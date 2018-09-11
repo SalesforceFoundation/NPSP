@@ -67,6 +67,52 @@ public with sharing class BDI_Donations_TEST {
             UTIL_unitTestData_TEST.getOpenStage(), system.Today(), 100, null, null);
         insert listOppT;
     }
+    /*********************************************************************************************************
+    * @description Verifies rollups are not calculated when rollup settings if not checked
+    */
+    @isTest
+    static void rollupShouldNotBeCalculatedWhenRollupSettingsIsNotChecked() {
+        if (ADV_PackageInfo_SVC.useAdv()) return;  
+        
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+        diSettings.Run_Opportunity_Rollups_while_Processing__c = false;    
+            
+        DataImport__c dataImport = new DataImport__c(
+            Contact1_Firstname__c = 'Jane', Contact1_Lastname__c = 'Smith',
+            Contact1_Personal_Email__c = 'jane.smith@norollups.com',
+            Donation_Donor__c = 'Contact1',
+            Donation_Name__c = 'Test',
+            Donation_Amount__c = 1000,
+            Donation_Date__c = Date.today().addMonths(3),
+            Donation_Stage__c = UTIL_UnitTestData_TEST.getClosedWonStage()
+        );
+        insert dataImport;
+
+        Test.StartTest();
+        BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH();
+        Database.executeBatch(batch, 10);
+        Test.stopTest();
+    
+        List<Contact> contacts = [SELECT npo02__TotalOppAmount__c, npo02__FirstCloseDate__c FROM Contact];
+        System.assertEquals(1, contacts.size());
+        System.assertEquals(0, contacts[0].npo02__TotalOppAmount__c);
+        System.assertEquals(null, contacts[0].npo02__FirstCloseDate__c);
+        
+        List<Opportunity> opps = [SELECT Name, Amount, StageName, isWon FROM Opportunity];
+        System.assertEquals(1, opps.size());
+        System.assertEquals(true, opps[0].isWon);
+        
+        List<npe01__OppPayment__c> payments = [SELECT Id FROM npe01__OppPayment__c];
+        System.assertEquals(1, payments.size());
+
+        List<DataImport__c> dataImports = [SELECT DonationImported__c, DonationImportStatus__c FROM DataImport__c];
+        System.assertEquals(1, dataImports.size());
+        System.assertEquals(opps[0].Id, dataImports[0].DonationImported__c);  
+        System.assertEquals(label.bdiCreated, dataImports[0].DonationImportStatus__c);     
+    }
 
     /*********************************************************************************************************
     * @description operation
@@ -77,7 +123,7 @@ public with sharing class BDI_Donations_TEST {
     */
     static testMethod void TwoDIWithExistingDonations() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'TwoDIWithExistingDonations') return;
         
@@ -295,7 +341,7 @@ public with sharing class BDI_Donations_TEST {
     */
     static testMethod void TwoDIWithExistingDonationsSpecified() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'TwoDIWithExistingDonationsSpecified') return;
         
@@ -374,7 +420,7 @@ public with sharing class BDI_Donations_TEST {
     */
     static testMethod void TwoDIWithExistingPaymentsSpecified() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'TwoDIWithExistingPaymentsSpecified') return;
         
@@ -475,7 +521,7 @@ public with sharing class BDI_Donations_TEST {
     */
     static testMethod void TwoDIWithExistingDonationsOneDupe() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'TwoDIWithExistingDonationsOneDupe') return;
         
@@ -795,7 +841,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules1() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules1') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -819,7 +865,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/
     static testMethod void donationMatchRules1b() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules1b') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -843,7 +889,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/
     static testMethod void donationMatchRules1c() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules1c') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -867,7 +913,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/
     static testMethod void donationMatchRules1d() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules1d') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -890,7 +936,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules2() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules2') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -943,7 +989,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules4() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules4') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -967,7 +1013,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules4b() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules4b') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -990,7 +1036,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules5() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules5') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -1014,7 +1060,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules5b() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules5b') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -1037,7 +1083,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules6() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules6') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -1061,7 +1107,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules7() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules7') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -1084,7 +1130,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules7b() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules7b') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -1108,7 +1154,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules8() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules8') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -1132,7 +1178,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules9() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules9') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -1156,7 +1202,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules9b() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules9b') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -1180,7 +1226,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules10() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules10') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -1204,7 +1250,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules10b() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules10b') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -1228,7 +1274,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules11() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules11') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -1252,7 +1298,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules11b() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules11b') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
@@ -1275,7 +1321,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules12() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules12') return;
 
@@ -1300,7 +1346,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules13() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules13') return;
 
@@ -1325,7 +1371,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules14() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules14') return;
 
@@ -1353,7 +1399,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules14b() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules14b') return;
 
@@ -1384,7 +1430,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules14c() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules14c') return;
 
@@ -1425,7 +1471,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules15() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules15') return;
 
@@ -1452,7 +1498,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules16() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
         
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules16') return;
 
@@ -1479,7 +1525,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/            
     static testMethod void donationMatchRules17() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules17') return;
 
@@ -1508,7 +1554,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/
     static testMethod void donationMatchRules18a() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules18a') return;
 
@@ -1551,7 +1597,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/
     static testMethod void donationMatchRules18b() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules18a') return;
 
@@ -1595,7 +1641,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/
     static testMethod void donationMatchRules18c() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules18c') return;
 
@@ -1636,7 +1682,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/
     static testMethod void donationMatchRules18d() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules18d') return;
 
@@ -1663,7 +1709,7 @@ public with sharing class BDI_Donations_TEST {
     **********************************************************************************************************/
     static testMethod void donationMatchRules19() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'donationMatchRules19') return;
 
