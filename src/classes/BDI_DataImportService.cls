@@ -77,13 +77,13 @@ global with sharing class BDI_DataImportService {
     * @param batchId id of batch to load
     * @return DataImportBatch__c
     */
-    private static DataImportBatch__c loadBatch(ID batchId) {
+    private static DataImportBatch__c loadBatch(Id batchId) {
 
-        List<DataImportBatch__c> listDIBatch = BDI_DataImportBatch_SEL.selectByIds(new Set<Id>{batchId});
+        List<DataImportBatch__c> listDIBatch = BDI_DataImportBatch_SEL.selectByIds(new Set<Id>{ batchId });
         if (listDIBatch.size() == 1) {
             return listDIBatch[0];
         } else {
-            throw(new BDIException(String.format(Label.bdiInvalidBatchId, new String[]{batchId})));
+            throw(new BDIException(String.format(Label.bdiInvalidBatchId, new String[]{ batchId })));
         }
     }
 
@@ -172,19 +172,26 @@ global with sharing class BDI_DataImportService {
         if (diSettings.Donation_Matching_Behavior__c != null &&
             diSettings.Donation_Matching_Behavior__c != BDI_DataImport_API.DoNotMatch &&
             String.isBlank(diSettings.Donation_Matching_Rule__c)) {
+            
             throw(new BDIException(Label.bdiDonationMatchingRuleEmpty));
         }
 
         // validate Batch Process Size
         if (diSettings.Batch_Size__c == null || diSettings.Batch_Size__c < 0) {
             throw(new BDIException(String.format(Label.bdiPositiveNumber,
-                new List<String>{UTIL_Describe.getFieldLabelSafe(strSettingsObj, UTIL_Namespace.StrTokenNSPrefix('Batch_Size__c'))})));
+                new List<String>{
+                    UTIL_Describe.getFieldLabelSafe(strSettingsObj, UTIL_Namespace.StrTokenNSPrefix('Batch_Size__c'))
+                }
+            )));
         }
 
         // validate Donation Date Range
         if (diSettings.Donation_Date_Range__c < 0) {
             throw(new BDIException(String.format(Label.bdiPositiveNumber,
-                new List<String>{UTIL_Describe.getFieldLabelSafe(strSettingsObj, UTIL_Namespace.StrTokenNSPrefix('Donation_Date_Range__c'))})));
+                new List<String>{
+                    UTIL_Describe.getFieldLabelSafe(strSettingsObj, UTIL_Namespace.StrTokenNSPrefix('Donation_Date_Range__c'))
+                }
+            )));
         }
 
         // validate donation implementing class by instantiating it
@@ -232,7 +239,8 @@ global with sharing class BDI_DataImportService {
             BDI_DataImport_API.BestMatchOrCreate
         };
         if (!setDMBehavior.contains(diSettings.Donation_Matching_Behavior__c)) {
-            throw(new BDIException(String.format(Label.bdiInvalidDonationMatchingBehavior, new String[]{diSettings.Donation_Matching_Behavior__c})));
+            throw(new BDIException(String.format(Label.bdiInvalidDonationMatchingBehavior,
+                new String[]{ diSettings.Donation_Matching_Behavior__c })));
         }
     }
 
@@ -245,20 +253,20 @@ global with sharing class BDI_DataImportService {
     public static void updateDIBatchStatistics(Id apexJobId, Id batchId) {
         if (batchId != null) {
             DataImportBatch__c diBatch = loadBatch(batchId);
-            integer cRecordsProcessed = [
+            Integer cRecordsProcessed = [
                 SELECT COUNT()
                 FROM DataImport__c
                 WHERE NPSP_Data_Import_Batch__c = :diBatch.Id
                 AND ApexJobId__c = :apexJobId
             ];
-            integer cRecordsSucceeded = [
+            Integer cRecordsSucceeded = [
                 SELECT COUNT()
                 FROM DataImport__c
                 WHERE NPSP_Data_Import_Batch__c = :diBatch.Id
                 AND Status__c = :BDI_DataImport_API.bdiImported
                 AND ApexJobId__c = :apexJobId
             ];
-            integer cRecordsFailed = cRecordsProcessed - cRecordsSucceeded;
+            Integer cRecordsFailed = cRecordsProcessed - cRecordsSucceeded;
 
             diBatch.Last_Processed_On__c = System.now();
             diBatch.Records_Successfully_Processed__c = cRecordsSucceeded;
@@ -305,11 +313,12 @@ global with sharing class BDI_DataImportService {
     /*******************************************************************************************************
     * @description whether the Account Custom Unique ID field is in our account matching rules
     */
-    private boolean isCustomIdInAccountMatchRules {
+    private Boolean isCustomIdInAccountMatchRules {
         get {
             String str = diSettings.Account_Custom_Unique_ID__c;
-            if (str == null || str == '')
+            if (str == null || str == '') {
                 return false;
+            }
             return true;
         }
     }
@@ -317,19 +326,24 @@ global with sharing class BDI_DataImportService {
     /*******************************************************************************************************
     * @description whether the Account Custom Uniue ID field is a String datatype
     */
-    private boolean isCustomIdInAccountDatatypeString {
+    private Boolean isCustomIdInAccountDatatypeString {
         get {
             if (isCustomIdInAccountDatatypeString == null) {
                 isCustomIdInAccountDatatypeString = false;
                 if (isCustomIdInAccountMatchRules) {
-                    Schema.Displaytype dt = UTIL_Describe.getFieldDisplaytype('Account', diSettings.Account_Custom_Unique_ID__c);
-                    if (dt == Schema.Displaytype.String ||
-                        dt == Schema.Displaytype.TextArea ||
-                        dt == Schema.Displaytype.Id ||
-                        dt == Schema.Displaytype.URL ||
-                        dt == Schema.Displaytype.Phone ||
-                        dt == Schema.Displaytype.Reference)
+                    Schema.DisplayType dt = UTIL_Describe.getFieldDisplaytype(
+                        'Account', diSettings.Account_Custom_Unique_ID__c
+                    );
+
+                    if (dt == Schema.DisplayType.String ||
+                        dt == Schema.DisplayType.TextArea ||
+                        dt == Schema.DisplayType.Id ||
+                        dt == Schema.DisplayType.URL ||
+                        dt == Schema.DisplayType.Phone ||
+                        dt == Schema.DisplayType.Reference) {
                         isCustomIdInAccountDatatypeString = true;
+                    }
+
                 }
             }
             return isCustomIdInAccountDatatypeString;
@@ -363,10 +377,11 @@ global with sharing class BDI_DataImportService {
     * @return String either the String value or an empty String ''
     */
     public String strNull(String str) {
-        if (str == null)
+        if (str == null) {
             return '';
-        else
+        } else {
             return str;
+        }
     }
 
     /*******************************************************************************************************
@@ -441,7 +456,9 @@ global with sharing class BDI_DataImportService {
     * @param isDryRun whether to run in Dry Run mode or commit records.
     * @return void
     */
-    public static void execute(Id apexJobId, Data_Import_Settings__c diSettings, List<DataImport__c> listDI, Boolean isDryRun) {
+    public static void execute(Id apexJobId, Data_Import_Settings__c diSettings, List<DataImport__c> listDI,
+        Boolean isDryRun) {
+
         BDI_DataImportService bdi = new BDI_DataImportService(isDryRun);
         bdi.process(apexJobId, diSettings, listDI);
     }
@@ -466,7 +483,7 @@ global with sharing class BDI_DataImportService {
             this.diSettings = diSettings;
 
             // first set a clean state for each DI
-            for (DataImport__c di: listDI) {
+            for (DataImport__c di : listDI) {
                 di.Status__c = null;
                 di.ImportedDate__c = null;
                 di.ApexJobId__c = null;
@@ -514,8 +531,6 @@ global with sharing class BDI_DataImportService {
             pl.stop();
 
         } catch (Exception e) {
-            //UTIL_Debug.debug('****DJH Exception ' + e);
-
             // we should only hit this exception if a truly unexpected runtime
             // error occurs.  not even database updates/inserts should get here,
             // since we now handle all database updates/inserts using the flavor
@@ -556,13 +571,13 @@ global with sharing class BDI_DataImportService {
     */
     private void updateDIStatuses(Id apexJobId) {
         // update final status for each DI
-        for (DataImport__c di: listDI) {
+        for (DataImport__c di : listDI) {
             if (di.Status__c == null) {
                 di.Status__c = statusDISuccess();
             } else if (di.Status__c == BDI_DataImport_API.bdiFailed) {
                 di.Status__c = statusDIFailed();
             }
-            di.ImportedDate__c = system.now();
+            di.ImportedDate__c = System.now();
             di.ApexJobId__c = apexJobId;
 
             // because a contact might be first imported in C1 location, but then moved to another
@@ -576,14 +591,21 @@ global with sharing class BDI_DataImportService {
 
             // our matching marks non-matches with created, assuming they will get created
             // but if there were errors that stopped that creation, let's clear the status
-            if (di.Contact1Imported__c == null && di.Contact1ImportStatus__c == label.bdiCreated)
+            if (di.Contact1Imported__c == null && di.Contact1ImportStatus__c == label.bdiCreated) {
                 di.Contact1ImportStatus__c = null;
-            if (di.Contact2Imported__c == null && di.Contact2ImportStatus__c == label.bdiCreated)
+            }
+
+            if (di.Contact2Imported__c == null && di.Contact2ImportStatus__c == label.bdiCreated) {
                 di.Contact2ImportStatus__c = null;
-            if (di.Account1Imported__c == null && di.Account1ImportStatus__c == label.bdiCreated)
+            }
+
+            if (di.Account1Imported__c == null && di.Account1ImportStatus__c == label.bdiCreated) {
                 di.Account1ImportStatus__c = null;
-            if (di.Account2Imported__c == null && di.Account2ImportStatus__c == label.bdiCreated)
+            }
+
+            if (di.Account2Imported__c == null && di.Account2ImportStatus__c == label.bdiCreated) {
                 di.Account2ImportStatus__c = null;
+            }
         }
 
         UTIL_DMLService.updateRecords(listDI);
@@ -595,7 +617,10 @@ global with sharing class BDI_DataImportService {
     * @return void
     */
     private void customPostProcess() {
-        BDI_IPostProcess iPostProcess = (BDI_IPostProcess)instantiateClassForInterface('BDI_IPostProcess', diSettings.Post_Process_Implementing_Class__c);
+        BDI_IPostProcess iPostProcess =
+            (BDI_IPostProcess)instantiateClassForInterface(
+                'BDI_IPostProcess', diSettings.Post_Process_Implementing_Class__c
+            );
         if (iPostProcess != null) {
             iPostProcess.process(this);
         }
@@ -622,7 +647,9 @@ global with sharing class BDI_DataImportService {
                 return classInstance;
             }
         }
-        throw new BDIException(String.format(Label.bdiErrorInvalidIMatchDonations, new List<String>{strClass, strInterface}));
+        throw new BDIException(
+            String.format(Label.bdiErrorInvalidIMatchDonations, new List<String>{strClass, strInterface})
+        );
     }
 
     /*******************************************************************************************************
@@ -635,8 +662,9 @@ global with sharing class BDI_DataImportService {
     public void LogBDIError(DataImport__c di, String strError, String strStatusField) {
         di.Status__c = BDI_DataImport_API.bdiFailed;
         di.FailureInformation__c = strError;
-        if (strStatusField != null)
+        if (strStatusField != null) {
             di.put(strStatusField, strError.left(255));
+        }
     }
 
     /*******************************************************************************************************
@@ -667,7 +695,7 @@ global with sharing class BDI_DataImportService {
     /*******************************************************************************************************
     * @description flag to allow us to test out field level security exception
     */
-    public static boolean failFieldLevelSecurity = false;
+    public static Boolean failFieldLevelSecurity = false;
 
     /*******************************************************************************************************
     * @description returns a map of fields from the DataImport to fields for the given 'object',
@@ -680,7 +708,8 @@ global with sharing class BDI_DataImportService {
     global static Map<String, String> mapFieldsForDIObject(String strObj, String strBaseObj, List<String> listStrDIFields) {
         Map<String, String> mapDIFieldToObjField = new Map<String, String>();
         for (String strF : listStrDIFields) {
-            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), strF);
+            DescribeFieldResult dfr =
+                UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), strF);
             String strHelpText = dfr.getInlineHelpText();
             if (strHelpText != null && strHelpText != '') {
                 List<String> strParts = strHelpText.split('\\.', 2);
@@ -704,7 +733,9 @@ global with sharing class BDI_DataImportService {
                     // we can't do this in all tests, because many profiles won't have FLS set for all our new fields!
                     if (!Test.isRunningTest() || failFieldLevelSecurity) {
                         dfr = UTIL_Describe.getFieldDescribe(strBaseObj, strField);
-                        Set<String> setAuditFields = new Set<String>{'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'};
+                        Set<String> setAuditFields = new Set<String>{
+                            'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'
+                        };
                         Boolean isAuditField = setAuditFields.contains(strField.toLowerCase());
 
                         if (failFieldLevelSecurity ||
@@ -733,7 +764,8 @@ global with sharing class BDI_DataImportService {
     * @param mapDIFieldToDstField The field map from a DI field to the destination field
     * @return boolean True if copied, False is not copied.
     */
-    public static boolean isCopiedDIField(DataImport__c di, String strDIField, SObject objDst, Map<String, String> mapDIFieldToDstField) {
+    public static Boolean isCopiedDIField(DataImport__c di, String strDIField, SObject objDst,
+        Map<String, String> mapDIFieldToDstField) {
 
         Object val = di.get(strDIField);
 
@@ -781,8 +813,9 @@ global with sharing class BDI_DataImportService {
         Map<String, String> mapDIFieldToHHField = mapFieldsForDIObject('Household', 'Account', listStrDataImportFields);
 
         // bail out if no custom fields
-        if (mapDIFieldToHHField.size() == 0)
+        if (mapDIFieldToHHField.size() == 0) {
             return;
+        }
 
         // holds the Households that need updating
         List<Account> listAccHHUpdate = new List<Account>();
@@ -791,13 +824,16 @@ global with sharing class BDI_DataImportService {
 
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == BDI_DataImport_API.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed) {
                 continue;
-            if (di.HouseholdAccountImported__c == null)
-                continue;
+            }
 
-            boolean isModified = false;
-            Account accHH = new Account(Id=di.HouseholdAccountImported__c);
+            if (di.HouseholdAccountImported__c == null) {
+                continue;
+            }
+
+            Boolean isModified = false;
+            Account accHH = new Account(Id = di.HouseholdAccountImported__c);
             for (String strDIField : mapDIFieldToHHField.keySet()) {
                 if (isCopiedDIField(di, strDIField, accHH, mapDIFieldToHHField)) {
                     isModified = true;
@@ -813,7 +849,7 @@ global with sharing class BDI_DataImportService {
 
         //UTIL_Debug.debug('****DJH about to upsert household Accounts: ' + listAccHHUpdate);
         List<Database.UpsertResult> listUR = UTIL_DMLService.upsertRecords(listAccHHUpdate, false);
-        for (integer i = 0; i < listUR.size(); i++) {
+        for (Integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
                 LogBDIError(listDIUpdate[i], ur.getErrors()[0].getMessage(), null);
@@ -893,7 +929,7 @@ global with sharing class BDI_DataImportService {
     * @param iCon 1 specifies Contact1 otherwise use Contact2
     * @return Contact the found Contact
     */
-    global Contact ContactFromDi(DataImport__c di, integer iCon) {
+    global Contact ContactFromDi(DataImport__c di, Integer iCon) {
         return contactService.ContactFromDi(di, iCon);
     }
 
@@ -923,24 +959,27 @@ global with sharing class BDI_DataImportService {
         // create/update our A1's
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == BDI_DataImport_API.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed) {
                 continue;
+            }
 
             Account acc = AccountFromDi(di, 1);
-            if (acc == null)
+            if (acc == null) {
                 continue;
+            }
 
-            boolean isModified = false;
+            Boolean isModified = false;
             for (String strDIField : mapDIFieldToA1Field.keySet()) {
                 if (isCopiedDIField(di, strDIField, acc, mapDIFieldToA1Field)) {
                     isModified = true;
                 }
             }
             if (isModified) {
-                boolean isAlreadyAdded = false;
+                Boolean isAlreadyAdded = false;
                 for (String diKey : listDiKeyA1(di)) {
-                    if (!setDIKeyUpsert.add(diKey))
+                    if (!setDIKeyUpsert.add(diKey)) {
                         isAlreadyAdded = true;
+                    }
                 }
                 if (!isAlreadyAdded) {
                     listAccUpsert.add(acc);
@@ -948,13 +987,14 @@ global with sharing class BDI_DataImportService {
                 }
             }
             // testing error handling
-            if (Test.isRunningTest() && acc.Name != null && acc.Name.startsWith('FailTest'))
+            if (Test.isRunningTest() && acc.Name != null && acc.Name.startsWith('FailTest')) {
                 acc.Name = null;
+            }
         }
 
         if (listAccUpsert.size() > 0) {
-            List<Database.UpsertResult> listUR = database.upsert(listAccUpsert, false);
-            for (integer i = 0; i < listUR.size(); i++) {
+            List<Database.UpsertResult> listUR = Database.upsert(listAccUpsert, false);
+            for (Integer i = 0; i < listUR.size(); i++) {
                 Database.UpsertResult ur = listUR[i];
                 if (!ur.isSuccess()) {
                     LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), 'Account1ImportStatus__c');
@@ -965,11 +1005,12 @@ global with sharing class BDI_DataImportService {
         // update each DI with its new Account1 ID
         // and set contact's primary affiliations
         Map<Id, Contact> mapConIdToConUpdate = new Map<Id, Contact>();
-        for (DataImport__c di: listDI) {
+        for (DataImport__c di : listDI) {
             if (di.Account1Imported__c == null) {
                 Account acc = AccountFromDi(di, 1);
-                if (acc != null)
+                if (acc != null) {
                     di.Account1Imported__c = acc.Id;
+                }
             }
             // set c1's primary affilation
             if (di.Account1Imported__c != null) {
@@ -989,24 +1030,27 @@ global with sharing class BDI_DataImportService {
         setDIKeyUpsert.clear();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == BDI_DataImport_API.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed) {
                 continue;
+            }
 
             Account acc = AccountFromDi(di, 2);
-            if (acc == null)
+            if (acc == null) {
                 continue;
+            }
 
-            boolean isModified = false;
+            Boolean isModified = false;
             for (String strDIField : mapDIFieldToA2Field.keySet()) {
                 if (isCopiedDIField(di, strDIField, acc, mapDIFieldToA2Field)) {
                     isModified = true;
                 }
             }
             if (isModified) {
-                boolean isAlreadyAdded = false;
+                Boolean isAlreadyAdded = false;
                 for (String diKey : listDiKeyA2(di)) {
-                    if (!setDIKeyUpsert.add(diKey))
+                    if (!setDIKeyUpsert.add(diKey)) {
                         isAlreadyAdded = true;
+                    }
                 }
                 if (!isAlreadyAdded) {
                     listAccUpsert.add(acc);
@@ -1014,13 +1058,14 @@ global with sharing class BDI_DataImportService {
                 }
             }
             // testing error handling
-            if (Test.isRunningTest() && acc.Name != null && acc.Name.startsWith('FailTest'))
+            if (Test.isRunningTest() && acc.Name != null && acc.Name.startsWith('FailTest')) {
                 acc.Name = null;
+            }
         }
 
         if (listAccUpsert.size() > 0) {
-            List<Database.UpsertResult> listUR = database.upsert(listAccUpsert, false);
-            for (integer i = 0; i < listUR.size(); i++) {
+            List<Database.UpsertResult> listUR = Database.upsert(listAccUpsert, false);
+            for (Integer i = 0; i < listUR.size(); i++) {
                 Database.UpsertResult ur = listUR[i];
                 if (!ur.isSuccess()) {
                     LogBDIError(listDIUpsert[i], ur.getErrors()[0].getMessage(), 'Account2ImportStatus__c');
@@ -1033,8 +1078,9 @@ global with sharing class BDI_DataImportService {
         for (DataImport__c di: listDI) {
             if (di.Account2Imported__c == null) {
                 Account acc = AccountFromDi(di, 2);
-                if (acc != null)
+                if (acc != null) {
                     di.Account2Imported__c = acc.Id;
+                }
             }
             // set c2's primary affilation
             if (di.Account2Imported__c != null) {
@@ -1071,8 +1117,9 @@ global with sharing class BDI_DataImportService {
     * @return List<String> a list of diKeys
     */
     private List<String> listDiKeyAccount(Account acc) {
-        if (acc == null)
+        if (acc == null) {
             return null;
+        }
 
         List<String> listDiKey = new List<String>();
 
@@ -1083,15 +1130,19 @@ global with sharing class BDI_DataImportService {
 
         // we need the Account CustomId key to always be checked second when matching
         String strUniqueId = '';
-        if (isCustomIDInAccountMatchRules && (strUniqueId = strNull(acc.get(diSettings.Account_Custom_Unique_ID__c))) != '') {
+        if (isCustomIDInAccountMatchRules &&
+            (strUniqueId = strNull(acc.get(diSettings.Account_Custom_Unique_ID__c))) != '') {
+
             if (!isCustomIdInAccountDatatypeString) {
-                strUniqueId = String.valueOf(double.valueOf(strUniqueId));
+                strUniqueId = String.valueOf(Double.valueOf(strUniqueId));
             }
             listDiKey.add(strUniqueId);
         }
 
-        if (acc.Name != null)
+        if (acc.Name != null) {
             listDiKey.add(acc.Name + '|' + strUniqueId);
+        }
+
         return listDiKey;
     }
 
@@ -1130,17 +1181,21 @@ global with sharing class BDI_DataImportService {
         }
 
         // we need the Account CustomId key to always be checked second when matching
-        if (isCustomIDInAccountMatchRules && (strUniqueId = strNull(di.get(strDIAccountCustomIDField(strAx, diSettings)))) != '') {
+        if (isCustomIDInAccountMatchRules &&
+            (strUniqueId = strNull(di.get(strDIAccountCustomIDField(strAx, diSettings)))) != '') {
+
             if (!isCustomIdInAccountDatatypeString) {
-                strUniqueId = String.valueOf(double.valueOf(strUniqueId));
+                strUniqueId = String.valueOf(Double.valueOf(strUniqueId));
             }
             listDiKey.add(strUniqueId);
         }
 
         // now create any other dikeys
         String strName;
-        if ((strName = String.valueOf(di.get(strAx + '_Name__c'))) != null)
+        if ((strName = String.valueOf(di.get(strAx + '_Name__c'))) != null) {
             listDiKey.add(strName + '|' + strUniqueId);
+        }
+
         return listDiKey;
     }
 
@@ -1150,11 +1205,12 @@ global with sharing class BDI_DataImportService {
     * @param iAcc 1 specifies Account1 otherwise use Account2
     * @return Account the found Account
     */
-    global Account AccountFromDi(DataImport__c di, integer iAcc) {
+    global Account AccountFromDi(DataImport__c di, Integer iAcc) {
         for (String diKey : listDiKeyAx(di, iAcc == 1 ? 'Account1' : 'Account2')) {
             Account acc = mapDIKeyToAccount.get(diKey);
-            if (acc != null)
+            if (acc != null) {
                 return acc;
+            }
         }
         return null;
     }
@@ -1168,7 +1224,7 @@ global with sharing class BDI_DataImportService {
 
         Set<String> setName = new Set<String>();
         Set<String> setCustomIDString = new Set<String>();
-        Set<double> setCustomIDNumber = new Set<double>();
+        Set<Double> setCustomIDNumber = new Set<Double>();
         Set<Id> setSFId = new Set<Id>();
         String a1CustomIDField = BDI_DataImportService.strDIAccountCustomIDField('Account1', diSettings);
         String a2CustomIDField = BDI_DataImportService.strDIAccountCustomIDField('Account2', diSettings);
@@ -1176,35 +1232,46 @@ global with sharing class BDI_DataImportService {
 
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == BDI_DataImport_API.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed) {
                 continue;
+            }
 
             // a1
-            if (di.Account1Imported__c != null)
+            if (di.Account1Imported__c != null) {
                 setSFId.add(di.Account1Imported__c);
-            if (di.Account1_Name__c != null)
+            }
+
+            if (di.Account1_Name__c != null) {
                 setName.add(di.Account1_Name__c);
+            }
+
             if (isCustomIDInAccountMatchRules) {
-                object val = di.get(a1CustomIDField);
+                Object val = di.get(a1CustomIDField);
                 if (val != null) {
-                    if (isCustomIdInAccountDatatypeString)
+                    if (isCustomIdInAccountDatatypeString) {
                         setCustomIDString.add(String.valueOf(val));
-                    else
-                        setCustomIDNumber.add(double.valueOf(val));
+                    } else {
+                        setCustomIDNumber.add(Double.valueOf(val));
+                    }
                 }
             }
             // a2
-            if (di.Account2Imported__c != null)
+            if (di.Account2Imported__c != null) {
                 setSFId.add(di.Account2Imported__c);
-            if (di.Account2_Name__c != null)
+            }
+
+            if (di.Account2_Name__c != null) {
                 setName.add(di.Account2_Name__c);
+            }
+
             if (isCustomIDInAccountMatchRules) {
-                object val = di.get(a2CustomIDField);
+                Object val = di.get(a2CustomIDField);
                 if (val != null) {
-                    if (isCustomIdInAccountDatatypeString)
+                    if (isCustomIdInAccountDatatypeString) {
                         setCustomIDString.add(String.valueOf(val));
-                    else
-                        setCustomIDNumber.add(double.valueOf(val));
+                    } else {
+                        setCustomIDNumber.add(Double.valueOf(val));
+                    }
                 }
             }
         }
@@ -1223,51 +1290,56 @@ global with sharing class BDI_DataImportService {
             }
         }
 
-        if (isCustomIDInAccountMatchRules && isCustomIdInAccountDatatypeString)
+        if (isCustomIDInAccountMatchRules && isCustomIdInAccountDatatypeString) {
             strSoql += ' OR ' + diSettings.Account_Custom_Unique_ID__c + ' IN :setCustomIDString';
-        else if (isCustomIDInAccountMatchRules && !isCustomIdInAccountDatatypeString)
+        } else if (isCustomIDInAccountMatchRules && !isCustomIdInAccountDatatypeString) {
             strSoql += ' OR ' + diSettings.Account_Custom_Unique_ID__c + ' IN :setCustomIDNumber';
+        }
 
         BDI_PerfLogger.PerfLog pl = perfLogger.newPerfLog('SOQL existing Accounts', BDI_PerfLogger.QUERY);
-        List<Account> listAcc = database.query(strSoql);
+        List<Account> listAcc = Database.query(strSoql);
         pl.stop();
 
         // put all Accounts into our map
         for (Account acc : listAcc) {
-            for (String diKey : listDiKeyAccount(acc))
+            for (String diKey : listDiKeyAccount(acc)) {
                 mapDIKeyToAccount.put(dikey, acc);
+            }
         }
 
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == BDI_DataImport_API.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed) {
                 continue;
+            }
 
             Account acc = AccountFromDi(di, 1);
             List<String> listDiKey = listDiKeyA1(di);
             if (acc != null) {
-                di.Account1Imported__c = acc.id;
-                di.Account1ImportStatus__c = (acc.id != null ? statusMatchedExisting() : statusMatchedNew());
+                di.Account1Imported__c = acc.Id;
+                di.Account1ImportStatus__c = (acc.Id != null ? statusMatchedExisting() : statusMatchedNew());
             } else if (listDiKey.size() > 0) {
                 acc = new Account();
                 di.Account1ImportStatus__c = statusCreatedNew();
             }
             // make sure all dikeys for that account are in the map
-            for (String diKey : listDiKey)
+            for (String diKey : listDiKey) {
                 mapDIKeyToAccount.put(diKey, acc);
+            }
 
             acc = AccountFromDi(di, 2);
             listDiKey = listDiKeyA2(di);
             if (acc != null) {
-                di.Account2Imported__c = acc.id;
-                di.Account2ImportStatus__c = (acc.id != null ? statusMatchedExisting() : statusMatchedNew());
+                di.Account2Imported__c = acc.Id;
+                di.Account2ImportStatus__c = (acc.Id != null ? statusMatchedExisting() : statusMatchedNew());
             } else if (listDiKey.size() > 0) {
                 acc = new Account();
                 di.Account2ImportStatus__c = statusCreatedNew();
             }
             // make sure all dikeys for that account are in the map
-            for (String diKey : listDiKey)
+            for (String diKey : listDiKey) {
                 mapDIKeyToAccount.put(diKey, acc);
+            }
         }
     }
 
@@ -1288,7 +1360,9 @@ global with sharing class BDI_DataImportService {
     private Map<String, String> mapDIFieldToA1Field {
         get {
             if (mapDIFieldToA1Field == null) {
-                mapDIFieldToA1Field = BDI_DataImportService.mapFieldsForDIObject('Account1', 'Account', BDI_DataImportService.listStrDataImportFields);
+                mapDIFieldToA1Field = BDI_DataImportService.mapFieldsForDIObject(
+                    'Account1', 'Account', BDI_DataImportService.listStrDataImportFields
+                );
             }
             return mapDIFieldToA1Field;
         }
@@ -1301,7 +1375,10 @@ global with sharing class BDI_DataImportService {
     private Map<String, String> mapDIFieldToA2Field {
         get {
             if (mapDIFieldToA2Field == null) {
-                mapDIFieldToA2Field = BDI_DataImportService.mapFieldsForDIObject('Account2', 'Account', BDI_DataImportService.listStrDataImportFields);
+                mapDIFieldToA2Field =
+                    BDI_DataImportService.mapFieldsForDIObject(
+                        'Account2', 'Account', BDI_DataImportService.listStrDataImportFields
+                    );
             }
             return mapDIFieldToA2Field;
         }
@@ -1328,15 +1405,26 @@ global with sharing class BDI_DataImportService {
         Set<Id> setHHId = new Set<Id>();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == BDI_DataImport_API.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed) {
                 continue;
+            }
+
             Contact con = ContactFromDi(di, 1);
-            if (con != null && con.AccountId != null)
+            if (con != null && con.AccountId != null) {
                 setHHId.add(con.AccountId);
+            }
         }
         BDI_PerfLogger.PerfLog pl = perfLogger.newPerfLog('SOQL existing Addresses', BDI_PerfLogger.QUERY);
-        List<Address__c> listAddrExisting = [select Id, Household_Account__c, MailingStreet__c, MailingCity__c, MailingState__c,
-            MailingPostalCode__c from Address__c where Household_Account__c in :setHHId];
+        List<Address__c> listAddrExisting = [
+            SELECT Id,
+                Household_Account__c,
+                MailingStreet__c,
+                MailingCity__c,
+                MailingState__c,
+                MailingPostalCode__c
+            FROM Address__c
+            WHERE Household_Account__c IN :setHHId
+        ];
         pl.stop();
 
         Map<String, Id> mapHHAddrKeyToId = new Map<String, Id>();
@@ -1344,14 +1432,16 @@ global with sharing class BDI_DataImportService {
             mapHHAddrKeyToId.put(strKeyOfAddr(addr), addr.Id);
         }
 
-        Map<String, String> mapDIFieldToAddrField = mapFieldsForDIObject('Address', UTIL_Namespace.StrTokenNSPrefix('Address__c'), listStrDataImportFields);
+        Map<String, String> mapDIFieldToAddrField =
+            mapFieldsForDIObject('Address', UTIL_Namespace.StrTokenNSPrefix('Address__c'), listStrDataImportFields);
         List<Address__c> listAddrInsert = new List<Address__c>();
         List<DataImport__c> listDIInsert = new List<DataImport__c>();
         Map<String, Address__c> mapHHAddrKeyToAddrNew = new Map<String, Address__c>();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == BDI_DataImport_API.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed) {
                 continue;
+            }
 
             Contact con = ContactFromDi(di, 1);
             Address__c addr = new Address__c();
@@ -1372,7 +1462,7 @@ global with sharing class BDI_DataImportService {
                 }
 
                 // check to see if we already have this address in this hh.
-                ID idAddr = mapHHAddrKeyToId.get(strKeyOfAddr(addr));
+                Id idAddr = mapHHAddrKeyToId.get(strKeyOfAddr(addr));
                 if (idAddr != null) {
                     di.HomeAddressImported__c = idAddr;
                     di.HomeAddressImportStatus__c = statusMatchedExisting();
@@ -1405,8 +1495,8 @@ global with sharing class BDI_DataImportService {
         // address record at a time, so we can log the failing address with the correct bdi record.
         try  {
             UTIL_DMLService.insertRecords(listAddrInsert);
-        } catch (exception ex) {
-            for (integer i = 0; i < listAddrInsert.size(); i++) {
+        } catch (Exception ex) {
+            for (Integer i = 0; i < listAddrInsert.size(); i++) {
                 Database.SaveResult sr = UTIL_DMLService.insertRecord(listAddrInsert[i], false);
                 if (!sr.isSuccess()) {
                     LogBDIError(listDIInsert[i], sr.getErrors()[0].getMessage(), 'HomeAddressImportStatus__c');
@@ -1417,8 +1507,10 @@ global with sharing class BDI_DataImportService {
         // update each DI with its new home address
         for (DataImport__c di: listDI) {
             // skip di's that already have an error
-            if (di.Status__c == BDI_DataImport_API.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed) {
                 continue;
+            }
+
             if (di.HomeAddressImported__c == null) {
                 Address__c addr = mapDIIdToAddr.get(di.Id);
                 if (addr != null && addr.Id != null) {
@@ -1435,7 +1527,8 @@ global with sharing class BDI_DataImportService {
     * @return String the key for the Address
     */
     private static String strKeyOfAddr(Address__c addr) {
-        return addr.Household_Account__c + addr.MailingStreet__c + addr.MailingCity__c + addr.MailingState__c + addr.MailingPostalCode__c;
+        return addr.Household_Account__c + addr.MailingStreet__c + addr.MailingCity__c + addr.MailingState__c +
+            addr.MailingPostalCode__c;
     }
 
     /*******************************************************************************************************
@@ -1462,19 +1555,31 @@ global with sharing class BDI_DataImportService {
         Set<Id> setHHId = new Set<Id>();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == BDI_DataImport_API.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed) {
                 continue;
-            if (di.HouseholdAccountImported__c != null)
+            }
+
+            if (di.HouseholdAccountImported__c != null) {
                 setHHId.add(di.HouseholdAccountImported__c);
+            }
         }
-        Map<Id, Account> mapHHIdToAcc = new Map<Id, Account>([select Id, BillingStreet, BillingCity,
-            BillingState, BillingPostalCode, BillingCountry from Account where Id in :setHHId]);
+        Map<Id, Account> mapHHIdToAcc = new Map<Id, Account>([
+            SELECT Id,
+                BillingStreet,
+                BillingCity,
+                BillingState,
+                BillingPostalCode,
+                BillingCountry
+            FROM Account
+            WHERE Id IN :setHHId
+        ]);
 
         // now update home address on the contacts and hh account
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == BDI_DataImport_API.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed) {
                 continue;
+            }
             Contact con1 = ContactFromDi(di, 1);
             Contact con2 = ContactFromDi(di, 2);
             Account accHH = mapHHIdToAcc.get(di.HouseholdAccountImported__c);
@@ -1520,21 +1625,21 @@ global with sharing class BDI_DataImportService {
 
         // now update the objects
         List<Database.UpsertResult> listUR = UTIL_DMLService.upsertRecords(listCon1Update, false);
-        for (integer i = 0; i < listUR.size(); i++) {
+        for (Integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
                 LogBDIError(listCon1Di[i], ur.getErrors()[0].getMessage(), 'Contact1ImportStatus__c');
             }
         }
         listUR = UTIL_DMLService.upsertRecords(listCon2Update, false);
-        for (integer i = 0; i < listUR.size(); i++) {
+        for (Integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
                 LogBDIError(listCon2Di[i], ur.getErrors()[0].getMessage(), 'Contact2ImportStatus__c');
             }
         }
         listUR = UTIL_DMLService.upsertRecords(listAccUpdate, false);
-        for (integer i = 0; i < listUR.size(); i++) {
+        for (Integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
                 LogBDIError(listAccDi[i], ur.getErrors()[0].getMessage(), 'HomeAddressImportStatus__c');
@@ -1562,14 +1667,18 @@ global with sharing class BDI_DataImportService {
         Set<String> setStrCampaign = new Set<String>();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == BDI_DataImport_API.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed) {
                 continue;
-            if (di.Donation_Campaign_Name__c != null)
+            }
+
+            if (di.Donation_Campaign_Name__c != null) {
                 setStrCampaign.add(di.Donation_Campaign_Name__c);
+            }
+
         }
 
         // add the existing campaigns to our map
-        for (Campaign cmp : [select Id, Name from Campaign where Name in :setStrCampaign]) {
+        for (Campaign cmp : [SELECT Id, Name FROM Campaign WHERE Name IN :setStrCampaign]) {
             mapStrNameToCampaignId.put(cmp.Name, cmp.Id);
         }
 
@@ -1579,8 +1688,10 @@ global with sharing class BDI_DataImportService {
         setStrCampaign.clear();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == BDI_DataImport_API.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed) {
                 continue;
+            }
+
             String strName = di.Donation_Campaign_Name__c;
             Campaign cmp;
             if (strName != null && setStrCampaign.add(strName)) {
@@ -1590,12 +1701,13 @@ global with sharing class BDI_DataImportService {
                     listDINew.add(di);
                 }
             }
-            if (Test.isRunningTest() && strName != null && strName.startsWith('FailTest'))
+            if (Test.isRunningTest() && strName != null && strName.startsWith('FailTest')) {
                 cmp.Name = null;
+            }
         }
         //insert listCmpNew;
         List<Database.UpsertResult> listUR = UTIL_DMLService.upsertRecords(listCmpNew, false);
-        for (integer i = 0; i < listUR.size(); i++) {
+        for (Integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
             if (!ur.isSuccess()) {
                 LogBDIError(listDINew[i], ur.getErrors()[0].getMessage(), 'DonationImportStatus__c');
@@ -1629,13 +1741,17 @@ global with sharing class BDI_DataImportService {
         // loop over the dis contacts and find existing cms or new cms to create (if they have a campaign)
         for (DataImport__c di : listDI) {
             // skip that already have an error
-            if (di.Status__c == BDI_DataImport_API.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed) {
                 continue;
+            }
+
             // only create CMs here for rows that don't have an opportunity
             if (di.Donation_Campaign_Name__c != null && di.DonationImported__c == null) {
                 // assume errors would have already been thrown
                 Id idCmp = mapStrNameToCampaignId.get(di.Donation_Campaign_Name__c);
-                String diStatus = String.isBlank(di.Campaign_Member_Status__c) ? Label.campaignMemberStatusDefault : di.Campaign_Member_Status__c;
+                String diStatus =
+                    String.isBlank(di.Campaign_Member_Status__c) ?
+                        Label.campaignMemberStatusDefault : di.Campaign_Member_Status__c;
 
                 if (di.Contact1Imported__c != null) {
                     newCmContactIds.add(di.Contact1Imported__c);
@@ -1651,7 +1767,8 @@ global with sharing class BDI_DataImportService {
         }
 
         // return DML wrapper for new CMs
-        TDTM_Runnable.DMLWrapper newCmWrapper = CON_AddToCampaign.CreateCampaignMembers(newCmContactIds,listCampaignIds,listCmStatues);
+        TDTM_Runnable.DMLWrapper newCmWrapper =
+            CON_AddToCampaign.CreateCampaignMembers(newCmContactIds, listCampaignIds, listCmStatues);
 
         // process dmls for CMs
         TDTM_TriggerHandler.processDML(newCmWrapper);
