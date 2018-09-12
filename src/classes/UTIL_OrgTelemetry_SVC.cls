@@ -74,7 +74,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      * @param telemetryType
      */
     @Future
-    public static void processNPSPSettingTelemetry_ASync() {
+    public static void asyncProcessNpspSettingsTelemetry() {
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
         telemetrySvc.processTelemetryType(TelemetryType.NPSP_Settings);
     }
@@ -155,8 +155,8 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Boolean isEnabled=false;
         if (UserInfo.isMultiCurrencyOrganization() == true) {
             try {
-                Integer DCRCount = Database.query('SELECT Id FROM DatedConversionRate WHERE StartDate = LAST_N_DAYS:180 LIMIT 1').size();
-                if (DCRCount == 1) {
+                Integer count = Database.query('SELECT Id FROM DatedConversionRate WHERE StartDate = LAST_N_DAYS:180 LIMIT 1').size();
+                if (count == 1) {
                     isEnabled = true;
                 }
             } catch (Exception e) { }
@@ -212,7 +212,8 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      */
     private void handleCountOfRecurringDonationOpps() {
         try {
-            Integer count = [SELECT Count() FROM Opportunity
+            Integer count = [SELECT Count()
+                FROM Opportunity
                 WHERE npe03__Recurring_Donation__c IN (SELECT Id FROM npe03__Recurring_Donation__c)];
             System.FeatureManagement.setPackageIntegerValue('Data_Count_of_RD_Opps_All', count);
         } catch (Exception ex) {}
@@ -224,8 +225,9 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     private void handleCountOfRecurringDonationOpps_OpenEnded() {
         String openStatusValue = System.Label.npe03.RecurringDonationOpenStatus;
         try {
-            Integer count = [SELECT Count() FROM Opportunity
-                    WHERE npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c = :openStatusValue];
+            Integer count = [SELECT Count()
+                FROM Opportunity
+                WHERE npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c = :openStatusValue];
             System.FeatureManagement.setPackageIntegerValue('Data_Count_of_RD_Opps_OpenEnded', count);
         } catch (Exception ex) {}
     }
@@ -238,10 +240,10 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     private void handleMaxNumRelatedOpps() {
         try {
             Account acct = [SELECT npo02__NumberOfClosedOpps__c
-                            FROM Account
-                            WHERE npo02__NumberOfClosedOpps__c > 0
-                            ORDER BY npo02__NumberOfClosedOpps__c DESC
-                            LIMIT 1];
+                FROM Account
+                WHERE npo02__NumberOfClosedOpps__c > 0
+                ORDER BY npo02__NumberOfClosedOpps__c DESC
+                LIMIT 1];
             if (acct != null) {
                 System.FeatureManagement.setPackageIntegerValue('Data_MaxNumRelatedOpps',
                         acct.npo02__NumberOfClosedOpps__c.intValue());

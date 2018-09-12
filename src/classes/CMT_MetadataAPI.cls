@@ -163,7 +163,7 @@ public class CMT_MetadataAPI {
                 upsert crlpSettings;
             }
             if (isSuccess) {
-                UTIL_OrgTelemetry_SVC.processNPSPSettingTelemetry_ASync();
+                UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
             }
         }
     }

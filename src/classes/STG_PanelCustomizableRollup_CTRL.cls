@@ -102,7 +102,7 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
                 STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c = true;
                 stgService.saveAll();
                 UTIL_MasterSchedulableHelper.setScheduledJobs();
-                UTIL_OrgTelemetry_SVC.processNPSPSettingTelemetry_ASync();
+                UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
             }
         } catch (Exception e) {
             Database.rollback(sp);
@@ -151,7 +151,7 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
             stgService.saveAll();
             // reset to legacy jobs
             UTIL_MasterSchedulableHelper.setScheduledJobs();
-            UTIL_OrgTelemetry_SVC.processNPSPSettingTelemetry_ASync();
+            UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
         } catch (Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);

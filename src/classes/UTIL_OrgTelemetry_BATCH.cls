@@ -55,9 +55,9 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
         };
 
     /**
-     * @description Return the list of Telemetry Type Enum values to be processed by this batch job
+     * @description Return the list of TelemetryType enum values to be processed by this batch job
      * @param BC BatchableContext (not used)
-     * @return telemetryTypesList list from above
+     * @return TelemetryTypes list from above
      */
     public Iterable<UTIL_OrgTelemetry_SVC.TelemetryType> start(Database.BatchableContext BC) {
         if (!Test.isRunningTest()) {
