@@ -29,6 +29,17 @@
         component.destroy();
     },
 
+    onSubmit: function (component, event, helper) {
+        event.preventDefault();
+        var eventFields = helper.addHiddenFields(component, event);
+        var isValid = true;
+        // TODO: add validation function
+        // isValid = helper.validateRecord(component, event);
+        if (isValid) {
+            component.find('recordEditForm').submit(eventFields);
+        }
+    },
+
     /**
      * @description: sets the donor type and alerts the parent. Used to circumvent the unhelpful labeling of Account1/Contact1.
      */
