@@ -6,7 +6,7 @@ Suite Teardown  Delete Records and Close Browser
 
 *** Test Cases ***
 
-Create Level and Verify
+Edit Level and Verify
     ${level_name}     Create Level
     Go To Object Home         npsp__Level__c
     Click Link    link=${level_name}
