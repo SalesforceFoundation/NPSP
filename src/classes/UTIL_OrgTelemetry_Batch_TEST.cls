@@ -44,9 +44,7 @@ private class UTIL_OrgTelemetry_Batch_TEST {
      * testing along side other methods that call the same featureParameter value used by this test.
      */
     @IsTest
-
-
-    static void test_telemetryBatchJob() {
+    static void validateTelemetryBatchJob() {
         Test.startTest();
         UTIL_OrgTelemetry_SVC.dispatchTelemetryBatchJob();
         Test.stopTest();

@@ -61,7 +61,7 @@ private class UTIL_OrgTelemetry_TEST {
      * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
      */
     @IsTest
-    static void test_telemetry_NPSP_Settings() {
+    static void validateNPSPSettingsTelemetry() {
         Test.startTest();
         UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
 
@@ -78,7 +78,7 @@ private class UTIL_OrgTelemetry_TEST {
      * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
      */
     @IsTest
-    static void test_telemetry_Org_Environment() {
+    static void validateOrgEnvironmentTelemetry() {
         Test.startTest();
         Integer currQueryCount = Limits.getQueries();
 
@@ -94,7 +94,7 @@ private class UTIL_OrgTelemetry_TEST {
      * that the call to System.FeatureManagement() call succeeded.
      */
     @IsTest
-    static void test_telemetry_Data_MaxNumRelatedOpps() {
+    static void validateMaxNumRelatedOppsTelemetry() {
         Test.startTest();
         Integer currQueryCount = Limits.getQueries();
 
@@ -110,7 +110,7 @@ private class UTIL_OrgTelemetry_TEST {
      * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
      */
     @IsTest
-    static void test_telemetry_Data_Count_of_RD_Opps_All() {
+    static void validateCountOfRDOppsAllTelemetry() {
         Test.startTest();
         Integer currQueryCount = Limits.getQueries();
 
@@ -126,7 +126,7 @@ private class UTIL_OrgTelemetry_TEST {
      * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
      */
     @IsTest
-    static void test_telemetry_Data_Count_of_RD_Opps_OpenEnded() {
+    static void validateCountOfRDOppsOpenEndedTelemetry() {
         Test.startTest();
         Integer currQueryCount = Limits.getQueries();
 
@@ -142,7 +142,7 @@ private class UTIL_OrgTelemetry_TEST {
      * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
      */
     @IsTest
-    static void test_telemetry_Data_CountOfErrorLog() {
+    static void validateCountOfErrorLogTelemetry() {
         Test.startTest();
         Integer currQueryCount = Limits.getQueries();
 
