@@ -273,6 +273,11 @@ public without sharing class TDTM_DefaultConfig {
               Class__c = 'PSC_Opportunity_TDTM', Load_Order__c = 4, Object__c = 'Opportunity',
               Trigger_Action__c = 'AfterUpdate'));
 
+        // Account Soft Credit support
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+                Class__c = 'OPP_AccountSoftCredit_TDTM', Load_Order__c = 1, Object__c = 'Account_Soft_Credit__c',
+                Trigger_Action__c = 'BeforeInsert;BeforeUpdate'));
+
         // Engagement Plans
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
               Class__c = 'EP_EngagementPlans_TDTM', Load_Order__c = 0, Object__c = 'Engagement_Plan__c',

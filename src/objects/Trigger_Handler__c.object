@@ -55,7 +55,7 @@
     <fields>
         <fullName>Active__c</fullName>
         <defaultValue>true</defaultValue>
-        <description>Indicates that this module is active</description>
+        <description>Indicates whether this Trigger Handler is in use.</description>
         <externalId>false</externalId>
         <inlineHelpText>Indicates whether this Trigger Handler is in use.</inlineHelpText>
         <label>Active</label>
@@ -65,7 +65,7 @@
     <fields>
         <fullName>Asynchronous__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Indicates that this module should be run asynchronously in this transaction, for any of its After events.</description>
+        <description>Indicates whether this class should run asynchronously in this transaction, for any of its After events.</description>
         <externalId>false</externalId>
         <inlineHelpText>Indicates whether this class should run asynchronously in this transaction, for any of its After events.</inlineHelpText>
         <label>Asynchronous After Events</label>
@@ -74,7 +74,7 @@
     </fields>
     <fields>
         <fullName>Class__c</fullName>
-        <description>Name of the class to be run</description>
+        <description>The name of the class to run.</description>
         <externalId>false</externalId>
         <inlineHelpText>The name of the class to run.</inlineHelpText>
         <label>Class</label>
@@ -86,7 +86,7 @@
     </fields>
     <fields>
         <fullName>Load_Order__c</fullName>
-        <description>Order in which this module should be run, helps maintain dependencies in the modules and data.</description>
+        <description>The order in which this class should run. The order is in relation to other triggers on the same object with the same Trigger Actions, for example, all “before insert” triggers on Account.</description>
         <externalId>false</externalId>
         <inlineHelpText>The order in which this class should run. The order is in relation to other triggers on the same object with the same Trigger Actions, for example, all “before insert” triggers on Account.</inlineHelpText>
         <label>Load Order</label>
@@ -99,9 +99,9 @@
     </fields>
     <fields>
         <fullName>Object__c</fullName>
-        <description>Name of the object this handler should be run for</description>
+        <description>The name of the object the class should act on, for example, Account, Contact, or Opportunity.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The name of the object the class should act on, for example, Account, Contact, Opportunity.</inlineHelpText>
+        <inlineHelpText>The name of the object the class should act on, for example, Account, Contact, or Opportunity.</inlineHelpText>
         <label>Object</label>
         <length>255</length>
         <required>true</required>
@@ -111,7 +111,7 @@
     </fields>
     <fields>
         <fullName>Trigger_Action__c</fullName>
-        <description>Trigger Action in which this module should fire</description>
+        <description>The context in which this class should run, for example, before a record is inserted, after a record is deleted, etc.</description>
         <externalId>false</externalId>
         <inlineHelpText>The context in which this class should run, for example, before a record is inserted, after a record is deleted, etc.</inlineHelpText>
         <label>Trigger Action</label>
@@ -163,7 +163,7 @@
     <fields>
         <fullName>User_Managed__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>The record is managed by the user and updates won&apos;t be pushed to it.</description>
+        <description>When selected, NPSP will no longer push updates to this Trigger Handler. Select this option if you have made changes that you do not want NPSP to overwrite.</description>
         <externalId>false</externalId>
         <inlineHelpText>When selected, NPSP will no longer push updates to this Trigger Handler. Select this option if you have made changes that you do not want NPSP to overwrite.</inlineHelpText>
         <label>User Managed</label>
@@ -172,7 +172,7 @@
     </fields>
     <fields>
         <fullName>Usernames_to_Exclude__c</fullName>
-        <description>Semicolon separated list of Salesforce usernames that this trigger will NOT run for</description>
+        <description>A semicolon-separated list of Usernames that this Trigger Handler will not run for. Leave blank to run for all Users.</description>
         <externalId>false</externalId>
         <inlineHelpText>A semicolon-separated list of Usernames that this Trigger Handler will not run for. Leave blank to run for all Users.</inlineHelpText>
         <label>Usernames to Exclude</label>

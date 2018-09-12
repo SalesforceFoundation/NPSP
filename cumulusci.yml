@@ -175,6 +175,12 @@ tasks:
         description: Execute the specified apex anonymous script
         class_path: tasks.anon_apex.AnonymousApexFromFileTask
 
+    enable_customizable_rollups:
+        description: Enable the NPSP Customizable Rollups feature
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: new STG_PanelCustomizableRollup_CTRL().enableCRLPs();
+
 flows:
     config_dev:
         steps:
@@ -200,6 +206,18 @@ flows:
             7:
                 task: test_data_relationships
 
+    config_acctsc_rollups:
+        description: 'Deploys custom fields and rollups for testing account soft credits.'
+        steps:
+            1:
+                task: enable_customizable_rollups
+            2:
+                task: deploy
+                options:
+                    path: dev_config/src_acctsc_rollups
+            3:
+                task: update_admin_profile
+
     release_beta:
         steps:
             5:
@@ -215,6 +233,14 @@ flows:
                 task: deploy_dev_config_managed
             5:
                 task: test_data_relationships
+
+    config_offsetfiscal:
+        description: 'Configure an offset fiscal year'
+        steps:
+            1:
+                task: deploy
+                options:
+                    path: dev_config/src_offsetfiscal
 
     test_data_dev_org:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 100 Contacts into the target org.'
@@ -263,6 +289,10 @@ orgs:
             config_file: orgs/beta_middlesuffix.json
         beta_multicurrency:
             config_file: orgs/beta_multicurrency.json
+        beta_personaccounts:
+            config_file: orgs/beta_personaccounts.json
+        beta_statecountry:
+            config_file: orgs/beta_statecountry.json
         beta_wave:
             config_file: orgs/beta_wave.json
         prerelease:

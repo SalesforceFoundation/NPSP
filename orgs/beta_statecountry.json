@@ -1,0 +1,16 @@
+{
+  "orgName": "NPSP - Beta Org - State / Country Picklist",
+  "edition": "Developer",
+  "features": [
+    "StateAndCountryPicklist"
+  ],
+  "hasSampleData": "true",
+  "orgPreferences" : {
+    "enabled": [
+      "ChatterEnabled",
+      "DisableParallelApexTesting",
+      "S1DesktopEnabled",
+      "Translation"
+    ]
+  }
+}
