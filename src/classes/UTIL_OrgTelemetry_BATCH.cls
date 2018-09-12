@@ -39,19 +39,19 @@
 * executing or other factors at play, the rest of this job will continue. That ensures that our LMO collects as much
 * data as possible. In addition, it can help us identify which specific telemetry data processes are failing.
 */
-public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchable<UTIL_OrgTelemetry_SVC.TelemetryTypeEnum> {
+public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchable<UTIL_OrgTelemetry_SVC.TelemetryType> {
 
     /**
      * @description List of High Level Telemetry Data Types to be processed asynchronously by this batch job.
      */
-    private static final List<UTIL_OrgTelemetry_SVC.TelemetryTypeEnum> telemetryTypesList =
-        new List<UTIL_OrgTelemetry_SVC.TelemetryTypeEnum>{
-            UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.NPSP_Settings,
-            UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Org_Environment,
-            UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Data_MaxNumRelatedOpps,
-            UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Data_Count_of_RD_Opps_All,
-            UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Data_Count_of_RD_Opps_OpenEnded,
-            UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Data_CountOfErrorLog
+    private final List<UTIL_OrgTelemetry_SVC.TelemetryType> telemetryTypes =
+        new List<UTIL_OrgTelemetry_SVC.TelemetryType>{
+            UTIL_OrgTelemetry_SVC.TelemetryType.NPSP_Settings,
+            UTIL_OrgTelemetry_SVC.TelemetryType.Org_Environment,
+            UTIL_OrgTelemetry_SVC.TelemetryType.Data_MaxNumRelatedOpps,
+            UTIL_OrgTelemetry_SVC.TelemetryType.Data_Count_of_RD_Opps_All,
+            UTIL_OrgTelemetry_SVC.TelemetryType.Data_Count_of_RD_Opps_OpenEnded,
+            UTIL_OrgTelemetry_SVC.TelemetryType.Data_CountOfErrorLog
         };
 
     /**
@@ -59,11 +59,11 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
      * @param BC BatchableContext (not used)
      * @return telemetryTypesList list from above
      */
-    public Iterable<UTIL_OrgTelemetry_SVC.TelemetryTypeEnum> start(Database.BatchableContext BC) {
+    public Iterable<UTIL_OrgTelemetry_SVC.TelemetryType> start(Database.BatchableContext BC) {
         if (!Test.isRunningTest()) {
-            return UTIL_OrgTelemetry_BATCH.telemetryTypesList;
+            return telemetryTypes;
         } else {
-            return new List<UTIL_OrgTelemetry_SVC.TelemetryTypeEnum>{UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Data_CountOfErrorLog};
+            return new List<UTIL_OrgTelemetry_SVC.TelemetryType>{UTIL_OrgTelemetry_SVC.TelemetryType.Data_CountOfErrorLog};
         }
     }
 
@@ -73,7 +73,7 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
      * @param info BatchableContext (not used)
      * @param types List<UTIL_OrgTelemetry_SVC.TelemetryTypeEnum> -- Batch Size of ONE is required
      */
-    public void execute(Database.BatchableContext info, List<UTIL_OrgTelemetry_SVC.TelemetryTypeEnum> types) {
+    public void execute(Database.BatchableContext info, List<UTIL_OrgTelemetry_SVC.TelemetryType> types) {
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
         telemetrySvc.processTelemetryType(types[0]);
     }

@@ -43,7 +43,10 @@ private class UTIL_OrgTelemetry_Batch_TEST {
      * This specific test needs to be in a separate test class to avoid an internal error that is thrown when
      * testing along side other methods that call the same featureParameter value used by this test.
      */
-    static testMethod void test_telemetryBatchJob() {
+    @IsTest
+
+
+    static void test_telemetryBatchJob() {
         Test.startTest();
         UTIL_OrgTelemetry_SVC.dispatchTelemetryBatchJob();
         Test.stopTest();
