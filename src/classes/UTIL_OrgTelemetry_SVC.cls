@@ -54,9 +54,9 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         NPSP_Settings,
         Org_Environment,
         Data_MaxNumRelatedOpps,
-        Data_Count_of_RD_Opps_All,
-        Data_Count_of_RD_Opps_OpenEnded,
-        Data_CountOfErrorLog
+        Data_CountRdOppsAll,
+        Data_CountRdOppsOpenEnded,
+        Data_CountErrorLog
     }
 
     /**
@@ -107,15 +107,15 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 handleMaxNumRelatedOpps();
             }
 
-            when Data_Count_of_RD_Opps_All {
+            when Data_CountRdOppsAll {
                 handleCountOfRecurringDonationOpps();
             }
 
-            when Data_Count_of_RD_Opps_OpenEnded {
+            when Data_CountRdOppsOpenEnded {
                 handleCountOfRecurringDonationOpps_OpenEnded();
             }
 
-            when Data_CountOfErrorLog {
+            when Data_CountErrorLog {
                 handleErrorLogCount();
             }
         }
@@ -180,7 +180,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 languages.add(u.LanguageLocaleKey);
             }
         }
-        System.FeatureManagement.setPackageIntegerValue('Org_Count_of_NonEnglishLanguages', languages.size());
+        System.FeatureManagement.setPackageIntegerValue('Org_CountNonEnglishLanguages', languages.size());
     }
 
     /**
@@ -203,7 +203,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     private void handleErrorLogCount() {
         try {
             Integer count = [SELECT Count() FROM Error__c];
-            System.FeatureManagement.setPackageIntegerValue('Data_Count_of_ErrorLog', count);
+            System.FeatureManagement.setPackageIntegerValue('Data_CountErrorLog', count);
         } catch (Exception ex) {}
     }
 
@@ -215,7 +215,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             Integer count = [SELECT Count()
                 FROM Opportunity
                 WHERE npe03__Recurring_Donation__c IN (SELECT Id FROM npe03__Recurring_Donation__c)];
-            System.FeatureManagement.setPackageIntegerValue('Data_Count_of_RD_Opps_All', count);
+            System.FeatureManagement.setPackageIntegerValue('Data_CountRdOppsAll', count);
         } catch (Exception ex) {}
     }
 
@@ -228,7 +228,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             Integer count = [SELECT Count()
                 FROM Opportunity
                 WHERE npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c = :openStatusValue];
-            System.FeatureManagement.setPackageIntegerValue('Data_Count_of_RD_Opps_OpenEnded', count);
+            System.FeatureManagement.setPackageIntegerValue('Data_CountRdOppsOpenEnded', count);
         } catch (Exception ex) {}
     }
 

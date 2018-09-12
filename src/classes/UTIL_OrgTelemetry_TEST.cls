@@ -115,7 +115,7 @@ private class UTIL_OrgTelemetry_TEST {
         Integer currQueryCount = Limits.getQueries();
 
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
-        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryType.Data_Count_of_RD_Opps_All);
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryType.Data_CountRdOppsAll);
 
         System.assertEquals(currQueryCount+1, Limits.getQueries(), 'There should be one new query executed');
         Test.stopTest();
@@ -131,7 +131,7 @@ private class UTIL_OrgTelemetry_TEST {
         Integer currQueryCount = Limits.getQueries();
 
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
-        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryType.Data_Count_of_RD_Opps_OpenEnded);
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryType.Data_CountRdOppsOpenEnded);
 
         System.assertEquals(currQueryCount+1, Limits.getQueries(), 'There should be one new query executed');
         Test.stopTest();
@@ -147,7 +147,7 @@ private class UTIL_OrgTelemetry_TEST {
         Integer currQueryCount = Limits.getQueries();
 
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
-        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryType.Data_CountOfErrorLog);
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryType.Data_CountErrorLog);
 
         System.assertEquals(currQueryCount+1, Limits.getQueries(), 'There should be one new query executed');
         Test.stopTest();

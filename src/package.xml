@@ -2338,11 +2338,11 @@
         <name>FeatureParameterBoolean</name>
     </types>
     <types>
-        <members>Data_Count_of_ErrorLog</members>
-        <members>Data_Count_of_RD_Opps_All</members>
-        <members>Data_Count_of_RD_Opps_OpenEnded</members>
+        <members>Data_CountErrorLog</members>
+        <members>Data_CountRdOppsAll</members>
+        <members>Data_CountRdOppsOpenEnded</members>
         <members>Data_MaxNumRelatedOpps</members>
-        <members>Org_Count_of_NonEnglishLanguages</members>
+        <members>Org_CountNonEnglishLanguages</members>
         <name>FeatureParameterInteger</name>
     </types>
     <types>

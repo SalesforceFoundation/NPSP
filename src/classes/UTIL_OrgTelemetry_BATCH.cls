@@ -49,9 +49,9 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
             UTIL_OrgTelemetry_SVC.TelemetryType.NPSP_Settings,
             UTIL_OrgTelemetry_SVC.TelemetryType.Org_Environment,
             UTIL_OrgTelemetry_SVC.TelemetryType.Data_MaxNumRelatedOpps,
-            UTIL_OrgTelemetry_SVC.TelemetryType.Data_Count_of_RD_Opps_All,
-            UTIL_OrgTelemetry_SVC.TelemetryType.Data_Count_of_RD_Opps_OpenEnded,
-            UTIL_OrgTelemetry_SVC.TelemetryType.Data_CountOfErrorLog
+            UTIL_OrgTelemetry_SVC.TelemetryType.Data_CountRdOppsAll,
+            UTIL_OrgTelemetry_SVC.TelemetryType.Data_CountRdOppsOpenEnded,
+            UTIL_OrgTelemetry_SVC.TelemetryType.Data_CountErrorLog
         };
 
     /**
@@ -63,7 +63,8 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
         if (!Test.isRunningTest()) {
             return telemetryTypes;
         } else {
-            return new List<UTIL_OrgTelemetry_SVC.TelemetryType>{UTIL_OrgTelemetry_SVC.TelemetryType.Data_CountOfErrorLog};
+            return new List<UTIL_OrgTelemetry_SVC.TelemetryType>{UTIL_OrgTelemetry_SVC.TelemetryType.Data_CountErrorLog
+            };
         }
     }
 
