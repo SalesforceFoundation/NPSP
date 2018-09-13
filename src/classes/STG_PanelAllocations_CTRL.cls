@@ -131,19 +131,12 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
         STG_Panel.stgService.stgAllo.Default__c = allo.General_Accounting_Unit__c;
         strDefaultGAUName = null;
 
-        Boolean oldPayAlloValue = STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c;
         setAllocationLevelFromSelection();
 
         if (STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c && 
             !STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.alloDefaultNotEnabled));
                 return null;
-        }
-
-        // If the Allocation level changed and custom rollups are enabled, update them
-        if (oldPayAlloValue != STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c 
-            && STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c){
-                CRLP_ConfigBuilder_SVC.updateCustomRollupsAlloLevel(STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c);
         }
 
         return super.saveSettings();

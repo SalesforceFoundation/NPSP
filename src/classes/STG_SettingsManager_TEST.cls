@@ -41,57 +41,6 @@ public with sharing class STG_SettingsManager_TEST {
     * if you want to run all tests, then use '*'
     */
     private static string strTestOnly = '*';
-
-    /*********************************************************************************************************
-    * @description used for testing conversion of Opportunity Allocation rollups to Payment
-    */
-    private static String oppClosedFilter = CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts_HC;
-    private static String pmtsPaidFilter = CRLP_DefaultConfigBuilder.FilterGroup_PaymentsPaid;
-    
-    /**
-     * @description Create Rollup__mdt records to test rolling up from the Opp and Payment objects to the Account
-     */
-    private static void mockRollupCMTValues() {
-
-        // Create a single Filter Group (no need for filter rules here)
-        String filterGroupId1 = CMT_UnitTestData_TEST.getNewRecordId();
-
-        // Simple testing filters for IsWon, RecordType, and Paid/Written Off
-        String filterGroupsJSON = '[' +
-                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, oppClosedFilter) +
-                ']';
-        String filterRulesJSON = '[' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, oppClosedFilter+'.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, oppClosedFilter+'.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', 'Something') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, oppClosedFilter+'.Rule3', 'npe01__OppPayment__c', 'npe01__Paid__c', 'Equals', 'True') +
-                ']';
-
-        // Deserialize the filter group and filter rule to use for the tests
-        CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(filterGroupsJSON, List<Filter_Group__mdt>.class);
-        CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(filterRulesJSON, List<Filter_Rule__mdt>.class);
-
-        // Create a single Rollup that uses the above Filter Group
-        String rollupsJSON = '[' +
-                CMT_UnitTestData_TEST.createRollupRecord('Household Total Donations All Time', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                        'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.SUM, 'Amount') + ',' +
-
-                CMT_UnitTestData_TEST.createRollupRecord('String Field', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                        'BillingState', CRLP_Operation.RollupType.AVERAGE, 'Amount') + ',' +
-
-                CMT_UnitTestData_TEST.createRollupRecord('Date Field', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                        'npo02__FirstCloseDate__c', CRLP_Operation.RollupType.AVERAGE, 'Amount') + ',' +
-
-                CMT_UnitTestData_TEST.createRollupRecord('Id Field', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
-                        'ParentId', CRLP_Operation.RollupType.AVERAGE, 'Amount') +
-                ']';
-
-        // Deserialize the rollups to use for testing
-        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
-    }
     
     /*********************************************************************************************************
     * @description Tests the Settings Manager page
@@ -237,106 +186,51 @@ public with sharing class STG_SettingsManager_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Test reactivating Customizable Rollups with a different Allocation level than before
-    * @return void
-    */
-    public static testMethod void testPanelCRLP_reactivatedRollups() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelCRLP_reactivatedRollups') return;
-
-        mockRollupCMTValues();
-
-        STG_PanelCustomizableRollup_CTRL panel = new STG_PanelCustomizableRollup_CTRL();
-        System.assertEquals('idPanelCustomizableRollup', panel.idPanel());
-        System.assertEquals(false, STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c, 
-            'CRLPs should not be enabled in STG_Panel.');
-
-        Test.startTest();
-        STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c = true;
-        panel.enableCRLPs();
-        Test.stopTest();
-
-        System.assertEquals(true, STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c, 
-            'CRLPs should be enabled in STG_Panel.');
-        System.assertEquals(true, STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c, 
-            'Payment Allocations should be enabled in STG_Panel.');
-        System.assert(CRLP_ConfigBuilder_SVC.queuedMetadataTypes.size() > 0, 
-            'Check that existing Opportunity Allocation rollups have been queued for update');
-
-    }
-
-    /*********************************************************************************************************
     * @description Tests the Allocations panel
     * @return void
     */
     public static testMethod void testPanelAllo() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelAllo') return;
-
-        // Adding mock data to test custom rollups updates when allocation level changes
-        mockRollupCMTValues();
-
-        Id oppAlloFilterGroupId = 
-            CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(oppClosedFilter);
-
-        Integer numOppRollups = 0;
-        List<Rollup__mdt> rollupsToUpdate = new List<Rollup__mdt>();
-        for (Rollup__mdt rlp : CRLP_Rollup_SEL.getRollupDefinitions()){
-            if( rlp.Filter_Group__c == oppAlloFilterGroupId 
-                && rlp.Detail_Object__c == STG_Panel.oppLabel){
-                    numOppRollups++;
-            }
-        }
-
-        system.assert(numOppRollups > 0, 'Check that Allocation rollups are currently at the Opportunity level');
         
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(name='foo');
         insert gau;
-
+        
         STG_PanelAllocations_CTRL panel = new STG_PanelAllocations_CTRL();
         system.assertEquals('idPanelAllocations', panel.idPanel());
-        // To fully test switching Allocation levels, enable customizable rollups
-        STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c = true;
-
-        STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = true;
-        STG_Panel.stgService.stgAllo.Default__c = gau.id;
-
         system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Payment_Allocations_Enabled__c, 'Payment Allocations should not be enabled.');
         system.assertEquals(panel.strAllocationLevel, STG_Panel.oppLabel, 'If Payment Allocations are not enabled, allocation level should be opportunity');
-        // Simulate selecting Payment Allocations
+        // Simulate selecting Payment Allocations without default GAU set
         panel.strAllocationLevel = STG_Panel.paymentLabel;
-
-        Test.startTest();
-        panel.saveSettings();
-        Test.stopTest();
         
-        system.assertEquals(numOppRollups, CRLP_ConfigBuilder_SVC.queuedMetadataTypes.size(), 'Check that Opportunity Allocation rollups have been queued for update');
-
-        Integer rollupObjChangeCount = 0;
-        Integer rollupFilterChangeCount = 0;
-        for (Metadata.CustomMetadata md: CRLP_ConfigBuilder_SVC.queuedMetadataTypes){
-            for (Metadata.CustomMetadataValue val : md.values) {
-                String valField = (String)val.field;
-                if (valField.contains('Detail_Object__c')){
-                    if(val.value == CRLP_DefaultConfigBuilder.paymentObject){
-                        rollupObjChangeCount++;
-                    }
-                }
-                else if (valField.contains('Filter_Group__c')){
-                    if(val.value == pmtsPaidFilter){
-                        rollupFilterChangeCount++;
-                    }
-                }
-            }
-        }
-        system.assertEquals(numOppRollups, rollupObjChangeCount, 'The queued rollups should all be for Payments');
-        system.assertEquals(numOppRollups, rollupFilterChangeCount, 'The queued rollups should all have the Payments paid filter');
-
-        system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Payment_Allocations_Enabled__c, 'Payment Allocations should be enabled.');
-        system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default_Allocations_Enabled__c, 'Settings should save successfully.');
-        system.assertNotEquals(null,UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default__c, 'Default should be filled with the Id of the created General Accounting Unit.');
-
-        STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = false;
         panel.saveSettings();
-        system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default_Allocations_Enabled__c);
+
+        List<Apexpages.Message> msgs = ApexPages.getMessages();
+        system.assertEquals(1, msgs.size(), 'Default GAU must be enabled');
+        system.assert(msgs[0].getDetail().contains(Label.alloDefaultNotEnabled));
+
+        system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default_Allocations_Enabled__c, 'Settings should not save successfully.');
+        system.assertEquals(null,UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default__c, 'Default GAU value should not be filled in.');
+
+        // Try again with just default allocations enabled
+        STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = true;
+        
+        panel.saveSettings();
+
+        msgs = ApexPages.getMessages();
+        system.assertEquals(2, msgs.size(), 'New error, a Default GAU value must be set');
+        system.assert(msgs[1].getDetail().contains(Label.alloDefaultGAUMissing));
+
+        // Finally, set everything correctly
+        STG_PanelAllocations_CTRL.allo = null;
+        STG_Panel.stgService.stgAllo.Default__c = gau.id;
+
+        panel.saveSettings();
+
+        msgs = ApexPages.getMessages();
+        system.assertEquals(2, msgs.size(), 'No new error messages');
+        system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default_Allocations_Enabled__c, 'Settings should save successfully.');
+        system.assertNotEquals(null,UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default__c, 'Default GAU value should be filled in.');
+        system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Payment_Allocations_Enabled__c, 'Payment Allocations should be enabled.');
     }
 
     /*********************************************************************************************************

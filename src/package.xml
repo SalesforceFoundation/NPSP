@@ -1845,6 +1845,7 @@
         <members>stgLabelAfflSettings</members>
         <members>stgLabelAllRecordTypes</members>
         <members>stgLabelAlloBatchProgress</members>
+        <members>stgLabelAllocationBehaviorSettings</members>
         <members>stgLabelAllocationsRollupSettings</members>
         <members>stgLabelAllocationsSettings</members>
         <members>stgLabelAreYouSure</members>

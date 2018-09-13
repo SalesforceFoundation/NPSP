@@ -42,16 +42,6 @@
 */
 public class CRLP_ConfigBuilder_SVC {
 
-    public static final String oppAlloAccountFilterGroup = CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts_HC;
-    public static final String oppAlloContactFilterGroup = CRLP_DefaultConfigBuilder.FilterGroup_Opps_Contacts_HC;
-    public static final String paymentAlloFilterGroup = CRLP_DefaultConfigBuilder.FilterGroup_PaymentsPaid;
-    public static final String paymentApiName = CRLP_DefaultConfigBuilder.paymentObject;
-    public static final String opportunityApiName = STG_Panel.oppLabel;
-    public static final String oppAlloAmountApiName = 'Amount';
-    public static final String paymentAlloAmountApiName = 'npe01__Payment_Amount__c';
-    public static final String oppAlloDateApiName = 'CloseDate';
-    public static final String paymentAlloDateApiName = 'npe01__Payment_Date__c';
-
     /** @description Metadata queued up for deployment */
     @TestVisible
     private static List<Metadata.CustomMetadata> queuedMetadataTypes = new List<Metadata.CustomMetadata>();
@@ -128,80 +118,6 @@ public class CRLP_ConfigBuilder_SVC {
     private static String getUniqueJobId() {
         return UserInfo.getUserId().left(15).right(4).toUpperCase() +
                 String.valueOf(Integer.valueOf(math.rint(math.random()*5000000))).right(6);
-    }
-
-    /*********************************************************************************************************
-    * @description Method to update custom rollups based on Allocation level
-    * set as a future method to not interfere with setup object DML operations
-    * @param usePayments Boolean if true, update to use Payment Allocations, otherwise use Opportunty
-    */
-    @future
-    public static void updateCustomRollupsAlloLevel(Boolean usePayments){
-        String oldAcctFilter = usePayments ? oppAlloAccountFilterGroup : paymentAlloFilterGroup;
-        String oldContactFilter = usePayments ? oppAlloContactFilterGroup : paymentAlloFilterGroup;
-        String newAcctFilter = usePayments ? paymentAlloFilterGroup : oppAlloAccountFilterGroup;
-        String newContactFilter = usePayments ? paymentAlloFilterGroup : oppAlloContactFilterGroup;
-        Id oldAccountFilterId = 
-            CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(oldAcctFilter);
-        Id oldContactFilterId = 
-            CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(oldContactFilter);
-        Id newAccountFilterId = 
-            CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(newAcctFilter);
-        Id newContactFilterId = 
-            CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(newContactFilter);
-        String oldObjectLevel = usePayments ? opportunityApiName : paymentApiName;
-        String newObjectLevel = usePayments ? paymentApiName : opportunityApiName;
-        String oldAmountField = usePayments ? oppAlloAmountApiName : paymentAlloAmountApiName;
-        String newAmountField = usePayments ? paymentAlloAmountApiName : oppAlloAmountApiName;
-        String oldDateField = usePayments ? oppAlloDateApiName : paymentAlloDateApiName;
-        String newDateField = usePayments ? paymentAlloDateApiName : oppAlloDateApiName;
-
-        List<Rollup__mdt> rollupsToUpdate = new List<Rollup__mdt>();
-        for (Rollup__mdt rlp : CRLP_Rollup_SEL.getRollupDefinitions()){
-            if ((rlp.Filter_Group__c == newAccountFilterId 
-                    || rlp.Filter_Group__c == newContactFilterId 
-                    || rlp.Filter_Group__c == oldAccountFilterId 
-                    || rlp.Filter_Group__c == oldContactFilterId)
-                && rlp.Detail_Object__r.QualifiedApiName == oldObjectLevel
-                && rlp.Amount_Object__r.QualifiedApiName == oldObjectLevel
-                && rlp.Date_Object__r.QualifiedApiName == oldObjectLevel){
-                    rollupsToUpdate.add(rlp);
-            }
-        }
-
-        if (rollupsToUpdate.isEmpty()){
-            return;
-        }
-
-        List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
-        for (Rollup__mdt rlp: rollupsToUpdate){
-            CRLP_RollupCMT.Rollup crlp = new CRLP_RollupCMT.Rollup(rlp);
-            // In case legacy Rollup Settings are different for Contacts versus Accounts
-            if(crlp.summaryObject == 'Contact'){
-                crlp.filterGroupRecordName = newContactFilter;
-            } else {
-                crlp.filterGroupRecordName = newAcctFilter;
-            }
-
-            // Make sure we use the correct detail field
-            if(crlp.detailField == oldDateField){
-                crlp.detailField = newDateField;
-            }
-            else if (crlp.detailField != null){
-                crlp.detailField = newAmountField;
-            }
-
-            crlp.detailObject = newObjectLevel;
-            crlp.dateObject = newObjectLevel;
-            crlp.amountObject = newObjectLevel;
-            crlp.amountField = newAmountField;
-            crlp.dateField = newDateField;
-            rollups.add(crlp);
-        }
-
-        clearQueue();
-        queueRollupConfigForDeploy(rollups);
-        deployedQueuedMetadataTypes();
     }
 
 }
