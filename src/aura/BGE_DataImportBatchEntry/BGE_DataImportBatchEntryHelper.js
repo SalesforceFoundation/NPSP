@@ -4,27 +4,27 @@
      */
     createEntryForm: function (component) {
         $A.createComponent(
-            "c:BGE_EntryForm",
+            'c:BGE_EntryForm',
             {
-                "aura:id": "entryForm",
-                "labels": component.get("v.labels"),
-                "donorType": component.get("v.donorType"),
-                "recordId": component.get("v.recordId"),
-                "dataImportFields": component.get("v.dataImportFields")
+                'aura:id': 'entryForm',
+                'labels': component.get('v.labels'),
+                'donorType': component.get('v.donorType'),
+                'recordId': component.get('v.recordId'),
+                'dataImportFields': component.get('v.dataImportFields')
             },
             function(newComponent, status, errorMessage){
                 //Add the new component to the body array
-                if (status === "SUCCESS") {
-                    var body = component.get("v.body");
+                if (status === 'SUCCESS') {
+                    var body = component.get('v.body');
                     body.push(newComponent);
-                    component.set("v.body", body);
+                    component.set('v.body', body);
                 }
-                else if (status === "INCOMPLETE") {
-                    console.log("No response from server or client is offline.")
+                else if (status === 'INCOMPLETE') {
+                    console.log('No response from server or client is offline.')
                     // Show offline error
                 }
-                else if (status === "ERROR") {
-                    console.log("Error: " + errorMessage);
+                else if (status === 'ERROR') {
+                    console.log('Error: ' + errorMessage);
                     // Show error message
                 }
             }
@@ -36,22 +36,22 @@
      */
     getDIs: function (component) {
         this.showSpinner(component);
-        var action = component.get("c.getDataImports");
-        action.setParams({batchId: component.get("v.recordId")});
+        var action = component.get('c.getDataImports');
+        action.setParams({batchId: component.get('v.recordId')});
         action.setCallback(this, function (response) {
             var state = response.getState();
-            if (state === "SUCCESS") {
+            if (state === 'SUCCESS') {
                 var responseRows = response.getReturnValue();
                 this.setDataTableRows(component, responseRows);
                 this.setTotals(component, responseRows);
-                var openRoad = component.find("openRoadIllustration");
+                var openRoad = component.find('openRoadIllustration');
                 if (responseRows.length === 0) {
-                    $A.util.removeClass(openRoad, "slds-hide");
+                    $A.util.removeClass(openRoad, 'slds-hide');
                 } else {
-                    $A.util.addClass(openRoad, "slds-hide");
+                    $A.util.addClass(openRoad, 'slds-hide');
                 }
             } else {
-                this.showToast(component, $A.get("$Label.c.PageMessagesError"), response.getReturnValue(), 'error');
+                this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
             }
             this.hideSpinner(component);
         });
@@ -62,16 +62,16 @@
      * @description: retrieves the model information. If successful, sets the model and creates child component; otherwise alerts user.
      */
     getModel: function(component) {
-        var action = component.get("c.getDataImportModel");
-        action.setParams({batchId: component.get("v.recordId")});
+        var action = component.get('c.getDataImportModel');
+        action.setParams({batchId: component.get('v.recordId')});
         action.setCallback(this, function (response) {
             var state = response.getState();
-            if (state === "SUCCESS") {
+            if (state === 'SUCCESS') {
                 var response = JSON.parse(response.getReturnValue());
                 this.setModel(component, response);
                 this.createEntryForm(component, response);
             } else {
-                this.showToast(component, $A.get("$Label.c.PageMessagesError"), response.getReturnValue(), 'error');
+                this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
             }
             this.hideSpinner(component);
         });
@@ -84,15 +84,15 @@
      */
     handleTableSave: function(component, values) {
         this.showSpinner(component);
-        var action = component.get("c.updateDataImports");
+        var action = component.get('c.updateDataImports');
         action.setParams({diList: values});
         action.setCallback(this, function (response) {
             var state = response.getState();
-            if (state === "SUCCESS") {
+            if (state === 'SUCCESS') {
                 this.getDIs(component);
-                this.showToast(component, $A.get("$Label.c.PageMessagesConfirm"), $A.get("$Label.c.bgeGridGiftUpdated"), 'success');
+                this.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftUpdated'), 'success');
             } else {
-                this.showToast(component, $A.get("$Label.c.PageMessagesError"), response.getReturnValue(), 'error');
+                this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
             }
             this.hideSpinner(component);
         });
@@ -143,14 +143,14 @@
             rows.push(row);
         });
 
-        var openRoad = component.find("openRoadIllustration");
+        var openRoad = component.find('openRoadIllustration');
         if (responseRows.length === 0) {
-            $A.util.removeClass(openRoad, "slds-hide");
+            $A.util.removeClass(openRoad, 'slds-hide');
         } else {
-            $A.util.addClass(openRoad, "slds-hide");
+            $A.util.addClass(openRoad, 'slds-hide');
         }
 
-        component.set("v.data", rows);
+        component.set('v.data', rows);
     },
 
     /**
@@ -158,14 +158,14 @@
      * @param model: full DataImportModel from the Apex controller
      */
     setModel: function (component, model) {
-        component.set("v.labels", model.labels);
+        component.set('v.labels', model.labels);
         this.setDataServiceFields(component, model.labels);
         this.setDataTableRows(component, model.dataImportRows);
         this.setTotals(component, model.dataImportRows);
         this.setColumns(component, model.columns);
         this.setDataImportFields(component, model.columns);
-        component.set("v.isNamespaced", Boolean(model.isNamespaced));
-        component.set("v.isLoaded", true);
+        component.set('v.isNamespaced', Boolean(model.isNamespaced));
+        component.set('v.isLoaded', true);
     },
 
     /**
@@ -176,7 +176,7 @@
         var fields = [];
         fields.push(labels.expectedCountField);
         fields.push(labels.expectedTotalField);
-        component.set("v.batchFields", fields);
+        component.set('v.batchFields', fields);
     },
 
     /**
@@ -189,15 +189,15 @@
         rows.forEach(function (currentRow) {
             var row = currentRow.record;
             countGifts += 1;
-            var amount = row[component.get("v.labels.donationAmountField")];
+            var amount = row[component.get('v.labels.donationAmountField')];
             if (amount) {
                 totalGiftAmount += amount;
             }
         });
-        var totals = component.get("v.totals");
+        var totals = component.get('v.totals');
         totals.countGifts = countGifts;
         totals.totalGiftAmount = totalGiftAmount;
-        component.set("v.totals", totals);
+        component.set('v.totals', totals);
     },
 
     /**
@@ -215,10 +215,10 @@
         }
 
         component.find('notifLib').showToast({
-            "variant": type,
-            "mode": mode,
-            "title": title,
-            "message": message
+            'variant': type,
+            'mode': mode,
+            'title': title,
+            'message': message
         });
     },
 
@@ -226,16 +226,16 @@
      * @description: shows lightning:dataTable spinner
      */
     showSpinner: function (component) {
-        var spinner = component.find("dataTableSpinner");
-        $A.util.removeClass(spinner, "slds-hide");
+        var spinner = component.find('dataTableSpinner');
+        $A.util.removeClass(spinner, 'slds-hide');
     },
 
     /**
      * @description: hides lightning:dataTable spinner
      */
     hideSpinner: function (component) {
-        var spinner = component.find("dataTableSpinner");
-        $A.util.addClass(spinner, "slds-hide");
+        var spinner = component.find('dataTableSpinner');
+        $A.util.addClass(spinner, 'slds-hide');
     }
 
 })

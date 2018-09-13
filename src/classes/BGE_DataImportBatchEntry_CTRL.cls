@@ -65,7 +65,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         dataImportModel.labels = getBatchDataImportLabels();
         dataImportModel.isNamespaced = String.isNotBlank(UTIL_Namespace.getNamespace());
 
-
         return JSON.serialize(dataImportModel);
     }
 
@@ -207,11 +206,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             String donorName = '';
             if (record.Donation_Donor__c == 'Account1' && record.Account1Imported__c != null) {
                 donorName = record.Account1Imported__r.Name;
-
             } 
             if (record.Donation_Donor__c == 'Contact1' && record.Contact1Imported__c != null) {
                 donorName = record.Contact1Imported__r.Name;
-
             }
             return donorName;
         }

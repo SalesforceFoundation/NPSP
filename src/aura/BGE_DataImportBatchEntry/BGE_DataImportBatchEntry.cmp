@@ -31,7 +31,7 @@
   @author Salesforce.org
   @date 2018
   @group BGE
-  @group-content //todo
+  @group-content ../../ApexDocContent/BatchDataImport.htm
   @description Component used to view, edit, and delete DataImport__c records on the related NPSP_Data_Import_Batch__c record home.
 -->
 

@@ -36,7 +36,7 @@
 */
 
 @isTest(IsParallel=true)
-public with sharing class BGE_DataImportBatchEntry_CTRL_TEST {
+private class BGE_DataImportBatchEntry_CTRL_TEST {
 
     /*********************************************************************************************************
     * @description Sets up a new NPSP_Data_Import_Batch__c Record
@@ -51,15 +51,15 @@ public with sharing class BGE_DataImportBatchEntry_CTRL_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Sets up a new DataImport__c Record
-    * @param recordName desired test new
+    * @description Sets up a list of DataImport__c Records
+    * @param numOfImports number of imports to create
     * @param batchId ID of the related NPSP_Data_Import_Batch__c
-    * @return new DataImport__c record
+    * @return list of new DataImport__c records
     */
     private static List<DataImport__c> createDataImports(Integer numOfImports, Id batchId) {
         List<DataImport__c> dataImports = new List<DataImport__c>();
 
-        for (Integer i=0; i<numOfImports; i++) {
+        for (Integer i=0; i < numOfImports; i++) {
             DataImport__c dataImport = new DataImport__c();
             dataImport.Account1_Name__c = 'Test Record ' + i;
             dataImport.NPSP_Data_Import_Batch__c = batchId;
@@ -74,7 +74,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL_TEST {
     * @description Tests getDataImportModel() for a new record
     */
 
-    public static testMethod void testGetNewDataImport() {
+    @isTest
+    public static void testGetNewDataImport() {
 
         Test.startTest();
         String jsonModel = BGE_DataImportBatchEntry_CTRL.getDataImportModel(null);
@@ -94,7 +95,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL_TEST {
     * @description Tests getDataImportModel() for a new record
     */
 
-    public static testMethod void testGetExistingDataImport() {
+    @isTest
+    public static void testGetExistingDataImport() {
 
         Id batchId = createDataImportBatch();
         List<DataImport__c> dataImports = createDataImports(1, batchId);
@@ -115,7 +117,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL_TEST {
     * @description Tests deleteDataImportRow() by creating 2 related DataImport__c records and deleting 1
     */
 
-    public static testMethod void deleteDataImportRow() {
+    @isTest
+    public static void deleteDataImportRow() {
 
         Id batchId = createDataImportBatch();
         List<DataImport__c> dataImports = createDataImports(2, batchId);

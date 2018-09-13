@@ -15,14 +15,14 @@
      * @description: adds necessary hidden fields to the Data Import record before submitting.
      */
     addHiddenFields: function (component, event) {
-        var eventFields = event.getParam("fields");
+        var eventFields = event.getParam('fields');
 
-        var recId = component.get("v.recordId");
-        var batchField = component.get("v.labels.batchIdField");
+        var recId = component.get('v.recordId');
+        var batchField = component.get('v.labels.batchIdField');
         eventFields[batchField] = recId;
 
-        var donorType = component.get("v.donorType");
-        var donorField = component.get("v.labels.donationDonor");
+        var donorType = component.get('v.donorType');
+        var donorField = component.get('v.labels.donationDonor');
         eventFields[donorField] = donorType;
 
         return eventFields;

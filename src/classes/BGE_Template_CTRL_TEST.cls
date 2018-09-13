@@ -36,7 +36,7 @@
 **/
 
 @isTest(IsParallel=true)
-public class BGE_Template_CTRL_TEST {
+private class BGE_Template_CTRL_TEST {
 
     /*********************************************************************************************************
     * @description Tests sets up a new Batch Template Record
@@ -57,7 +57,8 @@ public class BGE_Template_CTRL_TEST {
     * @description Tests getTemplateDetails() for a new record
     */
 
-    public static testMethod void testGetNewTemplateDetails() {
+    @isTest
+    public static void testGetNewTemplateDetails() {
 
         Test.startTest();
         String jsonModel = BGE_Template_CTRL.getTemplateDetails(null);
@@ -81,7 +82,8 @@ public class BGE_Template_CTRL_TEST {
     * @description Tests getTemplateDetails() for an existing record
     */
 
-    public static testMethod void testGetExistingTemplateDetails() {
+    @isTest
+    public static void testGetExistingTemplateDetails() {
         Batch_Template__c batchTemplate = initBatchTemplateTest();
 
         Test.startTest();
@@ -105,10 +107,25 @@ public class BGE_Template_CTRL_TEST {
     * @description Tests saveTemplateDetails() for a new record
     */
 
-    public static testMethod void testSaveNewTemplateDetails() {
+    @isTest
+    public static void testSaveNewTemplateDetails() {
 
-        String templateInfoJSON = '{"name":"Test 4","id":null,"description":"Test Record","enableTotalEntry":true,"requireTotalMatch":false}';
-        String activeFieldsJSON = '[{"label":"Name","name":"npsp__Account1_Name__c","sObjectName":"Account1","defaultValue":null,"required":false,"hide":false,"sortOrder":0}]';
+        String templateInfoJSON = '{' +
+                '"name":"Test 4",' +
+                '"id":null,' +
+                '"description":"Test Record",' +
+                '"enableTotalEntry":true,'+
+                '"requireTotalMatch":false'+
+                '}';
+        String activeFieldsJSON = '[{' +
+                '"label":"Name",'+
+                '"name":"npsp__Account1_Name__c",'+
+                '"sObjectName":"Account1",'+
+                '"defaultValue":null,'+
+                '"required":false,'+
+                '"hide":false,'+
+                '"sortOrder":0'+
+                '}]';
 
         Test.startTest();
         String jsonModel = BGE_Template_CTRL.saveTemplate(templateInfoJSON, activeFieldsJSON);
@@ -129,23 +146,39 @@ public class BGE_Template_CTRL_TEST {
     * @description Tests saveTemplateDetails() for an existing record
     */
 
-    public static testMethod void testSaveExistingTemplateDetails() {
+    @isTest
+    public static void testSaveExistingTemplateDetails() {
 
         Batch_Template__c batchTemplate = initBatchTemplateTest();
         String newName = 'New Name';
         System.assertNotEquals(newName, batchTemplate.Name);
 
-        String templateInfoJSON = '{"name":"' + newName +'","id":"' + batchTemplate.id + '","description":"Test Record","enableTotalEntry":true,"requireTotalMatch":false}';
-        String activeFieldsJSON = '[{"label":"Name","name":"npsp__Account1_Name__c","sObjectName":"Account1","defaultValue":null,"required":false,"hide":false,"sortOrder":0}]';
+        String templateInfoJSON = '{' +
+                '"name":"' + newName + '",' +
+                '"id":"' + batchTemplate.Id + '",' +
+                '"description":"Test Record",' +
+                '"enableTotalEntry":true,'+
+                '"requireTotalMatch":false'+
+                '}';
+        String activeFieldsJSON = '[{' +
+                '"label":"Name",'+
+                '"name":"npsp__Account1_Name__c",'+
+                '"sObjectName":"Account1",'+
+                '"defaultValue":null,'+
+                '"required":false,'+
+                '"hide":false,'+
+                '"sortOrder":0'+
+                '}]';
 
         Test.startTest();
+        System.debug(batchTemplate);
         String jsonModel = BGE_Template_CTRL.saveTemplate(templateInfoJSON, activeFieldsJSON);
         BGE_Template_CTRL.TemplateDetailsModel templateDetails = (BGE_Template_CTRL.TemplateDetailsModel) JSON.deserialize(jsonModel, BGE_Template_CTRL.TemplateDetailsModel.class);
         Test.stopTest();
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
-        System.assertEquals(newName, templateDetails.name);
-        System.assertEquals(batchTemplate.Id, templateDetails.id);
+        System.assertEquals(newName, templateDetails.name, 'Batch Template name does not match.');
+        System.assertEquals(batchTemplate.Id, templateDetails.id, 'Wrong Batch Template record was updated.');
     }
 
 }
