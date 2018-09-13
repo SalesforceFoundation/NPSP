@@ -91,42 +91,55 @@
 
                     <lightning:layoutItem size="12" padding="horizontal-small">
                         <!--<aura:if isTrue="{!greaterthan(mult(100,div(v.totals.countGifts,v.record.Expected_Count_of_Gifts__c)),100)}">
-                            Warning: Total gift count exceeds expected gift count. <br/> </aura:if>-->
+                                Warning: Total gift count exceeds expected gift count. <br/> </aura:if>-->
 
                         <div class="slds-grid slds-grid_align-spread slds-p-bottom_x-small">
                             <span>{!$Label.c.bgeGridGiftCountHeader}</span>
                             <span>
                                 <strong>
-                                    <aura:if isTrue="{!not(v.isNamespaced)}">
-                                        {!format($Label.c.bgeGridTotalCount, v.totals.countGifts, v.record.Expected_Count_of_Gifts__c)}
-                                    </aura:if>
-                                    <aura:if isTrue="{!v.isNamespaced}">
-                                        {!format($Label.c.bgeGridTotalCount, v.totals.countGifts, v.record.npsp__Expected_Count_of_Gifts__c)}
+                                    <aura:if isTrue="{!or(greaterthan(v.record.Expected_Count_of_Gifts__c, 0), greaterthan(v.record.npsp__Expected_Count_of_Gifts__c, 0))}">
+                                        <aura:if isTrue="{!not(v.isNamespaced)}">
+                                            {!$Label.c.bgeGridTotalCount + ' ' + v.totals.countGifts + ' / ' + v.record.Expected_Count_of_Gifts__c}
+                                        </aura:if>
+                                        <aura:if isTrue="{!v.isNamespaced}">
+                                            {!$Label.c.bgeGridTotalCount + ' ' + v.totals.countGifts + ' / ' + v.record.npsp__Expected_Count_of_Gifts__c}
+                                        </aura:if>
+                                        <aura:set attribute="else">
+                                            {!$Label.c.bgeGridTotalCount + ' ' + v.totals.countGifts}
+                                        </aura:set>
                                     </aura:if>
                                 </strong>
                             </span>
                         </div>
-                        <!--Progress bar is on a 100 point scale, so just using division doesn't work here-->
-                        <aura:if isTrue="{!not(v.isNamespaced)}">
-                            <lightning:progressBar value="{!mult(100,div(v.totals.countGifts, v.record.Expected_Count_of_Gifts__c))}"
-                                                   size="large"/>
-                        </aura:if>
-                        <aura:if isTrue="{!v.isNamespaced}">
-                            <lightning:progressBar value="{!mult(100,div(v.totals.countGifts, v.record.npsp__Expected_Count_of_Gifts__c))}"
-                                                   size="large"/>
+                        <aura:if isTrue="{!or(greaterthan(v.record.Expected_Count_of_Gifts__c, 0), greaterthan(v.record.npsp__Expected_Count_of_Gifts__c, 0))}">
+                            <!--Progress bar is on a 100 point scale, so just using division doesn't work here-->
+                            <aura:if isTrue="{!not(v.isNamespaced)}">
+                                <lightning:progressBar
+                                        value="{!mult(100,div(v.totals.countGifts, v.record.Expected_Count_of_Gifts__c))}"
+                                        size="large"/>
+                            </aura:if>
+                            <aura:if isTrue="{!v.isNamespaced}">
+                                <lightning:progressBar
+                                        value="{!mult(100,div(v.totals.countGifts, v.record.npsp__Expected_Count_of_Gifts__c))}"
+                                        size="large"/>
+                            </aura:if>
                         </aura:if>
                     </lightning:layoutItem>
 
                     <lightning:layoutItem size="6" padding="around-small">
+
                         <label for="expectedTotalAmount" class="slds-p-right_xx-small">{!$Label.c.bgeGridTotalAmount}</label>
-                        <lightning:formattedNumber value="{!v.totals.totalGiftAmount}" style="currency" />
-                        /
-                        <aura:if isTrue="{!not(v.isNamespaced)}">
-                            <lightning:formattedNumber value="{!v.record.Expected_Total_Batch_Amount__c}" style="currency"/>
+                        <lightning:formattedNumber value="{!v.totals.totalGiftAmount}" style="currency"/>
+
+                        <aura:if isTrue="{!or(greaterthan(v.record.Expected_Total_Batch_Amount__c, 0), greaterthan(v.record.npsp__Expected_Total_Batch_Amount__c, 0))}">
+                            <aura:if isTrue="{!not(v.isNamespaced)}">
+                                / <lightning:formattedNumber value="{!v.record.Expected_Total_Batch_Amount__c}" style="currency"/>
+                            </aura:if>
+                            <aura:if isTrue="{!v.isNamespaced}">
+                                / <lightning:formattedNumber value="{!v.record.npsp__Expected_Total_Batch_Amount__c}" style="currency"/>
+                            </aura:if>
                         </aura:if>
-                        <aura:if isTrue="{!v.isNamespaced}">
-                            <lightning:formattedNumber value="{!v.record.npsp__Expected_Total_Batch_Amount__c}" style="currency"/>
-                        </aura:if>
+
                     </lightning:layoutItem>
 
                 </lightning:layout>
