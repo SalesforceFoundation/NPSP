@@ -97,7 +97,7 @@
                             <span>{!$Label.c.bgeGridGiftCountHeader}</span>
                             <span>
                                 <strong>
-                                    <aura:if isTrue="{! !v.isNamespaced}">
+                                    <aura:if isTrue="{!not(v.isNamespaced)}">
                                         {!format($Label.c.bgeGridTotalCount, v.totals.countGifts, v.record.Expected_Count_of_Gifts__c)}
                                     </aura:if>
                                     <aura:if isTrue="{!v.isNamespaced}">
@@ -107,7 +107,7 @@
                             </span>
                         </div>
                         <!--Progress bar is on a 100 point scale, so just using division doesn't work here-->
-                        <aura:if isTrue="{! !v.isNamespaced}">
+                        <aura:if isTrue="{!not(v.isNamespaced)}">
                             <lightning:progressBar value="{!mult(100,div(v.totals.countGifts, v.record.Expected_Count_of_Gifts__c))}"
                                                    size="large"/>
                         </aura:if>
@@ -121,7 +121,7 @@
                         <label for="expectedTotalAmount" class="slds-p-right_xx-small">{!$Label.c.bgeGridTotalAmount}</label>
                         <lightning:formattedNumber value="{!v.totals.totalGiftAmount}" style="currency" />
                         /
-                        <aura:if isTrue="{! !v.isNamespaced}">
+                        <aura:if isTrue="{!not(v.isNamespaced)}">
                             <lightning:formattedNumber value="{!v.record.Expected_Total_Batch_Amount__c}" style="currency"/>
                         </aura:if>
                         <aura:if isTrue="{!v.isNamespaced}">
@@ -136,8 +136,8 @@
                     <div class="{!if(lessthan(v.data.length, 4), 'datatableContainer', '')+' slds-p-top_small'}">
                         <lightning:datatable
                                 aura:id="dataImportRowsDataTable"
-                                columns="{! v.columns }"
-                                data="{! v.data }"
+                                columns="{!v.columns}"
+                                data="{!v.data}"
                                 keyField="Id"
                                 onsave="{!c.onTableSave}"
                                 minColumnWidth="150"

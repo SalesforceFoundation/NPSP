@@ -69,8 +69,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     @AuraEnabled
-    public static void updateDataImports(List<DataImport__c> diList) {
-        database.update(diList);
+    public static void updateDataImports(List<DataImport__c> dataImports) {
+        database.update(dataImports);
     }
 
     /*******************************************************************************************************

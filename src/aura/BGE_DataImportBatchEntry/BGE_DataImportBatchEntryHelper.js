@@ -20,12 +20,10 @@
                     component.set('v.body', body);
                 }
                 else if (status === 'INCOMPLETE') {
-                    console.log('No response from server or client is offline.')
-                    // Show offline error
+                    this.showToast(component, $A.get('$Label.c.PageMessagesError'), $A.get('$Label.c.stgUnknownError'), 'error');
                 }
                 else if (status === 'ERROR') {
-                    console.log('Error: ' + errorMessage);
-                    // Show error message
+                    this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
                 }
             }
         );
@@ -85,7 +83,7 @@
     handleTableSave: function(component, values) {
         this.showSpinner(component);
         var action = component.get('c.updateDataImports');
-        action.setParams({diList: values});
+        action.setParams({dataImports: values});
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
@@ -137,7 +135,7 @@
      */
     setDataTableRows: function(component, responseRows) {
         var rows = [];
-        responseRows.forEach(function (currentRow) {
+        responseRows.forEach(function(currentRow) {
             var row = currentRow.record;
             row.donor = currentRow.donor;
             rows.push(row);
