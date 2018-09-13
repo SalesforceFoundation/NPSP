@@ -172,7 +172,7 @@ global with sharing class BDI_DataImportService {
         if (diSettings.Donation_Matching_Behavior__c != null &&
             diSettings.Donation_Matching_Behavior__c != BDI_DataImport_API.DoNotMatch &&
             String.isBlank(diSettings.Donation_Matching_Rule__c)) {
-            
+
             throw(new BDIException(Label.bdiDonationMatchingRuleEmpty));
         }
 
@@ -389,7 +389,7 @@ global with sharing class BDI_DataImportService {
     * @return String
     */
     public String statusMatchedExisting() {
-        return isDryRun ? label.bdiDryRunMatched : label.bdiMatched;
+        return isDryRun ? System.Label.bdiDryRunMatched : System.Label.bdiMatched;
     }
 
     /*******************************************************************************************************
@@ -397,7 +397,7 @@ global with sharing class BDI_DataImportService {
     * @return String
     */
     public String statusMatchedBest() {
-        return isDryRun ? label.bdiDryRunMatchedBest : label.bdiMatchedBest;
+        return isDryRun ? System.Label.bdiDryRunMatchedBest : System.Label.bdiMatchedBest;
     }
 
     /*******************************************************************************************************
@@ -405,7 +405,7 @@ global with sharing class BDI_DataImportService {
     * @return String
     */
     public String statusMatchedById() {
-        return isDryRun ? label.bdiDryRunMatchedId : label.bdiMatchedId;
+        return isDryRun ? System.Label.bdiDryRunMatchedId : System.Label.bdiMatchedId;
     }
 
     /*******************************************************************************************************
@@ -413,7 +413,7 @@ global with sharing class BDI_DataImportService {
     * @return String
     */
     public String statusMatchedNone() {
-        return isDryRun ? label.bdiDryRunNoMatch : label.bdiMatchedNone;
+        return isDryRun ? System.Label.bdiDryRunNoMatch : System.Label.bdiMatchedNone;
     }
 
     /*******************************************************************************************************
@@ -421,7 +421,7 @@ global with sharing class BDI_DataImportService {
     * @return String
     */
     public String statusMatchedNew() {
-        return isDryRun ? label.bdiDryRunNoMatch : label.bdiMatched;
+        return isDryRun ? System.Label.bdiDryRunNoMatch : System.Label.bdiMatched;
     }
 
     /*******************************************************************************************************
@@ -429,7 +429,7 @@ global with sharing class BDI_DataImportService {
     * @return String
     */
     public String statusCreatedNew() {
-        return isDryRun ? label.bdiDryRunNoMatch : label.bdiCreated;
+        return isDryRun ? System.Label.bdiDryRunNoMatch : System.Label.bdiCreated;
     }
 
     /*******************************************************************************************************
@@ -591,19 +591,19 @@ global with sharing class BDI_DataImportService {
 
             // our matching marks non-matches with created, assuming they will get created
             // but if there were errors that stopped that creation, let's clear the status
-            if (di.Contact1Imported__c == null && di.Contact1ImportStatus__c == label.bdiCreated) {
+            if (di.Contact1Imported__c == null && di.Contact1ImportStatus__c == System.Label.bdiCreated) {
                 di.Contact1ImportStatus__c = null;
             }
 
-            if (di.Contact2Imported__c == null && di.Contact2ImportStatus__c == label.bdiCreated) {
+            if (di.Contact2Imported__c == null && di.Contact2ImportStatus__c == System.Label.bdiCreated) {
                 di.Contact2ImportStatus__c = null;
             }
 
-            if (di.Account1Imported__c == null && di.Account1ImportStatus__c == label.bdiCreated) {
+            if (di.Account1Imported__c == null && di.Account1ImportStatus__c == System.Label.bdiCreated) {
                 di.Account1ImportStatus__c = null;
             }
 
-            if (di.Account2Imported__c == null && di.Account2ImportStatus__c == label.bdiCreated) {
+            if (di.Account2Imported__c == null && di.Account2ImportStatus__c == System.Label.bdiCreated) {
                 di.Account2ImportStatus__c = null;
             }
         }
@@ -1457,7 +1457,7 @@ global with sharing class BDI_DataImportService {
             if (!isEmpty) {
                 // only create Home Address if we have a household
                 if (con == null || con.AccountId == null) {
-                    di.HomeAddressImportStatus__c = label.bdiIgnored;
+                    di.HomeAddressImportStatus__c = System.Label.bdiIgnored;
                     continue;
                 }
 
