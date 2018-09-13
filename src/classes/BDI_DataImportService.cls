@@ -83,7 +83,7 @@ global with sharing class BDI_DataImportService {
         if (listDIBatch.size() == 1) {
             return listDIBatch[0];
         } else {
-            throw(new BDIException(String.format(Label.bdiInvalidBatchId, new String[]{ batchId })));
+            throw(new BDIException(String.format(Label.bdiInvalidBatchId, new List<String>{ batchId })));
         }
     }
 
@@ -213,7 +213,7 @@ global with sharing class BDI_DataImportService {
             if (!UTIL_Describe.isValidField(strDataImportObj, strContact1) ||
                 !UTIL_Describe.isValidField(strDataImportObj, strContact2)) {
                 throw(new BDIException(String.format(Label.bdiContactCustomIdError,
-                    new String[]{diSettings.Contact_Custom_Unique_ID__c, strContact1, strContact2})));
+                    new List<String>{ diSettings.Contact_Custom_Unique_ID__c, strContact1, strContact2 })));
             }
         }
 
@@ -225,7 +225,7 @@ global with sharing class BDI_DataImportService {
             if (!UTIL_Describe.isValidField(strDataImportObj, strAccount1) ||
                 !UTIL_Describe.isValidField(strDataImportObj, strAccount2)) {
                 throw(new BDIException(String.format(Label.bdiAccountCustomIdError,
-                    new String[]{diSettings.Account_Custom_Unique_ID__c, strAccount1, strAccount2})));
+                    new List<String>{ diSettings.Account_Custom_Unique_ID__c, strAccount1, strAccount2 })));
             }
         }
 
@@ -240,7 +240,7 @@ global with sharing class BDI_DataImportService {
         };
         if (!setDMBehavior.contains(diSettings.Donation_Matching_Behavior__c)) {
             throw(new BDIException(String.format(Label.bdiInvalidDonationMatchingBehavior,
-                new String[]{ diSettings.Donation_Matching_Behavior__c })));
+                new List<String>{ diSettings.Donation_Matching_Behavior__c })));
         }
     }
 
@@ -742,9 +742,9 @@ global with sharing class BDI_DataImportService {
                             dfr == null ||
                             !dfr.isCreateable() ||
                             (!isAuditField && !dfr.isUpdateable())) {
-                                throw (new flsException(String.format(label.flsError, new String[]{
-                                    strBaseObj + '.' + strField
-                                })));
+                                throw (new flsException(
+                                    String.format(System.Label.flsError, new List<String>{ strBaseObj + '.' + strField }
+                                )));
                         }
                     }
 
