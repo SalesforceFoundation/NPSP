@@ -8,7 +8,7 @@ Suite Teardown  Delete Records and Close Browser
 
 Via API
     &{contact} =      API Create Contact
-    Validate Contact  &{contact}[Id]  ${first_name}  ${last_name}
+    Validate Contact  &{contact}[Id]  &{contact}[FirstName]  &{contact}[LastName]
 
 Via UI
     ${first_name} =       Generate Random String

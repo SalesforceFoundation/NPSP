@@ -6,18 +6,19 @@ Suite Teardown  Custom Suite Teardown
 
 *** Keywords ***
 Custom Suite Setup
-    ${layout} =  Parse XML  src/layouts/Account-Household Layout.layout
-    Add Element  ${layout}
-    ...            <layoutItems><behavior>Readonly</behavior><field>County__c</field></layoutItems>
-    ...            xpath=.//layoutSections[1]/layoutColumns[2]
-    Save Xml     ${layout}  
-    ...            tests/integration/address_workflow_copycounty/layouts/Account-Household Layout.layout
-    Run Task     update_package_xml  
-    ...            path=tests/integration/address_workflow_copycounty
-    ...            package_name=""
-    Run Task     deploy
-    ...            path=tests/integration/address_workflow_copycounty
-    Run Task     update_admin_profile
+    ${layout} =       Parse XML  src/layouts/Account-Household Layout.layout
+    Add Element       ${layout}
+    ...                 <layoutItems><behavior>Readonly</behavior><field>County__c</field></layoutItems>
+    ...                 xpath=.//layoutSections[1]/layoutColumns[2]
+    Create Directory  ${CURDIR}/address_workflow_copycounty/layouts
+    Save Xml          ${layout}  
+    ...                 ${CURDIR}/address_workflow_copycounty/layouts/Account-Household Layout.layout
+    Run Task          update_package_xml  
+    ...                 path=${CURDIR}/address_workflow_copycounty
+    ...                 package_name=""
+    Run Task          deploy
+    ...                 path=${CURDIR}/address_workflow_copycounty
+    Run Task          update_admin_profile
     Open Test Browser
    
 Custom Suite Teardown 
