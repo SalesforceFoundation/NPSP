@@ -15,9 +15,9 @@
             function(newComponent, status, errorMessage){
                 //Add the new component to the body array
                 if (status === 'SUCCESS') {
-                    var body = component.get('v.body');
+                    var body = component.get('v.entryFormBody');
                     body.push(newComponent);
-                    component.set('v.body', body);
+                    component.set('v.entryFormBody', body);
                 }
                 else if (status === 'INCOMPLETE') {
                     this.showToast(component, $A.get('$Label.c.PageMessagesError'), $A.get('$Label.c.stgUnknownError'), 'error');

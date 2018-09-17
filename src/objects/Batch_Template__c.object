@@ -133,7 +133,7 @@
         <type>TextArea</type>
     </fields>
     <fields>
-        <fullName>Enable_Total_Entry__c</fullName>
+        <fullName>EnableTotalEntry__c</fullName>
         <defaultValue>false</defaultValue>
         <description>When checked, the user filling out the template may enter the expected number of gifts and expected total amount for the batch.</description>
         <externalId>false</externalId>
@@ -238,7 +238,7 @@
         <type>Checkbox</type>
     </fields>
     <fields>
-        <fullName>Require_Total_Match__c</fullName>
+        <fullName>RequireTotalMatch__c</fullName>
         <defaultValue>false</defaultValue>
         <description>When checked, the total number of gifts and total amount must match the expected totals entered for the batch.</description>
         <externalId>false</externalId>

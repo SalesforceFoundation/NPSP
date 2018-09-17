@@ -84,11 +84,11 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
         //for null ID, only these fields are populated
-        System.assertNotEquals(null, dataImportModel.columns);
-        System.assertNotEquals(null, dataImportModel.labels);
+        System.assertNotEquals(null, dataImportModel.columns, 'Data Import Model Columns should not be null');
+        System.assertNotEquals(null, dataImportModel.labels, 'Data Import Model Labels should not be null');
 
-        System.assertEquals(0, dataImportModel.dataImportRows.size());
-        System.assertEquals(null, dataImportModel.id);
+        System.assertEquals(0, dataImportModel.dataImportRows.size(), 'No data import rows should be returned');
+        System.assertEquals(null, dataImportModel.id, 'Data Import Model ID should be null');
     }
 
     /*********************************************************************************************************
@@ -107,10 +107,10 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         Test.stopTest();
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
-        System.assertNotEquals(null, dataImportModel.columns);
-        System.assertNotEquals(null, dataImportModel.labels);
-        System.assertNotEquals(null, dataImportModel.dataImportRows);
-        System.assertNotEquals(null, dataImportModel.id);
+        System.assertNotEquals(null, dataImportModel.columns, 'Data Import Model Columns should not be null');
+        System.assertNotEquals(null, dataImportModel.labels, 'Data Import Model Labels should not be null');
+        System.assertNotEquals(null, dataImportModel.dataImportRows, 'Data Import Model Rows should not be null');
+        System.assertNotEquals(null, dataImportModel.id, 'Data Import ID should not be null');
     }
 
     /*********************************************************************************************************
@@ -128,8 +128,8 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         List<DataImport__c> updatedDataImports = [SELECT Name, Id FROM DataImport__c WHERE NPSP_Data_Import_Batch__c = :batchId];
         Test.stopTest();
 
-        System.assertEquals(dataImports.size(), 2);
-        System.assertEquals(updatedDataImports.size(), 1);
+        System.assertEquals(dataImports.size(), 2, 'Data Imports should return 2 rows');
+        System.assertEquals(updatedDataImports.size(), 1, 'Updated Data Imports should return only 1 row');
     }
 
 }

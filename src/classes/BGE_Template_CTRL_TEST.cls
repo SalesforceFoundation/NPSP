@@ -45,8 +45,8 @@ private class BGE_Template_CTRL_TEST {
         Batch_Template__c batchTemplate = new Batch_Template__c();
         batchTemplate.Name = 'Test Template 1';
         batchTemplate.Description__c = 'Test Record';
-        batchTemplate.Enable_Total_Entry__c = true;
-        batchTemplate.Require_Total_Match__c = true;
+        batchTemplate.EnableTotalEntry__c = true;
+        batchTemplate.RequireTotalMatch__c = true;
 
         insert batchTemplate;
 
@@ -67,15 +67,15 @@ private class BGE_Template_CTRL_TEST {
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
         //for null, only these fields are populated
-        System.assertNotEquals(null, templateDetails.templateFields);
-        System.assertNotEquals(null, templateDetails.labels);
+        System.assertNotEquals(null, templateDetails.templateFields, 'Batch Template fields should not be null');
+        System.assertNotEquals(null, templateDetails.labels, 'Batch template labels should not be null');
 
-        System.assertEquals(null, templateDetails.name);
-        System.assertEquals(null, templateDetails.description);
-        System.assertEquals(false, templateDetails.enableTotalEntry);
-        System.assertEquals(false, templateDetails.requireTotalMatch);
-        System.assertEquals(null, templateDetails.activeFields);
-        System.assertEquals(null, templateDetails.id);
+        System.assertEquals(null, templateDetails.name, 'Batch Template name should be null');
+        System.assertEquals(null, templateDetails.description, 'Batch Template description should be null');
+        System.assertEquals(false, templateDetails.enableTotalEntry, 'Enable total entry should be false');
+        System.assertEquals(false, templateDetails.requireTotalMatch, 'Require total match should be false');
+        System.assertEquals(null, templateDetails.activeFields, 'Active Fields should be null');
+        System.assertEquals(null, templateDetails.id, 'Batch Template ID should be null');
     }
 
     /*********************************************************************************************************
@@ -92,15 +92,15 @@ private class BGE_Template_CTRL_TEST {
         Test.stopTest();
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
-        System.assertNotEquals(null, templateDetails.templateFields);
-        System.assertNotEquals(null, templateDetails.labels);
+        System.assertNotEquals(null, templateDetails.templateFields, 'Template Fields should not be null');
+        System.assertNotEquals(null, templateDetails.labels, 'Template Labels should not be null');
 
-        System.assertEquals(batchTemplate.Name, templateDetails.name);
-        System.assertEquals(batchTemplate.Description__c, templateDetails.description);
-        System.assertEquals(batchTemplate.Enable_Total_Entry__c, templateDetails.enableTotalEntry);
-        System.assertEquals(batchTemplate.Require_Total_Match__c, templateDetails.requireTotalMatch);
-        System.assertEquals(null, templateDetails.activeFields);
-        System.assertEquals(batchTemplate.Id, templateDetails.id);
+        System.assertEquals(batchTemplate.Name, templateDetails.name, 'Template details name should match');
+        System.assertEquals(batchTemplate.Description__c, templateDetails.description, 'Template details description should match');
+        System.assertEquals(batchTemplate.EnableTotalEntry__c, templateDetails.enableTotalEntry, 'Enable total entry should match');
+        System.assertEquals(batchTemplate.RequireTotalMatch__c, templateDetails.requireTotalMatch, 'Require total match should match');
+        System.assertEquals(null, templateDetails.activeFields, 'Active Fields should be null');
+        System.assertEquals(batchTemplate.Id, templateDetails.id, 'Batch template ID should match');
     }
 
     /*********************************************************************************************************
@@ -133,12 +133,12 @@ private class BGE_Template_CTRL_TEST {
         Test.stopTest();
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
-        System.assertEquals('Test 4', templateDetails.name);
-        System.assertEquals('Test Record', templateDetails.description);
-        System.assertEquals(true, templateDetails.enableTotalEntry);
-        System.assertEquals(false, templateDetails.requireTotalMatch);
-        System.assertEquals(null, templateDetails.activeFields);
-        System.assertNotEquals(null, templateDetails.id);
+        System.assertEquals('Test 4', templateDetails.name, 'Template details name should be Test 4');
+        System.assertEquals('Test Record', templateDetails.description, 'Template details description should be Test Record');
+        System.assertEquals(true, templateDetails.enableTotalEntry, 'Enable total entry should be true');
+        System.assertEquals(false, templateDetails.requireTotalMatch, 'Require total match should be false');
+        System.assertEquals(null, templateDetails.activeFields, 'Active Fields should be null');
+        System.assertNotEquals(null, templateDetails.id, 'Template details should not be null');
 
     }
 

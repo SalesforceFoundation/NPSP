@@ -51,6 +51,8 @@
     <aura:attribute name="batchFields" type="List" description="Fields that drive force:recordData"/>
     <aura:attribute name="isLoaded" type="Boolean" default="false" description="Updated in setModel when data is loaded"/>
     <aura:attribute name="isNamespaced" type="Boolean" default="true" description="Indicates if org has namespacing"/>
+    <aura:attribute name="entryFormBody" type="Aura.Component[]" description="Facet used to hold the BGE_EntryForm component"/>
+
     <!--Events-->
     <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
     <aura:handler event="ltng:sendMessage" action="{!c.handleMessage}"/>
@@ -75,7 +77,7 @@
             <lightning:card title="{!$Label.c.bgeGridNewGift}" aura:id="entryFormCard" class="bgeCard">
                 <lightning:spinner aura:id="formSpinner" alternativeText="{!$Label.c.labelMessageLoading}"/>
                 <!--BGE_EntryForm dynamically rendered here-->
-                {!v.body}
+                {!v.entryFormBody}
             </lightning:card>
         </lightning:layoutItem>
         <!--End New Row-->
@@ -162,9 +164,9 @@
                 </aura:if>
 
                 <div aura:id="openRoadIllustration" class="slds-illustration slds-illustration_small slds-p-top_small slds-hide" aria-hidden="true">
-                    <img src="/img/chatter/OpenRoad.svg" class="slds-illustration__svg" alt="{!v.labels.noDataImportsFound}"/>
+                    <img src="/img/chatter/OpenRoad.svg" class="slds-illustration__svg" aria-hidden="true" alt=""/>
                     <div class="slds-text-color_weak">
-                        <h3 class="slds-text-heading_medium">{!$Label.c.bgeGridNoGiftsHeader}</h3>
+                        <h1 class="slds-text-heading_medium">{!$Label.c.bgeGridNoGiftsHeader}</h1>
                         <p class="slds-text-body_regular">{!$Label.c.bgeGridNoGiftsBody}</p>
                     </div>
                 </div>
