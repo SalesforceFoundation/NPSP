@@ -11,12 +11,12 @@ Custom Suite Setup
     ...            <layoutItems><behavior>Readonly</behavior><field>County__c</field></layoutItems>
     ...            xpath=.//layoutSections[1]/layoutColumns[2]
     Save Xml     ${layout}  
-    ...            ${CURDIR}/address_workflow_copycounty/layouts/Account-Household Layout.layout
+    ...            tests/integration/address_workflow_copycounty/layouts/Account-Household Layout.layout
     Run Task     update_package_xml  
-    ...            path=${CURDIR}/address_workflow_copycounty
+    ...            path=tests/integration/address_workflow_copycounty
     ...            package_name=""
     Run Task     deploy
-    ...            path=${CURDIR}/address_workflow_copycounty
+    ...            path=tests/integration/address_workflow_copycounty
     Run Task     update_admin_profile
     Open Test Browser
    

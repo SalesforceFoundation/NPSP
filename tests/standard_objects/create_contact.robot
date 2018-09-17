@@ -7,7 +7,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Via API
-    &{contact} =      API Create Contact  fields
+    &{contact} =      API Create Contact
     Validate Contact  &{contact}[Id]  ${first_name}  ${last_name}
 
 Via UI
