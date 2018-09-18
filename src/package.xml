@@ -690,7 +690,7 @@
         <members>Allocations_Settings__c.Use_Fiscal_Year_for_Rollups__c</members>
         <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
         <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
-        <members>Batch_Template__c.AccountCustomUniqueID__c</members>
+        <members>Batch_Template__c.Account_Custom_Unique_ID__c</members>
         <members>Batch_Template__c.Active_Fields__c</members>
         <members>Batch_Template__c.Batch_Process_Size__c</members>
         <members>Batch_Template__c.Contact_Custom_Unique_ID__c</members>
