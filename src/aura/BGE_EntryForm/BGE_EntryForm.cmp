@@ -77,30 +77,25 @@
             </lightning:layoutItem>
             <!--END DONOR FIELDS-->
 
-                <!--Field iteration -->
-                <aura:iteration items="{!v.dataImportFields}" var="field" indexVar="index">
-                    <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
-                        <aura:if isTrue="{!greaterthan(field.options.length, 0)}">
-                            <lightning:select label="{!field.label}" class="slds-col slds-p-horizontal_small slds-size_1-of-6">
-                                <option value=""></option>
-                                <aura:iteration items="{!field.options}" var="opt">
-                                    <option value="{!opt.value}">{!opt.label}</option>
-                                </aura:iteration>
-                            </lightning:select>
-                            <aura:set attribute="else">
-                                <div class="slds-col slds-p-horizontal_small slds-size_1-of-6">
-                                    <lightning:inputField aura:id="{!field.name}"
-                                                          fieldName="{!field.name}"
-                                                          class="hideTooltip"
-                                    />
-                                </div>
-                            </aura:set>
-                        </aura:if>
-                    </lightning:layoutItem>
-
-                </aura:iteration>
-
-            </div>
+            <!--Field iteration -->
+            <aura:iteration items="{!v.dataImportFields}" var="field" indexVar="index">
+                <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
+                    <aura:if isTrue="{!greaterthan(field.options.length, 0)}">
+                        <lightning:select label="{!field.label}">
+                            <option value=""></option>
+                            <aura:iteration items="{!field.options}" var="opt">
+                                <option value="{!opt.value}">{!opt.label}</option>
+                            </aura:iteration>
+                        </lightning:select>
+                        <aura:set attribute="else">
+                            <lightning:inputField aura:id="{!field.name}"
+                                                  fieldName="{!field.name}"
+                                                  class="hideTooltip"
+                            />
+                        </aura:set>
+                    </aura:if>
+                </lightning:layoutItem>
+            </aura:iteration>
 
             <!--Form buttons-->
             <div class="slds-grid slds-p-around_medium slds-grid_align-center slds-size_1-of-1">
@@ -110,6 +105,7 @@
                 </div>
             </div>
 
+        </lightning:layout>
     </lightning:recordEditForm>
 
 </aura:component>

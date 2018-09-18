@@ -157,6 +157,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 col.fieldName = dfr.name;
                 col.editable = true;
                 col.type = dfr.type.name().toLowerCase();
+                // Lightning Components interpret "date" as datetime.
+                // Reassign "date" to "datelocal" to render as date only.
                 if (col.type == 'date') {
                     col.type = 'date-local';
                 }

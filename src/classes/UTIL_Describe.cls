@@ -468,10 +468,9 @@ public class UTIL_Describe {
     * for a given object and picklist field name.
     * @param objectName The name of the object.
     * @param fieldName The name of the field.
-    * @return List<SelectOption> The select options for this picklist field.
+    * @return List<Map<String, String>> The options for this picklist field formatted for use in Lightning Components
     */
-
-    public static List<Map<String, String>>getLightningSelectOptions(String objectName, String fieldName) {
+    public static List<Map<String, String>> getLightningSelectOptions(String objectName, String fieldName) {
         fieldName = fieldName.toLowerCase();
         List<SelectOption> picklistOptions = UTIL_Describe.getSelectOptions(objectName,fieldName);
         List<Map<String, String>> options = new List<Map<String, String>>();
