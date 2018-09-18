@@ -1,0 +1,101 @@
+<!--
+    Copyright (c) 2018, Salesforce.org
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+-->
+<!--
+  @author Salesforce.org
+  @date 2018
+  @group BGE
+  @group-content ../../ApexDocContent/BatchDataImport.htm
+  @description Component used to view, edit, and delete DataImport__c records on the related NPSP_Data_Import_Batch__c record home.
+-->
+
+<aura:component description="BGE_EntryForm">
+
+    <aura:attribute name="labels" type="Map" description="Labels retrieved in Apex related to Schema information." access="public"/>
+    <aura:attribute name="donorType" type="String" default="Contact1" description="Used to circumvent unhelpful labeling of Account1/Contact1" access="public"/>
+    <aura:attribute name="recordId" type="Id" description="Populated by force:hasRecordId" access="public"/>
+    <aura:attribute name="dataImportFields" type="Object[]" description="" access="public"/>
+
+    <aura:handler name="render" action="{!c.callFocus}" value="{!this}"/>
+
+    <lightning:recordEditForm aura:id="recordEditForm"
+                              objectApiName="{!v.labels.dataImportObject}"
+                              onsuccess="{!c.onSuccess}"
+                              onsubmit="{!c.onSubmit}"
+                              onload="{!c.onFormLoad}">
+
+        <lightning:layout multipleRows="true">
+            <!-- BEGIN DONOR FIELDS -->
+            <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
+                <label for="donorType" class="slds-form-element__label">{!$Label.c.bgeGridDonorType}</label>
+                <lightning:select aura:id="donorType" class="hideLabel" label="Donor Type"
+                                  value="{!v.donorType}" onchange="{!c.setDonorType}">
+                    <option value="Contact1">{!v.labels.contactObject}</option>
+                    <option value="Account1">{!v.labels.accountObject}</option>
+                </lightning:select>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
+                <aura:if isTrue="{!v.donorType == 'Contact1'}">
+                    <label for="contactLookup" class="slds-form-element__label">{!v.labels.contactObject}</label>
+                    <lightning:inputField aura:id="contactLookup" fieldName="{!v.labels.contactLookup}"
+                                          class="hideLabel"
+                    />
+                </aura:if>
+                <aura:if isTrue="{!v.donorType == 'Account1'}">
+                    <label for="accountLookup" class="slds-form-element__label">{!v.labels.accountObject}</label>
+                    <lightning:inputField aura:id="accountLookup" fieldName="{!v.labels.accountLookup}"
+                                          class="hideLabel"
+                    />
+                </aura:if>
+            </lightning:layoutItem>
+            <!--END DONOR FIELDS-->
+
+            <!--Field iteration -->
+            <aura:iteration items="{!v.dataImportFields}" var="field" indexVar="index">
+                <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
+                    <lightning:inputField aura:id="{!field.name}"
+                                          fieldName="{!field.name}"
+                                          class="hideTooltip"
+                    />
+                </lightning:layoutItem>
+            </aura:iteration>
+        </lightning:layout>
+        
+        <!--Form buttons-->
+        <div class="slds-grid slds-p-around_medium slds-grid_align-center slds-size_1-of-1">
+            <div class="slds-col slds-p-horizontal_small">
+                <lightning:button label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancelForm}" variant="neutral"/>
+                <lightning:button variant="brand" type="submit" name="save" label="{!$Label.c.stgBtnSave}" />
+            </div>
+        </div>
+
+    </lightning:recordEditForm>
+
+</aura:component>
