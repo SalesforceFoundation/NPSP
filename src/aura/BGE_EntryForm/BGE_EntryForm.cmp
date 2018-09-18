@@ -31,7 +31,7 @@
   @author Salesforce.org
   @date 2018
   @group BGE
-  @group-content //todo
+  @group-content ../../ApexDocContent/BatchDataImport.htm
   @description Component used to view, edit, and delete DataImport__c records on the related NPSP_Data_Import_Batch__c record home.
 -->
 
@@ -47,6 +47,7 @@
     <lightning:recordEditForm aura:id="recordEditForm"
                               objectApiName="{!v.labels.dataImportObject}"
                               onsuccess="{!c.onSuccess}"
+                              onsubmit="{!c.onSubmit}"
                               onload="{!c.onFormLoad}">
 
         <lightning:layout multipleRows="true">
@@ -57,9 +58,7 @@
                                   value="{!v.donorType}" onchange="{!c.setDonorType}">
                     <option value="Contact1">{!v.labels.contactObject}</option>
                     <option value="Account1">{!v.labels.accountObject}</option>
-                </lightning:select><br/>
-                {!v.recordId}<br/>
-                {!v.donorType}
+                </lightning:select>
             </lightning:layoutItem>
 
             <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
@@ -88,17 +87,7 @@
                 </lightning:layoutItem>
             </aura:iteration>
         </lightning:layout>
-
-        <lightning:layoutItem class="slds-hide">
-            <!-- Using a hidden field to bind the pretty lightning:select above with the actual Data Import field -->
-            <lightning:inputField fieldName="{!v.labels.donationDonor}" value="{!v.donorType}"/>
-            <!-- This must be at the end of the recordeditform to get around a bug whereby an enter keystroke
-            puts you in the first lookup field found (even if hidden) and clears the value -->
-            <!-- Using a hidden field to provide the reference to the Batch -->
-            <lightning:inputField fieldName="{!v.labels.batchIdField}" value="{!v.recordId}"/>
-        </lightning:layoutItem>
-
-
+        
         <!--Form buttons-->
         <div class="slds-grid slds-p-around_medium slds-grid_align-center slds-size_1-of-1">
             <div class="slds-col slds-p-horizontal_small">

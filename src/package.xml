@@ -65,6 +65,7 @@
         <members>BDI_DataImportDeleteBTN_CTRL</members>
         <members>BDI_DataImportDeleteBTN_TEST</members>
         <members>BDI_DataImportService</members>
+        <members>BDI_DataImportService_TEST</members>
         <members>BDI_DataImport_API</members>
         <members>BDI_DataImport_BATCH</members>
         <members>BDI_DataImport_CTRL</members>
@@ -689,7 +690,7 @@
         <members>Allocations_Settings__c.Use_Fiscal_Year_for_Rollups__c</members>
         <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
         <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
-        <members>Batch_Template__c.Account_Custom_Unique_ID__c</members>
+        <members>Batch_Template__c.AccountCustomUniqueID__c</members>
         <members>Batch_Template__c.Active_Fields__c</members>
         <members>Batch_Template__c.Batch_Process_Size__c</members>
         <members>Batch_Template__c.Contact_Custom_Unique_ID__c</members>
@@ -699,9 +700,9 @@
         <members>Batch_Template__c.Donation_Matching_Behavior__c</members>
         <members>Batch_Template__c.Donation_Matching_Implementing_Class__c</members>
         <members>Batch_Template__c.Donation_Matching_Rule__c</members>
-        <members>Batch_Template__c.Enable_Total_Entry__c</members>
+        <members>Batch_Template__c.EnableTotalEntry__c</members>
         <members>Batch_Template__c.Process_Using_Scheduled_Job__c</members>
-        <members>Batch_Template__c.Require_Total_Match__c</members>
+        <members>Batch_Template__c.RequireTotalMatch__c</members>
         <members>Batch_Template__c.Run_Opportunity_Rollups_while_Processing__c</members>
         <members>Batch__c.Batch_Status__c</members>
         <members>Batch__c.Description__c</members>
@@ -1382,15 +1383,15 @@
         <members>bgeBatchTemplateSelectFields</members>
         <members>bgeBatchTemplateSelectedFields</members>
         <members>bgeBatchTemplateSetFieldOptions</members>
-        <members>bgeGridDonorType</members>
         <members>bgeGridAllGifts</members>
+        <members>bgeGridDonorType</members>
         <members>bgeGridGiftCountHeader</members>
         <members>bgeGridGiftDeleted</members>
         <members>bgeGridGiftSaved</members>
         <members>bgeGridGiftUpdated</members>
         <members>bgeGridNewGift</members>
-        <members>bgeGridNoGiftsHeader</members>
         <members>bgeGridNoGiftsBody</members>
+        <members>bgeGridNoGiftsHeader</members>
         <members>bgeGridTotalAmount</members>
         <members>bgeGridTotalCount</members>
         <members>btnRemove</members>
@@ -2353,6 +2354,7 @@
     <types>
         <members>Address__c</members>
         <members>Batch_Data_Entry</members>
+        <members>Batch_Template__c</members>
         <members>Contact_Merge</members>
         <members>DataImportBatch__c</members>
         <members>DataImport__c</members>

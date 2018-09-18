@@ -3,7 +3,7 @@
      * @description: called during render to place the focus at the start of the form
      */
     callFocus: function(component){
-        component.find("donorType").focus();
+        component.find('donorType').focus();
     },
 
     /**
@@ -15,7 +15,7 @@
     },
 
     /**
-     * @description: hides spinner over form when form finishes loading
+     * @description: alerts parent component that form is loaded
      */
     onFormLoad: function (component, event, helper) {
         helper.sendMessage('hideFormSpinner', '');
@@ -31,11 +31,25 @@
     },
 
     /**
-     * @description: sets the donor type. Used to circumvent the unhelpful labeling of Account1/Contact1.
+     * @description: override submit function in recordEditForm to handle backend fields and validation
+     */
+    onSubmit: function (component, event, helper) {
+        event.preventDefault();
+        var eventFields = helper.addHiddenFields(component, event);
+        var isValid = true;
+        // TODO: add validation function
+        // isValid = helper.validateRecord(component, event);
+        if (isValid) {
+            component.find('recordEditForm').submit(eventFields);
+        }
+    },
+
+    /**
+     * @description: sets the donor type and alerts the parent. Used to circumvent the unhelpful labeling of Account1/Contact1.
      */
     setDonorType: function (component, event, helper) {
-        var donorType = event.getSource().get("v.value");
-        component.set("v.donorType", donorType);
+        var donorType = event.getSource().get('v.value');
+        component.set('v.donorType', donorType);
 
         var message = {'donorType': donorType};
         helper.sendMessage('setDonorType', message);
