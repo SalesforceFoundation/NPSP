@@ -72,9 +72,15 @@ tasks:
             path: dev_config/delete
 
     update_admin_profile:
-        class_path: tasks.salesforce.UpdateAdminProfile
         options:
             package_xml: lib/admin_profile.xml
+            record_types:
+                - record_type: Account.HH_Account
+                - record_type: Account.Organization
+                  default: true
+                  person_account_default: true
+                - record_type: Opportunity.NPSP_Default
+                  default: true
 
     pmd:
         description: Run Apex code analysis with PMD. This task assumes that PMD is available in PATH. On MacOS PMD is available to install in brew.
