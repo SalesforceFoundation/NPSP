@@ -38,7 +38,7 @@
 public with sharing class BGE_DataImportBatchEntry_CTRL {
 
     /*******************************************************************************************************
-    * @description deletes data DataImport__c record
+    * @description deletes DataImport__c record
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
     * @param dataImportId: ID of the DataImport__c
     * @return serialized string of DataImportRow for use in the lightning:datatable
@@ -63,13 +63,14 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         dataImportModel.dataImportRows = getDataImports(batchId);
         dataImportModel.columns = getColumns();
         dataImportModel.labels = getBatchDataImportLabels();
+        dataImportModel.isNamespaced = String.isNotBlank(UTIL_Namespace.getNamespace());
 
         return JSON.serialize(dataImportModel);
     }
 
     @AuraEnabled
-    public static void updateDataImports(List<DataImport__c> diList) {
-        database.update(diList);
+    public static void updateDataImports(List<DataImport__c> dataImports) {
+        database.update(dataImports);
     }
 
     /*******************************************************************************************************
@@ -192,6 +193,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         @AuraEnabled public Id id;
         @AuraEnabled public List<DataImportRow> dataImportRows;
         @AuraEnabled public List<Column> columns;
+        @AuraEnabled public Boolean isNamespaced;
         @AuraEnabled public Map<String, String> labels;
     }
 
@@ -211,11 +213,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             String donorName = '';
             if (record.Donation_Donor__c == 'Account1' && record.Account1Imported__c != null) {
                 donorName = record.Account1Imported__r.Name;
-
             } 
             if (record.Donation_Donor__c == 'Contact1' && record.Contact1Imported__c != null) {
                 donorName = record.Contact1Imported__r.Name;
-
             }
             return donorName;
         }
