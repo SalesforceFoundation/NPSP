@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2018
 * @group BGE
-* @group-content //todo
+* @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Lightning Component Server Controller for the Data Import Batch Entry component.
 */
 
@@ -83,7 +83,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
         try {
             List<DataImportRow> result = new List<DataImportRow>();
-            for (DataImport__c dataImportRecord : getDIsByIds(null, batchId)) {
+            for (DataImport__c dataImportRecord : getDataImportsByIds(null, batchId)) {
                 result.add(new DataImportRow(dataImportRecord));
             }
 
@@ -162,11 +162,11 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     */
     @AuraEnabled
     public static List<DataImportRow> runDryRun(List<Id> dataImportIds, String batchId) {
-        Data_Import_Settings__c diSettings = BDI_DataImportService.loadSettings(batchId);
-        Set<Id> recIds = new Set<Id>(dataImportIds);
-        List<DataImport__c> diRecords = getDIsByIds(recIds, null);
+        Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
+        Set<Id> recordIds = new Set<Id>(dataImportIds);
+        List<DataImport__c> dataImportRecords = getDataImportsByIds(recordIds, null);
 
-        BDI_DataImport_API.processDataImportRecords(diSettings, diRecords, true);
+        BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportRecords, true);
         
         return getDataImports(batchId);
     }
@@ -176,17 +176,16 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @param dataImportIds set of DataImport__c Ids
     * @param batchId a Data Import Batch Id
     */
-    public static List<DataImport__c> getDIsByIds(Set<Id> dataImportIds, Id batchId) {
-        List<String> diFields = getDIFields();
+    public static List<DataImport__c> getDataImportsByIds(Set<Id> dataImportIds, Id batchId) {
+        List<String> dataImportFields = getDataImportFields();
 
-        String query = 'SELECT ' + String.join(diFields,', ') + ' FROM DataImport__c';
+        String query = 'SELECT ' + String.join(dataImportFields,', ') + ' FROM DataImport__c';
         if (dataImportIds != null) {
             query += ' WHERE Id IN :dataImportIds';
         } else if (batchId != null) {
             query += ' WHERE NPSP_Data_Import_Batch__c = :batchId';
         }
         query += ' ORDER BY Id ASC';
-        System.debug(query);
 
         return Database.query(query);
     }
@@ -194,7 +193,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     /*******************************************************************************************************
     * @description returns a list of DataImport__c fields the UI needs
     */
-    public static List<String> getDIFields() {
+    public static List<String> getDataImportFields() {
         List<String> fields = new List<String> {
                 'Id',
                 'Contact1_Firstname__c',

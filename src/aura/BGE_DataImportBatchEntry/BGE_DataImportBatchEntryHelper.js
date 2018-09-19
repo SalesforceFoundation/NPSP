@@ -32,7 +32,7 @@
     /**
      * @description: retrieves the dataImportRows and sets them to the table.
      */
-    getDIs: function (component) {
+    getDataImports: function (component) {
         this.showSpinner(component);
         var action = component.get('c.getDataImports');
         action.setParams({batchId: component.get('v.recordId')});
@@ -81,7 +81,6 @@
      * @param values: changed values in the table
      */
     handleTableSave: function(component, draftValues) {
-        // TODO: determine how/when to run dryrun in here. maybe just from the apex side?
         this.showSpinner(component);
         var action = component.get('c.updateDataImports');
         action.setParams({dataImports: draftValues});
@@ -91,12 +90,11 @@
                 this.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftUpdated'), 'success');
 
                 // get updated values back
-                this.getDIs(component);
+                this.getDataImports(component);
 
                 // then send off for dry run
                 var recordIds = [];
                 draftValues.forEach(function(draftVal){
-                    debugger;
                     recordIds.push(draftVal.Id);
                 });
                 this.runDryRun(component, recordIds);
@@ -108,6 +106,10 @@
         $A.enqueueAction(action);
     },
 
+    /**
+     * @description: starts the BDI dry run to verify DataImport__c matches
+     * @param recordIds: list of DataImport__c RecordIds to check for dry run
+     */
     runDryRun: function(component, recordIds) {
         var action = component.get("c.runDryRun");
         action.setParams({dataImportIds: recordIds, batchId: component.get("v.recordId")});
