@@ -164,7 +164,7 @@
                 </aura:if>
 
                 <div aura:id="openRoadIllustration" aria-hidden="true"
-                     class="{!'slds-illustration slds-illustration_small slds-p-top_small' + if(notequals(v.data.length, 0), ' slds-hide', '')}">
+                     class="{!'slds-illustration slds-illustration_small slds-p-top_small' + if(and(v.isLoaded, equals(v.data.length, 0)), '', ' slds-hide')}">
                     <img src="/img/chatter/OpenRoad.svg" class="slds-illustration__svg" aria-hidden="true" alt=""/>
                     <div class="slds-text-color_weak">
                         <h1 class="slds-text-heading_medium">{!$Label.c.bgeGridNoGiftsHeader}</h1>
