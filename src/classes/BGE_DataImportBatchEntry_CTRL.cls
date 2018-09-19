@@ -85,7 +85,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
         try {
             List<DataImportRow> result = new List<DataImportRow>();
-            for (DataImport__c dataImportRecord : getDataImportsByIds(null, batchId)) {
+            for (DataImport__c dataImportRecord : getDataImportsByBatchId(batchId)) {
                 result.add(new DataImportRow(dataImportRecord));
             }
 
@@ -173,7 +173,16 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     public static List<DataImportRow> runDryRun(List<Id> dataImportIds, Id batchId) {
         Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
         Set<Id> recordIds = new Set<Id>(dataImportIds);
-        List<DataImport__c> dataImportRecords = getDataImportsByIds(recordIds, null);
+        List<DataImport__c> dataImportRecords = getDataImportsByIds(recordIds);
+
+        // Clear Dry Run fields before running Dry Run so new field values are accounted for
+        for (DataImport__c dataImport : dataImportRecords) {
+            dataImport.Status__c = null;
+            dataImport.FailureInformation__c = null;
+            dataImport.DonationImported__c = null;
+            dataImport.DonationImportStatus__c = null;
+        }
+        update dataImportRecords;
 
         BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportRecords, true);
         
@@ -181,26 +190,38 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description returns a list of DataImport__c records from a set of Ids OR a batch Id
-    * @param dataImportIds set of DataImport__c Ids
+    * @description returns a list of DataImport__c records from a batch Id
     * @param batchId a Data Import Batch Id
+    * @return List<DataImport__c>
     */
-    public static List<DataImport__c> getDataImportsByIds(Set<Id> dataImportIds, Id batchId) {
+    public static List<DataImport__c> getDataImportsByBatchId(Id batchId) {
         List<String> dataImportFields = getDataImportFields();
 
         String query = 'SELECT ' + String.join(dataImportFields,', ') + ' FROM DataImport__c';
-        if (dataImportIds != null) {
-            query += ' WHERE Id IN :dataImportIds';
-        } else if (batchId != null) {
-            query += ' WHERE NPSP_Data_Import_Batch__c = :batchId';
-        }
+        query += ' WHERE NPSP_Data_Import_Batch__c = :batchId';
         query += ' ORDER BY Id ASC';
 
         return Database.query(query);
     }
 
     /*******************************************************************************************************
-    * @description returns a list of DataImport__c fields the UI needs
+    * @description returns a list of DataImport__c records from a set of Ids
+    * @param dataImportIds set of DataImport__c Ids
+    * @return List<DataImport__c>
+    */
+    public static List<DataImport__c> getDataImportsByIds(Set<Id> dataImportIds) {
+        List<String> dataImportFields = getDataImportFields();
+
+        String query = 'SELECT ' + String.join(dataImportFields,', ') + ' FROM DataImport__c';
+        query += ' WHERE Id IN :dataImportIds';
+        query += ' ORDER BY Id ASC';
+
+        return Database.query(query);
+    }
+
+    /*******************************************************************************************************
+    * @description returns a list of DataImport__c fields the Batch Gift Entry  UI needs in SOQL
+    * @return List<String> list of DataImport__c field api names
     */
     public static List<String> getDataImportFields() {
         List<String> fields = new List<String> {
