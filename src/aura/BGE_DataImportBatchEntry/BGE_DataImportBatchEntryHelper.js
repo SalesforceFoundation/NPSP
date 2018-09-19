@@ -84,16 +84,17 @@
      * @param recordIds: list of DataImport__c RecordIds to check for dry run
      */
     runDryRun: function(component, recordIds) {
-        var action = component.get("c.runDryRun");
-        action.setParams({dataImportIds: recordIds, batchId: component.get("v.recordId")});
+        var action = component.get('c.runDryRun');
+        var batchId = component.get('v.recordId');
+        action.setParams({dataImportIds: recordIds, batchId: batchId});
         action.setCallback(this, function (response) {
             var state = response.getState();
-            if (state === "SUCCESS") {
+            if (state === 'SUCCESS') {
                 var responseRows = response.getReturnValue();
                 this.setDataTableRows(component, responseRows);
                 this.setTotals(component, responseRows);
             } else {
-                this.showToast(component, $A.get("$Label.c.PageMessagesError"), response.getReturnValue(), 'error');
+                this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
             }
         });
         $A.enqueueAction(action);

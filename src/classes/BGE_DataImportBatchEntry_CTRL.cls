@@ -70,7 +70,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
     @AuraEnabled
     public static List<DataImportRow> updateDataImports(List<DataImport__c> dataImports, Id batchId) {
-        database.update(dataImports);
+        Database.update(dataImports);
 
         return getDataImports(batchId);
     }
@@ -85,7 +85,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
         try {
             List<DataImportRow> result = new List<DataImportRow>();
-            for (DataImport__c dataImportRecord : getDataImportsByBatchId(batchId)) {
+            List<DataImport__c> dataImports = getDataImportsByBatchId(batchId);
+            for (DataImport__c dataImportRecord : dataImports) {
                 result.add(new DataImportRow(dataImportRecord));
             }
 
@@ -136,7 +137,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 'DonationImportStatus__c'
         };
 
-        Set<String> systemFields = new Set<String>{
+        Set<String> dryRunResultFields = new Set<String>{
                 'Status__c',
                 'FailureInformation__c',
                 'DonationImported__c',
@@ -151,7 +152,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 Column col = new Column();
                 col.label = dfr.label;
                 col.fieldName = dfr.name;
-                col.readOnly = systemFields.contains(UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.name));
+                col.readOnly = dryRunResultFields.contains(UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.name));
                 col.type = dfr.type.name().toLowerCase();
                 if (col.type == 'date') {
                     col.type = 'date-local';
@@ -197,9 +198,10 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     public static List<DataImport__c> getDataImportsByBatchId(Id batchId) {
         List<String> dataImportFields = getDataImportFields();
 
-        String query = 'SELECT ' + String.join(dataImportFields,', ') + ' FROM DataImport__c';
-        query += ' WHERE NPSP_Data_Import_Batch__c = :batchId';
-        query += ' ORDER BY Id ASC';
+        String query = 'SELECT ' + String.join(dataImportFields,', ') +
+                ' FROM DataImport__c' +
+                ' WHERE NPSP_Data_Import_Batch__c = :batchId' +
+                ' ORDER BY Id ASC';
 
         return Database.query(query);
     }
@@ -212,9 +214,10 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     public static List<DataImport__c> getDataImportsByIds(Set<Id> dataImportIds) {
         List<String> dataImportFields = getDataImportFields();
 
-        String query = 'SELECT ' + String.join(dataImportFields,', ') + ' FROM DataImport__c';
-        query += ' WHERE Id IN :dataImportIds';
-        query += ' ORDER BY Id ASC';
+        String query = 'SELECT ' + String.join(dataImportFields,', ') +
+                ' FROM DataImport__c' +
+                ' WHERE Id IN :dataImportIds' +
+                ' ORDER BY Id ASC';
 
         return Database.query(query);
     }
