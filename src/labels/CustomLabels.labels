@@ -4593,6 +4593,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>NPSP Payments Not Enabled</value>
     </labels>
     <labels>
+        <fullName>pmtWizardPaymentsNoAccessMessage</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed when the user has no permission to create payments</shortDescription>
+        <value>You do not have permissions to create Payments.</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardSectionTitle</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
@@ -4663,6 +4671,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>pmtWizardWriteoffMessage</shortDescription>
         <value>You are preparing to write off {0} Payment(s) totaling {1}.</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardWriteoffNoAccessMessage</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message displayed when the user has no permission to apply the Write Off</shortDescription>
+        <value>You do not have permissions to Write Off Payments.</value>
     </labels>
     <labels>
         <fullName>pmtWizardYear</fullName>
