@@ -69,8 +69,10 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     @AuraEnabled
-    public static void updateDataImports(List<DataImport__c> dataImports) {
+    public static List<DataImportRow> updateDataImports(List<DataImport__c> dataImports, Id batchId) {
         database.update(dataImports);
+
+        return getDataImports(batchId);
     }
 
     /*******************************************************************************************************
@@ -129,6 +131,14 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 'Payment_Method__c',
                 'Payment_Check_Reference_Number__c',
                 'Status__c',
+                'FailureInformation__c',
+                'DonationImported__c',
+                'DonationImportStatus__c'
+        };
+
+        Set<String> systemFields = new Set<String>{
+                'Status__c',
+                'FailureInformation__c',
                 'DonationImported__c',
                 'DonationImportStatus__c'
         };
@@ -141,8 +151,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 Column col = new Column();
                 col.label = dfr.label;
                 col.fieldName = dfr.name;
-                col.editable = (dfr.name.contains('Status') || dfr.name.contains('Imported')) ? false : true;
-                col.gridOnly = (dfr.name.contains('Status') || dfr.name.contains('Imported')) ? true : false;
+                col.readOnly = systemFields.contains(UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.name));
                 col.type = dfr.type.name().toLowerCase();
                 if (col.type == 'date') {
                     col.type = 'date-local';
@@ -161,7 +170,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return the full data set for the batch
     */
     @AuraEnabled
-    public static List<DataImportRow> runDryRun(List<Id> dataImportIds, String batchId) {
+    public static List<DataImportRow> runDryRun(List<Id> dataImportIds, Id batchId) {
         Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
         Set<Id> recordIds = new Set<Id>(dataImportIds);
         List<DataImport__c> dataImportRecords = getDataImportsByIds(recordIds, null);
@@ -212,6 +221,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 'Payment_Check_Reference_Number__c',
                 'DonationImported__c',
                 'Status__c',
+                'FailureInformation__c',
                 'DonationImportStatus__c'
         };
         return fields;
@@ -223,8 +233,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     public class Column {
         @AuraEnabled public String label;
         @AuraEnabled public String fieldName;
-        @AuraEnabled public Boolean editable;
-        @AuraEnabled public Boolean gridOnly;
+        @AuraEnabled public Boolean readOnly;
         @AuraEnabled public String type;
     }
 

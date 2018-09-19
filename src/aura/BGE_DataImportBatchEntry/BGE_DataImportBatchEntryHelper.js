@@ -30,33 +30,6 @@
     },
 
     /**
-     * @description: retrieves the dataImportRows and sets them to the table.
-     */
-    getDataImports: function (component) {
-        this.showSpinner(component);
-        var action = component.get('c.getDataImports');
-        action.setParams({batchId: component.get('v.recordId')});
-        action.setCallback(this, function (response) {
-            var state = response.getState();
-            if (state === 'SUCCESS') {
-                var responseRows = response.getReturnValue();
-                this.setDataTableRows(component, responseRows);
-                this.setTotals(component, responseRows);
-                var openRoad = component.find('openRoadIllustration');
-                if (responseRows.length === 0) {
-                    $A.util.removeClass(openRoad, 'slds-hide');
-                } else {
-                    $A.util.addClass(openRoad, 'slds-hide');
-                }
-            } else {
-                this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
-            }
-            this.hideSpinner(component);
-        });
-        $A.enqueueAction(action);
-    },
-
-    /**
      * @description: retrieves the model information. If successful, sets the model and creates child component; otherwise alerts user.
      */
     getModel: function(component) {
@@ -83,16 +56,16 @@
     handleTableSave: function(component, draftValues) {
         this.showSpinner(component);
         var action = component.get('c.updateDataImports');
-        action.setParams({dataImports: draftValues});
+        action.setParams({dataImports: draftValues, batchId: component.get('v.recordId')});
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
                 this.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftUpdated'), 'success');
+                var responseRows = response.getReturnValue();
+                this.setDataTableRows(component, responseRows);
+                this.setTotals(component, responseRows);
 
-                // get updated values back
-                this.getDataImports(component);
-
-                // then send off for dry run
+                //call dry run in callback to speed up refresh of datatable rows
                 var recordIds = [];
                 draftValues.forEach(function(draftVal){
                     recordIds.push(draftVal.Id);
@@ -119,12 +92,6 @@
                 var responseRows = response.getReturnValue();
                 this.setDataTableRows(component, responseRows);
                 this.setTotals(component, responseRows);
-                var openRoad = component.find("openRoadIllustration");
-                if (responseRows.length === 0) {
-                    $A.util.removeClass(openRoad, "slds-hide");
-                } else {
-                    $A.util.addClass(openRoad, "slds-hide");
-                }
             } else {
                 this.showToast(component, $A.get("$Label.c.PageMessagesError"), response.getReturnValue(), 'error');
             }
@@ -141,10 +108,17 @@
         columns.push({label: 'Donor', fieldName: 'donor', type: 'text', editable: false});
 
         dataColumns.forEach(function(col){
-            columns.push({label: col.label, fieldName: col.fieldName, type: col.type, editable: col.editable});
+            columns.push({label: col.label, fieldName: col.fieldName, type: col.type, editable: !col.readOnly});
         });
 
-        columns.push({type: 'action', typeAttributes: { rowActions: [{label: 'Delete', name: 'delete', title: 'Delete'}] }
+        columns.push({
+            type: 'action', typeAttributes: {
+                rowActions: [{
+                    label: 'Delete',
+                    name: 'delete',
+                    title: 'Delete'
+                }]
+            }
         });
 
         component.set('v.columns', columns);
@@ -158,7 +132,7 @@
         var dataImportFields = [];
 
         dataColumns.forEach(function(field){
-            if (!field.gridOnly) {
+            if (!field.readOnly) {
                 dataImportFields.push({label: field.label, name: field.fieldName});
             }
         });
@@ -177,13 +151,6 @@
             row.donor = currentRow.donor;
             rows.push(row);
         });
-
-        var openRoad = component.find('openRoadIllustration');
-        if (responseRows.length === 0) {
-            $A.util.removeClass(openRoad, 'slds-hide');
-        } else {
-            $A.util.addClass(openRoad, 'slds-hide');
-        }
 
         component.set('v.data', rows);
     },
