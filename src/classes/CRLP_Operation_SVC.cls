@@ -89,7 +89,7 @@ public class CRLP_Operation_SVC {
 
         if (dateValue != null) {
             yearNum = fiscalYrs.getYear(dateValue);
-            theYear = yearNum.format().replace(',', '');
+            theYear = fiscalYrs.getYearFormattedString(dateValue);
         }
 
         //in the case of a years-ago-single-result group, only proceed if the detail record is in the right year
