@@ -7,7 +7,7 @@
 */
 public static void initializeNPSPSettings() {
     // When calling this code in a managed context, the string %%%NAMESPACE%%% will be replaced with
-    // "NAMESPACE__" via a custom cci task defined in tasks/anon_apex.py as AnonymousApexFromFileTask().
+    // "NAMESPACE__" via the cumulusci task in cumulusci.tasks.apex.anon.AnonymousApexTask.
     // Similarly %%%NAMESPACED_RT%%% will be replaced by "NAMESPACE." for namespaced record type support
 
     %%%NAMESPACE%%%UTIL_CustomSettingsFacade.getOrgContactsSettings();
