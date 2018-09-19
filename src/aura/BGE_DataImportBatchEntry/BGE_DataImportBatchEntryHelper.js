@@ -80,16 +80,26 @@
      * @description: saves inline edits from dataTable.
      * @param values: changed values in the table
      */
-    handleTableSave: function(component, values) {
+    handleTableSave: function(component, draftValues) {
         // TODO: determine how/when to run dryrun in here. maybe just from the apex side?
         this.showSpinner(component);
         var action = component.get('c.updateDataImports');
-        action.setParams({dataImports: values});
+        action.setParams({dataImports: draftValues});
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
-                this.getDIs(component);
                 this.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftUpdated'), 'success');
+
+                // get updated values back
+                this.getDIs(component);
+
+                // then send off for dry run
+                var recordIds = [];
+                draftValues.forEach(function(draftVal){
+                    debugger;
+                    recordIds.push(draftVal.Id);
+                });
+                this.runDryRun(component, recordIds);
             } else {
                 this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
             }
@@ -98,12 +108,9 @@
         $A.enqueueAction(action);
     },
 
-    runDryRun: function(component, recordId) {
+    runDryRun: function(component, recordIds) {
         var action = component.get("c.runDryRun");
-        var records = [];
-        records.push(recordId);
-        console.log(records);
-        action.setParams({dataImportIds: records, batchId: component.get("v.recordId")});
+        action.setParams({dataImportIds: recordIds, batchId: component.get("v.recordId")});
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {

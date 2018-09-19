@@ -151,7 +151,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 columns.add(col);
             }
         }
-            
 
         return columns;
     }
@@ -159,6 +158,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     /*******************************************************************************************************
     * @description runs BDI Dry Run against a list of DataImport__c Ids
     * based on the processing settings of a given batch
+    * @return the full data set for the batch
     */
     @AuraEnabled
     public static List<DataImportRow> runDryRun(List<Id> dataImportIds, String batchId) {
@@ -167,8 +167,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         List<DataImport__c> diRecords = getDIsByIds(recIds, null);
 
         BDI_DataImport_API.processDataImportRecords(diSettings, diRecords, true);
+        
         return getDataImports(batchId);
-
     }
 
     /*******************************************************************************************************
