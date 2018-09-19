@@ -679,6 +679,7 @@ global with sharing class BDI_DataImportService {
     */
     global static Map<String, String> mapFieldsForDIObject(String strObj, String strBaseObj, List<String> listStrDIFields) {
         system.debug('GONNA MAP FIELDS');
+        system.debug('DATA IMPORT FIELDS:    ' + listStrDIFields);
         BDISettings__c bdiSettings = BDISettings__c.getOrgDefaults();
 
         Map<String, String> mapDIFieldToObjField = new Map<String, String>();
@@ -687,9 +688,7 @@ global with sharing class BDI_DataImportService {
 
             BDI_Field_Mapping__mdt[] BDIFIeldMappingList = [SELECT
                                                                 Source_FIeld__c,
-                                                                Target_Field__c,
-                                                                MasterLabel,
-                                                                QualifiedApiName
+                                                                Target_Field__c
                                                             FROM
                                                                 BDI_Field_Mapping__mdt];
 
@@ -700,14 +699,16 @@ global with sharing class BDI_DataImportService {
                 BDIFIeldMappingMap.put(customMetadata.Source_FIeld__c, customMetadata.Target_Field__c);
             }
 
+            system.debug('BDI FIeld Mapping Map ==> ' + BDIFIeldMappingMap);
+
             for (String strF : listStrDIFields) {
 
                 if (BDIFIeldMappingMap.containsKey(strF)) {
-
-                    DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), strF);
+                    system.debug('CONTAINS KEY ==> ' + strF);
+                    //DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), strF);
 
                     String strHelpText = BDIFIeldMappingMap.get(strF);
-
+                    system.debug('HELP TEXT ==> ' + strHelpText);
                     if (strHelpText != null && strHelpText != '') {
 
                         List<String> strParts = strHelpText.split('\\.', 2);
@@ -736,7 +737,7 @@ global with sharing class BDI_DataImportService {
                             // we can't do this in all tests, because many profiles won't have FLS set for all our new fields!
                             if (!Test.isRunningTest() || failFieldLevelSecurity) {
 
-                                dfr = UTIL_Describe.getFieldDescribe(strBaseObj, strField);
+                                DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(strBaseObj, strField);
                                 Set<String> setAuditFields = new Set<String>{'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'};
                                 Boolean isAuditField = setAuditFields.contains(strField.toLowerCase());
 
