@@ -28,16 +28,14 @@ var tableHeight = 0;
 
     function onInitHandler(result, event) {
 
-        templateId = result.templateId;
+        templateId = result ? result.templateId : null;
         selectPopper = undefined;
         isIndexLoading = false;
         isTableLoaded = false; // Needed for afterCreateRow:as it fires before afterInit: & confuses all
 
-        hideElements("#loadSpinnerEmbedded"); // Only used for pagination
-
         toggleDisabledButton("previousPageButton", true);
 
-        if (result.data.length == 0) {
+        if (result && result.data.length == 0) {
             toggleDisabledButton("nextPageButton", true);
         }
 
@@ -55,6 +53,10 @@ var tableHeight = 0;
 
         templateId = true;
         hideElements("#noTemplatesMessage");
+
+        showElements("#paginationButtonsContainer");
+        showElements("#summaryInfoContainer");
+        showElements("#commitBatchButtonContainer");
 
         rowsCount = result.rowsCount;
         rowsAmount = result.rowsAmount;
