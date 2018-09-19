@@ -157,8 +157,16 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 col.fieldName = dfr.name;
                 col.editable = true;
                 col.type = dfr.type.name().toLowerCase();
+                // Lightning Components interpret "date" as datetime.
+                // Reassign "date" to "datelocal" to render as date only.
                 if (col.type == 'date') {
                     col.type = 'date-local';
+                }
+
+                // special case for payment type to fetch picklist values
+                // TODO: consider abstracting this out to dynamically check for data type of mapped field?
+                if (col.fieldName == 'Payment_Method__c') {
+                    col.options = UTIL_Describe.getLightningSelectOptions('npe01__OppPayment__c','npe01__Payment_Method__c');
                 }
 
                 columns.add(col);
@@ -177,6 +185,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         @AuraEnabled public String fieldName;
         @AuraEnabled public Boolean editable;
         @AuraEnabled public String type;
+        @AuraEnabled public List<Map<String, String>> options;
     }
 
     /*******************************************************************************************************
