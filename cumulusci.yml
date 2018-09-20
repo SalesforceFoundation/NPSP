@@ -172,21 +172,17 @@ tasks:
 
     npsp_default_settings:
         description: Configure the default NPSP Settings including Membership RecordType
-        class_path: tasks.anon_apex.AnonymousApexFromFileTask
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         options:
             path: scripts/configure_npsp_default_settings.cls
             method: initializeNPSPSettings();
 
     npsp_default_templates:
         description: Configure BGE Templates
-        class_path: tasks.anon_apex.AnonymousApexFromFileTask
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
         options:
             path: scripts/create_templates.cls
             method: insertTemplates();
-
-    apex_anon:
-        description: Execute the specified apex anonymous script
-        class_path: tasks.anon_apex.AnonymousApexFromFileTask
 
     enable_customizable_rollups:
         description: Enable the NPSP Customizable Rollups feature
