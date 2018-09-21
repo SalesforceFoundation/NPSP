@@ -44,7 +44,7 @@ public class UTIL_String {
     public static String removeNonEnglishCharacters(String target) {
 
         if (target == null) {
-                return null;
+            return null;
         }    
 
         return target.replaceAll('[^A-Za-z]', '');
@@ -67,7 +67,7 @@ public class UTIL_String {
     }
 
     /*********************************************************************************************************
-     * @description Removes from a string all values that are not a an english language or numeric character  
+     * @description Removes from a string all values that are not a numeric or an english language character  
      * @param target The target string for the operation
      * @return String
      */
@@ -79,5 +79,5 @@ public class UTIL_String {
 
         return target.replaceAll('[^A-Za-z0-9]', '');
 
-        }    
+    }    
 }
