@@ -50,18 +50,18 @@ private class UTIL_String_TEST {
     /*******************************************************************************************************************
     * @description Verifies that only english language characters are returned after processing the string
     */
-    @isTest private static void nonEnglishAlphabetCharactersShouldBeRemoved() {
+    @isTest private static void nonEnglishCharactersShouldBeRemoved() {
         String expectedValue = 'Abc';
-        String actualValue = UTIL_String.englishAlphabetOnly(mixedCharacterString);
+        String actualValue = UTIL_String.removeNonEnglishCharacters(mixedCharacterString);
         System.assertEquals(expectedValue, actualValue); 
     }
 
     /*******************************************************************************************************************
     * @description Verifies that only english language or numeric characters are returned after processing the string
     */
-    @isTest private static void nonEnglishAlphabetAndNonNumericCharactersShouldBeRemoved() {
+    @isTest private static void nonNumericAndNonEnglishCharactersShouldBeRemoved() {
         String expectedValue = 'Abc0123456789';
-        String actualValue = UTIL_String.EnglishAlphabetOrNumericOnly(mixedCharacterString);
+        String actualValue = UTIL_String.removeNonNumericAndNonEnglishCharacters(mixedCharacterString);
         System.assertEquals(expectedValue, actualValue); 
     }
 
@@ -70,9 +70,9 @@ private class UTIL_String_TEST {
     */
     @isTest private static void nullStringsShouldReturnNull() {
         String nullTarget = null;
-        System.assertEquals(null, UTIL_String.englishAlphabetOnly(nullTarget)); 
+        System.assertEquals(null, UTIL_String.removeNonEnglishCharacters(nullTarget)); 
         System.assertEquals(null, UTIL_String.removeNonNumeric(nullTarget)); 
-        System.assertEquals(null, UTIL_String.englishAlphabetOrNumericOnly(nullTarget));
+        System.assertEquals(null, UTIL_String.removeNonNumericAndNonEnglishCharacters(nullTarget));
     }
 
 }
