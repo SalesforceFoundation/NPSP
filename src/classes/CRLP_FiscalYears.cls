@@ -70,7 +70,7 @@ public class CRLP_FiscalYears {
     * @return String The calendar or fiscal year for the given Date as a string.
     */
     public String getYearFormattedString(Date targetDate) {
-        return UTIL_String.numericCharactersOnly(getYear(targetDate).format());
+        return UTIL_String.removeNonNumeric(getYear(targetDate).format());
     }
 
     /*********************************************************************************************************

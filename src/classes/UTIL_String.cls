@@ -34,50 +34,50 @@
 * @description Methods used to manipulate string objects
 *
 */
-public with sharing class UTIL_String {
+public class UTIL_String {
     
     /*********************************************************************************************************
      * @description Removes from a string all values that are not an english language alpha character
-     * @param target The the target string for the operation
+     * @param target The target string for the operation
      * @return String
      */
-    public static String englishAlphabetOnly(String target) {
+    public static String removeNonEnglishCharacters(String target) {
 
-            if (target == null) {
-                 return null;
-            }    
+        if (target == null) {
+                return null;
+        }    
 
-            return target.replaceAll('[^A-Za-z]', '');
+        return target.replaceAll('[^A-Za-z]', '');
 
-        }
+    }
 
     /*********************************************************************************************************
      * @description Removes from a string all values that are not a numberic character
-     * @param target The the target string for the operation
+     * @param target The target string for the operation
      * @return String
      */
-    public static String numericCharactersOnly(String target) {
+    public static String removeNonNumeric(String target) {
 
-            if (target == null) {
-                return null;
-            }    
+        if (target == null) {
+            return null;
+        }    
 
-            return target.replaceAll('[^0-9]', '');
+        return target.replaceAll('[^0-9]', '');
 
-        }
+    }
 
     /*********************************************************************************************************
-     * @description Removes from a string all values that are not an english language or numeric character  
-     * @param target The the target string for the operation
+     * @description Removes from a string all values that are not a an english language or numeric character  
+     * @param target The target string for the operation
      * @return String
      */
-    public static String englishAlphabetOrNumericOnly(String target) {
+    public static String removeNonNumericAndNonEnglishCharacters(String target) {
 
-            if (target == null) {
-                return null;
-            }    
+        if (target == null) {
+            return null;
+        }    
 
-            return target.replaceAll('[^A-Za-z0-9]', '');
+        return target.replaceAll('[^A-Za-z0-9]', '');
 
         }    
 }

@@ -37,13 +37,16 @@
 private class CRLP_FiscalYears_TEST {
 
     /*********************************************************************************************************
-    * @description Test to ensure fiscal year is correctly formatted as a string with no punctuation
+    * @description Test to ensure fiscal year is correctly formatted as a string with no punctuation in multiple
+    * different languages. 
     */
-    @isTest static void yearStringShouldNotIncludePunctuation() {
+    @isTest 
+    static void yearStringShouldNotIncludePunctuation() {
         Date testDate = Date.newInstance(2018, 1, 1);
         Profile standardProfile = [SELECT Id FROM Profile WHERE Name='Standard User'];
-
-        //Ensure spanish language users format the date correctly
+        List<User> languageUsers = new List<User>();
+        
+        //spanish language users to use for date format testing
         User spanishLanguageUser = new User(
             UserName = 'spanishlanguageuser' + DateTime.now().getTime() + '@testorg.com',
             Email = 'spanishlanguageuser@testorg.com',
@@ -55,14 +58,9 @@ private class CRLP_FiscalYears_TEST {
             EmailEncodingKey = 'UTF-8', 
             TimeZoneSidKey = 'America/Los_Angeles'
         );
+        languageUsers.add(spanishLanguageUser);
 
-        System.runAs(spanishLanguageUser) {
-            CRLP_FiscalYears fiscalYrs = new CRLP_FiscalYears(true);
-            String yearString = fiscalYrs.getYearFormattedString(testDate);
-            System.assertEquals('2018', yearString);        
-        }
-
-        //Ensure english language users format the date correctly
+        //english language users to use for date format testing
         User englishLanguageUser = new User(
             UserName = 'englishlanguageuser' + DateTime.now().getTime() + '@testorg.com',
             Email = 'englishlanguageuser@testorg.com',
@@ -74,19 +72,26 @@ private class CRLP_FiscalYears_TEST {
             EmailEncodingKey = 'UTF-8', 
             TimeZoneSidKey = 'America/Los_Angeles'
         );
+        languageUsers.add(englishLanguageUser);
 
-        System.runAs(englishLanguageUser) {
-            CRLP_FiscalYears fiscalYrs = new CRLP_FiscalYears(true);
-            String yearString = fiscalYrs.getYearFormattedString(testDate);
-            System.assertEquals('2018', yearString);        
+        for (User languageUser : languageUsers) {
+        
+            System.runAs(languageUser) {
+                CRLP_FiscalYears fiscalYrs = new CRLP_FiscalYears(true);
+                String yearString = fiscalYrs.getYearFormattedString(testDate);
+                System.assertEquals('2018', yearString);        
+            }
+
         }
+       
     }
 
     /*********************************************************************************************************
     * @description For a given date, test to see if fiscal year is correctly calculated based on all
     * combinations of org fiscal year settings
     */
-    @isTest static void testGetFiscalYearForDate() {
+    @isTest 
+    static void testGetFiscalYearForDate() {
 
         // ----------------------------------------------------------------------------
         // Use Calendar Year information

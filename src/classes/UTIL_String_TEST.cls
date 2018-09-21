@@ -35,15 +35,15 @@
 *
 */
 @isTest(IsParallel=true)
-private with sharing class UTIL_String_TEST {
-    private static final String mixedCharacterString = 'Abc0123456789!@#$%^&*()_+[{]}|;:,<.>/?';
+private class UTIL_String_TEST {
+    private static final String mixedCharacterString = 'Abc0123456789!@#$%^&*()_+[{]}|;:,<.>/?èęàáöøûüìß';
     
     /*******************************************************************************************************************
     * @description Verifies that only numeric characters are returned after processing the string
     */
     @isTest private static void nonNumericCharactersShouldBeRemoved() {
         String expectedValue = '0123456789';
-        String actualValue = UTIL_String.numericCharactersOnly(mixedCharacterString);
+        String actualValue = UTIL_String.removeNonNumeric(mixedCharacterString);
         System.assertEquals(expectedValue, actualValue); 
     }
 
@@ -71,8 +71,8 @@ private with sharing class UTIL_String_TEST {
     @isTest private static void nullStringsShouldReturnNull() {
         String nullTarget = null;
         System.assertEquals(null, UTIL_String.englishAlphabetOnly(nullTarget)); 
-        System.assertEquals(null, UTIL_String.numericCharactersOnly(nullTarget)); 
-        System.assertEquals(null, UTIL_String.englishAlphabetOrNumericOnly(nullTarget)); 
+        System.assertEquals(null, UTIL_String.removeNonNumeric(nullTarget)); 
+        System.assertEquals(null, UTIL_String.englishAlphabetOrNumericOnly(nullTarget));
     }
 
 }

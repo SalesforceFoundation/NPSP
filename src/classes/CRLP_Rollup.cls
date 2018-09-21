@@ -325,7 +325,7 @@ public class CRLP_Rollup {
             
             // Find the data for the specified number of years back.
             Integer getThisYear = (this.useFiscalYear ? fiscalYrs.getYear(Date.today()) : Date.today().year()) - r.intValue;
-            String yrString = UTIL_String.numericCharactersOnly(getThisYear.format());
+            String yrString = UTIL_String.removeNonNumeric(getThisYear.format());
 
             // If the map of sums by year include the specified year, then get the Sum/Min/Max
             if (sumByYear.containsKey(yrString)) {
