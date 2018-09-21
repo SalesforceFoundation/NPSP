@@ -41,7 +41,7 @@ public class UTIL_String {
      * @param target The target string for the operation
      * @return String
      */
-    public static String removeNonEnglishCharacters(String target) {
+    public static String removeNonAsciiAlphabeticCharacters(String target) {
 
         if (target == null) {
             return null;
@@ -52,11 +52,11 @@ public class UTIL_String {
     }
 
     /*********************************************************************************************************
-     * @description Removes from a string all values that are not a numberic character
+     * @description Removes from a string all values that are not a numeric character
      * @param target The target string for the operation
      * @return String
      */
-    public static String removeNonNumeric(String target) {
+    public static String removeNonNumericCharacters(String target) {
 
         if (target == null) {
             return null;
@@ -71,7 +71,7 @@ public class UTIL_String {
      * @param target The target string for the operation
      * @return String
      */
-    public static String removeNonNumericAndNonEnglishCharacters(String target) {
+    public static String removeNonAsciiAlphanumericCharacters(String target) {
 
         if (target == null) {
             return null;

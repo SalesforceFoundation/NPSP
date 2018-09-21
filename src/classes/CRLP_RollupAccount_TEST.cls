@@ -235,7 +235,7 @@ private class CRLP_RollupAccount_TEST {
             if (closeDate.addMonths(n).year() == Date.Today().addYears(-2).year()) {
                 total2YearsAgo += amt;
             }
-            String donationYr = UTIL_String.removeNonNumeric(closeDate.addMonths(n).year().format());
+            String donationYr = UTIL_String.removeNonNumericCharacters(closeDate.addMonths(n).year().format());
             donationYears.add(donationYr);
             if (amt == maxAmt) {
                 bestGiftYear = donationYr;

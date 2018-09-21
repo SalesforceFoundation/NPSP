@@ -253,7 +253,7 @@ private class CRLP_RollupSoftCredit_TEST {
                 total2YearsAgo += amt;
             }
             
-            String donationYr = UTIL_String.removeNonNumeric(closeDate.addMonths(n).year().format());
+            String donationYr = UTIL_String.removeNonNumericCharacters(closeDate.addMonths(n).year().format());
             donationYears.add(donationYr);
             if (amt == maxAmt) {
                 bestGiftYear = donationYr;

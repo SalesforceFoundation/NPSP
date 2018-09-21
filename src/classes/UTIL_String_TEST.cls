@@ -43,25 +43,25 @@ private class UTIL_String_TEST {
     */
     @isTest private static void nonNumericCharactersShouldBeRemoved() {
         String expectedValue = '0123456789';
-        String actualValue = UTIL_String.removeNonNumeric(mixedCharacterString);
+        String actualValue = UTIL_String.removeNonNumericCharacters(mixedCharacterString);
         System.assertEquals(expectedValue, actualValue); 
     }
 
     /*******************************************************************************************************************
-    * @description Verifies that only english language characters are returned after processing the string
+    * @description Verifies that only ascii alphabetic language characters are returned after processing the string
     */
-    @isTest private static void nonEnglishCharactersShouldBeRemoved() {
+    @isTest private static void nonAsciiAlphabeticCharactersShouldBeRemoved() {
         String expectedValue = 'Abc';
-        String actualValue = UTIL_String.removeNonEnglishCharacters(mixedCharacterString);
+        String actualValue = UTIL_String.removeNonAsciiAlphabeticCharacters(mixedCharacterString);
         System.assertEquals(expectedValue, actualValue); 
     }
 
     /*******************************************************************************************************************
-    * @description Verifies that only english language or numeric characters are returned after processing the string
+    * @description Verifies that only ascii alphanumeric characters are returned after processing the string
     */
-    @isTest private static void nonNumericAndNonEnglishCharactersShouldBeRemoved() {
+    @isTest private static void nonAsciiAlphanuericCharactersShouldBeRemoved() {
         String expectedValue = 'Abc0123456789';
-        String actualValue = UTIL_String.removeNonNumericAndNonEnglishCharacters(mixedCharacterString);
+        String actualValue = UTIL_String.removeNonAsciiAlphanumericCharacters(mixedCharacterString);
         System.assertEquals(expectedValue, actualValue); 
     }
 
@@ -70,9 +70,9 @@ private class UTIL_String_TEST {
     */
     @isTest private static void nullStringsShouldReturnNull() {
         String nullTarget = null;
-        System.assertEquals(null, UTIL_String.removeNonEnglishCharacters(nullTarget)); 
-        System.assertEquals(null, UTIL_String.removeNonNumeric(nullTarget)); 
-        System.assertEquals(null, UTIL_String.removeNonNumericAndNonEnglishCharacters(nullTarget));
+        System.assertEquals(null, UTIL_String.removeNonAsciiAlphabeticCharacters(nullTarget)); 
+        System.assertEquals(null, UTIL_String.removeNonNumericCharacters(nullTarget)); 
+        System.assertEquals(null, UTIL_String.removeNonAsciiAlphanumericCharacters(nullTarget));
     }
 
 }
