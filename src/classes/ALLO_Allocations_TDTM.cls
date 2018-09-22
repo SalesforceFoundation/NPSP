@@ -62,7 +62,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         Decimal totalPercent = 0;                                            //holds total percentage allocations
         List<Allocation__c> triggerList = new List<Allocation__c>();         //all allocations for this opportunity in the current trigger set
         List<Allocation__c> listAllo = new List<Allocation__c>();            //all non-default allocations for this parent object
-        Map<Id, Allocation__c> mapDefaultDupes = new Map<Id, Allocation__c>();//duplicate default allocations, if any
+        Map<Id, Allocation__c> defaultDupesById = new Map<Id, Allocation__c>();//duplicate default allocations, if any
         Allocation__c defaultAllo = null;                                    //the default allocation for this parent object
         boolean defaultInTrigger = false;                                    //is the default allocation in the current trigger set?
     }
@@ -87,19 +87,19 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
 
         // dispatch to the correct handler
-        if (objResult.getsObjectType() == Allocation__c.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC) &&
+        if (objResult.getSObjectType() == Allocation__c.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC) &&
             (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
 
             runAllocationBeforeTriggerHandler(newlist, oldlist, triggerAction, objResult);
-        } else if (objResult.getsObjectType() == Allocation__c.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC) &&
+        } else if (objResult.getSObjectType() == Allocation__c.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC) &&
             (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterDelete)) {
 
             runAllocationAfterTriggerHandler(newlist, oldlist, triggerAction, objResult);
             //setting before to true for afterDelete case, to avoid running triggers on DML wrapper objects
-        } else if (objResult.getsObjectType() == Opportunity.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC)) {
+        } else if (objResult.getSObjectType() == Opportunity.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC)) {
 
             runOpportunityTriggerHandler(newlist, oldlist, triggerAction, objResult);
-        } else if (objResult.getsObjectType() == npe01__OppPayment__c.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC)) {
+        } else if (objResult.getSObjectType() == npe01__OppPayment__c.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC)) {
 
             runPaymentTriggerHandler(newlist, oldlist, triggerAction, objResult);
         }
@@ -300,14 +300,17 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 parentErrorDetected = true;
             }
             //neither an amount nor a percent is defined
-            if (allo.Amount__c == null && allo.Percent__c == null)
+            if (allo.Amount__c == null && allo.Percent__c == null) {
                 allo.addError(Label.alloAmountOrPercent);
-            //negative amount
-            if (allo.Amount__c != null && allo.Amount__c < 0)
+            }
+            //negative amount (Payments excepted)
+            if (allo.Amount__c != null && allo.Amount__c < 0 && allo.Payment__c == null) {
                 allo.addError(Label.alloNegativeAmount);
+            }
             //negative percent
-            if (allo.Percent__c != null && allo.Percent__c < 0)
+            if (allo.Percent__c != null && allo.Percent__c < 0) {
                 allo.addError(Label.alloNegativePercent);
+            }
             //manually updated currency
             if (triggerAction == TDTM_Runnable.Action.BeforeUpdate &&
                     UserInfo.isMultiCurrencyOrganization() &&
@@ -338,8 +341,15 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 continue;
             }
 
+            //Verify that allocation and Payment amount sign match
+            if ((allo.Amount__c >= 0 && wrap.parentAmount < 0)
+                ||(allo.Amount__c < 0 && wrap.parentAmount >= 0)){
+                allo.addError('Amount sign mistmatch. Negative amount Allocations are only allowed in negative Payments.');
+            }
+            
             //verify the total allocations don't exceed the parent amount
-            if (wrap.totalAmount > wrap.parentAmount) {
+            if ((wrap.totalAmount >= 0 && wrap.totalAmount > wrap.parentAmount) 
+                ||(wrap.totalAmount < 0 && wrap.totalAmount < wrap.parentAmount)) {
                 allo.addError(Label.alloTotalExceedsOppAmt);
             }
 
@@ -421,7 +431,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                             //no remainder: delete default allocation
                             if (amountDifferential == 0 && pmtWrap.defaultAllo!=null) {
                                 dmlWrapper.objectsToDelete.add(pmtWrap.defaultAllo);
-                            } else if (amountDifferential > 0) {
+                            } else if ((pmt.npe01__Payment_Amount__c >= 0 && amountDifferential > 0)
+                                    ||(pmt.npe01__Payment_Amount__c < 0 && amountDifferential < 0)) {
                                 //create a default allocation if we don't have one
                                 if (pmtWrap.defaultAllo == null) {
                                     pmtWrap.defaultAllo = makeDefaultAllocation(pmt);
@@ -433,8 +444,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                                 }
                             }
                             //delete duplicate default GAU allocations
-                            if (!pmtWrap.mapDefaultDupes.isEmpty()) {
-                                dmlWrapper.objectsToDelete.addAll((List<SObject>)pmtWrap.mapDefaultDupes.values());
+                            if (!pmtWrap.defaultDupesById.isEmpty()) {
+                                dmlWrapper.objectsToDelete.addAll((List<SObject>)pmtWrap.defaultDupesById.values());
                             }
                         //this pmt has no allocations, just create the default
                         } else dmlWrapper.objectsToInsert.add(makeDefaultAllocation(pmt));
@@ -474,8 +485,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                                 }
                             }
                             //delete duplicate default GAU allocations
-                            if (!oppWrap.mapDefaultDupes.isEmpty()) {
-                                dmlWrapper.objectsToDelete.addAll((List<SObject>)oppWrap.mapDefaultDupes.values());
+                            if (!oppWrap.defaultDupesById.isEmpty()) {
+                                dmlWrapper.objectsToDelete.addAll((List<SObject>)oppWrap.defaultDupesById.values());
                             }
                         //this opp has no allocations, just create the default
                         } else dmlWrapper.objectsToInsert.add(makeDefaultAllocation(opp));
@@ -521,7 +532,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 alloWrapper wrap;
                 //get wrapper for parent Payment.
                 if (sObj instanceof npe01__OppPayment__c)
-                    wrap = mapWrapper.get(sObj.Id);
+                    wrap = mapWrapper.get((Id)sObj.get('npe01__Opportunity__c'));
                 //get wrapper for parent object, preferring recurring donation over campaign allocations if they exist
                 else if (sObj.get('npe03__Recurring_Donation__c') != null && mapWrapper.containsKey((Id)sObj.get('npe03__Recurring_Donation__c')))
                     wrap = mapWrapper.get((Id)sObj.get('npe03__Recurring_Donation__c'));
@@ -540,6 +551,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
                 //reparent the cloned allocation to the opportunity
                 for (Allocation__c allo : listAlloForInsert) {
+                    allo.Opportunity__c = null;
                     allo.Recurring_Donation__c = null;
                     allo.Campaign__c = null;
                     if (sObj instanceof Opportunity) {
@@ -564,11 +576,17 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                         allo.Amount__c = (amount * allo.Percent__c * .01).setScale(2);
                     }
                     
+                    //Calculate proportional amount for non-percentage based Payment allocations
+                    if (sObj instanceof npe01__OppPayment__c && allo.Percent__c == null) {
+                        allo.Percent__c = allo.Amount__c / wrap.parentAmount * 100;
+                        allo.Amount__c = (amount * allo.Percent__c * .01).setScale(2);
+                    }
+
                     remainder -= allo.Amount__c;
                 }
                 
                 //if our remainder is negative, only create percentage based allocations
-                if (remainder < 0) {
+                if ((amount >= 0 && remainder < 0)||(amount < 0 && remainder > 0)) {
                     remainder = amount;
 
                     //TODO: log error: not able to create allocations. chatter post?
@@ -585,7 +603,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     }
 
                 //create default allocation if needed
-                } else if (settings.Default_Allocations_Enabled__c && remainder > 0) {
+                } else if (settings.Default_Allocations_Enabled__c && ((amount >= 0 && remainder > 0)||(amount < 0 && remainder < 0))) {
                     Allocation__c defaultAllo = makeDefaultAllocation(sObj);
                     defaultAllo.Amount__c = remainder;
                     dmlWrapper.objectsToInsert.add(defaultAllo);
@@ -594,7 +612,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 } else {
                     dmlWrapper.objectsToInsert.addAll((List<SObject>)listAlloForInsert);
                 }
-            //if we have no campaign or recurring donation allocations and defaults are enabled, create them for each opportunity
+            //if we have no campaign or recurring donation allocations and defaults are enabled, create them for each payment/opportunity
             } else if (settings.Default_Allocations_Enabled__c) {
                 dmlWrapper.objectsToInsert.add(makeDefaultAllocation(sObj));
             }
@@ -621,7 +639,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     dmlWrapper.objectsToDelete.addAll((List<SObject>)oppWrap.listAllo);
                     if (settings.Default_Allocations_Enabled__c && oppWrap.defaultAllo!=null) {
                         dmlWrapper.objectsToDelete.add(oppWrap.defaultAllo);
-                        dmlWrapper.objectsToDelete.addAll((List<SObject>)oppWrap.mapDefaultDupes.values());
+                        dmlWrapper.objectsToDelete.addAll((List<SObject>)oppWrap.defaultDupesById.values());
                     }
                 } else {
 
@@ -663,8 +681,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                             }
                         }
                         //delete duplicate default GAU allocations
-                        if (!oppWrap.mapDefaultDupes.isEmpty()) {
-                            dmlWrapper.objectsToDelete.addAll((List<SObject>)oppWrap.mapDefaultDupes.values());
+                        if (!oppWrap.defaultDupesById.isEmpty()) {
+                            dmlWrapper.objectsToDelete.addAll((List<SObject>)oppWrap.defaultDupesById.values());
                         }
                     }
                     //if the Opportunity amount has decreased, we run the risk of allocations exceeding the total opportunity amount
@@ -699,7 +717,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     dmlWrapper.objectsToDelete.addAll((List<SObject>)pmtWrap.listAllo);
                     if (settings.Default_Allocations_Enabled__c && pmtWrap.defaultAllo!=null)
                         dmlWrapper.objectsToDelete.add(pmtWrap.defaultAllo);
-                        dmlWrapper.objectsToDelete.addAll((List<SObject>)pmtWrap.mapDefaultDupes.values());
+                        dmlWrapper.objectsToDelete.addAll((List<SObject>)pmtWrap.defaultDupesById.values());
 
                 } else {
 
@@ -727,7 +745,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                         if (remainder==0) {
                             if (pmtWrap.defaultAllo!=null)
                                 dmlWrapper.objectsToDelete.add(pmtWrap.defaultAllo);
-                        } else if (remainder > 0) {
+                        } else if ((pmtWrap.parentAmount >= 0 && remainder > 0)||(pmtWrap.parentAmount < 0 && remainder < 0)) {
                             if (pmtWrap.defaultAllo==null) {
                                 pmtWrap.defaultAllo = makeDefaultAllocation(pmt);
                                 pmtWrap.defaultAllo.Amount__c = remainder;
@@ -741,14 +759,15 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                             }
                         }
                         //delete duplicate default GAU allocations
-                        if (!pmtWrap.mapDefaultDupes.isEmpty()) {
-                            dmlWrapper.objectsToDelete.addAll((List<SObject>)pmtWrap.mapDefaultDupes.values());
+                        if (!pmtWrap.defaultDupesById.isEmpty()) {
+                            dmlWrapper.objectsToDelete.addAll((List<SObject>)pmtWrap.defaultDupesById.values());
                         }
                     }
                     //if the payment amount has decreased, we run the risk of allocations exceeding the total payment amount
-                    if (pmtWrap.totalAmount > pmtWrap.parentAmount)
-                        //using addError here because we want to block opportunity update, display the error inline, and block the DML of updating all the related allocations
+                    if ((pmtWrap.totalAmount >= 0 && pmtWrap.totalAmount > pmtWrap.parentAmount)||(pmtWrap.totalAmount < 0 && pmtWrap.totalAmount < pmtWrap.parentAmount)) {
+                        //using addError here because we want to block payment update, display the error inline, and block the DML of updating all the related allocations
                         pmt.npe01__Payment_Amount__c.addError(Label.alloExceedsPmtAmount);
+                    }
                 }
             //if we have no allocations for this payment, defaults are enabled, and the payment has an amount, make a default allocation
             } else if (settings.Default_Allocations_Enabled__c && pmt.npe01__Payment_Amount__c != null) {
@@ -793,7 +812,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 if (wrap.defaultAllo == null)
                     wrap.defaultAllo = allo;
                 else if (wrap.defaultAllo.Id != allo.Id) {
-                    wrap.mapDefaultDupes.put(allo.Id, allo);
+                    wrap.defaultDupesById.put(allo.Id, allo);
                 }
                 wrap.defaultInTrigger = true;
                 continue;
@@ -833,7 +852,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 //keep the default allocation from listAllo
                 }
                 else {
-                    wrap.mapDefaultDupes.put(allo.Id, allo);
+                    wrap.defaultDupesById.put(allo.Id, allo);
                 }
                 continue;
             }
@@ -952,7 +971,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 if (wrap.defaultAllo == null)
                     wrap.defaultAllo = allo;
                 else if (wrap.defaultAllo.Id != allo.Id) {
-                    wrap.mapDefaultDupes.put(allo.Id, allo);
+                    wrap.defaultDupesById.put(allo.Id, allo);
                 }
                 continue;
             }
@@ -1012,9 +1031,9 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description Creates a default allocation for the specified opportunity.
-    * @param opp An opportunity.
-    * @return Allocation__c A default allocation for the amount of the opportunity.
+    * @description Creates a default allocation for the specified Opportunity/Payment.
+    * @param parentSObj An Opportunity or Payment.
+    * @return Allocation__c A default allocation for the amount of the Opportunity/Payment.
     ********************************************************************************************************/
     public static Allocation__c makeDefaultAllocation(SObject parentSObj) {
         
