@@ -276,10 +276,11 @@ public class CRLP_RollupProcessor_SVC {
             Type handlerClassType = getHanderClassType(options);
             CRLP_Debug_UTIL.setCurrentRollupState('Instantiate Handler Class: ' + handlerClassType.getName() + ' for ' + parentId);
             handler = (CRLP_VRollupHandler) handlerClassType.newInstance();
-            if (UserInfo.isMultiCurrencyOrganization()) {
-                handler.setCurrencyCode((String)parent.get('CurrencyIsoCode'));
-            }
             handlersMapByType.put(options.rollupJobType, handler);
+        }
+
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            handler.setCurrencyCode((String)parent.get('CurrencyIsoCode'));
         }
 
         // Set the Id of the summary object. This method will also reset and load the appropriate rollup mdt records
