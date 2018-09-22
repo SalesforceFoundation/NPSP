@@ -65,6 +65,7 @@
         <members>BDI_DataImportDeleteBTN_CTRL</members>
         <members>BDI_DataImportDeleteBTN_TEST</members>
         <members>BDI_DataImportService</members>
+        <members>BDI_DataImportService_TEST</members>
         <members>BDI_DataImport_API</members>
         <members>BDI_DataImport_BATCH</members>
         <members>BDI_DataImport_CTRL</members>
@@ -148,6 +149,7 @@
         <members>CRLP_RecalculateBTN_TEST</members>
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupAccSoftCredit_SVC</members>
+        <members>CRLP_RollupAccSoftCredit_TEST</members>
         <members>CRLP_RollupAccount_SVC</members>
         <members>CRLP_RollupAccount_TEST</members>
         <members>CRLP_RollupBatch_SVC</members>
@@ -427,7 +429,6 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>CRLP_RollupAccSoftCredit_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -439,7 +440,6 @@
         <members>STG_PageHeader</members>
         <members>UTIL_FormField</members>
         <members>UTIL_InputField</members>
-        <members>UTIL_JobProgress</members>
         <members>UTIL_JobProgressLightning</members>
         <members>UTIL_NavigateBack</members>
         <members>UTIL_PageHeader</members>
@@ -1614,6 +1614,7 @@
         <members>pmtWizardPaymentNumber</members>
         <members>pmtWizardPaymentsDisabled</members>
         <members>pmtWizardPaymentsDisabledTitle</members>
+        <members>pmtWizardPaymentsNoAccessMessage</members>
         <members>pmtWizardSectionTitle</members>
         <members>pmtWizardSectionWriteoff</members>
         <members>pmtWizardSectionWriteoffPayments</members>
@@ -1623,6 +1624,7 @@
         <members>pmtWizardWeek</members>
         <members>pmtWizardWriteoffDate</members>
         <members>pmtWizardWriteoffMessage</members>
+        <members>pmtWizardWriteoffNoAccessMessage</members>
         <members>pmtWizardYear</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
