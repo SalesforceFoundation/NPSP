@@ -704,14 +704,14 @@ global with sharing class BDI_DataImportService {
     * from the list of DataImport Fields, which have the form DIObject.developerfieldname in the field's help text property.
     * @param dataImportObjectName the bdi object we care about (Contact1, Contact2, Account1, etc)
     * @param targetObjectName the underlying object the bdi object is (ie, Contact, Account, etc)
-    * @param listStrDIFields the DataImport fields to consider
+    * @param dataImportFields the DataImport fields to consider
     * @return Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
     */
-    global static Map<String, String> mapFieldsForDIObject(String strObj, String strBaseObj, List<String> listStrDIFields) {
+    global static Map<String, String> mapFieldsForDIObject(String dataImportObjectName, String targetObjectName, List<String> dataImportFields) {
 
         BDISettings__c bdiSettings = BDISettings__c.getOrgDefaults();
 
-        Map<String, String> mapDIFieldToObjField = new Map<String, String>();
+        Map<String, String> dataImportFieldToTargetField = new Map<String, String>();
 
         if (bdiSettings.UseCustomMetadatainsteadOfHelpText__c) {
 
@@ -728,118 +728,164 @@ global with sharing class BDI_DataImportService {
                 BDIFIeldMappingMap.put(customMetadata.Source_Field__c.toLowerCase(), customMetadata.Target_Field__c);
             }
 
-            for (String strF : listStrDIFields) {
+            for (String dataImportField : dataImportFields) {
 
-                if (BDIFIeldMappingMap.containsKey(strF)) {
+                if (BDIFIeldMappingMap.containsKey(dataImportField)) {
 
-                    //DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), strF);
+                    String helpText = BDIFIeldMappingMap.get(dataImportField);
 
-                    String strHelpText = BDIFIeldMappingMap.get(strF);
+                    mapFieldsForDIObjectCore(dataImportObjectName, targetObjectName, dataImportField, helpText, dataImportFieldToTargetField);
 
-                    if (strHelpText != null && strHelpText != '') {
+                    // if (helpText != null && helpText != '') {
+                    //     List<String> parts = helpText.split('\\.', 2);
 
-                        List<String> strParts = strHelpText.split('\\.', 2);
+                    //     if (parts.size() == 2 && parts[0] == dataImportObjectName && parts[1] != '') {
+                    //         String fieldName = parts[1];
+                    //         //if we aren't in the npsp namespace, remove those tokens from help text
+                    //         //also removes tokens from actual detected namespace, if we happen to be
+                    //         //in a non-npsp namespace
+                    //         if (UTIL_Namespace.getNamespace() != 'npsp') {
+                    //             String fieldNameOld = fieldName;
+                    //             fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
 
-                        if (strParts.size() == 2 && strParts[0] == strObj && strParts[1] != '') {
+                    //             //if we have a detected namespace, and removed a namespace from the current field
+                    //             //add the current namespace back in, allowing this code to run in any namespace
+                    //             if (fieldName != fieldNameOld && UTIL_Namespace.getNamespace() != '') {
+                    //                 fieldName = UTIL_Namespace.StrAllNSPrefix(fieldName);
+                    //             }
+                    //         }
 
-                            String strField = strParts[1];
+                    //         // make sure they have permissions to modify the target field
+                    //         // we can't do this in all tests, because many profiles won't have FLS set for all our new fields!
+                    //         if (!Test.isRunningTest() || failFieldLevelSecurity) {
+                    //             DescribeFieldResult fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, fieldName);
+                    //             Set<String> setAuditFields = new Set<String>{
+                    //                 'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'
+                    //             };
+                    //             Boolean isAuditField = setAuditFields.contains(fieldName.toLowerCase());
 
-                            //if we aren't in the npsp namespace, remove those tokens from help text
-                            //also removes tokens from actual detected namespace, if we happen to be
-                            //in a non-npsp namespace
-                            if (UTIL_Namespace.getNamespace() != 'npsp') {
+                    //             if (failFieldLevelSecurity ||
+                    //                 fieldDescribe == null ||
+                    //                 !fieldDescribe.isCreateable() ||
+                    //                 (!isAuditField && !fieldDescribe.isUpdateable())) {
+                    //                     throw (new FLSException(
+                    //                         String.format(System.Label.flsError, new List<String>{ targetObjectName + '.' + fieldName }
+                    //                     )));
+                    //             }
+                    //         }
 
-                                String strFieldOld = strField;
-                                strField = UTIL_Namespace.StrTokenRemoveNSPrefix(strField);
-
-                                //if we have a detected namespace, and removed a namespace from the current field
-                                //add the current namespace back in, allowing this code to run in any namespace
-                                if (strField != strFieldOld && UTIL_Namespace.getNamespace() != '') {
-
-                                   strField = UTIL_Namespace.StrAllNSPrefix(strField);
-                                }
-                            }
-
-                            // make sure they have permissions to modify the target field
-                            // we can't do this in all tests, because many profiles won't have FLS set for all our new fields!
-                            if (!Test.isRunningTest() || failFieldLevelSecurity) {
-
-                                DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(strBaseObj, strField);
-                                Set<String> setAuditFields = new Set<String>{'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'};
-                                Boolean isAuditField = setAuditFields.contains(strField.toLowerCase());
-
-                                if (failFieldLevelSecurity || dfr == null || !dfr.isCreateable() || (!isAuditField && !dfr.isUpdateable())) {
-
-                                    throw (new flsException(String.format(label.flsError, new String[]{
-                                        strBaseObj + '.' + strField
-                                    })));
-                                }
-                            }
-
-                            mapDIFieldToObjField.put(strF, strField);
-                        }
-                    }
-
+                    //         dataImportFieldToTargetField.put(dataImportField, fieldName);
+                    //     }
+                    // }
                 }
-
             }
-
 
         } else {
 
-            for (String strF : listStrDIFields) {
+            for (String dataImportField : dataImportFields) {
 
-                DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), strF);
+                DescribeFieldResult fieldDescribe =
+                    UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), dataImportField);
+                String helpText = fieldDescribe.getInlineHelpText();
 
-                String strHelpText = dfr.getInlineHelpText();
+                mapFieldsForDIObjectCore(dataImportObjectName, targetObjectName, dataImportField, helpText, dataImportFieldToTargetField);
+                /*
+                if (helpText != null && helpText != '') {
+                    List<String> parts = helpText.split('\\.', 2);
 
-                if (strHelpText != null && strHelpText != '') {
-
-                    List<String> strParts = strHelpText.split('\\.', 2);
-
-                    if (strParts.size() == 2 && strParts[0] == strObj && strParts[1] != '') {
-
-                        String strField = strParts[1];
-
+                    if (parts.size() == 2 && parts[0] == dataImportObjectName && parts[1] != '') {
+                        String fieldName = parts[1];
                         //if we aren't in the npsp namespace, remove those tokens from help text
                         //also removes tokens from actual detected namespace, if we happen to be
                         //in a non-npsp namespace
                         if (UTIL_Namespace.getNamespace() != 'npsp') {
-
-                            String strFieldOld = strField;
-                            strField = UTIL_Namespace.StrTokenRemoveNSPrefix(strField);
+                            String fieldNameOld = fieldName;
+                            fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
 
                             //if we have a detected namespace, and removed a namespace from the current field
                             //add the current namespace back in, allowing this code to run in any namespace
-                            if (strField != strFieldOld && UTIL_Namespace.getNamespace() != '') {
-
-                                strField = UTIL_Namespace.StrAllNSPrefix(strField);
+                            if (fieldName != fieldNameOld && UTIL_Namespace.getNamespace() != '') {
+                                fieldName = UTIL_Namespace.StrAllNSPrefix(fieldName);
                             }
                         }
 
                         // make sure they have permissions to modify the target field
                         // we can't do this in all tests, because many profiles won't have FLS set for all our new fields!
                         if (!Test.isRunningTest() || failFieldLevelSecurity) {
+                            fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, fieldName);
+                            Set<String> setAuditFields = new Set<String>{
+                                'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'
+                            };
+                            Boolean isAuditField = setAuditFields.contains(fieldName.toLowerCase());
 
-                            dfr = UTIL_Describe.getFieldDescribe(strBaseObj, strField);
-                            Set<String> setAuditFields = new Set<String>{'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'};
-                            Boolean isAuditField = setAuditFields.contains(strField.toLowerCase());
-
-                            if (failFieldLevelSecurity || dfr == null || !dfr.isCreateable() || (!isAuditField && !dfr.isUpdateable())) {
-
-                                throw (new flsException(String.format(label.flsError, new String[]{
-                                    strBaseObj + '.' + strField
-                                })));
+                            if (failFieldLevelSecurity ||
+                                fieldDescribe == null ||
+                                !fieldDescribe.isCreateable() ||
+                                (!isAuditField && !fieldDescribe.isUpdateable())) {
+                                    throw (new FLSException(
+                                        String.format(System.Label.flsError, new List<String>{ targetObjectName + '.' + fieldName }
+                                    )));
                             }
                         }
 
-                        mapDIFieldToObjField.put(strF, strField);
+                        dataImportFieldToTargetField.put(dataImportField, fieldName);
                     }
-                }
+                }*/
             }
         }
-        system.debug('MAP DATA IMPORT FIELD TO OBJECT FIELD ==> ' + mapDIFieldToObjField);
-        return mapDIFieldToObjField;
+
+        return dataImportFieldToTargetField;
+
+    }
+
+    /*
+    *
+    * Common code for the old and the new logic on BDi Matching.
+    *
+    */
+    private static void mapFieldsForDIObjectCore(String dataImportObjectName, String targetObjectName, String dataImportField, String helpText, Map<String, String> dataImportFieldToTargetField) {
+
+        if (helpText != null && helpText != '') {
+            List<String> parts = helpText.split('\\.', 2);
+
+            if (parts.size() == 2 && parts[0] == dataImportObjectName && parts[1] != '') {
+                String fieldName = parts[1];
+                //if we aren't in the npsp namespace, remove those tokens from help text
+                //also removes tokens from actual detected namespace, if we happen to be
+                //in a non-npsp namespace
+                if (UTIL_Namespace.getNamespace() != 'npsp') {
+                    String fieldNameOld = fieldName;
+                    fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
+
+                    //if we have a detected namespace, and removed a namespace from the current field
+                    //add the current namespace back in, allowing this code to run in any namespace
+                    if (fieldName != fieldNameOld && UTIL_Namespace.getNamespace() != '') {
+                        fieldName = UTIL_Namespace.StrAllNSPrefix(fieldName);
+                    }
+                }
+
+                // make sure they have permissions to modify the target field
+                // we can't do this in all tests, because many profiles won't have FLS set for all our new fields!
+                if (!Test.isRunningTest() || failFieldLevelSecurity) {
+                    DescribeFieldResult fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, fieldName);
+                    Set<String> setAuditFields = new Set<String>{
+                        'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'
+                    };
+                    Boolean isAuditField = setAuditFields.contains(fieldName.toLowerCase());
+
+                    if (failFieldLevelSecurity ||
+                        fieldDescribe == null ||
+                        !fieldDescribe.isCreateable() ||
+                        (!isAuditField && !fieldDescribe.isUpdateable())) {
+                            throw (new FLSException(
+                                String.format(System.Label.flsError, new List<String>{ targetObjectName + '.' + fieldName }
+                            )));
+                    }
+                }
+
+                dataImportFieldToTargetField.put(dataImportField, fieldName);
+            }
+        }
 
     }
 
