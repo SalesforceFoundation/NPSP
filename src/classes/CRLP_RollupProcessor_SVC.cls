@@ -43,6 +43,7 @@ public class CRLP_RollupProcessor_SVC {
      * and a ProcessingOptions object instance that defines the parameters to use for the rollup work.
      * @param summaryRecords Summary Records
      * @param detailRecords Detail Records for the related Summary Records
+     * @param childRecordsByDetailId Related child records for detail record (ex: Payments for an Opportunity)
      * @param options ProcessingOptions
      * @return List<SObject> Records that require updating.
      */
@@ -260,7 +261,8 @@ public class CRLP_RollupProcessor_SVC {
      * details to the parent. The List<CRLP_Rollup> collection in ProcessingOptions is used for the actual rollup
      * accumulations. This method is called by all of the entry points for Rollup Calculations -- Batch, LDV, Queueable
      * @param parent Summary SObject record
-     * @param details list of Detail SObject records for a given parent Summary record
+     * @param detailRecords list of Detail SObject records for a given parent Summary record
+     * @param childRecordsByDetailId Related child records for detail record (ex: Payments for an Opportunity)
      * @param options ProcessingOptions. Contains List<CRLP_Rollup> rollup instances passed by referenced and
      * modified within this method.
      * @return an updated Summary SObject if it differs from the parent; otherwise it returns null.
