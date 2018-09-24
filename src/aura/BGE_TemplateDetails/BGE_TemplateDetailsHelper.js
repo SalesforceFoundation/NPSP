@@ -17,7 +17,6 @@
                 templateInfoView.name = templateInfo.name;
                 templateInfoView.id = templateInfo.id;
                 templateInfoView.description = templateInfo.description;
-                templateInfoView.enableTotalEntry = templateInfo.enableTotalEntry;
                 templateInfoView.requireTotalMatch = templateInfo.requireTotalMatch;
 
                 component.set('v.templateInfo', templateInfoView);
@@ -29,7 +28,6 @@
                 name: '',
                 id: '',
                 description: '',
-                enableTotalEntry: false,
                 requireTotalMatch: false
             };
         })(component, model);
@@ -267,7 +265,6 @@
                                 name: response.name,
                                 id: response.id,
                                 description: response.description,
-                                enableTotalEntry: response.enableTotalEntry,
                                 requireTotalMatch: response.requireTotalMatch
                             }
                         );
@@ -290,7 +287,6 @@
                     name: _templateInfo.name,
                     id: _templateInfo.id,
                     description: _templateInfo.description,
-                    enableTotalEntry: _templateInfo.enableTotalEntry,
                     requireTotalMatch: _templateInfo.requireTotalMatch
                 };
                 var activeFields = [];
@@ -315,7 +311,6 @@
                                 name: response.name,
                                 id: response.id,
                                 description: response.description,
-                                enableTotalEntry: response.enableTotalEntry,
                                 requireTotalMatch: response.requireTotalMatch
                             }
                         );
@@ -387,7 +382,6 @@
                 this.name = info.name;
                 this.description = info.description;
                 this.id = info.id;
-                this.enableTotalEntry = info.enableTotalEntry;
                 this.requireTotalMatch = info.requireTotalMatch;
                 this.onInfoUpdated.notify();
             }
@@ -405,7 +399,6 @@
                 name: '',
                 id: '',
                 description: '',
-                enableTotalEntry: false,
                 requireTotalMatch: false,
                 load: load,
                 isValid: isValid,
