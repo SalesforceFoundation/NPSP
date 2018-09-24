@@ -320,10 +320,13 @@ public class CRLP_Rollup {
         // ================================================================
         Decimal sumForSpecifiedYear = 0, maxForSpecifiedYear = 0, minForSpecifiedYear = 0, countForSpecifiedYear = 0;
         Boolean useYearsAgoValue = ( r.timeBoundOperationType == CRLP_Operation.TimeBoundOperationType.YEARS_AGO.name());
+
         if (useYearsAgoValue == true) {
+            
             // Find the data for the specified number of years back.
             Integer getThisYear = (this.useFiscalYear ? fiscalYrs.getYear(Date.today()) : Date.today().year()) - r.intValue;
-            String yrString = getThisYear.format().replace(',','');
+            String yrString = UTIL_String.removeNonNumericCharacters(getThisYear.format());
+
             // If the map of sums by year include the specified year, then get the Sum/Min/Max
             if (sumByYear.containsKey(yrString)) {
                 sumForSpecifiedYear += sumByYear.get(yrString);

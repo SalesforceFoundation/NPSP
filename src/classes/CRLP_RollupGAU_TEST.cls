@@ -193,7 +193,8 @@ private class CRLP_RollupGAU_TEST {
             if (closeDate.addMonths(n).year() == Date.Today().addYears(-2).year()) {
                 total2YearsAgo += (amt/2);
             }
-            String donationYr = closeDate.addMonths(n).year().format().replace(',','');
+            
+            String donationYr = UTIL_String.removeNonNumericCharacters(closeDate.addMonths(n).year().format());
             donationYears.add(donationYr);
             if (amt == maxAmt) {
                 bestGiftYear = donationYr;
