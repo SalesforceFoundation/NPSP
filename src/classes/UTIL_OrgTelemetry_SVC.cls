@@ -33,21 +33,221 @@
 * @group Utilities
 * @description Return some basic org and NPSP telemetry data to the License Management Application to assist with
 * better understanding of how our customers use our application.
+* This logic is called in two places:
+*   1) When Customizable Rollups is enabled or disabled
+*   2) During the Post-Install Script as part of a Package Update
+* Note: FeatureManagement operations are subject to MIXED_DML errors and must be conducted asynchronously
+* Uses "without sharing" so that it has full rights to query all records in all objects. This is needed to ensure a
+* consistent return of telemetry data even if the process is called by different users with different permissions.
+* Specific PII info is never queried or returned by this class.
 */
 public without sharing class UTIL_OrgTelemetry_SVC {
 
     /**
-    * @description Submit specific feature enablement statistics back to the License Management Org to assist
-    * with understanding how our customers are using our functionality. There's no way to unit test this though.
-    * Each feature below must be matched to a SubscriberToLmo feature of the same name.
-    * This should called in two places: 1) When the Settings page is loaded; 2) When a tracked area is saved.
-    * FeatureManagement operations are subject to MIXED_DML errors and must be conducted asynchronously
-    */
-    @future
-    public static void submitFeatureTelemetryToLMO() {
+     * @description A complete list of the Telemetry Types (at a high level) that are handled by this service class.
+     * These are used by the batch job to process feature parameters in asynchronous groups to avoid governor
+     * limit issues. The concept is that by separating each of these into smaller groupings that are processed
+     * as separate child batch iterations, the entire process can complete even if for some reason one of the queries
+     * against a table (such as a really huge Opportunity object) were to fail.
+     */
+    public Enum TelemetryType {
+        NPSP_Settings,
+        Org_Environment,
+        Data_MaxNumRelatedOpps,
+        Data_CountRdOppsAll,
+        Data_CountRdOppsOpenEnded,
+        Data_CountErrorLog
+    }
+
+    /**
+     * @description Execute the batch job that will process each telemetry featureParameter type one at a time
+     * as individual batch iterations. This process has to be asynchronous to handle governor limits against
+     * huge queries as well as to avoid MixedDML errors in case a calling process were to modify a record.
+     */
+    public static void dispatchTelemetryBatchJob() {
+        Database.executeBatch(new UTIL_OrgTelemetry_BATCH(), 1);
+    }
+
+    /**
+     * @description Called by the NPSP Settings Page to subject the current state of NPSP Settings related telemetry
+     * data if it has been changed in the NPSP Settings page.
+     * @param telemetryType
+     */
+    @Future
+    public static void asyncProcessNpspSettingsTelemetry() {
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.processTelemetryType(TelemetryType.NPSP_Settings);
+    }
+
+    /**
+     * @description Called by the batch job to process an individual telemetry type
+     * Submits specific feature teletry statistics back to the License Management Org to assist
+     * with understanding how our customers are using NPSP functionality.
+     * Each feature below must be matched to a SubscriberToLmo feature of the same name.
+     * @param telemetryType
+     */
+    public void processTelemetryType(TelemetryType telemetryType) {
+
+        switch on (telemetryType) {
+
+            // Simple Boolean FeatureParameters based strictly on NPSP Settings that can be processed in a single
+            // operation.
+            when NPSP_Settings {
+                handleNPSPSettings();
+            }
+
+            // Simple FeatureParameters based on the current organization configuration that can be processed
+            // in a single operation.
+            when Org_Environment {
+                handleIsAdvancedMulticurrencyEnabled();
+                handleNonEnglishLanguageCount();
+            }
+
+            when Data_MaxNumRelatedOpps {
+                handleMaxNumRelatedOpps();
+            }
+
+            when Data_CountRdOppsAll {
+                handleCountOfRecurringDonationOpps();
+            }
+
+            when Data_CountRdOppsOpenEnded {
+                handleCountOfRecurringDonationOpps_OpenEnded();
+            }
+
+            when Data_CountErrorLog {
+                handleErrorLogCount();
+            }
+        }
+    }
+
+
+    /**
+     * @description Simple Boolean FeatureParameters based strictly on NPSP Settings that can be processed in a
+     * operation.
+     */
+    private void handleNPSPSettings() {
         STG_SettingsService stgSvc = new STG_SettingsService();
         Addr_Verification_Settings__c addrVerifSettings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
 
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_CustomizableRollups', (stgSvc.stgCRLP.Customizable_Rollups_Enabled__c == true));
+        System.FeatureManagement.setPackageBooleanValue('IsEnabled_HouseholdAcctModel',
+                stgSvc.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR);
+        System.FeatureManagement.setPackageBooleanValue('IsEnabled_AutomaticPayments',
+                (stgSvc.stgCon.npe01__Payments_Enabled__c == true));
+        System.FeatureManagement.setPackageBooleanValue('IsEnabled_DefaultGAU',
+                stgSvc.stgAllo.Default__c != null);
+        System.FeatureManagement.setPackageBooleanValue('IsEnabled_AddressVerification',
+                (addrVerifSettings.Enable_Automatic_Verification__c == true));
+        System.FeatureManagement.setPackageBooleanValue('IsEnabled_CustomizableRollups',
+                (stgSvc.stgCRLP.Customizable_Rollups_Enabled__c == true));
+        if (!Test.isRunningTest()) {
+            handleHasUserManagedTriggers();
+        }
+    }
+
+    /**
+     * @description Count the number of DatedConversionRate records with an effective date in the last 180 days.
+     * If greater than 0, then consider AdvancedMultiCurrency to be enabled within an organization. This accounts for
+     * the fact that this object is always visible, but may not actually have any valid/recent data in it; and because
+     * there is no plan for core to ever fix this bug.
+     */
+    private void handleIsAdvancedMulticurrencyEnabled() {
+        Boolean isEnabled=false;
+        if (UserInfo.isMultiCurrencyOrganization() == true) {
+            try {
+                Integer count = Database.query('SELECT Id FROM DatedConversionRate WHERE StartDate = LAST_N_DAYS:180 LIMIT 1').size();
+                if (count == 1) {
+                    isEnabled = true;
+                }
+            } catch (Exception e) { }
+        }
+        System.FeatureManagement.setPackageBooleanValue('Org_IsEnabled_AdvancedMultiCurrency', isEnabled);
+    }
+
+    /**
+     * @description Count the number of non-english languages associated with active standard users.
+     */
+    private void handleNonEnglishLanguageCount() {
+        Set<String> languages = new Set<String>();
+        for (User u : [SELECT LanguageLocaleKey
+                FROM User
+                WHERE IsActive = TRUE
+                AND UserType = 'Standard'
+                AND LanguageLocaleKey != 'en_US'
+                ORDER BY LanguageLocaleKey]
+        ) {
+            if (u.LanguageLocaleKey != null && !u.LanguageLocaleKey.startsWithIgnoreCase('en_')) {
+                languages.add(u.LanguageLocaleKey);
+            }
+        }
+        System.FeatureManagement.setPackageIntegerValue('Org_CountNonEnglishLanguages', languages.size());
+    }
+
+    /**
+     * @description Are there are any TDTM Trigger Handler records marked as Inactive or that the custom has added.
+     */
+    private void handleHasUserManagedTriggers() {
+        Boolean hasUserManagedTrigger = false;
+        for (Trigger_Handler__c th : TDTM_Config_API.getCachedRecords()) {
+            if (th.User_Managed__c == true || th.Active__c == false) {
+                hasUserManagedTrigger = true;
+                break;
+            }
+        }
+        System.FeatureManagement.setPackageBooleanValue('getHasUserManagedTriggers', hasUserManagedTrigger);
+    }
+
+    /**
+     * @description Total number of records in the Error__c custom object
+     */
+    private void handleErrorLogCount() {
+        try {
+            Integer count = [SELECT Count() FROM Error__c];
+            System.FeatureManagement.setPackageIntegerValue('Data_CountErrorLog', count);
+        } catch (Exception ex) {}
+    }
+
+    /**
+     * @description Total number of Opportunities associated with a Recurring Donation
+     */
+    private void handleCountOfRecurringDonationOpps() {
+        try {
+            Integer count = [SELECT Count()
+                FROM Opportunity
+                WHERE npe03__Recurring_Donation__c IN (SELECT Id FROM npe03__Recurring_Donation__c)];
+            System.FeatureManagement.setPackageIntegerValue('Data_CountRdOppsAll', count);
+        } catch (Exception ex) {}
+    }
+
+    /**
+     * @description Total number of Opportunities associated with an Open Ended Recurring Donation
+     */
+    private void handleCountOfRecurringDonationOpps_OpenEnded() {
+        String openStatusValue = System.Label.npe03.RecurringDonationOpenStatus;
+        try {
+            Integer count = [SELECT Count()
+                FROM Opportunity
+                WHERE npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c = :openStatusValue];
+            System.FeatureManagement.setPackageIntegerValue('Data_CountRdOppsOpenEnded', count);
+        } catch (Exception ex) {}
+    }
+
+    /**
+     * @description Get the max number of attached opportunities (using by 'Total Number of Donations') for
+     * all Accounts. Note that this will not return useful information if the organization is not using
+     * NPSP rollups (either type)
+     */
+    private void handleMaxNumRelatedOpps() {
+        try {
+            Account acct = [SELECT npo02__NumberOfClosedOpps__c
+                FROM Account
+                WHERE npo02__NumberOfClosedOpps__c > 0
+                ORDER BY npo02__NumberOfClosedOpps__c DESC
+                LIMIT 1];
+            if (acct != null) {
+                System.FeatureManagement.setPackageIntegerValue('Data_MaxNumRelatedOpps',
+                        acct.npo02__NumberOfClosedOpps__c.intValue());
+            }
+        } catch (Exception ex) {}
     }
 }
