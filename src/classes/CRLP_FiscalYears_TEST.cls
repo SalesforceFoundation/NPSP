@@ -77,7 +77,7 @@ private class CRLP_FiscalYears_TEST {
         for (User languageUser : languageUsers) {
         
             System.runAs(languageUser) {
-                CRLP_FiscalYears fiscalYrs = new CRLP_FiscalYears(true);
+                CRLP_FiscalYears fiscalYrs = new CRLP_FiscalYears(false);
                 String yearString = fiscalYrs.getYearFormattedString(testDate);
                 System.assertEquals('2018', yearString);        
             }
