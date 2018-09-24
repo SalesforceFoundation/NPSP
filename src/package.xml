@@ -425,6 +425,8 @@
         <members>UTIL_RecordTypes_API</members>
         <members>UTIL_RecordTypes_TEST</members>
         <members>UTIL_SoqlListView_CTRL</members>
+        <members>UTIL_String</members>
+        <members>UTIL_String_TEST</members>
         <members>UTIL_Typeahead</members>
         <members>UTIL_Typeahead_TEST</members>
         <members>UTIL_UnitTestData_TEST</members>
