@@ -409,7 +409,10 @@
         <members>UTIL_Namespace_TEST</members>
         <members>UTIL_OrderBy</members>
         <members>UTIL_OrderBy_TEST</members>
+        <members>UTIL_OrgTelemetry_BATCH</members>
+        <members>UTIL_OrgTelemetry_Batch_TEST</members>
         <members>UTIL_OrgTelemetry_SVC</members>
+        <members>UTIL_OrgTelemetry_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
         <members>UTIL_PerfLogger</members>
         <members>UTIL_PerfLogger_TEST</members>
@@ -2334,8 +2337,22 @@
         <name>EmailTemplate</name>
     </types>
     <types>
+        <members>HasUserManagedTDTM</members>
+        <members>IsEnabled_AddressVerification</members>
+        <members>IsEnabled_AutomaticPayments</members>
         <members>IsEnabled_CustomizableRollups</members>
+        <members>IsEnabled_DefaultGAU</members>
+        <members>IsEnabled_HouseholdAcctModel</members>
+        <members>Org_IsEnabled_AdvancedMultiCurrency</members>
         <name>FeatureParameterBoolean</name>
+    </types>
+    <types>
+        <members>Data_CountErrorLog</members>
+        <members>Data_CountRdOppsAll</members>
+        <members>Data_CountRdOppsOpenEnded</members>
+        <members>Data_MaxNumRelatedOpps</members>
+        <members>Org_CountNonEnglishLanguages</members>
+        <name>FeatureParameterInteger</name>
     </types>
     <types>
         <members>Account.BDE_Entry_FS</members>
