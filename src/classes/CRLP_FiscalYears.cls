@@ -64,6 +64,16 @@ public class CRLP_FiscalYears {
     }
 
     /*********************************************************************************************************
+    * @description Returns the current year, fiscal or calendar depending on the rollup setting as a formatted string.
+    All punctuation will have been removed
+    * @param targetDate The date for which to look up the year.
+    * @return String The calendar or fiscal year for the given Date as a string.
+    */
+    public String getYearFormattedString(Date targetDate) {
+        return UTIL_String.removeNonNumericCharacters(getYear(targetDate).format());
+    }
+
+    /*********************************************************************************************************
      * @description Wrapper class for the Organization Fiscal year information. This allows the values
      * to be overrriden by unit tests
      */
