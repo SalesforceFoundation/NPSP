@@ -178,7 +178,7 @@ private class CRLP_RollupAccount_TEST {
      */
     static testMethod void test_Rollups_MultiCurrencyBatch() {
 
-        // Test is only relevant for multi-currency organizations.  If not, skip it.
+        // Test is only relevant for multi-currency organizations.  If not, skip it
         if (!UserInfo.isMultiCurrencyOrganization()) {
             return;
         }    
