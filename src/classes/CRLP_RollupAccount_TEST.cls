@@ -33,11 +33,12 @@
 * @group Customizable Rollups Operations Services
 * @description Unit Test for the Opportunity/Payment to Account Rollups (Hard Credit Only)
 */
-@isTest
+@IsTest
 private class CRLP_RollupAccount_TEST {
 
+    /** @description The 5 testing types supported by the test engine */
     private Enum TestType {
-        TestTrigger, TestQueueuable, TestBatch, testSkewBatch
+        TestTrigger, TestQueueuable, TestBatch, TestSkewBatch, TestMultiCurrBatch
     }
 
     /**
@@ -148,17 +149,62 @@ private class CRLP_RollupAccount_TEST {
         CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
     }
 
+    /** @description Test the asynchronous queuable method of rolling up */
     static testMethod void test_Rollups_Queueable() {
         testRollupsServices(TestType.TestQueueuable);
     }
+    /** @description Test the full non-skew batch job method of rolling up */
     static testMethod void test_Rollups_Batch() {
         testRollupsServices(TestType.TestBatch);
     }
+    /** @description Test the full skew mode batch job method of rolling up */
     static testMethod void test_Rollups_SkewBatch() {
-        testRollupsServices(TestType.testSkewBatch);
+        testRollupsServices(TestType.TestSkewBatch);
     }
+    /** @description Test the Trigger method of rolling up */
     static testMethod void test_Rollups_Trigger() {
         testRollupsServices(TestType.TestTrigger);
+    }
+
+    /* @description Default currency for the current user (if MC is enabled in the Org) */
+    private static String defaultCurrCode = UserInfo.getDefaultCurrency();
+    /* @description A different currency code to use for the MultiCurrency batch test */
+    private static String otherCurrencyCode;
+
+    /**
+     * @description Tests a specific scenario in a MultiCurrency Enabled Org (with at least 2 currencies)
+     * where the batch job was not properly setting the currency code for each target record. This test can only
+     * run in a Multicurrency enabled org to allow the currency code values to be set on the Account and related Opp.
+     */
+    static testMethod void test_Rollups_MultiCurrencyBatch() {
+        if (UserInfo.isMultiCurrencyOrganization()) {
+
+            UtilCurrencyCacheMock mockCurrencyCache = new UtilCurrencyCacheMock();
+            UTIL_CurrencyCache.instance = mockCurrencyCache;
+
+            // Define a simple 2x exchange rate to use for this test
+            mockCurrencyCache.effectiveRatesReturn = new List<Decimal>{ 2.0 };
+            mockCurrencyCache.effectiveDatesReturn = new List<Date>{ Date.newInstance(1900,1,1) };
+
+            // Get another currency code to use for the future tests
+            for (SObject curr : Database.query('SELECT IsoCode FROM CurrencyType WHERE IsActive = True')) {
+                if ((String)curr.get('IsoCode') != defaultCurrCode) {
+                    otherCurrencyCode = (String)curr.get('IsoCode');
+                    break;
+                }
+            }
+
+            // Enable for standard currency management in the mock
+            UTIL_Currency_TEST.UtilCurrencyMock mockCurr = new UTIL_Currency_TEST.UtilCurrencyMock();
+            UTIL_Currency.instance = mockCurr;
+            mockCurr.orgDefaultCurrencyReturn = defaultCurrCode;
+            mockCurr.getDefaultCurrencyReturn = defaultCurrCode;
+            mockCurr.isAdvancedCurrencyManagementEnabledReturn = false; // we're forcing the rates rather than attempting to query
+            mockCurr.isMultiCurrencyOrganizationReturn = true;
+
+            // Execute the rollup service test
+            testRollupsServices(TestType.TestMultiCurrBatch);
+        }
     }
 
     /**
@@ -189,7 +235,7 @@ private class CRLP_RollupAccount_TEST {
 
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
                 npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
-                npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role,
+                npo02__Household_Member_Contact_Role__c = System.Label.npo02.Household_Member_Contact_Role,
                 npo02__Household_Contact_Roles_On__c = true,
                 npo02__Always_Rollup_to_Primary_Contact__c = false
         ));
@@ -243,6 +289,25 @@ private class CRLP_RollupAccount_TEST {
             lastCloseDate = closeDate.addMonths(n);
         }
 
+        // In a multi-currency org, create one Opportunity in the default (probably USD), but set the target Account
+        // to a different currency so that the Opp amount will be converted. The mocking of the UTIL_CurrencyCache
+        // is handled the the test_Rollups_MultiCurrencyBatch() method above.
+        if (tt == TestType.TestMultiCurrBatch) {
+            Account mcAccount = [SELECT Id FROM Account WHERE Id != :hardCreditAccId LIMIT 1];
+            mcAccount.put('CurrencyIsoCode', otherCurrencyCode);
+            Database.update(mcAccount);
+            Opportunity opp = new Opportunity(
+                Name = 'Test MultiCurrencyOpp',
+                Amount = 1000,
+                CloseDate = Date.today().addDays(-30),
+                StageName = closedStage,
+                AccountId = mcAccount.Id,
+                RecordTypeId = rtId
+            );
+            opp.put('CurrencyIsoCode', defaultCurrCode);
+            opps.add(opp);
+        }
+
         // create one closed opportunity to ensure it's not included in our rollups
         opps.add(new Opportunity (
                 Name = 'Test Opp ' + c.FirstName + ' ' + c.LastName,
@@ -272,19 +337,22 @@ private class CRLP_RollupAccount_TEST {
         CMT_FilterRuleEvaluation_SVC.cachedFilterEvalResults.clear();
         update new List<npe01__OppPayment__c>{ pmt1, pmt2 };
 
-        system.assertEquals(cnt, [SELECT Count() FROM npe01__OppPayment__c WHERE npe01__Opportunity__r.IsWon = true],
+        System.assertEquals(cnt, [SELECT Count() FROM npe01__OppPayment__c WHERE npe01__Opportunity__r.IsWon = true
+                                AND npe01__Opportunity__r.AccountId = :hardCreditAccId],
                 'There should be 100 payment records on closed won opps');
-        system.assertEquals(1, [SELECT Count() FROM npe01__OppPayment__c WHERE npe01__Written_Off__c = true
-                                AND npe01__Paid__c = false AND npe01__Opportunity__r.IsWon = true],
+        System.assertEquals(1, [SELECT Count() FROM npe01__OppPayment__c WHERE npe01__Written_Off__c = true
+                                AND npe01__Paid__c = false AND npe01__Opportunity__r.IsWon = true
+                                AND npe01__Opportunity__r.AccountId = :hardCreditAccId],
                 'There should be 1 written off payment record on a closed won opp');
-        system.assertEquals(10800, ([SELECT Sum(npe01__Payment_Amount__c) Amt FROM npe01__OppPayment__c
-                                WHERE npe01__Paid__c = true AND npe01__Opportunity__r.IsWon = true])[0].get('Amt'),
+        System.assertEquals(10800, ([SELECT Sum(npe01__Payment_Amount__c) Amt FROM npe01__OppPayment__c
+                                WHERE npe01__Paid__c = true AND npe01__Opportunity__r.IsWon = true
+                                AND npe01__Opportunity__r.AccountId = :hardCreditAccId])[0].get('Amt'),
                 'The total Amount of all Paid Payments should be $10800');
 
         String baseAccountQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType);
 
         String hardCreditAccQuery = baseAccountQuery + ' WHERE Id = :hardCreditAccId LIMIT 1';
-        Account hardCreditAcc = database.query(hardCreditAccQuery);
+        Account hardCreditAcc = Database.query(hardCreditAccQuery);
 
         // Make sure everything is null first!
         if (tt != TestType.TestTrigger) {
@@ -302,7 +370,7 @@ private class CRLP_RollupAccount_TEST {
         if (tt == TestType.TestTrigger) {
             // No need to execute anything special here. If the triggers worked as expected, then
             // the data will be rolled up automatically upon the stopTest().
-        } else if (tt == TestType.TestBatch) {
+        } else if (tt == TestType.TestBatch || tt == TestType.TestMultiCurrBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
 
@@ -321,7 +389,7 @@ private class CRLP_RollupAccount_TEST {
         Test.stopTest();
 
         // Query the Accounts with all the target fields specified in the rollups
-        hardCreditAcc = database.query(hardCreditAccQuery);
+        hardCreditAcc = Database.query(hardCreditAccQuery);
 
         // Basic rollup asserts using existing NPSP rollup fields.
         System.assertEquals(totalDonations, hardCreditAcc.npo02__TotalOppAmount__c);
@@ -339,6 +407,47 @@ private class CRLP_RollupAccount_TEST {
         System.assertEquals(baseAmt, hardCreditAcc.npo02__LastMembershipAmount__c, 'The Amount written off does not match');
         System.assertEquals(donationYears.size(), hardCreditAcc.npo02__NumberOfMembershipOpps__c, 'The current streak should be all the years');
         System.assertEquals(donationYears.size(), hardCreditAcc.Description.split(';').size(), 'The list of donated years should match');
+
+        if (tt == TestType.TestMultiCurrBatch) {
+            // Query the MultiCurrency Account with all the target fields specified in the rollups
+            // Only need to validate one of the currency fields to ensure it has been converted correctly.
+            Account mcAccount = Database.query(baseAccountQuery + ' WHERE Id != :hardCreditAccId LIMIT 1');
+            System.assertEquals(2000, mcAccount.npo02__TotalOppAmount__c);
+        }
+
+    }
+
+    /**
+     * @description A mock implementation of UTIL_CurrencyCache.Interface_x that can
+     * be used to provide pre-set return values from methods and store
+     * parameters passed to methods.
+     */
+    public class UtilCurrencyCacheMock implements UTIL_CurrencyCache.Interface_x {
+        public List<Date> effectiveDatesReturn;     // List of dates in Descending date order
+        public List<Decimal> effectiveRatesReturn;  // List of rates matching to above dates
+        public Decimal defaultRate;                 // Default exchange rate for this currency when not using dated rates
+
+        public boolean isOrgCacheAvailable() {
+            return false;
+        }
+
+        public void resetCurrencyCache() { }
+
+        public Map<String, UTIL_CurrencyCache.CurrencyData> getRateMapForCurrencies(List<String> currCodes) {
+            Map<String, UTIL_CurrencyCache.CurrencyData> mapOfCurrencyDataByCurrencyCode
+                    = new Map<String, UTIL_CurrencyCache.CurrencyData>();
+
+            UTIL_CurrencyCache.CurrencyData currData = new UTIL_CurrencyCache.CurrencyData();
+            currData.effectiveDates = effectiveDatesReturn;
+            currData.rates = effectiveRatesReturn;
+            currData.defaultRate = defaultRate;
+
+            mapOfCurrencyDataByCurrencyCode.put(currCodes[0], currData);
+            return mapOfCurrencyDataByCurrencyCode;
+        }
+        public Integer getCurrDecimalPlaces(String currCode) {
+            return 2;
+        }
 
     }
 }
