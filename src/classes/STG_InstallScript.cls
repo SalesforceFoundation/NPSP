@@ -40,7 +40,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
         POPULATE_RD_INSTALLMENT_NUMBER, RUN_NEW_ORG_SCRIPT, 
         INSERT_TDTM_DEFAULTS, ABORT_OLD_SCHEDULED_JOBS, 
         CLEANUP_RECORD_TYPE_SETTINGS, UPDATE_CAMPAIGN_LIST_REPORT,
-        CREATE_DEFAULT_SETTINGS
+        UPDATE_ORG_TELEMETRY, CREATE_DEFAULT_SETTINGS
     }
 
     /*******************************************************************************************************
@@ -60,9 +60,14 @@ global without sharing class STG_InstallScript implements InstallHandler {
             executeAction(InstallAction.RUN_NEW_ORG_SCRIPT, logger);
 
         } else if (context.isUpgrade() || context.isPush()) {
+            // Ensure the any new Custom Settings objects are populated
             executeAction(InstallAction.CREATE_DEFAULT_SETTINGS, logger);
 
+            // Insert/Update the TDTM defaults as needed
             executeAction(InstallAction.INSERT_TDTM_DEFAULTS, logger);
+
+            // Submit generic org telemetry data back to the LMO using FeatureManagement
+            executeAction(InstallAction.UPDATE_ORG_TELEMETRY, logger);
         }
 
         executeAction(InstallAction.ABORT_OLD_SCHEDULED_JOBS, logger);
@@ -100,6 +105,9 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
             } else if (action == InstallAction.UPDATE_CAMPAIGN_LIST_REPORT) {
                 updateCampaignListReport();
+
+            } else if (action == InstallAction.UPDATE_ORG_TELEMETRY && !Test.isRunningTest()) {
+                UTIL_OrgTelemetry_SVC.dispatchTelemetryBatchJob();
 
             } else if (action == InstallAction.CREATE_DEFAULT_SETTINGS) {
                 createNewDefaultCustomSettingRecords();
@@ -298,7 +306,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
      * @description Ensure that any default Custom Settings Records are created for "new" custom settings objects
      * added
      */
-    private static void createNewDefaultCustomSettingRecords() {
+    private void createNewDefaultCustomSettingRecords() {
         UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings();
         updateDefaultOrgContactsSettings();
     }
