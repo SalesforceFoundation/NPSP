@@ -177,34 +177,44 @@ private class CRLP_RollupAccount_TEST {
      * run in a Multicurrency enabled org to allow the currency code values to be set on the Account and related Opp.
      */
     static testMethod void test_Rollups_MultiCurrencyBatch() {
-        if (UserInfo.isMultiCurrencyOrganization()) {
 
-            UtilCurrencyCacheMock mockCurrencyCache = new UtilCurrencyCacheMock();
-            UTIL_CurrencyCache.instance = mockCurrencyCache;
+        // Test is only relevant for multi-currency organizations.  If not, skip it.
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return;
+        }    
 
-            // Define a simple 2x exchange rate to use for this test
-            mockCurrencyCache.effectiveRatesReturn = new List<Decimal>{ 2.0 };
-            mockCurrencyCache.effectiveDatesReturn = new List<Date>{ Date.newInstance(1900,1,1) };
+        UtilCurrencyCacheMock mockCurrencyCache = new UtilCurrencyCacheMock();
+        UTIL_CurrencyCache.instance = mockCurrencyCache;
 
-            // Get another currency code to use for the future tests
-            for (SObject curr : Database.query('SELECT IsoCode FROM CurrencyType WHERE IsActive = True')) {
-                if ((String)curr.get('IsoCode') != defaultCurrCode) {
-                    otherCurrencyCode = (String)curr.get('IsoCode');
-                    break;
-                }
-            }
+        // Define a simple 2x exchange rate to use for this test
+        mockCurrencyCache.effectiveRatesReturn = new List<Decimal>{ 2.0 };
+        mockCurrencyCache.effectiveDatesReturn = new List<Date>{ Date.newInstance(1900,1,1) };
 
-            // Enable for standard currency management in the mock
-            UTIL_Currency_TEST.UtilCurrencyMock mockCurr = new UTIL_Currency_TEST.UtilCurrencyMock();
-            UTIL_Currency.instance = mockCurr;
-            mockCurr.orgDefaultCurrencyReturn = defaultCurrCode;
-            mockCurr.getDefaultCurrencyReturn = defaultCurrCode;
-            mockCurr.isAdvancedCurrencyManagementEnabledReturn = false; // we're forcing the rates rather than attempting to query
-            mockCurr.isMultiCurrencyOrganizationReturn = true;
-
-            // Execute the rollup service test
-            testRollupsServices(TestType.TestMultiCurrBatch);
+        // Test is only relevant if the multicurrency org actually has multiple currencies.   If not, skip it
+        SObject[] currencies = Database.query('SELECT IsoCode FROM CurrencyType WHERE IsActive = True');
+        if (currencies.size() <= 1) {
+            return;
         }
+
+        // Get another currency code to use for the future tests
+        for (SObject curr : currencies) {
+            if ((String)curr.get('IsoCode') != defaultCurrCode) {
+                otherCurrencyCode = (String)curr.get('IsoCode');
+                break;
+            }
+        }
+
+        // Enable for standard currency management in the mock
+        UTIL_Currency_TEST.UtilCurrencyMock mockCurr = new UTIL_Currency_TEST.UtilCurrencyMock();
+        UTIL_Currency.instance = mockCurr;
+        mockCurr.orgDefaultCurrencyReturn = defaultCurrCode;
+        mockCurr.getDefaultCurrencyReturn = defaultCurrCode;
+        mockCurr.isAdvancedCurrencyManagementEnabledReturn = false; // we're forcing the rates rather than attempting to query
+        mockCurr.isMultiCurrencyOrganizationReturn = true;
+
+        // Execute the rollup service test
+        testRollupsServices(TestType.TestMultiCurrBatch);
+        
     }
 
     /**
