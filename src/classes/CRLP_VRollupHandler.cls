@@ -167,6 +167,7 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
     public void resetAllRollups() {
         for (CRLP_Rollup r : this.rollups) {
             r.resetValues();
+            r.setCurrencyCode(this.currCode);
         }
     }
 
