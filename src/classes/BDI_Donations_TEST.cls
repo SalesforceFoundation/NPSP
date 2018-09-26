@@ -601,6 +601,83 @@ public with sharing class BDI_Donations_TEST {
     }
 
     /*********************************************************************************************************
+    * @description Verifies currency is copied to opportunity and payment in multicurrency orgs
+    */
+    @isTest
+    static void currencyShouldCopyToOpportunity() {
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
+        // only run this test if we're in a multicurrency org
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        // we need an currency with a rate that doesn't match the org default
+        List<SObject> currencies = Database.query(
+            'SELECT IsoCode, ConversionRate, IsCorporate ' +
+            'FROM CurrencyType ' +
+            'WHERE IsActive = true ' +
+                ' AND IsCorporate = false ' +
+                ' AND ConversionRate != 1 ' +
+            'LIMIT 1 '
+        );
+
+        // if there's not a currency to test against, don't run the test
+        if (currencies.size() < 1) {
+            return;
+        }
+
+        String testCurrencyCode = (String)currencies[0].get('IsoCode');
+        Decimal testCurrencyRate = (Decimal)currencies[0].get('ConversionRate');
+
+        System.debug('testing currency code: ' + testCurrencyCode);
+
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+        diSettings.Run_Opportunity_Rollups_while_Processing__c = false;
+
+        DataImport__c dataImport = new DataImport__c(
+            Contact1_Firstname__c = 'Jane', Contact1_Lastname__c = 'Smith',
+            Contact1_Personal_Email__c = 'jane.smith@norollups.com',
+            Donation_Donor__c = 'Contact1',
+            Donation_Name__c = 'Test',
+            Donation_Amount__c = 1000,
+            Donation_Date__c = Date.today().addMonths(3),
+            Donation_Stage__c = UTIL_UnitTestData_TEST.getClosedWonStage()
+        );
+        dataImport.put('CurrencyIsoCode', 'CAD');
+        insert dataImport;
+
+        Test.startTest();
+        BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH();
+        Database.executeBatch(batch, 10);
+        Test.stopTest();
+
+        List<Opportunity> opps = Database.query(
+            'SELECT Name, Amount, StageName, IsWon, CurrencyIsoCode ' +
+            'FROM Opportunity'
+        );
+        System.assertEquals(1, opps.size());
+        System.assertEquals(true, opps[0].IsWon);
+        System.assertEquals(testCurrencyCode, (String)opps[0].get('CurrencyIsoCode'));
+
+        List<npe01__OppPayment__c> payments = Database.query(
+            'SELECT Id, CurrencyIsoCode FROM npe01__OppPayment__c'
+        );
+        System.assertEquals(1, payments.size());
+        System.assertEquals(testCurrencyCode, (String)payments[0].get('CurrencyIsoCode'));
+
+        List<DataImport__c> dataImports = [SELECT DonationImported__c, DonationImportStatus__c FROM DataImport__c];
+        System.assertEquals(1, dataImports.size());
+        System.assertEquals(opps[0].Id, dataImports[0].DonationImported__c);
+        System.assertEquals(System.Label.bdiCreated, dataImports[0].DonationImportStatus__c);
+    }
+
+    /*********************************************************************************************************
     * @description operation: 
     *    import donations using different matching rules: Date, Amount, PaymentId to paid Pmt, Opp Closed
     *    requireExactMatch
