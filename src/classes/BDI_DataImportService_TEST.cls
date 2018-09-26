@@ -16,7 +16,7 @@
  
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
     FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
     COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
     INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
@@ -111,6 +111,86 @@ private with sharing class BDI_DataImportService_TEST {
 
             System.assertEquals(isActive, handler.Active__c, 'Only rollup trigger handlers should be deactivated: ' + handler);
         }
+    }
+
+    /*
+
+
+    */
+    @isTest
+    private static void useCustomMetatadaInsteadOfHelpText() {
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+
+        BDISettings__c bdiSettings = BDISettings__c.getOrgDefaults();
+
+        bdiSettings.UseCustomMetadatainsteadOfHelpText__c = true;
+
+        upsert bdiSettings;
+
+        Boolean isDryRun = false;
+
+        BDI_DataImportService service = new BDI_DataImportService(isDryRun);
+
+        DataImport__c myDataImport = new DataImport__c(
+           Contact1_Firstname__c = 'c1',
+           Contact1_Lastname__c = 'c1',
+           Contact1_Personal_Email__c = 'c1@c1.com',
+           Contact2_Firstname__c = 'c2',
+           Contact2_Lastname__c = 'c2',
+           Contact2_Personal_Email__c = 'c2@c2.com'
+        );
+
+        dataImports.add(myDataImport);
+
+        insert dataImports;
+
+        //run batch data import
+        Test.StartTest();
+
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+
+        Test.stopTest();
+    }
+
+    @isTest
+    private static void useHelpTextInsteadOfCustomMetatada() {
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+
+        BDISettings__c bdiSettings = BDISettings__c.getOrgDefaults();
+
+        bdiSettings.UseCustomMetadatainsteadOfHelpText__c = false;
+
+        upsert bdiSettings;
+
+        Boolean isDryRun = false;
+
+        BDI_DataImportService service = new BDI_DataImportService(isDryRun);
+
+        DataImport__c myDataImport = new DataImport__c(
+           Contact1_Firstname__c = 'c1',
+           Contact1_Lastname__c = 'c1',
+           Contact1_Personal_Email__c = 'c1@c1.com',
+           Contact2_Firstname__c = 'c2',
+           Contact2_Lastname__c = 'c2',
+           Contact2_Personal_Email__c = 'c2@c2.com'
+        );
+
+        dataImports.add(myDataImport);
+
+        insert dataImports;
+
+        //run batch data import
+        Test.StartTest();
+
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+
+        Test.stopTest();
     }
 
 

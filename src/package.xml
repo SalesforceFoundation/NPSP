@@ -713,6 +713,9 @@
         <members>Batch__c.Description__c</members>
         <members>Batch__c.Number_of_Items__c</members>
         <members>Batch__c.Object_Name__c</members>
+        <members>BDISettings__c.UseCustomMetadatainsteadOfHelpText__c</members>
+        <members>BDI_Field_Mapping__mdt.Source_Field__c</members>
+        <members>BDI_Field_Mapping__mdt.Target_Field__c</members>
         <members>Contact.Address_Verification_Status__c</members>
         <members>Contact.Batch__c</members>
         <members>Contact.Current_Address__c</members>
@@ -2056,6 +2059,8 @@
         <members>Relationship_Sync_Excluded_Fields__c</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
+        <members>BDISettings__c</members>
+        <members>BDI_Field_Mapping__mdt</members>
         <members>Filter_Group__mdt</members>
         <members>Filter_Rule__mdt</members>
         <members>Rollup__mdt</members>
