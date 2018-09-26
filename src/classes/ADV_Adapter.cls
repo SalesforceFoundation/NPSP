@@ -36,6 +36,47 @@
 **/
 
 global virtual with sharing class ADV_Adapter {
+
+    /*******************************************************************************************************
+    * @description One-to-One value for system processor field
+    */ 
+    global static final String ONE_TO_ONE_PROCESSOR = CAO_Constants.ONE_TO_ONE_PROCESSOR;
+
+    /*******************************************************************************************************
+    * @description One-to-One org type value
+    */ 
+    global static final String ONE_TO_ONE_ORGANIZATION_TYPE = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+
+    /*******************************************************************************************************
+    * @description Individual Bucket value for system processor field
+    */ 
+    global static final String BUCKET_PROCESSOR = CAO_Constants.BUCKET_PROCESSOR;
+
+    /*******************************************************************************************************
+    * @description Individual Bucket org type value
+    */ 
+    global static final String BUCKET_ORGANIZATION_TYPE = CAO_Constants.BUCKET_ORGANIZATION_TYPE;
+
+    /*******************************************************************************************************
+    * @description Individual Bucket Account name
+    */ 
+    global static String BUCKET_ACCOUNT_NAME = CAO_Constants.BUCKET_ACCOUNT_NAME;
+
+    /*******************************************************************************************************
+    * @description Household Account value for system processor field
+    */ 
+    global static final String HH_ACCOUNT_PROCESSOR = CAO_Constants.HH_ACCOUNT_PROCESSOR;
+
+    /*******************************************************************************************************
+    * @description Household Account org type value
+    */ 
+    global static final String HH_ACCOUNT_TYPE = CAO_Constants.HH_ACCOUNT_TYPE;
+
+    /*******************************************************************************************************
+    * @description Household Account value for the standard Type field
+    */ 
+    global static final string HH_TYPE = CAO_Constants.HH_TYPE;
+
     /*******************************************************************************************************
     * @description To be called by the NPSP TDTM trigger dispatcher. Advancement will disable some NPSP trigger
     * handlers records (since they conflict with HEDA version) and return the rest.
@@ -117,6 +158,20 @@ global virtual with sharing class ADV_Adapter {
         TDTM_Runnable.Action triggerAction = TDTM_TriggerActionHelper.getTriggerActionFromName(action);
         ACCT_Accounts_TDTM accountsTDTM = new ACCT_Accounts_TDTM();
         accountsTDTM.configAccountForContact(listNew, listOld, triggerAction, new List<Account>(), new List<Account>());
+    }
+
+    /*******************************************************************************************************
+    * @description Updates the provided Contacts and Orgs settings if not running tests
+    * @return void
+    ********************************************************************************************************/
+    global static void setOrgContactsSettings(npe01__Contacts_And_Orgs_Settings__c orgContactsSettings) {
+        if (!ADV_PackageInfo_SVC.useAdv()) {
+            throw new AdapterException(Label.adapterException);
+        }
+
+        if (!Test.isRunningTest()) {
+            update orgContactsSettings;
+        }
     }
 
     /*******************************************************************************************************

@@ -135,4 +135,26 @@ public class ADV_Adapter_TEST {
         }
         Test.stopTest();
     }
+
+    /*********************************************************************************************************
+    * @description Throw exception if Adv is not installed
+    */
+    @isTest
+    public static void setOrgContactsSettingsThrowException() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
+        npe01__Contacts_And_Orgs_Settings__c npspOrgSettings = UTIL_CustomSettings_API.getContactsSettings();
+        npspOrgSettings.npe01__Account_Processor__c = ADV_Adapter.ONE_TO_ONE_PROCESSOR;
+
+        Test.startTest();
+        try {
+            ADV_Adapter.setOrgContactsSettings(npspOrgSettings);
+            //Add this to make sure it throws exception
+            System.assert(false);
+        } catch (Exception ex) {
+            System.assertEquals(Label.adapterException, ex.getMessage());
+        }
+        Test.stopTest();
+    }
 }
