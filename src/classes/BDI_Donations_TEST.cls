@@ -630,9 +630,6 @@ public with sharing class BDI_Donations_TEST {
         }
 
         String testCurrencyCode = (String)currencies[0].get('IsoCode');
-        Decimal testCurrencyRate = (Decimal)currencies[0].get('ConversionRate');
-
-        System.debug('testing currency code: ' + testCurrencyCode);
 
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
@@ -649,7 +646,7 @@ public with sharing class BDI_Donations_TEST {
             Donation_Date__c = Date.today().addMonths(3),
             Donation_Stage__c = UTIL_UnitTestData_TEST.getClosedWonStage()
         );
-        dataImport.put('CurrencyIsoCode', 'CAD');
+        dataImport.put('CurrencyIsoCode', testCurrencyCode);
         insert dataImport;
 
         Test.startTest();
