@@ -194,7 +194,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 break;
             }
         }
-        System.FeatureManagement.setPackageBooleanValue('getHasUserManagedTriggers', hasUserManagedTrigger);
+        System.FeatureManagement.setPackageBooleanValue('HasUserManagedTDTM', hasUserManagedTrigger);
     }
 
     /**
