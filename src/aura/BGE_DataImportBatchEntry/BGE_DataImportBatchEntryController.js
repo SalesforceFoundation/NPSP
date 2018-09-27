@@ -42,13 +42,13 @@
         var channel = event.getParam('channel');
 
         if (channel === 'onSuccess') {
-            helper.getDIs(component);
+            helper.runDryRun(component, [message.recordId]);
             helper.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftSaved'), 'success');
             helper.createEntryForm(component);
         } else if (channel === 'onCancel') {
             helper.createEntryForm(component);
         } else if (channel === 'setDonorType') {
-            component.set('v.donorType', message);
+            component.set('v.donorType', message.donorType);
         } else if (channel === 'hideFormSpinner') {
             var spinner = component.find('formSpinner');
             $A.util.addClass(spinner, 'slds-hide');
