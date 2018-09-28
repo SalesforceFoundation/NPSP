@@ -15,7 +15,8 @@ from simple_salesforce import SalesforceResourceNotFound
 from locator import npsp_lex_locators
 from selenium.webdriver import ActionChains
 #import os
-#import sys
+import sys
+from email.mime import text
 #sys.path.append(os.path.abspath(os.path.join('..',
 #sys.path.append("/Users/skristem/Documents/GitHub/CumulusCI/cumulusci/robotframework/tests")
 #import Salesforce
@@ -295,7 +296,7 @@ class NPSP(object):
         self.selenium.page_should_contain_element(locator)    
      
     def select_related_dropdown(self,title):
-        """"""
+        """Clicks on the dropdown next to Related List"""
         locator=npsp_lex_locators['record']['related']['drop-down'].format(title)
         self.selenium.get_webelement(locator).click()   
         
@@ -372,16 +373,20 @@ class NPSP(object):
     def click_task_button(self, title):
         if title=="Add Dependent Task":
             id="btnAddDepTask"           
-            locator = npsp_lex_locators['engagement_plan']['task_id'].format(id)
+            locator = npsp_lex_locators['id'].format(id)
             self.selenium.get_webelement(locator).click()    
         elif title=="Add Task":
             id="j_id0:theForm:btnAddTask"
-            locator = npsp_lex_locators['engagement_plan']['task_id'].format(id)
+            locator = npsp_lex_locators['id'].format(id)
             self.selenium.get_webelement(locator).click() 
         elif title=="Save":
             id="j_id0:theForm:j_id5:j_id6:saveBTN"
-            locator = npsp_lex_locators['engagement_plan']['task_id'].format(id)
+            locator = npsp_lex_locators['id'].format(id)
             self.selenium.get_webelement(locator).click()
+        elif title=="Add Row":
+            id="j_id0:theForm:j_id49:0:addRowBTN"  
+            locator = npsp_lex_locators['id'].format(id)
+            self.selenium.get_webelement(locator).click()  
     
     def check_related_list_values(self,list_name,*args):
         """Verifies the value of custom related list"""
@@ -475,17 +480,135 @@ class NPSP(object):
         self.selenium.get_webelement(locator).click()
         time.sleep(1)  
         
-    def select_search(self):
-        """selects first record of the page"""
-        locator = npsp_lex_locators["click_search"]
+    def select_search(self, index, value):
+        """"""
+        locator = npsp_lex_locators["click_search"].format(index)
+        loc_value = self.selenium.get_webelement(locator).send_keys(value)
         loc = self.selenium.get_webelement(locator)
-        loc.send_keys(Keys.TAB+ Keys.RETURN)
+        #loc.send_keys(Keys.TAB+ Keys.RETURN)
         time.sleep(1)  
         
     def enter_gau(self, value):
         id = "lksrch"
-        locator = npsp_lex_locators["engagement_plan"]["task_id"].format(id)
+        locator = npsp_lex_locators["id"].format(id)
         loc = self.selenium.get_webelement(locator)
         loc.send_keys(value)
         self.selenium.get_webelement("//*[@title='Go!']").click()
         time.sleep(1)
+
+    def add_gau_allocation(self,type,index, value):
+        if type=="percentage":
+            id="j_id0:theForm:j_id49:{}:alloInputPercent"
+            locator = npsp_lex_locators["id"].format(id)
+            locc = locator.format(index)
+            loc = self.selenium.get_webelement(locc)
+            loc.send_keys(value)
+        elif type=="amount":
+            id="j_id0:theForm:j_id49:{}:alloInputAmount"
+            locator = npsp_lex_locators["id"].format(id)
+            locc = locator.format(index)
+            loc = self.selenium.get_webelement(locc)
+            loc.send_keys(value)    
+        
+    def click_save(self, page):
+        if  page== "GAU":
+            id="j_id0:theForm:j_id9:j_id10:saveBTN"
+            locator = npsp_lex_locators["id"].format(id)
+            self.selenium.get_webelement(locator).click()
+     
+    def enter_payment_schedule(self, *args):
+        """Enter values into corresponding fields in Levels page"""                 
+        #if name == "Payments":
+        id = ["j_id0:vfForm:paymentCount","j_id0:vfForm:intervals","j_id0:vfForm:intervalunits"]
+        for i in range(len(args)):
+            locator = npsp_lex_locators['id'].format(id[i])
+            loc = self.selenium.get_webelement(locator)
+            self.selenium.set_focus_to_element(locator)       
+            self.selenium.select_from_list_by_label(loc,args[i])
+            time.sleep(2)    
+                
+    def verify_payment_split(self, amount, no_payments):
+        loc = "//*[@id='pmtTable']/tbody/tr/td[2]/div//input[@value= '{}']"
+        values = int(amount)/int(no_payments)
+        values_1 = "{0:.2f}".format(values)
+        val = str(values_1)
+        locator =  loc.format(val)
+        list_payments = self.selenium.get_webelements(locator)
+        t_loc=len(list_payments)
+        if  t_loc == no_payments:
+            for element in list_payments:
+                self.selenium.page_should_contain_element(element)
+            return str(t_loc)
+        else:
+           return str(t_loc)
+       
+    def verify_date_split(self,date, no_payments, interval): 
+        ddate=[]  
+        mm, dd, yyyy = date.split("/")
+        mm, dd, yyyy = int(mm), int(dd), int(yyyy)
+        locator = npsp_lex_locators['payments']['date_loc'].format(date)
+        t_dates = self.selenium.get_webelement(locator)
+        self.selenium.page_should_contain_element(t_dates)
+        for i in range(int(no_payments) + 1):
+            if mm <= 12:
+                date_list = [mm, dd, yyyy]
+                dates = list(map(str, date_list))
+                new_date = "/".join(dates)
+                mm = mm + int(interval)
+                dates = list(map(str, date_list))
+                #if new_date not in t_dates: 
+                locator1 = npsp_lex_locators['payments']['date_loc'].format(new_date)
+                t_dates = self.selenium.get_webelement(locator1)                  
+                self.selenium.page_should_contain_element(t_dates)
+            elif mm > 12:
+                yyyy = yyyy + 1
+                mm = (mm + int(interval))-(12+int(interval))
+        return "pass"
+        
+    def click_viewall_related_list (self,title):  
+        """clicks on the View All link under the Related List"""      
+        locator=npsp_lex_locators['record']['related']['viewall'].format(title)
+        self.selenium.get_webelement(locator).click()
+        
+    def click_payments_button (self,title):  
+        """clicks on the button on the payments page"""      
+        locator=npsp_lex_locators['payments']['button'].format(title)
+        self.selenium.get_webelement(locator).click()
+        
+        
+    def verify_payments(self, amount,no_payments):
+        """To select a row on object page based on name and open the dropdown"""
+        locators = npsp_lex_locators['payments']
+        list_ele = self.selenium.get_webelements(locators)
+        t_count=len(list_ele)
+        for index, element in enumerate(list_ele):
+            if element.text == amount:
+                loc = npsp_lex_locators['payments']['pay_amount'].format(index + 1, amount)
+                self.selenium.page_should_contain_element(loc)
+                time.sleep(1)
+        
+                
+    """Copied below keywords from Salesforce Library"""    
+        
+#     def populate_lookup_field(self, name, value):
+#         self.populate_field(name, value)
+#         locator = npsp_lex_locators['field_lookup_value'].format(value)
+#         #self._call_selenium('_populate_lookup_field', True, locator)
+#         self.selenium.set_focus_to_element(locator)
+#         self.selenium.get_webelement(locator).click() 
+#         
+#     def populate_form(self, **kwargs):
+#         for name, value in kwargs.items():
+#             locator = npsp_lex_locators['field'].format(name)
+#             self.selenium.set_focus_to_element(locator)
+#             field = self.selenium.get_webelement(locator)
+#             field.clear()
+#             field.send_keys(value)
+#     
+#     def populate_field(self, name, value):
+#         locator = lex_locators['object']['field'].format(name) 
+#         self.selenium.set_focus_to_element(locator)
+#         field = self.selenium.get_webelement(locator)
+#         field.clear()
+#         field.send_keys(value)  
+        

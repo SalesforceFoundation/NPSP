@@ -44,7 +44,7 @@ npsp_lex_locators={
     'dd_options':'//*[@id="p3"]/option[text()="{}"]',
     'related_list_items':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")][.//div[contains(@class, "outputLookupContainer")]]//a[text()="{}"]',
     'span_button':'//span[text()="{}"]',
-    'header_field_value':'//li[contains(@class, "slds-page-header__detail")][.//span[contains(@class, "slds-form-element__label")][@title="{}"]]//*[text()="{}"]',
+    'header_field_value':'//li[contains(@class, "slds-page-header__detail")][.//p[contains(@class, "slds-text-heading--label")][@title="{}"]]//*[text()="{}"]',
     'header_datepicker':'//li[contains(@class, "slds-page-header__detail")][.//p[contains(@class, "slds-text-heading--label")][@title="{}"]]//*[@class="uiOutputDate"]',
     'affiliated_contacts':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")]//tbody//td/span[text()="{}"]/../following-sibling::td/span[text()="{}"]',
     'select_one_record':"//tbody/tr[1]/th/span/a",
@@ -93,8 +93,7 @@ npsp_lex_locators={
         
     },
     'payments':{
-        #'date_loc':"//*[@id='pmtTable']/tbody/tr[1]/td[3]/div//input[@value='9/11/2018']",
-        'date_loc':"//input[@value='{}']",
+        'date_loc':"//*[@id='pmtTable']/tbody/tr/td[3]/div//input",
         'button':'//input[@value="{}"]',
         'no_payments':'//tbody/tr',
         'pay_amount':'//tbody/tr[{}]/td[3]/span/span[text()="{}"]',
