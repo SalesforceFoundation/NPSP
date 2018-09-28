@@ -8,7 +8,7 @@ npsp_lex_locators={
         'button': "//div[@class='actionsContainer']/button[@title='{}']",
         'datepicker':"//div[contains(@class,'uiDatePickerGrid')]/table[@class='calGrid']//span[text()='{}']",
         'edit_button':'//*[@title="{}"]',
-        'list':"//div[contains(@class,'forcePageBlockSectionRow')]/div[contains(@class,'forcePageBlockItem')]/div[contains(@class,'slds-p-vertical_xx-small')]/div[@class='slds-form-element__control']/div[.//span[text()='{}']][//div[contains(@class,'uiMenu')]//a[@class='select']]",
+        'list':"//div[contains(@class,'forcePageBlockSectionRow')]/div[contains(@class,'forcePageBlockItem')]/div[contains(@class,'slds-form-element')]/div[@class='slds-form-element__control']/div[.//span[text()='{}']][//div[contains(@class,'uiMenu')]//a[@class='select']]",
         'dropdown':"//div[@class='select-options']/ul[@class='scrollable']/li[@class='uiMenuItem uiRadioMenuItem']/a[contains(text(),'{}')]",
         'related': {
             'button': "//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//a[@title='{}']",
@@ -96,8 +96,9 @@ npsp_lex_locators={
         #'date_loc':"//*[@id='pmtTable']/tbody/tr[1]/td[3]/div//input[@value='9/11/2018']",
         'date_loc':"//input[@value='{}']",
         'button':'//input[@value="{}"]',
-        'no_payments':'//tbody/tr',
+        'no_payments':'//tbody/tr/td[3]',
         'pay_amount':'//tbody/tr[{}]/td[3]/span/span[text()="{}"]',
+        'check_occurance':'//h2/a/span[@title="{}"]/following-sibling::span',
         },
     
 }
