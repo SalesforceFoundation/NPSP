@@ -367,7 +367,7 @@ public with sharing class BDI_ContactService {
         strSoql += ' WHERE AccountId IN :setHHId';
         List<Contact> listHHContacts = database.query(strSoql);
         for (Contact con : listHHContacts) {
-            mapDIKeyToContact.put(con.Firstname + '|' + con.AccountId, con);
+            mapDIKeyToContact.put(con.Firstname.toLowerCase() + '|' + con.AccountId, con);
         }
     }
 
@@ -601,7 +601,7 @@ public with sharing class BDI_ContactService {
     */
     private void addStringToSet(String str, Set<String> setStr) {
         if (String.isNotBlank(str)) {
-            setStr.add(str);
+            setStr.add(str.toLowerCase());
         }
     }
 
@@ -696,7 +696,7 @@ public with sharing class BDI_ContactService {
 
         boolean addedToken = false;
         if (con.Firstname != null) {
-            listFName.add(con.Firstname);
+            listFName.add(con.Firstname.toLowerCase());
             addedToken = true;
         }
         if (!addedToken || !isFirstnameInContactMatchRules)
@@ -704,7 +704,7 @@ public with sharing class BDI_ContactService {
 
         addedToken = false;
         if (con.Lastname != null) {
-            listLName.add(con.Lastname);
+            listLName.add(con.Lastname.toLowerCase());
             addedToken = true;
         }
         if (!addedToken || !isLastnameInContactMatchRules)
@@ -712,19 +712,19 @@ public with sharing class BDI_ContactService {
 
         addedToken = false;
         if (con.Email != null) {
-            listEmail.add(con.Email);
+            listEmail.add(con.Email.toLowerCase());
             addedToken = true;
         }
         if (con.npe01__HomeEmail__c != null) {
-            listEmail.add(con.npe01__HomeEmail__c);
+            listEmail.add(con.npe01__HomeEmail__c.toLowerCase());
             addedToken = true;
         }
         if (con.npe01__WorkEmail__c != null) {
-            listEmail.add(con.npe01__WorkEmail__c);
+            listEmail.add(con.npe01__WorkEmail__c.toLowerCase());
             addedToken = true;
         }
         if (con.npe01__AlternateEmail__c != null) {
-            listEmail.add(con.npe01__AlternateEmail__c);
+            listEmail.add(con.npe01__AlternateEmail__c.toLowerCase());
             addedToken = true;
         }
         if (!addedToken || !isEmailInContactMatchRules)
@@ -822,7 +822,7 @@ public with sharing class BDI_ContactService {
         boolean addedToken = false;
 
         if (di.get(strCx + '_Firstname__c') != null) {
-            listFName.add(String.valueOf(di.get(strCx + '_Firstname__c')));
+            listFName.add(String.valueOf(di.get(strCx + '_Firstname__c')).toLowerCase());
             addedToken = true;
         }
         if (!isFirstnameInContactMatchRules || !addedToken) {
@@ -831,7 +831,7 @@ public with sharing class BDI_ContactService {
 
         addedToken = false;
         if (di.get(strCx + '_Lastname__c') != null) {
-            listLName.add(String.valueOf(di.get(strCx + '_Lastname__c')));
+            listLName.add(String.valueOf(di.get(strCx + '_Lastname__c')).toLowerCase());
             addedToken = true;
         }
         if (!isLastnameInContactMatchRules || !addedToken) {
@@ -840,15 +840,15 @@ public with sharing class BDI_ContactService {
 
         addedToken = false;
         if (di.get(strCx + '_Personal_Email__c') != null) {
-            listEmail.add(String.valueOf(di.get(strCx + '_Personal_Email__c')));
+            listEmail.add(String.valueOf(di.get(strCx + '_Personal_Email__c')).toLowerCase());
             addedToken = true;
         }
         if (di.get(strCx + '_Work_Email__c') != null) {
-            listEmail.add(String.valueOf(di.get(strCx + '_Work_Email__c')));
+            listEmail.add(String.valueOf(di.get(strCx + '_Work_Email__c')).toLowerCase());
             addedToken = true;
         }
         if (di.get(strCx + '_Alternate_Email__c') != null) {
-            listEmail.add(String.valueOf(di.get(strCx + '_Alternate_Email__c')));
+            listEmail.add(String.valueOf(di.get(strCx + '_Alternate_Email__c')).toLowerCase());
             addedToken = true;
         }
         if (!isEmailInContactMatchRules || !addedToken) {
@@ -883,15 +883,15 @@ public with sharing class BDI_ContactService {
         // if we didn't create any dikey's for this di due to it not matching all constraints,
         // we have to still add a single key that this di can use to find the new contact to be created.
         if (listDiKey.size() == 0) {
-            String diKey =  bdi.strNull(di.get(strCx + '_Firstname__c')) + '|' + bdi.strNull(di.get(strCx + '_Lastname__c')) + '|';
+            String diKey =  bdi.strNull(String.valueOf(di.get(strCx + '_Firstname__c')).toLowerCase()) + '|' + bdi.strNull(String.valueOf(di.get(strCx + '_Lastname__c')).toLowerCase()) + '|';
 
             // email
             if (di.get(strCx + '_Personal_Email__c') != null) {
-                diKey += String.valueOf(di.get(strCx + '_Personal_Email__c'));
+                diKey += String.valueOf(String.valueOf(di.get(strCx + '_Personal_Email__c')).toLowerCase());
             } else if (di.get(strCx + '_Work_Email__c') != null) {
-                diKey += String.valueOf(di.get(strCx + '_Work_Email__c'));
+                diKey += String.valueOf(String.valueOf(di.get(strCx + '_Work_Email__c')).toLowerCase());
             } else if (di.get(strCx + '_Alternate_Email__c') != null) {
-                diKey += String.valueOf(di.get(strCx + '_Alternate_Email__c'));
+                diKey += String.valueOf(String.valueOf(di.get(strCx + '_Alternate_Email__c')).toLowerCase());
             }
             diKey += '|';
 
@@ -915,7 +915,7 @@ public with sharing class BDI_ContactService {
 
         // for c2's that we know their household, we want to add a "looser" key to match by as well.
         if (strCx == 'Contact2' && di.HouseholdAccountImported__c != null && di.get('Contact2_Firstname__c') != null) {
-            listDiKey.add(di.get('Contact2_Firstname__c') + '|' + di.HouseholdAccountImported__c);
+            listDiKey.add(String.valueOf(di.get('Contact2_Firstname__c')).toLowerCase() + '|' + di.HouseholdAccountImported__c);
         }
         pl.stop();
         return listDiKey;

@@ -1446,6 +1446,47 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
+    * @description operation
+    *        import existing contact with names using different case, make sure matching is case insensitive
+    * verify:
+    *        c1 matched despite email case mismatch
+    *        c2 matched in household despite firstname case mismatch
+    *        no problems updating additional fields on C1 and C2
+    **********************************************************************************************************/
+    static testMethod void OneDIExistingContactsCaseInsensitive() {
+        if (strTestOnly != '*' && strTestOnly != 'OneDIExistingContactsExistingHousehold') return;
+
+        // existing contacts into the same household
+        List<Contact> listConExisting = new List<Contact>();
+        listConExisting.add(new Contact(Firstname='C1', Lastname='C1', Email='c1@C1.com', Salutation='Mr'));
+        insert listConExisting;
+        ID hhId = getContacts()[0].AccountId;
+        listConExisting.add(new Contact(Firstname='c2', Lastname='C1', Email='c2@C2.com', Salutation='Mrs', AccountId=hhId));
+        upsert listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
+
+        List<DataImport__c> listDI = new List<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='C1@C1.com', Contact1_Salutation__c='Dr',
+            Contact2_Firstname__c='C2', Contact2_Salutation__c='Prof'));
+        insert listDI;
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        // verify expected results
+        List<Contact> listCon = getContacts();
+        System.assertEquals(2, listCon.size(), 'Contacts should be matched, despite case mismatch');
+        System.assertEquals(hhId, listCon[0].AccountId);
+        System.assertEquals(hhId, listCon[1].AccountId);
+        System.assertEquals('Dr', listCon[0].Salutation);
+        System.assertEquals('Prof', listCon[1].Salutation);
+    }
+
+    /*********************************************************************************************************
     * @description operation:
     *    Retrieves data import records in the order they were created during the test. 
     * @return List<DataImport__c> All data import records in creation order
