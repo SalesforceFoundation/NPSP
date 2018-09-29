@@ -110,12 +110,6 @@ public class BDI_Donations {
                 mapDIFieldToOppField = BDI_DataImportService.mapFieldsForDIObject('Opportunity', 'Opportunity', 
                     BDI_DataImportService.listStrDataImportFields);
             }
-
-            // handle multicurrency if it's enabled
-            if (UserInfo.isMultiCurrencyOrganization()) {
-                mapDIFieldToOppField.put('CurrencyIsoCode', 'CurrencyIsoCode');
-            }
-
             return mapDIFieldToOppField;
         }
         set;
@@ -130,12 +124,6 @@ public class BDI_Donations {
                 mapDIFieldToPmtField = BDI_DataImportService.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c', 
                     BDI_DataImportService.listStrDataImportFields);
             }
-
-            // handle multicurrency if it's enabled
-            if (UserInfo.isMultiCurrencyOrganization()) {
-                mapDIFieldToPmtField.put('CurrencyIsoCode', 'CurrencyIsoCode');
-            }
-
             return mapDIFieldToPmtField;
         }
         set;

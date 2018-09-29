@@ -721,7 +721,27 @@ global with sharing class BDI_DataImportService {
                 }
             }
         }
+
+        if (isCurrencyMapped(strBaseObj)) {
+            addCurrencyIsoCode(mapDIFieldToObjField);
+        }
+
         return mapDIFieldToObjField;
+    }
+
+    private static Boolean isCurrencyMapped(String objectName) {
+        Set<String> objectsThatMapCurrencyCode = new Set<String>{
+            'npe01__OppPayment__c',
+            'Opportunity'
+        };
+        return objectsThatMapCurrencyCode.contains(objectName);
+    }
+
+    private static void addCurrencyIsoCode(Map<String, String> fieldMap) {
+        // handle multicurrency if it's enabled
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            fieldMap.put('CurrencyIsoCode', 'CurrencyIsoCode');
+        }
     }
 
     /*******************************************************************************************************
