@@ -190,6 +190,209 @@ public with sharing class BDI_Donations_TEST {
 
     /*********************************************************************************************************
     * @description operation
+    *        import existing contacts with existing open Opportunities in a currency other than the org default
+    *        ex. 100 CAD should match 100 CAD
+    * verify:
+    *       opportunity objects matched & closed
+    *       payment objects updated
+    */
+    @isTest
+    static void dataImportWithExistingDonationInNonDefaultCurrency() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
+        if (!runMulticurrencyTest()) {
+            return;
+        }
+
+        String testCurrencyCode = (String)getNonDefaultCurrencies()[0].get('IsoCode');
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
+        insert testContacts;
+
+        Contact testContact = testContacts[0];
+
+        List<Opportunity> testOpportunities = UTIL_UnitTestData_TEST.OppsForContactList(testContacts, null,
+            UTIL_UnitTestData_TEST.getOpenStage(), System.today(), 100, null, null);
+
+        Opportunity testOpportunity = testOpportunities[0];
+        testOpportunity.put('CurrencyIsoCode', testCurrencyCode);
+
+        insert testOpportunities;
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+
+        DataImport__c matchingImport = new DataImport__c(
+            Contact1_Firstname__c = testContact.FirstName,
+            Contact1_Lastname__c = testContact.LastName,
+            Contact1_Work_Email__c = testContact.npe01__WorkEmail__c,
+            Donation_Amount__c = testOpportunity.Amount,
+            Donation_Date__c = testOpportunity.CloseDate,
+            Payment_Check_Reference_Number__c = 'abc',
+            Payment_Method__c = 'Check'
+        );
+        matchingImport.put('CurrencyIsoCode', testCurrencyCode);
+        dataImports.add(matchingImport);
+        System.debug('dataImports: ' + dataImports);
+        insert dataImports;
+
+        // set the specified settings
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c') + ';' +
+            'CurrencyIsoCode';
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+
+        //run batch data import
+        Test.startTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        Id ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        // verify expected results
+
+        List<Opportunity> resultOpportunities =
+            Database.query(
+                'SELECT Id, AccountId, Amount, CurrencyIsoCode, IsClosed, IsWon, Name, StageName ' +
+                'FROM Opportunity ' +
+                'ORDER BY Id'
+            );
+
+        System.debug('resultOpportunities: ' + resultOpportunities);
+        System.assertEquals(1, resultOpportunities.size());
+        System.assertEquals(true, resultOpportunities[0].IsWon);
+        System.assertEquals(dataImports[0].Donation_Amount__c, resultOpportunities[0].Amount);
+        System.assertEquals(testCurrencyCode, (String)resultOpportunities[0].get('CurrencyIsoCode'));
+
+        List<npe01__OppPayment__c> resultPayments =
+            Database.query(
+              'SELECT Id, CurrencyIsoCode, npe01__Check_Reference_Number__c, ' +
+                  'npe01__Payment_Amount__c, npe01__Payment_Method__c ' +
+              'FROM npe01__OppPayment__c ' +
+              'ORDER BY npe01__Opportunity__r.Id'
+            );
+
+        System.debug('resultPayments: ' + resultPayments);
+
+        System.assertEquals(1, resultPayments.size());
+
+        System.assertEquals('Check', resultPayments[0].npe01__Payment_Method__c);
+        System.assertEquals('abc', resultPayments[0].npe01__Check_Reference_Number__c);
+        System.assertEquals(dataImports[0].Donation_Amount__c, resultPayments[0].npe01__Payment_Amount__c);
+        System.assertEquals(testCurrencyCode, (String)resultPayments[0].get('CurrencyIsoCode'));
+
+
+        dataImports = [
+            SELECT Id, DonationImported__c, DonationImportStatus__c
+            FROM DataImport__c
+            ORDER BY Id
+        ];
+        System.assertEquals(1, dataImports.size());
+        System.assertEquals(dataImports[0].DonationImported__c, resultOpportunities[0].Id);
+        System.assertEquals(System.Label.bdiMatched, dataImports[0].DonationImportStatus__c);
+    }
+
+    /*********************************************************************************************************
+    * @description operation
+    *        import existing contacts with existing open Opportunities in a currency other than the org default -
+    *        everything matches except the currency code, which means the amounts aren't actually equivalent
+    *        ex. 100 USD should not match 100 CAD
+    * verify:
+    *       opportunity objects not matched & closed
+    *       payment objects updated
+    */
+    @isTest
+    static void dataImportWithNonMatchingCurrencyDonation() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
+        if (!runMulticurrencyTest()) {
+            return;
+        }
+
+        String testCurrencyCode = (String)getNonDefaultCurrencies()[0].get('IsoCode');
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
+        insert testContacts;
+
+        Contact testContact = testContacts[0];
+
+        List<Opportunity> testOpportunities = UTIL_UnitTestData_TEST.OppsForContactList(testContacts, null,
+            UTIL_UnitTestData_TEST.getOpenStage(), System.today(), 100, null, null);
+
+        // leave currency as the org default; do not set it to the test currency
+        Opportunity testOpportunity = testOpportunities[0];
+
+        insert testOpportunities;
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+
+        DataImport__c matchingImport = new DataImport__c(
+            Contact1_Firstname__c = testContact.FirstName,
+            Contact1_Lastname__c = testContact.LastName,
+            Contact1_Work_Email__c = testContact.npe01__WorkEmail__c,
+            Donation_Amount__c = testOpportunity.Amount,
+            Donation_Date__c = testOpportunity.CloseDate,
+            Payment_Check_Reference_Number__c = 'abc',
+            Payment_Method__c = 'Check'
+        );
+        matchingImport.put('CurrencyIsoCode', testCurrencyCode);
+        dataImports.add(matchingImport);
+        System.debug('dataImports: ' + dataImports);
+        insert dataImports;
+
+        // set the specified settings
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c') + ';' +
+            'CurrencyIsoCode';
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+
+        //run batch data import
+        Test.startTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        Id ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        // verify expected results
+
+        List<Opportunity> resultOpportunities =
+            Database.query(
+                'SELECT Id, AccountId, Amount, CurrencyIsoCode, IsClosed, IsWon, Name, StageName ' +
+                    'FROM Opportunity ' +
+                    'ORDER BY Id'
+            );
+
+        System.debug('resultOpportunities: ' + resultOpportunities);
+        System.assertEquals(2, resultOpportunities.size());
+
+        List<npe01__OppPayment__c> resultPayments =
+            Database.query(
+                'SELECT Id, CurrencyIsoCode, npe01__Check_Reference_Number__c, ' +
+                    'npe01__Payment_Amount__c, npe01__Payment_Method__c ' +
+                    'FROM npe01__OppPayment__c ' +
+                    'ORDER BY npe01__Opportunity__r.Id'
+            );
+
+        System.debug('resultPayments: ' + resultPayments);
+
+        System.assertEquals(2, resultPayments.size());
+
+        dataImports = [
+            SELECT Id, DonationImported__c, DonationImportStatus__c
+            FROM DataImport__c
+            ORDER BY Id
+        ];
+        System.assertEquals(1, dataImports.size());
+        System.assertEquals(System.Label.bdiCreated, dataImports[0].DonationImportStatus__c);
+    }
+
+    /*********************************************************************************************************
+    * @description operation
     *        import existing contacts with existing open Opportunities
     * verify:
     *       opportunity objects matched & closed
@@ -609,27 +812,11 @@ public with sharing class BDI_Donations_TEST {
             return;
         }
 
-        // only run this test if we're in a multicurrency org
-        if (!UserInfo.isMultiCurrencyOrganization()) {
+        if (!runMulticurrencyTest()) {
             return;
         }
 
-        // we need an currency with a rate that doesn't match the org default
-        List<SObject> currencies = Database.query(
-            'SELECT IsoCode, ConversionRate, IsCorporate ' +
-            'FROM CurrencyType ' +
-            'WHERE IsActive = true ' +
-                ' AND IsCorporate = false ' +
-                ' AND ConversionRate != 1 ' +
-            'LIMIT 1 '
-        );
-
-        // if there's not a currency to test against, don't run the test
-        if (currencies.size() < 1) {
-            return;
-        }
-
-        String testCurrencyCode = (String)currencies[0].get('IsoCode');
+        String testCurrencyCode = (String)getNonDefaultCurrencies()[0].get('IsoCode');
 
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
@@ -1963,5 +2150,48 @@ public with sharing class BDI_Donations_TEST {
         return [SELECT Id, IsWon, IsClosed, Amount, npe01__Amount_Outstanding__c,
             (SELECT Id, npe01__Payment_Amount__c, npe01__Written_Off__c, npe01__Paid__c FROM  npe01__OppPayment__r)
             FROM Opportunity WHERE Id = :oppId LIMIT 1];
+    }
+
+    /**
+    * @description Returns a list of currencies that can be used for testing multicurrency orgs,
+    * specifically currencies that aren't the org default and don't have a conversion rate that
+    * would match the org default.
+    * @return Currently returns a max of 1 currency as that's all we need to support current scenarios.
+    * Could be adjusted to return multiple currencies as needed.
+    */
+    private static List<SObject> getNonDefaultCurrencies() {
+        // we need an currency with a rate that doesn't match the org default
+        List<SObject> currencies = Database.query(
+            'SELECT IsoCode, ConversionRate, IsCorporate ' +
+                'FROM CurrencyType ' +
+                'WHERE IsActive = true ' +
+                    'AND IsCorporate = false ' +
+                    'AND ConversionRate != 1 ' +
+                'LIMIT 1 '
+        );
+        return currencies;
+    }
+
+    /**
+    * @description Determines whether it's appropriate to run a test against multicurrency functionality. We should
+    * only run multicurrency tests when we're in an organization with multicurrency turned on and more than one
+    * currency has been set up.
+    * @return Boolean indicating whether to run the test
+    */
+    private static Boolean runMulticurrencyTest() {
+        // only run the test if we're in a multicurrency org
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            return false;
+        }
+
+        // we need a currency with a rate that doesn't match the org default
+        List<SObject> currencies = getNonDefaultCurrencies();
+
+        // if there's not a currency to test against, don't run the test
+        if (currencies.size() < 1) {
+            return false;
+        }
+
+        return true;
     }
 }
