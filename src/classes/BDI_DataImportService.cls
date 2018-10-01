@@ -735,24 +735,24 @@ global with sharing class BDI_DataImportService {
         for (String dataImportField : dataImportFields) {
 
             DescribeFieldResult fieldDescribe;
-            String helpText = '';
+            String targetFieldName = '';
 
             if (useCustomMetadatainsteadOfHelpText) {
 
                 if (bdiFieldMappingMap.containsKey(dataImportField)) {
 
-                    helpText = bdiFieldMappingMap.get(dataImportField);
+                    targetFieldName = bdiFieldMappingMap.get(dataImportField);
                 }
             } else {
 
                 fieldDescribe = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), dataImportField);
 
-                helpText = fieldDescribe.getInlineHelpText();
+                targetFieldName = fieldDescribe.getInlineHelpText();
             }
 
-            if (helpText != null && helpText != '') {
+            if (targetFieldName != null && targetFieldName != '') {
 
-                List<String> parts = helpText.split('\\.', 2);
+                List<String> parts = targetFieldName.split('\\.', 2);
 
                 if (parts.size() == 2 && parts[0] == dataImportObjectName && parts[1] != '') {
                     String fieldName = parts[1];
