@@ -10,7 +10,7 @@
         <length>255</length>
         <required>true</required>
         <type>Text</type>
-        <unique>true</unique>
+        <unique>false</unique>
     </fields>
     <fields>
         <fullName>Target_Field__c</fullName>

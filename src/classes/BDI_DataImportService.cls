@@ -712,7 +712,7 @@ global with sharing class BDI_DataImportService {
         BDISettings__c bdiSettings = BDISettings__c.getOrgDefaults();
 
         Map<String, String> dataImportFieldToTargetField = new Map<String, String>();
-        Map<String, String> bdiFIeldMappingMap = new Map<String, String>();
+        Map<String, String> bdiFieldMappingMap = new Map<String, String>();
 
         Boolean useCustomMetadatainsteadOfHelpText = false;
 
@@ -726,7 +726,7 @@ global with sharing class BDI_DataImportService {
 
             for (BDI_Field_Mapping__mdt customMetadata : bdiFIeldMappingList) {
 
-                bdiFIeldMappingMap.put(customMetadata.Source_Field__c.toLowerCase(), customMetadata.Target_Field__c);
+                bdiFieldMappingMap.put(customMetadata.Source_Field__c.toLowerCase(), customMetadata.Target_Field__c);
             }
 
             useCustomMetadatainsteadOfHelpText = true;
@@ -739,9 +739,9 @@ global with sharing class BDI_DataImportService {
 
             if (useCustomMetadatainsteadOfHelpText) {
 
-                if (bdiFIeldMappingMap.containsKey(dataImportField)) {
+                if (bdiFieldMappingMap.containsKey(dataImportField)) {
 
-                    helpText = bdiFIeldMappingMap.get(dataImportField);
+                    helpText = bdiFieldMappingMap.get(dataImportField);
                 }
             } else {
                 system.debug('USING THE OLD STAFF');
