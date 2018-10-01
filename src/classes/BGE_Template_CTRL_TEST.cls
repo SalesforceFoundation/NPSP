@@ -54,15 +54,15 @@ private class BGE_Template_CTRL_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Tests getTemplateDetails() for a new record
+    * @description Tests getRecordDetails() for a new record
     */
 
     @isTest
     public static void testGetNewTemplateDetails() {
 
         Test.startTest();
-        String jsonModel = BGE_Template_CTRL.getTemplateDetails(null);
-        BGE_Template_CTRL.TemplateDetailsModel templateDetails = (BGE_Template_CTRL.TemplateDetailsModel) JSON.deserialize(jsonModel, BGE_Template_CTRL.TemplateDetailsModel.class);
+        String jsonModel = BGE_Template_CTRL.getRecordDetails('Batch_Template__c', null);
+        BGE_Template_CTRL.BGEDetailsModel templateDetails = (BGE_Template_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_Template_CTRL.BGEDetailsModel.class);
         Test.stopTest();
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
@@ -87,8 +87,8 @@ private class BGE_Template_CTRL_TEST {
         Batch_Template__c batchTemplate = initBatchTemplateTest();
 
         Test.startTest();
-        String jsonModel = BGE_Template_CTRL.getTemplateDetails(batchTemplate.Id);
-        BGE_Template_CTRL.TemplateDetailsModel templateDetails = (BGE_Template_CTRL.TemplateDetailsModel) JSON.deserialize(jsonModel, BGE_Template_CTRL.TemplateDetailsModel.class);
+        String jsonModel = BGE_Template_CTRL.getRecordDetails('Batch_Template__c', batchTemplate.Id);
+        BGE_Template_CTRL.BGEDetailsModel templateDetails = (BGE_Template_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_Template_CTRL.BGEDetailsModel.class);
         Test.stopTest();
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
@@ -129,7 +129,7 @@ private class BGE_Template_CTRL_TEST {
 
         Test.startTest();
         String jsonModel = BGE_Template_CTRL.saveTemplate(templateInfoJSON, activeFieldsJSON);
-        BGE_Template_CTRL.TemplateDetailsModel templateDetails = (BGE_Template_CTRL.TemplateDetailsModel) JSON.deserialize(jsonModel, BGE_Template_CTRL.TemplateDetailsModel.class);
+        BGE_Template_CTRL.BGEDetailsModel templateDetails = (BGE_Template_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_Template_CTRL.BGEDetailsModel.class);
         Test.stopTest();
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
@@ -173,7 +173,7 @@ private class BGE_Template_CTRL_TEST {
         Test.startTest();
         System.debug(batchTemplate);
         String jsonModel = BGE_Template_CTRL.saveTemplate(templateInfoJSON, activeFieldsJSON);
-        BGE_Template_CTRL.TemplateDetailsModel templateDetails = (BGE_Template_CTRL.TemplateDetailsModel) JSON.deserialize(jsonModel, BGE_Template_CTRL.TemplateDetailsModel.class);
+        BGE_Template_CTRL.BGEDetailsModel templateDetails = (BGE_Template_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_Template_CTRL.BGEDetailsModel.class);
         Test.stopTest();
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');

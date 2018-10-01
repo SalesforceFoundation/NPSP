@@ -42,7 +42,7 @@ public with sharing class BGE_Template_CTRL {
     */
     @AuraEnabled
     public static String getRecordDetails(String sObjectName, Id templateId) {
-        TemplateDetailsModel model = new TemplateDetailsModel();
+        BGEDetailsModel model = new BGEDetailsModel();
 
         sObjectName = UTIL_Namespace.StrTokenRemoveNSPrefix(sObjectName);
 
@@ -214,7 +214,7 @@ public with sharing class BGE_Template_CTRL {
     @AuraEnabled
     public static string saveTemplate(String templateInfo, String activeFields) {
         try {
-            TemplateDetailsModel templateDetails = (TemplateDetailsModel) JSON.deserialize(templateInfo, TemplateDetailsModel.class);
+            BGEDetailsModel templateDetails = (BGEDetailsModel) JSON.deserialize(templateInfo, BGEDetailsModel.class);
 
             Batch_Template__c batchTemplate = new Batch_Template__c();
 
@@ -242,7 +242,7 @@ public with sharing class BGE_Template_CTRL {
     /*******************************************************************************************************
     * @description a class to retrieve and save the required information for the BGE_TemplateDetails component.
     */
-    public class TemplateDetailsModel {
+    public class BGEDetailsModel {
         @AuraEnabled public String name;
         @AuraEnabled public String description;
         @AuraEnabled public Boolean enableTotalEntry;
@@ -252,7 +252,7 @@ public with sharing class BGE_Template_CTRL {
         @AuraEnabled public String activeFields;
         @AuraEnabled public Map<String, String> labels;
 
-        public TemplateDetailsModel() {
+        public BGEDetailsModel() {
             enableTotalEntry = false;
             requireTotalMatch = false;
             templateFields = new List<AvailableField>();
