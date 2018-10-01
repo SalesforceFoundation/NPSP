@@ -25,7 +25,8 @@
      * @description: alerts parent component that record is saved and needs to be reset
      */
     onSuccess: function (component, event, helper) {
-        helper.sendMessage('onSuccess', '');
+        var message = {'recordId': event.getParams().response.id};
+        helper.sendMessage('onSuccess', message);
         component.destroy();
     },
 
@@ -49,7 +50,9 @@
     setDonorType: function (component, event, helper) {
         var donorType = event.getSource().get('v.value');
         component.set('v.donorType', donorType);
-        helper.sendMessage('setDonorType', donorType);
+
+        var message = {'donorType': donorType};
+        helper.sendMessage('setDonorType', message);
     }
 
 })
