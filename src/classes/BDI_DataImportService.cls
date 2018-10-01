@@ -717,7 +717,7 @@ global with sharing class BDI_DataImportService {
         Boolean useCustomMetadatainsteadOfHelpText = false;
 
         if (bdiSettings.UseCustomMetadatainsteadOfHelpText__c) {
-            system.debug('USING THE NEW STAFF');
+
             BDI_Field_Mapping__mdt[] bdiFIeldMappingList = [SELECT
                                                                 Source_Field__c,
                                                                 Target_Field__c
@@ -744,14 +744,14 @@ global with sharing class BDI_DataImportService {
                     helpText = bdiFieldMappingMap.get(dataImportField);
                 }
             } else {
-                system.debug('USING THE OLD STAFF');
+
                 fieldDescribe = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), dataImportField);
 
                 helpText = fieldDescribe.getInlineHelpText();
             }
 
             if (helpText != null && helpText != '') {
-                system.debug('SOURCE: ==> ' + dataImportField + ' TARGET: ==> ' +  helpText);
+
                 List<String> parts = helpText.split('\\.', 2);
 
                 if (parts.size() == 2 && parts[0] == dataImportObjectName && parts[1] != '') {
