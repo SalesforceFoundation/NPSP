@@ -714,7 +714,7 @@ global with sharing class BDI_DataImportService {
         Map<String, String> dataImportFieldToTargetField = new Map<String, String>();
         Map<String, String> bdiFieldMappingMap = new Map<String, String>();
 
-        Boolean useCustomMetadatainsteadOfHelpText = false;
+        Boolean useCustomMetadataForFieldMapping = false;
 
         if (bdiSettings.UseCustomMetadatainsteadOfHelpText__c) {
 
@@ -729,7 +729,7 @@ global with sharing class BDI_DataImportService {
                 bdiFieldMappingMap.put(customMetadata.Source_Field__c.toLowerCase(), customMetadata.Target_Field__c);
             }
 
-            useCustomMetadatainsteadOfHelpText = true;
+            useCustomMetadataForFieldMapping = true;
         }
 
         for (String dataImportField : dataImportFields) {
@@ -737,7 +737,7 @@ global with sharing class BDI_DataImportService {
             DescribeFieldResult fieldDescribe;
             String targetFieldName = '';
 
-            if (useCustomMetadatainsteadOfHelpText) {
+            if (useCustomMetadataForFieldMapping) {
 
                 if (bdiFieldMappingMap.containsKey(dataImportField)) {
 
