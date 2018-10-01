@@ -36,7 +36,7 @@
             //navigate to record home
             var homeEvent = $A.get('e.force:navigateToObjectHome');
             homeEvent.setParams({
-                'scope': component.get('v.templateMetadata.labels.batchTemplateObject')
+                'scope': component.get('v.templateMetadata.labels.objectName')
             });
             homeEvent.fire();
         } else if (mode === 'edit') {

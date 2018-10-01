@@ -3,6 +3,26 @@
      * @description: instantiates component. Only called when component is first loaded.
      */
     doInit: function (component, event, helper) {
+        var recordId = component.get("v.recordId");
+
+        if (true) {
+            var modalBody;
+            $A.createComponent("c:BGE_TemplateDetails", {sObjectName: component.get("v.sObjectName")},
+                function(content, status) {
+                    if (status === "SUCCESS") {
+                        modalBody = content;
+                        component.find('overlayLib').showCustomModal({
+                            header: "Configure New Batch",
+                            body: modalBody,
+                            showCloseButton: false,
+                            cssClass: "mymodal",
+                            closeCallback: function() {
+                                //alert('You closed the alert!');
+                            }
+                        })
+                    }
+                });
+        }
         helper.getModel(component);
     },
 

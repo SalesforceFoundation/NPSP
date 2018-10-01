@@ -35,7 +35,7 @@
   @description Component used to view, edit, and delete DataImport__c records on the related NPSP_Data_Import_Batch__c record home.
 -->
 
-<aura:component implements="force:hasRecordId,flexipage:availableForAllPageTypes"
+<aura:component implements="force:hasSObjectName,force:hasRecordId,flexipage:availableForAllPageTypes"
                 controller="BGE_DataImportBatchEntry_CTRL"
                 access="global">
 
@@ -52,6 +52,7 @@
     <aura:attribute name="isLoaded" type="Boolean" default="false" description="Updated in setModel when data is loaded"/>
     <aura:attribute name="isNamespaced" type="Boolean" default="true" description="Indicates if org has namespacing"/>
     <aura:attribute name="entryFormBody" type="Aura.Component[]" description="Facet used to hold the BGE_EntryForm component"/>
+    <aura:attribute name="sObjectName" type="String" />
 
     <!--Events-->
     <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
@@ -69,6 +70,7 @@
     <!--Start Markup-->
 
     <lightning:notificationsLibrary aura:id="notifLib"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
 
     <lightning:layout multipleRows="true">
 

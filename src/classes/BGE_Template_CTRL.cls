@@ -41,41 +41,64 @@ public with sharing class BGE_Template_CTRL {
     * @return JSON model of all template details data.
     */
     @AuraEnabled
-    public static String getTemplateDetails(Id templateId) {
-        TemplateDetailsModel templateDetails = new TemplateDetailsModel();
+    public static String getRecordDetails(String sObjectName, Id templateId) {
+        TemplateDetailsModel model = new TemplateDetailsModel();
 
+        sObjectName = UTIL_Namespace.StrTokenRemoveNSPrefix(sObjectName);
+
+        //todo: look at using dynamic SOQL instead
         if (templateId != null) {
-            Batch_Template__c batchTemplate = [SELECT
-                    Name,
-                    Id,
-                    Description__c,
-                    EnableTotalEntry__c,
-                    RequireTotalMatch__c,
-                    Active_Fields__c
-            FROM Batch_Template__c
-            WHERE Id = :templateId];
+            if (sObjectName == 'Batch_Template__c') {
+                Batch_Template__c recordDetails = [SELECT
+                        Name,
+                        Id,
+                        Description__c,
+                        EnableTotalEntry__c,
+                        RequireTotalMatch__c,
+                        Active_Fields__c
+                FROM Batch_Template__c
+                WHERE Id = :templateId];
 
-            templateDetails.name = batchTemplate.Name;
-            templateDetails.description = batchTemplate.Description__c;
-            templateDetails.enableTotalEntry = batchTemplate.EnableTotalEntry__c;
-            templateDetails.id = batchTemplate.Id;
-            templateDetails.requireTotalMatch = batchTemplate.RequireTotalMatch__c;
-            templateDetails.activeFields = batchTemplate.Active_Fields__c;
+                model.name = recordDetails.Name;
+                model.description = recordDetails.Description__c;
+                model.enableTotalEntry = recordDetails.EnableTotalEntry__c;
+                model.id = recordDetails.Id;
+                model.requireTotalMatch = recordDetails.RequireTotalMatch__c;
+                model.activeFields = recordDetails.Active_Fields__c;
+
+            } else if (sObjectName == 'DataImportBatch__c') {
+                DataImportBatch__c recordDetails = [SELECT
+                        Name,
+                        Id,
+                        Batch_Description__c,
+                        EnableTotalEntry__c,
+                        RequireTotalMatch__c,
+                        Active_Fields__c
+                FROM DataImportBatch__c
+                WHERE Id = :templateId];
+
+                model.name = recordDetails.Name;
+                model.description = recordDetails.Batch_Description__c;
+                model.enableTotalEntry = recordDetails.EnableTotalEntry__c;
+                model.id = recordDetails.Id;
+                model.requireTotalMatch = recordDetails.RequireTotalMatch__c;
+                model.activeFields = recordDetails.Active_Fields__c;
+            }
         }
 
-        templateDetails.templateFields = getAvailableFields();
-        templateDetails.labels = getBatchTemplateLabels();
+        model.templateFields = getAvailableFields();
+        model.labels = getLabels(sObjectName);
 
-        return JSON.serialize(templateDetails);
+        return JSON.serialize(model);
     }
 
     /*******************************************************************************************************
     * @description Retrieves the related list of fields.
     * @return list of Template Fields with sObjectName and Name.
     */
-    public static List<Field> getAvailableFields() {
+    public static List<AvailableField> getAvailableFields() {
 
-        List<Field> fields = new List<Field>();
+        List<AvailableField> fields = new List<AvailableField>();
 
         Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
         Set<String> bannedFields = new Set<String>{'Account1Imported__c',
@@ -103,29 +126,44 @@ public with sharing class BGE_Template_CTRL {
                 'Account2ImportStatus__c'
         };
 
+        Set<String> allowedObjects = new Set<String>{
+                'Opportunity',
+                'Payment'
+        };
+
+        // these fields are required only if at least 1 field from its object group is selected
+        Set<String> systemRequiredFields = new Set<String>{
+                'Account1_Name__c',
+                'Account2_Name__c',
+                'Donation_Amount__c',
+                'Contact1_LastName__c',
+                'Contact2_LastName__c'
+        };
+
+        // looping through the fields on DataImport__c
         for (Schema.DescribeFieldResult dfr : fieldMap.values()) {
-            String unnamespacedObject = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.name);
-            if (!bannedFields.contains(unnamespacedObject) && dfr.inlineHelpText != null) {
-                Field fld = new Field();
-                if (unnamespacedObject == 'Donation_Donor__c') {
-                    fld.sObjectName = 'Opportunity';
-                } else {
-                    // TODO: make these localized with schema describes
-                    fld.sObjectName = dfr.inlineHelpText.split('\\.')[0];
-                }
+            String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.name);
+            //Special case for Donation_Donor because it's derived
+
+            //todo: rework these 2 lines
+            String dataImportFieldMappedObject = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[0] : null;
+            Boolean fieldAllowed = allowedObjects.contains(dataImportFieldMappedObject) && !bannedFields.contains(dataImportFieldApiName) && dfr.inlineHelpText != null;
+
+            if (fieldAllowed) {
+
+                AvailableField fld = new AvailableField();
+
+                // TODO: make these localized with schema describes
+                fld.sObjectName = dataImportFieldMappedObject;
+
                 // TODO: pull these labels from target fields' schema based on help text mapping
                 fld.label = (dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == fld.sObjectName) ?
                         dfr.getLabel().split(' ',2)[1] :
                         dfr.getLabel() ;
                 fld.name = dfr.getName();
 
-                // these fields are required only if at least 1 field from its object group is selected
                 String unnamespacedField = UTIL_Namespace.StrTokenRemoveNSPrefix(fld.name);
-                if (unnamespacedField == 'Account1_Name__c' ||
-                        unnamespacedField == 'Account2_Name__c' ||
-                        unnamespacedField == 'Donation_Amount__c' ||
-                        unnamespacedField == 'Contact1_LastName__c' ||
-                        unnamespacedField == 'Contact2_LastName__c') {
+                if (systemRequiredFields.contains(unnamespacedField)) {
                     fld.systemRequired = true;
                 }
 
@@ -136,23 +174,37 @@ public with sharing class BGE_Template_CTRL {
     }
     /*******************************************************************************************************
     * @description Retrieves the object and field labels for the component.
-    * @return Map of Batch Template object and field name keys to their labels.
+    * @param sObjectName the object being used by the component (already stripped of the namespace prefix)
+    * @return Map of object and field name keys to their labels.
     */
-    public static Map<String, String> getBatchTemplateLabels() {
+    public static Map<String, String> getLabels(String sObjectName) {
 
-        Map<String, String> labels = new Map<String, String> {
-            'batchTemplateLabel' => Schema.SObjectType.Batch_Template__c.getLabel(),
-            'backToTemplates' => String.format(Label.CRLP_Return, new List<String>{Schema.SObjectType.Batch_Template__c.getLabelPlural()}),
-            'batchTemplateObject' => Schema.SObjectType.Batch_Template__c.getName(),
-            'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.Batch_Template__c.Name.getDescribe().getLabel() + ', ' + Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
-            'description' => Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
-            'totalEntryHelp' => Schema.Batch_Template__c.EnableTotalEntry__c.getDescribe().getInlineHelpText(),
-            'totalEntryLabel' => Schema.Batch_Template__c.EnableTotalEntry__c.getDescribe().getLabel(),
-            'totalMatchHelp' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
-            'totalMatchLabel' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getLabel()
-        };
-
-        return labels;
+        if (sObjectName == 'Batch_Template__c') {
+            Map<String, String> labels = new Map<String, String> {
+                    'objectLabel' => Schema.SObjectType.Batch_Template__c.getLabel(),
+                    'backToTemplates' => String.format(Label.CRLP_Return, new List<String>{Schema.SObjectType.Batch_Template__c.getLabelPlural()}),
+                    'objectName' => Schema.SObjectType.Batch_Template__c.getName(),
+                    'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.Batch_Template__c.Name.getDescribe().getLabel() + ', ' + Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
+                    'description' => Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
+                    'totalEntryHelp' => Schema.Batch_Template__c.EnableTotalEntry__c.getDescribe().getInlineHelpText(),
+                    'totalEntryLabel' => Schema.Batch_Template__c.EnableTotalEntry__c.getDescribe().getLabel(),
+                    'totalMatchHelp' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
+                    'totalMatchLabel' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getLabel()
+            };
+            return labels;
+        } else {
+            Map<String, String> labels = new Map<String, String> {
+                    'objectLabel' => Schema.SObjectType.DataImportBatch__c.getLabel(),
+                    'objectName' => Schema.SObjectType.DataImportBatch__c.getName(),
+                    'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.DataImportBatch__c.Name.getDescribe().getLabel() + ', ' + Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
+                    'description' => Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
+                    'totalEntryHelp' => Schema.DataImportBatch__c.EnableTotalEntry__c.getDescribe().getInlineHelpText(),
+                    'totalEntryLabel' => Schema.DataImportBatch__c.EnableTotalEntry__c.getDescribe().getLabel(),
+                    'totalMatchHelp' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
+                    'totalMatchLabel' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getLabel()
+            };
+            return labels;
+        }
     }
 
     /*******************************************************************************************************
@@ -196,21 +248,21 @@ public with sharing class BGE_Template_CTRL {
         @AuraEnabled public Boolean enableTotalEntry;
         @AuraEnabled public Id id;
         @AuraEnabled public Boolean requireTotalMatch;
-        @AuraEnabled public List<Field> templateFields;
+        @AuraEnabled public List<AvailableField> templateFields;
         @AuraEnabled public String activeFields;
         @AuraEnabled public Map<String, String> labels;
 
         public TemplateDetailsModel() {
             enableTotalEntry = false;
             requireTotalMatch = false;
-            templateFields = new List<Field>();
+            templateFields = new List<AvailableField>();
         }
     }
 
     /*******************************************************************************************************
     * @description a class to retrieve and save information related to Active and Available fields.
     */
-    public class Field {
+    public class AvailableField {
         @AuraEnabled public String label;
         @AuraEnabled public String name;
         @AuraEnabled public String sObjectName;
@@ -220,7 +272,7 @@ public with sharing class BGE_Template_CTRL {
         @AuraEnabled public Boolean systemRequired;
         @AuraEnabled public Boolean hide;
 
-        public Field() {
+        public AvailableField() {
             isActive = false;
             required = false;
             hide = false;

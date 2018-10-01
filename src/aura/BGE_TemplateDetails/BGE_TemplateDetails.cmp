@@ -34,7 +34,8 @@
   @group-content ../../ApexDocContent/BatchDataImport.htm
   @description Component used to view, edit, or create a Batch Template record.
 -->
-<aura:component controller="BGE_Template_CTRL" implements="lightning:actionOverride,force:hasRecordId,flexipage:availableForRecordHome">
+<aura:component controller="BGE_Template_CTRL"
+                implements="lightning:actionOverride,force:hasRecordId,flexipage:availableForRecordHome,force:hasSObjectName">
 
     <!-- private attributes -->
     <aura:attribute name="model" type="Object" access="PRIVATE" />
@@ -46,6 +47,7 @@
     <!-- public attributes -->
     <aura:attribute name="isReadOnly" type="Boolean" description="Determines if fields are read-only, buttons are visible, and dual picklists are active."/>
     <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="sObjectName" type="String" />
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -54,33 +56,35 @@
     <lightning:notificationsLibrary aura:id="notifLib"/>
 
     <!-- Banner -->
-    <header role="banner" class="header">
-        <div class="slds-page-header">
-            <div class="slds-grid">
-                <div class="slds-col slds-has-flexi-truncate headerText">
-                    <div class="slds-media slds-no-space slds-grow">
-                        <div class="slds-media__figure">
-                            <lightning:icon iconName="standard:contract" alternativeText="{!v.templateMetadata.labels.batchTemplateLabel}" size="medium"/>
-                        </div>
-                        <div class="slds-media__body">
-                            <p class="slds-breadcrumb__item slds-line-height_reset">{!v.templateMetadata.labels.batchTemplateLabel}</p>
-                            <h1 class="slds-page-header__title slds-m-right_small slds-truncate">
-                                {!if(v.isReadOnly, v.templateInfo.name, v.templateMetadata.labels.batchTemplateHeader)}
-                            </h1>
+    <aura:if isTrue="{!v.sObjectName == 'Batch_Template__c'}">
+        <header role="banner" class="header">
+            <div class="slds-page-header">
+                <div class="slds-grid">
+                    <div class="slds-col slds-has-flexi-truncate headerText">
+                        <div class="slds-media slds-no-space slds-grow">
+                            <div class="slds-media__figure">
+                                <lightning:icon iconName="standard:contract" alternativeText="{!v.templateMetadata.labels.objectLabel}" size="medium"/>
+                            </div>
+                            <div class="slds-media__body">
+                                <p class="slds-breadcrumb__item slds-line-height_reset">{!v.templateMetadata.labels.objectLabel}</p>
+                                <h1 class="slds-page-header__title slds-m-right_small slds-truncate">
+                                    {!if(v.isReadOnly, v.templateInfo.name, v.templateMetadata.labels.batchTemplateHeader)}
+                                </h1>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
-                    <aura:if isTrue="{!v.isReadOnly}">
-                        <lightning:buttonGroup>
-                            <lightning:button label="{!$Label.c.stgBtnEdit}" onclick="{!c.changeModeToEdit}"/>
-                            <lightning:button label="{!v.templateMetadata.labels.backToTemplates}" onclick="{!c.cancel}"/>
-                        </lightning:buttonGroup>
-                    </aura:if>
+                    <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
+                        <aura:if isTrue="{!v.isReadOnly}">
+                            <lightning:buttonGroup>
+                                <lightning:button label="{!$Label.c.stgBtnEdit}" onclick="{!c.changeModeToEdit}"/>
+                                <lightning:button label="{!v.templateMetadata.labels.backToTemplates}" onclick="{!c.cancel}"/>
+                            </lightning:buttonGroup>
+                        </aura:if>
+                    </div>
                 </div>
             </div>
-        </div>
-    </header>
+        </header>
+    </aura:if>
 
     <!--Body-->
     <div aura:id="body" class="slds-tabs_card slds-grid slds-grid_align-center">
@@ -128,7 +132,7 @@
 
                 <!-- Step 1: Template Overview -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '1' }">
-                    <div class="row">
+                    <div class="row slds-grid_align-center">
                         <div class="slds-col slds-size_6-of-12">
                             <lightning:input type="text" name="name" label="{!$Label.c.stgLabelName}"
                                              value="{!v.templateInfo.name}" readonly="{!v.isReadOnly}" required="true"/>

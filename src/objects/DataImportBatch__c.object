@@ -56,6 +56,16 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
+        <fullName>Active_Fields__c</fullName>
+        <description>Represents the data model of active fields for a NPSP_Batch_Import__c record. Not intended for direct customer use and should not be edited directly.</description>
+        <externalId>false</externalId>
+        <label>Active Fields</label>
+        <length>30000</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
         <fullName>Account_Custom_Unique_ID__c</fullName>
         <description>An optional Unique Id field to use for Organization Account matching</description>
         <externalId>false</externalId>
@@ -225,6 +235,16 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>EnableTotalEntry__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When checked, the user filling out the template may enter the expected number of gifts and expected total amount for the batch.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, the user filling out the template may enter the expected number of gifts and expected total amount for the batch.</inlineHelpText>
+        <label>Enable Expected Totals Entry</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Expected_Count_of_Gifts__c</fullName>
         <defaultValue>0</defaultValue>
         <description>The number of gifts that are expected to be entered in this Batch.</description>
@@ -315,6 +335,16 @@
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>RequireTotalMatch__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When checked, the total number of gifts and total amount must match the expected totals entered for the batch.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, the total number of gifts and total amount must match the expected totals entered for the batch.</inlineHelpText>
+        <label>Require Expected Totals Match</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Run_Opportunity_Rollups_while_Processing__c</fullName>

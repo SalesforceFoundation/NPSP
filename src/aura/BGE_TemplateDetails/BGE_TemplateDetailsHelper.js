@@ -72,6 +72,7 @@
                 } else if (templateMetadataView.mode === 'create' || templateMetadataView.mode === 'edit') {
                     component.set('v.isReadOnly', false);
                     if (templateMetadata.mode === 'edit') {
+                        //todo: add these in
                         templateMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchTemplateEdit')
                     } else if (templateMetadata.mode === 'create') {
                         templateMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchTemplateNew');
@@ -260,7 +261,8 @@
              ************************************************************/
             function init(component) {
                 var recordId = _templateInfo.id ? _templateInfo.id : component.get('v.recordId');
-                _bgeTemplateController.getTemplateDetails(recordId, {
+                var sObjectName = component.get("v.sObjectName");
+                _bgeTemplateController.getRecordDetails(sObjectName, recordId, {
                     success: function(response) {
                         _templateInfo.load(
                             {
@@ -856,14 +858,15 @@
             var _component = component;
 
             /**
-             * @description Calls the getTemplateDetails method.
+             * @description Calls the getRecordDetails method.
              * @param recordId. The Id of the Template.
              * @param callback. The callback function to execute.
              * @return void.
              */
-            function getTemplateDetails(recordId, callback) {
-                var action = _component.get('c.getTemplateDetails');
+            function getRecordDetails(sObjectName, recordId, callback) {
+                var action = _component.get('c.getRecordDetails');
                 action.setParams({
+                    sObjectName: sObjectName,
                     templateId: recordId
                 });
                 action.setCallback(callback, _processResponse);
@@ -901,17 +904,18 @@
                     var errors = response.getError();
                     if (errors) {
                         if (errors[0] && errors[0].message) {
-                            this.error(errors[0].message);
+                            this.errors = errors[0].message;
                         }
                     } else {
-                        this.error('Unknown error');
+                        this.errors = 'Unknown error';
                     }
                 }
             }
             
             // BGETemplateController module public functions.
             return {
-                getTemplateDetails: getTemplateDetails,
+                errors: '',
+                getRecordDetails: getRecordDetails,
                 saveTemplateDetails: saveTemplateDetails
             }
         })(component);
