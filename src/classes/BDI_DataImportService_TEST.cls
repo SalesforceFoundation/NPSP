@@ -118,7 +118,7 @@ private with sharing class BDI_DataImportService_TEST {
     *
     */
     @isTest
-    private static void useCustomMetatadaInsteadOfHelpText() {
+    private static void mapFieldsUsingCustomMetadata() {
 
         List<DataImport__c> dataImports = new List<DataImport__c>();
 
@@ -149,11 +149,11 @@ private with sharing class BDI_DataImportService_TEST {
 
         insert dataImports;
 
-        System.assertEquals(firstDataImport.status__c,  null);
-        System.assertEquals(secondDataImport.status__c, null);
+        System.assertEquals(firstDataImport.Status__c,  null);
+        System.assertEquals(secondDataImport.Status__c, null);
 
         //run batch data import
-        Test.StartTest();
+        Test.startTest();
 
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
 
@@ -162,11 +162,11 @@ private with sharing class BDI_DataImportService_TEST {
         Test.stopTest();
 
         // Retrieve the status for each data import
-        firstDataImport = [SELECT id, Status__c FROM DataImport__c WHERE id =: firstDataImport.id];
-        secondDataImport = [SELECT id, Status__c FROM DataImport__c WHERE id =: secondDataImport.id];
+        firstDataImport = [SELECT id, Status__c FROM DataImport__c WHERE id = :firstDataImport.id];
+        secondDataImport = [SELECT id, Status__c FROM DataImport__c WHERE id = :secondDataImport.id];
 
-        System.assertEquals(firstDataImport.status__c,  'Imported');
-        System.assertEquals(secondDataImport.status__c, 'Imported');
+        System.assertEquals(firstDataImport.Status__c,  'Imported');
+        System.assertEquals(secondDataImport.Status__c, 'Imported');
     }
 
     /*******************************************************************************************************************
@@ -174,7 +174,7 @@ private with sharing class BDI_DataImportService_TEST {
     *
     */
     @isTest
-    private static void useHelpTextInsteadOfCustomMetatada() {
+    private static void mapFieldsUsingHelpText() {
 
         List<DataImport__c> dataImports = new List<DataImport__c>();
 
@@ -209,7 +209,7 @@ private with sharing class BDI_DataImportService_TEST {
         System.assertEquals(secondDataImport.status__c, null);
 
         //run batch data import
-        Test.StartTest();
+        Test.startTest();
 
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
 
@@ -217,8 +217,8 @@ private with sharing class BDI_DataImportService_TEST {
 
         Test.stopTest();
 
-        firstDataImport = [SELECT id, Status__c FROM DataImport__c WHERE id =: firstDataImport.id];
-        secondDataImport = [SELECT id, Status__c FROM DataImport__c WHERE id =: secondDataImport.id];
+        firstDataImport = [SELECT id, Status__c FROM DataImport__c WHERE id = :firstDataImport.id];
+        secondDataImport = [SELECT id, Status__c FROM DataImport__c WHERE id = :secondDataImport.id];
 
         System.assertEquals(firstDataImport.status__c,  'Imported');
         System.assertEquals(secondDataImport.status__c, 'Imported');
