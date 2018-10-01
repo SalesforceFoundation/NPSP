@@ -718,13 +718,13 @@ global with sharing class BDI_DataImportService {
 
         if (bdiSettings.UseCustomMetadatainsteadOfHelpText__c) {
 
-            BDI_Field_Mapping__mdt[] bdiFIeldMappingList = [SELECT
-                                                                Source_Field__c,
-                                                                Target_Field__c
-                                                            FROM
-                                                                BDI_Field_Mapping__mdt];
+            List<BDI_Field_Mapping__mdt> bdiFIeldMappings = [SELECT
+                                                                    Source_Field__c,
+                                                                    Target_Field__c
+                                                             FROM
+                                                                    BDI_Field_Mapping__mdt];
 
-            for (BDI_Field_Mapping__mdt customMetadata : bdiFIeldMappingList) {
+            for (BDI_Field_Mapping__mdt customMetadata : bdiFIeldMappings) {
 
                 bdiFieldMappingMap.put(customMetadata.Source_Field__c.toLowerCase(), customMetadata.Target_Field__c);
             }
