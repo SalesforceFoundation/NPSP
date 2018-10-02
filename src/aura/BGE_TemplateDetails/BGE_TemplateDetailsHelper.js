@@ -48,11 +48,14 @@
             model.getTemplateMetadata().onMetadataUpdated.subscribe(function() {
                 var templateMetadataView = component.get('v.templateMetadata');
                 var templateMetadata = model.getTemplateMetadata();
+                var headerChanged = Boolean(templateMetadataView.pageHeader !== templateMetadata.pageHeader);
+
                 templateMetadataView.labels = templateMetadata.labels;
                 templateMetadataView.mode = templateMetadata.mode;
                 templateMetadataView.hasError = templateMetadata.hasError;
                 templateMetadataView.errorMessage = templateMetadata.errorMessage;
                 templateMetadataView.dataTableChanged = templateMetadata.dataTableChanged;
+                templateMetadataView.pageHeader = templateMetadata.pageHeader;
 
                 if (!templateMetadataView.hasError) {
                     templateMetadataView.progressIndicatorStep = templateMetadata.progressIndicatorStep;
@@ -79,8 +82,28 @@
                     }
                 }
 
+                //update page header in modal if page header has changed and modal is used
+                if (headerChanged) {
+                    /*var sendMessage = $A.get('e.ltng:sendMessage');
+                    sendMessage.setParams({
+                        'channel': 'changeHeader',
+                        'message': templateMetadataView.pageHeader
+                    });
+                    sendMessage.fire();*/
+                    //_sendMessage('changeHeader', templateMetadataView.pageHeader)
+                }
                 component.set('v.templateMetadata', templateMetadataView);
             });
+
+            function _sendMessage(channel, message) {
+                debugger;
+                var sendMessage = $A.get('e.ltng:sendMessage');
+                sendMessage.setParams({
+                    'channel': channel,
+                    'message': message
+                });
+                sendMessage.fire();
+            }
 
             // TemplateMetadataView module public functions and properties
             return {
@@ -715,6 +738,7 @@
                         this.setMode('create');
                     }
                 }
+                this.setPageHeader();
                 this.onMetadataUpdated.notify();
             }
 
@@ -767,6 +791,35 @@
             }
 
             /**
+             * @description sets the page header based on the step in the wizard
+             * @return void.
+             */
+            function setPageHeader() {
+                switch (parseInt(this.progressIndicatorStep)) {
+                    case 1:
+                        this.pageHeader = $A.get('$Label.c.bgeBatchTemplateOverviewWizard');
+                        break;
+                    case 2:
+                        this.pageHeader = '';
+                        break;
+                    case 3:
+                        this.pageHeader = $A.get('$Label.c.bgeBatchTemplateSelectFields');
+                        break;
+                    case 4:
+                        this.pageHeader = '';
+                        break;
+                    case 5:
+                        this.pageHeader = $A.get('$Label.c.bgeBatchTemplateSetFieldOptions');
+                        break;
+                    case 6:
+                        this.pageHeader = '';
+                        break;
+                }
+
+                this.onMetadataUpdated.notify();
+            }
+
+            /**
              * @description Increments the step for the progressIndicator
              * @return void.
              */
@@ -796,10 +849,12 @@
                 hasError: false,
                 errorMessage: '',
                 dataTableChanged: false,
+                pageHeader: '',
                 load: load,
                 setMode: setMode,
                 showError: showError,
                 clearError: clearError,
+                setPageHeader: setPageHeader,
                 stepUp: stepUp,
                 stepDown: stepDown,
                 onMetadataUpdated: _onMetadataUpdated,
@@ -866,8 +921,8 @@
             function getRecordDetails(sObjectName, recordId, callback) {
                 var action = _component.get('c.getRecordDetails');
                 action.setParams({
-                    sObjectName: sObjectName,
-                    templateId: recordId
+                    'sObjectName': sObjectName,
+                    'templateId': recordId
                 });
                 action.setCallback(callback, _processResponse);
                 $A.enqueueAction(action);

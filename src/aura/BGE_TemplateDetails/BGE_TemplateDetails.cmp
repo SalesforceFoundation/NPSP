@@ -91,41 +91,35 @@
         <lightning:layout horizontalAlign="center" multipleRows="true">
             <lightning:layoutItem size="12" largeDeviceSize="8" mediumDeviceSize="10" smallDeviceSize="12">
 
-                <!-- Title -->
-                <aura:if isTrue="{!not(v.isReadOnly)}">
-                    <div class="slds-text-align_center slds-m-vertical_medium">
-                        <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '1' }">
-                            <h2 class="slds-text-heading_medium">{!$Label.c.bgeBatchTemplateOverviewWizard}</h2>
-                        </aura:if>
-                        <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '3' }">
-                            <h2 class="slds-text-heading_medium">{!$Label.c.bgeBatchTemplateSelectFields}</h2>
-                        </aura:if>
-                        <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '5' }">
-                            <h2 class="slds-text-heading_medium">{!$Label.c.bgeBatchTemplateSetFieldOptions}</h2>
-                        </aura:if>
-                    </div>
-                    <aura:set attribute="else">
-                        <div class="slds-section slds-is-open slds-p-bottom_small">
-                            <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small"
-                                  title="{!$Label.c.bgeBatchTemplateOverview}">
-                                {!$Label.c.bgeBatchTemplateOverview}
-                            </span>
-                            </h3>
+                <!-- Header for Batch Template Only -->
+                <aura:if isTrue="{!or(v.sObjectName == 'Batch_Template__c', v.sObjectName == 'npsp__Batch_Template__c')}">
+                    <aura:if isTrue="{!not(v.isReadOnly)}">
+                        <div class="slds-text-align_center slds-m-vertical_medium">
+                            <h2 class="slds-text-heading_medium">{!v.templateMetadata.pageHeader}</h2>
                         </div>
-                    </aura:set>
-                </aura:if>
+                        <aura:set attribute="else">
+                            <div class="slds-section slds-is-open slds-p-bottom_small">
+                                <h3 class="slds-section__title slds-theme_shade">
+                                    <span class="slds-truncate slds-p-horizontal_small"
+                                          title="{!$Label.c.bgeBatchTemplateOverview}">
+                                            {!$Label.c.bgeBatchTemplateOverview}
+                                    </span>
+                                </h3>
+                            </div>
+                        </aura:set>
+                    </aura:if>
 
-                <!--Progress Indicator-->
-                <aura:if isTrue="{!not(v.isReadOnly)}">
-                    <div class="slds-p-bottom_large">
-                        <lightning:progressIndicator currentStep="{!v.templateMetadata.progressIndicatorStep}" type="base"
-                                                     hasError="false" variant="base">
-                            <lightning:progressStep label="{!$Label.c.bgeBatchTemplateOverviewWizard}" value="1"/>
-                            <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="2"/>
-                            <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="3"/>
-                        </lightning:progressIndicator>
-                    </div>
+                    <!--Progress Indicator-->
+                    <aura:if isTrue="{!not(v.isReadOnly)}">
+                        <div class="slds-p-bottom_large">
+                            <lightning:progressIndicator currentStep="{!v.templateMetadata.progressIndicatorStep}" type="base"
+                                                         hasError="false" variant="base">
+                                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateOverviewWizard}" value="1"/>
+                                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="3"/>
+                                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="4"/>
+                            </lightning:progressIndicator>
+                        </div>
+                    </aura:if>
                 </aura:if>
 
                 <!--Template Container-->
@@ -215,7 +209,7 @@
                 </aura:if>
                 <!--End Selected Fields Section-->
 
-                <!-- Step 4: Choose Template Configuration -->
+                <!-- Step 4: Choose Template Configuration (Only Batch Gift Entry) -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '4'}">
                 </aura:if>
                 <!-- End Step 4 -->
@@ -237,13 +231,13 @@
                 </aura:if>
                 <!--End Step 5 -->
 
-                <!-- Step 6: Edit Matching Rules -->
+                <!-- Step 6: Edit Matching Rules (Only Batch Gift Entry) -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '6'}">
                 </aura:if>
                 <!-- End Step 6 -->
 
-                <!-- Buttons! -->
-                <aura:if isTrue="{!not(v.isReadOnly)}">
+                <!-- Buttons (Only for Batch Template) -->
+                <aura:if isTrue="{!and(not(v.isReadOnly), or(v.sObjectName == 'Batch_Template__c', v.sObjectName == 'npsp__Batch_Template__c'))}">
                     <lightning:layout horizontalAlign="spread" multipleRows="true">
                         <lightning:layoutItem size="3">
                             <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '1' }">

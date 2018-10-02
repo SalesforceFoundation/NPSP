@@ -30,6 +30,41 @@
     },
 
     /**
+     * @description: creates the configuration modal if record is new
+     */
+    createModal: function (component) {
+        var modalBody;
+        var modalHeader;
+        var modalFooter;
+
+
+        $A.createComponents([
+                ["c:BGE_TemplateDetails",{sObjectName: component.get("v.sObjectName")}],
+                ["c:modalHeader",{header: $A.get('$Label.c.bgeBatchTemplateOverviewWizard')}],
+                ["c:modalFooter",{}]
+            ],
+
+            function(components, status){
+                if (status === "SUCCESS") {
+                    modalBody = components[0];
+                    modalHeader = components[1];
+                    modalFooter = components[2];
+                    component.find('overlayLib').showCustomModal({
+                        body: modalBody,
+                        header: modalHeader,
+                        footer: modalFooter,
+                        showCloseButton: false,
+                        cssClass: "slds-modal_large",
+                        closeCallback: function() {
+                            //todo: control for escape button here?
+                        }
+                    })
+                }
+            }
+        );
+    },
+
+    /**
      * @description: retrieves the model information. If successful, sets the model and creates child component; otherwise alerts user.
      */
     getModel: function(component) {

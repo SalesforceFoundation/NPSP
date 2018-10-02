@@ -6,22 +6,7 @@
         var recordId = component.get("v.recordId");
 
         if (true) {
-            var modalBody;
-            $A.createComponent("c:BGE_TemplateDetails", {sObjectName: component.get("v.sObjectName")},
-                function(content, status) {
-                    if (status === "SUCCESS") {
-                        modalBody = content;
-                        component.find('overlayLib').showCustomModal({
-                            body: modalBody,
-                            showCloseButton: false,
-                            cssClass: "mymodal",
-                            closeCallback: function() {
-                                //alert('You closed the alert!');
-                                //todo: control for escape button here?
-                            }
-                        })
-                    }
-                });
+            helper.createModal(component);
         }
         helper.getModel(component);
     },

@@ -108,6 +108,7 @@
             if (model.getTemplateInfo().isValid()) {
                 model.getTemplateMetadata().clearError();
                 model.getTemplateMetadata().stepUp();
+                model.getTemplateMetadata().setPageHeader();
             } else {
                 model.getTemplateMetadata().showError(component.get('v.templateMetadata.labels.missingNameDescriptionError'));
             }
@@ -120,6 +121,7 @@
             if (!errors) {
                 model.getTemplateMetadata().clearError();
                 model.getTemplateMetadata().stepUp();
+                model.getTemplateMetadata().setPageHeader();
             } else {
                 model.getTemplateMetadata().showError(errors);
             }
@@ -138,6 +140,7 @@
         model.getTemplateMetadata().clearError();
         model.getTemplateMetadata().setDataTableChanged(false);
         model.getTemplateMetadata().stepDown();
+        model.getTemplateMetadata().setPageHeader();
     },
 
 });
