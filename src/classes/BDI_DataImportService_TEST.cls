@@ -124,7 +124,7 @@ private with sharing class BDI_DataImportService_TEST {
 
         BDISettings__c bdiSettings = BDISettings__c.getOrgDefaults();
 
-        bdiSettings.UseCustomMetadatainsteadOfHelpText__c = true;
+        bdiSettings.MapWithCustomMetadataTypes__c = true;
 
         upsert bdiSettings;
 
@@ -180,7 +180,7 @@ private with sharing class BDI_DataImportService_TEST {
 
         BDISettings__c bdiSettings = BDISettings__c.getOrgDefaults();
 
-        bdiSettings.UseCustomMetadatainsteadOfHelpText__c = false;
+        bdiSettings.MapWithCustomMetadataTypes__c = false;
 
         upsert bdiSettings;
 

@@ -4,11 +4,11 @@
     <description>Custom Setting to control features of BDI.</description>
     <enableFeeds>false</enableFeeds>
     <fields>
-        <fullName>UseCustomMetadatainsteadOfHelpText__c</fullName>
+        <fullName>MapWithCustomMetadataTypes__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Use BDI Field Mapping Custom Metadata instead of the help text in objects to map Batch Data Import.</description>
+        <description>Use BDI Field Mapping Custom Metadata to map Batch Data Import.</description>
         <externalId>false</externalId>
-        <label>Use Custom Metadata instead of Help Text</label>
+        <label>Map with Custom Metadata Types</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>

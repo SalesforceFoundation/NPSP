@@ -693,7 +693,7 @@
         <members>Allocations_Settings__c.Excluded_Opp_Types__c</members>
         <members>Allocations_Settings__c.Rollup_N_Day_Value__c</members>
         <members>Allocations_Settings__c.Use_Fiscal_Year_for_Rollups__c</members>
-        <members>BDISettings__c.UseCustomMetadatainsteadOfHelpText__c</members>
+        <members>BDISettings__c.MapWithCustomMetadataTypes__c</members>
         <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
         <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
         <members>Batch_Template__c.Account_Custom_Unique_ID__c</members>

@@ -717,7 +717,7 @@ global with sharing class BDI_DataImportService {
 
         Boolean useCustomMetadataForFieldMapping = false;
 
-        if (bdiSettings.UseCustomMetadatainsteadOfHelpText__c) {
+        if (bdiSettings.MapWithCustomMetadataTypes__c) {
 
             List<BDI_Field_Mapping__mdt> bdiFIeldMappings = [SELECT
                                                                     Source_Field__c,
