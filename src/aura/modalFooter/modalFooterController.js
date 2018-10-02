@@ -37,12 +37,7 @@
     },
 
     save: function(component, event) {
-        var sendMessage = $A.get('e.ltng:sendMessage');
-        sendMessage.setParams({
-            'channel': 'save',
-            'message': null
-        });
-        sendMessage.fire();
+        component.find("overlayLib").notifyClose();
     }
 
 })

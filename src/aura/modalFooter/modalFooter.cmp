@@ -42,6 +42,7 @@
 
     <!--Events-->
     <aura:handler event="ltng:sendMessage" action="{!c.handleMessage}"/>
+    <lightning:overlayLibrary aura:id="overlayLib"/>
 
     <!--Start Markup-->
     <lightning:layout horizontalAlign="spread" multipleRows="true">
