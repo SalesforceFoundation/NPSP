@@ -112,6 +112,8 @@
                 model.getTemplateMetadata().showError(component.get('v.templateMetadata.labels.missingNameDescriptionError'));
             }
         } else if (step === '2') {
+            //handle template copying here
+        } else if (step === '3') {
             var templateFields = component.get('v.templateFields');
             model.getTemplateFields().updateToActive(templateFields.fieldGroups);
             var errors = model.getTemplateFields().getRequiredFieldErrors();
@@ -121,6 +123,10 @@
             } else {
                 model.getTemplateMetadata().showError(errors);
             }
+        } else if (step === '4') {
+            //handle matching rules here
+        } else if (step === '5') {
+            //handle customize field options for batch gift entry here
         }
     },
 

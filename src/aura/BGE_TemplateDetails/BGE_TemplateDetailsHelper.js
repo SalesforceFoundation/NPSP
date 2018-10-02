@@ -772,7 +772,7 @@
              */
             function stepUp() {
                 var stepNum = parseInt(this.progressIndicatorStep);
-                stepNum = stepNum + 1;
+                stepNum = stepNum + 2;
                 this.progressIndicatorStep = stepNum.toString();
                 this.onMetadataUpdated.notify();
             }
@@ -783,7 +783,7 @@
              */
             function stepDown() {
                 var stepNum = parseInt(this.progressIndicatorStep);
-                stepNum = stepNum - 1;
+                stepNum = stepNum - 2;
                 this.progressIndicatorStep = stepNum.toString();
                 this.onMetadataUpdated.notify();
             }

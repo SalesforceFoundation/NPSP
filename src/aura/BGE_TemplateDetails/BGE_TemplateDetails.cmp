@@ -56,7 +56,7 @@
     <lightning:notificationsLibrary aura:id="notifLib"/>
 
     <!-- Banner -->
-    <aura:if isTrue="{!v.sObjectName == 'Batch_Template__c'}">
+    <aura:if isTrue="{!or(v.sObjectName == 'Batch_Template__c', v.sObjectName == 'npsp__Batch_Template__c')}">
         <header role="banner" class="header">
             <div class="slds-page-header">
                 <div class="slds-grid">
@@ -89,7 +89,7 @@
     <!--Body-->
     <div aura:id="body" class="slds-tabs_card">
         <lightning:layout horizontalAlign="center" multipleRows="true">
-            <lightning:layoutItem size="10" largeDeviceSize="8">
+            <lightning:layoutItem size="12" largeDeviceSize="8" mediumDeviceSize="10" smallDeviceSize="12">
 
                 <!-- Title -->
                 <aura:if isTrue="{!not(v.isReadOnly)}">
@@ -97,10 +97,10 @@
                         <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '1' }">
                             <h2 class="slds-text-heading_medium">{!$Label.c.bgeBatchTemplateOverviewWizard}</h2>
                         </aura:if>
-                        <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '2' }">
+                        <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '3' }">
                             <h2 class="slds-text-heading_medium">{!$Label.c.bgeBatchTemplateSelectFields}</h2>
                         </aura:if>
-                        <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '3' }">
+                        <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '5' }">
                             <h2 class="slds-text-heading_medium">{!$Label.c.bgeBatchTemplateSetFieldOptions}</h2>
                         </aura:if>
                     </div>
@@ -130,7 +130,7 @@
 
                 <!--Template Container-->
 
-                <!-- Step 1: Template Overview -->
+                <!-- Step 1: Overview -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '1' }">
                     <lightning:layout horizontalAlign="center">
                         <lightning:layoutItem size="10">
@@ -173,8 +173,13 @@
                 </aura:if>
                 <!--End Step 1-->
 
-                <!-- Step 2: Select Fields -->
+                <!-- Step 2: Template Configuration (Only for Batch Gift Entry) -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '2'}">
+                </aura:if>
+                <!-- Step 2: Template Configuration -->
+
+                <!-- Step 3: Select Fields -->
+                <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '3'}">
                     <div class="slds-m-around_medium">
                         <lightning:accordion>
                             <aura:iteration items="{!v.templateFields.fieldGroups}" var="currentFieldGroup">
@@ -196,7 +201,7 @@
                         </lightning:accordion>
                     </div>
                 </aura:if>
-                <!--End Step 2-->
+                <!--End Step 3-->
 
                 <!--Selected Fields Section Header (View Mode Only)-->
                 <aura:if isTrue="{!v.isReadOnly}">
@@ -210,8 +215,13 @@
                 </aura:if>
                 <!--End Selected Fields Section-->
 
-                <!-- Step 3: Set Field Options -->
-                <aura:if isTrue="{!or(v.templateMetadata.progressIndicatorStep == '3', v.isReadOnly)}">
+                <!-- Step 4: Choose Template Configuration -->
+                <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '4'}">
+                </aura:if>
+                <!-- End Step 4 -->
+
+                <!-- Step 5: Set Field Options -->
+                <aura:if isTrue="{!or(v.templateMetadata.progressIndicatorStep == '5', v.isReadOnly)}">
                     <div class="slds-m-around_medium">
                         <lightning:datatable
                                 keyField="name"
@@ -225,7 +235,12 @@
                         />
                     </div>
                 </aura:if>
-                <!--End Step 3-->
+                <!--End Step 5 -->
+
+                <!-- Step 6: Edit Matching Rules -->
+                <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '6'}">
+                </aura:if>
+                <!-- End Step 6 -->
 
                 <!-- Buttons! -->
                 <aura:if isTrue="{!not(v.isReadOnly)}">
@@ -239,10 +254,10 @@
                             <aura:if isTrue="{!not(v.isReadOnly)}">
                                 <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
                             </aura:if>
-                            <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '3' }">
+                            <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '5' }">
                                 <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
                             </aura:if>
-                            <aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '3') }">
+                            <aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '5') }">
                                 <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" disabled="{!or (v.templateMetadata.dataTableChanged, v.templateFieldOptions.errors.size > 0)}" />
                             </aura:if>
                         </lightning:layoutItem>

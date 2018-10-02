@@ -12,12 +12,12 @@
                     if (status === "SUCCESS") {
                         modalBody = content;
                         component.find('overlayLib').showCustomModal({
-                            header: "Configure New Batch",
                             body: modalBody,
                             showCloseButton: false,
                             cssClass: "mymodal",
                             closeCallback: function() {
                                 //alert('You closed the alert!');
+                                //todo: control for escape button here?
                             }
                         })
                     }
