@@ -6,7 +6,7 @@
                 <name>isReadOnly</name>
                 <value>true</value>
             </componentInstanceProperties>
-            <componentName>BGE_TemplateDetails</componentName>
+            <componentName>BGE_Wizard</componentName>
         </componentInstances>
         <name>header</name>
         <type>Region</type>

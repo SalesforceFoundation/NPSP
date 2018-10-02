@@ -51,12 +51,13 @@
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler event="ltng:sendMessage" action="{!c.handleButtonClick}"/>
 
     <!-- START MARKUP -->
     <lightning:notificationsLibrary aura:id="notifLib"/>
 
     <!-- Banner -->
-    <aura:if isTrue="{!or(v.sObjectName == 'Batch_Template__c', v.sObjectName == 'npsp__Batch_Template__c')}">
+    <aura:if isTrue="{!v.templateMetadata.labels.objectName == 'Batch_Template__c'}">
         <header role="banner" class="header">
             <div class="slds-page-header">
                 <div class="slds-grid">
@@ -77,7 +78,7 @@
                         <aura:if isTrue="{!v.isReadOnly}">
                             <lightning:buttonGroup>
                                 <lightning:button label="{!$Label.c.stgBtnEdit}" onclick="{!c.changeModeToEdit}"/>
-                                <lightning:button label="{!v.templateMetadata.labels.backToTemplates}" onclick="{!c.cancel}"/>
+                                <lightning:button aura:id="backToTemplates" label="{!v.templateMetadata.labels.backToTemplates}" onclick="{!c.handleButtonClick}"/>
                             </lightning:buttonGroup>
                         </aura:if>
                     </div>
@@ -167,10 +168,10 @@
                 </aura:if>
                 <!--End Step 1-->
 
-                <!-- Step 2: Template Configuration (Only for Batch Gift Entry) -->
+                <!-- Step 2: Template Selection (Only for Batch Gift Entry) -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '2'}">
                 </aura:if>
-                <!-- Step 2: Template Configuration -->
+                <!-- End Step 2 -->
 
                 <!-- Step 3: Select Fields -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '3'}">
@@ -195,7 +196,6 @@
                         </lightning:accordion>
                     </div>
                 </aura:if>
-                <!--End Step 3-->
 
                 <!--Selected Fields Section Header (View Mode Only)-->
                 <aura:if isTrue="{!v.isReadOnly}">
@@ -208,14 +208,10 @@
                     </div>
                 </aura:if>
                 <!--End Selected Fields Section-->
+                <!--End Step 3-->
 
-                <!-- Step 4: Choose Template Configuration (Only Batch Gift Entry) -->
-                <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '4'}">
-                </aura:if>
-                <!-- End Step 4 -->
-
-                <!-- Step 5: Set Field Options -->
-                <aura:if isTrue="{!or(v.templateMetadata.progressIndicatorStep == '5', v.isReadOnly)}">
+                <!-- Step 4: Set Field Options -->
+                <aura:if isTrue="{!or(v.templateMetadata.progressIndicatorStep == '4', v.isReadOnly)}">
                     <div class="slds-m-around_medium">
                         <lightning:datatable
                                 keyField="name"
@@ -229,30 +225,30 @@
                         />
                     </div>
                 </aura:if>
-                <!--End Step 5 -->
+                <!--End Step 4 -->
 
-                <!-- Step 6: Edit Matching Rules (Only Batch Gift Entry) -->
-                <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '6'}">
+                <!-- Step 5: Edit Matching Rules (Only Batch Gift Entry) -->
+                <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '5'}">
                 </aura:if>
-                <!-- End Step 6 -->
+                <!-- End Step 5 -->
 
                 <!-- Buttons (Only for Batch Template) -->
-                <aura:if isTrue="{!and(not(v.isReadOnly), or(v.sObjectName == 'Batch_Template__c', v.sObjectName == 'npsp__Batch_Template__c'))}">
+                <aura:if isTrue="{!and(not(v.isReadOnly), v.templateMetadata.labels.objectName == 'Batch_Template__c')}">
                     <lightning:layout horizontalAlign="spread" multipleRows="true">
                         <lightning:layoutItem size="3">
                             <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '1' }">
-                                <lightning:button variant="neutral" label="{!$Label.c.stgBtnBack}" onclick="{!c.back}" />
+                                <lightning:button aura:id="back" variant="neutral" label="{!$Label.c.stgBtnBack}" onclick="{!c.handleButtonClick}" />
                             </aura:if>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="6" class="slds-text-align_right">
                             <aura:if isTrue="{!not(v.isReadOnly)}">
-                                <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
+                                <lightning:button aura:id="cancel" variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.handleButtonClick}" />
                             </aura:if>
-                            <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '5' }">
-                                <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
+                            <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '4' }">
+                                <lightning:button aura:id="next" variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.handleButtonClick}" />
                             </aura:if>
-                            <aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '5') }">
-                                <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" disabled="{!or (v.templateMetadata.dataTableChanged, v.templateFieldOptions.errors.size > 0)}" />
+                            <aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '4') }">
+                                <lightning:button aura:id="save" variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.handleButtonClick}" disabled="{!or (v.templateMetadata.dataTableChanged, v.templateFieldOptions.errors.size > 0)}" />
                             </aura:if>
                         </lightning:layoutItem>
                     </lightning:layout>

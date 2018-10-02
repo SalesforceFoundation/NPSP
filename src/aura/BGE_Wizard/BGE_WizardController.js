@@ -25,29 +25,6 @@
     },
 
     /**
-     * @description Cancels creation or view of the template by
-     * navigating to object home. Cancels edit by querying model data.
-     */
-    cancel: function(component, event, helper) {
-        var model = component.get('v.model');
-        var mode = component.get('v.templateMetadata.mode');
-        //Create/Edit modes invoke cancel from the button; view does so from 'Back to Templates' button
-        if (mode === 'create' || mode === 'view') {
-            //navigate to record home
-            var homeEvent = $A.get('e.force:navigateToObjectHome');
-            homeEvent.setParams({
-                'scope': component.get('v.templateMetadata.labels.objectName')
-            });
-            homeEvent.fire();
-        } else if (mode === 'edit') {
-            model.getTemplateMetadata().clearError();
-            model.getTemplateMetadata().setDataTableChanged(false);
-            model.getTemplateMetadata().setMode('view');
-            model.init(component);
-        }
-    },
-
-    /**
      * @description Navigates from View to Edit mode.
      */
     changeModeToEdit: function(component, event, helper) {
@@ -62,7 +39,6 @@
         var model = component.get('v.model');
         model.save();
     },
-
 
     /**
     * @description Saves field options from step 3 to the model
@@ -95,52 +71,47 @@
         model.getTemplateMetadata().setDataTableChanged(false);
     },
 
-    /**
-    * @description Moves to next wizard step
-    */
-    next: function(component, event, helper) {
-        var model = component.get('v.model');
-        var step = component.get('v.templateMetadata.progressIndicatorStep');
+    handleButtonClick: function(component, event, helper) {
+        // opt 1: button came from our own component
+        var buttonClick = event.getSource().getLocalId();
+        // opt 2: button came from a send message
+        // must be explicit about channel because other messages may be sent
+        var channel = event.getParam('channel');
 
-        if (step === '1') {
-            var templateInfoData = component.get('v.templateInfo');
-            model.getTemplateInfo().load(templateInfoData);
-            if (model.getTemplateInfo().isValid()) {
-                model.getTemplateMetadata().clearError();
-                model.getTemplateMetadata().stepUp();
-                model.getTemplateMetadata().setPageHeader();
-            } else {
-                model.getTemplateMetadata().showError(component.get('v.templateMetadata.labels.missingNameDescriptionError'));
+        var model = component.get('v.model');
+
+        if (channel === 'next' || buttonClick === 'next') {
+            var step = component.get('v.templateMetadata.progressIndicatorStep');
+            if (step === '1') {
+                var templateInfoData = component.get('v.templateInfo');
+                model.getTemplateInfo().load(templateInfoData);
+                model.getTemplateMetadata().nextStep(model.getTemplateInfo().isValid(),
+                    component.get('v.templateMetadata.labels.missingNameDescriptionError'));
+            } else if (step === '2') {
+                console.log('step 2?');
+                //handle template selection and copying here
+            } else if (step === '3') {
+                var templateFields = component.get('v.templateFields');
+                model.getTemplateFields().updateToActive(templateFields.fieldGroups);
+                var errors = model.getTemplateFields().getRequiredFieldErrors();
+                model.getTemplateMetadata().nextStep(errors.length === 0, errors);
+            } else if (step === '4') {
+                //handle customize field options for batch gift entry here
+            } else if (step === '5') {
+                //handle matching rules here
             }
-        } else if (step === '2') {
-            //handle template copying here
-        } else if (step === '3') {
-            var templateFields = component.get('v.templateFields');
-            model.getTemplateFields().updateToActive(templateFields.fieldGroups);
-            var errors = model.getTemplateFields().getRequiredFieldErrors();
-            if (!errors) {
-                model.getTemplateMetadata().clearError();
-                model.getTemplateMetadata().stepUp();
-                model.getTemplateMetadata().setPageHeader();
-            } else {
-                model.getTemplateMetadata().showError(errors);
+        } else if (channel === 'back' || buttonClick === 'back') {
+            model.getTemplateMetadata().backStep();
+        } else if (channel === 'cancel' || buttonClick === 'cancel' || buttonClick === 'backToTemplates') {
+            var mode = component.get('v.templateMetadata.mode');
+            model.getTemplateMetadata().cancel(mode, component.get('v.templateMetadata.labels.objectName'));
+            //Create/Edit modes invoke cancel from the button; view does so from 'Back to Templates' button
+            if (mode === 'edit') {
+                model.init(component);
             }
-        } else if (step === '4') {
-            //handle matching rules here
-        } else if (step === '5') {
-            //handle customize field options for batch gift entry here
+        } else if (channel === 'save' || buttonClick === 'save') {
+
         }
-    },
-
-    /**
-    * @description Moves to previous wizard step
-    */
-    back: function(component, event, helper) {
-        var model = component.get('v.model');
-        model.getTemplateMetadata().clearError();
-        model.getTemplateMetadata().setDataTableChanged(false);
-        model.getTemplateMetadata().stepDown();
-        model.getTemplateMetadata().setPageHeader();
     },
 
 });

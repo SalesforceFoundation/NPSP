@@ -3,7 +3,7 @@
         var channel = event.getParam('channel');
         var message = event.getParam('message');
 
-        if (channel === 'changeHeader') {
+        if (channel === 'setHeader') {
             component.set("v.header", message);
         }
     }

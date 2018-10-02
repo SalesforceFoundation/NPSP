@@ -59,6 +59,7 @@
 
                 if (!templateMetadataView.hasError) {
                     templateMetadataView.progressIndicatorStep = templateMetadata.progressIndicatorStep;
+                    _sendMessage('setStep',templateMetadata.progressIndicatorStep);
                 } else {
                     component.find('notifLib').showNotice({
                         'variant': 'error',
@@ -84,13 +85,7 @@
 
                 //update page header in modal if page header has changed and modal is used
                 if (headerChanged) {
-                    /*var sendMessage = $A.get('e.ltng:sendMessage');
-                    sendMessage.setParams({
-                        'channel': 'changeHeader',
-                        'message': templateMetadataView.pageHeader
-                    });
-                    sendMessage.fire();*/
-                    //_sendMessage('changeHeader', templateMetadataView.pageHeader)
+                    _sendMessage('setHeader',templateMetadata.pageHeader);
                 }
                 component.set('v.templateMetadata', templateMetadataView);
             });
@@ -743,6 +738,55 @@
             }
 
             /**
+             * @description Increments Wizard to next step if no errors exist
+             * @param isValid - string that is the selected mode
+             * @param error - existing errors
+             * TODO: make templateMetadata error-aware and remove this param
+             * @return void.
+             */
+            function nextStep(isValid, error) {
+
+                if (isValid) {
+                    this.clearError();
+                    this.stepUp();
+                    this.setPageHeader();
+                } else {
+                    this.showError(error);
+                }
+            }
+
+            /**
+             * @description Decrements Wizard to previous step regardless of errors
+             * @return void.
+             */
+            function backStep() {
+                this.clearError();
+                this.setDataTableChanged(false);
+                this.stepDown();
+                this.setPageHeader();
+            }
+
+            /**
+             * @description From Edit mode, sets back to View mode, otherwise returns user to dynamic Object home
+             * @return void.
+             */
+            function cancel(mode, objectName) {
+                //Create/Edit modes invoke cancel from the button; view does so from 'Back to Templates' button
+                if (mode === 'edit') {
+                    this.clearError();
+                    this.setDataTableChanged(false);
+                    this.setMode('view');
+                } else {
+                    //navigate to record home
+                    var homeEvent = $A.get('e.force:navigateToObjectHome');
+                    homeEvent.setParams({
+                        'scope': objectName
+                    });
+                    homeEvent.fire();
+                }
+            }
+
+            /**
              * @description Sets the mode, and notify all the
              *      _onMetadataUpdated listeners. Resets progressIndicator.
              * @param mode - string that is the selected mode
@@ -800,19 +844,18 @@
                         this.pageHeader = $A.get('$Label.c.bgeBatchTemplateOverviewWizard');
                         break;
                     case 2:
-                        this.pageHeader = '';
+                        // TODO: add custom label when we add step 2
+                        this.pageHeader = 'Select Template';
                         break;
                     case 3:
                         this.pageHeader = $A.get('$Label.c.bgeBatchTemplateSelectFields');
                         break;
                     case 4:
-                        this.pageHeader = '';
-                        break;
-                    case 5:
                         this.pageHeader = $A.get('$Label.c.bgeBatchTemplateSetFieldOptions');
                         break;
-                    case 6:
-                        this.pageHeader = '';
+                    case 5:
+                        // TODO: add custom label when we add step 5
+                        this.pageHeader = 'Select Matching Rules';
                         break;
                 }
 
@@ -825,7 +868,21 @@
              */
             function stepUp() {
                 var stepNum = parseInt(this.progressIndicatorStep);
-                stepNum = stepNum + 2;
+                switch (stepNum) {
+                    case 1:
+                        // TODO: adjust this when we add in step 2
+                        stepNum = 3;
+                        break;
+                    case 2:
+                        stepNum = 3;
+                        break;
+                    case 3:
+                        stepNum = 4;
+                        break;
+                    case 4:
+                        stepNum = 5;
+                        break;
+                }
                 this.progressIndicatorStep = stepNum.toString();
                 this.onMetadataUpdated.notify();
             }
@@ -836,7 +893,21 @@
              */
             function stepDown() {
                 var stepNum = parseInt(this.progressIndicatorStep);
-                stepNum = stepNum - 2;
+                switch (stepNum) {
+                    case 2:
+                        stepNum = 1;
+                        break;
+                    case 3:
+                        // TODO: adjust this when we add in step 2
+                        stepNum = 1;
+                        break;
+                    case 4:
+                        stepNum = 3;
+                        break;
+                    case 5:
+                        stepNum = 4;
+                        break;
+                }
                 this.progressIndicatorStep = stepNum.toString();
                 this.onMetadataUpdated.notify();
             }
@@ -851,6 +922,9 @@
                 dataTableChanged: false,
                 pageHeader: '',
                 load: load,
+                nextStep: nextStep,
+                backStep: backStep,
+                cancel: cancel,
                 setMode: setMode,
                 showError: showError,
                 clearError: clearError,
