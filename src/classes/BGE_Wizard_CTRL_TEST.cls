@@ -32,11 +32,11 @@
 * @date 2018
 * @group BGE
 * @group-content
-* @description Unit Tests for the Lightning Component Apex Controller for the BGE Batch Template UI.
+* @description Unit Tests for the Lightning Component Apex Controller for the BGE Wizard UI.
 **/
 
 @isTest(IsParallel=true)
-private class BGE_Template_CTRL_TEST {
+private class BGE_Wizard_CTRL_TEST {
 
     /*********************************************************************************************************
     * @description Tests sets up a new Batch Template Record
@@ -61,8 +61,8 @@ private class BGE_Template_CTRL_TEST {
     public static void testGetNewTemplateDetails() {
 
         Test.startTest();
-        String jsonModel = BGE_Template_CTRL.getRecordDetails('Batch_Template__c', null);
-        BGE_Template_CTRL.BGEDetailsModel templateDetails = (BGE_Template_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_Template_CTRL.BGEDetailsModel.class);
+        String jsonModel = BGE_Wizard_CTRL.getRecordDetails('Batch_Template__c', null);
+        BGE_Wizard_CTRL.BGEDetailsModel templateDetails = (BGE_Wizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_Wizard_CTRL.BGEDetailsModel.class);
         Test.stopTest();
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
@@ -87,8 +87,8 @@ private class BGE_Template_CTRL_TEST {
         Batch_Template__c batchTemplate = initBatchTemplateTest();
 
         Test.startTest();
-        String jsonModel = BGE_Template_CTRL.getRecordDetails('Batch_Template__c', batchTemplate.Id);
-        BGE_Template_CTRL.BGEDetailsModel templateDetails = (BGE_Template_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_Template_CTRL.BGEDetailsModel.class);
+        String jsonModel = BGE_Wizard_CTRL.getRecordDetails('Batch_Template__c', batchTemplate.Id);
+        BGE_Wizard_CTRL.BGEDetailsModel templateDetails = (BGE_Wizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_Wizard_CTRL.BGEDetailsModel.class);
         Test.stopTest();
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
@@ -128,8 +128,8 @@ private class BGE_Template_CTRL_TEST {
                 '}]';
 
         Test.startTest();
-        String jsonModel = BGE_Template_CTRL.saveTemplate(templateInfoJSON, activeFieldsJSON);
-        BGE_Template_CTRL.BGEDetailsModel templateDetails = (BGE_Template_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_Template_CTRL.BGEDetailsModel.class);
+        String jsonModel = BGE_Wizard_CTRL.saveTemplate(templateInfoJSON, activeFieldsJSON);
+        BGE_Wizard_CTRL.BGEDetailsModel templateDetails = (BGE_Wizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_Wizard_CTRL.BGEDetailsModel.class);
         Test.stopTest();
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
@@ -172,8 +172,8 @@ private class BGE_Template_CTRL_TEST {
 
         Test.startTest();
         System.debug(batchTemplate);
-        String jsonModel = BGE_Template_CTRL.saveTemplate(templateInfoJSON, activeFieldsJSON);
-        BGE_Template_CTRL.BGEDetailsModel templateDetails = (BGE_Template_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_Template_CTRL.BGEDetailsModel.class);
+        String jsonModel = BGE_Wizard_CTRL.saveTemplate(templateInfoJSON, activeFieldsJSON);
+        BGE_Wizard_CTRL.BGEDetailsModel templateDetails = (BGE_Wizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_Wizard_CTRL.BGEDetailsModel.class);
         Test.stopTest();
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');

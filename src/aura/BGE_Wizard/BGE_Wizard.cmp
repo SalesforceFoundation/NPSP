@@ -34,7 +34,7 @@
   @group-content ../../ApexDocContent/BatchDataImport.htm
   @description Component used to view, edit, or create a Batch Template record.
 -->
-<aura:component controller="BGE_Template_CTRL"
+<aura:component controller="BGE_Wizard_CTRL"
                 implements="lightning:actionOverride,force:hasRecordId,flexipage:availableForRecordHome,force:hasSObjectName">
 
     <!-- private attributes -->

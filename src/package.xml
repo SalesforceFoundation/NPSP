@@ -84,8 +84,8 @@
         <members>BDI_SettingsUI_TEST</members>
         <members>BGE_DataImportBatchEntry_CTRL</members>
         <members>BGE_DataImportBatchEntry_CTRL_TEST</members>
-        <members>BGE_Template_CTRL</members>
-        <members>BGE_Template_CTRL_TEST</members>
+        <members>BGE_Wizard_CTRL</members>
+        <members>BGE_Wizard_CTRL_TEST</members>
         <members>CAM_CascadeDeleteLookups_TDTM</members>
         <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
@@ -559,7 +559,7 @@
     <types>
         <members>BGE_DataImportBatchEntry</members>
         <members>BGE_EntryForm</members>
-        <members>BGE_TemplateDetails</members>
+        <members>BGE_Wizard</members>
         <members>CRLP_FilterGroup</members>
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupApp</members>
@@ -587,6 +587,8 @@
         <members>autocompleteSelectListOption</members>
         <members>dataProviderInterface</members>
         <members>defaultTokens</members>
+        <members>modalFooter</members>
+        <members>modalHeader</members>
         <members>svg</members>
         <name>AuraDefinitionBundle</name>
     </types>
@@ -1381,6 +1383,7 @@
         <members>bdiStatusProcessed</members>
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
+        <members>bgeBatchOverviewWizard</members>
         <members>bgeBatchTemplateAvailableFields</members>
         <members>bgeBatchTemplateEdit</members>
         <members>bgeBatchTemplateErrorDefaultValue</members>

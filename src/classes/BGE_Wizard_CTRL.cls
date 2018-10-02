@@ -32,9 +32,9 @@
 * @date 2018
 * @group BGE
 * @group-content 
-* @description BGE Template Component Controller.
+* @description BGE Wizard Component Controller.
 */
-public with sharing class BGE_Template_CTRL {
+public with sharing class BGE_Wizard_CTRL {
 
     /*******************************************************************************************************
     * @description Retrieves the Template Details information, the related list of fields, and component labels.
@@ -240,7 +240,7 @@ public with sharing class BGE_Template_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description a class to retrieve and save the required information for the BGE_TemplateDetails component.
+    * @description a class to retrieve and save the required information for the BGE_Wizard component.
     */
     public class BGEDetailsModel {
         @AuraEnabled public String name;

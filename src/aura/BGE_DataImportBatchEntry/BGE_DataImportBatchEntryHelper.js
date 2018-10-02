@@ -39,8 +39,8 @@
 
 
         $A.createComponents([
-                ["c:BGE_TemplateDetails",{sObjectName: component.get("v.sObjectName")}],
-                ["c:modalHeader",{header: $A.get('$Label.c.bgeBatchTemplateOverviewWizard')}],
+                ["c:BGE_Wizard",{sObjectName: component.get("v.sObjectName"), recordId: component.get("v.recordId")}],
+                ["c:modalHeader",{header: $A.get('$Label.c.bgeBatchOverviewWizard')}],
                 ["c:modalFooter",{}]
             ],
 
