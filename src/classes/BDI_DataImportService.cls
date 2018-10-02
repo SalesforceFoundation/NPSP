@@ -708,17 +708,12 @@ global with sharing class BDI_DataImportService {
     * @return Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
     */
     global static Map<String, String> mapFieldsForDIObject(String dataImportObjectName, String targetObjectName, List<String> dataImportFields) {
-
         BDISettings__c bdiSettings = BDISettings__c.getOrgDefaults();
-
-        Map<String, String> stringParameters = new Map<String, String>();
+        Map<String, String> parametersByName = new Map<String, String>();
         Map<String, String> dataImportFieldToTargetField = new Map<String, String>();
         Map<String, Set<String>> targetFieldsBySource = new Map<String, Set<String>>();
-
         Boolean useCustomMetadataForFieldMapping = false;
-
         if (bdiSettings.MapWithCustomMetadataTypes__c) {
-
             List<BDI_Field_Mapping__mdt> bdiFIeldMappings = [SELECT
                                                                     Source_Field__c,
                                                                     Target_Field__c
@@ -726,19 +721,12 @@ global with sharing class BDI_DataImportService {
                                                                     BDI_Field_Mapping__mdt];
 
             for (BDI_Field_Mapping__mdt customMetadata : bdiFIeldMappings) {
-
                 String sourceField = customMetadata.Source_Field__c.toLowerCase();
-
                 if(targetFieldsBySource.containsKey(sourceField)) {
-
             		Set<String> targetFields = targetFieldsBySource.get(sourceField);
-
             		targetFields.add(customMetadata.Target_Field__c);
-
                     targetFieldsBySource.put(sourceField, targetFields);
-
 	            } else {
-
             		targetFieldsBySource.put(sourceField, new Set<String> { customMetadata.Target_Field__c });
             	}
             }
@@ -747,58 +735,50 @@ global with sharing class BDI_DataImportService {
         }
 
         for (String dataImportField : dataImportFields) {
-
             DescribeFieldResult fieldDescribe;
-
             if (useCustomMetadataForFieldMapping) {
-
                 if (targetFieldsBySource.containsKey(dataImportField)) {
-
                     Set<String> targetFields = targetFieldsBySource.get(dataImportField);
-
                     for (String targetFieldName : targetFields) {
-
-                        stringParameters.put('targetFieldName', targetFieldName);
-                        stringParameters.put('dataImportObjectName', dataImportObjectName);
-                        stringParameters.put('targetObjectName', targetObjectName);
-                        stringParameters.put('dataImportField', dataImportField);
-
-                        mapFieldsForDIObjectCore(stringParameters, dataImportFieldToTargetField);
+                        // Place the necessary parameters for the method we are going to call on a Map to avoid sending too many parameters.
+                        parametersByName.put('targetFieldName', targetFieldName);
+                        parametersByName.put('dataImportObjectName', dataImportObjectName);
+                        parametersByName.put('targetObjectName', targetObjectName);
+                        parametersByName.put('dataImportField', dataImportField);
+                        mapFieldsForDIObjectCore(parametersByName, dataImportFieldToTargetField);
                     }
                 }
             } else {
-
                 fieldDescribe = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), dataImportField);
-
                 String  targetFieldName = fieldDescribe.getInlineHelpText();
-
-                stringParameters.put('targetFieldName', targetFieldName);
-                stringParameters.put('dataImportObjectName', dataImportObjectName);
-                stringParameters.put('targetObjectName', targetObjectName);
-                stringParameters.put('dataImportField', dataImportField);
-
-                mapFieldsForDIObjectCore(stringParameters, dataImportFieldToTargetField);
+                // Place the necessary parameters for the method we are going to call on a Map to avoid sending too many parameters.
+                parametersByName.put('targetFieldName', targetFieldName);
+                parametersByName.put('dataImportObjectName', dataImportObjectName);
+                parametersByName.put('targetObjectName', targetObjectName);
+                parametersByName.put('dataImportField', dataImportField);
+                mapFieldsForDIObjectCore(parametersByName, dataImportFieldToTargetField);
             }
         }
 
         return dataImportFieldToTargetField;
-
     }
 
-
-    private static void mapFieldsForDIObjectCore(Map<String, String> stringParameters, Map<String, String> dataImportFieldToTargetField) {
-
-        String targetFieldName = stringParameters.get('targetFieldName');
-        String dataImportObjectName = stringParameters.get('dataImportObjectName');
-        String targetObjectName = stringParameters.get('targetObjectName');
-        String dataImportField = stringParameters.get('dataImportField');
-
+    /*******************************************************************************************************
+    * @description The core logic for the method mapFieldsForDIObject
+    * @param parametersByName a Map containing parameters for this function. The key being the parameter name and the value being the actual parameter.
+    * @param dataImportFieldToTargetField Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
+    * @return void.
+    */
+    private static void mapFieldsForDIObjectCore(Map<String, String> parametersByName, Map<String, String> dataImportFieldToTargetField) {
+        String targetFieldName = parametersByName.get('targetFieldName');
+        String dataImportObjectName = parametersByName.get('dataImportObjectName');
+        String targetObjectName = parametersByName.get('targetObjectName');
+        String dataImportField = parametersByName.get('dataImportField');
         if (targetFieldName != null && targetFieldName != '') {
-
             List<String> parts = targetFieldName.split('\\.', 2);
-
             if (parts.size() == 2 && parts[0] == dataImportObjectName && parts[1] != '') {
                 String fieldName = parts[1];
+
                 //if we aren't in the npsp namespace, remove those tokens from help text
                 //also removes tokens from actual detected namespace, if we happen to be
                 //in a non-npsp namespace
@@ -821,7 +801,6 @@ global with sharing class BDI_DataImportService {
                         'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'
                     };
                     Boolean isAuditField = setAuditFields.contains(fieldName.toLowerCase());
-
                     if (failFieldLevelSecurity ||
                         fieldDescribe == null ||
                         !fieldDescribe.isCreateable() ||
