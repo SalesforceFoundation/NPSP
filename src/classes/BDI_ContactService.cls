@@ -444,22 +444,22 @@ public with sharing class BDI_ContactService {
                 addStringToSet(getContactNameFromDi(di, 2), setName);
             } else {
                 // c1 Names, Emails, Phones
-                addStringToSet(di.Contact1_Firstname__c, setFname);
-                addStringToSet(di.Contact1_Lastname__c, setLname);
-                addStringToSet(di.Contact1_Personal_Email__c, setEmail);
-                addStringToSet(di.Contact1_Work_Email__c, setEmail);
-                addStringToSet(di.Contact1_Alternate_Email__c, setEmail);
+                addStringToSet(di.Contact1_Firstname__c.toLowerCase(), setFname);
+                addStringToSet(di.Contact1_Lastname__c.toLowerCase(), setLname);
+                addStringToSet(di.Contact1_Personal_Email__c.toLowerCase(), setEmail);
+                addStringToSet(di.Contact1_Work_Email__c.toLowerCase(), setEmail);
+                addStringToSet(di.Contact1_Alternate_Email__c.toLowerCase(), setEmail);
                 addStringToSet(di.Contact1_Home_Phone__c, setPhone);
                 addStringToSet(di.Contact1_Mobile_Phone__c, setPhone);
                 addStringToSet(di.Contact1_Other_Phone__c, setPhone);
                 addStringToSet(di.Contact1_Work_Phone__c, setPhone);
 
                 // c2 Names, Emails, Phones
-                addStringToSet(di.Contact2_Firstname__c, setFname);
-                addStringToSet(di.Contact2_Lastname__c, setLname);
-                addStringToSet(di.Contact2_Personal_Email__c, setEmail);
-                addStringToSet(di.Contact2_Work_Email__c, setEmail);
-                addStringToSet(di.Contact2_Alternate_Email__c, setEmail);
+                addStringToSet(di.Contact2_Firstname__c.toLowerCase(), setFname);
+                addStringToSet(di.Contact2_Lastname__c.toLowerCase(), setLname);
+                addStringToSet(di.Contact2_Personal_Email__c.toLowerCase(), setEmail);
+                addStringToSet(di.Contact2_Work_Email__c.toLowerCase(), setEmail);
+                addStringToSet(di.Contact2_Alternate_Email__c.toLowerCase(), setEmail);
                 addStringToSet(di.Contact2_Home_Phone__c, setPhone);
                 addStringToSet(di.Contact2_Mobile_Phone__c, setPhone);
                 addStringToSet(di.Contact2_Other_Phone__c, setPhone);
@@ -601,7 +601,7 @@ public with sharing class BDI_ContactService {
     */
     private void addStringToSet(String str, Set<String> setStr) {
         if (String.isNotBlank(str)) {
-            setStr.add(str.toLowerCase());
+            setStr.add(str);
         }
     }
 
@@ -634,29 +634,29 @@ public with sharing class BDI_ContactService {
 
     First, we create a key which is the Salesforce Id of the Contact.
     Second, if Contact Unique Id is specified, we create a key with that unique id.
-    Then we use a compound key of Contact Firstname, Lastname, Email, and Phone (with a | between each) to
-    match against existing Contacts,
+    Then we use a compound key of Contact Firstname, Lastname, Email, and Phone (transformed to lowercase, 
+    in order to ignore case differences, with a | between each) to match against existing Contacts,
     and also those Contacts we are creating. We call this compound key a diKey. Our mapDIKeyToContact
     is used to lookup a given Contact from a diKey. In order to support settings that tell us which fields
     to use in the match, a given Contact can have multiple keys. Eg., if the setting is Email Only, and
     we have an existing Contact of Fred Smith fred@smith.com, then we need to support matching the following
     diKeys:
-        Fred|Smith|fred@smith.com
-        Fred||fred@smith.com
-        |Smith|fred@smith.com
+        fred|smith|fred@smith.com
+        fred||fred@smith.com
+        |smith|fred@smith.com
         ||fred@smith.com
 
     In this same example, if our DI record is John Doe john@doe.com, then its diKeys would be:
-        John|Doe|john@doe.com
-        John||john@doe.com
-        |Doe|john@doe.com
+        john|doe|john@doe.com
+        john||john@doe.com
+        |doe|john@doe.com
         ||john@doe.com
 
     But if another DI record is just Bob Dole (no email), then we know it can't match an existing Contact
     since it has no email, but we still need to create a unique diKey for this record so that we can track
     its Contact, as well as map other DI records with the same name to the same contact.  Thus we'll create
     the diKey:
-        Bob|Dole|
+        bob|dole|
 
     So the rules can be explained as:
         Existing contacts only add the specific keys the rules can match against.
