@@ -110,6 +110,7 @@ private class BGE_Wizard_CTRL_TEST {
     @isTest
     public static void testSaveNewTemplateDetails() {
 
+        String sObjectName = 'Batch_Template__c';
         String templateInfoJSON = '{' +
                 '"name":"Test 4",' +
                 '"id":null,' +
@@ -128,7 +129,7 @@ private class BGE_Wizard_CTRL_TEST {
                 '}]';
 
         Test.startTest();
-        String jsonModel = BGE_Wizard_CTRL.saveTemplate(templateInfoJSON, activeFieldsJSON);
+        String jsonModel = BGE_Wizard_CTRL.saveRecord(sObjectName, templateInfoJSON, activeFieldsJSON);
         BGE_Wizard_CTRL.BGEDetailsModel templateDetails = (BGE_Wizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_Wizard_CTRL.BGEDetailsModel.class);
         Test.stopTest();
 
@@ -153,6 +154,7 @@ private class BGE_Wizard_CTRL_TEST {
         String newName = 'New Name';
         System.assertNotEquals(newName, batchTemplate.Name);
 
+        String sObjectName = 'Batch_Template__c';
         String templateInfoJSON = '{' +
                 '"name":"' + newName + '",' +
                 '"id":"' + batchTemplate.Id + '",' +
@@ -172,7 +174,7 @@ private class BGE_Wizard_CTRL_TEST {
 
         Test.startTest();
         System.debug(batchTemplate);
-        String jsonModel = BGE_Wizard_CTRL.saveTemplate(templateInfoJSON, activeFieldsJSON);
+        String jsonModel = BGE_Wizard_CTRL.saveRecord(sObjectName, templateInfoJSON, activeFieldsJSON);
         BGE_Wizard_CTRL.BGEDetailsModel templateDetails = (BGE_Wizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_Wizard_CTRL.BGEDetailsModel.class);
         Test.stopTest();
 
