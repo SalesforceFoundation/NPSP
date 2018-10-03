@@ -57,7 +57,7 @@
     <lightning:notificationsLibrary aura:id="notifLib"/>
 
     <!-- Banner -->
-    <aura:if isTrue="{!v.templateMetadata.labels.objectName == 'Batch_Template__c'}">
+    <aura:if isTrue="{!v.templateMetadata.labels.sObjectNameNoNamespace == 'Batch_Template__c'}">
         <header role="banner" class="header">
             <div class="slds-page-header">
                 <div class="slds-grid">
@@ -93,7 +93,7 @@
             <lightning:layoutItem size="12" largeDeviceSize="8" mediumDeviceSize="10" smallDeviceSize="12">
 
                 <!-- Header for Batch Template Only -->
-                <aura:if isTrue="{!or(v.sObjectName == 'Batch_Template__c', v.sObjectName == 'npsp__Batch_Template__c')}">
+                <aura:if isTrue="{!v.templateMetadata.labels.sObjectNameNoNamespace == 'Batch_Template__c'}">
                     <aura:if isTrue="{!not(v.isReadOnly)}">
                         <div class="slds-text-align_center slds-m-vertical_medium">
                             <h2 class="slds-text-heading_medium">{!v.templateMetadata.pageHeader}</h2>
@@ -137,7 +137,7 @@
                             <div class="slds-p-top_large">
                                 <aura:if isTrue="{!v.isReadOnly}">
                                     <ui:outputCheckbox value="{!v.templateInfo.enableTotalEntry}" class="slds-form-element__control"/>
-                                    <span class="slds-form-element__label">{!v.templateMetadata.labels.totalEntryLabel}</span>
+                                    <span class="slds-form-element__label">{!v.templateMetadata.labels.totalEntryLabel}</span> <br/>
                                     <ui:outputCheckbox value="{!v.templateInfo.requireTotalMatch}" class="slds-form-element__control"/>
                                     <span class="slds-form-element__label">{!v.templateMetadata.labels.totalMatchLabel}</span>
 
@@ -233,7 +233,7 @@
                 <!-- End Step 5 -->
 
                 <!-- Buttons (Only for Batch Template) -->
-                <aura:if isTrue="{!and(not(v.isReadOnly), v.templateMetadata.labels.objectName == 'Batch_Template__c')}">
+                <aura:if isTrue="{!and(not(v.isReadOnly), v.templateMetadata.labels.sObjectNameNoNamespace == 'Batch_Template__c')}">
                     <lightning:layout horizontalAlign="spread" multipleRows="true">
                         <lightning:layoutItem size="3">
                             <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '1' }">

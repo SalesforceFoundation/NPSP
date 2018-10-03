@@ -37,15 +37,13 @@
         var modalHeader;
         var modalFooter;
 
-
         $A.createComponents([
-                ["c:BGE_Wizard",{sObjectName: component.get("v.sObjectName"), recordId: component.get("v.recordId")}],
-                ["c:modalHeader",{header: $A.get('$Label.c.bgeBatchOverviewWizard')}],
-                ["c:modalFooter",{}]
+                ['c:BGE_Wizard',{sObjectName: component.get('v.sObjectName'), recordId: component.get('v.recordId')}],
+                ['c:modalHeader',{header: $A.get('$Label.c.bgeBatchOverviewWizard')}],
+                ['c:modalFooter',{}]
             ],
-
             function(components, status){
-                if (status === "SUCCESS") {
+                if (status === 'SUCCESS') {
                     modalBody = components[0];
                     modalHeader = components[1];
                     modalFooter = components[2];
@@ -54,7 +52,7 @@
                         header: modalHeader,
                         footer: modalFooter,
                         showCloseButton: false,
-                        cssClass: "slds-modal_large",
+                        cssClass: 'slds-modal_large',
                         closeCallback: function() {
                             //todo: control for escape button here?
                         }
@@ -245,12 +243,7 @@
      * @param type: configures type of toast
      */
     showToast: function(component, title, message, type) {
-        var mode;
-        if (type === 'Error') {
-            mode = 'sticky';
-        } else {
-            mode = 'pester';
-        }
+        var mode = (type === 'Error') ? 'sticky' : 'pester';
 
         component.find('notifLib').showToast({
             'variant': type,

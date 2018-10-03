@@ -23,7 +23,6 @@
                 component.set('v.templateInfo', templateInfoView);
             });
 
-
             // TemplateInfoView module public functions and properties
             return {
                 name: '',
@@ -91,7 +90,6 @@
             });
 
             function _sendMessage(channel, message) {
-                debugger;
                 var sendMessage = $A.get('e.ltng:sendMessage');
                 sendMessage.setParams({
                     'channel': channel,
@@ -279,7 +277,7 @@
              ************************************************************/
             function init(component) {
                 var recordId = _templateInfo.id ? _templateInfo.id : component.get('v.recordId');
-                var sObjectName = component.get("v.sObjectName");
+                var sObjectName = component.get('v.sObjectName');
                 _bgeTemplateController.getRecordDetails(sObjectName, recordId, {
                     success: function(response) {
                         _templateInfo.load(
@@ -327,7 +325,9 @@
                     });
                 });
 
-                _bgeTemplateController.saveTemplateDetails(templateDetailsData, activeFields, {
+                var sObjectName = _templateMetadata.labels.sObjectNameNoNamespace;
+
+                _bgeTemplateController.saveRecord(sObjectName, templateDetailsData, activeFields, {
                     success: function(response) {
                         _templateMetadata.setMode('view');
                         _templateInfo.load(
@@ -857,6 +857,9 @@
                         // TODO: add custom label when we add step 5
                         this.pageHeader = 'Select Matching Rules';
                         break;
+                    default:
+                        this.pageHeader = $A.get('$Label.c.bgeBatchTemplateOverviewWizard');
+                        break;
                 }
 
                 this.onMetadataUpdated.notify();
@@ -882,6 +885,9 @@
                     case 4:
                         stepNum = 5;
                         break;
+                    default:
+                        stepNum = 1;
+                        break;
                 }
                 this.progressIndicatorStep = stepNum.toString();
                 this.onMetadataUpdated.notify();
@@ -906,6 +912,9 @@
                         break;
                     case 5:
                         stepNum = 4;
+                        break;
+                    default:
+                        stepNum = 1;
                         break;
                 }
                 this.progressIndicatorStep = stepNum.toString();
@@ -996,23 +1005,24 @@
                 var action = _component.get('c.getRecordDetails');
                 action.setParams({
                     'sObjectName': sObjectName,
-                    'templateId': recordId
+                    'recordId': recordId
                 });
                 action.setCallback(callback, _processResponse);
                 $A.enqueueAction(action);
             }
 
             /**
-             * @description Calls the saveTemplateDetails method.
+             * @description Calls the saveRecord method.
              * @param templateDetails. The Template fields.
              * @param activeFields. The active fields (JSON format)
              * @param callback. The callback function to execute.
              * @return void.
              */
-            function saveTemplateDetails(templateDetails, activeFields, callback) {
-                var action = _component.get('c.saveTemplate');
+            function saveRecord(sObjectName, recordDetails, activeFields, callback) {
+                var action = _component.get('c.saveRecord');
                 action.setParams({
-                    'templateInfo': JSON.stringify(templateDetails),
+                    'sObjectName' : sObjectName,
+                    'recordInfo': JSON.stringify(recordDetails),
                     'activeFields': JSON.stringify(activeFields)
                 });
                 action.setCallback(callback, _processResponse);
@@ -1045,7 +1055,7 @@
             return {
                 errors: '',
                 getRecordDetails: getRecordDetails,
-                saveTemplateDetails: saveTemplateDetails
+                saveRecord: saveRecord
             }
         })(component);
     },

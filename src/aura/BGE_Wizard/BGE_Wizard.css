@@ -5,6 +5,10 @@
 .THIS .templateInputCheckbox{
     display: inline-flex;
 }
+/*give info icons extra space*/
+.THIS .slds-form-element__icon{
+    margin-left: .2rem;
+}
 /*padding for helptext icon*/
 .THIS .uiOutputCheckbox {
     padding-right: .5rem;

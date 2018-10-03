@@ -57,7 +57,7 @@
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
         <fullName>Active_Fields__c</fullName>
-        <description>Represents the data model of active fields for a NPSP_Batch_Import__c record. Not intended for direct customer use and should not be edited directly.</description>
+        <description>Represents the data model of active fields for a NPSP_DataImportBatch__c record. Not intended for direct customer use and should not be edited directly.</description>
         <externalId>false</externalId>
         <label>Active Fields</label>
         <length>30000</length>

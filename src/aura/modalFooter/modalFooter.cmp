@@ -37,8 +37,9 @@
 <aura:component>
 
     <!--Public Attributes-->
-    <aura:attribute name="currentStep" default="1" type="String" description="Step in progress indicator"/>
-    <aura:attribute name="progressSteps" default="[]" type="List" description="List of mapped labels and values for progress indicator" />
+    <aura:attribute name="currentStep" default="1" type="String" description="Step in progress indicator" />
+    <aura:attribute name="progressSteps" default="[]" type="List"
+                    description="List of mapped labels and values for progress indicator" />
 
     <!--Events-->
     <aura:handler event="ltng:sendMessage" action="{!c.handleMessage}"/>
@@ -53,28 +54,28 @@
         </lightning:layoutItem>
 
         <!-- Start: Progress Indicator -->
-        <lightning:layoutItem size="6">
-            <div class="slds-p-bottom_large">
-                <lightning:progressIndicator currentStep="{!v.currentStep}" type="base" hasError="false" variant="base">
-                    <lightning:progressStep label="{!$Label.c.bgeBatchTemplateOverviewWizard}" value="1"/>
-                    <lightning:progressStep label="Step 2" value="2"/>
-                    <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="3"/>
-                    <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="4"/>
-                    <lightning:progressStep label="Step 5" value="5"/>
-                </lightning:progressIndicator>
-            </div>
-        </lightning:layoutItem>
+        <aura:if isTrue="{!v.progressSteps}">
+            <lightning:layoutItem size="6">
+                <div class="slds-p-bottom_large">
+                    <lightning:progressIndicator currentStep="{!v.currentStep}" type="base" hasError="false" variant="base">
+                        <lightning:progressStep label="{!$Label.c.bgeBatchTemplateOverviewWizard}" value="1"/>
+                        <!--<lightning:progressStep label="Step 2" value="2"/>-->
+                        <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="3"/>
+                        <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="4"/>
+                        <!--<lightning:progressStep label="Step 5" value="5"/>-->
+                    </lightning:progressIndicator>
+                </div>
+            </lightning:layoutItem>
+        </aura:if>
         <!-- End: Progress Indicator -->
 
         <lightning:layoutItem size="3" class="slds-text-align_right">
-            <aura:if isTrue="{!not(v.isReadOnly)}">
-                <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
-            </aura:if>
-            <aura:if isTrue="{! v.currentStep != '4' }">
+            <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
+            <aura:if isTrue="{!v.currentStep != '4'}">
                 <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
             </aura:if>
-            <aura:if isTrue="{! and(!v.isReadOnly, v.currentStep == '4') }">
-                <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" />
+            <aura:if isTrue="{!v.currentStep == '4'}">
+                <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}"/>
             </aura:if>
         </lightning:layoutItem>
     </lightning:layout>

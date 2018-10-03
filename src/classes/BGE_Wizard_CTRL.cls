@@ -38,16 +38,18 @@ public with sharing class BGE_Wizard_CTRL {
 
     /*******************************************************************************************************
     * @description Retrieves the Template Details information, the related list of fields, and component labels.
+    * @param sObjectName string of the sObjectName retrieved with force:hasSObjectName
+    * @param recordId Id of the record to be queried
     * @return JSON model of all template details data.
     */
     @AuraEnabled
-    public static String getRecordDetails(String sObjectName, Id templateId) {
+    public static String getRecordDetails(String sObjectName, Id recordId) {
         BGEDetailsModel model = new BGEDetailsModel();
 
         sObjectName = UTIL_Namespace.StrTokenRemoveNSPrefix(sObjectName);
 
         //todo: look at using dynamic SOQL instead
-        if (templateId != null) {
+        if (recordId != null) {
             if (sObjectName == 'Batch_Template__c') {
                 Batch_Template__c recordDetails = [SELECT
                         Name,
@@ -57,7 +59,7 @@ public with sharing class BGE_Wizard_CTRL {
                         RequireTotalMatch__c,
                         Active_Fields__c
                 FROM Batch_Template__c
-                WHERE Id = :templateId];
+                WHERE Id = :recordId];
 
                 model.name = recordDetails.Name;
                 model.description = recordDetails.Description__c;
@@ -75,7 +77,7 @@ public with sharing class BGE_Wizard_CTRL {
                         RequireTotalMatch__c,
                         Active_Fields__c
                 FROM DataImportBatch__c
-                WHERE Id = :templateId];
+                WHERE Id = :recordId];
 
                 model.name = recordDetails.Name;
                 model.description = recordDetails.Batch_Description__c;
@@ -183,7 +185,7 @@ public with sharing class BGE_Wizard_CTRL {
             Map<String, String> labels = new Map<String, String> {
                     'objectLabel' => Schema.SObjectType.Batch_Template__c.getLabel(),
                     'backToTemplates' => String.format(Label.CRLP_Return, new List<String>{Schema.SObjectType.Batch_Template__c.getLabelPlural()}),
-                    'objectName' => Schema.SObjectType.Batch_Template__c.getName(),
+                    'sObjectNameNoNamespace' => UTIL_Namespace.StrTokenRemoveNSPrefix(Schema.SObjectType.Batch_Template__c.getName()),
                     'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.Batch_Template__c.Name.getDescribe().getLabel() + ', ' + Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
                     'description' => Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
                     'totalEntryHelp' => Schema.Batch_Template__c.EnableTotalEntry__c.getDescribe().getInlineHelpText(),
@@ -195,7 +197,7 @@ public with sharing class BGE_Wizard_CTRL {
         } else {
             Map<String, String> labels = new Map<String, String> {
                     'objectLabel' => Schema.SObjectType.DataImportBatch__c.getLabel(),
-                    'objectName' => Schema.SObjectType.DataImportBatch__c.getName(),
+                    'sObjectNameNoNamespace' => UTIL_Namespace.StrTokenRemoveNSPrefix(Schema.SObjectType.DataImportBatch__c.getName()),
                     'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.DataImportBatch__c.Name.getDescribe().getLabel() + ', ' + Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
                     'description' => Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
                     'totalEntryHelp' => Schema.DataImportBatch__c.EnableTotalEntry__c.getDescribe().getInlineHelpText(),
@@ -209,28 +211,49 @@ public with sharing class BGE_Wizard_CTRL {
 
     /*******************************************************************************************************
     * @description Saves the Template Details information with the structured list of active fields.
-    * @return void.
+    * @param sObjectName the non-namespaced sObjectName
+    * @param recordInfo JSON string of the record information
+    * @param activeFields JSON string of the active fields to be saved to the record
+    * @return string of the record information with the Id
     */
     @AuraEnabled
-    public static string saveTemplate(String templateInfo, String activeFields) {
+    public static string saveRecord(String sObjectName, String recordInfo, String activeFields) {
         try {
-            BGEDetailsModel templateDetails = (BGEDetailsModel) JSON.deserialize(templateInfo, BGEDetailsModel.class);
+            BGEDetailsModel recordDetails = (BGEDetailsModel) JSON.deserialize(recordInfo, BGEDetailsModel.class);
 
-            Batch_Template__c batchTemplate = new Batch_Template__c();
+            if (sObjectName == 'Batch_Template__c') {
+                Batch_Template__c batchTemplate = new Batch_Template__c();
 
-            if (templateDetails.id != null) {
-                batchTemplate.Id = templateDetails.id;
+                if (recordDetails.id != null) {
+                    batchTemplate.Id = recordDetails.id;
+                }
+                batchTemplate.Name = recordDetails.name;
+                batchTemplate.Description__c = recordDetails.description;
+                batchTemplate.EnableTotalEntry__c = recordDetails.enableTotalEntry;
+                batchTemplate.RequireTotalMatch__c = recordDetails.requireTotalMatch;
+                batchTemplate.Active_Fields__c = activeFields;
+
+                upsert batchTemplate;
+                recordDetails.id = batchTemplate.Id;
+
+            } else if (sObjectName == 'DataImportBatch__c') {
+                DataImportBatch__c dataImportBatch = new DataImportBatch__c();
+
+                if (recordDetails.id != null) {
+                    dataImportBatch.Id = recordDetails.id;
+                }
+                dataImportBatch.Name = recordDetails.name;
+                dataImportBatch.Batch_Description__c = recordDetails.description;
+                dataImportBatch.EnableTotalEntry__c = recordDetails.enableTotalEntry;
+                dataImportBatch.RequireTotalMatch__c = recordDetails.requireTotalMatch;
+                dataImportBatch.Active_Fields__c = activeFields;
+
+                upsert dataImportBatch;
+                recordDetails.id = dataImportBatch.Id;
+
             }
-            batchTemplate.Name = templateDetails.name;
-            batchTemplate.Description__c = templateDetails.description;
-            batchTemplate.EnableTotalEntry__c = templateDetails.enableTotalEntry;
-            batchTemplate.RequireTotalMatch__c = templateDetails.requireTotalMatch;
-            batchTemplate.Active_Fields__c = activeFields;
 
-            upsert batchTemplate;
-            templateDetails.id = batchTemplate.Id;
-
-            return JSON.serialize(templateDetails);
+            return JSON.serialize(recordDetails);
 
         } catch (Exception ex) {
             //TODO: is BDI right to use here?

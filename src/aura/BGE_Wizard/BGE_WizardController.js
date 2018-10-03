@@ -33,14 +33,6 @@
     },
 
     /**
-     * @description Saves the full Batch Template record after step 3
-     */
-    save: function(component, event, helper) {
-        var model = component.get('v.model');
-        model.save();
-    },
-
-    /**
     * @description Saves field options from step 3 to the model
     */
     saveFieldOptions: function(component, event, helper) {
@@ -74,7 +66,7 @@
     handleButtonClick: function(component, event, helper) {
         // opt 1: button came from our own component
         var buttonClick = event.getSource().getLocalId();
-        // opt 2: button came from a send message
+        // opt 2: button came from a ltng:sendMessage
         // must be explicit about channel because other messages may be sent
         var channel = event.getParam('channel');
 
@@ -104,13 +96,13 @@
             model.getTemplateMetadata().backStep();
         } else if (channel === 'cancel' || buttonClick === 'cancel' || buttonClick === 'backToTemplates') {
             var mode = component.get('v.templateMetadata.mode');
-            model.getTemplateMetadata().cancel(mode, component.get('v.templateMetadata.labels.objectName'));
+            model.getTemplateMetadata().cancel(mode, component.get('v.sObjectName'));
             //Create/Edit modes invoke cancel from the button; view does so from 'Back to Templates' button
             if (mode === 'edit') {
                 model.init(component);
             }
         } else if (channel === 'save' || buttonClick === 'save') {
-
+            model.save();
         }
     },
 

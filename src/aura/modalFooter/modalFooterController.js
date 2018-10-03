@@ -9,34 +9,21 @@
         }
     },
 
-    back: function(component, event) {
-        var sendMessage = $A.get('e.ltng:sendMessage');
-        sendMessage.setParams({
-            'channel': 'back',
-            'message': null
-        });
-        sendMessage.fire();
+    back: function(component, event, helper) {
+        helper.sendMessage(component, 'back', null);
     },
 
-    cancel: function(component, event) {
-        var sendMessage = $A.get('e.ltng:sendMessage');
-        sendMessage.setParams({
-            'channel': 'cancel',
-            'message': null
-        });
-        sendMessage.fire();
+    cancel: function(component, event, helper) {
+        helper.sendMessage(component, 'cancel', null);
     },
 
-    next: function(component, event) {
-        var sendMessage = $A.get('e.ltng:sendMessage');
-        sendMessage.setParams({
-            'channel': 'next',
-            'message': null
-        });
-        sendMessage.fire();
+    next: function(component, event, helper) {
+        helper.sendMessage(component, 'next', null);
     },
 
-    save: function(component, event) {
+    save: function(component, event, helper) {
+        helper.sendMessage(component, 'save', null);
+        //todo: add validation, put this in another listener function
         component.find("overlayLib").notifyClose();
     }
 
