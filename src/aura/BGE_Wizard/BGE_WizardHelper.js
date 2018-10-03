@@ -770,15 +770,16 @@
              * @description From Edit mode, sets back to View mode, otherwise returns user to dynamic Object home
              * @return void.
              */
-            function cancel(mode, objectName) {
+            function cancel() {
                 //Create/Edit modes invoke cancel from the button; view does so from 'Back to Templates' button
-                if (mode === 'edit') {
+                if (this.mode === 'edit') {
                     this.clearError();
                     this.setDataTableChanged(false);
                     this.setMode('view');
                 } else {
                     //navigate to record home
                     var homeEvent = $A.get('e.force:navigateToObjectHome');
+                    var objectName = this.labels.sObjectName;
                     homeEvent.setParams({
                         'scope': objectName
                     });

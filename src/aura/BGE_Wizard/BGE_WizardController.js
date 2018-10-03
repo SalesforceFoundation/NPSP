@@ -95,12 +95,12 @@
         } else if (channel === 'back' || buttonClick === 'back') {
             model.getTemplateMetadata().backStep();
         } else if (channel === 'cancel' || buttonClick === 'cancel' || buttonClick === 'backToTemplates') {
+            //Set off init here to reset view
             var mode = component.get('v.templateMetadata.mode');
-            model.getTemplateMetadata().cancel(mode, component.get('v.sObjectName'));
-            //Create/Edit modes invoke cancel from the button; view does so from 'Back to Templates' button
             if (mode === 'edit') {
                 model.init(component);
             }
+            model.getTemplateMetadata().cancel();
         } else if (channel === 'save' || buttonClick === 'save') {
             model.save();
         }

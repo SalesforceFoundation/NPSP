@@ -185,6 +185,7 @@ public with sharing class BGE_Wizard_CTRL {
             Map<String, String> labels = new Map<String, String> {
                     'objectLabel' => Schema.SObjectType.Batch_Template__c.getLabel(),
                     'backToTemplates' => String.format(Label.CRLP_Return, new List<String>{Schema.SObjectType.Batch_Template__c.getLabelPlural()}),
+                    'sObjectName' => Schema.SObjectType.Batch_Template__c.getName(),
                     'sObjectNameNoNamespace' => UTIL_Namespace.StrTokenRemoveNSPrefix(Schema.SObjectType.Batch_Template__c.getName()),
                     'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.Batch_Template__c.Name.getDescribe().getLabel() + ', ' + Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
                     'description' => Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
@@ -197,6 +198,7 @@ public with sharing class BGE_Wizard_CTRL {
         } else {
             Map<String, String> labels = new Map<String, String> {
                     'objectLabel' => Schema.SObjectType.DataImportBatch__c.getLabel(),
+                    'sObjectName' => Schema.SObjectType.DataImportBatch__c.getName(),
                     'sObjectNameNoNamespace' => UTIL_Namespace.StrTokenRemoveNSPrefix(Schema.SObjectType.DataImportBatch__c.getName()),
                     'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.DataImportBatch__c.Name.getDescribe().getLabel() + ', ' + Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
                     'description' => Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
