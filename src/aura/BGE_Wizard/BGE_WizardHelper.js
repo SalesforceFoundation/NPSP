@@ -86,6 +86,10 @@
                 if (headerChanged) {
                     _sendMessage('setHeader',templateMetadata.pageHeader);
                 }
+
+                // when in modal context, need to notify the modal footer component
+                _sendMessage('dataTableChanged',templateMetadata.dataTableChanged);
+
                 component.set('v.templateMetadata', templateMetadataView);
             });
 
@@ -806,12 +810,10 @@
              */
             function setDataTableChanged(status) {
                 this.dataTableChanged = status;
-                // oncellchange seems to be broken, so we set the view directly in the controller
+                // oncellchange seems to be broken, so we also set the view directly in the controller
                 // this is just updating the model
-                // we only notify when changing to false
-                if (status === false) {
-                    this.onMetadataUpdated.notify();
-                }
+                // still need to notify so the modal footer can be notified
+                this.onMetadataUpdated.notify();
             }
 
             /**

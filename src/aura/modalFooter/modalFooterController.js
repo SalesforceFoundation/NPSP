@@ -5,7 +5,9 @@
         var message = event.getParam('message');
 
         if (channel === 'setStep') {
-            component.set("v.currentStep", message);
+            component.set('v.currentStep', message);
+        } else if (channel === 'dataTableChanged') {
+            component.set('v.dataTableChanged', message);
         }
     },
 
