@@ -886,11 +886,11 @@ public with sharing class BDI_ContactService {
             String diKey =  bdi.strNull(di.get(strCx + '_Firstname__c')) + '|' + bdi.strNull(di.get(strCx + '_Lastname__c')) + '|';
             // email
             if (di.get(strCx + '_Personal_Email__c') != null) {
-                diKey += String.valueOf(String.valueOf(di.get(strCx + '_Personal_Email__c')).toLowerCase());
+                diKey += String.valueOf(di.get(strCx + '_Personal_Email__c'));
             } else if (di.get(strCx + '_Work_Email__c') != null) {
-                diKey += String.valueOf(String.valueOf(di.get(strCx + '_Work_Email__c')).toLowerCase());
+                diKey += String.valueOf(di.get(strCx + '_Work_Email__c'));
             } else if (di.get(strCx + '_Alternate_Email__c') != null) {
-                diKey += String.valueOf(String.valueOf(di.get(strCx + '_Alternate_Email__c')).toLowerCase());
+                diKey += String.valueOf(di.get(strCx + '_Alternate_Email__c'));
             }
             diKey += '|';
             diKey.toLowerCase();
