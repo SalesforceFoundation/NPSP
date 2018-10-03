@@ -38,6 +38,7 @@
 
     <!--Public Attributes-->
     <aura:attribute name="currentStep" default="1" type="String" description="Step in progress indicator" />
+    <aura:attribute name="dataTableChanged" default="false" type="Boolean" description="Controls whether Save is disabled because Data Table has uncommitted changes" />
     <aura:attribute name="progressSteps" default="[]" type="List"
                     description="List of mapped labels and values for progress indicator" />
 
@@ -72,7 +73,7 @@
                 <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
             </aura:if>
             <aura:if isTrue="{!v.currentStep == '4'}">
-                <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}"/>
+                <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" disabled="{!v.dataTableChanged}"/>
             </aura:if>
         </lightning:layoutItem>
     </lightning:layout>
