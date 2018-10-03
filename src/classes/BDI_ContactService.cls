@@ -440,8 +440,8 @@ public with sharing class BDI_ContactService {
 
             if (filterOnlyByName) {
                 // Names
-                addStringToSet(getContactNameFromDi(di, 1), setName);
-                addStringToSet(getContactNameFromDi(di, 2), setName);
+                addStringToSet(getContactNameFromDi(di, 1).toLowerCase(), setName);
+                addStringToSet(getContactNameFromDi(di, 2).toLowerCase(), setName);
             } else {
                 // c1 Names, Emails, Phones
                 addStringToSet(di.Contact1_Firstname__c.toLowerCase(), setFname);
@@ -883,8 +883,7 @@ public with sharing class BDI_ContactService {
         // if we didn't create any dikey's for this di due to it not matching all constraints,
         // we have to still add a single key that this di can use to find the new contact to be created.
         if (listDiKey.size() == 0) {
-            String diKey =  bdi.strNull(String.valueOf(di.get(strCx + '_Firstname__c')).toLowerCase()) + '|' + bdi.strNull(String.valueOf(di.get(strCx + '_Lastname__c')).toLowerCase()) + '|';
-
+            String diKey =  bdi.strNull(di.get(strCx + '_Firstname__c')) + '|' + bdi.strNull(di.get(strCx + '_Lastname__c')) + '|';
             // email
             if (di.get(strCx + '_Personal_Email__c') != null) {
                 diKey += String.valueOf(String.valueOf(di.get(strCx + '_Personal_Email__c')).toLowerCase());
@@ -894,6 +893,7 @@ public with sharing class BDI_ContactService {
                 diKey += String.valueOf(String.valueOf(di.get(strCx + '_Alternate_Email__c')).toLowerCase());
             }
             diKey += '|';
+            diKey.toLowerCase();
 
             // phone
             if (di.get(strCx + '_Home_Phone__c') != null) {
