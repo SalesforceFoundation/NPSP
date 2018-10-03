@@ -440,26 +440,26 @@ public with sharing class BDI_ContactService {
 
             if (filterOnlyByName) {
                 // Names
-                addStringToSet(getContactNameFromDi(di, 1).toLowerCase(), setName);
-                addStringToSet(getContactNameFromDi(di, 2).toLowerCase(), setName);
+                addStringToSet(getContactNameFromDi(di, 1), setName);
+                addStringToSet(getContactNameFromDi(di, 2), setName);
             } else {
                 // c1 Names, Emails, Phones
-                addStringToSet(di.Contact1_Firstname__c.toLowerCase(), setFname);
-                addStringToSet(di.Contact1_Lastname__c.toLowerCase(), setLname);
-                addStringToSet(di.Contact1_Personal_Email__c.toLowerCase(), setEmail);
-                addStringToSet(di.Contact1_Work_Email__c.toLowerCase(), setEmail);
-                addStringToSet(di.Contact1_Alternate_Email__c.toLowerCase(), setEmail);
+                addStringToSet(di.Contact1_Firstname__c, setFname);
+                addStringToSet(di.Contact1_Lastname__c, setLname);
+                addStringToSet(di.Contact1_Personal_Email__c, setEmail);
+                addStringToSet(di.Contact1_Work_Email__c, setEmail);
+                addStringToSet(di.Contact1_Alternate_Email__c, setEmail);
                 addStringToSet(di.Contact1_Home_Phone__c, setPhone);
                 addStringToSet(di.Contact1_Mobile_Phone__c, setPhone);
                 addStringToSet(di.Contact1_Other_Phone__c, setPhone);
                 addStringToSet(di.Contact1_Work_Phone__c, setPhone);
 
                 // c2 Names, Emails, Phones
-                addStringToSet(di.Contact2_Firstname__c.toLowerCase(), setFname);
-                addStringToSet(di.Contact2_Lastname__c.toLowerCase(), setLname);
-                addStringToSet(di.Contact2_Personal_Email__c.toLowerCase(), setEmail);
-                addStringToSet(di.Contact2_Work_Email__c.toLowerCase(), setEmail);
-                addStringToSet(di.Contact2_Alternate_Email__c.toLowerCase(), setEmail);
+                addStringToSet(di.Contact2_Firstname__c, setFname);
+                addStringToSet(di.Contact2_Lastname__c, setLname);
+                addStringToSet(di.Contact2_Personal_Email__c, setEmail);
+                addStringToSet(di.Contact2_Work_Email__c, setEmail);
+                addStringToSet(di.Contact2_Alternate_Email__c, setEmail);
                 addStringToSet(di.Contact2_Home_Phone__c, setPhone);
                 addStringToSet(di.Contact2_Mobile_Phone__c, setPhone);
                 addStringToSet(di.Contact2_Other_Phone__c, setPhone);
