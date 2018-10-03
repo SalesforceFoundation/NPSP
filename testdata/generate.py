@@ -387,7 +387,7 @@ class RecurringDonationGenerator(Generator):
 
 class HouseholdGenerator(Generator):
     table = "accounts"
-    columns = ("id", "name")
+    columns = ("id", "name", "record_type")
 
     def __init__(self, conn, logger, include_skew=False):
         super(HouseholdGenerator, self).__init__(conn, logger)
@@ -412,7 +412,7 @@ class HouseholdGenerator(Generator):
 
     def make_one(self, n):
         id = self.make_id()
-        attrs = {"id": id}
+        attrs = {"id": id, "record_type": "HH_Account"}
 
         # contacts
         contact_gen = self.generators["contacts"]
@@ -464,7 +464,7 @@ class HouseholdGenerator(Generator):
             i += 1
             self.make_one(i, **kw)
             if not i % 1000:
-                self.logger.info("{} {}".format(self.__class__.__name__, i))
+                self.logger.info(i)
 
     def name_household(self, children):
         return "{} Household".format(
@@ -505,7 +505,7 @@ class GenerateFakeData(BaseTask):
 
         self.logger.info("Connecting to {}".format(database_url))
         conn = psycopg2.connect(database_url)
-        self.logger.info("{}".format(count))
+        self.logger.info("Generating {} households".format(count))
         with HouseholdGenerator(
             conn, self.logger, include_skew=self.options["include_skew"]
         ) as gen:

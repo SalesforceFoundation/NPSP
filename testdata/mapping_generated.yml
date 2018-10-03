@@ -8,7 +8,8 @@ Insert Households:
         Name: name
     record_type: HH_Account
     static:
-        npe01__SYSTEM_AccountType__c: Household Account
+        npe01__SYSTEM_AccountType__c: "Household Account"
+        npe01__SYSTEMISINDIVIDUAL__c: true
 Insert Addresses:
     sf_object: npsp__Address__c
     table: addresses
