@@ -1,3 +1,6 @@
+# Mapping for test data in the 1k/100k/dev_org folders.
+# This version does not have the npsp namespace prefix.
+
 Insert Households:
     sf_object: Account
     table: households

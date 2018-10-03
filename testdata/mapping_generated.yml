@@ -1,33 +1,19 @@
-# Mapping for test data in the 1k/100k/dev_org folders.
-# This version includes the npsp namespace prefix.
+# Mapping for test data generated using the generate_fake_data task.
 
 Insert Households:
     sf_object: Account
-    table: households
+    table: accounts
     fields:
         Id: sf_id
-        BillingCountry: country
-        BillingStreet: street
-        BillingState: state
-        BillingCity: city
-        BillingPostalCode: zip
-    static:
-        Name: Household
-        npe01__SYSTEM_AccountType__c: Household Account
+        Name: name
     record_type: HH_Account
-Insert Organizations:
-    sf_object: Account
-    table: organizations
-    fields:
-        Id: sf_id
-        Name: organization
-    record_type: Organization
+    static:
+        npe01__SYSTEM_AccountType__c: Household Account
 Insert Addresses:
     sf_object: npsp__Address__c
     table: addresses
     fields:
         Id: sf_id
-        npsp__MailingCountry__c: country
         npsp__MailingStreet__c: street
         npsp__MailingState__c: state
         npsp__MailingCity__c: city
@@ -39,14 +25,12 @@ Insert Addresses:
     lookups:
         npsp__Household_Account__c: 
             key_field: household_id
-            table: households
-            join_field: household_id
+            table: accounts
+            join_field: id
             value_field: sf_id
-Insert Household Contacts:
+Insert Contacts:
     sf_object: Contact
     table: contacts
-    filters:
-        - 'household_id is not null'
     fields:
         Id: sf_id
         Salutation: salutation
@@ -57,33 +41,14 @@ Insert Household Contacts:
         Title: job_title
     lookups:
         AccountId:
-            key_field: household_id
-            table: households
-            join_field: household_id
+            key_field: account_id
+            table: accounts
+            join_field: account_id
             value_field: sf_id
         npsp__Primary_Affiliation__c: 
-            key_field: organization_id
-            table: organizations
-            join_field: organization_id
-            value_field: sf_id
-Insert Organization Contacts:
-    sf_object: Contact
-    table: contacts
-    filters:
-        - 'household_id is null'
-    fields:
-        Id: sf_id
-        Salutation: salutation
-        FirstName: first_name
-        LastName: last_name
-        Email: email
-        Phone: phone
-        Title: job_title
-    lookups:
-        AccountId:
-            key_field: organization_id
-            table: organizations
-            join_field: organization_id
+            key_field: primary_affiliation_id
+            table: accounts
+            join_field: id
             value_field: sf_id
 Insert Recurring Donations:
     sf_object: npe03__Recurring_Donation__c
@@ -93,8 +58,8 @@ Insert Recurring Donations:
         Name: name
         npe03__Amount__c: amount
         npe03__Date_Established__c: start_date
+        npe03__Open_Ended_Status__c: open_ended
     static:
-        npe03__Open_Ended_status__c: True
         npe03__Schedule_Type__c: Monthly
     lookups:
         npe03__Contact__c:
@@ -102,12 +67,9 @@ Insert Recurring Donations:
             table: contacts
             join_field: id
             value_field: sf_id
-
-Insert Organization Opportunities:
+Insert Opportunities:
     sf_object: Opportunity
     table: opportunities
-    filters:
-        - 'organization_id is not null'
     fields:
         Id: sf_id
         Name: name
@@ -117,9 +79,9 @@ Insert Organization Opportunities:
         npe01__Do_Not_Automatically_Create_Payment__c: dont_create_payments
     lookups:
         AccountId: 
-            key_field: organization_id
-            table: organizations
-            join_field: organization_id
+            key_field: account_id
+            table: accounts
+            join_field: id
             value_field: sf_id
         npsp__Primary_Contact__c: 
             key_field: contact_id
@@ -129,35 +91,7 @@ Insert Organization Opportunities:
         npe03__Recurring_Donation__c: 
             key_field: recurring_donation_id
             table: recurring_donations
-            join_field: recurring_donation_id
-            value_field: sf_id
-Insert Household Opportunities:
-    sf_object: Opportunity
-    table: opportunities
-    filters:
-        - 'organization_id is null'
-    fields:
-        Id: sf_id
-        Name: name
-        Amount: amount
-        StageName: stage_name
-        CloseDate: close_date
-        npe01__Do_Not_Automatically_Create_Payment__c: dont_create_payments
-    lookups:
-        AccountId: 
-            key_field: household_id
-            table: households
-            join_field: household_id
-            value_field: sf_id
-        npsp__Primary_Contact__c: 
-            key_field: contact_id
-            table: contacts
             join_field: id
-            value_field: sf_id
-        npe03__Recurring_Donation__c: 
-            key_field: recurring_donation_id
-            table: recurring_donations
-            join_field: recurring_donation_id
             value_field: sf_id
 Insert OpportunityContactRoles:
     sf_object: OpportunityContactRole
@@ -221,53 +155,13 @@ Insert Allocations:
         Id: sf_id
         npsp__Percent__c: percent
     lookups:
-        npsp__Opportunity__c:
-            key_field: opportunity_id
-            table: opportunities
-            join_field: id
-            value_field: sf_id
         npsp__General_Accounting_Unit__c:
             key_field: gau_id
             table: gaus
             join_field: id
             value_field: sf_id
-Insert Relationships:
-    sf_object: npe4__Relationship__c
-    table: relationships
-    fields:
-        Id: sf_id
-        npe4__Type__c: relationship_type
-    lookups:
-        npe4__Contact__c:
-            key_field: contact_id
-            table: contacts
+        npsp__Opportunity__c:
+            key_field: opportunity_id
+            table: opportunities
             join_field: id
-            value_field: sf_id
-        npe4__RelatedContact__c:
-            key_field: related_contact_id
-            table: contacts
-            join_field: id
-            value_field: sf_id
-Insert Campaigns:
-    sf_object: Campaign
-    table: campaigns
-    fields:
-        Id: sf_id
-        Name: name
-Insert CampaignMembers:
-    sf_object: CampaignMember
-    table: campaign_members
-    fields:
-        Id: sf_id
-        Status: status
-    lookups:
-        ContactId:
-            key_field: contact_id
-            table: contacts
-            join_field: id
-            value_field: sf_id
-        CampaignId:
-            key_field: campaign_id
-            table: campaigns
-            join_field: campaign_id
             value_field: sf_id

@@ -85,6 +85,12 @@ tasks:
             runAllApex: False
             htmlfilename: 'pmd.html'
 
+    generate_fake_data:
+        description: 'Generates fake NPSP data in a Postgres database'
+        class_path: testdata.generate.GenerateFakeData
+        options:
+            database_url: 'postgres://localhost/testdata'
+
     test_data_dev_org:
         description: 'Loads a test data set for most NPSP objects based on 100 Contacts that should fit into a scratch org or DE org'
         class_path: cumulusci.tasks.bulkdata.LoadData
