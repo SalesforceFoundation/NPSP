@@ -47,30 +47,27 @@
 
     <!--Start Markup-->
     <lightning:layout horizontalAlign="spread" multipleRows="true">
-        <lightning:layoutItem size="3">
+        <lightning:layoutItem size="3" class="slds-text-align_left">
             <aura:if isTrue="{! v.currentStep != '1' }">
                 <lightning:button variant="neutral" label="{!$Label.c.stgBtnBack}" onclick="{!c.back}" />
             </aura:if>
         </lightning:layoutItem>
 
         <!-- Start: Progress Indicator -->
-        <aura:if isTrue="{!v.progressSteps}">
-            <lightning:layoutItem size="6">
-                <div class="slds-p-bottom_large">
-                    <lightning:progressIndicator currentStep="{!v.currentStep}" type="base" hasError="false" variant="base">
-                        <lightning:progressStep label="{!$Label.c.bgeBatchTemplateOverviewWizard}" value="1"/>
-                        <!--<lightning:progressStep label="Step 2" value="2"/>-->
-                        <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="3"/>
-                        <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="4"/>
-                        <!--<lightning:progressStep label="Step 5" value="5"/>-->
-                    </lightning:progressIndicator>
-                </div>
-            </lightning:layoutItem>
-        </aura:if>
+        <lightning:layoutItem size="6" class="slds-grid_vertical-align-center">
+            <lightning:progressIndicator currentStep="{!v.currentStep}" type="base" hasError="false" variant="base">
+                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateOverviewWizard}" value="1"/>
+                <!--<lightning:progressStep label="Step 2" value="2"/>-->
+                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="3"/>
+                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="4"/>
+                <!--<lightning:progressStep label="Step 5" value="5"/>-->
+            </lightning:progressIndicator>
+        </lightning:layoutItem>
         <!-- End: Progress Indicator -->
 
         <lightning:layoutItem size="3" class="slds-text-align_right">
-            <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
+            <!--todo: do we want cancel functionality from the modal?-->
+            <!--<lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />-->
             <aura:if isTrue="{!v.currentStep != '4'}">
                 <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
             </aura:if>
