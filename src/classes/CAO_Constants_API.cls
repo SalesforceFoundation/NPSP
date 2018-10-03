@@ -42,6 +42,7 @@ global class CAO_Constants_API {
     */ 
     global static final String ONE_TO_ONE_PROCESSOR {
         get {return CAO_Constants.ONE_TO_ONE_PROCESSOR;}
+        private set;
     }
 
     /*******************************************************************************************************
@@ -49,6 +50,7 @@ global class CAO_Constants_API {
     */ 
     global static final String ONE_TO_ONE_ORGANIZATION_TYPE {
         get {return CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;}
+        private set;
     }
 
     /*******************************************************************************************************
@@ -56,6 +58,7 @@ global class CAO_Constants_API {
     */ 
     global static final String BUCKET_PROCESSOR {
         get {return CAO_Constants.BUCKET_PROCESSOR;}
+        private set;
     }
 
     /*******************************************************************************************************
@@ -63,6 +66,7 @@ global class CAO_Constants_API {
     */ 
     global static final String BUCKET_ORGANIZATION_TYPE {
         get {return CAO_Constants.BUCKET_ORGANIZATION_TYPE;}
+        private set;
     }
 
     /*******************************************************************************************************
@@ -70,6 +74,7 @@ global class CAO_Constants_API {
     */ 
     global static String BUCKET_ACCOUNT_NAME {
         get {return CAO_Constants.BUCKET_ACCOUNT_NAME;}
+        private set;
     }
 
     /*******************************************************************************************************
@@ -77,6 +82,7 @@ global class CAO_Constants_API {
     */ 
     global static final String HH_ACCOUNT_PROCESSOR {
         get {return CAO_Constants.HH_ACCOUNT_PROCESSOR;}
+        private set;
     }
 
     /*******************************************************************************************************
@@ -84,6 +90,7 @@ global class CAO_Constants_API {
     */ 
     global static final String HH_ACCOUNT_TYPE {
         get {return CAO_Constants.HH_ACCOUNT_TYPE;}
+        private set;
     }
 
     /*******************************************************************************************************
@@ -91,6 +98,7 @@ global class CAO_Constants_API {
     */ 
     global static final string HH_TYPE {
         get {return CAO_Constants.HH_TYPE;}
+        private set;
     }
 
 }
