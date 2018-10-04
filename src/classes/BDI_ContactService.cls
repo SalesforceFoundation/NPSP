@@ -819,7 +819,7 @@ public with sharing class BDI_ContactService {
         List<String> listLName = new List<String>();
         List<String> listEmail = new List<String>();
         List<String> listPhone = new List<String>();
-        boolean addedToken = false;
+        Boolean addedToken = false;
 
         if (di.get(strCx + '_Firstname__c') != null) {
             listFName.add(String.valueOf(di.get(strCx + '_Firstname__c')).toLowerCase());
@@ -893,7 +893,7 @@ public with sharing class BDI_ContactService {
                 diKey += String.valueOf(di.get(strCx + '_Alternate_Email__c'));
             }
             diKey += '|';
-            diKey.toLowerCase();
+            diKey = diKey.toLowerCase();
 
             // phone
             if (di.get(strCx + '_Home_Phone__c') != null) {

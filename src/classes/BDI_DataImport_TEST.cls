@@ -1393,22 +1393,45 @@ public with sharing class BDI_DataImport_TEST {
     **********************************************************************************************************/
     static testMethod void OneDIExistingContactsCaseInsensitive() {
         // existing contacts into the same household
-        List<Contact> listConExisting = new List<Contact>();
-        listConExisting.add(new Contact(Firstname='C1', Lastname='C1', Email='c1@C1.com', Salutation='Mr'));
-        insert listConExisting;
+        List<Contact> existingContacts = new List<Contact>();
+        existingContacts.add(
+            new Contact(
+                FirstName='C1',
+                LastName='c1',
+                Email='c1@C1.com',
+                Salutation='Mr'
+            )
+        );
+        insert existingContacts;
         ID hhId = getContacts()[0].AccountId;
-        listConExisting.add(new Contact(Firstname='c2', Lastname='C1', Email='c2@C2.com', Salutation='Mrs', AccountId=hhId));
-        upsert listConExisting;
+        existingContacts.add(
+            new Contact(
+                FirstName='c2',
+                LastName='c1',
+                Email='c2@C2.com',
+                Salutation='Mrs',
+                AccountId=hhId
+            )
+        );
+        upsert existingContacts;
 
-        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
+        UTIL_UnitTestData_TEST.setFixedSearchResults(existingContacts);
 
         List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='C1@C1.com', Contact1_Salutation__c='Dr',
-            Contact2_Firstname__c='C2', Contact2_Salutation__c='Prof'));
+        listDI.add(
+            new DataImport__c(
+                Contact1_Firstname__c='C1',
+                Contact1_Lastname__c='C1',
+                Contact1_Personal_Email__c='c1@c1.com',
+                Contact1_Salutation__c='Dr',
+                Contact2_Firstname__c='C2',
+                Contact2_Salutation__c='Prof'
+            )
+        );
         insert listDI;
 
         //run batch data import
-        Test.StartTest();
+        Test.startTest();
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
@@ -1416,10 +1439,13 @@ public with sharing class BDI_DataImport_TEST {
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(2, listCon.size(), 'Contacts should be matched, despite case mismatch');
-        System.assertEquals(hhId, listCon[0].AccountId);
-        System.assertEquals(hhId, listCon[1].AccountId);
-        System.assertEquals('Dr', listCon[0].Salutation);
-        System.assertEquals('Prof', listCon[1].Salutation);
+        System.assertEquals(hhId, listCon[0].AccountId, 'Contacts should be in same household.');
+        System.assertEquals(hhId, listCon[1].AccountId, 'Contacts should be in same household.');
+        System.assertEquals('Dr', listCon[0].Salutation, 'Contact should be updated with salutation from the data import.');
+        System.assertEquals('Prof', listCon[1].Salutation, 'Contact should be updated with salutation from the data import.');
+        System.assertEquals('C1', listCon[0].LastName, 'Contact should be updated with the uppercase last name from the data import.');
+        System.assertEquals('c1@c1.com', listCon[0].Email, 'Contact should be updated with the lowercase email from the data import.');
+        System.assertEquals('C2', listCon[0].FirstName, 'Contact should be updated with the uppercase first name from the data import.');
     }
 
     /*********************************************************************************************************
