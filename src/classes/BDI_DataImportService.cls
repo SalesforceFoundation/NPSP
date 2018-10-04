@@ -722,7 +722,7 @@ global with sharing class BDI_DataImportService {
 
             for (BDI_Field_Mapping__mdt customMetadata : bdiFieldMappings) {
                 String sourceField = customMetadata.Source_Field__c.toLowerCase();
-                if(targetFieldsBySource.containsKey(sourceField)) {
+                if (targetFieldsBySource.containsKey(sourceField)) {
             		Set<String> targetFields = targetFieldsBySource.get(sourceField);
             		targetFields.add(customMetadata.Target_Field__c);
                     targetFieldsBySource.put(sourceField, targetFields);
@@ -749,7 +749,7 @@ global with sharing class BDI_DataImportService {
                 }
             } else {
                 DescribeFieldResult fieldDescribe = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), dataImportField);
-                String  targetFieldName = fieldDescribe.getInlineHelpText();
+                String targetFieldName = fieldDescribe.getInlineHelpText();
                 // Place the necessary parameters for the method we are going to call on a Map to avoid sending too many parameters.
                 parametersByName.put('targetFieldName', targetFieldName);
                 parametersByName.put('dataImportObjectName', dataImportObjectName);
