@@ -276,11 +276,31 @@ public with sharing class BGE_Wizard_CTRL {
         @AuraEnabled public List<AvailableField> templateFields;
         @AuraEnabled public String activeFields;
         @AuraEnabled public Map<String, String> labels;
+        @AuraEnabled public Integer batchProcessSize;
+        @AuraEnabled public Boolean calculateDonationRollupsWithBatch;
+        @AuraEnabled public String contactMatchingRule;
+        @AuraEnabled public String donationMatchingBehavior;
+        @AuraEnabled public String donationMatchingRule;
+        @AuraEnabled public Integer numberOfDaysFromDonationDate;
+        @AuraEnabled public Boolean processUsingScheduledJob;
 
         public BGEDetailsModel() {
             enableTotalEntry = false;
             requireTotalMatch = false;
             templateFields = new List<AvailableField>();
+            // todo: put this in a custom label
+            name = 'Default Batch Gift Entry Template';
+            batchProcessSize = 50;
+            calculateDonationRollupsWithBatch = false;
+            contactMatchingRule = 'Firstname,Lastname,Email';
+            donationMatchingBehavior = '';
+            donationMatchingRule = 'Donation_Amount__c;Donation_Date__c';
+            numberOfDaysFromDonationDate = 0;
+            processUsingScheduledJob = false;
+            activeFields = '[{"label":"Donation Amount","name":"Donation_Amount__c","sObjectName":"Opportunity","defaultValue":"true","required":false,"hide":false,"sortOrder":0},' +
+                    '{"label":"Donation Date","name":"Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1},' +
+                    '{"label":"Method","name":"Payment_Method__c","sObjectName":"Payment","defaultValue":null,"required":false,"hide":false,"sortOrder":2},' +
+                    '{"label":"Check/Reference Number","name":"Payment_Check_Reference_Number__c","sObjectName":"Payment","defaultValue":null,"required":false,"hide":false,"sortOrder":3}]';
         }
     }
 
