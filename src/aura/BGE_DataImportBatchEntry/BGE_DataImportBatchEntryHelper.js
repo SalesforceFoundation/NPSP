@@ -109,11 +109,16 @@
         columns.push({label: 'Donor', fieldName: 'donor', type: 'text', editable: false});
 
         dataColumns.forEach(function(col){
-            columns.push({label: col.label, fieldName: col.fieldName, type: col.type, editable: !col.readOnly});
+            columns.push({label: col.label,
+                fieldName: col.fieldName,
+                type: col.type,
+                editable: !col.readOnly,
+                typeAttributes: col.typeAttributes});
         });
 
         columns.push({
-            type: 'action', typeAttributes: {
+            type: 'action',
+            typeAttributes: {
                 rowActions: [{
                     label: 'Delete',
                     name: 'delete',
@@ -150,6 +155,8 @@
         responseRows.forEach(function(currentRow) {
             var row = currentRow.record;
             row.donor = currentRow.donor;
+            row.matchedRecordUrl = currentRow.matchedRecordUrl;
+            row.matchedRecordLabel = currentRow.matchedRecordLabel;
             rows.push(row);
         });
 

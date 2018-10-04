@@ -130,18 +130,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 'Donation_Amount__c',
                 'Donation_Date__c',
                 'Payment_Method__c',
-                'Payment_Check_Reference_Number__c',
-                'Status__c',
-                'FailureInformation__c',
-                'DonationImported__c',
-                'DonationImportStatus__c'
-        };
-
-        Set<String> dryRunResultFields = new Set<String>{
-                'Status__c',
-                'FailureInformation__c',
-                'DonationImported__c',
-                'DonationImportStatus__c'
+                'Payment_Check_Reference_Number__c'
         };
 
         Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
@@ -152,15 +141,28 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 Column col = new Column();
                 col.label = dfr.label;
                 col.fieldName = dfr.name;
-                col.readOnly = dryRunResultFields.contains(UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.name));
+                col.readOnly = false;
                 col.type = dfr.type.name().toLowerCase();
                 if (col.type == 'date') {
                     col.type = 'date-local';
                 }
+                col.typeAttributes = new Map<String, Map<String, String>>();
 
                 columns.add(col);
             }
         }
+
+        //add derived matched record column
+        Column col = new Column();
+        Map<String, Map<String, String>> typeAttributes = new Map<String, Map<String, String>>();
+        typeAttributes.put('label', new Map<String, String>{'fieldName' => 'matchedRecordLabel'});
+
+        col.label = 'Matched Record';
+        col.fieldName = 'matchedRecordUrl';
+        col.readOnly = true;
+        col.type = 'url';
+        col.typeAttributes = typeAttributes;
+        columns.add(col);
 
         return columns;
     }
@@ -259,6 +261,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         @AuraEnabled public String fieldName;
         @AuraEnabled public Boolean readOnly;
         @AuraEnabled public String type;
+        @AuraEnabled public Map<String, Map<String, String>> typeAttributes;
     }
 
     /*******************************************************************************************************
@@ -277,11 +280,17 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     */
     public class DataImportRow {
         @AuraEnabled public String donor;
+        @AuraEnabled public String matchedRecordUrl;
+        @AuraEnabled public String matchedRecordLabel;
         @AuraEnabled public DataImport__c record;
 
         public DataImportRow(DataImport__c record) {
             donor = getDonorName(record);
             this.record = record;
+
+            Map<String, String> matchedRecord = getMatchedRecordInfo(record);
+            this.matchedRecordUrl = matchedRecord.get('url');
+            this.matchedRecordLabel = matchedRecord.get('label');
         }
 
         private String getDonorName(DataImport__c record) {
@@ -293,6 +302,20 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 donorName = record.Contact1Imported__r.Name;
             }
             return donorName;
+        }
+
+        private Map<String, String> getMatchedRecordInfo(DataImport__c record) {
+            Map<String, String> matchedRecord = new Map<String, String>();
+            //if there is a match, set url
+            matchedRecord.put('url', 'http://www.salesforce.com');
+            matchedRecord.put('label', 'Google');
+
+            //if there is no match, set new
+
+            //if dry run not done or there is an error, set null
+
+            return matchedRecord;
+
         }
     }
 }
