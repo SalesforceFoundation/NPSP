@@ -86,6 +86,7 @@
         <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
         <members>CAO_Constants_API</members>
+        <members>CAO_Constants_API_TEST</members>
         <members>CDL_CascadeDeleteLookups</members>
         <members>CDL_CascadeDeleteLookups_TDTM</members>
         <members>CDL_CascadeDeleteLookups_TEST</members>

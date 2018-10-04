@@ -135,5 +135,4 @@ public class ADV_Adapter_TEST {
         }
         Test.stopTest();
     }
-
 }

@@ -40,7 +40,7 @@ global class CAO_Constants_API {
     /*******************************************************************************************************
     * @description One-to-One value for system processor field
     */ 
-    global static final String ONE_TO_ONE_PROCESSOR {
+    global static String ONE_TO_ONE_PROCESSOR {
         get {return CAO_Constants.ONE_TO_ONE_PROCESSOR;}
         private set;
     }
@@ -48,7 +48,7 @@ global class CAO_Constants_API {
     /*******************************************************************************************************
     * @description One-to-One org type value
     */ 
-    global static final String ONE_TO_ONE_ORGANIZATION_TYPE {
+    global static String ONE_TO_ONE_ORGANIZATION_TYPE {
         get {return CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;}
         private set;
     }
@@ -56,7 +56,7 @@ global class CAO_Constants_API {
     /*******************************************************************************************************
     * @description Individual Bucket value for system processor field
     */ 
-    global static final String BUCKET_PROCESSOR {
+    global static String BUCKET_PROCESSOR {
         get {return CAO_Constants.BUCKET_PROCESSOR;}
         private set;
     }
@@ -64,7 +64,7 @@ global class CAO_Constants_API {
     /*******************************************************************************************************
     * @description Individual Bucket org type value
     */ 
-    global static final String BUCKET_ORGANIZATION_TYPE {
+    global static String BUCKET_ORGANIZATION_TYPE {
         get {return CAO_Constants.BUCKET_ORGANIZATION_TYPE;}
         private set;
     }
@@ -80,7 +80,7 @@ global class CAO_Constants_API {
     /*******************************************************************************************************
     * @description Household Account value for system processor field
     */ 
-    global static final String HH_ACCOUNT_PROCESSOR {
+    global static String HH_ACCOUNT_PROCESSOR {
         get {return CAO_Constants.HH_ACCOUNT_PROCESSOR;}
         private set;
     }
@@ -88,7 +88,7 @@ global class CAO_Constants_API {
     /*******************************************************************************************************
     * @description Household Account org type value
     */ 
-    global static final String HH_ACCOUNT_TYPE {
+    global static String HH_ACCOUNT_TYPE {
         get {return CAO_Constants.HH_ACCOUNT_TYPE;}
         private set;
     }
@@ -96,7 +96,7 @@ global class CAO_Constants_API {
     /*******************************************************************************************************
     * @description Household Account value for the standard Type field
     */ 
-    global static final string HH_TYPE {
+    global static string HH_TYPE {
         get {return CAO_Constants.HH_TYPE;}
         private set;
     }
