@@ -741,8 +741,10 @@ global with sharing class BDI_DataImportService {
         if (val != null && val != false) {
             String strDstField = mapDIFieldToDstField.get(strDIField);
 
+            Boolean changed = objDst.get(strDstField) == val;
             // if values haven't changed, don't copy it and say the object was modified!
-            if (objDst.get(strDstField) == val) {
+            system.debug('val:' + val + ' strDstField: ' + strDstField + ' same: ' + changed);
+            if (changed) {
                 return false;
             }
 

@@ -1397,8 +1397,8 @@ public with sharing class BDI_DataImport_TEST {
         existingContacts.add(
             new Contact(
                 FirstName='C1',
-                LastName='c1',
-                Email='c1@C1.com',
+                LastName='C1',
+                Email='c1@c1.com',
                 Salutation='Mr'
             )
         );
@@ -1406,9 +1406,9 @@ public with sharing class BDI_DataImport_TEST {
         ID hhId = getContacts()[0].AccountId;
         existingContacts.add(
             new Contact(
-                FirstName='c2',
-                LastName='c1',
-                Email='c2@C2.com',
+                FirstName='C2',
+                LastName='C1',
+                Email='c2@c2.com',
                 Salutation='Mrs',
                 AccountId=hhId
             )
@@ -1420,11 +1420,11 @@ public with sharing class BDI_DataImport_TEST {
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(
             new DataImport__c(
-                Contact1_Firstname__c='C1',
-                Contact1_Lastname__c='C1',
-                Contact1_Personal_Email__c='c1@c1.com',
+                Contact1_Firstname__c='c1',
+                Contact1_Lastname__c='c1',
+                Contact1_Personal_Email__c='C1@C1.com',
                 Contact1_Salutation__c='Dr',
-                Contact2_Firstname__c='C2',
+                Contact2_Firstname__c='c2',
                 Contact2_Salutation__c='Prof'
             )
         );
@@ -1437,15 +1437,15 @@ public with sharing class BDI_DataImport_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = getContacts();
-        System.assertEquals(2, listCon.size(), 'Contacts should be matched, despite case mismatch');
-        System.assertEquals(hhId, listCon[0].AccountId, 'Contacts should be in same household.');
-        System.assertEquals(hhId, listCon[1].AccountId, 'Contacts should be in same household.');
-        System.assertEquals('Dr', listCon[0].Salutation, 'Contact should be updated with salutation from the data import.');
-        System.assertEquals('Prof', listCon[1].Salutation, 'Contact should be updated with salutation from the data import.');
-        System.assertEquals('C1', listCon[0].LastName, 'Contact should be updated with the uppercase last name from the data import.');
-        System.assertEquals('c1@c1.com', listCon[0].Email, 'Contact should be updated with the lowercase email from the data import.');
-        System.assertEquals('C2', listCon[0].FirstName, 'Contact should be updated with the uppercase first name from the data import.');
+        List<Contact> contacts = getContacts();
+        System.assertEquals(2, contacts.size(), 'Contacts should be matched, despite case mismatch');
+        System.assertEquals(hhId, contacts[0].AccountId, 'Contacts should be in same household.');
+        System.assertEquals(hhId, contacts[1].AccountId, 'Contacts should be in same household.');
+        System.assertEquals('Dr', contacts[0].Salutation, 'Contact should be updated with salutation from the data import.');
+        System.assertEquals('Prof', contacts[1].Salutation, 'Contact should be updated with salutation from the data import.');
+        System.assertEquals('C1', contacts[0].LastName, 'Contact should not be updated with the lowercase last name from the data import.');
+        System.assertEquals('c1@c1.com', contacts[0].Email, 'Contact should not be updated with the uppercase email from the data import.');
+        System.assertEquals('C2', contacts[1].FirstName, 'Contact should not be updated with the lowercase first name from the data import.');
     }
 
     /*********************************************************************************************************
@@ -1501,9 +1501,9 @@ public with sharing class BDI_DataImport_TEST {
     **********************************************************************************************************/
     private static List<Contact> getContacts() {
         return [
-            SELECT Id, AccountId, Birthdate, HomePhone,  MobilePhone, Name, Title, Salutation, Account.Phone,
+            SELECT Id, AccountId, Birthdate, HomePhone,  MobilePhone, Name, FirstName, LastName, Title, Salutation, Account.Phone,
                 Account.npe01__System_AccountType__c, MailingState, MailingPostalCode, MailingCountry, MailingStreet, MailingCity,
-                Primary_Affiliation__c, npe01__HomeEmail__c, npe01__AlternateEmail__c, npe01__Preferred_Email__c,
+                Primary_Affiliation__c, Email, npe01__HomeEmail__c, npe01__AlternateEmail__c, npe01__Preferred_Email__c,
                 npe01__PreferredPhone__c, npe01__WorkEmail__c, npe01__WorkPhone__c, npo02__TotalOppAmount__c
             FROM Contact
             ORDER BY Id
