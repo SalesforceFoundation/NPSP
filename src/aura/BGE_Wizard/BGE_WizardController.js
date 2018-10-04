@@ -80,7 +80,6 @@
                 model.getTemplateMetadata().nextStep(model.getTemplateInfo().isValid(),
                     component.get('v.templateMetadata.labels.missingNameDescriptionError'));
             } else if (step === '2') {
-                console.log('step 2?');
                 //handle template selection and copying here
             } else if (step === '3') {
                 var templateFields = component.get('v.templateFields');

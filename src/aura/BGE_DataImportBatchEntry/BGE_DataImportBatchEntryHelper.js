@@ -54,7 +54,6 @@
                         showCloseButton: true,
                         cssClass: 'slds-modal_large',
                         closeCallback: function() {
-                            //todo: control for escape button here?
                         }
                     })
                 }

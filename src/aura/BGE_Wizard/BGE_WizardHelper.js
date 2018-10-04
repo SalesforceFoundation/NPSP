@@ -75,7 +75,6 @@
                 } else if (templateMetadataView.mode === 'create' || templateMetadataView.mode === 'edit') {
                     component.set('v.isReadOnly', false);
                     if (templateMetadata.mode === 'edit') {
-                        //todo: add these in
                         templateMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchTemplateEdit')
                     } else if (templateMetadata.mode === 'create') {
                         templateMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchTemplateNew');
@@ -745,7 +744,6 @@
              * @description Increments Wizard to next step if no errors exist
              * @param isValid - string that is the selected mode
              * @param error - existing errors
-             * TODO: make templateMetadata error-aware and remove this param
              * @return void.
              */
             function nextStep(isValid, error) {
