@@ -775,8 +775,7 @@
              * @return void.
              */
             function cancel() {
-                //Create/Edit modes invoke cancel from the button; view does so from 'Back to Templates' button
-                if (this.mode === 'edit') {
+                if (this.mode === 'edit' && this.labels.sObjectNameNoNamespace === 'Batch_Template__c') {
                     this.clearError();
                     this.setDataTableChanged(false);
                     this.setMode('view');

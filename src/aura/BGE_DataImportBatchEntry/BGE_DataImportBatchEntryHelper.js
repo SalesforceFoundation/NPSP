@@ -30,7 +30,7 @@
     },
 
     /**
-     * @description: creates the configuration modal if record is new
+     * @description: creates the configuration modal
      */
     createModal: function (component) {
         var modalBody;
@@ -51,7 +51,7 @@
                         body: modalBody,
                         header: modalHeader,
                         footer: modalFooter,
-                        showCloseButton: false,
+                        showCloseButton: true,
                         cssClass: 'slds-modal_large',
                         closeCallback: function() {
                             //todo: control for escape button here?

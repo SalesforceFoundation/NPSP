@@ -67,8 +67,7 @@
         <!-- End: Progress Indicator -->
 
         <lightning:layoutItem size="3" class="slds-text-align_right">
-            <!--todo: do we want cancel functionality from the modal?-->
-            <!--<lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />-->
+            <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
             <aura:if isTrue="{!v.currentStep != '4'}">
                 <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
             </aura:if>
