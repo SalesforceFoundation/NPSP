@@ -714,13 +714,13 @@ global with sharing class BDI_DataImportService {
         Map<String, Set<String>> targetFieldsBySource = new Map<String, Set<String>>();
         Boolean useCustomMetadataForFieldMapping = false;
         if (bdiSettings.MapWithCustomMetadataTypes__c) {
-            List<BDI_Field_Mapping__mdt> bdiFIeldMappings = [SELECT
+            List<BDI_Field_Mapping__mdt> bdiFieldMappings = [SELECT
                                                                     Source_Field__c,
                                                                     Target_Field__c
                                                              FROM
                                                                     BDI_Field_Mapping__mdt];
 
-            for (BDI_Field_Mapping__mdt customMetadata : bdiFIeldMappings) {
+            for (BDI_Field_Mapping__mdt customMetadata : bdiFieldMappings) {
                 String sourceField = customMetadata.Source_Field__c.toLowerCase();
                 if(targetFieldsBySource.containsKey(sourceField)) {
             		Set<String> targetFields = targetFieldsBySource.get(sourceField);
@@ -735,7 +735,6 @@ global with sharing class BDI_DataImportService {
         }
 
         for (String dataImportField : dataImportFields) {
-            DescribeFieldResult fieldDescribe;
             if (useCustomMetadataForFieldMapping) {
                 if (targetFieldsBySource.containsKey(dataImportField)) {
                     Set<String> targetFields = targetFieldsBySource.get(dataImportField);
@@ -749,7 +748,7 @@ global with sharing class BDI_DataImportService {
                     }
                 }
             } else {
-                fieldDescribe = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), dataImportField);
+                DescribeFieldResult fieldDescribe = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), dataImportField);
                 String  targetFieldName = fieldDescribe.getInlineHelpText();
                 // Place the necessary parameters for the method we are going to call on a Map to avoid sending too many parameters.
                 parametersByName.put('targetFieldName', targetFieldName);

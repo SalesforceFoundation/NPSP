@@ -162,8 +162,8 @@ private with sharing class BDI_DataImportService_TEST {
         Test.stopTest();
 
         // Retrieve the status for each data import
-        firstDataImport = [SELECT id, Status__c FROM DataImport__c WHERE id = :firstDataImport.id];
-        secondDataImport = [SELECT id, Status__c FROM DataImport__c WHERE id = :secondDataImport.id];
+        firstDataImport = [SELECT Id, Status__c FROM DataImport__c WHERE Id = :firstDataImport.Id];
+        secondDataImport = [SELECT Id, Status__c FROM DataImport__c WHERE Id = :secondDataImport.Id];
 
         System.assertEquals(firstDataImport.Status__c,  'Imported');
         System.assertEquals(secondDataImport.Status__c, 'Imported');
@@ -217,8 +217,8 @@ private with sharing class BDI_DataImportService_TEST {
 
         Test.stopTest();
 
-        firstDataImport = [SELECT id, Status__c FROM DataImport__c WHERE id = :firstDataImport.id];
-        secondDataImport = [SELECT id, Status__c FROM DataImport__c WHERE id = :secondDataImport.id];
+        firstDataImport = [SELECT Id, Status__c FROM DataImport__c WHERE Id = :firstDataImport.Id];
+        secondDataImport = [SELECT Id, Status__c FROM DataImport__c WHERE Id = :secondDataImport.Id];
 
         System.assertEquals(firstDataImport.status__c,  'Imported');
         System.assertEquals(secondDataImport.status__c, 'Imported');
