@@ -61,10 +61,10 @@
     },
 
     /**
-     * @description: callback function for lightning:recordEditForm. Queries DataImport__c records,
-     * shows toast, and clears recordEditForm.
+     * @description: cell change handler for lightning:dataTable
+     * Saves updated cell value and re-runs Dry Run on that row.
      */
-    onTableSave: function (component, event, helper) {
+    onCellChange: function (component, event, helper) {
         var values = event.getParam('draftValues');
         // validation would happen here
         helper.handleTableSave(component, values);
