@@ -203,11 +203,13 @@ public with sharing class BDI_Donations_TEST {
             return;
         }
 
-        if (!runMulticurrencyTest()) {
-            return;
+        UTIL_CurrencyCache.CurrencyData testCurrency = UTIL_UnitTestData_TEST.nonDefaultCurrencyType;
+
+        if (testCurrency == null) {
+            return; // don't run the test if there's nothing to test
         }
 
-        String testCurrencyCode = (String)getNonDefaultCurrencies()[0].get('IsoCode');
+        String testCurrencyCode = testCurrency.IsoCode;
 
         List<Contact> testContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
         insert testContacts;
@@ -308,11 +310,13 @@ public with sharing class BDI_Donations_TEST {
             return;
         }
 
-        if (!runMulticurrencyTest()) {
-            return;
+        UTIL_CurrencyCache.CurrencyData testCurrency = UTIL_UnitTestData_TEST.nonDefaultCurrencyType;
+
+        if (testCurrency == null) {
+            return; // don't run the test if there's nothing to test
         }
 
-        String testCurrencyCode = (String)getNonDefaultCurrencies()[0].get('IsoCode');
+        String testCurrencyCode = testCurrency.IsoCode;
 
         List<Contact> testContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
         insert testContacts;
@@ -803,11 +807,13 @@ public with sharing class BDI_Donations_TEST {
             return;
         }
 
-        if (!runMulticurrencyTest()) {
-            return;
+        UTIL_CurrencyCache.CurrencyData testCurrency = UTIL_UnitTestData_TEST.nonDefaultCurrencyType;
+
+        if (testCurrency == null) {
+            return; // don't run the test if there's nothing to test
         }
 
-        String testCurrencyCode = (String)getNonDefaultCurrencies()[0].get('IsoCode');
+        String testCurrencyCode = testCurrency.IsoCode;
 
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
@@ -2143,46 +2149,4 @@ public with sharing class BDI_Donations_TEST {
             FROM Opportunity WHERE Id = :oppId LIMIT 1];
     }
 
-    /**
-    * @description Returns a list of currencies that can be used for testing multicurrency orgs,
-    * specifically currencies that aren't the org default and don't have a conversion rate that
-    * would match the org default.
-    * @return Currently returns a max of 1 currency as that's all we need to support current scenarios.
-    * Could be adjusted to return multiple currencies as needed.
-    */
-    private static List<SObject> getNonDefaultCurrencies() {
-        // we need an currency with a rate that doesn't match the org default
-        List<SObject> currencies = Database.query(
-            'SELECT IsoCode, ConversionRate, IsCorporate ' +
-                'FROM CurrencyType ' +
-                'WHERE IsActive = true ' +
-                    'AND IsCorporate = false ' +
-                    'AND ConversionRate != 1 ' +
-                'LIMIT 1 '
-        );
-        return currencies;
-    }
-
-    /**
-    * @description Determines whether it's appropriate to run a test against multicurrency functionality. We should
-    * only run multicurrency tests when we're in an organization with multicurrency turned on and more than one
-    * currency has been set up.
-    * @return Boolean indicating whether to run the test
-    */
-    private static Boolean runMulticurrencyTest() {
-        // only run the test if we're in a multicurrency org
-        if (!UserInfo.isMultiCurrencyOrganization()) {
-            return false;
-        }
-
-        // we need a currency with a rate that doesn't match the org default
-        List<SObject> currencies = getNonDefaultCurrencies();
-
-        // if there's not a currency to test against, don't run the test
-        if (currencies.size() < 1) {
-            return false;
-        }
-
-        return true;
-    }
 }

@@ -750,4 +750,29 @@ public class UTIL_UnitTestData_TEST {
     public static Boolean isAccountNameEncrypted() {
         return !Schema.sObjectType.Account.fields.Name.isFilterable();
     }
+
+    /**
+    * @description Returns a currency that isn't the org default so we can test behavior for multicurrency orgs.
+    * To get the default currency code, use UTIL_CurrencyCache.getOrgDefaultCurrency()
+    */
+    @TestVisible
+    private static UTIL_CurrencyCache.CurrencyData nonDefaultCurrencyType {
+        get {
+            if (nonDefaultCurrencyType == null) {
+                setupCurrencies();
+            }
+            return nonDefaultCurrencyType;
+        }
+        set;
+    }
+
+    private static void setupCurrencies() {
+        for (UTIL_CurrencyCache.CurrencyData currencyData : UTIL_CurrencyCache.cachedMapOfRatesByCurrencyCode.values()) {
+            if (!currencyData.isOrgDefault) {
+                nonDefaultCurrencyType = currencyData;
+                return;
+            }
+        }
+    }
+
 }

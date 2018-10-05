@@ -239,6 +239,7 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
 
                 Date dt = (Date) dcr.get('StartDate');
                 Decimal rt = (Decimal) dcr.get('ConversionRate');
+                currData.IsoCode = currCode;
                 currData.effectiveDates.add(dt);
                 currData.rates.add(rt);
                 mapOfCurrencyDataByCurrencyCode.put(currCode, currData);
@@ -264,6 +265,7 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
                     currData = new UTIL_CurrencyCache.CurrencyData();
                 }
 
+                currData.IsoCode = currCode;
                 currData.defaultRate = (Decimal)scr.get('ConversionRate');
                 currData.isOrgDefault = (Boolean)scr.get('IsCorporate');
                 currData.decimalPlaces = (Integer)scr.get('DecimalPlaces');
@@ -303,6 +305,7 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
      * flag to retrieve only the default (non-dated) rate.
      */
     public class CurrencyData {
+        public String IsoCode { get; set; }
         public List<Date> effectiveDates {get; set; }
         public List<Decimal> rates {get; set; }
         public Decimal defaultRate {get; set; }
