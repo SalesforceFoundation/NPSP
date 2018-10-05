@@ -156,7 +156,7 @@
                                 data="{!v.data}"
                                 errors="{!v.errors}"
                                 keyField="Id"
-                                onsave="{!c.onTableSave}"
+                                oncellchange="{!c.onCellChange}"
                                 minColumnWidth="150"
                                 hideCheckboxColumn="true"
                                 onrowaction="{!c.handleRowAction}"
