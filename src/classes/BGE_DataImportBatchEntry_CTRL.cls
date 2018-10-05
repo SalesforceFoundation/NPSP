@@ -287,17 +287,15 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         @AuraEnabled public String matchedRecordUrl;
         @AuraEnabled public String matchedRecordLabel;
         @AuraEnabled public DataImport__c record;
+        @AuraEnabled public List<String> errors;
 
         public DataImportRow(DataImport__c record) {
-            donor = getDonorName(record);
+            donor = setDonorName(record);
+            setDryRunRecordInfo(record);
             this.record = record;
-
-            Map<String, String> matchedRecord = getMatchedRecordInfo(record);
-            this.matchedRecordUrl = matchedRecord.get('url');
-            this.matchedRecordLabel = matchedRecord.get('label');
         }
 
-        private String getDonorName(DataImport__c record) {
+        private String setDonorName(DataImport__c record) {
             String donorName = '';
             if (record.Donation_Donor__c == 'Account1' && record.Account1Imported__c != null) {
                 donorName = record.Account1Imported__r.Name;
@@ -309,34 +307,53 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         }
 
         /***************************************************************************************************
-        * @description checks if a record's oppty or payment has matched matching the BDI_Donations setDryRunDonationStatuses
+        * @description sets DataImport__c record with matching url or failure information matching based on
+        * the BDI_Donations setDryRunDonationStatuses
         * @param record: the DataImport__c record to check for matches
-        * @return Map<String, String> with the url and label of the match. If no match, values are empty strings.
         */
-        private Map<String, String> getMatchedRecordInfo(DataImport__c record) {
-            Map<String, String> matchedRecord = new Map<String, String>();
-
+        private void setDryRunRecordInfo(DataImport__c record) {
             try {
-                if (record.DonationImportStatus__c == Label.bdiDryRunMatched ||
-                        record.PaymentImportStatus__c == Label.bdiDryRunMatched ||
-                        record.DonationImportStatus__c == Label.bdiDryRunMatchedBest ||
-                        record.PaymentImportStatus__c == Label.bdiDryRunMatchedBest ||
-                        record.DonationImportStatus__c == Label.bdiDryRunMatchedId ||
-                        record.PaymentImportStatus__c == Label.bdiDryRunMatchedId) {
-                    //if there is a match, set url
-                    String importedId = record.PaymentImported__c != null ? record.PaymentImported__c : record.DonationImported__c;
-                    String importedLabel = record.PaymentImported__c != null ? record.PaymentImported__r.Name : record.DonationImported__r.Name;
-                    String url = URL.getSalesforceBaseUrl().toExternalForm() + '/' + importedId;
+                String matchedUrl = '';
+                String matchedUrlLabel = '';
+                List<String> errors = new List<String>();
 
-                    matchedRecord.put('url', url);
-                    matchedRecord.put('label', importedLabel);
-                } else {
-                    //otherwise, set null
-                    matchedRecord.put('url', '');
-                    matchedRecord.put('label', '');
+                Boolean donationMatched = (record.DonationImportStatus__c == Label.bdiDryRunMatched ||
+                        record.DonationImportStatus__c == Label.bdiDryRunMatchedBest ||
+                        record.DonationImportStatus__c == Label.bdiDryRunMatchedId);
+                Boolean paymentMatched = (record.PaymentImportStatus__c == Label.bdiDryRunMatched ||
+                        record.PaymentImportStatus__c == Label.bdiDryRunMatchedBest ||
+                        record.PaymentImportStatus__c == Label.bdiDryRunMatchedId);
+                Boolean importFailure = record.FailureInformation__c != null;
+
+                if (paymentMatched) {
+                    //if there is a match, set url, preferably for the payment
+                    String importedId = record.PaymentImported__c != null ? record.PaymentImported__c : '';
+                    matchedUrlLabel = record.PaymentImported__c != null && record.PaymentImported__r != null ? record.PaymentImported__r.Name : '';
+                    matchedUrl = URL.getSalesforceBaseUrl().toExternalForm() + '/' + importedId;
+                } else if (donationMatched) {
+                    String importedId = record.DonationImported__c != null ? record.DonationImported__c : '';
+                    matchedUrlLabel = record.DonationImported__c != null && record.DonationImported__r != null ? record.DonationImported__r.Name : '';
+                    matchedUrl = URL.getSalesforceBaseUrl().toExternalForm() + '/' + importedId;
+                } else if (importFailure) {
+
+                    //if Donation and Payment didn't have matched or matched none status, then an error was set
+                    if (record.DonationImportStatus__c != Label.bdiMatchedNone && record.DonationImportStatus__c != null && !donationMatched) {
+                        errors.add(record.DonationImportStatus__c);
+                    }
+                    if (record.PaymentImportStatus__c != Label.bdiMatchedNone && record.PaymentImportStatus__c != null && !paymentMatched) {
+                        errors.add(record.PaymentImportStatus__c);
+                    }
+                    //only add failure information specific to a donation or payment matching failure
+                    //todo: is there a better way we want to filter out failures?
+                    if (errors.size() != 0) {
+                        errors.add(0, record.FailureInformation__c);
+                    }
                 }
 
-                return matchedRecord;
+                this.matchedRecordUrl = matchedUrl;
+                this.matchedRecordLabel = matchedUrlLabel;
+                this.errors = errors;
+
             }
             catch (Exception e) {
                 throw new AuraHandledException(e.getMessage());
