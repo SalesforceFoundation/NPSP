@@ -354,10 +354,10 @@ private class ACCT_IndividualAccounts_TEST {
         //one contact should have been created
         system.assertEquals(1,insertedContacts.size());
         //the account should have the right type
-        if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR)        
-            system.assertEquals(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE,insertedcontacts[0].npe01__Organization_Type__c);
-        else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)    
-            system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE,insertedcontacts[0].npe01__Organization_Type__c);
+        if (strProcessor == CAO_Constants_API.ONE_TO_ONE_PROCESSOR)        
+            system.assertEquals(CAO_Constants_API.ONE_TO_ONE_ORGANIZATION_TYPE,insertedcontacts[0].npe01__Organization_Type__c);
+        else if (strProcessor == CAO_Constants_API.HH_ACCOUNT_PROCESSOR)    
+            system.assertEquals(CAO_Constants_API.HH_ACCOUNT_TYPE,insertedcontacts[0].npe01__Organization_Type__c);
         //the account should be flagged as an individual
         system.assertEquals(true,insertedcontacts[0].Account.npe01__SYSTEMIsIndividual__c );
         //the account should have been named correctly
@@ -568,14 +568,14 @@ private class ACCT_IndividualAccounts_TEST {
         
         Contact[] insertedContacts = [Select Account.Name,AccountId,npe01__Organization_Type__c from Contact where id=:con.id];
         //the contact should have the right type
-        if (strProcessor == CAO_Constants.BUCKET_PROCESSOR)
-            system.assertEquals(CAO_Constants.BUCKET_ORGANIZATION_TYPE,insertedcontacts[0].npe01__Organization_Type__c);
-        else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)
-            system.assertEquals(CAO_Constants.HH_ACCOUNT_TYPE,insertedcontacts[0].npe01__Organization_Type__c);
+        if (strProcessor == CAO_Constants_API.BUCKET_PROCESSOR)
+            system.assertEquals(CAO_Constants_API.BUCKET_ORGANIZATION_TYPE,insertedcontacts[0].npe01__Organization_Type__c);
+        else if (strProcessor == CAO_Constants_API.HH_ACCOUNT_PROCESSOR)
+            system.assertEquals(CAO_Constants_API.HH_ACCOUNT_TYPE,insertedcontacts[0].npe01__Organization_Type__c);
         //the account should have been named correctly
-        if (strProcessor == CAO_Constants.BUCKET_PROCESSOR)
-            system.assertEquals(CAO_Constants.BUCKET_ACCOUNT_NAME,insertedcontacts[0].Account.Name);
-        else if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR)
+        if (strProcessor == CAO_Constants_API.BUCKET_PROCESSOR)
+            system.assertEquals(CAO_Constants_API.BUCKET_ACCOUNT_NAME,insertedcontacts[0].Account.Name);
+        else if (strProcessor == CAO_Constants_API.HH_ACCOUNT_PROCESSOR)
             system.assertEquals(con.LastName + ' Household',insertedcontacts[0].Account.Name);        
     }
     
