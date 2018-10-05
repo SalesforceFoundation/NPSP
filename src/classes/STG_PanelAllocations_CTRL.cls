@@ -46,6 +46,11 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
     public String strAllocationLevel {get;set;}
 
     /*********************************************************************************************************
+    * @description Boolean that is set to true if this org has Allocations set on Opportunities
+    */
+    public Boolean oppAllocationsExist {get;set;}
+
+    /*********************************************************************************************************
     * @description The panel's constructor.
     */
     public STG_PanelAllocations_CTRL() {
@@ -53,6 +58,20 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
             strAllocationLevel = paymentLabel;
         } else {
             strAllocationLevel = oppLabel;
+        }
+        List<Allocation__c> oppAllos = 
+            [SELECT Id FROM Allocation__c WHERE Opportunity__c != null LIMIT 1];
+        oppAllocationsExist = oppAllos.size() == 1;
+    }
+
+    /*********************************************************************************************************
+    * @description Show a warning message if the Allocation Level changed to Payment
+    * and this org has Allocations set on Opportunities
+    */
+    public void allocationLevelChange(){
+        if(oppAllocationsExist && strAllocationLevel == paymentLabel){
+            apexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning,
+                Label.stgHelpAllocationLevelWarning));
         }
     }
 

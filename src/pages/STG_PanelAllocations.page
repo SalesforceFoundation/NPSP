@@ -25,7 +25,7 @@
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
             <apex:commandButton id="editAllo" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
         </div>
-        <c:UTIL_PageMessages />
+        <c:UTIL_PageMessages allowClose="false" id="msgs" />
         <div class="slds-section-title--divider" >{!$Label.stgLabelAllocationsSettings}</div>
         <div class="slds-form--horizontal">
             <div class="slds-form-element">
@@ -56,11 +56,11 @@
                 <div class="slds-form-element__control">
                     <apex:outputText value="{!strAllocationLevel}" rendered="{!NOT(isEditMode)}" styleClass="slds-form-element__static"/>
                     <apex:selectList value="{!strAllocationLevel}" multiselect="false" size="1" rendered="{!isEditMode}" id="idAL" styleClass="slds-select">
+                        <apex:actionSupport event="onchange" action="{!allocationLevelChange}" reRender="msgs"/>
                         <apex:selectOptions value="{!listSOAllocationLevels}"/>
                     </apex:selectList>
                     <apex:outputPanel id="idALHelp" layout="block">
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpAllocationLevel}" />
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpAllocationLevel2}" />
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpAllocationLevel}" escape="false" />
                     </apex:outputPanel>
                 </div>
             </div>

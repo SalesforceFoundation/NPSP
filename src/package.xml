@@ -1716,7 +1716,7 @@
         <members>stgHelpAlloFiscalYearRollups</members>
         <members>stgHelpAlloNDayValue</members>
         <members>stgHelpAllocationLevel</members>
-        <members>stgHelpAllocationLevel2</members>
+        <members>stgHelpAllocationLevelWarning</members>
         <members>stgHelpAutoAffil</members>
         <members>stgHelpAutoRelCampaignRT</members>
         <members>stgHelpAutoRelField</members>
