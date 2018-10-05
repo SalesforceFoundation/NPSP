@@ -248,7 +248,11 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 'DonationImported__c',
                 'Status__c',
                 'FailureInformation__c',
-                'DonationImportStatus__c'
+                'DonationImportStatus__c',
+                'PaymentImportStatus__c',
+                'PaymentImported__c',
+                'PaymentImported__r.Name',
+                'DonationImported__r.Name'
         };
         return fields;
     }
@@ -304,17 +308,41 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             return donorName;
         }
 
+        /***************************************************************************************************
+        * @description checks if a record's oppty or payment has matched matching the BDI_Donations setDryRunDonationStatuses
+        * @param record: the DataImport__c record to check for matches
+        * @return Map<String, String> with the url and label of the match. If no match, values are empty strings.
+        */
         private Map<String, String> getMatchedRecordInfo(DataImport__c record) {
             Map<String, String> matchedRecord = new Map<String, String>();
-            //if there is a match, set url
-            matchedRecord.put('url', 'http://www.salesforce.com');
-            matchedRecord.put('label', 'Google');
 
-            //if there is no match, set new
+            try {
+                if (record.DonationImportStatus__c == Label.bdiDryRunMatched ||
+                        record.PaymentImportStatus__c == Label.bdiDryRunMatched ||
+                        record.DonationImportStatus__c == Label.bdiDryRunMatchedBest ||
+                        record.PaymentImportStatus__c == Label.bdiDryRunMatchedBest ||
+                        record.DonationImportStatus__c == Label.bdiDryRunMatchedId ||
+                        record.PaymentImportStatus__c == Label.bdiDryRunMatchedId) {
+                    //if there is a match, set url
+                    String importedId = record.PaymentImported__c != null ? record.PaymentImported__c : record.DonationImported__c;
+                    String importedLabel = record.PaymentImported__c != null ? record.PaymentImported__r.Name : record.DonationImported__r.Name;
+                    String url = URL.getSalesforceBaseUrl().toExternalForm() + '/' + importedId;
 
-            //if dry run not done or there is an error, set null
+                    matchedRecord.put('url', url);
+                    matchedRecord.put('label', importedLabel);
+                } else {
+                    //otherwise, set null
+                    matchedRecord.put('url', '');
+                    matchedRecord.put('label', '');
+                }
 
-            return matchedRecord;
+                return matchedRecord;
+            }
+            catch (Exception e) {
+                throw new AuraHandledException(e.getMessage());
+            }
+
+
 
         }
     }
