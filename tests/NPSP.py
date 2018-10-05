@@ -13,6 +13,7 @@ from simple_salesforce import SalesforceMalformedRequest
 from simple_salesforce import SalesforceResourceNotFound
 from locator_backup_91118 import npsp_lex_locators
 from selenium.webdriver import ActionChains
+#from cumulusci.robotframework.utils import selenium_retry
 #import os
 import sys
 from email.mime import text
@@ -32,6 +33,7 @@ class NPSP(object):
         self.current_page = None
         self._session_records = []
         self.val=0
+        self.payment_list= []
         # Turn off info logging of all http requests 
         logging.getLogger('requests.packages.urllib3.connectionpool').setLevel(logging.WARN)
  
@@ -46,6 +48,7 @@ class NPSP(object):
     @property
     def selenium(self):
         return self.builtin.get_library_instance('SeleniumLibrary')
+     
             
     def populate_address(self, loc, value):
         """ Populate address with Place Holder aka Mailing Street etc as a locator
@@ -94,6 +97,12 @@ class NPSP(object):
         locator = npsp_lex_locators['record']['datepicker'].format(value)
         self.selenium.set_focus_to_element(locator)
         self.selenium.get_webelement(locator).click() 
+       
+    def change_month(self, value):    
+        """To pick month in the date picker"""
+        locator = npsp_lex_locators['record']['month_pick'].format(value)
+        self.selenium.set_focus_to_element(locator)
+        self.selenium.get_webelement(locator).click()
         
 #     def select_row(self,value):
 #         """To select a row on object page based on name and open the dropdown"""    
@@ -536,13 +545,13 @@ class NPSP(object):
         self.val = str(values_1)
         locator =  loc.format(self.val)
         list_payments = self.selenium.get_webelements(locator)
-        t_loc=len(list_payments)
-        if  t_loc == int(no_payments):
+        self.t_loc=len(list_payments)
+        if  self.t_loc == int(no_payments):
             for i in list_payments:
                 self.selenium.page_should_contain_element(i)             
-            return str(t_loc)
+            return str(self.t_loc)
         else:
-            return str(t_loc)
+            return str(self.t_loc)
        
     def verify_date_split(self,date, no_payments, interval): 
         ddate=[]  
@@ -574,9 +583,9 @@ class NPSP(object):
         locator=npsp_lex_locators['record']['related']['viewall'].format(title)
         self.selenium.get_webelement(locator).click()
         
-    def click_payments_button (self,title):  
+    def click_button_with_value (self,title):  
         """clicks on the button on the payments page"""      
-        locator=npsp_lex_locators['payments']['button'].format(title)
+        locator=npsp_lex_locators['button'].format(title)
         self.selenium.get_webelement(locator).click()
         
 #         
@@ -601,28 +610,34 @@ class NPSP(object):
     def verify_payment(self):
         locators=npsp_lex_locators['payments']['no_payments']
         list_ele=self.selenium.get_webelements(locators)
+        l_no_payments = len(list_ele)
+        #return list_ele
+        #return l_no_payments, self.t_loc
+        #if self.t_loc == l_no_payments:
         for element in list_ele:
             payment_com=self.selenium.get_webelement(element).text
             cc=payment_com.replace("$","")
-            if cc == str(self.val):
-                pass
-            return cc, self.val
-#             else:
-#                 return "fail"
-#             if cc in self.payment_list:
-#                 pass
-#             else:
-#                 return "fail"
+            if cc == str(self.val) and self.t_loc == l_no_payments :
+                return 'pass'
+            #return cc, self.val
+            else:
+                return "fail"
         
-    def testing(self):
-        d=[]
-        s= [1,2,3,4,5]
-        for i in range(9):
-            pass
-            #d.append(i)
-        return i
-                
-    """Copied below keywords from Salesforce Library"""    
+        
+        
+        
+    def wait_for_locator(self, path, *args, **kwargs):
+        """ Returns a rendered locator string from the Salesforce lex_locators
+            dictionary.  This can be useful if you want to use an element in
+            a different way than the built in keywords allow.
+        """
+        locator = npsp_lex_locators
+        for key in path.split('.'):
+            locator = locator[key]
+        main_loc = locator.format(*args, **kwargs)    
+        self.selenium.wait_until_element_is_visible(main_loc)
+        #return main_loc     
+    #"""Copied below keywords from Salesvalueforce Library"""    
         
 #     def populate_lookup_field(self, name, value):
 #         self.populate_field(name, value)

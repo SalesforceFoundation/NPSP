@@ -1,3 +1,4 @@
+
 npsp_lex_locators={
     'mailing_address': "//*[contains(@placeholder,'{}')]",
     'app_launcher':{
@@ -7,6 +8,7 @@ npsp_lex_locators={
     "record": {
         'button': "//div[@class='actionsContainer']/button[@title='{}']",
         'datepicker':"//div[contains(@class,'uiDatePickerGrid')]/table[@class='calGrid']//span[text()='{}']",
+        'month_pick':"//div[@class='dateBar']//a[@title='{}']",
         'edit_button':'//*[@title="{}"]',
         'list':"//div[contains(@class,'forcePageBlockSectionRow')]/div[contains(@class,'forcePageBlockItem')]/div[contains(@class,'slds-p-vertical_xx-small')]/div[@class='slds-form-element__control']/div[.//span[text()='{}']][//div[contains(@class,'uiMenu')]//a[@class='select']]",
         'dropdown':"//div[@class='select-options']/ul[@class='scrollable']/li[@class='uiMenuItem uiRadioMenuItem']/a[contains(text(),'{}')]",
@@ -23,6 +25,7 @@ npsp_lex_locators={
         
     },
     'id':'//*[@id="{}"]',
+    'button':'//input[@value="{}"]',
     'tab': "//div[@class='uiTabBar']/ul[@class='tabs__nav']/li[contains(@class,'uiTabItem')]/a[@class='tabHeader']/span[contains(text(), '{}')]",
     'desktop_rendered': 'css: div.desktop.container.oneOne.oneAppLayoutHost[data-aura-rendered-by]',
     'loading_box': 'css: div.auraLoadingBox.oneLoadingBox',
@@ -94,17 +97,17 @@ npsp_lex_locators={
     },
     'payments':{
         'date_loc':"//*[@id='pmtTable']/tbody/tr/td[3]/div//input",
-        'button':'//input[@value="{}"]',
-        'no_payments':'//tbody/tr',
+        
+        'no_payments':'//tbody/tr/td[3]',
         'pay_amount':'//tbody/tr[{}]/td[3]/span/span[text()="{}"]',
         'check_occurance':'//h2/a/span[@title="{}"]/following-sibling::span',
         },
-    
+
 }
-    
+
 
 extra_locators={
     'related_list_items1':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "Relationships"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")]//tbody//td/span[text()="{}"]',
 }
 dnd={ ""
-    }
+}

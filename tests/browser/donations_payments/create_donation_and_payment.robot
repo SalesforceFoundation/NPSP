@@ -2,7 +2,7 @@
 
 Resource        tests/NPSP.robot
 Suite Setup     Open Test Browser
-#Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Delete Records and Close Browser
 
 *** Variables ***
 ${No_of_payments}     5
@@ -40,7 +40,7 @@ Create Donation from a Contact
     ${value}     Verify Payment Split   100    ${No_of_payments}
     Should be equal as strings    ${value}    ${No_of_payments}
     Verify Date Split    8/15/2018    ${No_of_payments}    ${intervel}
-    Click Payments Button    Create Payments
+    Click Button with Value    Create Payments
     Sleep    2
     ${value}    Verify Occurance Payments    Payments
     Should not be equal as strings    ${value}    0
@@ -51,9 +51,12 @@ Verify Payments
     Click Link    ${opp_name}  
     Click ViewAll Related List    Payments
     sleep     5
-    @{flag}    Verify payment    
-    #should be equal as strings     ${flag}    None
-    :for     ${a}    in     @{flag}
-    \    log to console    @{a}
-    
+    Reload Page
+    ${flag}     Verify payment    
+    should be equal as strings     ${flag}    pass
+    # @{flag}    verify payment
+    # :for     ${a}    in     @{flag}
+    # \    log to console    ${a}
+    #log to console    ${flag}    
+    #log to console    ${test}
     
