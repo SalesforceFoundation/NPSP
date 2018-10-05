@@ -8,11 +8,11 @@ Suite Setup     Open Test Browser
 ${No_of_payments}     5
 ${intervel}    2
 ${frequency}    Month
+${opp_name}
 
 *** Test Cases ***
 
 Create Donation from a Contact
-    #1 contact HouseHold Validation
     ${contact_id} =  Create Contact with Email
     &{contact} =  Salesforce Get  Contact  ${contact_id}
     Header Field Value    Account Name    &{contact}[LastName] Household
@@ -26,6 +26,8 @@ Create Donation from a Contact
     Sleep    5  
     Create Opportunities    Test $100 donation    &{Contact}[LastName] Household
     Sleep    2
+    ${opp_name}    Get Main Header 
+    Set Global Variable      ${opp_name}
     Select Related Dropdown    Payments
     Click Link    link=Schedule Payments
     Sleep    2
@@ -37,10 +39,21 @@ Create Donation from a Contact
     Click Element    //*[@id="j_id0:vfForm:j_id134"]
     ${value}     Verify Payment Split   100    ${No_of_payments}
     Should be equal as strings    ${value}    ${No_of_payments}
-    ${dates}    Verify Date Split    8/15/2018    ${No_of_payments}    1
-    #:for ${a} in @{dates}
-    log to console     ${dates}
-    # Should be equal as strings    ${dates}    ${No_of_payments}
+    Verify Date Split    8/15/2018    ${No_of_payments}    ${intervel}
     Click Payments Button    Create Payments
     Sleep    2
+    ${value}    Verify Occurance Payments    Payments
+    Should not be equal as strings    ${value}    0
+    
+Verify Payments 
+    Go To Object Home         Opportunity
+    Sleep    2
+    Click Link    ${opp_name}  
     Click ViewAll Related List    Payments
+    sleep     5
+    @{flag}    Verify payment    
+    #should be equal as strings     ${flag}    None
+    :for     ${a}    in     @{flag}
+    \    log to console    @{a}
+    
+    

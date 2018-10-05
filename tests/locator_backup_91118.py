@@ -97,6 +97,7 @@ npsp_lex_locators={
         'button':'//input[@value="{}"]',
         'no_payments':'//tbody/tr',
         'pay_amount':'//tbody/tr[{}]/td[3]/span/span[text()="{}"]',
+        'check_occurance':'//h2/a/span[@title="{}"]/following-sibling::span',
         },
     
 }

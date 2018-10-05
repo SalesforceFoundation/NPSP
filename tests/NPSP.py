@@ -2,7 +2,6 @@ import logging
 import re
 import time
 
-
 from robot.libraries.BuiltIn import BuiltIn
 from selenium.common.exceptions import ElementNotInteractableException
 from selenium.common.exceptions import StaleElementReferenceException
@@ -12,11 +11,12 @@ from selenium.webdriver.common.keys import Keys
 from SeleniumLibrary.errors import ElementNotFound
 from simple_salesforce import SalesforceMalformedRequest
 from simple_salesforce import SalesforceResourceNotFound
-from locator import npsp_lex_locators
+from locator_backup_91118 import npsp_lex_locators
 from selenium.webdriver import ActionChains
 #import os
 import sys
 from email.mime import text
+from httplib import PAYMENT_REQUIRED
 #sys.path.append(os.path.abspath(os.path.join('..',
 #sys.path.append("/Users/skristem/Documents/GitHub/CumulusCI/cumulusci/robotframework/tests")
 #import Salesforce
@@ -31,6 +31,7 @@ class NPSP(object):
         self.debug = debug
         self.current_page = None
         self._session_records = []
+        self.val=0
         # Turn off info logging of all http requests 
         logging.getLogger('requests.packages.urllib3.connectionpool').setLevel(logging.WARN)
  
@@ -530,17 +531,18 @@ class NPSP(object):
     def verify_payment_split(self, amount, no_payments):
         loc = "//*[@id='pmtTable']/tbody/tr/td[2]/div//input[@value= '{}']"
         values = int(amount)/int(no_payments)
+        #global self.val
         values_1 = "{0:.2f}".format(values)
-        val = str(values_1)
-        locator =  loc.format(val)
+        self.val = str(values_1)
+        locator =  loc.format(self.val)
         list_payments = self.selenium.get_webelements(locator)
         t_loc=len(list_payments)
-        if  t_loc == no_payments:
-            for element in list_payments:
-                self.selenium.page_should_contain_element(element)
+        if  t_loc == int(no_payments):
+            for i in list_payments:
+                self.selenium.page_should_contain_element(i)             
             return str(t_loc)
         else:
-           return str(t_loc)
+            return str(t_loc)
        
     def verify_date_split(self,date, no_payments, interval): 
         ddate=[]  
@@ -549,21 +551,23 @@ class NPSP(object):
         locator = npsp_lex_locators['payments']['date_loc'].format(date)
         t_dates = self.selenium.get_webelement(locator)
         self.selenium.page_should_contain_element(t_dates)
-        for i in range(int(no_payments) + 1):
-            if mm <= 12:
-                date_list = [mm, dd, yyyy]
-                dates = list(map(str, date_list))
-                new_date = "/".join(dates)
-                mm = mm + int(interval)
-                dates = list(map(str, date_list))
-                #if new_date not in t_dates: 
-                locator1 = npsp_lex_locators['payments']['date_loc'].format(new_date)
-                t_dates = self.selenium.get_webelement(locator1)                  
-                self.selenium.page_should_contain_element(t_dates)
-            elif mm > 12:
-                yyyy = yyyy + 1
-                mm = (mm + int(interval))-(12+int(interval))
-        return "pass"
+#            for i in range(int(no_payments) + 1):
+        if mm <= 12:
+            date_list = [mm, dd, yyyy]
+            dates = list(map(str, date_list))
+            new_date = "/".join(dates)
+            mm = mm + int(interval)
+            dates = list(map(str, date_list))
+            #if new_date not in t_dates: 
+            locator1 = npsp_lex_locators['payments']['date_loc'].format(new_date)
+            t_dates = self.selenium.get_webelement(locator1)                  
+            self.selenium.page_should_contain_element(t_dates)
+        elif mm > 12:
+            yyyy = yyyy + 1
+            mm = (mm + int(interval))-(12+int(interval))
+            #return "pass"
+#         else:
+#             return "fail"
         
     def click_viewall_related_list (self,title):  
         """clicks on the View All link under the Related List"""      
@@ -575,18 +579,48 @@ class NPSP(object):
         locator=npsp_lex_locators['payments']['button'].format(title)
         self.selenium.get_webelement(locator).click()
         
+#         
+#     def verify_payments(self, amount,no_payments):
+#         """To select a row on object page based on name and open the dropdown"""
+#         locators = npsp_lex_locators['payments']['no_payments']
+#         list_ele = self.selenium.get_webelements(locators)
+#         t_count=len(list_ele)
+#         for index, element in enumerate(list_ele):
+#             if element.text == amount:
+#                 loc = npsp_lex_locators['payments']['pay_amount'].format(index + 1, amount)
+#                 self.selenium.page_should_contain_element(loc)
+#                 time.sleep(1)
+                
+    def verify_occurance_payments(self,title,value=None):
+        """"""
+        locator=npsp_lex_locators['payments']['check_occurance'].format(title)
+        occ_value=self.selenium.get_webelement(locator).text
+        return occ_value        
         
-    def verify_payments(self, amount,no_payments):
-        """To select a row on object page based on name and open the dropdown"""
-        locators = npsp_lex_locators['payments']
-        list_ele = self.selenium.get_webelements(locators)
-        t_count=len(list_ele)
-        for index, element in enumerate(list_ele):
-            if element.text == amount:
-                loc = npsp_lex_locators['payments']['pay_amount'].format(index + 1, amount)
-                self.selenium.page_should_contain_element(loc)
-                time.sleep(1)
         
+    def verify_payment(self):
+        locators=npsp_lex_locators['payments']['no_payments']
+        list_ele=self.selenium.get_webelements(locators)
+        for element in list_ele:
+            payment_com=self.selenium.get_webelement(element).text
+            cc=payment_com.replace("$","")
+            if cc == str(self.val):
+                pass
+            return cc, self.val
+#             else:
+#                 return "fail"
+#             if cc in self.payment_list:
+#                 pass
+#             else:
+#                 return "fail"
+        
+    def testing(self):
+        d=[]
+        s= [1,2,3,4,5]
+        for i in range(9):
+            pass
+            #d.append(i)
+        return i
                 
     """Copied below keywords from Salesforce Library"""    
         
