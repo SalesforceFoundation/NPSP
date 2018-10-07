@@ -397,6 +397,12 @@ public class CMT_FilterRule {
                 // always return true (i.e. passed)
                 return true;
 
+            } else if (fieldValue == null && (rule.operation == FilterOperation.CONTAINS
+                    || rule.operation == FilterOperation.STARTS_WITH || rule.operation == FilterOperation.IS_INCLUDED)) {
+                // If the field value is null value and the operation is one of these inclusion types, then
+                // always return false (i.e. not-passed)
+                return false;
+
             } else if (rule.operation == FilterOperation.EQUALS) {
                 return fieldValue == compareValue;
 
