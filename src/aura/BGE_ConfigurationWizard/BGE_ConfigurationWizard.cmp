@@ -34,7 +34,7 @@
   @group-content ../../ApexDocContent/BatchDataImport.htm
   @description Component used to view, edit, or create a Batch Template record.
 -->
-<aura:component controller="BGE_Wizard_CTRL"
+<aura:component controller="BGE_ConfigurationWizard_CTRL"
                 implements="lightning:actionOverride,force:hasRecordId,flexipage:availableForRecordHome,force:hasSObjectName">
 
     <!-- private attributes -->
@@ -136,21 +136,10 @@
                                                 required="true" class="slds-p-top_medium"/>
                             <div class="slds-p-top_large">
                                 <aura:if isTrue="{!v.isReadOnly}">
-                                    <ui:outputCheckbox value="{!v.templateInfo.enableTotalEntry}" class="slds-form-element__control"/>
-                                    <span class="slds-form-element__label">{!v.templateMetadata.labels.totalEntryLabel}</span> <br/>
                                     <ui:outputCheckbox value="{!v.templateInfo.requireTotalMatch}" class="slds-form-element__control"/>
                                     <span class="slds-form-element__label">{!v.templateMetadata.labels.totalMatchLabel}</span>
 
                                     <aura:set attribute="else">
-                                        <div>
-                                            <lightning:input aura:id="totalEntryCheckbox" type="checkbox" class="templateInputCheckbox"
-                                                             label="{!v.templateMetadata.labels.totalEntryLabel}"
-                                                             name="enableTotalEntry"
-                                                             checked="{!v.templateInfo.enableTotalEntry}"
-                                                             readonly="{!v.isReadOnly}"
-                                                             variant="label-hidden"/>
-                                            <c:CRLP_Tooltip helpText="{!v.templateMetadata.labels.totalEntryHelp}" fieldLabel="{!v.templateMetadata.labels.totalEntryLabel}"/>
-                                        </div>
                                         <div>
                                             <lightning:input aura:id="totalMatchCheckbox" type="checkbox" class="templateInputCheckbox"
                                                              label="{!v.templateMetadata.labels.totalMatchLabel}"

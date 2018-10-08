@@ -18,7 +18,7 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>Edit</actionName>
-        <content>BGE_Wizard</content>
+        <content>BGE_ConfigurationWizard</content>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>LightningComponent</type>
     </actionOverrides>
@@ -32,7 +32,7 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>New</actionName>
-        <content>BGE_Wizard</content>
+        <content>BGE_ConfigurationWizard</content>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>LightningComponent</type>
     </actionOverrides>
@@ -131,16 +131,6 @@
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>TextArea</type>
-    </fields>
-    <fields>
-        <fullName>EnableTotalEntry__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>When checked, the user filling out the template may enter the expected number of gifts and expected total amount for the batch.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>When checked, the user filling out the template may enter the expected number of gifts and expected total amount for the batch.</inlineHelpText>
-        <label>Enable Expected Totals Entry</label>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Donation_Date_Range__c</fullName>

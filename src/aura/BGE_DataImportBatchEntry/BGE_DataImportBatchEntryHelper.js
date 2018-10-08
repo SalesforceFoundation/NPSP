@@ -38,11 +38,11 @@
         var modalFooter;
 
         $A.createComponents([
-                ['c:BGE_Wizard',{sObjectName: component.get('v.sObjectName'), recordId: component.get('v.recordId')}],
-                ['c:modalHeader',{header: $A.get('$Label.c.bgeBatchOverviewWizard')}],
-                ['c:modalFooter',{}]
+                ['c:BGE_ConfigurationWizard', {sObjectName: component.get('v.sObjectName'), recordId: component.get('v.recordId')}],
+                ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
+                ['c:modalFooter', {}]
             ],
-            function(components, status){
+            function(components, status, errorMessage){
                 if (status === 'SUCCESS') {
                     modalBody = components[0];
                     modalHeader = components[1];
@@ -56,6 +56,8 @@
                         closeCallback: function() {
                         }
                     })
+                } else {
+                    this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
                 }
             }
         );

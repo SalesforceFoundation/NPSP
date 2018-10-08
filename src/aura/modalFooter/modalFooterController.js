@@ -18,28 +18,28 @@
      * @description: sends back event to modal
      */
     back: function(component, event, helper) {
-        helper.sendMessage(component, 'back', null);
+        helper.sendMessage(component, 'back');
     },
 
     /**
      * @description: sends cancel event to modal
      */
     cancel: function(component, event, helper) {
-        helper.sendMessage(component, 'cancel', null);
+        helper.sendMessage(component, 'cancel');
     },
 
     /**
      * @description: sends next event to modal
      */
     next: function(component, event, helper) {
-        helper.sendMessage(component, 'next', null);
+        helper.sendMessage(component, 'next');
     },
 
     /**
      * @description: sends save event to modal
      */
     save: function(component, event, helper) {
-        helper.sendMessage(component, 'save', null);
+        helper.sendMessage(component, 'save');
         //todo: add validation, put this in another listener function
         component.find("overlayLib").notifyClose();
     }
