@@ -695,6 +695,7 @@
         <members>Allocations_Settings__c.Excluded_Opp_Types__c</members>
         <members>Allocations_Settings__c.Rollup_N_Day_Value__c</members>
         <members>Allocations_Settings__c.Use_Fiscal_Year_for_Rollups__c</members>
+        <members>BDISettings__c.MapWithCustomMetadataTypes__c</members>
         <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
         <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
         <members>Batch_Template__c.Account_Custom_Unique_ID__c</members>
@@ -1020,6 +1021,8 @@
         <members>Trigger_Handler__c.Trigger_Action__c</members>
         <members>Trigger_Handler__c.User_Managed__c</members>
         <members>Trigger_Handler__c.Usernames_to_Exclude__c</members>
+        <members>BDI_Field_Mapping__mdt.Source_Field__c</members>
+        <members>BDI_Field_Mapping__mdt.Target_Field__c</members>
         <members>Filter_Group__mdt.Description__c</members>
         <members>Filter_Group__mdt.Is_Deleted__c</members>
         <members>Filter_Rule__mdt.Constant__c</members>
@@ -2030,12 +2033,73 @@
         <name>CustomLabels</name>
     </types>
     <types>
+        <members>BDI_Field_Mapping.Account1City</members>
+        <members>BDI_Field_Mapping.Account1Country</members>
+        <members>BDI_Field_Mapping.Account1Name</members>
+        <members>BDI_Field_Mapping.Account1Phone</members>
+        <members>BDI_Field_Mapping.Account1StateProvince</members>
+        <members>BDI_Field_Mapping.Account1Street</members>
+        <members>BDI_Field_Mapping.Account1Website</members>
+        <members>BDI_Field_Mapping.Account1ZipPostalCode</members>
+        <members>BDI_Field_Mapping.Account2City</members>
+        <members>BDI_Field_Mapping.Account2Country</members>
+        <members>BDI_Field_Mapping.Account2Name</members>
+        <members>BDI_Field_Mapping.Account2Phone</members>
+        <members>BDI_Field_Mapping.Account2StateProvince</members>
+        <members>BDI_Field_Mapping.Account2Street</members>
+        <members>BDI_Field_Mapping.Account2Website</members>
+        <members>BDI_Field_Mapping.Account2ZipPostalCode</members>
+        <members>BDI_Field_Mapping.Contact1AlternateEmail</members>
+        <members>BDI_Field_Mapping.Contact1Birthdate</members>
+        <members>BDI_Field_Mapping.Contact1FirstName</members>
+        <members>BDI_Field_Mapping.Contact1HomePhone</members>
+        <members>BDI_Field_Mapping.Contact1LastName</members>
+        <members>BDI_Field_Mapping.Contact1MobilePhone</members>
+        <members>BDI_Field_Mapping.Contact1OtherPhone</members>
+        <members>BDI_Field_Mapping.Contact1PersonalEmail</members>
+        <members>BDI_Field_Mapping.Contact1PreferredEmail</members>
+        <members>BDI_Field_Mapping.Contact1PreferredPhone</members>
+        <members>BDI_Field_Mapping.Contact1Salutation</members>
+        <members>BDI_Field_Mapping.Contact1Title</members>
+        <members>BDI_Field_Mapping.Contact1WorkEmail</members>
+        <members>BDI_Field_Mapping.Contact1WorkPhone</members>
+        <members>BDI_Field_Mapping.Contact2AlternateEmail</members>
+        <members>BDI_Field_Mapping.Contact2Birthdate</members>
+        <members>BDI_Field_Mapping.Contact2FirstName</members>
+        <members>BDI_Field_Mapping.Contact2HomePhone</members>
+        <members>BDI_Field_Mapping.Contact2LastName</members>
+        <members>BDI_Field_Mapping.Contact2MobilePhone</members>
+        <members>BDI_Field_Mapping.Contact2OtherPhone</members>
+        <members>BDI_Field_Mapping.Contact2PersonalEmail</members>
+        <members>BDI_Field_Mapping.Contact2PreferredEmail</members>
+        <members>BDI_Field_Mapping.Contact2PreferredPhone</members>
+        <members>BDI_Field_Mapping.Contact2Salutation</members>
+        <members>BDI_Field_Mapping.Contact2Title</members>
+        <members>BDI_Field_Mapping.Contact2WorkEmail</members>
+        <members>BDI_Field_Mapping.Contact2WorkPhone</members>
+        <members>BDI_Field_Mapping.DonationAmount</members>
+        <members>BDI_Field_Mapping.DonationDate</members>
+        <members>BDI_Field_Mapping.DonationDescription</members>
+        <members>BDI_Field_Mapping.DonationMemberLevel</members>
+        <members>BDI_Field_Mapping.DonationMembershipEndDate</members>
+        <members>BDI_Field_Mapping.DonationMembershipOrigin</members>
+        <members>BDI_Field_Mapping.DonationMembershipStartDate</members>
+        <members>BDI_Field_Mapping.DonationName</members>
+        <members>BDI_Field_Mapping.DonationRecordTypeName</members>
+        <members>BDI_Field_Mapping.DonationStage</members>
+        <members>BDI_Field_Mapping.DonationType</members>
+        <members>BDI_Field_Mapping.PaymentCheckReferenceNumber</members>
+        <members>BDI_Field_Mapping.PaymentMethod</members>
+        <name>CustomMetadata</name>
+    </types>
+    <types>
         <members>Account_Soft_Credit__c</members>
         <members>Addr_Verification_Settings__c</members>
         <members>Address_Verification_Settings__c</members>
         <members>Address__c</members>
         <members>Allocation__c</members>
         <members>Allocations_Settings__c</members>
+        <members>BDISettings__c</members>
         <members>Batch_Data_Entry_Settings__c</members>
         <members>Batch_Template__c</members>
         <members>Batch__c</members>
@@ -2058,6 +2122,7 @@
         <members>Relationship_Sync_Excluded_Fields__c</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
+        <members>BDI_Field_Mapping__mdt</members>
         <members>Filter_Group__mdt</members>
         <members>Filter_Rule__mdt</members>
         <members>Rollup__mdt</members>
@@ -2458,6 +2523,7 @@
         <members>Partial_Soft_Credit__c-Partial Soft Credit Layout</members>
         <members>Schedulable__c-Schedulable Layout</members>
         <members>Trigger_Handler__c-Trigger Handler Layout</members>
+        <members>BDI_Field_Mapping__mdt-BDI Field Mapping Layout</members>
         <members>Filter_Group__mdt-Filter Group Layout</members>
         <members>Filter_Rule__mdt-Filter Rule Layout</members>
         <members>Rollup__mdt-Rollup Layout</members>
