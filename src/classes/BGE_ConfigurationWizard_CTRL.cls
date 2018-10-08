@@ -54,11 +54,11 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 try {
                     String descriptionField = (sObjectName == 'DataImportBatch__c') ? 'Batch_Description__c' : 'Description__c';
 
-                    String queryString = 'SELECT Name, Id, ' + descriptionField + ', RequireTotalMatch__c, Active_Fields__c ';
-                    queryString += 'FROM ' + sObjectName;
-                    queryString += ' WHERE Id = ' + recordId;
+                    String soql = 'SELECT Name, Id, ' + descriptionField + ', RequireTotalMatch__c, Active_Fields__c ';
+                    soql += 'FROM ' + sObjectName;
+                    soql += ' WHERE Id=:recordId';
 
-                    SObject recordDetails = Database.query(queryString);
+                    SObject recordDetails = Database.query(soql);
 
                     model.name = (String)recordDetails.get('Name');
                     model.id = (String)recordDetails.get('Id');

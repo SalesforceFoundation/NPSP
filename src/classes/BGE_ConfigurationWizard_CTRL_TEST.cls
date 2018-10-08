@@ -36,7 +36,7 @@
 **/
 
 @isTest(IsParallel=true)
-private class BGE_Wizard_CTRL_TEST {
+private class BGE_ConfigurationWizard_CTRL_TEST {
 
     /*********************************************************************************************************
     * @description Tests sets up a new Batch Template Record
