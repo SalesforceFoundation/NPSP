@@ -334,7 +334,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                     String importedId = record.DonationImported__c != null ? record.DonationImported__c : '';
                     matchedUrlLabel = record.DonationImported__c != null && record.DonationImported__r != null ? record.DonationImported__r.Name : '';
                     matchedUrl = URL.getSalesforceBaseUrl().toExternalForm() + '/' + importedId;
-                } else if (importFailure) {
+                }
+
+                if (importFailure) {
 
                     //if Donation and Payment didn't have matched or matched none status, then an error was set
                     if (record.DonationImportStatus__c != Label.bdiMatchedNone
@@ -348,12 +350,11 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                             && record.PaymentImportStatus__c != record.DonationImportStatus__c) {
                         errors.add(record.PaymentImportStatus__c);
                     }
-                    //only add additional failure information specific to a donation or payment matching failure
-                    //todo: is there a better way we want to filter out failures?
-                    if (errors.size() != 0
-                            && record.FailureInformation__c != record.PaymentImportStatus__c
+
+                    //get any additional errors
+                    if (record.FailureInformation__c != record.PaymentImportStatus__c
                             && record.FailureInformation__c != record.DonationImportStatus__c) {
-                        errors.add(0, record.FailureInformation__c);
+                        errors.add(record.FailureInformation__c);
                     }
                 }
 
