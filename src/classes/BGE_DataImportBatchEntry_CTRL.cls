@@ -337,15 +337,22 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 } else if (importFailure) {
 
                     //if Donation and Payment didn't have matched or matched none status, then an error was set
-                    if (record.DonationImportStatus__c != Label.bdiMatchedNone && record.DonationImportStatus__c != null && !donationMatched) {
+                    if (record.DonationImportStatus__c != Label.bdiMatchedNone
+                            && record.DonationImportStatus__c != null
+                            && !donationMatched) {
                         errors.add(record.DonationImportStatus__c);
                     }
-                    if (record.PaymentImportStatus__c != Label.bdiMatchedNone && record.PaymentImportStatus__c != null && !paymentMatched) {
+                    if (record.PaymentImportStatus__c != Label.bdiMatchedNone
+                            && record.PaymentImportStatus__c != null
+                            && !paymentMatched
+                            && record.PaymentImportStatus__c != record.DonationImportStatus__c) {
                         errors.add(record.PaymentImportStatus__c);
                     }
-                    //only add failure information specific to a donation or payment matching failure
+                    //only add additional failure information specific to a donation or payment matching failure
                     //todo: is there a better way we want to filter out failures?
-                    if (errors.size() != 0) {
+                    if (errors.size() != 0
+                            && record.FailureInformation__c != record.PaymentImportStatus__c
+                            && record.FailureInformation__c != record.DonationImportStatus__c) {
                         errors.add(0, record.FailureInformation__c);
                     }
                 }
