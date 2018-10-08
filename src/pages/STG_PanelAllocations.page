@@ -55,8 +55,8 @@
                 <apex:outputLabel value="{!$Label.stgAllocationLevel}" for="idAL" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <apex:outputText value="{!strAllocationLevel}" rendered="{!NOT(isEditMode)}" styleClass="slds-form-element__static"/>
-                    <apex:selectList value="{!strAllocationLevel}" multiselect="false" size="1" rendered="{!isEditMode}" id="idAL" styleClass="slds-select">
-                        <apex:actionSupport event="onchange" action="{!allocationLevelChange}" reRender="msgs"/>
+                    <apex:actionFunction reRender="msgs" name="allocationLevelChange" action="{!allocationLevelChange}" />
+                    <apex:selectList value="{!strAllocationLevel}" onChange="allocationLevelChange();" multiselect="false" size="1" rendered="{!isEditMode}" id="idAL" styleClass="slds-select">
                         <apex:selectOptions value="{!listSOAllocationLevels}"/>
                     </apex:selectList>
                     <apex:outputPanel id="idALHelp" layout="block">
