@@ -141,24 +141,11 @@
                         <div class="slds-p-top_large">
                             <aura:if isTrue="{!v.isReadOnly}">
                                 <div class="slds-form-element">
-                                    <ui:outputCheckbox value="{!v.templateInfo.enableTotalEntry}" class="slds-form-element__control"/>
-                                    <span class="slds-form-element__label">{!v.templateMetadata.labels.totalEntryLabel}</span>
-                                </div>
-                                <div class="slds-form-element">
                                     <ui:outputCheckbox value="{!v.templateInfo.requireTotalMatch}" class="slds-form-element__control"/>
                                     <span class="slds-form-element__label">{!v.templateMetadata.labels.totalMatchLabel}</span>
                                 </div>
 
                                 <aura:set attribute="else">
-                                    <div>
-                                        <lightning:input aura:id="totalEntryCheckbox" type="checkbox" class="templateInputCheckbox"
-                                                         label="{!v.templateMetadata.labels.totalEntryLabel}"
-                                                         name="enableTotalEntry"
-                                                         checked="{!v.templateInfo.enableTotalEntry}"
-                                                         readonly="{!v.isReadOnly}"
-                                                         variant="label-hidden"/>
-                                        <c:CRLP_Tooltip helpText="{!v.templateMetadata.labels.totalEntryHelp}" fieldLabel="{!v.templateMetadata.labels.totalEntryLabel}"/>
-                                    </div>
                                     <div>
                                         <lightning:input aura:id="totalMatchCheckbox" type="checkbox" class="templateInputCheckbox"
                                                          label="{!v.templateMetadata.labels.totalMatchLabel}"
