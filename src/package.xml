@@ -708,7 +708,6 @@
         <members>Batch_Template__c.Donation_Matching_Behavior__c</members>
         <members>Batch_Template__c.Donation_Matching_Implementing_Class__c</members>
         <members>Batch_Template__c.Donation_Matching_Rule__c</members>
-        <members>Batch_Template__c.EnableTotalEntry__c</members>
         <members>Batch_Template__c.Process_Using_Scheduled_Job__c</members>
         <members>Batch_Template__c.RequireTotalMatch__c</members>
         <members>Batch_Template__c.Run_Opportunity_Rollups_while_Processing__c</members>

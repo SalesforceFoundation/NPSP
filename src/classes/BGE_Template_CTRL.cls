@@ -49,7 +49,6 @@ public with sharing class BGE_Template_CTRL {
                     Name,
                     Id,
                     Description__c,
-                    EnableTotalEntry__c,
                     RequireTotalMatch__c,
                     Active_Fields__c
             FROM Batch_Template__c
@@ -57,7 +56,6 @@ public with sharing class BGE_Template_CTRL {
 
             templateDetails.name = batchTemplate.Name;
             templateDetails.description = batchTemplate.Description__c;
-            templateDetails.enableTotalEntry = batchTemplate.EnableTotalEntry__c;
             templateDetails.id = batchTemplate.Id;
             templateDetails.requireTotalMatch = batchTemplate.RequireTotalMatch__c;
             templateDetails.activeFields = batchTemplate.Active_Fields__c;
@@ -146,8 +144,6 @@ public with sharing class BGE_Template_CTRL {
             'batchTemplateObject' => Schema.SObjectType.Batch_Template__c.getName(),
             'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.Batch_Template__c.Name.getDescribe().getLabel() + ', ' + Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
             'description' => Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
-            'totalEntryHelp' => Schema.Batch_Template__c.EnableTotalEntry__c.getDescribe().getInlineHelpText(),
-            'totalEntryLabel' => Schema.Batch_Template__c.EnableTotalEntry__c.getDescribe().getLabel(),
             'totalMatchHelp' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
             'totalMatchLabel' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getLabel()
         };
@@ -171,7 +167,6 @@ public with sharing class BGE_Template_CTRL {
             }
             batchTemplate.Name = templateDetails.name;
             batchTemplate.Description__c = templateDetails.description;
-            batchTemplate.EnableTotalEntry__c = templateDetails.enableTotalEntry;
             batchTemplate.RequireTotalMatch__c = templateDetails.requireTotalMatch;
             batchTemplate.Active_Fields__c = activeFields;
 
@@ -193,7 +188,6 @@ public with sharing class BGE_Template_CTRL {
     public class TemplateDetailsModel {
         @AuraEnabled public String name;
         @AuraEnabled public String description;
-        @AuraEnabled public Boolean enableTotalEntry;
         @AuraEnabled public Id id;
         @AuraEnabled public Boolean requireTotalMatch;
         @AuraEnabled public List<Field> templateFields;
@@ -201,7 +195,6 @@ public with sharing class BGE_Template_CTRL {
         @AuraEnabled public Map<String, String> labels;
 
         public TemplateDetailsModel() {
-            enableTotalEntry = false;
             requireTotalMatch = false;
             templateFields = new List<Field>();
         }
