@@ -65,6 +65,10 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                     model.description = (String)recordDetails.get(descriptionField);
                     model.requireTotalMatch = (Boolean)recordDetails.get('RequireTotalMatch__c');
                     model.activeFields = (String)recordDetails.get('Active_Fields__c');
+
+                    if (model.activeFields == null) {
+                        model.setDefaultActiveFields();
+                    }
                 }
                 catch (Exception ex){
                     throw new AuraHandledException('ERROR: ' + ex.getMessage());
@@ -305,13 +309,14 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public String donationMatchingRule;
         @AuraEnabled public Integer numberOfDaysFromDonationDate;
         @AuraEnabled public Boolean processUsingScheduledJob;
+        @AuraEnabled public List<Batch_Template__c> batchTemplates;
 
         public BGEDetailsModel() {
             enableTotalEntry = false;
             requireTotalMatch = false;
             templateFields = new List<AvailableField>();
-            // todo: put this in a custom label
-            name = 'Default Batch Gift Entry Template';
+            // todo: put this in a custom label: also, only display in the template selection page
+            //name = 'Default Batch Gift Entry Template';
             batchProcessSize = 50;
             calculateDonationRollupsWithBatch = false;
             contactMatchingRule = 'Firstname,Lastname,Email';
@@ -319,7 +324,12 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             donationMatchingRule = 'Donation_Amount__c;Donation_Date__c';
             numberOfDaysFromDonationDate = 0;
             processUsingScheduledJob = false;
-            activeFields = '[{"label":"Donation Amount","name":"Donation_Amount__c","sObjectName":"Opportunity","defaultValue":"true","required":false,"hide":false,"sortOrder":0},' +
+
+            setDefaultActiveFields();
+        }
+
+        public void setDefaultActiveFields() {
+            this.activeFields = '[{"label":"Donation Amount","name":"Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0},' +
                     '{"label":"Donation Date","name":"Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1},' +
                     '{"label":"Method","name":"Payment_Method__c","sObjectName":"Payment","defaultValue":null,"required":false,"hide":false,"sortOrder":2},' +
                     '{"label":"Check/Reference Number","name":"Payment_Check_Reference_Number__c","sObjectName":"Payment","defaultValue":null,"required":false,"hide":false,"sortOrder":3}]';
