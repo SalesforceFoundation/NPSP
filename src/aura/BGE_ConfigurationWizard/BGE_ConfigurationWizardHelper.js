@@ -17,7 +17,6 @@
                 templateInfoView.name = templateInfo.name;
                 templateInfoView.id = templateInfo.id;
                 templateInfoView.description = templateInfo.description;
-                templateInfoView.enableTotalEntry = templateInfo.enableTotalEntry;
                 templateInfoView.requireTotalMatch = templateInfo.requireTotalMatch;
 
                 component.set('v.templateInfo', templateInfoView);
@@ -28,7 +27,6 @@
                 name: '',
                 id: '',
                 description: '',
-                enableTotalEntry: false,
                 requireTotalMatch: false
             };
         })(component, model);
@@ -75,7 +73,6 @@
                 } else if (templateMetadataView.mode === 'create' || templateMetadataView.mode === 'edit') {
                     component.set('v.isReadOnly', false);
                     if (templateMetadata.mode === 'edit') {
-                        //todo: add these in
                         templateMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchTemplateEdit')
                     } else if (templateMetadata.mode === 'create') {
                         templateMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchTemplateNew');
@@ -289,7 +286,6 @@
                                 name: response.name,
                                 id: response.id,
                                 description: response.description,
-                                enableTotalEntry: response.enableTotalEntry,
                                 requireTotalMatch: response.requireTotalMatch
                             }
                         );
@@ -312,7 +308,6 @@
                     name: _templateInfo.name,
                     id: _templateInfo.id,
                     description: _templateInfo.description,
-                    enableTotalEntry: _templateInfo.enableTotalEntry,
                     requireTotalMatch: _templateInfo.requireTotalMatch
                 };
                 var activeFields = [];
@@ -339,7 +334,6 @@
                                 name: response.name,
                                 id: response.id,
                                 description: response.description,
-                                enableTotalEntry: response.enableTotalEntry,
                                 requireTotalMatch: response.requireTotalMatch
                             }
                         );
@@ -411,7 +405,6 @@
                 this.name = info.name;
                 this.description = info.description;
                 this.id = info.id;
-                this.enableTotalEntry = info.enableTotalEntry;
                 this.requireTotalMatch = info.requireTotalMatch;
                 this.onInfoUpdated.notify();
             }
@@ -429,7 +422,6 @@
                 name: '',
                 id: '',
                 description: '',
-                enableTotalEntry: false,
                 requireTotalMatch: false,
                 load: load,
                 isValid: isValid,
@@ -745,7 +737,6 @@
              * @description Increments Wizard to next step if no errors exist
              * @param isValid - string that is the selected mode
              * @param error - existing errors
-             * TODO: make templateMetadata error-aware and remove this param
              * @return void.
              */
             function nextStep(isValid, error) {
@@ -775,8 +766,7 @@
              * @return void.
              */
             function cancel() {
-                //Create/Edit modes invoke cancel from the button; view does so from 'Back to Templates' button
-                if (this.mode === 'edit') {
+                if (this.mode === 'edit' && this.labels.sObjectNameNoNamespace === 'Batch_Template__c') {
                     this.clearError();
                     this.setDataTableChanged(false);
                     this.setMode('view');
@@ -842,29 +832,15 @@
              * @return void.
              */
             function setPageHeader() {
-                switch (parseInt(this.progressIndicatorStep)) {
-                    case 1:
-                        this.pageHeader = $A.get('$Label.c.bgeBatchTemplateOverviewWizard');
-                        break;
-                    case 2:
-                        // TODO: add custom label when we add step 2
-                        this.pageHeader = 'Select Template';
-                        break;
-                    case 3:
-                        this.pageHeader = $A.get('$Label.c.bgeBatchTemplateSelectFields');
-                        break;
-                    case 4:
-                        this.pageHeader = $A.get('$Label.c.bgeBatchTemplateSetFieldOptions');
-                        break;
-                    case 5:
-                        // TODO: add custom label when we add step 5
-                        this.pageHeader = 'Select Matching Rules';
-                        break;
-                    default:
-                        this.pageHeader = $A.get('$Label.c.bgeBatchTemplateOverviewWizard');
-                        break;
-                }
+                var headers = [$A.get('$Label.c.bgeBatchTemplateOverviewWizard'),
+                    'Select Template',
+                    $A.get('$Label.c.bgeBatchTemplateSelectFields'),
+                    $A.get('$Label.c.bgeBatchTemplateSetFieldOptions'),
+                    'Select Matching Rules'
+                ];
 
+                var progressIndicatorStepBase1 = parseInt(this.progressIndicatorStep) + 1;
+                this.pageHeader = headers[progressIndicatorStepBase1]
                 this.onMetadataUpdated.notify();
             }
 

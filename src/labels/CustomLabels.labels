@@ -2453,17 +2453,17 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Enter Template Info</value>
     </labels>
     <labels>
-        <fullName>bgeBatchOverviewWizard</fullName>
+        <fullName>bgeBatchInfoWizard</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for Batch Template Info in Wizard</shortDescription>
+        <shortDescription>Header for Batch Info in Wizard prompting user entry</shortDescription>
         <value>Enter Batch Info</value>
     </labels>
     <labels>
         <fullName>bgeBatchTemplateOverview</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for Batch Template Info in View</shortDescription>
+        <shortDescription>Header for Batch Template Info in View Mode</shortDescription>
         <value>Template Info</value>
     </labels>
     <labels>

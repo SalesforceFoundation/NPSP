@@ -1,4 +1,7 @@
 ({
+    /**
+     * @description: handles ltng:sendMessage
+     */
     handleMessage: function(component, event) {
         var channel = event.getParam('channel');
         var message = event.getParam('message');

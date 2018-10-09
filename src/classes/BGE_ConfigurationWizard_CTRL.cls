@@ -34,7 +34,7 @@
 * @group-content 
 * @description BGE Wizard Component Controller.
 */
-public with sharing class BGE_Wizard_CTRL {
+public with sharing class BGE_ConfigurationWizard_CTRL {
 
     /*******************************************************************************************************
     * @description Retrieves the Template Details information, the related list of fields, and component labels.
@@ -48,43 +48,29 @@ public with sharing class BGE_Wizard_CTRL {
 
         sObjectName = UTIL_Namespace.StrTokenRemoveNSPrefix(sObjectName);
 
-        //todo: look at using dynamic SOQL instead
         if (recordId != null) {
-            if (sObjectName == 'Batch_Template__c') {
-                Batch_Template__c recordDetails = [SELECT
-                        Name,
-                        Id,
-                        Description__c,
-                        EnableTotalEntry__c,
-                        RequireTotalMatch__c,
-                        Active_Fields__c
-                FROM Batch_Template__c
-                WHERE Id = :recordId];
 
-                model.name = recordDetails.Name;
-                model.description = recordDetails.Description__c;
-                model.enableTotalEntry = recordDetails.EnableTotalEntry__c;
-                model.id = recordDetails.Id;
-                model.requireTotalMatch = recordDetails.RequireTotalMatch__c;
-                model.activeFields = recordDetails.Active_Fields__c;
+            if (sObjectName == 'Batch_Template__c' || sObjectName == 'DataImportBatch__c') {
+                try {
+                    String descriptionField = (sObjectName == 'DataImportBatch__c') ? 'Batch_Description__c' : 'Description__c';
 
-            } else if (sObjectName == 'DataImportBatch__c') {
-                DataImportBatch__c recordDetails = [SELECT
-                        Name,
-                        Id,
-                        Batch_Description__c,
-                        EnableTotalEntry__c,
-                        RequireTotalMatch__c,
-                        Active_Fields__c
-                FROM DataImportBatch__c
-                WHERE Id = :recordId];
+                    String soql = 'SELECT Name, Id, ' + descriptionField + ', RequireTotalMatch__c, Active_Fields__c ';
+                    soql += 'FROM ' + sObjectName;
+                    soql += ' WHERE Id=:recordId';
 
-                model.name = recordDetails.Name;
-                model.description = recordDetails.Batch_Description__c;
-                model.enableTotalEntry = recordDetails.EnableTotalEntry__c;
-                model.id = recordDetails.Id;
-                model.requireTotalMatch = recordDetails.RequireTotalMatch__c;
-                model.activeFields = recordDetails.Active_Fields__c;
+                    SObject recordDetails = Database.query(soql);
+
+                    model.name = (String)recordDetails.get('Name');
+                    model.id = (String)recordDetails.get('Id');
+                    model.description = (String)recordDetails.get(descriptionField);
+                    model.requireTotalMatch = (Boolean)recordDetails.get('RequireTotalMatch__c');
+                    model.activeFields = (String)recordDetails.get('Active_Fields__c');
+                }
+                catch (Exception ex){
+                    throw new AuraHandledException('ERROR: ' + ex.getMessage());
+                }
+            } else {
+                throw new AuraHandledException('ERROR: ' + 'Only Batch_Template__c and DataImportBatch__c are supported objects.');
             }
         }
 
@@ -143,33 +129,32 @@ public with sharing class BGE_Wizard_CTRL {
         };
 
         // looping through the fields on DataImport__c
-        for (Schema.DescribeFieldResult dfr : fieldMap.values()) {
-            String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.name);
-            //Special case for Donation_Donor because it's derived
+        for (Schema.DescribeFieldResult fieldResult : fieldMap.values()) {
+            String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldResult.name);
+            //Special case for Donation_Donor because it's derived 
 
             //todo: rework these 2 lines
-            String dataImportFieldMappedObject = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[0] : null;
-            Boolean fieldAllowed = allowedObjects.contains(dataImportFieldMappedObject) && !bannedFields.contains(dataImportFieldApiName) && dfr.inlineHelpText != null;
+            String dataImportFieldMappedObject = fieldResult.inlineHelpText != null ? fieldResult.inlineHelpText.split('\\.')[0] : null;
+            Boolean fieldAllowed = allowedObjects.contains(dataImportFieldMappedObject) && !bannedFields.contains(dataImportFieldApiName) && fieldResult.inlineHelpText != null;
 
             if (fieldAllowed) {
 
-                AvailableField fld = new AvailableField();
+                AvailableField field = new AvailableField();
 
                 // TODO: make these localized with schema describes
-                fld.sObjectName = dataImportFieldMappedObject;
+                field.sObjectName = dataImportFieldMappedObject;
 
                 // TODO: pull these labels from target fields' schema based on help text mapping
-                fld.label = (dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == fld.sObjectName) ?
-                        dfr.getLabel().split(' ',2)[1] :
-                        dfr.getLabel() ;
-                fld.name = dfr.getName();
+                Boolean fieldHasSpacesAndObjName = fieldResult.getLabel().contains(' ') && fieldResult.getLabel().split(' ',2)[0] == field.sObjectName;
+                field.label = (fieldHasSpacesAndObjName) ? fieldResult.getLabel().split(' ',2)[1] : fieldResult.getLabel();
+                field.name = fieldResult.getName();
 
-                String unnamespacedField = UTIL_Namespace.StrTokenRemoveNSPrefix(fld.name);
+                String unnamespacedField = UTIL_Namespace.StrTokenRemoveNSPrefix(field.name);
                 if (systemRequiredFields.contains(unnamespacedField)) {
-                    fld.systemRequired = true;
+                    field.systemRequired = true;
                 }
 
-                fields.add(fld);
+                fields.add(field);
             }
         }
         return fields;
@@ -182,77 +167,70 @@ public with sharing class BGE_Wizard_CTRL {
     public static Map<String, String> getLabels(String sObjectName) {
 
         if (sObjectName == 'Batch_Template__c') {
-            Map<String, String> labels = new Map<String, String> {
-                    'objectLabel' => Schema.SObjectType.Batch_Template__c.getLabel(),
-                    'backToTemplates' => String.format(Label.CRLP_Return, new List<String>{Schema.SObjectType.Batch_Template__c.getLabelPlural()}),
-                    'sObjectName' => Schema.SObjectType.Batch_Template__c.getName(),
-                    'sObjectNameNoNamespace' => UTIL_Namespace.StrTokenRemoveNSPrefix(Schema.SObjectType.Batch_Template__c.getName()),
-                    'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.Batch_Template__c.Name.getDescribe().getLabel() + ', ' + Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
-                    'description' => Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
-                    'totalEntryHelp' => Schema.Batch_Template__c.EnableTotalEntry__c.getDescribe().getInlineHelpText(),
-                    'totalEntryLabel' => Schema.Batch_Template__c.EnableTotalEntry__c.getDescribe().getLabel(),
-                    'totalMatchHelp' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
-                    'totalMatchLabel' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getLabel()
-            };
+            Map<String, String> labels = getTemplateLabels();
+            return labels;
+        } else if (sObjectName == 'DataImportBatch__c') {
+            Map<String, String> labels = getBatchLabels();
             return labels;
         } else {
-            Map<String, String> labels = new Map<String, String> {
-                    'objectLabel' => Schema.SObjectType.DataImportBatch__c.getLabel(),
-                    'sObjectName' => Schema.SObjectType.DataImportBatch__c.getName(),
-                    'sObjectNameNoNamespace' => UTIL_Namespace.StrTokenRemoveNSPrefix(Schema.SObjectType.DataImportBatch__c.getName()),
-                    'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.DataImportBatch__c.Name.getDescribe().getLabel() + ', ' + Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
-                    'description' => Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
-                    'totalEntryHelp' => Schema.DataImportBatch__c.EnableTotalEntry__c.getDescribe().getInlineHelpText(),
-                    'totalEntryLabel' => Schema.DataImportBatch__c.EnableTotalEntry__c.getDescribe().getLabel(),
-                    'totalMatchHelp' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
-                    'totalMatchLabel' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getLabel()
-            };
-            return labels;
+            throw new AuraHandledException('ERROR: ' + 'Only Batch_Template__c and DataImportBatch__c are supported objects.');
         }
     }
 
     /*******************************************************************************************************
-    * @description Saves the Template Details information with the structured list of active fields.
+    * @description Retrieves the object and field labels for the template object.
+    * @return Map of object and field name keys to their labels.
+    */
+    public static Map<String, String> getTemplateLabels() {
+        Map<String, String> labels = new Map<String, String> {
+                'objectLabel' => Schema.SObjectType.Batch_Template__c.getLabel(),
+                'backToTemplates' => String.format(Label.CRLP_Return, new List<String>{Schema.SObjectType.Batch_Template__c.getLabelPlural()}),
+                'sObjectName' => Schema.SObjectType.Batch_Template__c.getName(),
+                'sObjectNameNoNamespace' => UTIL_Namespace.StrTokenRemoveNSPrefix(Schema.SObjectType.Batch_Template__c.getName()),
+                'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.Batch_Template__c.Name.getDescribe().getLabel() + ', ' + Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
+                'description' => Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
+                'totalMatchHelp' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
+                'totalMatchLabel' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getLabel()
+        };
+        return labels;
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieves the object and field labels for the batch object.
+    * @return Map of object and field name keys to their labels.
+    */
+    public static Map<String, String> getBatchLabels() {
+        Map<String, String> labels = new Map<String, String> {
+                'objectLabel' => Schema.SObjectType.DataImportBatch__c.getLabel(),
+                'sObjectName' => Schema.SObjectType.DataImportBatch__c.getName(),
+                'sObjectNameNoNamespace' => UTIL_Namespace.StrTokenRemoveNSPrefix(Schema.SObjectType.DataImportBatch__c.getName()),
+                'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.DataImportBatch__c.Name.getDescribe().getLabel() + ', ' + Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
+                'description' => Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
+                'totalMatchHelp' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
+                'totalMatchLabel' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getLabel()
+        };
+        return labels;
+    }
+
+
+    /*******************************************************************************************************
+    * @description Deserializes information to the model and selects which record to save.
     * @param sObjectName the non-namespaced sObjectName
     * @param recordInfo JSON string of the record information
     * @param activeFields JSON string of the active fields to be saved to the record
     * @return string of the record information with the Id
     */
     @AuraEnabled
-    public static string saveRecord(String sObjectName, String recordInfo, String activeFields) {
+    public static String saveRecord(String sObjectName, String recordInfo, String activeFields) {
         try {
             BGEDetailsModel recordDetails = (BGEDetailsModel) JSON.deserialize(recordInfo, BGEDetailsModel.class);
 
             if (sObjectName == 'Batch_Template__c') {
-                Batch_Template__c batchTemplate = new Batch_Template__c();
-
-                if (recordDetails.id != null) {
-                    batchTemplate.Id = recordDetails.id;
-                }
-                batchTemplate.Name = recordDetails.name;
-                batchTemplate.Description__c = recordDetails.description;
-                batchTemplate.EnableTotalEntry__c = recordDetails.enableTotalEntry;
-                batchTemplate.RequireTotalMatch__c = recordDetails.requireTotalMatch;
-                batchTemplate.Active_Fields__c = activeFields;
-
-                upsert batchTemplate;
-                recordDetails.id = batchTemplate.Id;
-
+                recordDetails.id = saveRecordTemplate(recordDetails, activeFields);
             } else if (sObjectName == 'DataImportBatch__c') {
-                DataImportBatch__c dataImportBatch = new DataImportBatch__c();
-
-                if (recordDetails.id != null) {
-                    dataImportBatch.Id = recordDetails.id;
-                }
-                dataImportBatch.Name = recordDetails.name;
-                dataImportBatch.Batch_Description__c = recordDetails.description;
-                dataImportBatch.EnableTotalEntry__c = recordDetails.enableTotalEntry;
-                dataImportBatch.RequireTotalMatch__c = recordDetails.requireTotalMatch;
-                dataImportBatch.Active_Fields__c = activeFields;
-
-                upsert dataImportBatch;
-                recordDetails.id = dataImportBatch.Id;
-
+                recordDetails.id = saveRecordBatch(recordDetails, activeFields);
+            } else {
+                throw new AuraHandledException('ERROR: ' + 'Only Batch_Template__c and DataImportBatch__c are supported objects.');
             }
 
             return JSON.serialize(recordDetails);
@@ -265,7 +243,51 @@ public with sharing class BGE_Wizard_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description a class to retrieve and save the required information for the BGE_Wizard component.
+    * @description Saves the Batch information with the structured list of active fields.
+    * @param recordDetails model of the information to save
+    * @param activeFields JSON string of the active fields to be saved to the record
+    * @return Id of the saved record
+    */
+    public static Id saveRecordBatch(BGEDetailsModel recordDetails, String activeFields) {
+        DataImportBatch__c dataImportBatch = new DataImportBatch__c();
+
+        if (recordDetails.id != null) {
+            dataImportBatch.Id = recordDetails.id;
+        }
+        dataImportBatch.Name = recordDetails.name;
+        dataImportBatch.Batch_Description__c = recordDetails.description;
+        dataImportBatch.RequireTotalMatch__c = recordDetails.requireTotalMatch;
+        dataImportBatch.Active_Fields__c = activeFields;
+
+        upsert dataImportBatch;
+
+        return dataImportBatch.Id;
+    }
+
+    /*******************************************************************************************************
+    * @description Saves the Template information with the structured list of active fields.
+    * @param recordDetails model of the information to save
+    * @param activeFields JSON string of the active fields to be saved to the record
+    * @return Id of the saved record
+    */
+    public static Id saveRecordTemplate(BGEDetailsModel recordDetails, String activeFields) {
+        Batch_Template__c batchTemplate = new Batch_Template__c();
+
+        if (recordDetails.id != null) {
+            batchTemplate.Id = recordDetails.id;
+        }
+        batchTemplate.Name = recordDetails.name;
+        batchTemplate.Description__c = recordDetails.description;
+        batchTemplate.RequireTotalMatch__c = recordDetails.requireTotalMatch;
+        batchTemplate.Active_Fields__c = activeFields;
+
+        upsert batchTemplate;
+
+        return batchTemplate.Id;
+    }
+
+    /*******************************************************************************************************
+    * @description a class to retrieve and save the required information for the BGE_ConfigurationWizard component.
     */
     public class BGEDetailsModel {
         @AuraEnabled public String name;

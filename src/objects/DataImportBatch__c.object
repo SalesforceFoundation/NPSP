@@ -60,7 +60,7 @@
         <description>Represents the data model of active fields for a NPSP_DataImportBatch__c record. Not intended for direct customer use and should not be edited directly.</description>
         <externalId>false</externalId>
         <label>Active Fields</label>
-        <length>30000</length>
+        <length>32768</length>
         <trackTrending>false</trackTrending>
         <type>LongTextArea</type>
         <visibleLines>3</visibleLines>
@@ -233,16 +233,6 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>EnableTotalEntry__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>When checked, the user filling out the template may enter the expected number of gifts and expected total amount for the batch.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>When checked, the user filling out the template may enter the expected number of gifts and expected total amount for the batch.</inlineHelpText>
-        <label>Enable Expected Totals Entry</label>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Expected_Count_of_Gifts__c</fullName>

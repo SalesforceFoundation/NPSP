@@ -30,9 +30,7 @@
 <!--
   @author Salesforce.org
   @date 2018
-  @group Batch Gift Entry
-  @group-content ../../ApexDocContent/BatchDataImport.htm
-  @description Component used to view, edit, or create a Batch Template record.
+  @description Dynamic component used in a modal to send button events to a parent body.
 -->
 <aura:component>
 
@@ -67,8 +65,7 @@
         <!-- End: Progress Indicator -->
 
         <lightning:layoutItem size="3" class="slds-text-align_right">
-            <!--todo: do we want cancel functionality from the modal?-->
-            <!--<lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />-->
+            <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
             <aura:if isTrue="{!v.currentStep != '4'}">
                 <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
             </aura:if>

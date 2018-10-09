@@ -3,7 +3,7 @@
      * @description: instantiates component. Only called when component is first loaded.
      */
     doInit: function (component, event, helper) {
-        var recordId = component.get("v.recordId");
+        var recordId = component.get('v.recordId');
 
         if (true) {
             helper.createModal(component);

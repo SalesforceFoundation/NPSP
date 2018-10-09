@@ -82,10 +82,10 @@
         <members>BDI_PostProcess_TEST</members>
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
+        <members>BGE_ConfigurationWizard_CTRL</members>
         <members>BGE_DataImportBatchEntry_CTRL</members>
         <members>BGE_DataImportBatchEntry_CTRL_TEST</members>
-        <members>BGE_Wizard_CTRL</members>
-        <members>BGE_Wizard_CTRL_TEST</members>
+        <members>BGE_ConfigurationWizard_CTRL_TEST</members>
         <members>CAM_CascadeDeleteLookups_TDTM</members>
         <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
@@ -559,9 +559,9 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>BGE_ConfigurationWizard</members>
         <members>BGE_DataImportBatchEntry</members>
         <members>BGE_EntryForm</members>
-        <members>BGE_Wizard</members>
         <members>CRLP_FilterGroup</members>
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupApp</members>
@@ -709,7 +709,6 @@
         <members>Batch_Template__c.Donation_Matching_Behavior__c</members>
         <members>Batch_Template__c.Donation_Matching_Implementing_Class__c</members>
         <members>Batch_Template__c.Donation_Matching_Rule__c</members>
-        <members>Batch_Template__c.EnableTotalEntry__c</members>
         <members>Batch_Template__c.Process_Using_Scheduled_Job__c</members>
         <members>Batch_Template__c.RequireTotalMatch__c</members>
         <members>Batch_Template__c.Run_Opportunity_Rollups_while_Processing__c</members>
@@ -764,7 +763,6 @@
         <members>DataImportBatch__c.Donation_Matching_Behavior__c</members>
         <members>DataImportBatch__c.Donation_Matching_Implementing_Class__c</members>
         <members>DataImportBatch__c.Donation_Matching_Rule__c</members>
-        <members>DataImportBatch__c.EnableTotalEntry__c</members>
         <members>DataImportBatch__c.Expected_Count_of_Gifts__c</members>
         <members>DataImportBatch__c.Expected_Total_Batch_Amount__c</members>
         <members>DataImportBatch__c.Last_Processed_On__c</members>
@@ -1385,7 +1383,7 @@
         <members>bdiStatusProcessed</members>
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
-        <members>bgeBatchOverviewWizard</members>
+        <members>bgeBatchInfoWizard</members>
         <members>bgeBatchTemplateAvailableFields</members>
         <members>bgeBatchTemplateEdit</members>
         <members>bgeBatchTemplateErrorDefaultValue</members>
