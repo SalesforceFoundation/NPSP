@@ -87,7 +87,7 @@
                 </lightning:layoutItem>
             </aura:iteration>
         </lightning:layout>
-
+        
         <!--Form buttons-->
         <div class="slds-grid slds-p-around_medium slds-grid_align-center slds-size_1-of-1">
             <div class="slds-col slds-p-horizontal_small">
