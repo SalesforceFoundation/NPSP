@@ -73,7 +73,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                     throw new AuraHandledException('ERROR: ' + ex.getMessage());
                 }
             } else {
-                throw new AuraHandledException('ERROR: ' + 'Only Batch_Template__c and DataImportBatch__c are supported objects.');
+                throw new AuraHandledException('ERROR: Only Batch_Template__c and DataImportBatch__c are supported objects.');
             }
         }
 
@@ -175,6 +175,9 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 '{"label":"Check/Reference Number","name":"Payment_Check_Reference_Number__c","sObjectName":"Payment","defaultValue":null,"required":false,"hide":false,"sortOrder":3}]';
     }
 
+    /*******************************************************************************************************
+    * @description Gets the BGEDetailsModel's default values for Batch Gift Entry
+    */
     public static BGEDetailsModel getDefaultBGEDetailsModel() {
         BGEDetailsModel model = new BGEDetailsModel();
 
@@ -191,6 +194,9 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         return model;
     }
 
+    /*******************************************************************************************************
+    * @description Sets default values on BGEDetails Model to avoid returning any null values
+    */
     private static void setDefaultValuesOnBGEDetailsModel(BGEDetailsModel model) {
 
         if (model.requireTotalMatch == null) {

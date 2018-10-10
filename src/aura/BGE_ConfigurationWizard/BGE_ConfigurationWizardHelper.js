@@ -281,15 +281,7 @@
                 var sObjectName = component.get('v.sObjectName');
                 _bgeTemplateController.getRecordDetails(sObjectName, recordId, {
                     success: function(response) {
-                        _templateInfo.load(
-                            {
-                                name: response.name,
-                                id: response.id,
-                                description: response.description,
-                                requireTotalMatch: response.requireTotalMatch
-                            }
-                        );
-
+                        _templateInfo.load(response);
                         _templateFields.load(response.templateFields, JSON.parse(response.activeFields));
                         _templateMetadata.load(response.labels, component);
                     },
@@ -309,6 +301,13 @@
                     id: _templateInfo.id,
                     description: _templateInfo.description,
                     requireTotalMatch: _templateInfo.requireTotalMatch
+                    batchProcessSize: _templateInfo.batchProcessSize,
+                    runOpportunityRollupsWhileProcessing: _templateInfo.runOpportunityRollupsWhileProcessing,
+                    contactMatchingRule: _templateInfo.contactMatchingRule,
+                    donationMatchingBehavior: _templateInfo.donationMatchingBehavior,
+                    donationMatchingRule: _templateInfo.donationMatchingRule,
+                    donationDateRange: _templateInfo.donationDateRange,
+                    processUsingScheduledJob: _templateInfo.processUsingScheduledJob
                 };
                 var activeFields = [];
 
@@ -329,14 +328,7 @@
                 _bgeTemplateController.saveRecord(sObjectName, templateDetailsData, activeFields, {
                     success: function(response) {
                         _templateMetadata.setMode('view');
-                        _templateInfo.load(
-                            {
-                                name: response.name,
-                                id: response.id,
-                                description: response.description,
-                                requireTotalMatch: response.requireTotalMatch
-                            }
-                        );
+                        _templateInfo.load(response);
                     },
                     error: function(error) {
                         console.log(error);
@@ -402,10 +394,19 @@
              * @return List of fields.
              */
             function load(info) {
+                //record info
                 this.name = info.name;
                 this.description = info.description;
                 this.id = info.id;
                 this.requireTotalMatch = info.requireTotalMatch;
+                //batch processing settings
+                this.batchProcessSize = info.batchProcessSize;
+                this.runOpportunityRollupsWhileProcessing = info.runOpportunityRollupsWhileProcessing;
+                this.contactMatchingRule = info.contactMatchingRule;
+                this.donationMatchingBehavior = info.donationMatchingBehavior;
+                this.donationMatchingRule = info.donationMatchingRule;
+                this.donationDateRange = info.donationDateRange
+                this.processUsingScheduledJob = info.processUsingScheduledJob;
                 this.onInfoUpdated.notify();
             }
 
@@ -423,6 +424,13 @@
                 id: '',
                 description: '',
                 requireTotalMatch: false,
+                batchProcessSize: 0,
+                runOpportunityRollupsWhileProcessing: false,
+                contactMatchingRule: '',
+                donationMatchingBehavior: '',
+                donationMatchingRule: '',
+                donationDateRange: '',
+                processUsingScheduledJob: false,
                 load: load,
                 isValid: isValid,
                 onInfoUpdated: _onInfoUpdated
