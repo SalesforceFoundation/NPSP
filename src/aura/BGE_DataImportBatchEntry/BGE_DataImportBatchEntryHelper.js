@@ -143,11 +143,16 @@
         columns.push({label: 'Donor', fieldName: 'donor', type: 'text', editable: false});
 
         dataColumns.forEach(function(col){
-            columns.push({label: col.label, fieldName: col.fieldName, type: col.type, editable: !col.readOnly});
+            columns.push({label: col.label,
+                fieldName: col.fieldName,
+                type: col.type,
+                editable: !col.readOnly,
+                typeAttributes: JSON.parse(col.typeAttributes)});
         });
 
         columns.push({
-            type: 'action', typeAttributes: {
+            type: 'action',
+            typeAttributes: {
                 rowActions: [{
                     label: 'Delete',
                     name: 'delete',
@@ -181,11 +186,29 @@
      */
     setDataTableRows: function(component, responseRows) {
         var rows = [];
+        var errors = [];
         responseRows.forEach(function(currentRow) {
             var row = currentRow.record;
             row.donor = currentRow.donor;
+            row.matchedRecordUrl = currentRow.matchedRecordUrl;
+            row.matchedRecordLabel = currentRow.matchedRecordLabel;
+            row.errors = currentRow.errors;
             rows.push(row);
+
+            //get payment and opportunity error information if import failed
+            if (row.errors.length > 0) {
+                var rowError = {
+                    id: row.Id,
+                    title: $A.get('$Label.c.PageMessagesError'),
+                    messages: row.errors
+                };
+                errors.push(rowError);
+            }
         });
+
+        if (errors) {
+            this.handleTableErrors(component, errors);
+        }
 
         component.set('v.data', rows);
     },
@@ -214,6 +237,26 @@
         fields.push(labels.expectedCountField);
         fields.push(labels.expectedTotalField);
         component.set('v.batchFields', fields);
+    },
+
+    /**
+     * @description: handles the display or clearing of errors from the results of dry run
+     * @param rowErrors: object with row Id, title, and list of associated messages
+     */
+    handleTableErrors: function(component, rowErrors) {
+        var tableErrors = { rows: {}, table: {}, size: 0 };
+
+        rowErrors.forEach(function(error) {
+            var rowError = {
+                title: error.title,
+                messages: error.messages
+            };
+            tableErrors.rows[error.id] = rowError;
+        });
+
+        tableErrors.size = rowErrors.length;
+
+        component.set("v.errors", tableErrors);
     },
 
     /**
