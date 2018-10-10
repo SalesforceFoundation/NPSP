@@ -39,18 +39,18 @@
 * executing or other factors at play, the rest of this job will continue. That ensures that our LMO collects as much
 * data as possible. In addition, it can help us identify which specific telemetry data processes are failing.
 */
-public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchable<UTIL_OrgTelemetry_SVC.TelemetryCategory> {
+public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchable<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory> {
 
     /**
      * @description List of High Level Telemetry Data Types to be processed asynchronously by this batch job.
      */
-    private final List<UTIL_OrgTelemetry_SVC.TelemetryCategory> telemetryTypes =
-        new List<UTIL_OrgTelemetry_SVC.TelemetryCategory>{
-            UTIL_OrgTelemetry_SVC.TelemetryCategory.NPSP_Settings,
-            UTIL_OrgTelemetry_SVC.TelemetryCategory.Org_Environment,
-            UTIL_OrgTelemetry_SVC.TelemetryCategory.Data_MaxNumRelatedOpps,
-            UTIL_OrgTelemetry_SVC.TelemetryCategory.Data_CountRdOpps,
-            UTIL_OrgTelemetry_SVC.TelemetryCategory.Data_CountErrorLog
+    private final List<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory> telemetryTypes =
+        new List<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory>{
+            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings,
+            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Org_Environment,
+            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_MaxNumRelatedOpps,
+            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountRdOpps,
+            UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountErrorLog
         };
 
     /**
@@ -58,11 +58,11 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
      * @param BC BatchableContext (not used)
      * @return TelemetryTypes list from above
      */
-    public Iterable<UTIL_OrgTelemetry_SVC.TelemetryCategory> start(Database.BatchableContext BC) {
+    public Iterable<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory> start(Database.BatchableContext BC) {
         if (!Test.isRunningTest()) {
             return telemetryTypes;
         } else {
-            return new List<UTIL_OrgTelemetry_SVC.TelemetryCategory>{UTIL_OrgTelemetry_SVC.TelemetryCategory.Data_CountErrorLog
+            return new List<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory>{UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountErrorLog
             };
         }
     }
@@ -73,7 +73,7 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
      * @param info BatchableContext (not used)
      * @param types List<UTIL_OrgTelemetry_SVC.TelemetryTypeEnum> -- Batch Size of ONE is required
      */
-    public void execute(Database.BatchableContext info, List<UTIL_OrgTelemetry_SVC.TelemetryCategory> types) {
+    public void execute(Database.BatchableContext info, List<UTIL_OrgTelemetry_SVC.TelemetryBatchCategory> types) {
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
         telemetrySvc.processTelemetryType(types[0]);
     }
@@ -86,7 +86,7 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
         Integer cnt = Database.countQuery('SELECT Count() FROM npe03__Recurring_Donation__c LIMIT 1');
         if (cnt == 1) {
             Database.executeBatch(new UTIL_OrgTelemetry_SObject_BATCH(
-                    UTIL_OrgTelemetry_SObject_BATCH.BatchJobMode.RECURRING_DONATIONS), 2000);
+                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS), 2000);
         }
     }
 }

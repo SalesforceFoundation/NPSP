@@ -79,7 +79,7 @@ private class UTIL_OrgTelemetry_TEST {
 
         Integer currQueryCount = Limits.getQueries();
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
-        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryCategory.NPSP_Settings);
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings);
 
         System.assertEquals(currQueryCount, Limits.getQueries(), 'There should no new queries executed because these only reference static custom setting');
         Test.stopTest();
@@ -95,7 +95,7 @@ private class UTIL_OrgTelemetry_TEST {
         Integer currQueryCount = Limits.getQueries();
 
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
-        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryCategory.Org_Environment);
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Org_Environment);
 
         System.assert(Limits.getQueries() > currQueryCount, 'There should be at least one new query executed');
         Test.stopTest();
@@ -111,7 +111,7 @@ private class UTIL_OrgTelemetry_TEST {
         Integer currQueryCount = Limits.getQueries();
 
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
-        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryCategory.Data_MaxNumRelatedOpps);
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_MaxNumRelatedOpps);
 
         System.assertEquals(currQueryCount+1, Limits.getQueries(), 'There should be one new query executed');
         Test.stopTest();
@@ -126,11 +126,12 @@ private class UTIL_OrgTelemetry_TEST {
         Test.startTest();
 
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
-        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryCategory.Data_CountRdOpps);
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountRdOpps);
 
         Test.stopTest();
-        Integer currQueryCount = [SELECT Count() FROM AsyncApexJob WHERE ApexClass.Name = 'UTIL_OrgTelemetry_SObject_BATCH' LIMIT 1];
-        // Haven't found a way to assert that this job is have been queued to execute
+        // Haven't found a way to assert that this job is have been queued to execute.
+        // This category no longer does a query and there is no way to check the value of a featureParameter
+        // in a unit test.
     }
 
     /**
@@ -143,7 +144,7 @@ private class UTIL_OrgTelemetry_TEST {
         Integer currQueryCount = Limits.getQueries();
 
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
-        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryCategory.Data_CountErrorLog);
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountErrorLog);
 
         System.assertEquals(currQueryCount+1, Limits.getQueries(), 'There should be one new query executed');
         Test.stopTest();

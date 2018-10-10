@@ -50,7 +50,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      * as separate child batch iterations, the entire process can complete even if for some reason one of the queries
      * against a table (such as a really huge Opportunity object) were to fail.
      */
-    public enum TelemetryCategory {
+    public enum TelemetryBatchCategory {
         NPSP_Settings,
         Org_Environment,
         Data_MaxNumRelatedOpps,
@@ -93,7 +93,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     @Future
     public static void asyncProcessNpspSettingsTelemetry() {
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
-        telemetrySvc.processTelemetryType(TelemetryCategory.NPSP_Settings);
+        telemetrySvc.processTelemetryType(TelemetryBatchCategory.NPSP_Settings);
     }
 
     /**
@@ -101,11 +101,11 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      * Submits specific feature teletry statistics back to the License Management Org to assist
      * with understanding how our customers are using NPSP functionality.
      * Each feature below must be matched to a SubscriberToLmo feature of the same name.
-     * @param telemetryType
+     * @param telemetryCategory
      */
-    public void processTelemetryType(TelemetryCategory telemetryType) {
+    public void processTelemetryType(TelemetryBatchCategory telemetryCategory) {
 
-        switch on (telemetryType) {
+        switch on (telemetryCategory) {
 
             // Simple Boolean FeatureParameters based strictly on NPSP Settings that can be processed in a single
             // operation.

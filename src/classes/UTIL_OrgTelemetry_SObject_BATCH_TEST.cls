@@ -59,7 +59,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     static void testSObjectBatchJob() {
         Test.startTest();
         Database.executeBatch(
-                new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.BatchJobMode.RECURRING_DONATIONS), 20);
+                new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS), 20);
         Test.stopTest();
     }
 }

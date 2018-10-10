@@ -42,10 +42,12 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
      * @description BatchJobMode is to add support for other query types in this same batch job
      * that aren't yet needed, but may be in the future
      */
-    public enum BatchJobMode { RECURRING_DONATIONS }
+    public enum TelemetryBatchJobMode {
+        RECURRING_DONATIONS
+    }
 
     /** @description The job mode this particular batch iteration is executing in */
-    private UTIL_OrgTelemetry_SObject_BATCH.BatchJobMode jobMode;
+    private UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode jobMode;
 
     /** @description Stateful counter vars used for the different counting jobs */
     private Integer countAllRDOpps = 0;
@@ -57,15 +59,15 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     /**
      * @description Constructor
      */
-    public UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.BatchJobMode mode) {
-        this.jobMode = mode;
+    public UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode jobMode) {
+        this.jobMode = jobMode;
     }
 
     /**
      * @description Execute the appropriate query to use in this batch job.
      */
     public Database.QueryLocator start(Database.BatchableContext context) {
-        switch on (this.jobMode) {
+        switch on (jobMode) {
             when RECURRING_DONATIONS {
                 return Database.getQueryLocator(
                         [SELECT Id, npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c
@@ -82,7 +84,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
      */
     public void execute(Database.BatchableContext context, List<SObject> scope) {
         for (SObject record : scope) {
-            switch on (this.jobMode) {
+            switch on (jobMode) {
                 when RECURRING_DONATIONS {
                     getRecurringDonationsCounts((Opportunity)record);
                 }
@@ -98,7 +100,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
             countAllRDOpps++;
             Object rdStatus = opp.npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c;
             if (rdStatus != null && (String) rdStatus == recurringDonationOpenStatusValue) {
-                this.countOpenRDOpps++;
+                countOpenRDOpps++;
             }
         }
     }
@@ -107,10 +109,10 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
      * @description When the entire batch job is done, submit the final count variables to the LMO
      */
     public void finish(Database.BatchableContext context) {
-        switch on (this.jobMode) {
+        switch on (jobMode) {
             when RECURRING_DONATIONS {
-                System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), this.countOpenRDOpps);
-                System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), this.countAllRDOpps);
+                System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), countOpenRDOpps);
+                System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), countAllRDOpps);
             }
         }
     }
