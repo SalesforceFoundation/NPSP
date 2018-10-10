@@ -106,7 +106,8 @@
      */
     setColumns: function(component, dataColumns) {
         var columns = [];
-        columns.push({label: 'Donor', fieldName: 'donorLink', type: 'url', editable: false, typeAttributes: {label: {fieldName: 'donorName'}}});
+        columns.push({label: 'Donor', fieldName: 'donorLink', type: 'url', editable: false,
+            typeAttributes: {label: {fieldName: 'donorName'}, target: '_blank'}});
 
         dataColumns.forEach(function(col){
             columns.push({label: col.label, fieldName: col.fieldName, type: col.type, editable: !col.readOnly});
