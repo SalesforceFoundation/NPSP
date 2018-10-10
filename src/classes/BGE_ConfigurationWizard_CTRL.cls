@@ -54,9 +54,19 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 try {
                     String descriptionField = (sObjectName == 'DataImportBatch__c') ? 'Batch_Description__c' : 'Description__c';
 
-                    String soql = 'SELECT Name, Id, ' + descriptionField + ', RequireTotalMatch__c, Active_Fields__c ';
-                    soql += 'FROM ' + sObjectName;
-                    soql += ' WHERE Id=:recordId';
+                    String soql = 'SELECT Name, Id, ' +
+                            descriptionField +
+                            ', RequireTotalMatch__c' +
+                            ', Active_Fields__c ' +
+                            ', Batch_Process_Size__c' +
+                            ', Run_Opportunity_Rollups_while_Processing__c' +
+                            ', Contact_Matching_Rule__c' +
+                            ', Donation_Matching_Behavior__c' +
+                            ', Donation_Matching_Rule__c' +
+                            ', Donation_Date_Range__c' +
+                            ', Process_Using_Scheduled_Job__c' +
+                            ' FROM ' + sObjectName +
+                            ' WHERE Id=:recordId';
 
                     SObject recordDetails = Database.query(soql);
 

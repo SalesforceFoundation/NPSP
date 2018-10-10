@@ -18,6 +18,13 @@
                 templateInfoView.id = templateInfo.id;
                 templateInfoView.description = templateInfo.description;
                 templateInfoView.requireTotalMatch = templateInfo.requireTotalMatch;
+                templateInfoView.batchProcessSize = templateInfo.batchProcessSize;
+                templateInfoView.runOpportunityRollupsWhileProcessing = templateInfo.runOpportunityRollupsWhileProcessing;
+                templateInfoView.contactMatchingRule = templateInfo.contactMatchingRule;
+                templateInfoView.donationMatchingBehavior = templateInfo.donationMatchingBehavior;
+                templateInfoView.donationMatchingRule = templateInfo.donationMatchingRule;
+                templateInfoView.donationDateRange = templateInfo.donationDateRange;
+                templateInfoView.processUsingScheduledJob = templateInfo.processUsingScheduledJob;
 
                 component.set('v.templateInfo', templateInfoView);
             });
@@ -27,7 +34,15 @@
                 name: '',
                 id: '',
                 description: '',
-                requireTotalMatch: false
+                requireTotalMatch: false,
+                // batch processing settings
+                batchProcessSize: 0,
+                runOpportunityRollupsWhileProcessing: false,
+                contactMatchingRule: '',
+                donationMatchingBehavior: '',
+                donationMatchingRule: '',
+                donationDateRange: '',
+                processUsingScheduledJob: false
             };
         })(component, model);
     },
@@ -424,6 +439,8 @@
                 id: '',
                 description: '',
                 requireTotalMatch: false,
+
+                // batch processing settings
                 batchProcessSize: 0,
                 runOpportunityRollupsWhileProcessing: false,
                 contactMatchingRule: '',
@@ -431,6 +448,7 @@
                 donationMatchingRule: '',
                 donationDateRange: '',
                 processUsingScheduledJob: false,
+
                 load: load,
                 isValid: isValid,
                 onInfoUpdated: _onInfoUpdated
