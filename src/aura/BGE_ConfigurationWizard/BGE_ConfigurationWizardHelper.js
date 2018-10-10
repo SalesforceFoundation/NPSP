@@ -300,7 +300,7 @@
                     name: _templateInfo.name,
                     id: _templateInfo.id,
                     description: _templateInfo.description,
-                    requireTotalMatch: _templateInfo.requireTotalMatch
+                    requireTotalMatch: _templateInfo.requireTotalMatch,
                     batchProcessSize: _templateInfo.batchProcessSize,
                     runOpportunityRollupsWhileProcessing: _templateInfo.runOpportunityRollupsWhileProcessing,
                     contactMatchingRule: _templateInfo.contactMatchingRule,
