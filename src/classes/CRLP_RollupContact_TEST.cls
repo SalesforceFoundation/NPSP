@@ -73,11 +73,22 @@ private class CRLP_RollupContact_TEST {
         String filterRulesJSON = '[' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule3', 'npe01__OppPayment__c', 'npe01__Paid__c', 'Equals', 'True') + ',' +
+                /* The following rules test Inclusion and Exclusion filters against picklist fields that have and don't have any data */
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule3', 'Opportunity', 'Type', 'Equals', 'New') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule4', 'Opportunity', 'Type', 'Contains', 'New') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule5', 'Opportunity', 'Type', 'Starts_With', 'New') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule6', 'Opportunity', 'Type', 'Does_Not_Contain', 'Old') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule7', 'Opportunity', 'npe01__Membership_Origin__c', 'Does_Not_Contain', 'Nothing') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule8', 'Opportunity', 'npe01__Membership_Origin__c', 'Equals', '') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule9', 'Opportunity', 'npe01__Membership_Origin__c', 'Contains', '') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule10', 'Opportunity', 'npe01__Membership_Origin__c', 'Not_Equals', 'Nothing') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule11', 'Opportunity', 'npe01__Membership_Origin__c', 'Starts_With', '') + ',' +
+                /* The following rule is for testing against paid payments */
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule12', 'npe01__OppPayment__c', 'npe01__Paid__c', 'Equals', 'True') + ',' +
 
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule3', 'npe01__OppPayment__c', 'npe01__Written_Off__c', 'Equals', 'True') +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule4', 'npe01__OppPayment__c', 'npe01__Written_Off__c', 'Equals', 'True') +
             ']';
 
         // Deserialize the filter group and filter rule to use for the tests
@@ -304,7 +315,7 @@ private class CRLP_RollupContact_TEST {
             if (closeDate.addMonths(n).daysBetween(Date.Today()) <= 365) {
                 last365Days += amt;
             }
-            String donationYr = closeDate.addMonths(n).year().format().replace(',','');
+            String donationYr = UTIL_String.removeNonNumericCharacters(closeDate.addMonths(n).year().format());
             donationYears.add(donationYr);
             if (amt == maxAmt) {
                 bestGiftYear = donationYr;
@@ -319,7 +330,8 @@ private class CRLP_RollupContact_TEST {
                 CloseDate = Date.Today().addDays(1),
                 StageName = UTIL_UnitTestData_TEST.getClosedLostStage(),
                 Primary_Contact__c = conId,
-                RecordTypeId = rtId
+                RecordTypeId = rtId,
+                Type = 'New'
         ));
 
         // create one closed won Organization opportunity to ensure it's not included in the Contact Hard Credit rollups
@@ -333,7 +345,8 @@ private class CRLP_RollupContact_TEST {
                 StageName = closedStage,
                 Primary_Contact__c = conId,
                 RecordTypeId = rtId,
-                npe01__Do_Not_Automatically_Create_Payment__c = true
+                npe01__Do_Not_Automatically_Create_Payment__c = true,
+                Type = 'New'
         ));
 
         // create 4 opps for con4 to test single result opp edge cases
@@ -349,7 +362,8 @@ private class CRLP_RollupContact_TEST {
                 Primary_Contact__c = con4Id,
                 RecordTypeId = rtId,
                 Recurring_Donation_Installment_Number__c = 4,
-                npe01__Do_Not_Automatically_Create_Payment__c = true
+                npe01__Do_Not_Automatically_Create_Payment__c = true,
+                Type = 'New'
         ));
         opps.add(new Opportunity (
                 Name = 'Test Opp SRO 2' + c.FirstName + ' ' + c.LastName,
@@ -360,7 +374,8 @@ private class CRLP_RollupContact_TEST {
                 Primary_Contact__c = con4Id,
                 RecordTypeId = rtId,
                 Recurring_Donation_Installment_Number__c = 42,
-                npe01__Do_Not_Automatically_Create_Payment__c = true
+                npe01__Do_Not_Automatically_Create_Payment__c = true,
+                Type = 'New'
         ));
         opps.add(new Opportunity (
                 Name = 'Test Opp SRO 3' + c.FirstName + ' ' + c.LastName,
@@ -371,7 +386,8 @@ private class CRLP_RollupContact_TEST {
                 Primary_Contact__c = con4Id,
                 RecordTypeId = rtId,
                 Recurring_Donation_Installment_Number__c = 314,
-                npe01__Do_Not_Automatically_Create_Payment__c = true
+                npe01__Do_Not_Automatically_Create_Payment__c = true,
+                Type = 'New'
         ));
         opps.add(new Opportunity (
                 Name = 'Test Opp SRO 4' + c.FirstName + ' ' + c.LastName,
@@ -382,7 +398,8 @@ private class CRLP_RollupContact_TEST {
                 Primary_Contact__c = con4Id,
                 RecordTypeId = rtId,
                 Recurring_Donation_Installment_Number__c = 56,
-                npe01__Do_Not_Automatically_Create_Payment__c = true
+                npe01__Do_Not_Automatically_Create_Payment__c = true,
+                Type = 'New'
         ));
 
         insert opps;
@@ -439,7 +456,7 @@ private class CRLP_RollupContact_TEST {
             last365Days += orgDonationAmt;
             maxAmt = orgDonationAmt;
             cnt++;
-            bestGiftYear = orgDonationDate.year().format().replace(',', '');
+            bestGiftYear = UTIL_String.removeNonNumericCharacters(orgDonationDate.year().format());
             if (orgDonationDate > lastCloseDate) {
                 lastCloseDate = orgDonationDate;
             }
