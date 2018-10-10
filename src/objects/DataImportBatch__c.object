@@ -105,19 +105,6 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Batch_Template__c</fullName>
-        <deleteConstraint>Restrict</deleteConstraint>
-        <externalId>false</externalId>
-        <label>Batch Template</label>
-        <referenceTo>Batch_Template__c</referenceTo>
-        <relationshipLabel>NPSP Data Import Batches</relationshipLabel>
-        <relationshipName>NPSP_Data_Import_Batches</relationshipName>
-        <required>false</required>
-        <trackHistory>false</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Lookup</type>
-    </fields>
-    <fields>
         <fullName>Contact_Custom_Unique_ID__c</fullName>
         <description>An optional Unique Id field to use for Contact matching</description>
         <externalId>false</externalId>
@@ -161,7 +148,7 @@
     </fields>
     <fields>
         <fullName>Donation_Matching_Behavior__c</fullName>
-        <defaultValue>&quot;Do Not Match&quot;</defaultValue>
+        <defaultValue>&quot;Single Match or Create&quot;</defaultValue>
         <description>Defines how the Data Importer should handle matching Donations. You must choose a value.</description>
         <externalId>false</externalId>
         <inlineHelpText>Defines how the Data Importer should handle matching Donations. You must choose a value.</inlineHelpText>
@@ -191,7 +178,7 @@
                 </value>
                 <value>
                     <fullName>Single Match or Create</fullName>
-                    <default>false</default>
+                    <default>true</default>
                     <label>Single Match or Create</label>
                 </value>
                 <value>
@@ -222,7 +209,7 @@
     </fields>
     <fields>
         <fullName>Donation_Matching_Rule__c</fullName>
-        <defaultValue>&quot;npsp__Donation_Amount__c;npsp__Donation_Date&quot;</defaultValue>
+        <defaultValue>&quot;npsp__Donation_Amount__c;npsp__Donation_Date__c"</defaultValue>
         <description>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field.</description>
         <externalId>false</externalId>
         <inlineHelpText>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field.</inlineHelpText>
