@@ -218,8 +218,9 @@
                 messages: error.messages
             };
             tableErrors.rows[error.id] = rowError;
-            tableErrors.size += 1;
         });
+
+        tableErrors.size = rowErrors.length;
 
         component.set("v.errors", tableErrors);
     },

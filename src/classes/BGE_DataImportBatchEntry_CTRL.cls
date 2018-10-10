@@ -315,35 +315,29 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 String matchedUrlLabel = '';
                 List<String> errors = new List<String>();
 
-                Boolean donationMatched = (record.DonationImportStatus__c == Label.bdiDryRunMatched ||
-                        record.DonationImportStatus__c == Label.bdiDryRunMatchedBest ||
-                        record.DonationImportStatus__c == Label.bdiDryRunMatchedId);
-                Boolean paymentMatched = (record.PaymentImportStatus__c == Label.bdiDryRunMatched ||
-                        record.PaymentImportStatus__c == Label.bdiDryRunMatchedBest ||
-                        record.PaymentImportStatus__c == Label.bdiDryRunMatchedId);
-                Boolean importFailure = record.FailureInformation__c != null;
+                Boolean donationMatched = (record.DonationImported__c != null);
+                Boolean paymentMatched = (record.PaymentImported__c != null);
+                Boolean importFailure = (record.FailureInformation__c != null);
 
                 if (paymentMatched) {
                     //if there is a match, set url, preferably for the payment
-                    String importedId = record.PaymentImported__c != null ? record.PaymentImported__c : '';
-                    matchedUrlLabel = record.PaymentImported__c != null && record.PaymentImported__r != null ? record.PaymentImported__r.Name : '';
+                    String importedId = record.PaymentImported__c;
+                    matchedUrlLabel = record.PaymentImported__r.Name;
                     matchedUrl = URL.getSalesforceBaseUrl().toExternalForm() + '/' + importedId;
                 } else if (donationMatched) {
-                    String importedId = record.DonationImported__c != null ? record.DonationImported__c : '';
-                    matchedUrlLabel = record.DonationImported__c != null && record.DonationImported__r != null ? record.DonationImported__r.Name : '';
+                    String importedId = record.DonationImported__c;
+                    matchedUrlLabel = record.DonationImported__r.Name;
                     matchedUrl = URL.getSalesforceBaseUrl().toExternalForm() + '/' + importedId;
                 }
 
                 if (importFailure) {
 
                     //if Donation and Payment didn't have matched or matched none status, then an error was set
-                    if (record.DonationImportStatus__c != Label.bdiMatchedNone
-                            && record.DonationImportStatus__c != null
+                    if (record.DonationImportStatus__c != null
                             && !donationMatched) {
                         errors.add(record.DonationImportStatus__c);
                     }
-                    if (record.PaymentImportStatus__c != Label.bdiMatchedNone
-                            && record.PaymentImportStatus__c != null
+                    if (record.PaymentImportStatus__c != null
                             && !paymentMatched
                             && record.PaymentImportStatus__c != record.DonationImportStatus__c) {
                         errors.add(record.PaymentImportStatus__c);
