@@ -384,8 +384,8 @@ public class CMT_FilterRule {
             }
 
             if (fieldValue == null && compareValue == null) {
-                // A null to null comparison is either Equals (true) or false for any other operation
-                if (rule.operation == FilterOperation.EQUALS) {
+                // A null to null comparison is true for Equals/StartsWith/Contains or false for any other operation
+                if (rule.operation == FilterOperation.EQUALS || rule.operation == FilterOperation.STARTS_WITH || rule.operation == FilterOperation.CONTAINS) {
                     return true;
                 } else {
                     return false;
@@ -396,6 +396,12 @@ public class CMT_FilterRule {
                 // If the field value is null value and the operation is one of these exclusionary types, then
                 // always return true (i.e. passed)
                 return true;
+
+            } else if (fieldValue == null && (rule.operation == FilterOperation.CONTAINS
+                    || rule.operation == FilterOperation.STARTS_WITH || rule.operation == FilterOperation.IS_INCLUDED)) {
+                // If the field value is null value and the operation is one of these inclusion types, then
+                // always return false (i.e. not-passed)
+                return false;
 
             } else if (rule.operation == FilterOperation.EQUALS) {
                 return fieldValue == compareValue;
