@@ -3,11 +3,19 @@
     <label>Donation Membership Origin</label>
     <protected>false</protected>
     <values>
-        <field>Source_Field__c</field>
+        <field>SourceFieldEntity__c</field>
+        <value xsi:type="xsd:string">DataImport__c</value>
+    </values>
+    <values>
+        <field>SourceField__c</field>
         <value xsi:type="xsd:string">Donation_Membership_Origin__c</value>
     </values>
     <values>
-        <field>Target_Field__c</field>
-        <value xsi:type="xsd:string">Opportunity.npe01__Membership_Origin__c</value>
+        <field>TargetFieldEntity__c</field>
+        <value xsi:type="xsd:string">Opportunity</value>
+    </values>
+    <values>
+        <field>TargetField__c</field>
+        <value xsi:type="xsd:string">npe01__Membership_Origin__c</value>
     </values>
 </CustomMetadata>

@@ -3,11 +3,19 @@
     <label>Account1 State/Province</label>
     <protected>false</protected>
     <values>
-        <field>Source_Field__c</field>
+        <field>SourceFieldEntity__c</field>
+        <value xsi:type="xsd:string">DataImport__c</value>
+    </values>
+    <values>
+        <field>SourceField__c</field>
         <value xsi:type="xsd:string">Account1_State_Province__c</value>
     </values>
     <values>
-        <field>Target_Field__c</field>
-        <value xsi:type="xsd:string">Account1.BillingState</value>
+        <field>TargetFieldEntity__c</field>
+        <value xsi:type="xsd:string">Account</value>
+    </values>
+    <values>
+        <field>TargetField__c</field>
+        <value xsi:type="xsd:string">BillingState</value>
     </values>
 </CustomMetadata>

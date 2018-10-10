@@ -3,11 +3,19 @@
     <label>Account1 Name</label>
     <protected>false</protected>
     <values>
-        <field>Source_Field__c</field>
+        <field>SourceFieldEntity__c</field>
+        <value xsi:type="xsd:string">DataImport__c</value>
+    </values>
+    <values>
+        <field>SourceField__c</field>
         <value xsi:type="xsd:string">Account1_Name__c</value>
     </values>
     <values>
-        <field>Target_Field__c</field>
-        <value xsi:type="xsd:string">Account1.Name</value>
+        <field>TargetFieldEntity__c</field>
+        <value xsi:type="xsd:string">Account</value>
+    </values>
+    <values>
+        <field>TargetField__c</field>
+        <value xsi:type="xsd:string">Name</value>
     </values>
 </CustomMetadata>

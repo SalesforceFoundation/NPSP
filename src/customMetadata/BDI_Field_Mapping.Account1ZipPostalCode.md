@@ -3,11 +3,19 @@
     <label>Account1 Zip/Postal Code</label>
     <protected>false</protected>
     <values>
-        <field>Source_Field__c</field>
+        <field>SourceFieldEntity__c</field>
+        <value xsi:type="xsd:string">DataImport__c</value>
+    </values>
+    <values>
+        <field>SourceField__c</field>
         <value xsi:type="xsd:string">Account1_Zip_Postal_Code__c</value>
     </values>
     <values>
-        <field>Target_Field__c</field>
-        <value xsi:type="xsd:string">Account1.BillingPostalCode</value>
+        <field>TargetFieldEntity__c</field>
+        <value xsi:type="xsd:string">Account</value>
+    </values>
+    <values>
+        <field>TargetField__c</field>
+        <value xsi:type="xsd:string">BillingPostalCode</value>
     </values>
 </CustomMetadata>

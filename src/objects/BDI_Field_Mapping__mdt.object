@@ -2,26 +2,51 @@
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <description>Batch Data Import takes a single NPSP Data Import record and translates it into multiple records (Contacts, Accounts, Opportunity, Payment, etc.). It does this by mapping fields from the Source Field to the Target Field.</description>
     <fields>
-        <fullName>Source_Field__c</fullName>
-        <caseSensitive>false</caseSensitive>
+        <fullName>SourceFieldEntity__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>Source Field Entity</label>
+        <referenceTo>EntityDefinition</referenceTo>
+        <relationshipLabel>BDI Field Target Entities</relationshipLabel>
+        <relationshipName>BDIFieldTargetEntities</relationshipName>
+        <required>true</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>SourceField__c</fullName>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
         <label>Source Field</label>
+        <metadataRelationshipControllingField>BDI_Field_Mapping__mdt.SourceFieldEntity__c</metadataRelationshipControllingField>
+        <referenceTo>FieldDefinition</referenceTo>
+        <relationshipLabel>BDI Field Sources</relationshipLabel>
+        <relationshipName>BDIFieldSources</relationshipName>
+        <required>true</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>TargetFieldEntity__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>Target Field Entity</label>
+        <referenceTo>EntityDefinition</referenceTo>
+        <relationshipLabel>BDI Target Entities</relationshipLabel>
+        <relationshipName>BDITargetEntities</relationshipName>
+        <required>true</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>TargetField__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>TargetField</label>
         <length>255</length>
         <required>true</required>
         <type>Text</type>
         <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Target_Field__c</fullName>
-        <caseSensitive>false</caseSensitive>
-        <externalId>false</externalId>
-        <fieldManageability>DeveloperControlled</fieldManageability>
-        <label>Target Field</label>
-        <length>255</length>
-        <required>true</required>
-        <type>Text</type>
-        <unique>true</unique>
     </fields>
     <label>BDI Field Mapping</label>
     <pluralLabel>BDI Field Mappings</pluralLabel>
