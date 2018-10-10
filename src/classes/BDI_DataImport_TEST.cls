@@ -37,13 +37,6 @@
 
 @isTest
 public with sharing class BDI_DataImport_TEST {
-
-    /*******************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-    
     /*******************************************************************************************************
     * @description creates a new di record for tests
     * @param firstname the firstname to specify for Contact1
@@ -84,8 +77,6 @@ public with sharing class BDI_DataImport_TEST {
     *     only one contact created
     **********************************************************************************************************/            
     static testMethod void OneDIDuplicateNewContacts() {
-        if (strTestOnly != '*' && strTestOnly != 'OneDIDuplicateNewContacts') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(newDI('c1', 'C1', 'c1', 'C1'));
         insert listDI;
@@ -117,8 +108,6 @@ public with sharing class BDI_DataImport_TEST {
     *        two contacts created
     **********************************************************************************************************/            
     static testMethod void OneDITwoNewContacts() {
-        if (strTestOnly != '*' && strTestOnly != 'OneDITwoNewContacts') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
         insert listDI;
@@ -150,8 +139,6 @@ public with sharing class BDI_DataImport_TEST {
     *        only one contact created
     **********************************************************************************************************/            
     static testMethod void TwoDIDuplicateNewContacts() {
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIDuplicateNewContacts') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(newDI('c1', 'C1'));
         listDI.add(newDI('c1', 'C1'));
@@ -185,8 +172,6 @@ public with sharing class BDI_DataImport_TEST {
     *        two contacts created
     **********************************************************************************************************/            
     static testMethod void TwoDITwoNewContacts() {
-        if (strTestOnly != '*' && strTestOnly != 'TwoDITwoNewContacts') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(newDI('c1', 'C1'));
         listDI.add(newDI('c2', 'C2'));
@@ -221,8 +206,6 @@ public with sharing class BDI_DataImport_TEST {
     *        only 1 household account created
     **********************************************************************************************************/            
     static testMethod void TwoDIDuplicateNewContactsDifferentOrder() {
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIDuplicateNewContactsDifferentOrder') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
         listDI.add(newDI('c2', 'C2'));
@@ -269,8 +252,6 @@ public with sharing class BDI_DataImport_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'OneDITwoExistingContacts') return;
-            
         // existing contacts
         List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com'));
@@ -310,8 +291,6 @@ public with sharing class BDI_DataImport_TEST {
     *        error given, di not processed.
     **********************************************************************************************************/            
     static testMethod void OneDIExistingContacts1x1() {
-        if (strTestOnly != '*' && strTestOnly != 'OneDIExistingContacts1x1') return;
-            
         // existing 1x1 contact
         UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 1, 0);   
         List<Contact> listConExisting = getContacts();
@@ -358,7 +337,6 @@ public with sharing class BDI_DataImport_TEST {
     *        two accounts created
     **********************************************************************************************************/            
     static testMethod void OneDITwoNewAccounts() {
-        if (strTestOnly != '*' && strTestOnly != 'OneDITwoNewAccounts') return;
             
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='A1', Account2_Name__c='A2'));
@@ -390,8 +368,6 @@ public with sharing class BDI_DataImport_TEST {
     *        one accounts created
     **********************************************************************************************************/            
     static testMethod void OneDITwoSameAccounts() {
-        if (strTestOnly != '*' && strTestOnly != 'OneDITwoSameAccounts') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='A1', Account2_Name__c='A1'));
         insert listDI;
@@ -421,8 +397,6 @@ public with sharing class BDI_DataImport_TEST {
     *        one account created
     **********************************************************************************************************/            
     static testMethod void TwoDISameAccounts() {
-        if (strTestOnly != '*' && strTestOnly != 'TwoDISameAccounts') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='A1'));
         listDI.add(new DataImport__c(Account1_Name__c='A1'));
@@ -453,8 +427,6 @@ public with sharing class BDI_DataImport_TEST {
     *        no accounts created, just matched
     **********************************************************************************************************/
     static testMethod void TwoDIExistingAccounts() {
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIExistingAccounts') return;
-            
         List<Account> listAcc = new List<Account>();
         listAcc.add(new Account(name='A1', BillingCity='Seattle'));
         listAcc.add(new Account(name='A2'));
@@ -495,8 +467,6 @@ public with sharing class BDI_DataImport_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIExistingAccountsSalesforceId') return;
-            
         List<Account> listAcc = new List<Account>();
         listAcc.add(new Account(name='A1'));
         listAcc.add(new Account(name='A2'));
@@ -539,8 +509,6 @@ public with sharing class BDI_DataImport_TEST {
     **********************************************************************************************************/
     /** can't use this test because it relies on our workflow rules being active, which we can't enforce.
     static testMethod void ThreeDINewContactsWithPreferredEmail() {
-        if (strTestOnly != '*' && strTestOnly != 'ThreeDINewContactsWithPreferredEmail') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(newDI('c1', 'C1'));
         listDI.add(newDI('c2', 'C2'));
@@ -583,8 +551,6 @@ public with sharing class BDI_DataImport_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIAffiliations') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
         listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
@@ -639,8 +605,6 @@ public with sharing class BDI_DataImport_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIHomeAddresses') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
         listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
@@ -697,8 +661,6 @@ public with sharing class BDI_DataImport_TEST {
     static testMethod void TwoDIExistingHomeAddresses() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIExistingHomeAddresses') return;
 
         // existing contacts
         List<Contact> listConExisting = new List<Contact>();
@@ -766,8 +728,6 @@ public with sharing class BDI_DataImport_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'ManyDISameHomeAddresses') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
         listDI.add(newDI('c1', 'C1'));
@@ -850,8 +810,6 @@ public with sharing class BDI_DataImport_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIHomeAddressesAddrMgmtOff') return;
-            
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
@@ -908,8 +866,6 @@ public with sharing class BDI_DataImport_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIMixedAddresses') return;
-            
         // existing contacts
         List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com', MailingCity='Seattle'));
@@ -968,8 +924,6 @@ public with sharing class BDI_DataImport_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIMixedAddressesAddrMgmtOff') return;
-            
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
@@ -1026,8 +980,6 @@ public with sharing class BDI_DataImport_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIWithDonations') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
         listDI.add(newDI('c3', 'C3', 'c4', 'C4'));
@@ -1110,8 +1062,6 @@ public with sharing class BDI_DataImport_TEST {
     *       account's rollups updated
     **********************************************************************************************************/            
     static testMethod void TwoDIWithAccountDonations() {
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIWithAccountDonations') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='A1'));
         listDI.add(new DataImport__c(Account1_Name__c='A2'));
@@ -1176,8 +1126,6 @@ public with sharing class BDI_DataImport_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIWithDonationsAndCampaigns') return;
-        
         List<Campaign> listC = new List<Campaign>();
         listC.add(new Campaign(Name='CmpExisting'));
         insert listC;
@@ -1235,8 +1183,6 @@ public with sharing class BDI_DataImport_TEST {
     *    opportunities added to campaigns
     **********************************************************************************************************/            
     static testMethod void TwoDIWithCampaignMembers() {
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIWithCampaignMembers') return;
-        
         List<Campaign> listC = new List<Campaign>();
         listC.add(new Campaign(Name='CmpExisting'));
         insert listC;
@@ -1282,8 +1228,6 @@ public with sharing class BDI_DataImport_TEST {
     *        opportunity objects created only for valid di
     **********************************************************************************************************/            
     static testMethod void TwoDIWithDonationErrors() {
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIWithDonationErrors') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='A1'));
         listDI.add(new DataImport__c(Account1_Name__c='A2'));
@@ -1328,8 +1272,6 @@ public with sharing class BDI_DataImport_TEST {
     *        two contacts created
     **********************************************************************************************************/            
     static testMethod void TwoDITwoNewContactsHouseholdFields() {
-        if (strTestOnly != '*' && strTestOnly != 'TwoDITwoNewContactsHouseholdFields') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Lastname__c = 'c1', Household_Phone__c = '425-111-2222'));
         listDI.add(new DataImport__c(Contact1_Lastname__c = 'c2', Household_Phone__c = '425-111-2222'));
@@ -1365,8 +1307,6 @@ public with sharing class BDI_DataImport_TEST {
     *        provided household account used
     **********************************************************************************************************/            
     static testMethod void TwoDINewContactsExistingsHousehold() {
-        if (strTestOnly != '*' && strTestOnly != 'TwoDINewContactsExistingsHousehold') return;
-            
         // existing contacts
         List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com'));
@@ -1413,8 +1353,6 @@ public with sharing class BDI_DataImport_TEST {
     *        c2 matched in household
     **********************************************************************************************************/
     static testMethod void OneDIExistingContactsExistingHousehold() {
-        if (strTestOnly != '*' && strTestOnly != 'OneDIExistingContactsExistingHousehold') return;
-
         // existing contacts into the same household
         List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com', Salutation='Mr'));
@@ -1443,6 +1381,71 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(hhId, listCon[1].AccountId);
         System.assertEquals('Dr', listCon[0].Salutation);
         System.assertEquals('Prof', listCon[1].Salutation);
+    }
+
+    /*********************************************************************************************************
+    * @description operation
+    *        import existing contact with names using different case, make sure matching is case insensitive
+    * verify:
+    *        c1 matched despite email case mismatch
+    *        c2 matched in household despite firstname case mismatch
+    *        no problems updating additional fields on C1 and C2
+    **********************************************************************************************************/
+    static testMethod void OneDIExistingContactsCaseInsensitive() {
+        // existing contacts into the same household
+        List<Contact> existingContacts = new List<Contact>();
+        existingContacts.add(
+            new Contact(
+                FirstName='C1',
+                LastName='C1',
+                Email='c1@c1.com',
+                Salutation='Mr'
+            )
+        );
+        insert existingContacts;
+        ID hhId = getContacts()[0].AccountId;
+        existingContacts.add(
+            new Contact(
+                FirstName='C2',
+                LastName='C1',
+                Email='c2@c2.com',
+                Salutation='Mrs',
+                AccountId=hhId
+            )
+        );
+        upsert existingContacts;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(existingContacts);
+
+        List<DataImport__c> listDI = new List<DataImport__c>();
+        listDI.add(
+            new DataImport__c(
+                Contact1_Firstname__c='c1',
+                Contact1_Lastname__c='c1',
+                Contact1_Personal_Email__c='C1@C1.com',
+                Contact1_Salutation__c='Dr',
+                Contact2_Firstname__c='c2',
+                Contact2_Salutation__c='Prof'
+            )
+        );
+        insert listDI;
+
+        //run batch data import
+        Test.startTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        // verify expected results
+        List<Contact> contacts = getContacts();
+        System.assertEquals(2, contacts.size(), 'Contacts should be matched, despite case mismatch');
+        System.assertEquals(hhId, contacts[0].AccountId, 'Contacts should be in same household.');
+        System.assertEquals(hhId, contacts[1].AccountId, 'Contacts should be in same household.');
+        System.assertEquals('Dr', contacts[0].Salutation, 'Contact should be updated with salutation from the data import.');
+        System.assertEquals('Prof', contacts[1].Salutation, 'Contact should be updated with salutation from the data import.');
+        System.assertEquals('C1', contacts[0].LastName, 'Contact should not be updated with the lowercase last name from the data import.');
+        System.assertEquals('c1@c1.com', contacts[0].Email, 'Contact should not be updated with the uppercase email from the data import.');
+        System.assertEquals('C2', contacts[1].FirstName, 'Contact should not be updated with the lowercase first name from the data import.');
     }
 
     /*********************************************************************************************************
@@ -1498,9 +1501,9 @@ public with sharing class BDI_DataImport_TEST {
     **********************************************************************************************************/
     private static List<Contact> getContacts() {
         return [
-            SELECT Id, AccountId, Birthdate, HomePhone,  MobilePhone, Name, Title, Salutation, Account.Phone,
+            SELECT Id, AccountId, Birthdate, HomePhone,  MobilePhone, Name, FirstName, LastName, Title, Salutation, Account.Phone,
                 Account.npe01__System_AccountType__c, MailingState, MailingPostalCode, MailingCountry, MailingStreet, MailingCity,
-                Primary_Affiliation__c, npe01__HomeEmail__c, npe01__AlternateEmail__c, npe01__Preferred_Email__c,
+                Primary_Affiliation__c, Email, npe01__HomeEmail__c, npe01__AlternateEmail__c, npe01__Preferred_Email__c,
                 npe01__PreferredPhone__c, npe01__WorkEmail__c, npe01__WorkPhone__c, npo02__TotalOppAmount__c
             FROM Contact
             ORDER BY Id
