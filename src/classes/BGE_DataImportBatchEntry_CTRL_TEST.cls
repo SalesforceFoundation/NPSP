@@ -118,7 +118,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
     */
 
     @isTest
-    public static void deleteDataImportRow() {
+    public static void testDeleteDataImportRow() {
 
         Id batchId = createDataImportBatch();
         List<DataImport__c> dataImports = createDataImports(2, batchId);

@@ -2523,6 +2523,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Gifts successfully updated.</value>
     </labels>
     <labels>
+        <fullName>bgeGridMatchedRecord</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Matched Record URL</shortDescription>
+        <value>Matched Record</value>
+    </labels>
+    <labels>
         <fullName>bgeGridNewGift</fullName>
         <language>en_US</language>
         <protected>true</protected>
