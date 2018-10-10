@@ -113,7 +113,7 @@
                 fieldName: col.fieldName,
                 type: col.type,
                 editable: !col.readOnly,
-                typeAttributes: col.typeAttributes});
+                typeAttributes: JSON.parse(col.typeAttributes)});
         });
 
         columns.push({

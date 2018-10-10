@@ -146,7 +146,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 if (col.type == 'date') {
                     col.type = 'date-local';
                 }
-                col.typeAttributes = new Map<String, Map<String, String>>();
+                col.typeAttributes = '{}';
 
                 columns.add(col);
             }
@@ -154,14 +154,12 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
         //add derived matched record column
         Column col = new Column();
-        Map<String, Map<String, String>> typeAttributes = new Map<String, Map<String, String>>();
-        typeAttributes.put('label', new Map<String, String>{'fieldName' => 'matchedRecordLabel'});
 
         col.label = Label.bgeGridMatchedRecord;
         col.fieldName = 'matchedRecordUrl';
         col.readOnly = true;
         col.type = 'url';
-        col.typeAttributes = typeAttributes;
+        col.typeAttributes = '{"label":{"fieldName":"matchedRecordLabel"},"target":"_blank"}';
         columns.add(col);
 
         return columns;
@@ -265,7 +263,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         @AuraEnabled public String fieldName;
         @AuraEnabled public Boolean readOnly;
         @AuraEnabled public String type;
-        @AuraEnabled public Map<String, Map<String, String>> typeAttributes;
+        @AuraEnabled public String typeAttributes;
     }
 
     /*******************************************************************************************************
