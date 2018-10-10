@@ -50,13 +50,30 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      * as separate child batch iterations, the entire process can complete even if for some reason one of the queries
      * against a table (such as a really huge Opportunity object) were to fail.
      */
-    public Enum TelemetryType {
+    public enum TelemetryCategory {
         NPSP_Settings,
         Org_Environment,
         Data_MaxNumRelatedOpps,
+        Data_CountRdOpps,
+        Data_CountErrorLog
+    }
+
+    /**
+     * @description Each of these corresponds to the exact name of a FeatureParameter in the managed package.
+     */
+    public enum TelemetryParameterName {
+        IsEnabled_HouseholdAcctModel,
+        IsEnabled_AddressVerification,
+        IsEnabled_AutomaticPayments,
+        IsEnabled_CustomizableRollups,
+        IsEnabled_DefaultGAU,
+        Data_CountErrorLog,
         Data_CountRdOppsAll,
         Data_CountRdOppsOpenEnded,
-        Data_CountErrorLog
+        Data_MaxNumRelatedOpps,
+        HasUserManagedTDTM,
+        Org_CountNonEnglishLanguages,
+        Org_IsEnabled_AdvancedMultiCurrency
     }
 
     /**
@@ -76,7 +93,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     @Future
     public static void asyncProcessNpspSettingsTelemetry() {
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
-        telemetrySvc.processTelemetryType(TelemetryType.NPSP_Settings);
+        telemetrySvc.processTelemetryType(TelemetryCategory.NPSP_Settings);
     }
 
     /**
@@ -86,7 +103,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      * Each feature below must be matched to a SubscriberToLmo feature of the same name.
      * @param telemetryType
      */
-    public void processTelemetryType(TelemetryType telemetryType) {
+    public void processTelemetryType(TelemetryCategory telemetryType) {
 
         switch on (telemetryType) {
 
@@ -107,12 +124,10 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 handleMaxNumRelatedOpps();
             }
 
-            when Data_CountRdOppsAll {
-                handleCountOfRecurringDonationOpps();
-            }
-
-            when Data_CountRdOppsOpenEnded {
-                handleCountOfRecurringDonationOpps_OpenEnded();
+            when Data_CountRdOpps {
+                // Default these to -1 so we can determine (in the LMO) if there was an error retrieving them
+                System.FeatureManagement.setPackageIntegerValue(TelemetryParameterName.Data_CountRdOppsAll.name(), -1);
+                System.FeatureManagement.setPackageIntegerValue(TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), -1);
             }
 
             when Data_CountErrorLog {
@@ -130,15 +145,15 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         STG_SettingsService stgSvc = new STG_SettingsService();
         Addr_Verification_Settings__c addrVerifSettings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
 
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_HouseholdAcctModel',
+        System.FeatureManagement.setPackageBooleanValue(TelemetryParameterName.IsEnabled_HouseholdAcctModel.name(),
                 stgSvc.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR);
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_AutomaticPayments',
+        System.FeatureManagement.setPackageBooleanValue(TelemetryParameterName.IsEnabled_AutomaticPayments.name(),
                 (stgSvc.stgCon.npe01__Payments_Enabled__c == true));
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_DefaultGAU',
+        System.FeatureManagement.setPackageBooleanValue(TelemetryParameterName.IsEnabled_DefaultGAU.name(),
                 stgSvc.stgAllo.Default__c != null);
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_AddressVerification',
+        System.FeatureManagement.setPackageBooleanValue(TelemetryParameterName.IsEnabled_AddressVerification.name(),
                 (addrVerifSettings.Enable_Automatic_Verification__c == true));
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_CustomizableRollups',
+        System.FeatureManagement.setPackageBooleanValue(TelemetryParameterName.IsEnabled_CustomizableRollups.name(),
                 (stgSvc.stgCRLP.Customizable_Rollups_Enabled__c == true));
         if (!Test.isRunningTest()) {
             handleHasUserManagedTriggers();
@@ -161,7 +176,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 }
             } catch (Exception e) { }
         }
-        System.FeatureManagement.setPackageBooleanValue('Org_IsEnabled_AdvancedMultiCurrency', isEnabled);
+        System.FeatureManagement.setPackageBooleanValue(TelemetryParameterName.Org_IsEnabled_AdvancedMultiCurrency.name(), isEnabled);
     }
 
     /**
@@ -180,7 +195,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 languages.add(u.LanguageLocaleKey);
             }
         }
-        System.FeatureManagement.setPackageIntegerValue('Org_CountNonEnglishLanguages', languages.size());
+        System.FeatureManagement.setPackageIntegerValue(TelemetryParameterName.Org_CountNonEnglishLanguages.name(), languages.size());
     }
 
     /**
@@ -194,7 +209,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 break;
             }
         }
-        System.FeatureManagement.setPackageBooleanValue('HasUserManagedTDTM', hasUserManagedTrigger);
+        System.FeatureManagement.setPackageBooleanValue(TelemetryParameterName.HasUserManagedTDTM.name(), hasUserManagedTrigger);
     }
 
     /**
@@ -202,34 +217,11 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      */
     private void handleErrorLogCount() {
         try {
-            Integer count = [SELECT Count() FROM Error__c];
-            System.FeatureManagement.setPackageIntegerValue('Data_CountErrorLog', count);
-        } catch (Exception ex) {}
-    }
-
-    /**
-     * @description Total number of Opportunities associated with a Recurring Donation
-     */
-    private void handleCountOfRecurringDonationOpps() {
-        try {
-            Integer count = [SELECT Count()
-                FROM Opportunity
-                WHERE npe03__Recurring_Donation__c IN (SELECT Id FROM npe03__Recurring_Donation__c)];
-            System.FeatureManagement.setPackageIntegerValue('Data_CountRdOppsAll', count);
-        } catch (Exception ex) {}
-    }
-
-    /**
-     * @description Total number of Opportunities associated with an Open Ended Recurring Donation
-     */
-    private void handleCountOfRecurringDonationOpps_OpenEnded() {
-        String openStatusValue = System.Label.npe03.RecurringDonationOpenStatus;
-        try {
-            Integer count = [SELECT Count()
-                FROM Opportunity
-                WHERE npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c = :openStatusValue];
-            System.FeatureManagement.setPackageIntegerValue('Data_CountRdOppsOpenEnded', count);
-        } catch (Exception ex) {}
+            Integer count = Database.countQuery('SELECT Count() FROM Error__c');
+            System.FeatureManagement.setPackageIntegerValue(TelemetryParameterName.Data_CountErrorLog.name(), count);
+        } catch (Exception ex) {
+            System.FeatureManagement.setPackageIntegerValue(TelemetryParameterName.Data_CountErrorLog.name(), -1);
+        }
     }
 
     /**
@@ -245,7 +237,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 ORDER BY npo02__NumberOfClosedOpps__c DESC
                 LIMIT 1];
             if (acct != null) {
-                System.FeatureManagement.setPackageIntegerValue('Data_MaxNumRelatedOpps',
+                System.FeatureManagement.setPackageIntegerValue(TelemetryParameterName.Data_MaxNumRelatedOpps.name(),
                         acct.npo02__NumberOfClosedOpps__c.intValue());
             }
         } catch (Exception ex) {}
