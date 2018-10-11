@@ -172,9 +172,9 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         // e.g. Account__c, Contact__c
         // or a custom object name with suffix already appended
         // e.g. Custom_Object__c
-        if (UTIL_Describe.isValidField('Engagement_Plan__c', level.Target__c + '__c')) {
+        if (UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan__c'), level.Target__c + '__c')) {
             ep.put(level.Target__c + '__c', target);
-        } else if (UTIL_Describe.isValidField('Engagement_Plan__c', level.Target__c)) {
+        } else if (UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan__c'), level.Target__c)) {
             ep.put(level.Target__c, target);
         } else {
             //no matching field found, can't create an engagement plan
