@@ -37,12 +37,12 @@
 */
 public with sharing class EP_EngagementPlans_UTIL {
 
-	public static final String TASK_STATUS_WAITING = 'Waiting on Dependent Task';
-	public static final String BLANK_ASSIGNMENT_USER_CREATING = 'User Creating Engagement Plan';
-	public static final String BLANK_ASSIGNMENT_OWNER_RECEIVING = 'Owner of Object for Engagement Plan';
-	public static final String SKIP_DAY_FRIDAY = 'Friday';
-	public static final String SKIP_DAY_MONDAY = 'Monday';
-	public static final Integer MAX_ITERATIONS = 500;
+    public static final String TASK_STATUS_WAITING = 'Waiting on Dependent Task';
+    public static final String BLANK_ASSIGNMENT_USER_CREATING = 'User Creating Engagement Plan';
+    public static final String BLANK_ASSIGNMENT_OWNER_RECEIVING = 'Owner of Object for Engagement Plan';
+    public static final String SKIP_DAY_FRIDAY = 'Friday';
+    public static final String SKIP_DAY_MONDAY = 'Monday';
+    public static final Integer MAX_ITERATIONS = 500;
 
     /** @description Engagement Plan field describe map.*/
     private static Map<String, Schema.DescribeFieldResult> fieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan__c'));
@@ -56,7 +56,8 @@ public with sharing class EP_EngagementPlans_UTIL {
                     Schema.DescribeFieldResult fieldDescribe = fieldDescribeMap.get(fieldName);
                     if (fieldDescribe.getRelationshipName() != null && fieldDescribe.isCustom()) {
                         if (fieldName != UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan_Template__c')) {
-                            lookupFieldsToRelationship.put(fieldName, fieldDescribe.getRelationshipName()+'.' + String.join(getOwnerIdPath(fieldDescribe.getReferenceTo()[0]),'.'));
+                            //toLowerCase() is necessary here as custom fields were being returned twice, like CustomField__c and customfield__c
+                            lookupFieldsToRelationship.put(fieldName.toLowerCase(), fieldDescribe.getRelationshipName()+'.' + String.join(getOwnerIdPath(fieldDescribe.getReferenceTo()[0]),'.'));
                         }
                     }
                 }
@@ -89,10 +90,10 @@ public with sharing class EP_EngagementPlans_UTIL {
                 String pathToOwner = lookupFieldsToRelationship.get(targetField);
                 SObject currentSObject = engagementPlan;
                 while (pathToOwner.contains('.')){
-    				List<String> cons = pathToOwner.split ('[.]', 2);
+                    List<String> cons = pathToOwner.split ('[.]', 2);
 
-                 	currentSObject = (SObject) currentSObject.getSobject(cons[0]);
-                 	pathToOwner = cons[1];
+                     currentSObject = (SObject) currentSObject.getSobject(cons[0]);
+                     pathToOwner = cons[1];
                 }
 
 
@@ -155,7 +156,7 @@ public with sharing class EP_EngagementPlans_UTIL {
     public static List<String> getOwnerIdPath(SObjectType t) {
         List<String> result = new List<String>();
         DescribeSObjectResult obj = t.getDescribe();
-		Map<String, Schema.SObjectField> fieldMap = obj.fields.getMap();
+        Map<String, Schema.SObjectField> fieldMap = obj.fields.getMap();
         if(fieldMap.containsKey('OwnerId')) {
             result.add('OwnerId');
             return result;

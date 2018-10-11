@@ -122,12 +122,18 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
                             
                             // apply the Engagement Plan
                             if (lvl.Engagement_Plan_Template__c != null) {
-                                Engagement_Plan__c ep = new Engagement_Plan__c();
-                                // a little trickery.  we know the objects supported by EP's
-                                // use the object name exactly.
-                                ep.put(lvl.Target__c + '__c', sobj.Id);
-                                ep.Engagement_Plan_Template__c = lvl.Engagement_Plan_Template__c;
-                                listEP.add(ep);
+                                Engagement_Plan__c ep = engagementPlanFromLevel(lvl,sobj.Id);
+                                if (ep != null) {
+                                    listEP.add(ep);
+                                } else {
+                                    Error__c logEntry = new Error__c(
+                                        Datetime__c = System.now(),
+                                        Context_Type__c = ERR_Handler_API.Context.LVL.name(),
+                                        Error_Type__c = 'Batch Apex error',
+                                        Full_Message__c = (Label.engagementPlanMissingField + ' ' + lvl.Target__c)
+                                    );
+                                    insert logEntry;
+                                }
                             }
                         }
                         // done with this level.
@@ -151,6 +157,30 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         // save 'em
         update mapSObjUpdate.values();     
         insert listEP;
+    }
+
+    /*******************************************************************************************************
+    * @description Creates an Engagement Plan based on a Level record
+    * @param level The level used to create the Engagement Plan
+    * @param target The Id of object to relate the Engagement Plan to
+    * @return Engagement_Plan__c The Engagement Plan
+    */
+    private Engagement_Plan__c engagementPlanFromLevel(Level__c level, Id target) {
+        Engagement_Plan__c ep = new Engagement_Plan__c(Engagement_Plan_Template__c = level.Engagement_Plan_Template__c);
+        // Attempt to find the engagement plan lookup field
+        // it could be either a standard object that requires us to add a suffix
+        // e.g. Account__c, Contact__c
+        // or a custom object name with suffix already appended
+        // e.g. Custom_Object__c
+        if (UTIL_Describe.isValidField('Engagement_Plan__c', level.Target__c + '__c')) {
+            ep.put(level.Target__c + '__c', target);
+        } else if (UTIL_Describe.isValidField('Engagement_Plan__c', level.Target__c)) {
+            ep.put(level.Target__c, target);
+        } else {
+            //no matching field found, can't create an engagement plan
+            return null;
+        }
+        return ep;
     }
 
     /*******************************************************************************************************
