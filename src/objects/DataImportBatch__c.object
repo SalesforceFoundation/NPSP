@@ -344,6 +344,7 @@
     </nameField>
     <pluralLabel>NPSP Data Import Batches</pluralLabel>
     <searchLayouts>
+        <listViewButtons>New_Gift_Batch</listViewButtons>
         <listViewButtons>View_Templates</listViewButtons>
         <lookupDialogsAdditionalFields>Batch_Description__c</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>UPDATEDBY_USER</lookupDialogsAdditionalFields>
@@ -374,6 +375,19 @@
         <openType>sidebar</openType>
         <protected>false</protected>
         <url>/apex/BDI_BatchOverride?Id={!DataImportBatch__c.Id}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>New_Gift_Batch</fullName>
+        <availability>online</availability>
+        <description>Directs user to the Batch Gift Entry page</description>
+        <displayType>massActionButton</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>New Gift Batch</masterLabel>
+        <openType>sidebar</openType>
+        <page>BGE_NewGiftBatch</page>
+        <protected>false</protected>
+        <requireRowSelection>false</requireRowSelection>
     </webLinks>
     <webLinks>
         <fullName>Process_Batch</fullName>

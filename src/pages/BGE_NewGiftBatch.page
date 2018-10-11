@@ -1,0 +1,25 @@
+<apex:page id="BGE_NewGiftBatch" standardController="DataImportBatch__c" extensions="BGE_NewGiftBatch_CTRL"
+           recordSetVar="Batches">
+    <apex:form id="createBatchForm">
+        <apex:actionFunction
+                name="callCreateBatch"
+                action="{!createBatch}"
+                reRender="createBatchForm"
+                oncomplete="onCreateBatch()"/>
+
+        <script type="text/javascript">
+
+            function onCreateBatch() {
+                console.log('Called create batch');
+                var batchId = '{!batchId}';
+                sforce.one.navigateToSObject(batchId);
+            }
+        </script>
+
+    </apex:form>
+
+    <script type="text/javascript">
+        callCreateBatch();
+    </script>
+
+</apex:page>
