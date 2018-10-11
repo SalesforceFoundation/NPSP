@@ -16,11 +16,19 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>Source_Field__c</field>
+                <field>SourceFieldEntity__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>Target_Field__c</field>
+                <field>TargetFieldEntity__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Required</behavior>
+                <field>SourceField__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Required</behavior>
+                <field>TargetField__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>

@@ -711,23 +711,23 @@ global with sharing class BDI_DataImportService {
         BDISettings__c bdiSettings = BDISettings__c.getOrgDefaults();
         Map<String, String> parametersByName = new Map<String, String>();
         Map<String, String> dataImportFieldToTargetField = new Map<String, String>();
-        Map<String, Set<String>> targetFieldsBySource = new Map<String, Set<String>>();
+        Map<Id, Set<String>> targetFieldsBySource = new Map<Id, Set<String>>();
         Boolean useCustomMetadataForFieldMapping = false;
         if (bdiSettings.MapWithCustomMetadataTypes__c) {
             List<BDI_Field_Mapping__mdt> bdiFieldMappings = [SELECT
-                                                                    Source_Field__c,
-                                                                    Target_Field__c
+                                                                    SourceField__c,
+                                                                    TargetField__c
                                                              FROM
                                                                     BDI_Field_Mapping__mdt];
 
             for (BDI_Field_Mapping__mdt customMetadata : bdiFieldMappings) {
-                String sourceField = customMetadata.Source_Field__c.toLowerCase();
+                Id sourceField = customMetadata.SourceField__c;
                 if (targetFieldsBySource.containsKey(sourceField)) {
             		Set<String> targetFields = targetFieldsBySource.get(sourceField);
-            		targetFields.add(customMetadata.Target_Field__c);
+            		targetFields.add(customMetadata.TargetField__c);
                     targetFieldsBySource.put(sourceField, targetFields);
 	            } else {
-            		targetFieldsBySource.put(sourceField, new Set<String> { customMetadata.Target_Field__c });
+            		targetFieldsBySource.put(sourceField, new Set<String> { customMetadata.TargetField__c });
             	}
             }
 

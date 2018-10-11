@@ -1021,8 +1021,11 @@
         <members>Trigger_Handler__c.Trigger_Action__c</members>
         <members>Trigger_Handler__c.User_Managed__c</members>
         <members>Trigger_Handler__c.Usernames_to_Exclude__c</members>
-        <members>BDI_Field_Mapping__mdt.Source_Field__c</members>
-        <members>BDI_Field_Mapping__mdt.Target_Field__c</members>
+        <members>BDI_Field_Mapping__mdt.SourceFieldEntity__c</members>
+        <members>BDI_Field_Mapping__mdt.TargetFieldEntity__c</members>
+        <members>BDI_Field_Mapping__mdt.target__c</members>
+        <members>BDI_Field_Mapping__mdt.SourceField__c</members>
+        <members>BDI_Field_Mapping__mdt.TargetField__c</members>
         <members>Filter_Group__mdt.Description__c</members>
         <members>Filter_Group__mdt.Is_Deleted__c</members>
         <members>Filter_Rule__mdt.Constant__c</members>

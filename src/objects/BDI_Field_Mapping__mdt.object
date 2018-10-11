@@ -48,6 +48,19 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
+    <fields>
+        <fullName>target__c</fullName>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>target</label>
+        <metadataRelationshipControllingField>BDI_Field_Mapping__mdt.TargetFieldEntity__c</metadataRelationshipControllingField>
+        <referenceTo>FieldDefinition</referenceTo>
+        <relationshipLabel>BDI_Field_Mappings</relationshipLabel>
+        <relationshipName>BDI_Field_Mappings</relationshipName>
+        <required>false</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
     <label>BDI Field Mapping</label>
     <pluralLabel>BDI Field Mappings</pluralLabel>
     <visibility>Public</visibility>

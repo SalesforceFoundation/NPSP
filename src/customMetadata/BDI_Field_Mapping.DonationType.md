@@ -18,4 +18,8 @@
         <field>TargetField__c</field>
         <value xsi:type="xsd:string">Type</value>
     </values>
+    <values>
+        <field>target__c</field>
+        <value xsi:nil="true">Type</value>
+    </values>
 </CustomMetadata>
