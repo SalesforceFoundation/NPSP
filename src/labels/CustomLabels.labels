@@ -5324,7 +5324,7 @@ Payment Allocation Rollups are not currently supported.</value>
         <fullName>stgHelpAllocationLevelWarning</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>stgHelpAutoAffil</shortDescription>
         <value>If you enable and start using Payment Allocations and then disable them, you will need to manually reconcile your data and update Opportunity Allocation records to reflect the information previously assigned in Payment Allocations.</value>
     </labels>

@@ -67,6 +67,7 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
     /*********************************************************************************************************
     * @description Show a warning message if the Allocation Level changed to Payment
     * and this org has Allocations set on Opportunities
+    * @return void
     */
     public void allocationLevelChange(){
         if(oppAllocationsExist && strAllocationLevel == paymentLabel){
