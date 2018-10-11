@@ -40,8 +40,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
         POPULATE_RD_INSTALLMENT_NUMBER, RUN_NEW_ORG_SCRIPT, 
         INSERT_TDTM_DEFAULTS, ABORT_OLD_SCHEDULED_JOBS, 
         CLEANUP_RECORD_TYPE_SETTINGS, UPDATE_CAMPAIGN_LIST_REPORT,
-        UPDATE_ORG_TELEMETRY, CREATE_DEFAULT_SETTINGS,
-        POPULATE_NAMESPACE_PREFIX
+        UPDATE_ORG_TELEMETRY, CREATE_DEFAULT_SETTINGS_FOR_UPGRADE,
+        CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL
     }
 
     /*******************************************************************************************************
@@ -52,19 +52,21 @@ global without sharing class STG_InstallScript implements InstallHandler {
     global void onInstall(InstallContext context) {
         ErrorLogger logger = new ErrorLogger(context, ERR_Handler_API.Context.STTG);
 
-        executeAction(InstallAction.POPULATE_NAMESPACE_PREFIX, logger);
-
-        //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
+        // First install of Cumulus
         if (context.previousVersion() == null) {
-            //Populate Recurring Donation Installment Number on Opportunity for fresh installs; 
-            //This also covers upgrades from v2
+            // Ensure custom settings that we manage are populated
+            executeAction(InstallAction.CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL, logger);
+
+            // Populate Recurring Donation Installment Number on Opportunity for fresh installs;
+            // This also covers upgrades from v2
             executeAction(InstallAction.POPULATE_RD_INSTALLMENT_NUMBER, logger);
             
             executeAction(InstallAction.RUN_NEW_ORG_SCRIPT, logger);
 
+        // Upgrade of existing Cumulus installation
         } else if (context.isUpgrade() || context.isPush()) {
             // Ensure the any new Custom Settings objects are populated
-            executeAction(InstallAction.CREATE_DEFAULT_SETTINGS, logger);
+            executeAction(InstallAction.CREATE_DEFAULT_SETTINGS_FOR_UPGRADE, logger);
 
             // Insert/Update the TDTM defaults as needed
             executeAction(InstallAction.INSERT_TDTM_DEFAULTS, logger);
@@ -75,10 +77,12 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
         executeAction(InstallAction.ABORT_OLD_SCHEDULED_JOBS, logger);
 
+        // Upgrade from NPSP 3.79
         if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 79)) < 0) {
             executeAction(InstallAction.CLEANUP_RECORD_TYPE_SETTINGS, logger);
         }
 
+        // Upgrade from NPSP 3.112
         if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 112)) < 0) {
             executeAction(InstallAction.UPDATE_CAMPAIGN_LIST_REPORT, logger);
         }
@@ -112,10 +116,11 @@ global without sharing class STG_InstallScript implements InstallHandler {
             } else if (action == InstallAction.UPDATE_ORG_TELEMETRY && !Test.isRunningTest()) {
                 UTIL_OrgTelemetry_SVC.dispatchTelemetryBatchJob();
 
-            } else if (action == InstallAction.CREATE_DEFAULT_SETTINGS) {
+            } else if (action == InstallAction.CREATE_DEFAULT_SETTINGS_FOR_UPGRADE) {
+                populateNamespacePrefix();
                 createNewDefaultCustomSettingRecords();
 
-            } else if (action == InstallAction.POPULATE_NAMESPACE_PREFIX) {
+            } else if (action == InstallAction.CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL) {
                 populateNamespacePrefix();
             }
 
@@ -332,9 +337,11 @@ global without sharing class STG_InstallScript implements InstallHandler {
     * @description Make sure a value is set for the namespace prefix custom setting.
     */
     private void populateNamespacePrefix() {
-        Package_Settings__c settings = Package_Settings__c.getOrgDefaults();
-        settings.Namespace_Prefix__c = UTIL_Namespace.StrTokenNSPrefix('');
-        upsert settings;
+        Package_Settings__c pkgSettings = Package_Settings__c.getOrgDefaults();
+        if (pkgSettings.Id == null) {
+            pkgSettings.Namespace_Prefix__c = UTIL_Namespace.StrTokenNSPrefix('');
+            insert pkgSettings;
+        }
     }
 
     /*******************************************************************************************************

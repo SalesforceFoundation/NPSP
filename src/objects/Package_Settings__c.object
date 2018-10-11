@@ -8,7 +8,7 @@
         <fullName>Namespace_Prefix__c</fullName>
         <description>The active package namespace prefix for NPSP.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Do not edit.</inlineHelpText>
+        <inlineHelpText>The active package namespace prefix for NPSP. Do not edit manually.</inlineHelpText>
         <label>Namespace Prefix</label>
         <length>17</length>
         <required>false</required>
