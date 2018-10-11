@@ -1695,7 +1695,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>alloDefaultNotEnabled</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>You must enable Default Allocations in order to allocate at the payment level.</shortDescription>
         <value>You must enable Default Allocations in order to allocate at the payment level.</value>
     </labels>
@@ -1727,7 +1727,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>alloExceedsPmtAmount</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>The Allocations for this Payment are greater than the amount of the Payment.</shortDescription>
         <value>The Allocations for this Payment exceed the Payment amount. Update your Allocation amounts, and then adjust the Payment amount.</value>
     </labels>
@@ -1799,7 +1799,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>alloPaymentNotEnabled</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>Payment-level allocations are not enabled.</shortDescription>
         <value>Payment-level Allocations aren't enabled for your organization. Try allocating at the Opportunity level instead.</value>
     </labels>

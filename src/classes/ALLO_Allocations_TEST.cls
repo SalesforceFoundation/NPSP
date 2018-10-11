@@ -144,13 +144,13 @@ private with sharing class ALLO_Allocations_TEST {
             Default_Allocations_Enabled__c = true,
             Default__c = defaultGau.Id));
 
-        Account acc = new Account(Name='foo');
+        Account acc = new Account(Name='Account-pmtAmountChange');
         insert acc;
-        Opportunity opp = new Opportunity(Name='foo', Amount = 10, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        Opportunity opp = new Opportunity(Name='Opp-pmtAmountChange', Amount = 10, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         insert opp;
         npe01__OppPayment__c pmt = new npe01__OppPayment__c(npe01__Payment_Amount__c = 8, npe01__Opportunity__c = opp.Id);
         insert pmt;
-        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='foo');
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='GAU-pmtAmountChange');
         insert gau;
 
         //resetting these manually as a test is considered a single context for static variables
