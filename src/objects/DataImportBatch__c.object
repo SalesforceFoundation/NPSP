@@ -148,7 +148,7 @@
     </fields>
     <fields>
         <fullName>Donation_Matching_Behavior__c</fullName>
-        <defaultValue>&quot;Single Match or Create&quot;</defaultValue>
+        <defaultValue>&quot;Do Not Match&quot;</defaultValue>
         <description>Defines how the Data Importer should handle matching Donations. You must choose a value.</description>
         <externalId>false</externalId>
         <inlineHelpText>Defines how the Data Importer should handle matching Donations. You must choose a value.</inlineHelpText>
@@ -163,7 +163,7 @@
                 <sorted>false</sorted>
                 <value>
                     <fullName>Do Not Match</fullName>
-                    <default>false</default>
+                    <default>true</default>
                     <label>Do Not Match</label>
                 </value>
                 <value>
@@ -178,7 +178,7 @@
                 </value>
                 <value>
                     <fullName>Single Match or Create</fullName>
-                    <default>true</default>
+                    <default>false</default>
                     <label>Single Match or Create</label>
                 </value>
                 <value>
