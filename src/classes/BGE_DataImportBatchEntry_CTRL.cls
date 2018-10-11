@@ -130,18 +130,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 'Donation_Amount__c',
                 'Donation_Date__c',
                 'Payment_Method__c',
-                'Payment_Check_Reference_Number__c',
-                'Status__c',
-                'FailureInformation__c',
-                'DonationImported__c',
-                'DonationImportStatus__c'
-        };
-
-        Set<String> dryRunResultFields = new Set<String>{
-                'Status__c',
-                'FailureInformation__c',
-                'DonationImported__c',
-                'DonationImportStatus__c'
+                'Payment_Check_Reference_Number__c'
         };
 
         Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
@@ -152,15 +141,26 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 Column col = new Column();
                 col.label = dfr.label;
                 col.fieldName = dfr.name;
-                col.readOnly = dryRunResultFields.contains(UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.name));
+                col.readOnly = false;
                 col.type = dfr.type.name().toLowerCase();
                 if (col.type == 'date') {
                     col.type = 'date-local';
                 }
+                col.typeAttributes = '{}';
 
                 columns.add(col);
             }
         }
+
+        //add derived matched record column
+        Column col = new Column();
+
+        col.label = Label.bgeGridMatchedRecord;
+        col.fieldName = 'matchedRecordUrl';
+        col.readOnly = true;
+        col.type = 'url';
+        col.typeAttributes = '{"label":{"fieldName":"matchedRecordLabel"},"target":"_blank"}';
+        columns.add(col);
 
         return columns;
     }
@@ -246,7 +246,11 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 'DonationImported__c',
                 'Status__c',
                 'FailureInformation__c',
-                'DonationImportStatus__c'
+                'DonationImportStatus__c',
+                'PaymentImportStatus__c',
+                'PaymentImported__c',
+                'PaymentImported__r.Name',
+                'DonationImported__r.Name'
         };
         return fields;
     }
@@ -259,6 +263,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         @AuraEnabled public String fieldName;
         @AuraEnabled public Boolean readOnly;
         @AuraEnabled public String type;
+        @AuraEnabled public String typeAttributes;
     }
 
     /*******************************************************************************************************
@@ -276,25 +281,86 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @description a class to retrieve DataImport__c records with derived donor information.
     */
     public class DataImportRow {
-        @AuraEnabled public String donorName;
-        @AuraEnabled public String donorLink;
+        @AuraEnabled public String donor;
+        @AuraEnabled public String matchedRecordUrl;
+        @AuraEnabled public String matchedRecordLabel;
         @AuraEnabled public DataImport__c record;
+        @AuraEnabled public List<String> errors;
 
         public DataImportRow(DataImport__c record) {
-            getDonorInfo(record);
+            donor = setDonorName(record);
+            setDryRunRecordInfo(record);
             this.record = record;
         }
 
-        private void getDonorInfo(DataImport__c record) {
+        private String setDonorName(DataImport__c record) {
             String donorName = '';
             if (record.Donation_Donor__c == 'Account1' && record.Account1Imported__c != null) {
-                this.donorName = record.Account1Imported__r.Name;
-                this.donorLink = '/'+record.Account1Imported__c;
+                donorName = record.Account1Imported__r.Name;
             } 
             if (record.Donation_Donor__c == 'Contact1' && record.Contact1Imported__c != null) {
-                this.donorName = record.Contact1Imported__r.Name;
-                this.donorLink = '/'+record.Contact1Imported__c;
+                donorName = record.Contact1Imported__r.Name;
             }
+            return donorName;
+        }
+
+        /***************************************************************************************************
+        * @description sets DataImport__c record with matching url or failure information matching based on
+        * the BDI_Donations setDryRunDonationStatuses
+        * @param record: the DataImport__c record to check for matches
+        */
+        private void setDryRunRecordInfo(DataImport__c record) {
+            try {
+                String matchedUrl = '';
+                String matchedUrlLabel = '';
+                List<String> errors = new List<String>();
+
+                Boolean donationMatched = (record.DonationImported__c != null);
+                Boolean paymentMatched = (record.PaymentImported__c != null);
+                Boolean importFailure = (record.FailureInformation__c != null);
+
+                if (paymentMatched) {
+                    //if there is a match, set url, preferably for the payment
+                    String importedId = record.PaymentImported__c;
+                    matchedUrlLabel = record.PaymentImported__r.Name;
+                    matchedUrl = URL.getSalesforceBaseUrl().toExternalForm() + '/' + importedId;
+                } else if (donationMatched) {
+                    String importedId = record.DonationImported__c;
+                    matchedUrlLabel = record.DonationImported__r.Name;
+                    matchedUrl = URL.getSalesforceBaseUrl().toExternalForm() + '/' + importedId;
+                }
+
+                if (importFailure) {
+
+                    //if Donation and Payment didn't have matched or matched none status, then an error was set
+                    if (record.DonationImportStatus__c != null
+                            && !donationMatched) {
+                        errors.add(record.DonationImportStatus__c);
+                    }
+                    if (record.PaymentImportStatus__c != null
+                            && !paymentMatched
+                            && record.PaymentImportStatus__c != record.DonationImportStatus__c) {
+                        errors.add(record.PaymentImportStatus__c);
+                    }
+
+                    //get any additional errors
+                    if (record.FailureInformation__c != record.PaymentImportStatus__c
+                            && record.FailureInformation__c != record.DonationImportStatus__c) {
+                        errors.add(record.FailureInformation__c);
+                    }
+                }
+
+                this.matchedRecordUrl = matchedUrl;
+                this.matchedRecordLabel = matchedUrlLabel;
+                this.errors = errors;
+
+            }
+            catch (Exception e) {
+                throw new AuraHandledException(e.getMessage());
+            }
+
+
+
         }
     }
 }
