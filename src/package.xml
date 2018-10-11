@@ -84,6 +84,7 @@
         <members>BDI_SettingsUI_TEST</members>
         <members>BGE_DataImportBatchEntry_CTRL</members>
         <members>BGE_DataImportBatchEntry_CTRL_TEST</members>
+        <members>BGE_NewGiftBatch_CTRL</members>
         <members>BGE_Template_CTRL</members>
         <members>BGE_Template_CTRL_TEST</members>
         <members>CAM_CascadeDeleteLookups_TDTM</members>
@@ -470,6 +471,7 @@
         <members>BDI_BatchOverride</members>
         <members>BDI_DataImport</members>
         <members>BDI_DataImportDeleteBTN</members>
+        <members>BGE_NewGiftBatch</members>
         <members>CONV_Account_Conversion</members>
         <members>CON_ContactMerge</members>
         <members>CON_DeleteContactOverride</members>
@@ -590,6 +592,7 @@
         <members>dataProviderInterface</members>
         <members>defaultTokens</members>
         <members>svg</members>
+        <members>NewGiftBatch</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
@@ -2567,6 +2570,7 @@
         <members>Contact.Recalculate_Rollups</members>
         <members>DataImportBatch__c.Batch_Gift_Entry</members>
         <members>DataImportBatch__c.Edit_Processing_Settings</members>
+        <members>DataImportBatch__c.New_Gift_Batch</members>
         <members>DataImportBatch__c.Process_Batch</members>
         <members>DataImportBatch__c.View_Templates</members>
         <members>DataImport__c.Delete_All_Data_Import_Records</members>

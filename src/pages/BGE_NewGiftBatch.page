@@ -1,5 +1,21 @@
 <apex:page id="BGE_NewGiftBatch" standardController="DataImportBatch__c" extensions="BGE_NewGiftBatch_CTRL"
            recordSetVar="Batches">
+
+    <apex:includeLightning />
+
+    <div id="lightning" />
+
+    <script>
+        $Lightning.use("c:NewGiftBatch", function() {
+            $Lightning.createComponent("c:BGE_TemplateDetails",
+                {  },
+                "lightning",
+                function(cmp) {
+                    // do some stuff
+                });
+        });
+    </script>
+
     <apex:form id="createBatchForm">
         <apex:actionFunction
                 name="callCreateBatch"
@@ -19,7 +35,7 @@
     </apex:form>
 
     <script type="text/javascript">
-        callCreateBatch();
+        // callCreateBatch();
     </script>
 
 </apex:page>
