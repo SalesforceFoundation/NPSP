@@ -845,7 +845,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         //Read Only user should be denied permission to add donation
         User readOnlyUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
         
-        //No redirect should occur, correct message is returned
+        //No redirect should occur, correct info message is returned
         System.runAs(readOnlyUser) {
             System.assertEquals(null, rdadb.buttonClick());
             UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.RD_ErrorAddDonationPermissionDenied, ApexPages.Severity.INFO);
