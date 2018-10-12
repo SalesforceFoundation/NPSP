@@ -337,6 +337,11 @@
                                 requireTotalMatch: response.requireTotalMatch
                             }
                         );
+                        var navEvt = $A.get('e.force:navigateToSObject');
+                        navEvt.setParams({
+                            'recordId': response.id
+                        });
+                        navEvt.fire();
                     },
                     error: function(error) {
                         console.log(error);

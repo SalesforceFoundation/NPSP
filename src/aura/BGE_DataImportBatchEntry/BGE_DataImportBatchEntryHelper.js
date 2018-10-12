@@ -30,40 +30,6 @@
     },
 
     /**
-     * @description: creates the configuration modal
-     */
-    createModal: function (component) {
-        var modalBody;
-        var modalHeader;
-        var modalFooter;
-
-        $A.createComponents([
-                ['c:BGE_ConfigurationWizard', {sObjectName: component.get('v.sObjectName'), recordId: component.get('v.recordId')}],
-                ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
-                ['c:modalFooter', {}]
-            ],
-            function(components, status, errorMessage){
-                if (status === 'SUCCESS') {
-                    modalBody = components[0];
-                    modalHeader = components[1];
-                    modalFooter = components[2];
-                    component.find('overlayLib').showCustomModal({
-                        body: modalBody,
-                        header: modalHeader,
-                        footer: modalFooter,
-                        showCloseButton: true,
-                        cssClass: 'slds-modal_large',
-                        closeCallback: function() {
-                        }
-                    })
-                } else {
-                    this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
-                }
-            }
-        );
-    },
-
-    /**
      * @description: retrieves the model information. If successful, sets the model and creates child component; otherwise alerts user.
      */
     getModel: function(component) {
