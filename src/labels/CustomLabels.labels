@@ -1273,6 +1273,14 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <value>Warning</value>
     </labels>
     <labels>
+        <fullName>RD_ErrorAddDonationPermissionDenied</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>You do not have permission to create a donation record</shortDescription>
+        <value>You do not have permission to create a donation record. Please contact your system administrator for more information.</value>
+    </labels>
+    <labels>
         <fullName>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>

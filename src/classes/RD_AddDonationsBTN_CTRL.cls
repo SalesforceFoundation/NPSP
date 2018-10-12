@@ -53,18 +53,24 @@ public with sharing class RD_AddDonationsBTN_CTRL {
     public PageReference buttonClick(){
         Savepoint sp = Database.setSavepoint();
         try {
-            system.assert(sc.getId() != null);
-	        string qString = RD_RecurringDonations.strQueryRDNoWhere();
-            qString += ' where id = \'' + sc.getId() + '\'';
-	        npe03__Recurring_Donation__c recurringDonation = (npe03__Recurring_Donation__c)database.query(qString);
-            // This recalculates Rollups only in Legacy mode. 
-	        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{recurringDonation});
-            //This recalculates Rollups only if Customizable Rollup is enabled.
-	        recalculateRollups(sc.getId());
 
+            if (!Schema.SObjectType.Opportunity.isCreateable()) { 
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, System.Label.RD_ErrorAddDonationPermissionDenied));
+                return null;
+            }
+
+            system.assert(sc.getId() != null);
+            string qString = RD_RecurringDonations.strQueryRDNoWhere();
+            qString += ' where id = \'' + sc.getId() + '\'';
+            npe03__Recurring_Donation__c recurringDonation = (npe03__Recurring_Donation__c)database.query(qString);
+            // This recalculates Rollups only in Legacy mode. 
+            RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{recurringDonation});
+            //This recalculates Rollups only if Customizable Rollup is enabled.
+            recalculateRollups(sc.getId());
+            
 	        PageReference pageRef = sc.view();
 	        pageRef.setRedirect(true);
-	        return pageRef;
+            return pageRef;
         
         } catch(Exception e) {
             Database.rollback(sp);
@@ -74,6 +80,17 @@ public with sharing class RD_AddDonationsBTN_CTRL {
         }
     }
     
+    /*******************************************************************************************************
+    * @description Action method to redirect to the Recurring Donation calling page
+    * @return PageReference to the calling page
+    */ 
+    public Pagereference returnButtonClick() {
+        PageReference pageRef = sc.view();
+	    pageRef.setRedirect(true);
+        return pageRef;
+    }
+
+
     /*********************************************************************************************************
     * @description Recalculates the Rollup for Recurring Donation.
     * @return void.
