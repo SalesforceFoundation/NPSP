@@ -36,10 +36,6 @@
 @isTest
 public with sharing class STG_InstallScript_TEST {
 
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
-    private static string strTestOnly = '*';
-
     /*******************************************************************************************************
     * @description A test exception class 
     */
@@ -47,8 +43,6 @@ public with sharing class STG_InstallScript_TEST {
     
     /** NPSP to TDTM test - to verify no exception is thrown if the custom settings don't exist **/
     public testmethod static void mappingsTest_runScriptNoCustomSettings() {
-        if (strTestOnly != '*' && strTestOnly != 'mappingsTest_runScriptNoCustomSettings') return;
-               
         //Don't create NPSP custom settings
         
         //Run the install script
@@ -60,8 +54,6 @@ public with sharing class STG_InstallScript_TEST {
     
     /** Tests that missing trigger handlers get created **/
     public static testmethod void missingSettingsCreated() {
-        if (strTestOnly != '*' && strTestOnly != 'missingSettingsCreated') return;
-        
         //Create some of the default settings
         createSomeDefaultSettings();
         
@@ -74,8 +66,6 @@ public with sharing class STG_InstallScript_TEST {
 
     /** Tests that deleted class trigger handlers get deleted **/
     public static testmethod void deletedHandlers() {
-        if (strTestOnly != '*' && strTestOnly != 'deletedHandlers') return;
-        
         //Create some of the default settings
         createSomeDefaultSettings();
 
@@ -92,8 +82,6 @@ public with sharing class STG_InstallScript_TEST {
     }
     
     public testmethod static void push() {
-        if (strTestOnly != '*' && strTestOnly != 'push') return;
-        
         //Create some of the default settings
         createSomeDefaultSettings();
         
@@ -105,8 +93,6 @@ public with sharing class STG_InstallScript_TEST {
     }
     
     public testmethod static void upgrade() {
-        if (strTestOnly != '*' && strTestOnly != 'upgrade') return;
-        
         //Create some of the default settings
         createSomeDefaultSettings();
         
@@ -119,8 +105,6 @@ public with sharing class STG_InstallScript_TEST {
     
     /** NPSP to TDTM test - If it's the first time we install Cumulus and there was no custom DISABLE flag enabled **/
     public testmethod static void mappingsTest_runScriptNoCustomConfigOnInstall() {
-        if (strTestOnly != '*' && strTestOnly != 'mappingsTest_runScriptNoCustomConfigOnInstall') return;
-         
         //Create NPSP custom settings with all disable flags off
         setAllNpspFlags(false);
                
@@ -131,8 +115,6 @@ public with sharing class STG_InstallScript_TEST {
     
     /** NPSP to TDTM test - If it's the first time we install Cumulus and all the custom DISABLE flag were enabled **/
     public testmethod static void mappingsTest_runScriptCustomConfigOnInstallAllFlags() {
-        if (strTestOnly != '*' && strTestOnly != 'mappingsTest_runScriptCustomConfigOnInstallAllFlags') return;
-        
         //Create NPSP custom settings with all disable flags on
         setAllNpspFlags(true);
 
@@ -164,8 +146,6 @@ public with sharing class STG_InstallScript_TEST {
     
      /** NPSP to TDTM test - If it's the first time we install Cumulus and some the custom DISABLE flag were enabled **/
     public testmethod static void mappingsTest_runScriptCustomConfigOnInstallSomeFlags() {
-        if (strTestOnly != '*' && strTestOnly != 'mappingsTest_runScriptCustomConfigOnInstallSomeFlags') return;
-        
         //Create NPSP custom settings with some disable flags on
         List<SObject> settingsToUpdate = new List<SObject>();
         
@@ -192,8 +172,6 @@ public with sharing class STG_InstallScript_TEST {
     }
 
     public static testmethod void defaultSettingsCreated() {
-        if (strTestOnly != '*' && strTestOnly != 'defaultSettingsCreated') return;
-        
         //Clear all custom settings
         deleteAllCustomSettings();
                        
@@ -210,6 +188,7 @@ public with sharing class STG_InstallScript_TEST {
         Household_Naming_Settings__c householdNamingSettings = UTIL_CustomSettingsFacade.getOrgHouseholdNamingSettings();
         Allocations_Settings__c allocationsSettings = UTIL_CustomSettingsFacade.getOrgAllocationsSettings();
         Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getOrgDataImportSettings();
+        Package_Settings__c pkgSettings = Package_Settings__c.getOrgDefaults();
 
         //If it's a new install we want to set the Household model by default
         System.assertEquals(CAO_Constants.HH_ACCOUNT_PROCESSOR, npe01Settings.npe01__Account_Processor__c);
@@ -266,6 +245,8 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals('HH_NameSpec',householdNamingSettings.Implementing_Class__c);
         System.assertEquals(365,allocationsSettings.Rollup_N_Day_Value__c);
         System.assertEquals(50,dataImportSettings.Batch_Size__c);
+
+        System.assertNotEquals(pkgSettings.Id, null);
     }
 
     /*********************************************************************************************************
