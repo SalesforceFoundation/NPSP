@@ -17,7 +17,6 @@ from selenium.webdriver import ActionChains
 #import os
 import sys
 from email.mime import text
-from httplib import PAYMENT_REQUIRED
 #sys.path.append(os.path.abspath(os.path.join('..',
 #sys.path.append("/Users/skristem/Documents/GitHub/CumulusCI/cumulusci/robotframework/tests")
 #import Salesforce
