@@ -43,24 +43,10 @@
     <header role="banner" class="header slds-p-bottom_medium">
         <div class="slds-page-header">
             <div class="slds-grid">
-                <div class="slds-col slds-has-flexi-truncate ">
-                    <div class="slds-media slds-no-space slds-grow">
-                        <div class="slds-media__figure">
-                            <lightning:icon iconName="custom:custom17" alternativeText="Batch Gift Entry" size="medium"/>
-                        </div>
-                        <div class="slds-media__body">
-
-
-                            <div class="slds-page-header__name">
-
-                                <h1>
-                                    <span class="slds-page-header__title" title="Batch Gift Entry">Batch Gift Entry</span>
-                                </h1>
-
-                            </div>
-
-                        </div>
-                    </div>
+                <div class="slds-col slds-has-flexi-truncate slds-align-middle">
+                    <h1>
+                        <span class="slds-page-header__title" title="Batch Gift Entry">Batch Gift Entry</span>
+                    </h1>
                 </div>
                 <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
                     <lightning:buttonGroup>
