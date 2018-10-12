@@ -35,6 +35,10 @@
                 <behavior>Edit</behavior>
                 <field>Expected_Total_Batch_Amount__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>UseBatchGiftEntryGrid__c</field>
+            </layoutItems>
         </layoutColumns>
         <style>OneColumn</style>
     </layoutSections>

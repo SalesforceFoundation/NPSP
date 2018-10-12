@@ -10,7 +10,9 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>Clone</actionName>
-        <type>Default</type>
+        <content>BDI_BatchOverride</content>
+        <skipRecordTypeSelect>true</skipRecordTypeSelect>
+        <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>Delete</actionName>
@@ -18,7 +20,9 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>Edit</actionName>
-        <type>Default</type>
+        <content>BDI_BatchOverride</content>
+        <skipRecordTypeSelect>true</skipRecordTypeSelect>
+        <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>List</actionName>
@@ -26,7 +30,9 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>New</actionName>
-        <type>Default</type>
+        <content>BDI_BatchOverride</content>
+        <skipRecordTypeSelect>true</skipRecordTypeSelect>
+        <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>SaveEdit</actionName>
@@ -346,6 +352,15 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
+    <fields>
+        <fullName>UseBatchGiftEntryGrid__c</fullName>
+        <defaultValue>true</defaultValue>
+        <description>This flag is set during batch creation to use the gift entry batch feature.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Set this flag during batch creation to create a gift entry batch.</inlineHelpText>
+        <label>Use New Gift Batch</label>
+        <type>Checkbox</type>
+    </fields>
     <label>NPSP Data Import Batch</label>
     <listViews>
         <fullName>All</fullName>
@@ -372,17 +387,6 @@
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
-    <webLinks>
-        <fullName>Batch_Gift_Entry</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <encodingKey>UTF-8</encodingKey>
-        <linkType>url</linkType>
-        <masterLabel>Batch Gift Entry</masterLabel>
-        <openType>replace</openType>
-        <protected>false</protected>
-        <url>/apex/BGE_HandsOnGrid?batchId={!DataImportBatch__c.Id}</url>
-    </webLinks>
     <webLinks>
         <fullName>Edit_Processing_Settings</fullName>
         <availability>online</availability>
