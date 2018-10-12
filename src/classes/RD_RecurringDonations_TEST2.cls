@@ -842,33 +842,13 @@ private with sharing class RD_RecurringDonations_TEST2 {
         system.assertEquals(r1.id, rdadb.sc.getId());
         rdadb.buttonClick();
        
-        Profile readOnlyProfile = [SELECT Id FROM Profile WHERE Name='Read Only'];
-        User readOnlyUser = new User(
-            UserName = 'readonlyuser' + DateTime.now().getTime() + '@testorg.com',
-            Email = 'readonlyuser@testorg.com',
-            Alias = 'readon',
-            ProfileId = readOnlyProfile.Id,
-            LastName = 'Testing', 
-            LanguageLocaleKey = 'en_US',
-            LocaleSidKey = 'en_US', 
-            EmailEncodingKey = 'UTF-8', 
-            TimeZoneSidKey = 'America/Los_Angeles'
-        );
+        //Read Only user should be denied permission to add donation
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
         
-        //Read Only user denied permission to add donation, no redirect, correct message displayed
+        //No redirect should occur, correct message is returned
         System.runAs(readOnlyUser) {
             System.assertEquals(null, rdadb.buttonClick());
-
-            boolean hasMessage = false;
-
-            for(Apexpages.Message message : ApexPages.getMessages()){
-                if (message.getDetail().equals(System.Label.RD_ErrorAddDonationPermissionDenied)) {
-                    hasMessage = true;
-                    break;
-                } 
-            }
-
-            system.assert(true, hasMessage);
+            UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.RD_ErrorAddDonationPermissionDenied, ApexPages.Severity.INFO);
         }
 
         test.stopTest();
