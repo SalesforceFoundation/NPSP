@@ -3,7 +3,7 @@
     <webLinks>
         <fullName>DO_NOT_PACKAGE_Refresh_Opportunities</fullName>
         <availability>online</availability>
-        <description>Run the check opp routine for Recurring Donations</description>
+        <description>Run the check opp routine for Recurring Donations. Scratch Org override button to use instead of the button from the RecurringDonations Package</description>
         <displayType>button</displayType>
         <encodingKey>UTF-8</encodingKey>
         <linkType>url</linkType>
