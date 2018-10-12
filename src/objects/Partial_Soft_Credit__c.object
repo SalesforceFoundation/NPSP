@@ -157,6 +157,6 @@
         <openType>sidebar</openType>
         <protected>false</protected>
         <requireRowSelection>false</requireRowSelection>
-        <url>/apex/npsp__PSC_ManageSoftCredits?id={!Opportunity.Id}</url>
+        <url>/apex/{!$Setup.Package_Settings__c.Namespace_Prefix__c}PSC_ManageSoftCredits?id={!Opportunity.Id}</url>
     </webLinks>
 </CustomObject>
