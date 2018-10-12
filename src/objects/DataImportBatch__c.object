@@ -401,7 +401,6 @@
         <label>All</label>
     </listViews>
     <listViews>
-        <fullName>BGE_Batches</fullName>
         <columns>NAME</columns>
         <columns>Batch_Description__c</columns>
         <columns>Status__c</columns>
@@ -420,71 +419,6 @@
         <type>Text</type>
     </nameField>
     <pluralLabel>NPSP Data Import Batches</pluralLabel>
-    <recordTypeTrackHistory>false</recordTypeTrackHistory>
-    <recordTypes>
-        <fullName>Batch_Gift_Entry</fullName>
-        <active>true</active>
-        <label>Batch Gift Entry</label>
-        <picklistValues>
-            <picklist>Donation_Matching_Behavior__c</picklist>
-            <values>
-                <fullName>Best Match</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Best Match or Create</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Do Not Match</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>No Match</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Single Match</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Single Match or Create</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-    </recordTypes>
-    <recordTypes>
-        <fullName>Data_Import_Batch</fullName>
-        <active>true</active>
-        <label>Data Import Batch</label>
-        <picklistValues>
-            <picklist>Donation_Matching_Behavior__c</picklist>
-            <values>
-                <fullName>Best Match</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Best Match or Create</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Do Not Match</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>No Match</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Single Match</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Single Match or Create</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-    </recordTypes>
     <searchLayouts>
         <listViewButtons>View_Templates</listViewButtons>
         <lookupDialogsAdditionalFields>Batch_Description__c</lookupDialogsAdditionalFields>
@@ -494,17 +428,6 @@
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
-    <webLinks>
-        <fullName>Batch_Gift_Entry</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <encodingKey>UTF-8</encodingKey>
-        <linkType>url</linkType>
-        <masterLabel>Batch Gift Entry</masterLabel>
-        <openType>replace</openType>
-        <protected>false</protected>
-        <url>/apex/BGE_HandsOnGrid?batchId={!DataImportBatch__c.Id}</url>
-    </webLinks>
     <webLinks>
         <fullName>Edit_Processing_Settings</fullName>
         <availability>online</availability>
@@ -516,32 +439,6 @@
         <openType>sidebar</openType>
         <protected>false</protected>
         <url>/apex/BDI_BatchOverride?Id={!DataImportBatch__c.Id}</url>
-    </webLinks>
-    <webLinks>
-        <fullName>New_Gift_Batch</fullName>
-        <availability>online</availability>
-        <description>Directs user to the Batch Gift Entry page</description>
-        <displayType>massActionButton</displayType>
-        <height>600</height>
-        <linkType>page</linkType>
-        <masterLabel>New Gift Batch</masterLabel>
-        <openType>sidebar</openType>
-        <page>BGE_NewGiftBatch</page>
-        <protected>false</protected>
-        <requireRowSelection>false</requireRowSelection>
-    </webLinks>
-    <webLinks>
-        <fullName>New_Gift_Entry_Batch</fullName>
-        <availability>online</availability>
-        <displayType>massActionButton</displayType>
-        <encodingKey>UTF-8</encodingKey>
-        <height>600</height>
-        <linkType>url</linkType>
-        <masterLabel>New Gift Entry Batch</masterLabel>
-        <openType>sidebar</openType>
-        <protected>false</protected>
-        <requireRowSelection>false</requireRowSelection>
-        <url>/001</url>
     </webLinks>
     <webLinks>
         <fullName>Process_Batch</fullName>
