@@ -981,6 +981,7 @@
         <members>Opportunity_Naming_Settings__c.Date_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Name_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Record_Types__c</members>
+        <members>Package_Settings__c.Namespace_Prefix__c</members>
         <members>Partial_Soft_Credit__c.Amount__c</members>
         <members>Partial_Soft_Credit__c.Contact_Name__c</members>
         <members>Partial_Soft_Credit__c.Contact_Role_ID__c</members>
@@ -2006,6 +2007,7 @@
         <members>Household_Naming_Settings__c</members>
         <members>Level__c</members>
         <members>Opportunity_Naming_Settings__c</members>
+        <members>Package_Settings__c</members>
         <members>Partial_Soft_Credit__c</members>
         <members>Relationship_Sync_Excluded_Fields__c</members>
         <members>Schedulable__c</members>
