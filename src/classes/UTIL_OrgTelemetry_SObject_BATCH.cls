@@ -50,8 +50,8 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     private UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode jobMode;
 
     /** @description Stateful counter vars used for the different counting jobs */
-    private Integer countAllRDOpps = 0;
-    private Integer countOpenRDOpps = 0;
+    private Integer rdAllOppsCount = 0;
+    private Integer rdOpenStatusOppsCount = 0;
 
     private static final String recurringDonationOpenStatusValue = System.Label.npe03.RecurringDonationOpenStatus;
 
@@ -75,7 +75,8 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
                         WHERE npe03__Recurring_Donation__c != null]);
             }
         }
-        return null;
+        // If no conditions are met, this returns an empty query to avoid an NPE
+        return Database.getQueryLocator([SELECT Id FROM Account LIMIT 0]);
     }
 
     /**
@@ -96,12 +97,15 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
      * @description Process RecurringDonation counters for the specific Opportunity
      */
     private void getRecurringDonationsCounts(Opportunity opp) {
-        if (opp.npe03__Recurring_Donation__c != null) {
-            countAllRDOpps++;
-            Object rdStatus = opp.npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c;
-            if (rdStatus != null && (String) rdStatus == recurringDonationOpenStatusValue) {
-                countOpenRDOpps++;
-            }
+        if (opp.npe03__Recurring_Donation__c == null) {
+            return;
+        }
+
+        rdAllOppsCount++;
+
+        Object rdStatus = opp.npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c;
+        if (rdStatus != null && (String) rdStatus == recurringDonationOpenStatusValue) {
+            rdOpenStatusOppsCount++;
         }
     }
 
@@ -111,8 +115,8 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     public void finish(Database.BatchableContext context) {
         switch on (jobMode) {
             when RECURRING_DONATIONS {
-                System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), countOpenRDOpps);
-                System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), countAllRDOpps);
+                System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), rdOpenStatusOppsCount);
+                System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), rdAllOppsCount);
             }
         }
     }

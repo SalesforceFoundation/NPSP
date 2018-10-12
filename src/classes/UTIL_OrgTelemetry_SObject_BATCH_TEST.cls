@@ -36,10 +36,13 @@
 @IsTest(IsParallel=false)
 private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
+    /**
+     * @description Create test data needed for the unit tests in this class
+     */
     @TestSetup
     static void testDataSetup() {
 
-        Account a = new Account(Name = 'UTIL_OrgTelemetry_SObject_BATCH_TEST', Type='New');
+        Account a = new Account(Name = 'UTIL_OrgTelemetry_SObject_BATCH_TEST', Type = 'New');
         insert a;
 
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
@@ -55,6 +58,11 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         insert rd;
     }
 
+    /**
+     * @description Provide coverage test for the executed batch job. There's no way to verify that the
+     * job executed; and the job itself modifies no data that can be validated against.
+     * The lack of a failed test itself is an implicit assert that the batch job completed.
+     */
     @IsTest
     static void testSObjectBatchJob() {
         Test.startTest();
