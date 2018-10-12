@@ -68,9 +68,7 @@ public with sharing class RD_AddDonationsBTN_CTRL {
             //This recalculates Rollups only if Customizable Rollup is enabled.
             recalculateRollups(sc.getId());
             
-	        PageReference pageRef = sc.view();
-	        pageRef.setRedirect(true);
-            return pageRef;
+	        return redirectToRecurringDonationsPage();
         
         } catch(Exception e) {
             Database.rollback(sp);
@@ -84,12 +82,11 @@ public with sharing class RD_AddDonationsBTN_CTRL {
     * @description Action method to redirect to the Recurring Donation calling page
     * @return PageReference to the calling page
     */ 
-    public Pagereference returnButtonClick() {
+    public PageReference redirectToRecurringDonationsPage() {
         PageReference pageRef = sc.view();
 	    pageRef.setRedirect(true);
         return pageRef;
     }
-
 
     /*********************************************************************************************************
     * @description Recalculates the Rollup for Recurring Donation.

@@ -1281,6 +1281,14 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <value>You do not have permission to create a donation record. Please contact your system administrator for more information.</value>
     </labels>
     <labels>
+        <fullName>RD_ErrorAddDonationReturnButtonText</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Return to Recurring Donations</shortDescription>
+        <value>Return to Recurring Donations</value>
+    </labels>
+    <labels>
         <fullName>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>

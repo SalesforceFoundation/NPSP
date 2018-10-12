@@ -1210,6 +1210,7 @@
         <members>PageMessagesInfo</members>
         <members>PageMessagesWarning</members>
         <members>RD_ErrorAddDonationPermissionDenied</members>
+        <members>RD_ErrorAddDonationReturnButtonText</members>
         <members>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</members>
         <members>RD_ErrorNotEnoughClosedValueForFixedLength</members>
         <members>REL_Create_New_Relationship</members>

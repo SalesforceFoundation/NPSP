@@ -835,11 +835,44 @@ private with sharing class RD_RecurringDonations_TEST2 {
         npe03__Recurring_Donation_Field__c = 'Name'
         );
         
+        test.startTest();
+        
         ApexPages.StandardController scc = new ApexPages.StandardController(r1);
         RD_AddDonationsBTN_CTRL rdadb = new RD_AddDonationsBTN_CTRL(scc);
         system.assertEquals(r1.id, rdadb.sc.getId());
-        rdadb.buttonClick();    
-    }    
+        rdadb.buttonClick();
+       
+        Profile readOnlyProfile = [SELECT Id FROM Profile WHERE Name='Read Only'];
+        User readOnlyUser = new User(
+            UserName = 'readonlyuser' + DateTime.now().getTime() + '@testorg.com',
+            Email = 'readonlyuser@testorg.com',
+            Alias = 'readon',
+            ProfileId = readOnlyProfile.Id,
+            LastName = 'Testing', 
+            LanguageLocaleKey = 'en_US',
+            LocaleSidKey = 'en_US', 
+            EmailEncodingKey = 'UTF-8', 
+            TimeZoneSidKey = 'America/Los_Angeles'
+        );
+        
+        //Read Only user denied permission to add donation, no redirect, correct message displayed
+        System.runAs(readOnlyUser) {
+            System.assertEquals(null, rdadb.buttonClick());
+
+            boolean hasMessage = false;
+
+            for(Apexpages.Message message : ApexPages.getMessages()){
+                if (message.getDetail().equals(System.Label.RD_ErrorAddDonationPermissionDenied)) {
+                    hasMessage = true;
+                    break;
+                } 
+            }
+
+            system.assert(true, hasMessage);
+        }
+
+        test.stopTest();
+    }
 
     /*******************************************************************************************************
     * @description test method for custom field mapping on insert and update of Fixed Length RDs

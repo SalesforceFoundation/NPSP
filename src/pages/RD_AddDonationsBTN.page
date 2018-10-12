@@ -2,7 +2,7 @@
     <apex:pageBlock>
         <apex:PageMessages />
         <apex:form>
-            <apex:commandButton value="Return" action="{!returnButtonClick}"/>
+            <apex:commandButton value="{!$Label.RD_ErrorAddDonationReturnButtonText}" action="{!redirectToRecurringDonationsPage}"/>
         </apex:form>
     </apex:pageBlock>
 </apex:page>
