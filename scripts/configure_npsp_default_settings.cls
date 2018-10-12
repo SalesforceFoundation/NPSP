@@ -33,6 +33,10 @@ public static void initializeNPSPSettings() {
     cos.%%%NAMESPACE%%%Notification_Recipient_Opp_Contact_Role__c = 'Notification Contact';
     cos.%%%NAMESPACE%%%Payments_Auto_Close_Stage_Name__c = getClosedWonStage();
     upsert cos;
+
+    %%%NAMESPACE%%%Package_Settings__c pkg = %%%NAMESPACE%%%Package_Settings__c.getOrgDefaults();
+    pkg.%%%NAMESPACE%%%Namespace_Prefix__c = %%%NAMESPACE%%%UTIL_Namespace.StrTokenNSPrefix('');
+    upsert pkg;
 }
 
 private static String getClosedWonStage(){
