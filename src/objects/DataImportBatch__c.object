@@ -401,6 +401,7 @@
         <label>All</label>
     </listViews>
     <listViews>
+        <fullName>Gift_Batches</fullName>
         <columns>NAME</columns>
         <columns>Batch_Description__c</columns>
         <columns>Status__c</columns>
