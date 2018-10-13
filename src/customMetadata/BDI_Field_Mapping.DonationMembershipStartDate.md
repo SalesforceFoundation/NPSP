@@ -11,10 +11,6 @@
         <value xsi:type="xsd:string">Donation_Membership_Start_Date__c</value>
     </values>
     <values>
-        <field>TargetFieldEntity__c</field>
-        <value xsi:type="xsd:string">Opportunity</value>
-    </values>
-    <values>
         <field>TargetField__c</field>
         <value xsi:type="xsd:string">npe01__Membership_Start_Date__c</value>
     </values>

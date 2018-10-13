@@ -11,10 +11,6 @@
         <value xsi:nil="true"/>
     </values>
     <values>
-        <field>TargetFieldEntity__c</field>
-        <value xsi:nil="true"/>
-    </values>
-    <values>
         <field>TargetField__c</field>
         <value xsi:nil="true"/>
     </values>

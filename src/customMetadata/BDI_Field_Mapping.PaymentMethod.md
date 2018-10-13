@@ -11,10 +11,6 @@
         <value xsi:type="xsd:string">Payment_Method__c</value>
     </values>
     <values>
-        <field>TargetFieldEntity__c</field>
-        <value xsi:type="xsd:string">npe01__OppPayment__c</value>
-    </values>
-    <values>
         <field>TargetField__c</field>
         <value xsi:type="xsd:string">npe01__Payment_Method__c</value>
     </values>

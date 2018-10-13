@@ -711,30 +711,34 @@ global with sharing class BDI_DataImportService {
         BDISettings__c bdiSettings = BDISettings__c.getOrgDefaults();
         Map<String, String> parametersByName = new Map<String, String>();
         Map<String, String> dataImportFieldToTargetField = new Map<String, String>();
-        Map<Id, Set<String>> targetFieldsBySource = new Map<Id, Set<String>>();
+        Map<String, Set<String>> targetFieldsBySource = new Map<String, Set<String>>();
         Boolean useCustomMetadataForFieldMapping = false;
         if (bdiSettings.MapWithCustomMetadataTypes__c) {
             List<BDI_Field_Mapping__mdt> bdiFieldMappings = [SELECT
                                                                     SourceField__c,
-                                                                    TargetField__c
+                                                                    TargetField__c,
+                                                                    SourceFieldEntity__c
                                                              FROM
                                                                     BDI_Field_Mapping__mdt];
 
             for (BDI_Field_Mapping__mdt customMetadata : bdiFieldMappings) {
-                Id sourceField = customMetadata.SourceField__c;
-                if (targetFieldsBySource.containsKey(sourceField)) {
-            		Set<String> targetFields = targetFieldsBySource.get(sourceField);
+                String sourceObject = String.valueOf(customMetadata.SourceFieldEntity__c);
+                String sourceField = String.valueOf(customMetadata.SourceField__c);
+                String source = sourceObject + ' - ' + sourceField;
+                if (targetFieldsBySource.containsKey(source)) {
+            		Set<String> targetFields = targetFieldsBySource.get(source);
             		targetFields.add(customMetadata.TargetField__c);
-                    targetFieldsBySource.put(sourceField, targetFields);
+                    targetFieldsBySource.put(source, targetFields);
 	            } else {
-            		targetFieldsBySource.put(sourceField, new Set<String> { customMetadata.TargetField__c });
+            		targetFieldsBySource.put(source, new Set<String> { customMetadata.TargetField__c });
             	}
             }
 
             useCustomMetadataForFieldMapping = true;
         }
-
+        system.debug('DATA IMPORT FIELDS ==> ' + dataImportFields);
         for (String dataImportField : dataImportFields) {
+        system.debug('DATA IMPORT FIELD ==> ' + dataImportField);
             if (useCustomMetadataForFieldMapping) {
                 if (targetFieldsBySource.containsKey(dataImportField)) {
                     Set<String> targetFields = targetFieldsBySource.get(dataImportField);

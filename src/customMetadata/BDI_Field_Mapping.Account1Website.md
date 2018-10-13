@@ -11,10 +11,6 @@
         <value xsi:type="xsd:string">Account1_Website__c</value>
     </values>
     <values>
-        <field>TargetFieldEntity__c</field>
-        <value xsi:type="xsd:string">Account</value>
-    </values>
-    <values>
         <field>TargetField__c</field>
         <value xsi:type="xsd:string">Website</value>
     </values>

@@ -11,15 +11,7 @@
         <value xsi:type="xsd:string">Donation_Type__c</value>
     </values>
     <values>
-        <field>TargetFieldEntity__c</field>
-        <value xsi:type="xsd:string">Opportunity</value>
-    </values>
-    <values>
         <field>TargetField__c</field>
         <value xsi:type="xsd:string">Type</value>
-    </values>
-    <values>
-        <field>target__c</field>
-        <value xsi:nil="true">Type</value>
     </values>
 </CustomMetadata>
