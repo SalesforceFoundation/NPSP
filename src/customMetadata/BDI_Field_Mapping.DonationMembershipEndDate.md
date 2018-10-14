@@ -12,6 +12,6 @@
     </values>
     <values>
         <field>TargetField__c</field>
-        <value xsi:type="xsd:string">npe01__Membership_End_Date__c</value>
+        <value xsi:type="xsd:string">Opportunity.npe01__Membership_End_Date__c</value>
     </values>
 </CustomMetadata>

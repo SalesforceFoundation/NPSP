@@ -12,6 +12,6 @@
     </values>
     <values>
         <field>TargetField__c</field>
-        <value xsi:type="xsd:string">npe01__Check_Reference_Number__c</value>
+        <value xsi:type="xsd:string">Payment.npe01__Check_Reference_Number__c</value>
     </values>
 </CustomMetadata>

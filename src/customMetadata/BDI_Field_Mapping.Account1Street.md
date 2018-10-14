@@ -12,6 +12,6 @@
     </values>
     <values>
         <field>TargetField__c</field>
-        <value xsi:type="xsd:string">BillingStreet</value>
+        <value xsi:type="xsd:string">Account1.BillingStreet</value>
     </values>
 </CustomMetadata>

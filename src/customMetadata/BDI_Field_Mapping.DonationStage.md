@@ -12,6 +12,6 @@
     </values>
     <values>
         <field>TargetField__c</field>
-        <value xsi:type="xsd:string">StageName</value>
+        <value xsi:type="xsd:string">Opportunity.StageName</value>
     </values>
 </CustomMetadata>
