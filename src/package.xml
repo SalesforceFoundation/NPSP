@@ -708,7 +708,6 @@
         <members>Batch_Template__c.Donation_Matching_Behavior__c</members>
         <members>Batch_Template__c.Donation_Matching_Implementing_Class__c</members>
         <members>Batch_Template__c.Donation_Matching_Rule__c</members>
-        <members>Batch_Template__c.EnableTotalEntry__c</members>
         <members>Batch_Template__c.Process_Using_Scheduled_Job__c</members>
         <members>Batch_Template__c.RequireTotalMatch__c</members>
         <members>Batch_Template__c.Run_Opportunity_Rollups_while_Processing__c</members>
@@ -755,7 +754,6 @@
         <members>DataImportBatch__c.Account_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Batch_Description__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>
-        <members>DataImportBatch__c.Batch_Template__c</members>
         <members>DataImportBatch__c.Contact_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Contact_Matching_Rule__c</members>
         <members>DataImportBatch__c.Donation_Date_Range__c</members>
@@ -1003,6 +1001,7 @@
         <members>Opportunity_Naming_Settings__c.Date_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Name_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Record_Types__c</members>
+        <members>Package_Settings__c.Namespace_Prefix__c</members>
         <members>Partial_Soft_Credit__c.Amount__c</members>
         <members>Partial_Soft_Credit__c.Contact_Name__c</members>
         <members>Partial_Soft_Credit__c.Contact_Role_ID__c</members>
@@ -1400,6 +1399,7 @@
         <members>bgeGridGiftDeleted</members>
         <members>bgeGridGiftSaved</members>
         <members>bgeGridGiftUpdated</members>
+        <members>bgeGridMatchedRecord</members>
         <members>bgeGridNewGift</members>
         <members>bgeGridNoGiftsBody</members>
         <members>bgeGridNoGiftsHeader</members>
@@ -2119,6 +2119,7 @@
         <members>Household_Naming_Settings__c</members>
         <members>Level__c</members>
         <members>Opportunity_Naming_Settings__c</members>
+        <members>Package_Settings__c</members>
         <members>Partial_Soft_Credit__c</members>
         <members>Relationship_Sync_Excluded_Fields__c</members>
         <members>Schedulable__c</members>
