@@ -34,19 +34,40 @@
 * @description Unit Tests related to the org telemetry class
 */
 @IsTest(IsParallel=false)
-private class UTIL_OrgTelemetry_Batch_TEST {
+private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
     /**
-     * @description Submits the telemetry batch job to execute. This will only execute a single child iteration
-     * and not the entire set of data. It's not possible to determine if the job actually completed.
-     * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
-     * This specific test needs to be in a separate test class to avoid an internal error that is thrown when
-     * testing along side other methods that call the same featureParameter value used by this test.
+     * @description Create test data needed for the unit tests in this class
+     */
+    @TestSetup
+    static void testDataSetup() {
+
+        Account a = new Account(Name = 'UTIL_OrgTelemetry_SObject_BATCH_TEST', Type = 'New');
+        insert a;
+
+        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
+                Name = 'UTIL_OrgTelemetry_SObject_BATCH_TEST',
+                npe03__Organization__c = a.Id,
+                npe03__Installments__c = 3,
+                npe03__Amount__c = 100,
+                npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
+                npe03__Date_Established__c = Date.newInstance(2018,6,15),
+                npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
+                npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus
+        );
+        insert rd;
+    }
+
+    /**
+     * @description Provide coverage test for the executed batch job. There's no way to verify that the
+     * job executed; and the job itself modifies no data that can be validated against.
+     * The lack of a failed test itself is an implicit assert that the batch job completed.
      */
     @IsTest
-    static void validateTelemetryBatchJob() {
+    static void testSObjectBatchJob() {
         Test.startTest();
-        UTIL_OrgTelemetry_SVC.dispatchTelemetryBatchJob();
+        Database.executeBatch(
+                new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS), 20);
         Test.stopTest();
     }
 }
