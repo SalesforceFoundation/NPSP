@@ -164,7 +164,7 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(1, imports.size());
         System.assertEquals(imports[0].Contact1Imported__c, contacts[0].Id);
         System.assertNotEquals(null, imports[0].HouseholdAccountImported__c);
-        System.assertEquals(label.bdiMatched, imports[0].Contact1ImportStatus__c);
+        System.assertEquals(System.Label.bdiMatched, imports[0].Contact1ImportStatus__c);
     }
 
     /*********************************************************************************************************
