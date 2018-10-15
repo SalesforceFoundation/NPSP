@@ -168,13 +168,20 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
     private Engagement_Plan__c engagementPlanFromLevel(Level__c level, Id target) {
         Engagement_Plan__c ep = new Engagement_Plan__c(Engagement_Plan_Template__c = level.Engagement_Plan_Template__c);
         // Attempt to find the engagement plan lookup field
-        // it could be either a standard object that requires us to add a suffix
-        // e.g. Account__c, Contact__c
-        // or a custom object name with suffix already appended
+        // it could be either a standard object that requires us to add a namespace prefix and custom field suffix
+        // e.g. npsp__Account__c, npsp__Contact__c
+        // or a standard object added by a user with no prefix that requires us to add a custom feild suffix
         // e.g. Custom_Object__c
-        if (UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan__c'), level.Target__c + '__c')) {
-            ep.put(level.Target__c + '__c', target);
-        } else if (UTIL_Describe.isValidField(UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan__c'), level.Target__c)) {
+        // or a custom object name without namespace prefix and with suffix already appended
+        // e.g. Custom_Object__c
+        String engagementPlanPrefixed = UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan__c');
+        String targetFieldPrefixedAndSuffixed = UTIL_Namespace.StrTokenNSPrefix(level.Target__c + '__c');
+        String targetFieldSuffixed = level.Target__c + '__c';
+        if (UTIL_Describe.isValidField(engagementPlanPrefixed, targetFieldPrefixedAndSuffixed)) {
+            ep.put(targetFieldPrefixedAndSuffixed, target);
+        } else if (UTIL_Describe.isValidField(engagementPlanPrefixed, targetFieldSuffixed)) {
+            ep.put(targetFieldSuffixed, target);
+        } else if (UTIL_Describe.isValidField(engagementPlanPrefixed, level.Target__c)) {
             ep.put(level.Target__c, target);
         } else {
             //no matching field found, can't create an engagement plan

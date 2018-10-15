@@ -1371,6 +1371,7 @@
         <members>conMergeStageComplete</members>
         <members>conMergeWinnerAsstText</members>
         <members>engagementPlanCantEdit</members>
+        <members>engagementPlanMissingField</members>
         <members>engagementPlanNoLookups</members>
         <members>engagementPlanTwoLookups</members>
         <members>exceptionDeletePermission</members>
