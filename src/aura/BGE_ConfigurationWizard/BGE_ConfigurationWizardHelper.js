@@ -328,7 +328,6 @@
 
                 _bgeTemplateController.saveRecord(sObjectName, templateDetailsData, activeFields, {
                     success: function(response) {
-                        _templateMetadata.setMode('view');
                         _templateInfo.load(
                             {
                                 name: response.name,
@@ -844,7 +843,7 @@
                     'Select Matching Rules'
                 ];
 
-                var progressIndicatorStepBase1 = parseInt(this.progressIndicatorStep) + 1;
+                var progressIndicatorStepBase1 = parseInt(this.progressIndicatorStep) - 1;
                 this.pageHeader = headers[progressIndicatorStepBase1];
                 this.onMetadataUpdated.notify();
             }
