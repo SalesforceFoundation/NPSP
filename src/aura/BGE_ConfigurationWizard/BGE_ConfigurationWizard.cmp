@@ -88,7 +88,7 @@
     </aura:if>
 
     <!--Body-->
-    <div aura:id="body" class="slds-tabs_card">
+    <div aura:id="body" class="{!if(v.templateMetadata.labels.sObjectNameNoNamespace == 'Batch_Template__c', 'slds-tabs_card', '')}">
         <lightning:layout horizontalAlign="center" multipleRows="true">
             <lightning:layoutItem size="12" largeDeviceSize="8" mediumDeviceSize="10" smallDeviceSize="12">
 
@@ -115,7 +115,7 @@
                         <div class="slds-p-bottom_large">
                             <lightning:progressIndicator currentStep="{!v.templateMetadata.progressIndicatorStep}" type="base"
                                                          hasError="false" variant="base">
-                                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateOverviewWizard}" value="1"/>
+                                <lightning:progressStep label="{!v.templateMetadata.labels.recordInfoLabel}" value="1"/>
                                 <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="3"/>
                                 <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="4"/>
                             </lightning:progressIndicator>
@@ -169,7 +169,7 @@
                             <aura:iteration items="{!v.templateFields.fieldGroups}" var="currentFieldGroup">
                                 <lightning:accordionSection name="{!currentFieldGroup.sObjectName}" label="{!currentFieldGroup.sObjectName}">
                                     <lightning:layout horizontalAlign="center">
-                                        <lightning:layoutItem size="12" class="slds-grid slds-grid--align-center">
+                                        <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center">
                                             <lightning:dualListbox name="multipleOptions"
                                                                    label="Fields"
                                                                    sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"

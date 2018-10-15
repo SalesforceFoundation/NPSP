@@ -281,7 +281,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.Batch_Template__c.Name.getDescribe().getLabel() + ', ' + Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
                 'description' => Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
                 'totalMatchHelp' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
-                'totalMatchLabel' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getLabel()
+                'totalMatchLabel' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getLabel(),
+                'recordInfoLabel' => Label.bgeBatchTemplateOverviewWizard
         };
         return labels;
     }
@@ -298,11 +299,20 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.DataImportBatch__c.Name.getDescribe().getLabel() + ', ' + Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
                 'description' => Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
                 'totalMatchHelp' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
-                'totalMatchLabel' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getLabel()
+                'totalMatchLabel' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getLabel(),
+                'recordInfoLabel' => Label.bgeBatchInfoWizard
         };
         return labels;
     }
 
+    /*******************************************************************************************************
+    * @description Checks if an org uses namespacing
+    * @return Boolean of if namespace is used
+    */
+    @AuraEnabled
+    public static Boolean isOrgNamespaced() {
+        return UTIL_Namespace.getNamespace() != '';
+    }
 
     /*******************************************************************************************************
     * @description Deserializes information to the model and selects which record to save.

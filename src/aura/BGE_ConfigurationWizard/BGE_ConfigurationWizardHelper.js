@@ -342,8 +342,12 @@
 
                 _bgeTemplateController.saveRecord(sObjectName, templateDetailsData, activeFields, {
                     success: function(response) {
-                        _templateMetadata.setMode('view');
                         _templateInfo.load(response);
+                        var navEvt = $A.get('e.force:navigateToSObject');
+                        navEvt.setParams({
+                            'recordId': response.id
+                        });
+                        navEvt.fire();
                     },
                     error: function(error) {
                         console.log(error);
@@ -858,15 +862,15 @@
              * @return void.
              */
             function setPageHeader() {
-                var headers = [$A.get('$Label.c.bgeBatchTemplateOverviewWizard'),
+                var headers = [this.labels.recordInfoLabel,
                     'Select Template',
                     $A.get('$Label.c.bgeBatchTemplateSelectFields'),
                     $A.get('$Label.c.bgeBatchTemplateSetFieldOptions'),
                     'Select Matching Rules'
                 ];
 
-                var progressIndicatorStepBase1 = parseInt(this.progressIndicatorStep) + 1;
-                this.pageHeader = headers[progressIndicatorStepBase1]
+                var progressIndicatorStepBase1 = parseInt(this.progressIndicatorStep) - 1;
+                this.pageHeader = headers[progressIndicatorStepBase1];
                 this.onMetadataUpdated.notify();
             }
 

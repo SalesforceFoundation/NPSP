@@ -10,7 +10,9 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>Clone</actionName>
-        <type>Default</type>
+        <content>BDI_BatchOverride</content>
+        <skipRecordTypeSelect>true</skipRecordTypeSelect>
+        <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>Delete</actionName>
@@ -18,7 +20,9 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>Edit</actionName>
-        <type>Default</type>
+        <content>BDI_BatchOverride</content>
+        <skipRecordTypeSelect>true</skipRecordTypeSelect>
+        <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>List</actionName>
@@ -26,7 +30,9 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>New</actionName>
-        <type>Default</type>
+        <content>BDI_BatchOverride</content>
+        <skipRecordTypeSelect>true</skipRecordTypeSelect>
+        <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>SaveEdit</actionName>
@@ -56,16 +62,6 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
-        <fullName>Active_Fields__c</fullName>
-        <description>Represents the data model of active fields for a NPSP_DataImportBatch__c record. Not intended for direct customer use and should not be edited directly.</description>
-        <externalId>false</externalId>
-        <label>Active Fields</label>
-        <length>32768</length>
-        <trackTrending>false</trackTrending>
-        <type>LongTextArea</type>
-        <visibleLines>3</visibleLines>
-    </fields>
-    <fields>
         <fullName>Account_Custom_Unique_ID__c</fullName>
         <description>An optional Unique Id field to use for Organization Account matching</description>
         <externalId>false</externalId>
@@ -77,6 +73,17 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Active_Fields__c</fullName>
+        <description>Represents the data model of active fields for a NPSP_DataImportBatch__c record. Not intended for direct customer use and should not be edited directly.</description>
+        <externalId>false</externalId>
+        <label>Active Fields</label>
+        <length>32768</length>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
     </fields>
     <fields>
         <fullName>Batch_Description__c</fullName>
@@ -103,6 +110,19 @@
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Batch_Template__c</fullName>
+        <deleteConstraint>Restrict</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Batch Template</label>
+        <referenceTo>Batch_Template__c</referenceTo>
+        <relationshipLabel>NPSP Data Import Batches</relationshipLabel>
+        <relationshipName>NPSP_Data_Import_Batches</relationshipName>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
     </fields>
     <fields>
         <fullName>Contact_Custom_Unique_ID__c</fullName>
@@ -209,7 +229,7 @@
     </fields>
     <fields>
         <fullName>Donation_Matching_Rule__c</fullName>
-        <defaultValue>&quot;npsp__Donation_Amount__c;npsp__Donation_Date__c"</defaultValue>
+        <defaultValue>&quot;npsp__Donation_Amount__c;npsp__Donation_Date__c&quot;</defaultValue>
         <description>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field.</description>
         <externalId>false</externalId>
         <inlineHelpText>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field.</inlineHelpText>
@@ -220,6 +240,17 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>EnableTotalEntry__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When checked, the user filling out the template may enter the expected number of gifts and expected total amount for the batch.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, the user filling out the template may enter the expected number of gifts and expected total amount for the batch.</inlineHelpText>
+        <label>Enable Expected Totals Entry</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Expected_Count_of_Gifts__c</fullName>
@@ -320,6 +351,7 @@
         <externalId>false</externalId>
         <inlineHelpText>When checked, the total number of gifts and total amount must match the expected totals entered for the batch.</inlineHelpText>
         <label>Require Expected Totals Match</label>
+        <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
@@ -346,6 +378,17 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
+    <fields>
+        <fullName>UseBatchGiftEntryGrid__c</fullName>
+        <defaultValue>true</defaultValue>
+        <description>This flag is set during batch creation to use the gift entry batch feature.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Set this flag during batch creation to create a gift entry batch.</inlineHelpText>
+        <label>Use Batch Gift Entry Grid</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
     <label>NPSP Data Import Batch</label>
     <listViews>
         <fullName>All</fullName>
@@ -356,6 +399,20 @@
         <columns>Batch_Description__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
+    </listViews>
+    <listViews>
+        <fullName>Gift_Batches</fullName>
+        <columns>NAME</columns>
+        <columns>Batch_Description__c</columns>
+        <columns>Status__c</columns>
+        <columns>CREATEDBY_USER</columns>
+        <columns>CREATED_DATE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Batch_Template__c</field>
+            <operation>equals</operation>
+        </filters>
+        <label>Gift Batches</label>
     </listViews>
     <nameField>
         <label>Batch Name</label>
@@ -372,17 +429,6 @@
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
-    <webLinks>
-        <fullName>Batch_Gift_Entry</fullName>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <encodingKey>UTF-8</encodingKey>
-        <linkType>url</linkType>
-        <masterLabel>Batch Gift Entry</masterLabel>
-        <openType>replace</openType>
-        <protected>false</protected>
-        <url>/apex/BGE_HandsOnGrid?batchId={!DataImportBatch__c.Id}</url>
-    </webLinks>
     <webLinks>
         <fullName>Edit_Processing_Settings</fullName>
         <availability>online</availability>
