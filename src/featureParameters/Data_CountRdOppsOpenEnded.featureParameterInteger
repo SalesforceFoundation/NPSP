@@ -2,5 +2,5 @@
 <FeatureParameterInteger xmlns="http://soap.sforce.com/2006/04/metadata">
     <dataflowDirection>SubscriberToLmo</dataflowDirection>
     <masterLabel>Data: Count of all Open Ended Recurring Donation Opportunities</masterLabel>
-    <value>0</value>
+    <value>-1</value>
 </FeatureParameterInteger>
