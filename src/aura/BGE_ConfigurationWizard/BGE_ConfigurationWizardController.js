@@ -101,6 +101,7 @@
             }
             model.getTemplateMetadata().cancel();
         } else if (channel === 'save' || buttonClick === 'save') {
+            //todo: add validation
             model.save();
         }
     },

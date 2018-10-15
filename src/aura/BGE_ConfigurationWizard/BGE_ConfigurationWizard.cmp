@@ -165,9 +165,13 @@
                 <!-- Step 3: Select Fields -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '3'}">
                     <div class="slds-m-around_medium">
+<!--
                         <lightning:accordion>
+-->
                             <aura:iteration items="{!v.templateFields.fieldGroups}" var="currentFieldGroup">
+<!--
                                 <lightning:accordionSection name="{!currentFieldGroup.sObjectName}" label="{!currentFieldGroup.sObjectName}">
+-->
                                     <lightning:layout horizontalAlign="center">
                                         <lightning:layoutItem size="12" class="slds-grid slds-grid--align-center">
                                             <lightning:dualListbox name="multipleOptions"
@@ -180,9 +184,13 @@
                                             />
                                         </lightning:layoutItem>
                                     </lightning:layout>
+<!--
                                 </lightning:accordionSection>
+-->
                             </aura:iteration>
+<!--
                         </lightning:accordion>
+-->
                     </div>
                 </aura:if>
 

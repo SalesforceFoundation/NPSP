@@ -1405,12 +1405,12 @@
         <members>bgeGridGiftSaved</members>
         <members>bgeGridGiftUpdated</members>
         <members>bgeGridMatchedRecord</members>
-        <members>bgeGridNewGift</members>
         <members>bgeGridNoGiftsBody</members>
         <members>bgeGridNoGiftsHeader</members>
         <members>bgeGridTotalAmount</members>
         <members>bgeGridTotalCount</members>
         <members>bgeNewBatch</members>
+        <members>bgeNewGift</members>
         <members>bgeTabHeader</members>
         <members>btnRemove</members>
         <members>campaignMemberStatusDefault</members>
@@ -2383,6 +2383,7 @@
         <members>Address__c</members>
         <members>BatchGiftEntry</members>
         <members>Batch_Data_Entry</members>
+        <members>Batch_Gift_Entry</members>
         <members>Batch_Template__c</members>
         <members>Contact_Merge</members>
         <members>DataImportBatch__c</members>

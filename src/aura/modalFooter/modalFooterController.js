@@ -40,8 +40,6 @@
      */
     save: function(component, event, helper) {
         helper.sendMessage(component, 'save');
-        //todo: add validation, put this in another listener function
-        component.find("overlayLib").notifyClose();
     }
 
 })

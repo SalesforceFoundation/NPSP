@@ -19,6 +19,7 @@
     <actionOverrides>
         <actionName>Edit</actionName>
         <content>BGE_ConfigurationWizard</content>
+        <formFactor>Large</formFactor>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>LightningComponent</type>
     </actionOverrides>
@@ -33,6 +34,7 @@
     <actionOverrides>
         <actionName>New</actionName>
         <content>BGE_ConfigurationWizard</content>
+        <formFactor>Large</formFactor>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>LightningComponent</type>
     </actionOverrides>
