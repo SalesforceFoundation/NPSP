@@ -1,8 +1,4 @@
-/**
- * Created by bbreisnes on 2018-10-12.
- */
 ({
-
     /**
      * @description: creates the configuration modal
      */

@@ -845,7 +845,7 @@
                 ];
 
                 var progressIndicatorStepBase1 = parseInt(this.progressIndicatorStep) + 1;
-                this.pageHeader = headers[progressIndicatorStepBase1]
+                this.pageHeader = headers[progressIndicatorStepBase1];
                 this.onMetadataUpdated.notify();
             }
 
