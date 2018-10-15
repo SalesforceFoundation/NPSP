@@ -2,5 +2,5 @@
 <FeatureParameterBoolean xmlns="http://soap.sforce.com/2006/04/metadata">
     <dataflowDirection>SubscriberToLmo</dataflowDirection>
     <masterLabel>Count of NPSP Error Log Records</masterLabel>
-    <value>0</value>
+    <value>-1</value>
 </FeatureParameterBoolean>
