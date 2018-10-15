@@ -836,7 +836,7 @@
              * @return void.
              */
             function setPageHeader() {
-                var headers = [$A.get('$Label.c.bgeBatchTemplateOverviewWizard'),
+                var headers = [this.labels.recordInfoLabel,
                     'Select Template',
                     $A.get('$Label.c.bgeBatchTemplateSelectFields'),
                     $A.get('$Label.c.bgeBatchTemplateSetFieldOptions'),
