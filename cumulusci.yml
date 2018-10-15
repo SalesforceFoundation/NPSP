@@ -45,25 +45,25 @@ tasks:
         description: Deploys the post install configuration for an unmanaged DE org
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
-            path: dev_config/src
+            path: config/dev
 
     deploy_dev_config_managed:
         description: Deploys the post install configuration for a managed DE org
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
-            path: dev_config/src_managed
+            path: config/managed
 
     deploy_qa_config:
         description: Deploys additional fields used for qa purposes only
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
-            path: dev_config/src_qa
+            path: config/qa
 
     deploy_dev_config_delete:
         description: Deploys the metadata deletions for the post install DE org config
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
-            path: dev_config/delete
+            path: config/delete
 
     robot_libdoc:
         class_path: cumulusci.tasks.robotframework.RobotLibDoc
@@ -216,7 +216,7 @@ flows:
             2:
                 task: deploy
                 options:
-                    path: dev_config/src_acctsc_rollups
+                    path: config/acctsc_rollups
             3:
                 task: update_admin_profile
 
@@ -242,7 +242,7 @@ flows:
             1:
                 task: deploy
                 options:
-                    path: dev_config/src_offsetfiscal
+                    path: config/offsetfiscal
 
     test_data_dev_org:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 100 Contacts into the target org.'

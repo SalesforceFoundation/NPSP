@@ -367,7 +367,7 @@ public with sharing class BDI_ContactService {
         strSoql += ' WHERE AccountId IN :setHHId';
         List<Contact> listHHContacts = database.query(strSoql);
         for (Contact con : listHHContacts) {
-            mapDIKeyToContact.put(con.Firstname + '|' + con.AccountId, con);
+            mapDIKeyToContact.put(con.Firstname.toLowerCase() + '|' + con.AccountId, con);
         }
     }
 
@@ -634,29 +634,29 @@ public with sharing class BDI_ContactService {
 
     First, we create a key which is the Salesforce Id of the Contact.
     Second, if Contact Unique Id is specified, we create a key with that unique id.
-    Then we use a compound key of Contact Firstname, Lastname, Email, and Phone (with a | between each) to
-    match against existing Contacts,
+    Then we use a compound key of Contact Firstname, Lastname, Email, and Phone (transformed to lowercase, 
+    in order to ignore case differences, with a | between each) to match against existing Contacts,
     and also those Contacts we are creating. We call this compound key a diKey. Our mapDIKeyToContact
     is used to lookup a given Contact from a diKey. In order to support settings that tell us which fields
     to use in the match, a given Contact can have multiple keys. Eg., if the setting is Email Only, and
     we have an existing Contact of Fred Smith fred@smith.com, then we need to support matching the following
     diKeys:
-        Fred|Smith|fred@smith.com
-        Fred||fred@smith.com
-        |Smith|fred@smith.com
+        fred|smith|fred@smith.com
+        fred||fred@smith.com
+        |smith|fred@smith.com
         ||fred@smith.com
 
     In this same example, if our DI record is John Doe john@doe.com, then its diKeys would be:
-        John|Doe|john@doe.com
-        John||john@doe.com
-        |Doe|john@doe.com
+        john|doe|john@doe.com
+        john||john@doe.com
+        |doe|john@doe.com
         ||john@doe.com
 
     But if another DI record is just Bob Dole (no email), then we know it can't match an existing Contact
     since it has no email, but we still need to create a unique diKey for this record so that we can track
     its Contact, as well as map other DI records with the same name to the same contact.  Thus we'll create
     the diKey:
-        Bob|Dole|
+        bob|dole|
 
     So the rules can be explained as:
         Existing contacts only add the specific keys the rules can match against.
@@ -696,7 +696,7 @@ public with sharing class BDI_ContactService {
 
         boolean addedToken = false;
         if (con.Firstname != null) {
-            listFName.add(con.Firstname);
+            listFName.add(con.Firstname.toLowerCase());
             addedToken = true;
         }
         if (!addedToken || !isFirstnameInContactMatchRules)
@@ -704,7 +704,7 @@ public with sharing class BDI_ContactService {
 
         addedToken = false;
         if (con.Lastname != null) {
-            listLName.add(con.Lastname);
+            listLName.add(con.Lastname.toLowerCase());
             addedToken = true;
         }
         if (!addedToken || !isLastnameInContactMatchRules)
@@ -712,19 +712,19 @@ public with sharing class BDI_ContactService {
 
         addedToken = false;
         if (con.Email != null) {
-            listEmail.add(con.Email);
+            listEmail.add(con.Email.toLowerCase());
             addedToken = true;
         }
         if (con.npe01__HomeEmail__c != null) {
-            listEmail.add(con.npe01__HomeEmail__c);
+            listEmail.add(con.npe01__HomeEmail__c.toLowerCase());
             addedToken = true;
         }
         if (con.npe01__WorkEmail__c != null) {
-            listEmail.add(con.npe01__WorkEmail__c);
+            listEmail.add(con.npe01__WorkEmail__c.toLowerCase());
             addedToken = true;
         }
         if (con.npe01__AlternateEmail__c != null) {
-            listEmail.add(con.npe01__AlternateEmail__c);
+            listEmail.add(con.npe01__AlternateEmail__c.toLowerCase());
             addedToken = true;
         }
         if (!addedToken || !isEmailInContactMatchRules)
@@ -819,10 +819,10 @@ public with sharing class BDI_ContactService {
         List<String> listLName = new List<String>();
         List<String> listEmail = new List<String>();
         List<String> listPhone = new List<String>();
-        boolean addedToken = false;
+        Boolean addedToken = false;
 
         if (di.get(strCx + '_Firstname__c') != null) {
-            listFName.add(String.valueOf(di.get(strCx + '_Firstname__c')));
+            listFName.add(String.valueOf(di.get(strCx + '_Firstname__c')).toLowerCase());
             addedToken = true;
         }
         if (!isFirstnameInContactMatchRules || !addedToken) {
@@ -831,7 +831,7 @@ public with sharing class BDI_ContactService {
 
         addedToken = false;
         if (di.get(strCx + '_Lastname__c') != null) {
-            listLName.add(String.valueOf(di.get(strCx + '_Lastname__c')));
+            listLName.add(String.valueOf(di.get(strCx + '_Lastname__c')).toLowerCase());
             addedToken = true;
         }
         if (!isLastnameInContactMatchRules || !addedToken) {
@@ -840,15 +840,15 @@ public with sharing class BDI_ContactService {
 
         addedToken = false;
         if (di.get(strCx + '_Personal_Email__c') != null) {
-            listEmail.add(String.valueOf(di.get(strCx + '_Personal_Email__c')));
+            listEmail.add(String.valueOf(di.get(strCx + '_Personal_Email__c')).toLowerCase());
             addedToken = true;
         }
         if (di.get(strCx + '_Work_Email__c') != null) {
-            listEmail.add(String.valueOf(di.get(strCx + '_Work_Email__c')));
+            listEmail.add(String.valueOf(di.get(strCx + '_Work_Email__c')).toLowerCase());
             addedToken = true;
         }
         if (di.get(strCx + '_Alternate_Email__c') != null) {
-            listEmail.add(String.valueOf(di.get(strCx + '_Alternate_Email__c')));
+            listEmail.add(String.valueOf(di.get(strCx + '_Alternate_Email__c')).toLowerCase());
             addedToken = true;
         }
         if (!isEmailInContactMatchRules || !addedToken) {
@@ -884,7 +884,6 @@ public with sharing class BDI_ContactService {
         // we have to still add a single key that this di can use to find the new contact to be created.
         if (listDiKey.size() == 0) {
             String diKey =  bdi.strNull(di.get(strCx + '_Firstname__c')) + '|' + bdi.strNull(di.get(strCx + '_Lastname__c')) + '|';
-
             // email
             if (di.get(strCx + '_Personal_Email__c') != null) {
                 diKey += String.valueOf(di.get(strCx + '_Personal_Email__c'));
@@ -894,6 +893,7 @@ public with sharing class BDI_ContactService {
                 diKey += String.valueOf(di.get(strCx + '_Alternate_Email__c'));
             }
             diKey += '|';
+            diKey = diKey.toLowerCase();
 
             // phone
             if (di.get(strCx + '_Home_Phone__c') != null) {
@@ -915,7 +915,7 @@ public with sharing class BDI_ContactService {
 
         // for c2's that we know their household, we want to add a "looser" key to match by as well.
         if (strCx == 'Contact2' && di.HouseholdAccountImported__c != null && di.get('Contact2_Firstname__c') != null) {
-            listDiKey.add(di.get('Contact2_Firstname__c') + '|' + di.HouseholdAccountImported__c);
+            listDiKey.add(String.valueOf(di.get('Contact2_Firstname__c')).toLowerCase() + '|' + di.HouseholdAccountImported__c);
         }
         pl.stop();
         return listDiKey;
