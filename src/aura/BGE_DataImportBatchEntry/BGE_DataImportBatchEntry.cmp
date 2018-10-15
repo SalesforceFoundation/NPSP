@@ -105,7 +105,7 @@
 
         <!--Start New Row-->
         <lightning:layoutItem size="12" class="slds-p-bottom_x-small">
-            <lightning:card title="{!$Label.c.bgeGridNewGift}" aura:id="entryFormCard" class="bgeCard">
+            <lightning:card title="{!$Label.c.bgeNewGift}" aura:id="entryFormCard" class="bgeCard">
                 <lightning:spinner aura:id="formSpinner" alternativeText="{!$Label.c.labelMessageLoading}"/>
                 <!--BGE_EntryForm dynamically rendered here-->
                 {!v.entryFormBody}
