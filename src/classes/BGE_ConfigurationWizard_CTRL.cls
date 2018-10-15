@@ -212,6 +212,14 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         return labels;
     }
 
+    /*******************************************************************************************************
+    * @description Checks if an org uses namespacing
+    * @return Boolean of if namespace is used
+    */
+    @AuraEnabled
+    public static Boolean isOrgNamespaced() {
+        return UTIL_Namespace.getNamespace() != '';
+    }
 
     /*******************************************************************************************************
     * @description Deserializes information to the model and selects which record to save.

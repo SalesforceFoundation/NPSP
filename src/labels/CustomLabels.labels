@@ -2530,7 +2530,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Matched Record</value>
     </labels>
     <labels>
-        <fullName>bgeGridNewGift</fullName>
+        <fullName>bgeNewGift</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label for Gift Entry Form</shortDescription>
@@ -2563,6 +2563,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Total count versus expected count.</shortDescription>
         <value>Total Count:</value>
+    </labels>
+    <labels>
+        <fullName>bgeNewBatch</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to create a new batch.</shortDescription>
+        <value>New Batch</value>
+    </labels>
+    <labels>
+        <fullName>bgeTabHeader</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header used for Batch Gift Entry tab</shortDescription>
+        <value>Batch Gift Entry</value>
     </labels>
     <labels>
         <fullName>btnRemove</fullName>

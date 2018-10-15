@@ -35,8 +35,16 @@
   @description Component used to view, edit, or create a Batch Template record.
 -->
 
-<aura:component description="BGE_BatchGiftEntryTab" implements="force:appHostable">
+<aura:component implements="force:appHostable" controller="BGE_ConfigurationWizard_CTRL">
 
+    <!-- public attributes -->
+    <aura:attribute name="listView" type="Map" description="Namespace correct objectApiName and listName" access="public"
+                    default="{'isLoaded':false}"/>
+
+    <!-- events we handle -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!-- Start Markup -->
     <lightning:overlayLibrary aura:id="overlayLib"/>
 
     <!-- Banner -->
@@ -45,22 +53,27 @@
             <div class="slds-grid">
                 <div class="slds-col slds-has-flexi-truncate slds-align-middle">
                     <h1>
-                        <span class="slds-page-header__title" title="Batch Gift Entry">Batch Gift Entry</span>
+                        <span class="slds-page-header__title" title="{!$Label.c.bgeTabHeader}">{!$Label.c.bgeTabHeader}</span>
                     </h1>
                 </div>
                 <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
                     <lightning:buttonGroup>
-                        <lightning:button aura:id="newBGEBatch" label="New Batch" onclick="{!c.openNewBatchWizard}"/>
+                        <lightning:button aura:id="newBGEBatch" label="{!$Label.c.bgeNewBatch}" onclick="{!c.openNewBatchWizard}"/>
                     </lightning:buttonGroup>
                 </div>
             </div>
         </div>
     </header>
 
-    <lightning:listView objectApiName="DataImportBatch__c"
-                        listName="BGE_Batches"
-                        showActionBar="false"
-                        enableInlineEdit="false"
-                        showRowLevelActions="false"/>
+    <!--listView does not rerender dynamically, so need aura:if to have it wait before loading-->
+    <aura:if isTrue="{!v.listView.isLoaded}">
+        <lightning:listView objectApiName="{!v.listView.objectApiName}"
+                            listName="{!v.listView.listName}"
+                            showActionBar="false"
+                            enableInlineEdit="false"
+                            showRowLevelActions="false"/>
+    </aura:if>
+
+    <!-- End Markup -->
 
 </aura:component>

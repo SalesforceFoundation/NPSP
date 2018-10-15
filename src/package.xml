@@ -1410,6 +1410,8 @@
         <members>bgeGridNoGiftsHeader</members>
         <members>bgeGridTotalAmount</members>
         <members>bgeGridTotalCount</members>
+        <members>bgeNewBatch</members>
+        <members>bgeTabHeader</members>
         <members>btnRemove</members>
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>

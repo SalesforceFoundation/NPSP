@@ -3,6 +3,13 @@
     <flexiPageRegions>
         <componentInstances>
             <componentName>BGE_DataImportBatchEntry</componentName>
+            <visibilityRule>
+                <criteria>
+                    <leftValue>{!Record.UseBatchGiftEntryGrid__c}</leftValue>
+                    <operator>EQUAL</operator>
+                    <rightValue>true</rightValue>
+                </criteria>
+            </visibilityRule>
         </componentInstances>
         <name>header</name>
         <type>Region</type>
@@ -18,9 +25,23 @@
                 <value>3</value>
             </componentInstanceProperties>
             <componentName>force:highlightsPanel</componentName>
+            <visibilityRule>
+                <criteria>
+                    <leftValue>{!Record.UseBatchGiftEntryGrid__c}</leftValue>
+                    <operator>EQUAL</operator>
+                    <rightValue>false</rightValue>
+                </criteria>
+            </visibilityRule>
         </componentInstances>
         <componentInstances>
             <componentName>force:detailPanel</componentName>
+            <visibilityRule>
+                <criteria>
+                    <leftValue>{!Record.UseBatchGiftEntryGrid__c}</leftValue>
+                    <operator>EQUAL</operator>
+                    <rightValue>false</rightValue>
+                </criteria>
+            </visibilityRule>
         </componentInstances>
         <name>main</name>
         <type>Region</type>
