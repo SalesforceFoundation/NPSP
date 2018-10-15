@@ -160,20 +160,20 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
     }
 
     /*******************************************************************************************************
-    * @description Creates an Engagement Plan based on a Level record
+    * @description Creates an Engagement Plan based on a Level record.
+    * Attempts to find the engagement plan lookup field based on the leve's target field
+    * it could be either a standard object that requires us to add a namespace prefix and custom field suffix
+    * e.g. Account -> npsp__Account__c, Contact -> npsp__Contact__c
+    * or a standard object added by a user with no prefix that requires us to add a custom feild suffix
+    * e.g. Case -> Case__c
+    * or a custom object name without namespace prefix and with suffix already appended
+    * e.g. Custom_Object__c -> Custom_Object__c
     * @param level The level used to create the Engagement Plan
     * @param target The Id of object to relate the Engagement Plan to
     * @return Engagement_Plan__c The Engagement Plan
     */
     private Engagement_Plan__c engagementPlanFromLevel(Level__c level, Id target) {
         Engagement_Plan__c ep = new Engagement_Plan__c(Engagement_Plan_Template__c = level.Engagement_Plan_Template__c);
-        // Attempt to find the engagement plan lookup field
-        // it could be either a standard object that requires us to add a namespace prefix and custom field suffix
-        // e.g. npsp__Account__c, npsp__Contact__c
-        // or a standard object added by a user with no prefix that requires us to add a custom feild suffix
-        // e.g. Custom_Object__c
-        // or a custom object name without namespace prefix and with suffix already appended
-        // e.g. Custom_Object__c
         String engagementPlanPrefixed = UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan__c');
         String targetFieldPrefixedAndSuffixed = UTIL_Namespace.StrTokenNSPrefix(level.Target__c + '__c');
         String targetFieldSuffixed = level.Target__c + '__c';
