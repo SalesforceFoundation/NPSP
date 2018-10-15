@@ -202,6 +202,7 @@
         var fields = [];
         fields.push(labels.expectedCountField);
         fields.push(labels.expectedTotalField);
+        fields.push('Name');
         component.set('v.batchFields', fields);
     },
 
