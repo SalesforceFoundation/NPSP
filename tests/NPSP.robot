@@ -12,13 +12,39 @@ ${task2}     Make a Phone Call1
 *** Keywords ***
 
 API Create Contact
+    [Arguments]      &{fields}
     ${first_name} =  Generate Random String
     ${last_name} =   Generate Random String
     ${contact_id} =  Salesforce Insert  Contact
     ...                  FirstName=${first_name}
     ...                  LastName=${last_name}
+    ...                  &{fields}  
     &{contact} =     Salesforce Get  Contact  ${contact_id}
     [return]         &{contact}
+ 
+API Create Opportunity
+    [Arguments]      ${account_id}      &{fields}    
+    ${opp_id} =  Salesforce Insert    Opportunity
+    ...               AccountId=${account_id}
+    ...               StageName=ClosedWon
+    ...               CloseDate=2018-09-10
+    ...               Amount=100
+    ...               Name=Test Donation
+    ...               npe01__Do_Not_Automatically_Create_Payment__c=true 
+    ...               &{fields}
+    &{opportunity} =     Salesforce Get  Opportunity  ${opp_id} 
+    [return]         &{opportunity}  
+ 
+API Create Household Account
+    [Arguments]      &{fields}
+    ${name} =        Generate Random String
+    ${rt_id} =       Get Record Type Id  Account  HH_Account
+    ${account_id} =  Salesforce Insert  Account
+    ...                  Name=${name} HouseHold
+    ...                  RecordTypeId=${rt_id}
+    ...                  &{fields}
+    &{account} =     Salesforce Get  Account  ${account_id}
+    [return]         &{account}
   
 Create Contact
     ${first_name} =           Generate Random String
