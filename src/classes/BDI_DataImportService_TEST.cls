@@ -139,9 +139,9 @@ private with sharing class BDI_DataImportService_TEST {
         );
 
         DataImport__c secondDataImport = new DataImport__c(
-           Contact1_Firstname__c = 'John',
-           Contact1_Lastname__c = 'Doe',
-           Contact1_Personal_Email__c = 'john@doe.com'
+           Contact1_Firstname__c = 'Peter',
+           Contact1_Lastname__c = 'Parker',
+           Contact1_Personal_Email__c = 'pp@test.com'
         );
 
         dataImports.add(firstDataImport);
@@ -189,15 +189,15 @@ private with sharing class BDI_DataImportService_TEST {
         BDI_DataImportService service = new BDI_DataImportService(isDryRun);
 
         DataImport__c firstDataImport = new DataImport__c(
-           Contact1_Firstname__c = 'John',
-           Contact1_Lastname__c = 'Doe',
-           Contact1_Personal_Email__c = 'john@doe.com'
+           Contact1_Firstname__c = 'Rick',
+           Contact1_Lastname__c = 'James',
+           Contact1_Personal_Email__c = 'rick@example.com'
         );
 
         DataImport__c secondDataImport = new DataImport__c(
-           Contact1_Firstname__c = 'John',
-           Contact1_Lastname__c = 'Doe',
-           Contact1_Personal_Email__c = 'john@doe.com'
+           Contact1_Firstname__c = 'Jack',
+           Contact1_Lastname__c = 'Nicholson',
+           Contact1_Personal_Email__c = 'jack@doe.com'
         );
 
         dataImports.add(firstDataImport);

@@ -722,6 +722,9 @@ global with sharing class BDI_DataImportService {
                                                                     BDI_Field_Mapping__mdt];
 
             for (BDI_Field_Mapping__mdt customMetadata : bdiFieldMappings) {
+                // The developer name from the custom metadata does not include the __c suffix
+                // All of the fields that we are retrieving from the custom metadata are custom fields
+                // so we need the suffix
                 String sourceField = customMetadata.SourceField__r.developername + '__c';
                 sourceField = sourceField == null ? null : sourceField.toLowerCase();
                 if (targetFieldsBySource.containsKey(sourceField)) {
