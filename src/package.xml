@@ -2382,7 +2382,6 @@
     </types>
     <types>
         <members>Address__c</members>
-        <members>BatchGiftEntry</members>
         <members>Batch_Data_Entry</members>
         <members>Batch_Gift_Entry</members>
         <members>Batch_Template__c</members>
