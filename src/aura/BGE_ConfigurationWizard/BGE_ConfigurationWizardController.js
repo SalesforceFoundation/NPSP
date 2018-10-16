@@ -69,7 +69,6 @@
         // opt 2: button came from a ltng:sendMessage
         // must be explicit about channel because other messages may be sent
         var channel = event.getParam('channel');
-
         var model = component.get('v.model');
 
         if (channel === 'next' || buttonClick === 'next') {
@@ -93,7 +92,7 @@
             }
         } else if (channel === 'back' || buttonClick === 'back') {
             model.getTemplateMetadata().backStep();
-        } else if (channel === 'cancel' || buttonClick === 'cancel' || buttonClick === 'backToTemplates') {
+        } else if (buttonClick === 'cancel' || buttonClick === 'backToTemplates') {
             //Set off init here to reset view
             var mode = component.get('v.templateMetadata.mode');
             if (mode === 'edit') {

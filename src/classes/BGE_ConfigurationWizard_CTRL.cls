@@ -78,6 +78,10 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
                     // TODO: If/When users are able to change the processing settings, we will need to retrieve their defined values here as well.
 
+                    if (sObjectName == 'DataImportBatch__c') {
+                        model.expectedCount = (Integer)recordDetails.get('Expected_Count_of_Gifts__c');
+                        model.expectedTotal = (Decimal)recordDetails.get('Expected_Total_Batch_Amount__c');
+                    }
                 }
                 catch (Exception ex){
                     throw new AuraHandledException('ERROR: ' + ex.getMessage());
@@ -191,6 +195,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     public static BGEDetailsModel getDefaultBGEDetailsModel() {
         BGEDetailsModel model = new BGEDetailsModel();
 
+        model.expectedCount = 0;
+        model.expectedTotal = 0;
         model.requireTotalMatch = false;
         model.templateFields = new List<AvailableField>();
         model.batchProcessSize = 50;
@@ -208,6 +214,14 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     * @description Sets default values on BGEDetails Model to avoid returning any null values
     */
     private static void setDefaultValuesOnBGEDetailsModel(BGEDetailsModel model) {
+
+        if (model.expectedCount == null) {
+            model.expectedCount = 0;
+        }
+
+        if (model.expectedTotal == null) {
+            model.expectedTotal = 0;
+        }
 
         if (model.requireTotalMatch == null) {
             model.requireTotalMatch = false;
@@ -300,7 +314,11 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 'description' => Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
                 'totalMatchHelp' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
                 'totalMatchLabel' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getLabel(),
-                'recordInfoLabel' => Label.bgeBatchInfoWizard
+                'recordInfoLabel' => Label.bgeBatchInfoWizard,
+                'expectedCountField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Count_of_Gifts__c.getName(),
+                'expectedCountLabel' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Count_of_Gifts__c.getLabel(),
+                'expectedTotalField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getName(),
+                'expectedTotalLabel' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getLabel()
         };
         return labels;
     }
@@ -367,6 +385,9 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         dataImportBatch.Donation_Matching_Rule__c = recordDetails.donationMatchingRule;
         dataImportBatch.Donation_Date_Range__c = recordDetails.donationDateRange;
         dataImportBatch.Process_Using_Scheduled_Job__c = recordDetails.processUsingScheduledJob;
+        dataImportBatch.Expected_Count_of_Gifts__c = recordDetails.expectedCount;
+        dataImportBatch.Expected_Total_Batch_Amount__c = recordDetails.expectedTotal;
+        dataImportBatch.Active_Fields__c = activeFields;
 
         upsert dataImportBatch;
 
@@ -410,6 +431,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public String description;
         @AuraEnabled public Id id;
         @AuraEnabled public Boolean requireTotalMatch;
+        @AuraEnabled public Integer expectedCount;
+        @AuraEnabled public Decimal expectedTotal;
         @AuraEnabled public List<AvailableField> templateFields;
         @AuraEnabled public String activeFields;
         @AuraEnabled public Map<String, String> labels;
@@ -421,6 +444,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public Integer donationDateRange;
         @AuraEnabled public Boolean processUsingScheduledJob;
         @AuraEnabled public List<Batch_Template__c> availableBatchTemplates;
+
     }
 
     /*******************************************************************************************************

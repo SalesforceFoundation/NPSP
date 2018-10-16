@@ -91,11 +91,11 @@
                         </div>
                     </div>
                 </div>
+                <!-- future buttons go here
                 <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
                     <lightning:buttonGroup>
-                        <!--buttons go here-->
                     </lightning:buttonGroup>
-                </div>
+                </div>-->
             </div>
         </div>
     </header>

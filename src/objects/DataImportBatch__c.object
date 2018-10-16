@@ -242,17 +242,6 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>EnableTotalEntry__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>When checked, the user filling out the template may enter the expected number of gifts and expected total amount for the batch.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>When checked, the user filling out the template may enter the expected number of gifts and expected total amount for the batch.</inlineHelpText>
-        <label>Enable Expected Totals Entry</label>
-        <trackHistory>false</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
-    </fields>
-    <fields>
         <fullName>Expected_Count_of_Gifts__c</fullName>
         <defaultValue>0</defaultValue>
         <description>The number of gifts that are expected to be entered in this Batch.</description>

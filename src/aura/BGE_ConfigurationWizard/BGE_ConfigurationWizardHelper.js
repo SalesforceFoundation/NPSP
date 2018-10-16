@@ -14,9 +14,15 @@
             model.getTemplateInfo().onInfoUpdated.subscribe(function() {
                 var templateInfoView = component.get('v.templateInfo');
                 var templateInfo = model.getTemplateInfo();
+
+                // record info
                 templateInfoView.name = templateInfo.name;
                 templateInfoView.id = templateInfo.id;
                 templateInfoView.description = templateInfo.description;
+                templateInfoView.expectedCount = templateInfo.expectedCount;
+                templateInfoView.expectedTotal = templateInfo.expectedTotal;
+
+                // batch processing settings
                 templateInfoView.requireTotalMatch = templateInfo.requireTotalMatch;
                 templateInfoView.batchProcessSize = templateInfo.batchProcessSize;
                 templateInfoView.runOpportunityRollupsWhileProcessing = templateInfo.runOpportunityRollupsWhileProcessing;
@@ -34,8 +40,11 @@
                 name: '',
                 id: '',
                 description: '',
-                requireTotalMatch: false,
+                expectedCount: 0,
+                expectedTotal: 0,
+
                 // batch processing settings
+                requireTotalMatch: false,
                 batchProcessSize: 0,
                 runOpportunityRollupsWhileProcessing: false,
                 contactMatchingRule: '',
@@ -96,11 +105,12 @@
 
                 //update page header in modal if page header has changed and modal is used
                 if (headerChanged) {
-                    _sendMessage('setHeader',templateMetadata.pageHeader);
+                    _sendMessage('setHeader', templateMetadataView.pageHeader);
                 }
 
                 // when in modal context, need to notify the modal footer component
-                _sendMessage('dataTableChanged',templateMetadata.dataTableChanged);
+                _sendMessage('dataTableChanged', templateMetadataView.dataTableChanged);
+                _sendMessage('setError', templateMetadataView.hasError);
 
                 component.set('v.templateMetadata', templateMetadataView);
             });
@@ -312,9 +322,14 @@
              */
             function save() {
                 var templateDetailsData = {
+                    //record info
                     name: _templateInfo.name,
                     id: _templateInfo.id,
                     description: _templateInfo.description,
+                    expectedCount: _templateInfo.expectedCount,
+                    expectedTotal: _templateInfo.expectedTotal,
+
+                    // batch processing settings
                     requireTotalMatch: _templateInfo.requireTotalMatch,
                     batchProcessSize: _templateInfo.batchProcessSize,
                     runOpportunityRollupsWhileProcessing: _templateInfo.runOpportunityRollupsWhileProcessing,
@@ -342,12 +357,7 @@
 
                 _bgeTemplateController.saveRecord(sObjectName, templateDetailsData, activeFields, {
                     success: function(response) {
-                        _templateInfo.load(response);
-                        var navEvt = $A.get('e.force:navigateToSObject');
-                        navEvt.setParams({
-                            'recordId': response.id
-                        });
-                        navEvt.fire();
+                        _templateMetadata.navigateToRecord(response.id);
                     },
                     error: function(error) {
                         console.log(error);
@@ -417,8 +427,11 @@
                 this.name = info.name;
                 this.description = info.description;
                 this.id = info.id;
-                this.requireTotalMatch = info.requireTotalMatch;
+                this.expectedCount = info.expectedCount;
+                this.expectedTotal = info.expectedTotal;
+
                 //batch processing settings
+                this.requireTotalMatch = info.requireTotalMatch;
                 this.batchProcessSize = info.batchProcessSize;
                 this.runOpportunityRollupsWhileProcessing = info.runOpportunityRollupsWhileProcessing;
                 this.contactMatchingRule = info.contactMatchingRule;
@@ -439,12 +452,15 @@
             
             // TemplateInfo module public functions and properties
             return {
+                // record info
                 name: '',
                 id: '',
                 description: '',
-                requireTotalMatch: false,
+                expectedCount: 0,
+                expectedTotal: 0,
 
                 // batch processing settings
+                requireTotalMatch: false,
                 batchProcessSize: 0,
                 runOpportunityRollupsWhileProcessing: false,
                 contactMatchingRule: '',
@@ -764,6 +780,18 @@
             }
 
             /**
+             * @description Navigates to the record's sObject Home
+             * @param recordId - the record we want to view
+             */
+            function navigateToRecord(recordId) {
+                var navEvt = $A.get('e.force:navigateToSObject');
+                navEvt.setParams({
+                    'recordId': recordId
+                });
+                navEvt.fire();
+            }
+
+            /**
              * @description Increments Wizard to next step if no errors exist
              * @param isValid - string that is the selected mode
              * @param error - existing errors
@@ -930,7 +958,7 @@
                 this.onMetadataUpdated.notify();
             }
 
-            // TemplateInfo module public functions and properties
+            // TemplateMetadata module public functions and properties
             return {
                 labels: {},
                 mode: '',
@@ -940,6 +968,7 @@
                 dataTableChanged: false,
                 pageHeader: '',
                 load: load,
+                navigateToRecord: navigateToRecord,
                 nextStep: nextStep,
                 backStep: backStep,
                 cancel: cancel,
