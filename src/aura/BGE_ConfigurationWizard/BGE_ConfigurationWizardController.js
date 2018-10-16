@@ -69,7 +69,6 @@
         // opt 2: button came from a ltng:sendMessage
         // must be explicit about channel because other messages may be sent
         var channel = event.getParam('channel');
-
         var model = component.get('v.model');
 
         if (channel === 'next' || buttonClick === 'next') {
