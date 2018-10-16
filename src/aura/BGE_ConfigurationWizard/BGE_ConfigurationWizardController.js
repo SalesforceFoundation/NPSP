@@ -93,7 +93,7 @@
             }
         } else if (channel === 'back' || buttonClick === 'back') {
             model.getTemplateMetadata().backStep();
-        } else if (channel === 'cancel' || buttonClick === 'cancel' || buttonClick === 'backToTemplates') {
+        } else if (buttonClick === 'cancel' || buttonClick === 'backToTemplates') {
             //Set off init here to reset view
             var mode = component.get('v.templateMetadata.mode');
             if (mode === 'edit') {

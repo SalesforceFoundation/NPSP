@@ -85,11 +85,12 @@
 
                 //update page header in modal if page header has changed and modal is used
                 if (headerChanged) {
-                    _sendMessage('setHeader',templateMetadata.pageHeader);
+                    _sendMessage('setHeader', templateMetadataView.pageHeader);
                 }
 
                 // when in modal context, need to notify the modal footer component
-                _sendMessage('dataTableChanged',templateMetadata.dataTableChanged);
+                _sendMessage('dataTableChanged', templateMetadataView.dataTableChanged);
+                _sendMessage('setError', templateMetadataView.hasError);
 
                 component.set('v.templateMetadata', templateMetadataView);
             });

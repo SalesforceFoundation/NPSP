@@ -114,7 +114,7 @@
                     <aura:if isTrue="{!not(v.isReadOnly)}">
                         <div class="slds-p-bottom_large">
                             <lightning:progressIndicator currentStep="{!v.templateMetadata.progressIndicatorStep}" type="base"
-                                                         hasError="false" variant="base">
+                                                         hasError="{!v.templateMetadata.hasError}" variant="base">
                                 <lightning:progressStep label="{!v.templateMetadata.labels.recordInfoLabel}" value="1"/>
                                 <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="3"/>
                                 <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="4"/>

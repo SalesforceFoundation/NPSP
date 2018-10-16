@@ -36,7 +36,10 @@
 
     <!--Public Attributes-->
     <aura:attribute name="currentStep" default="1" type="String" description="Step in progress indicator" />
-    <aura:attribute name="dataTableChanged" default="false" type="Boolean" description="Controls whether Save is disabled because Data Table has uncommitted changes" />
+    <aura:attribute name="hasError" default="false" type="Boolean"
+                    description="Indicates if there is an error in the current step" />
+    <aura:attribute name="dataTableChanged" default="false" type="Boolean"
+                    description="Controls whether Save is disabled because Data Table has uncommitted changes" />
     <aura:attribute name="progressSteps" default="[]" type="List"
                     description="List of mapped labels and values for progress indicator" />
 
@@ -54,7 +57,7 @@
 
         <!-- Start: Progress Indicator -->
         <lightning:layoutItem size="6" class="slds-grid_vertical-align-center">
-            <lightning:progressIndicator currentStep="{!v.currentStep}" type="base" hasError="false" variant="base">
+            <lightning:progressIndicator currentStep="{!v.currentStep}" type="base" hasError="{!v.hasError}" variant="base">
                 <lightning:progressStep label="{!$Label.c.bgeBatchTemplateOverviewWizard}" value="1"/>
                 <!--<lightning:progressStep label="Step 2" value="2"/>-->
                 <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="3"/>

@@ -11,6 +11,8 @@
             component.set('v.currentStep', message);
         } else if (channel === 'dataTableChanged') {
             component.set('v.dataTableChanged', message);
+        } else if (channel === 'setError') {
+            component.set('v.hasError', message);
         }
     },
 
@@ -22,10 +24,10 @@
     },
 
     /**
-     * @description: sends cancel event to modal
+     * @description: closes the modal directly
      */
     cancel: function(component, event, helper) {
-        helper.sendMessage(component, 'cancel');
+        component.find("overlayLib").notifyClose();
     },
 
     /**
