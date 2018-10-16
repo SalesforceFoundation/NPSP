@@ -1812,6 +1812,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Remainder:</value>
     </labels>
     <labels>
+        <fullName>alloSignMistmatch</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Negative Allocations are only allowed in negative Payments and positive Allocations are not allowed in negative Payments.</shortDescription>
+        <value>Negative Allocations are only allowed in negative Payments and positive Allocations are not allowed in negative Payments.</value>
+    </labels>
+    <labels>
         <fullName>alloSingleParent</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
