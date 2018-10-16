@@ -797,14 +797,20 @@ global with sharing class BDI_DataImportService {
                 }
 
                 // make sure they have permissions to modify the target field
-                // we can't do this in all tests, because many profiles won't have FLS set for all our new fields!
                 checkTargetObjectFieldPermissions(targetObjectName, fieldName);
                 fieldNameByDataImportField.put(dataImportField, fieldName);
             }
         }
     }
 
+    /*******************************************************************************************************
+    * @descriptioncheck if the user have permissions to modify the target field
+    * @param targetObjectName the underlying object the bdi object is (ie, Contact, Account, etc)
+    * @param fieldName a String containing the bare name of the target field without the object nor the prefix
+    * @return void.
+    */
     private static void checkTargetObjectFieldPermissions(String targetObjectName, String fieldName) {
+        // we can't do this in all tests, because many profiles won't have FLS set for all our new fields!
         if (!Test.isRunningTest() || failFieldLevelSecurity) {
             DescribeFieldResult fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, fieldName);
             Set<String> setAuditFields = new Set<String>{
