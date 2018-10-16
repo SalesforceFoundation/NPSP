@@ -710,7 +710,7 @@ global with sharing class BDI_DataImportService {
     global static Map<String, String> mapFieldsForDIObject(String dataImportObjectName, String targetObjectName, List<String> dataImportFields) {
         BDISettings__c bdiSettings = BDISettings__c.getOrgDefaults();
         Map<String, String> parametersByName = new Map<String, String>();
-        Map<String, String> dataImportFieldToTargetField = new Map<String, String>();
+        Map<String, String> fieldNameByDataImportField = new Map<String, String>();
         Map<String, Set<String>> targetFieldsBySource = new Map<String, Set<String>>();
         Boolean useCustomMetadataForFieldMapping = false;
         if (bdiSettings.MapWithCustomMetadataTypes__c) {
@@ -748,7 +748,7 @@ global with sharing class BDI_DataImportService {
                         parametersByName.put('dataImportObjectName', dataImportObjectName);
                         parametersByName.put('targetObjectName', targetObjectName);
                         parametersByName.put('dataImportField', dataImportField);
-                        mapFieldsForDIObjectCore(parametersByName, dataImportFieldToTargetField);
+                        mapFieldsForDIObjectCore(parametersByName, fieldNameByDataImportField);
                     }
                 }
             } else {
@@ -759,25 +759,25 @@ global with sharing class BDI_DataImportService {
                 parametersByName.put('dataImportObjectName', dataImportObjectName);
                 parametersByName.put('targetObjectName', targetObjectName);
                 parametersByName.put('dataImportField', dataImportField);
-                mapFieldsForDIObjectCore(parametersByName, dataImportFieldToTargetField);
+                mapFieldsForDIObjectCore(parametersByName, fieldNameByDataImportField);
             }
         }
 
-        return dataImportFieldToTargetField;
+        return fieldNameByDataImportField;
     }
 
     /*******************************************************************************************************
     * @description The core logic for the method mapFieldsForDIObject
     * @param parametersByName a Map containing parameters for this function. The key being the parameter name and the value being the actual parameter.
-    * @param dataImportFieldToTargetField Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
+    * @param fieldNameByDataImportField Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
     * @return void.
     */
-    private static void mapFieldsForDIObjectCore(Map<String, String> parametersByName, Map<String, String> dataImportFieldToTargetField) {
+    private static void mapFieldsForDIObjectCore(Map<String, String> parametersByName, Map<String, String> fieldNameByDataImportField) {
         String targetFieldName = parametersByName.get('targetFieldName');
         String dataImportObjectName = parametersByName.get('dataImportObjectName');
         String targetObjectName = parametersByName.get('targetObjectName');
         String dataImportField = parametersByName.get('dataImportField');
-        if (targetFieldName != null && targetFieldName != '') {
+        if (!String.isEmpty(targetFieldName)) {
             List<String> parts = targetFieldName.split('\\.', 2);
             if (parts.size() == 2 && parts[0] == dataImportObjectName && parts[1] != '') {
                 String fieldName = parts[1];
@@ -785,7 +785,7 @@ global with sharing class BDI_DataImportService {
                 //if we aren't in the npsp namespace, remove those tokens from help text
                 //also removes tokens from actual detected namespace, if we happen to be
                 //in a non-npsp namespace
-                if (UTIL_Namespace.getNamespace() != 'npsp') {
+                if (String.isBlank(UTIL_Namespace.getNamespace())) {
                     String fieldNameOld = fieldName;
                     fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
 
@@ -798,23 +798,26 @@ global with sharing class BDI_DataImportService {
 
                 // make sure they have permissions to modify the target field
                 // we can't do this in all tests, because many profiles won't have FLS set for all our new fields!
-                if (!Test.isRunningTest() || failFieldLevelSecurity) {
-                    DescribeFieldResult fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, fieldName);
-                    Set<String> setAuditFields = new Set<String>{
-                        'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'
-                    };
-                    Boolean isAuditField = setAuditFields.contains(fieldName.toLowerCase());
-                    if (failFieldLevelSecurity ||
-                        fieldDescribe == null ||
-                        !fieldDescribe.isCreateable() ||
-                        (!isAuditField && !fieldDescribe.isUpdateable())) {
-                        throw (new FLSException(
-                            String.format(System.Label.flsError, new List<String>{ targetObjectName + '.' + fieldName }
-                        )));
-                    }
-                }
+                checkTargetObjectFieldPermissions(targetObjectName, fieldName);
+                fieldNameByDataImportField.put(dataImportField, fieldName);
+            }
+        }
+    }
 
-                dataImportFieldToTargetField.put(dataImportField, fieldName);
+    private static void checkTargetObjectFieldPermissions(String targetObjectName, String fieldName) {
+        if (!Test.isRunningTest() || failFieldLevelSecurity) {
+            DescribeFieldResult fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, fieldName);
+            Set<String> setAuditFields = new Set<String>{
+                'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'
+            };
+            Boolean isAuditField = setAuditFields.contains(fieldName.toLowerCase());
+            if (failFieldLevelSecurity ||
+                fieldDescribe == null ||
+                !fieldDescribe.isCreateable() ||
+                (!isAuditField && !fieldDescribe.isUpdateable())) {
+                throw (new FLSException(
+                    String.format(System.Label.flsError, new List<String>{ targetObjectName + '.' + fieldName }
+                )));
             }
         }
     }
