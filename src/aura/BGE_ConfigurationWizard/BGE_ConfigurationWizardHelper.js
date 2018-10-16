@@ -18,6 +18,8 @@
                 templateInfoView.id = templateInfo.id;
                 templateInfoView.description = templateInfo.description;
                 templateInfoView.requireTotalMatch = templateInfo.requireTotalMatch;
+                templateInfoView.expectedCount = templateInfo.expectedCount;
+                templateInfoView.expectedTotal = templateInfo.expectedTotal;
 
                 component.set('v.templateInfo', templateInfoView);
             });
@@ -27,7 +29,9 @@
                 name: '',
                 id: '',
                 description: '',
-                requireTotalMatch: false
+                requireTotalMatch: false,
+                expectedCount: 0,
+                expectedTotal: 0
             };
         })(component, model);
     },
@@ -286,7 +290,9 @@
                                 name: response.name,
                                 id: response.id,
                                 description: response.description,
-                                requireTotalMatch: response.requireTotalMatch
+                                requireTotalMatch: response.requireTotalMatch,
+                                expectedCount: response.expectedCount,
+                                expectedTotal: response.expectedTotal
                             }
                         );
 
@@ -308,7 +314,9 @@
                     name: _templateInfo.name,
                     id: _templateInfo.id,
                     description: _templateInfo.description,
-                    requireTotalMatch: _templateInfo.requireTotalMatch
+                    requireTotalMatch: _templateInfo.requireTotalMatch,
+                    expectedCount: _templateInfo.expectedCount,
+                    expectedTotal: _templateInfo.expectedTotal
                 };
                 var activeFields = [];
 
@@ -333,14 +341,12 @@
                                 name: response.name,
                                 id: response.id,
                                 description: response.description,
-                                requireTotalMatch: response.requireTotalMatch
+                                requireTotalMatch: response.requireTotalMatch,
+                                expectedCount: response.expectedCount,
+                                expectedTotal: response.expectedTotal
                             }
                         );
-                        var navEvt = $A.get('e.force:navigateToSObject');
-                        navEvt.setParams({
-                            'recordId': response.id
-                        });
-                        navEvt.fire();
+                        _templateMetadata.reload(response.id);
                     },
                     error: function(error) {
                         console.log(error);
@@ -410,6 +416,8 @@
                 this.description = info.description;
                 this.id = info.id;
                 this.requireTotalMatch = info.requireTotalMatch;
+                this.expectedCount = info.expectedCount;
+                this.expectedTotal = info.expectedTotal;
                 this.onInfoUpdated.notify();
             }
 
@@ -427,6 +435,8 @@
                 id: '',
                 description: '',
                 requireTotalMatch: false,
+                expectedCount: 0,
+                expectedTotal: 0,
                 load: load,
                 isValid: isValid,
                 onInfoUpdated: _onInfoUpdated
@@ -738,6 +748,18 @@
             }
 
             /**
+             * @description Navigates to the record's sObject Home
+             * @param recordId - the record we want to view
+             */
+            function reload(recordId) {
+                var navEvt = $A.get('e.force:navigateToSObject');
+                navEvt.setParams({
+                    'recordId': recordId
+                });
+                navEvt.fire();
+            }
+
+            /**
              * @description Increments Wizard to next step if no errors exist
              * @param isValid - string that is the selected mode
              * @param error - existing errors
@@ -904,7 +926,7 @@
                 this.onMetadataUpdated.notify();
             }
 
-            // TemplateInfo module public functions and properties
+            // TemplateMetadata module public functions and properties
             return {
                 labels: {},
                 mode: '',
@@ -914,6 +936,7 @@
                 dataTableChanged: false,
                 pageHeader: '',
                 load: load,
+                reload: reload,
                 nextStep: nextStep,
                 backStep: backStep,
                 cancel: cancel,

@@ -766,7 +766,6 @@
         <members>DataImportBatch__c.Donation_Matching_Behavior__c</members>
         <members>DataImportBatch__c.Donation_Matching_Implementing_Class__c</members>
         <members>DataImportBatch__c.Donation_Matching_Rule__c</members>
-        <members>DataImportBatch__c.EnableTotalEntry__c</members>
         <members>DataImportBatch__c.Expected_Count_of_Gifts__c</members>
         <members>DataImportBatch__c.Expected_Total_Batch_Amount__c</members>
         <members>DataImportBatch__c.Last_Processed_On__c</members>

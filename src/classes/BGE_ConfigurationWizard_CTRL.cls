@@ -65,6 +65,11 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                     model.description = (String)recordDetails.get(descriptionField);
                     model.requireTotalMatch = (Boolean)recordDetails.get('RequireTotalMatch__c');
                     model.activeFields = (String)recordDetails.get('Active_Fields__c');
+
+                    if (sObjectName == 'DataImportBatch__c') {
+                        model.expectedCount = (Integer)recordDetails.get('Expected_Count_of_Gifts__c');
+                        model.expectedTotal = (Decimal)recordDetails.get('Expected_Total_Batch_Amount__c');
+                    }
                 }
                 catch (Exception ex){
                     throw new AuraHandledException('ERROR: ' + ex.getMessage());
@@ -209,7 +214,11 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 'description' => Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
                 'totalMatchHelp' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
                 'totalMatchLabel' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getLabel(),
-                'recordInfoLabel' => Label.bgeBatchInfoWizard
+                'recordInfoLabel' => Label.bgeBatchInfoWizard,
+                'expectedCountField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Count_of_Gifts__c.getName(),
+                'expectedCountLabel' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Count_of_Gifts__c.getLabel(),
+                'expectedTotalField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getName(),
+                'expectedTotalLabel' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getLabel()
         };
         return labels;
     }
@@ -267,6 +276,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         dataImportBatch.Name = recordDetails.name;
         dataImportBatch.Batch_Description__c = recordDetails.description;
         dataImportBatch.RequireTotalMatch__c = recordDetails.requireTotalMatch;
+        dataImportBatch.Expected_Count_of_Gifts__c = recordDetails.expectedCount;
+        dataImportBatch.Expected_Total_Batch_Amount__c = recordDetails.expectedTotal;
         dataImportBatch.Active_Fields__c = activeFields;
 
         upsert dataImportBatch;
@@ -305,6 +316,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public Boolean enableTotalEntry;
         @AuraEnabled public Id id;
         @AuraEnabled public Boolean requireTotalMatch;
+        @AuraEnabled public Integer expectedCount;
+        @AuraEnabled public Decimal expectedTotal;
         @AuraEnabled public List<AvailableField> templateFields;
         @AuraEnabled public String activeFields;
         @AuraEnabled public Map<String, String> labels;
@@ -312,6 +325,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         public BGEDetailsModel() {
             enableTotalEntry = false;
             requireTotalMatch = false;
+            expectedCount = 0;
+            expectedTotal = 0;
             templateFields = new List<AvailableField>();
         }
     }
