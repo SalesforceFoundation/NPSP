@@ -55,16 +55,16 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                     String descriptionField = (sObjectName == 'DataImportBatch__c') ? 'Batch_Description__c' : 'Description__c';
 
                     String soql = 'SELECT Name, Id, ' +
-                            descriptionField +
-                            ', RequireTotalMatch__c' +
-                            ', Active_Fields__c ' +
-                            ', Batch_Process_Size__c' +
-                            ', Run_Opportunity_Rollups_while_Processing__c' +
-                            ', Contact_Matching_Rule__c' +
-                            ', Donation_Matching_Behavior__c' +
-                            ', Donation_Matching_Rule__c' +
-                            ', Donation_Date_Range__c' +
-                            ', Process_Using_Scheduled_Job__c' +
+                            descriptionField + ', ' +
+                            'RequireTotalMatch__c, ' +
+                            'Active_Fields__c, ' +
+                            'Batch_Process_Size__c, ' +
+                            'Run_Opportunity_Rollups_while_Processing__c, ' +
+                            'Contact_Matching_Rule__c, ' +
+                            'Donation_Matching_Behavior__c, ' +
+                            'Donation_Matching_Rule__c, ' +
+                            'Donation_Date_Range__c, ' +
+                            'Process_Using_Scheduled_Job__c' +
                             ' FROM ' + sObjectName +
                             ' WHERE Id=:recordId';
 
@@ -183,10 +183,35 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     * @description Retrieves the default active fields for a new Batch or Template in a JSON String
     */
     public static String getDefaultActiveFields() {
-        return '[{"label":"Donation Amount","name":"Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0},' +
-                '{"label":"Donation Date","name":"Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1},' +
-                '{"label":"Method","name":"Payment_Method__c","sObjectName":"Payment","defaultValue":null,"required":false,"hide":false,"sortOrder":2},' +
-                '{"label":"Check/Reference Number","name":"Payment_Check_Reference_Number__c","sObjectName":"Payment","defaultValue":null,"required":false,"hide":false,"sortOrder":3}]';
+        return '[{"label":"Donation Amount",' +
+                    '"name":"Donation_Amount__c",' +
+                    '"sObjectName":"Opportunity",' +
+                    '"defaultValue":null,' +
+                    '"required":true,' +
+                    '"hide":false,' +
+                    '"sortOrder":0},' +
+                '{"label":"Donation Date",' +
+                    '"name":"Donation_Date__c",' +
+                    '"sObjectName":"Opportunity",' +
+                    '"defaultValue":null,' +
+                    '"required":false,' +
+                    '"hide":false,' +
+                    '"sortOrder":1},' +
+                '{"label":"Method",' +
+                    '"name":"Payment_Method__c",' +
+                    '"sObjectName":"Payment",' +
+                    '"defaultValue":null,' +
+                    '"required":false,' +
+                    '"hide":false,' +
+                    '"sortOrder":2},' +
+                '{"label":"Check/Reference Number",' +
+                    '"name":"Payment_Check_Reference_Number__c",' +
+                    '"sObjectName":"Payment",' +
+                    '"defaultValue":null,' +
+                    '"required":false,' +
+                    '"hide":false,' +
+                    '"sortOrder":3' +
+                '}]';
     }
 
     /*******************************************************************************************************
