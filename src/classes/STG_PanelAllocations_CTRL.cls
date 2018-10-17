@@ -46,33 +46,20 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
     public String strAllocationLevel {get;set;}
 
     /*********************************************************************************************************
-    * @description Boolean that is set to true if this org has Allocations set on Opportunities
-    */
-    public Boolean oppAllocationsExist {get;set;}
-
-    /*********************************************************************************************************
     * @description The panel's constructor.
     */
     public STG_PanelAllocations_CTRL() {
+        setAllocationPicklistFromSetting();
+    }
+
+    /*********************************************************************************************************
+    * @description Update the UI picklist with the current Allocation Type setting
+    */
+    public void setAllocationPicklistFromSetting(){
         if(STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c){
             strAllocationLevel = paymentLabel;
         } else {
             strAllocationLevel = oppLabel;
-        }
-        List<Allocation__c> oppAllos = 
-            [SELECT Id FROM Allocation__c WHERE Opportunity__c != null LIMIT 1];
-        oppAllocationsExist = oppAllos.size() == 1;
-    }
-
-    /*********************************************************************************************************
-    * @description Show a warning message if the Allocation Level changed to Payment
-    * and this org has Allocations set on Opportunities
-    * @return void
-    */
-    public void allocationLevelChange(){
-        if(oppAllocationsExist && strAllocationLevel == paymentLabel){
-            apexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning,
-                Label.stgHelpAllocationLevelWarning));
         }
     }
 
@@ -134,6 +121,15 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
             return strExcludedOppRecTypesReadOnly;
         }
         private set;
+    }
+
+    /*******************************************************************************************************
+    * @description Cancels the edit. Returns page to View mode.
+    * @return PageReference The page to redirect to, if any.
+    */
+    public override PageReference cancelEdit() {
+        setAllocationPicklistFromSetting();
+        return super.cancelEdit();
     }
 
     /*********************************************************************************************************

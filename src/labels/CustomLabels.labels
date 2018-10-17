@@ -5316,17 +5316,11 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
         <shortDescription>stgHelpAllocationLevel</shortDescription>
         <value>An allocation is the specific amount of a gift that goes to a designated General Accounting Unit (GAU). This setting determines whether funds are allocated based on the Amount on the Opportunity or the Amount on the Payment.&lt;br/&gt;&lt;br/&gt;
 
-&lt;b&gt;IMPORTANT:&lt;/b&gt; Choosing to use Payment Allocations changes the way Opportunity Allocations work in your org. It's important that you understand these changes, the impact of turning Payment Allocations off after they've been enabled, and the additional requirements that exist before enabling them in your org. Review the Payment Allocations documentation to better understand the potential impact.&lt;br/&gt;&lt;br/&gt;
+&lt;b&gt;WARNING:&lt;/b&gt; Choosing to use Payment Allocations changes the way Opportunity Allocations work in your org. It's important that you understand these changes and the additional requirements that exist before enabling them.&lt;br/&gt;&lt;br/&gt;
+
+If you enable and start using Payment Allocations and then disable them, you will need to manually reconcile your data and update Opportunity Allocation records to reflect the information previously assigned in Payment Allocations. Review the Payment Allocations documentation to better understand the potential impact.&lt;br/&gt;&lt;br/&gt;
 
 Payment Allocation Rollups are not currently supported.</value>
-    </labels>
-    <labels>
-        <fullName>stgHelpAllocationLevelWarning</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgHelpAutoAffil</shortDescription>
-        <value>If you enable and start using Payment Allocations and then disable them, you will need to manually reconcile your data and update Opportunity Allocation records to reflect the information previously assigned in Payment Allocations.</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoAffil</fullName>
