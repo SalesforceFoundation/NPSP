@@ -331,6 +331,8 @@ public with sharing class BDI_ContactService {
                 di.put(strCx + 'ImportStatus__c', bdi.statusCreatedNew());
                 di.put(strCx + '_Preferred_Email__c', strPreferredEmail(di, iCx));
                 di.put(strCx + '_Preferred_Phone__c', strPreferredPhone(di, iCx));
+                // CurrencyIsoCode is copied from Data Import to any created Contacts. It is not copied for matched Contacts.
+                con.CurrencyIsoCode = di.CurrencyIsoCode;
 
                 // if no lastname specified for c2, we need to get it from c1 (which may only be implicit via Contact1_Imported)
                 if (strCx == 'Contact2' && di.Contact2_Lastname__c == null) {
