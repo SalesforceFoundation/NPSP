@@ -106,7 +106,7 @@
      */
     setColumns: function(component, dataColumns) {
         var columns = [];
-        columns.push({label: 'Donor', fieldName: 'donor', type: 'text', editable: false});
+        columns.push({label: 'Donor', fieldName: 'donorLink', type: 'url', editable: false, typeAttributes: {label: {fieldName: 'donorName'}}});
 
         dataColumns.forEach(function(col){
             columns.push({label: col.label,
@@ -155,7 +155,8 @@
         var errors = [];
         responseRows.forEach(function(currentRow) {
             var row = currentRow.record;
-            row.donor = currentRow.donor;
+            row.donorName = currentRow.donorName;
+            row.donorLink = currentRow.donorLink;
             row.matchedRecordUrl = currentRow.matchedRecordUrl;
             row.matchedRecordLabel = currentRow.matchedRecordLabel;
             row.errors = currentRow.errors;
