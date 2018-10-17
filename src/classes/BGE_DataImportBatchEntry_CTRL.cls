@@ -289,27 +289,29 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @description a class to retrieve DataImport__c records with derived donor information.
     */
     public class DataImportRow {
-        @AuraEnabled public String donor;
+        @AuraEnabled public String donorName;
+        @AuraEnabled public String donorLink;
         @AuraEnabled public String matchedRecordUrl;
         @AuraEnabled public String matchedRecordLabel;
         @AuraEnabled public DataImport__c record;
         @AuraEnabled public List<String> errors;
 
         public DataImportRow(DataImport__c record) {
-            donor = setDonorName(record);
+            getDonorInfo(record);
             setDryRunRecordInfo(record);
             this.record = record;
         }
 
-        private String setDonorName(DataImport__c record) {
+        private void getDonorInfo(DataImport__c record) {
             String donorName = '';
             if (record.Donation_Donor__c == 'Account1' && record.Account1Imported__c != null) {
-                donorName = record.Account1Imported__r.Name;
-            } 
-            if (record.Donation_Donor__c == 'Contact1' && record.Contact1Imported__c != null) {
-                donorName = record.Contact1Imported__r.Name;
+                this.donorName = record.Account1Imported__r.Name;
+                this.donorLink = '/'+record.Account1Imported__c;
             }
-            return donorName;
+            if (record.Donation_Donor__c == 'Contact1' && record.Contact1Imported__c != null) {
+                this.donorName = record.Contact1Imported__r.Name;
+                this.donorLink = '/'+record.Contact1Imported__c;
+            }
         }
 
         /***************************************************************************************************
