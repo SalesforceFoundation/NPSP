@@ -11,7 +11,7 @@ from selenium.webdriver.common.keys import Keys
 from SeleniumLibrary.errors import ElementNotFound
 from simple_salesforce import SalesforceMalformedRequest
 from simple_salesforce import SalesforceResourceNotFound
-from locator_backup_91118 import npsp_lex_locators
+from locator_w19 import npsp_lex_locators
 from selenium.webdriver import ActionChains
 #from cumulusci.robotframework.utils import selenium_retry
 #import os
@@ -238,6 +238,11 @@ class NPSP(object):
         """Validates if the specified header field has specified value"""   
         locator= npsp_lex_locators['header_field_value'].format(title,value)
         self.selenium.page_should_contain_element(locator)
+        
+    def verify_header(self,value):   
+        """Validates header value"""   
+        locator= npsp_lex_locators['header'].format(value)
+        self.selenium.page_should_contain_element(locator)    
         
     def Verify_affiliated_contact(self,list_name,first_name,last_name, y):   
         """Validates if the affiliated contacts have the added contact details enter Y for positive case and N for negative case"""   
@@ -622,41 +627,76 @@ class NPSP(object):
             else:
                 return "fail"
         
+    def select_value_from_list(self,list_name,value): 
+        locator = npsp_lex_locators['npsp_settings']['list'].format(list_name)
+        loc = self.selenium.get_webelement(locator)
+        self.selenium.set_focus_to_element(locator)       
+        self.selenium.select_from_list_by_label(loc,value)   
         
-        
-        
-    def wait_for_locator(self, path, *args, **kwargs):
-        """ Returns a rendered locator string from the Salesforce lex_locators
+    def get_npsp_locator(self, path, *args, **kwargs):
+        """ Returns a rendered locator string from the npsp_lex_locators
             dictionary.  This can be useful if you want to use an element in
             a different way than the built in keywords allow.
-        """
+        """ 
         locator = npsp_lex_locators
         for key in path.split('.'):
             locator = locator[key]
-        main_loc = locator.format(*args, **kwargs)    
+        main_loc = locator.format(*args, **kwargs)
+        return main_loc   
+        
+    def wait_for_locator(self, path, *args, **kwargs):
+        main_loc = self.get_npsp_locator(path,*args, **kwargs)    
         self.selenium.wait_until_element_is_visible(main_loc)
-        #return main_loc     
-    #"""Copied below keywords from Salesvalueforce Library"""    
+            
+    def get_npsp_settings_value(self,field_name): 
+        locator = npsp_lex_locators['npsp_settings']['field_value'].format(field_name)
+        loc = self.selenium.get_webelement(locator).text  
+        return loc 
+    
+    def click_panal_sub_link (self,title):  
+        """clicks on the button on the payments page"""      
+        locator=npsp_lex_locators['npsp_settings']['panal_sub_link'].format(title)
+        self.selenium.get_webelement(locator).click()
         
-#     def populate_lookup_field(self, name, value):
-#         self.populate_field(name, value)
-#         locator = npsp_lex_locators['field_lookup_value'].format(value)
-#         #self._call_selenium('_populate_lookup_field', True, locator)
-#         self.selenium.set_focus_to_element(locator)
-#         self.selenium.get_webelement(locator).click() 
-#         
-#     def populate_form(self, **kwargs):
-#         for name, value in kwargs.items():
-#             locator = npsp_lex_locators['field'].format(name)
-#             self.selenium.set_focus_to_element(locator)
-#             field = self.selenium.get_webelement(locator)
-#             field.clear()
-#             field.send_keys(value)
-#     
-#     def populate_field(self, name, value):
-#         locator = lex_locators['object']['field'].format(name) 
-#         self.selenium.set_focus_to_element(locator)
-#         field = self.selenium.get_webelement(locator)
-#         field.clear()
-#         field.send_keys(value)  
         
+    def verify_payment_details(self):
+        locator = "//tbody/tr/td[3]"
+        locs1 = self.selenium.get_webelements(locator)
+        locator2 = "//tbody/tr/td[4]"
+        locs2 = self.selenium.get_webelements(locator2)
+        for i, j in list(zip(locs1, locs2)):
+            #loc1_vaue = self.selenium.get_webelemt(i).text
+            #loc2_vaue = self.selenium.get_webelemt(j).text
+            if i.text == "Pledged" and j.text == "$100.00":
+                pass
+            else:
+                return "fail"    
+        return len(locs1)-1
+    
+    def wrapper_fun(self, len_value):
+        locator = "//tbody/tr[13]/th"
+        s = self.selenium.get_webelement(locator).text
+        #return s
+        strip_list = s.split(" ")
+        date = strip_list[-1]
+        date = date.split("/")
+        date = list(map(int, date))
+        mm, dd, yyyy = date
+        for _ in range(int(len_value)):
+            if mm == 12:
+                mm = 1
+                yyyy = yyyy + 1
+                date = [mm, dd, yyyy]
+                date = list(map(str, date))
+                date = "/".join(date)
+                loctor_contains = "//tbody//a[contains(@title , '{}')]".format(date)
+                time.sleep(1)
+                self.selenium.page_should_contain_element(loctor_contains)            
+            else:
+                mm = mm + 1
+                date = [mm, dd, yyyy]
+                date = list(map(str, date))
+                date = "/".join(date)
+                loctor_contains = "//tbody//a[contains(@title , '{}')]".format(date)
+                self.selenium.page_should_contain_element(loctor_contains)
+                

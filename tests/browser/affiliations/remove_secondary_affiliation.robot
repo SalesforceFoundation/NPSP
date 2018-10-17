@@ -12,13 +12,14 @@ Remove Secondary Affiliation for Contact
     &{contact} =  Salesforce Get  Contact  ${con}
     Go To Object Home          Contact
     Click Link    link=&{contact}[FirstName] &{contact}[LastName]
-    Sleep    5
+    #Sleep    5
+    Wait For Locator    record.related.title    Relationships    
     Scroll Page To Location    50    600
     Select Related Row    &{account}[Name]
     Click Link    link=Delete
     Click Modal Button    Delete
     Go To Object Home    Account
-    Sleep    5
+    #Sleep    5
     Click Link    link=&{account}[Name]
     Verify Affiliated Contact    Affiliated Contacts    &{contact}[FirstName]    &{contact}[LastName]    N
    

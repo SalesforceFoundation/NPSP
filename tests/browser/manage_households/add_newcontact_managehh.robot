@@ -29,7 +29,7 @@ Add New Contact to Existing Household
     Sleep    2
     Click Managehh Button       Save
     Sleep  5
-    Header Field Value    Account Name    &{contact}[LastName] and ${last_name} Household
+    Verify Header    &{contact}[LastName] and ${last_name} Household
     Verify Related List Items    Contacts    ${first_name} ${last_name}
 
 
