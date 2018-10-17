@@ -7,12 +7,11 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Secondary Affiliation for Contact
-    # Create Organization Account
-    ${acc}    ${con}    Create Secondary Affiliation
-    &{account} =  Salesforce Get  Account  ${acc}
-    &{contact} =  Salesforce Get  Contact  ${con}
+    &{account} =  API Create Organization Account
+    &{contact} =  API Create Contact    Email=skristem@robot.com    
+    API Create Secondary Affiliation    &{account}[Id]    &{contact}[Id]
+    Go To Record Home  &{contact}[Id]
     Page Should Contain    &{contact}[LastName]
-    Page Should Contain    &{account}[Name]
     Scroll Page To Location    50    600
     #Sleep    5
     Click Id    &{account}[Name]
@@ -20,7 +19,7 @@ Create Secondary Affiliation for Contact
     Scroll Page To Location    0    400
     Click Edit Button    Edit Primary
     #Sleep    5
-    Select Checkbox    //div[contains(@class, "uiInput")]/label/following-sibling::input[@type='checkbox']
+    Select Modal Checkbox    Primary
     Click Record Button    Save
     Sleep    5
     Go To Object Home    Contact

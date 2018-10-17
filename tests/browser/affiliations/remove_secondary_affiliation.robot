@@ -7,9 +7,9 @@ Suite Teardown  Delete Records and Close Browser
  
 *** Test Cases ***    
 Remove Secondary Affiliation for Contact    
-    ${acc}    ${con}    Create Secondary Affiliation
-    &{account} =  Salesforce Get  Account  ${acc}
-    &{contact} =  Salesforce Get  Contact  ${con}
+    &{account} =  API Create Organization Account
+    &{contact} =  API Create Contact    Email=skristem@robot.com    
+    API Create Secondary Affiliation    &{account}[Id]    &{contact}[Id]
     Go To Object Home          Contact
     Click Link    link=&{contact}[FirstName] &{contact}[LastName]
     #Sleep    5

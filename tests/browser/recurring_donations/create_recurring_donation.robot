@@ -49,6 +49,6 @@ Create Open Recurring Donation With Monthly Installment
     Reload Page
     ${return_value}    Verify Payment Details
     Should be equal as strings    ${return_value}    ${value}
-    Wrapper Fun    ${value}
+    Verify Opportunities    ${value}
  
     

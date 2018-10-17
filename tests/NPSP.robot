@@ -35,16 +35,32 @@ API Create Opportunity
     &{opportunity} =     Salesforce Get  Opportunity  ${opp_id} 
     [return]         &{opportunity}  
  
-API Create Household Account
+API Create Organization Account
     [Arguments]      &{fields}
     ${name} =        Generate Random String
-    ${rt_id} =       Get Record Type Id  Account  HH_Account
+    ${rt_id} =       Get Record Type Id  Account  Organization
     ${account_id} =  Salesforce Insert  Account
-    ...                  Name=${name} HouseHold
+    ...                  Name=${name}
     ...                  RecordTypeId=${rt_id}
     ...                  &{fields}
     &{account} =     Salesforce Get  Account  ${account_id}
     [return]         &{account}
+
+API Create Primary Affiliation
+    [Arguments]      ${account_id}      ${contact_id}    &{fields}    
+    ${opp_id} =  Salesforce Insert    npe5__Affiliation__c
+    ...               npe5__Organization__c=${account_id}
+    ...               npe5__Contact__c=${contact_id}
+    ...               npe5__Primary__c=true 
+    ...               &{fields}
+
+API Create Secondary Affiliation
+    [Arguments]      ${account_id}      ${contact_id}    &{fields}    
+    ${opp_id} =  Salesforce Insert    npe5__Affiliation__c
+    ...               npe5__Organization__c=${account_id}
+    ...               npe5__Contact__c=${contact_id}
+    ...               npe5__Primary__c=false 
+    ...               &{fields}
   
 Create Contact
     ${first_name} =           Generate Random String
@@ -141,33 +157,32 @@ Create HouseHold
     [return]                  ${account_id}
 
 Create Primary Affiliation
-    # Create Organization Account
-    ${account_id} =  Create Organization Foundation
-    &{account} =  Salesforce Get  Account  ${account_id}
-    
-    # Create Contact
-    ${contact_id} =  Create Contact with Email
-    &{contact} =  Salesforce Get  Contact  ${contact_id}   
+    [Arguments]      ${acc_name}      ${con_id}
+    # # Create Organization Account
+    # &{account} =  API Create Organization Account
+    # # Create Contact 
+    # &{contact} =  API Create Contact    Email=skristem@robot.com
+    Go To Record Home  ${con_id}
     Select Tab    Details
-    Scroll Page To Location    0    300
+    #Scroll Page To Location    0    300
     Click Edit Button    Edit Primary Affiliation
-    Populate Lookup Field    Primary Affiliation    &{account}[Name]
+    Populate Lookup Field    Primary Affiliation    ${acc_name}
     Click Record Button    Save 
-    [Return]         ${account_id}    ${contact_id}   
+    # [Return]         &{account}[Id]    &{contact}[Id]   
 
 Create Secondary Affiliation
-    # Create Organization Account
-    ${account_id} =  Create Organization Foundation
-    &{account} =  Salesforce Get  Account  ${account_id}
-    
-    # Create Contact
-    ${contact_id} =  Create Contact with Email
-    &{contact} =  Salesforce Get  Contact  ${contact_id}   
+    [Arguments]      ${acc_name}      ${con_id}
+    # # Create Organization Account
+    # &{account} =  API Create Organization Account
+    # # Create Contact
+    # &{contact} =  API Create Contact    Email=skristem@robot.com
+    Go To Record Home  ${con_id}
+    Wait For Locator    record.related.title    Volunteer Hours 
     Scroll Page To Location    50    400
     Click Related List Button   Organization Affiliations    New
-    Populate Lookup Field    Organization    &{account}[Name]
+    Populate Lookup Field    Organization    ${acc_name}
     Click Modal Button    Save
-    [Return]         ${account_id}    ${contact_id}
+    #[Return]         &{account}[Id]    &{contact}[Id]
     
 Create Opportunities
     [Arguments]    ${opp_name}    ${hh_name}  

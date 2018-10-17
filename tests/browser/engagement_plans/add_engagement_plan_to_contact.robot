@@ -11,7 +11,7 @@ Create a Contact and Add Engagement Plan
     ${contact_id} =  Create Contact with Address
     &{contact} =  Salesforce Get  Contact  ${contact_id}
     Header Field Value    Account Name    &{contact}[LastName] Household
-    Scroll Page To Location    0    500
+    #Scroll Page To Location    0    500
     Click Related List Button  Engagement Plans    New
     Populate Lookup Field    Engagement Plan Template    ${plan_name}
     Click Modal Button        Save

@@ -56,15 +56,16 @@ npsp_lex_locators={
     'field_lookup_value': "//a[@role='option'][.//div[@title='{}']]",
     'header':'//h1[contains(@title,"{}")]',
     'detail_page': {
-        'address':'//h3[contains(@class, "slds-section__title")][.//span[contains(text(),"Address")]]/../..//div[contains(@class, "test-id")]/span[text()= "{}"]/../following-sibling::div//a[@title = "{}"]/div[contains(@class, "slds")]',
+        'address':'//h3[contains(@class, "slds-section__title")][.//span[contains(text(),"Address")]]/../..//div[contains(@class, "test-id")]/span[text()= "{}"]/../following-sibling::div//a/div[contains(@class, "slds")]',
         'field':'//h3[contains(@class, "slds-section__title")][.//span[text()="{}"]]/../..//div[contains(@class, "test-id")]/span[text()= "{}"]/../following-sibling::div//span[text()="{}"]',
         'verify_field_value':'//div[contains(@class, "forcePageBlockItem")]/div/div//span[text()="{}"]/../../div[2]/span/span[text() = "{}"]',
     },
     
     'manage_hh_page':{
+        'address_link':'//h4[text()="{}"]',
         'address':'//div[contains(@class, "uiInput")][.//label[contains(@class, "uiLabel")]/span[text()="{}"]]/',
         'mhh_checkbox':'//*[@id="SortCanvas"]/li//a[text()="{}"]/ancestor::div[contains(@class, "slds-card__header")]/following-sibling::div[contains(@class,"slds-card__body")]//form//div//label/span[@id = "{}"]',
-        'button':'//*[contains(@title, "{}")]',
+        'button':'//*[text()="{}"]',
         
     },
     'modal':{
@@ -90,9 +91,9 @@ npsp_lex_locators={
         'tasks':'//div[@class="slds-section__content"]/ul/li//a[text()="{}"]',
     },
     'levels':{
-        'id':'//input[@id="j_id0:j_id4:{}"]',
-        'select':'//select[@id="j_id0:j_id4:{}"]',
-        'button':'//input[@id="j_id0:j_id4:j_id6:j_id7:{}"]',
+        'id':'//input[contains(@id,"{}")]',
+        'select':'//select[contains(@id,"{}")]',
+        #'button':'//input[@id="j_id0:j_id4:j_id6:j_id7:{}"]',
         
     },
     'payments':{
@@ -104,10 +105,10 @@ npsp_lex_locators={
         'text':'//*[@id="j_id0:vfForm:j_id76:util_formfield:inputx:util_inputfield:inputX"]',
         },
     'npsp_settings':{
-        'panal_link':'//div[@id="idPanelRecDonationsNav"]//a[text()="{}"]',
-        'panal_sub_link':'//ul/li/a[text()="{}"]',
+        'panel_link':'//div[@id="idPanelRecDonationsNav"]//a[text()="{}"]',
+        'panel_sub_link':'//ul/li/a[text()="{}"]',
         'field_value':"//div[@class='slds-form-element'][./label[contains(text(),'{}')]]/div/span",
-        'side_panal':"//ul/div[contains(@id,'RecDonations')]/button[1]",
+        'side_panel':"//ul/div[contains(@id,'RecDonations')]/button[1]",
         'list':"//div[contains(@class,'slds-form--horizontal')]/div[@class='slds-form-element'][./label[text()='{}']]/div/select",
         'list_val':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/span[text()="{}"]',
         },
