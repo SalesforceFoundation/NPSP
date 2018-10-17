@@ -349,7 +349,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             //Verify that allocation and Payment amount sign match
             if ((allo.Amount__c >= 0 && wrap.parentAmount < 0)
                 ||(allo.Amount__c < 0 && wrap.parentAmount >= 0)){
-                allo.addError('Amount sign mistmatch. Negative amount Allocations are only allowed in negative Payments.');
+                allo.addError(Label.alloSignMistmatch);
             }
             
             //verify the total allocations don't exceed the parent amount
@@ -738,6 +738,18 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                                 allo.put('CurrencyIsoCode', pmt.get('CurrencyIsoCode'));
                             }
                             dmlWrapper.objectsToUpdate.add(allo);
+                        
+                        //make sure alloc and parent amount sign match (both positive or both negative)
+                        } else if (allo.Percent__c == null && (allo.Amount__c >= 0 && pmtWrap.parentAmount < 0 || allo.Amount__c < 0 && pmtWrap.parentAmount >= 0)) {
+                            pmtWrap.totalAmount -= allo.Amount__c;
+                            allo.Amount__c =  -1 * allo.Amount__c; //Change allocation sign to natch parent
+                            pmtWrap.totalAmount += allo.Amount__c;
+
+                            if (UserInfo.isMultiCurrencyOrganization()) {
+                                allo.put('CurrencyIsoCode', pmt.get('CurrencyIsoCode'));
+                            }
+                            dmlWrapper.objectsToUpdate.add(allo);
+
                         //if just the currency changed, recalculate the currency
                         } else if (UserInfo.isMultiCurrencyOrganization() && allo.get('CurrencyIsoCode') != pmt.get('CurrencyIsoCode')) {
                             allo.put('CurrencyIsoCode', pmt.get('CurrencyIsoCode'));
