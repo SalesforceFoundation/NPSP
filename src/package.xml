@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -411,6 +411,8 @@
         <members>UTIL_OrderBy_TEST</members>
         <members>UTIL_OrgTelemetry_BATCH</members>
         <members>UTIL_OrgTelemetry_Batch_TEST</members>
+        <members>UTIL_OrgTelemetry_SObject_BATCH</members>
+        <members>UTIL_OrgTelemetry_SObject_BATCH_TEST</members>
         <members>UTIL_OrgTelemetry_SVC</members>
         <members>UTIL_OrgTelemetry_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
@@ -977,6 +979,7 @@
         <members>Opportunity_Naming_Settings__c.Date_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Name_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Record_Types__c</members>
+        <members>Package_Settings__c.Namespace_Prefix__c</members>
         <members>Partial_Soft_Credit__c.Amount__c</members>
         <members>Partial_Soft_Credit__c.Contact_Name__c</members>
         <members>Partial_Soft_Credit__c.Contact_Role_ID__c</members>
@@ -2009,6 +2012,7 @@
         <members>Household_Naming_Settings__c</members>
         <members>Level__c</members>
         <members>Opportunity_Naming_Settings__c</members>
+        <members>Package_Settings__c</members>
         <members>Partial_Soft_Credit__c</members>
         <members>Relationship_Sync_Excluded_Fields__c</members>
         <members>Schedulable__c</members>
