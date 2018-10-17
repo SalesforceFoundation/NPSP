@@ -1285,6 +1285,7 @@
         <members>alloPaymentNotEnabled</members>
         <members>alloPercentExceed100</members>
         <members>alloRemainder</members>
+        <members>alloSignMistmatch</members>
         <members>alloSingleParent</members>
         <members>alloTotalExceedsOppAmt</members>
         <members>alloTotals</members>

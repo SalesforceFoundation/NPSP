@@ -199,17 +199,12 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('idPanelAllocations', panel.idPanel());
         system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Payment_Allocations_Enabled__c, 'Payment Allocations should not be enabled.');
         system.assertEquals(panel.strAllocationLevel, STG_Panel.oppLabel, 'If Payment Allocations are not enabled, allocation level should be opportunity');
-        system.assertEquals(panel.oppAllocationsExist, false, 'There should be no Opportunity Allocations yet');
         // Simulate selecting Payment Allocations without default GAU set
         panel.strAllocationLevel = STG_Panel.paymentLabel;
 
-        panel.allocationLevelChange();
-        List<Apexpages.Message> msgs = ApexPages.getMessages();
-        system.assertEquals(0, msgs.size(), 'Since there are no allocations, there should be no warning');
-
         panel.saveSettings();
 
-        msgs = ApexPages.getMessages();
+        List<Apexpages.Message> msgs = ApexPages.getMessages();
         system.assertEquals(1, msgs.size(), 'Default GAU must be enabled');
         system.assert(msgs[0].getDetail().contains(Label.alloDefaultNotEnabled));
 
