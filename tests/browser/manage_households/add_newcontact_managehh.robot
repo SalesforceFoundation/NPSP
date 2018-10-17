@@ -7,28 +7,23 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Add New Contact to Existing Household 
-    #1 contact HouseHold Validation
-    ${contact_id} =  Create Contact with Email
-    &{contact} =  Salesforce Get  Contact  ${contact_id}
-    Header Field Value  Account Name   &{contact}[LastName] Household
-    
-    #2 Create a new contact using Manage Household Page and add to contact1 HouseHold Validation 
-    Click Link    link=&{contact}[LastName] Household
+    &{contact} =  API Create Contact    Email=skristem@robot.com
+    Go To Record Home  &{contact}[AccountId] 
     Click Link    link=Show more actions
     Click Link    link=Manage Household    
-    Sleep     15     Input-textbox-notloaded-properly    
+    Sleep     5     Input-textbox-notloaded-properly    
     Select Frame With Title   Manage Household
-    Click Element     //input
     ${first_name} =           Generate Random String
     ${last_name} =            Generate Random String
-    Press Key      //input    ${first_name} ${last_name}
-    Sleep    2
-    Click Button    //*[text()="New Contact"]
-    Sleep  5  Input-textbox-notloaded-properly
+    Populate Address    Find a Contact or add a new Contact to the Household    ${first_name} ${last_name}
+    Wait For Locator    manage_hh_page.button    New Contact
+    #Sleep    2
+    Click Managehh Button    New Contact
+    #Sleep  5  Input-textbox-notloaded-properly
     Click Span Button    New Contact
-    Sleep    2
+    #Sleep    2
     Click Managehh Button       Save
-    Sleep  5
+    Wait For Locator    header    &{contact}[LastName] and ${last_name} Household
     Verify Header    &{contact}[LastName] and ${last_name} Household
     Verify Related List Items    Contacts    ${first_name} ${last_name}
 

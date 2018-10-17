@@ -7,9 +7,9 @@ Suite Teardown  Delete Records and Close Browser
  
 *** Test Cases ***    
 Remove Primary Affiliation for Contact    
-    ${acc}    ${con}    Create Primary Affiliation
-    &{account} =  Salesforce Get  Account  ${acc}
-    &{contact} =  Salesforce Get  Contact  ${con}
+    &{account} =  API Create Organization Account
+    &{contact} =  API Create Contact    Email=skristem@robot.com    
+    API Create Primary Affiliation    &{account}[Id]    &{contact}[Id]
     Go To Object Home          Contact
     Click Link    link=&{contact}[FirstName] &{contact}[LastName]
     #Sleep    5
@@ -24,13 +24,13 @@ Remove Primary Affiliation for Contact
     Page Should not Contain Link     &{contact}[FirstName]
     
 Remove Primary Affiliation for Contact2
-    ${acc}    ${con}    Create Primary Affiliation
-    &{account} =  Salesforce Get  Account  ${acc}
-    &{contact} =  Salesforce Get  Contact  ${con}
+    &{account} =  API Create Organization Account
+    &{contact} =  API Create Contact    Email=skristem@robot.com
+    API Create Primary Affiliation    &{account}[Id]    &{contact}[Id]
     Go To Object Home          Contact
     Click Link    link=&{contact}[FirstName] &{contact}[LastName]
     Select Tab    Details
-    Scroll Page To Location    100    300
+    #Scroll Page To Location    100    300
     Click Edit Button    Edit Primary Affiliation
     #Sleep    5
     Scroll Page To Location    100    500
@@ -39,6 +39,7 @@ Remove Primary Affiliation for Contact2
     #Sleep    5
     Scroll Page To Location    0    100
     Select Tab    Related
+    Scroll Page To Location    0    500
     #Sleep    5
     ${id}    ${status}    Check Status    &{account}[Name]
     Should Be Equal As Strings    ${status}    Former

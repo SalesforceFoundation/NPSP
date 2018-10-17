@@ -6,10 +6,10 @@ Suite Teardown  Delete Records and Close Browser
 
  
 *** Test Cases ***    
-Create Primary Affiliation for Contact    
-    ${acc}    ${con}    Create Primary Affiliation
-    &{account} =  Salesforce Get  Account  ${acc}
-    &{contact} =  Salesforce Get  Contact  ${con}
+Create Primary Affiliation for Contact
+    &{account} =  API Create Organization Account   
+    &{contact} =  API Create Contact    Email=skristem@robot.com 
+    Create Primary Affiliation    &{account}[Name]    &{contact}[Id]    
     Go To Object Home          Account
     Click Link    link=&{account}[Name]
     Verify Affiliated Contact    Affiliated Contacts    &{contact}[FirstName]    &{contact}[LastName]    Y    

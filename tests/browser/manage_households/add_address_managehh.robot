@@ -15,7 +15,7 @@ Add New Address to Household
     #Sleep     3        
     Select Frame With Title   Manage Household
     Click Button    Change Address
-    Click Element     //h4[text()="Enter a new address"]
+    Click ManageHH Link     Enter a new address
     Fill Address Form
     ...                       Street=123 Dummy Street
     ...                       City=Tracy
@@ -32,11 +32,12 @@ Add New Address to Household
     #Sleep    3
     Select Tab    Details
     Scroll Page To Location    0    1200
-    Verify Details Address    Mailing Address    123 Dummy Street, Tracy, CA 99999, US
+    ${status}    Verify Details Address    Mailing Address    123 Dummy Street     Tracy, CA 99999     US
+    Should Be Equal as Strings    ${status}    pass
     Go To Object Home          Account
     Click Link    link=&{contact1}[LastName] Household
     Select Tab    Details
     Scroll Page To Location    0    300
-    Verify Details Address    Billing Address    123 Dummy Street, Tracy, CA 99999, US
-
+    ${status}    Verify Details Address    Billing Address    123 Dummy Street     Tracy, CA 99999     US
+    Should Be Equal as Strings    ${status}    pass
 

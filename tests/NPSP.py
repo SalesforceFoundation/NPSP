@@ -263,11 +263,14 @@ class NPSP(object):
                 locator = locator+"input"
                 self.selenium.get_webelement(locator).send_keys(value)
          
-    def Verify_details_address(self,field,value):   
+    def Verify_details_address(self,field,npsp_street, npsp_city, npsp_country):   
         """Validates if the details page address field has specified value"""   
-        locator= npsp_lex_locators['detail_page']['address'].format(field,value)
-        self.selenium.page_should_contain_element(locator)        
-        
+        locator= npsp_lex_locators['detail_page']['address'].format(field)
+        street, city, country = self.selenium.get_webelements(locator)
+        if street.text ==  npsp_street and city.text == npsp_city and country.text == npsp_country:
+            return "pass"
+        else:
+            return "fail"
    
     def validate_checkbox(self,name,checkbox_title):   
         """validates all 3 checkboxes for contact on manage hh page and returns locator for the checkbox thats required"""   
@@ -297,7 +300,12 @@ class NPSP(object):
     def click_managehh_button(self,title):  
         """clicks on the new contact button on manage hh page"""      
         locator=npsp_lex_locators['manage_hh_page']['button'].format(title)
-        self.selenium.get_webelement(locator).click()    
+        self.selenium.get_webelement(locator).click()  
+        
+    def click_managehh_link(self,title):  
+        """clicks on the new contact button on manage hh page"""      
+        locator=npsp_lex_locators['manage_hh_page']['address_link'].format(title)
+        self.selenium.get_webelement(locator).click()      
     
     def select_modal_checkbox(self,title):
         """"""
@@ -480,7 +488,7 @@ class NPSP(object):
     def click_level_button(self,title):   
         if title == "Save":
             id = "saveBTN"
-            locator = npsp_lex_locators['levels']['button'].format(id) 
+            locator = npsp_lex_locators['levels']['id'].format(id) 
             self.selenium.get_webelement(locator).click()                
             
     def select_app_launcher_link(self,title):
@@ -653,9 +661,9 @@ class NPSP(object):
         loc = self.selenium.get_webelement(locator).text  
         return loc 
     
-    def click_panal_sub_link (self,title):  
+    def click_panel_sub_link (self,title):  
         """clicks on the button on the payments page"""      
-        locator=npsp_lex_locators['npsp_settings']['panal_sub_link'].format(title)
+        locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
         self.selenium.get_webelement(locator).click()
         
         
@@ -673,7 +681,7 @@ class NPSP(object):
                 return "fail"    
         return len(locs1)-1
     
-    def wrapper_fun(self, len_value):
+    def verify_opportunities(self, len_value):
         locator = "//tbody/tr[13]/th"
         s = self.selenium.get_webelement(locator).text
         #return s
@@ -699,4 +707,7 @@ class NPSP(object):
                 date = "/".join(date)
                 loctor_contains = "//tbody//a[contains(@title , '{}')]".format(date)
                 self.selenium.page_should_contain_element(loctor_contains)
+                
+    
+            
                 
