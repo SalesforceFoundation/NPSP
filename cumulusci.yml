@@ -177,6 +177,16 @@ tasks:
         options:
             apex: new STG_PanelCustomizableRollup_CTRL().enableCRLPs();
 
+    uninstall_packaged_incremental:
+        description: Deletes any metadata from the package in the target org not in the local workspace
+        class_path: cumulusci.tasks.salesforce.UninstallPackagedIncremental
+        options:
+            ignore:
+                QuickAction:
+                    - NewEvent
+                    - NewCase
+                    - SendEmail
+
 flows:
     config_dev:
         steps:
