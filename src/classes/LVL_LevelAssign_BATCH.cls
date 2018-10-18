@@ -69,10 +69,11 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
     public void execute(Database.BatchableContext BC, List<sObject> scope) {
         
         // track our objects to update
-        map<Id, SObject> mapSObjUpdate = new map<Id, SObject>();
+        Map<Id, SObject> mapSObjUpdate = new Map<Id, SObject>();
         
         // track our Engagement Plans to create
-        list<Engagement_Plan__c> listEP = new list<Engagement_Plan__c>();
+        List<Engagement_Plan__c> newEngagementPlans = new list<Engagement_Plan__c>();
+        List<Error__c> errorsCreatingEngagementPlans = new List<Errors__c>();
         
         // for each of our objects
         for (SObject sobj : scope) {
@@ -122,17 +123,18 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
                             
                             // apply the Engagement Plan
                             if (lvl.Engagement_Plan_Template__c != null) {
-                                Engagement_Plan__c ep = engagementPlanFromLevel(lvl,sobj.Id);
-                                if (ep != null) {
-                                    listEP.add(ep);
+                                Engagement_Plan__c engagementPlanFromLevel = engagementPlanFromLevel(lvl, sobj.Id);
+                                if (engagementPlanFromLevel != null) {
+                                    newEngagementPlans.add(engagementPlanFromLevel);
                                 } else {
-                                    Error__c logEntry = new Error__c(
-                                        Datetime__c = System.now(),
-                                        Context_Type__c = ERR_Handler_API.Context.LVL.name(),
-                                        Error_Type__c = 'Batch Apex error',
-                                        Full_Message__c = (Label.engagementPlanMissingField + ' ' + lvl.Target__c)
+                                    errorsCreatingEngagementPlans.add(
+                                        new Error__c(
+                                            Datetime__c = System.now(),
+                                            Context_Type__c = ERR_Handler_API.Context.LVL.name(),
+                                            Error_Type__c = 'Batch Apex error',
+                                            Full_Message__c = (Label.engagementPlanMissingField + ' ' + lvl.Target__c)
+                                        )
                                     );
-                                    insert logEntry;
                                 }
                             }
                         }
@@ -156,12 +158,17 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
                 
         // save 'em
         update mapSObjUpdate.values();     
-        insert listEP;
+        if (!newEngagementPlans.isEmpty()) {
+            insert newEngagementPlans;
+        }
+        if (!errorsCreatingEngagementPlans.isEmpty()) {
+            insert errorsCreatingEngagementPlans;
+        }
     }
 
     /*******************************************************************************************************
     * @description Creates an Engagement Plan based on a Level record.
-    * Attempts to find the engagement plan lookup field based on the leve's target field
+    * Attempts to find the engagement plan lookup field based on the level's target field
     * it could be either a standard object that requires us to add a namespace prefix and custom field suffix
     * e.g. Account -> npsp__Account__c, Contact -> npsp__Contact__c
     * or a standard object added by a user with no prefix that requires us to add a custom feild suffix
@@ -174,15 +181,20 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
     */
     private Engagement_Plan__c engagementPlanFromLevel(Level__c level, Id target) {
         Engagement_Plan__c ep = new Engagement_Plan__c(Engagement_Plan_Template__c = level.Engagement_Plan_Template__c);
+        
         String engagementPlanPrefixed = UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan__c');
         String targetFieldPrefixedAndSuffixed = UTIL_Namespace.StrTokenNSPrefix(level.Target__c + '__c');
         String targetFieldSuffixed = level.Target__c + '__c';
+        
         if (UTIL_Describe.isValidField(engagementPlanPrefixed, targetFieldPrefixedAndSuffixed)) {
             ep.put(targetFieldPrefixedAndSuffixed, target);
+        
         } else if (UTIL_Describe.isValidField(engagementPlanPrefixed, targetFieldSuffixed)) {
             ep.put(targetFieldSuffixed, target);
+        
         } else if (UTIL_Describe.isValidField(engagementPlanPrefixed, level.Target__c)) {
             ep.put(level.Target__c, target);
+        
         } else {
             //no matching field found, can't create an engagement plan
             return null;
