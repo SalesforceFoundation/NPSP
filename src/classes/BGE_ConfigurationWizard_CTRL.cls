@@ -240,52 +240,54 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     */
     private static void setDefaultValuesOnBGEDetailsModel(BGEDetailsModel model) {
 
+        BGEDetailsModel defaultModel = getDefaultBGEDetailsModel();
+
         if (model.expectedCount == null) {
-            model.expectedCount = 0;
+            model.expectedCount = defaultModel.expectedCount;
         }
 
         if (model.expectedTotal == null) {
-            model.expectedTotal = 0;
+            model.expectedTotal = defaultModel.expectedTotal;
         }
 
         if (model.requireTotalMatch == null) {
-            model.requireTotalMatch = false;
+            model.requireTotalMatch = defaultModel.requireTotalMatch;
         }
 
         if (model.templateFields == null) {
-            model.templateFields = new List<AvailableField>();
+            model.templateFields = defaultModel.templateFields;
         }
 
         if (model.batchProcessSize == null) {
-            model.batchProcessSize = 50;
+            model.batchProcessSize = defaultModel.batchProcessSize;
         }
 
         if (model.runOpportunityRollupsWhileProcessing == null) {
-            model.runOpportunityRollupsWhileProcessing = false;
+            model.runOpportunityRollupsWhileProcessing = defaultModel.runOpportunityRollupsWhileProcessing;
         }
 
         if (model.contactMatchingRule == null) {
-            model.contactMatchingRule = 'Firstname,Lastname,Email';
+            model.contactMatchingRule = defaultModel.contactMatchingRule;
         }
 
         if (model.donationMatchingBehavior == null) {
-            model.donationMatchingBehavior = BDI_DataImport_API.ExactMatchOrCreate;
+            model.donationMatchingBehavior = defaultModel.donationMatchingBehavior;
         }
 
         if (model.donationMatchingRule == null) {
-            model.donationMatchingRule = UTIL_Namespace.StrAllNSPrefix('Donation_Amount__c') + ';' + UTIL_Namespace.StrAllNSPrefix('Donation_Date__c');
+            model.donationMatchingRule = defaultModel.donationMatchingRule;
         }
 
         if (model.donationDateRange == null) {
-            model.donationDateRange = 0;
+            model.donationDateRange = defaultModel.donationDateRange;
         }
 
         if (model.processUsingScheduledJob == null) {
-            model.processUsingScheduledJob = false;
+            model.processUsingScheduledJob = defaultModel.processUsingScheduledJob;
         }
 
         if (model.activeFields == null) {
-            model.activeFields = getDefaultActiveFields();
+            model.activeFields = defaultModel.activeFields;
         }
     }
 
