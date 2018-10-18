@@ -73,7 +73,7 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         
         // track our Engagement Plans to create
         List<Engagement_Plan__c> newEngagementPlans = new list<Engagement_Plan__c>();
-        List<Error__c> errorsCreatingEngagementPlans = new List<Errors__c>();
+        List<Error__c> errorsCreatingEngagementPlans = new List<Error__c>();
         
         // for each of our objects
         for (SObject sobj : scope) {

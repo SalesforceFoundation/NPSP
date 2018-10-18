@@ -45,7 +45,10 @@ public with sharing class EP_EngagementPlans_UTIL {
     public static final Integer MAX_ITERATIONS = 500;
 
     /** @description Engagement Plan field describe map.*/
-    private static Map<String, Schema.DescribeFieldResult> fieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan__c'));
+    private static Map<String, Schema.DescribeFieldResult> fieldDescribeMap = UTIL_Describe.getAllFieldsDescribe(
+        UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan__c')
+    );
+    
     /** @description A map of Engagement Plan lookup field names to the relationship name and OwnerId for all custom relationship fields,
     * used for generating a query of all related object owners. Excludes the template master-detail field. */
     private static Map<String, String> lookupFieldsToRelationship {
