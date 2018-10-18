@@ -16,7 +16,7 @@
  
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
     FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
     COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
     INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
@@ -113,6 +113,116 @@ private with sharing class BDI_DataImportService_TEST {
         }
     }
 
+    /*******************************************************************************************************************
+    * @description Verifies correct working using the custom metadata instead of help text.
+    *
+    */
+    @isTest
+    private static void mapFieldsUsingCustomMetadata() {
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+
+        BDISettings__c bdiSettings = BDISettings__c.getOrgDefaults();
+
+        bdiSettings.MapWithCustomMetadataTypes__c = true;
+
+        upsert bdiSettings;
+
+        Boolean isDryRun = false;
+
+        BDI_DataImportService service = new BDI_DataImportService(isDryRun);
+
+        DataImport__c firstDataImport = new DataImport__c(
+           Contact1_Firstname__c = 'John',
+           Contact1_Lastname__c = 'Doe',
+           Contact1_Personal_Email__c = 'john@doe.com'
+        );
+
+        DataImport__c secondDataImport = new DataImport__c(
+           Contact1_Firstname__c = 'Peter',
+           Contact1_Lastname__c = 'Parker',
+           Contact1_Personal_Email__c = 'pp@test.com'
+        );
+
+        dataImports.add(firstDataImport);
+        dataImports.add(secondDataImport);
+
+        insert dataImports;
+
+        System.assertEquals(firstDataImport.Status__c,  null);
+        System.assertEquals(secondDataImport.Status__c, null);
+
+        //run batch data import
+        Test.startTest();
+
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+
+        Database.executeBatch(bdi, 10);
+
+        Test.stopTest();
+
+        // Retrieve the status for each data import
+        firstDataImport = [SELECT Id, Status__c FROM DataImport__c WHERE Id = :firstDataImport.Id];
+        secondDataImport = [SELECT Id, Status__c FROM DataImport__c WHERE Id = :secondDataImport.Id];
+
+        System.assertEquals(firstDataImport.Status__c,  'Imported');
+        System.assertEquals(secondDataImport.Status__c, 'Imported');
+    }
+
+    /*******************************************************************************************************************
+    * @description Verifies correct working using the help text instead of custom metadata.
+    *
+    */
+    @isTest
+    private static void mapFieldsUsingHelpText() {
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+
+        BDISettings__c bdiSettings = BDISettings__c.getOrgDefaults();
+
+        bdiSettings.MapWithCustomMetadataTypes__c = false;
+
+        upsert bdiSettings;
+
+        Boolean isDryRun = false;
+
+        BDI_DataImportService service = new BDI_DataImportService(isDryRun);
+
+        DataImport__c firstDataImport = new DataImport__c(
+           Contact1_Firstname__c = 'Rick',
+           Contact1_Lastname__c = 'James',
+           Contact1_Personal_Email__c = 'rick@example.com'
+        );
+
+        DataImport__c secondDataImport = new DataImport__c(
+           Contact1_Firstname__c = 'Jack',
+           Contact1_Lastname__c = 'Nicholson',
+           Contact1_Personal_Email__c = 'jack@doe.com'
+        );
+
+        dataImports.add(firstDataImport);
+        dataImports.add(secondDataImport);
+
+        insert dataImports;
+
+        System.assertEquals(firstDataImport.status__c,  null);
+        System.assertEquals(secondDataImport.status__c, null);
+
+        //run batch data import
+        Test.startTest();
+
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+
+        Database.executeBatch(bdi, 10);
+
+        Test.stopTest();
+
+        firstDataImport = [SELECT Id, Status__c FROM DataImport__c WHERE Id = :firstDataImport.Id];
+        secondDataImport = [SELECT Id, Status__c FROM DataImport__c WHERE Id = :secondDataImport.Id];
+
+        System.assertEquals(firstDataImport.status__c,  'Imported');
+        System.assertEquals(secondDataImport.status__c, 'Imported');
+    }
 
     // Helpers
     ////////////
@@ -137,6 +247,6 @@ private with sharing class BDI_DataImportService_TEST {
     private static Boolean isRollupTriggerHandler(Trigger_Handler__c handler) {
          return (handler.Object__c == 'Opportunity' && handler.Class__c == 'RLLP_OppRollup_TDTM') ||
             (handler.Object__c == 'Opportunity' && handler.Class__c == 'CRLP_Rollup_TDTM') ||
-            (handler.Object__c == 'npe01__OppPayment__c' && handler.Class__c == 'CRLP_Rollup_TDTM'); 
+            (handler.Object__c == 'npe01__OppPayment__c' && handler.Class__c == 'CRLP_Rollup_TDTM');
     }
 }
