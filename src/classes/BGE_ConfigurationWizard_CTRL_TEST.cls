@@ -96,7 +96,7 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
         System.assertEquals(batchTemplate.Name, templateDetails.name, 'Template details name should match');
         System.assertEquals(batchTemplate.Description__c, templateDetails.description, 'Template details description should match');
         System.assertEquals(batchTemplate.RequireTotalMatch__c, templateDetails.requireTotalMatch, 'Require total match should match');
-        System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), templateDetails.activeFields, 'Active Fields should be match default');
+        System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), templateDetails.activeFields, 'Active Fields should match default');
         System.assertEquals(batchTemplate.Id, templateDetails.id, 'Batch template ID should match');
     }
 

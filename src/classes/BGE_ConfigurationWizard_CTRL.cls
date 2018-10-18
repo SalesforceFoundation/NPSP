@@ -231,6 +231,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         model.donationMatchingRule = UTIL_Namespace.StrAllNSPrefix('Donation_Amount__c') + ';' + UTIL_Namespace.StrAllNSPrefix('Donation_Date__c');
         model.donationDateRange = 0;
         model.processUsingScheduledJob = false;
+        model.activeFields = getDefaultActiveFields();
 
         return model;
     }
