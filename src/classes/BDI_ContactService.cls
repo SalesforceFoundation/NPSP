@@ -335,7 +335,8 @@ public with sharing class BDI_ContactService {
                 if (UserInfo.isMultiCurrencyOrganization()) {
 
                     // CurrencyIsoCode is copied from Data Import to any created Contacts. It is not copied for matched Contacts.
-                    con.CurrencyIsoCode = di.CurrencyIsoCode;
+                    // If we are not in multicurrency org assigning this directly would fail.
+                    con.put('CurrencyIsoCode', di.get('CurrencyIsoCode'));
                 }
 
                 // if no lastname specified for c2, we need to get it from c1 (which may only be implicit via Contact1_Imported)

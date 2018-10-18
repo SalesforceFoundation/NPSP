@@ -738,7 +738,7 @@ global with sharing class BDI_DataImportService {
     }
 
     private static void addCurrencyIsoCode(Map<String, String> fieldMap) {
-        
+
         // handle multicurrency if it's enabled
         if (UserInfo.isMultiCurrencyOrganization()) {
             fieldMap.put('currencyisocode', 'CurrencyIsoCode');
@@ -1272,8 +1272,10 @@ global with sharing class BDI_DataImportService {
             } else if (listDiKey.size() > 0) {
                 acc = new Account();
                 if (UserInfo.isMultiCurrencyOrganization()) {
+
                     // CurrencyIsoCode is copied from Data Import to any created Accounts. It is not copied for matched Accounts.
-                    acc.CurrencyIsoCode = di.CurrencyIsoCode;
+                    // If we are not in multicurrency org assigning this directly would fail.
+                    acc.put('CurrencyIsoCode', di.get('CurrencyIsoCode'));
                 }
                 di.Account1ImportStatus__c = statusCreatedNew();
             }
