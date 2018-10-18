@@ -398,8 +398,9 @@
         <columns>CREATED_DATE</columns>
         <filterScope>Everything</filterScope>
         <filters>
-            <field>Batch_Template__c</field>
+            <field>UseBatchGiftEntryGrid__c</field>
             <operation>equals</operation>
+            <value>1</value>
         </filters>
         <label>Gift Batches</label>
     </listViews>
