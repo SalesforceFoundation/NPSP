@@ -82,10 +82,10 @@
         <members>BDI_PostProcess_TEST</members>
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
+        <members>BGE_ConfigurationWizard_CTRL</members>
+        <members>BGE_ConfigurationWizard_CTRL_TEST</members>
         <members>BGE_DataImportBatchEntry_CTRL</members>
         <members>BGE_DataImportBatchEntry_CTRL_TEST</members>
-        <members>BGE_Template_CTRL</members>
-        <members>BGE_Template_CTRL_TEST</members>
         <members>CAM_CascadeDeleteLookups_TDTM</members>
         <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
@@ -561,9 +561,10 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>BGE_BatchGiftEntryTab</members>
+        <members>BGE_ConfigurationWizard</members>
         <members>BGE_DataImportBatchEntry</members>
         <members>BGE_EntryForm</members>
-        <members>BGE_TemplateDetails</members>
         <members>CRLP_FilterGroup</members>
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupApp</members>
@@ -591,6 +592,8 @@
         <members>autocompleteSelectListOption</members>
         <members>dataProviderInterface</members>
         <members>defaultTokens</members>
+        <members>modalFooter</members>
+        <members>modalHeader</members>
         <members>svg</members>
         <name>AuraDefinitionBundle</name>
     </types>
@@ -753,8 +756,10 @@
         <members>Customizable_Rollup_Settings__c.Rollups_Limit_on_Attached_Opps_for_Skew__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Skew_Dispatcher_Batch_Size__c</members>
         <members>DataImportBatch__c.Account_Custom_Unique_ID__c</members>
+        <members>DataImportBatch__c.Active_Fields__c</members>
         <members>DataImportBatch__c.Batch_Description__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>
+        <members>DataImportBatch__c.Batch_Template__c</members>
         <members>DataImportBatch__c.Contact_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Contact_Matching_Rule__c</members>
         <members>DataImportBatch__c.Donation_Date_Range__c</members>
@@ -768,8 +773,10 @@
         <members>DataImportBatch__c.Process_Using_Scheduled_Job__c</members>
         <members>DataImportBatch__c.Records_Failed__c</members>
         <members>DataImportBatch__c.Records_Successfully_Processed__c</members>
+        <members>DataImportBatch__c.RequireTotalMatch__c</members>
         <members>DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c</members>
         <members>DataImportBatch__c.Status__c</members>
+        <members>DataImportBatch__c.UseBatchGiftEntryGrid__c</members>
         <members>DataImport__c.Account1ImportStatus__c</members>
         <members>DataImport__c.Account1Imported__c</members>
         <members>DataImport__c.Account1_City__c</members>
@@ -1381,6 +1388,7 @@
         <members>bdiStatusProcessed</members>
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
+        <members>bgeBatchInfoWizard</members>
         <members>bgeBatchTemplateAvailableFields</members>
         <members>bgeBatchTemplateEdit</members>
         <members>bgeBatchTemplateErrorDefaultValue</members>
@@ -1398,11 +1406,13 @@
         <members>bgeGridGiftSaved</members>
         <members>bgeGridGiftUpdated</members>
         <members>bgeGridMatchedRecord</members>
-        <members>bgeGridNewGift</members>
         <members>bgeGridNoGiftsBody</members>
         <members>bgeGridNoGiftsHeader</members>
         <members>bgeGridTotalAmount</members>
         <members>bgeGridTotalCount</members>
+        <members>bgeNewBatch</members>
+        <members>bgeNewGift</members>
+        <members>bgeTabHeader</members>
         <members>btnRemove</members>
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
@@ -2258,6 +2268,13 @@
         <members>Opportunity_Naming_Settings__c-iw</members>
         <members>Opportunity_Naming_Settings__c-ja</members>
         <members>Opportunity_Naming_Settings__c-nl_NL</members>
+        <members>Package_Settings__c-de</members>
+        <members>Package_Settings__c-en_US</members>
+        <members>Package_Settings__c-es</members>
+        <members>Package_Settings__c-fr</members>
+        <members>Package_Settings__c-iw</members>
+        <members>Package_Settings__c-ja</members>
+        <members>Package_Settings__c-nl_NL</members>
         <members>Partial_Soft_Credit__c-de</members>
         <members>Partial_Soft_Credit__c-en_US</members>
         <members>Partial_Soft_Credit__c-es</members>
@@ -2366,6 +2383,7 @@
     <types>
         <members>Address__c</members>
         <members>Batch_Data_Entry</members>
+        <members>Batch_Gift_Entry</members>
         <members>Batch_Template__c</members>
         <members>Contact_Merge</members>
         <members>DataImportBatch__c</members>
@@ -2476,6 +2494,7 @@
         <members>Batch__c.Completed_Batches</members>
         <members>Batch__c.Open_Batches</members>
         <members>DataImportBatch__c.All</members>
+        <members>DataImportBatch__c.Gift_Batches</members>
         <members>DataImport__c.All</members>
         <members>DataImport__c.Dry_Run_Errors</members>
         <members>DataImport__c.Dry_Run_Validated</members>
@@ -2569,7 +2588,6 @@
         <members>Batch_Template__c.Edit_Processing_Settings</members>
         <members>Contact.Merge_Contacts</members>
         <members>Contact.Recalculate_Rollups</members>
-        <members>DataImportBatch__c.Batch_Gift_Entry</members>
         <members>DataImportBatch__c.Edit_Processing_Settings</members>
         <members>DataImportBatch__c.Process_Batch</members>
         <members>DataImportBatch__c.View_Templates</members>
@@ -2602,5 +2620,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>39.0</version>
+    <version>43.0</version>
 </Package>

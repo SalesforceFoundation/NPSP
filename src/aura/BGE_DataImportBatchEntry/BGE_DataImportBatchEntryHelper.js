@@ -203,6 +203,7 @@
         var fields = [];
         fields.push(labels.expectedCountField);
         fields.push(labels.expectedTotalField);
+        fields.push('Name');
         component.set('v.batchFields', fields);
     },
 
@@ -254,12 +255,7 @@
      * @param type: configures type of toast
      */
     showToast: function(component, title, message, type) {
-        var mode;
-        if (type === 'Error') {
-            mode = 'sticky';
-        } else {
-            mode = 'pester';
-        }
+        var mode = (type === 'Error') ? 'sticky' : 'pester';
 
         component.find('notifLib').showToast({
             'variant': type,
