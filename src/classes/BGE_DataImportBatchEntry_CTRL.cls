@@ -85,11 +85,11 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
         String activeFieldsJSON = batch.Active_Fields__c;
         System.debug(activeFieldsJSON);
-        List<BGE_ConfigurationWizard_CTRL.bgeField> activeFields = (List<BGE_ConfigurationWizard_CTRL.bgeField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.bgeField>.class);
+        List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields = (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
 
         List<String> activeFieldNames = new List<String>();
 
-        for (BGE_ConfigurationWizard_CTRL.bgeField field : activeFields) {
+        for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
             activeFieldNames.add(field.name);
         }
 
@@ -151,10 +151,10 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
         DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
         String activeFieldsJSON = batch.Active_Fields__c;
-        List<BGE_ConfigurationWizard_CTRL.bgeField> activeFields = (List<BGE_ConfigurationWizard_CTRL.bgeField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.bgeField>.class);
+        List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields = (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
 
         Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
-        for (BGE_ConfigurationWizard_CTRL.bgeField field : activeFields) {
+        for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
             String namespacedField = UTIL_Namespace.StrTokenNSPrefix(field.name);
             Schema.DescribeFieldResult dfr = fieldMap.get(namespacedField.toLowerCase());
             if (dfr != null) {

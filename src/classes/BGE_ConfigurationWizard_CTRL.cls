@@ -89,9 +89,9 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     * @description Retrieves the related list of fields.
     * @return list of Template Fields with sObjectName and Name.
     */
-    public static List<bgeField> getAvailableFields() {
+    public static List<BGEField> getAvailableFields() {
 
-        List<bgeField> fields = new List<bgeField>();
+        List<BGEField> fields = new List<BGEField>();
 
         Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
         Set<String> bannedFields = new Set<String>{'Account1Imported__c',
@@ -144,7 +144,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
             if (fieldAllowed) {
 
-                bgeField field = new bgeField();
+                BGEField field = new BGEField();
 
                 // TODO: make these localized with schema describes
                 field.sObjectName = dataImportFieldMappedObject;
@@ -319,7 +319,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public Boolean requireTotalMatch;
         @AuraEnabled public Integer expectedCount;
         @AuraEnabled public Decimal expectedTotal;
-        @AuraEnabled public List<bgeField> templateFields;
+        @AuraEnabled public List<BGEField> templateFields;
         @AuraEnabled public String activeFields;
         @AuraEnabled public Map<String, String> labels;
 
@@ -328,14 +328,14 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             requireTotalMatch = false;
             expectedCount = 0;
             expectedTotal = 0;
-            templateFields = new List<bgeField>();
+            templateFields = new List<BGEField>();
         }
     }
 
     /*******************************************************************************************************
     * @description a class to retrieve and save information related to Active and Available fields.
     */
-    public class bgeField {
+    public class BGEField {
         @AuraEnabled public String label;
         @AuraEnabled public String name;
         @AuraEnabled public String sObjectName;
@@ -345,7 +345,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public Boolean systemRequired;
         @AuraEnabled public Boolean hide;
 
-        public bgeField() {
+        public BGEField() {
             isActive = false;
             required = false;
             hide = false;
