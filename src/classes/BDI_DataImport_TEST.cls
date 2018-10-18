@@ -134,6 +134,41 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation
+    *        match a contact with no firstname
+    * verify:
+    *        contact matched
+    **********************************************************************************************************/
+    static testMethod void OneDIWithoutFirstName() {
+        insert new DataImport__c(
+            Contact1_Lastname__c = 'foo',
+            Contact1_Personal_Email__c = 'foo@bar.com'
+        );
+
+        insert new Contact(
+            Lastname='foo',
+            Email='foo@bar.com'
+        );
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        // verify expected results
+        List<Contact> contacts = getContacts();
+        System.assertEquals(1, contacts.size());
+        System.assertEquals(null, contacts[0].FirstName);
+
+        List<DataImport__c> imports = getDIs();
+        System.assertEquals(1, imports.size());
+        System.assertEquals(imports[0].Contact1Imported__c, contacts[0].Id);
+        System.assertNotEquals(null, imports[0].HouseholdAccountImported__c);
+        System.assertEquals(System.Label.bdiMatched, imports[0].Contact1ImportStatus__c);
+    }
+
+    /*********************************************************************************************************
+    * @description operation
     *        import matching contacts within multiple di records in the same batch  
     * verify: 
     *        only one contact created
