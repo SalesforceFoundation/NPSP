@@ -20,8 +20,12 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>Batch_Gift_Entry</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
         <members>Admin</members>
         <name>Profile</name>
     </types>
-    <version>36.0</version>
+    <version>43.0</version>
 </Package>

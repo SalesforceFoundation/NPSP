@@ -18,17 +18,20 @@
                 templateInfoView.id = templateInfo.id;
                 templateInfoView.description = templateInfo.description;
                 templateInfoView.requireTotalMatch = templateInfo.requireTotalMatch;
+                templateInfoView.expectedCount = templateInfo.expectedCount;
+                templateInfoView.expectedTotal = templateInfo.expectedTotal;
 
                 component.set('v.templateInfo', templateInfoView);
             });
-
 
             // TemplateInfoView module public functions and properties
             return {
                 name: '',
                 id: '',
                 description: '',
-                requireTotalMatch: false
+                requireTotalMatch: false,
+                expectedCount: 0,
+                expectedTotal: 0
             };
         })(component, model);
     },
@@ -46,14 +49,18 @@
             model.getTemplateMetadata().onMetadataUpdated.subscribe(function() {
                 var templateMetadataView = component.get('v.templateMetadata');
                 var templateMetadata = model.getTemplateMetadata();
+                var headerChanged = Boolean(templateMetadataView.pageHeader !== templateMetadata.pageHeader);
+
                 templateMetadataView.labels = templateMetadata.labels;
                 templateMetadataView.mode = templateMetadata.mode;
                 templateMetadataView.hasError = templateMetadata.hasError;
                 templateMetadataView.errorMessage = templateMetadata.errorMessage;
                 templateMetadataView.dataTableChanged = templateMetadata.dataTableChanged;
+                templateMetadataView.pageHeader = templateMetadata.pageHeader;
 
                 if (!templateMetadataView.hasError) {
                     templateMetadataView.progressIndicatorStep = templateMetadata.progressIndicatorStep;
+                    _sendMessage('setStep',templateMetadata.progressIndicatorStep);
                 } else {
                     component.find('notifLib').showNotice({
                         'variant': 'error',
@@ -76,8 +83,26 @@
                     }
                 }
 
+                //update page header in modal if page header has changed and modal is used
+                if (headerChanged) {
+                    _sendMessage('setHeader', templateMetadataView.pageHeader);
+                }
+
+                // when in modal context, need to notify the modal footer component
+                _sendMessage('dataTableChanged', templateMetadataView.dataTableChanged);
+                _sendMessage('setError', templateMetadataView.hasError);
+
                 component.set('v.templateMetadata', templateMetadataView);
             });
+
+            function _sendMessage(channel, message) {
+                var sendMessage = $A.get('e.ltng:sendMessage');
+                sendMessage.setParams({
+                    'channel': channel,
+                    'message': message
+                });
+                sendMessage.fire();
+            }
 
             // TemplateMetadataView module public functions and properties
             return {
@@ -258,14 +283,17 @@
              ************************************************************/
             function init(component) {
                 var recordId = _templateInfo.id ? _templateInfo.id : component.get('v.recordId');
-                _bgeTemplateController.getTemplateDetails(recordId, {
+                var sObjectName = component.get('v.sObjectName');
+                _bgeTemplateController.getRecordDetails(sObjectName, recordId, {
                     success: function(response) {
                         _templateInfo.load(
                             {
                                 name: response.name,
                                 id: response.id,
                                 description: response.description,
-                                requireTotalMatch: response.requireTotalMatch
+                                requireTotalMatch: response.requireTotalMatch,
+                                expectedCount: response.expectedCount,
+                                expectedTotal: response.expectedTotal
                             }
                         );
 
@@ -287,7 +315,9 @@
                     name: _templateInfo.name,
                     id: _templateInfo.id,
                     description: _templateInfo.description,
-                    requireTotalMatch: _templateInfo.requireTotalMatch
+                    requireTotalMatch: _templateInfo.requireTotalMatch,
+                    expectedCount: _templateInfo.expectedCount,
+                    expectedTotal: _templateInfo.expectedTotal
                 };
                 var activeFields = [];
 
@@ -303,17 +333,21 @@
                     });
                 });
 
-                _bgeTemplateController.saveTemplateDetails(templateDetailsData, activeFields, {
+                var sObjectName = _templateMetadata.labels.sObjectNameNoNamespace;
+
+                _bgeTemplateController.saveRecord(sObjectName, templateDetailsData, activeFields, {
                     success: function(response) {
-                        _templateMetadata.setMode('view');
                         _templateInfo.load(
                             {
                                 name: response.name,
                                 id: response.id,
                                 description: response.description,
-                                requireTotalMatch: response.requireTotalMatch
+                                requireTotalMatch: response.requireTotalMatch,
+                                expectedCount: response.expectedCount,
+                                expectedTotal: response.expectedTotal
                             }
                         );
+                        _templateMetadata.reload(response.id);
                     },
                     error: function(error) {
                         console.log(error);
@@ -383,6 +417,8 @@
                 this.description = info.description;
                 this.id = info.id;
                 this.requireTotalMatch = info.requireTotalMatch;
+                this.expectedCount = info.expectedCount;
+                this.expectedTotal = info.expectedTotal;
                 this.onInfoUpdated.notify();
             }
 
@@ -400,6 +436,8 @@
                 id: '',
                 description: '',
                 requireTotalMatch: false,
+                expectedCount: 0,
+                expectedTotal: 0,
                 load: load,
                 isValid: isValid,
                 onInfoUpdated: _onInfoUpdated
@@ -706,7 +744,68 @@
                         this.setMode('create');
                     }
                 }
+                this.setPageHeader();
                 this.onMetadataUpdated.notify();
+            }
+
+            /**
+             * @description Navigates to the record's sObject Home
+             * @param recordId - the record we want to view
+             */
+            function reload(recordId) {
+                var navEvt = $A.get('e.force:navigateToSObject');
+                navEvt.setParams({
+                    'recordId': recordId
+                });
+                navEvt.fire();
+            }
+
+            /**
+             * @description Increments Wizard to next step if no errors exist
+             * @param isValid - string that is the selected mode
+             * @param error - existing errors
+             * @return void.
+             */
+            function nextStep(isValid, error) {
+
+                if (isValid) {
+                    this.clearError();
+                    this.stepUp();
+                    this.setPageHeader();
+                } else {
+                    this.showError(error);
+                }
+            }
+
+            /**
+             * @description Decrements Wizard to previous step regardless of errors
+             * @return void.
+             */
+            function backStep() {
+                this.clearError();
+                this.setDataTableChanged(false);
+                this.stepDown();
+                this.setPageHeader();
+            }
+
+            /**
+             * @description From Edit mode, sets back to View mode, otherwise returns user to dynamic Object home
+             * @return void.
+             */
+            function cancel() {
+                if (this.mode === 'edit' && this.labels.sObjectNameNoNamespace === 'Batch_Template__c') {
+                    this.clearError();
+                    this.setDataTableChanged(false);
+                    this.setMode('view');
+                } else {
+                    //navigate to record home
+                    var homeEvent = $A.get('e.force:navigateToObjectHome');
+                    var objectName = this.labels.sObjectName;
+                    homeEvent.setParams({
+                        'scope': objectName
+                    });
+                    homeEvent.fire();
+                }
             }
 
             /**
@@ -728,12 +827,10 @@
              */
             function setDataTableChanged(status) {
                 this.dataTableChanged = status;
-                // oncellchange seems to be broken, so we set the view directly in the controller
+                // oncellchange seems to be broken, so we also set the view directly in the controller
                 // this is just updating the model
-                // we only notify when changing to false
-                if (status === false) {
-                    this.onMetadataUpdated.notify();
-                }
+                // still need to notify so the modal footer can be notified
+                this.onMetadataUpdated.notify();
             }
 
             /**
@@ -758,12 +855,46 @@
             }
 
             /**
+             * @description sets the page header based on the step in the wizard
+             * @return void.
+             */
+            function setPageHeader() {
+                var headers = [this.labels.recordInfoLabel,
+                    'Select Template',
+                    $A.get('$Label.c.bgeBatchTemplateSelectFields'),
+                    $A.get('$Label.c.bgeBatchTemplateSetFieldOptions'),
+                    'Select Matching Rules'
+                ];
+
+                var progressIndicatorStepBase1 = parseInt(this.progressIndicatorStep) - 1;
+                this.pageHeader = headers[progressIndicatorStepBase1];
+                this.onMetadataUpdated.notify();
+            }
+
+            /**
              * @description Increments the step for the progressIndicator
              * @return void.
              */
             function stepUp() {
                 var stepNum = parseInt(this.progressIndicatorStep);
-                stepNum = stepNum + 1;
+                switch (stepNum) {
+                    case 1:
+                        // TODO: adjust this when we add in step 2
+                        stepNum = 3;
+                        break;
+                    case 2:
+                        stepNum = 3;
+                        break;
+                    case 3:
+                        stepNum = 4;
+                        break;
+                    case 4:
+                        stepNum = 5;
+                        break;
+                    default:
+                        stepNum = 1;
+                        break;
+                }
                 this.progressIndicatorStep = stepNum.toString();
                 this.onMetadataUpdated.notify();
             }
@@ -774,12 +905,29 @@
              */
             function stepDown() {
                 var stepNum = parseInt(this.progressIndicatorStep);
-                stepNum = stepNum - 1;
+                switch (stepNum) {
+                    case 2:
+                        stepNum = 1;
+                        break;
+                    case 3:
+                        // TODO: adjust this when we add in step 2
+                        stepNum = 1;
+                        break;
+                    case 4:
+                        stepNum = 3;
+                        break;
+                    case 5:
+                        stepNum = 4;
+                        break;
+                    default:
+                        stepNum = 1;
+                        break;
+                }
                 this.progressIndicatorStep = stepNum.toString();
                 this.onMetadataUpdated.notify();
             }
 
-            // TemplateInfo module public functions and properties
+            // TemplateMetadata module public functions and properties
             return {
                 labels: {},
                 mode: '',
@@ -787,10 +935,16 @@
                 hasError: false,
                 errorMessage: '',
                 dataTableChanged: false,
+                pageHeader: '',
                 load: load,
+                reload: reload,
+                nextStep: nextStep,
+                backStep: backStep,
+                cancel: cancel,
                 setMode: setMode,
                 showError: showError,
                 clearError: clearError,
+                setPageHeader: setPageHeader,
                 stepUp: stepUp,
                 stepDown: stepDown,
                 onMetadataUpdated: _onMetadataUpdated,
@@ -849,31 +1003,33 @@
             var _component = component;
 
             /**
-             * @description Calls the getTemplateDetails method.
+             * @description Calls the getRecordDetails method.
              * @param recordId. The Id of the Template.
              * @param callback. The callback function to execute.
              * @return void.
              */
-            function getTemplateDetails(recordId, callback) {
-                var action = _component.get('c.getTemplateDetails');
+            function getRecordDetails(sObjectName, recordId, callback) {
+                var action = _component.get('c.getRecordDetails');
                 action.setParams({
-                    templateId: recordId
+                    'sObjectName': sObjectName,
+                    'recordId': recordId
                 });
                 action.setCallback(callback, _processResponse);
                 $A.enqueueAction(action);
             }
 
             /**
-             * @description Calls the saveTemplateDetails method.
+             * @description Calls the saveRecord method.
              * @param templateDetails. The Template fields.
              * @param activeFields. The active fields (JSON format)
              * @param callback. The callback function to execute.
              * @return void.
              */
-            function saveTemplateDetails(templateDetails, activeFields, callback) {
-                var action = _component.get('c.saveTemplate');
+            function saveRecord(sObjectName, recordDetails, activeFields, callback) {
+                var action = _component.get('c.saveRecord');
                 action.setParams({
-                    'templateInfo': JSON.stringify(templateDetails),
+                    'sObjectName' : sObjectName,
+                    'recordInfo': JSON.stringify(recordDetails),
                     'activeFields': JSON.stringify(activeFields)
                 });
                 action.setCallback(callback, _processResponse);
@@ -894,18 +1050,19 @@
                     var errors = response.getError();
                     if (errors) {
                         if (errors[0] && errors[0].message) {
-                            this.error(errors[0].message);
+                            this.errors = errors[0].message;
                         }
                     } else {
-                        this.error('Unknown error');
+                        this.errors = 'Unknown error';
                     }
                 }
             }
             
             // BGETemplateController module public functions.
             return {
-                getTemplateDetails: getTemplateDetails,
-                saveTemplateDetails: saveTemplateDetails
+                errors: '',
+                getRecordDetails: getRecordDetails,
+                saveRecord: saveRecord
             }
         })(component);
     },
