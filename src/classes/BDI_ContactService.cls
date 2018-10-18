@@ -372,7 +372,11 @@ public with sharing class BDI_ContactService {
         strSoql += ' WHERE AccountId IN :setHHId';
         List<Contact> listHHContacts = database.query(strSoql);
         for (Contact con : listHHContacts) {
-            mapDIKeyToContact.put(con.Firstname.toLowerCase() + '|' + con.AccountId, con);
+            String firstName = con.FirstName;
+            if (!String.isBlank(firstName)) {
+                firstName = firstName.toLowerCase();
+            }
+            mapDIKeyToContact.put(firstName + '|' + con.AccountId, con);
         }
     }
 
