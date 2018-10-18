@@ -369,7 +369,7 @@
     </fields>
     <fields>
         <fullName>UseBatchGiftEntryGrid__c</fullName>
-        <defaultValue>true</defaultValue>
+        <defaultValue>false</defaultValue>
         <description>This flag is set during batch creation to use the gift entry batch feature.</description>
         <externalId>false</externalId>
         <inlineHelpText>Set this flag during batch creation to create a gift entry batch.</inlineHelpText>
