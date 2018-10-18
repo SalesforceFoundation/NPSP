@@ -60,7 +60,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         DataImportModel dataImportModel = new DataImportModel();
 
         dataImportModel.id = batchId;
-        List<String> activeFieldNames = getActiveFieldNamesFromBatch(batchId);
         dataImportModel.dataImportRows = getDataImportRows(batchId);
         dataImportModel.columns = getColumns(batchId);
         dataImportModel.labels = getBatchDataImportLabels();
@@ -169,6 +168,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 col.type = dfr.type.name().toLowerCase();
                 if (col.type == 'date') {
                     col.type = 'date-local';
+                }
+                if (col.type == 'double') {
+                    col.type = 'number';
                 }
                 col.typeAttributes = '{}';
 
