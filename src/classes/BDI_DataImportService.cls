@@ -738,6 +738,7 @@ global with sharing class BDI_DataImportService {
     }
 
     private static void addCurrencyIsoCode(Map<String, String> fieldMap) {
+        
         // handle multicurrency if it's enabled
         if (UserInfo.isMultiCurrencyOrganization()) {
             fieldMap.put('currencyisocode', 'CurrencyIsoCode');

@@ -333,6 +333,7 @@ public with sharing class BDI_ContactService {
                 di.put(strCx + '_Preferred_Phone__c', strPreferredPhone(di, iCx));
 
                 if (UserInfo.isMultiCurrencyOrganization()) {
+
                     // CurrencyIsoCode is copied from Data Import to any created Contacts. It is not copied for matched Contacts.
                     con.CurrencyIsoCode = di.CurrencyIsoCode;
                 }
