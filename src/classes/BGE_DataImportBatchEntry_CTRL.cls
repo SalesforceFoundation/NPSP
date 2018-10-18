@@ -197,7 +197,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return the full data set for the batch
     */
     @AuraEnabled
-    public static List<DataImportRow> runDryRun(List<Id> dataImportIds, Id batchId, List<String> activeFieldNames) {
+    public static List<DataImportRow> runDryRun(List<Id> dataImportIds, Id batchId) {
         Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
         Set<Id> recordIds = new Set<Id>(dataImportIds);
         List<DataImport__c> dataImportRecords = getDataImportRecordsByIds(batchId, recordIds);
