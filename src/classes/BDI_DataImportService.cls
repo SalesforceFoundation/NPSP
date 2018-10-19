@@ -721,9 +721,14 @@ global with sharing class BDI_DataImportService {
                 }
             }
         }
-
         if (isCurrencyMapped(strBaseObj)) {
-            addCurrencyIsoCode(mapDIFieldToObjField);
+            Boolean isCurrencyIsoCodeMapped = false;
+            for (String currentValue : mapDIFieldToObjField.values()) {
+                isCurrencyIsoCodeMapped = true;
+            }
+            if (!isCurrencyIsoCodeMapped) {
+                addCurrencyIsoCode(mapDIFieldToObjField);
+            }
         }
 
         return mapDIFieldToObjField;
