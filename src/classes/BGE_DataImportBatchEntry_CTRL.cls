@@ -55,7 +55,13 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return serialized string of dataImportModel
     */
     @AuraEnabled
-    public static String getDataImportModel(Id batchId){
+    public static String getDataImportModel(Id batchId) {
+
+        if (batchId == null) {
+            AuraHandledException e = new AuraHandledException('Data Import Model must receive a Batch ID.');
+            e.setMessage('Data Import Model must receive a Batch ID.');
+            throw e;
+        }
 
         DataImportModel dataImportModel = new DataImportModel();
 
@@ -84,13 +90,13 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
         DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
         String activeFieldsJSON = batch.Active_Fields__c;
-        System.debug(activeFieldsJSON);
-        List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields = (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
-
         List<String> activeFieldNames = new List<String>();
 
-        for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
-            activeFieldNames.add(field.name);
+        if (activeFieldsJSON != null) {
+            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields = (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
+            for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
+                activeFieldNames.add(field.name);
+            }
         }
 
         return activeFieldNames;
@@ -143,40 +149,13 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Retrieves the related list of columns for DataImport__c from a specified list (currently hardcoded)
+    * @description Retrieves the related list of columns for the BGE interface
     * @return list of Columns to use in BGE_DataImportBatchEntry table
     */
     private static List<Column> getColumns(Id batchId) {
         List<Column> columns = new List<Column>();
 
-        DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
-        String activeFieldsJSON = batch.Active_Fields__c;
-        List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields = (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
-
-        Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
-        for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
-            String namespacedField = UTIL_Namespace.StrTokenNSPrefix(field.name);
-            Schema.DescribeFieldResult dfr = fieldMap.get(namespacedField.toLowerCase());
-            if (dfr != null) {
-                Column col = new Column();
-                col.label = dfr.label;
-                col.fieldName = dfr.name;
-                col.readOnly = false;
-                col.defaultValue = field.defaultValue;
-                col.required = field.required;
-                col.hide = field.hide;
-                col.type = dfr.type.name().toLowerCase();
-                if (col.type == 'date') {
-                    col.type = 'date-local';
-                }
-                if (col.type == 'double') {
-                    col.type = 'number';
-                }
-                col.typeAttributes = '{}';
-
-                columns.add(col);
-            }
-        }
+        columns.addAll(getUserDefinedColumns(batchId));
 
         //add derived matched record column
         Column col = new Column();
@@ -187,6 +166,47 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         col.type = 'url';
         col.typeAttributes = '{"label":{"fieldName":"matchedRecordLabel"},"target":"_blank"}';
         columns.add(col);
+
+        return columns;
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieves the related list of columns defined by users in the Batch record Active_Fields__c
+    * @return list of Columns to use in BGE_DataImportBatchEntry table
+    */
+    private static List<Column> getUserDefinedColumns(Id batchId) {
+        List<Column> columns = new List<Column>();
+
+        DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
+        String activeFieldsJSON = batch.Active_Fields__c;
+        if (activeFieldsJSON != null) {
+            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields = (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
+
+            Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
+            for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
+                String namespacedField = UTIL_Namespace.StrTokenNSPrefix(field.name);
+                Schema.DescribeFieldResult dfr = fieldMap.get(namespacedField.toLowerCase());
+                if (dfr != null) {
+                    Column col = new Column();
+                    col.label = dfr.label;
+                    col.fieldName = dfr.name;
+                    col.readOnly = false;
+                    col.defaultValue = field.defaultValue;
+                    col.required = field.required;
+                    col.hide = field.hide;
+                    col.type = dfr.type.name().toLowerCase();
+                    if (col.type == 'date') {
+                        col.type = 'date-local';
+                    }
+                    if (col.type == 'double') {
+                        col.type = 'number';
+                    }
+                    col.typeAttributes = '{}';
+
+                    columns.add(col);
+                }
+            }
+        }
 
         return columns;
     }
