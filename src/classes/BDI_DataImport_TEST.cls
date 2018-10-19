@@ -146,7 +146,7 @@ public with sharing class BDI_DataImport_TEST {
         }
 
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        diSettings.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
+        diSettings.Contact_Matching_Rule__c = 'Lastname,Email';
 
         insert new Contact(
             Lastname='foo',
