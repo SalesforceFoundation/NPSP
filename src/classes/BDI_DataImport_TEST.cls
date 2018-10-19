@@ -139,20 +139,28 @@ public with sharing class BDI_DataImport_TEST {
     *        contact matched
     **********************************************************************************************************/
     static testMethod void OneDIWithoutFirstName() {
-        insert new DataImport__c(
-            Contact1_Lastname__c = 'foo',
-            Contact1_Personal_Email__c = 'foo@bar.com'
-        );
+        // this test won't pass if middle name or suffix is enabled due to a
+        // salesforce won't fix issue: https://success.salesforce.com/issues_view?id=a1p30000000eQRxAAM
+        if (UTIL_Describe.isMiddleNameEnabled() || UTIL_Describe.isNameSuffixEnabled()) {
+            return;
+        }
+
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Contact_Matching_Rule__c = 'Lastname,Email';
 
         insert new Contact(
             Lastname='foo',
             Email='foo@bar.com'
         );
 
+        insert new DataImport__c(
+            Contact1_Lastname__c = 'Foo',
+            Contact1_Personal_Email__c = 'foo@bar.com'
+        );
+
         //run batch data import
         Test.StartTest();
-        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
-        ID ApexJobId = Database.executeBatch(bdi, 10);
+        ID ApexJobId = Database.executeBatch(new BDI_DataImport_BATCH(), 10);
         Test.stopTest();
 
         // verify expected results
