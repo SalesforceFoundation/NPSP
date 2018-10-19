@@ -332,13 +332,6 @@ public with sharing class BDI_ContactService {
                 di.put(strCx + '_Preferred_Email__c', strPreferredEmail(di, iCx));
                 di.put(strCx + '_Preferred_Phone__c', strPreferredPhone(di, iCx));
 
-                if (UserInfo.isMultiCurrencyOrganization()) {
-
-                    // CurrencyIsoCode is copied from Data Import to any created Contacts. It is not copied for matched Contacts.
-                    // If we are not in multicurrency org assigning this directly would fail.
-                    con.put('CurrencyIsoCode', di.get('CurrencyIsoCode'));
-                }
-
                 // if no lastname specified for c2, we need to get it from c1 (which may only be implicit via Contact1_Imported)
                 if (strCx == 'Contact2' && di.Contact2_Lastname__c == null) {
                     Contact con1 = ContactFromDi(di, 1);

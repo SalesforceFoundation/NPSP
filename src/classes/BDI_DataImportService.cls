@@ -1276,12 +1276,6 @@ global with sharing class BDI_DataImportService {
                 di.Account1ImportStatus__c = (acc.id != null ? statusMatchedExisting() : statusMatchedNew());
             } else if (listDiKey.size() > 0) {
                 acc = new Account();
-                if (UserInfo.isMultiCurrencyOrganization()) {
-
-                    // CurrencyIsoCode is copied from Data Import to any created Accounts. It is not copied for matched Accounts.
-                    // If we are not in multicurrency org assigning this directly would fail.
-                    acc.put('CurrencyIsoCode', di.get('CurrencyIsoCode'));
-                }
                 di.Account1ImportStatus__c = statusCreatedNew();
             }
             // make sure all dikeys for that account are in the map
