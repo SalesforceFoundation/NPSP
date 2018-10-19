@@ -66,9 +66,9 @@
     <fields>
         <fullName>Average_Allocation__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>The average amount of all Allocations to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</description>
+        <description>Average gift amount to this GAU.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The average amount of all Allocations to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <inlineHelpText>Average gift amount to this GAU.</inlineHelpText>
         <label>Average Allocation</label>
         <precision>18</precision>
         <required>false</required>
@@ -103,9 +103,9 @@
     <fields>
         <fullName>Largest_Allocation__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>The amount of the largest Allocation to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</description>
+        <description>Largest gift amount to this GAU.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The amount of the largest Allocation to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <inlineHelpText>Largest gift amount to this GAU.</inlineHelpText>
         <label>Largest Allocation</label>
         <precision>18</precision>
         <required>false</required>
@@ -128,9 +128,9 @@
     <fields>
         <fullName>Number_of_Allocations_Last_N_Days__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Total number of allocations of opportunities in a closed and won stage in the last N days. The value of N can be modified in settings.</description>
+        <description>Count of all gifts allocated in the last N days to this GAU.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Total number of allocations of opportunities in a closed and won stage in the last N days. The value of N can be modified in settings.</inlineHelpText>
+        <inlineHelpText>Count of all gifts allocated in the last N days to this GAU.</inlineHelpText>
         <label>Number of Allocations Last N Days</label>
         <precision>18</precision>
         <required>false</required>
@@ -143,9 +143,9 @@
     <fields>
         <fullName>Number_of_Allocations_Last_Year__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>The total number of Allocations last year from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</description>
+        <description>Count of all gifts allocated in the last calendar year to this GAU.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The total number of Allocations last year from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <inlineHelpText>Count of all gifts allocated in the last calendar year to this GAU.</inlineHelpText>
         <label>Number of Allocations Last Year</label>
         <precision>18</precision>
         <required>false</required>
@@ -158,9 +158,9 @@
     <fields>
         <fullName>Number_of_Allocations_This_Year__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>The total number of Allocations this year from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</description>
+        <description>Count of all gifts allocated in the current calendar year to this GAU.</description>
         <externalId>false</externalId>
-        <inlineHelpText>TThe total number of Allocations this year from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <inlineHelpText>Count of all gifts allocated in the current calendar year to this GAU.</inlineHelpText>
         <label>Number of Allocations This Year</label>
         <precision>18</precision>
         <required>false</required>
@@ -202,9 +202,9 @@
     <fields>
         <fullName>Total_Allocations_Last_N_Days__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>The number of Allocations from Closed/Won Opportunities in the last N days. (The value of N is set in NPSP Settings, under Donations, GAU Allocations.) NPSP updates this field in a nightly Scheduled Job.</description>
+        <description>Total amount of gifts allocated in the last N days to this GAU.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The number of Allocations from Closed/Won Opportunities in the last N days. (The value of N is set in NPSP Settings, under Donations, GAU Allocations.) NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <inlineHelpText>Total amount of gifts allocated in the last N days to this GAU.</inlineHelpText>
         <label>Total Allocations Last N Days</label>
         <precision>18</precision>
         <required>false</required>
@@ -258,9 +258,9 @@
     <fields>
         <fullName>Total_Allocations__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>The total amount from all Allocations from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</description>
+        <description>Total of all gift amounts to this GAU.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The total amount from all Allocations from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <inlineHelpText>Total of all gift amounts to this GAU.</inlineHelpText>
         <label>Total Allocations</label>
         <precision>18</precision>
         <required>false</required>
@@ -272,9 +272,9 @@
     <fields>
         <fullName>Total_Number_of_Allocations__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>The total number of Allocations from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</description>
+        <description>Count of all gifts allocated to this GAU</description>
         <externalId>false</externalId>
-        <inlineHelpText>The total number of Allocations from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+        <inlineHelpText>Count of all gifts allocated to this GAU</inlineHelpText>
         <label>Total Number of Allocations</label>
         <precision>18</precision>
         <required>false</required>
