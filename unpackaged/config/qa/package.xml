@@ -16,5 +16,15 @@
         <members>Opportunity</members>
         <name>CustomObject</name>
     </types>
-    <version>37.0</version>
+    <types>
+        <members>Contact.DO_NOT_PACKAGE_Relationships_Viewer</members>
+        <members>npe01__OppPayment__c.DO_NOT_PACKAGE_Schedule_Payments</members>
+        <members>npe01__OppPayment__c.DO_NOT_PACKAGE_Writeoff_Payments</members>
+        <members>npe03__Recurring_Donation__c.DO_NOT_PACKAGE_Refresh_Opportunities</members>
+        <members>Campaign.DO_NOT_PACKAGE_Household_Mailing_List</members>
+        <members>Contact.DO_NOT_PACKAGE_Copy_Address_to_Household</members>
+        <members>npo02__Household__c.DO_NOT_PACKAGE_Copy_Address_to_Contacts</members>
+        <name>WebLink</name>
+    </types>
+    <version>40.0</version>
 </Package>

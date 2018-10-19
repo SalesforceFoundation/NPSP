@@ -6,29 +6,4 @@
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>Visualforce</type>
     </actionOverrides>
-    <webLinks>
-        <fullName>DO_NOT_PACKAGE_Relationships_Viewer</fullName>
-        <description>Scratch Org override button to use instead of the button from the Relationships Package</description>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <encodingKey>UTF-8</encodingKey>
-        <linkType>url</linkType>
-        <masterLabel>[NPSP] Relationships Viewer</masterLabel>
-        <openType>replace</openType>
-        <protected>false</protected>
-        <url>{!URLFOR(&apos;/apex/REL_RelationshipsViewer?id=&apos; + Contact.Id)}</url>
-    </webLinks>
-    <webLinks>
-        <fullName>DO_NOT_PACKAGE_Copy_Address_to_Household</fullName>
-        <description>Scratch Org override button to use instead of the button from the Household Package</description>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <encodingKey>UTF-8</encodingKey>
-        <height>600</height>
-        <linkType>url</linkType>
-        <masterLabel>[NPSP] Copy Address to Household</masterLabel>
-        <openType>sidebar</openType>
-        <protected>false</protected>
-        <url>/apex/ADDR_CopyAddrHHObjBTN?id={!Contact.Id}</url>
-    </webLinks>
 </CustomObject>
