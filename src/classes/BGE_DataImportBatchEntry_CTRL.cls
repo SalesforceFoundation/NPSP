@@ -227,6 +227,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             dataImport.FailureInformation__c = null;
             dataImport.DonationImported__c = null;
             dataImport.DonationImportStatus__c = null;
+            dataImport.PaymentImported__c = null;
+            dataImport.PaymentImportStatus__c = null;
         }
         update dataImportRecords;
 
