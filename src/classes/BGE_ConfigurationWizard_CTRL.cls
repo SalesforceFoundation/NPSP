@@ -133,14 +133,24 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 'Contact2_LastName__c'
         };
 
+        // these data types have been whitelisted since they already work with BGE
+        Set<String> allowedDataTypes = new Set<String>{
+                'CURRENCY',
+                'DATE',
+                'STRING',
+                'TEXTAREA',
+                'DOUBLE'
+        };
+
         // looping through the fields on DataImport__c
         for (Schema.DescribeFieldResult fieldResult : fieldMap.values()) {
             String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldResult.name);
-            //Special case for Donation_Donor because it's derived 
 
-            //todo: rework these 2 lines
             String dataImportFieldMappedObject = fieldResult.inlineHelpText != null ? fieldResult.inlineHelpText.split('\\.')[0] : null;
-            Boolean fieldAllowed = allowedObjects.contains(dataImportFieldMappedObject) && !bannedFields.contains(dataImportFieldApiName) && fieldResult.inlineHelpText != null;
+            Boolean fieldAllowed = allowedObjects.contains(dataImportFieldMappedObject)
+                    && allowedDataTypes.contains(fieldResult.type.name())
+                    && !bannedFields.contains(dataImportFieldApiName)
+                    && fieldResult.inlineHelpText != null;
 
             if (fieldAllowed) {
 
