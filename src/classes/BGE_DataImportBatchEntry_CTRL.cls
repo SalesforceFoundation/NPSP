@@ -184,8 +184,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
             Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
             for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
-                String namespacedField = UTIL_Namespace.StrTokenNSPrefix(field.name);
-                Schema.DescribeFieldResult dfr = fieldMap.get(namespacedField.toLowerCase());
+                Schema.DescribeFieldResult dfr = fieldMap.get(field.name.toLowerCase());
                 if (dfr != null) {
                     Column col = new Column();
                     col.label = dfr.label;
