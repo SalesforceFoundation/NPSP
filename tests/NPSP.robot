@@ -196,7 +196,7 @@ Create Opportunities
     Populate Lookup Field    Account Name    ${hh_name}
     Click Dropdown    Close Date
     Pick Date    10
-    Select Modal Checkbox    Do Not Automatically Create Payment
+    Select Lightning Checkbox    Do Not Automatically Create Payment
     Click Modal Button        Save
 
 Create Engagement Plan

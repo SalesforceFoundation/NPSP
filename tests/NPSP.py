@@ -13,7 +13,7 @@ from simple_salesforce import SalesforceMalformedRequest
 from simple_salesforce import SalesforceResourceNotFound
 from locator_w19 import npsp_lex_locators
 from selenium.webdriver import ActionChains
-#from cumulusci.robotframework.utils import selenium_retry
+from cumulusci.robotframework.utils import selenium_retry
 #import os
 import sys
 from email.mime import text
@@ -22,6 +22,7 @@ from email.mime import text
 #import Salesforce
 
 
+@selenium_retry
 class NPSP(object):
     
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
@@ -43,12 +44,7 @@ class NPSP(object):
     @property
     def cumulusci(self):
         return self.builtin.get_library_instance('cumulusci.robotframework.CumulusCI')
-  
-    @property
-    def selenium(self):
-        return self.builtin.get_library_instance('SeleniumLibrary')
-     
-            
+
     def populate_address(self, loc, value):
         """ Populate address with Place Holder aka Mailing Street etc as a locator
             and actual value of the place holder.
@@ -171,8 +167,9 @@ class NPSP(object):
         
     def click_edit_button(self, title):  
         locator=npsp_lex_locators['record']['edit_button'].format(title)
-        self.selenium.get_webelement(locator).click()   
-        
+        self.selenium.get_webelement(locator).click()
+        self.wait_for_locator('record.edit_form')
+
     def click_id(self, title):  
         locator=npsp_lex_locators['aff_id'].format(title)
         self.selenium.get_webelement(locator).click()     
@@ -307,10 +304,10 @@ class NPSP(object):
         locator=npsp_lex_locators['manage_hh_page']['address_link'].format(title)
         self.selenium.get_webelement(locator).click()      
     
-    def select_modal_checkbox(self,title):
+    def select_lightning_checkbox(self,title):
         """"""
-        locator=npsp_lex_locators['modal']['checkbox'].format(title)
-        self.selenium.get_webelement(locator).click()    
+        locator=npsp_lex_locators['checkbox'].format(title)
+        self.selenium.get_webelement(locator).click()
         
     def verify_occurance(self,title,value):
         """"""
