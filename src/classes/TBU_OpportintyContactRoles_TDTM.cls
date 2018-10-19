@@ -159,11 +159,13 @@ public with sharing class TBU_OpportintyContactRoles_TDTM extends TDTM_Runnable 
                 Tribute__c oldTri = oldTributes[i];
                 //then manage honoree, if it has changed and it's not the same as the primary contact
                 if (oppOCRTDTM.needsManageOCR(newTri, oldTri, 'Honoree_Contact__c', mapOppIdPrimaryContact.get(newTri.Opportunity__c))) {
-                    oppOCRTDTM.manageOtherOCR(newTri, oldTri, mapOppIdMapConIdOCR.get(newTri.Opportunity__c), 'Honoree_Contact__c', true);
+                    oppOCRTDTM.manageOtherOCR(newTri, oldTri, mapOppIdMapConIdOCR.get(newTri.Opportunity__c), 'Honoree_Contact__c', new Map<Id, List<OpportunityContactRole>> (), 
+                    new List<OpportunityContactRole> (), true);
                 }
                 //finally, manage the notification, if it has changed and it's not the same as either contact already dealt with
                 if (oppOCRTDTM.needsManageOCR(newTri, oldTri, 'Notification_Recipient_Contact__c', mapOppIdPrimaryContact.get(newTri.Opportunity__c))) {
-                    oppOCRTDTM.manageOtherOCR(newTri, oldTri, mapOppIdMapConIdOCR.get(newTri.Opportunity__c), 'Notification_Recipient_Contact__c', true);
+                    oppOCRTDTM.manageOtherOCR(newTri, oldTri, mapOppIdMapConIdOCR.get(newTri.Opportunity__c), 'Notification_Recipient_Contact__c', new Map<Id, List<OpportunityContactRole>> (), 
+                    new List<OpportunityContactRole> (),  true);
                 }
             }
         }

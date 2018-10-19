@@ -358,7 +358,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             //using cloned opp to check if these OCRs need to be managed, as it relies on the Primary Contact field being populated
             if (needsManageOCR(clonedOpp, new Opportunity(), FIELD_NAME_HONOREE_CONTACT, clonedOpp.Primary_Contact__c)) {
                 OpportunityContactRole honoreeOCR = getOCR(clonedOpp, FIELD_NAME_HONOREE_CONTACT);
-                dmlWrapper.objectsToInsert.add(getOCR(honoreeOCR);
+                dmlWrapper.objectsToInsert.add(honoreeOCR);
                 transactionOCRs = populateTransactionOCRs(transactionOCRs, honoreeOCR);
             }
 
@@ -455,8 +455,8 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             // Account is a Household or Organization
             if (newOpp.Primary_Contact__c != oldOpp.Primary_Contact__c ||
                     newOpp.AccountId != oldOpp.AccountId ||
-                    needsManageOCR(newOpp, oldOpp, FIELD_NAME_HONOREE_CONTACT) ||
-                    needsManageOCR(newOpp, oldOpp, FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT)) {
+                    needsManageOCR(newOpp, oldOpp, FIELD_NAME_HONOREE_CONTACT, newOpp.Primary_Contact__c) ||
+                    needsManageOCR(newOpp, oldOpp, FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, newOpp.Primary_Contact__c)) {
 
                 mapOppIdMapConIdOCR.put(newOpp.Id, new Map<Id, OpportunityContactRole>());
             }
@@ -653,6 +653,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         //If other class call manageOtherOCR method, we might need to processDML right away
         if (processDML) {
             TDTM_TriggerHandler.processDML(dmlWrapper);
+        }
     }
 
 

@@ -30,9 +30,8 @@
 
 trigger TDTM_Tribute on Tribute__c (after delete, after insert, after undelete,
         after update, before delete, before insert, before update) {
-    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();
-    handler.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete,
-            Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.Tribute__c,
-            new TDTM_ObjectDataGateway());
+
+    TDTM_Config_API.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete,
+            Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.Tribute__c);
 
 }
