@@ -51,23 +51,26 @@ public with sharing class RD_AddDonationsBTN_CTRL {
     * @return PageReference to the calling page
     */ 
     public PageReference buttonClick(){
+
+        if (sc.getId() == null) { 
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.RD_ErrorAddDonationMissingId));
+            return null;
+        }
+        
+        if (!Schema.SObjectType.Opportunity.isCreateable()) { 
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, System.Label.RD_ErrorAddDonationPermissionDenied));
+            return null;
+        }
+
         Savepoint sp = Database.setSavepoint();
         try {
-
-            if (!Schema.SObjectType.Opportunity.isCreateable()) { 
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, System.Label.RD_ErrorAddDonationPermissionDenied));
-                return null;
-            }
-
-            system.assert(sc.getId() != null);
-            string qString = RD_RecurringDonations.strQueryRDNoWhere();
+            String qString = RD_RecurringDonations.strQueryRDNoWhere();
             qString += ' where id = \'' + sc.getId() + '\'';
             npe03__Recurring_Donation__c recurringDonation = (npe03__Recurring_Donation__c)database.query(qString);
             // This recalculates Rollups only in Legacy mode. 
             RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{recurringDonation});
             //This recalculates Rollups only if Customizable Rollup is enabled.
             recalculateRollups(sc.getId());
-            
             return redirectToRecurringDonationsPage();
         
         } catch(Exception e) {
@@ -79,10 +82,17 @@ public with sharing class RD_AddDonationsBTN_CTRL {
     }
     
     /*******************************************************************************************************
-    * @description Action method to redirect to the Recurring Donation calling page
+    * @description Action method to redirect to the Recurring Donation calling page. Redirects to 
+    * recurring donation list if the ID is missing.
     * @return PageReference to the calling page
     */ 
     public PageReference redirectToRecurringDonationsPage() {
+
+        if (sc.getId() == null) {
+            Schema.DescribeSObjectResult describeResult = npe03__Recurring_Donation__c.SObjectType.getDescribe();
+            return new PageReference('/' + describeResult.getKeyPrefix());
+        }
+
         PageReference pageRef = sc.view();
         pageRef.setRedirect(true);
         return pageRef;
