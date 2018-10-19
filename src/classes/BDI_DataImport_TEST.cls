@@ -139,6 +139,12 @@ public with sharing class BDI_DataImport_TEST {
     *        contact matched
     **********************************************************************************************************/
     static testMethod void OneDIWithoutFirstName() {
+        // this test won't pass if middle name or suffix is enabled due to a
+        // salesforce won't fix issue: https://success.salesforce.com/issues_view?id=a1p30000000eQRxAAM
+        if (UTIL_Describe.isMiddleNameEnabled() || UTIL_Describe.isNameSuffixEnabled()) {
+            return;
+        }
+
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         diSettings.Contact_Matching_Rule__c = 'Firstname,Lastname,Email';
 
