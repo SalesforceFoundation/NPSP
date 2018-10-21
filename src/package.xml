@@ -684,6 +684,7 @@
         <members>Allocation__c.Campaign__c</members>
         <members>Allocation__c.General_Accounting_Unit__c</members>
         <members>Allocation__c.Opportunity__c</members>
+        <members>Allocation__c.Payment__c</members>
         <members>Allocation__c.Percent__c</members>
         <members>Allocation__c.Recurring_Donation__c</members>
         <members>Allocations_Settings__c.Default_Allocations_Enabled__c</members>
