@@ -466,25 +466,25 @@ public class CRLP_DefaultConfigBuilder {
             'General_Accounting_Unit__c.Last_Allocation_Date__c' =>
                     new List<String>{ 'GAU: Last Allocation Date', 'Date of the last Opportunity with an Allocation to this GAU' },
             'General_Accounting_Unit__c.Largest_Allocation__c' =>
-                    new List<String>{ 'GAU: Largest Allocation', 'Largest amount allocated to this GAU' },
+                    new List<String>{ 'GAU: Largest Allocation', 'Largest gift amount to this GAU' },
             'General_Accounting_Unit__c.Smallest_Allocation__c' =>
                     new List<String>{ 'GAU: Smallest Allocation', 'Smallest amount allocated to this GAU' },
             'General_Accounting_Unit__c.Total_Number_of_Allocations__c' =>
-                    new List<String>{ 'GAU: Total Number of Allocations', 'Count of all Allocation Amounts to this GAU' },
+                    new List<String>{ 'GAU: Total Number of Allocations', 'Count of all gifts allocated to this GAU' },
             'General_Accounting_Unit__c.Number_of_Allocations_Last_N_Days__c' =>
-                    new List<String>{ 'GAU: Number of Allocations Last N Days', 'Count of all Allocation Amounts in the last N days to this GAU' },
+                    new List<String>{ 'GAU: Number of Allocations Last N Days', 'Count of all gifts allocated in the last N days to this GAU' },
             'General_Accounting_Unit__c.Number_of_Allocations_Last_Year__c' =>
-                    new List<String>{ 'GAU: Number of Allocations Last Year','Count of all Allocation Amounts in the last calendar year to this GAU' },
+                    new List<String>{ 'GAU: Number of Allocations Last Year','Count of all gifts allocated in the last calendar year to this GAU' },
             'General_Accounting_Unit__c.Number_of_Allocations_This_Year__c' =>
-                    new List<String>{ 'GAU: Number of Allocations This Year', 'Count of all Allocation Amounts in the current calendar year to this GAU' },
+                    new List<String>{ 'GAU: Number of Allocations This Year', 'Count of all gifts allocated in the current calendar year to this GAU' },
             'General_Accounting_Unit__c.Number_of_Allocations_Two_Years_Ago__c' =>
                     new List<String>{ 'GAU: Number of Allocations Two Years Ago', 'Count of all Allocation Amounts two calendar years ago to this GAU' },
             'General_Accounting_Unit__c.Average_Allocation__c' =>
-                    new List<String>{ 'GAU: Average Allocation', 'Average of all Allocation Amounts to this GAU' },
+                    new List<String>{ 'GAU: Average Allocation', 'Average gift amount to this GAU' },
             'General_Accounting_Unit__c.Total_Allocations__c' =>
-                    new List<String>{ 'GAU: Total Allocations', 'Total of all Allocation Amounts to this GAU' },
+                    new List<String>{ 'GAU: Total Allocations', 'Total of all gift amounts to this GAU' },
             'General_Accounting_Unit__c.Total_Allocations_Last_N_Days__c' =>
-                    new List<String>{ 'GAU: Total Allocations Last N Days', 'Total of all Allocation Amounts in the last N days to this GAU' },
+                    new List<String>{ 'GAU: Total Allocations Last N Days', 'Total amount of gifts allocated in the last N days to this GAU' },
             'General_Accounting_Unit__c.Total_Allocations_Last_Year__c' =>
                     new List<String>{ 'GAU: Total Allocations Last Year', 'Total of all Allocation Amounts in the last calendar year to this GAU' },
             'General_Accounting_Unit__c.Total_Allocations_This_Year__c' =>
