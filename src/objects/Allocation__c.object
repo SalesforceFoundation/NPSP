@@ -117,6 +117,20 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Payment__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Attributes allocations to a Payment.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Attributes allocations to a Payment.</inlineHelpText>
+        <label>Payment</label>
+        <referenceTo>npe01__OppPayment__c</referenceTo>
+        <relationshipLabel>Payment Allocations</relationshipLabel>
+        <relationshipName>Allocations</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
         <fullName>Percent__c</fullName>
         <description>Percent of Opportunity amount allocated to this Allocation's General Accounting Unit. If you later modify the Opportunity amount, NPSP will update the allocation amount on the General Accounting Unit.</description>
         <externalId>false</externalId>
