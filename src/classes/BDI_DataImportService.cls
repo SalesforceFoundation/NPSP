@@ -734,6 +734,11 @@ global with sharing class BDI_DataImportService {
         return mapDIFieldToObjField;
     }
 
+    /*******************************************************************************************************
+    * @description Checks if the org has multi-currency enabled and if so adds the currencyisocode to the Map passed as parameter.
+    * @param strBaseObj the underlying object the bdi object is (ie, Contact, Account, etc)
+    * @return Boolean if the strBaseObj is either a Payment or an Opportunity.
+    */
     private static Boolean isCurrencyMapped(String objectName) {
         Set<String> objectsThatMapCurrencyCode = new Set<String>{
             'npe01__OppPayment__c',
@@ -742,6 +747,11 @@ global with sharing class BDI_DataImportService {
         return objectsThatMapCurrencyCode.contains(objectName);
     }
 
+    /*******************************************************************************************************
+    * @description Checks if the org has multi-currency enabled and if so adds the currencyisocode to the Map passed as parameter.
+    * @param Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
+    * @return void.
+    */
     private static void addCurrencyIsoCode(Map<String, String> fieldMap) {
 
         // handle multicurrency if it's enabled
