@@ -723,7 +723,7 @@ global with sharing class BDI_DataImportService {
         }
         if (isCurrencyMapped(strBaseObj)) {
             Boolean isCurrencyIsoCodeMapped = false;
-            for (String currentValue : mapDIFieldToObjField.values()) {
+            if (strBaseObj == 'npe01__OppPayment__c') {
                 isCurrencyIsoCodeMapped = true;
             }
             if (!isCurrencyIsoCodeMapped) {
