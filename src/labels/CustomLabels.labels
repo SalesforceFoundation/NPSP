@@ -5328,7 +5328,7 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
 
 If you enable and start using Payment Allocations and then disable them, you will need to manually reconcile your data and update Opportunity Allocation records to reflect the information previously assigned in Payment Allocations. Review the Payment Allocations documentation to better understand the potential impact.&lt;br/&gt;&lt;br/&gt;
 
-Payment Allocation Rollups are not currently supported.</value>
+When you enable Payment Allocations, existing rollups remain the same. We do not modify rollups or create new Custom Rollups. You can create new rollups based only on Payments, if you want to.</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoAffil</fullName>
