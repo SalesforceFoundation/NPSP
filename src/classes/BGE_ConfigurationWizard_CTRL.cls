@@ -184,28 +184,28 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     */
     public static String getDefaultActiveFields() {
         return '[{"label":"Donation Amount",' +
-                    '"name":"Donation_Amount__c",' +
+                    '"name":"' + UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + '",' +
                     '"sObjectName":"Opportunity",' +
                     '"defaultValue":null,' +
                     '"required":true,' +
                     '"hide":false,' +
                     '"sortOrder":0},' +
                 '{"label":"Donation Date",' +
-                    '"name":"Donation_Date__c",' +
+                    '"name":"' + UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c') + '",' +
                     '"sObjectName":"Opportunity",' +
                     '"defaultValue":null,' +
                     '"required":false,' +
                     '"hide":false,' +
                     '"sortOrder":1},' +
                 '{"label":"Method",' +
-                    '"name":"Payment_Method__c",' +
+                    '"name":"' + UTIL_Namespace.StrTokenNSPrefix('Payment_Method__c') + '",' +
                     '"sObjectName":"Payment",' +
                     '"defaultValue":null,' +
                     '"required":false,' +
                     '"hide":false,' +
                     '"sortOrder":2},' +
                 '{"label":"Check/Reference Number",' +
-                    '"name":"Payment_Check_Reference_Number__c",' +
+                    '"name":"' + UTIL_Namespace.StrTokenNSPrefix('Payment_Check_Reference_Number__c') + '",' +
                     '"sObjectName":"Payment",' +
                     '"defaultValue":null,' +
                     '"required":false,' +
