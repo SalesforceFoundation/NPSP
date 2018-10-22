@@ -417,8 +417,6 @@ public class BDI_Donations {
         }
 
         Boolean useCustomMappingInsteadOfCurrencyIsoCode = false;
-
-        system.debug('MAP FIELD TO OPPORTUNITY FIELD ==> ' + mapDIFieldToOppField);
         for (string strDIField : mapDIFieldToOppField.keySet()) {
             String currentValue = mapDIFieldToOppField.get(strDIField);
             // If we have a custom mapping against the field CurrencyIsoCode of the Data Import object.
@@ -444,12 +442,9 @@ public class BDI_Donations {
             if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase() && di.PaymentImported__c != null) {
                 continue;
             }
-
             if (strDIField == 'CurrencyIsoCode' && useCustomMappingInsteadOfCurrencyIsoCode) {
                 continue;
             }
-
-            system.debug('DATA IMPORT ==> ' + di + ' DATA IMPORT FIELD ==> ' + strDIField + ' OPPORTUNITY ==> ' + opp + ' MAP DATA IMPORT FIELD TO OPPORTUNITY FIELD ==> ' + mapDIFieldToOppField);
             BDI_DataImportService.isCopiedDIField(di, strDIField, opp, mapDIFieldToOppField);
         }
 
