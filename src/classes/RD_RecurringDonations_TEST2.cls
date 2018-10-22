@@ -835,14 +835,14 @@ private with sharing class RD_RecurringDonations_TEST2 {
         npe03__Recurring_Donation_Field__c = 'Name'
         );
         
-        test.startTest();
+        Test.startTest();
         
         ApexPages.StandardController scc = new ApexPages.StandardController(r1);
         RD_AddDonationsBTN_CTRL rdadb = new RD_AddDonationsBTN_CTRL(scc);
         system.assertEquals(r1.id, rdadb.sc.getId());
         rdadb.buttonClick();
 
-        test.stopTest();
+        Test.stopTest();
     }
 
     /*******************************************************************************************************
@@ -864,7 +864,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
             npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly
         );
         
-        test.startTest();
+        Test.startTest();
         
         ApexPages.StandardController controller = new ApexPages.StandardController(recurringDonation);
         RD_AddDonationsBTN_CTRL addDontationController = new RD_AddDonationsBTN_CTRL(controller);
@@ -881,7 +881,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
             UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.RD_ErrorAddDonationPermissionDenied, ApexPages.Severity.INFO);
         }
 
-        test.stopTest();
+        Test.stopTest();
     }
 
     /*******************************************************************************************************
@@ -902,7 +902,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
             npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly
         );
         
-        test.startTest();
+        Test.startTest();
         
         ApexPages.StandardController controller = new ApexPages.StandardController(recurringDonation);
         RD_AddDonationsBTN_CTRL addDontationController = new RD_AddDonationsBTN_CTRL(controller);
@@ -918,7 +918,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
         PageReference listViewPage = new PageReference('/' + describeResult.getKeyPrefix());
         System.assertNotEquals(listViewPage, addDontationController.redirectToRecurringDonationsPage());
 
-        test.stopTest();
+        Test.stopTest();
     }
 
     /*******************************************************************************************************

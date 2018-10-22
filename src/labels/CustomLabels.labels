@@ -1286,7 +1286,7 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Recurring Donation ID missing</shortDescription>
-        <value>Recurring Donation ID missing.  Please select a valid recurring donation record.</value>
+        <value>Recurring Donation ID missing. Please select a valid recurring donation record.</value>
     </labels>
     <labels>
         <fullName>RD_ErrorAddDonationPermissionDenied</fullName>
