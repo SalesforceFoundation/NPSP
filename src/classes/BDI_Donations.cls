@@ -417,11 +417,14 @@ public class BDI_Donations {
         }
 
         Boolean useCustomMappingInsteadOfCurrencyIsoCode = false;
+
+        // Set useCustomMappingInsteadOfCurrencyIsoCode
         for (string strDIField : mapDIFieldToOppField.keySet()) {
             String currentValue = mapDIFieldToOppField.get(strDIField);
+
             // If we have a custom mapping against the field CurrencyIsoCode of the Data Import object.
             if (strDIField != 'CurrencyIsoCode' && currentValue == 'CurrencyIsoCode') {
-                if (di.get(strDIField) != null) {
+                if (currentValue != null) {
                     useCustomMappingInsteadOfCurrencyIsoCode = true;
                 }
             }
@@ -442,6 +445,7 @@ public class BDI_Donations {
             if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase() && di.PaymentImported__c != null) {
                 continue;
             }
+            // If the user has a custom field on the Data Import which maps to CurrencyIsoCode
             if (strDIField == 'CurrencyIsoCode' && useCustomMappingInsteadOfCurrencyIsoCode) {
                 continue;
             }
