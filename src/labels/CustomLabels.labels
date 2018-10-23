@@ -2545,7 +2545,15 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>engagementPlanCantEdit</shortDescription>
-        <value>You can't change the Account, Contact, Campaign, or Case for an Engagement Plan. Create a new Engagement Plan instead.</value>
+        <value>You can't change the Account, Contact, Campaign, Case, Opportunity, or Recurring Donation for an Engagement Plan. Create a new Engagement Plan instead.</value>
+    </labels>
+    <labels>
+        <fullName>engagementPlanMissingField</fullName>
+        <categories>Engagement Plans</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>engagementPlanMissingField</shortDescription>
+        <value>Unable to create an Engagement Plan while applying a Level. Engagement Plan is missing the field</value>
     </labels>
     <labels>
         <fullName>engagementPlanNoLookups</fullName>
@@ -2553,7 +2561,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>engagementPlanNoLookups</shortDescription>
-        <value>You must enter either an Account, Contact, Campaign, or Case for this Engagement Plan.</value>
+        <value>You must enter either an Account, Contact, Campaign, Case, Opportunity, or Recurring Donation for this Engagement Plan.</value>
     </labels>
     <labels>
         <fullName>engagementPlanTwoLookups</fullName>
@@ -2561,7 +2569,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>engagementPlanTwoLookups</shortDescription>
-        <value>You can enter a value for only one of the following fields: Account, Contact, Campaign, Case.</value>
+        <value>You can enter a value for only one of the following fields: Account, Contact, Campaign, Case, Opportunity, or Recurring Donation.</value>
     </labels>
     <labels>
         <fullName>exceptionDeletePermission</fullName>
