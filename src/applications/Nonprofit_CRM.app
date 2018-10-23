@@ -3,17 +3,17 @@
     <defaultLandingTab>NPSP_Resources</defaultLandingTab>
     <description>The Nonprofit Success Pack application</description>
     <label>Nonprofit Success Pack</label>
-    <tab>standard-Account</tab>
-    <tab>standard-Contact</tab>
-    <tab>standard-Lead</tab>
-    <tab>standard-Opportunity</tab>
-    <tab>standard-Campaign</tab>
-    <tab>standard-report</tab>
-    <tab>npe03__Recurring_Donation__c</tab>
-    <tab>Engagement_Plan_Template__c</tab>
-    <tab>Level__c</tab>
-    <tab>Contact_Merge</tab>
-    <tab>NPSP_Settings</tab>
-    <tab>NPSP_Resources</tab>
+    <tabs>standard-Account</tabs>
+    <tabs>standard-Contact</tabs>
+    <tabs>standard-Lead</tabs>
+    <tabs>standard-Opportunity</tabs>
+    <tabs>standard-Campaign</tabs>
+    <tabs>standard-report</tabs>
+    <tabs>npe03__Recurring_Donation__c</tabs>
+    <tabs>Engagement_Plan_Template__c</tabs>
+    <tabs>Level__c</tabs>
+    <tabs>Contact_Merge</tabs>
+    <tabs>NPSP_Settings</tabs>
+    <tabs>NPSP_Resources</tabs>
     <formFactors>Large</formFactors>
 </CustomApplication>
