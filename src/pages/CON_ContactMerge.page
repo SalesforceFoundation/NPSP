@@ -20,16 +20,16 @@
         <apex:form id="pgHeader">
             <c:UTIL_PageHeader headerLabel="{!$Label.conMergePageTitle}"
                                header="{!$Label.conMergePageTitleDetail}"
-                               icon="contact_120" iconCategory="standard"
+                               icon="contact" iconCategory="standard"
                                showSaveBtn="false" showCancelBtn="false"/>
         </apex:form>
 
         <style type="text/css">
-            .slds .slds-tabs_path__stage {
+            .slds .slds-path__stage {
                 /* fix weird issue where check icon was not aligning properly */
                 margin-top: -0.5rem;
             }
-            .slds-tabs_path * {
+            .slds-path * {
                 cursor: default !important;
             }
             .lookupHoverDetail {
@@ -48,50 +48,50 @@
         <apex:variable var="step3class" value="{!IF(step < 3, 'slds-is-incomplete', IF(STEP == 3, 'slds-is-current', 'slds-is-complete'))}"/>
 
         <div class="slds-m-top_medium slds-m-bottom_large slds-p-horizontal_large">
-            <div class="slds-tabs_path" role="application tablist">
-                <ul class="slds-tabs_path__nav" role="presentation">
-                    <li class="slds-tabs_path__item {!step1class}" role="presentation">
-                        <div class="slds-tabs_path__link" role="tab">
-                            <span class="slds-tabs_path__stage">
+            <div class="slds-path" role="application tablist">
+                <ul class="slds-path__nav" role="presentation">
+                    <li class="slds-path__item {!step1class}" role="presentation">
+                        <div class="slds-path__link" role="tab">
+                            <span class="slds-path__stage">
                                 <svg aria-hidden="true" class="slds-icon slds-icon_x-small" viewBox="0 0 24 24">
                                     <path  d="M8.8 19.6L1.2 12c-.3-.3-.3-.8 0-1.1l1-1c.3-.3.8-.3 1 0L9 15.7c.1.2.5.2.6 0L20.9 4.4c.2-.3.7-.3 1 0l1 1c.3.3.3.7 0 1L9.8 19.6c-.2.3-.7.3-1 0z"/>
                                 </svg>
                                 <span class="slds-assistive-text">{!$Label.conMergeStageComplete}</span>
                             </span>
-                            <span class="slds-tabs_path__title">{!$Label.npe01__Contact_Merge_Step1}</span>
+                            <span class="slds-path__title">{!$Label.npe01__Contact_Merge_Step1}</span>
                         </div>
                     </li>
-                    <li class="slds-tabs_path__item {!step2class}" role="presentation">
-                        <div class="slds-tabs_path__link" role="tab">
-                            <span class="slds-tabs_path__stage">
+                    <li class="slds-path__item {!step2class}" role="presentation">
+                        <div class="slds-path__link" role="tab">
+                            <span class="slds-path__stage">
                                 <svg aria-hidden="true" class="slds-icon slds-icon_x-small" viewBox="0 0 24 24">
                                     <path  d="M8.8 19.6L1.2 12c-.3-.3-.3-.8 0-1.1l1-1c.3-.3.8-.3 1 0L9 15.7c.1.2.5.2.6 0L20.9 4.4c.2-.3.7-.3 1 0l1 1c.3.3.3.7 0 1L9.8 19.6c-.2.3-.7.3-1 0z"/>
                                 </svg>
                                 <span class="slds-assistive-text">{!$Label.conMergeStageComplete}</span>
                             </span>
-                            <span class="slds-tabs_path__title">{!$Label.npe01__Contact_Merge_Step2}</span>
+                            <span class="slds-path__title">{!$Label.npe01__Contact_Merge_Step2}</span>
                         </div>
                     </li>
-                    <li class="slds-tabs_path__item {!step3class}" role="presentation">
-                        <div class="slds-tabs_path__link" role="tab">
-                            <span class="slds-tabs_path__stage">
+                    <li class="slds-path__item {!step3class}" role="presentation">
+                        <div class="slds-path__link" role="tab">
+                            <span class="slds-path__stage">
                                 <svg aria-hidden="true" class="slds-icon slds-icon_x-small" viewBox="0 0 24 24">
                                     <path  d="M8.8 19.6L1.2 12c-.3-.3-.3-.8 0-1.1l1-1c.3-.3.8-.3 1 0L9 15.7c.1.2.5.2.6 0L20.9 4.4c.2-.3.7-.3 1 0l1 1c.3.3.3.7 0 1L9.8 19.6c-.2.3-.7.3-1 0z"/>
                                 </svg>
                                 <span class="slds-assistive-text">{!$Label.conMergeStageComplete}</span>
                             </span>
-                            <span class="slds-tabs_path__title">{!$Label.npe01__Contact_Merge_Step3}</span>
+                            <span class="slds-path__title">{!$Label.npe01__Contact_Merge_Step3}</span>
                         </div>
                     </li>
-                    <li class="slds-tabs_path__item slds-is-incomplete" role="presentation">
-                        <div class="slds-tabs_path__link" role="tab">
-                            <span class="slds-tabs_path__stage">
+                    <li class="slds-path__item slds-is-incomplete" role="presentation">
+                        <div class="slds-path__link" role="tab">
+                            <span class="slds-path__stage">
                                 <svg aria-hidden="true" class="slds-icon slds-icon_x-small" viewBox="0 0 24 24">
                                     <path  d="M8.8 19.6L1.2 12c-.3-.3-.3-.8 0-1.1l1-1c.3-.3.8-.3 1 0L9 15.7c.1.2.5.2.6 0L20.9 4.4c.2-.3.7-.3 1 0l1 1c.3.3.3.7 0 1L9.8 19.6c-.2.3-.7.3-1 0z"/>
                                 </svg>
                                 <span class="slds-assistive-text">{!$Label.conMergeStageComplete}</span>
                             </span>
-                            <span class="slds-tabs_path__title">{!$Label.npe01__Contact_Merge_Step4}</span>
+                            <span class="slds-path__title">{!$Label.npe01__Contact_Merge_Step4}</span>
                         </div>
                     </li>
                 </ul>
