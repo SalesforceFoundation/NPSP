@@ -45,7 +45,10 @@ public class OPP_CreateTribute_BATCH implements Database.Batchable<sObject> {
                 'Honoree_Contact__c != null OR ' +
                 'Honoree_Name__c != null OR ' +
                 'Notification_Recipient_Contact__c != null OR ' +
-                'Notification_Recipient_Name__c != null ');
+                'Notification_Recipient_Name__c != null OR ' +
+                'Tribute_Type__c != null OR ' +
+                'Notification_Recipient_Information__c != null OR ' +
+                'Notification_Preference__c != null');
     }
 
     /*******************************************************************************************************

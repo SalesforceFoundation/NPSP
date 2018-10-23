@@ -52,14 +52,14 @@ public with sharing class TBU_OpportintyContactRoles_TDTM extends TDTM_Runnable 
 
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
             //prevent create Tribute based on the setting
-            if(UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributeST) {
+            if(UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesSingleOpp) {
                 preventInsertTributeRecord((List<Tribute__c>) newList);
             }
 
             OPP_OpportunityContactRoles_TDTM.updateHonoreeNotificationFields(newList, null, 'Tribute__c');
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             //prevent update Tribute record based on the setting
-            if(UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributeST) {
+            if(UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesSingleOpp) {
                 preventInsertTributeRecord((List<Tribute__c>) newList);
             }
 

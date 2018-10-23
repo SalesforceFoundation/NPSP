@@ -246,8 +246,8 @@
         <members>OPP_CampaignMember_TEST</members>
         <members>OPP_CascadeDeleteLookups_TDTM</members>
         <members>OPP_CascadeDeleteLookups_TEST</members>
-        <members>OPP_CreateTribute</members>
         <members>OPP_CreateTribute_BATCH</members>
+        <members>OPP_CreateTribute_TEST</members>
         <members>OPP_CurrencySync_TEST</members>
         <members>OPP_INaming</members>
         <members>OPP_MatchingDonationsBTN_CTRL</members>

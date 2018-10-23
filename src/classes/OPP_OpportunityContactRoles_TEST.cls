@@ -942,4 +942,155 @@ private class OPP_OpportunityContactRoles_TEST {
         System.assertNotEquals(null, result[0].Opportunity.AccountId);
     }
 
+    /******************************************************************************************************
+    * @description Test Create Opporunity with SingleTribute Only mode
+    */
+    static testMethod void createOppWithTributeSingle() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                new npe01__Contacts_and_Orgs_Settings__c(
+                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                        npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
+                        Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
+                        Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
+                        Multiple_Tributes__c = Label.stgMultipleTributesSingleOpp
+                )
+        );
+
+        //Create and Insert Opportunity
+        Account orgAcct = new Account(Name = 'MultipleTributeAccount1', npe01__SYSTEMIsIndividual__c = false);
+        insert orgAcct;
+
+        Opportunity oppToInsert = new Opportunity( AccountId = orgAcct.id, StageName = 'Close Won', Name='Donation1',
+                Amount= 1000, CloseDate = date.today(), Honoree_Name__c = 'John Smith', Notification_Recipient_Name__c = 'Mark Smith');
+
+        Test.startTest();
+        insert oppToInsert;
+        Test.stopTest();
+
+        //verify that the there is no tribute in the org
+        List<Tribute__c> tributes = [Select Id from Tribute__c];
+        system.assertEquals(0, tributes.size());
+
+        //verify that the Tribute field is still on opp
+        List<Opportunity> opp = [Select Id from Opportunity where Honoree_Name__c = 'John Smith' and Notification_Recipient_Name__c = 'Mark Smith'
+        and Id =: oppToInsert.Id];
+        system.assertEquals(1, opp.size());
+    }
+
+    /******************************************************************************************************
+    * @description Test Create/Update Opportunity/Tribute with Mix mode (Allow both Tribute object
+    * and Tribute Field)
+    ********************************************************************************************************/
+    static testMethod void createOppWithTributeMultipleLoose() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                new npe01__Contacts_and_Orgs_Settings__c(
+                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                        npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
+                        Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
+                        Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
+                        Multiple_Tributes__c = Label.stgMultipleTributesFlexible
+                )
+        );
+
+        //Create and Insert Opportunity
+        Account orgAcct = new Account(Name = 'MultipleTributeAccount2', npe01__SYSTEMIsIndividual__c = false);
+        insert orgAcct;
+
+        List<Opportunity> oppsToInsert = new List<Opportunity>();
+
+        Opportunity opp1 = new Opportunity( AccountId = orgAcct.id, StageName = 'Close Won', Name='Donation2',
+                Amount= 1000, CloseDate = date.today(), Honoree_Name__c = 'John Smith', Notification_Recipient_Name__c = 'Mark Smith');
+
+        oppsToInsert.add(opp1);
+
+        Opportunity opp2 = new Opportunity( AccountId = orgAcct.id, StageName = 'Close Won', Name='Donation3',
+                Amount= 1000, CloseDate = date.today());
+
+        oppsToInsert.add(opp2);
+
+        Test.startTest();
+
+        insert oppsToInsert;
+
+        //verify that the there is no tribute in the org
+        List<Tribute__c> tributes = [Select Id from Tribute__c];
+        system.assertEquals(0, tributes.size());
+
+        //Now insert a Tribute for opp2, should not have any issue
+        Tribute__c tri = new Tribute__c(Opportunity__c = opp2.Id, Honoree_Name__c = 'John Smith', Notification_Recipient_Name__c = 'Mark Smith');
+        insert tri;
+
+        //System should allow update of Tribute info on Opp1
+        opp1.Honoree_Name__c = 'Mike Brown';
+        update opp1;
+
+        opp1 = [Select Id, Honoree_Name__c from Opportunity where Id =: opp1.Id];
+        system.assertEquals('Mike Brown', opp1.Honoree_Name__c);
+
+
+        //system should prevent update Tribute on Opp2 since Opp2 has a separate Tribute record on it
+        try{
+            opp2.Honoree_Name__c = 'Mike Brown';
+            update opp2; //System should throw an exception here
+            system.assert(false);
+        } catch (Exception ex) {
+            system.assert(ex.getMessage().contains(Label.errMultipleTributesEnforceMultiple) == true);
+        }
+
+        Test.stopTest();
+    }
+
+    /******************************************************************************************************
+    * @description Test Create/Update Opportunity with Multiple Tribute only mode
+    ********************************************************************************************************/
+    static testMethod void createOppWithTributeMultipleStrict() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                new npe01__Contacts_and_Orgs_Settings__c(
+                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                        npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
+                        Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
+                        Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
+                        Multiple_Tributes__c = Label.stgMultipleTributesLimited
+                )
+        );
+
+        //Create and Insert Opportunity
+        Account orgAcct = new Account(Name = 'MultipleTributeAccount3', npe01__SYSTEMIsIndividual__c = false);
+        insert orgAcct;
+
+        Opportunity opp = new Opportunity( AccountId = orgAcct.id, StageName = 'Close Won', Name='Donation2',
+                Amount= 1000, CloseDate = date.today(), Honoree_Name__c = 'John Smith', Notification_Recipient_Name__c = 'Mark Smith');
+
+        Test.startTest();
+        insert opp;
+
+        //verify that the there is one tribute in the org, and Tribute fields get cleared
+        List<Tribute__c> tributes = [Select Id, Opportunity__c, Honoree_Name__c, Notification_Recipient_Name__c, Opportunity__r.Honoree_Name__c, Opportunity__r.Notification_Recipient_Name__c from Tribute__c];
+        system.assertEquals(1, tributes.size());
+        system.assertEquals(opp.Id, tributes[0].Opportunity__c);
+        system.assertEquals('John Smith', tributes[0].Honoree_Name__c);
+        system.assertEquals('Mark Smith', tributes[0].Notification_Recipient_Name__c);
+        system.assertEquals(null, tributes[0].Opportunity__r.Honoree_Name__c);
+        system.assertEquals(null, tributes[0].Opportunity__r.Notification_Recipient_Name__c);
+
+        //verify that system will not Allow update Tribute on Opp
+        try{
+            opp.Honoree_Name__c = 'Mike Brown';
+            update opp; //System should throw an exception here
+            system.assert(false);
+        } catch (Exception ex) {
+            system.assert(ex.getMessage().contains(Label.errMultipleTributesEnforceMultiple) == true);
+        }
+
+        Test.stopTest();
+    }
 }

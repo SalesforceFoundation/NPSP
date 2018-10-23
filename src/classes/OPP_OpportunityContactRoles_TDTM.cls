@@ -63,9 +63,14 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             updateHonoreeNotificationFields(newlist, null, 'Opportunity');
 
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            //If user only use Tribute object, we need to prevent user update existing Tribute Fields on Opportunity based on the setting
-            if (UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributeStrict) {
-                preventUpdateTributeInfoOnOpportunity((List<Opportunity>) newlist, (list<Opportunity>) oldlist);
+            //If the Setting is Multiple Tribute Only, we need to prevent updating existing Tribute Fields on Opportunity
+            if (UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesLimited) {
+                preventUpdateTributeInfoOnOpportunity((List<Opportunity>) newlist, (list<Opportunity>) oldlist, false);
+            }
+
+            //If the Setting allow Mix mode, then we only prevent updating Tribute when there is a Tribute record attached to it
+            if (UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesFlexible) {
+                preventUpdateTributeInfoOnOpportunity((List<Opportunity>) newlist, (list<Opportunity>) oldlist, true);
             }
 
             updateHonoreeNotificationFields(newlist, oldlist, 'Opportunity');
@@ -78,8 +83,8 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 ERR_Handler.processError(ex, ERR_Handler_API.Context.OPP);
             }
 
-            //If user only use Tribute object, system should Auto create Tribute record
-            if (UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributeStrict) {
+            //If the Setting is Multiple Tribute Only, system should Auto create Tribute record
+            if (UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesLimited) {
                 createTributeFromOpportunity((list<Opportunity>) newlist);
             }
 
@@ -167,67 +172,6 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 }            
             }
         }       
-    }
-
-
-    /*******************************************************************************************************
-    * @description
-    * @param listOpps List of Opportunities from trigger.new
-    ********************************************************************************************************/
-    private static void createTributeFromOpportunity(List<Opportunity> listOpps) {
-        List<Tribute__c> tributeToInsert = new List<Tribute__c>();
-        for(Opportunity opp : listOpps) {
-            if(opp.Honoree_Contact__c != null || opp.Honoree_Name__c != null ||
-                    opp.Notification_Recipient_Contact__c != null || opp.Notification_Recipient_Name__c != null) {
-                //Create new Tribute Record based on the Opportunity Tribute Fields
-                Tribute__c newTribute = new Tribute__c();
-                createTributeFromOpportunityHelper(newTribute, opp);
-                tributeToInsert.add(newTribute);
-            }
-        }
-
-        //Set a flag in Tribute TDTM to remember to clear the tribute field on Opportunity
-        TBU_OpportintyContactRoles_TDTM.clearTributeFieldsFromOpportunity = true;
-        insert tributeToInsert;
-        TBU_OpportintyContactRoles_TDTM.clearTributeFieldsFromOpportunity = false;
-
-    }
-
-
-    public static void createTributeFromOpportunityHelper(Tribute__c newTribute, Opportunity opp) {
-        newTribute.Opportunity__c = opp.Id;
-        newTribute.Tribute_Type__c = opp.Tribute_Type__c;
-        newTribute.Honoree_Contact__c = opp.Honoree_Contact__c;
-        newTribute.Honoree_Name__c = opp.Honoree_Name__c;
-        newTribute.Notification_Recipient_Contact__c = opp.Notification_Recipient_Contact__c;
-        newTribute.Notification_Recipient_Name__c = opp.Notification_Recipient_Name__c;
-        newTribute.Notification_Recipient_Information__c = opp.Notification_Recipient_Information__c;
-        newTribute.Notification_Preference__c = opp.Notification_Preference__c;
-        newTribute.Notification_Message__c = opp.Notification_Message__c;
-    }
-
-    /*******************************************************************************************************
-    * @description
-    * @param listOpps List of Opportunities from trigger.new
-    * @param oldListOpps List of Opportunities from trigger.old
-    ********************************************************************************************************/
-    private void preventUpdateTributeInfoOnOpportunity(List<Opportunity> listOpps, List<Opportunity> oldListOpps) {
-        for(integer i = 0; i < listOpps.size(); i ++) {
-            Opportunity newOpp = listOpps[i];
-            Opportunity oldOpp = oldListOpps[i];
-
-            if(newOpp.Tribute_Type__c != oldOpp.Tribute_Type__c ||
-                    newOpp.Honoree_Contact__c != oldOpp.Honoree_Contact__c ||
-                    newOpp.Honoree_Name__c != oldOpp.Honoree_Name__c ||
-                    newOpp.Notification_Recipient_Contact__c != oldOpp.Notification_Recipient_Contact__c ||
-                    newOpp.Notification_Recipient_Name__c != oldOpp.Notification_Recipient_Name__c ||
-                    newOpp.Notification_Preference__c != oldOpp.Notification_Preference__c ||
-                    newOpp.Notification_Message__c != oldOpp.Notification_Message__c ||
-                    newOpp.Notification_Recipient_Information__c != oldOpp.Notification_Recipient_Information__c) {
-                newOpp.AddError(Label.stgMultipleTributePreventUpdate);
-
-            }
-        }
     }
 
     /*******************************************************************************************************
@@ -964,5 +908,86 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
      */
     private static Boolean isIndividualAccount(Map<Id, Account> accountMap, Id accountId) {
         return (accountId != null && accountMap.containsKey(accountId) ? accountMap.get(accountId).npe01__SYSTEMIsIndividual__c  : null);
+    }
+
+
+
+    /*******************************************************************************************************
+     * @description Create the new Tribute record from Opportunity
+     * @param listOpps List of Opportunities from trigger.new
+     * @return void
+     ********************************************************************************************************/
+    private static void createTributeFromOpportunity(List<Opportunity> listOpps) {
+        List<Tribute__c> tributeToInsert = new List<Tribute__c>();
+        for (Opportunity opp : listOpps) {
+            if (opp.Honoree_Contact__c != null || opp.Honoree_Name__c != null ||
+                    opp.Notification_Recipient_Contact__c != null ||
+                    opp.Notification_Recipient_Name__c != null ||
+                    opp.Tribute_Type__c != null ||
+                    opp.Notification_Recipient_Information__c != null ||
+                    opp.Notification_Preference__c != null ||
+                    opp.Notification_Message__c != null) {
+                //Create new Tribute Record based on the Opportunity Tribute Fields
+                Tribute__c newTribute = new Tribute__c();
+                createTributeFromOpportunityHelper(newTribute, opp);
+                tributeToInsert.add(newTribute);
+            }
+        }
+
+        //Set a flag in Tribute TDTM to remember to clear the tribute field on Opportunity
+        TBU_OpportintyContactRoles_TDTM.clearTributeFieldsFromOpportunity = true;
+        insert tributeToInsert;
+        TBU_OpportintyContactRoles_TDTM.clearTributeFieldsFromOpportunity = false;
+
+    }
+
+    /*******************************************************************************************************
+     * @description The helper method to create the new Tribute record from Opportunity
+     * @param newTribute The new Tribute record
+     * @param listOpps List of Opportunities from trigger.new
+     * @return void
+     ********************************************************************************************************/
+    private static void createTributeFromOpportunityHelper(Tribute__c newTribute, Opportunity opp) {
+        newTribute.Opportunity__c = opp.Id;
+        newTribute.Tribute_Type__c = opp.Tribute_Type__c;
+        newTribute.Honoree_Contact__c = opp.Honoree_Contact__c;
+        newTribute.Honoree_Name__c = opp.Honoree_Name__c;
+        newTribute.Notification_Recipient_Contact__c = opp.Notification_Recipient_Contact__c;
+        newTribute.Notification_Recipient_Name__c = opp.Notification_Recipient_Name__c;
+        newTribute.Notification_Recipient_Information__c = opp.Notification_Recipient_Information__c;
+        newTribute.Notification_Preference__c = opp.Notification_Preference__c;
+        newTribute.Notification_Message__c = opp.Notification_Message__c;
+    }
+
+    /*******************************************************************************************************
+    * @description Prevent user update Tribute on Opportunity based on the custom setting
+    * @param listOpps List of Opportunities from trigger.new
+    * @param oldListOpps List of Opportunities from trigger.old
+    * @boolean checkTributeRollup
+    ********************************************************************************************************/
+    private void preventUpdateTributeInfoOnOpportunity(List<Opportunity> listOpps, List<Opportunity> oldListOpps,
+            boolean checkTributeRollup) {
+        for (integer i = 0; i < listOpps.size(); i ++) {
+            Opportunity newOpp = listOpps[i];
+            Opportunity oldOpp = oldListOpps[i];
+
+            //We will prevent user update the Tribute info unless user try to clear the field in order to do some correction
+            if (newOpp.Tribute_Type__c != oldOpp.Tribute_Type__c && newOpp.Tribute_Type__c != null ||
+                    (newOpp.Honoree_Contact__c != oldOpp.Honoree_Contact__c && String.isNotBlank(newOpp.Honoree_Contact__c)) ||
+                    (newOpp.Honoree_Name__c != oldOpp.Honoree_Name__c && String.isNotBlank(newOpp.Honoree_Name__c)) ||
+                    (newOpp.Notification_Recipient_Contact__c != oldOpp.Notification_Recipient_Contact__c && String.isNotBlank(newOpp.Notification_Recipient_Contact__c)) ||
+                    (newOpp.Notification_Recipient_Name__c != oldOpp.Notification_Recipient_Name__c && String.isNotBlank(newOpp.Notification_Recipient_Name__c)) ||
+                    (newOpp.Notification_Preference__c != oldOpp.Notification_Preference__c && String.isNotBlank(newOpp.Notification_Preference__c)) ||
+                    (newOpp.Notification_Message__c != oldOpp.Notification_Message__c && String.isNotBlank(newOpp.Notification_Message__c)) ||
+                    (newOpp.Notification_Recipient_Information__c != oldOpp.Notification_Recipient_Information__c && String.isNotBlank(newOpp.Notification_Recipient_Information__c))) {
+                if (checkTributeRollup) {
+                    if(newOpp.Number_of_Tributes__c > 0) {
+                        newOpp.AddError(Label.errMultipleTributesEnforceMultiple);
+                    }
+                } else {
+                    newOpp.AddError(Label.errMultipleTributesEnforceMultiple);
+                }
+            }
+        }
     }
 }
