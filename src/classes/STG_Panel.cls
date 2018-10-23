@@ -60,7 +60,7 @@ public with sharing virtual class STG_Panel {
 	public boolean isReadOnlyMode {
 		get {
 			return !isEditMode;
-		}
+		} private set;
 	}
     
     /*******************************************************************************************************
@@ -72,8 +72,7 @@ public with sharing virtual class STG_Panel {
             	stgService = STG_SettingsService.stgService;
             }
             return stgService;
-        }
-        private set;
+        } set;
     }
 
     /*******************************************************************************************************
