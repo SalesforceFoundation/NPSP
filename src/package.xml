@@ -974,6 +974,7 @@
         <members>Opportunity.Notification_Recipient_Contact__c</members>
         <members>Opportunity.Notification_Recipient_Information__c</members>
         <members>Opportunity.Notification_Recipient_Name__c</members>
+        <members>Opportunity.Number_of_Tributes__c</members>
         <members>Opportunity.Previous_Grant_Opportunity__c</members>
         <members>Opportunity.Primary_Contact_Campaign_Member_Status__c</members>
         <members>Opportunity.Primary_Contact__c</members>

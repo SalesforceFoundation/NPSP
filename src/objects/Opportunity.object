@@ -1227,6 +1227,15 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Number_of_Tributes__c</fullName>
+        <externalId>false</externalId>
+        <label>Number of Tributes</label>
+        <summaryForeignKey>Tribute__c.Opportunity__c</summaryForeignKey>
+        <summaryOperation>count</summaryOperation>
+        <trackTrending>false</trackTrending>
+        <type>Summary</type>
+    </fields>
+    <fields>
         <fullName>Previous_Grant_Opportunity__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <description>If this Grant is a renewal of a previous Grant, use this field to relate this record to the previous Grant.</description>
