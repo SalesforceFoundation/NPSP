@@ -1255,7 +1255,7 @@ public class ADDR_Addresses_TDTM extends TDTM_Runnable {
                 }
             }
             return defaultAddressType;
-        }
+        } private set;
     }
 
     /*******************************************************************************************************

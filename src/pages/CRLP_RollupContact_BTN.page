@@ -6,7 +6,7 @@
                                parentEntityLabel="{! $ObjectType.Contact.LabelPlural }" parentAction="/003"
                                parentRecordName="{!Contact.Name }" parentRecordAction="/{!Contact.Id}"
                                header="{!$Label.CRLP_RecalculatingRollups}"
-                               icon="contact_120" iconCategory="standard"
+                               icon="contact" iconCategory="standard"
                                showSaveBtn="false" showCancelBtn="true"
                                cancelLabel="{!returnLabel}" cancelAction="/{!Contact.Id}"
                                rendered="true" />
