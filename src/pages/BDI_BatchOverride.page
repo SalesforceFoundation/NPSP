@@ -9,7 +9,7 @@
             <!-- PAGE HEADER -->
             <c:UTIL_PageHeader headerLabel="{!$ObjectType.DataImportBatch__c.Label}"
                                header="{!diBatch.Name}"
-                               icon="custom17_120" iconCategory="custom" iconContainer="custom18"
+                               icon="custom17" iconCategory="custom" iconContainer="custom18"
                                saveAction="{!save}" saveReRender="idForm"
                                cancelAction="{!cancel}"/>
             <!-- /PAGE HEADER -->
