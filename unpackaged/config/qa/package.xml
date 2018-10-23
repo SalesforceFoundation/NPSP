@@ -19,6 +19,7 @@
     <types>
         <members>Campaign-NPSP Campaign Layout</members>
         <members>Contact-Contact Layout</members>
+        <members>npe03__Recurring_Donation__c-npe03__Recurring Donation Layout</members>
         <members>Opportunity-Donation Layout</members>
         <name>Layout</name>
     </types>
