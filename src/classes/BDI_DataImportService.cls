@@ -722,13 +722,7 @@ global with sharing class BDI_DataImportService {
             }
         }
         if (isCurrencyMapped(strBaseObj)) {
-            // Boolean isCurrencyIsoCodeMapped = false;
-            // if (strBaseObj == 'npe01__OppPayment__c') {
-            //     isCurrencyIsoCodeMapped = true;
-            // }
-            // if (!isCurrencyIsoCodeMapped) {
-                addCurrencyIsoCode(mapDIFieldToObjField);
-            //}
+            addCurrencyIsoCode(mapDIFieldToObjField);
         }
 
         return mapDIFieldToObjField;
@@ -741,7 +735,6 @@ global with sharing class BDI_DataImportService {
     */
     private static Boolean isCurrencyMapped(String objectName) {
         Set<String> objectsThatMapCurrencyCode = new Set<String>{
-            //'npe01__OppPayment__c',
             'Opportunity'
         };
         return objectsThatMapCurrencyCode.contains(objectName);

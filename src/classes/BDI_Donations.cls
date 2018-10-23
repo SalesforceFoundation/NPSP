@@ -424,8 +424,8 @@ public class BDI_Donations {
 
             // If we have a custom mapping against the field CurrencyIsoCode of the Data Import object.
             if (strDIField != 'CurrencyIsoCode' && currentValue == 'CurrencyIsoCode') {
-                useCustomMappingInsteadOfCurrencyIsoCode = true;
-                continue;
+                    useCustomMappingInsteadOfCurrencyIsoCode = true;
+                    continue;
             }
         }
 
