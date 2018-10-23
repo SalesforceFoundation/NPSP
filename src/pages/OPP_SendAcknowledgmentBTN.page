@@ -13,7 +13,7 @@
             <!-- PAGE HEADER -->
             <c:UTIL_PageHeader headerLabel="{!$ObjectType.Opportunity.Label}"
                                header="{!$Label.sendAcknowledgmentPageTitle}"
-                               icon="opportunity_120" iconCategory="standard"
+                               icon="opportunity" iconCategory="standard"
                                showSaveBtn="false" cancelLabel="{!$Label.bdiBtnClose}"
                                cancelAction="{!close}" cancelReRender="vfForm"/>
 

@@ -61,7 +61,7 @@ public class CRLP_Debug_UTIL {
                 }
             }
             return debuggingLevel;
-        }
+        } private set;
     }
 
     /**
@@ -70,7 +70,7 @@ public class CRLP_Debug_UTIL {
     public static Boolean isDebuggingEnabled {
         get {
             return (debuggingLevel > 0);
-        }
+        } private set;
     }
 
     private static List<String> currentRollupState = new List<String>();

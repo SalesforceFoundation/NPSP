@@ -1,13 +1,13 @@
-<apex:page controller="STG_PanelOpps_CTRL" docType="html-5.0">
-    <apex:form id="form" styleClass="slds-m-around--x-large">
+<apex:page controller="STG_PanelOpps_CTRL" docType="html-5.0" standardStylesheets="false">
+    <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavPayments}" />
         <c:UTIL_PageMessages />
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
             <apex:outputPanel layout="block" rendered="{!isReadOnlyMode}" styleClass="slds-button-group">
-                <apex:commandButton id="editOpps" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                <apex:commandButton id="editOpps" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
             </apex:outputPanel>
         </div>
-        <div class="slds-form--horizontal slds-m-around--large">
+        <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Payments_Enabled__c.Label}" for="cbxPE" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -59,10 +59,10 @@
                 </div>
             </div>
         </div>
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
             <apex:outputPanel layout="block" rendered="{!isEditMode}" styleClass="slds-button-group">
-                <apex:commandButton id="saveOpps" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-                <apex:commandButton id="cancelOpps" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                <apex:commandButton id="saveOpps" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button_small slds-button_brand" />
+                <apex:commandButton id="cancelOpps" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
             </apex:outputPanel>
         </div>
     </apex:form>

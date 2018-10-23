@@ -6,7 +6,7 @@
     <apex:form >
         <c:UTIL_PageHeader headerLabel="{!$ObjectType.Opportunity.Label}"
                            header="{!Opportunity.Name}"
-                           icon="opportunity_120" iconCategory="standard"
+                           icon="opportunity" iconCategory="standard"
                            showSaveBtn="false"
                            cancelAction="{!cancel}" cancelImmediate="true" />
         <c:UTIL_PageMessages />
