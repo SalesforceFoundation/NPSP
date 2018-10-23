@@ -846,45 +846,6 @@ private with sharing class RD_RecurringDonations_TEST2 {
     }
 
     /*******************************************************************************************************
-    * @description Ensures proper message is displayed when read only user tries to create a donation
-    */
-    @isTest
-    public static void readOnlyUserShouldSeeErrorMessageWhenButtonClicked() {
-        
-        if (strTestOnly != '*' && strTestOnly != 'readOnlyUserShouldSeeErrorMessageWhenButtonClicked') {
-            return;
-        }
-        
-        npe03__Recurring_Donation__c recurringDonation = new npe03__Recurring_Donation__c(
-            Id = npe03__Recurring_Donation__c.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA',
-            Name = 'Test Recurring Donation',
-            npe03__Installments__c = 2,
-            npe03__Organization__c = UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID,
-            npe03__Amount__c = 100,
-            npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly
-        );
-        
-        Test.startTest();
-        
-        ApexPages.StandardController controller = new ApexPages.StandardController(recurringDonation);
-        RD_AddDonationsBTN_CTRL addDontationController = new RD_AddDonationsBTN_CTRL(controller);
-       
-        //Read Only user who should be denied permission to add donation
-        User readOnlyUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
-        
-        System.runAs(readOnlyUser) {
-
-            //No redirect should occur
-            System.assertEquals(null, addDontationController.buttonClick());
-
-            //Correct info message is returned
-            UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.RD_ErrorAddDonationPermissionDenied, ApexPages.Severity.INFO);
-        }
-
-        Test.stopTest();
-    }
-
-    /*******************************************************************************************************
     * @description Ensures proper message is displayed when navigating to Visualforce page without an ID
     */
     @isTest
