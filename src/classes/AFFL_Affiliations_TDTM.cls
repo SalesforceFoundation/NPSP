@@ -309,7 +309,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                     return null;
                 }
                 return strComboKey.left(strComboKey.indexOf('|'));
-            }
+            } private set;
         }
         
         ID AccountId {
@@ -318,7 +318,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                     return null;
                 }
                 return strComboKey.substring(strComboKey.indexOf('|') + 1);
-            }
+            } private set;
         }
         
     }

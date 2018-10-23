@@ -49,7 +49,7 @@ public with sharing class HH_ManageHH_CTRL {
     public Account hhA {
         get {
             return (Account)hh;
-        }
+        } private set;
     }
 
     /** @description what is the namespace (null if unmanaged, or npsp if managed) */
@@ -71,7 +71,7 @@ public with sharing class HH_ManageHH_CTRL {
                 }
             }
             return false; 
-        }
+        } private set;
     }
     
     /*******************************************************************************************************

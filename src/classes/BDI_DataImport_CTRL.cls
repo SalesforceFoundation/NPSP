@@ -65,7 +65,7 @@ public with sharing class BDI_DataImport_CTRL {
             return isTrueBatch ?
                 DataImportBatch__c.SobjectType.getDescribe().isUpdateable() :
                 Data_Import_Settings__c.SobjectType.getDescribe().isUpdateable();
-        }
+        } private set;
     }
     
     /*******************************************************************************************************
@@ -113,6 +113,7 @@ public with sharing class BDI_DataImport_CTRL {
     /*******************************************************************************************************
     * @description the initial custom settings object we defaultly load.  will be converted to a diBatch.
     */
+    @TestVisible
     private Data_Import_Settings__c diSettings { get; set; }
 
     /*******************************************************************************************************
@@ -141,7 +142,7 @@ public with sharing class BDI_DataImport_CTRL {
     public Boolean isTrueBatch {
         get {
             return diBatch.Id != null;
-        }
+        } private set;
     }
     
     /*******************************************************************************************************
@@ -292,7 +293,7 @@ public with sharing class BDI_DataImport_CTRL {
         get {
             string strLabel = (aaj.Status == 'Processing' ? label.bdiStatusProcessing : label.bdiStatusProcessed);
             return string.format(strLabel, new string[]{string.valueOf(aaj.JobItemsProcessed), string.valueOf(aaj.TotalJobItems)});
-        }
+        } private set;
     }
     
     /*******************************************************************************************************

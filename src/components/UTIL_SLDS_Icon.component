@@ -1,0 +1,25 @@
+<apex:component id="UTIL_SLDS_Icon">
+
+    <apex:attribute name="iconCategory" type="String" default=""
+                    description="The category the icon belongs to, e.g. standard, utility, action, etc."/>
+    <apex:attribute name="icon" type="String" default=""
+                    description="The name of the icon svg to display"/>
+    <apex:attribute name="assistiveText" type="String" default=""
+                    description="Assistive Text for icon"/>
+    <apex:attribute name="size" type="String" default="small"
+                    description="small, large, x-small, or xx-small"/>
+    <apex:attribute name="type" type="String" default="default"
+                    description="default, warning, error, light"/>
+    <apex:attribute name="fillColor" type="String" default="white"
+                    description="any recognized css color name (or inherit)"/>
+
+    <apex:variable var="containerClass" value="{! IF(iconCategory=='action', 'slds-icon_container_circle', '')}" />
+
+    <span class="slds-icon_container slds-current-color slds-icon-{!iconCategory}-{!icon} {!containerClass}" style="color: {!fillColor};">
+        <svg aria-hidden="true" class="slds-icon slds-icon-text-{!type} slds-icon_{!size}">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/' + iconCategory + '-sprite/svg/symbols.svg#' + icon)}"></use>
+        </svg>
+        <span class="slds-assistive-text">{!assistiveText}</span>
+    </span>
+
+</apex:component>
