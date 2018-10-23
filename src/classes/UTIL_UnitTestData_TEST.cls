@@ -766,6 +766,9 @@ public class UTIL_UnitTestData_TEST {
         set;
     }
 
+    /**
+    * @description sets a currency that isn't the org default so we can test behavior for multicurrency orgs.
+    */
     private static void setupCurrencies() {
         for (UTIL_CurrencyCache.CurrencyData currencyData : UTIL_CurrencyCache.cachedMapOfRatesByCurrencyCode.values()) {
             if (!currencyData.isOrgDefault) {
