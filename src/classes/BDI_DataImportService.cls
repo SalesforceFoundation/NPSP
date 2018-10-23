@@ -729,7 +729,8 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
-    * @description Checks that the object is a Payment or an Opportunity.
+    * @description Checks if this is one of the objects where we want to have a currency mapped.
+    * As of now, those objects are Opportunity and Payments. Payment currency iso code is inherited from the Opportunity.
     * @param strBaseObj the underlying object the bdi object is (ie, Contact, Account, etc)
     * @return Boolean if the strBaseObj is either a Payment or an Opportunity.
     */
