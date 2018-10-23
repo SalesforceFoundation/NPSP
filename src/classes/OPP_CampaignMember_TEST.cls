@@ -191,7 +191,7 @@ private class OPP_CampaignMember_TEST {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c(
                 Automatic_Campaign_Member_Management__c=true, 
-                Campaign_Member_Responded_Status__c = 'NewTestStatus', 
+                Campaign_Member_Responded_Status__c = 'NewTestStatus_A',
                 npe01__Account_Processor__c=CAO_Constants.HH_ACCOUNT_PROCESSOR
             )
         );
@@ -202,31 +202,31 @@ private class OPP_CampaignMember_TEST {
         Campaign cam = new Campaign(Name='foo');
         insert cam;
 
-        list<CampaignMemberStatus> listCMSForInsert = new list<CampaignMemberStatus>();
-        listCMSForInsert.add(new CampaignMemberStatus(campaignId = cam.id, Label = 'Responded', SortOrder = 5, hasResponded=true));
-        listCMSForInsert.add(new CampaignMemberStatus(campaignId = cam.id, Label = 'NewTestStatus', SortOrder = 10, hasResponded=false));
+        List<CampaignMemberStatus> listCMSForInsert = new List<CampaignMemberStatus>();
+        listCMSForInsert.add(new CampaignMemberStatus(CampaignId = cam.Id, Label = 'Responded_A', SortOrder = 5, HasResponded=true));
+        listCMSForInsert.add(new CampaignMemberStatus(CampaignId = cam.Id, Label = 'NewTestStatus_A', SortOrder = 10, HasResponded=false));
         insert listCMSForInsert;
 
         Opportunity opp = new Opportunity(
             Name = 'foo',
-            Primary_Contact__c = con.id,
+            Primary_Contact__c = con.Id,
             CloseDate = system.today(),
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
             Amount = 8,
-            CampaignId=cam.id
+            CampaignId=cam.Id
         );
 
         test.startTest();
         insert opp;
         test.stopTest();
 
-        list<campaignmemberstatus> querycmstatus = [SELECT id, Label, hasResponded, SortOrder FROM CampaignMemberStatus WHERE Label='NewTestStatus'];
+        list<campaignmemberstatus> querycmstatus = [SELECT id, Label, HasResponded, SortOrder FROM CampaignMemberStatus WHERE Label='NewTestStatus_A'];
         system.assertEquals(1,querycmstatus.size(),'Only one campaign member status should exist for this status.');
-        system.assertEquals(false,querycmstatus[0].hasResponded,'Campaign Member Status should not be marked responded as it was created.');
+        system.assertEquals(false,querycmstatus[0].HasResponded,'Campaign Member Status should not be marked responded as it was created.');
 
-        list<CampaignMember> querycm = [SELECT Id, Status, HasResponded FROM CampaignMember WHERE contactId=:con.id AND campaignId=:cam.id];
+        list<CampaignMember> querycm = [SELECT Id, Status, HasResponded FROM CampaignMember WHERE ContactId=:con.Id AND CampaignId=:cam.Id];
         system.assertEquals(1, querycm.size(), 'A campaign member should still exist.');
-        system.assertEquals('NewTestStatus', querycm[0].Status, 'Status should be created per the npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Responded_Status__c setting.');
+        system.assertEquals('NewTestStatus_A', querycm[0].Status, 'Status should be created per the npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Responded_Status__c setting.');
         system.assertEquals(false, querycm[0].HasResponded, 'Campaign member should have a non-responded status since it was already created that way.');
     }
 
@@ -251,9 +251,9 @@ private class OPP_CampaignMember_TEST {
         Campaign cam = new Campaign(Name='foo');
         insert cam;
 
-        list<CampaignMemberStatus> listStatusForInsert = new list<CampaignMemberStatus>();
-        listStatusForInsert.add(new CampaignMemberStatus(campaignId = cam.id, Label = 'NonResponded', HasResponded = false, SortOrder = 5));
-        listStatusForInsert.add(new CampaignMemberStatus(campaignId = cam.id, Label = 'Responded', HasResponded = true, SortOrder = 6));
+        List<CampaignMemberStatus> listStatusForInsert = new List<CampaignMemberStatus>();
+        listStatusForInsert.add(new CampaignMemberStatus(CampaignId = cam.id, Label = 'NonResponded_B', HasResponded = false, SortOrder = 5));
+        listStatusForInsert.add(new CampaignMemberStatus(CampaignId = cam.id, Label = 'Responded_B', HasResponded = true, SortOrder = 6));
         insert listStatusForInsert;
 
         Opportunity opp = new Opportunity(
@@ -295,9 +295,9 @@ private class OPP_CampaignMember_TEST {
         Campaign cam = new Campaign(Name='foo');
         insert cam;
 
-        list<CampaignMemberStatus> listStatusForInsert = new list<CampaignMemberStatus>();
-        listStatusForInsert.add(new CampaignMemberStatus(campaignId = cam.id, Label = 'NonResponded', HasResponded = false, SortOrder = 5));
-        listStatusForInsert.add(new CampaignMemberStatus(campaignId = cam.id, Label = 'Responded', HasResponded = true, SortOrder = 6));
+        List<CampaignMemberStatus> listStatusForInsert = new List<CampaignMemberStatus>();
+        listStatusForInsert.add(new CampaignMemberStatus(CampaignId = cam.id, Label = 'NonResponded_C', HasResponded = false, SortOrder = 5));
+        listStatusForInsert.add(new CampaignMemberStatus(CampaignId = cam.id, Label = 'Responded_C', HasResponded = true, SortOrder = 6));
         insert listStatusForInsert;
 
         Opportunity opp = new Opportunity(
@@ -308,7 +308,7 @@ private class OPP_CampaignMember_TEST {
             Amount = 8,
             CampaignId=cam.id
     	);
-    	
+
     	test.startTest();
         insert opp;
         test.stopTest();

@@ -263,7 +263,7 @@ public with sharing class STG_PanelPaymentMapping_CTRL extends STG_Panel {
                pfmNew.npe01__Opportunity_Field__c != null &&
                pfmNew.npe01__Payment_Field__c != null &&
                pfmNew.npe01__Payment_Field__c != strNoValidField;
-        }
+        } private set;
     }
     
     /*********************************************************************************************************

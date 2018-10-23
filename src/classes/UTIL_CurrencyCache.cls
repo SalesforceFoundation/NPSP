@@ -117,7 +117,7 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
     public static Cache.OrgPartition orgCache {
         get {
             return UTIL_PlatformCache.orgCache;
-        }
+        } private set;
     }
 
     /**

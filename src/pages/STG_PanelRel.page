@@ -1,12 +1,12 @@
-<apex:page controller="STG_PanelRel_CTRL" docType="html-5.0">
-    <apex:form id="form" styleClass="slds-m-around--x-large">
+<apex:page controller="STG_PanelRel_CTRL" docType="html-5.0" standardStylesheets="false">
+    <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelationships}" />
-        <p class="slds-text-body--small slds-m-top--x-small">{!$Label.npe4__relationshipssettingsdescription}</p>
+        <p class="slds-text-body_small slds-m-top_x-small">{!$Label.npe4__relationshipssettingsdescription}</p>
         <c:UTIL_PageMessages />
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                <apex:commandButton id="editRel" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+                <apex:commandButton id="editRel" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
-        <div class="slds-form--horizontal slds-m-around--large">
+        <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.npe4__Reciprocal_Method__c.Label}" for="slRM" styleClass="col-md-4 slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -69,9 +69,9 @@
                 </apex:outputPanel>
             </apex:outputPanel>
         </div>
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton id="saveRel" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-            <apex:commandButton id="cancelRel" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+            <apex:commandButton id="saveRel" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button_small slds-button_brand" />
+            <apex:commandButton id="cancelRel" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
     </apex:form>
 </apex:page>

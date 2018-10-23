@@ -1,28 +1,26 @@
-<apex:page controller="PMT_PaymentWizard_CTRL" title="{!IF(isWriteoffWizard,$Label.pmtWizardSectionWriteoff,$Label.pmtWizardSubtitle)}" tabStyle="Opportunity" standardStylesheets="true" docType="html-5.0">
+<apex:page controller="PMT_PaymentWizard_CTRL" title="{!IF(isWriteoffWizard,$Label.pmtWizardSectionWriteoff,$Label.pmtWizardSubtitle)}"
+           tabStyle="Opportunity" standardStylesheets="true" docType="html-5.0">
 
     <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
-<!--
-Opp Payment Creator VF Page
-Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 23rd Ave S, Seattle, WA 98144
--->
+    <!--
+    Opp Payment Creator VF Page
+    Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 23rd Ave S, Seattle, WA 98144
+    -->
     <style>
-        .slds-scope .slds-form_horizontal .extraInline {
-            width: 33%;
-        }
         td:first-child {
-         width: 8%;
+            width: 8%;
         }
     </style>
 
     <script>
-        //hack to override JavaScript that is setting focus on Date field 
+        //hack to override JavaScript that is setting focus on Date field
         function setFocusOnLoad() {}
         // For some reason, VF will not render the page messages without this onLoad function in place, even if it doesn't actually do anything.
         window.onload = function () { };
     </script>
-    
+
     <apex:form id="vfForm">
         <div class="slds-scope">
             <!-- Nav -->
@@ -33,7 +31,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                                parentAction="/006" parentRecordName="{!currentOpp.Name}"
                                parentRecordAction="{!If (NOT(ISNULL(currentOpp)), URLFOR($Action.Opportunity.View, currentOpp.Id), '')}"
                                header="{!IF( NOT(isWriteoffWizard), $Label.pmtWizardSubtitle, $Label.pmtWizardSectionWriteoff)}"
-                               icon="opportunity_120" iconCategory="standard"
+                               icon="opportunity" iconCategory="standard"
                                showSaveBtn="false" cancelAction="{!If (NOT(ISNULL(currentOpp)), URLFOR($Action.Opportunity.View, currentOpp.Id), '')}"/>
 
             <!--Page Alerts-->
@@ -53,7 +51,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
             <apex:outputPanel rendered="{!AND(hasPaymentAccess, NOT(ISNULL(paymentsSettings)), paymentsSettings.npe01__Payments_Enabled__c == false)}">
                 <div class="slds-grid slds-grid_align-center">
                     <div class="slds-col">
-                        <apex:outputLink value="{!URLFOR($Page.STG_SettingsManager)}" styleClass="slds-button slds-button_neutral" >{!$Label.lblNPSPSettings}</apex:outputLink>
+                        <apex:outputLink value="{!URLFOR($Page.STG_SettingsManager)}" styleClass="slds-button slds-button_neutral"><apex:outputText value="{!$Label.lblNPSPSettings}"/></apex:outputLink>
                     </div>
                 </div>
             </apex:outputPanel>
@@ -63,7 +61,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                 <!-- Opportunity Info -->
                 <apex:outputText rendered="{!AND(hasPaymentAccess, NOT(ISNULL(paymentsSettings)), paymentsSettings.npe01__Payments_Enabled__c == true, isScheduleWizard == true)}">
                     <div class="slds-section-title_divider" id="pmtWizardTitle">
-                        {!$Label.pmtWizardSectionTitle}
+                        <apex:outputText value="{!$Label.pmtWizardSectionTitle}"/>
                     </div>
                     <apex:outputText rendered="{!NOT(ISNULL(currentOpp))}">
                         <div class="slds-grid slds-wrap slds-form_horizontal">
@@ -136,61 +134,70 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                     <!-- Create payment schedule -->
                     <apex:outputText rendered="{!AND(hasPaymentAccess, NOT(isClosedLost), OR(haveAmount, removePaidPayments))}" styleClass="slds-m-around_medium slds-p-top_medium">
                         <div class="slds-section-title_divider" id="pmtCreateTitle">
-                            {!$Label.pmtWizardCreateSchedule}
+                            <apex:outputText value="{!$Label.pmtWizardCreateSchedule}"/>
                         </div>
-                        <div class="slds-grid slds-wrap slds-form_horizontal slds-p-top_x-small">
-                            <div class="slds-col slds-col_padded">
-                                <div class="slds-form-element">
-                                    <label class="slds-form-element__label">{!$Label.pmtWizardNumberOfPayments}</label>
-                                    <div class="slds-form-element__control slds-select_container">
-                                        <apex:selectList value="{!numberofPayments}" id="paymentCount" multiselect="false" size="1" styleClass="slds-select">
-                                            <apex:selectOptions value="{!items}"/>
-                                        </apex:selectList>
+                        <div class="slds-form slds-form_horizontal">
+                            <div class="slds-grid slds-gutters_small slds-p-top_x-small">
+                                <div class="slds-col slds-has-flexi-truncate slds-grid">
+                                    <div class="slds-form-element">
+                                        <label class="slds-form-element__label"><apex:outputText value="{!$Label.pmtWizardNumberOfPayments}"/></label>
+                                        <div class="slds-form-element__control slds-select_container">
+                                            <apex:selectList value="{!numberofPayments}" id="paymentCount" multiselect="false" size="1" styleClass="slds-select">
+                                                <apex:selectOptions value="{!items}"/>
+                                            </apex:selectList>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="slds-form-element">
-                                    <label class="slds-form-element__label">{!$Label.pmtWizardInterval}</label>
-                                    <div class="slds-form-element__control slds-select_container extraInline">
-                                        <apex:selectList value="{!interval}" id="intervals" multiselect="false" size="1" styleClass="slds-select">
-                                            <apex:selectOptions value="{!intervals}"/>
-                                        </apex:selectList>
-                                    </div>
-                                    <div class="slds-form-element__control slds-select_container extraInline">
-                                        <apex:selectList value="{!intervalunit}" id="intervalunits" multiselect="false" size="1" styleClass="slds-select">
-                                            <apex:selectOptions value="{!intervalunits}"/>
-                                        </apex:selectList>
-                                    </div>
+
+                                <div class="slds-col slds-has-flexi-truncate slds-grid">
+                                    <c:UTIL_FormField sObj="{!samplePayment}" sObjType="npe01__OppPayment__c" field="npe01__Scheduled_Date__c"
+                                                      labelOverride="{!$Label.pmtWizardFirstPaymentDate}" />
                                 </div>
                             </div>
-                            <div class="slds-col slds-col_padded">
-                                <c:UTIL_FormField sObj="{!samplePayment}" sObjType="npe01__OppPayment__c" field="npe01__Scheduled_Date__c"
-                                                  labelOverride="{!$Label.pmtWizardFirstPaymentDate}" />
-                                <c:UTIL_FormField sObj="{!samplePayment}" sObjType="npe01__OppPayment__c" field="npe01__Payment_Method__c" />
+                            <div class="slds-grid slds-gutters_small slds-p-top_x-small">
+                                <div class="slds-col slds-has-flexi-truncate slds-grid">
+                                    <div class="slds-form-element">
+                                        <label class="slds-form-element__label"><apex:outputText value="{!$Label.pmtWizardInterval}"/></label>
+                                        <div class="slds-form-element__control slds-select_container">
+                                            <apex:selectList value="{!interval}" id="intervals" multiselect="false" size="1" styleClass="slds-select">
+                                                <apex:selectOptions value="{!intervals}"/>
+                                            </apex:selectList>
+                                        </div>
+                                        <div class="slds-form-element__control slds-select_container">
+                                            <apex:selectList value="{!intervalunit}" id="intervalunits" multiselect="false" size="1" styleClass="slds-select">
+                                                <apex:selectOptions value="{!intervalunits}"/>
+                                            </apex:selectList>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-has-flexi-truncate slds-grid">
+                                    <c:UTIL_FormField sObj="{!samplePayment}" sObjType="npe01__OppPayment__c" field="npe01__Payment_Method__c" />
+                                </div>
                             </div>
                         </div>
                     </apex:outputText>
                     <div class="slds-grid slds-grid_align-center">
                         <div class="slds-col">
-                            <apex:commandButton action="{!calculate}" 
-                                value="{!$Label.pmtWizardBtnCalcPayments}" 
-                                rendered="{!AND(hasPaymentAccess, NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isScheduleWizard == true, NOT(isClosedLost), OR(haveAmount, removePaidPayments))}" styleClass="slds-button slds-button_neutral slds-m-around_medium" reRender="vfForm"/>
+                            <apex:commandButton action="{!calculate}"
+                                                value="{!$Label.pmtWizardBtnCalcPayments}"
+                                                rendered="{!AND(hasPaymentAccess, NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isScheduleWizard == true, NOT(isClosedLost), OR(haveAmount, removePaidPayments))}" styleClass="slds-button slds-button_brand slds-m-around_medium" reRender="vfForm"/>
                         </div>
                     </div>
                     <!-- Show Payments to be Created -->
                     <apex:outputText rendered="{!AND(NOT(isClosedLost), payments.size>0, OR(haveAmount, removePaidPayments))}" styleClass="slds-p-around_medium">
                         <div class="slds-section-title_divider" id="pmtsToCreateTitle">
-                            {!$Label.pmtWizardToBeCreated}
+                            <apex:outputText value="{!$Label.pmtWizardToBeCreated}"/>
                         </div>
                         <table class="slds-table" id="pmtTable">
                             <thead>
-                                <tr class="slds-text-heading_label">
-                                    <th scope="col" class="slds-cell-wrap">{!$Label.pmtWizardPaymentNumber}</th>
-                                    <apex:repeat value="{!pmtFieldSet}" var="fLbl">
-                                         <th scope="col" class="slds-cell-wrap"><span class="slds-truncate">
+                            <tr class="slds-text-heading_label">
+                                <th scope="col" class="slds-cell-wrap"><apex:outputText value="{!$Label.pmtWizardPaymentNumber}"/></th>
+                                <apex:repeat value="{!pmtFieldSet}" var="fLbl">
+                                    <th scope="col" class="slds-cell-wrap"><span class="slds-truncate">
                                             <apex:outputText value="{!fLbl.label}"/>
                                         </span></th>
-                                    </apex:repeat>
-                                </tr>
+                                </apex:repeat>
+                            </tr>
                             </thead>
                             <apex:repeat value="{!payments}" var="p">
                                 <tr>
@@ -199,7 +206,7 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                                             <apex:outputText value="{!p.paymentNumber}"/>
                                         </div>
                                     </td>
-                                    <apex:repeat value="{!pmtFieldSet}" var="f"> 
+                                    <apex:repeat value="{!pmtFieldSet}" var="f">
                                         <td>
                                             <c:UTIL_FormField field="{!f.fieldPath}"
                                                               sObj="{!p.OppPayment}"
@@ -213,19 +220,19 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                         </table>
                     </apex:outputText>
                 </apex:outputText>
-               <!-- END PAYMENT ADD MARKUP  -->
+                <!-- END PAYMENT ADD MARKUP  -->
 
-               <!-- CREATE PAYMENTS BUTTON -->
+                <!-- CREATE PAYMENTS BUTTON -->
                 <div class="slds-grid slds-grid_align-center">
                     <div class="slds-col">
-                        <apex:commandButton action="{!createPayments}" value="{!$Label.pmtWizardBtnCreatePayments}" rendered="{!AND(NOT(isClosedLost), payments.size>0, OR(haveAmount, removePaidPayments))}" styleClass="slds-button slds-button_neutral" reRender="vfForm"/>
+                        <apex:commandButton action="{!createPayments}" value="{!$Label.pmtWizardBtnCreatePayments}" rendered="{!AND(NOT(isClosedLost), payments.size>0, OR(haveAmount, removePaidPayments))}" styleClass="slds-button slds-button_brand" reRender="vfForm"/>
                     </div>
                 </div>
 
                 <!-- START PAYMENT WRITEOFF  -->
-                <apex:outputText rendered="{!AND(hasPaymentAccess, NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isWriteoffWizard == true)}" styleClass="slds-p-around_medium">
+                <apex:outputText rendered="{!AND(hasPaymentAccess, NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isWriteoffWizard == true)}">
                     <div class="slds-section-title_divider" id="pmtWizardTitle2">
-                        {!$Label.pmtWizardSectionTitle}
+                        <apex:outputText value="{!$Label.pmtWizardSectionTitle}"/>
                     </div>
                     <apex:outputText rendered="{!NOT(ISNULL(currentOpp))}">
                         <div class="slds-grid slds-wrap slds-form_horizontal">
@@ -272,19 +279,23 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
                                 <div class="slds-form-element">
                                     <label class="slds-form-element__label" for="oppPmtMade2">{!$ObjectType.Opportunity.Fields.npe01__Payments_Made__c.Label}</label>
                                     <div class="slds-form-element__control">
-                                        <span class="slds-form-element__addon">{!currencySymbol}</span>
-                                        <apex:outputText value="{0, number, ###,##0.00}"  id="oppPmtMade2" styleClass="slds-form-element__static">
-                                            <apex:param value="{!totalPaymentsMade}"/>
-                                        </apex:outputText>
+                                        <span class="slds-form-element__static">
+                                            <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                            <apex:outputText value="{0, number, ###,##0.00}"  id="oppPmtMade2">
+                                                <apex:param value="{!totalPaymentsMade}"/>
+                                            </apex:outputText>
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="slds-form-element">
                                     <label class="slds-form-element__label" for="oppAmtOutstanding2">{!$ObjectType.Opportunity.Fields.npe01__Amount_Outstanding__c.Label}</label>
                                     <div class="slds-form-element__control">
-                                        <span class="slds-form-element__addon">{!currencySymbol}</span>
-                                        <apex:outputText value="{0, number, ###,##0.00}"  id="oppAmtOutstanding2" styleClass="slds-form-element__static">
-                                            <apex:param value="{!amountOutstanding}"/>
-                                        </apex:outputText>
+                                        <span class="slds-form-element__static">
+                                            <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                            <apex:outputText value="{0, number, ###,##0.00}"  id="oppAmtOutstanding2">
+                                                <apex:param value="{!amountOutstanding}"/>
+                                            </apex:outputText>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -293,25 +304,27 @@ Copyright (c) 2008 Evan Callahan, evanc@npowerseattle.org, NPower Seattle, 403 2
 
                     <apex:outputText rendered="{!AND(NOT(ISNULL(CurrentOpp)), haveAmount, NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true)}" styleClass="slds-p-around_medium">
                         <div class="slds-section-title_divider" id="writeoffPmtsTitle">
-                            {!$Label.pmtWizardSectionWriteoffPayments}
+                            <apex:outputText value="{!$Label.pmtWizardSectionWriteoffPayments}"/>
                         </div>
                         <div class="slds-m-around_medium">
-                            <div class="slds-notify slds-notify_alert slds-theme_inverse-text slds-theme_alert-texture" role="alert">
-                                <apex:outputText value="{!$Label.pmtWizardWriteoffMessage}">
-                                    <apex:param value="{!outstanding_payments}"/>
-                                    <apex:param value="{!currencySymbol}{!amountOutstanding}"/>
-                                </apex:outputText>
+                            <div class="slds-notify_container slds-is-relative">
+                                <div class="slds-notify slds-notify_alert slds-theme_inverse-text slds-color__background_gray-7 slds-text-title_bold" role="alert">
+                                    <apex:outputText value="{!$Label.pmtWizardWriteoffMessage}">
+                                        <apex:param value="{!outstanding_payments}"/>
+                                        <apex:param value="{!currencySymbol}{!amountOutstanding}"/>
+                                    </apex:outputText>
+                                </div>
                             </div>
                         </div>
                         <div class="slds-grid slds-wrap slds-grid_align-center">
                             <div class="slds-col_padded slds-form-element">
                                 <c:UTIL_FormField sObj="{!writeoffPayment}" sObjType="npe01__OppPayment__c" field="npe01__Payment_Date__c"
-                                      labelOverride="{!$Label.pmtWizardWriteoffDate}"/>
+                                                  labelOverride="{!$Label.pmtWizardWriteoffDate}"/>
                             </div>
                         </div>
                         <div class="slds-grid slds-wrap slds-grid_align-center slds-m-around_medium">
                             <div class="slds-col">
-                                <apex:commandButton action="{!writeoff}" value="{!$Label.pmtWizardSectionWriteoffPayments}"  styleClass="slds-button slds-button_neutral" reRender="vfForm"/>
+                                <apex:commandButton action="{!writeoff}" value="{!$Label.pmtWizardSectionWriteoffPayments}"  styleClass="slds-button slds-button_brand" reRender="vfForm"/>
                             </div>
                         </div>
                     </apex:outputText>
