@@ -59,7 +59,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     public boolean hasResults { 
         get {
             return (listDR != null && listDR.size() > 0);
-        }
+        } private set;
     }
     
     /*********************************************************************************************************
@@ -74,7 +74,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
                     return false;
             }
             return true;
-        }
+        } private set;
     }
     
     /*********************************************************************************************************
@@ -88,7 +88,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     public string strNow {
         get {
             return datetime.now().format();  // this will put it in the time zone of the current user.
-        }
+        } private set;
     }
     
     /*********************************************************************************************************

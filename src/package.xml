@@ -455,6 +455,7 @@
         <members>UTIL_NavigateBack</members>
         <members>UTIL_PageHeader</members>
         <members>UTIL_PageMessages</members>
+        <members>UTIL_SLDS_Icon</members>
         <members>UTIL_SoqlListView</members>
         <members>UTIL_Tooltip</members>
         <members>UTIL_Typeahead</members>
@@ -2490,7 +2491,6 @@
     </types>
     <types>
         <members>CumulusStaticResources</members>
-        <members>SLDS</members>
         <name>StaticResource</name>
     </types>
     <types>
@@ -2543,5 +2543,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>39.0</version>
+    <version>43.0</version>
 </Package>

@@ -1,15 +1,15 @@
-<apex:page controller="STG_PanelUserRollup_CTRL" >
-    <apex:form id="form" styleClass="slds-m-around--x-large">
+<apex:page controller="STG_PanelUserRollup_CTRL" docType="html-5.0" standardStylesheets="false" >
+    <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavUserDefinedRollups}" />
         <div class="slds-grid">
-            <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
-                <p class="slds-text-body--small slds-m-top--x-small">{!$Label.npo02__udrdescription}</p>
+            <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
+                <p class="slds-text-body_small slds-m-top_x-small">{!$Label.npo02__udrdescription}</p>
             </div>        
         </div>
         <c:UTIL_PageMessages />
 
         <div class="slds" id="page_messages">
-            <div role="alert" class="slds-notify slds-notify_toast slds-notify--toast slds-theme_info slds-theme--info">
+            <div role="alert" class="slds-notify slds-notify_toast slds-notify_toast slds-theme_info slds-theme_info">
                 <div class="notify__content">
                     <div class="slds-media">
                         <div class="slds-media__figure">
@@ -20,23 +20,25 @@
                             </apex:outputText>
                         </div>
                         <div class="slds-media__body">
-                            <h2 class="slds-text-heading_small slds-text-heading--small">
+                            <h2 class="slds-text-heading_small slds-text-heading_small">
                                 <apex:outputText value="{!$Label.stgCRLPInfoOnUDRHeading}" escape="true"/>
                             </h2>
-                            <apex:outputText styleClass="slds-m-top_medium slds-m-top--medium" value="{!$Label.stgCRLPInfoOnUDRBody}" escape="false"/>
+                            <apex:outputText styleClass="slds-m-top_medium slds-m-top_medium" value="{!$Label.stgCRLPInfoOnUDRBody}" escape="false"/>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton id="newUDR" value="{!$Label.stgBtnNewUDR}" action="{!startBuild}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+            <apex:commandButton id="newUDR" value="{!$Label.stgBtnNewUDR}" action="{!startBuild}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
         <apex:outputPanel rendered="{!isEditMode}" id="udrpageblock" >
-            <div class="slds-section-title--divider" >{!$Label.stgLabelNewUDR}</div>
-            <p class="slds-text-body--small slds-m-around--large">{!$Label.stgHelpNewUDR}</p>
-            <div class="slds-form--horizontal slds-m-around--large">
+            <div class="slds-section">
+                <div class="slds-section-title_divider" >{!$Label.stgLabelNewUDR}</div>
+            </div>
+            <p class="slds-text-body_small slds-m-around_large">{!$Label.stgHelpNewUDR}</p>
+            <div class="slds-form_horizontal slds-m-around_large">
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$Label.stgLabelUDROppField}" for="slSF" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
@@ -88,15 +90,15 @@
                 </div>
             </div>
 
-            <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                <apex:commandButton id="btnCreate" value="{!$Label.stgBtnCreateUDR}" action="{!activeUDR.save}" status="statusLoad" rendered="{!isEditMode}" disabled="{!NOT(activeUDR.isValid)}" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-                <apex:commandbutton id="cancelUDR" value="{!$Label.stgBtnCancel}" action="{!cancel}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+                <apex:commandButton id="btnCreate" value="{!$Label.stgBtnCreateUDR}" action="{!activeUDR.save}" status="statusLoad" rendered="{!isEditMode}" disabled="{!NOT(activeUDR.isValid)}" rerender="form" styleClass="slds-button slds-button_small slds-button_brand" />
+                <apex:commandbutton id="cancelUDR" value="{!$Label.stgBtnCancel}" action="{!cancel}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
             </div>
         </apex:outputPanel>
         <apex:outputPanel rendered="{!AND(NOT(ISNULL(udrlist)), udrlist.size > 0)}">
-            <table class="slds-table slds-table--bordered" >
+            <table class="slds-table slds-table_bordered" >
                 <thead>
-                    <tr class="slds-text-heading--label">
+                    <tr class="slds-text-heading_label">
                         <th scope="col"><label class="slds-truncate">{!$Label.stgLabelActionColumn}</label></th>
                         <th scope="col"><label class="slds-truncate">{!$Label.stgLabelUDROppField}</label></th>
                         <th scope="col"><label class="slds-truncate">{!$Label.stgLabelUDROp}</label></th>
