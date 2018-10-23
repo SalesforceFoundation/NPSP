@@ -69,10 +69,11 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
     public void execute(Database.BatchableContext BC, List<sObject> scope) {
         
         // track our objects to update
-        map<Id, SObject> mapSObjUpdate = new map<Id, SObject>();
+        Map<Id, SObject> mapSObjUpdate = new Map<Id, SObject>();
         
         // track our Engagement Plans to create
-        list<Engagement_Plan__c> listEP = new list<Engagement_Plan__c>();
+        List<Engagement_Plan__c> newEngagementPlans = new list<Engagement_Plan__c>();
+        List<Error__c> errorsCreatingEngagementPlans = new List<Error__c>();
         
         // for each of our objects
         for (SObject sobj : scope) {
@@ -91,14 +92,14 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
                         try {
                             lvlIdPrev = (Id)sobj.get(strLadder);
                         } catch (Exception ex) {
-                            throw new LevelException(String.format(Label.lvlErrorInvalidLookupField, new list<String>{strLadder, lvl.Name}));
+                            throw new LevelException(String.format(System.Label.lvlErrorInvalidLookupField, new list<String>{strLadder, lvl.Name}));
                         }
                     }
                     Decimal amt;
                     try {
                         amt = (Decimal)sobj.get(lvl.Source_Field__c);
                     } catch (Exception ex) {
-                        throw new LevelException(String.format(Label.lvlErrorInvalidSourceField, new list<String>{lvl.Source_Field__c, lvl.Name}));
+                        throw new LevelException(String.format(System.Label.lvlErrorInvalidSourceField, new list<String>{lvl.Source_Field__c, lvl.Name}));
                     }
                     if (amt == null) 
                         amt = 0;
@@ -115,19 +116,26 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
                             try {
                                 sobj.put(strLadder, lvl.Id);
                             } catch (exception ex) {
-                                throw new LevelException(String.format(Label.lvlErrorInvalidLookupField, new list<String>{strLadder, lvl.Name}));
+                                throw new LevelException(String.format(System.Label.lvlErrorInvalidLookupField, new list<String>{strLadder, lvl.Name}));
                             }
                             
                             mapSObjUpdate.put(sobj.Id, sobj);
                             
                             // apply the Engagement Plan
                             if (lvl.Engagement_Plan_Template__c != null) {
-                                Engagement_Plan__c ep = new Engagement_Plan__c();
-                                // a little trickery.  we know the objects supported by EP's
-                                // use the object name exactly.
-                                ep.put(lvl.Target__c + '__c', sobj.Id);
-                                ep.Engagement_Plan_Template__c = lvl.Engagement_Plan_Template__c;
-                                listEP.add(ep);
+                                Engagement_Plan__c engagementPlanFromLevel = engagementPlanFromLevel(lvl, sobj.Id);
+                                if (engagementPlanFromLevel != null) {
+                                    newEngagementPlans.add(engagementPlanFromLevel);
+                                } else {
+                                    errorsCreatingEngagementPlans.add(
+                                        new Error__c(
+                                            Datetime__c = System.now(),
+                                            Context_Type__c = ERR_Handler_API.Context.LVL.name(),
+                                            Error_Type__c = 'Batch Apex error',
+                                            Full_Message__c = (System.Label.engagementPlanMissingField + ' ' + lvl.Target__c)
+                                        )
+                                    );
+                                }
                             }
                         }
                         // done with this level.
@@ -150,7 +158,48 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
                 
         // save 'em
         update mapSObjUpdate.values();     
-        insert listEP;
+        if (!newEngagementPlans.isEmpty()) {
+            insert newEngagementPlans;
+        }
+        if (!errorsCreatingEngagementPlans.isEmpty()) {
+            insert errorsCreatingEngagementPlans;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Creates an Engagement Plan based on a Level record.
+    * Attempts to find the engagement plan lookup field based on the level's target field
+    * it could be either a standard object that requires us to add a namespace prefix and custom field suffix
+    * e.g. Account -> npsp__Account__c, Contact -> npsp__Contact__c
+    * or a standard object added by a user with no prefix that requires us to add a custom feild suffix
+    * e.g. Case -> Case__c
+    * or a custom object name without namespace prefix and with suffix already appended
+    * e.g. Custom_Object__c -> Custom_Object__c
+    * @param level The level used to create the Engagement Plan
+    * @param target The Id of object to relate the Engagement Plan to
+    * @return Engagement_Plan__c The Engagement Plan
+    */
+    private Engagement_Plan__c engagementPlanFromLevel(Level__c level, Id target) {
+        Engagement_Plan__c ep = new Engagement_Plan__c(Engagement_Plan_Template__c = level.Engagement_Plan_Template__c);
+        
+        String engagementPlanPrefixed = UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan__c');
+        String targetFieldPrefixedAndSuffixed = UTIL_Namespace.StrTokenNSPrefix(level.Target__c + '__c');
+        String targetFieldSuffixed = level.Target__c + '__c';
+        
+        if (UTIL_Describe.isValidField(engagementPlanPrefixed, targetFieldPrefixedAndSuffixed)) {
+            ep.put(targetFieldPrefixedAndSuffixed, target);
+        
+        } else if (UTIL_Describe.isValidField(engagementPlanPrefixed, targetFieldSuffixed)) {
+            ep.put(targetFieldSuffixed, target);
+        
+        } else if (UTIL_Describe.isValidField(engagementPlanPrefixed, level.Target__c)) {
+            ep.put(level.Target__c, target);
+        
+        } else {
+            //no matching field found, can't create an engagement plan
+            return null;
+        }
+        return ep;
     }
 
     /*******************************************************************************************************
@@ -171,7 +220,7 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         } catch(Exception ex) {
             throw new LevelException(
                 String.format(
-                    Label.lvlErrorInvalidLookupField, 
+                    System.Label.lvlErrorInvalidLookupField, 
                     new List<String>{ level.Previous_Level_Field__c, level.Name }
                 )
             );

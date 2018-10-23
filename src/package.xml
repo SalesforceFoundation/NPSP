@@ -458,6 +458,7 @@
         <members>UTIL_NavigateBack</members>
         <members>UTIL_PageHeader</members>
         <members>UTIL_PageMessages</members>
+        <members>UTIL_SLDS_Icon</members>
         <members>UTIL_SoqlListView</members>
         <members>UTIL_Tooltip</members>
         <members>UTIL_Typeahead</members>
@@ -1394,6 +1395,7 @@
         <members>conMergeStageComplete</members>
         <members>conMergeWinnerAsstText</members>
         <members>engagementPlanCantEdit</members>
+        <members>engagementPlanMissingField</members>
         <members>engagementPlanNoLookups</members>
         <members>engagementPlanTwoLookups</members>
         <members>exceptionDeletePermission</members>
@@ -2234,6 +2236,13 @@
         <members>Opportunity_Naming_Settings__c-iw</members>
         <members>Opportunity_Naming_Settings__c-ja</members>
         <members>Opportunity_Naming_Settings__c-nl_NL</members>
+        <members>Package_Settings__c-de</members>
+        <members>Package_Settings__c-en_US</members>
+        <members>Package_Settings__c-es</members>
+        <members>Package_Settings__c-fr</members>
+        <members>Package_Settings__c-iw</members>
+        <members>Package_Settings__c-ja</members>
+        <members>Package_Settings__c-nl_NL</members>
         <members>Partial_Soft_Credit__c-de</members>
         <members>Partial_Soft_Credit__c-en_US</members>
         <members>Partial_Soft_Credit__c-es</members>
@@ -2514,7 +2523,6 @@
     </types>
     <types>
         <members>CumulusStaticResources</members>
-        <members>SLDS</members>
         <name>StaticResource</name>
     </types>
     <types>
@@ -2567,5 +2575,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>39.0</version>
+    <version>43.0</version>
 </Package>
