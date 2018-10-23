@@ -11,7 +11,7 @@
  *      5. TEST_Acc_Soft_Credit_Largest_Amt__c
  * - REQUIRES CRLPs TO BE ENABLED IN TEST ORG
  * - CAN USE createCustomRollups METHOD BELOW FROM ANON APEX TO CREATE THE EXTRA CMT RECORDS
- * - REQUIRES MEMBERSHIP RECORD TYPE TO BE CONFIGURED AS EXCLUDED IN LEGACY AND CRLPs
+ * - SINCE THE DEFAULT IS TO INCLUDE MEMBERSHIP RECORD IN ALL ROLLUPS, THIS ASSUMES MEMBERSHIPS ARE INCLUDED
  * - ALL TESTS ARE CONDUCTED USING EXECUTE ANONYMOUS; EXECUTING ONE METHOD AT A TIME IN THE FOLLOWING ORDER:
  *   CRLP_TEST_VALIDATE_ROLLUPS.deleteTestData();
  *   CRLP_TEST_VALIDATE_ROLLUPS.createTestDataASync();
@@ -25,8 +25,10 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
 
     // TODO -- Add support for verifying that dupe OCR's for Soft Credit Contact Roles are not duped in results
 
+    private static Boolean ROLLUPS_INCLUDES_MEMBERSHIP = true;
+
     // When testing in a multicurrency org, set up CAD with this rate: 1.2311
-    private static final Double CURR_EXCHANGE_RATE = 1.2311;
+    private static final Double CURR_EXCHANGE_RATE = 2.0;
 
     private static final String ACCOUNT_NAME_RD = 'CRLP TEST RD ACCOUNT 3';
     private static final String ACCOUNT_NAME_ORG = 'CRLP TEST ORG ACCOUNT 4';
@@ -47,27 +49,28 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
     private static final Integer OPP_COUNT_PER_ACCT = 500;
     private static final Integer CLOSED_OPP_COUNT_PER_ACCT = 450;
 
-    private static final Date MEMBERSHIP_FIRST_DATE = Date.newInstance(2014,6,30);
-    private static final Decimal MEMBERSHIP_AMOUNT = 75;
+    private static final Date MEMBERSHIP_FIRST_DATE = Date.newInstance(2015,6,30);
+    private static final Decimal MEMBERSHIP_AMOUNT = 25;
     private static final Decimal MEMBERSHIP_TOTAL = (MEMBERSHIP_AMOUNT*4);
     private static final Integer MEMBERSHIP_COUNT = 4;
 
-    private static final Decimal ROLLUP_TOTAL_WON_AMOUNT = CLOSED_OPP_COUNT_PER_ACCT*BASE_AMOUNT_USD;
-    private static final Decimal ROLLUP_TOTAL_WON_COUNT = CLOSED_OPP_COUNT_PER_ACCT;
-    private static final Decimal ROLLUP_TOTAL_PAYMENT_AMOUNT = ROLLUP_TOTAL_WON_AMOUNT + MEMBERSHIP_TOTAL;
-    private static final Decimal ROLLUP_TOTAL_WRITEOFF_AMOUNT = (OPP_COUNT_PER_ACCT-CLOSED_OPP_COUNT_PER_ACCT)*BASE_AMOUNT_USD;
-    private static final Decimal ROLLUP_TOTAL_LASTYEAR = 15000;
-    private static final Decimal ROLLUP_AVERAGE = BASE_AMOUNT_USD;
+    private static final Decimal ROLLUP_TOTAL_WON_AMOUNT = (CLOSED_OPP_COUNT_PER_ACCT * BASE_AMOUNT_USD)
+            + (ROLLUPS_INCLUDES_MEMBERSHIP ? MEMBERSHIP_TOTAL : 0);
+    private static final Decimal ROLLUP_TOTAL_WON_COUNT = CLOSED_OPP_COUNT_PER_ACCT
+            + (ROLLUPS_INCLUDES_MEMBERSHIP ? MEMBERSHIP_COUNT : 0);
+    private static final Decimal ROLLUP_TOTAL_LASTYEAR = 15000 + MEMBERSHIP_AMOUNT ;
+    private static final Decimal ROLLUP_AVERAGE = ROLLUP_TOTAL_WON_AMOUNT.divide(ROLLUP_TOTAL_WON_COUNT, 2, System.RoundingMode.HALF_UP);
     private static final Decimal ROLLUP_LARGEST = BASE_AMOUNT_USD;
-    private static final Decimal ROLLUP_SMALLEST = BASE_AMOUNT_USD;
+    private static final Decimal ROLLUP_SMALLEST = (ROLLUPS_INCLUDES_MEMBERSHIP ? MEMBERSHIP_AMOUNT : BASE_AMOUNT_USD);
     private static final Date ROLLUP_FIRSTDATE = Date.newInstance(2015, 1, 2);
-    private static final Date ROLLUP_LASTTDATE = Date.newInstance(2017, 10, 28);
+    private static final Date ROLLUP_LASTTDATE = (ROLLUPS_INCLUDES_MEMBERSHIP ?  Date.newInstance(2018, 6, 30) : Date.newInstance(2017,10,28));
     private static final String ROLLUP_BEST_YEAR = '2015';  // All 3 years have 150 donations, so 2015 is the first
 
-    private static Boolean ALLOC_INCLUDES_MEMBERSHIP = true;
+    private static final Decimal ROLLUP_TOTAL_PAYMENT_AMOUNT = ROLLUP_TOTAL_WON_AMOUNT;
+    private static final Decimal ROLLUP_TOTAL_WRITEOFF_AMOUNT = (OPP_COUNT_PER_ACCT-CLOSED_OPP_COUNT_PER_ACCT)*BASE_AMOUNT_USD;
 
-    private static final Decimal ALLOC_TOTAL_AMOUNT = (ROLLUP_TOTAL_WON_AMOUNT + (ALLOC_INCLUDES_MEMBERSHIP ? MEMBERSHIP_TOTAL : 0)) * 2;
-    private static final Decimal ALLOC_TOTAL_COUNT = (ROLLUP_TOTAL_WON_COUNT + (ALLOC_INCLUDES_MEMBERSHIP ? MEMBERSHIP_COUNT : 0)) * 2;
+    private static final Decimal ALLOC_TOTAL_AMOUNT = ROLLUP_TOTAL_WON_AMOUNT * 2;
+    private static final Decimal ALLOC_TOTAL_COUNT = ROLLUP_TOTAL_WON_COUNT * 2;
     private static final Decimal ALLOC_AVERAGE = ALLOC_TOTAL_AMOUNT.divide(ALLOC_TOTAL_COUNT, 2);
 
     private static List<Account> accounts;
@@ -102,12 +105,12 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
             }
         }
 
-        database.delete([SELECT Id FROM Allocation__c WHERE General_Accounting_Unit__r.Name = :GAU_NAME]);
-        database.delete([SELECT Id FROM Opportunity WHERE Account.Site = :TEST_SITE_NAME]);
-        database.delete([SELECT Id FROM Contact WHERE Account.Site = :TEST_SITE_NAME]);
-        database.delete([SELECT Id FROM Account WHERE Site = :TEST_SITE_NAME]);
-        database.delete([SELECT Id FROM General_Accounting_Unit__c WHERE Name = :GAU_NAME]);
-        database.delete([SELECT Id FROM npe03__Recurring_Donation__c WHERE Name = :RD_NAME LIMIT 1]);
+        Database.delete([SELECT Id FROM Allocation__c WHERE General_Accounting_Unit__r.Name = :GAU_NAME]);
+        Database.delete([SELECT Id FROM Opportunity WHERE Account.Site = :TEST_SITE_NAME]);
+        Database.delete([SELECT Id FROM Contact WHERE Account.Site = :TEST_SITE_NAME]);
+        Database.delete([SELECT Id FROM Account WHERE Site = :TEST_SITE_NAME]);
+        Database.delete([SELECT Id FROM General_Accounting_Unit__c WHERE Name = :GAU_NAME]);
+        Database.delete([SELECT Id FROM npe03__Recurring_Donation__c WHERE Name = :RD_NAME LIMIT 1]);
     }
 
     /** *****************************************************************************************
@@ -123,8 +126,8 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         RLLP_OppRollup_UTIL rlpUtil = new RLLP_OppRollup_UTIL();
         String acctSOQL = rlpUtil.buildAccountQuery() + ' WHERE Site = :TEST_SITE_NAME';
         String contactSOQL = rlpUtil.buildContactQuery() + ' WHERE Account.Site = :TEST_SITE_NAME';
-        Map<Id, Account> accountsMap = new Map<Id, Account>((List<Account>)database.query(acctSOQL));
-        Map<Id, Contact> contactsMap = new Map<Id, Contact>((List<Contact>)database.query(contactSOQL));
+        Map<Id, Account> accountsMap = new Map<Id, Account>((List<Account>)Database.query(acctSOQL));
+        Map<Id, Contact> contactsMap = new Map<Id, Contact>((List<Contact>)Database.query(contactSOQL));
 
         RLLP_OppRollup rlpUps = new RLLP_OppRollup();
         rlpUps.rollupAccounts(accountsMap);
@@ -191,7 +194,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         String acctSOQL = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType);
         acctSOQL += ' WHERE Site = :TEST_SITE_NAME';
         acctSOQL = acctSOQL.replace('Id,', 'Id,Name,');
-        accounts = database.query(acctSOQL);
+        accounts = Database.query(acctSOQL);
 
         Account orgAcct = [SELECT Id, Name FROM Account WHERE npe01__SYSTEMIsIndividual__c = false
         AND Site = :TEST_SITE_NAME AND Name != :ACCOUNT_NAME_ASC LIMIT 1];
@@ -222,7 +225,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
 
                 assertValue(ROLLUP_TOTAL_WON_AMOUNT, a.npo02__TotalOppAmount__c, a.Id + ' Account.npo02__TotalOppAmount__c should be');
                 assertValue(ROLLUP_TOTAL_WON_COUNT, a.npo02__NumberOfClosedOpps__c, 'Account.npo02__NumberOfClosedOpps__c should be');
-                assertValue(ROLLUP_AVERAGE, a.npo02__AverageAmount__c, 'Account.npo02__AverageAmount__c should be');
+                assertValue(ROLLUP_AVERAGE, a.npo02__AverageAmount__c.divide(1, 2, System.RoundingMode.HALF_UP), 'Account.npo02__AverageAmount__c should be');
                 assertValue(ROLLUP_LARGEST, a.npo02__LargestAmount__c, 'Account.npo02__LargestAmount__c should be');
                 assertValue(ROLLUP_SMALLEST, a.npo02__SmallestAmount__c, 'Account.npo02__SmallestAmount__c should be');
                 assertValue(ROLLUP_BEST_YEAR, a.npo02__Best_Gift_Year__c, 'Account.npo02__Best_Gift_Year__c should be');
@@ -258,7 +261,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
                 ', Account.npe01__One2OneContact__c FROM Contact ' +
                 ' WHERE Account.Site = :TEST_SITE_NAME';
         contactSOQL = contactSOQL.replace('Id,', 'Id,Account.Name,');
-        contacts = database.query(contactSOQL);
+        contacts = Database.query(contactSOQL);
 
         for (Contact c : contacts) {
             // The organization account will only have a single donation
@@ -270,7 +273,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
                 // Hard Credit
                 assertValue(ROLLUP_TOTAL_WON_AMOUNT, c.npo02__TotalOppAmount__c, 'Contact.npo02__TotalOppAmount__c should be');
                 assertValue(ROLLUP_TOTAL_WON_COUNT, c.npo02__NumberOfClosedOpps__c, 'Contact.npo02__NumberOfClosedOpps__c should be');
-                assertValue(ROLLUP_AVERAGE, c.npo02__AverageAmount__c, 'Contact.npo02__AverageAmount__c should be');
+                assertValue(ROLLUP_AVERAGE, c.npo02__AverageAmount__c.divide(1, 2, System.RoundingMode.HALF_UP), 'Contact.npo02__AverageAmount__c should be');
                 assertValue(ROLLUP_LARGEST, c.npo02__LargestAmount__c, 'Contact.npo02__LargestAmount__c should be');
                 assertValue(ROLLUP_SMALLEST, c.npo02__SmallestAmount__c, 'Contact.npo02__SmallestAmount__c should be');
                 assertValue(ROLLUP_BEST_YEAR, c.npo02__Best_Gift_Year__c, 'Contact.npo02__Best_Gift_Year__c should be');
@@ -310,14 +313,14 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         }
 
         String gauSOQL = CRLP_Query_SEL.buildObjectQueryForRollup(General_Accounting_Unit__c.SObjectType) + ' WHERE Name = :GAU_NAME LIMIT 1';
-        gau = database.query(gauSOQL);
+        gau = Database.query(gauSOQL);
         assertValue(ALLOC_TOTAL_AMOUNT, gau.Total_Allocations__c, 'Total_Allocations__c should be');
         assertValue(ALLOC_TOTAL_COUNT, gau.Total_Number_of_Allocations__c, 'Total_Number_of_Allocations__c should be');
         assertValue(ALLOC_AVERAGE.intValue(), (gau.Average_Allocation__c != null ? gau.Average_Allocation__c.intValue() : null), 'Average_Allocation__c should be');
 
 
         String rdSOQL = CRLP_Query_SEL.buildObjectQueryForRollup(npe03__Recurring_Donation__c.SObjectType) + ' WHERE Name = :RD_NAME LIMIT 1';
-        npe03__Recurring_Donation__c rd = database.query(rdSOQL);
+        npe03__Recurring_Donation__c rd = Database.query(rdSOQL);
         assertValue(12, rd.npe03__Total_Paid_Installments__c, 'npe03__Total_Paid_Installments__c should be');
         assertValue(RD_AMOUNT_USD * 12, rd.npe03__Paid_Amount__c, 'npe03__Paid_Amount__c should be');
         assertValue(Date.Today().addMonths(-1), rd.npe03__Last_Payment_Date__c, 'npe03__Last_Payment_Date__c should be');
@@ -325,7 +328,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         if (!errorsList.isEmpty()) {
             throw new ValidationException('\n' + String.join(errorsList, '\n'));
         }
-        system.debug(LoggingLevel.Error, '>>> ALL VALIDATIONS PASSED <<<');
+        System.debug(LoggingLevel.Error, '>>> ALL VALIDATIONS PASSED <<<');
     }
 
     private static List<String> errorsList = new List<String>();
@@ -598,9 +601,9 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
                 npe03__Contact__c = rdContact.Id,
                 /*npe03__Organization__c = rdContact.AccountId,*/
                 npe03__Amount__c = RD_AMOUNT_USD,
-                npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly,
+                npe03__Installment_Period__c = System.label.npe03.RecurringDonationInstallmentPeriodMonthly,
                 npe03__Date_Established__c = Date.Today().addMonths(-12),
-                npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
+                npe03__Schedule_Type__c = System.label.npe03.RecurringDonationMultiplyValue,
                 npe03__Open_Ended_Status__c = 'Open'
         );
         insert rd;
