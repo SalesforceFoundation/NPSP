@@ -45,25 +45,25 @@ tasks:
         description: Deploys the post install configuration for an unmanaged DE org
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
-            path: config/dev
+            path: unpackaged/config/dev
 
     deploy_dev_config_managed:
         description: Deploys the post install configuration for a managed DE org
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
-            path: config/managed
+            path: unpackaged/config/managed
 
     deploy_qa_config:
         description: Deploys additional fields used for qa purposes only
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
-            path: config/qa
+            path: unpackaged/config/qa
 
     deploy_dev_config_delete:
         description: Deploys the metadata deletions for the post install DE org config
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
-            path: config/delete
+            path: unpackaged/config/delete
 
     update_admin_profile:
         options:
@@ -220,7 +220,7 @@ flows:
             2:
                 task: deploy
                 options:
-                    path: config/acctsc_rollups
+                    path: unpackaged/config/acctsc_rollups
             3:
                 task: update_admin_profile
 
@@ -246,7 +246,7 @@ flows:
             1:
                 task: deploy
                 options:
-                    path: config/offsetfiscal
+                    path: unpackaged/config/offsetfiscal
 
     test_data_dev_org:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 100 Contacts into the target org.'
