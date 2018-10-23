@@ -1,11 +1,11 @@
-<apex:page controller="STG_PanelMembership_CTRL" docType="html-5.0">
-    <apex:form id="form" styleClass="slds-m-around--x-large">
+<apex:page controller="STG_PanelMembership_CTRL" docType="html-5.0" standardStylesheets="false">
+    <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavMembership}" />
         <c:UTIL_PageMessages />
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton id="editMembership" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+            <apex:commandButton id="editMembership" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
-        <div class="slds-form--horizontal slds-m-around--large">
+        <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element" style="{!IF(!stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:block', 'display:none')}">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Record_Types__c.Label}" for="slMRT" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -24,9 +24,9 @@
                 </div>
             </div>
         </div>
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton id="saveMembership" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-            <apex:commandButton id="cancelMembership" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+            <apex:commandButton id="saveMembership" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button_small slds-button_brand" />
+            <apex:commandButton id="cancelMembership" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
     </apex:form>
 </apex:page>

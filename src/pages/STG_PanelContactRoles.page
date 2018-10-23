@@ -1,17 +1,19 @@
-<apex:page controller="STG_PanelContactRoles_CTRL" >
-    <apex:form id="form" styleClass="slds-m-around--x-large">
+<apex:page controller="STG_PanelContactRoles_CTRL" docType="html-5.0" standardStylesheets="false" >
+    <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavContactRoles}" />
         <div class="slds-grid">
-            <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
-                <p class="slds-text-body--small slds-m-top--x-small"><apex:outputText value="{!$Label.stgHelpOCR}" escape="false"/></p>
+            <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
+                <p class="slds-text-body_small slds-m-top_x-small"><apex:outputText value="{!$Label.stgHelpOCR}" escape="false"/></p>
             </div>
         </div>
         <c:UTIL_PageMessages />
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton id="editOCR" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" immediate="true" rendered="{!isReadOnlyMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+            <apex:commandButton id="editOCR" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" immediate="true" rendered="{!isReadOnlyMode}" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
-        <div class="slds-section-title--divider">{!$Label.stgLabelAutoContactRoles}</div>
-        <div class="slds-form--horizontal slds-m-around--large">
+        <div class="slds-section">
+            <div class="slds-section-title_divider">{!$Label.stgLabelAutoContactRoles}</div>
+        </div>
+        <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element">
                 <!-- Individual Default OCR -->
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Opportunity_Contact_Role_Default_role__c.Label}" for="slOCRDR" styleClass="slds-form-element__label" />
@@ -65,8 +67,10 @@
                 </div>
             </div>
         </div>
-        <div class="slds-section-title--divider" style="{!IF(!stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:block', 'display:none')}">{!$Label.stgLabelSoftCredit}</div>
-        <div class="slds-form--horizontal slds-m-around--large">
+        <div class="slds-section">
+            <div class="slds-section-title_divider" style="{!IF(!stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:block', 'display:none')}">{!$Label.stgLabelSoftCredit}</div>
+        </div>
+        <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element" style="{!IF(!stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:block', 'display:none')}">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Enable_Soft_Credit_Rollups__c.Label}" for="cbxESCR" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -88,9 +92,11 @@
             </div>
         </div>
         <!-- Household Opportunity Contact Roles -->
-        <div class="slds-section-title--divider">{!$Label.stgLabelHHOCR}</div>
-        <p class="slds-text-body--small">{!$Label.npo02__Household_Contact_Roles_Help_Text}</p>
-        <div class="slds-form--horizontal slds-m-around--large">
+        <div class="slds-section">
+            <div class="slds-section-title_divider">{!$Label.stgLabelHHOCR}</div>
+        </div>
+        <p class="slds-text-body_small">{!$Label.npo02__Household_Contact_Roles_Help_Text}</p>
+        <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Contact_Roles_On__c.Label}" for="cbxHCRO" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -124,9 +130,11 @@
             </div>
         </div>
         <!-- Honoree and Notification Recipient Contact Roles -->
-        <div class="slds-section-title--divider">{!$Label.stgLabelHonoreeNotificationOCR}</div>
-        <p class="slds-text-body--small">{!$Label.stgLabelHonoreeNotificationHelpText}</p>
-        <div class="slds-form--horizontal slds-m-around--large">
+        <div class="slds-section">
+            <div class="slds-section-title_divider">{!$Label.stgLabelHonoreeNotificationOCR}</div>
+        </div>
+        <p class="slds-text-body_small">{!$Label.stgLabelHonoreeNotificationHelpText}</p>
+        <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Honoree_Opportunity_Contact_Role__c.Label}" for="slHonoreeRole" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -152,9 +160,9 @@
                 </div>
             </div>
         </div>
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton id="saveOCR" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-            <apex:commandButton id="cancelOCR" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+            <apex:commandButton id="saveOCR" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button_small slds-button_brand" />
+            <apex:commandButton id="cancelOCR" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
     </apex:form>
 </apex:page>

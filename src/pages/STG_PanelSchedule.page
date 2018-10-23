@@ -1,15 +1,17 @@
-<apex:page controller="STG_PanelSchedule_CTRL" docType="html-5.0" >
-    <apex:form id="form" styleClass="slds-m-around--x-large">
+<apex:page controller="STG_PanelSchedule_CTRL" docType="html-5.0" standardStylesheets="false">
+    <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.stgNavBatchProcessSettings}" />
         <c:UTIL_PageMessages />
 
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton id="editSchedule" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" immediate="true" rendered="{!isReadOnlyMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+            <apex:commandButton id="editSchedule" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" immediate="true" rendered="{!isReadOnlyMode}" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
 
-        <div class="slds-section-title--divider" >{!$Label.stgLabelBatchJobSizes}</div>
+        <div class="slds-section">
+            <div class="slds-section-title_divider" >{!$Label.stgLabelBatchJobSizes}</div>
+        </div>
 
-        <div class="slds-form--horizontal slds-m-around--large">
+        <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.Customizable_Rollup_Settings__c.Fields.Rollups_Contact_Batch_Size__c.Label}" for="tbxConHard" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -58,9 +60,11 @@
 
         <div style="{!IF(stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:block', 'display:none')}">
 
-            <div class="slds-section-title--divider" >{!$Label.stgLabelBatchJobRollupSkewSizes}</div>
+            <div class="slds-section">
+                <div class="slds-section-title_divider" >{!$Label.stgLabelBatchJobRollupSkewSizes}</div>
+            </div>
 
-            <div class="slds-form--horizontal slds-m-around--large">
+            <div class="slds-form_horizontal slds-m-around_large">
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.Customizable_Rollup_Settings__c.Fields.Rollups_Limit_on_Attached_Opps_for_Skew__c.Label}" for="tbxSkewLimit" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
@@ -99,10 +103,11 @@
 
         </div>
 
+        <div class="slds-section">
+            <div class="slds-section-title_divider" >{!$Label.stgLabelBatchProcessingOptions}</div>
+        </div>
 
-        <div class="slds-section-title--divider" >{!$Label.stgLabelBatchProcessingOptions}</div>
-
-        <div class="slds-form--horizontal slds-m-around--large">
+        <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element" style="{!IF(isACMEnabled, 'display:block', 'display:none')}">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.Use_Dated_Conversion_Rates__c.Label}" for="cbxDatedConv" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -125,9 +130,9 @@
             </div>
         </div>
 
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-            <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+            <apex:commandButton value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button_small slds-button_brand" />
+            <apex:commandButton value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
     </apex:form>
 </apex:page>
