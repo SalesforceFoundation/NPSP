@@ -1057,7 +1057,7 @@ public with sharing class BDI_ContactService {
                 return false;
             }
             return str.contains('Firstname');
-        }
+        } private set;
     }
 
     /*******************************************************************************************************
@@ -1070,7 +1070,7 @@ public with sharing class BDI_ContactService {
                 return false;
             }
             return str.contains('Lastname');
-        }
+        } private set;
     }
 
     /*******************************************************************************************************
@@ -1083,7 +1083,7 @@ public with sharing class BDI_ContactService {
                 return false;
             }
             return str.contains('Email');
-        }
+        } private set;
     }
 
     /*******************************************************************************************************
@@ -1096,7 +1096,7 @@ public with sharing class BDI_ContactService {
                 return false;
             }
             return str.contains('Phone');
-        }
+        } private set;
     }
 
     /*******************************************************************************************************
@@ -1109,7 +1109,7 @@ public with sharing class BDI_ContactService {
                 return false;
             }
             return true;
-        }
+        } private set;
     }
 
     /*******************************************************************************************************

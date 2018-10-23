@@ -457,6 +457,7 @@
         <members>UTIL_NavigateBack</members>
         <members>UTIL_PageHeader</members>
         <members>UTIL_PageMessages</members>
+        <members>UTIL_SLDS_Icon</members>
         <members>UTIL_SoqlListView</members>
         <members>UTIL_Tooltip</members>
         <members>UTIL_Typeahead</members>
@@ -1432,6 +1433,7 @@
         <members>conMergeStageComplete</members>
         <members>conMergeWinnerAsstText</members>
         <members>engagementPlanCantEdit</members>
+        <members>engagementPlanMissingField</members>
         <members>engagementPlanNoLookups</members>
         <members>engagementPlanTwoLookups</members>
         <members>exceptionDeletePermission</members>
@@ -2565,7 +2567,6 @@
     </types>
     <types>
         <members>CumulusStaticResources</members>
-        <members>SLDS</members>
         <name>StaticResource</name>
     </types>
     <types>
