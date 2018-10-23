@@ -322,7 +322,7 @@ global with sharing class BDI_DataImportService {
                 return false;
             }
             return true;
-        }
+        } private set;
     }
 
     /*******************************************************************************************************

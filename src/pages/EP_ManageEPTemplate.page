@@ -12,7 +12,7 @@
                 </div>
             </div>
 
-            <c:UTIL_PageHeader headerLabel="{!$Label.EPManageTemplate}" header="{!template.Name}" icon="custom62_120" iconCategory="custom"
+            <c:UTIL_PageHeader headerLabel="{!$Label.EPManageTemplate}" header="{!template.Name}" icon="custom62" iconCategory="custom"
                 cancelAction="{!cancel}" saveAction="{!saveClose}"/>
             
             <apex:outputPanel id="panelErrors">
