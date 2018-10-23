@@ -835,11 +835,91 @@ private with sharing class RD_RecurringDonations_TEST2 {
         npe03__Recurring_Donation_Field__c = 'Name'
         );
         
+        Test.startTest();
+        
         ApexPages.StandardController scc = new ApexPages.StandardController(r1);
         RD_AddDonationsBTN_CTRL rdadb = new RD_AddDonationsBTN_CTRL(scc);
         system.assertEquals(r1.id, rdadb.sc.getId());
-        rdadb.buttonClick();    
-    }    
+        rdadb.buttonClick();
+
+        Test.stopTest();
+    }
+
+    /*******************************************************************************************************
+    * @description Ensures proper message is displayed when read only user tries to create a donation
+    */
+    @isTest
+    public static void readOnlyUserShouldSeeErrorMessageWhenButtonClicked() {
+        
+        if (strTestOnly != '*' && strTestOnly != 'readOnlyUserShouldSeeErrorMessageWhenButtonClicked') {
+            return;
+        }
+        
+        npe03__Recurring_Donation__c recurringDonation = new npe03__Recurring_Donation__c(
+            Id = npe03__Recurring_Donation__c.sObjectType.getDescribe().getKeyPrefix() + '000000000001AAA',
+            Name = 'Test Recurring Donation',
+            npe03__Installments__c = 2,
+            npe03__Organization__c = UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID,
+            npe03__Amount__c = 100,
+            npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly
+        );
+        
+        Test.startTest();
+        
+        ApexPages.StandardController controller = new ApexPages.StandardController(recurringDonation);
+        RD_AddDonationsBTN_CTRL addDontationController = new RD_AddDonationsBTN_CTRL(controller);
+       
+        //Read Only user who should be denied permission to add donation
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
+        
+        System.runAs(readOnlyUser) {
+
+            //No redirect should occur
+            System.assertEquals(null, addDontationController.buttonClick());
+
+            //Correct info message is returned
+            UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.RD_ErrorAddDonationPermissionDenied, ApexPages.Severity.INFO);
+        }
+
+        Test.stopTest();
+    }
+
+    /*******************************************************************************************************
+    * @description Ensures proper message is displayed when navigating to Visualforce page without an ID
+    */
+    @isTest
+    public static void errorMessageDisplayedWhenMissingId() {
+        
+        if (strTestOnly != '*' && strTestOnly != 'errorMessageDisplayedWhenMissingId') {
+            return;
+        }
+        
+        npe03__Recurring_Donation__c recurringDonation = new npe03__Recurring_Donation__c(
+            Name = 'Test Recurring Donation',
+            npe03__Installments__c = 2,
+            npe03__Organization__c = UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID,
+            npe03__Amount__c = 100,
+            npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly
+        );
+        
+        Test.startTest();
+        
+        ApexPages.StandardController controller = new ApexPages.StandardController(recurringDonation);
+        RD_AddDonationsBTN_CTRL addDontationController = new RD_AddDonationsBTN_CTRL(controller);
+       
+        //No redirect should occur
+        System.assertEquals(null, addDontationController.buttonClick());
+
+        //Correct info message is returned
+        UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.RD_ErrorAddDonationMissingId, ApexPages.Severity.ERROR);
+
+        //Cancel button redircts back to list recurring donation list view
+        Schema.DescribeSObjectResult describeResult = npe03__Recurring_Donation__c.SObjectType.getDescribe();
+        PageReference listViewPage = new PageReference('/' + describeResult.getKeyPrefix());
+        System.assertNotEquals(listViewPage, addDontationController.redirectToRecurringDonationsPage());
+
+        Test.stopTest();
+    }
 
     /*******************************************************************************************************
     * @description test method for custom field mapping on insert and update of Fixed Length RDs
