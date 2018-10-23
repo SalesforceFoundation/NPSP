@@ -92,14 +92,14 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
                         try {
                             lvlIdPrev = (Id)sobj.get(strLadder);
                         } catch (Exception ex) {
-                            throw new LevelException(String.format(Label.lvlErrorInvalidLookupField, new list<String>{strLadder, lvl.Name}));
+                            throw new LevelException(String.format(System.Label.lvlErrorInvalidLookupField, new list<String>{strLadder, lvl.Name}));
                         }
                     }
                     Decimal amt;
                     try {
                         amt = (Decimal)sobj.get(lvl.Source_Field__c);
                     } catch (Exception ex) {
-                        throw new LevelException(String.format(Label.lvlErrorInvalidSourceField, new list<String>{lvl.Source_Field__c, lvl.Name}));
+                        throw new LevelException(String.format(System.Label.lvlErrorInvalidSourceField, new list<String>{lvl.Source_Field__c, lvl.Name}));
                     }
                     if (amt == null) 
                         amt = 0;
@@ -116,7 +116,7 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
                             try {
                                 sobj.put(strLadder, lvl.Id);
                             } catch (exception ex) {
-                                throw new LevelException(String.format(Label.lvlErrorInvalidLookupField, new list<String>{strLadder, lvl.Name}));
+                                throw new LevelException(String.format(System.Label.lvlErrorInvalidLookupField, new list<String>{strLadder, lvl.Name}));
                             }
                             
                             mapSObjUpdate.put(sobj.Id, sobj);
@@ -132,7 +132,7 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
                                             Datetime__c = System.now(),
                                             Context_Type__c = ERR_Handler_API.Context.LVL.name(),
                                             Error_Type__c = 'Batch Apex error',
-                                            Full_Message__c = (Label.engagementPlanMissingField + ' ' + lvl.Target__c)
+                                            Full_Message__c = (System.Label.engagementPlanMissingField + ' ' + lvl.Target__c)
                                         )
                                     );
                                 }
@@ -220,7 +220,7 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         } catch(Exception ex) {
             throw new LevelException(
                 String.format(
-                    Label.lvlErrorInvalidLookupField, 
+                    System.Label.lvlErrorInvalidLookupField, 
                     new List<String>{ level.Previous_Level_Field__c, level.Name }
                 )
             );
