@@ -123,35 +123,7 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
                 '"templateFields":null,' +
                 '"labels":null' +
                 '}';
-        String activeFieldsJSON = '[{"label":"Donation Amount",' +
-                    '"name":"Donation_Amount__c",' +
-                    '"sObjectName":"Opportunity",' +
-                    '"defaultValue":null,' +
-                    '"required":true,' +
-                    '"hide":false,' +
-                    '"sortOrder":0},' +
-                '{"label":"Donation Date",' +
-                    '"name":"Donation_Date__c",' +
-                    '"sObjectName":"Opportunity",' +
-                    '"defaultValue":null,' +
-                    '"required":false,' +
-                    '"hide":false,' +
-                    '"sortOrder":1},' +
-                '{"label":"Method",' +
-                    '"name":"Payment_Method__c",' +
-                    '"sObjectName":"Payment",' +
-                    '"defaultValue":null,' +
-                    '"required":false,' +
-                    '"hide":false,' +
-                    '"sortOrder":2},' +
-                '{"label":"Check/Reference Number",' +
-                    '"name":"Payment_Check_Reference_Number__c",' +
-                    '"sObjectName":"Payment",' +
-                    '"defaultValue":null,' +
-                    '"required":false,' +
-                    '"hide":false,' +
-                    '"sortOrder":3' +
-                '}]';
+        String activeFieldsJSON = BGE_ConfigurationWizard_CTRL.getDefaultActiveFields();
         Test.startTest();
         String jsonModel = BGE_ConfigurationWizard_CTRL.saveRecord(sObjectName, templateInfoJSON, activeFieldsJSON);
         BGE_ConfigurationWizard_CTRL.BGEDetailsModel templateDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
