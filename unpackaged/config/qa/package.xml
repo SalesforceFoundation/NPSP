@@ -17,6 +17,13 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>Campaign-NPSP Campaign Layout</members>
+        <members>Contact-Contact Layout</members>
+        <members>npe03__Recurring_Donation__c-npe03__Recurring Donation Layout</members>
+        <members>Opportunity-Donation Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
         <members>Contact.DO_NOT_PACKAGE_Relationships_Viewer</members>
         <members>npe01__OppPayment__c.DO_NOT_PACKAGE_Schedule_Payments</members>
         <members>npe01__OppPayment__c.DO_NOT_PACKAGE_Writeoff_Payments</members>
