@@ -14,12 +14,23 @@
             model.getTemplateInfo().onInfoUpdated.subscribe(function() {
                 var templateInfoView = component.get('v.templateInfo');
                 var templateInfo = model.getTemplateInfo();
+
+                // record info
                 templateInfoView.name = templateInfo.name;
                 templateInfoView.id = templateInfo.id;
                 templateInfoView.description = templateInfo.description;
-                templateInfoView.requireTotalMatch = templateInfo.requireTotalMatch;
                 templateInfoView.expectedCount = templateInfo.expectedCount;
                 templateInfoView.expectedTotal = templateInfo.expectedTotal;
+
+                // batch processing settings
+                templateInfoView.requireTotalMatch = templateInfo.requireTotalMatch;
+                templateInfoView.batchProcessSize = templateInfo.batchProcessSize;
+                templateInfoView.runOpportunityRollupsWhileProcessing = templateInfo.runOpportunityRollupsWhileProcessing;
+                templateInfoView.contactMatchingRule = templateInfo.contactMatchingRule;
+                templateInfoView.donationMatchingBehavior = templateInfo.donationMatchingBehavior;
+                templateInfoView.donationMatchingRule = templateInfo.donationMatchingRule;
+                templateInfoView.donationDateRange = templateInfo.donationDateRange;
+                templateInfoView.processUsingScheduledJob = templateInfo.processUsingScheduledJob;
 
                 component.set('v.templateInfo', templateInfoView);
             });
@@ -29,9 +40,18 @@
                 name: '',
                 id: '',
                 description: '',
-                requireTotalMatch: false,
                 expectedCount: 0,
-                expectedTotal: 0
+                expectedTotal: 0,
+
+                // batch processing settings
+                requireTotalMatch: false,
+                batchProcessSize: 0,
+                runOpportunityRollupsWhileProcessing: false,
+                contactMatchingRule: '',
+                donationMatchingBehavior: '',
+                donationMatchingRule: '',
+                donationDateRange: '',
+                processUsingScheduledJob: false
             };
         })(component, model);
     },
@@ -286,17 +306,7 @@
                 var sObjectName = component.get('v.sObjectName');
                 _bgeTemplateController.getRecordDetails(sObjectName, recordId, {
                     success: function(response) {
-                        _templateInfo.load(
-                            {
-                                name: response.name,
-                                id: response.id,
-                                description: response.description,
-                                requireTotalMatch: response.requireTotalMatch,
-                                expectedCount: response.expectedCount,
-                                expectedTotal: response.expectedTotal
-                            }
-                        );
-
+                        _templateInfo.load(response);
                         _templateFields.load(response.templateFields, JSON.parse(response.activeFields));
                         _templateMetadata.load(response.labels, component);
                     },
@@ -312,12 +322,22 @@
              */
             function save() {
                 var templateDetailsData = {
+                    //record info
                     name: _templateInfo.name,
                     id: _templateInfo.id,
                     description: _templateInfo.description,
-                    requireTotalMatch: _templateInfo.requireTotalMatch,
                     expectedCount: _templateInfo.expectedCount,
-                    expectedTotal: _templateInfo.expectedTotal
+                    expectedTotal: _templateInfo.expectedTotal,
+
+                    // batch processing settings
+                    requireTotalMatch: _templateInfo.requireTotalMatch,
+                    batchProcessSize: _templateInfo.batchProcessSize,
+                    runOpportunityRollupsWhileProcessing: _templateInfo.runOpportunityRollupsWhileProcessing,
+                    contactMatchingRule: _templateInfo.contactMatchingRule,
+                    donationMatchingBehavior: _templateInfo.donationMatchingBehavior,
+                    donationMatchingRule: _templateInfo.donationMatchingRule,
+                    donationDateRange: _templateInfo.donationDateRange,
+                    processUsingScheduledJob: _templateInfo.processUsingScheduledJob
                 };
                 var activeFields = [];
 
@@ -337,17 +357,7 @@
 
                 _bgeTemplateController.saveRecord(sObjectName, templateDetailsData, activeFields, {
                     success: function(response) {
-                        _templateInfo.load(
-                            {
-                                name: response.name,
-                                id: response.id,
-                                description: response.description,
-                                requireTotalMatch: response.requireTotalMatch,
-                                expectedCount: response.expectedCount,
-                                expectedTotal: response.expectedTotal
-                            }
-                        );
-                        _templateMetadata.reload(response.id);
+                        _templateMetadata.navigateToRecord(response.id);
                     },
                     error: function(error) {
                         console.log(error);
@@ -413,12 +423,22 @@
              * @return List of fields.
              */
             function load(info) {
+                //record info
                 this.name = info.name;
                 this.description = info.description;
                 this.id = info.id;
-                this.requireTotalMatch = info.requireTotalMatch;
                 this.expectedCount = info.expectedCount;
                 this.expectedTotal = info.expectedTotal;
+
+                //batch processing settings
+                this.requireTotalMatch = info.requireTotalMatch;
+                this.batchProcessSize = info.batchProcessSize;
+                this.runOpportunityRollupsWhileProcessing = info.runOpportunityRollupsWhileProcessing;
+                this.contactMatchingRule = info.contactMatchingRule;
+                this.donationMatchingBehavior = info.donationMatchingBehavior;
+                this.donationMatchingRule = info.donationMatchingRule;
+                this.donationDateRange = info.donationDateRange
+                this.processUsingScheduledJob = info.processUsingScheduledJob;
                 this.onInfoUpdated.notify();
             }
 
@@ -432,12 +452,23 @@
             
             // TemplateInfo module public functions and properties
             return {
+                // record info
                 name: '',
                 id: '',
                 description: '',
-                requireTotalMatch: false,
                 expectedCount: 0,
                 expectedTotal: 0,
+
+                // batch processing settings
+                requireTotalMatch: false,
+                batchProcessSize: 0,
+                runOpportunityRollupsWhileProcessing: false,
+                contactMatchingRule: '',
+                donationMatchingBehavior: '',
+                donationMatchingRule: '',
+                donationDateRange: '',
+                processUsingScheduledJob: false,
+
                 load: load,
                 isValid: isValid,
                 onInfoUpdated: _onInfoUpdated
@@ -752,7 +783,7 @@
              * @description Navigates to the record's sObject Home
              * @param recordId - the record we want to view
              */
-            function reload(recordId) {
+            function navigateToRecord(recordId) {
                 var navEvt = $A.get('e.force:navigateToSObject');
                 navEvt.setParams({
                     'recordId': recordId
@@ -937,7 +968,7 @@
                 dataTableChanged: false,
                 pageHeader: '',
                 load: load,
-                reload: reload,
+                navigateToRecord: navigateToRecord,
                 nextStep: nextStep,
                 backStep: backStep,
                 cancel: cancel,

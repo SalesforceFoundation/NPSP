@@ -72,7 +72,7 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
         System.assertEquals(null, templateDetails.name, 'Batch Template name should be null');
         System.assertEquals(null, templateDetails.description, 'Batch Template description should be null');
         System.assertEquals(false, templateDetails.requireTotalMatch, 'Require total match should be false');
-        System.assertEquals(null, templateDetails.activeFields, 'Active Fields should be null');
+        System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), templateDetails.activeFields, 'Active Fields should match default');
         System.assertEquals(null, templateDetails.id, 'Batch Template ID should be null');
     }
 
@@ -96,7 +96,7 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
         System.assertEquals(batchTemplate.Name, templateDetails.name, 'Template details name should match');
         System.assertEquals(batchTemplate.Description__c, templateDetails.description, 'Template details description should match');
         System.assertEquals(batchTemplate.RequireTotalMatch__c, templateDetails.requireTotalMatch, 'Require total match should match');
-        System.assertEquals(null, templateDetails.activeFields, 'Active Fields should be null');
+        System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), templateDetails.activeFields, 'Active Fields should match default');
         System.assertEquals(batchTemplate.Id, templateDetails.id, 'Batch template ID should match');
     }
 
@@ -112,18 +112,18 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
                 '"name":"Test 4",' +
                 '"id":null,' +
                 '"description":"Test Record",' +
-                '"requireTotalMatch":false'+
+                '"requireTotalMatch":false,' +
+                '"batchProcessSize":5,' +
+                '"runOpportunityRollupsWhileProcessing":false,' +
+                '"contactMatchingRule":null,' +
+                '"donationMatchingBehavior":null,' +
+                '"donationMatchingRule":null,' +
+                '"donationDateRange":1,' +
+                '"processUsingScheduledJob":false,' +
+                '"templateFields":null,' +
+                '"labels":null' +
                 '}';
-        String activeFieldsJSON = '[{' +
-                '"label":"Name",'+
-                '"name":"npsp__Account1_Name__c",'+
-                '"sObjectName":"Account1",'+
-                '"defaultValue":null,'+
-                '"required":false,'+
-                '"hide":false,'+
-                '"sortOrder":0'+
-                '}]';
-
+        String activeFieldsJSON = BGE_ConfigurationWizard_CTRL.getDefaultActiveFields();
         Test.startTest();
         String jsonModel = BGE_ConfigurationWizard_CTRL.saveRecord(sObjectName, templateInfoJSON, activeFieldsJSON);
         BGE_ConfigurationWizard_CTRL.BGEDetailsModel templateDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
@@ -133,7 +133,7 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
         System.assertEquals('Test 4', templateDetails.name, 'Template details name should be Test 4');
         System.assertEquals('Test Record', templateDetails.description, 'Template details description should be Test Record');
         System.assertEquals(false, templateDetails.requireTotalMatch, 'Require total match should be false');
-        System.assertEquals(null, templateDetails.activeFields, 'Active Fields should be null');
+        System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), templateDetails.activeFields, 'Active Fields should match default');
         System.assertNotEquals(null, templateDetails.id, 'Template details should not be null');
 
     }
@@ -154,7 +154,17 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
                 '"name":"' + newName + '",' +
                 '"id":"' + batchTemplate.Id + '",' +
                 '"description":"Test Record",' +
-                '"requireTotalMatch":false'+
+                '"requireTotalMatch":false,' +
+                '"batchProcessSize":5,' +
+                '"runOpportunityRollupsWhileProcessing":false,' +
+                '"contactMatchingRule":null,' +
+                '"donationMatchingBehavior":null,' +
+                '"donationMatchingRule":null,' +
+                '"donationDateRange":1,' +
+                '"processUsingScheduledJob":false,' +
+                '"templateFields":null,' +
+                '"activeFields":null,' +
+                '"labels":null' +
                 '}';
         String activeFieldsJSON = '[{' +
                 '"label":"Name",'+
