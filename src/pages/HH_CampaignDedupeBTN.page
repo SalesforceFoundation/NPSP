@@ -16,7 +16,7 @@
             <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="Campaign"
                                parentAction="/701" parentRecordName="{!Campaign.Name}"
                                parentRecordAction="/{!Campaign.Id}" header="{!$Label.hhCmpDedupeBatchProgressTitle}"
-                               icon="campaign_120" iconCategory="standard"
+                               icon="campaign" iconCategory="standard"
                                showSaveBtn="false" showCancelBtn="false"/>
         </apex:form>
 
