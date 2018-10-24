@@ -370,7 +370,8 @@
         <members>STG_SettingsService</members>
         <members>STG_UninstallScript</members>
         <members>STG_UninstallScript_TEST</members>
-        <members>TBU_OpportintyContactRoles_TDTM</members>
+        <members>TBU_OpportunityContactRoles_TDTM</members>
+        <members>TBU_OpportunityContactRoles_TEST</members>
         <members>TDTM_Config_API</members>
         <members>TDTM_Config_API_Test</members>
         <members>TDTM_DMLgt200_TEST</members>
@@ -1398,6 +1399,10 @@
         <members>engagementPlanMissingField</members>
         <members>engagementPlanNoLookups</members>
         <members>engagementPlanTwoLookups</members>
+        <members>errMultipleTributesBatchInvalid</members>
+        <members>errMultipleTributesEnforceMultiple</members>
+        <members>errMultipleTributesEnforceSingle</members>
+        <members>errMultipleTributesFlexibleUpdate</members>
         <members>exceptionDeletePermission</members>
         <members>exceptionRequiredField</members>
         <members>exceptionValidationRule</members>

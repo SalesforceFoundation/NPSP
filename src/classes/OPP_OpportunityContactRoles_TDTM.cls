@@ -36,6 +36,8 @@
 */
 public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runnable {
 
+    private static final String OBJECT_NAME_OPPORTUNITY = 'Opportunity';
+    private static final String FIELD_NAME_OPPORTUNITY = 'Opportunity__c';
     private static final String FIELD_NAME_PRIMARY_CONTACT = 'Primary_Contact__c';
     private static final String FIELD_NAME_HONOREE_CONTACT = 'Honoree_Contact__c';
     private static final String FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT = 'Notification_Recipient_Contact__c';
@@ -60,7 +62,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
             setOpportunityAccountField((list<Opportunity>) newlist);
 
-            updateHonoreeNotificationFields(newlist, null, 'Opportunity');
+            updateHonoreeNotificationFields(newlist, null, OBJECT_NAME_OPPORTUNITY);
 
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             //If the Setting is Multiple Tribute Only, we need to prevent updating existing Tribute Fields on Opportunity
@@ -73,7 +75,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 preventUpdateTributeInfoOnOpportunity((List<Opportunity>) newlist, (list<Opportunity>) oldlist, true);
             }
 
-            updateHonoreeNotificationFields(newlist, oldlist, 'Opportunity');
+            updateHonoreeNotificationFields(newlist, oldlist, OBJECT_NAME_OPPORTUNITY);
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             upsertContactRolesAfterInsert((list<Opportunity>) newlist);
@@ -531,8 +533,8 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     ********************************************************************************************************/
     public void manageOtherOCR(SObject obj, SObject oldObj, map<id,OpportunityContactRole> mapConIdOCR, string fieldName, 
                                 Map<Id, List<OpportunityContactRole>> transactionOCRs, List<OpportunityContactRole> ocrsToDeleteImmediately, boolean processDML) {
-        id idNewCon = (id) obj.get(fieldName);
-        id idOldCon = (id) oldObj.get(fieldName);
+        Id idNewCon = (Id) obj.get(fieldName);
+        Id idOldCon = (Id) oldObj.get(fieldName);
 
         OpportunityContactRole ocrNewCon = mapConIdOCR.get(idNewCon);
         OpportunityContactRole ocrOldCon = mapConIdOCR.get(idOldCon);
@@ -665,7 +667,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         if (obj instanceof Opportunity) {
             ocr.OpportunityId = obj.id;
         } else {
-            ocr.OpportunityId = (Id)obj.get('Opportunity__c');
+            ocr.OpportunityId = (Id)obj.get(FIELD_NAME_OPPORTUNITY);
         }
         ocr.ContactId = (Id)obj.get(fieldname);
         ocr.Role = getRole(fieldName, isIndividualAccount);
@@ -935,9 +937,9 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         }
 
         //Set a flag in Tribute TDTM to remember to clear the tribute field on Opportunity
-        TBU_OpportintyContactRoles_TDTM.clearTributeFieldsFromOpportunity = true;
+        TBU_OpportunityContactRoles_TDTM.clearTributeFieldsFromOpportunity = true;
         insert tributeToInsert;
-        TBU_OpportintyContactRoles_TDTM.clearTributeFieldsFromOpportunity = false;
+        TBU_OpportunityContactRoles_TDTM.clearTributeFieldsFromOpportunity = false;
 
     }
 

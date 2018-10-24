@@ -2572,6 +2572,34 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You can enter a value for only one of the following fields: Account, Contact, Campaign, Case, Opportunity, or Recurring Donation.</value>
     </labels>
     <labels>
+        <fullName>errMultipleTributesBatchInvalid</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when current Multiple Tribute setting prevents batch update</shortDescription>
+        <value>To run the batch, first change the Multiple Tribute custom setting to the option that requires Tributes to be saved on the Tribute object.</value>
+    </labels>
+    <labels>
+        <fullName>errMultipleTributesEnforceMultiple</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when updating Tribute on Opportunity</shortDescription>
+        <value>We can&apos;t update Tribute information on this Opportunity. Update the Tribute record on the Tribute object instead.</value>
+    </labels>
+    <labels>
+        <fullName>errMultipleTributesEnforceSingle</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when only single Tribute per Opportunity is allowed</shortDescription>
+        <value>You can&apos;t enter multiple Tributes on a single Opportunity. Enter Tribute on the Opportunity&apos;s Tribute fields.</value>
+    </labels>
+    <labels>
+        <fullName>errMultipleTributesFlexibleUpdate</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Opportunity has existing Tribute</shortDescription>
+        <value>This Opportunity already has one Tribute. To add another, first remove existing data from the Tribute fields. Then create all Tributes through the Tribute object.</value>
+    </labels>
+    <labels>
         <fullName>exceptionDeletePermission</fullName>
         <categories>Error</categories>
         <language>en_US</language>
