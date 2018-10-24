@@ -399,9 +399,17 @@ public class PMT_PaymentCreator {
         Boolean paymentAmountReceivedUpdated = (oldOpp.npe01__Payments_Made__c != totalPaymentAmount);
         Boolean amountPositive = (newOpp.Amount > 0);
         Boolean isNotAndWasNotClosed = (!oldOpp.IsClosed && !newOpp.IsClosed);
-        String oppCurrency = (String)newOpp.get('CurrencyIsoCode');
-        Integer decimalPlaces = UTIL_CurrencyCache.getInstance().getCurrDecimalPlaces(oppCurrency);
-        Boolean amountEqualPaymentReceived = isEqualWhenRounded(newOpp.Amount, totalPaymentAmount, decimalPlaces);
+        Boolean amountEqualPaymentReceived;
+
+        // If the org has multicurrency setted up we need to round up the currency value to avoid bugs.
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            String oppCurrency = (String)newOpp.get('CurrencyIsoCode');
+            Integer decimalPlaces = UTIL_CurrencyCache.getInstance().getCurrDecimalPlaces(oppCurrency);
+            amountEqualPaymentReceived = isEqualWhenRounded(newOpp.Amount, totalPaymentAmount, decimalPlaces);
+        } else {
+            amountEqualPaymentReceived = (newOpp.Amount == totalPaymentAmount);
+        }
+
         Boolean stageNameSpecified = !String.isEmpty(closedStageName);
 
         if (
