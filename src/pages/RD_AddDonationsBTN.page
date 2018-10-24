@@ -1,4 +1,21 @@
-<apex:page standardController="npe03__Recurring_Donation__c" extensions="RD_AddDonationsBTN_CTRL" action="{!buttonClick}">
-    <apex:PageMessages />
-    <apex:outputLink title="Return"  value="{!URLFOR($Action.npe03__Recurring_Donation__c.View, npe03__Recurring_Donation__c.Id)}" >Return</apex:outputLink>
+<apex:page standardController="npe03__Recurring_Donation__c" title="{!$Label.RD_ErrorAddDonationHeaderText}" extensions="RD_AddDonationsBTN_CTRL" action="{!buttonClick}">
+    <apex:slds />
+    <apex:form id="vfForm">
+        <div class="slds-scope">
+            <!-- Page Header -->
+            <c:UTIL_PageHeader  showBreadcrumb="true" 
+                                parentEntityLabel="{!$ObjectType.npe03__Recurring_Donation__c.labelPlural}"
+                                parentAction="/{!$ObjectType.npe03__Recurring_Donation__c.keyPrefix}"
+                                parentRecordName="{!npe03__Recurring_Donation__c.Name}"
+                                parentRecordAction="{!If (NOT(ISNULL(npe03__Recurring_Donation__c.Id)), URLFOR($Action.npe03__Recurring_Donation__c.View, npe03__Recurring_Donation__c.Id), '')}"
+                                header="{!$Label.RD_ErrorAddDonationHeaderText}"
+                                icon="custom40_120" iconCategory="custom"
+                                showSaveBtn="false" cancelAction="{!redirectToRecurringDonationsPage}"/>
+
+            <!--Page Alerts-->
+            <apex:outputPanel id="pgMessages">
+                <c:UTIL_PageMessages />
+            </apex:outputPanel>
+        </div>
+    </apex:form>
 </apex:page>
