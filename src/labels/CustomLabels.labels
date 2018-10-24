@@ -1273,6 +1273,30 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <value>Warning</value>
     </labels>
     <labels>
+        <fullName>RD_ErrorAddDonationHeaderText</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Refresh Opportunities</shortDescription>
+        <value>Refresh Opportunities</value>
+    </labels>
+        <labels>
+        <fullName>RD_ErrorAddDonationMissingId</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Recurring Donation ID missing</shortDescription>
+        <value>Recurring Donation ID missing. Please select a valid recurring donation record.</value>
+    </labels>
+    <labels>
+        <fullName>RD_ErrorAddDonationPermissionDenied</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>You do not have permission to create a donation record</shortDescription>
+        <value>You do not have permission to create a donation record. Please contact your system administrator for more information.</value>
+    </labels>
+    <labels>
         <fullName>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
