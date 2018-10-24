@@ -260,13 +260,13 @@
                         fieldName: 'required',
                         label: $A.get('$Label.c.lblRequired'),
                         editable: isEditable
-                    },
+                    }/*,
                     {
                         type: 'boolean',
                         fieldName: 'hide',
                         label: $A.get('$Label.c.stgLabelHidden'),
                         editable: isEditable
-                    }
+                    }*/
                 ];
             }
 

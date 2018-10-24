@@ -103,9 +103,9 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     * @description Retrieves the related list of fields.
     * @return list of Template Fields with sObjectName and Name.
     */
-    public static List<AvailableField> getAvailableFields() {
+    public static List<BGEField> getAvailableFields() {
 
-        List<AvailableField> fields = new List<AvailableField>();
+        List<BGEField> fields = new List<BGEField>();
 
         Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
         Set<String> bannedFields = new Set<String>{'Account1Imported__c',
@@ -147,18 +147,28 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 'Contact2_LastName__c'
         };
 
+        // these data types have been whitelisted since they already work with BGE
+        Set<String> allowedDataTypes = new Set<String>{
+                'CURRENCY',
+                'DATE',
+                'STRING',
+                'TEXTAREA',
+                'DOUBLE'
+        };
+
         // looping through the fields on DataImport__c
         for (Schema.DescribeFieldResult fieldResult : fieldMap.values()) {
             String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldResult.name);
-            //Special case for Donation_Donor because it's derived 
 
-            //todo: rework these 2 lines
             String dataImportFieldMappedObject = fieldResult.inlineHelpText != null ? fieldResult.inlineHelpText.split('\\.')[0] : null;
-            Boolean fieldAllowed = allowedObjects.contains(dataImportFieldMappedObject) && !bannedFields.contains(dataImportFieldApiName) && fieldResult.inlineHelpText != null;
+            Boolean fieldAllowed = allowedObjects.contains(dataImportFieldMappedObject)
+                    && allowedDataTypes.contains(fieldResult.type.name())
+                    && !bannedFields.contains(dataImportFieldApiName)
+                    && fieldResult.inlineHelpText != null;
 
             if (fieldAllowed) {
 
-                AvailableField field = new AvailableField();
+                BGEField field = new BGEField();
 
                 // TODO: make these localized with schema describes
                 field.sObjectName = dataImportFieldMappedObject;
@@ -223,7 +233,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         model.expectedCount = 0;
         model.expectedTotal = 0;
         model.requireTotalMatch = false;
-        model.templateFields = new List<AvailableField>();
+        model.templateFields = new List<BGEField>();
         model.batchProcessSize = 50;
         model.runOpportunityRollupsWhileProcessing = false;
         model.contactMatchingRule = 'Firstname,Lastname,Email';
@@ -462,7 +472,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public Boolean requireTotalMatch;
         @AuraEnabled public Integer expectedCount;
         @AuraEnabled public Decimal expectedTotal;
-        @AuraEnabled public List<AvailableField> templateFields;
+        @AuraEnabled public List<BGEField> templateFields;
         @AuraEnabled public String activeFields;
         @AuraEnabled public Map<String, String> labels;
         @AuraEnabled public Integer batchProcessSize;
@@ -474,12 +484,18 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public Boolean processUsingScheduledJob;
         @AuraEnabled public List<Batch_Template__c> availableBatchTemplates;
 
+        public BGEDetailsModel() {
+            requireTotalMatch = false;
+            expectedCount = 0;
+            expectedTotal = 0;
+            templateFields = new List<BGEField>();
+        }
     }
 
     /*******************************************************************************************************
     * @description a class to retrieve and save information related to Active and Available fields.
     */
-    public class AvailableField {
+    public class BGEField {
         @AuraEnabled public String label;
         @AuraEnabled public String name;
         @AuraEnabled public String sObjectName;
@@ -489,7 +505,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public Boolean systemRequired;
         @AuraEnabled public Boolean hide;
 
-        public AvailableField() {
+        public BGEField() {
             isActive = false;
             required = false;
             hide = false;
