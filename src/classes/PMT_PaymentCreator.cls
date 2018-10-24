@@ -394,11 +394,14 @@ public class PMT_PaymentCreator {
      */
     private void closeOpportunityIfAllPaymentsReceived(Opportunity oldOpp, Opportunity newOpp, String closedStageName,
             Decimal totalPaymentAmount) {
+
         Boolean amountUpdated = (oldOpp.Amount != newOpp.Amount);
         Boolean paymentAmountReceivedUpdated = (oldOpp.npe01__Payments_Made__c != totalPaymentAmount);
         Boolean amountPositive = (newOpp.Amount > 0);
         Boolean isNotAndWasNotClosed = (!oldOpp.IsClosed && !newOpp.IsClosed);
-        Boolean amountEqualPaymentReceived = (newOpp.Amount == totalPaymentAmount);
+        String oppCurrency = (String)newOpp.get('CurrencyIsoCode');
+        Integer decimalPlaces = UTIL_CurrencyCache.getInstance().getCurrDecimalPlaces(oppCurrency);
+        Boolean amountEqualPaymentReceived = isEqualWhenRounded(newOpp.Amount, totalPaymentAmount, decimalPlaces);
         Boolean stageNameSpecified = !String.isEmpty(closedStageName);
 
         if (
@@ -410,6 +413,20 @@ public class PMT_PaymentCreator {
         ) {
             newOpp.StageName = closedStageName;
         }
+    }
+
+
+    /*******************************************************************************************************
+    * @description return true if booth values are equal when rounded on the same decimal scale.
+    * @param Decimal amount1 one of the decimal values to compare.
+    * @param Decimal amount2 the other decimal value to compare.
+    * @param Integer decimalPlaces for booth values
+    * @return Boolean stating id booth Decimal values are equal.
+    */
+    private static Boolean isEqualWhenRounded(Decimal amount1, Decimal amount2, Integer decimalPlaces) {
+        Decimal amount1Rounded = amount1.setScale(decimalPlaces);
+        Decimal amount2Rounded = amount2.setScale(decimalPlaces);
+        return (amount1Rounded == amount2Rounded);
     }
 
     /*******************************************************************************************************
