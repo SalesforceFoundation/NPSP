@@ -32,16 +32,21 @@
   @date 2018
   @group BGE
   @group-content ../../ApexDocContent/BatchDataImport.htm
-  @description Component used to view, edit, and delete DataImport__c records on the related NPSP_Data_Import_Batch__c record home.
+  @description Component used to create DataImport__c records on the related NPSP_Data_Import_Batch__c record home.
 -->
 
-<aura:component description="BGE_EntryForm">
+<aura:component>
 
+    <!--Public Attributes-->
     <aura:attribute name="labels" type="Map" description="Labels retrieved in Apex related to Schema information." access="public"/>
     <aura:attribute name="donorType" type="String" default="Contact1" description="Used to circumvent unhelpful labeling of Account1/Contact1" access="public"/>
     <aura:attribute name="recordId" type="Id" description="Populated by force:hasRecordId" access="public"/>
-    <aura:attribute name="dataImportFields" type="Object[]" description="" access="public"/>
+    <aura:attribute name="record" type="DataImport__c" description="Object" access="public"/>
+    <aura:attribute name="dataImportFields" type="Object[]" description="List of dynamic field objects to use in the field iteration" access="public"/>
+    <aura:attribute name="requiredFields" type="List" description="Easily accessible list of required fields" access="private"/>
 
+    <!--Events-->
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
     <aura:handler name="render" action="{!c.callFocus}" value="{!this}"/>
 
     <lightning:recordEditForm aura:id="recordEditForm"
@@ -62,24 +67,25 @@
             </lightning:layoutItem>
 
             <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
-                <aura:if isTrue="{!v.donorType == 'Contact1'}">
-                    <label for="recordLookup" class="slds-form-element__label">
+                <!--don't use aura:if to hide, because we need to get reference to the inputfield for data validation-->
+                <div class="{!if(v.donorType == 'Account1', 'slds-hide', '')}">
+                    <label for="contactLookup" class="slds-form-element__label">
                         <abbr class="slds-required" title="required">* </abbr>
                         {!v.labels.contactObject}
                     </label>
-                    <lightning:inputField aura:id="recordLookup" fieldName="{!v.labels.contactLookup}"
+                    <lightning:inputField aura:id="contactLookup" fieldName="{!v.labels.contactLookup}"
                                           class="hideLabel"
                     />
-                </aura:if>
-                <aura:if isTrue="{!v.donorType == 'Account1'}">
-                    <label for="recordLookup" class="slds-form-element__label">
+                </div>
+                <div class="{!if(v.donorType == 'Contact1', 'slds-hide', '')}">
+                    <label for="accountLookup" class="slds-form-element__label">
                         <abbr class="slds-required" title="required">* </abbr>
                         {!v.labels.accountObject}
                     </label>
-                    <lightning:inputField aura:id="recordLookup" fieldName="{!v.labels.accountLookup}"
+                    <lightning:inputField aura:id="accountLookup" fieldName="{!v.labels.accountLookup}"
                                           class="hideLabel"
                     />
-                </aura:if>
+                </div>
             </lightning:layoutItem>
             <!--END DONOR FIELDS-->
 
@@ -90,7 +96,7 @@
                         <aura:if isTrue="{!field.required}"><abbr class="slds-required" title="required">* </abbr></aura:if>
                         {!field.label}
                     </label>
-                    <lightning:inputField aura:id="{!field.name}"
+                    <lightning:inputField aura:id="dynamicInputFields"
                                           fieldName="{!field.name}"
                                           class="hideTooltip equalHeight hideLabel"
                     />
