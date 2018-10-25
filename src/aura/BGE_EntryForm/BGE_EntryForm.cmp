@@ -63,14 +63,20 @@
 
             <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
                 <aura:if isTrue="{!v.donorType == 'Contact1'}">
-                    <label for="contactLookup" class="slds-form-element__label">{!v.labels.contactObject}</label>
-                    <lightning:inputField aura:id="contactLookup" fieldName="{!v.labels.contactLookup}"
+                    <label for="recordLookup" class="slds-form-element__label">
+                        <abbr class="slds-required" title="required">* </abbr>
+                        {!v.labels.contactObject}
+                    </label>
+                    <lightning:inputField aura:id="recordLookup" fieldName="{!v.labels.contactLookup}"
                                           class="hideLabel"
                     />
                 </aura:if>
                 <aura:if isTrue="{!v.donorType == 'Account1'}">
-                    <label for="accountLookup" class="slds-form-element__label">{!v.labels.accountObject}</label>
-                    <lightning:inputField aura:id="accountLookup" fieldName="{!v.labels.accountLookup}"
+                    <label for="recordLookup" class="slds-form-element__label">
+                        <abbr class="slds-required" title="required">* </abbr>
+                        {!v.labels.accountObject}
+                    </label>
+                    <lightning:inputField aura:id="recordLookup" fieldName="{!v.labels.accountLookup}"
                                           class="hideLabel"
                     />
                 </aura:if>
@@ -80,9 +86,13 @@
             <!--Field iteration -->
             <aura:iteration items="{!v.dataImportFields}" var="field" indexVar="index">
                 <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
+                    <label for="{!field.name}" class="slds-form-element__label">
+                        <aura:if isTrue="{!field.required}"><abbr class="slds-required" title="required">* </abbr></aura:if>
+                        {!field.label}
+                    </label>
                     <lightning:inputField aura:id="{!field.name}"
                                           fieldName="{!field.name}"
-                                          class="hideTooltip equalHeight"
+                                          class="hideTooltip equalHeight hideLabel"
                     />
                 </lightning:layoutItem>
             </aura:iteration>

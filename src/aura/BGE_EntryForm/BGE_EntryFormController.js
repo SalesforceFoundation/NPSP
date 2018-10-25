@@ -36,11 +36,13 @@
     onSubmit: function (component, event, helper) {
         event.preventDefault();
         var eventFields = helper.addHiddenFields(component, event);
-        var isValid = true;
-        // TODO: add validation function
-        // isValid = helper.validateRecord(component, event);
-        if (isValid) {
+        var validity = helper.validateFields(component, event);
+        if (validity.isValid) {
             component.find('recordEditForm').submit(eventFields);
+        } else if (validity.missingFields.length != 0) {
+            helper.sendErrorToast(component, validity.missingFields);
+        } else {
+            //do nothing since data format errors display inline
         }
     },
 
