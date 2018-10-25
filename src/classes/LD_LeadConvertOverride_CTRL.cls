@@ -134,7 +134,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 l.company.toLowerCase() == 'individual' ||
                 l.company.toLowerCase() == l.name.toLowerCase()
             );
-        }
+        } private set;
     }
 
     /*******************************************************************************************************

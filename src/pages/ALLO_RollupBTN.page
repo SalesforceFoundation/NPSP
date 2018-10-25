@@ -6,7 +6,7 @@
                                parentEntityLabel="{! $ObjectType.General_Accounting_Unit__c.labelPlural }" parentAction="/{!$ObjectType.General_Accounting_Unit__c.keyPrefix}"
                                parentRecordName="{!General_Accounting_Unit__c.Name }" parentRecordAction="/{!General_Accounting_Unit__c.Id}"
                                header="{!$Label.CRLP_RecalculatingRollups}"
-                               icon="custom87_120" iconCategory="custom"
+                               icon="custom87" iconCategory="custom"
                                showSaveBtn="false" showCancelBtn="true"
                                cancelLabel="{!returnLabel}" cancelAction="/{!General_Accounting_Unit__c.Id}"
                                rendered="true" />

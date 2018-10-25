@@ -81,7 +81,7 @@ public class CMT_FilterRule {
                 }
             }
             return validDateConstants;
-        }
+        } private set;
     }
 
     /**
