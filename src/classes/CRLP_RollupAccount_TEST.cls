@@ -76,10 +76,14 @@ private class CRLP_RollupAccount_TEST {
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule3', 'npe01__OppPayment__c', 'npe01__Paid__c', 'Equals', 'True') + ',' +
+                /* Add a rule that should filter out Opportunities created more than 100 months ago */
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule4', 'Opportunity', 'CloseDate', CMT_FilterRule.FilterOperation.Greater.name(),
+                        DateTime.now().addMonths(-101).format('yyyy-MM-dd')) + ',' +
 
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule3', 'npe01__OppPayment__c', 'npe01__Written_Off__c', 'Equals', 'True') +
+
             ']';
 
         // Deserialize the filter group and filter rule to use for the tests
@@ -269,18 +273,18 @@ private class CRLP_RollupAccount_TEST {
         Id rtId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
 
         List<Opportunity> opps = new List<Opportunity>();
-        Date closeDate = Date.Today().addMonths(-100);
+        final Date closeDate = Date.Today().addMonths(-100);
+        final Decimal maxAmt = 1000;
+        final Decimal baseAmt = 100;
+        final Integer cnt = 100;
         Decimal totalDonations = 0, total2YearsAgo = 0;
-        Decimal maxAmt = 1000;
-        Decimal baseAmt = 100;
-        Integer cnt = 100;
         String bestGiftYear;
         Set<String> donationYears = new Set<String>();
         Date lastCloseDate;
         for (Integer n=0; n<cnt; n++) {
             Decimal amt = (n==50 ? maxAmt : baseAmt);
             opps.add(new Opportunity (
-                    Name = 'Test Opp ' + c.FirstName + ' ' + c.LastName,
+                    Name = 'Test Opp ' + c.FirstName + ' ' + c.LastName + '-' + n,
                     Amount = amt,
                     CloseDate = closeDate.addMonths(n),
                     StageName = closedStage,
@@ -320,12 +324,23 @@ private class CRLP_RollupAccount_TEST {
 
         // create one closed opportunity to ensure it's not included in our rollups
         opps.add(new Opportunity (
-                Name = 'Test Opp ' + c.FirstName + ' ' + c.LastName,
+                Name = 'Test ClosedWon Opp ' + c.FirstName + ' ' + c.LastName,
                 Amount = 500,
                 CloseDate = Date.Today().addDays(1),
                 StageName = UTIL_UnitTestData_TEST.getClosedLostStage(),
                 Primary_Contact__c = c.Id,
                 RecordTypeId = rtId
+        ));
+
+        // create one closed won opportunity from BEFORE the earliest date to ensure it's not included
+        opps.add(new Opportunity (
+                Name = 'Test Not Include' + c.FirstName + ' ' + c.LastName,
+                Amount = 50000,
+                CloseDate = closeDate.addDays(-2),
+                StageName = closedStage,
+                Primary_Contact__c = c.Id,
+                RecordTypeId = rtId,
+                npe01__Do_Not_Automatically_Create_Payment__c = true
         ));
 
         insert opps;
