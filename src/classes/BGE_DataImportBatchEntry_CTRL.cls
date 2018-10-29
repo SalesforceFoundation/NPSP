@@ -150,10 +150,19 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 }
                 col.typeAttributes = '{}';
 
-                // special case for payment type to fetch picklist values
-                // TODO: consider abstracting this out to dynamically check for data type of mapped field?
-                if (col.fieldName == 'Payment_Method__c') {
-                    col.options = UTIL_Describe.getLightningSelectOptions('npe01__OppPayment__c','npe01__Payment_Method__c');
+                // If source field is String and target field is Picklist, display on page as Picklist with target field options
+                if (col.type == 'string') {
+                    String targetObject = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[0] : null;
+                    if (targetObject == 'Payment') {
+                        targetObject = 'npe01__OppPayment__c';
+                    }
+                    String targetField = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[1] : null;
+
+                    Schema.DisplayType targetFieldType = UTIL_Describe.getFieldDisplaytype(targetObject, targetField.toLowerCase());
+
+                    if (targetFieldType == Schema.DisplayType.PICKLIST) {
+                        col.options = UTIL_Describe.getLightningSelectOptions(targetObject, targetField);
+                    }
                 }
 
                 columns.add(col);
