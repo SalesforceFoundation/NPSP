@@ -46,7 +46,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     @AuraEnabled
     public static String deleteDataImportRow(Id batchId, Id dataImportId) {
         delete new DataImport__c(Id = dataImportId);
-        return JSON.serialize(getDataImports(batchId));
+        return JSON.serialize(getDataImportRows(batchId));
     }
 
     /*******************************************************************************************************
@@ -55,13 +55,19 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return serialized string of dataImportModel
     */
     @AuraEnabled
-    public static String getDataImportModel(Id batchId){
+    public static String getDataImportModel(Id batchId) {
+
+        if (batchId == null) {
+            AuraHandledException e = new AuraHandledException('Data Import Model must receive a Batch ID.');
+            e.setMessage('Data Import Model must receive a Batch ID.');
+            throw e;
+        }
 
         DataImportModel dataImportModel = new DataImportModel();
 
         dataImportModel.id = batchId;
-        dataImportModel.dataImportRows = getDataImports(batchId);
-        dataImportModel.columns = getColumns();
+        dataImportModel.dataImportRows = getDataImportRows(batchId);
+        dataImportModel.columns = getColumns(batchId);
         dataImportModel.labels = getBatchDataImportLabels();
         dataImportModel.isNamespaced = String.isNotBlank(UTIL_Namespace.getNamespace());
 
@@ -72,8 +78,30 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     public static List<DataImportRow> updateDataImports(List<DataImport__c> dataImports, Id batchId) {
         Database.update(dataImports);
 
-        return getDataImports(batchId);
+        return getDataImportRows(batchId);
     }
+
+    /*******************************************************************************************************
+    * @description
+    * @param batchId: ID of the NPSP_Data_Import_Batch__c
+    * @return list of field api names
+    */
+    public static List<String> getActiveFieldNamesFromBatch(Id batchId) {
+
+        DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
+        String activeFieldsJSON = batch.Active_Fields__c;
+        List<String> activeFieldNames = new List<String>();
+
+        if (activeFieldsJSON != null) {
+            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields = (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
+            for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
+                activeFieldNames.add(field.name);
+            }
+        }
+
+        return activeFieldNames;
+    }
+
 
     /*******************************************************************************************************
     * @description queries the DataImport__c records associated with the given batchId
@@ -81,16 +109,16 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return list of custom DataImportRow objects for use in the lightning:datatable
     */
     @AuraEnabled
-    public static List<DataImportRow> getDataImports(Id batchId){
+    public static List<DataImportRow> getDataImportRows(Id batchId){
 
         try {
-            List<DataImportRow> result = new List<DataImportRow>();
-            List<DataImport__c> dataImports = getDataImportsByBatchId(batchId);
+            List<DataImportRow> rows = new List<DataImportRow>();
+            List<DataImport__c> dataImports = getDataImportRecordsByBatchId(batchId);
             for (DataImport__c dataImportRecord : dataImports) {
-                result.add(new DataImportRow(dataImportRecord));
+                rows.add(new DataImportRow(dataImportRecord));
             }
 
-            return result;
+            return rows;
         }
         catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
@@ -121,34 +149,58 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Retrieves the related list of columns for DataImport__c from a specified list (currently hardcoded)
+    * @description Retrieves the related list of columns for the BGE interface
     * @return list of Columns to use in BGE_DataImportBatchEntry table
     */
-    private static List<Column> getColumns() {
+    private static List<Column> getColumns(Id batchId) {
         List<Column> columns = new List<Column>();
-        List<String> fields = new List<String>{
-                'Donation_Amount__c',
-                'Donation_Date__c',
-                'Payment_Method__c',
-                'Payment_Check_Reference_Number__c'
-        };
 
-        Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
-        for (String field : fields) {
-            String namespacedField = UTIL_Namespace.StrTokenNSPrefix(field);
-            Schema.DescribeFieldResult dfr = fieldMap.get(namespacedField.toLowerCase());
-            if (dfr != null) {
-                Column col = new Column();
-                col.label = dfr.label;
-                col.fieldName = dfr.name;
-                col.readOnly = false;
-                col.type = dfr.type.name().toLowerCase();
-                // Lightning Components interpret "date" as datetime.
-                // Reassign "date" to "datelocal" to render as date only.
-                if (col.type == 'date') {
-                    col.type = 'date-local';
-                }
-                col.typeAttributes = '{}';
+        columns.addAll(getUserDefinedColumns(batchId));
+
+        //add derived matched record column
+        Column col = new Column();
+
+        col.label = Label.bgeGridMatchedRecord;
+        col.fieldName = 'matchedRecordUrl';
+        col.readOnly = true;
+        col.type = 'url';
+        col.typeAttributes = '{"label":{"fieldName":"matchedRecordLabel"},"target":"_blank"}';
+        columns.add(col);
+
+        return columns;
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieves the related list of columns defined by users in the Batch record Active_Fields__c
+    * @return list of Columns to use in BGE_DataImportBatchEntry table
+    */
+    private static List<Column> getUserDefinedColumns(Id batchId) {
+        List<Column> columns = new List<Column>();
+
+        DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
+        String activeFieldsJSON = batch.Active_Fields__c;
+        if (activeFieldsJSON != null) {
+            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields = (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
+
+            Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
+            for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
+                Schema.DescribeFieldResult dfr = fieldMap.get(field.name.toLowerCase());
+                if (dfr != null) {
+                    Column col = new Column();
+                    col.label = dfr.label;
+                    col.fieldName = dfr.name;
+                    col.readOnly = false;
+                    col.defaultValue = field.defaultValue;
+                    col.required = field.required;
+                    col.hide = field.hide;
+                    col.type = dfr.type.name().toLowerCase();
+                    if (col.type == 'date') {
+                        col.type = 'date-local';
+                    }
+                    if (col.type == 'double') {
+                        col.type = 'number';
+                    }
+                    col.typeAttributes = '{}';
 
                 // If source field is String and target field is Picklist, display on page as Picklist with target field options
                 if (col.type == 'string') {
@@ -190,7 +242,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     public static List<DataImportRow> runDryRun(List<Id> dataImportIds, Id batchId) {
         Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
         Set<Id> recordIds = new Set<Id>(dataImportIds);
-        List<DataImport__c> dataImportRecords = getDataImportsByIds(recordIds);
+        List<DataImport__c> dataImportRecords = getDataImportRecordsByIds(batchId, recordIds);
 
         // Clear Dry Run fields before running Dry Run so new field values are accounted for
         for (DataImport__c dataImport : dataImportRecords) {
@@ -205,7 +257,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
         BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportRecords, true);
         
-        return getDataImports(batchId);
+        return getDataImportRows(batchId);
     }
 
     /*******************************************************************************************************
@@ -213,8 +265,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @param batchId a Data Import Batch Id
     * @return List<DataImport__c>
     */
-    public static List<DataImport__c> getDataImportsByBatchId(Id batchId) {
-        List<String> dataImportFields = getDataImportFields();
+    public static List<DataImport__c> getDataImportRecordsByBatchId(Id batchId) {
+
+        List<String> dataImportFields = getDataImportFields(batchId);
 
         String query = 'SELECT ' + String.join(dataImportFields,', ') +
                 ' FROM DataImport__c' +
@@ -229,8 +282,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @param dataImportIds set of DataImport__c Ids
     * @return List<DataImport__c>
     */
-    public static List<DataImport__c> getDataImportsByIds(Set<Id> dataImportIds) {
-        List<String> dataImportFields = getDataImportFields();
+    public static List<DataImport__c> getDataImportRecordsByIds(Id batchId, Set<Id> dataImportIds) {
+
+        List<String> dataImportFields = getDataImportFields(batchId);
 
         String query = 'SELECT ' + String.join(dataImportFields,', ') +
                 ' FROM DataImport__c' +
@@ -241,26 +295,21 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description returns a list of DataImport__c fields the Batch Gift Entry  UI needs in SOQL
+    * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
     * @return List<String> list of DataImport__c field api names
     */
-    public static List<String> getDataImportFields() {
+    public static List<String> getDataImportFields(Id batchId) {
+
+        List<String> activeFieldNames = getActiveFieldNamesFromBatch(batchId);
+
         List<String> fields = new List<String> {
                 'Id',
-                'Contact1_Firstname__c',
-                'Contact1_Lastname__c',
                 'Contact1Imported__c',
-                'Contact1Imported__r.FirstName',
-                'Contact1Imported__r.LastName',
                 'Contact1Imported__r.Name',
                 'Account1Imported__c',
                 'Account1Imported__r.Name',
                 'NPSP_Data_Import_Batch__c',
                 'Donation_Donor__c',
-                'Donation_Amount__c',
-                'Donation_Date__c',
-                'Payment_Method__c',
-                'Payment_Check_Reference_Number__c',
                 'DonationImported__c',
                 'Status__c',
                 'FailureInformation__c',
@@ -270,6 +319,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 'PaymentImported__r.Name',
                 'DonationImported__r.Name'
         };
+
+        fields.addAll(activeFieldNames);
+
         return fields;
     }
 
@@ -281,6 +333,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         @AuraEnabled public String fieldName;
         @AuraEnabled public Boolean readOnly;
         @AuraEnabled public String type;
+        @AuraEnabled public String defaultValue;
+        @AuraEnabled public Boolean required;
+        @AuraEnabled public Boolean hide;
         @AuraEnabled public String typeAttributes;
         @AuraEnabled public List<Map<String, String>> options;
     }

@@ -90,10 +90,11 @@
                         <aura:set attribute="else">
                             <lightning:inputField aura:id="{!field.name}"
                                                   fieldName="{!field.name}"
-                                                  class="hideTooltip"
+                                                  class="hideTooltip equalHeight"
                             />
                         </aura:set>
                     </aura:if>
+
                 </lightning:layoutItem>
             </aura:iteration>
 

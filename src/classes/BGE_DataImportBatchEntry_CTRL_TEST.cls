@@ -77,18 +77,11 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
     @isTest
     public static void testGetNewDataImport() {
 
-        Test.startTest();
-        String jsonModel = BGE_DataImportBatchEntry_CTRL.getDataImportModel(null);
-        BGE_DataImportBatchEntry_CTRL.DataImportModel dataImportModel = (BGE_DataImportBatchEntry_CTRL.DataImportModel) JSON.deserialize(jsonModel, BGE_DataImportBatchEntry_CTRL.DataImportModel.class);
-        Test.stopTest();
-
-        System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
-        //for null ID, only these fields are populated
-        System.assertNotEquals(null, dataImportModel.columns, 'Data Import Model Columns should not be null');
-        System.assertNotEquals(null, dataImportModel.labels, 'Data Import Model Labels should not be null');
-
-        System.assertEquals(0, dataImportModel.dataImportRows.size(), 'No data import rows should be returned');
-        System.assertEquals(null, dataImportModel.id, 'Data Import Model ID should be null');
+        try {
+            String jsonModel = BGE_DataImportBatchEntry_CTRL.getDataImportModel(null);
+        } catch (AuraHandledException e) {
+            System.assert(e.getMessage().contains('Data Import Model must receive a Batch ID.'));
+        }
     }
 
     /*********************************************************************************************************
