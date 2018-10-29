@@ -58,7 +58,7 @@ public with sharing virtual class STG_Panel {
                 oppLabel = Schema.sObjectType.Opportunity.getLabel();
             }
             return oppLabel;
-        }
+        } private set;
     }
 
     /*******************************************************************************************************
@@ -70,7 +70,7 @@ public with sharing virtual class STG_Panel {
                 paymentLabel = Schema.sObjectType.npe01__OppPayment__c.getLabel();
             }
             return paymentLabel;
-        }
+        } private set;
     }
 	
     /*******************************************************************************************************

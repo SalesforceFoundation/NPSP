@@ -16,7 +16,7 @@
             line-height: normal;
             margin-right: -30px;
         }
-        .slds-form--horizontal {
+        .slds-form_horizontal {
             margin-bottom: .5rem;
         }
     </style>
@@ -26,8 +26,10 @@
             <apex:commandButton id="editAllo" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
         <c:UTIL_PageMessages allowClose="false" id="msgs" />
-        <div class="slds-section-title--divider" >{!$Label.stgLabelAllocationsSettings}</div>
-        <div class="slds-form--horizontal">
+        <div class="slds-section">
+            <div class="slds-section-title_divider" >{!$Label.stgLabelAllocationsSettings}</div>
+        </div>
+        <div class="slds-form_horizontal">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default_Allocations_Enabled__c.Label}" for="cbxDAE" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -49,8 +51,10 @@
                 </div>
             </div>
         </div>
-        <div class="slds-section-title--divider" >{!$Label.stgLabelAllocationBehaviorSettings}</div>
-        <div class="slds-form--horizontal">
+        <div class="slds-section">
+            <div class="slds-section-title_divider" >{!$Label.stgLabelAllocationBehaviorSettings}</div>
+        </div>
+        <div class="slds-form_horizontal">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$Label.stgAllocationLevel}" for="idAL" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -65,8 +69,10 @@
             </div>
         </div>
         <div style="{!IF(!stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:block', 'display:none')}">
-            <div class="slds-section-title--divider" style="margin-top:0;">{!$Label.stgLabelAllocationsRollupSettings}</div>
-            <div class="slds-form--horizontal">
+            <div class="slds-section">
+                <div class="slds-section-title_divider" style="margin-top:0;">{!$Label.stgLabelAllocationsRollupSettings}</div>
+            </div>
+            <div class="slds-form_horizontal">
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Excluded_Opp_RecTypes__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
@@ -107,9 +113,9 @@
                 </div>
             </div>
         </div>
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
-            <apex:commandButton id="saveAllo" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-            <apex:commandButton id="cancelAllo" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
+            <apex:commandButton id="saveAllo" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button_small slds-button_brand" />
+            <apex:commandButton id="cancelAllo" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
     </apex:form>
 </apex:page>
