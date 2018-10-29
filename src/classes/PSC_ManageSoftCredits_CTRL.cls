@@ -37,18 +37,26 @@
 public with sharing class PSC_ManageSoftCredits_CTRL {
 
     public Opportunity opp {get; set;}
-    public boolean isAmount {get; set;} // true = amount, false = percentage
-    public boolean allowTooManySoftCredits {get; set;}
+    public Boolean isAmount {get; set;} // true = amount, false = percentage
+    public Boolean allowTooManySoftCredits {get; set;}
     public List<SoftCredit> softCredits {get; set;}
     /** @description List of soft credits to delete when the user clicks Save.*/
-    public List<sObject> listSoftCreditsForDelete = new List<sObject>();
+    public List<SObject> listSoftCreditsForDelete = new List<sObject>();
     public List<SelectOption> contactRoles {get; private set;}
     /** @description Row number sent back by page for delete row method.*/
-    public integer rowNumber {get;set;}
-
+    public Integer rowNumber {get;set;}
     /** @description The currency symbol or ISO code of the related record or org default */
-    @TestVisible
-    private String currencySymbol;
+    @TestVisible private String currencySymbol;
+    /** @description Set to true if the user has the appropriate permissions to access the page */
+    public Boolean hasAccess {
+        get {
+            if (hasAccess == null) {
+                hasAccess = getCurrentUserHasAccess();
+            }
+            return hasAccess;
+        }
+        private set;
+    }
 
     /*******************************************************************************************************
     * @description temporary Opp to hold the current Total Soft Credit Amount and currency
@@ -99,6 +107,14 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     */ 
     public PSC_ManageSoftCredits_CTRL(ApexPages.StandardController controller) {
         Id recordId = controller.getRecord().Id;
+
+        if (!hasAccess) {
+            opp = new Opportunity(Id = recordId);
+
+            Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, System.Label.pscManageSoftCreditsPermissionDenied));
+            return;
+        }
+
         String oppQuery = 'SELECT Id, Name, Amount, AccountId, Account.Name, npe01__Is_Opp_From_Individual__c, Primary_Contact__c, Primary_Contact__r.Name';
 
         if (userInfo.isMultiCurrencyOrganization()) {
@@ -188,6 +204,16 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
         if (softCreditRoles.isEmpty())
             Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.pscManageSoftCreditsNoRoles));
         
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies the user has Create/Edit/Delete permissions for Partial Soft Credits.
+    * @return true when the user has the appropriate access
+    */
+    private Boolean getCurrentUserHasAccess() {
+        return Schema.SObjectType.Partial_Soft_Credit__c.isCreateable()
+            && Schema.SObjectType.Partial_Soft_Credit__c.isUpdateable()
+            && Schema.SObjectType.Partial_Soft_Credit__c.isDeletable();
     }
 
     /** @description Removes a row from the page, and adds to the list for deletion once the user saves.*/
