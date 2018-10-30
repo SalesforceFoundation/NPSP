@@ -67,6 +67,7 @@ private class CRLP_RollupAccount_TEST {
         String filterGroupId1 = CMT_UnitTestData_TEST.getNewRecordId();
         String filterGroupId2 = CMT_UnitTestData_TEST.getNewRecordId();
 
+        String dtValue = DateTime.now().addMonths(-100).addDays(-1).format('yyyy-MM-dd');
         // Simple testing filters for IsWon, RecordType, and Paid/Written Off
         String filterGroupsJSON = '[' +
                 CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'TestFilterGroup1-IsWon+Paid') + ',' +
@@ -77,8 +78,7 @@ private class CRLP_RollupAccount_TEST {
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule3', 'npe01__OppPayment__c', 'npe01__Paid__c', 'Equals', 'True') + ',' +
                 /* Add a rule that should filter out Opportunities created more than 100 months ago */
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule4', 'Opportunity', 'CloseDate', CMT_FilterRule.FilterOperation.Greater.name(),
-                        DateTime.now().addMonths(-101).format('yyyy-MM-dd')) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule4', 'Opportunity', 'CloseDate', CMT_FilterRule.FilterOperation.Greater.name(), dtvalue) + ',' +
 
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
@@ -333,10 +333,11 @@ private class CRLP_RollupAccount_TEST {
         ));
 
         // create one closed won opportunity from BEFORE the earliest date to ensure it's not included
+        Date oldCloseDate = closeDate.addDays(-1);
         opps.add(new Opportunity (
                 Name = 'Test Not Include' + c.FirstName + ' ' + c.LastName,
                 Amount = 50000,
-                CloseDate = closeDate.addDays(-2),
+                CloseDate = oldCloseDate,
                 StageName = closedStage,
                 Primary_Contact__c = c.Id,
                 RecordTypeId = rtId,
