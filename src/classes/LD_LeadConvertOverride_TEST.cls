@@ -569,45 +569,38 @@ private class LD_LeadConvertOverride_TEST {
     public static void newNativeLeadConversion_Test(String strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-        //CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
 
-        Contact con = new Contact();
-        con.Firstname = 'Test';
-        con.Lastname = 'NativeLead';
-        //con.MailingStreet = '123';
+        Contact con = new Contact(Firstname = 'Test', Lastname = 'NativeLead');
         insert con;
 
-        System.assertEquals(1, [SELECT count() FROM Contact]);
-        System.assertEquals(1, [SELECT count() FROM Account]);
         con = getContacts()[0];
-        System.assertEquals(null, con.Current_Address__c);
 
-        Lead l = new Lead();
-        l.FirstName = 'Test';
-        l.LastName = 'NativeLead';
-        l.Company = 'NativeLead Household';
-        l.Street = '123 Native Ld';
-        l.City = 'Bellevue';
-        l.PostalCode = '98005';
-        insert l;
+        Lead leadToConvert = new Lead(
+            FirstName = 'Test',
+            LastName = 'NativeLead',
+            Company = 'NativeLead Household',
+            Street = '123 Native Ld',
+            City = 'Bellevue',
+            PostalCode = '98005'
+        );
+        insert leadToConvert;
 
-        Database.LeadConvert lc = new Database.LeadConvert();
-        lc.setLeadId(l.id);
-        lc.setContactId(con.Id);
-        lc.setAccountId(con.AccountId);
-
-        List<LeadStatus> convertStatus = [SELECT Id, ApiName FROM LeadStatus WHERE IsConverted = true];
+        Database.LeadConvert leadConv = new Database.LeadConvert();
+        leadConv.setLeadId(leadToConvert.Id);
+        leadConv.setContactId(con.Id);
+        leadConv.setAccountId(con.AccountId);
 
         Test.startTest();
-        Database.LeadConvertResult lcr;
+        Database.LeadConvertResult leadConvResult;
         Boolean brkLoop;
 
-        for (LeadStatus cs : convertStatus) {
+        // Updating ctrl and test to allow for different recordtype defaults and conversion statuses
+        for (LeadStatus convertStatus : [SELECT Id, ApiName FROM LeadStatus WHERE IsConverted = true]) {
             brkLoop = true;
-            lc.setConvertedStatus(cs.ApiName);
+            leadConv.setConvertedStatus(convertStatus.ApiName);
 
             try {
-                lcr = Database.convertLead(lc);
+                leadConvResult = Database.convertLead(leadConv);
             } catch(Exception ex) {
                   brkLoop = false;
             }
@@ -618,27 +611,27 @@ private class LD_LeadConvertOverride_TEST {
         }
 
         Test.stopTest();
-        System.assert(lcr.isSuccess());
+        System.assert(leadConvResult.isSuccess(), 'The lead convert should be successful.');
 
-        Contact[] convertedContacts = getContacts();
-        System.assertEquals(1, convertedContacts.size(), 'Only one contact should exist.');
-        System.assertEquals(true, convertedContacts[0].Account.npe01__Systemisindividual__c);
-        System.assertEquals(l.Street, convertedContacts[0].MailingStreet);
-        System.assertEquals(l.City, convertedContacts[0].MailingCity);
-        System.assertEquals(l.PostalCode, convertedContacts[0].MailingPostalCode);
+        List<Contact> convertedContacts = getContacts();
+        System.assertEquals(1, convertedContacts.size(), 'Only one contact should exist after convert.');
+        System.assert(convertedContacts[0].Account.npe01__Systemisindividual__c, 'System is individual should be true.');
+        System.assertEquals(leadToConvert.Street, convertedContacts[0].MailingStreet, 'The contacts street should match the lead street.');
+        System.assertEquals(leadToConvert.City, convertedContacts[0].MailingCity, 'The contacts city should match the lead city.');
+        System.assertEquals(leadToConvert.PostalCode, convertedContacts[0].MailingPostalCode, 'The contacts postal code should match the lead postal code.');
 
         String accountName = convertedContacts[0].FirstName + ' ' + convertedContacts[0].LastName;
         if (CAO_Constants.isOneToOne()) {
-            System.assertEquals(accountName, convertedContacts[0].Account.Name);
+            System.assertEquals(accountName, convertedContacts[0].Account.Name, 'The one to one account name should be as expected.');
             assertAccountWithName(accountName);
 
         } else if (CAO_Constants.isHHAccountModel()) {
-            System.assertEquals(convertedContacts[0].LastName + ' Household', convertedContacts[0].Account.Name);
-            System.assertEquals(1, [SELECT count() FROM Address__c]);
-            System.assertEquals(1, [SELECT count() FROM Address__c WHERE Default_Address__c = true]);
+            System.assertEquals(convertedContacts[0].LastName + ' Household', convertedContacts[0].Account.Name, 'The hh account name should be as expected.');
+            System.assertEquals(1, [SELECT count() FROM Address__c], 'There should only be 1 address created.');
+            System.assertEquals(1, [SELECT count() FROM Address__c WHERE Default_Address__c = true], 'There should be 1 default address');
 
         } else if (CAO_Constants.isBucketModel()) {
-            System.assertEquals(CAO_Constants.BUCKET_ACCOUNT_NAME, convertedContacts[0].Account.Name);
+            System.assertEquals(CAO_Constants.BUCKET_ACCOUNT_NAME, convertedContacts[0].Account.Name, 'The bucket account name should be as expected.');
         }
 
         System.assertEquals(0, [SELECT count() FROM npe5__Affiliation__c], 'An affiliation record should not be created.');
