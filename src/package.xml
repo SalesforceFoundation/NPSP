@@ -1957,6 +1957,8 @@
         <members>stgLinkDelete</members>
         <members>stgMultipleTributeBatch</members>
         <members>stgMultipleTributeSettings</members>
+        <members>stgMultipleTributes</members>
+        <members>stgMultipleTributesBatchPanel</members>
         <members>stgMultipleTributesFlexible</members>
         <members>stgMultipleTributesLimited</members>
         <members>stgMultipleTributesSingleOpp</members>

@@ -7145,6 +7145,20 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
 ● Please note that once your org start using Tribute object, there is no system back fill job to put the Tribute information from Tribute record back to Opportunity.&lt;br/&gt;</value>
     </labels>
     <labels>
+        <fullName>stgMultipleTributes</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The string of Multiple Tributes</shortDescription>
+        <value>Multiple Tributes</value>
+    </labels>
+    <labels>
+        <fullName>stgMultipleTributesBatchPanel</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The string on Multiple Tribute Batch Panel</shortDescription>
+        <value>Create Tribute from Opportunity</value>
+    </labels>
+    <labels>
         <fullName>stgMultipleTributesFlexible</fullName>
         <language>en_US</language>
         <protected>true</protected>
