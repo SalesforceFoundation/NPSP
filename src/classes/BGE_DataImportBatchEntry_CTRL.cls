@@ -204,11 +204,11 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
                     // If source field is String and target field is Picklist, display on page as Picklist with target field options
                     if (col.type == 'string') {
-                        String targetObject = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[0] : null;
+                        String targetObject = BDI_DataImportService.getTargetObject(dfr.name);
                         if (targetObject == 'Payment') {
                             targetObject = 'npe01__OppPayment__c';
                         }
-                        String targetField = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[1] : null;
+                        String targetField = BDI_DataImportService.getTargetField(dfr.name);
 
                         Schema.DisplayType targetFieldType = UTIL_Describe.getFieldDisplaytype(targetObject, targetField.toLowerCase());
 

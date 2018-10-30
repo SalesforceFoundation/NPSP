@@ -160,7 +160,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         for (Schema.DescribeFieldResult fieldResult : fieldMap.values()) {
             String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldResult.name);
 
-            String dataImportFieldMappedObject = fieldResult.inlineHelpText != null ? fieldResult.inlineHelpText.split('\\.')[0] : null;
+            String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(fieldResult.name);
             Boolean fieldAllowed = allowedObjects.contains(dataImportFieldMappedObject)
                     && allowedDataTypes.contains(fieldResult.type.name())
                     && !bannedFields.contains(dataImportFieldApiName)
