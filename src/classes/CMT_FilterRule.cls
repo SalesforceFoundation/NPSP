@@ -253,6 +253,11 @@ public class CMT_FilterRule {
                     rule.constant : null);
             Date compareValue = (String.isNotEmpty(rule.constant) && dateConstant == null ? Date.valueOf(rule.constant) : null);
 
+            // Just in case the field value has a time portion, reconstruct the date from scratch
+            if (fieldValue != null) {
+                fieldValue = Date.newInstance(fieldValue.year(), fieldValue.month(), fieldValue.day());
+            }
+
             if (fieldValue == null && compareValue == null) {
                 // A null to null comparison is either Equals (true) or false for any other operation
                 if (rule.operation == FilterOperation.EQUALS) {
