@@ -60,7 +60,7 @@ private class TBU_OpportunityContactRoles_TEST {
         );
 
         //Insert three Contacts
-        List<Contact> cons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(4);
+        List<Contact> cons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
         insert cons;
 
         Opportunity opp = new Opportunity(Primary_Contact__c = cons[0].id, StageName = 'Close Won', Name='Donation3',
@@ -84,7 +84,7 @@ private class TBU_OpportunityContactRoles_TEST {
 
         //Now update the Tribute Honoree Contact and Notification Contact, system should update the corresponding Name field
         newTri.Honoree_Contact__c = cons[2].Id;
-        newTri.Notification_Recipient_Contact__c = cons[3].Id;
+        newTri.Notification_Recipient_Contact__c = cons[1].Id;
         update newTri;
 
         newTri = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Tribute__c WHERE Id = :newTri.id];
@@ -297,7 +297,7 @@ private class TBU_OpportunityContactRoles_TEST {
         system.assertEquals(queryCon[0].Name, queryTribute[0].Notification_Recipient_Name__c);
 
         //System should update the OCR based on the changes. Since Notification Recipient is the same as Primary, it will not create additional OCR
-        queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
+        queryOCR = [SELECT Id, ContactId, Contact.Name, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
         system.assertEquals(2,queryOCR.size());
 
         system.assertEquals(cons[0].id,queryOCR[0].ContactId);

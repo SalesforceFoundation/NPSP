@@ -60,42 +60,42 @@ public with sharing class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable
 
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
             //Prevent insert tribute if the setting does not indicate that the system allow Multiple Tribute
-            if(UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c != Label.stgMultipleTributesFlexible &&
+            if (UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c != Label.stgMultipleTributesFlexible &&
                     UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c != Label.stgMultipleTributesLimited) {
                 preventTributeRecordOperations((List<Tribute__c>) newList);
             }
 
             //Prevent insert Tribute if the setting allow Mix but the Opportunity has Tribute Info
-            if(UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesFlexible) {
+            if (UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesFlexible) {
                 preventInsertTributeForMixMode((List<Tribute__c>) newList);
             }
 
             //we will populate Name field if the setting allow Multiple Tribute
-            if(UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesFlexible ||
+            if (UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesFlexible ||
                     UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesLimited) {
                 OPP_OpportunityContactRoles_TDTM.updateHonoreeNotificationFields(newList, null, OBJECT_NAME_TRIBUTE);
             }
 
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             //Prevent update tribute if the setting does not indicate that the system allow Multiple Tribute
-            if(UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c != Label.stgMultipleTributesFlexible &&
+            if (UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c != Label.stgMultipleTributesFlexible &&
                     UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c != Label.stgMultipleTributesLimited) {
                 preventTributeRecordOperations((List<Tribute__c>) newList);
             }
 
             //we will populate Name field if the setting allow Multiple Tribute
-            if(UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesFlexible ||
+            if (UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesFlexible ||
                     UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesLimited) {
                 OPP_OpportunityContactRoles_TDTM.updateHonoreeNotificationFields(newList, oldList, OBJECT_NAME_TRIBUTE);
             }
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             //If the Tribute comes from Opportuniy, then we do not want to create OCR again
-            if(!clearTributeFieldsFromOpportunity) {
+            if (!clearTributeFieldsFromOpportunity) {
                 upsertContactRolesAfterInsert((List<Tribute__c>) newList);
             }
 
-            if(clearTributeFieldsFromOpportunity) {
+            if (clearTributeFieldsFromOpportunity) {
                 clearTributeFieldsOnOpportunity((List<Tribute__c>) newList);
             }
 
@@ -112,7 +112,7 @@ public with sharing class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable
     * @return void
     ******************************************************************************************************/
     private void preventTributeRecordOperations(List<Tribute__c> tributes) {
-        for(Tribute__c tri : tributes) {
+        for (Tribute__c tri : tributes) {
             tri.addError(Label.errMultipleTributesEnforceSingle);
         }
     }
@@ -125,18 +125,18 @@ public with sharing class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable
     private void preventInsertTributeForMixMode(List<Tribute__c> tributes) {
         Set<Id> oppIds = new Set<Id>();
 
-        for(Tribute__c tri : tributes) {
+        for (Tribute__c tri : tributes) {
             oppIds.add(tri.Opportunity__c);
         }
 
         Map<Id, Opportunity> oppMap = new Map<Id, Opportunity>();
 
         //Build the map of Opportunity which has the Tribute info on it
-        for(Opportunity opp : [SELECT Id, Tribute_Type__c, Honoree_Contact__c,
+        for (Opportunity opp : [SELECT Id, Tribute_Type__c, Honoree_Contact__c,
                 Honoree_Name__c, Notification_Recipient_Contact__c, Notification_Recipient_Name__c,
                 Notification_Recipient_Information__c, Notification_Preference__c, Notification_Message__c FROM Opportunity WHERE  Id in:oppIds]) {
 
-            if(opp.Honoree_Contact__c != null || opp.Honoree_Name__c != null ||
+            if (opp.Honoree_Contact__c != null || opp.Honoree_Name__c != null ||
                     opp.Notification_Recipient_Contact__c != null || opp.Notification_Recipient_Name__c != null ||
                     opp.Tribute_Type__c != null || opp.Notification_Recipient_Information__c != null ||
                     opp.Notification_Preference__c != null || opp.Notification_Message__c != null) {
@@ -144,8 +144,8 @@ public with sharing class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable
             }
         }
 
-        for(Tribute__c tri : tributes) {
-            if(oppMap.get(tri.Opportunity__c) != null) {
+        for (Tribute__c tri : tributes) {
+            if (oppMap.get(tri.Opportunity__c) != null) {
                 tri.addError(Label.errMultipleTributesFlexibleUpdate);
             }
         }
@@ -157,37 +157,30 @@ public with sharing class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable
     * @return void
     ******************************************************************************************************/
     private void upsertContactRolesAfterInsert(List<Tribute__c> tributes) {
-        List<OpportunityContactRole> listOCRForInsert = new List<OpportunityContactRole>();
+        //Get the opportunity Ids from Tributes
+        Set<String> oppIds = new Set<String>();
 
-        Map<Id, Id> mapOppIdPrimaryContact = new Map<Id, Id>();
+        Map<Id, List<Tribute__c>> tributesByOpp = new Map<Id, List<Tribute__c>>();
+
+        for (Tribute__c tri : tributes) {
+            oppIds.add(tri.Opportunity__c);
+
+            if(tributesByOpp.get(tri.Opportunity__c) == null) {
+                tributesByOpp.put(tri.Opportunity__c, new List<Tribute__c>{tri});
+            } else {
+                tributesByOpp.put(tri.Opportunity__c, (List<Tribute__c>) tributesByOpp.get(tri.Opportunity__c).add(tri));
+            }
+        }
+
+        String soql = buildOpportunitySOQL();
+
+        List<Opportunity> opps = Database.query(soql);
 
         OPP_OpportunityContactRoles_TDTM oppOCRTDTM = new OPP_OpportunityContactRoles_TDTM();
 
-        //Get the opportunity information
-        List<Id> oppIds = new List<Id>();
-        for(Tribute__c tri : tributes) {
-            oppIds.add(tri.Opportunity__c);
-        }
+        //Call OPP_OpportunityContactRoles_TDTM class to handle the OCR stuff
+        oppOCRTDTM.upsertContactRolesAfterInsert(opps, tributesByOpp, true);
 
-        //Get existing primary contact roles for the trigger opps.
-        for (Opportunity opp : [SELECT Id, Primary_Contact__c FROM Opportunity WHERE Id IN :oppIds]) {
-            mapOppIdPrimaryContact.put(opp.Id, opp.Primary_Contact__c);
-        }
-
-        for(Tribute__c tri : tributes) {
-            //using cloned opp to check if these OCRs need to be managed, as it relies on the Primary Contact field being populated
-            if (oppOCRTDTM.needsManageOCR(tri, new Tribute__c(), FIELD_NAME_HONOREE_CONTACT, mapOppIdPrimaryContact.get(tri.Opportunity__c))) {
-                listOCRForInsert.add(oppOCRTDTM.getOCR(tri,FIELD_NAME_HONOREE_CONTACT));
-            }
-
-            if (oppOCRTDTM.needsManageOCR(tri, new Tribute__c(), FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, mapOppIdPrimaryContact.get(tri.Opportunity__c))) {
-                listOCRForInsert.add(oppOCRTDTM.getOCR(tri, FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT));
-            }
-        }
-
-        if(listOCRForInsert != null && listOCRForInsert.size() > 0) {
-            insert listOCRForInsert;
-        }
     }
 
     /******************************************************************************************************
@@ -196,13 +189,50 @@ public with sharing class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable
     * @return void
     ******************************************************************************************************/
     private void upsertContactRolesAfterUpdate(list<Tribute__c> tributes, list<Tribute__c> oldTributes) {
+        //Get the opportunity Ids from Tributes
+        Set<String> oppIds = new Set<String>();
+
+        Map<Id, List<Tribute__c>> tributesByOpp = new Map<Id, List<Tribute__c>>();
+        Map<Id, List<Tribute__c>> oldtributesByOpp = new Map<Id, List<Tribute__c>>();
+
+        for (Tribute__c tri : tributes) {
+            oppIds.add(tri.Opportunity__c);
+
+            if(tributesByOpp.get(tri.Opportunity__c) == null) {
+                tributesByOpp.put(tri.Opportunity__c, new List<Tribute__c>{tri});
+            } else {
+                tributesByOpp.put(tri.Opportunity__c, (List<Tribute__c>) tributesByOpp.get(tri.Opportunity__c).add(tri));
+            }
+        }
+
+        for (Tribute__c tri : oldTributes) {
+            oppIds.add(tri.Opportunity__c);
+
+            if(oldtributesByOpp.get(tri.Opportunity__c) == null) {
+                oldtributesByOpp.put(tri.Opportunity__c, new List<Tribute__c>{tri});
+            } else {
+                oldtributesByOpp.put(tri.Opportunity__c, (List<Tribute__c>) oldtributesByOpp.get(tri.Opportunity__c).add(tri));
+            }
+        }
+
+        String soql = buildOpportunitySOQL();
+
+        List<Opportunity> opps = Database.query(soql);
+
+        OPP_OpportunityContactRoles_TDTM oppOCRTDTM = new OPP_OpportunityContactRoles_TDTM();
+
+        //Call OPP_OpportunityContactRoles_TDTM class to handle the OCR stuff
+
+        oppOCRTDTM.upsertContactRolesAfterUpdate(opps, opps, tributesByOpp, oldtributesByOpp, true);
+    }
+    /*private void upsertContactRolesAfterUpdate(list<Tribute__c> tributes, list<Tribute__c> oldTributes) {
         Map<Id, Id> mapOppIdPrimaryContact = new Map<Id, Id>();
 
         OPP_OpportunityContactRoles_TDTM oppOCRTDTM = new OPP_OpportunityContactRoles_TDTM();
 
         //Get the opportunity information
         List<Id> oppIds = new List<Id>();
-        for(Tribute__c tri : tributes) {
+        for (Tribute__c tri : tributes) {
             oppIds.add(tri.Opportunity__c);
         }
 
@@ -246,7 +276,7 @@ public with sharing class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable
                 }
             }
         }
-    }
+    }*/
 
     /******************************************************************************************************
     * @description Clear Tribute fields on the Opportunity
@@ -257,7 +287,7 @@ public with sharing class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable
         //We do not want the Trigger to run when just clear the field
 
         Map<Id, Opportunity> oppsToUpdateMap = new Map<Id, Opportunity>();
-        for(Tribute__c tri : tributes) {
+        for (Tribute__c tri : tributes) {
             Opportunity opp = new Opportunity(Id = tri.Opportunity__c);
             //clear the Opportunity fields
             opp.Tribute_Type__c = null;
@@ -270,10 +300,27 @@ public with sharing class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable
             opp.Notification_Message__c = null;
             oppsToUpdateMap.put(opp.Id, opp);
         }
-        if(oppsToUpdateMap != null && oppsToUpdateMap.values().size() > 0) {
+        if (oppsToUpdateMap != null && oppsToUpdateMap.values().size() > 0) {
             TDTM_TriggerHandler.disableTDTM = true;
             update oppsToUpdateMap.values();
             TDTM_TriggerHandler.disableTDTM = false;
         }
+    }
+
+    /******************************************************************************************************
+    * @description Get All fields from the Opportunity object
+    * @return String SOQL
+    ******************************************************************************************************/
+    private String buildOpportunitySOQL() {
+
+        // Get all of the fields on the object
+        Set<String> fieldNames = UTIL_Describe.getAllFieldsDescribe('Opportunity').keySet();
+
+        // Build a Dynamic Query String.
+        return new UTIL_Query()
+                .withSelectFields(fieldNames)
+                .withFrom('Opportunity')
+                .withWhere('Id IN :oppIds')
+                .build();
     }
 }

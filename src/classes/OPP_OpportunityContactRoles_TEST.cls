@@ -872,7 +872,7 @@ private class OPP_OpportunityContactRoles_TEST {
         System.assertEquals(3, testOCRs.size());
 
         OPP_OpportunityContactRoles_TDTM oppOCRInstance = new OPP_OpportunityContactRoles_TDTM();
-        oppOCRInstance.clearOCRs(opportunityToContactToOCR, changedOpptys, ocrsToDeleteImmediately);
+        oppOCRInstance.clearOCRs(opportunityToContactToOCR, changedOpptys, ocrsToDeleteImmediately, new Map<Id, List<Tribute__c>>());
         testOCRs = [SELECT Id, OpportunityId, ContactId, Role, isPrimary FROM OpportunityContactRole];
         System.assertEquals(1, testOCRs.size());
 

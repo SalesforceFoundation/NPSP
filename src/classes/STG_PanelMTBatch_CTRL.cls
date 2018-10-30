@@ -54,7 +54,7 @@ public with sharing class STG_PanelMTBatch_CTRL extends STG_Panel {
 
     public boolean isBatchDisabled {
         get {
-            return UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c != Label.stgMultipleTributeStrict;
+            return UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c != Label.stgMultipleTributesLimited;
         }
         set;
     }
@@ -65,9 +65,9 @@ public with sharing class STG_PanelMTBatch_CTRL extends STG_Panel {
     */
     public PageReference runBatch() {
         //We only allow user to run the batch if user only use Tribute object
-        if(UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c != Label.stgMultipleTributeStrict) {
+        if(UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c != Label.stgMultipleTributesLimited) {
             isRunningBatch = false;
-            ApexPages.addMessage(new ApexPages.message(ApexPages.Severity.ERROR, 'abc'));
+            ApexPages.addMessage(new ApexPages.message(ApexPages.Severity.ERROR, Label.errMultipleTributesBatchInvalid));
             return null;
         }
         isRunningBatch = true;

@@ -1,6 +1,6 @@
 <apex:page controller="STG_PanelMultipleTribute_CTRL">
     <apex:form id="form" styleClass="slds-m-around--x-large">
-        <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="Multiple Tributes" />
+        <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgMultipleTributes}" />
         <div class="slds-text-body--small slds-m-around--medium"><apex:outputText value="{!$Label.stgMultipleTributeSettings}" escape="false" /></div>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
@@ -12,9 +12,9 @@
                 <div class="slds-form-element__control">
                     <apex:outputField value="{!stgService.stgCon.Multiple_Tributes__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                     <apex:selectList value="{!stgService.stgCon.Multiple_Tributes__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="multipleTributeModel" html-aria-describedby="{!$Component.multipleTributeModelHelp}" styleClass="slds-select" >
-                        <apex:selectOption itemValue="{!$Label.stgMultipleTributeST}" itemLabel="{!$Label.stgMultipleTributeST}"/>
-                        <apex:selectOption itemValue="{!$Label.stgMultipleTributeLose}" itemLabel="{!$Label.stgMultipleTributeLose}"/>
-                        <apex:selectOption itemValue="{!$Label.stgMultipleTributeStrict}" itemLabel="{!$Label.stgMultipleTributeStrict}"/>
+                        <apex:selectOption itemValue="{!$Label.stgMultipleTributesSingleOpp}" itemLabel="{!$Label.stgMultipleTributesSingleOpp}"/>
+                        <apex:selectOption itemValue="{!$Label.stgMultipleTributesFlexible}" itemLabel="{!$Label.stgMultipleTributesFlexible}"/>
+                        <apex:selectOption itemValue="{!$Label.stgMultipleTributesLimited}" itemLabel="{!$Label.stgMultipleTributesLimited}"/>
                     </apex:selectList>
                     <apex:outputPanel id="multipleTributeModelHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Multiple_Tributes__c.inlineHelpText}" />
