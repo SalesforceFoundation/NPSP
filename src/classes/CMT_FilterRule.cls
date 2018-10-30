@@ -253,14 +253,6 @@ public class CMT_FilterRule {
                     rule.constant : null);
             Date compareValue = (String.isNotEmpty(rule.constant) && dateConstant == null ? Date.valueOf(rule.constant) : null);
 
-            // If the field is actually a DATETIME field, but it's being compared to a pure date, then
-            // some extra processing is needed to convert the date string properly to avoid timezone issues
-            try {
-                String strField = String.valueOf(record.get(rule.field));
-                DateTime dtm = DateTime.valueOfGmt(strField);
-                fieldValue = Date.valueOf(dtm.format('YYYY-MM-dd'));
-            } catch (Exception ex) {}
-
             if (fieldValue == null && compareValue == null) {
                 // A null to null comparison is either Equals (true) or false for any other operation
                 if (rule.operation == FilterOperation.EQUALS) {
