@@ -83,6 +83,7 @@
                     <lightning:inputField aura:id="{!field.name}"
                                           fieldName="{!field.name}"
                                           class="hideTooltip equalHeight"
+                                          value="{!field.value}"
                     />
                 </lightning:layoutItem>
             </aura:iteration>
