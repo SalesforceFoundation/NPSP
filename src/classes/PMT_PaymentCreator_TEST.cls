@@ -914,7 +914,7 @@ private with sharing class PMT_PaymentCreator_TEST {
     verify:
         Excluded opps don't get payments.
         Included opps payments are created correctly.
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void testBatchPaymentCreation() {
         if (strTestOnly != '*' && strTestOnly != 'testBatchPaymentCreation') return;
         
@@ -964,7 +964,7 @@ private with sharing class PMT_PaymentCreator_TEST {
             Name='Unpaid Payment',
             AccountId = acct.id,
             Amount = 36,
-            CloseDate = date.today(), 
+            CloseDate = date.today(),
             StageName = UTIL_UnitTestData_TEST.getOpenStage()
         ));
         testOppList.add(new Opportunity (
@@ -1001,7 +1001,7 @@ private with sharing class PMT_PaymentCreator_TEST {
             Name='No pmt:rectype',
             AccountId = acct.id,
             Amount = 3,
-            CloseDate = date.today(), 
+            CloseDate = date.today(),
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
         );
         if (rtIdGift != null)
@@ -1033,4 +1033,49 @@ private with sharing class PMT_PaymentCreator_TEST {
         system.assertEquals(false, queryPmt[1].npe01__Paid__c, 'Payment for open opportunity should not be marked paid.');
         system.assertEquals('Unpaid Payment', queryPmt[1].npe01__Custom_Payment_Field__c, 'Custom field mapping should be copied over.');
     }
+
+    /*********************************************************************************************************
+    * @description
+        operation:
+        verify:
+    **********************************************************************************************************/
+    static testMethod void testOpportunityAutoClosingWithMulticurrency() {
+
+        UTIL_Currency_TEST.UtilCurrencyMock mock = new UTIL_Currency_TEST.UtilCurrencyMock();
+        mock.isMultiCurrencyOrganizationReturn = true;
+
+        //create test data
+        Account acct = new Account (
+            Name='Test Account'
+        );
+        insert acct;
+
+        // I have an opportunity for CAD100 in a stage of Open.
+        Opportunity opp = new Opportunity (
+            Name='Non US Currency',
+            AccountId = acct.id,
+            Amount = 100,
+            CurrencyIsoCode = 'CAD',
+            CloseDate = date.today(),
+            StageName = UTIL_UnitTestData_TEST.getOpenStage()
+        );
+
+        insert opp;
+
+        npe01__OppPayment__c payment = [SELECT id,
+                                               npe01__paid__c,
+                                               npe01__payment_amount__c,
+                                               npe01__Payment_Date__c
+                                        FROM npe01__OppPayment__c
+                                        WHERE npe01__opportunity__c = :opp.Id
+                                        LIMIT 1];
+
+        payment.npe01__paid__c = true;
+        payment.npe01__Payment_Date__c = date.today();
+
+        update payment;
+
+        System.assertEquals(opp.StageName, UTIL_UnitTestData_TEST.getClosedWonStage());
+    }
+
 }
