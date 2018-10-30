@@ -187,13 +187,13 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 Schema.DescribeFieldResult dfr = fieldMap.get(field.name.toLowerCase());
                 if (dfr != null) {
                     Column col = new Column();
-                    col.label = dfr.label;
-                    col.fieldName = dfr.name;
+                    col.label = dfr.getLabel();
+                    col.fieldName = dfr.getName();
                     col.readOnly = false;
                     col.defaultValue = field.defaultValue;
                     col.required = field.required;
                     col.hide = field.hide;
-                    col.type = dfr.type.name().toLowerCase();
+                    col.type = dfr.getType().name().toLowerCase();
                     if (col.type == 'date') {
                         col.type = 'date-local';
                     }
