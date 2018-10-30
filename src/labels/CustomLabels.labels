@@ -7132,46 +7132,6 @@ Before starting this process, we recommend that you back up your data. We also r
 Once the process is 100% complete, you can safely leave or refresh this page.</value>
     </labels>
     <labels>
-        <fullName>stgMultipleTributeLose</fullName>
-        <categories>NPSP Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Allow Tribute on Opp and Tribute</shortDescription>
-        <value>Allow multiple tributes and allow tribute data on Tribute and Opportunity objects</value>
-    </labels>
-    <labels>
-        <fullName>stgMultipleTributeNotAllowBatch</fullName>
-        <categories>NPSP Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Not allow user to run the Multiple Tribute Batch</shortDescription>
-        <value>You cannot run the batch unless the system only use Tribute object. Please update the Multiple Tribute setting if needed.</value>
-    </labels>
-    <labels>
-        <fullName>stgMultipleTributePreventInsert</fullName>
-        <categories>NPSP Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Prevent user insert new Tribute record</shortDescription>
-        <value>You are not allow to create Tribute record. Please update the Multiple Tribute setting to allow creation.</value>
-    </labels>
-    <labels>
-        <fullName>stgMultipleTributePreventUpdate</fullName>
-        <categories>NPSP Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Prevent user update Tribute on Opportunity</shortDescription>
-        <value>You are not allow to update the Tribute Info in this Opportunity! Please update the Tribute Record instead!</value>
-    </labels>
-    <labels>
-        <fullName>stgMultipleTributeST</fullName>
-        <categories>NPSP Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Single Tribute</shortDescription>
-        <value>Use single tributes only</value>
-    </labels>
-    <labels>
         <fullName>stgMultipleTributeSettings</fullName>
         <categories>NPSP Settings</categories>
         <language>en_US</language>
@@ -7183,13 +7143,6 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
 ● If you choose to use Tribute object, you might consider update existing report or create new report to include Tribute object.&lt;br/&gt; 
 ● We recommend to run the Create Tribute from Opportunity batch job if you would like to migrate from the single Tribute model to the Multiple Tributes model. System will create Tribute record based on existing Opportunity. &lt;b&gt;Please note that it might occupy a lot of the storage in the org.&lt;/b&gt; &lt;br/&gt; 
 ● Please note that once your org start using Tribute object, there is no system back fill job to put the Tribute information from Tribute record back to Opportunity.&lt;br/&gt;</value>
-    </labels>
-    <labels>
-        <fullName>stgMultipleTributeStrict</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Only Allow Tribute Record</shortDescription>
-        <value>Allow multiple tributes and automatically create records on the Tribute object only</value>
     </labels>
     <labels>
         <fullName>stgMultipleTributesFlexible</fullName>

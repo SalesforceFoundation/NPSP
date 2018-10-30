@@ -1956,13 +1956,10 @@
         <members>stgLabelYearPicklistYearsAgo</members>
         <members>stgLinkDelete</members>
         <members>stgMultipleTributeBatch</members>
-        <members>stgMultipleTributeLose</members>
-        <members>stgMultipleTributeNotAllowBatch</members>
-        <members>stgMultipleTributePreventInsert</members>
-        <members>stgMultipleTributePreventUpdate</members>
-        <members>stgMultipleTributeST</members>
         <members>stgMultipleTributeSettings</members>
-        <members>stgMultipleTributeStrict</members>
+        <members>stgMultipleTributesFlexible</members>
+        <members>stgMultipleTributesLimited</members>
+        <members>stgMultipleTributesSingleOpp</members>
         <members>stgNPSPGuideImportData</members>
         <members>stgNPSPSettings</members>
         <members>stgNPSPSettingsTitle</members>
