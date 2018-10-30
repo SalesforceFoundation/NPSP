@@ -1044,6 +1044,11 @@ private with sharing class PMT_PaymentCreator_TEST {
         UTIL_Currency_TEST.UtilCurrencyMock mock = new UTIL_Currency_TEST.UtilCurrencyMock();
         mock.isMultiCurrencyOrganizationReturn = true;
 
+        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
+        String openStage = UTIL_UnitTestData_TEST.getOpenStage();
+
+        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = closedWonStage;
+
         //create test data
         Account acct = new Account (
             Name='Test Account'
@@ -1054,10 +1059,10 @@ private with sharing class PMT_PaymentCreator_TEST {
         Opportunity opp = new Opportunity (
             Name='Non US Currency',
             AccountId = acct.id,
-            Amount = 100,
+            Amount = 100.00,
             CurrencyIsoCode = 'CAD',
             CloseDate = date.today(),
-            StageName = UTIL_UnitTestData_TEST.getOpenStage()
+            StageName = openStage
         );
 
         insert opp;
@@ -1065,7 +1070,8 @@ private with sharing class PMT_PaymentCreator_TEST {
         npe01__OppPayment__c payment = [SELECT id,
                                                npe01__paid__c,
                                                npe01__payment_amount__c,
-                                               npe01__Payment_Date__c
+                                               npe01__Payment_Date__c,
+		                                       CurrencyIsoCode
                                         FROM npe01__OppPayment__c
                                         WHERE npe01__opportunity__c = :opp.Id
                                         LIMIT 1];
@@ -1075,7 +1081,12 @@ private with sharing class PMT_PaymentCreator_TEST {
 
         update payment;
 
-        System.assertEquals(opp.StageName, UTIL_UnitTestData_TEST.getClosedWonStage());
+        String insertedOpportunityStageName = [SELECT StageName
+                                                FROM Opportunity
+                                                WHERE Id = : opp.Id
+                                                LIMIT 1].StageName;
+
+        System.assertEquals(closedWonStage,insertedOpportunityStageName);
     }
 
 }
