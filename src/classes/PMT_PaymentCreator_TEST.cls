@@ -1047,6 +1047,7 @@ private with sharing class PMT_PaymentCreator_TEST {
 
         UTIL_Currency_TEST.UtilCurrencyMock mock = new UTIL_Currency_TEST.UtilCurrencyMock();
         mock.isMultiCurrencyOrganizationReturn = true;
+        UTIL_Currency.instance = mock;
 
         String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
         String openStage = UTIL_UnitTestData_TEST.getOpenStage();
@@ -1065,6 +1066,66 @@ private with sharing class PMT_PaymentCreator_TEST {
             AccountId = acct.id,
             Amount = 100.00,
             CurrencyIsoCode = 'CAD',
+            CloseDate = date.today(),
+            StageName = openStage
+        );
+
+        insert opp;
+
+        npe01__OppPayment__c payment = [SELECT id,
+                                               npe01__paid__c,
+                                               npe01__payment_amount__c,
+                                               npe01__Payment_Date__c,
+		                                       CurrencyIsoCode
+                                        FROM npe01__OppPayment__c
+                                        WHERE npe01__opportunity__c = :opp.Id
+                                        LIMIT 1];
+
+        payment.npe01__paid__c = true;
+        payment.npe01__Payment_Date__c = date.today();
+
+        update payment;
+
+        String insertedOpportunityStageName = [SELECT StageName
+                                                FROM Opportunity
+                                                WHERE Id = : opp.Id
+                                                LIMIT 1].StageName;
+
+        System.assertEquals(closedWonStage,insertedOpportunityStageName);
+    }
+
+    /*********************************************************************************************************
+    * @description
+        operation:
+            Create an Opportunity in an org where multicurrency is NOT enabled
+            with stage name Prospecting and an amount of 100 CAD
+            update the corresponding payment so it is Paid and have a date.
+        verify:
+            Opportunity stage changes from 'Prospecting' to 'Closed/Won'
+    **********************************************************************************************************/
+    @isTest
+    static void testOpportunityAutoClosingWithoutMulticurrency() {
+
+        UTIL_Currency_TEST.UtilCurrencyMock mock = new UTIL_Currency_TEST.UtilCurrencyMock();
+        mock.isMultiCurrencyOrganizationReturn = false;
+        UTIL_Currency.instance = mock;
+
+        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
+        String openStage = UTIL_UnitTestData_TEST.getOpenStage();
+
+        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = closedWonStage;
+
+        //create test data
+        Account acct = new Account (
+            Name='Test Account'
+        );
+        insert acct;
+
+        // I have an opportunity for CAD100 in a stage of Prospecting.
+        Opportunity opp = new Opportunity (
+            Name='Non US Currency',
+            AccountId = acct.id,
+            Amount = 100.00,
             CloseDate = date.today(),
             StageName = openStage
         );

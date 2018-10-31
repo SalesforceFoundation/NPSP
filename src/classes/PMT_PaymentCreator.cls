@@ -402,7 +402,7 @@ public class PMT_PaymentCreator {
         Boolean isAmountEqualPaymentReceived = false;
 
         // If the org has multicurrency setted up we need to round up the currency value to avoid bugs.
-        if (UserInfo.isMultiCurrencyOrganization()) {
+        if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
             String oppCurrency = (String)newOpp.get('CurrencyIsoCode');
             Integer decimalPlaces = UTIL_CurrencyCache.getInstance().getCurrDecimalPlaces(oppCurrency);
             isAmountEqualPaymentReceived = isEqualWhenRounded(newOpp.Amount, totalPaymentAmount, decimalPlaces);
