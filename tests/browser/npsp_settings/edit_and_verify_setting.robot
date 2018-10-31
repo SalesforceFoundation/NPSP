@@ -7,6 +7,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Make Changes to Settings and Verify Changes
+    [tags]  unstable
     Sleep    5
     Open App Launcher
     Populate Address    Search apps or items...    NPSP Settings

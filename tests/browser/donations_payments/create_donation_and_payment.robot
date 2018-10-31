@@ -13,6 +13,7 @@ ${opp_name}
 *** Test Cases ***
 
 Create Donation from a Contact
+    [tags]  unstable
     &{contact} =  API Create Contact    Email=skristem@robot.com
     &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Name=Sravani $100 donation
     Go To Record Home  &{opportunity}[Id]
@@ -34,6 +35,7 @@ Create Donation from a Contact
     Should not be equal as strings    ${value}    0
     
 Verify Payments 
+    [tags]  unstable
     Go To Object Home         Opportunity
     Click Link    ${opp_name}  
     Click ViewAll Related List    Payments

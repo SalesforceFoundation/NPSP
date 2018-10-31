@@ -8,6 +8,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Open Recurring Donation With Monthly Installment
+    [tags]  unstable
     Sleep    5
     Open App Launcher
     Populate Address    Search apps or items...    NPSP Settings
