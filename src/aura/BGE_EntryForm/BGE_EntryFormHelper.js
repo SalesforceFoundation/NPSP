@@ -63,7 +63,7 @@
      * @return: validity Object with Boolean for validity and an array of any missing fields to display
      */
     validateFields: function(component) {
-        var validity = {isValid: true, missingFields: [], badFormatFields: []};
+        var validity = {isValid: true, missingFields: []};
 
         //check for missing donor first
         var missingDonorLabel = this.validateDonor(component);

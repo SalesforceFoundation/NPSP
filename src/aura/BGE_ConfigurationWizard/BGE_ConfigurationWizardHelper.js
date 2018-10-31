@@ -174,7 +174,7 @@
                             currentFieldGroup.values.push(currentField.id);
                         });
                     }
-                    //special case for Amount object to always be visible
+                    //special case so Amount object is always visible
                     if (sObjectName === 'Opportunity') {
                         currentFieldGroup.requiredOptions.push('Opportunity.npsp__Donation_Amount__c');
                         currentFieldGroup.requiredOptions.push('Opportunity.Donation_Amount__c');
