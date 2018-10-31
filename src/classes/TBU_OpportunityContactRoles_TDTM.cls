@@ -36,7 +36,6 @@
 */
 public with sharing class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable {
 
-    private static final String OBJECT_NAME_TRIBUTE = 'Tribute__c';
     private static final String FIELD_NAME_PRIMARY_CONTACT = 'Primary_Contact__c';
     private static final String FIELD_NAME_HONOREE_CONTACT = 'Honoree_Contact__c';
     private static final String FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT = 'Notification_Recipient_Contact__c';
@@ -73,7 +72,7 @@ public with sharing class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable
             //we will populate Name field if the setting allow Multiple Tribute
             if (UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesFlexible ||
                     UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesLimited) {
-                OPP_OpportunityContactRoles_TDTM.updateHonoreeNotificationFields(newList, null, OBJECT_NAME_TRIBUTE);
+                OPP_OpportunityContactRoles_TDTM.updateHonoreeNotificationFields(newList, null, Tribute__c.SObjectType);
             }
 
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
@@ -86,7 +85,7 @@ public with sharing class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable
             //we will populate Name field if the setting allow Multiple Tribute
             if (UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesFlexible ||
                     UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesLimited) {
-                OPP_OpportunityContactRoles_TDTM.updateHonoreeNotificationFields(newList, oldList, OBJECT_NAME_TRIBUTE);
+                OPP_OpportunityContactRoles_TDTM.updateHonoreeNotificationFields(newList, oldList, Tribute__c.SObjectType);
             }
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {

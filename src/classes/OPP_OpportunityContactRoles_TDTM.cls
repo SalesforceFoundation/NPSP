@@ -36,7 +36,6 @@
 */
 public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runnable {
 
-    private static final String OBJECT_NAME_OPPORTUNITY = 'Opportunity';
     private static final String FIELD_NAME_OPPORTUNITY = 'Opportunity__c';
     private static final String FIELD_NAME_PRIMARY_CONTACT = 'Primary_Contact__c';
     private static final String FIELD_NAME_HONOREE_CONTACT = 'Honoree_Contact__c';
@@ -62,7 +61,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
             setOpportunityAccountField((list<Opportunity>) newlist);
 
-            updateHonoreeNotificationFields(newlist, null, OBJECT_NAME_OPPORTUNITY);
+            updateHonoreeNotificationFields(newlist, null, Opportunity.SobjectType);
 
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             //If the Setting is Multiple Tribute Only, we need to prevent updating existing Tribute Fields on Opportunity
@@ -75,7 +74,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 preventUpdateTributeInfoOnOpportunity((List<Opportunity>) newlist, (list<Opportunity>) oldlist, true);
             }
 
-            updateHonoreeNotificationFields(newlist, oldlist, OBJECT_NAME_OPPORTUNITY);
+            updateHonoreeNotificationFields(newlist, oldlist, Opportunity.SobjectType);
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             upsertContactRolesAfterInsert((list<Opportunity>) newlist, null, false);
@@ -183,13 +182,13 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     * @param listOldSObjs List of Sobjects from trigger.old
     * @param objType The Type of the object
     ********************************************************************************************************/
-    public static void updateHonoreeNotificationFields(list<Sobject> listSObjs, list<Sobject> listOldSObjs, String objType) {
+    public static void updateHonoreeNotificationFields(list<Sobject> listSObjs, list<Sobject> listOldSObjs, Schema.SObjectType sObjType) {
         map<id,Contact> mapConIdContact = new map<id,Contact>();
         list<String> listFields = new list<string>{FIELD_NAME_HONOREE_CONTACT, FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT};
 
         for (integer i=0; i<listSObjs.size(); i++) {
             Sobject newSObj = listSObjs[i];
-            Sobject oldSObj = listOldSObjs!=null && !listOldSObjs.IsEmpty() ? listOldSObjs[i] :  UTIL_Describe.getPrototypeObject(objType);
+            Sobject oldSObj = listOldSObjs!=null && !listOldSObjs.IsEmpty() ? listOldSObjs[i] :  sObjType.newSObject();
             for (string field : listFields) {
                 if (newSObj.get(field) != oldSObj.get(field)) {
                     if (newSObj.get(field)!=null)
@@ -204,7 +203,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             mapConIdContact = new map<id,Contact>([SELECT Id, Name FROM Contact WHERE Id IN :mapConIdContact.keySet()]);
             for (integer i=0; i<listSObjs.size(); i++) {
                 Sobject newSObj = listSObjs[i];
-                Sobject oldSObj = listOldSObjs!=null && !listOldSObjs.IsEmpty() ? listOldSObjs[i] :  UTIL_Describe.getPrototypeObject(objType);
+                Sobject oldSObj = listOldSObjs!=null && !listOldSObjs.IsEmpty() ? listOldSObjs[i] :  sObjType.newSObject();
 
                 for (string field : listFields) {
                     if (newSObj.get(field) != oldSObj.get(field)) {
