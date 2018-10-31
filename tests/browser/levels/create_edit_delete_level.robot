@@ -22,7 +22,7 @@ Create Level and Verify
     
 Edit Level and Verify
     Click Link    link=Edit
-    Sleep    2
+    #Sleep    2
     Select Frame With Title    Levels
     Enter Level Dd Values    Source Field    Smallest Gift
     Enter Level Values
@@ -34,25 +34,23 @@ Edit Level and Verify
     Click Link    link=${level_name}  
     Confirm Value    Minimum Amount (>=)    0.01    Y
     Confirm Value    Maximum Amount (<)     0.99    Y
-    Sleep    2
+    #Sleep    2
     Confirm Value    Source Field    npo02__SmallestAmount__c    Y
             
 Delete Level
-    ${contact_id} =  Create Contact
-    &{contact} =  Salesforce Get  Contact  ${contact_id} 
-    Header Field Value    Account Name    &{contact}[LastName] Household
+    &{contact} =  API Create Contact
+    Go To Record Home  &{contact}[Id]
     Select Tab    Details
-    Scroll Page To Location    100    400
     Click Edit Button    Edit Level
     Populate Lookup Field    Level    ${level_name}
     Click Record Button    Save
-    Sleep    2
+    #Sleep    2
     Verify Field Value    Level    ${level_name}    Y
     Go To Object Home         npsp__Level__c
     Click Link    link=${level_name}
     Click Link    link=Show more actions
     Click Link    link=Delete
-    Sleep    2
+    #Sleep    2
     Click Modal Button    Delete
     Go To Object Home    Contact
     Click Link    link=&{contact}[FirstName] &{contact}[LastName]
