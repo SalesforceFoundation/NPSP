@@ -47,6 +47,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     public Integer rowNumber {get;set;}
     /** @description The currency symbol or ISO code of the related record or org default */
     @TestVisible private String currencySymbol;
+
     /** @description Set to true if the user has the appropriate permissions to access the page */
     public Boolean hasAccess {
         get {
