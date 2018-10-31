@@ -1214,6 +1214,9 @@
         <members>PageMessagesFatal</members>
         <members>PageMessagesInfo</members>
         <members>PageMessagesWarning</members>
+        <members>RD_ErrorAddDonationHeaderText</members>
+        <members>RD_ErrorAddDonationMissingId</members>
+        <members>RD_ErrorAddDonationPermissionDenied</members>
         <members>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</members>
         <members>RD_ErrorNotEnoughClosedValueForFixedLength</members>
         <members>REL_Create_New_Relationship</members>
@@ -2208,6 +2211,13 @@
         <members>Opportunity_Naming_Settings__c-iw</members>
         <members>Opportunity_Naming_Settings__c-ja</members>
         <members>Opportunity_Naming_Settings__c-nl_NL</members>
+        <members>Package_Settings__c-de</members>
+        <members>Package_Settings__c-en_US</members>
+        <members>Package_Settings__c-es</members>
+        <members>Package_Settings__c-fr</members>
+        <members>Package_Settings__c-iw</members>
+        <members>Package_Settings__c-ja</members>
+        <members>Package_Settings__c-nl_NL</members>
         <members>Partial_Soft_Credit__c-de</members>
         <members>Partial_Soft_Credit__c-en_US</members>
         <members>Partial_Soft_Credit__c-es</members>
