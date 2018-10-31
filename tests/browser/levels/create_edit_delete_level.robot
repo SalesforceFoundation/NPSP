@@ -10,6 +10,7 @@ ${level_name}
 *** Test Cases ***
 
 Create Level and Verify
+    [tags]  unstable
     ${level_name}     Create Level
     Set Global Variable      ${level_name}
     Go To Object Home         npsp__Level__c
@@ -21,6 +22,7 @@ Create Level and Verify
     
     
 Edit Level and Verify
+    [tags]  unstable
     Click Link    link=Edit
     Sleep    2
     Select Frame With Title    Levels
@@ -38,6 +40,7 @@ Edit Level and Verify
     Confirm Value    Source Field    npo02__SmallestAmount__c    Y
             
 Delete Level
+    [tags]  unstable
     ${contact_id} =  Create Contact
     &{contact} =  Salesforce Get  Contact  ${contact_id} 
     Header Field Value    Account Name    &{contact}[LastName] Household

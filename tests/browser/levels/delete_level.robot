@@ -7,6 +7,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Delete Level
+    [tags]  unstable
     ${level_name}     Create Level
     ${contact_id} =  Create Contact
     &{contact} =  Salesforce Get  Contact  ${contact_id} 

@@ -13,6 +13,7 @@ ${opp_name}
 *** Test Cases ***
 
 Create Donation from a Contact
+    [tags]  unstable
     ${contact_id} =  Create Contact with Email
     &{contact} =  Salesforce Get  Contact  ${contact_id}
     Header Field Value    Account Name    &{contact}[LastName] Household
@@ -42,6 +43,7 @@ Create Donation from a Contact
     Should not be equal as strings    ${value}    0
     
 Verify Payments 
+    [tags]  unstable
     Go To Object Home         Opportunity
     Click Link    ${opp_name}  
     Click ViewAll Related List    Payments

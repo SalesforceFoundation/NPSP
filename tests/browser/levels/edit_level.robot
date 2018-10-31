@@ -7,6 +7,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Edit Level and Verify
+    [tags]  unstable
     ${level_name}     Create Level
     Go To Object Home         npsp__Level__c
     Click Link    link=${level_name}

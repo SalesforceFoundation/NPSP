@@ -7,6 +7,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create a Contact and Add Engagement Plan
+    [tags]  unstable
     ${plan_name}     ${task1_1}    ${sub_task1_1}     ${task2_1}     Create Engagement Plan
     ${contact_id} =  Create Contact with Address
     &{contact} =  Salesforce Get  Contact  ${contact_id}
@@ -20,6 +21,7 @@ Create a Contact and Add Engagement Plan
     Log To Console    ${plan_num}
     
 Delete Engagement Plan
+    [tags]  unstable
     Sleep    2
     ${plan_num}    Verify Eng Plan Exists    Engagement Plans    True
     Sleep    2
@@ -28,6 +30,7 @@ Delete Engagement Plan
     Verify Occurance    Engagement Plans    0    
     
 Verify Tasks Exist Under Activity
+    [tags]  unstable
     Sleep    2
     Scroll Page To Location    0    0
     Click Span Button    More Steps

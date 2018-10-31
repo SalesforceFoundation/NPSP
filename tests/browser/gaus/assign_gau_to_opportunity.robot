@@ -8,6 +8,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Assign GAU to Opportunity
+    [tags]  unstable
     ${gau_name1}    Create GAU
     ${gau_name2}    Create GAU
     Go To Object Home    Opportunity

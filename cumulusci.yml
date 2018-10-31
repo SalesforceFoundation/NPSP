@@ -65,6 +65,14 @@ tasks:
         options:
             path: unpackaged/config/delete
 
+    robot:
+        description: Runs a Robot Framework test from a .robot file
+        class_path: cumulusci.tasks.robotframework.Robot
+        options:
+            suites: tests
+            options:
+                noncritical: unstable
+
     robot_libdoc:
         class_path: cumulusci.tasks.robotframework.RobotLibDoc
         options:

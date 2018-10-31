@@ -15,6 +15,7 @@ Create Household With Name Only
 
     
 Create Household With Name and Email
+    [tags]  unstable
     ${contact_id} =  Create Contact with Email
     &{contact} =  Salesforce Get  Contact  ${contact_id}
     Header Field Value    Account Name    &{contact}[LastName] Household

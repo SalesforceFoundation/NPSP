@@ -8,6 +8,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Donation and Opportunity and Create Payment Manually
+    [tags]  unstable
     #1 contact HouseHold Validation
     ${contact_id} =  Create Contact with Email
     &{contact} =  Salesforce Get  Contact  ${contact_id}

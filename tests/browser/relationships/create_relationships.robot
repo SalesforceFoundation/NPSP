@@ -7,6 +7,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Relationships for contacts
+    [tags]  unstable
     #1 contact HouseHold Validation
     ${contact_id1} =  Create Contact with Email
     &{contact1} =  Salesforce Get  Contact  ${contact_id1}
