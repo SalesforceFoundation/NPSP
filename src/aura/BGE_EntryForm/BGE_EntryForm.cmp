@@ -46,7 +46,6 @@
     <aura:attribute name="requiredFields" type="List" description="Easily accessible list of required fields" access="private"/>
 
     <!--Events-->
-    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
     <aura:handler name="render" action="{!c.callFocus}" value="{!this}"/>
 
     <lightning:recordEditForm aura:id="recordEditForm"

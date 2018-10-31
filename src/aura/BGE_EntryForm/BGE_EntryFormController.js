@@ -1,17 +1,4 @@
 ({
-    doInit: function(component) {
-        //get all required fields for easy-access validity check
-        var requiredFields = [];
-        var allFields = component.get("v.dataImportFields");
-
-        allFields.forEach(function(field) {
-           if (field.required) {
-               requiredFields.push(field.name);
-           }
-        });
-
-        component.set("v.requiredFields", requiredFields);
-    },
     /**
      * @description: called during render to place the focus at the start of the form
      */
@@ -47,14 +34,13 @@
      * @description: override submit function in recordEditForm to handle backend fields and validation
      */
     onSubmit: function (component, event, helper) {
-        debugger;
         event.preventDefault();
         var eventFields = helper.addHiddenFields(component, event);
         var validity = helper.validateFields(component, event);
-        //component.find('recordEditForm').submit(eventFields);
+
         if (validity.isValid) {
             component.find('recordEditForm').submit(eventFields);
-        } else if (validity.missingFields.length != 0) {
+        } else if (validity.missingFields.length !== 0) {
             helper.sendErrorToast(component, validity.missingFields);
         } else {
             //do nothing since data format errors display inline
