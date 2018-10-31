@@ -176,6 +176,7 @@
                     }
                     //special case for Amount object to always be visible
                     if (sObjectName === 'Opportunity') {
+                        currentFieldGroup.requiredOptions.push('Opportunity.npsp__Donation_Amount__c');
                         currentFieldGroup.requiredOptions.push('Opportunity.Donation_Amount__c');
                     }
                     templateFields.fieldGroups.push(currentFieldGroup);
@@ -671,7 +672,8 @@
                         errors.rows[fieldName] = fieldNameGroup;
                         errors.size += 1;
                     }*/
-                    if (currentField.name === 'Donation_Amount__c' && !currentField.required) {
+                    if ((currentField.name === 'Donation_Amount__c' || currentField.name === 'npsp__Donation_Amount__c')
+                        && !currentField.required) {
                         allValid = false;
                         var fieldName = currentField.name;
                         var fieldNameGroup = {
