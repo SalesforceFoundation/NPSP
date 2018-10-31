@@ -1,4 +1,5 @@
 npsp_lex_locators={
+    'breadcrumb': "//li[contains(@class, 'slds-breadcrumb__item')]/span[text()='{}']",
     'mailing_address': "//*[contains(@placeholder,'{}')]",
     'app_launcher':{
         'select-option':'//span/mark[text()="{}"]',

@@ -225,9 +225,8 @@ Create Engagement Plan
     
 Create Level
     ${level_name}=    Generate Random String
-    Go To Object Home         npsp__Level__c
+    Select App Launcher Tab  Levels
     Click Special Object Button       New
-    Sleep    2
     Select Frame With Title    Levels
     Enter Level Values
     ...            Level Name=${level_name}
@@ -237,10 +236,14 @@ Create Level
     Enter Level Dd Values    Source Field    Total Gifts
     Enter Level Dd Values    Level Field    Level
     Enter Level Dd Values    Previous Level Field    Previous Level
-    Click Level Button    Save
-    Sleep    2
-    [Return]    ${level_name}
-     
+    Set Focus To Element   xpath: //input[@value='Save']
+    Click Button  Save
+    Unselect Frame
+    Wait For Locator  breadcrumb  Level
+    ${level_id} =            Get Current Record Id
+    Store Session Record  Level__c  ${level_id}
+    [Return]    ${level_id}  ${level_name}
+
 Verify Engagement Plan
     [Arguments]       ${plan_name}     @{others}
     Go To Object Home         npsp__Engagement_Plan_Template__c
