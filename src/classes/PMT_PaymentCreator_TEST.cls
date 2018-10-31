@@ -1037,7 +1037,10 @@ private with sharing class PMT_PaymentCreator_TEST {
     /*********************************************************************************************************
     * @description
         operation:
+            Create an Opportunity with stage name Prospecting and an amount of 100 CAD
+            update the corresponding payment so it is Paid and have a date.
         verify:
+            Opportunity stage changes from 'Prospecting' to 'Closed/Won'
     **********************************************************************************************************/
     static testMethod void testOpportunityAutoClosingWithMulticurrency() {
 
@@ -1055,7 +1058,7 @@ private with sharing class PMT_PaymentCreator_TEST {
         );
         insert acct;
 
-        // I have an opportunity for CAD100 in a stage of Open.
+        // I have an opportunity for CAD100 in a stage of Prospecting.
         Opportunity opp = new Opportunity (
             Name='Non US Currency',
             AccountId = acct.id,
