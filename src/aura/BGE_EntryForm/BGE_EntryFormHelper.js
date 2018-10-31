@@ -85,7 +85,7 @@
         }
 
         //if field formats are invalid or fields are missing, set isValid as false
-        if (validity.missingFields.length !== 0 || validity.badFormatFields !== 0) {
+        if (validity.missingFields.length !== 0) {
             validity.isValid = false;
         }
 

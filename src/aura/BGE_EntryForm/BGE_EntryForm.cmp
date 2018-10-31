@@ -53,6 +53,7 @@
                               onsuccess="{!c.onSuccess}"
                               onsubmit="{!c.onSubmit}"
                               onload="{!c.onFormLoad}">
+        <lightning:messages />
 
         <lightning:layout multipleRows="true">
             <!-- BEGIN DONOR FIELDS -->
