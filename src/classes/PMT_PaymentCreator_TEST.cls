@@ -1042,7 +1042,8 @@ private with sharing class PMT_PaymentCreator_TEST {
         verify:
             Opportunity stage changes from 'Prospecting' to 'Closed/Won'
     **********************************************************************************************************/
-    static testMethod void testOpportunityAutoClosingWithMulticurrency() {
+    @isTest
+    static void testOpportunityAutoClosingWithMulticurrency() {
 
         UTIL_Currency_TEST.UtilCurrencyMock mock = new UTIL_Currency_TEST.UtilCurrencyMock();
         mock.isMultiCurrencyOrganizationReturn = true;
