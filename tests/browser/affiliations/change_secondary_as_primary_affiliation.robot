@@ -12,16 +12,14 @@ Create Secondary Affiliation for Contact
     API Create Secondary Affiliation    &{account}[Id]    &{contact}[Id]
     Go To Record Home  &{contact}[Id]
     Page Should Contain    &{contact}[LastName]
-    Scroll Page To Location    50    600
-    #Sleep    5
-    Click Id    &{account}[Name]
-    #Sleep    5
+    Click Related Item Link  Organization Affiliations  &{account}[Name]
+    # Scroll down so elements aren't hidden behind the footer
     Scroll Page To Location    0    400
     Click Edit Button    Edit Primary
-    #Sleep    5
-    Select Modal Checkbox    Primary
+    Wait For Locator  checkbox  Primary
+    Select Lightning Checkbox    Primary
     Click Record Button    Save
-    Sleep    5
+    #Sleep    5
     Go To Object Home    Contact
     Click link    link=&{contact}[FirstName] &{contact}[LastName]
     Select Tab    Details

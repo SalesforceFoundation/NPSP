@@ -13,9 +13,7 @@ Remove Primary Affiliation for Contact
     Go To Object Home          Contact
     Click Link    link=&{contact}[FirstName] &{contact}[LastName]
     #Sleep    5
-    Scroll Page To Location    50    600
-    Select Related Row    &{account}[Name]
-    Click Link    link=Delete
+    Click Related Item Popup Link  Organization Affiliations  &{account}[Name]  Delete
     Click Modal Button    Delete
     #Sleep    5
     Go To Object Home    Account

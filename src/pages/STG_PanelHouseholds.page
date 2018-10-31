@@ -112,15 +112,17 @@
 
 </style>
 
-    <apex:form id="form" styleClass="slds-m-around--x-large">
+    <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgLabelHHSettings}" />
         <c:UTIL_PageMessages />
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton id="editHouseholds" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" oncomplete="initOtherFields();" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--neutral" />
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+            <apex:commandButton id="editHouseholds" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" oncomplete="initOtherFields();" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_neutral" />
         </div>
 
-        <div class="slds-section-title--divider">{!$Label.stgLabelHHNaming}</div>
-        <div class="slds-form--horizontal slds-m-around--large">
+        <div class="slds-section">
+            <div class="slds-section-title_divider">{!$Label.stgLabelHHNaming}</div>
+        </div>
+        <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Advanced_Household_Naming__c.Label}" for="cbxAHN" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -227,7 +229,7 @@
             </apex:outputPanel>
         </div>
 
-        <div class="slds-form--horizontal slds-m-around--large">
+        <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.Household_Naming_Settings__c.Fields.Name_Overrun__c.Label}" for="txtOverrun" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -262,11 +264,13 @@
             </div>
         </div>
 
-        <div class="slds-section-title--divider slds-m-around--none">
-            {!$Label.stgLabelHHObject}
+        <div class="slds-section">
+            <div class="slds-section-title_divider slds-m-around_none">
+                {!$Label.stgLabelHHObject}
+            </div>
         </div>
-        <p class="slds-text-body--small slds-m-around--large"><apex:outputText value="{!$Label.stgHelpHHObjectOverview}" escape="false" /></p>
-        <div class="slds-form--horizontal slds-p-bottom--large">
+        <p class="slds-text-body_small slds-m-around_large"><apex:outputText value="{!$Label.stgHelpHHObjectOverview}" escape="false" /></p>
+        <div class="slds-form_horizontal slds-p-bottom_large">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Rules__c.Label}" for="slHR" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -290,10 +294,12 @@
             </div>
         </div>
 
-        <div class="slds-section-title--divider slds-m-around--none">
-            {!$Label.stgLabelHHGeneral}
+        <div class="slds-section">
+            <div class="slds-section-title_divider slds-m-around_none">
+                {!$Label.stgLabelHHGeneral}
+            </div>
         </div>
-        <div class="slds-form--horizontal slds-m-around--large">
+        <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Mailing_List_ID__c.Label}" for="slHMLI" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -307,9 +313,9 @@
                 </div>
             </div>
         </div>
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton id="saveHouseholds" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" oncomplete="initOtherFields();" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-            <apex:commandButton id="cancelHouseholds" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+            <apex:commandButton id="saveHouseholds" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" oncomplete="initOtherFields();" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button_small slds-button_brand" />
+            <apex:commandButton id="cancelHouseholds" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
     </apex:form>
 </apex:page>

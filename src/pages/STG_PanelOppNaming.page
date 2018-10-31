@@ -1,4 +1,4 @@
-<apex:page controller="STG_PanelOppNaming_CTRL" docType="html-5.0">
+<apex:page controller="STG_PanelOppNaming_CTRL" docType="html-5.0" standardStylesheets="false">
     <script type="text/javascript">
     (function($) {
         // called when the user changes an option in the selectlist (or it gets the focus)
@@ -41,22 +41,22 @@
         window.setOppNameSpec = setOppNameSpec;
     })(jQuery);
     </script>
-    <apex:form id="form" styleClass="slds-m-around--x-large">
+    <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgLabelOppNamingSettings}" />
         <div class="slds-grid">
-            <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
-                <p class="slds-text-body--small slds-m-top--x-small"><apex:outputText value="{!$Label.stgOppNamingDescription}" escape="false"/></p>
+            <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
+                <p class="slds-text-body_small slds-m-top_x-small"><apex:outputText value="{!$Label.stgOppNamingDescription}" escape="false"/></p>
             </div>        
         </div>
         <c:UTIL_PageMessages />
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton id="newONS" value="{!$Label.stgBtnNewONS}" action="{!newONS}" oncomplete="window.initOppEditMode();" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn slds-button slds-button--small slds-button--neutral" />
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+            <apex:commandButton id="newONS" value="{!$Label.stgBtnNewONS}" action="{!newONS}" oncomplete="window.initOppEditMode();" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn slds-button slds-button_small slds-button_neutral" />
         </div>
         <!-- Settings List View -->
         <apex:outputPanel rendered="{!isReadOnlyMode && listOppNameSettings.size>0}">
-            <table class="slds-table slds-table--bordered" >
+            <table class="slds-table slds-table_bordered" >
                 <thead>
-                    <tr class="slds-text-heading--label">
+                    <tr class="slds-text-heading_label">
                         <th scope="col" class="slds-cell-wrap">
                             <label class="slds-truncate">{!$Label.stgLabelActionColumn}</label>
                         </th>
@@ -76,7 +76,7 @@
                 </thead>
                 <tbody>
                     <apex:repeat var="ons" value="{!listOppNameSettings}" >
-                        <tr class="slds-text-body--small">
+                        <tr class="slds-text-body_small">
                             <td class="slds-cell-wrap">
                                 <apex:commandLink id="editONS" action="{!editONS}" title="{!$Label.stgBtnEdit}" oncomplete="window.initOppEditMode();" styleClass="actionLink" status="statusLoad" value="{!$Label.stgBtnEdit}" rerender="form" >
                                     <apex:param assignTo="{!currentONSName}" name="idEdit" value="{!ons.so.Name}" />
@@ -97,8 +97,10 @@
         </apex:outputPanel>
         <!-- Edit View -->
         <apex:outputPanel rendered="{!isEditMode}">
-            <div class="slds-section-title--divider" >{!$Label.stgLabelONS}</div>
-            <div class="slds-form--horizontal slds-m-around--large">
+            <div class="slds-section">
+                <div class="slds-section-title_divider" >{!$Label.stgLabelONS}</div>
+            </div>
+            <div class="slds-form_horizontal slds-m-around_large">
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Attribution__c.Label}" for="slOppAttr" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
@@ -158,9 +160,9 @@
                     </div>
                 </div>
             </div>
-            <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                <apex:commandButton id="saveONS" value="{!$Label.stgBtnSave}" action="{!saveONS}" status="statusLoad" rendered="{!isEditMode}" oncomplete="window.initOppEditMode()" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-                <apex:commandButton id="cancelONS" value="{!$Label.stgBtnCancel}" action="{!cancelEdit}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn slds-button slds-button--small slds-button--neutral" />
+            <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+                <apex:commandButton id="saveONS" value="{!$Label.stgBtnSave}" action="{!saveONS}" status="statusLoad" rendered="{!isEditMode}" oncomplete="window.initOppEditMode()" immediate="false" rerender="form" styleClass="slds-button slds-button_small slds-button_brand" />
+                <apex:commandButton id="cancelONS" value="{!$Label.stgBtnCancel}" action="{!cancelEdit}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn slds-button slds-button_small slds-button_neutral" />
             </div>
         </apex:outputPanel>
     </apex:form>
