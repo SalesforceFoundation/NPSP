@@ -13,10 +13,7 @@ Data Imports
     ${first_name2} =           Generate Random String
     ${last_name2} =            Generate Random String
     ${acc2}=                   Generate Random String
-    Sleep    5
-    Open App Launcher
-    Populate Address    Search apps or items...    NPSP Data Imports
-    Select App Launcher Link  NPSP Data Imports
+    Select App Launcher Tab   NPSP Data Imports
     Click Object Button       New
     Populate Form
     ...                       Contact1 First Name=${first_name1}
@@ -26,7 +23,7 @@ Data Imports
     ...                       Contact2 Last Name=${last_name2}
     ...                       Account2 Name=${acc2}
     Click Modal Button        Save
-    Go To Object Home         npsp__DataImport__c
+    Select App Launcher Tab   NPSP Data Imports
     Select Object Dropdown
     Click Link    link=All
     #Sleep    2
@@ -36,6 +33,3 @@ Data Imports
     Select Frame With Title   NPSP Data Import
     Click Button With Value   Begin Data Import Process
     Wait For Locator    data_imports.status    Completed
-    
-    
-        

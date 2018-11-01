@@ -205,7 +205,7 @@ Create Opportunities
 
 Create Engagement Plan
     ${plan_name} =     Generate Random String
-    Go To Object Home         npsp__Engagement_Plan_Template__c
+    Select App Launcher Tab  Engagement Plan Templates
     Click Special Object Button       New
     #Sleep    2
     Select Frame With Title    Manage Engagement Plan Template
@@ -246,7 +246,7 @@ Create Level
 
 Verify Engagement Plan
     [Arguments]       ${plan_name}     @{others}
-    Go To Object Home         npsp__Engagement_Plan_Template__c
+    Select App Launcher Tab  Engagement Plan Templates
     Click Link    link=${plan_name}
     Check Field Value    Engagement Plan Template Name    ${plan_name}
     Select Tab    Related
