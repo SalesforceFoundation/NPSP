@@ -383,10 +383,6 @@
                     <apex:include pageName="STG_PanelRDBatch" />
                 </div>
 
-                <div class="panel noborder" id="idPanelMTBatch" style="display:none" >
-                    <apex:include pageName="STG_PanelMTBatch" />
-                </div>
-
                 <!-- System Tools -->
                 <div class="panel noborder" id="idPanelHealthCheck" style="display:none" >
                     <apex:include pageName="STG_PanelHealthCheck" />
