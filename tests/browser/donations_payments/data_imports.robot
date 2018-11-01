@@ -15,7 +15,7 @@ Data Imports
     ${acc2}=                   Generate Random String
     Sleep    5
     Open App Launcher
-    Populate Address    Find an app or item    NPSP Data Imports
+    Populate Address    Search apps or items...    NPSP Data Imports
     Select App Launcher Link  NPSP Data Imports
     Click Object Button       New
     Populate Form
@@ -29,13 +29,13 @@ Data Imports
     Go To Object Home         npsp__DataImport__c
     Select Object Dropdown
     Click Link    link=All
-    Sleep    2
+    #Sleep    2
     #Click Link    link=Status
     Click Special Object Button       Start Data Import
-    Sleep    3
+    #Sleep    3
     Select Frame With Title   NPSP Data Import
     Click Button With Value   Begin Data Import Process
-    Wait Until Element is Visible    //div[contains(@class,"slds-tile__title")][./p[text()="BDI_DataImport_BATCH"]]/div[contains(@class,"slds-col")]/span[text()="Completed"]    15
+    Wait For Locator    data_imports.status    Completed
     
     
         

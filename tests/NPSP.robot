@@ -61,7 +61,21 @@ API Create Secondary Affiliation
     ...               npe5__Contact__c=${contact_id}
     ...               npe5__Primary__c=false 
     ...               &{fields}
-  
+ 
+# API Create Engagement Plan
+    # [Arguments]      ${plan_name}     &{fields}    
+    # ${opp_id} =  Salesforce Insert    npsp__Engagement_Plan_Template__c
+    # ...               Name=${plan_name}
+    # ...               npsp__Description__c=This plan is created via Automation 
+    # ...               &{fields}
+   
+API Create GAU
+    ${name} =   Generate Random String
+    ${gau_id} =  Salesforce Insert  npsp__General_Accounting_Unit__c
+    ...               Name=${name}
+    &{gau} =     Salesforce Get  npsp__General_Accounting_Unit__c  ${gau_id}
+    [return]         &{gau}  
+   
 Create Contact
     ${first_name} =           Generate Random String
     ${last_name} =            Generate Random String
@@ -158,31 +172,21 @@ Create HouseHold
 
 Create Primary Affiliation
     [Arguments]      ${acc_name}      ${con_id}
-    # # Create Organization Account
-    # &{account} =  API Create Organization Account
-    # # Create Contact 
-    # &{contact} =  API Create Contact    Email=skristem@robot.com
     Go To Record Home  ${con_id}
     Select Tab    Details
     #Scroll Page To Location    0    300
     Click Edit Button    Edit Primary Affiliation
     Populate Lookup Field    Primary Affiliation    ${acc_name}
     Click Record Button    Save 
-    # [Return]         &{account}[Id]    &{contact}[Id]   
-
+    
 Create Secondary Affiliation
     [Arguments]      ${acc_name}      ${con_id}
-    # # Create Organization Account
-    # &{account} =  API Create Organization Account
-    # # Create Contact
-    # &{contact} =  API Create Contact    Email=skristem@robot.com
     Go To Record Home  ${con_id}
     Wait For Locator    record.related.title    Volunteer Hours 
     Scroll Page To Location    50    400
     Click Related List Button   Organization Affiliations    New
     Populate Lookup Field    Organization    ${acc_name}
     Click Modal Button    Save
-    #[Return]         &{account}[Id]    &{contact}[Id]
     
 Create Opportunities
     [Arguments]    ${opp_name}    ${hh_name}  
@@ -203,7 +207,7 @@ Create Engagement Plan
     ${plan_name} =     Generate Random String
     Go To Object Home         npsp__Engagement_Plan_Template__c
     Click Special Object Button       New
-    Sleep    2
+    #Sleep    2
     Select Frame With Title    Manage Engagement Plan Template
     Enter Eng Plan Values
     ...             Engagement Plan Template Name=${plan_name}
@@ -214,9 +218,9 @@ Create Engagement Plan
     Enter Task Id and Subject    32    ${sub_task}
     Click Task Button    Add Task
     Enter Task Id and Subject    59    ${task2}
-    Scroll Page To Location    50    0
+    Page Scroll To Locator    id    saveBTN
     Click Task Button    Save
-    Sleep    2
+    #Sleep    2
     [Return]    ${plan_name}    ${task1}    ${sub_task}     ${task2}
     
 Create Level
@@ -232,7 +236,7 @@ Create Level
     Enter Level Dd Values    Target    Contact
     Enter Level Dd Values    Source Field    Total Gifts
     Enter Level Dd Values    Level Field    Level
-    Enter Level Dd Values    Previous Level Field    PreviousLevel
+    Enter Level Dd Values    Previous Level Field    Previous Level
     Click Level Button    Save
     Sleep    2
     [Return]    ${level_name}
@@ -249,14 +253,14 @@ Create GAU
     ${gau_name} =         Generate Random String
     Sleep    5
     Open App Launcher
-    Populate Address    Find an app or item    General Accounting Units
+    Populate Address    Search apps or items...    General Accounting Units
     Select App Launcher Link    General Accounting Units
     Click Object Button       New
     Populate Form
     ...                    General Accounting Unit Name=${gau_name}
     ...                    Largest Allocation=5
     Click Modal Button        Save
-    Sleep    2
+    #Sleep    2
     [Return]           ${gau_name}    
     
 Choose Frame

@@ -3,7 +3,8 @@ npsp_lex_locators={
     'app_launcher':{
         'select-option':'//span/mark[text()="{}"]',
     },
-    'object_dd':"//h1[contains(@class,'slds-page-header__title')]/a/div[contains(@class,'triggerLinkTextAndIconWrapper')][.//lightning-primitive-icon]",
+    #'object_dd':"//h1[contains(@class,'slds-page-header__title')]/a/div[contains(@class,'triggerLinkTextAndIconWrapper')][.//lightning-primitive-icon]",
+    'object_dd':'//h1[contains(@class,"slds-page-header__title")]//a',
     "record": {
         'button': "//div[@class='actionsContainer']/button[@title='{}']",
         'datepicker':"//div[contains(@class,'uiDatePickerGrid')]/table[@class='calGrid']//span[text()='{}']",
@@ -24,8 +25,10 @@ npsp_lex_locators={
         'radio_button':"//div[contains(@class,'changeRecordTypeRightColumn')]/div/label[@class='slds-radio']/div[.//span[text()='{}']]/preceding::div[1]/span[@class='slds-radio--faux']",
         
     },
+    'test':'/html/body/div[6]/table/tbody/tr[23]/td[1]/a',
     'frame':'//iframe[@title= "{}"]',
-    'id':'//*[@id="{}"]',
+    #'id':'//*[@id="{}"]',
+    'id':'//*[contains(@id,"{}")]',
     'button':'//input[@value="{}"]',
     'checkbox':'//div[contains(@class,"uiInputCheckbox")]/label/span[text()="{}"]/../following-sibling::input[@type="checkbox"]',
     'tab': "//div[@class='uiTabBar']/ul[@class='tabs__nav']/li[contains(@class,'uiTabItem')]/a[@class='tabHeader']/span[contains(text(), '{}')]",
@@ -57,6 +60,7 @@ npsp_lex_locators={
     'field': "//div[contains(@class, 'uiInput')][.//label[contains(@class, 'uiLabel')][.//span[text()='{}']]]//input",
     'field_lookup_value': "//a[@role='option'][.//div[@title='{}']]",
     'header':'//h1[contains(@title,"{}")]',
+    'check_related_list_item':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")]//tbody//th//a[text()="{}"]',
     'detail_page': {
         'address':'//h3[contains(@class, "slds-section__title")][.//span[contains(text(),"Address")]]/../..//div[contains(@class, "test-id")]/span[text()= "{}"]/../following-sibling::div//a/div[contains(@class, "slds")]',
         'field':'//h3[contains(@class, "slds-section__title")][.//span[text()="{}"]]/../..//div[contains(@class, "test-id")]/span[text()= "{}"]/../following-sibling::div//span[text()="{}"]',
@@ -79,12 +83,10 @@ npsp_lex_locators={
         'button': "css: div.windowViewMode-normal ul.forceActionsContainer.oneActionsRibbon a[title='{}']",
     },
     'engagement_plan':{
-        'id':'//*[@id="j_id0:theForm:{}"]',
-        #'task_id':'//*[@id="{}"]',
         'input_box':'//*[contains(@id ,"j_id0:theForm:j_id102_{}") and @class= "slds-input"]',
         'dropdown':'//div[contains(@class,"slds-p-top_small")]/label[text()="{}"]/following-sibling::div/select',
         'checkbox':'//div[contains(@class,"slds-p-top_small")]/label[@class="slds-checkbox"][./span/following-sibling::{}[text()="{}"]/]',
-        'check_related_list_item':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")]//tbody//th//a[text()="{}"]',
+        
         'check_eng_plan':'//h2/a/span[@title="{}"]//ancestor::div[@class = "slds-card__header slds-grid"]/following-sibling::div//tbody/tr/th/div/a',
         'dd':'//h2/a/span[@title="{}"]//ancestor::div[@class = "slds-card__header slds-grid"]/following-sibling::div//tbody/tr/th/div/a/ancestor::th/following-sibling::td//lightning-primitive-icon',
         'tasks':'//div[@class="slds-section__content"]/ul/li//a[text()="{}"]',
@@ -111,7 +113,9 @@ npsp_lex_locators={
         'list':"//div[contains(@class,'slds-form--horizontal')]/div[@class='slds-form-element'][./label[text()='{}']]/div/select",
         'list_val':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/span[text()="{}"]',
         },
-    
+    'data_imports':{
+        'status':'//div[contains(@class,"slds-tile__title")][./p[text()="BDI_DataImport_BATCH"]]/div[contains(@class,"slds-col")]/span[text()="{}"]',
+        },
 }
     
 

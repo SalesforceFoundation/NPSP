@@ -13,17 +13,9 @@ ${opp_name}
 *** Test Cases ***
 
 Create Donation from a Contact
-    ${contact_id} =  Create Contact with Email
-    &{contact} =  Salesforce Get  Contact  ${contact_id}
-    Header Field Value    Account Name    &{contact}[LastName] Household
-    Scroll Page To Location    0    500
-    Wait For Locator    record.related.button    Opportunities    New Contact Donation
-    Click Special Related List Button   Opportunities    New Contact Donation
-    Choose Frame    New Opportunity
-    Click Element    p3
-    Select Option    Donation    
-    Click Element    //input[@title='Continue'] 
-    Create Opportunities    Test $100 donation    &{Contact}[LastName] Household
+    &{contact} =  API Create Contact    Email=skristem@robot.com
+    &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Name=Sravani $100 donation
+    Go To Record Home  &{opportunity}[Id]
     ${opp_name}    Get Main Header 
     Set Global Variable      ${opp_name}
     Select Related Dropdown    Payments
@@ -31,9 +23,9 @@ Create Donation from a Contact
     Wait For Locator    frame    Create one or more Payments for this Opportunity
     Select Frame with Title    Create one or more Payments for this Opportunity
     Enter Payment Schedule    ${No_of_payments}    ${intervel}    ${frequency}
-    ${loc}    Get NPSP Locator    payments.text
+    ${loc}    Get NPSP Locator    id    inputX
     Input Text    ${loc}    8/15/2018
-    Click Element    //*[@id="j_id0:vfForm:j_id134"]
+    Click Button With Value    Calculate Payments
     ${value}     Verify Payment Split   100    ${No_of_payments}
     Should be equal as strings    ${value}    ${No_of_payments}
     Verify Date Split    8/15/2018    ${No_of_payments}    ${intervel}

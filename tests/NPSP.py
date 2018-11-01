@@ -375,11 +375,11 @@ class NPSP(object):
         for name, value in kwargs.items():
             if name == "Engagement Plan Template Name":
                 id = "idName"
-                locator = npsp_lex_locators['engagement_plan']['id'].format(id) 
+                locator = npsp_lex_locators['id'].format(id) 
                 self.selenium.get_webelement(locator).send_keys(value)     
             elif name == "Description":
                 id = "idDesc"
-                locator = npsp_lex_locators['engagement_plan']['id'].format(id)
+                locator = npsp_lex_locators['id'].format(id)
                 self.selenium.get_webelement(locator).send_keys(value)  
 
                 
@@ -395,22 +395,22 @@ class NPSP(object):
             locator = npsp_lex_locators['id'].format(id)
             self.selenium.get_webelement(locator).click()    
         elif title=="Add Task":
-            id="j_id0:theForm:btnAddTask"
+            id="btnAddTask"
             locator = npsp_lex_locators['id'].format(id)
             self.selenium.get_webelement(locator).click() 
         elif title=="Save":
-            id="j_id0:theForm:j_id5:j_id6:saveBTN"
+            id="saveBTN"
             locator = npsp_lex_locators['id'].format(id)
             self.selenium.get_webelement(locator).click()
         elif title=="Add Row":
-            id="j_id0:theForm:j_id49:0:addRowBTN"  
+            id="addRowBTN" 
             locator = npsp_lex_locators['id'].format(id)
             self.selenium.get_webelement(locator).click()  
     
     def check_related_list_values(self,list_name,*args):
         """Verifies the value of custom related list"""
         for value in args:
-            locator = npsp_lex_locators['engagement_plan']['check_related_list_item'].format(list_name,value)
+            locator = npsp_lex_locators['check_related_list_item'].format(list_name,value)
             self.selenium.page_should_contain_element(locator)
 
     def verify_eng_plan_exists(self,name, delete=None):  
@@ -538,7 +538,7 @@ class NPSP(object):
     def enter_payment_schedule(self, *args):
         """Enter values into corresponding fields in Levels page"""                 
         #if name == "Payments":
-        id = ["j_id0:vfForm:paymentCount","j_id0:vfForm:intervals","j_id0:vfForm:intervalunits"]
+        id = ["paymentCount","intervals","intervalunits"]
         for i in range(len(args)):
             locator = npsp_lex_locators['id'].format(id[i])
             loc = self.selenium.get_webelement(locator)
@@ -706,5 +706,12 @@ class NPSP(object):
                 self.selenium.page_should_contain_element(loctor_contains)
                 
     
-            
+    def page_scroll_to_locator(self, path, *args, **kwargs):
+        loc=self.get_npsp_locator(path, *args, **kwargs)
+        self.selenium.execute_javascript("window.document.evaluate('{}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)".format(loc))
+        
+        
+        
+        
+        
                 
