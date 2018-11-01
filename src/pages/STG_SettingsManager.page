@@ -201,7 +201,6 @@
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDBatchNav"><a href="#" onclick="ShowPanel('idPanelRDBatch');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRDBatch}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelLvlAssignBatchNav"><a href="#" onclick="ShowPanel('idPanelLvlAssignBatch');return false;" class="slds-grow slds-m-left_large">{!$Label.stgLabelLvlAssignBatchTitle}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelPrimaryContactRoleMergeNav"><a href="#" onclick="ShowPanel('idPanelPrimaryContactRoleMergeBatch');return false;" class="slds-grow slds-m-left_large">{!$Label.stgLabelPrimaryContactRoleMergeBatch}</a></li>
-                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelMTBatchNav"><a href="#" onclick="ShowPanel('idPanelMTBatch');return false;" class="slds-grow slds-m-left_large">{!$Label.stgMultipleTributesBatchPanel}</a></li>
                             </ul>
                             <!-- System Tools -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelSystemNav">

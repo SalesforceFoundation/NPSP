@@ -38,4 +38,33 @@ public with sharing class STG_PanelMultipleTribute_CTRL extends STG_Panel {
     * @description Returns the string Id of the Multiple Tribute panel.
     */
     public override string idPanel() { return 'idPaneMultipleTribute'; }
+
+
+    /*********************************************************************************************************
+    * @description Whether we are running the Create Tribute from Opportunity Batch process.
+    */
+    public boolean isRunningBatch { get; set; }
+
+    public boolean isBatchDisabled {
+        get {
+            return UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesSingleOpp;
+        }
+        set;
+    }
+
+    /*********************************************************************************************************
+    * @description Action Method to run Create Tribute from Opportunity Batch.
+    * @return null
+    */
+    public PageReference runBatch() {
+        //We only allow user to run the batch if user only use Tribute object
+        if(UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c != Label.stgMultipleTributesLimited) {
+            isRunningBatch = false;
+            ApexPages.addMessage(new ApexPages.message(ApexPages.Severity.ERROR, Label.errMultipleTributesBatchInvalid));
+            return null;
+        }
+        isRunningBatch = true;
+        Database.executeBatch(new OPP_CreateTribute_BATCH(), 2000);
+        return null;
+    }
 }
