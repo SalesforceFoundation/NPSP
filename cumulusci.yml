@@ -183,6 +183,10 @@ tasks:
         options:
             apex: new STG_PanelCustomizableRollup_CTRL().enableCRLPs();
 
+    add_second_currency:
+        description: Add CAD as a 2nd currency for a multicurrency org
+        class_path: tasks.multicurrency.ConfigureCAD
+
     uninstall_packaged_incremental:
         description: Deletes any metadata from the package in the target org not in the local workspace
         class_path: cumulusci.tasks.salesforce.UninstallPackagedIncremental
@@ -253,6 +257,12 @@ flows:
                 task: deploy
                 options:
                     path: unpackaged/config/offsetfiscal
+
+    config_multicurrency:
+        description: 'Configure a second currency'
+        steps:
+            1:
+                task: add_second_currency
 
     test_data_dev_org:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 100 Contacts into the target org.'
