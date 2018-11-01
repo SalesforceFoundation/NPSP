@@ -66,4 +66,11 @@
         component.find('dataImportRowsDataTable').set('v.draftValues', null);
     },
 
+    /**
+     * @description: called when the 'Process Batch' button is clicked
+     */
+    processBatch: function(component, event, helper) {
+        helper.processBatch(component);
+    }
+
 })
