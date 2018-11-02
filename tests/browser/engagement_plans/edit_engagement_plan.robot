@@ -11,8 +11,9 @@ ${task3_1}  Follow-Up Phone Call
 *** Test Cases ***
 
 Create Engagement Plan and Edit to Add New Task
+    [tags]  unstable
     ${plan_name}     ${task1_1}    ${sub_task1_1}     ${task2_1}     Create Engagement Plan
-    Go To Object Home         npsp__Engagement_Plan_Template__c
+    Select App Launcher Tab  Engagement Plan Templates
     Click Link    link=${plan_name}
     Click Link    link=Edit
     #Sleep    2

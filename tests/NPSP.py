@@ -481,13 +481,7 @@ class NPSP(object):
             loc = self.selenium.get_webelement(locator) 
             self.selenium.set_focus_to_element(locator)      
             self.selenium.select_from_list_by_label(loc,value) 
-    
-    def click_level_button(self,title):   
-        if title == "Save":
-            id = "saveBTN"
-            locator = npsp_lex_locators['levels']['id'].format(id) 
-            self.selenium.get_webelement(locator).click()                
-            
+
     def select_app_launcher_link(self,title):
         locator = npsp_lex_locators['app_launcher']['select-option'].format(title) 
         self.selenium.get_webelement(locator).click()

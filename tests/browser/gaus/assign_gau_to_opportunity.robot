@@ -7,6 +7,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Assign GAU to Opportunity
+    [tags]  unstable
     &{gau1} =  API Create GAU
     &{gau2} =  API Create GAU
     &{contact} =  API Create Contact    Email=skristem@robot.com
