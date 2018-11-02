@@ -148,6 +148,7 @@
             // Subscribe to the model onFieldsUpdated event.
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var templateFields = component.get('v.templateFields');
+                var isNamespaced = component.get('v.isNamespaced')
                 templateFields.fieldGroups = [];
 
                 var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
@@ -175,8 +176,9 @@
                         });
                     }
                     //special case so Amount object is always visible
-                    if (sObjectName === 'Opportunity') {
+                    if (sObjectName === 'Opportunity' && isNamespaced) {
                         currentFieldGroup.requiredOptions.push('Opportunity.npsp__Donation_Amount__c');
+                    } else {
                         currentFieldGroup.requiredOptions.push('Opportunity.Donation_Amount__c');
                     }
                     templateFields.fieldGroups.push(currentFieldGroup);

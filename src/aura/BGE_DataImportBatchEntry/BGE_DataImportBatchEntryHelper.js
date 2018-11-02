@@ -224,7 +224,7 @@
 
         tableErrors.size = rowErrors.length;
 
-        component.set("v.errors", tableErrors);
+        component.set('v.errors', tableErrors);
     },
 
     /**
