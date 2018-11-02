@@ -296,14 +296,20 @@ public class CMT_FilterRule {
     }
 
     /**
-     * @description Compare implementation for a DateTime data type
+     * @description Compare implementation for a DateTime data type. The UI will format a DateTime entered value as
+     * '2018-11-02T22:00:00.000Z' (i.e., GMT), however DateTime.valueOfGMT() requires that the string not include the
+     * "T" and "Z" letters.
      */
     public class CompareDateTimes implements ICompare {
         public Boolean isIncluded(SObject record, CMT_FilterRule rule) {
             DateTime fieldValue = (record.get(rule.field) != null ? (DateTime)record.get(rule.field) : null);
             String dateConstant = (String.isNotEmpty(rule.constant) && CMT_FilterRule.validDateConstants.contains(rule.constant) ?
                     rule.constant : null);
-            DateTime compareValue = (String.isNotEmpty(rule.constant) && dateConstant == null ? DateTime.valueOf(rule.constant) : null);
+            DateTime compareValue;
+
+            if (String.isNotEmpty(rule.constant) && dateConstant == null) {
+                compareValue = DateTime.valueOf(rule.constant.replace('T',' ').replace('Z', ''));
+            }
 
             if (fieldValue == null && compareValue == null) {
                 // A null to null comparison is either Equals (true) or false for any other operation
