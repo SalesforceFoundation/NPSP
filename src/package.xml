@@ -1953,12 +1953,12 @@
         <members>stgLabelYearPicklistThisYear</members>
         <members>stgLabelYearPicklistYearsAgo</members>
         <members>stgLinkDelete</members>
-        <members>stgMultipleTributeBatch</members>
-        <members>stgMultipleTributeSettings</members>
         <members>stgMultipleTributes</members>
+        <members>stgMultipleTributesBatch</members>
         <members>stgMultipleTributesBatchPanel</members>
         <members>stgMultipleTributesFlexible</members>
         <members>stgMultipleTributesLimited</members>
+        <members>stgMultipleTributesSettings</members>
         <members>stgMultipleTributesSingleOpp</members>
         <members>stgNPSPGuideImportData</members>
         <members>stgNPSPSettings</members>
