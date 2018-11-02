@@ -32,3 +32,9 @@ Referenced Packages
 **/.vscode/
 **/.idea/
 /config/
+log.html
+output.xml
+report.html
+*.png
+testdata/dev_org/test_data.db
+*.db
