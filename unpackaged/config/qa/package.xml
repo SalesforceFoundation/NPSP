@@ -2,8 +2,12 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
         <members>Account.A_User_Defined_Rollup_Field__c</members>
+        <members>Account.Current_Level__c</members>
+        <members>Account.Previous_Level__c</members>
         <members>Account.UniqueId__c</members>
         <members>Contact.A_User_Defined_Rollup_Field__c</members>
+        <members>Contact.Current_Level__c</members>
+        <members>Contact.Previous_Level__c</members>
         <members>Contact.Gender__c</members>
         <members>Contact.UniqueId__c</members>
         <members>Opportunity.UniqueId__c</members>
