@@ -308,7 +308,7 @@ public class CMT_FilterRule {
             DateTime compareValue;
 
             if (String.isNotEmpty(rule.constant) && dateConstant == null) {
-                compareValue = DateTime.valueOf(rule.constant.replace('T',' ').replace('Z', ''));
+                compareValue = DateTime.valueOfGMT(rule.constant.replace('T',' ').replace('Z', ''));
             }
 
             if (fieldValue == null && compareValue == null) {
