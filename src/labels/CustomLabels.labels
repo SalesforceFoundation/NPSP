@@ -1817,7 +1817,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>alloObjectUnsupported</shortDescription>
-        <value>The Manage Allocations button is only supported from a Campaign, Opportunity or Recurring Donation record.</value>
+        <value>The Manage Allocations button is only supported from a Campaign, Opportunity, Payment or Recurring Donation record.</value>
     </labels>
     <labels>
         <fullName>alloPaymentNotEnabled</fullName>
