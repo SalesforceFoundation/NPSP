@@ -1228,7 +1228,9 @@
     </fields>
     <fields>
         <fullName>Number_of_Tributes__c</fullName>
+        <description>Calculated based on the number of Tribute records associated with the Opportunity.</description>
         <externalId>false</externalId>
+        <inlineHelpText>Total number of Tributes associated with this Opportunity</inlineHelpText>
         <label>Number of Tributes</label>
         <summaryForeignKey>Tribute__c.Opportunity__c</summaryForeignKey>
         <summaryOperation>count</summaryOperation>

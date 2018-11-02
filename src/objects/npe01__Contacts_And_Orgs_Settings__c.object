@@ -97,15 +97,8 @@
     </fields>
     <fields>
         <fullName>Multiple_Tributes__c</fullName>
-        <description>There are three different model for Multiple Tributes.
-Use single tributes only
-Allow multiple tributes and allow tribute data on Tribute and Opportunity objects 
-Allow multiple tributes and automatically create records on the Tribute object only</description>
+        <description>Allows multiple Tributes per Opportunity.</description>
         <externalId>false</externalId>
-        <inlineHelpText>There are three different model for Multiple Tributes.
-Use single tributes only;
-Allow multiple tributes and allow tribute data on Tribute and Opportunity objects;
-Allow multiple tributes and automatically create records on the Tribute object only</inlineHelpText>
         <label>Multiple Tributes</label>
         <length>255</length>
         <required>false</required>

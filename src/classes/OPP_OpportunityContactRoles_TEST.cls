@@ -1093,4 +1093,68 @@ private class OPP_OpportunityContactRoles_TEST {
 
         Test.stopTest();
     }
+
+    /******************************************************************************************************
+    * @description Test clear OCR and Sync OCR for Multiple Tributes
+    ********************************************************************************************************/
+    static testMethod void updatePrimaryContactOfOpportunity(){
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                new npe01__Contacts_and_Orgs_Settings__c(
+                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                        npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
+                        Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
+                        Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
+                        Multiple_Tributes__c = Label.stgMultipleTributesLimited
+                )
+        );
+
+        //Insert three Contacts
+        List<Contact> cons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
+        insert cons;
+
+        Opportunity opp = new Opportunity(
+                Name = 'Test',
+                Primary_Contact__c = cons[0].id,
+                Honoree_Contact__c = cons[1].id,
+                Notification_Recipient_Contact__c = cons[2].Id,
+                CloseDate = date.today(),
+                StageName = 'Close Won'
+        );
+
+        insert opp;
+
+        List<OpportunityContactRole> ocrs = [SELECT Id FROM OpportunityContactRole WHERE OpportunityId = :opp.id];
+        delete ocrs;
+
+        OpportunityContactRole garbageOCR = new OpportunityContactRole();
+        garbageOCR.OpportunityId = opp.Id;
+        garbageOCR.ContactId = cons[3].Id;
+        garbageOCR.Role = OPPORTUNITY_CONTACT_ROLE_HONOREE;
+        garbageOCR.isPrimary = false;
+
+        insert garbageOCR;
+
+        //When the Primary Contact changes on the Opp, system should run Clear OCR to delete unnecessary OCR and create
+        //the missing OCR based on the Tribute
+        opp = [Select Primary_Contact__c from Opportunity where Id =: opp.Id];
+        opp.Primary_Contact__c = cons[4].id;
+        Test.startTest();
+        update opp;
+        Test.stopTest();
+
+        List<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, Contact.Name, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY Contact.Name];
+        system.assertEquals(3,queryOCR.size());
+
+        system.assertEquals(cons[1].id, queryOCR[0].ContactId);
+        system.assertEquals(false, queryOCR[0].isPrimary);
+        system.assertEquals(OPPORTUNITY_CONTACT_ROLE_HONOREE, queryOCR[0].Role);
+
+        system.assertEquals(cons[2].id, queryOCR[1].ContactId);
+        system.assertEquals(false, queryOCR[1].isPrimary);
+        system.assertEquals(OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT, queryOCR[1].Role);
+
+        system.assertEquals(cons[4].id, queryOCR[2].ContactId);
+        system.assertEquals(true, queryOCR[2].isPrimary);
+        system.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, queryOCR[2].Role);
+    }
 }

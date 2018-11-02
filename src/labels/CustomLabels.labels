@@ -7118,10 +7118,10 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The Warning for Donations - Create Tribute from Opportunity</shortDescription>
-        <value>&lt;b&gt;WARNING:&lt;/b&gt;This batch will create Tribute record based on Opportunity. Depending on how many Opportunity record has Tribute information, it might occupy &lt;b&gt;A LOT &lt;/b&gt;of storage space in your org. Please test it in the sandbox before doing in Production.&lt;br/&gt;&lt;br/&gt; 
+        <value>&lt;b&gt;WARNING:&lt;/b&gt;This batch will create Tribute records based on the Tribute settings for all Opportunities. Depending on the number of Opportunity records in your org with Tribute information, this process might consume &lt;b&gt;A LOT &lt;/b&gt;of storage space in your org. Test this feature in your sandbox before using it in your Production environment.&lt;br/&gt;&lt;br/&gt;
 
-&lt;b&gt;This is an irreversible process.&lt;/b&gt; 
-Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities: 
+&lt;b&gt;This process cannot be reversed.&lt;/b&gt; 
+Before starting this process, back up your data and disable the following items when they affect Opportunities: 
 &lt;br/&gt; 
 &lt;br/&gt; 
 ● Custom Validation Rules&lt;br/&gt; 
@@ -7137,12 +7137,11 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The Warning for Donations - Multiple Tributes page</shortDescription>
-        <value>&lt;b&gt;WARNING:&lt;/b&gt;Please consider the following areas when editing the Multiple Tribute settings.&lt;br/&gt;&lt;br/&gt; 
+        <value>&lt;b&gt;WARNING:&lt;/b&gt;When you enable Multiple Tributes, tribute information will be tracked on Tribute records instead of Opportunity records. If you&apos;re enabling Multiple Tributes:&lt;br/&gt;&lt;br/&gt; 
 
-● If you choose to use Tribute object, you might consider to add Tribute related list on Opportunity layout. And also remove Tribute section on Opportunity layout if needed.&lt;br/&gt; 
-● If you choose to use Tribute object, you might consider update existing report or create new report to include Tribute object.&lt;br/&gt; 
-● We recommend to run the Create Tribute from Opportunity batch job if you would like to migrate from the single Tribute model to the Multiple Tributes model. System will create Tribute record based on existing Opportunity. &lt;b&gt;Please note that it might occupy a lot of the storage in the org.&lt;/b&gt; &lt;br/&gt; 
-● Please note that once your org start using Tribute object, there is no system back fill job to put the Tribute information from Tribute record back to Opportunity.&lt;br/&gt;</value>
+● Consider adding the Tribute related list to the Opportunity page layout to ensure that Tribute records are visible from Opportunities. Also consider removing the Tribute section from the Opportunity page layout if you no longer need access to Tribute data stored on Opportunities.&lt;br/&gt; 
+● Consider updating existing reports or create new reports to include the Tribute objects that will now be generated.&lt;br/&gt; 
+● Run the Create Tribute from Opportunity batch job to migrate from the single-tribute model to the multiple-tributes model. Tribute data on Opportunities will be migrated to new Tribute records. &lt;b&gt;Before proceeding, be sure that you understand the potentially significant storage impact of this action.&lt;/b&gt; &lt;br/&gt;</value>
     </labels>
     <labels>
         <fullName>stgMultipleTributes</fullName>
@@ -7163,21 +7162,21 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Value for multiple Tributes on either Opportunity or Tribute object</shortDescription>
-        <value>Allow multiple Tributes and Tribute data on Tribute or Opportunity objects</value>
+        <value>(mixed tributes) Allow single (Opportunity) or multiple (Multiple Tribute) tribute records.</value>
     </labels>
     <labels>
         <fullName>stgMultipleTributesLimited</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Value for multiple Tributes on Tribute object only</shortDescription>
-        <value>Allow multiple Tributes and auto-create records on the Tribute object only</value>
+        <value>(multiple tributes) Allow only multiple Tribute records. Tribute data entered on new Opportunities are migrated to Tribute records.</value>
     </labels>
     <labels>
         <fullName>stgMultipleTributesSingleOpp</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Value for single Tribute on Opportunity object only</shortDescription>
-        <value>Allow only one Tribute per Opportunity record, on the Opportunity object</value>
+        <value>(single tribute) Allow only single tributes (Opportunity records).</value>
     </labels>
     <labels>
         <fullName>stgNoObjectsFound</fullName>
