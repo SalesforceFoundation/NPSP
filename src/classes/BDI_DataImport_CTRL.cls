@@ -58,13 +58,17 @@ public with sharing class BDI_DataImport_CTRL {
     private DateTime dtStart;
 
     /*******************************************************************************************************
-    * @description does the user have permissions to update these batch/settings
+    * @description does the user have permissions and an eligible DataImportBatch record to update the batch/settings
     */
     public boolean userCanEditSettings {
         get {
-            return isTrueBatch ?
-                DataImportBatch__c.SobjectType.getDescribe().isUpdateable() :
-                Data_Import_Settings__c.SobjectType.getDescribe().isUpdateable();
+            if (diBatch.UseBatchGiftEntryGrid__c == false) {
+                return isTrueBatch ?
+                        DataImportBatch__c.SobjectType.getDescribe().isUpdateable() :
+                        Data_Import_Settings__c.SobjectType.getDescribe().isUpdateable();
+            } else {
+                return false;
+            }
         } private set;
     }
     
@@ -136,7 +140,7 @@ public with sharing class BDI_DataImport_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description whether we are processing a real saved batch, or just using custom settings with an
+    * @description whether we are processing a real saved non-BGE batch, or just using custom settings with an
     * in-memory batch.
     */
     public Boolean isTrueBatch {
