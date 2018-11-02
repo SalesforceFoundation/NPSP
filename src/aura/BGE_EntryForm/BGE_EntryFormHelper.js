@@ -1,31 +1,20 @@
 ({
     /**
-     * @description: generic component used to send a message to parent component.
-     */
-    sendMessage: function (channel, message) {
-        var sendMessage = $A.get('e.ltng:sendMessage');
-        sendMessage.setParams({
-            'channel': channel,
-            'message': message
-        });
-        sendMessage.fire();
-    },
-
-    /**
      * @description: adds necessary hidden fields to the Data Import record before submitting.
+     * @return: Object rowFields with hidden fields added
      */
-    addHiddenFields: function (component, event) {
-        var eventFields = event.getParam('fields');
+    getRowWithHiddenFields: function (component, event) {
+        var rowFields = event.getParam('fields');
 
         var recId = component.get('v.recordId');
         var batchField = component.get('v.labels.batchIdField');
-        eventFields[batchField] = recId;
+        rowFields[batchField] = recId;
 
         var donorType = component.get('v.donorType');
         var donorField = component.get('v.labels.donationDonor');
-        eventFields[donorField] = donorType;
+        rowFields[donorField] = donorType;
 
-        return eventFields;
+        return rowFields;
     },
 
     /**
@@ -40,35 +29,30 @@
     },
 
     /**
-     * @description: checks for presence of a donor, which is always required
-     * @return: empty string or label of missing donor
+     * @description: generic component used to send a message to parent component.
      */
-    validateDonor: function(component) {
-        var lookupValue;
-        var donorLabel = '';
-        if (component.get("v.donorType") === 'Contact1') {
-            lookupValue = component.find("contactLookup").get("v.value");
-        } else {
-            lookupValue = component.find("accountLookup").get("v.value");
-        }
-        if (!lookupValue) {
-            var labels = component.get("v.labels");
-            var donorLabel = (component.get("v.donorType") === 'Contact1') ? labels.contactObject : labels.accountObject;
-        }
-        return donorLabel;
+    sendMessage: function (channel, message) {
+        var sendMessage = $A.get('e.ltng:sendMessage');
+        sendMessage.setParams({
+            'channel': channel,
+            'message': message
+        });
+        sendMessage.fire();
     },
 
     /**
      * @description: checks for required fields and gathers error messages before submitting
      * @return: validity Object with Boolean for validity and an array of any missing fields to display
      */
-    validateFields: function(component) {
+    validateFields: function(component, rowFields) {
         var validity = {isValid: true, missingFields: []};
 
         //check for missing donor first
-        var missingDonorLabel = this.validateDonor(component);
-        if (missingDonorLabel) {
-            validity.missingFields.push(missingDonorLabel);
+        var hasDonor = this.verifyRowHasDonor(component, rowFields);
+        if (!hasDonor) {
+            var labels = component.get("v.labels");
+            var missingDonor = (component.get("v.donorType") === 'Contact1') ? labels.contactObject : labels.accountObject;
+            validity.missingFields.push(missingDonor);
         }
 
         var dataImportFields = component.get("v.dataImportFields");
@@ -90,6 +74,28 @@
         }
 
         return validity;
+    },
+
+    /**
+     * @description: checks for presence of a donor, which is always required
+     * @param rowFields: Object rowFields with updated hidden values
+     * @return hasDonor: Boolean to indicate if row has a donor
+     */
+    verifyRowHasDonor: function(component, rowFields) {
+        var hasDonor = true;
+        var lookupValue;
+
+        if (component.get("v.donorType") === 'Contact1') {
+            lookupValue = rowFields[component.get("v.labels.contactLookup")];
+        } else if (component.get("v.donorType") === 'Account1') {
+            lookupValue = rowFields[component.get("v.labels.accountLookup")];
+        }
+
+        if (!lookupValue || lookupValue.length !== 18) {
+            hasDonor = false;
+        }
+
+        return hasDonor;
     }
 
 })

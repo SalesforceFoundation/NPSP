@@ -43,7 +43,6 @@
     <aura:attribute name="recordId" type="Id" description="Populated by force:hasRecordId" access="public"/>
     <aura:attribute name="record" type="DataImport__c" description="Object" access="public"/>
     <aura:attribute name="dataImportFields" type="Object[]" description="List of dynamic field objects to use in the field iteration" access="public"/>
-    <aura:attribute name="requiredFields" type="List" description="Easily accessible list of required fields" access="private"/>
 
     <!--Events-->
     <aura:handler name="render" action="{!c.callFocus}" value="{!this}"/>
@@ -67,8 +66,7 @@
             </lightning:layoutItem>
 
             <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
-                <!--don't use aura:if to hide, because we need to get reference to the inputfield for data validation-->
-                <div class="{!if(v.donorType == 'Account1', 'slds-hide', '')}">
+                <aura:if isTrue="{!v.donorType == 'Contact1'}">
                     <label for="contactLookup" class="slds-form-element__label">
                         <abbr class="slds-required" title="required">* </abbr>
                         {!v.labels.contactObject}
@@ -76,8 +74,8 @@
                     <lightning:inputField aura:id="contactLookup" fieldName="{!v.labels.contactLookup}"
                                           class="hideLabel"
                     />
-                </div>
-                <div class="{!if(v.donorType == 'Contact1', 'slds-hide', '')}">
+                </aura:if>
+                <aura:if isTrue="{!v.donorType == 'Account1'}">
                     <label for="accountLookup" class="slds-form-element__label">
                         <abbr class="slds-required" title="required">* </abbr>
                         {!v.labels.accountObject}
@@ -85,7 +83,7 @@
                     <lightning:inputField aura:id="accountLookup" fieldName="{!v.labels.accountLookup}"
                                           class="hideLabel"
                     />
-                </div>
+                </aura:if>
             </lightning:layoutItem>
             <!--END DONOR FIELDS-->
 
