@@ -115,13 +115,13 @@ public with sharing class BDI_DataImport_CTRL {
     }
     
     /*******************************************************************************************************
-    * @description the initial custom settings object we defaultly load.  will be converted to a diBatch.
+    * @description the initial custom settings object we load by default.  will be converted to a diBatch.
     */
     @TestVisible
     private Data_Import_Settings__c diSettings { get; set; }
 
     /*******************************************************************************************************
-    * @description the current batch we are going to process.  it will be an in-memory only batch (no Id)
+    * @description the current batch we are going to process. it will be an in-memory only batch (no Id)
     * if we are going to process records that have no batch.
     */
     public DataImportBatch__c diBatch { get; private set; }
@@ -140,7 +140,7 @@ public with sharing class BDI_DataImport_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description whether we are processing a real saved non-BGE batch, or just using custom settings with an
+    * @description whether we are processing a real saved batch, or just using custom settings with an
     * in-memory batch.
     */
     public Boolean isTrueBatch {

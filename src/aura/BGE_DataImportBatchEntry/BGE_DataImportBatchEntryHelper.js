@@ -83,8 +83,6 @@
      * @description: invoke the Data Importer on all records associated with this Batch
      */
     processBatch: function(component) {
-        //todo: add returl?
-        ///apex/{!$Setup.Package_Settings__c.Namespace_Prefix__c}BDI_DataImport?batchId={!DataImportBatch__c.Id}&retURL={!URLFOR('/' + DataImportBatch__c.Id)}
         var batchId = component.get('v.recordId');
         var bdiBatchClass = component.get('v.labels.bdiBatchClass');
         var url = '/apex/' + bdiBatchClass + '?batchId=' + batchId;
