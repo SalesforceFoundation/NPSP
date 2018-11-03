@@ -80,7 +80,7 @@
                                             function viewLink() {
                                                 var contactId = '{!HTMLENCODE(strConId)}';
                                                 if (contactId  == null || contactId  == "" ||  contactId  == 'NEW_CONTACT') {
-                                                    alert("{!$Label.leadConvertViewContactError}");
+                                                    alert("{!JSENCODE($Label.leadConvertViewContactError)}");
                                                 } else {
                                                     var view = document.getElementById('view');
                                                     view.setAttribute("data-toggle","modal");
