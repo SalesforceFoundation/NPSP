@@ -104,6 +104,7 @@ public class CMT_FilterRule {
     protected Schema.SObjectType objectType;
     protected Schema.SObjectField field;
     protected FilterOperation operation;
+    protected SoapType fieldType;
     protected String constant;
     public String objectName;
     public Id ruleId;
@@ -120,8 +121,9 @@ public class CMT_FilterRule {
         this.field = UTIL_Describe.getFieldDescribe(filterRule.Object__r.QualifiedApiName, filterRule.Field__r.QualifiedApiName).getSObjectField();
         this.constant = filterRule.Constant__c;
         this.operation = CMT_FilterRuleUI_SVC.getFilterOperationFromString(filterRule.Operator__c);
+        this.fieldType = field.getDescribe().getSoapType();
 
-        if (field.getDescribe().getSOAPType() == SoapType.DATETIME && constant != null &&
+        if (fieldType == SoapType.DATETIME && constant != null &&
                 constant.length() == 10 && !CMT_FilterRule.validDateConstants.contains(constant)) {
             // If the field is a datetime type, and the constant is a date format (YYYY-DD-MM) then use
             // DATE comparison class rather than the date time comparison class
@@ -134,7 +136,7 @@ public class CMT_FilterRule {
             this.compare = (ICompare) converters.get(SoapType.STRING).newInstance();
 
         } else {
-            this.compare = (ICompare) converters.get(field.getDescribe().getSOAPType()).newInstance();
+            this.compare = (ICompare) converters.get(fieldType).newInstance();
         }
     }
 
@@ -253,9 +255,16 @@ public class CMT_FilterRule {
                     rule.constant : null);
             Date compareValue = (String.isNotEmpty(rule.constant) && dateConstant == null ? Date.valueOf(rule.constant) : null);
 
-            // Just in case the field value has a time portion, reconstruct the date from scratch
-            if (fieldValue != null) {
-                fieldValue = Date.newInstance(fieldValue.year(), fieldValue.month(), fieldValue.day());
+            // Because Date.valueOf() returns a DateTime field in GMT, it's necessary to attempt to cast as a
+            // DateTime and then use .Date() to get the local date portion. It's wrapped in a Try/Catch to handle
+            // any unexpected conversion scenarios
+            if (fieldValue != null && rule.fieldType == SoapType.DATETIME) {
+                try {
+                    Datetime dtmValue = (DateTime)record.get(rule.field);
+                    fieldValue = dtmValue.date();
+                } catch (Exception ex) {
+                    fieldValue = Date.newInstance(fieldValue.year(), fieldValue.month(), fieldValue.day());
+                }
             }
 
             if (fieldValue == null && compareValue == null) {
@@ -287,14 +296,20 @@ public class CMT_FilterRule {
     }
 
     /**
-     * @description Compare implementation for a DateTime data type
+     * @description Compare implementation for a DateTime data type. The UI will format a DateTime entered value as
+     * '2018-11-02T22:00:00.000Z' (i.e., GMT), however DateTime.valueOfGMT() requires that the string not include the
+     * "T" and "Z" letters.
      */
     public class CompareDateTimes implements ICompare {
         public Boolean isIncluded(SObject record, CMT_FilterRule rule) {
             DateTime fieldValue = (record.get(rule.field) != null ? (DateTime)record.get(rule.field) : null);
             String dateConstant = (String.isNotEmpty(rule.constant) && CMT_FilterRule.validDateConstants.contains(rule.constant) ?
                     rule.constant : null);
-            DateTime compareValue = (String.isNotEmpty(rule.constant) && dateConstant == null ? DateTime.valueOf(rule.constant) : null);
+            DateTime compareValue;
+
+            if (String.isNotEmpty(rule.constant) && dateConstant == null) {
+                compareValue = DateTime.valueOfGMT(rule.constant.replace('T',' ').replace('Z', ''));
+            }
 
             if (fieldValue == null && compareValue == null) {
                 // A null to null comparison is either Equals (true) or false for any other operation
