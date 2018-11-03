@@ -22,6 +22,7 @@ Remove Primary Affiliation for Contact
     Page Should not Contain Link     &{contact}[FirstName]
     
 Remove Primary Affiliation for Contact2
+    [tags]  unstable
     &{account} =  API Create Organization Account
     &{contact} =  API Create Contact    Email=skristem@robot.com
     API Create Primary Affiliation    &{account}[Id]    &{contact}[Id]
@@ -47,4 +48,3 @@ Remove Primary Affiliation for Contact2
     Scroll Page To Location    0    300
     Get Id
     Confirm Value    Status    Former    Y
-      
