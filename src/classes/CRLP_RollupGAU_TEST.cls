@@ -92,35 +92,57 @@ private class CRLP_RollupGAU_TEST {
         // Create a single Rollup that uses the above Filter Group
         // TODO Add many more rollup variations to this
         String rollupsJSON = '[' +
-                CMT_UnitTestData_TEST.createRollupRecord('Household Total Allocations All Time', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.GAU,
+                //Opportunity Allocations
+                CMT_UnitTestData_TEST.createRollupRecord('Household Total Opportunity Allocations All Time', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToGAU,
                         'Total_Allocations__c', CRLP_Operation.RollupType.SUM, 'Amount__c',
                         CRLP_Operation.TimeBoundOperationType.ALL_TIME, 0) + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecord('Average Allocations All Time', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.GAU,
+                CMT_UnitTestData_TEST.createRollupRecord('Average Opportunity Allocations All Time', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToGAU,
                         'Average_Allocation__c', CRLP_Operation.RollupType.AVERAGE, 'Amount__c',
                         CRLP_Operation.TimeBoundOperationType.ALL_TIME, 0) + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecord('Allocations 2 Years Ago', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.GAU,
+                CMT_UnitTestData_TEST.createRollupRecord('Opportunity Allocations Two Years Ago', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToGAU,
                         'Total_Allocations_Two_Years_Ago__c', CRLP_Operation.RollupType.SUM, 'Amount__c',
                         CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 2) + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecord('Max Allocation All Time', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.GAU,
+                CMT_UnitTestData_TEST.createRollupRecord('Max Opportunity Allocation All Time', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToGAU,
                         'Largest_Allocation__c', CRLP_Operation.RollupType.LARGEST, 'Amount__c',
                         CRLP_Operation.TimeBoundOperationType.ALL_TIME, 0) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Years Donated', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.GAU,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToGAU,
                         'Description__c', CRLP_Operation.RollupType.YEARS_DONATED, '',
                         CRLP_Operation.TimeBoundOperationType.ALL_TIME, 0) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Current Donation Streak', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.GAU,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToGAU,
                         'Total_Allocations_Last_N_Days__c', CRLP_Operation.RollupType.Donor_Streak, '',
-                        null, 0) +
+                        null, 0) + ',' +
+
+                //Payment Allocations; fields don't correspond exactly to operations
+                CMT_UnitTestData_TEST.createRollupRecord('Total Payment Allocations Two Years Ago', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.PmtToGAU,
+                        'Total_Allocations_Last_Year__c', CRLP_Operation.RollupType.SUM, 'Amount__c',
+                        CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 2) + ',' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('Number of Payment Allocations Two Years ago', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.PmtToGAU,
+                        'Total_Allocations_Last_Year__c', CRLP_Operation.RollupType.COUNT, '',
+                        CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 2) + ',' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('Smallest Payment Allocation', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.PmtToGAU,
+                        'Smallest_Allocation__c', CRLP_Operation.RollupType.SMALLEST, 'Amount__c',
+                        CRLP_Operation.TimeBoundOperationType.ALL_TIME, 0) + ',' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('Last Payment Allocation Date', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.PmtToGAU,
+                        'Last_Allocation_Date__c', CRLP_Operation.RollupType.LAST, 'Payment__r.npe01__Payment_Date__c') +
+
                 ']';
 
         // Deserialize the rollups to use for testing
@@ -153,6 +175,13 @@ private class CRLP_RollupGAU_TEST {
                         Rollups_Contact_Soft_Credit_Batch_Size__c = 100
                 )
         );
+
+        // Enable Payment Allocations
+        UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(
+            Default_Allocations_Enabled__c = true,
+            Payment_Allocations_Enabled__c = true,
+            Default__c = defaultGau1.Id
+        ));
 
         // Create the test data
         mockRollupCMTValues();
@@ -215,6 +244,9 @@ private class CRLP_RollupGAU_TEST {
 
         system.assertEquals(cnt * 2, [SELECT Count() FROM Allocation__c WHERE Opportunity__r.IsWon = true],
                 'There should be 200 Allocation records on closed won opps');
+
+        system.assertEquals(cnt * 2, [SELECT Count() FROM Allocation__c WHERE Payment__r.npe01__Paid__c = true],
+                'There should be 200 Allocation records on paid payments');
 
         Id gauId = defaultGau1.Id;
 

@@ -241,7 +241,7 @@ public class CMT_UnitTestData_TEST {
      * Detail object names since they're automatically set based on the RollupRecordType enum.
      */
     public Enum RollupRecordType {
-        OppToAcct, OppToContact, PmtToAcct, PmtToContact, GAU, SoftCreditToContact, ContactSoftCreditToAccount, OppToRD, AccountSoftCreditToAccount
+        OppToAcct, OppToContact, PmtToAcct, PmtToContact, OppToGAU, PmtToGAU, SoftCreditToContact, ContactSoftCreditToAccount, OppToRD, AccountSoftCreditToAccount
     }
     /**
      * @description Convert the Enum to a Summary Object name
@@ -251,7 +251,8 @@ public class CMT_UnitTestData_TEST {
             RollupRecordType.OppToContact => 'Contact',
             RollupRecordType.PmtToAcct => 'Account',
             RollupRecordType.PmtToContact => 'Contact',
-            RollupRecordType.GAU => 'General_Accounting_Unit__c',
+            RollupRecordType.OppToGAU => 'General_Accounting_Unit__c',
+            RollupRecordType.PmtToGAU => 'General_Accounting_Unit__c',
             RollupRecordType.SoftCreditToContact => 'Contact',
             RollupRecordType.ContactSoftCreditToAccount => 'Account',
             RollupRecordType.OppToRD => 'npe03__Recurring_Donation__c',
@@ -265,7 +266,8 @@ public class CMT_UnitTestData_TEST {
             RollupRecordType.OppToContact => 'Opportunity',
             RollupRecordType.PmtToAcct => 'npe01__OppPayment__c',
             RollupRecordType.PmtToContact => 'npe01__OppPayment__c',
-            RollupRecordType.GAU => 'Allocation__c',
+            RollupRecordType.OppToGAU => 'Allocation__c',
+            RollupRecordType.PmtToGAU => 'Allocation__c',
             RollupRecordType.SoftCreditToContact => 'Partial_Soft_Credit__c',
             RollupRecordType.ContactSoftCreditToAccount => 'Partial_Soft_Credit__c',
             RollupRecordType.OppToRD => 'Opportunity',
@@ -390,12 +392,16 @@ public class CMT_UnitTestData_TEST {
             parms.put('Date', getDetailObject.get(rollupType) + '.npe01__Payment_Date__c');
             parms.put('Detail', getDetailObject.get(rollupType));
 
-        } else if (rollupType == RollupRecordType.GAU) {
+        //TODO make this work
+        } else if (rollupType == RollupRecordType.OppToGAU || rollupType == RollupRecordType.PmtToGAU) {
             String detailField;
             if (((String)parms.get('Detail')).contains('.')) {
                 detailField = ((String)parms.get('Detail')).split('\\.')[1];
             } else {
                 detailField = 'Amount__c';
+            }
+            if (rollupType == RollupRecordType.PmtToGAU){
+                parms.put('Date', getDetailObject.get(rollupType) + 'Payment__r.npe01__Payment_Date__c');
             }
             parms.put('Amount', getDetailObject.get(rollupType) + '.' + detailField);
             parms.put('Detail', getDetailObject.get(rollupType) + '.' + detailField);
