@@ -36,9 +36,9 @@
 @IsTest
 private class CRLP_RollupAccount_TEST {
 
-    /** @description The 5 testing types supported by the test engine */
+    /** @description The 6 testing types supported by the test engine */
     private Enum TestType {
-        TestTrigger, TestQueueuable, TestBatch, TestSkewBatch, TestMultiCurrBatch
+        TestTrigger, TestQueueuable, TestBatch, TestSkewBatch, TestMultiCurrBatch, TestReparentOpp
     }
 
     /**
@@ -169,6 +169,10 @@ private class CRLP_RollupAccount_TEST {
     static testMethod void test_Rollups_Trigger() {
         testRollupsServices(TestType.TestTrigger);
     }
+    /** @description Test the Trigger method of rolling up when reparenting an Opp to a different Account */
+    static testMethod void test_Rollups_ReparentOppAccount() {
+        testRollupsServices(TestType.TestReparentOpp);
+    }
 
     /* @description Default currency for the current user (if MC is enabled in the Org) */
     private static String defaultCurrCode = UserInfo.getDefaultCurrency();
@@ -218,7 +222,6 @@ private class CRLP_RollupAccount_TEST {
 
         // Execute the rollup service test
         testRollupsServices(TestType.TestMultiCurrBatch);
-        
     }
 
     /**
@@ -234,7 +237,7 @@ private class CRLP_RollupAccount_TEST {
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true,
-                Rollups_Limit_on_Attached_Opps_for_Skew__c = (tt == TestType.testSkewBatch ? 50 : 200),
+                Rollups_Limit_on_Attached_Opps_for_Skew__c = (tt == TestType.TestSkewBatch ? 50 : 200),
                 Rollups_Account_SkewMode_Batch_Size__c = 200,
                 Rollups_Contact_SkewMode_Batch_Size__c = 200,
                 Rollups_Contact_Soft_Credit_Batch_Size__c = 200,
@@ -260,7 +263,7 @@ private class CRLP_RollupAccount_TEST {
         // Disable all legacy rollup triggers
         UTIL_UnitTestData_TEST.disableRollupTriggers();
 
-        if (tt != TestType.TestTrigger) {
+        if (tt != TestType.TestTrigger && tt != TestType.TestReparentOpp) {
             // disable customizable rollup triggers to test the Batch & Queueuable logic
             UTIL_UnitTestData_TEST.disableCustomizableRollupTriggers();
         }
@@ -381,7 +384,7 @@ private class CRLP_RollupAccount_TEST {
         Account hardCreditAcc = Database.query(hardCreditAccQuery);
 
         // Make sure everything is null first!
-        if (tt != TestType.TestTrigger) {
+        if (tt != TestType.TestTrigger && tt != TestType.TestReparentOpp) {
             System.assertEquals(0, hardCreditAcc.npo02__TotalOppAmount__c);
             System.assertEquals(0, hardCreditAcc.npo02__AverageAmount__c);
             System.assertEquals(0, hardCreditAcc.npo02__OppAmount2YearsAgo__c);
@@ -393,14 +396,14 @@ private class CRLP_RollupAccount_TEST {
         }
 
         // Now test the rollups to the Account from the Opportunity
-        if (tt == TestType.TestTrigger) {
+        if (tt == TestType.TestTrigger || tt == TestType.TestReparentOpp) {
             // No need to execute anything special here. If the triggers worked as expected, then
             // the data will be rolled up automatically upon the stopTest().
         } else if (tt == TestType.TestBatch || tt == TestType.TestMultiCurrBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
 
-        } else if (tt == TestType.testSkewBatch) {
+        } else if (tt == TestType.TestSkewBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{
                             hardCreditAccId
@@ -441,6 +444,23 @@ private class CRLP_RollupAccount_TEST {
             System.assertEquals(2000, mcAccount.npo02__TotalOppAmount__c);
         }
 
+        if (tt == TestType.TestReparentOpp) {
+            // Get the "other" household account to reparent all the opportunities to it
+            Id otherAcctId = [SELECT Id FROM Account WHERE Id != :hardCreditAccId].Id;
+            for (Opportunity opp : opps) {
+                opp.AccountId = otherAcctId;
+            }
+            Database.update(opps);
+
+            // Query the old and new Accounts
+            String otherAccountQuery = baseAccountQuery + ' WHERE Id = :otherAcctId LIMIT 1';
+            Account otherAccount = Database.query(otherAccountQuery);
+            hardCreditAcc = Database.query(hardCreditAccQuery);
+
+            // Verify that the rollups have run and updated both Accounts.
+            System.assertEquals(0, hardCreditAcc.npo02__TotalOppAmount__c, 'The original Account should have its rollups at zero');
+            System.assertEquals(totalDonations, otherAccount.npo02__TotalOppAmount__c, 'The new parent Account should now have a rollup');
+        }
     }
 
     /**
@@ -453,7 +473,7 @@ private class CRLP_RollupAccount_TEST {
         public List<Decimal> effectiveRatesReturn;  // List of rates matching to above dates
         public Decimal defaultRate;                 // Default exchange rate for this currency when not using dated rates
 
-        public boolean isOrgCacheAvailable() {
+        public Boolean isOrgCacheAvailable() {
             return false;
         }
 
