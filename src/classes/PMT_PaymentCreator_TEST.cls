@@ -1065,21 +1065,25 @@ private with sharing class PMT_PaymentCreator_TEST {
             Name='Non US Currency',
             AccountId = acct.id,
             Amount = 100.00,
-            CurrencyIsoCode = 'CAD',
             CloseDate = date.today(),
             StageName = openStage
         );
 
+        mock.queryCurrencyIsoCodeReturn = 'CAD';
+        //opp.put('CurrencyIsoCode','CAD');
+
         insert opp;
 
-        npe01__OppPayment__c payment = [SELECT id,
-                                               npe01__paid__c,
-                                               npe01__payment_amount__c,
-                                               npe01__Payment_Date__c,
-		                                       CurrencyIsoCode
-                                        FROM npe01__OppPayment__c
-                                        WHERE npe01__opportunity__c = :opp.Id
-                                        LIMIT 1];
+        // npe01__OppPayment__c payment = [SELECT id,
+        //                                        npe01__paid__c,
+        //                                        npe01__payment_amount__c,
+        //                                        npe01__Payment_Date__c,
+		//                                        CurrencyIsoCode
+        //                                 FROM npe01__OppPayment__c
+        //                                 WHERE npe01__opportunity__c = :opp.Id
+        //                                 LIMIT 1];
+
+        npe01__OppPayment__c payment = database.query('SELECT id, npe01__paid__c, npe01__payment_amount__c, npe01__Payment_Date__c, CurrencyIsoCode FROM npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id LIMIT 1');
 
         payment.npe01__paid__c = true;
         payment.npe01__Payment_Date__c = date.today();
@@ -1135,8 +1139,7 @@ private with sharing class PMT_PaymentCreator_TEST {
         npe01__OppPayment__c payment = [SELECT id,
                                                npe01__paid__c,
                                                npe01__payment_amount__c,
-                                               npe01__Payment_Date__c,
-		                                       CurrencyIsoCode
+                                               npe01__Payment_Date__c
                                         FROM npe01__OppPayment__c
                                         WHERE npe01__opportunity__c = :opp.Id
                                         LIMIT 1];
