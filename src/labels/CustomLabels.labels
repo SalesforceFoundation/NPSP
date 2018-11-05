@@ -7163,11 +7163,13 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The Warning for Donations - Multiple Tributes page</shortDescription>
-        <value>&lt;b&gt;WARNING:&lt;/b&gt;When you enable Multiple Tributes, tribute information will be tracked on Tribute records instead of Opportunity records. If you&apos;re enabling Multiple Tributes:&lt;br/&gt;&lt;br/&gt; 
+        <value>&lt;b&gt;WARNING:&lt;/b&gt;When you enable Multiple Tributes, tributes are tracked on Tribute records instead of Opportunities. If you&apos;re enabling Multiple Tributes, consider:&lt;br/&gt;&lt;br/&gt; 
 
-● Consider adding the Tribute related list to the Opportunity page layout to ensure that Tribute records are visible from Opportunities. Also consider removing the Tribute section from the Opportunity page layout if you no longer need access to Tribute data stored on Opportunities.&lt;br/&gt; 
-● Consider updating existing reports or create new reports to include the Tribute objects that will now be generated.&lt;br/&gt; 
-● Run the Create Tribute from Opportunity batch job to migrate from the single-tribute model to the multiple-tributes model. Tribute data on Opportunities will be migrated to new Tribute records. &lt;b&gt;Before proceeding, be sure that you understand the potentially significant storage impact of this action.&lt;/b&gt; &lt;br/&gt;</value>
+● Adding the Tribute related list to the Opportunity page layout so that Tribute records are visible from Opportunities. Also consider removing the Tribute section from the Opportunity page layout if you don&apos;t need the Tribute data stored on Opportunities.&lt;br/&gt; 
+● Updating existing reports or creating new ones to include Tribute objects that are now generated.&lt;br/&gt; 
+● Running the Create Tribute from Opportunity batch job to migrate from the single-tribute to multiple-tributes model. Tribute data on Opportunities will be migrated to new Tribute records. &lt;b&gt;Before proceeding, be sure that you understand the potentially significant storage impact of this action.&lt;/b&gt; &lt;br/&gt;
+
+Once you start using Multiple Tributes, you can&apos;t revert to single tributes. There is no way to return Tribute data to Opportunities.&lt;br/&gt;</value>
     </labels>
     <labels>
         <fullName>stgMultipleTributesSingleOpp</fullName>
