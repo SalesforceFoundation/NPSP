@@ -97,6 +97,7 @@
                     <lightning:inputField aura:id="dynamicInputFields"
                                           fieldName="{!field.name}"
                                           class="hideTooltip equalHeight hideLabel"
+                                          value="{!field.value}"
                     />
                 </lightning:layoutItem>
             </aura:iteration>

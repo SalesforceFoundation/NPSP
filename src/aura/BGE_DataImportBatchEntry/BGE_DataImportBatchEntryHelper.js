@@ -139,7 +139,12 @@
 
         dataColumns.forEach(function(field){
             if (!field.readOnly) {
-                dataImportFields.push({label: field.label, name: field.fieldName, required: field.required});
+                dataImportFields.push({
+                    label: field.label,
+                    name: field.fieldName,
+                    value: field.defaultValue,
+                    required: field.required
+                });
             }
         });
 
