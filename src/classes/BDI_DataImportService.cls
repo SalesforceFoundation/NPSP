@@ -700,6 +700,32 @@ global with sharing class BDI_DataImportService {
     public static Boolean failFieldLevelSecurity = false;
 
     /*******************************************************************************************************
+    * @description returns the target object (bdi name) for a given Data Import field
+    * @param sourceFieldName the api name of the Data Import field
+    * @return String the BDI name of the target object for that field, derived from the help text
+    */
+    public static String getTargetObject(String sourceFieldName) {
+        String dataImportObjectName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
+        DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(dataImportObjectName, sourceFieldName);
+        String targetObject = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[0] : null;
+
+        return targetObject;
+    }
+
+    /*******************************************************************************************************
+    * @description returns the target field api name for a given Data Import field
+    * @param sourceFieldName the api name of the Data Import field
+    * @return String the api name of the target field for that source field, derived from the help text
+    */
+    public static String getTargetField(String sourceFieldName) {
+        String dataImportObjectName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
+        DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(dataImportObjectName, sourceFieldName);
+        String targetField = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[1] : null;
+
+        return targetField;
+    }
+
+    /*******************************************************************************************************
     * @description returns a map of fields from the DataImport to fields for the given 'object',
     * from the list of DataImport Fields, which have the form DIObject.developerfieldname in the field's help text property.
     * @param dataImportObjectName the bdi object we care about (Contact1, Contact2, Account1, etc)
@@ -713,6 +739,7 @@ global with sharing class BDI_DataImportService {
 
         for (String dataImportField : dataImportFields) {
 
+            // TODO: refactor to use new getTargetObject get getTargetField methods
             DescribeFieldResult fieldDescribe =
                 UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), dataImportField);
             String helpText = fieldDescribe.getInlineHelpText();

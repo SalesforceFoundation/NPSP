@@ -189,13 +189,13 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 Schema.DescribeFieldResult dfr = fieldMap.get(field.name.toLowerCase());
                 if (dfr != null) {
                     Column col = new Column();
-                    col.label = dfr.label;
-                    col.fieldName = dfr.name;
+                    col.label = dfr.getLabel();
+                    col.fieldName = dfr.getName();
                     col.readOnly = false;
                     col.defaultValue = field.defaultValue;
                     col.required = field.required;
                     col.hide = field.hide;
-                    col.type = dfr.type.name().toLowerCase();
+                    col.type = dfr.getType().name().toLowerCase();
                     if (col.type == 'date') {
                         col.type = 'date-local';
                     }
@@ -203,6 +203,26 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                         col.type = 'number';
                     }
                     col.typeAttributes = '{}';
+
+                    // If source field is picklist, display on page as Picklist with its field options
+                    if (col.type == 'picklist') {
+                        col.options = UTIL_Describe.getLightningSelectOptions(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), col.fieldName);
+
+                    // If source field is String and target field is Picklist, display on page as Picklist with target field options
+                    } else if (col.type == 'string') {
+
+                        String targetObject = BDI_DataImportService.getTargetObject(dfr.name);
+                        if (targetObject == 'Payment') {
+                            targetObject = 'npe01__OppPayment__c';
+                        }
+
+                        String targetField = BDI_DataImportService.getTargetField(dfr.name);
+                        Schema.DisplayType targetFieldType = UTIL_Describe.getFieldDisplaytype(targetObject, targetField.toLowerCase());
+
+                        if (targetFieldType == Schema.DisplayType.PICKLIST) {
+                            col.options = UTIL_Describe.getLightningSelectOptions(targetObject, targetField);
+                        }
+                    }
 
                     columns.add(col);
                 }
@@ -235,7 +255,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         update dataImportRecords;
 
         BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportRecords, true);
-        
+
         return getDataImportRows(batchId);
     }
 
@@ -316,6 +336,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         @AuraEnabled public Boolean required;
         @AuraEnabled public Boolean hide;
         @AuraEnabled public String typeAttributes;
+        @AuraEnabled public List<Map<String, String>> options;
     }
 
     /*******************************************************************************************************

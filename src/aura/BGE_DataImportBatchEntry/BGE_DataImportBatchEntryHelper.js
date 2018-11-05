@@ -153,7 +153,12 @@
 
         dataColumns.forEach(function(field){
             if (!field.readOnly) {
-                dataImportFields.push({label: field.label, name: field.fieldName, value: field.defaultValue});
+                dataImportFields.push({
+                    label: field.label,
+                    name: field.fieldName,
+                    options: field.options,
+                    value: field.defaultValue
+                });
             }
         });
 
