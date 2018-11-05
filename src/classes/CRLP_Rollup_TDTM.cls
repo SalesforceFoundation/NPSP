@@ -62,15 +62,17 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
 
         List<SObject> recordsToRecalculate = new List<SObject>();
         for (Integer i=0; i < ((newlist == null ? oldlist.size() : newlist.size())); i++) {
+            SObject record = (newlist == null ? oldlist[i] : newlist[i]);
             if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                 // Have any of the "key" fields on the record changed?
-                if (isRollupRecalcNeeded(newlist[i], oldlist[i])) {
-                    recordsToRecalculate.add(newlist[i]);
+                if (isRollupRecalcNeeded(record, oldlist[i])) {
+                    recordsToRecalculate.add(record);
+                    recordsToRecalculate.add(oldlist[i]);
                 }
             } else if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterDelete ||
                     triggerAction == TDTM_Runnable.Action.AfterUndelete) {
                 // Always recalculate after an Insert/Delete/Undelete
-                recordsToRecalculate.add((newlist == null ? oldlist[i] : newlist[i]));
+                recordsToRecalculate.add(record);
             }
         }
 
