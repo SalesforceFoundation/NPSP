@@ -35,7 +35,9 @@
      */
     onSubmit: function (component, event, helper) {
         event.preventDefault();
-        var eventFields = helper.addHiddenFields(component, event);
+
+        var eventFields = helper.addExtraFields(component, event);
+
         var isValid = true;
         // TODO: add validation function
         // isValid = helper.validateRecord(component, event);
