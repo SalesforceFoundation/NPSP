@@ -8,18 +8,18 @@
 
         <apex:variable var="headerSubtitle" value="{! SUBSTITUTE($Label.mtchItems, '{0}', TEXT(numberOfSoftCredits))}" />
         <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="Opportunity"
-                         parentAction="{!If (NOT(ISNULL(opp)), URLFOR($Action.Opportunity.View, opp.Id), '')}" parentRecordName="{!opp.Name}"
-                         parentRecordAction="/{!opp.Id}"
+                         parentAction="{!If (NOT(ISNULL(opp)), URLFOR($Action.Opportunity.View, opp.Id), '')}"
+                         parentRecordName="{!opp.Name}" parentRecordAction="/{!opp.Id}"
                          header="{! $Label.pscManageSoftCreditsTitle }" headerLabel="{!headerSubtitle}"
                          icon="opportunity" iconCategory="standard"
-                         saveAction="{!save}" cancelAction="{!cancel}"/>
+                         saveAction="{!save}" showSaveBtn="{!hasAccess}" cancelAction="{!cancel}"/>
 
         <apex:actionFunction name="refresh" action="{!refresh}" reRender="totalSelected, totalUn" />
         <c:UTIL_PageMessages />
         
         <!-- outer div of body below header -->
-        <div class="myBodyContent">
-        
+        <apex:outputPanel styleClass="myBodyContent" layout="block" rendered="{!hasAccess}">
+
             <!-- SUMMARY INFO PANEL -->
             <div class="slds-grid slds-p-around_medium slds-p-bottom_large slds-theme_default">
                 <div class="slds-col slds-align-middle" id="account">
@@ -132,7 +132,7 @@
             <div class="slds-p-around_medium">
                 <apex:commandLink action="{!addAnotherSoftCredit}" value="{!$Label.pscManageSoftCreditsAdd}" reRender="tablePanel" />
             </div>
-        </div> <!-- myBodyContent -->
+        </apex:outputPanel> <!-- myBodyContent -->
     </div> <!-- slds -->
     </apex:form>
 </apex:page>
