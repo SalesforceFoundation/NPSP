@@ -37,6 +37,7 @@
 private class CMT_FilterRuleEvaluation_TEST {
 
     private static Id filterGroupId1, filterGroupId2, filterGroupId3, filterGroupId4, filterGroupId5, filterGroupId6, filterGroupId7;
+    private static Date closeDate = Date.Today().toStartOfMonth().addDays(1);
 
     /**
      * @description Because unit tests cannot actually insert Custom Metadata Types and there's no real way to know
@@ -68,6 +69,8 @@ private class CMT_FilterRuleEvaluation_TEST {
                 CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId7, 'Test Group 7') +
             ']';
 
+        String closeDateString = Datetime.newInstance(closeDate, Time.newInstance(12,0,0,0)).format('YYYY-MM-dd');
+
         String filterRulesJSON = '[' +
                 /*  FILTER RULES FOR FILTER GROUPS 1-3 -- Opportunity only String, Boolean and Date fields */
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
@@ -78,7 +81,8 @@ private class CMT_FilterRuleEvaluation_TEST {
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule6', 'Opportunity', 'NextStep', 'Contains', 'TEST') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule7', 'Opportunity', 'NextStep', 'Does_Not_Contain', 'NothingAtAll') + ',' +
 
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'CloseDate', 'Equals', 'THIS_YEAR') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1a', 'Opportunity', 'CloseDate', 'Equals', closeDateString) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1b', 'Opportunity', 'CloseDate', 'Equals', 'THIS_YEAR') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'Opportunity', 'CloseDate', 'Equals', 'THIS_MONTH') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule3', 'Opportunity', 'CloseDate', 'Not_Equals', 'LAST_YEAR') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule4', 'Opportunity', 'CreatedDate', 'Equals', 'TODAY') + ',' +
@@ -87,7 +91,7 @@ private class CMT_FilterRuleEvaluation_TEST {
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule1', 'Opportunity', 'CreatedDate', 'Equals', DateTime.Now().format('YYYY-MM-dd')) + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule2', 'Opportunity', 'CreatedDate', 'Greater_Or_Equal', DateTime.Now().addDays(-1).format('YYYY-MM-dd')) + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule3', 'Opportunity', 'CreatedDate', 'Less_Or_Equal', DateTime.Now().addDays(1).format('YYYY-MM-dd')) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule4', 'Opportunity', 'CreatedDate', 'Greater', DateTime.Now().addDays(-2).format('YYYY-MM-dd')) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule4', 'Opportunity', 'CreatedDate', 'Greater', DateTime.Now().addDays(-2).formatGmt('YYYY-MM-dd hh:mm:ss.SSS')) + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule5', 'Opportunity', 'CreatedDate', 'Less', DateTime.Now().addDays(2).format('YYYY-MM-dd')) + ',' +
 
                 /*  FILTER RULES FOR FILTER GROUP 4-7 -- Opportunity with RecordTypeId, RecordType.DeveloperName, StageName, OCR.Role, Amount */
@@ -139,7 +143,7 @@ private class CMT_FilterRuleEvaluation_TEST {
         Opportunity o = new Opportunity (
                 Name = 'Test Opp ' + c.FirstName + c.LastName,
                 Amount = 1000,
-                CloseDate = Date.Today().toStartOfMonth().addDays(1),
+                CloseDate = closeDate,
                 StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
                 Primary_Contact__c = c.Id,
                 RecordTypeId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.sObjectType),

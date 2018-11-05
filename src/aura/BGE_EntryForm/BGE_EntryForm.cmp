@@ -81,7 +81,7 @@
             <aura:iteration items="{!v.dataImportFields}" var="field" indexVar="index">
                 <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
                     <aura:if isTrue="{!greaterthan(field.options.length, 0)}">
-                        <lightning:select label="{!field.label}" aura:id="dynamicInputFields">
+                        <lightning:select label="{!field.label}" aura:id="dynamicInputFields" value="{!field.value}">
                             <option value=""></option>
                             <aura:iteration items="{!field.options}" var="opt">
                                 <option value="{!opt.value}">{!opt.label}</option>
@@ -91,6 +91,7 @@
                             <lightning:inputField aura:id="dynamicInputFields"
                                                   fieldName="{!field.name}"
                                                   class="hideTooltip equalHeight"
+                                                  value="{!field.value}"
                             />
                         </aura:set>
                     </aura:if>
