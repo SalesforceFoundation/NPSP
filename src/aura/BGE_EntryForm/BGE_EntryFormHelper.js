@@ -1,6 +1,6 @@
 ({
     /**
-     * @description: adds necessary hidden fields to the Data Import record before submitting.
+     * @description: adds hidden and non-lightning:inputfield fields to the Data Import record before submitting.
      * @return: Object rowFields with hidden fields added
      */
     getRowWithHiddenFields: function (component, event) {
@@ -10,9 +10,23 @@
         var batchField = component.get('v.labels.batchIdField');
         rowFields[batchField] = recId;
 
+        // add donor type hidden fields
         var donorType = component.get('v.donorType');
         var donorField = component.get('v.labels.donationDonor');
         rowFields[donorField] = donorType;
+
+        // add any picklist fields manually, because they use lightning:select
+        var dynamicInputFields = component.find('dynamicInputFields');
+        var dataImportFields = component.get('v.dataImportFields');
+
+        //dataImportFields and dynamicInputFields have the same order, so can loop both to get the value
+        for (var i=0; i<dataImportFields.length; i++) {
+            if (dataImportFields[i].options && dataImportFields[i].options.length > 0) {
+                var fieldValue = dynamicInputFields[i].get('v.value');
+                var fieldName = dataImportFields[i].name;
+                rowFields[fieldName] = fieldValue;
+            }
+        }
 
         return rowFields;
     },
@@ -41,13 +55,12 @@
     },
 
     /**
-     * @description: checks for required fields and gathers error messages before submitting
+     * @description: checks for Donor and other required fields and gathers error messages before submitting
      * @return: validity Object with Boolean for validity and an array of any missing fields to display
      */
     validateFields: function(component, rowFields) {
         var validity = {isValid: true, missingFields: []};
 
-        //check for missing donor first
         var hasDonor = this.verifyRowHasDonor(component, rowFields);
         if (!hasDonor) {
             var labels = component.get("v.labels");
@@ -55,6 +68,25 @@
             validity.missingFields.push(missingDonor);
         }
 
+        var missingRequiredFields = this.verifyRequiredFields(component, rowFields);
+        if (missingRequiredFields.length != 0) {
+            validity.missingFields = validity.missingFields.concat(missingRequiredFields);
+        }
+
+        if (validity.missingFields.length !== 0) {
+            validity.isValid = false;
+        }
+
+        return validity;
+    },
+
+    /**
+     * @description: checks for presence of fields that user has marked as required
+     * @param rowFields: Object rowFields with updated hidden values
+     * @return missingFields: list of any fields by label that are missing
+     */
+    verifyRequiredFields: function(component, rowFields) {
+        var missingFields = [];
         var dataImportFields = component.get("v.dataImportFields");
         var dynamicInputFields = component.find("dynamicInputFields");
 
@@ -63,17 +95,12 @@
             if (dataImportFields[i].required) {
                 var fieldValue = dynamicInputFields[i].get("v.value");
                 if (fieldValue === '' || fieldValue === null) {
-                    validity.missingFields.push(dataImportFields[i].label);
+                    missingFields.push(dataImportFields[i].label);
                 }
             }
         }
 
-        //if field formats are invalid or fields are missing, set isValid as false
-        if (validity.missingFields.length !== 0) {
-            validity.isValid = false;
-        }
-
-        return validity;
+        return missingFields;
     },
 
     /**

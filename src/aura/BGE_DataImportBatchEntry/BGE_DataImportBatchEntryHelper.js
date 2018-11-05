@@ -142,8 +142,9 @@
                 dataImportFields.push({
                     label: field.label,
                     name: field.fieldName,
-                    value: field.defaultValue,
-                    required: field.required
+                    options: field.options,
+                    required: field.required,
+                    value: field.defaultValue
                 });
             }
         });

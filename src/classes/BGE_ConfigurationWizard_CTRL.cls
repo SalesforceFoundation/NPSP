@@ -158,13 +158,13 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         // looping through the fields on DataImport__c
         for (Schema.DescribeFieldResult fieldResult : fieldMap.values()) {
-            String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldResult.name);
+            String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldResult.getName());
 
-            String dataImportFieldMappedObject = fieldResult.inlineHelpText != null ? fieldResult.inlineHelpText.split('\\.')[0] : null;
+            String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(fieldResult.getName());
             Boolean fieldAllowed = allowedObjects.contains(dataImportFieldMappedObject)
-                    && allowedDataTypes.contains(fieldResult.type.name())
+                    && allowedDataTypes.contains(fieldResult.getType().name())
                     && !bannedFields.contains(dataImportFieldApiName)
-                    && fieldResult.inlineHelpText != null;
+                    && fieldResult.getInlineHelpText() != null;
 
             if (fieldAllowed) {
 
