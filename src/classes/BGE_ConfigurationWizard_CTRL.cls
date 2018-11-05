@@ -153,7 +153,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 'DATE',
                 'STRING',
                 'TEXTAREA',
-                'DOUBLE'
+                'DOUBLE',
+                'PICKLIST'
         };
 
         // looping through the fields on DataImport__c
