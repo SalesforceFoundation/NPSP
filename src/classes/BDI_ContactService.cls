@@ -369,7 +369,11 @@ public with sharing class BDI_ContactService {
         strSoql += ' WHERE AccountId IN :setHHId';
         List<Contact> listHHContacts = database.query(strSoql);
         for (Contact con : listHHContacts) {
-            mapDIKeyToContact.put(con.Firstname.toLowerCase() + '|' + con.AccountId, con);
+            String firstName = con.FirstName;
+            if (!String.isBlank(firstName)) {
+                firstName = firstName.toLowerCase();
+            }
+            mapDIKeyToContact.put(firstName + '|' + con.AccountId, con);
         }
     }
 
@@ -1055,7 +1059,7 @@ public with sharing class BDI_ContactService {
                 return false;
             }
             return str.contains('Firstname');
-        }
+        } private set;
     }
 
     /*******************************************************************************************************
@@ -1068,7 +1072,7 @@ public with sharing class BDI_ContactService {
                 return false;
             }
             return str.contains('Lastname');
-        }
+        } private set;
     }
 
     /*******************************************************************************************************
@@ -1081,7 +1085,7 @@ public with sharing class BDI_ContactService {
                 return false;
             }
             return str.contains('Email');
-        }
+        } private set;
     }
 
     /*******************************************************************************************************
@@ -1094,7 +1098,7 @@ public with sharing class BDI_ContactService {
                 return false;
             }
             return str.contains('Phone');
-        }
+        } private set;
     }
 
     /*******************************************************************************************************
@@ -1107,7 +1111,7 @@ public with sharing class BDI_ContactService {
                 return false;
             }
             return true;
-        }
+        } private set;
     }
 
     /*******************************************************************************************************

@@ -311,7 +311,7 @@ global with sharing class BDI_DataImportService {
             if (str == null || str == '')
                 return false;
             return true;
-        }
+        } private set;
     }
 
     /*******************************************************************************************************

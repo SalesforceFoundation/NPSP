@@ -107,17 +107,17 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     /*******************************************************************************************************
     * @description Select options for the possible Lead Statuses
     */
-    public list<selectOption> lcStatuses {
-      get {
-        if (lcStatuses == null) {
-          lcStatuses = new list<selectOption>();
-          for (LeadStatus ls : [Select Id, Masterlabel from LeadStatus where IsConverted=true] ) {
-            lcStatuses.add( new SelectOption(ls.masterlabel, ls.masterlabel));
-          }
-        }
-        return lcStatuses;
-      }
-      private set;
+    public List<SelectOption> lcStatuses {
+        get {
+            if (lcStatuses == null) {
+                lcStatuses = new List<SelectOption>();
+
+                for (LeadStatus ls : [SELECT Id, ApiName, Masterlabel FROM LeadStatus WHERE IsConverted = true]) {
+                    lcStatuses.add(new SelectOption(ls.ApiName.escapeHtml4(), ls.Masterlabel.escapeHtml4()));
+                }
+            }
+            return lcStatuses;
+        } private set;
     }
 
     /*******************************************************************************************************
@@ -134,7 +134,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 l.company.toLowerCase() == 'individual' ||
                 l.company.toLowerCase() == l.name.toLowerCase()
             );
-        }
+        } private set;
     }
 
     /*******************************************************************************************************

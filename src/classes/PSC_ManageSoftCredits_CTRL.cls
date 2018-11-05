@@ -89,7 +89,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     public integer numberOfSoftCredits {
         get {
             return softCredits == null ? 0 : softCredits.size();
-        }
+        } private set;
     }
 
     /*******************************************************************************************************
@@ -330,11 +330,12 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     */ 
     public string PrimaryContactId {
         get {
-            if (opp.npe01__Is_Opp_From_Individual__c == 'true' && opp.Primary_Contact__c != null)
+            if (opp.npe01__Is_Opp_From_Individual__c == 'true' && opp.Primary_Contact__c != null) {
                 return opp.Primary_Contact__c;
-            else
+            } else {
                 return opp.AccountId;
-        }
+            }
+        } private set;
     }
     
     /*******************************************************************************************************
@@ -342,11 +343,12 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     */ 
     public string PrimaryContactName {
         get {
-            if (opp.npe01__Is_Opp_From_Individual__c == 'true' && opp.Primary_Contact__c != null)
+            if (opp.npe01__Is_Opp_From_Individual__c == 'true' && opp.Primary_Contact__c != null) {
                 return opp.Primary_Contact__r.Name;
-            else
+            } else {
                 return opp.Account.Name;
-        }
+            }
+        } private set;
     }
 
     /*******************************************************************************************************

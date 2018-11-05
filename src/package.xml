@@ -411,6 +411,8 @@
         <members>UTIL_OrderBy_TEST</members>
         <members>UTIL_OrgTelemetry_BATCH</members>
         <members>UTIL_OrgTelemetry_Batch_TEST</members>
+        <members>UTIL_OrgTelemetry_SObject_BATCH</members>
+        <members>UTIL_OrgTelemetry_SObject_BATCH_TEST</members>
         <members>UTIL_OrgTelemetry_SVC</members>
         <members>UTIL_OrgTelemetry_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
@@ -451,6 +453,7 @@
         <members>UTIL_NavigateBack</members>
         <members>UTIL_PageHeader</members>
         <members>UTIL_PageMessages</members>
+        <members>UTIL_SLDS_Icon</members>
         <members>UTIL_SoqlListView</members>
         <members>UTIL_Tooltip</members>
         <members>UTIL_Typeahead</members>
@@ -680,6 +683,7 @@
         <members>Allocation__c.Campaign__c</members>
         <members>Allocation__c.General_Accounting_Unit__c</members>
         <members>Allocation__c.Opportunity__c</members>
+        <members>Allocation__c.Payment__c</members>
         <members>Allocation__c.Percent__c</members>
         <members>Allocation__c.Recurring_Donation__c</members>
         <members>Allocations_Settings__c.Default_Allocations_Enabled__c</members>
@@ -975,6 +979,7 @@
         <members>Opportunity_Naming_Settings__c.Date_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Name_Format__c</members>
         <members>Opportunity_Naming_Settings__c.Opportunity_Record_Types__c</members>
+        <members>Package_Settings__c.Namespace_Prefix__c</members>
         <members>Partial_Soft_Credit__c.Amount__c</members>
         <members>Partial_Soft_Credit__c.Contact_Name__c</members>
         <members>Partial_Soft_Credit__c.Contact_Role_ID__c</members>
@@ -1209,6 +1214,9 @@
         <members>PageMessagesFatal</members>
         <members>PageMessagesInfo</members>
         <members>PageMessagesWarning</members>
+        <members>RD_ErrorAddDonationHeaderText</members>
+        <members>RD_ErrorAddDonationMissingId</members>
+        <members>RD_ErrorAddDonationPermissionDenied</members>
         <members>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</members>
         <members>RD_ErrorNotEnoughClosedValueForFixedLength</members>
         <members>REL_Create_New_Relationship</members>
@@ -1371,6 +1379,7 @@
         <members>conMergeStageComplete</members>
         <members>conMergeWinnerAsstText</members>
         <members>engagementPlanCantEdit</members>
+        <members>engagementPlanMissingField</members>
         <members>engagementPlanNoLookups</members>
         <members>engagementPlanTwoLookups</members>
         <members>exceptionDeletePermission</members>
@@ -2000,6 +2009,7 @@
         <members>Household_Naming_Settings__c</members>
         <members>Level__c</members>
         <members>Opportunity_Naming_Settings__c</members>
+        <members>Package_Settings__c</members>
         <members>Partial_Soft_Credit__c</members>
         <members>Relationship_Sync_Excluded_Fields__c</members>
         <members>Schedulable__c</members>
@@ -2201,6 +2211,13 @@
         <members>Opportunity_Naming_Settings__c-iw</members>
         <members>Opportunity_Naming_Settings__c-ja</members>
         <members>Opportunity_Naming_Settings__c-nl_NL</members>
+        <members>Package_Settings__c-de</members>
+        <members>Package_Settings__c-en_US</members>
+        <members>Package_Settings__c-es</members>
+        <members>Package_Settings__c-fr</members>
+        <members>Package_Settings__c-iw</members>
+        <members>Package_Settings__c-ja</members>
+        <members>Package_Settings__c-nl_NL</members>
         <members>Partial_Soft_Credit__c-de</members>
         <members>Partial_Soft_Credit__c-en_US</members>
         <members>Partial_Soft_Credit__c-es</members>
@@ -2479,7 +2496,6 @@
     </types>
     <types>
         <members>CumulusStaticResources</members>
-        <members>SLDS</members>
         <name>StaticResource</name>
     </types>
     <types>
@@ -2532,5 +2548,5 @@
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
     </types>
-    <version>39.0</version>
+    <version>43.0</version>
 </Package>

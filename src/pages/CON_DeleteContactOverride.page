@@ -5,7 +5,7 @@
             <!-- PAGE HEADER -->
             <c:UTIL_PageHeader headerLabel="{!$ObjectType.Contact.Label}"
                 header="{!Contact.Name}"
-                icon="contact_120" iconCategory="standard"
+                icon="contact" iconCategory="standard"
                 showSaveBtn="false" 
                 cancelLabel="{!$Label.bdiBtnClose}"
                 cancelAction="{!onCancel}"

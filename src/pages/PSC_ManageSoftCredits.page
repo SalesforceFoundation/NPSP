@@ -11,7 +11,7 @@
                          parentAction="{!If (NOT(ISNULL(opp)), URLFOR($Action.Opportunity.View, opp.Id), '')}" parentRecordName="{!opp.Name}"
                          parentRecordAction="/{!opp.Id}"
                          header="{! $Label.pscManageSoftCreditsTitle }" headerLabel="{!headerSubtitle}"
-                         icon="opportunity_120" iconCategory="standard"
+                         icon="opportunity" iconCategory="standard"
                          saveAction="{!save}" cancelAction="{!cancel}"/>
 
         <apex:actionFunction name="refresh" action="{!refresh}" reRender="totalSelected, totalUn" />

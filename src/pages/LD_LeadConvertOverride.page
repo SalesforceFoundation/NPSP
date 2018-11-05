@@ -38,7 +38,7 @@
                                    parentAction="/00Q" parentRecordName="{!l.Name}"
                                    parentRecordAction="/{!l.Id}"
                                    headerLabel="{! $Label.leadConvertSectionTitle }" header="{!l.Name}"
-                                   icon="lead_120" iconCategory="standard"
+                                   icon="lead" iconCategory="standard"
                                    saveAction="{!convertLeadNow}" saveLabel="{!$Label.leadConvertBtnConvert}"
                                    cancelAction="{!cancel}" cancelLabel="{!$Label.leadConvertBtnCancel}"/>
 
@@ -80,7 +80,7 @@
                                             function viewLink() {
                                                 var contactId = '{!HTMLENCODE(strConId)}';
                                                 if (contactId  == null || contactId  == "" ||  contactId  == 'NEW_CONTACT') {
-                                                    alert("{!$Label.leadConvertViewContactError}");
+                                                    alert("{!JSENCODE($Label.leadConvertViewContactError)}");
                                                 } else {
                                                     var view = document.getElementById('view');
                                                     view.setAttribute("data-toggle","modal");

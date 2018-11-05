@@ -1,4 +1,4 @@
-<apex:page controller="STG_PanelAllocations_CTRL" docType="html-5.0">
+<apex:page controller="STG_PanelAllocations_CTRL" docType="html-5.0" standardStylesheets="false">
     <style>
         input.lookupInput {
             background-color: white;
@@ -17,15 +17,17 @@
             margin-right: -30px;
         }
     </style>
-    <apex:form id="form" styleClass="slds-m-around--x-large">
+    <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavAllocations}" />
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
-            <apex:commandButton id="editAllo" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
+            <apex:commandButton id="editAllo" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
         <c:UTIL_PageMessages />
         <div style="{!IF(!stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:block', 'display:none')}">
-            <div class="slds-section-title--divider" >{!$Label.stgLabelAllocationsRollupSettings}</div>
-            <div class="slds-form--horizontal">
+            <div class="slds-section">
+                <div class="slds-section-title_divider">{!$Label.stgLabelAllocationsRollupSettings}</div>
+            </div>
+            <div class="slds-form_horizontal">
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Excluded_Opp_RecTypes__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
@@ -66,8 +68,10 @@
                 </div>
             </div>
         </div>
-        <div class="slds-section-title--divider" >{!$Label.stgLabelAllocationsSettings}</div>
-        <div class="slds-form--horizontal">
+        <div class="slds-section">
+            <div class="slds-section-title_divider" >{!$Label.stgLabelAllocationsSettings}</div>
+        </div>
+        <div class="slds-form_horizontal">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default_Allocations_Enabled__c.Label}" for="cbxDAE" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -82,16 +86,18 @@
                 <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default__c.Label}" for="inputDefaultGAU" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <apex:outputText value="{!strDefaultGAUName}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                    <apex:inputfield value="{!allo.General_Accounting_Unit__c}" required="false" rendered="{!isEditMode}" id="inputDefaultGAU" html-aria-describedby="{!$Component.inputDefaultGAUHelp}" styleClass="lookupInput" />
+                    <apex:outputPanel id="inputDefaultGAU" layout="block" rendered="{!isEditMode}" html-aria-describedby="{!$Component.inputDefaultGAUHelp}">
+                        <c:UTIL_InputField sObj="{!allo}" sObjType="Allocation__c" required="false" field="General_Accounting_Unit__c"/>
+                    </apex:outputPanel>
                     <apex:outputPanel id="inputDefaultGAUHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpDefaultGAU}" />
                     </apex:outputPanel>
                 </div>
             </div>
         </div>
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
-            <apex:commandButton id="saveAllo" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-            <apex:commandButton id="cancelAllo" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
+            <apex:commandButton id="saveAllo" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button_small slds-button_brand" />
+            <apex:commandButton id="cancelAllo" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
     </apex:form>
 </apex:page>
