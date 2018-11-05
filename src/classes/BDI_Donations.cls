@@ -337,15 +337,15 @@ public class BDI_Donations {
         bdi.LogBDIError(di, strError, 'DonationImportStatus__c');        
         return false;
     }
-    
+
     /*******************************************************************************************************
     * @description for the provided DataImport record, create or update the appropriate Opp (in memory)
     * with data from the DI record, and return it unsaved.
     *
     * @param di The DataImport record to prepare the Opportunity for
     * @return Opportunity A new or existing Opportunity. Null if there was an error.
-    */ 
-    private Opportunity prepareOppForUpdateInsert(DataImport__c di) {        
+    */
+    private Opportunity prepareOppForUpdateInsert(DataImport__c di) {
         Opportunity opp = mapDIIdToOpp.get(di.Id);
         string strOppName;
 
@@ -424,8 +424,11 @@ public class BDI_Donations {
 
             // If we have a custom mapping against the field CurrencyIsoCode of the Data Import object.
             if (strDIField != 'CurrencyIsoCode' && currentValue == 'CurrencyIsoCode') {
+                String customCurrencyIsoCodeFieldOnDataImport = (String)di.get(strDIField);
+                if (!String.isBlank(customCurrencyIsoCodeFieldOnDataImport)) {                    
                     useCustomMappingInsteadOfCurrencyIsoCode = true;
                     break;
+                }
             }
         }
 
