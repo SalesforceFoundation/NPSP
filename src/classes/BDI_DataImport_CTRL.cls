@@ -62,7 +62,7 @@ public with sharing class BDI_DataImport_CTRL {
     */
     public boolean userCanEditSettings {
         get {
-            if (diBatch.UseBatchGiftEntryGrid__c == false) {
+            if (!isBGERecord) {
                 return isTrueBatch ?
                         DataImportBatch__c.SobjectType.getDescribe().isUpdateable() :
                         Data_Import_Settings__c.SobjectType.getDescribe().isUpdateable();
@@ -137,6 +137,15 @@ public with sharing class BDI_DataImport_CTRL {
             return diTemp;
         }
         private set;
+    }
+
+    /*******************************************************************************************************
+    * @description whether we are processing a record created for Batch Gift Entry or only the Data Importer
+    */
+    public Boolean isBGERecord {
+        get {
+            return diBatch.UseBatchGiftEntryGrid__c;
+        } private set;
     }
 
     /*******************************************************************************************************
