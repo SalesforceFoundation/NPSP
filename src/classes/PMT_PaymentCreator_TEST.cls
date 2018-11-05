@@ -1050,10 +1050,6 @@ private with sharing class PMT_PaymentCreator_TEST {
             return;
         }
 
-        // UTIL_Currency_TEST.UtilCurrencyMock mock = new UTIL_Currency_TEST.UtilCurrencyMock();
-        // mock.isMultiCurrencyOrganizationReturn = true;
-        // UTIL_Currency.instance = mock;
-
         String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
         String openStage = UTIL_UnitTestData_TEST.getOpenStage();
 
@@ -1074,9 +1070,10 @@ private with sharing class PMT_PaymentCreator_TEST {
             StageName = openStage
         );
 
+        opp.put('CurrencyIsoCode','CAD');
         insert opp;
 
-        npe01__OppPayment__c payment = database.query('SELECT id, npe01__paid__c, npe01__payment_amount__c, npe01__Payment_Date__c FROM npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id LIMIT 1');
+        npe01__OppPayment__c payment = database.query('SELECT id, CurrencyIsoCode, npe01__paid__c, npe01__payment_amount__c, npe01__Payment_Date__c FROM npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id LIMIT 1');
 
         payment.npe01__paid__c = true;
         payment.npe01__Payment_Date__c = date.today();
