@@ -730,15 +730,12 @@ global with sharing class BDI_DataImportService {
 
     /*******************************************************************************************************
     * @description Checks if this is one of the objects where we want to have a currency mapped.
-    * As of now, those objects are Opportunity and Payments. Payment currency iso code is inherited from the Opportunity.
+    * As of now, that object is Opportunity. Payment CurrencyISOCode is inherited from the Opportunity.
     * @param strBaseObj the underlying object the bdi object is (ie, Contact, Account, etc)
-    * @return Boolean if the strBaseObj is either a Payment or an Opportunity.
+    * @return Boolean if the strBaseObj is an Opportunity.
     */
     private static Boolean isCurrencyMapped(String objectName) {
-        Set<String> objectsThatMapCurrencyCode = new Set<String>{
-            'Opportunity'
-        };
-        return objectsThatMapCurrencyCode.contains(objectName);
+        return objectName.equalsIgnoreCase('Opportunity');
     }
 
     /*******************************************************************************************************
