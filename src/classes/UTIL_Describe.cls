@@ -464,6 +464,27 @@ public class UTIL_Describe {
         return null;
     }
 
+    /** @description Returns a list of options formatted for Lightning Component use in lightning:select tags
+    * for a given object and picklist field name.
+    * @param objectName The name of the object.
+    * @param fieldName The name of the field.
+    * @return List<Map<String, String>> The options for this picklist field formatted for use in Lightning Components
+    */
+    public static List<Map<String, String>> getLightningSelectOptions(String objectName, String fieldName) {
+        fieldName = fieldName.toLowerCase();
+        List<SelectOption> picklistOptions = UTIL_Describe.getSelectOptions(objectName,fieldName);
+        List<Map<String, String>> options = new List<Map<String, String>>();
+        for (SelectOption opt : picklistOptions) {
+            if (opt.getDisabled() == false) {
+                Map<String, String> labeledOption = new Map<String, String>();
+                labeledOption.put('value', opt.getValue());
+                labeledOption.put('label', opt.getLabel());
+                options.add(labeledOption);
+            }
+        }
+        return options;
+    }
+
     /** @description For a given object and field, verifies that the field is accessible and updateable,
     * throwing an exception if it isn't.*/
     public static void checkFieldFLS(String objectName, String fieldName) {
