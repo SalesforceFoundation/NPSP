@@ -35,6 +35,13 @@
 * is built to be generic enough to be executed in different configurations to count whatever large object requires
 * counting. Stateful is used to hold the count variables and an Enum is used to define the mode the batch job
 * is executing in.
+* *
+* Significant query tests were done in Oct/Nov 2018 to determine what query can run against a very very large
+* organization without timing out. The initial query tests used two different WHERE clauses against the
+* npe03__Recurring_Donation__c field. Both of those consistently failed with a query timeout error. The only query
+* that did run consistently is one without any filter at all. Technically we could use a filter with against an
+* indexed field, however in this case the goal was to use " != null" which would not use the index. As a result
+* this job will query and loop through all Opportunity records, but just count the recurring donation related ones.
 */
 public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObject>, Database.Stateful {
 
@@ -53,8 +60,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     private Integer rdAllOppsCount = 0;
     private Integer rdOpenStatusOppsCount = 0;
 
-    private static final String recurringDonationOpenStatusValue = System.Label.npe03.RecurringDonationOpenStatus;
-
+    private final String recurringDonationOpenStatusValue = System.Label.npe03.RecurringDonationOpenStatus;
 
     /**
      * @description Constructor
@@ -69,10 +75,8 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     public Database.QueryLocator start(Database.BatchableContext context) {
         switch on (jobMode) {
             when RECURRING_DONATIONS {
-                return Database.getQueryLocator(
-                        [SELECT Id, npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c
-                        FROM Opportunity
-                        WHERE npe03__Recurring_Donation__c != null]);
+                String soql = 'SELECT Id, npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c FROM Opportunity';
+                return Database.getQueryLocator(soql);
             }
         }
         // If no conditions are met, this returns an empty query to avoid an NPE
