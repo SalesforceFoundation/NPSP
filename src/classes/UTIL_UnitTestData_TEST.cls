@@ -175,7 +175,6 @@ public class UTIL_UnitTestData_TEST {
         // TBD should allow specifying rectype (optional)
     
         List<Opportunity> OppsToAdd = new List<Opportunity> ();
-        UTIL_Debug.debug('recordtypeintest: ' + rtid);
 
         for ( Contact thisCon : Cons ) {
             Opportunity newOpp = New Opportunity (
@@ -761,4 +760,26 @@ public class UTIL_UnitTestData_TEST {
     public static Boolean isAccountNameEncrypted() {
         return !Schema.sObjectType.Account.fields.Name.isFilterable();
     }
+
+    /**
+    * @description Returns a currency that isn't the org default so we can test behavior for multicurrency orgs.
+    * To get the default currency code, use UTIL_CurrencyCache.getOrgDefaultCurrency()
+    */
+    @TestVisible
+    private static UTIL_CurrencyCache.CurrencyData nonDefaultCurrencyType {
+        get {
+            if (nonDefaultCurrencyType == null) {
+                // get a valid ISO code
+                List<SObject> nonDefaultCurrency = Database.query('SELECT IsoCode FROM CurrencyType WHERE IsCorporate = false LIMIT 1');
+                if (nonDefaultCurrency.size() > 0) {
+                    String nondefaultCurrencyCode = (String)nonDefaultCurrency[0].get('IsoCode');
+                    UTIL_CurrencyCache.retrieveAndCacheExchangeRates(nondefaultCurrencyCode);
+                    nonDefaultCurrencyType = UTIL_CurrencyCache.cachedMapOfRatesByCurrencyCode.get(nondefaultCurrencyCode);
+                }
+            }
+            return nonDefaultCurrencyType;
+        }
+        set;
+    }
+
 }

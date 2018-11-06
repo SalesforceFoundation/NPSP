@@ -36,26 +36,6 @@
 @isTest
 private class PMT_Payment_TEST {
 
-    /** @description Non default currency type sObject for this org.*/
-    private static sObject nonDefaultCurrencyType;
-    /** @description Default currency type sObject for this org.*/
-    private static sObject defaultCurrencyType;
-
-    /** @description Queries currency types and fills class variables.*/
-    private static void setupISOCodes() {
-        if (nonDefaultCurrencyType!=null || defaultCurrencyType!=null)
-            return;
-        else {
-            for (sObject ct : database.query('SELECT IsoCode, ConversionRate, IsCorporate FROM CurrencyType WHERE IsActive = True')) {
-                if ((boolean)ct.get('IsCorporate')) {
-                    defaultCurrencyType = ct;
-                } else {
-                    nonDefaultCurrencyType = ct;
-                }
-            }
-        }
-    }
-
     @TestSetup
     static void test_createTestData() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
@@ -70,15 +50,14 @@ private class PMT_Payment_TEST {
     static testMethod void test_newPaymentCurrencyMatchesOpportunity() {
 
         //only run test in multicurrency orgs
-        if (!userInfo.isMultiCurrencyOrganization()) {
+        if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
             return;
         }
 
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
-        setupISOCodes();
         // If there is no active non-default currency just exit out at this point.
-        if (nonDefaultCurrencyType == null) {
+        if (UTIL_UnitTestData_TEST.nonDefaultCurrencyType == null) {
             return;
         }
 
@@ -90,10 +69,10 @@ private class PMT_Payment_TEST {
                 AccountID = acc.id,
                 CloseDate = system.today(),
                 StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
-        opp.put('CurrencyIsoCode', (String) nonDefaultCurrencyType.get('IsoCode'));
+        opp.put('CurrencyIsoCode', UTIL_UnitTestData_TEST.nonDefaultCurrencyType.IsoCode);
         insert opp;
 
-        Test.StopTest();
+        Test.stopTest();
 
         String soql = 'SELECT Id, CurrencyIsoCode FROM Opportunity WHERE Id = \'' + opp.Id + '\' LIMIT 1';
         opp = database.query(soql);
@@ -106,16 +85,15 @@ private class PMT_Payment_TEST {
      * @description Validate that a change to the CurrencyIsoCode on the Opportunity record is copied
      * down the Payment records.
      */
-    static testMethod void test_UpdatePaymentCurrencyFromOpportunity() {
+    static testMethod void testUpdatePaymentCurrencyFromOpportunity() {
 
         //only run test in multicurrency orgs
-        if (!userInfo.isMultiCurrencyOrganization()) {
+        if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
             return;
         }
 
-        setupISOCodes();
         // If there is no active non-default currency just exit out at this point.
-        if (nonDefaultCurrencyType == null) {
+        if (UTIL_UnitTestData_TEST.nonDefaultCurrencyType == null) {
             return;
         }
 
@@ -133,14 +111,14 @@ private class PMT_Payment_TEST {
 
 
         // Verify that the Payment CurrencyIsoCode is updated when the Opportunity CurrencyIsoCode is changed
-        opp.put('CurrencyIsoCode', (String) nonDefaultCurrencyType.get('IsoCode'));
+        opp.put('CurrencyIsoCode', UTIL_UnitTestData_TEST.nonDefaultCurrencyType.IsoCode);
         update opp;
 
         Test.stopTest();
 
         npe01__OppPayment__c pmt = getPaymentRecord(opp.Id);
-        System.AssertEquals((String) opp.get('CurrencyIsoCode'), (String) pmt.get('CurrencyIsoCode'));
-        System.AssertEquals(opp.Amount, (Double)pmt.npe01__Payment_Amount__c);
+        System.assertEquals((String) opp.get('CurrencyIsoCode'), (String) pmt.get('CurrencyIsoCode'));
+        System.assertEquals(opp.Amount, (Double)pmt.npe01__Payment_Amount__c);
     }
 
     /**
@@ -150,13 +128,12 @@ private class PMT_Payment_TEST {
     static testMethod void test_BlockPaymentCurrencyChange() {
 
         //only run test in multicurrency orgs
-        if (!userInfo.isMultiCurrencyOrganization()) {
+        if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
             return;
         }
 
-        setupISOCodes();
         // If there is no active non-default currency just exit out at this point.
-        if (nonDefaultCurrencyType == null) {
+        if (UTIL_UnitTestData_TEST.nonDefaultCurrencyType == null) {
             return;
         }
 
@@ -175,7 +152,7 @@ private class PMT_Payment_TEST {
         npe01__OppPayment__c pmt = getPaymentRecord(opp.Id);
 
         // Verify that individual changes to the Payment CurrencyIsoCode are blocked
-        pmt.put('CurrencyIsoCode', (String)nonDefaultCurrencyType.get('IsoCode'));
+        pmt.put('CurrencyIsoCode', UTIL_UnitTestData_TEST.nonDefaultCurrencyType.IsoCode);
         try {
             update pmt;
             System.Assert(False, 'Updating the Payment.CurrencyIsoCode directly should have failed');
@@ -190,7 +167,7 @@ private class PMT_Payment_TEST {
             npe01__Opportunity__c = opp.Id,
             npe01__Payment_Amount__c = 100
         );
-        pmt.put('CurrencyIsoCode', (String)nonDefaultCurrencyType.get('IsoCode'));
+        pmt.put('CurrencyIsoCode', UTIL_UnitTestData_TEST.nonDefaultCurrencyType.IsoCode);
         try {
             insert pmt;
             System.Assert(False, 'Inserting the Payment.CurrencyIsoCode directly should have failed');
