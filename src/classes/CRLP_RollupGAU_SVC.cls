@@ -77,7 +77,6 @@ public class CRLP_RollupGAU_SVC extends CRLP_VRollupHandler {
                 detailRows = new List<SObject>{ opp, alloc };
             }
             if (isPaymentAllocation) {
-                System.debug('Payment Allocation: ' + alloc);
                 payment = alloc.Payment__r;
                 opp = payment.npe01__Opportunity__r;
                 detailRows = new List<SObject>{ opp, payment, alloc };

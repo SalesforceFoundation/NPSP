@@ -392,7 +392,6 @@ public class CMT_UnitTestData_TEST {
             parms.put('Date', getDetailObject.get(rollupType) + '.npe01__Payment_Date__c');
             parms.put('Detail', getDetailObject.get(rollupType));
 
-        //TODO make this work
         } else if (rollupType == RollupRecordType.OppToGAU || rollupType == RollupRecordType.PmtToGAU) {
             String detailField;
             if (((String)parms.get('Detail')).contains('.')) {
