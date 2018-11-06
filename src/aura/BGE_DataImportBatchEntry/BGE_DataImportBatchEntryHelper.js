@@ -157,6 +157,7 @@
                     label: field.label,
                     name: field.fieldName,
                     options: field.options,
+                    required: field.required,
                     value: field.defaultValue
                 });
             }
@@ -243,7 +244,7 @@
 
         tableErrors.size = rowErrors.length;
 
-        component.set("v.errors", tableErrors);
+        component.set('v.errors', tableErrors);
     },
 
     /**

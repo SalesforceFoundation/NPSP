@@ -194,6 +194,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     * @description Retrieves the default active fields for a new Batch or Template in a JSON String
     */
     public static String getDefaultActiveFields() {
+        //todo: change this into BGE Field objects instead
         return '[{"label":"Donation Amount",' +
                     '"name":"' + UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + '",' +
                     '"sObjectName":"Opportunity",' +

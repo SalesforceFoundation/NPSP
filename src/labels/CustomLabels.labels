@@ -2456,6 +2456,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Hidden fields must have a default value.</value>
     </labels>
     <labels>
+        <fullName>bgeBatchTemplateErrorRequiredAmount</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error shown when opportunity amount is not required.</shortDescription>
+        <value>Amount field must be required.</value>
+    </labels>
+    <labels>
         <fullName>bgeBatchTemplateErrorRequiredFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -5330,6 +5337,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>For alternative text when a boolean is not selected.</shortDescription>
         <value>Not Selected</value>
+    </labels>
+    <labels>
+        <fullName>stgClearErrors</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error shown when errors must be removed before something else can occur.</shortDescription>
+        <value>Clear errors before proceeding.</value>
     </labels>
     <labels>
         <fullName>stgCountOf</fullName>
