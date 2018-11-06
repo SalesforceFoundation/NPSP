@@ -231,15 +231,18 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      */
     private void handleMaxNumRelatedOpps() {
         try {
-            Account acct = [SELECT npo02__NumberOfClosedOpps__c
+            Integer cnt = 0;
+            List<Account> accts = [SELECT npo02__NumberOfClosedOpps__c
                 FROM Account
                 WHERE npo02__NumberOfClosedOpps__c > 0
                 ORDER BY npo02__NumberOfClosedOpps__c DESC
                 LIMIT 1];
-            if (acct != null) {
-                System.FeatureManagement.setPackageIntegerValue(TelemetryParameterName.Data_MaxNumRelatedOpps.name(),
-                        acct.npo02__NumberOfClosedOpps__c.intValue());
+            if (!accts.isEmpty()) {
+                cnt = accts[0].npo02__NumberOfClosedOpps__c.intValue();
             }
-        } catch (Exception ex) {}
+            System.FeatureManagement.setPackageIntegerValue(TelemetryParameterName.Data_MaxNumRelatedOpps.name(), cnt);
+        } catch (Exception ex) {
+            System.FeatureManagement.setPackageIntegerValue(TelemetryParameterName.Data_MaxNumRelatedOpps.name(), -1);
+        }
     }
 }
