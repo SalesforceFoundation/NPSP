@@ -223,6 +223,64 @@ private with sharing class BDI_DataImportCTRL_TEST {
 
     /*********************************************************************************************************
     * @description operation:
+    *    Open the Data Import Run/Settings page, with UseBatchGiftEntryGrid__c = false
+    * verify:
+    *    The UserCanEditSettings flag is correct.
+    **********************************************************************************************************/
+    static testMethod void testUserCanEditSettings() {
+
+        DataImportBatch__c diBatch = BDI_BatchOverride_TEST.newDIBatch();
+        diBatch.UseBatchGiftEntryGrid__c = false;
+        insert diBatch;
+
+        // Create an admin User
+        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        adminUser.IsActive = true;
+        insert adminUser;
+
+        Test.startTest();
+        System.runAs(adminUser) {
+            PageReference pageRef = Page.BDI_DataImport;
+            pageRef.getParameters().put('batchId', diBatch.Id);
+            Test.setCurrentPage(pageRef);
+            BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
+
+            System.assertEquals(true, ctrl.UserCanEditSettings);
+        }
+        Test.stopTest();
+    }
+
+    /*********************************************************************************************************
+    * @description operation:
+    *    Open the Data Import Run/Settings page, with UseBatchGiftEntryGrid__c = true
+    * verify:
+    *    The UserCanEditSettings flag is correct.
+    **********************************************************************************************************/
+    static testMethod void testUserCannotEditSettings() {
+
+        DataImportBatch__c diBatch = BDI_BatchOverride_TEST.newDIBatch();
+        diBatch.UseBatchGiftEntryGrid__c = true;
+        insert diBatch;
+
+        // Create an admin User
+        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        adminUser.IsActive = true;
+        insert adminUser;
+
+        Test.startTest();
+        System.runAs(adminUser) {
+            PageReference pageRef = Page.BDI_DataImport;
+            pageRef.getParameters().put('batchId', diBatch.Id);
+            Test.setCurrentPage(pageRef);
+            BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
+
+            System.assertEquals(false, ctrl.UserCanEditSettings);
+        }
+        Test.stopTest();
+    }
+
+    /*********************************************************************************************************
+    * @description operation:
     *    Creates data import records
     **********************************************************************************************************/
     private static void createTestData() {
