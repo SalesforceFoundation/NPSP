@@ -1045,8 +1045,6 @@ private with sharing class PMT_PaymentCreator_TEST {
     @isTest
     static void testOpportunityAutoClosingWithMulticurrency() {
 
-        UTIL_CurrencyCache.getInstance().resetCurrencyCache();
-
         // Test is only relevant for multi-currency organizations.  If not, skip it
         if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
             return;
