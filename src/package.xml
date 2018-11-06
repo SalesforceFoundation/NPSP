@@ -1702,6 +1702,7 @@
         <members>pscManageSoftCreditsAmountMissing</members>
         <members>pscManageSoftCreditsAmountOrPercent</members>
         <members>pscManageSoftCreditsCantChangeCurrency</members>
+        <members>pscManageSoftCreditsPermissionDenied</members>
         <members>pscManageSoftCreditsFull</members>
         <members>pscManageSoftCreditsInvalidContact</members>
         <members>pscManageSoftCreditsNoRoles</members>
