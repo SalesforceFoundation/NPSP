@@ -81,10 +81,10 @@
                 <div class="slds-col slds-has-flexi-truncate headerText">
                     <div class="slds-media slds-no-space slds-grow">
                         <div class="slds-media__figure">
-                            <lightning:icon iconName="standard:contract" alternativeText="Batch Gift Entry" size="medium"/>
+                            <lightning:icon iconName="standard:contract" alternativeText="{!$Label.c.bgeTabHeader}" size="medium"/>
                         </div>
                         <div class="slds-media__body">
-                            <p class="slds-breadcrumb__item slds-line-height_reset">Batch Gift Entry</p>
+                            <p class="slds-breadcrumb__item slds-line-height_reset">{!$Label.c.bgeTabHeader}</p>
                             <h1 class="slds-page-header__title slds-m-right_small slds-truncate">
                                 {!v.record.Name}
                             </h1>
