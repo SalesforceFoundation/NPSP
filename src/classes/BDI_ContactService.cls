@@ -317,12 +317,6 @@ public with sharing class BDI_ContactService {
             List<String> listDiKey = listDIKeyCx(di, strCx);
             Contact con = ContactFromDiKeys(listDiKey);
             if (con != null) {
-                Boolean contactAccountIsNotHousehold = con.Id != null && con.AccountId != null 
-                    && con.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE;
-                if (contactAccountIsNotHousehold && !ADV_PackageInfo_SVC.useAdv()) {
-                        bdi.LogBDIError(di, label.bdiErrorNonHHAccountContact, strCx + 'ImportStatus__c');
-                        continue;
-                }
                 di.put(strCx + 'Imported__c', con.id);
                 di.put(strCx + 'ImportStatus__c', con.id != null ? bdi.statusMatchedExisting() : bdi.statusMatchedNew());
                 if (con.AccountId != null && di.HouseholdAccountImported__c == null) {

@@ -1579,9 +1579,9 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.StartTest();
         try {
             BDI_DataImport_API.importData();
-            System.assert(false, 'importData should have thrown exception');
+            System.assert(true, 'importData should not have thrown exception');
         } catch (exception ex) {
-            System.assert(ex.getMessage().contains('Household Account model'));
+            System.assert(false, 'importData should not have thrown exception');
         }
         Test.stopTest();
     }
