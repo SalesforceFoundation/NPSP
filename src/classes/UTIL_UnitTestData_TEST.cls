@@ -770,10 +770,11 @@ public class UTIL_UnitTestData_TEST {
         get {
             if (nonDefaultCurrencyType == null) {
                 // get a valid ISO code
-                List<SObject> nonDefaultCurrency = Database.query('SELECT IsoCode FROM CurrencyType WHERE IsCorporate = false LIMIT 1');
+                List<SObject> nonDefaultCurrency = Database.query(
+                    'SELECT IsoCode FROM CurrencyType WHERE IsCorporate = false LIMIT 1'
+                );
                 if (nonDefaultCurrency.size() > 0) {
                     String nondefaultCurrencyCode = (String)nonDefaultCurrency[0].get('IsoCode');
-                    UTIL_CurrencyCache.retrieveAndCacheExchangeRates(nondefaultCurrencyCode);
                     nonDefaultCurrencyType = UTIL_CurrencyCache.cachedMapOfRatesByCurrencyCode.get(nondefaultCurrencyCode);
                 }
             }
