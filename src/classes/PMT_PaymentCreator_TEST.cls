@@ -1045,10 +1045,23 @@ private with sharing class PMT_PaymentCreator_TEST {
     @isTest
     static void testOpportunityAutoClosingWithMulticurrency() {
 
+        UTIL_CurrencyCache.getInstance().resetCurrencyCache();
+
         // Test is only relevant for multi-currency organizations.  If not, skip it
-        if (!UserInfo.isMultiCurrencyOrganization()) {
+        if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
             return;
         }
+
+        UTIL_CurrencyCache.CurrencyData mockCurrency = UTIL_UnitTestData_TEST.nonDefaultCurrencyType;
+
+        if (mockCurrency == null) {
+            return;
+        }
+
+        // set default rate for the currency we're using to a rate we know will cause rounding errors
+        mockCurrency.defaultRate = 1.290000;
+
+        UTIL_CurrencyCache.cachedMapOfRatesByCurrencyCode.put(mockCurrency.IsoCode, mockCurrency);
 
         String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
         String openStage = UTIL_UnitTestData_TEST.getOpenStage();
@@ -1064,28 +1077,34 @@ private with sharing class PMT_PaymentCreator_TEST {
         // I have an opportunity for CAD100 in a stage of Prospecting.
         Opportunity opp = new Opportunity (
             Name='Non US Currency',
-            AccountId = acct.id,
+            AccountId = acct.Id,
             Amount = 100.00,
-            CloseDate = date.today(),
+            CloseDate = Date.today(),
             StageName = openStage
         );
 
-        opp.put('CurrencyIsoCode','CAD');
+        opp.put('CurrencyIsoCode', mockCurrency.IsoCode);
         insert opp;
 
-        npe01__OppPayment__c payment = database.query('SELECT id, CurrencyIsoCode, npe01__paid__c, npe01__payment_amount__c, npe01__Payment_Date__c FROM npe01__OppPayment__c WHERE npe01__opportunity__c = :opp.Id LIMIT 1');
-
-        payment.npe01__paid__c = true;
-        payment.npe01__Payment_Date__c = date.today();
+        npe01__OppPayment__c payment = Database.query(
+            'SELECT Id, CurrencyIsoCode, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Date__c ' +
+            'FROM npe01__OppPayment__c ' +
+            'WHERE npe01__opportunity__c = \'' + opp.Id + '\'' +
+            'LIMIT 1'
+        );
+        payment.npe01__Paid__c = true;
+        payment.npe01__Payment_Date__c = Date.today();
 
         update payment;
 
-        String insertedOpportunityStageName = [SELECT StageName
-                                                FROM Opportunity
-                                                WHERE Id = : opp.Id
-                                                LIMIT 1].StageName;
+        opp = [
+            SELECT StageName
+            FROM Opportunity
+            WHERE Id = :opp.Id
+            LIMIT 1
+        ];
 
-        System.assertEquals(closedWonStage,insertedOpportunityStageName);
+        System.assertEquals(closedWonStage,opp.StageName);
     }
 
     /*********************************************************************************************************
@@ -1100,7 +1119,7 @@ private with sharing class PMT_PaymentCreator_TEST {
     @isTest
     static void testOpportunityAutoClosingWithoutMulticurrency() {
 
-        if (UserInfo.isMultiCurrencyOrganization()) {
+        if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
             return;
         }
 

@@ -399,9 +399,9 @@ public class PMT_PaymentCreator {
         Boolean paymentAmountReceivedUpdated = (oldOpp.npe01__Payments_Made__c != totalPaymentAmount);
         Boolean amountPositive = (newOpp.Amount > 0);
         Boolean isNotAndWasNotClosed = (!oldOpp.IsClosed && !newOpp.IsClosed);
-        Boolean isAmountEqualPaymentReceived = false;
+        Boolean isAmountEqualPaymentReceived;
 
-        // If the org has multicurrency setted up we need to round up the currency value to avoid bugs.
+        // If the org has multicurrency set up we need to round the currency value
         if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
             String oppCurrency = (String)newOpp.get('CurrencyIsoCode');
             Integer decimalPlaces = UTIL_CurrencyCache.getInstance().getCurrDecimalPlaces(oppCurrency);
@@ -428,7 +428,7 @@ public class PMT_PaymentCreator {
     * @description return true if booth values are equal when rounded on the same decimal scale.
     * @param Decimal amount1 one of the decimal values to compare.
     * @param Decimal amount2 the other decimal value to compare.
-    * @param Integer decimalPlaces for booth values
+    * @param Integer decimalPlaces for both values
     * @return Boolean stating id booth Decimal values are equal.
     */
     private static Boolean isEqualWhenRounded(Decimal amount1, Decimal amount2, Integer decimalPlaces) {
