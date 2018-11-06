@@ -1052,6 +1052,8 @@ private with sharing class PMT_PaymentCreator_TEST {
             return;
         }
 
+        // we have to use a real currency even though we're mocking the conversion rate because
+        // CurrencyIsoCode picklist values are restricted - you can't set an invalid code on an opp
         UTIL_CurrencyCache.CurrencyData mockCurrency = UTIL_UnitTestData_TEST.nonDefaultCurrencyType;
 
         if (mockCurrency == null) {
