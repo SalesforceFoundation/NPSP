@@ -66,19 +66,43 @@ public class CRLP_RollupGAU_SVC extends CRLP_VRollupHandler {
         List<Allocation__c> allocs = (List<Allocation__c>)details;
         for (Integer n=0, listSize = allocs.size(); n<listSize; n++) {
             Allocation__c alloc = allocs[n];
-            Opportunity opp = alloc.Opportunity__r;
+            Boolean isOpportunityAllocation = alloc.Opportunity__c != null;
+            Boolean isPaymentAllocation = alloc.Payment__c != null;
+            Opportunity opp;
+            npe01__OppPayment__c payment;
+            List<SObject> detailRows;
+
+            if (isOpportunityAllocation) {
+                opp = alloc.Opportunity__r;
+                detailRows = new List<SObject>{ opp, alloc };
+            }
+            if (isPaymentAllocation) {
+                System.debug('Payment Allocation: ' + alloc);
+                payment = alloc.Payment__r;
+                opp = payment.npe01__Opportunity__r;
+                detailRows = new List<SObject>{ opp, payment, alloc };
+            } 
 
             for (Integer nsr=0, rollupsListSize=this.rollups.size(); nsr<rollupsListSize; nsr++) {
                 CRLP_Rollup rollup = this.rollups[nsr];
                 Id filterGroupId = rollup.filterGroup;
 
-                // Process rollups that are coming from the Opportunity only (not from Payment)
-                List<SObject> detailRows = new List<SObject>{ opp, alloc };
-
-                // Does this row pass the evaluation?
-                if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(detailRows, filterGroupId)) {
-                    // YES -- now need to do the actual rollup!
-                    CRLP_Operation_SVC.doRollupOperation(rollup, opp, alloc);
+                // Process rollups for opportunity allocations... this should only have two items: opp, alloc
+                if (isOpportunityAllocation && rollup.dateObject == oppObjectName) {
+                    // Does this row pass the evaluation?
+                    if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(detailRows, filterGroupId)) {
+                        // YES -- now need to do the actual rollup!
+                        CRLP_Operation_SVC.doRollupOperation(rollup, opp, alloc);
+                    }
+                }
+                
+                // Process rollups for payment allocations... this should only have three items for filtering: opp, payment, and alloc
+                if (isPaymentAllocation && rollup.dateObject == pmtObjectName) {
+                    // Does this row pass the evaluation?
+                    if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(detailRows, filterGroupId)) {
+                        // YES -- now need to do the actual rollup!
+                        CRLP_Operation_SVC.doRollupOperation(rollup, payment, alloc);
+                    }
                 }
             }
 

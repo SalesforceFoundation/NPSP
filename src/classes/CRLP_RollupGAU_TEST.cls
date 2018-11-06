@@ -131,17 +131,13 @@ private class CRLP_RollupGAU_TEST {
 
                 CMT_UnitTestData_TEST.createRollupRecord('Number of Payment Allocations Two Years ago', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.PmtToGAU,
-                        'Total_Allocations_Last_Year__c', CRLP_Operation.RollupType.COUNT, '',
+                        'Number_of_Allocations_Last_Year__c', CRLP_Operation.RollupType.COUNT, '',
                         CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 2) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Smallest Payment Allocation', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.PmtToGAU,
                         'Smallest_Allocation__c', CRLP_Operation.RollupType.SMALLEST, 'Amount__c',
-                        CRLP_Operation.TimeBoundOperationType.ALL_TIME, 0) + ',' +
-
-                CMT_UnitTestData_TEST.createRollupRecord('Last Payment Allocation Date', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.PmtToGAU,
-                        'Last_Allocation_Date__c', CRLP_Operation.RollupType.LAST, 'Payment__r.npe01__Payment_Date__c') +
+                        CRLP_Operation.TimeBoundOperationType.ALL_TIME, 0) +
 
                 ']';
 
@@ -169,7 +165,7 @@ private class CRLP_RollupGAU_TEST {
                         Customizable_Rollups_Enabled__c = true,
                         Rollups_Limit_on_Attached_Opps_for_Skew__c = 150,
                         Rollups_Account_Batch_Size__c = 20,
-                        Rollups_GAU_Batch_Size__c = 400,
+                        Rollups_GAU_Batch_Size__c = 2000,
                         Rollups_Account_SkewMode_Batch_Size__c = 100,
                         Rollups_Contact_SkewMode_Batch_Size__c = 100,
                         Rollups_Contact_Soft_Credit_Batch_Size__c = 100
@@ -257,17 +253,26 @@ private class CRLP_RollupGAU_TEST {
                 CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, null, null);
         Test.stopTest();
 
+        List<Error__c> errors = [SELECT Id, Error_Type__c, Full_Message__c, Object_Type__c, Stack_Trace__c from Error__c];
+        System.assertEquals(0, errors.size(), errors);
+
         // Query the Account with all the target fields specified in the rollups
         String gauQuery = CRLP_Query_SEL.buildObjectQueryForRollup(General_Accounting_Unit__c.SObjectType) + ' WHERE Id = :gauId LIMIT 1';
         General_Accounting_Unit__c gau = database.query(gauQuery);
 
         // Basic rollup asserts using existing NPSP rollup fields.
-        System.assertEquals(totalDonations, gau.Total_Allocations__c);
-        System.assertEquals((totalDonations / cnt), gau.Average_Allocation__c);
-        System.assertEquals(total2YearsAgo, gau.Total_Allocations_Two_Years_Ago__c);
-        System.assertEquals(maxAmt/2, gau.Largest_Allocation__c);
+        System.assertEquals(totalDonations, gau.Total_Allocations__c, 'Total Donations');
+        System.assertEquals((totalDonations / cnt), gau.Average_Allocation__c, 'Average Allocation');
+        System.assertEquals(total2YearsAgo, gau.Total_Allocations_Two_Years_Ago__c, 'Total Two Years Ago');
+        System.assertEquals(maxAmt/2, gau.Largest_Allocation__c, 'Largest');
 
         System.assertEquals(donationYears.size(), gau.Total_Allocations_Last_N_Days__c, 'The current streak should be all the years');
         System.assertEquals(donationYears.size(), gau.Description__c.split(';').size(), 'The list of donated years should match');
+
+        // Payment Allocations
+        System.assertEquals(baseAmt/2, gau.Smallest_Allocation__c, 'Smallest Payment Allocation');
+        System.assertEquals(total2YearsAgo, gau.Total_Allocations_Last_Year__c, 'Total_Allocations_Last_Year__c Payment Allocation');
+        System.assertEquals(12, gau.Number_of_Allocations_Last_Year__c, 'Number_of_Allocations_Last_Year__c Payment Allocation');
+
     }
 }

@@ -401,7 +401,7 @@ public class CMT_UnitTestData_TEST {
                 detailField = 'Amount__c';
             }
             if (rollupType == RollupRecordType.PmtToGAU){
-                parms.put('Date', getDetailObject.get(rollupType) + 'Payment__r.npe01__Payment_Date__c');
+                parms.put('Date', 'npe01__OppPayment__c.npe01__Payment_Date__c');
             }
             parms.put('Amount', getDetailObject.get(rollupType) + '.' + detailField);
             parms.put('Detail', getDetailObject.get(rollupType) + '.' + detailField);

@@ -420,19 +420,19 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
      * @description There are cases where the main queryLocator did not filter out certain records to avoid
      * non-selectivity issues that would affect the query performance. In these cases, this method is hard-coded
      * to strip out any detail records from the queried data that will not be rolled up. Initially this only applies
-     * to removing records with a null value in Opportunity__c from the Allocation__c object.
+     * to removing records without value in Opportunity__c or Payment__c from the Allocation__c object.
      * @param scope List<SObject> from query locator
      * @return updated List<SObject> with the same or less rows as 'scope'
      */
     private List<SObject> applyPostQueryLocatorFilters(List<SObject> scope) {
 
         if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-            // For the GAU object, strip out any detail records where the key field is NULL. This is better
+            // For the GAU object, strip out any detail records where the key fields are NULL. This is better
             // handled here in the Execute() method than in the query to ensure proper SOQL selectivity.
             List<SObject> updatedDetailRecords = new List<SObject>();
             for (Integer n = 0, listSize = scope.size(); n < listSize; n++) {
                 Allocation__c alloc = (Allocation__c) scope[n];
-                if (alloc.Opportunity__c != null) {
+                if (alloc.Opportunity__c != null || alloc.Payment__c != null) {
                     updatedDetailRecords.add(alloc);
                 }
             }

@@ -131,7 +131,11 @@
 
             mainSoql += appendParentQuery(Opportunity.SObjectType, oppParentField);
 
+            //get opportunity and payment information for allocations
             if (detailObject == Allocation__c.SObjectType) {
+                mainSoql += appendParentQuery(Opportunity.SObjectType, UTIL_Namespace.StrAllNSPrefix('Payment__r.npe01__Opportunity__r'));
+                mainSoql += appendParentQuery(npe01__OppPayment__c.SObjectType, UTIL_Namespace.StrAllNSPrefix('Payment__r'));
+                mainSoql += ',' + SObjectType.Allocation__c.fields.Payment__c.getName();
                 mainSoql += ',' + SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
             }
 
