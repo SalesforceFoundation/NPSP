@@ -32,16 +32,19 @@
   @date 2018
   @group BGE
   @group-content ../../ApexDocContent/BatchDataImport.htm
-  @description Component used to view, edit, and delete DataImport__c records on the related NPSP_Data_Import_Batch__c record home.
+  @description Component used to create DataImport__c records on the related NPSP_Data_Import_Batch__c record home.
 -->
 
-<aura:component description="BGE_EntryForm">
+<aura:component>
 
+    <!--Public Attributes-->
     <aura:attribute name="labels" type="Map" description="Labels retrieved in Apex related to Schema information." access="public"/>
     <aura:attribute name="donorType" type="String" default="Contact1" description="Used to circumvent unhelpful labeling of Account1/Contact1" access="public"/>
     <aura:attribute name="recordId" type="Id" description="Populated by force:hasRecordId" access="public"/>
-    <aura:attribute name="dataImportFields" type="Object[]" description="" access="public"/>
+    <aura:attribute name="record" type="DataImport__c" description="Object" access="public"/>
+    <aura:attribute name="dataImportFields" type="Object[]" description="List of dynamic field objects to use in the field iteration" access="public"/>
 
+    <!--Events-->
     <aura:handler name="render" action="{!c.callFocus}" value="{!this}"/>
 
     <lightning:recordEditForm aura:id="recordEditForm"
@@ -49,6 +52,7 @@
                               onsuccess="{!c.onSuccess}"
                               onsubmit="{!c.onSubmit}"
                               onload="{!c.onFormLoad}">
+        <lightning:messages />
 
         <lightning:layout multipleRows="true">
             <!-- BEGIN DONOR FIELDS -->
@@ -63,13 +67,19 @@
 
             <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
                 <aura:if isTrue="{!v.donorType == 'Contact1'}">
-                    <label for="contactLookup" class="slds-form-element__label">{!v.labels.contactObject}</label>
+                    <label for="contactLookup" class="slds-form-element__label">
+                        <abbr class="slds-required" title="required">* </abbr>
+                        {!v.labels.contactObject}
+                    </label>
                     <lightning:inputField aura:id="contactLookup" fieldName="{!v.labels.contactLookup}"
                                           class="hideLabel"
                     />
                 </aura:if>
                 <aura:if isTrue="{!v.donorType == 'Account1'}">
-                    <label for="accountLookup" class="slds-form-element__label">{!v.labels.accountObject}</label>
+                    <label for="accountLookup" class="slds-form-element__label">
+                        <abbr class="slds-required" title="required">* </abbr>
+                        {!v.labels.accountObject}
+                    </label>
                     <lightning:inputField aura:id="accountLookup" fieldName="{!v.labels.accountLookup}"
                                           class="hideLabel"
                     />
@@ -81,21 +91,27 @@
             <aura:iteration items="{!v.dataImportFields}" var="field" indexVar="index">
                 <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
                     <aura:if isTrue="{!greaterthan(field.options.length, 0)}">
-                        <lightning:select label="{!field.label}" aura:id="dynamicInputFields" value="{!field.value}">
+                        <lightning:select aura:id="dynamicInputFields"
+                                          label="{!field.label}"
+                                          value="{!field.value}"
+                                          required="{!field.required}">
                             <option value=""></option>
                             <aura:iteration items="{!field.options}" var="opt">
                                 <option value="{!opt.value}">{!opt.label}</option>
                             </aura:iteration>
                         </lightning:select>
                         <aura:set attribute="else">
+                            <label for="{!field.name}" class="slds-form-element__label">
+                                <aura:if isTrue="{!field.required}"><abbr class="slds-required" title="required">* </abbr></aura:if>
+                                <span>{!field.label}</span>
+                            </label>
                             <lightning:inputField aura:id="dynamicInputFields"
+                                                  class="hideTooltip equalHeight hideLabel"
                                                   fieldName="{!field.name}"
-                                                  class="hideTooltip equalHeight"
                                                   value="{!field.value}"
                             />
                         </aura:set>
                     </aura:if>
-
                 </lightning:layoutItem>
             </aura:iteration>
 

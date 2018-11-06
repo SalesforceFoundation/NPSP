@@ -148,6 +148,7 @@
             // Subscribe to the model onFieldsUpdated event.
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var templateFields = component.get('v.templateFields');
+                var isNamespaced = component.get('v.isNamespaced')
                 templateFields.fieldGroups = [];
 
                 var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
@@ -157,6 +158,7 @@
                     var currentFieldGroup = {
                         sObjectName : sObjectName,
                         options: [],
+                        requiredOptions: [],
                         values: []
                     };
 
@@ -172,6 +174,12 @@
                         activeFieldsBySObject[sObjectName].forEach(function(currentField) {
                             currentFieldGroup.values.push(currentField.id);
                         });
+                    }
+                    //special case so Amount object is always visible
+                    if (sObjectName === 'Opportunity' && isNamespaced) {
+                        currentFieldGroup.requiredOptions.push('Opportunity.npsp__Donation_Amount__c');
+                    } else {
+                        currentFieldGroup.requiredOptions.push('Opportunity.Donation_Amount__c');
                     }
                     templateFields.fieldGroups.push(currentFieldGroup);
                 });
@@ -577,7 +585,7 @@
             }
 
             /**
-             * @description Validates the required templateInfo.
+             * @description Validates the required templateInfo in Select Fields step.
              * @return Boolean validity.
              */
             function getRequiredFieldErrors() {
@@ -652,6 +660,8 @@
                         }
                     });
 
+
+                    /* todo: put this back when we decide to use hidden attribute
                     if (currentField.hide && !currentField.defaultValue) {
 
                         allValid = false;
@@ -663,13 +673,25 @@
                         };
                         errors.rows[fieldName] = fieldNameGroup;
                         errors.size += 1;
+                    }*/
+                    if ((currentField.name === 'Donation_Amount__c' || currentField.name === 'npsp__Donation_Amount__c')
+                        && !currentField.required) {
+                        allValid = false;
+                        var fieldName = currentField.name;
+                        var fieldNameGroup = {
+                            title: $A.get('$Label.c.PageMessagesError'),
+                            messages: [$A.get('$Label.c.bgeBatchTemplateErrorRequiredAmount')],
+                            fieldNames: ['required']
+                        };
+                        errors.rows[fieldName] = fieldNameGroup;
+                        errors.size += 1;
                     }
                 });
 
                 if (!allValid) {
                     errors.table = {
                         title: $A.get('$Label.c.PageMessagesError'),
-                        messages: [$A.get('$Label.c.bgeBatchTemplateErrorDefaultValue')]
+                        messages: [$A.get('$Label.c.stgClearErrors')]
                         };
                 } else {
                     errors = { rows: [], table: [], size: 0 };

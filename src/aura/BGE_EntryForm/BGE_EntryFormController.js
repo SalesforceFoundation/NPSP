@@ -22,28 +22,29 @@
     },
 
     /**
+     * @description: override submit function in recordEditForm to handle hidden fields and validation
+     */
+    onSubmit: function (component, event, helper) {
+        event.preventDefault();
+        var completeRow = helper.getRowWithHiddenFields(component, event);
+        var validity = helper.validateFields(component, completeRow);
+
+        if (validity.isValid) {
+            component.find('recordEditForm').submit(completeRow);
+        } else if (validity.missingFields.length !== 0) {
+            helper.sendErrorToast(component, validity.missingFields);
+        } else {
+            //do nothing since data format errors display inline
+        }
+    },
+
+    /**
      * @description: alerts parent component that record is saved and needs to be reset
      */
     onSuccess: function (component, event, helper) {
         var message = {'recordId': event.getParams().response.id};
         helper.sendMessage('onSuccess', message);
         component.destroy();
-    },
-
-    /**
-     * @description: override submit function in recordEditForm to handle backend fields and validation
-     */
-    onSubmit: function (component, event, helper) {
-        event.preventDefault();
-
-        var eventFields = helper.addExtraFields(component, event);
-
-        var isValid = true;
-        // TODO: add validation function
-        // isValid = helper.validateRecord(component, event);
-        if (isValid) {
-            component.find('recordEditForm').submit(eventFields);
-        }
     },
 
     /**
