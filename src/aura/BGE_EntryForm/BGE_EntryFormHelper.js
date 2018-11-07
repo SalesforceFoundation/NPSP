@@ -87,13 +87,17 @@
      */
     verifyRequiredFields: function(component, rowFields) {
         var missingFields = [];
-        var dataImportFields = component.get("v.dataImportFields");
-        var dynamicInputFields = component.find("dynamicInputFields");
+        var dataImportFields = component.get('v.dataImportFields');
+        var dynamicInputFields = component.find('dynamicInputFields');
+
+        if (! Array.isArray(dynamicInputFields)) {
+            dynamicInputFields = [dynamicInputFields];
+        }
 
         //dataImportFields and dynamicInputFields have the same order, so can loop both to check validity
         for (var i=0; i<dataImportFields.length; i++) {
             if (dataImportFields[i].required) {
-                var fieldValue = dynamicInputFields[i].get("v.value");
+                var fieldValue = dynamicInputFields[i].get('v.value');
                 if (fieldValue === '' || fieldValue === null) {
                     missingFields.push(dataImportFields[i].label);
                 }
