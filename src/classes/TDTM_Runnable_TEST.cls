@@ -38,15 +38,11 @@
 @isTest
 public with sharing class TDTM_Runnable_TEST {
 
-    private static string strTestOnly = '*';
-    
-    /*************************************************************************** 
+    /***************************************************************************
     * @description This test verifies that the runFuture method of the TDTM_Runnable class works properly 
     **/
     public static testmethod void testAsync() {
-    	if (strTestOnly != '*' && strTestOnly != 'testAsync') return;
-    	
-    	insert new Trigger_Handler__c(Active__c = true, Asynchronous__c = true, 
+    	insert new Trigger_Handler__c(Active__c = true, Asynchronous__c = true,
               Class__c = 'ERR_ParentAccountUpdater2_TEST', Load_Order__c = 1, Object__c = 'Contact', 
               Trigger_Action__c = 'AfterInsert;');
          
@@ -72,8 +68,6 @@ public with sharing class TDTM_Runnable_TEST {
     * If you comment out the first line in the method groupSObjects of TDTM_Runnable this test fails.
     **/
     public static testmethod void nochunking() {
-    	if (strTestOnly != '*' && strTestOnly != 'nochunking') return;
-    	
     	npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
     

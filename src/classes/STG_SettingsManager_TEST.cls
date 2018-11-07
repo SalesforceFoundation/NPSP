@@ -37,18 +37,11 @@
 public with sharing class STG_SettingsManager_TEST {
 
     /*********************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-    
-    /*********************************************************************************************************
     * @description Tests the Settings Manager page
     * @return void
     */
     public static testMethod void testSettingsManager() {
-        if (strTestOnly != '*' && strTestOnly != 'testSettingsManager') return;
-        STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
+        STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL();
         system.assertEquals('idPanelHome', STG_SettingsManager_CTRL.idPanelCurrent);
         system.assertEquals(null, ctrl.setPanelCurrent());
     }
@@ -101,7 +94,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testDataBoundMultiSelect() {
-        if (strTestOnly != '*' && strTestOnly != 'testDataBoundMultiSelect') return;
         STG_DataBoundMultiSelect_CTRL ctrl = new STG_DataBoundMultiSelect_CTRL();
         Contact con = new Contact();
         con.npo02__Naming_Exclusions__c = 'a;b;c';
@@ -120,7 +112,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanel() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanel') return;
         STG_Panel ctrl = new STG_Panel();
         system.assertEquals(null, ctrl.idPanel());
         ctrl.isEditMode = true;
@@ -152,7 +143,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testSettingsService() {
-        if (strTestOnly != '*' && strTestOnly != 'testSettingsService') return;
     	STG_SettingsService svc = STG_SettingsService.stgService;
     	system.assertNotEquals(null, svc);
     	system.assertNotEquals(null, svc.stgCon);
@@ -174,7 +164,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelAffl() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelAffl') return;
     	STG_PanelAffiliations_CTRL panel = new STG_PanelAffiliations_CTRL();
     	system.assertEquals('idPanelAffl', panel.idPanel());
     	STG_Panel.stgService.stgAffl.npe5__Automatic_Affiliation_Creation_Turned_On__c = true;
@@ -190,8 +179,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelAllo() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelAllo') return;
-        
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(name='foo');
         insert gau;
 
@@ -214,7 +201,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelBDE() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelBDE') return;
         STG_PanelBDE_CTRL panel = new STG_PanelBDE_CTRL();
         system.assertEquals('idPanelBDE', panel.idPanel());
         STG_Panel.stgService.stgBDE.Opportunity_Naming__c = true;
@@ -230,7 +216,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelContactRoles() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelContactRoles') return;
         STG_PanelContactRoles_CTRL panel = new STG_PanelContactRoles_CTRL();
         system.assertEquals('idPanelConRoles', panel.idPanel());
         STG_Panel.stgService.stgCon.npe01__Enable_Opportunity_Contact_Role_Trigger__c = true;
@@ -250,8 +235,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelContacts() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelContacts') return;
-
         String hhAccountRecTypeLabel = STG_PanelContacts_CTRL.strHHAccountRecordTypeLabel;
         String oneToOneRecordTypeLabel = STG_PanelContacts_CTRL.strOneToOneRecordTypeLabel;  
 
@@ -279,8 +262,6 @@ public with sharing class STG_SettingsManager_TEST {
         The Page contains an error.        
     **********************************************************************************************************/ 
     private static testMethod void testPanelRenameHHDoesNotRunBatchWhenHHNamingSettingsIsInvalid() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelRenameHHDoesNotRunBatchWhenHHNamingSettingsIsInvalid') return;
-
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
         UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings();
 
@@ -310,8 +291,6 @@ public with sharing class STG_SettingsManager_TEST {
         The Page contains no error.        
     **********************************************************************************************************/ 
     private static testMethod void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOff() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOff') return;
-
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
 
         Test.setCurrentPage(Page.STG_PanelRenameHouseholds);
@@ -338,8 +317,6 @@ public with sharing class STG_SettingsManager_TEST {
         The Page contains no error.        
     **********************************************************************************************************/ 
     private static testMethod void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOn() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOn') return;
-
         UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
 
         Test.setCurrentPage(Page.STG_PanelRenameHouseholds);
@@ -363,7 +340,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelLeads() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelLeads') return;
         STG_PanelLeads_CTRL panel = new STG_PanelLeads_CTRL();
         system.assertEquals('idPanelLeads', panel.idPanel());
         STG_Panel.stgService.stgCon.npe01__Default_Opp_on_Convert__c = true;
@@ -379,7 +355,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelMembership() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelMembership') return;
         STG_PanelMembership_CTRL panel = new STG_PanelMembership_CTRL();
         system.assertEquals('idPanelMembership', panel.idPanel());
         STG_Panel.stgService.stgHH.npo02__Membership_Grace_Period__c = 10;
@@ -395,7 +370,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelOppBatch() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelOppBatch') return;
         STG_PanelOppBatch_CTRL panel = new STG_PanelOppBatch_CTRL();
         system.assertEquals('idPanelOppBatch', panel.idPanel());
         system.assertEquals(false, panel.isRunningBatch);
@@ -408,7 +382,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelOppRollups() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelOppRollups') return;
         STG_PanelOppRollups_CTRL panel = new STG_PanelOppRollups_CTRL();
         system.assertEquals('idPanelOppRollup', panel.idPanel());
         STG_Panel.stgService.stgHH.npo02__Batch_Size__c = 10;
@@ -424,7 +397,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelOpps() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelOpps') return;
         STG_PanelOpps_CTRL panel = new STG_PanelOpps_CTRL();
         system.assertEquals('idPanelOpp', panel.idPanel());
         STG_Panel.stgService.stgCon.npe01__Payments_Enabled__c = true;
@@ -440,8 +412,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelOppNaming() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelOppNaming') return;
-
         STG_PanelOppNaming_CTRL panel = new STG_PanelOppNaming_CTRL();
         system.assertEquals('idPanelOppNaming', panel.idPanel());
         panel.newONS();
@@ -457,7 +427,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelPaymentMapping() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelPaymentMapping') return;
         STG_PanelPaymentMapping_CTRL panel = new STG_PanelPaymentMapping_CTRL();
         system.assertEquals('idPanelPaymentMapping', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());               
@@ -504,7 +473,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelRD() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelRD') return;
         STG_PanelRD_CTRL panel = new STG_PanelRD_CTRL();
         system.assertEquals('idPanelRD', panel.idPanel());
         panel.init();
@@ -527,7 +495,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelRDBatch() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelRDBatch') return;
         STG_PanelRDBatch_CTRL panel = new STG_PanelRDBatch_CTRL();
         system.assertEquals('idPanelRDBatch', panel.idPanel());
         system.assertEquals(false, panel.isRunningBatch);
@@ -540,7 +507,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelRDCustomFieldMapping() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelRDCustomFieldMapping') return;
         STG_PanelRDCustomFieldMapping_CTRL panel = new STG_PanelRDCustomFieldMapping_CTRL();
         system.assertEquals('idPanelRDFieldMap', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());               
@@ -577,7 +543,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelRDCustomInstallment() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelRDCustomInstallment') return;
         STG_PanelRDCustomInstallment_CTRL panel = new STG_PanelRDCustomInstallment_CTRL();
         system.assertEquals('idPanelRDInstPd', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());               
@@ -616,7 +581,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelRel() { 
-        if (strTestOnly != '*' && strTestOnly != 'testPanelRel') return;
         STG_PanelRel_CTRL panel = new STG_PanelRel_CTRL();
         system.assertEquals('idPanelRel', panel.idPanel());
         STG_Panel.stgService.stgRel.npe4__Allow_AutoCreated_Duplicates__c = true;
@@ -662,7 +626,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelRelAuto() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelRelAuto') return;
         STG_PanelRelAuto_CTRL panel = new STG_PanelRelAuto_CTRL();
         system.assertEquals('idPanelRelAuto', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());               
@@ -705,7 +668,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelRelReciprocal() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelRelReciprocal') return;
         STG_PanelRelReciprocal_CTRL panel = new STG_PanelRelReciprocal_CTRL();
         system.assertEquals('idPanelRelReciprocal', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());               
@@ -744,7 +706,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelUserRollup() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelUserRollup') return;
         STG_PanelUserRollup_CTRL panel = new STG_PanelUserRollup_CTRL();
         system.assertEquals('idPanelUserRollup', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());               
@@ -807,8 +768,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void TEST_userRollupSettings() {
-        if (strTestOnly != '*' && strTestOnly != 'TEST_userRollupSettings') return;
-        
         Test.setCurrentPageReference(new PageReference('Page.STG_SettingsManager'));
         
         //pass the controller into the extension
@@ -915,8 +874,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelCRLP() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelCRLP') return;
-
         STG_PanelCustomizableRollup_CTRL panel = new STG_PanelCustomizableRollup_CTRL();
         System.assertEquals('idPanelCustomizableRollup', panel.idPanel());
         System.assertEquals(true, panel.isAdmin);
@@ -961,7 +918,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelSchedule() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelLeads') return;
         STG_PanelSchedule_CTRL panel = new STG_PanelSchedule_CTRL();
         system.assertEquals('idPanelSchedule', panel.idPanel());
         STG_Panel.stgService.stgErr.Don_t_Auto_Schedule_Default_NPSP_Jobs__c = true;
@@ -977,7 +933,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelTDTM() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelTDTM') return;
         STG_PanelTDTM_CTRL panel = new STG_PanelTDTM_CTRL();
         system.assertEquals('idPanelTDTM', panel.idPanel());
         system.assertEquals(false, ApexPages.hasMessages());               
@@ -1018,7 +973,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelErrorLog() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelErrorLog') return;
         STG_PanelErrorLog_CTRL panel = new STG_PanelErrorLog_CTRL();
         system.assertEquals('idPanelErrorLog', panel.idPanel());
         UTIL_SoqlListView_CTRL slv = new UTIL_SoqlListView_CTRL();
@@ -1055,7 +1009,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelHealthCheck() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelHealthCheck') return;
         STG_PanelHealthCheck_CTRL panel = new STG_PanelHealthCheck_CTRL();
         system.assertEquals('idPanelHealthCheck', panel.idPanel());
         system.assertEquals(null, panel.runDetector());
@@ -1066,7 +1019,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelLvlAssignBatch() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelLvlAssignBatch') return;
         STG_PanelLvlAssignBatch_CTRL panel = new STG_PanelLvlAssignBatch_CTRL();
         system.assertEquals('idPanelLvlAssignBatch', panel.idPanel());
         system.assertEquals(false, panel.isRunningBatch);
@@ -1079,7 +1031,6 @@ public with sharing class STG_SettingsManager_TEST {
     * @return void
     */
     public static testMethod void testPanelPanelPrimaryContactRoleMergeBatch() {
-        if (strTestOnly != '*' && strTestOnly != 'testPanelPanelPrimaryContactRoleMergeBatch') return;
         STG_PanelPrimaryContactRoleMerge_CTRL panel = new STG_PanelPrimaryContactRoleMerge_CTRL();
         system.assertEquals('idPanelPrimaryContactRoleMergeBatch', panel.idPanel());
         system.assertEquals(false, panel.isRunningBatch);

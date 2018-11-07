@@ -38,12 +38,6 @@
 public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-
-    /*********************************************************************************************************
     * @description Holds the number of Households to create in tests.
     */
     static integer cHH = 2;
@@ -151,8 +145,6 @@ public with sharing class ADDR_Addresses_TEST {
         M contact Mailing address fields updated
     **********************************************************************************************************/
     static testMethod void newDefaultAddr() {
-        if (strTestOnly != '*' && strTestOnly != 'newDefaultAddr') return;
-
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
         Test.startTest();
@@ -181,8 +173,6 @@ public with sharing class ADDR_Addresses_TEST {
     static testMethod void insertContactWithAddress() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'insertContactWithAddress') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
 
@@ -232,8 +222,6 @@ public with sharing class ADDR_Addresses_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'insertContactWithAddressRecreateAccount') return;
-
         TDTM_DefaultConfig.startTestDataInit();
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
 
@@ -276,8 +264,6 @@ public with sharing class ADDR_Addresses_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'insertContactWithAddressOverride') return;
-
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
 
         listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cCon);
@@ -313,8 +299,6 @@ public with sharing class ADDR_Addresses_TEST {
         contact Mailing address fields updated
     **********************************************************************************************************/
     static testMethod void updateDefaultAddr() {
-        if (strTestOnly != '*' && strTestOnly != 'updateDefaultAddr') return;
-
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -351,8 +335,6 @@ public with sharing class ADDR_Addresses_TEST {
         contact Mailing address fields cleared
     **********************************************************************************************************/
     static testMethod void deleteDefaultAddr() {
-        if (strTestOnly != '*' && strTestOnly != 'deleteDefaultAddr') return;
-
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -386,8 +368,6 @@ public with sharing class ADDR_Addresses_TEST {
         contact Mailing address fields reset to default
     **********************************************************************************************************/
     static testMethod void deleteNonDefaultOverrideAddr() {
-        if (strTestOnly != '*' && strTestOnly != 'deleteNonDefaultOverrideAddr') return;
-
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -438,8 +418,6 @@ public with sharing class ADDR_Addresses_TEST {
         no change to HH and contact addresses
     **********************************************************************************************************/
     static testMethod void updateNonDefaultAddr() {
-        if (strTestOnly != '*' && strTestOnly != 'updateNonDefaultAddr') return;
-
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -476,8 +454,6 @@ public with sharing class ADDR_Addresses_TEST {
         contact's address matches override
     **********************************************************************************************************/
     static testMethod void setConAddrOverride() {
-        if (strTestOnly != '*' && strTestOnly != 'setConAddrOverride') return;
-
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -536,8 +512,6 @@ public with sharing class ADDR_Addresses_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
         
-        if (strTestOnly != '*' && strTestOnly != 'setConAddrNoOverride') return;
-
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -600,8 +574,6 @@ public with sharing class ADDR_Addresses_TEST {
         old default addresses no longer marked default
     **********************************************************************************************************/
     static testMethod void insertNewDefaultAddr() {
-        if (strTestOnly != '*' && strTestOnly != 'insertNewDefaultAddr') return;
-
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -655,8 +627,6 @@ public with sharing class ADDR_Addresses_TEST {
         new default addresses no longer marked default
     **********************************************************************************************************/
     static testMethod void insertNewDefaultAddrAndReset() {
-        if (strTestOnly != '*' && strTestOnly != 'insertNewDefaultAddrAndReset') return;
-
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
         list<Address__c> listAddrOriginal = listAddrT;
@@ -722,8 +692,6 @@ public with sharing class ADDR_Addresses_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'updateAddrOverride') return;
-
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -788,8 +756,6 @@ public with sharing class ADDR_Addresses_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'clearAddrOverride') return;
-
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -853,8 +819,6 @@ public with sharing class ADDR_Addresses_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'clearAddrOverrideNewAddr') return;
-
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -914,8 +878,6 @@ public with sharing class ADDR_Addresses_TEST {
     static testMethod void updateConAddrNew() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'updateConAddrNew') return;
 
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
@@ -981,8 +943,6 @@ public with sharing class ADDR_Addresses_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'updateConAddrMarkOverride') return;
-
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -1034,10 +994,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static testMethod void testAddressOverrideCreatesNewAddressWhenStateCodeIsChanged() {
         if (!ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
-            return;
-        }
-
-        if (strTestOnly != '*' && strTestOnly != 'testAddressOverrideCreatesNewAddressWhenStateCodeIsChanged') {
             return;
         }
 
@@ -1107,10 +1063,6 @@ public with sharing class ADDR_Addresses_TEST {
             return;
         }
 
-        if (strTestOnly != '*' && strTestOnly != 'testEmptyAddressCountryIsPopulatedFromCountryCode') {
-            return;
-        }
-
         Contact con = new Contact();
         con.put('MailingCountryCode', null);
         Address__c addressEmptyCountry = new Address__c(MailingCountry__c = null);
@@ -1142,10 +1094,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static testMethod void testEmptyAddressStateIsPopulatedFromStateCode() {
         if (!ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
-            return;
-        }
-
-        if (strTestOnly != '*' && strTestOnly != 'testEmptyAddressStateIsPopulatedFromStateCode') {
             return;
         }
 
@@ -1185,10 +1133,6 @@ public with sharing class ADDR_Addresses_TEST {
             return;
         }
 
-        if (strTestOnly != '*' && strTestOnly != 'testIsMatchingStateCode') {
-            return;
-        }
-
         Address__c addressMatch = new Address__c();
 
         Test.startTest();
@@ -1218,8 +1162,6 @@ public with sharing class ADDR_Addresses_TEST {
     static testMethod void updateConAddrExisting() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'updateConAddrExisting') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
                 new npe01__Contacts_and_Orgs_Settings__c(
@@ -1286,8 +1228,6 @@ public with sharing class ADDR_Addresses_TEST {
     static testMethod void updateConAddrExistingAddrType() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'updateConAddrExistingAddrType') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
                 new npe01__Contacts_and_Orgs_Settings__c(
@@ -1365,8 +1305,6 @@ public with sharing class ADDR_Addresses_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'addExistingContactToNewHouseholdShouldSyncPrimaryAddressTypeWithAddressType') return;
-
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
                 new npe01__Contacts_and_Orgs_Settings__c (
                         npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
@@ -1428,8 +1366,6 @@ public with sharing class ADDR_Addresses_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'addNewContactToHouseholdShouldSyncPrimaryAddressTypeWithAddressType') return;
-
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
                 new npe01__Contacts_and_Orgs_Settings__c (
                         npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
@@ -1481,8 +1417,6 @@ public with sharing class ADDR_Addresses_TEST {
     static testMethod void updateConAddrExistingCaseOnly() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'updateConAddrExistingCaseOnly') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
                 new npe01__Contacts_and_Orgs_Settings__c(
@@ -1583,8 +1517,6 @@ public with sharing class ADDR_Addresses_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'updateAccAddrNew') return;
-
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -1646,8 +1578,6 @@ public with sharing class ADDR_Addresses_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'updateAccAddrExisting') return;
-
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
                 new npe01__Contacts_and_Orgs_Settings__c(
                         npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
@@ -1708,8 +1638,6 @@ public with sharing class ADDR_Addresses_TEST {
         runtime error
     **********************************************************************************************************/
     static testMethod void newAddrNoAccount() {
-        if (strTestOnly != '*' && strTestOnly != 'newAddrNoAccount') return;
-
         initTestAddr(cHH);
         for (integer i = 0; i < cHH; i++) {
             system.assertEquals(null, listAddrT[i].Household_Account__c);
@@ -1732,8 +1660,6 @@ public with sharing class ADDR_Addresses_TEST {
         runtime error
     **********************************************************************************************************/
     static testMethod void newAddrNotHHAccount() {
-        if (strTestOnly != '*' && strTestOnly != 'newAddrNotHHAccount') return;
-
         listAccT = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(cHH, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
         insert listAccT;
 
@@ -1768,8 +1694,6 @@ public with sharing class ADDR_Addresses_TEST {
         old default addresses still marked default
     **********************************************************************************************************/
     static testMethod void insertNewSeasonalAddr() {
-        if (strTestOnly != '*' && strTestOnly != 'insertNewSeasonalAddr') return;
-
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -1820,8 +1744,6 @@ public with sharing class ADDR_Addresses_TEST {
         old default addresses still marked default
     **********************************************************************************************************/
     static testMethod void insertNewSeasonalAddrNotCurrent() {
-        if (strTestOnly != '*' && strTestOnly != 'insertNewSeasonalAddrNotCurrent') return;
-
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -1871,8 +1793,6 @@ public with sharing class ADDR_Addresses_TEST {
         Method returns empty Contact list
     **********************************************************************************************************/
     static testMethod void ContactRepository_getContactsShouldReturnEmptyListWhenAccountHasNoContacts() {
-        if (strTestOnly != '*' && strTestOnly != 'ContactRepository_getContactsShouldReturnEmptyListWhenAccountHasNoContacts') return;
-
         Account account = new Account(Name = 'AccountWithoutContacts');
         insert account;
 
@@ -1889,8 +1809,6 @@ public with sharing class ADDR_Addresses_TEST {
         Method returns expected Contact list for each Account
     **********************************************************************************************************/
     static testMethod void ContactRepository_getContactsShouldReturnContactsWhenAccountHasContacts() {
-        if (strTestOnly != '*' && strTestOnly != 'ContactRepository_getContactsShouldReturnContactsWhenAccountHasContacts') return;
-
         Integer hhSize = 2;
         Integer contactSize = 2;
         createHHTestData(hhSize, contactSize);
@@ -1907,8 +1825,6 @@ public with sharing class ADDR_Addresses_TEST {
         Method returns expected Contact list for each Account
     **********************************************************************************************************/
     static testMethod void ContactRepository_getContactsShouldReturnContactsWhenAccountHasNotBeenPassedToConstructor() {
-        if (strTestOnly != '*' && strTestOnly != 'ContactRepository_getContactsShouldReturnContactsWhenAccountHasNotBeenPassedToConstructor') return;
-
         Integer hhSize = 2;
         Integer contactSize = 2;
         createHHTestData(hhSize, contactSize);
@@ -1952,8 +1868,6 @@ public with sharing class ADDR_Addresses_TEST {
         address propagated to all contacts and accounts
     **********************************************************************************************************/
     static testMethod void insertManyAddresses() {
-        if (strTestOnly != '*' && strTestOnly != 'insertManyAddresses') return;
-
         createHHTestData(210, 1);
 
         // verify that the HH and Contacts share the same address
