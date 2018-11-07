@@ -234,7 +234,7 @@
 
                                         <lightning:layoutItem size="4">
 
-                                            <aura:if isTrue="{!field.type == 'picklist'}">
+                                            <aura:if isTrue="{!greaterthan(field.options.length, 0)}">
                                                 <lightning:select label="{!$Label.c.stgDefaultValue}" value="{!field.defaultValue}">
                                                     <option value=""></option>
                                                     <aura:iteration items="{!field.options}" var="opt">

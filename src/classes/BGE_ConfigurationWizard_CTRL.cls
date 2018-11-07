@@ -224,7 +224,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         String dataImportObject = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
 
-        String rawFieldType = UTIL_Describe.getFieldDisplaytype(dataImportObject, dataImportField).name().toLowerCase();
+        String rawFieldType = UTIL_Describe.getFieldDisplaytype(dataImportObject, dataImportField.toLowerCase()).name().toLowerCase();
 
         if (rawFieldType == 'picklist') {
             options = UTIL_Describe.getLightningSelectOptions(dataImportObject, dataImportField);
@@ -283,7 +283,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         paymentMethod.defaultValue = null;
         paymentMethod.required = false;
         paymentMethod.hide = false;
-        paymentMethod.type = getLightningFieldType('picklist');
+        paymentMethod.type = getLightningFieldType('string');
         // TODO: figure out why this next line is breaking things and not matching to the existing payment method field in available fields.
         paymentMethod.options = getPicklistOptions(UTIL_Namespace.StrTokenNSPrefix('Payment_Method__c'));
         paymentMethod.sortOrder = 2;
