@@ -5,7 +5,7 @@
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
             <apex:commandButton id="runLvlAssignBatch" value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}" 
-                disabled="{!isRunningBatch}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
+                disabled="{!isRunningBatch}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral stg-run-level-batch" />
         </div>
         <apex:outputPanel rendered="{!isRunningBatch}">
             <c:UTIL_JobProgressLightning id="jobProgress"
