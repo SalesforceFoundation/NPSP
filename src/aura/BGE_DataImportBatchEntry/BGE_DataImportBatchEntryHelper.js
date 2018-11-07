@@ -80,6 +80,20 @@
     },
 
     /**
+     * @description: invoke the Data Importer on all records associated with this Batch
+     */
+    processBatch: function(component) {
+        var batchId = component.get('v.recordId');
+        var bdiBatchClass = component.get('v.labels.bdiBatchClass');
+        var url = '/apex/' + bdiBatchClass + '?batchId=' + batchId + '&retURL=' + batchId;
+        var urlEvent = $A.get('e.force:navigateToURL');
+        urlEvent.setParams({
+            'url': url
+        });
+        urlEvent.fire();
+    },
+
+    /**
      * @description: starts the BDI dry run to verify DataImport__c matches
      * @param recordIds: list of DataImport__c RecordIds to check for dry run
      */
