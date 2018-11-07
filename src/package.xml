@@ -714,6 +714,7 @@
         <members>Batch_Template__c.Donation_Matching_Behavior__c</members>
         <members>Batch_Template__c.Donation_Matching_Implementing_Class__c</members>
         <members>Batch_Template__c.Donation_Matching_Rule__c</members>
+        <members>Batch_Template__c.Post_Process_Implementing_Class__c</members>
         <members>Batch_Template__c.Process_Using_Scheduled_Job__c</members>
         <members>Batch_Template__c.RequireTotalMatch__c</members>
         <members>Batch_Template__c.Run_Opportunity_Rollups_while_Processing__c</members>
@@ -1404,6 +1405,7 @@
         <members>bgeBatchTemplateOverviewWizard</members>
         <members>bgeBatchTemplateSelectFields</members>
         <members>bgeBatchTemplateSelectedFields</members>
+        <members>bgeBatchTemplateSetBatchOptions</members>
         <members>bgeBatchTemplateSetFieldOptions</members>
         <members>bgeGridAllGifts</members>
         <members>bgeGridDonorType</members>

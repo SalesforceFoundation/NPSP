@@ -2505,6 +2505,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Select Fields</value>
     </labels>
     <labels>
+        <fullName>bgeBatchTemplateSetBatchOptions</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Template Batch Options</shortDescription>
+        <value>Set Batch Options</value>
+    </labels>
+    <labels>
         <fullName>bgeBatchTemplateSetFieldOptions</fullName>
         <language>en_US</language>
         <protected>true</protected>

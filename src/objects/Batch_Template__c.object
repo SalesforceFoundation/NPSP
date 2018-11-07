@@ -220,6 +220,19 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Post_Process_Implementing_Class__c</fullName>
+        <description>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records.</inlineHelpText>
+        <label>Post Process Implementing Class</label>
+        <length>255</length>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Process_Using_Scheduled_Job__c</fullName>
         <defaultValue>false</defaultValue>
         <description>When checked, the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job.</description>

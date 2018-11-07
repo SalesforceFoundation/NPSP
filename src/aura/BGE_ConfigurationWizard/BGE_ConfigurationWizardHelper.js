@@ -26,10 +26,11 @@
                 templateInfoView.requireTotalMatch = templateInfo.requireTotalMatch;
                 templateInfoView.batchProcessSize = templateInfo.batchProcessSize;
                 templateInfoView.runOpportunityRollupsWhileProcessing = templateInfo.runOpportunityRollupsWhileProcessing;
-                templateInfoView.contactMatchingRule = templateInfo.contactMatchingRule;
                 templateInfoView.donationMatchingBehavior = templateInfo.donationMatchingBehavior;
+                templateInfoView.donationMatchingClass = templateInfo.donationMatchingClass;
                 templateInfoView.donationMatchingRule = templateInfo.donationMatchingRule;
                 templateInfoView.donationDateRange = templateInfo.donationDateRange;
+                templateInfoView.postProcessImplementingClass = templateInfo.postProcessImplementingClass;
                 templateInfoView.processUsingScheduledJob = templateInfo.processUsingScheduledJob;
 
                 component.set('v.templateInfo', templateInfoView);
@@ -47,10 +48,11 @@
                 requireTotalMatch: false,
                 batchProcessSize: 0,
                 runOpportunityRollupsWhileProcessing: false,
-                contactMatchingRule: '',
                 donationMatchingBehavior: '',
+                donationMatchingClass: '',
                 donationMatchingRule: '',
                 donationDateRange: '',
+                postProcessImplementingClass: '',
                 processUsingScheduledJob: false
             };
         })(component, model);
@@ -341,10 +343,11 @@
                     requireTotalMatch: _templateInfo.requireTotalMatch,
                     batchProcessSize: _templateInfo.batchProcessSize,
                     runOpportunityRollupsWhileProcessing: _templateInfo.runOpportunityRollupsWhileProcessing,
-                    contactMatchingRule: _templateInfo.contactMatchingRule,
                     donationMatchingBehavior: _templateInfo.donationMatchingBehavior,
+                    donationMatchingClass: _templateInfo.donationMatchingClass,
                     donationMatchingRule: _templateInfo.donationMatchingRule,
                     donationDateRange: _templateInfo.donationDateRange,
+                    postProcessImplementingClass: _templateInfo.postProcessImplementingClass,
                     processUsingScheduledJob: _templateInfo.processUsingScheduledJob
                 };
                 var activeFields = [];
@@ -442,10 +445,11 @@
                 this.requireTotalMatch = info.requireTotalMatch;
                 this.batchProcessSize = info.batchProcessSize;
                 this.runOpportunityRollupsWhileProcessing = info.runOpportunityRollupsWhileProcessing;
-                this.contactMatchingRule = info.contactMatchingRule;
                 this.donationMatchingBehavior = info.donationMatchingBehavior;
+                this.donationMatchingClass = info.donationMatchingClass;
                 this.donationMatchingRule = info.donationMatchingRule;
-                this.donationDateRange = info.donationDateRange
+                this.donationDateRange = info.donationDateRange;
+                this.postProcessImplementingClass = info.postProcessImplementingClass;
                 this.processUsingScheduledJob = info.processUsingScheduledJob;
                 this.onInfoUpdated.notify();
             }
@@ -471,10 +475,11 @@
                 requireTotalMatch: false,
                 batchProcessSize: 0,
                 runOpportunityRollupsWhileProcessing: false,
-                contactMatchingRule: '',
                 donationMatchingBehavior: '',
+                donationMatchingClass: '',
                 donationMatchingRule: '',
                 donationDateRange: '',
+                postProcessImplementingClass: '',
                 processUsingScheduledJob: false,
 
                 load: load,
@@ -869,7 +874,7 @@
              */
             function setMode(mode) {
                 this.mode = mode;
-                this.progressIndicatorStep = '1';
+                this.progressIndicatorStep = '5';
                 this.onMetadataUpdated.notify();
             }
 

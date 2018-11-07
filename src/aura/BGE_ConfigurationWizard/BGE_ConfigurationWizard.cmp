@@ -118,6 +118,7 @@
                                 <lightning:progressStep label="{!v.templateMetadata.labels.recordInfoLabel}" value="1"/>
                                 <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="3"/>
                                 <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="4"/>
+                                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetBatchOptions}" value="5"/>
                             </lightning:progressIndicator>
                         </div>
                     </aura:if>
@@ -200,6 +201,7 @@
                         </aura:iteration>
                     </div>
                 </div>
+                <!--End Step 3-->
 
                 <!--Selected Fields Section Header (View Mode Only)-->
                 <aura:if isTrue="{!v.isReadOnly}">
@@ -212,7 +214,6 @@
                     </div>
                 </aura:if>
                 <!--End Selected Fields Section-->
-                <!--End Step 3-->
 
                 <!-- Step 4: Set Field Options -->
                 <aura:if isTrue="{!or(v.templateMetadata.progressIndicatorStep == '4', v.isReadOnly)}">
@@ -233,6 +234,68 @@
 
                 <!-- Step 5: Edit Matching Rules (Only Batch Gift Entry) -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '5'}">
+                    <lightning:layout>
+                        <lightning:layoutItem size="6">
+                            <lightning:layout multipleRows="true">
+                                <lightning:layoutItem class="slds-p-horizontal_x-small" size="12">
+                                    <div class="slds-section">
+                                        <h3 class="slds-section__title slds-theme_shade">
+                                            <span class="slds-p-left_small slds-truncate">
+                                                {!$Label.c.stgLabelBatchProcessingOptions}
+                                            </span>
+                                        </h3>
+                                    </div>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                    <lightning:input label="Batch Process Size" type="number" step="0"
+                                                     value="{!v.templateInfo.batchProcessSize}"/>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                    <lightning:input label="Process Using Scheduled Job" type="checkbox"
+                                                     value="{!v.templateInfo.processUsingScheduledJob}"/>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                    <lightning:input label="Calculate Donation Rollups With Batch" type="checkbox"
+                                                     value="{!v.templateInfo.processUsingScheduledJob}"/>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                    <lightning:input label="Post Processing Implementing Class"
+                                                     value="{!v.templateInfo.postProcessClass}"/>
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="6">
+                                <lightning:layout horizontalAlign="spread" multipleRows="true">
+                                    <lightning:layoutItem class="slds-p-horizontal_x-small" size="12">
+                                        <div class="slds-section">
+                                            <h3 class="slds-section__title slds-theme_shade">
+                                                <span class="slds-p-left_small slds-truncate">
+                                                    {!$Label.c.bdiSettingsSectionDonationMatching}
+                                                </span>
+                                            </h3>
+                                        </div>
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                        <lightning:select label="Donation Matching Behavior" required="true"
+                                                          value="{!v.templateInfo.donationMatchingBehavior}">
+                                            <option value="" text=""/>
+                                        </lightning:select>
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                        <lightning:input label="Donation Matching Rule"
+                                                         value="{!v.templateInfo.donationMatchingRule}"/>
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                        <lightning:input label="Number of Days from Donation Date"
+                                                         value="{!v.templateInfo.donationDateRange}"/>
+                                    </lightning:layoutItem>
+                                    <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                        <lightning:input label="Donation Matching Implementing Class"
+                                                         value="{!v.templateInfo.donationMatchingClass}"/>
+                                    </lightning:layoutItem>
+                                </lightning:layout>
+                        </lightning:layoutItem>
+                    </lightning:layout>
                 </aura:if>
                 <!-- End Step 5 -->
 
@@ -248,10 +311,10 @@
                             <aura:if isTrue="{!not(v.isReadOnly)}">
                                 <lightning:button aura:id="cancel" variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.handleButtonClick}" />
                             </aura:if>
-                            <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '4' }">
+                            <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '5' }">
                                 <lightning:button aura:id="next" variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.handleButtonClick}" />
                             </aura:if>
-                            <aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '4') }">
+                            <aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '5') }">
                                 <lightning:button aura:id="save" variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.handleButtonClick}" disabled="{!or (v.templateMetadata.dataTableChanged, v.templateFieldOptions.errors.size > 0)}" />
                             </aura:if>
                         </lightning:layoutItem>
