@@ -44,6 +44,10 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     */
     @AuraEnabled
     public static String getRecordDetails(String sObjectName, Id recordId) {
+
+        // instantiate DI field map from UTIL_Describe so field order is guaranteed
+        Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
+
         BGEDetailsModel model = new BGEDetailsModel();
 
         sObjectName = UTIL_Namespace.StrTokenRemoveNSPrefix(sObjectName);
@@ -91,10 +95,9 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             }
         }
 
-        model.templateFields = getAvailableFields();
-
-        // this has to come after getAvailableFields() because of memoization behavior in UTIL_Describe that results in fields being out of order
         setDefaultValuesOnBGEDetailsModel(model);
+
+        model.templateFields = getAvailableFields();
 
         model.labels = getLabels(sObjectName);
 

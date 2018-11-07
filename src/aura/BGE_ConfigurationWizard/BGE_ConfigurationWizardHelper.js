@@ -75,7 +75,6 @@
                 templateMetadataView.mode = templateMetadata.mode;
                 templateMetadataView.hasError = templateMetadata.hasError;
                 templateMetadataView.errorMessage = templateMetadata.errorMessage;
-                templateMetadataView.dataTableChanged = templateMetadata.dataTableChanged;
                 templateMetadataView.pageHeader = templateMetadata.pageHeader;
 
                 if (!templateMetadataView.hasError) {
@@ -109,7 +108,6 @@
                 }
 
                 // when in modal context, need to notify the modal footer component
-                _sendMessage('dataTableChanged', templateMetadataView.dataTableChanged);
                 _sendMessage('setError', templateMetadataView.hasError);
 
                 component.set('v.templateMetadata', templateMetadataView);
@@ -130,8 +128,7 @@
                 mode: '',
                 progressIndicatorStep: '',
                 hasError: false,
-                errorMessage: '',
-                dataTableChanged: false
+                errorMessage: ''
             };
         })(component, model);
     },
@@ -654,9 +651,6 @@
              */
             function updateTemplateFieldOptions(templateFieldOptions) {
 
-                var allValid = true;
-                var errors = { rows: {}, table: {}, size: 0 };
-
                 _allFields.forEach(function(currentField) {
                     templateFieldOptions.forEach(function(currentActiveField) {
                         if (currentField.name === currentActiveField.name) {
@@ -666,8 +660,9 @@
                         }
                     });
 
-
                     /* todo: put this back when we decide to use hidden attribute
+                    // will need to figure out where/how to display errors
+                    // this error/allvalid handling is remnant from datatable display
                     if (currentField.hide && !currentField.defaultValue) {
 
                         allValid = false;
@@ -680,30 +675,9 @@
                         errors.rows[fieldName] = fieldNameGroup;
                         errors.size += 1;
                     }*/
-                    if ((currentField.name === 'Donation_Amount__c' || currentField.name === 'npsp__Donation_Amount__c')
-                        && !currentField.required) {
-                        allValid = false;
-                        var fieldName = currentField.name;
-                        var fieldNameGroup = {
-                            title: $A.get('$Label.c.PageMessagesError'),
-                            messages: [$A.get('$Label.c.bgeBatchTemplateErrorRequiredAmount')],
-                            fieldNames: ['required']
-                        };
-                        errors.rows[fieldName] = fieldNameGroup;
-                        errors.size += 1;
-                    }
+
                 });
 
-                if (!allValid) {
-                    errors.table = {
-                        title: $A.get('$Label.c.PageMessagesError'),
-                        messages: [$A.get('$Label.c.stgClearErrors')]
-                        };
-                } else {
-                    errors = { rows: [], table: [], size: 0 };
-                }
-
-                this.errors = errors;
                 this.onFieldsUpdated.notify();
             }
 
@@ -842,7 +816,6 @@
              */
             function backStep() {
                 this.clearError();
-                this.setDataTableChanged(false);
                 this.stepDown();
                 this.setPageHeader();
             }
@@ -854,7 +827,6 @@
             function cancel() {
                 if (this.mode === 'edit' && this.labels.sObjectNameNoNamespace === 'Batch_Template__c') {
                     this.clearError();
-                    this.setDataTableChanged(false);
                     this.setMode('view');
                 } else {
                     //navigate to record home
@@ -876,19 +848,6 @@
             function setMode(mode) {
                 this.mode = mode;
                 this.progressIndicatorStep = '1';
-                this.onMetadataUpdated.notify();
-            }
-
-            /**
-             * @description Sets attribute logging whether data table info has changed
-             * @param status - boolean
-             * @return void.
-             */
-            function setDataTableChanged(status) {
-                this.dataTableChanged = status;
-                // oncellchange seems to be broken, so we also set the view directly in the controller
-                // this is just updating the model
-                // still need to notify so the modal footer can be notified
                 this.onMetadataUpdated.notify();
             }
 
@@ -993,7 +952,6 @@
                 progressIndicatorStep: '',
                 hasError: false,
                 errorMessage: '',
-                dataTableChanged: false,
                 pageHeader: '',
                 load: load,
                 navigateToRecord: navigateToRecord,
@@ -1006,8 +964,7 @@
                 setPageHeader: setPageHeader,
                 stepUp: stepUp,
                 stepDown: stepDown,
-                onMetadataUpdated: _onMetadataUpdated,
-                setDataTableChanged: setDataTableChanged
+                onMetadataUpdated: _onMetadataUpdated
             }
         })(this.Event());
     },

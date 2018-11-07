@@ -236,25 +236,34 @@
                                         <lightning:layoutItem size="4">
 
                                             <aura:if isTrue="{!greaterthan(field.options.length, 0)}">
-                                                <lightning:select label="{!$Label.c.stgDefaultValue}" value="{!field.defaultValue}">
-                                                    <option value=""></option>
-                                                    <aura:iteration items="{!field.options}" var="opt">
-                                                        <option value="{!opt.value}">{!opt.label}</option>
-                                                    </aura:iteration>
-                                                </lightning:select>
+                                                <aura:if isTrue="{!v.isReadOnly}">
+                                                    <lightning:input label="{!$Label.c.stgDefaultValue}"
+                                                                     name="{!v.fieldLabel}"
+                                                                     value="{!field.defaultValue}"
+                                                                     readonly="true"/>
+                                                    <aura:set attribute="else">
+                                                        <lightning:select label="{!$Label.c.stgDefaultValue}" value="{!field.defaultValue}">
+                                                            <option value=""></option>
+                                                            <aura:iteration items="{!field.options}" var="opt">
+                                                                <option value="{!opt.value}">{!opt.label}</option>
+                                                            </aura:iteration>
+                                                        </lightning:select>
+                                                    </aura:set>
+                                                </aura:if>
 
                                                 <aura:set attribute="else">
                                                     <lightning:input label="{!$Label.c.stgDefaultValue}"
                                                                      type="{!field.type}"
                                                                      value="{!field.defaultValue}"
-                                                                     formatter="{!field.formatter}"/>
+                                                                     formatter="{!field.formatter}"
+                                                                     readonly="{!v.isReadOnly}"/>
                                                 </aura:set>
                                             </aura:if>
 
                                         </lightning:layoutItem>
 
                                         <lightning:layoutItem size="4" class="slds-align-middle slds-text-align_right">
-                                            <lightning:input label="{!$Label.c.lblRequired}" type="checkbox" value="{!field.required}"/>
+                                            <lightning:input label="{!$Label.c.lblRequired}" type="checkbox" checked="{!field.required}" disabled="{!field.name == 'Donation_Amount__c'}"/>
                                         </lightning:layoutItem>
 
                                     </lightning:layout>
