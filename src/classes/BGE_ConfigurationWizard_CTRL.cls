@@ -91,9 +91,11 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             }
         }
 
+        model.templateFields = getAvailableFields();
+
+        // this has to come after getAvailableFields() because of memoization behavior in UTIL_Describe that results in fields being out of order
         setDefaultValuesOnBGEDetailsModel(model);
 
-        model.templateFields = getAvailableFields();
         model.labels = getLabels(sObjectName);
 
         return JSON.serialize(model);
@@ -224,12 +226,12 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         String dataImportObject = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
 
-        String rawFieldType = UTIL_Describe.getFieldDisplaytype(dataImportObject, dataImportField.toLowerCase()).name().toLowerCase();
+        String rawSourceFieldType = UTIL_Describe.getFieldDisplaytype(dataImportObject, dataImportField.toLowerCase()).name().toLowerCase();
 
-        if (rawFieldType == 'picklist') {
+        if (rawSourceFieldType == 'picklist') {
             options = UTIL_Describe.getLightningSelectOptions(dataImportObject, dataImportField);
 
-        } else if (rawFieldType == 'string') {
+        } else if (rawSourceFieldType == 'string') {
 
             String targetObject = BDI_DataImportService.getTargetObject(dataImportField);
             if (targetObject == 'Payment') {
@@ -237,7 +239,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             }
 
             String targetField = BDI_DataImportService.getTargetField(dataImportField);
-            Schema.DisplayType targetFieldType = UTIL_Describe.getFieldDisplaytype(targetObject, targetField.toLowerCase());
+            Schema.DisplayType targetFieldType = UTIL_Describe.getFieldDisplaytype(targetObject, targetField);
 
             if (targetFieldType == Schema.DisplayType.PICKLIST) {
                 options = UTIL_Describe.getLightningSelectOptions(targetObject, targetField);
