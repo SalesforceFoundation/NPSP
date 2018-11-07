@@ -183,7 +183,14 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 if (systemRequiredFields.contains(unnamespacedField)) {
                     field.systemRequired = true;
                 }
-                field.type = fieldResult.getType().name().toLowerCase();
+
+                String rawFieldType = fieldResult.getType().name().toLowerCase();
+                field.type = getLightningFieldType(rawFieldType);
+                if (rawFieldType == 'currency') {
+                    field.formatter = 'currency';
+                }
+
+                field.options = getPicklistOptions(field.name);
 
                 fields.add(field);
             }
@@ -207,6 +214,40 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description Returns the source field's options formatted for lightning:select if the source field is a picklist
+    * or the target field's options formatted for lightning:select if the source field is a string and the target
+    * field is a picklist
+    * Returns an empty map if neither case applies
+    */
+    public static List<Map<String, String>> getPicklistOptions(String dataImportField){
+        List<Map<String, String>> options = new List<Map<String, String>>();
+
+        String dataImportObject = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
+
+        String rawFieldType = UTIL_Describe.getFieldDisplaytype(dataImportObject, dataImportField).name().toLowerCase();
+
+        if (rawFieldType == 'picklist') {
+            options = UTIL_Describe.getLightningSelectOptions(dataImportObject, dataImportField);
+
+        } else if (rawFieldType == 'string') {
+
+            String targetObject = BDI_DataImportService.getTargetObject(dataImportField);
+            if (targetObject == 'Payment') {
+                targetObject = 'npe01__OppPayment__c';
+            }
+
+            String targetField = BDI_DataImportService.getTargetField(dataImportField);
+            Schema.DisplayType targetFieldType = UTIL_Describe.getFieldDisplaytype(targetObject, targetField.toLowerCase());
+
+            if (targetFieldType == Schema.DisplayType.PICKLIST) {
+                options = UTIL_Describe.getLightningSelectOptions(targetObject, targetField);
+            }
+        }
+
+        return options;
+    }
+
+    /*******************************************************************************************************
     * @description Retrieves the default active fields for a new Batch or Template in a JSON String
     */
     public static String getDefaultActiveFields() {
@@ -214,40 +255,49 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         BGEField donationAmount = new BGEField();
         donationAmount.name = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c');
+        donationAmount.label = 'Donation Amount';
         donationAmount.sObjectName = 'Opportunity';
         donationAmount.defaultValue = null;
         donationAmount.required = true;
         donationAmount.hide = false;
         donationAmount.type = getLightningFieldType('number');
         donationAmount.formatter = 'currency';
+        donationAmount.sortOrder = 0;
         fields.add(donationAmount);
 
         BGEField donationDate = new BGEField();
         donationDate.name = UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        donationDate.label = 'Donation Date';
         donationDate.sObjectName = 'Opportunity';
         donationDate.defaultValue = null;
         donationDate.required = false;
         donationDate.hide = false;
         donationDate.type = getLightningFieldType('date');
+        donationDate.sortOrder = 1;
         fields.add(donationDate);
 
         BGEField paymentMethod = new BGEField();
         paymentMethod.name = UTIL_Namespace.StrTokenNSPrefix('Payment_Method__c');
+        paymentMethod.label = 'Method';
         paymentMethod.sObjectName = 'Payment';
         paymentMethod.defaultValue = null;
         paymentMethod.required = false;
         paymentMethod.hide = false;
         paymentMethod.type = getLightningFieldType('picklist');
-        paymentMethod.options = UTIL_Describe.getLightningSelectOptions('npe01__OppPayment__c','npe01__Payment_Method__c');
+        // TODO: figure out why this next line is breaking things and not matching to the existing payment method field in available fields.
+        paymentMethod.options = getPicklistOptions(UTIL_Namespace.StrTokenNSPrefix('Payment_Method__c'));
+        paymentMethod.sortOrder = 2;
         fields.add(paymentMethod);
 
         BGEField checkNumber = new BGEField();
         checkNumber.name = UTIL_Namespace.StrTokenNSPrefix('Payment_Check_Reference_Number__c');
+        checkNumber.label = 'Check/Reference Number';
         checkNumber.sObjectName = 'Payment';
         checkNumber.defaultValue = null;
         checkNumber.required = false;
         checkNumber.hide = false;
         checkNumber.type = getLightningFieldType('string');
+        checkNumber.sortOrder = 3;
         fields.add(checkNumber);
 
         return JSON.serialize(fields);
@@ -536,6 +586,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public String type;
         @AuraEnabled public String formatter;
         @AuraEnabled public List<Map<String, String>> options;
+        @AuraEnabled public Integer sortOrder;
 
         public BGEField() {
             isActive = false;
