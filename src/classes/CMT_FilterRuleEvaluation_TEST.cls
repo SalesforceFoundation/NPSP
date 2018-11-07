@@ -36,7 +36,8 @@
 @isTest(IsParallel=true)
 private class CMT_FilterRuleEvaluation_TEST {
 
-    private static Id filterGroupId1, filterGroupId2, filterGroupId3;
+    private static Id filterGroupId1, filterGroupId2, filterGroupId3, filterGroupId4, filterGroupId5, filterGroupId6, filterGroupId7;
+    private static Date closeDate = Date.Today().toStartOfMonth().addDays(1);
 
     /**
      * @description Because unit tests cannot actually insert Custom Metadata Types and there's no real way to know
@@ -48,6 +49,10 @@ private class CMT_FilterRuleEvaluation_TEST {
         filterGroupId1 = CMT_UnitTestData_TEST.getNewRecordId();
         filterGroupId2 = CMT_UnitTestData_TEST.getNewRecordId();
         filterGroupId3 = CMT_UnitTestData_TEST.getNewRecordId();
+        filterGroupId4 = CMT_UnitTestData_TEST.getNewRecordId();
+        filterGroupId5 = CMT_UnitTestData_TEST.getNewRecordId();
+        filterGroupId6 = CMT_UnitTestData_TEST.getNewRecordId();
+        filterGroupId7 = CMT_UnitTestData_TEST.getNewRecordId();
 
         String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
         String donationRTId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
@@ -57,11 +62,17 @@ private class CMT_FilterRuleEvaluation_TEST {
         String filterGroupsJSON = '[' +
                 CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'Test Group 1') + ',' +
                 CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId2, 'Test Group 2') + ',' +
-                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId3, 'Test Group 3') +
+                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId3, 'Test Group 3') + ',' +
+                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId4, 'Test Group 4') + ',' +
+                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId5, 'Test Group 5') + ',' +
+                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId6, 'Test Group 6') + ',' +
+                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId7, 'Test Group 7') +
             ']';
 
+        String closeDateString = Datetime.newInstance(closeDate, Time.newInstance(12,0,0,0)).format('YYYY-MM-dd');
+
         String filterRulesJSON = '[' +
-            /*  FILTER RULES FOR FILTER GROUP 1 -- Opportunity only String, Boolean and Date fields */
+                /*  FILTER RULES FOR FILTER GROUPS 1-3 -- Opportunity only String, Boolean and Date fields */
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'Opportunity', 'StageName', 'Starts_With', closedWonStage) + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule3', 'Opportunity', 'StageName', 'Equals', closedWonStage.toUpperCase()) + ',' +
@@ -69,31 +80,37 @@ private class CMT_FilterRuleEvaluation_TEST {
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule5', 'Opportunity', 'Type', 'Equals', '') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule6', 'Opportunity', 'NextStep', 'Contains', 'TEST') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule7', 'Opportunity', 'NextStep', 'Does_Not_Contain', 'NothingAtAll') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule8', 'Opportunity', 'CloseDate', 'Equals', 'THIS_YEAR') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule9', 'Opportunity', 'CloseDate', 'Equals', 'THIS_MONTH') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule10', 'Opportunity', 'CloseDate', 'Not_Equals', 'LAST_YEAR') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule11', 'Opportunity', 'CreatedDate', 'Equals', 'TODAY') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule12', 'Opportunity', 'CreatedDate', 'Equals', DateTime.Now().format('YYYY-MM-dd')) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule13', 'Opportunity', 'CreatedDate', 'Greater_Or_Equal', DateTime.Now().addDays(-1).format('YYYY-MM-dd hh:mm:ssZ')) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule14', 'Opportunity', 'CreatedDate', 'Less_Or_Equal', DateTime.Now().addDays(1).format('YYYY-MM-dd hh:mm:ssZ')) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule15', 'Opportunity', 'CreatedDate', 'Greater', DateTime.Now().addDays(-2).format('YYYY-MM-dd hh:mm:ssZ')) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule16', 'Opportunity', 'CreatedDate', 'Less', DateTime.Now().addDays(2).format('YYYY-MM-dd hh:mm:ssZ')) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule17', 'Opportunity', 'CreatedDate', 'Greater', 'YESTERDAY') + ',' +
 
-                /*  FILTER RULES FOR FILTER GROUP 2 -- Opportunity with RecordTypeId, RecordType.DeveloperName, StageName, OCR.Role, Amount */
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Not_Equals', 'False') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'In_List', donationRTId + ';' + anotherId) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'In_List', rtDonation.DeveloperName) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group1.Rule3', 'Opportunity', 'Primary_Contact__c', 'Not_Equals', '') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule4', 'Opportunity', 'Amount', 'Greater', '0') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule5', 'Opportunity', 'Amount', 'Not_Equals', '') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule6', 'Opportunity', 'Amount', 'Less_Or_Equal', '1000000000') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule7', 'Opportunity', 'Amount', 'Greater_Or_Equal', '0') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule8', 'Opportunity', 'Recurring_Donation_Installment_Number__c', 'Not_Equals', '1') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule9', 'Opportunity', 'Recurring_Donation_Installment_Number__c', 'Greater_Or_Equal', '0') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule10', 'Partial_Soft_Credit__c', 'Role_Name__c', 'In_List', 'Donor;Member') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule11', 'Partial_Soft_Credit__c', 'Role_Name__c', 'Not_In_List', 'InvalidRole') +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1a', 'Opportunity', 'CloseDate', 'Equals', closeDateString) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1b', 'Opportunity', 'CloseDate', 'Equals', 'THIS_YEAR') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'Opportunity', 'CloseDate', 'Equals', 'THIS_MONTH') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule3', 'Opportunity', 'CloseDate', 'Not_Equals', 'LAST_YEAR') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule4', 'Opportunity', 'CreatedDate', 'Equals', 'TODAY') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule5', 'Opportunity', 'CreatedDate', 'Greater', 'YESTERDAY') + ',' +
+
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule1', 'Opportunity', 'CreatedDate', 'Equals', DateTime.Now().format('YYYY-MM-dd')) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule2', 'Opportunity', 'CreatedDate', 'Greater_Or_Equal', DateTime.Now().addDays(-1).format('YYYY-MM-dd')) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule3', 'Opportunity', 'CreatedDate', 'Less_Or_Equal', DateTime.Now().addDays(1).format('YYYY-MM-dd')) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule4', 'Opportunity', 'CreatedDate', 'Greater', DateTime.Now().addDays(-2).formatGmt('YYYY-MM-dd hh:mm:ss.SSS')) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule5', 'Opportunity', 'CreatedDate', 'Less', DateTime.Now().addDays(2).format('YYYY-MM-dd')) + ',' +
+
+                /*  FILTER RULES FOR FILTER GROUP 4-7 -- Opportunity with RecordTypeId, RecordType.DeveloperName, StageName, OCR.Role, Amount */
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId4, 'Group4.Rule1', 'Opportunity', 'IsWon', 'Not_Equals', 'False') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId4, 'Group4.Rule2', 'Opportunity', 'RecordTypeId', 'In_List', donationRTId + ';' + anotherId) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId4, 'Group4.Rule3', 'Opportunity', 'RecordTypeId', 'In_List', rtDonation.DeveloperName) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId4, 'Group4.Rule4', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId4, 'Group4.Rule5', 'Opportunity', 'Primary_Contact__c', 'Not_Equals', '') + ',' +
+
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId5, 'Group5.Rule1', 'Opportunity', 'Amount', 'Greater', '0') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId5, 'Group5.Rule2', 'Opportunity', 'Amount', 'Not_Equals', '') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId5, 'Group5.Rule3', 'Opportunity', 'Amount', 'Less_Or_Equal', '1000000000') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId5, 'Group5.Rule4', 'Opportunity', 'Amount', 'Greater_Or_Equal', '0') + ',' +
+
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId6, 'Group6.Rule1', 'Opportunity', 'Recurring_Donation_Installment_Number__c', 'Not_Equals', '1') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId6, 'Group6.Rule2', 'Opportunity', 'Recurring_Donation_Installment_Number__c', 'Greater_Or_Equal', '0') + ',' +
+
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId7, 'Group7.Rule1', 'Partial_Soft_Credit__c', 'Role_Name__c', 'In_List', 'Donor;Member') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId7, 'Group7.Rule2', 'Partial_Soft_Credit__c', 'Role_Name__c', 'Not_In_List', 'InvalidRole') +
             ']';
 
         // Count the number of records that there should be in the group and rule JSON strings
@@ -126,7 +143,7 @@ private class CMT_FilterRuleEvaluation_TEST {
         Opportunity o = new Opportunity (
                 Name = 'Test Opp ' + c.FirstName + c.LastName,
                 Amount = 1000,
-                CloseDate = Date.Today().toStartOfMonth().addDays(1),
+                CloseDate = closeDate,
                 StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
                 Primary_Contact__c = c.Id,
                 RecordTypeId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.sObjectType),
@@ -151,8 +168,17 @@ private class CMT_FilterRuleEvaluation_TEST {
         Test.startTest();
 
          System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{o}, filterGroupId1));
+         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{o}, filterGroupId2));
+         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{o}, filterGroupId3));
+
          System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
                  new List<SObject>{o, o.OpportunityContactRoles[0]}, filterGroupId2));
+         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
+                 new List<SObject>{o, o.OpportunityContactRoles[0]}, filterGroupId5));
+         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
+                 new List<SObject>{o, o.OpportunityContactRoles[0]}, filterGroupId6));
+         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
+                 new List<SObject>{o, o.OpportunityContactRoles[0]}, filterGroupId7));
 
         // TODO Add more tests
     }

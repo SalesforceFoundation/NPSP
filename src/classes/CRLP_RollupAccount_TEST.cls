@@ -36,9 +36,9 @@
 @IsTest
 private class CRLP_RollupAccount_TEST {
 
-    /** @description The 5 testing types supported by the test engine */
+    /** @description The 6 testing types supported by the test engine */
     private Enum TestType {
-        TestTrigger, TestQueueuable, TestBatch, TestSkewBatch, TestMultiCurrBatch
+        TestTrigger, TestQueueuable, TestBatch, TestSkewBatch, TestMultiCurrBatch, TestReparentOpp
     }
 
     /**
@@ -67,6 +67,7 @@ private class CRLP_RollupAccount_TEST {
         String filterGroupId1 = CMT_UnitTestData_TEST.getNewRecordId();
         String filterGroupId2 = CMT_UnitTestData_TEST.getNewRecordId();
 
+        String dtValue = DateTime.now().addMonths(-100).addDays(-1).format('yyyy-MM-dd');
         // Simple testing filters for IsWon, RecordType, and Paid/Written Off
         String filterGroupsJSON = '[' +
                 CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'TestFilterGroup1-IsWon+Paid') + ',' +
@@ -76,10 +77,13 @@ private class CRLP_RollupAccount_TEST {
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule3', 'npe01__OppPayment__c', 'npe01__Paid__c', 'Equals', 'True') + ',' +
+                /* Add a rule that should filter out Opportunities created more than 100 months ago */
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule4', 'Opportunity', 'CloseDate', CMT_FilterRule.FilterOperation.Greater.name(), dtvalue) + ',' +
 
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule3', 'npe01__OppPayment__c', 'npe01__Written_Off__c', 'Equals', 'True') +
+
             ']';
 
         // Deserialize the filter group and filter rule to use for the tests
@@ -165,6 +169,10 @@ private class CRLP_RollupAccount_TEST {
     static testMethod void test_Rollups_Trigger() {
         testRollupsServices(TestType.TestTrigger);
     }
+    /** @description Test the Trigger method of rolling up when reparenting an Opp to a different Account */
+    static testMethod void test_Rollups_ReparentOppAccount() {
+        testRollupsServices(TestType.TestReparentOpp);
+    }
 
     /* @description Default currency for the current user (if MC is enabled in the Org) */
     private static String defaultCurrCode = UserInfo.getDefaultCurrency();
@@ -214,7 +222,6 @@ private class CRLP_RollupAccount_TEST {
 
         // Execute the rollup service test
         testRollupsServices(TestType.TestMultiCurrBatch);
-        
     }
 
     /**
@@ -230,7 +237,7 @@ private class CRLP_RollupAccount_TEST {
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true,
-                Rollups_Limit_on_Attached_Opps_for_Skew__c = (tt == TestType.testSkewBatch ? 50 : 200),
+                Rollups_Limit_on_Attached_Opps_for_Skew__c = (tt == TestType.TestSkewBatch ? 50 : 200),
                 Rollups_Account_SkewMode_Batch_Size__c = 200,
                 Rollups_Contact_SkewMode_Batch_Size__c = 200,
                 Rollups_Contact_Soft_Credit_Batch_Size__c = 200,
@@ -256,7 +263,7 @@ private class CRLP_RollupAccount_TEST {
         // Disable all legacy rollup triggers
         UTIL_UnitTestData_TEST.disableRollupTriggers();
 
-        if (tt != TestType.TestTrigger) {
+        if (tt != TestType.TestTrigger && tt != TestType.TestReparentOpp) {
             // disable customizable rollup triggers to test the Batch & Queueuable logic
             UTIL_UnitTestData_TEST.disableCustomizableRollupTriggers();
         }
@@ -269,18 +276,18 @@ private class CRLP_RollupAccount_TEST {
         Id rtId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
 
         List<Opportunity> opps = new List<Opportunity>();
-        Date closeDate = Date.Today().addMonths(-100);
+        final Date closeDate = Date.Today().addMonths(-100);
+        final Decimal maxAmt = 1000;
+        final Decimal baseAmt = 100;
+        final Integer cnt = 100;
         Decimal totalDonations = 0, total2YearsAgo = 0;
-        Decimal maxAmt = 1000;
-        Decimal baseAmt = 100;
-        Integer cnt = 100;
         String bestGiftYear;
         Set<String> donationYears = new Set<String>();
         Date lastCloseDate;
         for (Integer n=0; n<cnt; n++) {
             Decimal amt = (n==50 ? maxAmt : baseAmt);
             opps.add(new Opportunity (
-                    Name = 'Test Opp ' + c.FirstName + ' ' + c.LastName,
+                    Name = 'Test Opp ' + c.FirstName + ' ' + c.LastName + '-' + n,
                     Amount = amt,
                     CloseDate = closeDate.addMonths(n),
                     StageName = closedStage,
@@ -320,12 +327,24 @@ private class CRLP_RollupAccount_TEST {
 
         // create one closed opportunity to ensure it's not included in our rollups
         opps.add(new Opportunity (
-                Name = 'Test Opp ' + c.FirstName + ' ' + c.LastName,
+                Name = 'Test ClosedWon Opp ' + c.FirstName + ' ' + c.LastName,
                 Amount = 500,
                 CloseDate = Date.Today().addDays(1),
                 StageName = UTIL_UnitTestData_TEST.getClosedLostStage(),
                 Primary_Contact__c = c.Id,
                 RecordTypeId = rtId
+        ));
+
+        // create one closed won opportunity from BEFORE the earliest date to ensure it's not included
+        Date oldCloseDate = closeDate.addDays(-1);
+        opps.add(new Opportunity (
+                Name = 'Test Not Include' + c.FirstName + ' ' + c.LastName,
+                Amount = 50000,
+                CloseDate = oldCloseDate,
+                StageName = closedStage,
+                Primary_Contact__c = c.Id,
+                RecordTypeId = rtId,
+                npe01__Do_Not_Automatically_Create_Payment__c = true
         ));
 
         insert opps;
@@ -365,7 +384,7 @@ private class CRLP_RollupAccount_TEST {
         Account hardCreditAcc = Database.query(hardCreditAccQuery);
 
         // Make sure everything is null first!
-        if (tt != TestType.TestTrigger) {
+        if (tt != TestType.TestTrigger && tt != TestType.TestReparentOpp) {
             System.assertEquals(0, hardCreditAcc.npo02__TotalOppAmount__c);
             System.assertEquals(0, hardCreditAcc.npo02__AverageAmount__c);
             System.assertEquals(0, hardCreditAcc.npo02__OppAmount2YearsAgo__c);
@@ -377,14 +396,14 @@ private class CRLP_RollupAccount_TEST {
         }
 
         // Now test the rollups to the Account from the Opportunity
-        if (tt == TestType.TestTrigger) {
+        if (tt == TestType.TestTrigger || tt == TestType.TestReparentOpp) {
             // No need to execute anything special here. If the triggers worked as expected, then
             // the data will be rolled up automatically upon the stopTest().
         } else if (tt == TestType.TestBatch || tt == TestType.TestMultiCurrBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
 
-        } else if (tt == TestType.testSkewBatch) {
+        } else if (tt == TestType.TestSkewBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{
                             hardCreditAccId
@@ -425,6 +444,23 @@ private class CRLP_RollupAccount_TEST {
             System.assertEquals(2000, mcAccount.npo02__TotalOppAmount__c);
         }
 
+        if (tt == TestType.TestReparentOpp) {
+            // Get the "other" household account to reparent all the opportunities to it
+            Id otherAcctId = [SELECT Id FROM Account WHERE Id != :hardCreditAccId].Id;
+            for (Opportunity opp : opps) {
+                opp.AccountId = otherAcctId;
+            }
+            Database.update(opps);
+
+            // Query the old and new Accounts
+            String otherAccountQuery = baseAccountQuery + ' WHERE Id = :otherAcctId LIMIT 1';
+            Account otherAccount = Database.query(otherAccountQuery);
+            hardCreditAcc = Database.query(hardCreditAccQuery);
+
+            // Verify that the rollups have run and updated both Accounts.
+            System.assertEquals(0, hardCreditAcc.npo02__TotalOppAmount__c, 'The original Account should have its rollups at zero');
+            System.assertEquals(totalDonations, otherAccount.npo02__TotalOppAmount__c, 'The new parent Account should now have a rollup');
+        }
     }
 
     /**
@@ -437,7 +473,7 @@ private class CRLP_RollupAccount_TEST {
         public List<Decimal> effectiveRatesReturn;  // List of rates matching to above dates
         public Decimal defaultRate;                 // Default exchange rate for this currency when not using dated rates
 
-        public boolean isOrgCacheAvailable() {
+        public Boolean isOrgCacheAvailable() {
             return false;
         }
 

@@ -1,0 +1,44 @@
+*** Settings ***
+
+Resource        tests/NPSP.robot
+Suite Setup     Open Test Browser
+Suite Teardown  Delete Records and Close Browser
+
+*** Test Cases ***
+
+Add New Address to Household 
+    [tags]  unstable
+    &{contact1} =  API Create Contact    MailingStreet=50 Fremont Street    MailingCity=San Francisco    MailingPostalCode=95320    MailingState=CA    MailingCountry=USA
+    Go To Record Home  &{contact1}[AccountId]    
+    Click Link    link=Show more actions
+    Click Link    link=Manage Household 
+    Wait For Locator    frame    Manage Household   
+    #Sleep     3        
+    Select Frame With Title   Manage Household
+    Click Button    Change Address
+    Click ManageHH Link     Enter a new address
+    Fill Address Form
+    ...                       Street=123 Dummy Street
+    ...                       City=Tracy
+    ...                       State=CA
+    ...                       Postal Code=99999
+    ...                       Country=US   
+    
+    Click Span Button    Set Address
+    #Sleep    2
+    Click Managehh Button       Save
+    #Sleep    3
+    Go To Object Home    Contact
+    Click Link    link=&{contact1}[FirstName] &{contact1}[LastName]
+    #Sleep    3
+    Select Tab    Details
+    Scroll Page To Location    0    1200
+    ${status}    Verify Details Address    Mailing Address    123 Dummy Street     Tracy, CA 99999     US
+    Should Be Equal as Strings    ${status}    pass
+    Go To Object Home          Account
+    Click Link    link=&{contact1}[LastName] Household
+    Select Tab    Details
+    Scroll Page To Location    0    300
+    ${status}    Verify Details Address    Billing Address    123 Dummy Street     Tracy, CA 99999     US
+    Should Be Equal as Strings    ${status}    pass
+
