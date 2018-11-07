@@ -190,6 +190,7 @@
                                                                sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
                                                                selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
                                                                options="{!currentFieldGroup.options}"
+                                                               requiredOptions="{!currentFieldGroup.requiredOptions}"
                                                                value="{!currentFieldGroup.values}"
                                                                variant="label-hidden"
                                         />

@@ -52,6 +52,8 @@
         } else if (channel === 'hideFormSpinner') {
             var spinner = component.find('formSpinner');
             $A.util.addClass(spinner, 'slds-hide');
+        } else if (channel === 'onError') {
+            helper.showToast(component, message.title, message.errorMessage, 'Error');
         }
     },
 
@@ -65,5 +67,12 @@
         helper.handleTableSave(component, values);
         component.find('dataImportRowsDataTable').set('v.draftValues', null);
     },
+
+    /**
+     * @description: called when the 'Process Batch' button is clicked
+     */
+    processBatch: function(component, event, helper) {
+        helper.processBatch(component);
+    }
 
 })
