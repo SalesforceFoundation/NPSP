@@ -71,6 +71,7 @@
             allFieldsToQuery.add(SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getSobjectField().getDescribe());
         } else if (resultObject == npe01__OppPayment__c.SObjectType) {
             allFieldsToQuery.add(SObjectType.npe01__OppPayment__c.fields.npe01__Opportunity__c.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.npe01__OppPayment__c.fields.npe01__Payment_Date__c.getSobjectField().getDescribe());
         }
 
         // Loop through the FieldDescribeResults list and add each field that is accessible to the current user
