@@ -35,11 +35,11 @@
     /**
     * @description Saves field options from step 3 to the model
     */
-    saveFieldOptions: function(component, event, helper) {
+    /*saveFieldOptions: function(component, event, helper) {
         var model = component.get('v.model');
         model.getTemplateMetadata().setDataTableChanged(false);
         model.getTemplateFields().updateTemplateFieldOptions(event.getParam('draftValues'));
-    },
+    },*/
 
     /**
     * @description Logs any changes to data table to disable primary save button
@@ -100,6 +100,9 @@
             }
             model.getTemplateMetadata().cancel();
         } else if (channel === 'save' || buttonClick === 'save') {
+            var fieldOptions = component.get('v.templateFieldOptions.data');
+            model.getTemplateFields().updateTemplateFieldOptions(fieldOptions);
+
             //todo: add validation
             model.save();
         }

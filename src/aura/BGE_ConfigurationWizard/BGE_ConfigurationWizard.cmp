@@ -216,18 +216,53 @@
                 <!-- Step 4: Set Field Options -->
                 <aura:if isTrue="{!or(v.templateMetadata.progressIndicatorStep == '4', v.isReadOnly)}">
                     <div class="slds-m-around_medium">
-                        <lightning:datatable
-                                keyField="name"
-                                data="{!v.templateFieldOptions.data}"
-                                columns="{!v.templateFieldOptions.columns}"
-                                hideCheckboxColumn="true"
-                                onsave="{!c.saveFieldOptions}"
-                                oncancel="{!c.cancelDataTableChanges}"
-                                oncellchange="{!c.logDataTableChange}"
-                                errors="{!v.templateFieldOptions.errors}"
-                        />
+                        <aura:iteration items="{!v.templateFields.fieldGroups}" var="currentFieldGroup">
+                            <div class="slds-section">
+                                <h3 class="slds-section__title slds-theme_shade">
+                                    {!currentFieldGroup.sObjectName}
+                                </h3>
+                            </div>
+
+                            <aura:iteration items="{!v.templateFieldOptions.data}" var="field">
+                                <aura:if isTrue="{!field.sObjectName == currentFieldGroup.sObjectName}">
+
+                                    <lightning:layout horizontalAlign="center">
+
+                                        <lightning:layoutItem size="4" class="slds-align-middle">
+                                            {!field.label}
+                                        </lightning:layoutItem>
+
+                                        <lightning:layoutItem size="4">
+
+                                            <aura:if isTrue="{!field.type == 'picklist'}">
+                                                <lightning:select label="{!$Label.c.stgDefaultValue}" value="{!field.defaultValue}">
+                                                    <option value=""></option>
+                                                    <aura:iteration items="{!field.options}" var="opt">
+                                                        <option value="{!opt.value}">{!opt.label}</option>
+                                                    </aura:iteration>
+                                                </lightning:select>
+
+                                                <aura:set attribute="else">
+                                                    <lightning:input label="{!$Label.c.stgDefaultValue}"
+                                                                     type="{!field.type}"
+                                                                     value="{!field.defaultValue}"
+                                                                     formatter="{!field.formatter}"/>
+                                                </aura:set>
+                                            </aura:if>
+
+                                        </lightning:layoutItem>
+
+                                        <lightning:layoutItem size="4" class="slds-align-middle slds-text-align_right">
+                                            <lightning:input label="{!$Label.c.lblRequired}" type="checkbox" value="{!field.required}"/>
+                                        </lightning:layoutItem>
+
+                                    </lightning:layout>
+                                </aura:if>
+                            </aura:iteration>
+                        </aura:iteration>
                     </div>
                 </aura:if>
+
                 <!--End Step 4 -->
 
                 <!-- Step 5: Edit Matching Rules (Only Batch Gift Entry) -->

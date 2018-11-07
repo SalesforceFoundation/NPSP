@@ -17,7 +17,7 @@
      */
     addExtraFields: function (component, event) {
         var eventFields = event.getParam('fields');
-
+        console.log(JSON.stringify(eventFields));
         var recId = component.get('v.recordId');
         var batchField = component.get('v.labels.batchIdField');
         eventFields[batchField] = recId;

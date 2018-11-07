@@ -200,6 +200,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                     if (col.type == 'double') {
                         col.type = 'number';
                     }
+                    System.debug(col.label);
+                    System.debug(col.type);
                     col.typeAttributes = '{}';
 
                     // If source field is picklist, display on page as Picklist with its field options

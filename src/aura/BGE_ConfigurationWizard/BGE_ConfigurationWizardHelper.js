@@ -222,7 +222,10 @@
                         label: currentField.label,
                         defaultValue: currentField.defaultValue,
                         required: currentField.required,
-                        hide: currentField.hide
+                        hide: currentField.hide,
+                        type: currentField.type,
+                        formatter: currentField.formatter,
+                        options: currentField.options
                     });
 
                 });
@@ -515,6 +518,9 @@
                         currentField.hide = activeFieldMap.get(currentField.id).hide;
                         currentField.required = activeFieldMap.get(currentField.id).required;
                         currentField.sortOrder = activeFieldMap.get(currentField.id).sortOrder;
+                        currentField.type = activeFieldMap.get(currentField.id).type;
+                        currentField.formatter = activeFieldMap.get(currentField.id).formatter;
+                        currentField.options = activeFieldMap.get(currentField.id).options;
                     } else {
                         currentField.isActive = false;
                     }

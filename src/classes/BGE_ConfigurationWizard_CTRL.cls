@@ -183,6 +183,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 if (systemRequiredFields.contains(unnamespacedField)) {
                     field.systemRequired = true;
                 }
+                field.type = fieldResult.getType().name().toLowerCase();
 
                 fields.add(field);
             }
@@ -191,38 +192,65 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description Returns the corresponding Lightning field type from an Apex field type
+    */
+    public static String getLightningFieldType(String apexFieldType) {
+        if (apexFieldType == 'currency') {
+            return 'number';
+        } else if (apexFieldType == 'string') {
+            return 'text';
+        } else if (apexFieldType == 'boolean') {
+            return 'checkbox';
+        } else {
+            return apexFieldType;
+        }
+    }
+
+    /*******************************************************************************************************
     * @description Retrieves the default active fields for a new Batch or Template in a JSON String
     */
     public static String getDefaultActiveFields() {
-        return '[{"label":"Donation Amount",' +
-                    '"name":"' + UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + '",' +
-                    '"sObjectName":"Opportunity",' +
-                    '"defaultValue":null,' +
-                    '"required":true,' +
-                    '"hide":false,' +
-                    '"sortOrder":0},' +
-                '{"label":"Donation Date",' +
-                    '"name":"' + UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c') + '",' +
-                    '"sObjectName":"Opportunity",' +
-                    '"defaultValue":null,' +
-                    '"required":false,' +
-                    '"hide":false,' +
-                    '"sortOrder":1},' +
-                '{"label":"Method",' +
-                    '"name":"' + UTIL_Namespace.StrTokenNSPrefix('Payment_Method__c') + '",' +
-                    '"sObjectName":"Payment",' +
-                    '"defaultValue":null,' +
-                    '"required":false,' +
-                    '"hide":false,' +
-                    '"sortOrder":2},' +
-                '{"label":"Check/Reference Number",' +
-                    '"name":"' + UTIL_Namespace.StrTokenNSPrefix('Payment_Check_Reference_Number__c') + '",' +
-                    '"sObjectName":"Payment",' +
-                    '"defaultValue":null,' +
-                    '"required":false,' +
-                    '"hide":false,' +
-                    '"sortOrder":3' +
-                '}]';
+        List<BGEField> fields = new List<BGEField>();
+
+        BGEField donationAmount = new BGEField();
+        donationAmount.name = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c');
+        donationAmount.sObjectName = 'Opportunity';
+        donationAmount.defaultValue = null;
+        donationAmount.required = true;
+        donationAmount.hide = false;
+        donationAmount.type = getLightningFieldType('number');
+        donationAmount.formatter = 'currency';
+        fields.add(donationAmount);
+
+        BGEField donationDate = new BGEField();
+        donationDate.name = UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        donationDate.sObjectName = 'Opportunity';
+        donationDate.defaultValue = null;
+        donationDate.required = false;
+        donationDate.hide = false;
+        donationDate.type = getLightningFieldType('date');
+        fields.add(donationDate);
+
+        BGEField paymentMethod = new BGEField();
+        paymentMethod.name = UTIL_Namespace.StrTokenNSPrefix('Payment_Method__c');
+        paymentMethod.sObjectName = 'Payment';
+        paymentMethod.defaultValue = null;
+        paymentMethod.required = false;
+        paymentMethod.hide = false;
+        paymentMethod.type = getLightningFieldType('picklist');
+        paymentMethod.options = UTIL_Describe.getLightningSelectOptions('npe01__OppPayment__c','npe01__Payment_Method__c');
+        fields.add(paymentMethod);
+
+        BGEField checkNumber = new BGEField();
+        checkNumber.name = UTIL_Namespace.StrTokenNSPrefix('Payment_Check_Reference_Number__c');
+        checkNumber.sObjectName = 'Payment';
+        checkNumber.defaultValue = null;
+        checkNumber.required = false;
+        checkNumber.hide = false;
+        checkNumber.type = getLightningFieldType('string');
+        fields.add(checkNumber);
+
+        return JSON.serialize(fields);
     }
 
     /*******************************************************************************************************
@@ -505,6 +533,9 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public Boolean required;
         @AuraEnabled public Boolean systemRequired;
         @AuraEnabled public Boolean hide;
+        @AuraEnabled public String type;
+        @AuraEnabled public String formatter;
+        @AuraEnabled public List<Map<String, String>> options;
 
         public BGEField() {
             isActive = false;
