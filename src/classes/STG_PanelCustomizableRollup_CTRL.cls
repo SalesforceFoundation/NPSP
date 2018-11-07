@@ -56,11 +56,13 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     }
 
     /*******************************************************************************************************
-    * @description is the org on the HH Account model
+    * @description Is the org on the HH Account model. Always returns false if HEDA + Advancement is installed
+    * @return Boolean
     */
     public Boolean isHHAccount {
         get {
-            return (STG_Panel.stgService.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR);
+            return (STG_Panel.stgService.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
+                && !ADV_PackageInfo_SVC.useAdv();
         }
         set;
     }

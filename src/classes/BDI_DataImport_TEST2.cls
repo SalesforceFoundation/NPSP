@@ -1564,7 +1564,7 @@ private with sharing class BDI_DataImport_TEST2 {
     *    importData fails
     **********************************************************************************************************/            
     static testMethod void testInvalidAccountModel() {
-        if (strTestOnly != '*' && strTestOnly != 'testInvalidAccountModel') return;
+        if ((strTestOnly != '*' && strTestOnly != 'testInvalidAccountModel') || ADV_PackageInfo_SVC.useAdv()) return;
             
         // set 1x1 account model
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -1579,9 +1579,9 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.StartTest();
         try {
             BDI_DataImport_API.importData();
-            System.assert(true, 'importData should not have thrown exception');
+            System.assert(false, 'importData should have thrown exception');
         } catch (exception ex) {
-            System.assert(false, 'importData should not have thrown exception');
+            System.assert(ex.getMessage().contains('Household Account model'));
         }
         Test.stopTest();
     }

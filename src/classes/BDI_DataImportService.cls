@@ -193,6 +193,12 @@ global with sharing class BDI_DataImportService {
         // validate post process implementing class by instantiating it
         instantiateClassForInterface('BDI_IPostProcess', diSettings.Post_Process_Implementing_Class__c);
 
+        // ensure we are in the household account model!
+        // ignore this check if HEDA + Advancement is installed
+        if (!CAO_Constants.isHHAccountModel() && !ADV_PackageInfo_SVC.useAdv()){
+            throw(new BDIException(Label.bdiHouseholdModelRequired));
+        }
+
         // validate settings
         if (diSettings.Contact_Custom_Unique_ID__c != null) {
             // make sure c1 and c2 have the appropriately named field

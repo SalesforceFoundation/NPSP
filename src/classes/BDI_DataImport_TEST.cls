@@ -334,6 +334,9 @@ public with sharing class BDI_DataImport_TEST {
     *        error given, di not processed.
     **********************************************************************************************************/            
     static testMethod void OneDIExistingContacts1x1() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+        
         // existing 1x1 contact
         UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 1, 0);   
         List<Contact> listConExisting = getContacts();
@@ -359,16 +362,16 @@ public with sharing class BDI_DataImport_TEST {
     
         // verify expected results
         List<Contact> listCon = getContacts();
-        System.assertEquals(2, listCon.size());
+        System.assertEquals(1, listCon.size());
         System.assertEquals('TestFirstname00 TestLastname00', listCon[0].Name);
         
         listDI = getDIs();
         System.assertEquals(1, listDI.size());
-        System.assertNotEquals(null, listDI[0].Contact1Imported__c);
-        System.assertNotEquals(null, listDI[0].Contact2Imported__c);
-        System.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
-        System.assertNotEquals(label.bdiErrorNonHHAccountContact, listDI[0].Contact1ImportStatus__c);
-        System.assertNotEquals(null, listDI[0].Contact2ImportStatus__c);     
+        System.assertEquals(null, listDI[0].Contact1Imported__c);
+        System.assertEquals(null, listDI[0].Contact2Imported__c);
+        System.assertEquals(null, listDI[0].HouseholdAccountImported__c);
+        System.assertEquals(label.bdiErrorNonHHAccountContact, listDI[0].Contact1ImportStatus__c);
+        System.assertEquals(null, listDI[0].Contact2ImportStatus__c);     
         List<Address__c> listAddr = getAddresses();   
         System.assertEquals(0, listAddr.size());
     }
