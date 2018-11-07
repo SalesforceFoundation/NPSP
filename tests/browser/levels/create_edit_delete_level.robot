@@ -6,6 +6,7 @@ Suite Teardown  Delete Records and Close Browser
 
 *** Variables ***
 ${level_name}
+${contact_id}
 
 *** Test Cases ***
 
@@ -39,7 +40,8 @@ Validate Level Assignment in Batch Job
     # Modify the SmallestGift field to allow the level to be applied
     # --------------------------------
     &{contact} =  API Create Contact
-    Go To Record Home       &{contact}[Id]
+    Set Global Variable     ${contact_id}       &{contact}[Id]
+    Go To Record Home       ${contact_id}
     Select Tab              Details
     # Scroll down so elements aren't hidden behind the footer
     Scroll Page To Location    0    1000
@@ -62,14 +64,11 @@ Validate Level Assignment in Batch Job
     Click Link    link=Level Assignment Batch
     #Sleep    2
     Click Element       //input[contains(@class, 'stg-run-level-batch')]
-    # alternative method is to wait for this to be found -- //span[contains(@class, 'slds-theme_success')]
-    # or possibly to wait 5 seconds (though this is more fragile)
-    Run Task    batch_apex_wait
-    ...         class_name=LVL_LevelAssign_BATCH
+    Wait for Locator    npsp_settings.completed
     # --------------------------------
     # Return to the Contact to validate the updated Level field
     # --------------------------------
-    Go To Record Home       &{contact}[Id]
+    Go To Record Home       ${contact_id}
     Select Tab    Details
     Verify Field Value    Level    ${level_name}    Y
     # --------------------------------
@@ -95,12 +94,11 @@ Validate Level Assignment in Batch Job
     Click Link    link=Level Assignment Batch
     #Sleep    2
     Click Element       //input[contains(@class, 'stg-run-level-batch')]
-    Run Task    batch_apex_wait
-    ...         class_name=LVL_LevelAssign_BATCH
+    Wait for Locator    npsp_settings.completed
     # --------------------------------
     # Return to the Contact to validate the updated Level field
     # --------------------------------
-    Go To Record Home       &{contact}[Id]
+    Go To Record Home       ${contact_id}
     Select Tab    Details
     Confirm Value    Level             ${level_name}    N
     Verify Field Value    Previous Level    ${level_name}    Y
@@ -111,6 +109,6 @@ Validate Level Assignment in Batch Job
     Click Link    link=Show more actions
     Click Link    link=Delete
     Click Modal Button    Delete
-    Go To Record Home       &{contact}[Id]
+    Go To Record Home       ${contact_id}
     Select Tab    Details
     Confirm Value    Level    ${level_name}    N
