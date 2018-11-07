@@ -44,7 +44,6 @@ public class CRLP_Operation_SVC {
 
     /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
     private static final String oppObjectName = UTIL_Describe.getObjectDescribe('Opportunity').getName();
-    private static final String pmtObjectName = UTIL_Describe.getObjectDescribe('npe01__OppPayment__c').getName();
 
     /**
      * @description Perform the rollup operation based on the details in the CRLP_Rollup_SVC.Rollup instance
@@ -58,11 +57,8 @@ public class CRLP_Operation_SVC {
      */
     public static void doRollupOperation(CRLP_Rollup rollup, SObject parentSObject, SObject detailSObject) {
         Opportunity oppSObject;
-        npe01__OppPayment__c pmtSObject;
         if (parentSObject.getSObjectType() == Opportunity.getSObjectType()) {
             oppSObject = (Opportunity)parentSObject;
-        } else {
-            pmtSObject = (npe01__OppPayment__c)parentSObject;
         }
 
         String objName = UTIL_Describe.getObjectDescribe(detailSObject.getSObjectType()).getName();
@@ -85,7 +81,7 @@ public class CRLP_Operation_SVC {
         if (rollup.dateObject == oppObjectName && dateField == 'CloseDate' && oppSObject != null) {
             dateValue = oppSObject.CloseDate;
         }
-        SObject dateSObject = rollup.dateObject == 'Opportunity' ? oppSObject : detailSObject;
+        SObject dateSObject = rollup.dateObject == parentSObject.getSObjectType().getDescribe().getName() ? parentSObject : detailSObject;
         if (dateValue == null && dateField != null && dateSObject.get(dateField) != null) {
             if (rollup.dateFieldType == SoapType.DATE) {
                 dateValue = (Date) dateSObject.get(dateField);
