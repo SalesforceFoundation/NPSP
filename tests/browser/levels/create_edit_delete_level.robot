@@ -34,19 +34,43 @@ Edit Level and Verify
     Confirm Value    Maximum Amount (<)     0.99    Y
     Confirm Value    Source Field    npo02__SmallestAmount__c    Y
 
-Delete Level
+Validate Level Batch Job 1
     &{contact} =  API Create Contact
-    Go To Record Home  &{contact}[Id]
-    Select Tab    Details
-    Click Edit Button    Edit Level
-    Populate Lookup Field    Level    ${level_name}
+    Go To Record Home       &{contact}[Id]
+    Select Tab              Details
+    # Scroll down so elements aren't hidden behind the footer
+    Scroll Page To Location    0    1000
+    Click Edit Button    Edit Smallest Gift
+    Populate Form
+    ...                    Smallest Gift=0.75
     Click Record Button    Save
+    Wait Until Loading Is Complete
+    Run Task    execute_anon
+    ...         apex=LVL_LevelAssign_SCHED sched = new LVL_LevelAssign_SCHED(); sched.runBatch();
+    Run Task    batch_apex_wait
+    ...         class_name=LVL_LevelAssign_BATCH
+    Go To Record Home       &{contact}[Id]
+    Select Tab    Details
     Verify Field Value    Level    ${level_name}    Y
+    ## Validate Level Batch Job 2
+    Scroll Page To Location    0    1000
+    Click Edit Button    Edit Smallest Gift
+    Populate Form
+    ...                    Smallest Gift=2.0
+    Click Record Button    Save
+    Wait Until Loading Is Complete
+    Run Task    execute_anon
+    ...         apex=LVL_LevelAssign_SCHED sched = new LVL_LevelAssign_SCHED(); sched.runBatch();
+    Run Task    batch_apex_wait
+    ...         class_name=LVL_LevelAssign_BATCH
+    Go To Record Home       &{contact}[Id]
+    Select Tab    Details
+    Confirm Value    Level             ${level_name}    N
+    Verify Field Value    Previous Level    ${level_name}    Y
     Click Link    link=${level_name}
     Click Link    link=Show more actions
     Click Link    link=Delete
     Click Modal Button    Delete
-    Go To Object Home    Contact
-    Click Link    link=&{contact}[FirstName] &{contact}[LastName]
+    Go To Record Home       &{contact}[Id]
     Select Tab    Details
     Confirm Value    Level    ${level_name}    N
