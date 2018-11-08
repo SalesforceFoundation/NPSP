@@ -616,6 +616,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         allosettings.Default__c = null;
         allosettings.Excluded_Opp_RecTypes__c = null;
         allosettings.Excluded_Opp_Types__c = null;
+        allosettings.Payment_Allocations_Enabled__c = false;
         allosettings.Rollup_N_Day_Value__c = 365;
         allosettings.Use_Fiscal_Year_for_Rollups__c = false;
     }
@@ -782,6 +783,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         allocationsSettings.Default__c = mySettings.Default__c;
         allocationsSettings.Excluded_Opp_RecTypes__c = mySettings.Excluded_Opp_RecTypes__c;
         allocationsSettings.Excluded_Opp_Types__c = mySettings.Excluded_Opp_Types__c;
+        allocationsSettings.Payment_Allocations_Enabled__c = mySettings.Payment_Allocations_Enabled__c;
         allocationsSettings.Rollup_N_Day_Value__c = mySettings.Rollup_N_Day_Value__c;
         allocationsSettings.Use_Fiscal_Year_for_Rollups__c = mySettings.Use_Fiscal_Year_for_Rollups__c;
         orgAllocationsSettings = allocationsSettings;
