@@ -398,18 +398,42 @@ public class PMT_PaymentCreator {
         Boolean paymentAmountReceivedUpdated = (oldOpp.npe01__Payments_Made__c != totalPaymentAmount);
         Boolean amountPositive = (newOpp.Amount > 0);
         Boolean isNotAndWasNotClosed = (!oldOpp.IsClosed && !newOpp.IsClosed);
-        Boolean amountEqualPaymentReceived = (newOpp.Amount == totalPaymentAmount);
+        Boolean isAmountEqualPaymentReceived;
+
+        // If the org has multicurrency set up we need to round the currency value
+        if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+            String oppCurrency = (String)newOpp.get('CurrencyIsoCode');
+            Integer decimalPlaces = UTIL_CurrencyCache.getInstance().getCurrDecimalPlaces(oppCurrency);
+            isAmountEqualPaymentReceived = isEqualWhenRounded(newOpp.Amount, totalPaymentAmount, decimalPlaces);
+        } else {
+            isAmountEqualPaymentReceived = (newOpp.Amount == totalPaymentAmount);
+        }
+
         Boolean stageNameSpecified = !String.isEmpty(closedStageName);
 
         if (
             (amountUpdated || paymentAmountReceivedUpdated)
             && amountPositive
             && isNotAndWasNotClosed
-            && amountEqualPaymentReceived
+            && isAmountEqualPaymentReceived
             && stageNameSpecified
         ) {
             newOpp.StageName = closedStageName;
         }
+    }
+
+
+    /*******************************************************************************************************
+    * @description return true if booth values are equal when rounded on the same decimal scale.
+    * @param Decimal amount1 one of the decimal values to compare.
+    * @param Decimal amount2 the other decimal value to compare.
+    * @param Integer decimalPlaces for both values
+    * @return Boolean stating id booth Decimal values are equal.
+    */
+    private static Boolean isEqualWhenRounded(Decimal amount1, Decimal amount2, Integer decimalPlaces) {
+        Decimal amount1Rounded = amount1 != null ? amount1.setScale(decimalPlaces) : null;
+        Decimal amount2Rounded = amount2 != null ? amount2.setScale(decimalPlaces) : null;
+        return (amount1Rounded == amount2Rounded);
     }
 
     /*******************************************************************************************************
