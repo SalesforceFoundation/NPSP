@@ -38,12 +38,38 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
     /*********************************************************************************************************
     * @description Returns the string Id of the Allocations panel. 
     */
-    public override string idPanel() { return 'idPanelAllocations'; }
+    public override String idPanel() { return 'idPanelAllocations'; }
+
+    /*********************************************************************************************************
+    * @description String that holds the selected Allocation Level from the settings picklist
+    */
+    public String strAllocationLevel {get;set;}
 
     /*********************************************************************************************************
     * @description The panel's constructor.
     */
-    public STG_PanelAllocations_CTRL() {}
+    public STG_PanelAllocations_CTRL() {
+        setAllocationPicklistFromSetting();
+    }
+
+    /*********************************************************************************************************
+    * @description Update the UI picklist with the current Allocation Type setting
+    */
+    public void setAllocationPicklistFromSetting(){
+        if(STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c){
+            strAllocationLevel = paymentLabel;
+        } else {
+            strAllocationLevel = oppLabel;
+        }
+    }
+
+    /*********************************************************************************************************
+    * @description Enable or disable payment allocations based on settings selection
+    */
+    public void setAllocationLevelFromSelection(){
+        STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c = 
+            (strAllocationLevel == paymentLabel);
+    }
 
     /*********************************************************************************************************
     * @description An allocation, used to present a GAU lookup in the page to allow selecting a default GAU.
@@ -97,6 +123,15 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
         private set;
     }
 
+    /*******************************************************************************************************
+    * @description Cancels the edit. Returns page to View mode.
+    * @return PageReference The page to redirect to, if any.
+    */
+    public override PageReference cancelEdit() {
+        setAllocationPicklistFromSetting();
+        return super.cancelEdit();
+    }
+
     /*********************************************************************************************************
     * @description Action Method to save the current settings
     * If default allocations are enabled, ensure a default GAU is selected.
@@ -111,6 +146,14 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
 
         STG_Panel.stgService.stgAllo.Default__c = allo.General_Accounting_Unit__c;
         strDefaultGAUName = null;
+
+        setAllocationLevelFromSelection();
+
+        if (STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c && 
+            !STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.alloDefaultNotEnabled));
+                return null;
+        }
 
         return super.saveSettings();
     }
