@@ -291,6 +291,6 @@ Open NPSP Settings
     Select Frame With Title    Nonprofit Success Pack Settings
     Wait for Locator    npsp_settings.side_panel
     Click Link    link=${topmenu}
-    #Sleep    2
+    Sleep    1
     Click Link    link=${submenu}
-    #Sleep    2
+    Sleep    1

@@ -18,6 +18,9 @@ Create Level and Verify Fields
     Confirm Value    Maximum Amount (<)     0.90    Y
 
 Edit Level and Verify Fields
+    # --------------------------------
+    # Modify the Level Values and validate that they save correctly
+    # --------------------------------
     Click Link    link=Show more actions
     Click Link    link=Edit
     Select Frame With Title    Levels
@@ -43,14 +46,15 @@ Validate Level Assignment in Batch Job
     Set Global Variable     ${contact_id}       &{contact}[Id]
     Go To Record Home       ${contact_id}
     Select Tab              Details
-    # Scroll down so elements aren't hidden behind the footer
+    # Scroll down to the section below 'Donation Information' so the 'Smallest Gift' field is visible
     Scroll Element Into View    xpath: //span[text()='Donation Totals']
-    # Scroll Page To Location    0    1000
     Click Edit Button    Edit Smallest Gift
     Populate Form
     ...                    Smallest Gift=0.75
     Click Record Button    Save
     Wait Until Loading Is Complete
+    Scroll Element Into View    xpath: //span[text()='Donation Totals']
+    Confirm Value    Smallest Gift    0.75    Y
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
     # --------------------------------
@@ -66,7 +70,6 @@ Validate Level Assignment in Batch Job
     # --------------------------------
     # Modify the SmallestGift field to change the applied level
     # --------------------------------
-    # Scroll down so elements aren't hidden behind the footer
     Scroll Element Into View    xpath: //span[text()='Donation Totals']
     Click Edit Button    Edit Smallest Gift
     Populate Form
@@ -86,6 +89,8 @@ Validate Level Assignment in Batch Job
     Select Tab    Details
     Confirm Value    Level             ${level_name}    N
     Verify Field Value    Previous Level    ${level_name}    Y
+
+Delete Level and Validate Contact
     # --------------------------------
     # Delete the Level and validate that it was removed from the Contact
     # --------------------------------
