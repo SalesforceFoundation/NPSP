@@ -117,6 +117,150 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(8, queryOpps[0].Amount, 'The opportunity amount should remain unchanged after the exception is caught.');
     }
 
+
+    /*******************************************************************************************************
+    * @description When changing the amount of a Payment with Allocations: 
+    * Increasing the amount will adjust the percentage allocations.
+    * Decreasing the amount so that the total allocation amount is below the payment amount will adjust 
+    * the percentage allocations.
+    * Decreasing the amount so that the total allocation amount is greater than the payment amount, an 
+    * error is thrown and the payment update is blocked.
+    ********************************************************************************************************/
+    static testMethod void pmtAmountChange() {
+        if (strTestOnly != '*' && strTestOnly != 'pmtAmountChange') return;
+        
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
+        insert defaultGau;
+
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id));
+
+        Account acc = new Account(Name='Account-pmtAmountChange');
+        insert acc;
+        Opportunity opp = new Opportunity(Name='Opp-pmtAmountChange', Amount = 10, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp;
+        npe01__OppPayment__c pmt = new npe01__OppPayment__c(npe01__Payment_Amount__c = 8, npe01__Opportunity__c = opp.Id);
+        insert pmt;
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='GAU-pmtAmountChange');
+        insert gau;
+
+        //resetting these manually as a test is considered a single context for static variables
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        Allocation__c percentAllo = new Allocation__c(Payment__c=pmt.id, Percent__c = 50, General_Accounting_Unit__c = gau.id);
+        alloForInsert.add(percentAllo);
+        Allocation__c amountAllo = new Allocation__c(Payment__c=pmt.id, Amount__c = 4, General_Accounting_Unit__c = gau.id);
+        alloForInsert.add(amountAllo);
+        insert alloForInsert;
+
+        List<Allocation__c> queryAllo = getAllocationsOrderByPercent();
+        System.assertEquals(50, queryAllo[3].Percent__c, 'The percentage allocation should be 50%.');
+        System.assertEquals(4, queryAllo[3].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
+        System.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the standard number allocation should be 4.');
+        
+        pmt.npe01__Payment_Amount__c = 10;
+        Test.startTest();
+        update pmt;
+        Test.stopTest();
+        
+        queryAllo = getAllocationsOrderByPercent();
+        System.assertEquals(5, queryAllo[4].Amount__c, 'The amount of the percentage allocation should increase proportionately with the Payment amount.');
+        System.assertEquals(4, queryAllo[2].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
+        
+        pmt.npe01__Payment_Amount__c = 8;
+        update pmt;
+
+        queryAllo = getAllocationsOrderByPercent();
+        System.assertEquals(4, queryAllo[3].Amount__c, 'The amount of the percentage allocation should decrease proportionately with the Payment amount.');
+        System.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
+
+        pmt.npe01__Payment_Amount__c = 1;
+        
+        try {
+            update pmt;
+            System.assert(false, 'An exception should be caught.');
+        } catch (Exception ex) {
+            System.assert(ex.getMessage().contains(Label.alloExceedsPmtAmount), 'Error message should indicate that allocs are greater than payment amount');
+        }
+
+        List<npe01__OppPayment__c> queryPmts = [SELECT Id, npe01__Payment_Amount__c FROM npe01__OppPayment__c WHERE Id = :pmt.id];
+        System.assertEquals(8, queryPmts[0].npe01__Payment_Amount__c, 'The payment amount should remain unchanged after the exception is caught.');
+    }
+
+    /*******************************************************************************************************
+    * @description When working with negative amount Payments: 
+    * Updating the amount will adjust the percentage allocations.
+    * Changing the amount sign from positive to negative and vice versa also flips the sign on the allocations 
+    * Decreasing the amount so that the total allocation amount (absolute value) is greater than the payment
+    * amount, an error is thrown and the payment update is blocked.
+    ********************************************************************************************************/
+    static testMethod void pmtsWithNegativeAmount() {
+        if (strTestOnly != '*' && strTestOnly != 'pmtAmountChange') return;
+        
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
+        insert defaultGau;
+
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id));
+
+        Account acc = new Account(Name='Account-pmtAmountChange');
+        insert acc;
+        Opportunity opp = new Opportunity(Name='Opp-pmtAmountChange', Amount = 10, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage(), npe01__Do_Not_Automatically_Create_Payment__c=true);
+        insert opp;
+        npe01__OppPayment__c pmt = new npe01__OppPayment__c(npe01__Payment_Amount__c = -8, npe01__Opportunity__c = opp.Id);
+        insert pmt;
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='GAU-pmtAmountChange');
+        insert gau;
+
+        //resetting these manually as a test is considered a single context for static variables
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        Allocation__c percentAllo = new Allocation__c(Payment__c=pmt.id, Percent__c = 50, General_Accounting_Unit__c = gau.id);
+        alloForInsert.add(percentAllo);
+        Allocation__c amountAllo = new Allocation__c(Payment__c=pmt.id, Amount__c = -4, General_Accounting_Unit__c = gau.id);
+        alloForInsert.add(amountAllo);
+        insert alloForInsert;
+
+        List<Allocation__c> queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c WHERE Payment__c = :pmt.id]; ///getAllocationsOrderByPercent();
+        System.assertEquals(50, queryAllo[0].Percent__c, 'The percentage allocation should be 50%.');
+        System.assertEquals(-4, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
+        System.assertEquals(-4, queryAllo[1].Amount__c, 'The amount of the standard number allocation should be -4.');
+        
+        pmt.npe01__Payment_Amount__c = 20;
+        Test.startTest();
+        update pmt;
+        Test.stopTest();
+        
+        queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c WHERE Payment__c = :pmt.id]; ///getAllocationsOrderByPercent();
+        System.assertEquals(10, queryAllo[0].Amount__c, 'The calculated amount of the % allocation should be positive in order to match the Payment.');
+        System.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the standard number allocation should be 4.');
+        System.assertEquals(6, queryAllo[2].Amount__c, 'The amount of the default allocation should be to 6.');
+        
+        pmt.npe01__Payment_Amount__c = -10;
+        update pmt;
+
+        queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c WHERE Payment__c = :pmt.id]; ///getAllocationsOrderByPercent();
+        System.assertEquals(-5, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be updated proportionately with the Payment amount and should match the sign.');
+        System.assertEquals(-4, queryAllo[1].Amount__c, 'The amount of the standard number allocation should be -4.');
+        System.assertEquals(-1, queryAllo[2].Amount__c, 'The amount of the default allocation should be -1.');
+
+        pmt.npe01__Payment_Amount__c = -1;
+        
+        try {
+            update pmt;
+            System.assert(false, 'An exception should be caught.');
+        } catch (Exception ex) {
+            System.assert(ex.getMessage().contains(Label.alloExceedsPmtAmount), 'Error message should indicate that allocs are greater than payment amount');
+        }
+
+        List<npe01__OppPayment__c> queryPmts = [SELECT Id, npe01__Payment_Amount__c FROM npe01__OppPayment__c WHERE Id = :pmt.id];
+        System.assertEquals(-10, queryPmts[0].npe01__Payment_Amount__c, 'The payment amount should remain unchanged after the exception is caught.');
+    }
+
     /*******************************************************************************************************
     * @description With default General Accounting Units enabled, creating an Opportunity automatically 
     * creates a default allocation for the full amount of the opportunity.

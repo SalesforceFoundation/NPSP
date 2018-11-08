@@ -181,19 +181,43 @@ public with sharing class STG_SettingsManager_TEST {
     public static testMethod void testPanelAllo() {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(name='foo');
         insert gau;
-
+        
         STG_PanelAllocations_CTRL panel = new STG_PanelAllocations_CTRL();
         system.assertEquals('idPanelAllocations', panel.idPanel());
+        system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Payment_Allocations_Enabled__c, 'Payment Allocations should not be enabled.');
+        system.assertEquals(panel.strAllocationLevel, STG_Panel.oppLabel, 'If Payment Allocations are not enabled, allocation level should be opportunity');
+        // Simulate selecting Payment Allocations without default GAU set
+        panel.strAllocationLevel = STG_Panel.paymentLabel;
+
+        panel.saveSettings();
+
+        List<Apexpages.Message> msgs = ApexPages.getMessages();
+        system.assertEquals(1, msgs.size(), 'Default GAU must be enabled');
+        system.assert(msgs[0].getDetail().contains(Label.alloDefaultNotEnabled));
+
+        system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default_Allocations_Enabled__c, 'Settings should not save successfully.');
+        system.assertEquals(null,UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default__c, 'Default GAU value should not be filled in.');
+
+        // Try again with just default allocations enabled
         STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = true;
+        
+        panel.saveSettings();
+
+        msgs = ApexPages.getMessages();
+        system.assertEquals(2, msgs.size(), 'New error, a Default GAU value must be set');
+        system.assert(msgs[1].getDetail().contains(Label.alloDefaultGAUMissing));
+
+        // Finally, set everything correctly
+        STG_PanelAllocations_CTRL.allo = null;
         STG_Panel.stgService.stgAllo.Default__c = gau.id;
 
         panel.saveSettings();
-        system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default_Allocations_Enabled__c, 'Settings should save successfully.');
-        system.assertNotEquals(null,UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default__c, 'Default should be filled with the Id of the created General Accounting Unit.');
 
-        STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = false;
-        panel.saveSettings();
-        system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default_Allocations_Enabled__c);
+        msgs = ApexPages.getMessages();
+        system.assertEquals(2, msgs.size(), 'No new error messages');
+        system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default_Allocations_Enabled__c, 'Settings should save successfully.');
+        system.assertNotEquals(null,UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default__c, 'Default GAU value should be filled in.');
+        system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Payment_Allocations_Enabled__c, 'Payment Allocations should be enabled.');
     }
 
     /*********************************************************************************************************
@@ -883,6 +907,8 @@ public with sharing class STG_SettingsManager_TEST {
         System.assert(panel.isAdmin);
         System.assertEquals(false, ApexPages.hasMessages());
 
+        // Clear cache so test passes in orgs that have rollups
+        CRLP_Rollup_SEL.cachedRollups = new List<Rollup__mdt>();
         panel.enableCRLPs();
         System.assertEquals(true, panel.isPolling, 'Polling should be active.');
         //fake the success result.
