@@ -69,6 +69,7 @@ Validate Level Assignment in Batch Job
     # Return to the Contact to validate the updated Level field
     # --------------------------------
     Go To Record Home       ${contact_id}
+    Reload Page
     Select Tab    Details
     Verify Field Value    Level    ${level_name}    Y
     # --------------------------------
@@ -99,6 +100,7 @@ Validate Level Assignment in Batch Job
     # Return to the Contact to validate the updated Level field
     # --------------------------------
     Go To Record Home       ${contact_id}
+    Reload Page
     Select Tab    Details
     Confirm Value    Level             ${level_name}    N
     Verify Field Value    Previous Level    ${level_name}    Y
