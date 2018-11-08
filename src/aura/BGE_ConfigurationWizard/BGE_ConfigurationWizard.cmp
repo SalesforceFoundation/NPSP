@@ -218,31 +218,52 @@
                 <aura:if isTrue="{!or(v.templateMetadata.progressIndicatorStep == '4', v.isReadOnly)}">
                     <div class="slds-m-around_medium">
                         <aura:iteration items="{!v.templateFields.fieldGroups}" var="currentFieldGroup">
-                            <div class="slds-section">
+                            <div class="slds-section slds-is-open">
                                 <h3 class="slds-section__title slds-theme_shade">
-                                    {!currentFieldGroup.sObjectName}
+                                    <span class="slds-truncate slds-p-horizontal_small">
+                                        {!currentFieldGroup.sObjectName}
+                                    </span>
                                 </h3>
                             </div>
+
+                            <lightning:layout horizontalAlign="center" multipleRows="true">
+
+                                <lightning:layoutItem size="4" class="slds-text-align_left slds-p-horizontal_x-small">
+                                    <!--intentionally left empty-->
+                                </lightning:layoutItem>
+
+                                <lightning:layoutItem size="4" class="slds-text-align_left slds-p-horizontal_x-small">
+                                    {!$Label.c.stgDefaultValue}
+                                </lightning:layoutItem>
+
+                                <lightning:layoutItem size="4" class="slds-text-align_left slds-p-horizontal_x-small">
+                                    {!$Label.c.lblRequired}
+                                </lightning:layoutItem>
+
+                            </lightning:layout>
 
                             <aura:iteration items="{!v.templateFieldOptions.data}" var="field">
                                 <aura:if isTrue="{!field.sObjectName == currentFieldGroup.sObjectName}">
 
-                                    <lightning:layout horizontalAlign="center">
+                                    <lightning:layout horizontalAlign="center" multipleRows="true">
 
-                                        <lightning:layoutItem size="4" class="slds-align-middle">
+                                        <lightning:layoutItem size="4" class="slds-text-align_left slds-p-around_x-small slds-form-element__legend">
                                             {!field.label}
                                         </lightning:layoutItem>
 
-                                        <lightning:layoutItem size="4">
-
+                                        <lightning:layoutItem size="4" class="slds-text-align_left slds-p-around_x-small">
                                             <aura:if isTrue="{!greaterthan(field.options.length, 0)}">
                                                 <aura:if isTrue="{!v.isReadOnly}">
                                                     <lightning:input label="{!$Label.c.stgDefaultValue}"
                                                                      name="{!v.fieldLabel}"
                                                                      value="{!field.defaultValue}"
-                                                                     readonly="true"/>
+                                                                     readonly="true"
+                                                                     variant="label-hidden" />
                                                     <aura:set attribute="else">
-                                                        <lightning:select label="{!$Label.c.stgDefaultValue}" value="{!field.defaultValue}">
+                                                        <lightning:select label="{!$Label.c.stgDefaultValue}"
+                                                                          value="{!field.defaultValue}"
+                                                                          variant="label-hidden"
+                                                                          class="label-hidden">
                                                             <option value=""></option>
                                                             <aura:iteration items="{!field.options}" var="opt">
                                                                 <option value="{!opt.value}">{!opt.label}</option>
@@ -256,14 +277,14 @@
                                                                      type="{!field.type}"
                                                                      value="{!field.defaultValue}"
                                                                      formatter="{!field.formatter}"
-                                                                     readonly="{!v.isReadOnly}"/>
+                                                                     readonly="{!v.isReadOnly}"
+                                                                     variant="label-hidden" />
                                                 </aura:set>
                                             </aura:if>
-
                                         </lightning:layoutItem>
 
-                                        <lightning:layoutItem size="4" class="slds-align-middle slds-text-align_right">
-                                            <lightning:input label="{!$Label.c.lblRequired}" type="checkbox" checked="{!field.required}" disabled="{!field.name == 'Donation_Amount__c'}"/>
+                                        <lightning:layoutItem size="4" class="slds-text-align_left slds-p-around_x-small">
+                                            <lightning:input label="{!$Label.c.lblRequired}" type="checkbox" checked="{!field.required}" disabled="{!field.name == 'Donation_Amount__c'}" variant="label-hidden"/>
                                         </lightning:layoutItem>
 
                                     </lightning:layout>

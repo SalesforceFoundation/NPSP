@@ -29,3 +29,8 @@
 .THIS .slds-dueling-list__column_responsive .slds-dueling-list__options {
     min-width: 240px;
 }
+
+/* hide rogue label spacing on lightning:select when variant="label-hidden" */
+.THIS .label-hidden > label {
+    display: none;
+}
