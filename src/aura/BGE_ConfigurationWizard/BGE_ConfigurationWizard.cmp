@@ -228,15 +228,15 @@
 
                             <lightning:layout horizontalAlign="center" multipleRows="true">
 
-                                <lightning:layoutItem size="4" class="slds-text-align_left slds-p-horizontal_x-small">
+                                <lightning:layoutItem size="4" class="slds-text-align_left slds-p-horizontal_x-small slds-form-element__legend">
                                     <!--intentionally left empty-->
                                 </lightning:layoutItem>
 
-                                <lightning:layoutItem size="4" class="slds-text-align_left slds-p-horizontal_x-small">
+                                <lightning:layoutItem size="4" class="slds-text-align_left slds-p-horizontal_x-small slds-form-element__legend">
                                     {!$Label.c.stgDefaultValue}
                                 </lightning:layoutItem>
 
-                                <lightning:layoutItem size="4" class="slds-text-align_left slds-p-horizontal_x-small">
+                                <lightning:layoutItem size="2" class="slds-text-align_center slds-p-horizontal_x-small slds-form-element__legend">
                                     {!$Label.c.lblRequired}
                                 </lightning:layoutItem>
 
@@ -244,16 +244,19 @@
 
                             <aura:iteration items="{!currentFieldGroup.fields}" var="field">
 
-                                    <lightning:layout horizontalAlign="center" multipleRows="true">
+                                    <lightning:layout horizontalAlign="center" multipleRows="true" verticalAlign="center">
 
-                                        <lightning:layoutItem size="4" class="slds-text-align_left slds-p-around_x-small slds-form-element__legend">
-                                            {!field.label}
+                                        <lightning:layoutItem size="4"
+                                                              class="slds-text-align_left slds-p-around_x-small">
+                                            <span aria-hidden="true">
+                                                {!field.label}
+                                            </span>
                                         </lightning:layoutItem>
 
                                         <lightning:layoutItem size="4" class="slds-text-align_left slds-p-around_x-small">
                                             <aura:if isTrue="{!greaterthan(field.options.length, 0)}">
                                                 <aura:if isTrue="{!v.isReadOnly}">
-                                                    <lightning:input label="{!$Label.c.stgDefaultValue}"
+                                                    <lightning:input label="{!field.label + ': ' + $Label.c.stgDefaultValue}"
                                                                      name="{!v.fieldLabel}"
                                                                      value="{!field.defaultValue}"
                                                                      readonly="true"
@@ -272,7 +275,7 @@
                                                 </aura:if>
 
                                                 <aura:set attribute="else">
-                                                    <lightning:input label="{!$Label.c.stgDefaultValue}"
+                                                    <lightning:input label="{!field.label + ': ' + $Label.c.stgDefaultValue}"
                                                                      type="{!field.type}"
                                                                      value="{!field.defaultValue}"
                                                                      formatter="{!field.formatter}"
@@ -282,8 +285,13 @@
                                             </aura:if>
                                         </lightning:layoutItem>
 
-                                        <lightning:layoutItem size="4" class="slds-text-align_left slds-p-around_x-small">
-                                            <lightning:input label="{!$Label.c.lblRequired}" type="checkbox" checked="{!field.required}" disabled="{!field.name == 'Donation_Amount__c'}" variant="label-hidden"/>
+                                        <lightning:layoutItem size="2" class="slds-text-align_center slds-p-around_x-small">
+                                            <lightning:input label="{!field.label + ': ' + $Label.c.lblRequired}"
+                                                             type="checkbox"
+                                                             checked="{!field.required}"
+                                                             disabled="{!or(field.systemRequired, v.isReadOnly)}"
+                                                             aria-disabled="{!or(field.systemRequired, v.isReadOnly)}"
+                                                             variant="label-hidden"/>
                                         </lightning:layoutItem>
 
                                     </lightning:layout>

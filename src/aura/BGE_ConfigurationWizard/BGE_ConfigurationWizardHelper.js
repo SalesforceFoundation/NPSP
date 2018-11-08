@@ -216,6 +216,7 @@
                 var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
                 var templateFields = model.getTemplateFields();
                 templateFieldOptions.errors = templateFields.errors;
+                var isNamespaced = component.get('v.isNamespaced')
 
                 Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
 
@@ -225,7 +226,8 @@
                     };
 
                     activeFieldsBySObject[sObjectName].forEach(function (currentField) {
-                        currentFieldGroup.fields.push({
+
+                        var fieldInfo = {
                             name: currentField.name,
                             sObjectName: currentField.sObjectName,
                             label: currentField.label,
@@ -235,7 +237,15 @@
                             type: currentField.type,
                             formatter: currentField.formatter,
                             options: currentField.options
-                        });
+                        }
+
+                        if (currentField.sObjectName === 'Opportunity' &&
+                            (currentField.name == 'npsp__Donation_Amount__c' || currentField.name == 'Donation_Amount__c')) {
+                            fieldInfo.systemRequired = true;
+                        }
+
+                        currentFieldGroup.fields.push(fieldInfo);
+
                     });
 
                     templateFieldOptions.fieldGroups.push(currentFieldGroup);
@@ -615,7 +625,14 @@
              * @description Updates the selected fields to Active, unselects fields
              * @return void.
              */
-            function updateTemplateFieldOptions(templateFieldOptions) {
+            function updateTemplateFieldOptions(templateFieldGroups) {
+
+                var templateFieldOptions = [];
+                templateFieldGroups.forEach(function(currentFieldGroup) {
+                    currentFieldGroup.fields.forEach(function(currentField) {
+                        templateFieldOptions.push(currentField);
+                    });
+                });
 
                 _allFields.forEach(function(currentField) {
                     templateFieldOptions.forEach(function(currentActiveField) {
