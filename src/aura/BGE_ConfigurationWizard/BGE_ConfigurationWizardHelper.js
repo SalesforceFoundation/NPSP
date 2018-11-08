@@ -637,9 +637,9 @@
                 _allFields.forEach(function(currentField) {
                     templateFieldOptions.forEach(function(currentActiveField) {
                         if (currentField.name === currentActiveField.name) {
-                            currentField.required = currentActiveField.hasOwnProperty('required') ? currentActiveField.required : currentField.required;
-                            currentField.hide = currentActiveField.hasOwnProperty('hide') ? currentActiveField.hide : currentField.hide;
-                            currentField.defaultValue = currentActiveField.hasOwnProperty('defaultValue') ? currentActiveField.defaultValue : currentField.defaultValue;
+                            currentField.required = currentActiveField.required;
+                            currentField.hide = currentActiveField.hide;
+                            currentField.defaultValue = currentActiveField.defaultValue;
                         }
                     });
 
@@ -661,7 +661,6 @@
 
                 });
 
-                this.onFieldsUpdated.notify();
             }
 
             /* ******************PRIVATE FUNCTIONS************************/

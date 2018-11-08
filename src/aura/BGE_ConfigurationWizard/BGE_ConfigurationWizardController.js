@@ -71,8 +71,6 @@
         } else if (channel === 'save' || buttonClick === 'save') {
             var fieldOptions = component.get('v.templateFieldOptions.fieldGroups');
             model.getTemplateFields().updateTemplateFieldOptions(fieldOptions);
-
-            //todo: add validation
             model.save();
         }
     },
