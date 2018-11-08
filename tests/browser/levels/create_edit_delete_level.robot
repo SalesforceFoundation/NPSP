@@ -44,7 +44,8 @@ Validate Level Assignment in Batch Job
     Go To Record Home       ${contact_id}
     Select Tab              Details
     # Scroll down so elements aren't hidden behind the footer
-    Scroll Page To Location    0    1000
+    Scroll Element Into View    xpath: //span[text()='Donation Totals']
+    # Scroll Page To Location    0    1000
     Click Edit Button    Edit Smallest Gift
     Populate Form
     ...                    Smallest Gift=0.75
@@ -53,29 +54,20 @@ Validate Level Assignment in Batch Job
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
     # --------------------------------
-    Open App Launcher
-    Populate Address    Search apps or items...    NPSP Settings
-    Select App Launcher Link  NPSP Settings
-    Wait For Locator    frame    Nonprofit Success Pack Settings
-    Select Frame With Title    Nonprofit Success Pack Settings
-    Wait for Locator    npsp_settings.side_panel
-    Click Link    link=Bulk Data Processes
-    #Sleep    2
-    Click Link    link=Level Assignment Batch
-    #Sleep    2
-    Click Element       //input[contains(@class, 'stg-run-level-batch')]
-    Wait for Locator    npsp_settings.completed
+    Open NPSP Settings      Bulk Data Processes         Level Assignment Batch
+    Click Element           //input[contains(@class, 'stg-run-level-batch')]
+    Wait for Locator        npsp_settings.completed
     # --------------------------------
     # Return to the Contact to validate the updated Level field
     # --------------------------------
     Go To Record Home       ${contact_id}
-    Reload Page
     Select Tab    Details
     Verify Field Value    Level    ${level_name}    Y
     # --------------------------------
     # Modify the SmallestGift field to change the applied level
     # --------------------------------
-    Scroll Page To Location    0    1000
+    # Scroll down so elements aren't hidden behind the footer
+    Scroll Element Into View    xpath: //span[text()='Donation Totals']
     Click Edit Button    Edit Smallest Gift
     Populate Form
     ...                    Smallest Gift=2.0
@@ -84,23 +76,13 @@ Validate Level Assignment in Batch Job
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
     # --------------------------------
-    Open App Launcher
-    Populate Address    Search apps or items...    NPSP Settings
-    Select App Launcher Link  NPSP Settings
-    Wait For Locator    frame    Nonprofit Success Pack Settings
-    Select Frame With Title    Nonprofit Success Pack Settings
-    Wait for Locator    npsp_settings.side_panel
-    Click Link    link=Bulk Data Processes
-    #Sleep    2
-    Click Link    link=Level Assignment Batch
-    #Sleep    2
-    Click Element       //input[contains(@class, 'stg-run-level-batch')]
-    Wait for Locator    npsp_settings.completed
+    Open NPSP Settings      Bulk Data Processes         Level Assignment Batch
+    Click Element           //input[contains(@class, 'stg-run-level-batch')]
+    Wait for Locator        npsp_settings.completed
     # --------------------------------
     # Return to the Contact to validate the updated Level field
     # --------------------------------
     Go To Record Home       ${contact_id}
-    Reload Page
     Select Tab    Details
     Confirm Value    Level             ${level_name}    N
     Verify Field Value    Previous Level    ${level_name}    Y
