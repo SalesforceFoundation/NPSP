@@ -217,7 +217,7 @@
                 <!-- Step 4: Set Field Options -->
                 <aura:if isTrue="{!or(v.templateMetadata.progressIndicatorStep == '4', v.isReadOnly)}">
                     <div class="slds-m-around_medium">
-                        <aura:iteration items="{!v.templateFields.fieldGroups}" var="currentFieldGroup">
+                        <aura:iteration items="{!v.templateFieldOptions.fieldGroups}" var="currentFieldGroup">
                             <div class="slds-section slds-is-open">
                                 <h3 class="slds-section__title slds-theme_shade">
                                     <span class="slds-truncate slds-p-horizontal_small">
@@ -242,8 +242,7 @@
 
                             </lightning:layout>
 
-                            <aura:iteration items="{!v.templateFieldOptions.data}" var="field">
-                                <aura:if isTrue="{!field.sObjectName == currentFieldGroup.sObjectName}">
+                            <aura:iteration items="{!currentFieldGroup.fields}" var="field">
 
                                     <lightning:layout horizontalAlign="center" multipleRows="true">
 
@@ -288,7 +287,7 @@
                                         </lightning:layoutItem>
 
                                     </lightning:layout>
-                                </aura:if>
+
                             </aura:iteration>
                         </aura:iteration>
                     </div>

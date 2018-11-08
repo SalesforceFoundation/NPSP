@@ -201,87 +201,53 @@
         return (function (component, model) {
 
             var isReadOnly = component.get('v.isReadOnly');
-            var _columns = _getColumns(!isReadOnly);
 
             // Subscribe to the model onMetadataChange event.
             model.getTemplateMetadata().onMetadataUpdated.subscribe(function() {
                 var templateFieldOptions = component.get('v.templateFieldOptions');
                 var isReadOnly = component.get('v.isReadOnly');
-                templateFieldOptions.columns = _getColumns(!isReadOnly);
                 component.set('v.templateFieldOptions', templateFieldOptions);
             });
 
             // Subscribe to the model onFieldsUpdated event.
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var templateFieldOptions = component.get('v.templateFieldOptions');
-                templateFieldOptions.data = [];
-                var activeFields = model.getTemplateFields().getActives();
+                templateFieldOptions.fieldGroups = [];
+                var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
                 var templateFields = model.getTemplateFields();
                 templateFieldOptions.errors = templateFields.errors;
 
-                activeFields.forEach(function (currentField) {
+                Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
 
-                    templateFieldOptions.data.push({
-                        name: currentField.name,
-                        sObjectName: currentField.sObjectName,
-                        label: currentField.label,
-                        defaultValue: currentField.defaultValue,
-                        required: currentField.required,
-                        hide: currentField.hide,
-                        type: currentField.type,
-                        formatter: currentField.formatter,
-                        options: currentField.options
+                    var currentFieldGroup = {
+                        sObjectName : sObjectName,
+                        fields: []
+                    };
+
+                    activeFieldsBySObject[sObjectName].forEach(function (currentField) {
+                        currentFieldGroup.fields.push({
+                            name: currentField.name,
+                            sObjectName: currentField.sObjectName,
+                            label: currentField.label,
+                            defaultValue: currentField.defaultValue,
+                            required: currentField.required,
+                            hide: currentField.hide,
+                            type: currentField.type,
+                            formatter: currentField.formatter,
+                            options: currentField.options
+                        });
                     });
+
+                    templateFieldOptions.fieldGroups.push(currentFieldGroup);
 
                 });
                 component.set('v.templateFieldOptions', templateFieldOptions);
 
             });
 
-            /**
-             * @description Gets the columns definition.
-             * @param isEditable. The TemplateMetadata mode.
-             * @return List of columns.
-             */
-            function _getColumns(isEditable) {
-                return [
-                    {
-                        type: 'text',
-                        fieldName: 'sObjectName',
-                        label: $A.get('$Label.c.stgLabelObject'),
-                        editable: false
-                    },
-                    {
-                        type: 'text',
-                        fieldName: 'label',
-                        label: $A.get('$Label.c.stgLabelField'),
-                        editable: false
-                    },
-                    {
-                        type: 'text',
-                        fieldName: 'defaultValue',
-                        label: $A.get('$Label.c.stgDefaultValue'),
-                        editable: isEditable
-                    },
-                    {
-                        type: 'boolean',
-                        fieldName: 'required',
-                        label: $A.get('$Label.c.lblRequired'),
-                        editable: isEditable
-                    }/*,
-                    {
-                        type: 'boolean',
-                        fieldName: 'hide',
-                        label: $A.get('$Label.c.stgLabelHidden'),
-                        editable: isEditable
-                    }*/
-                ];
-            }
-
             // TemplateFieldOptionsView module public functions and properties
             return {
-                columns: _columns,
-                data: []
+                fieldGroups: []
             };
 
         })(component, model);
