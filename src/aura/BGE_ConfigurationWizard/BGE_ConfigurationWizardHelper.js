@@ -52,7 +52,7 @@
                 donationMatchingBehavior: '',
                 donationMatchingClass: '',
                 donationMatchingOptions: [],
-                donationMatchingRule: '',
+                donationMatchingRule: [],
                 donationDateRange: '',
                 postProcessImplementingClass: '',
                 processUsingScheduledJob: false
@@ -481,7 +481,7 @@
                 donationMatchingBehavior: '',
                 donationMatchingClass: '',
                 donationMatchingOptions: [],
-                donationMatchingRule: '',
+                donationMatchingRule: [],
                 donationDateRange: '',
                 postProcessImplementingClass: '',
                 processUsingScheduledJob: false,
