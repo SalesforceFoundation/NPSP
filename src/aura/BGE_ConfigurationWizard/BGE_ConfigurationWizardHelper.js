@@ -28,6 +28,7 @@
                 templateInfoView.runOpportunityRollupsWhileProcessing = templateInfo.runOpportunityRollupsWhileProcessing;
                 templateInfoView.donationMatchingBehavior = templateInfo.donationMatchingBehavior;
                 templateInfoView.donationMatchingClass = templateInfo.donationMatchingClass;
+                templateInfoView.donationMatchingOptions = templateInfo.donationMatchingOptions;
                 templateInfoView.donationMatchingRule = templateInfo.donationMatchingRule;
                 templateInfoView.donationDateRange = templateInfo.donationDateRange;
                 templateInfoView.postProcessImplementingClass = templateInfo.postProcessImplementingClass;
@@ -50,6 +51,7 @@
                 runOpportunityRollupsWhileProcessing: false,
                 donationMatchingBehavior: '',
                 donationMatchingClass: '',
+                donationMatchingOptions: [],
                 donationMatchingRule: '',
                 donationDateRange: '',
                 postProcessImplementingClass: '',
@@ -447,6 +449,7 @@
                 this.runOpportunityRollupsWhileProcessing = info.runOpportunityRollupsWhileProcessing;
                 this.donationMatchingBehavior = info.donationMatchingBehavior;
                 this.donationMatchingClass = info.donationMatchingClass;
+                this.donationMatchingOptions = info.donationMatchingOptions;
                 this.donationMatchingRule = info.donationMatchingRule;
                 this.donationDateRange = info.donationDateRange;
                 this.postProcessImplementingClass = info.postProcessImplementingClass;
@@ -477,6 +480,7 @@
                 runOpportunityRollupsWhileProcessing: false,
                 donationMatchingBehavior: '',
                 donationMatchingClass: '',
+                donationMatchingOptions: [],
                 donationMatchingRule: '',
                 donationDateRange: '',
                 postProcessImplementingClass: '',
@@ -917,11 +921,12 @@
              * @return void.
              */
             function setPageHeader() {
-                var headers = [this.labels.recordInfoLabel,
+                var headers = [
+                    this.labels.recordInfoLabel,
                     'Select Template',
                     $A.get('$Label.c.bgeBatchTemplateSelectFields'),
                     $A.get('$Label.c.bgeBatchTemplateSetFieldOptions'),
-                    'Select Matching Rules'
+                    $A.get('$Label.c.bgeBatchTemplateSetBatchOptions')
                 ];
 
                 var progressIndicatorStepBase1 = parseInt(this.progressIndicatorStep) - 1;

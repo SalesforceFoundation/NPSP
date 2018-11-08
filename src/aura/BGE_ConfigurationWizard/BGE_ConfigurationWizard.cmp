@@ -187,7 +187,8 @@
                                 <lightning:layout horizontalAlign="center">
                                     <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center">
                                         <lightning:dualListbox name="multipleOptions"
-                                                               label="Fields"
+                                                               class="wideListbox"
+                                                               label="{!$Label.c.bgeBatchTemplateAvailableFields}"
                                                                sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
                                                                selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
                                                                options="{!currentFieldGroup.options}"
@@ -235,7 +236,7 @@
                 <!-- Step 5: Edit Matching Rules (Only Batch Gift Entry) -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '5'}">
                     <lightning:layout>
-                        <lightning:layoutItem size="6">
+                        <lightning:layoutItem size="6" class="slds-p-bottom_small">
                             <lightning:layout multipleRows="true">
                                 <lightning:layoutItem class="slds-p-horizontal_x-small" size="12">
                                     <div class="slds-section">
@@ -247,20 +248,36 @@
                                     </div>
                                 </lightning:layoutItem>
                                 <lightning:layoutItem class="slds-p-around_x-small" size="12">
-                                    <lightning:input label="Batch Process Size" type="number" step="0"
+                                    <lightning:input label="{!v.templateMetadata.labels.batchProcessSizeLabel}"
+                                                     type="number" step="0" required="true"
                                                      value="{!v.templateInfo.batchProcessSize}"/>
                                 </lightning:layoutItem>
                                 <lightning:layoutItem class="slds-p-around_x-small" size="12">
-                                    <lightning:input label="Process Using Scheduled Job" type="checkbox"
+                                    <lightning:input label="{!v.templateMetadata.labels.runOpportunityRollupsWhileProcessingLabel}"
+                                                     type="checkbox"
                                                      value="{!v.templateInfo.processUsingScheduledJob}"/>
                                 </lightning:layoutItem>
                                 <lightning:layoutItem class="slds-p-around_x-small" size="12">
-                                    <lightning:input label="Calculate Donation Rollups With Batch" type="checkbox"
+                                    <lightning:input label="{!v.templateMetadata.labels.processUsingScheduledJobLabel}"
+                                                     type="checkbox"
                                                      value="{!v.templateInfo.processUsingScheduledJob}"/>
                                 </lightning:layoutItem>
+                                <lightning:layoutItem class="slds-p-horizontal_x-small" size="12">
+                                    <div class="slds-section">
+                                        <h3 class="slds-section__title slds-theme_shade">
+                                            <span class="slds-p-left_small slds-truncate">
+                                                {!$Label.c.bdiSettingsSectionExtensibility}
+                                            </span>
+                                        </h3>
+                                    </div>
+                                </lightning:layoutItem>
                                 <lightning:layoutItem class="slds-p-around_x-small" size="12">
-                                    <lightning:input label="Post Processing Implementing Class"
+                                    <lightning:input label="{!v.templateMetadata.labels.postProcessClassLabel}"
                                                      value="{!v.templateInfo.postProcessClass}"/>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                    <lightning:input label="{!v.templateMetadata.labels.donationMatchingClassLabel}"
+                                                     value="{!v.templateInfo.donationMatchingClass}"/>
                                 </lightning:layoutItem>
                             </lightning:layout>
                         </lightning:layoutItem>
@@ -276,22 +293,32 @@
                                         </div>
                                     </lightning:layoutItem>
                                     <lightning:layoutItem class="slds-p-around_x-small" size="12">
-                                        <lightning:select label="Donation Matching Behavior" required="true"
-                                                          value="{!v.templateInfo.donationMatchingBehavior}">
-                                            <option value="" text=""/>
+                                        <lightning:select label="{!v.templateMetadata.labels.donationMatchingBehaviorLabel}"
+                                                          required="true" value="{!v.templateInfo.donationMatchingBehavior}">
+                                            <option value="{!v.templateMetadata.labels.DoNotMatch}" text="{!$Label.c.bdiBehaviorDoNotMatch}"/>
+                                            <option value="{!v.templateMetadata.labels.RequireNoMatch}" text="{!$Label.c.bdiBehaviorRequireNoMatch}"/>
+                                            <option value="{!v.templateMetadata.labels.RequireExactMatch}" text="{!$Label.c.bdiBehaviorRequireExactMatch}"/>
+                                            <option value="{!v.templateMetadata.labels.ExactMatchOrCreate}" text="{!$Label.c.bdiBehaviorExactMatchOrCreate}"/>
+                                            <option value="{!v.templateMetadata.labels.RequireBestMatch}" text="{!$Label.c.bdiBehaviorRequireBestMatch}"/>
+                                            <option value="{!v.templateMetadata.labels.BestMatchOrCreate}" text="{!$Label.c.bdiBehaviorBestMatchOrCreate}"/>
                                         </lightning:select>
                                     </lightning:layoutItem>
                                     <lightning:layoutItem class="slds-p-around_x-small" size="12">
-                                        <lightning:input label="Donation Matching Rule"
-                                                         value="{!v.templateInfo.donationMatchingRule}"/>
+                                        <lightning:dualListbox name="{!v.templateMetadata.labels.donationMatchingRuleLabel}"
+                                                               class="donationMatchingRuleListbox"
+                                                               label="{!v.templateMetadata.labels.donationMatchingRuleLabel}"
+                                                               sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
+                                                               selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
+                                                               options="{!v.templateInfo.donationMatchingOptions}"
+                                                               value=""
+                                                               required="true"
+                                                               disableReordering="true"
+                                                               size="5"/>
                                     </lightning:layoutItem>
                                     <lightning:layoutItem class="slds-p-around_x-small" size="12">
-                                        <lightning:input label="Number of Days from Donation Date"
+                                        <lightning:input label="{!v.templateMetadata.labels.donationDateRangeLabel}"
+                                                         type="number" required="true"
                                                          value="{!v.templateInfo.donationDateRange}"/>
-                                    </lightning:layoutItem>
-                                    <lightning:layoutItem class="slds-p-around_x-small" size="12">
-                                        <lightning:input label="Donation Matching Implementing Class"
-                                                         value="{!v.templateInfo.donationMatchingClass}"/>
                                     </lightning:layoutItem>
                                 </lightning:layout>
                         </lightning:layoutItem>

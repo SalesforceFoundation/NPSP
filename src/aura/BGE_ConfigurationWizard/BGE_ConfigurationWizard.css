@@ -26,6 +26,6 @@
     padding-right: .5rem;
 }
 /*override different sized list options*/
-.THIS .slds-dueling-list__column_responsive .slds-dueling-list__options {
+.THIS .wideListbox .slds-dueling-list__column_responsive .slds-dueling-list__options {
     min-width: 240px;
 }

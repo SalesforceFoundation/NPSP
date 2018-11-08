@@ -62,9 +62,11 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                             'Run_Opportunity_Rollups_while_Processing__c, ' +
                             'Contact_Matching_Rule__c, ' +
                             'Donation_Matching_Behavior__c, ' +
+                            'Donation_Matching_Implementing_Class__c, ' +
                             'Donation_Matching_Rule__c, ' +
                             'Donation_Date_Range__c, ' +
                             'Process_Using_Scheduled_Job__c' +
+                            'Post_Process_Implementing_Class__c' +
                             ' FROM ' + sObjectName +
                             ' WHERE Id=:recordId';
 
@@ -93,6 +95,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         setDefaultValuesOnBGEDetailsModel(model);
 
+        model.donationMatchingOptions = getDonationMatchingOptions();
         model.templateFields = getAvailableFields();
         model.labels = getLabels(sObjectName);
 
@@ -315,6 +318,30 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description Sets donation field options for BGEDetailsModel
+    * @return List<Map<String,String>> donationMatchingOptions
+    */
+    private static List<Map<String, String>> getDonationMatchingOptions() {
+        List<Map<String, String>> donationMatchingOptions = new List<Map<String, String>>();
+
+        Set<String> setFields = new Set<String>();
+        setFields.addAll(BDI_Donations.mapDIFieldToOppField.keySet());
+        setFields.addAll(BDI_Donations.mapDIFieldToPmtField.keySet());
+        List<String> donationFields = new List<String>(setFields);
+        donationFields.sort();
+
+        for (String donationField: donationFields) {
+            String donationFieldLabel = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), donationField);
+            Map<String, String> option = new Map<String, String>();
+            option.put('value', donationField);
+            option.put('label', donationFieldLabel);
+            donationMatchingOptions.add(option);
+        }
+        return donationMatchingOptions;
+    }
+
+
+    /*******************************************************************************************************
     * @description Retrieves the object and field labels for the component.
     * @param sObjectName the object being used by the component (already stripped of the namespace prefix)
     * @return Map of object and field name keys to their labels.
@@ -346,8 +373,25 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 'description' => Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
                 'totalMatchHelp' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
                 'totalMatchLabel' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getLabel(),
-                'recordInfoLabel' => Label.bgeBatchTemplateOverviewWizard
+                'recordInfoLabel' => Label.bgeBatchTemplateOverviewWizard,
+                'batchProcessSizeLabel' => Schema.Batch_Template__c.Batch_Process_Size__c.getDescribe().getLabel(),
+                'batchProcessSizeHelp' => Schema.Batch_Template__c.Batch_Process_Size__c.getDescribe().getInlineHelpText(),
+                'donationDateRangeLabel' => Schema.Batch_Template__c.Donation_Date_Range__c.getDescribe().getLabel(),
+                'donationDateRangeHelp' => Schema.Batch_Template__c.Donation_Date_Range__c.getDescribe().getInlineHelpText(),
+                'donationMatchingBehaviorLabel' => Schema.Batch_Template__c.Donation_Matching_Behavior__c.getDescribe().getLabel(),
+                'donationMatchingBehaviorHelp' => Schema.Batch_Template__c.Donation_Matching_Behavior__c.getDescribe().getInlineHelpText(),
+                'donationMatchingClassLabel' => Schema.Batch_Template__c.Donation_Matching_Implementing_Class__c.getDescribe().getLabel(),
+                'donationMatchingClassHelp' => Schema.Batch_Template__c.Donation_Matching_Implementing_Class__c.getDescribe().getInlineHelpText(),
+                'donationMatchingRuleLabel' => Schema.Batch_Template__c.Donation_Matching_Rule__c.getDescribe().getLabel(),
+                'donationMatchingRuleHelp' => Schema.Batch_Template__c.Donation_Matching_Rule__c.getDescribe().getInlineHelpText(),
+                'postProcessClassLabel' => Schema.Batch_Template__c.Post_Process_Implementing_Class__c.getDescribe().getLabel(),
+                'postProcessClassHelp' => Schema.Batch_Template__c.Post_Process_Implementing_Class__c.getDescribe().getInlineHelpText(),
+                'processUsingScheduledJobLabel' => Schema.Batch_Template__c.Process_Using_Scheduled_Job__c.getDescribe().getLabel(),
+                'processUsingScheduledJobHelp' => Schema.Batch_Template__c.Process_Using_Scheduled_Job__c.getDescribe().getInlineHelpText(),
+                'runOpportunityRollupsWhileProcessingLabel' => Schema.Batch_Template__c.Run_Opportunity_Rollups_while_Processing__c.getDescribe().getLabel(),
+                'runOpportunityRollupsWhileProcessingHelp' => Schema.Batch_Template__c.Run_Opportunity_Rollups_while_Processing__c	.getDescribe().getInlineHelpText()
         };
+        labels.putAll(getMatchingValues());
         return labels;
     }
 
@@ -368,7 +412,40 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 'expectedCountField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Count_of_Gifts__c.getName(),
                 'expectedCountLabel' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Count_of_Gifts__c.getLabel(),
                 'expectedTotalField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getName(),
-                'expectedTotalLabel' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getLabel()
+                'expectedTotalLabel' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getLabel(),
+                'batchProcessSizeLabel' => Schema.DataImportBatch__c.Batch_Process_Size__c.getDescribe().getLabel(),
+                'batchProcessSizeHelp' => Schema.DataImportBatch__c.Batch_Process_Size__c.getDescribe().getInlineHelpText(),
+                'donationDateRangeLabel' => Schema.DataImportBatch__c.Donation_Date_Range__c.getDescribe().getLabel(),
+                'donationDateRangeHelp' => Schema.DataImportBatch__c.Donation_Date_Range__c.getDescribe().getInlineHelpText(),
+                'donationMatchingBehaviorLabel' => Schema.DataImportBatch__c.Donation_Matching_Behavior__c.getDescribe().getLabel(),
+                'donationMatchingBehaviorHelp' => Schema.DataImportBatch__c.Donation_Matching_Behavior__c.getDescribe().getInlineHelpText(),
+                'donationMatchingClassLabel' => Schema.DataImportBatch__c.Donation_Matching_Implementing_Class__c.getDescribe().getLabel(),
+                'donationMatchingClassHelp' => Schema.DataImportBatch__c.Donation_Matching_Implementing_Class__c.getDescribe().getInlineHelpText(),
+                'donationMatchingRuleLabel' => Schema.DataImportBatch__c.Donation_Matching_Rule__c.getDescribe().getLabel(),
+                'donationMatchingRuleHelp' => Schema.DataImportBatch__c.Donation_Matching_Rule__c.getDescribe().getInlineHelpText(),
+                'postProcessClassLabel' => Schema.DataImportBatch__c.Post_Process_Implementing_Class__c.getDescribe().getLabel(),
+                'postProcessClassHelp' => Schema.DataImportBatch__c.Post_Process_Implementing_Class__c.getDescribe().getInlineHelpText(),
+                'processUsingScheduledJobLabel' => Schema.DataImportBatch__c.Process_Using_Scheduled_Job__c.getDescribe().getLabel(),
+                'processUsingScheduledJobHelp' => Schema.DataImportBatch__c.Process_Using_Scheduled_Job__c.getDescribe().getInlineHelpText(),
+                'runOpportunityRollupsWhileProcessingLabel' => Schema.DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c.getDescribe().getLabel(),
+                'runOpportunityRollupsWhileProcessingHelp' => Schema.DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c	.getDescribe().getInlineHelpText()
+        };
+        labels.putAll(getMatchingValues());
+        return labels;
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieves Matching string values from BDI_DataImport_API
+    * @return Map of object and field name keys to their labels.
+    */
+    private static Map<String, String> getMatchingValues() {
+        Map<String, String> labels = new Map<String, String> {
+                'DoNotMatch' => BDI_DataImport_API.DoNotMatch,
+                'RequireNoMatch' => BDI_DataImport_API.RequireNoMatch,
+                'RequireExactMatch' => BDI_DataImport_API.RequireExactMatch,
+                'ExactMatchOrCreate' => BDI_DataImport_API.ExactMatchOrCreate,
+                'RequireBestMatch' => BDI_DataImport_API.RequireBestMatch,
+                'BestMatchOrCreate' => BDI_DataImport_API.RequireBestMatch
         };
         return labels;
     }
@@ -496,6 +573,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public String donationMatchingBehavior;
         @AuraEnabled public String donationMatchingClass;
         @AuraEnabled public String donationMatchingRule;
+        @AuraEnabled public List<Map<String,String>> donationMatchingOptions;
         @AuraEnabled public Integer donationDateRange;
         @AuraEnabled public String postProcessClass;
         @AuraEnabled public Boolean processUsingScheduledJob;
