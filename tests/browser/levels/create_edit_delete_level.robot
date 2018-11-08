@@ -48,6 +48,7 @@ Validate Level Assignment in Batch Job
     Select Tab              Details
     # Scroll down to the section below 'Donation Information' so the 'Smallest Gift' field is visible
     Scroll Element Into View    xpath: //span[text()='Donation Totals']
+    Capture Page Screenshot
     Click Edit Button    Edit Smallest Gift
     Populate Form
     ...                    Smallest Gift=0.75
