@@ -46,17 +46,15 @@ Validate Level Assignment in Batch Job
     Set Global Variable     ${contact_id}       &{contact}[Id]
     Go To Record Home       ${contact_id}
     Select Tab              Details
-    Scroll Element Into View    xpath: //span[text()='Smallest Gift']
+    Scroll Element Into View    xpath: //span[text()='Donation Totals']
     Click Edit Button    Edit Smallest Gift
-    Capture Page Screenshot
-    Populate Form
-    ...                    Smallest Gift=0.75
+    Populate Field    Smallest Gift     0.75
     Capture Page Screenshot
     Click Record Button    Save
     Wait Until Loading Is Complete
     Capture Page Screenshot
-    Scroll Element Into View    xpath: //span[text()='Smallest Gift']
-    Confirm Value    Smallest Gift    0.75    Y
+    Scroll Element Into View    xpath: //span[text()='Donation Totals']
+    Confirm Value    Smallest Gift    $0.75    Y
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
     # --------------------------------
@@ -72,10 +70,9 @@ Validate Level Assignment in Batch Job
     # --------------------------------
     # Modify the SmallestGift field to change the applied level
     # --------------------------------
-    Scroll Element Into View    xpath: //span[text()='Smallest Gift']
+    Scroll Element Into View    xpath: //span[text()='Donation Totals']
     Click Edit Button    Edit Smallest Gift
-    Populate Form
-    ...                    Smallest Gift=2.0
+    Populate Field    Smallest Gift     2.0
     Click Record Button    Save
     Wait Until Loading Is Complete
     # --------------------------------
