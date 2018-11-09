@@ -1074,7 +1074,7 @@ private with sharing class PMT_PaymentCreator_TEST {
         );
         insert acct;
 
-        // I have an opportunity for CAD100 in a stage of Prospecting.
+        // I have an opportunity for 100 in a stage of Prospecting.
         Opportunity opp = new Opportunity (
             Name='Non US Currency',
             AccountId = acct.Id,
@@ -1138,27 +1138,27 @@ private with sharing class PMT_PaymentCreator_TEST {
         );
         insert acct;
 
-        // I have an opportunity for CAD100 in a stage of Prospecting.
+        // I have an opportunity for 100 in a stage of Prospecting.
         Opportunity opp = new Opportunity (
             Name='Non US Currency',
-            AccountId = acct.id,
+            AccountId = acct.Id,
             Amount = 100.00,
-            CloseDate = date.today(),
+            CloseDate = Date.today(),
             StageName = openStage
         );
 
         insert opp;
 
-        npe01__OppPayment__c payment = [SELECT id,
-                                               npe01__paid__c,
-                                               npe01__payment_amount__c,
+        npe01__OppPayment__c payment = [SELECT Id,
+                                               npe01__Paid__c,
+                                               npe01__Payment_Amount__c,
                                                npe01__Payment_Date__c
                                         FROM npe01__OppPayment__c
                                         WHERE npe01__opportunity__c = :opp.Id
                                         LIMIT 1];
 
         payment.npe01__paid__c = true;
-        payment.npe01__Payment_Date__c = date.today();
+        payment.npe01__Payment_Date__c = Date.today();
 
         update payment;
 
