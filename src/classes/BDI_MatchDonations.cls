@@ -292,7 +292,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 // special case date matching
                 if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase() && strOppField != null) {
                     Date dtOpp = date.valueOf(opp.get(strOppField));
-                    if (dtOpp != null) {
+                    if (dtOpp != null && val != null) {
                         integer dtVarianceT = math.abs(date.valueOf(val).daysBetween(dtOpp));
                         if (dtVarianceT <= integer.valueOf(bdi.diSettings.Donation_Date_Range__c)) {
                             dtVariance = dtVarianceT;
@@ -345,7 +345,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 // special case date matching
                 if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase() && strPmtField != null) {
                     Date dtPmt = date.valueOf(pmt.get(strPmtField));
-                    if (dtPmt != null) {
+                    if (dtPmt != null && val != null) {
                         integer dtVarianceT = math.abs(date.valueOf(val).daysBetween(dtPmt));
                         if (dtVarianceT <= integer.valueOf(bdi.diSettings.Donation_Date_Range__c)) {
                             dtVariance = dtVarianceT;
