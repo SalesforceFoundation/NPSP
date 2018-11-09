@@ -96,8 +96,6 @@ private class ALLO_ManageAllocations_TEST {
     * row, then inserts an allocation and verifies the allocation was created properly.
     ********************************************************************************************************/
     static testMethod void testPayment() {
-        if (strTestOnly != '*' && strTestOnly != 'testPayment') return;
-
         Decimal amt = 100;
         Account acc = new Account(Name='foo');
         insert acc;

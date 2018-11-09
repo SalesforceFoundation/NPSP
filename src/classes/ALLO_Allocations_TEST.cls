@@ -127,8 +127,6 @@ private with sharing class ALLO_Allocations_TEST {
     * error is thrown and the payment update is blocked.
     ********************************************************************************************************/
     static testMethod void pmtAmountChange() {
-        if (strTestOnly != '*' && strTestOnly != 'pmtAmountChange') return;
-        
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
         insert defaultGau;
 
@@ -197,8 +195,6 @@ private with sharing class ALLO_Allocations_TEST {
     * amount, an error is thrown and the payment update is blocked.
     ********************************************************************************************************/
     static testMethod void pmtsWithNegativeAmount() {
-        if (strTestOnly != '*' && strTestOnly != 'pmtAmountChange') return;
-        
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
         insert defaultGau;
 
