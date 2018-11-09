@@ -21,7 +21,17 @@ API Create Contact
     ...                  &{fields}  
     &{contact} =     Salesforce Get  Contact  ${contact_id}
     [return]         &{contact}
- 
+
+API Modify Contact
+    [Arguments]      ${contact_id}      &{fields}
+    Salesforce Update       Contact     ${contact_id}
+    ...                     &{fields}
+    @{records} =  Salesforce Query      Contact
+    ...              select=Id,FirstName,LastName,Email
+    ...              Id=${contact_id}
+    &{contact} =  Get From List  ${records}  0
+    [return]         &{contact}
+
 API Create Opportunity
     [Arguments]      ${account_id}      &{fields}    
     ${opp_id} =  Salesforce Insert    Opportunity

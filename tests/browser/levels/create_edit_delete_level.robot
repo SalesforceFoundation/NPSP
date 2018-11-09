@@ -10,14 +10,14 @@ ${contact_id}
 
 *** Test Cases ***
 
-Create Level and Verify Fields
+1 Create Level and Verify Fields
     ${level_id}  ${level_name}     Create Level
     Set Global Variable      ${level_name}
-    Go To Record Home         ${level_id}
+    Go To Record Home        ${level_id}
     Confirm Value    Minimum Amount (>=)    0.10    Y
     Confirm Value    Maximum Amount (<)     0.90    Y
 
-Edit Level and Verify Fields
+2 Edit Level and Verify Fields
     # --------------------------------
     # Modify the Level Values and validate that they save correctly
     # --------------------------------
@@ -38,23 +38,22 @@ Edit Level and Verify Fields
     Confirm Value    Maximum Amount (<)     0.99    Y
     Confirm Value    Source Field    npo02__SmallestAmount__c    Y
 
-Validate Level Assignment in Batch Job
+3 Validate Level Assignment in Batch Job
     # --------------------------------
     # Modify the SmallestGift field to allow the level to be applied
     # --------------------------------
     &{contact} =  API Create Contact
     Set Global Variable     ${contact_id}       &{contact}[Id]
+    API Modify Contact      ${contact_id}       npo02__SmallestAmount__c=0.75
     Go To Record Home       ${contact_id}
     Select Tab              Details
     Scroll Element Into View    xpath: //span[text()='Donation Totals']
-    Click Edit Button    Edit Smallest Gift
-    Populate Field    Smallest Gift     0.75
-    Capture Page Screenshot
-    Click Record Button    Save
-    Wait Until Loading Is Complete
-    Capture Page Screenshot
-    Scroll Element Into View    xpath: //span[text()='Donation Totals']
-    Confirm Value    Smallest Gift    $0.75    Y
+    #Click Edit Button       Edit Smallest Gift
+    #Populate Field          Smallest Gift     0.75
+    #Click Record Button     Save
+    #Wait Until Loading Is Complete
+    #Scroll Element Into View    xpath: //span[text()='Donation Totals']
+    Confirm Value           Smallest Gift    $0.75    Y
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
     # --------------------------------
@@ -65,16 +64,19 @@ Validate Level Assignment in Batch Job
     # Return to the Contact to validate the updated Level field
     # --------------------------------
     Go To Record Home       ${contact_id}
-    Select Tab    Details
-    Verify Field Value    Level    ${level_name}    Y
+    Select Tab              Details
+    Verify Field Value      Level    ${level_name}    Y
     # --------------------------------
     # Modify the SmallestGift field to change the applied level
     # --------------------------------
+    API Modify Contact      ${contact_id}       npo02__SmallestAmount__c=2.0
+    Go To Record Home       ${contact_id}
+    Select Tab              Details
     Scroll Element Into View    xpath: //span[text()='Donation Totals']
-    Click Edit Button    Edit Smallest Gift
-    Populate Field    Smallest Gift     2.0
-    Click Record Button    Save
-    Wait Until Loading Is Complete
+    #Click Edit Button       Edit Smallest Gift
+    #Populate Field          Smallest Gift     2.0
+    #Click Record Button     Save
+    #Wait Until Loading Is Complete
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
     # --------------------------------
@@ -85,11 +87,11 @@ Validate Level Assignment in Batch Job
     # Return to the Contact to validate the updated Level field
     # --------------------------------
     Go To Record Home       ${contact_id}
-    Select Tab    Details
-    Confirm Value    Level             ${level_name}    N
-    Verify Field Value    Previous Level    ${level_name}    Y
+    Select Tab              Details
+    Confirm Value           Level               ${level_name}    N
+    Verify Field Value      Previous Level      ${level_name}    Y
 
-Delete Level and Validate Contact
+4 Delete Level and Validate Contact
     # --------------------------------
     # Delete the Level and validate that it was removed from the Contact
     # --------------------------------
@@ -97,6 +99,6 @@ Delete Level and Validate Contact
     Click Link    link=Show more actions
     Click Link    link=Delete
     Click Modal Button    Delete
-    Go To Record Home       ${contact_id}
-    Select Tab    Details
-    Confirm Value    Level    ${level_name}    N
+    Go To Record Home           ${contact_id}
+    Select Tab       Details
+    Confirm Value    Level      ${level_name}    N
