@@ -4585,8 +4585,8 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Payment Wizard</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Message displayed when the user has no permission to create payments</shortDescription>
-        <value>You do not have permissions to create Payments.</value>
+        <shortDescription>Message displayed when the user has no permission to manage payments</shortDescription>
+        <value>You do not have permissions to manage Payments.</value>
     </labels>
     <labels>
         <fullName>pmtWizardSectionTitle</fullName>
