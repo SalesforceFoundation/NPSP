@@ -54,17 +54,27 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 try {
                     String descriptionField = (sObjectName == 'DataImportBatch__c') ? 'Batch_Description__c' : 'Description__c';
 
-                    String soql = 'SELECT Name, Id, ' +
-                            descriptionField + ', ' +
-                            'RequireTotalMatch__c, ' +
-                            'Active_Fields__c, ' +
-                            'Batch_Process_Size__c, ' +
-                            'Run_Opportunity_Rollups_while_Processing__c, ' +
-                            'Contact_Matching_Rule__c, ' +
-                            'Donation_Matching_Behavior__c, ' +
-                            'Donation_Matching_Rule__c, ' +
-                            'Donation_Date_Range__c, ' +
-                            'Process_Using_Scheduled_Job__c' +
+                    List<String> fields = new List<String>{descriptionField,
+                            'Name',
+                            'Id',
+                            'RequireTotalMatch__c',
+                            'Active_Fields__c',
+                            'Batch_Process_Size__c',
+                            'Run_Opportunity_Rollups_while_Processing__c',
+                            'Contact_Matching_Rule__c',
+                            'Donation_Matching_Behavior__c',
+                            'Donation_Matching_Rule__c',
+                            'Donation_Date_Range__c',
+                            'Process_Using_Scheduled_Job__c'};
+
+                    if (sObjectName == 'DataImportBatch__c') {
+                        fields.add('Expected_Count_of_Gifts__c');
+                        fields.add('Expected_Total_Batch_Amount__c');
+                    }
+
+
+                    String soql = 'SELECT ' +
+                            String.join(fields, ', ') +
                             ' FROM ' + sObjectName +
                             ' WHERE Id=:recordId';
 
@@ -79,7 +89,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                     // TODO: If/When users are able to change the processing settings, we will need to retrieve their defined values here as well.
 
                     if (sObjectName == 'DataImportBatch__c') {
-                        model.expectedCount = (Integer)recordDetails.get('Expected_Count_of_Gifts__c');
+                        model.expectedCount = (Decimal)recordDetails.get('Expected_Count_of_Gifts__c');
                         model.expectedTotal = (Decimal)recordDetails.get('Expected_Total_Batch_Amount__c');
                     }
                 }
@@ -472,7 +482,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public String description;
         @AuraEnabled public Id id;
         @AuraEnabled public Boolean requireTotalMatch;
-        @AuraEnabled public Integer expectedCount;
+        @AuraEnabled public Decimal expectedCount;
         @AuraEnabled public Decimal expectedTotal;
         @AuraEnabled public List<BGEField> templateFields;
         @AuraEnabled public String activeFields;

@@ -93,7 +93,8 @@
                 </div>
                 <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
                     <lightning:buttonGroup>
-                        <lightning:button aura:id="processBatch" label="{!v.labels.processBatchButton}" onclick="{!c.processBatch}"/>
+                        <lightning:button aura:id="processBatch" label="{!$Label.c.bgeProcessBatch}" onclick="{!c.processBatch}"/>
+                        <lightning:button aura:id="editBGEBatch" label="{!$Label.c.stgBtnEdit}" onclick="{!c.openBatchWizard}"/>
                     </lightning:buttonGroup>
                 </div>
             </div>

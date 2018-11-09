@@ -1418,6 +1418,7 @@
         <members>bgeGridTotalCount</members>
         <members>bgeNewBatch</members>
         <members>bgeNewGift</members>
+        <members>bgeProcessBatch</members>
         <members>bgeTabHeader</members>
         <members>btnRemove</members>
         <members>campaignMemberStatusDefault</members>

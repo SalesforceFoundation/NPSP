@@ -2603,6 +2603,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>New Batch</value>
     </labels>
     <labels>
+        <fullName>bgeProcessBatch</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to process a batch.</shortDescription>
+        <value>Process Batch</value>
+    </labels>
+    <labels>
         <fullName>bgeTabHeader</fullName>
         <language>en_US</language>
         <protected>true</protected>
