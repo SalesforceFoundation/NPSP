@@ -1405,6 +1405,9 @@
         <members>bgeBatchTemplateSelectFields</members>
         <members>bgeBatchTemplateSelectedFields</members>
         <members>bgeBatchTemplateSetFieldOptions</members>
+        <members>bgeEditBatchFieldOptionsWarning</members>
+        <members>bgeEditBatchFieldSelectionWarning</members>
+        <members>bgeEditBatchOptionsWarning</members>
         <members>bgeGridAllGifts</members>
         <members>bgeGridDonorType</members>
         <members>bgeGridGiftCountHeader</members>

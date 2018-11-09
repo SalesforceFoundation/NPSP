@@ -54,7 +54,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 try {
                     String descriptionField = (sObjectName == 'DataImportBatch__c') ? 'Batch_Description__c' : 'Description__c';
 
-                    List<String> fields = new List<String>{descriptionField,
+                    List<String> fields = new List<String>{
+                            descriptionField,
                             'Name',
                             'Id',
                             'RequireTotalMatch__c',
@@ -65,7 +66,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                             'Donation_Matching_Behavior__c',
                             'Donation_Matching_Rule__c',
                             'Donation_Date_Range__c',
-                            'Process_Using_Scheduled_Job__c'};
+                            'Process_Using_Scheduled_Job__c'
+                    };
 
                     if (sObjectName == 'DataImportBatch__c') {
                         fields.add('Expected_Count_of_Gifts__c');
@@ -80,24 +82,27 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
                     SObject recordDetails = Database.query(soql);
 
-                    model.name = (String)recordDetails.get('Name');
-                    model.id = (String)recordDetails.get('Id');
-                    model.description = (String)recordDetails.get(descriptionField);
-                    model.requireTotalMatch = (Boolean)recordDetails.get('RequireTotalMatch__c');
-                    model.activeFields = (String)recordDetails.get('Active_Fields__c');
+                    model.name = (String) recordDetails.get('Name');
+                    model.id = (String) recordDetails.get('Id');
+                    model.description = (String) recordDetails.get(descriptionField);
+                    model.requireTotalMatch = (Boolean) recordDetails.get('RequireTotalMatch__c');
+                    model.activeFields = (String) recordDetails.get('Active_Fields__c');
 
                     // TODO: If/When users are able to change the processing settings, we will need to retrieve their defined values here as well.
 
                     if (sObjectName == 'DataImportBatch__c') {
-                        model.expectedCount = (Decimal)recordDetails.get('Expected_Count_of_Gifts__c');
-                        model.expectedTotal = (Decimal)recordDetails.get('Expected_Total_Batch_Amount__c');
+                        model.expectedCount = (Decimal) recordDetails.get('Expected_Count_of_Gifts__c');
+                        model.expectedTotal = (Decimal) recordDetails.get('Expected_Total_Batch_Amount__c');
                     }
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     throw new AuraHandledException('ERROR: ' + ex.getMessage());
                 }
             } else {
                 throw new AuraHandledException('ERROR: Only Batch_Template__c and DataImportBatch__c are supported objects.');
+            }
+
+            if (sObjectName == 'DataImportBatch__c') {
+                model.recordCount = [SELECT COUNT() FROM DataImport__c WHERE NPSP_Data_Import_Batch__c = :recordId];
             }
         }
 
@@ -495,6 +500,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public Integer donationDateRange;
         @AuraEnabled public Boolean processUsingScheduledJob;
         @AuraEnabled public List<Batch_Template__c> availableBatchTemplates;
+        @AuraEnabled public Integer recordCount;
 
         public BGEDetailsModel() {
             requireTotalMatch = false;

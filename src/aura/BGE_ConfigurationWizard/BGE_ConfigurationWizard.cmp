@@ -177,7 +177,23 @@
 
                 <!-- Step 3: Select Fields -->
                 <div class="{!if(v.templateMetadata.progressIndicatorStep == '3', '', 'slds-hide')}">
+
                     <div class="slds-m-around_medium">
+
+                        <aura:if isTrue="{!greaterthan(v.templateInfo.recordCount,0)}">
+                            <lightning:layout horizontalAlign="center">
+                                <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center slds-p-bottom_medium">
+                                    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                                        <span class="slds-assistive-text">warning</span>
+                                        <lightning:icon iconName="utility:warning" alternativeText="warning" class="iconContainer"/>
+                                        <h2>
+                                            {!$Label.c.bgeEditBatchFieldSelectionWarning}
+                                        </h2>
+                                    </div>
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                        </aura:if>
+
                         <aura:iteration items="{!v.templateFields.fieldGroups}" var="currentFieldGroup">
                             <div class="slds-section slds-p-bottom_medium">
                                 <h3 class="slds-section__title slds-theme_shade slds-m-bottom_small">
@@ -198,6 +214,7 @@
                                 </lightning:layout>
                             </div>
                         </aura:iteration>
+
                     </div>
                 </div>
 
@@ -217,6 +234,21 @@
                 <!-- Step 4: Set Field Options -->
                 <aura:if isTrue="{!or(v.templateMetadata.progressIndicatorStep == '4', v.isReadOnly)}">
                     <div class="slds-m-around_medium">
+
+                        <aura:if isTrue="{!greaterthan(v.templateInfo.recordCount,0)}">
+                            <lightning:layout horizontalAlign="center">
+                                <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center slds-p-bottom_medium">
+                                    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                                        <span class="slds-assistive-text">warning</span>
+                                        <lightning:icon iconName="utility:warning" alternativeText="warning" class="iconContainer"/>
+                                        <h2>
+                                            {!$Label.c.bgeEditBatchFieldOptionsWarning}
+                                        </h2>
+                                    </div>
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                        </aura:if>
+
                         <lightning:datatable
                                 keyField="name"
                                 data="{!v.templateFieldOptions.data}"
@@ -233,6 +265,21 @@
 
                 <!-- Step 5: Edit Matching Rules (Only Batch Gift Entry) -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '5'}">
+
+                    <aura:if isTrue="{!greaterthan(v.templateInfo.recordCount,0)}">
+                        <lightning:layout horizontalAlign="center">
+                            <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center slds-p-bottom_medium">
+                                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                                    <span class="slds-assistive-text">warning</span>
+                                    <lightning:icon iconName="utility:warning" alternativeText="warning" class="iconContainer"/>
+                                    <h2>
+                                        {!$Label.c.bgeEditBatchOptionsWarning}
+                                    </h2>
+                                </div>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </aura:if>
+
                 </aura:if>
                 <!-- End Step 5 -->
 
