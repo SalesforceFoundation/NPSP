@@ -202,8 +202,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                     if (col.type == 'double') {
                         col.type = 'number';
                     }
-                    System.debug(col.label);
-                    System.debug(col.type);
                     col.typeAttributes = '{}';
 
                     col.options = BGE_ConfigurationWizard_CTRL.getPicklistOptions(col.fieldName);
