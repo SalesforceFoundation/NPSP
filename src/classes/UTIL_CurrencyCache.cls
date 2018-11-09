@@ -216,19 +216,19 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
     public Map<String, UTIL_CurrencyCache.CurrencyData> getRateMapForCurrencies(List<String> currCodes) {
 
         Map<String, UTIL_CurrencyCache.CurrencyData> mapOfCurrencyDataByCurrencyCode
-                = new Map<String, UTIL_CurrencyCache.CurrencyData>();
+            = new Map<String, UTIL_CurrencyCache.CurrencyData>();
 
         // Even if ACM is enabled, the Admin may choose to not use dated conversion rates for roll-ups.
         Boolean useDatedConversionRates = UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()
-                && householdSettings.Use_Dated_Conversion_Rates__c == true;
+            && householdSettings.Use_Dated_Conversion_Rates__c == true;
 
         if (useDatedConversionRates) {
             // When ACM is enabled, query the DatedConversionRate table to retrieve the effective dates
             // but only for the specific currency code requested.
             String soql = 'SELECT IsoCode, ConversionRate, StartDate ' +
-                    'FROM DatedConversionRate ' +
-                    'WHERE IsoCode IN :currCodes ' +
-                    'ORDER By IsoCode, StartDate DESC';
+                'FROM DatedConversionRate ' +
+                'WHERE IsoCode IN :currCodes ' +
+                'ORDER By IsoCode, StartDate DESC';
             for (SObject dcr : database.query(soql)) {
 
                 String currCode = (String) dcr.get('IsoCode');
@@ -239,6 +239,7 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
 
                 Date dt = (Date) dcr.get('StartDate');
                 Decimal rt = (Decimal) dcr.get('ConversionRate');
+                currData.IsoCode = currCode;
                 currData.effectiveDates.add(dt);
                 currData.rates.add(rt);
                 mapOfCurrencyDataByCurrencyCode.put(currCode, currData);
@@ -264,6 +265,7 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
                     currData = new UTIL_CurrencyCache.CurrencyData();
                 }
 
+                currData.IsoCode = currCode;
                 currData.defaultRate = (Decimal)scr.get('ConversionRate');
                 currData.isOrgDefault = (Boolean)scr.get('IsCorporate');
                 currData.decimalPlaces = (Integer)scr.get('DecimalPlaces');
@@ -303,6 +305,7 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
      * flag to retrieve only the default (non-dated) rate.
      */
     public class CurrencyData {
+        public String IsoCode { get; set; }
         public List<Date> effectiveDates {get; set; }
         public List<Decimal> rates {get; set; }
         public Decimal defaultRate {get; set; }
