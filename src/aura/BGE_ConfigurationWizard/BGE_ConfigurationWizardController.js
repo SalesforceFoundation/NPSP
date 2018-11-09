@@ -69,9 +69,12 @@
             }
             model.getTemplateMetadata().cancel();
         } else if (channel === 'save' || buttonClick === 'save') {
-            var fieldOptions = component.get('v.templateFieldOptions.fieldGroups');
-            model.getTemplateFields().updateTemplateFieldOptions(fieldOptions);
-            model.save();
+            var isValid = model.getTemplateFields().getDefaultFieldValidity(component);
+            if (isValid) {
+                var fieldOptions = component.get('v.templateFieldOptions.fieldGroups');
+                model.getTemplateFields().updateTemplateFieldOptions(fieldOptions);
+                model.save();
+            }
         }
     },
 

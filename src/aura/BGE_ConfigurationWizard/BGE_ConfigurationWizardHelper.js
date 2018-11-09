@@ -564,6 +564,17 @@
             }
 
             /**
+             * @description Gets the aggregate validity of provided default values
+             * @return Boolean
+             */
+            function getDefaultFieldValidity(component) {
+                var isValid = component.find("defaultValueField").reduce(function (validSoFar, defaultValueField) {
+                    return validSoFar && defaultValueField.get("v.validity").valid;
+                }, true);
+                return isValid;
+            }
+
+            /**
              * @description Validates the required templateInfo in Select Fields step.
              * @return Boolean validity.
              */
@@ -725,6 +736,7 @@
                 getAvailablesBySObject: getAvailablesBySObject,
                 getActives: getActives,
                 getActivesBySObject: getActivesBySObject,
+                getDefaultFieldValidity: getDefaultFieldValidity,
                 updateToActive: updateToActive,
                 updateTemplateFieldOptions: updateTemplateFieldOptions,
                 onFieldsUpdated: _onFieldsUpdated

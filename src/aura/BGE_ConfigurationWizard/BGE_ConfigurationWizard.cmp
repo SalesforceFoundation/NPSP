@@ -246,8 +246,7 @@
 
                                     <lightning:layout horizontalAlign="center" multipleRows="true" verticalAlign="center">
 
-                                        <lightning:layoutItem size="4"
-                                                              class="slds-text-align_left slds-p-around_x-small">
+                                        <lightning:layoutItem size="4" class="slds-text-align_left slds-p-around_x-small">
                                             <span aria-hidden="true">
                                                 {!field.label}
                                             </span>
@@ -275,7 +274,8 @@
                                                 </aura:if>
 
                                                 <aura:set attribute="else">
-                                                    <lightning:input label="{!field.label + ': ' + $Label.c.stgDefaultValue}"
+                                                    <lightning:input aura:id="defaultValueField"
+                                                                     label="{!field.label + ': ' + $Label.c.stgDefaultValue}"
                                                                      type="{!field.type}"
                                                                      value="{!field.defaultValue}"
                                                                      formatter="{!field.formatter}"
