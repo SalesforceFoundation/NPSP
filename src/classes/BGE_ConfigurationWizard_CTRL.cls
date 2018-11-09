@@ -65,8 +65,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                             'Donation_Matching_Implementing_Class__c, ' +
                             'Donation_Matching_Rule__c, ' +
                             'Donation_Date_Range__c, ' +
+                            'Post_Process_Implementing_Class__c, ' +
                             'Process_Using_Scheduled_Job__c' +
-                            'Post_Process_Implementing_Class__c' +
                             ' FROM ' + sObjectName +
                             ' WHERE Id=:recordId';
 
@@ -77,9 +77,17 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                     model.description = (String)recordDetails.get(descriptionField);
                     model.requireTotalMatch = (Boolean)recordDetails.get('RequireTotalMatch__c');
                     model.activeFields = (String)recordDetails.get('Active_Fields__c');
+                    model.batchProcessSize = (Decimal)recordDetails.get('Batch_Process_Size__c');
+                    model.runOpportunityRollupsWhileProcessing = (Boolean)recordDetails.get('Run_Opportunity_Rollups_while_Processing__c');
+                    model.donationMatchingBehavior = (String)recordDetails.get('Donation_Matching_Behavior__c');
+                    model.donationMatchingClass = (String)recordDetails.get('Donation_Matching_Implementing_Class__c');
+                    model.donationDateRange = (Decimal)recordDetails.get('Donation_Date_Range__c');
+                    model.postProcessClass = (String)recordDetails.get('Post_Process_Implementing_Class__c');
+                    model.processUsingScheduledJob = (Boolean)recordDetails.get('Process_Using_Scheduled_Job__c');
 
-                    // TODO: If/When users are able to change the processing settings, we will need to retrieve their defined values here as well.
-                    //for donationMatchingRule: split properly into a list from semicolon list
+                    String donationMatchingRule = (String)recordDetails.get('Donation_Matching_Rule__c');
+                    List<String> donationMatchingRules = new List<String>();
+                    donationMatchingRules.addAll(donationMatchingRule.split(';'));
 
                     if (sObjectName == 'DataImportBatch__c') {
                         model.expectedCount = (Integer)recordDetails.get('Expected_Count_of_Gifts__c');
@@ -572,14 +580,14 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public List<BGEField> templateFields;
         @AuraEnabled public String activeFields;
         @AuraEnabled public Map<String, String> labels;
-        @AuraEnabled public Integer batchProcessSize;
+        @AuraEnabled public Decimal batchProcessSize;
         @AuraEnabled public Boolean runOpportunityRollupsWhileProcessing;
         @AuraEnabled public String contactMatchingRule;
         @AuraEnabled public String donationMatchingBehavior;
         @AuraEnabled public String donationMatchingClass;
         @AuraEnabled public List<String> donationMatchingRule;
         @AuraEnabled public List<Map<String,String>> donationMatchingOptions;
-        @AuraEnabled public Integer donationDateRange;
+        @AuraEnabled public Decimal donationDateRange;
         @AuraEnabled public String postProcessClass;
         @AuraEnabled public Boolean processUsingScheduledJob;
         @AuraEnabled public List<Batch_Template__c> availableBatchTemplates;

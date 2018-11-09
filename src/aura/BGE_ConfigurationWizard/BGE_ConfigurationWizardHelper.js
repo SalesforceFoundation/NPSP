@@ -31,7 +31,7 @@
                 templateInfoView.donationMatchingOptions = templateInfo.donationMatchingOptions;
                 templateInfoView.donationMatchingRule = templateInfo.donationMatchingRule;
                 templateInfoView.donationDateRange = templateInfo.donationDateRange;
-                templateInfoView.postProcessImplementingClass = templateInfo.postProcessImplementingClass;
+                templateInfoView.postProcessClass = templateInfo.postProcessClass;
                 templateInfoView.processUsingScheduledJob = templateInfo.processUsingScheduledJob;
 
                 component.set('v.templateInfo', templateInfoView);
@@ -54,7 +54,7 @@
                 donationMatchingOptions: [],
                 donationMatchingRule: [],
                 donationDateRange: '',
-                postProcessImplementingClass: '',
+                postProcessClass: '',
                 processUsingScheduledJob: false
             };
         })(component, model);
@@ -349,7 +349,7 @@
                     donationMatchingClass: _templateInfo.donationMatchingClass,
                     donationMatchingRule: _templateInfo.donationMatchingRule,
                     donationDateRange: _templateInfo.donationDateRange,
-                    postProcessImplementingClass: _templateInfo.postProcessImplementingClass,
+                    postProcessClass: _templateInfo.postProcessClass,
                     processUsingScheduledJob: _templateInfo.processUsingScheduledJob
                 };
                 var activeFields = [];
@@ -452,7 +452,7 @@
                 this.donationMatchingOptions = info.donationMatchingOptions;
                 this.donationMatchingRule = info.donationMatchingRule;
                 this.donationDateRange = info.donationDateRange;
-                this.postProcessImplementingClass = info.postProcessImplementingClass;
+                this.postProcessClass = info.postProcessClass;
                 this.processUsingScheduledJob = info.processUsingScheduledJob;
                 this.onInfoUpdated.notify();
             }
@@ -483,7 +483,7 @@
                 donationMatchingOptions: [],
                 donationMatchingRule: [],
                 donationDateRange: '',
-                postProcessImplementingClass: '',
+                postProcessClass: '',
                 processUsingScheduledJob: false,
 
                 load: load,
@@ -878,7 +878,7 @@
              */
             function setMode(mode) {
                 this.mode = mode;
-                this.progressIndicatorStep = '5';
+                this.progressIndicatorStep = '1';
                 this.onMetadataUpdated.notify();
             }
 

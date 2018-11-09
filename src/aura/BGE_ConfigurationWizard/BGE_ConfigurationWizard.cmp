@@ -300,12 +300,12 @@
                                 <lightning:layoutItem class="slds-p-around_x-small" size="12">
                                     <lightning:input label="{!v.templateMetadata.labels.runOpportunityRollupsWhileProcessingLabel}"
                                                      type="checkbox"
-                                                     value="{!v.templateInfo.processUsingScheduledJob}"/>
+                                                     checked="{!v.templateInfo.runOpportunityRollupsWhileProcessing}"/>
                                 </lightning:layoutItem>
                                 <lightning:layoutItem class="slds-p-around_x-small" size="12">
                                     <lightning:input label="{!v.templateMetadata.labels.processUsingScheduledJobLabel}"
                                                      type="checkbox"
-                                                     value="{!v.templateInfo.processUsingScheduledJob}"/>
+                                                     checked="{!v.templateInfo.processUsingScheduledJob}"/>
                                 </lightning:layoutItem>
                                 <lightning:layoutItem class="slds-p-around_x-small" size="12">
                                     <lightning:input label="{!v.templateMetadata.labels.postProcessClassLabel}"
