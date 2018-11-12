@@ -22,20 +22,18 @@ npsp_lex_locators={
             'viewall':'//a[.//span[text()="View All"]/span[text()="{}"]]',
          },    
     },
-    'object':{
-        'radio_button':"//div[contains(@class,'changeRecordTypeRightColumn')]/div/label[@class='slds-radio']/div[.//span[text()='{}']]/preceding::div[1]/span[@class='slds-radio--faux']",
-        
-    },
     'test':'/html/body/div[6]/table/tbody/tr[23]/td[1]/a',
     'frame':'//iframe[@title= "{}"]',
     #'id':'//*[@id="{}"]',
     'id':'//*[contains(@id,"{}")]',
     'button':'//input[@value="{}"]',
     'checkbox':'//div[contains(@class,"uiInputCheckbox")]/label/span[text()="{}"]/../following-sibling::input[@type="checkbox"]',
+    'table_checkbox':'//tbody/tr[./td[2]/a[text()="{}"]]/td/input[@type="checkbox"]',
     'tab': "//div[@class='uiTabBar']/ul[@class='tabs__nav']/li[contains(@class,'uiTabItem')]/a[@class='tabHeader']/span[contains(text(), '{}')]",
     'desktop_rendered': 'css: div.desktop.container.oneOne.oneAppLayoutHost[data-aura-rendered-by]',
     'loading_box': 'css: div.auraLoadingBox.oneLoadingBox',
     'spinner': 'css: div.slds-spinner',
+    'modal_field':"//div[contains(@class, 'lookupInput')][./label[contains(text(), '{}')]]/div//span[@class='lookupInput']/input",
     'name':'//tbody/tr/th/span/a',
     'select_name':'//tbody//a[text()= "{}"]',
     'locate_dropdown':'//tbody/tr[{}]/td/span//div/a/lightning-icon',
@@ -63,6 +61,7 @@ npsp_lex_locators={
     'header':'//h1[contains(@title,"{}")]',
     'check_related_list_item':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")]//tbody//th//a[text()="{}"]',
     'detail_page': {
+        'section_header':'//h3//span[text()="{}"]',
         'address':'//h3[contains(@class, "slds-section__title")][.//span[contains(text(),"Address")]]/../..//div[contains(@class, "test-id")]/span[text()= "{}"]/../following-sibling::div//a/div[contains(@class, "slds")]',
         'field':'//h3[contains(@class, "slds-section__title")][.//span[text()="{}"]]/../..//div[contains(@class, "test-id")]/span[text()= "{}"]/../following-sibling::div//span[text()="{}"]',
         'verify_field_value':'//div[contains(@class, "forcePageBlockItem")]/div/div//span[text()="{}"]/../../div[2]/span/span[text() = "{}"]',
@@ -82,6 +81,8 @@ npsp_lex_locators={
         'contact_role':'//tbody//a[text()= "{}"]/../../following-sibling::td/span/span[text() = "{}"]',
         'record':'//tbody//a[text()= "{}"]',
         'button': "css: div.windowViewMode-normal ul.forceActionsContainer.oneActionsRibbon a[title='{}']",
+        'radio_button':"//div[contains(@class,'changeRecordTypeRightColumn')]/div/label[@class='slds-radio']/div[.//span[text()='{}']]/preceding::div[1]/span[@class='slds-radio--faux']",
+        
     },
     'engagement_plan':{
         'input_box':'//*[contains(@id ,"j_id0:theForm:j_id102_{}") and @class= "slds-input"]',
@@ -111,8 +112,9 @@ npsp_lex_locators={
         'panel_sub_link':'//ul/li/a[text()="{}"]',
         'field_value':"//div[@class='slds-form-element'][./label[contains(text(),'{}')]]/div/span",
         'side_panel':"//ul/div[contains(@id,'RecDonations')]/button[1]",
-        'list':"//div[contains(@class,'slds-form--horizontal')]/div[@class='slds-form-element'][./label[text()='{}']]/div/select",
+        'list':"//div[contains(@class,'slds-form_horizontal')]/div[@class='slds-form-element'][./label[text()='{}']]/div/select",
         'list_val':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/span[text()="{}"]',
+        'status':'//div[contains(@class,"slds-tile__title")][.//span[text()="{}"]]/div[contains(@class,"slds-col")]//span[text()="{}"]',
         },
     'data_imports':{
         'status':'//div[contains(@class,"slds-tile__title")][./p[text()="BDI_DataImport_BATCH"]]/div[contains(@class,"slds-col")]/span[text()="{}"]',

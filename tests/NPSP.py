@@ -309,6 +309,18 @@ class NPSP(object):
         locator=npsp_lex_locators['checkbox'].format(title)
         self.selenium.get_webelement(locator).click()
         
+    def select_lightning_table_checkbox(self,title):
+        """"""
+        locator=npsp_lex_locators['table_checkbox'].format(title)
+        self.selenium.get_webelement(locator).click() 
+        
+    def populate_modal_field(self, title, value):
+        locator=npsp_lex_locators['modal_field'].format(title,value)
+        self.selenium.set_focus_to_element(locator)
+        field = self.selenium.get_webelement(locator)
+        field.clear()
+        field.send_keys(value)       
+        
     def verify_occurance(self,title,value):
         """"""
         locator=npsp_lex_locators['record']['related']['check_occurance'].format(title,value)
@@ -339,8 +351,8 @@ class NPSP(object):
         locator=npsp_lex_locators['record']['related']['title'].format(title)
         self.selenium.get_webelement(locator).click()  
         
-    def verify_contact_roles(self, **kwargs):
-        """verifies the role of a specific contact on Opportunities page""" 
+    def verify_related_list_field_values(self, **kwargs):
+        """verifies the values in the related list objects page""" 
         for name, value in kwargs.items():
             locator= npsp_lex_locators['object']['contact_role'].format(name,value)
             self.selenium.page_should_contain_element(locator)   

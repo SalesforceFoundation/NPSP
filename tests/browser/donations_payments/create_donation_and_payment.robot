@@ -15,10 +15,11 @@ ${opp_name}
 Create Donation from a Contact
     [tags]  unstable
     &{contact} =  API Create Contact    Email=skristem@robot.com
-    &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Name=Sravani $100 donation
+    &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Donation    Name=Sravani $100 donation
     Go To Record Home  &{opportunity}[Id]
     ${opp_name}    Get Main Header 
     Set Global Variable      ${opp_name}
+    Load Related List    Payments
     Select Related Dropdown    Payments
     Click Link    link=Schedule Payments
     Wait For Locator    frame    Create one or more Payments for this Opportunity
