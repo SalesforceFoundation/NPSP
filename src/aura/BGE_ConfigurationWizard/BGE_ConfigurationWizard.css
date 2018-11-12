@@ -29,3 +29,16 @@
 .THIS .wideListbox .slds-dueling-list__column_responsive .slds-dueling-list__options {
     min-width: 240px;
 }
+/*removes the extra label and automatic tooltip for inputFields*/
+.THIS .hideLabel .slds-form-element__label {
+    display: none;
+    visibility: hidden;
+}
+/*formatting for checkboxes with help text */
+.THIS .inputCheckbox{
+    display: inline-flex;
+}
+/*remove extra top padding on help text icons*/
+.THIS .slds-form-element__icon {
+    padding-top: 0px;
+}
