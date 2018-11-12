@@ -288,10 +288,11 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
             for (String strDIField : listMatchFields) {
                 Object val = di.get(strDIField);
                 String strOppField = mapDIFieldToOppField.get(strDIField);
+                String donationDate = UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase();
 
                 // special case date matching
-                if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase() && strOppField != null) {
-                    Date dtOpp = date.valueOf(opp.get(strOppField));
+                if (strDIField == donationDate && strOppField != null) {
+                    Date dtOpp = Date.valueOf(opp.get(strOppField));
                     if (dtOpp != null && val != null) {
                         Integer dtVarianceT = math.abs(Date.valueOf(val).daysBetween(dtOpp));
                         if (dtVarianceT <= Integer.valueOf(bdi.diSettings.Donation_Date_Range__c)) {
@@ -341,12 +342,13 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
             for (String strDIField : listMatchFields) {
                 Object val = di.get(strDIField);
                 String strPmtField = mapDIFieldToPmtField.get(strDIField);
+                String donationDate = UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase();
 
                 // special case date matching
-                if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase() && strPmtField != null) {
+                if (strDIField == donationDate && strPmtField != null) {
                     Date dtPmt = Date.valueOf(pmt.get(strPmtField));
                     if (dtPmt != null && val != null) {
-                        Integer dtVarianceT = math.abs(date.valueOf(val).daysBetween(dtPmt));
+                        Integer dtVarianceT = math.abs(Date.valueOf(val).daysBetween(dtPmt));
                         if (dtVarianceT <= Integer.valueOf(bdi.diSettings.Donation_Date_Range__c)) {
                             dtVariance = dtVarianceT;
                             continue;
