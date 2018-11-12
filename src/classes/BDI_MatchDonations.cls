@@ -285,14 +285,14 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
             Boolean isAllMatch = true;
             Integer dtVariance = 0;
 
-            for (String strDIField : listMatchFields) {
-                Object val = di.get(strDIField);
-                String strOppField = mapDIFieldToOppField.get(strDIField);
+            for (String dataImportField : listMatchFields) {
+                Object val = di.get(dataImportField);
+                String opportunityField = mapDIFieldToOppField.get(dataImportField);
                 String donationDate = UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase();
 
                 // special case date matching
-                if (strDIField == donationDate && strOppField != null) {
-                    Date dtOpp = Date.valueOf(opp.get(strOppField));
+                if (dataImportField == donationDate && opportunityField != null) {
+                    Date dtOpp = Date.valueOf(opp.get(opportunityField));
                     if (dtOpp != null && val != null) {
                         Integer dtVarianceT = math.abs(Date.valueOf(val).daysBetween(dtOpp));
                         if (dtVarianceT <= Integer.valueOf(bdi.diSettings.Donation_Date_Range__c)) {
@@ -303,12 +303,12 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 }
 
                 // handle mapping a specified record type name to the Id we must compare with
-                if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c').toLowercase()) {
+                if (dataImportField == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c').toLowercase()) {
                     val = UTIL_RecordTypes.getRecordTypeId(Opportunity.sObjectType, String.valueOf(val));
                 }
 
                 // only test opp fields (failing match if payment fields specified)
-                if (strOppField == null || val != opp.get(strOppField)) {
+                if (opportunityField == null || val != opp.get(opportunityField)) {
                     isAllMatch = false;
                     break;
                 }
@@ -339,14 +339,14 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
             Boolean isAllMatch = true;
             Integer dtVariance = 0;
 
-            for (String strDIField : listMatchFields) {
-                Object val = di.get(strDIField);
-                String strPmtField = mapDIFieldToPmtField.get(strDIField);
+            for (String dataImportField : listMatchFields) {
+                Object val = di.get(dataImportField);
+                String paymentField = mapDIFieldToPmtField.get(dataImportField);
                 String donationDate = UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase();
 
                 // special case date matching
-                if (strDIField == donationDate && strPmtField != null) {
-                    Date dtPmt = Date.valueOf(pmt.get(strPmtField));
+                if (dataImportField == donationDate && paymentField != null) {
+                    Date dtPmt = Date.valueOf(pmt.get(paymentField));
                     if (dtPmt != null && val != null) {
                         Integer dtVarianceT = math.abs(Date.valueOf(val).daysBetween(dtPmt));
                         if (dtVarianceT <= Integer.valueOf(bdi.diSettings.Donation_Date_Range__c)) {
@@ -357,7 +357,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 }
 
                 // only test pmt fields (failing match if Opp fields specified)
-                if (strPmtField == null || val != pmt.get(strPmtField)) {
+                if (paymentField == null || val != pmt.get(paymentField)) {
                     isAllMatch = false;
                     break;
                 }
