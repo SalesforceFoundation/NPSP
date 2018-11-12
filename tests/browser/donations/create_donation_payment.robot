@@ -8,6 +8,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Donation and Opportunity and Create Payment Manually
+    [tags]  unstable
     &{contact} =  API Create Contact    Email=skristem@robot.com
     &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Donation    Name=Sravani $100 donation
     Go To Record Home  &{opportunity}[Id]
@@ -24,4 +25,3 @@ Create Donation and Opportunity and Create Payment Manually
     Click Modal Button        Save
     #Sleep    2
     Verify Occurance    Payments    1
-   

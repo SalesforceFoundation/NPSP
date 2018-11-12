@@ -567,7 +567,7 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         ctrl.refresh();
         system.assertNotEquals(null, ctrl.cancel());
     }
- 
+
     /*******************************************************************************************************
     * @description test handling of no Soft Credit Roles in NPSP Settings
     * verify errors detected and reported
@@ -591,5 +591,25 @@ public with sharing class PSC_ManageSoftCredits_TEST {
         system.assertEquals(0, ctrl.softCredits.size());
         
         system.assertNotEquals(0, ApexPages.getMessages().size());
+    }
+
+    /*******************************************************************************************************
+    * @description Verify the page displays an error when the user does not have the access required to
+    * view the page
+    */
+    @isTest
+    private static void shouldDisplayMessageWhenUserDoesNotHavePermissions() {
+        initTestDataWithoutPscs();
+        User user = UTIL_UnitTestData_TEST.createNewUserForTests(Datetime.now().getTime() + 'managepsc@salesforce.org.test');
+
+        System.runAs(user) {
+            Test.startTest();
+            Test.setCurrentPage(Page.PSC_ManageSoftCredits);
+            PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
+            Test.stopTest();
+
+            System.assertEquals(null, ctrl.opp.Name, 'The opportunity query should not be executed.');
+            System.assertNotEquals(0, ApexPages.getMessages().size(), 'A message should be displayed on the page.');
+        }
     }
 }
