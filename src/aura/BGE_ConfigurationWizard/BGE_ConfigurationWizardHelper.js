@@ -200,15 +200,6 @@
     TemplateFieldOptionsView : function(component, model) {
         return (function (component, model) {
 
-            var isReadOnly = component.get('v.isReadOnly');
-
-            // Subscribe to the model onMetadataChange event.
-            model.getTemplateMetadata().onMetadataUpdated.subscribe(function() {
-                var templateFieldOptions = component.get('v.templateFieldOptions');
-                var isReadOnly = component.get('v.isReadOnly');
-                component.set('v.templateFieldOptions', templateFieldOptions);
-            });
-
             // Subscribe to the model onFieldsUpdated event.
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var templateFieldOptions = component.get('v.templateFieldOptions');
@@ -216,7 +207,7 @@
                 var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
                 var templateFields = model.getTemplateFields();
                 templateFieldOptions.errors = templateFields.errors;
-                var isNamespaced = component.get('v.isNamespaced')
+                var isNamespaced = component.get('v.isNamespaced');
 
                 Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
 
