@@ -17,7 +17,6 @@ from cumulusci.robotframework.utils import selenium_retry
 #import os
 import sys
 from email.mime import text
-from test.test_deque import fail
 #sys.path.append(os.path.abspath(os.path.join('..',
 #sys.path.append("/Users/skristem/Documents/GitHub/CumulusCI/cumulusci/robotframework/tests")
 #import Salesforce
