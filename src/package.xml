@@ -1396,6 +1396,11 @@
         <members>bdiTime</members>
         <members>bgeBatchInfoWizard</members>
         <members>bgeBatchTemplateAvailableFields</members>
+        <members>bgeBatchTemplateBatchProcessSizeHelp</members>
+        <members>bgeBatchTemplateDonationDateRangeHelp</members>
+        <members>bgeBatchTemplateDonationMatchingBehaviorHelp</members>
+        <members>bgeBatchTemplateDonationMatchingClassHelp</members>
+        <members>bgeBatchTemplateDonationMatchingRuleHelp</members>
         <members>bgeBatchTemplateEdit</members>
         <members>bgeBatchTemplateErrorDefaultValue</members>
         <members>bgeBatchTemplateErrorRequiredAmount</members>
@@ -1403,6 +1408,9 @@
         <members>bgeBatchTemplateNew</members>
         <members>bgeBatchTemplateOverview</members>
         <members>bgeBatchTemplateOverviewWizard</members>
+        <members>bgeBatchTemplatePostProcessClassHelp</members>
+        <members>bgeBatchTemplateProcessUsingScheduledJobHelp</members>
+        <members>bgeBatchTemplateRunOpportunityRollupsWhileProcessingHelp</members>
         <members>bgeBatchTemplateSelectFields</members>
         <members>bgeBatchTemplateSelectedFields</members>
         <members>bgeBatchTemplateSetBatchOptions</members>

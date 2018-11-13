@@ -388,21 +388,13 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 'totalMatchLabel' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getLabel(),
                 'recordInfoLabel' => Label.bgeBatchTemplateOverviewWizard,
                 'batchProcessSizeLabel' => Schema.Batch_Template__c.Batch_Process_Size__c.getDescribe().getLabel(),
-                'batchProcessSizeHelp' => Schema.Batch_Template__c.Batch_Process_Size__c.getDescribe().getInlineHelpText(),
                 'donationDateRangeLabel' => Schema.Batch_Template__c.Donation_Date_Range__c.getDescribe().getLabel(),
-                'donationDateRangeHelp' => Schema.Batch_Template__c.Donation_Date_Range__c.getDescribe().getInlineHelpText(),
                 'donationMatchingBehaviorLabel' => Schema.Batch_Template__c.Donation_Matching_Behavior__c.getDescribe().getLabel(),
-                'donationMatchingBehaviorHelp' => Schema.Batch_Template__c.Donation_Matching_Behavior__c.getDescribe().getInlineHelpText(),
                 'donationMatchingClassLabel' => Schema.Batch_Template__c.Donation_Matching_Implementing_Class__c.getDescribe().getLabel(),
-                'donationMatchingClassHelp' => Schema.Batch_Template__c.Donation_Matching_Implementing_Class__c.getDescribe().getInlineHelpText(),
                 'donationMatchingRuleLabel' => Schema.Batch_Template__c.Donation_Matching_Rule__c.getDescribe().getLabel(),
-                'donationMatchingRuleHelp' => Schema.Batch_Template__c.Donation_Matching_Rule__c.getDescribe().getInlineHelpText(),
                 'postProcessClassLabel' => Schema.Batch_Template__c.Post_Process_Implementing_Class__c.getDescribe().getLabel(),
-                'postProcessClassHelp' => Schema.Batch_Template__c.Post_Process_Implementing_Class__c.getDescribe().getInlineHelpText(),
                 'processUsingScheduledJobLabel' => Schema.Batch_Template__c.Process_Using_Scheduled_Job__c.getDescribe().getLabel(),
-                'processUsingScheduledJobHelp' => Schema.Batch_Template__c.Process_Using_Scheduled_Job__c.getDescribe().getInlineHelpText(),
-                'runOpportunityRollupsWhileProcessingLabel' => Schema.Batch_Template__c.Run_Opportunity_Rollups_while_Processing__c.getDescribe().getLabel(),
-                'runOpportunityRollupsWhileProcessingHelp' => Schema.Batch_Template__c.Run_Opportunity_Rollups_while_Processing__c	.getDescribe().getInlineHelpText()
+                'runOpportunityRollupsWhileProcessingLabel' => Schema.Batch_Template__c.Run_Opportunity_Rollups_while_Processing__c.getDescribe().getLabel()
         };
         labels.putAll(getMatchingValues());
         return labels;
@@ -427,21 +419,13 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 'expectedTotalField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getName(),
                 'expectedTotalLabel' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getLabel(),
                 'batchProcessSizeLabel' => Schema.DataImportBatch__c.Batch_Process_Size__c.getDescribe().getLabel(),
-                'batchProcessSizeHelp' => Schema.DataImportBatch__c.Batch_Process_Size__c.getDescribe().getInlineHelpText(),
                 'donationDateRangeLabel' => Schema.DataImportBatch__c.Donation_Date_Range__c.getDescribe().getLabel(),
-                'donationDateRangeHelp' => Schema.DataImportBatch__c.Donation_Date_Range__c.getDescribe().getInlineHelpText(),
                 'donationMatchingBehaviorLabel' => Schema.DataImportBatch__c.Donation_Matching_Behavior__c.getDescribe().getLabel(),
-                'donationMatchingBehaviorHelp' => Schema.DataImportBatch__c.Donation_Matching_Behavior__c.getDescribe().getInlineHelpText(),
                 'donationMatchingClassLabel' => Schema.DataImportBatch__c.Donation_Matching_Implementing_Class__c.getDescribe().getLabel(),
-                'donationMatchingClassHelp' => Schema.DataImportBatch__c.Donation_Matching_Implementing_Class__c.getDescribe().getInlineHelpText(),
                 'donationMatchingRuleLabel' => Schema.DataImportBatch__c.Donation_Matching_Rule__c.getDescribe().getLabel(),
-                'donationMatchingRuleHelp' => Schema.DataImportBatch__c.Donation_Matching_Rule__c.getDescribe().getInlineHelpText(),
                 'postProcessClassLabel' => Schema.DataImportBatch__c.Post_Process_Implementing_Class__c.getDescribe().getLabel(),
-                'postProcessClassHelp' => Schema.DataImportBatch__c.Post_Process_Implementing_Class__c.getDescribe().getInlineHelpText(),
                 'processUsingScheduledJobLabel' => Schema.DataImportBatch__c.Process_Using_Scheduled_Job__c.getDescribe().getLabel(),
-                'processUsingScheduledJobHelp' => Schema.DataImportBatch__c.Process_Using_Scheduled_Job__c.getDescribe().getInlineHelpText(),
-                'runOpportunityRollupsWhileProcessingLabel' => Schema.DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c.getDescribe().getLabel(),
-                'runOpportunityRollupsWhileProcessingHelp' => Schema.DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c	.getDescribe().getInlineHelpText()
+                'runOpportunityRollupsWhileProcessingLabel' => Schema.DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c.getDescribe().getLabel()
         };
         labels.putAll(getMatchingValues());
         return labels;

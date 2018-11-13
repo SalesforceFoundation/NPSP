@@ -2442,6 +2442,41 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Available Fields</value>
     </labels>
     <labels>
+        <fullName>bgeBatchTemplateBatchProcessSizeHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>The number of records to process at a time in each batch.</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateDonationDateRangeHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>Enter the numer of days from the Donation Date to consider when looking for a matching Opportunity or Payment. NPSP will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateDonationMatchingBehaviorHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>Defines how NPSP should handle matching Donations.</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateDonationMatchingClassHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>The developer name of an Apex class that implements the BDI_IMatching interface for Donations. Leave blank to let NPSP handle matching.</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateDonationMatchingRuleHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>Specifies which fields to match by when trying to match Donations in batch records against existing Opportunties and Payments.</value>
+    </labels>
+    <labels>
         <fullName>bgeBatchTemplateEdit</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2482,6 +2517,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Header for Batch Template Info in Wizard</shortDescription>
         <value>Enter Template Info</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplatePostProcessClassHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP batch records.
+        </value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateProcessUsingScheduledJobHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>When checked, the batch will be automatically processed based on the schedule for the associated job.</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateRunOpportunityRollupsWhileProcessingHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>When checked, NPSP calculates donor rollups when donations are processed. If unchecked, donor rollups are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.</value>
     </labels>
     <labels>
         <fullName>bgeBatchInfoWizard</fullName>
