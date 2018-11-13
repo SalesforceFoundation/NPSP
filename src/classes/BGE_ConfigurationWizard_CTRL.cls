@@ -91,7 +91,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                     // TODO: If/When users are able to change the processing settings, we will need to retrieve their defined values here as well.
 
                     if (sObjectName == 'DataImportBatch__c') {
-                        model.expectedCount = (Decimal) recordDetails.get('Expected_Count_of_Gifts__c');
+                        model.expectedCount = (Integer) recordDetails.get('Expected_Count_of_Gifts__c');
                         model.expectedTotal = (Decimal) recordDetails.get('Expected_Total_Batch_Amount__c');
                     }
                 } catch (Exception ex) {
@@ -487,7 +487,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public String description;
         @AuraEnabled public Id id;
         @AuraEnabled public Boolean requireTotalMatch;
-        @AuraEnabled public Decimal expectedCount;
+        @AuraEnabled public Integer expectedCount;
         @AuraEnabled public Decimal expectedTotal;
         @AuraEnabled public List<BGEField> templateFields;
         @AuraEnabled public String activeFields;

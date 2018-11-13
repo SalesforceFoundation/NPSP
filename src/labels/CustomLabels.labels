@@ -2515,7 +2515,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bgeEditBatchFieldSelectionWarning</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Warning msg for Select Fields step of BGE Config Wizard</shortDescription>
+        <shortDescription>Warning message for Select Fields step of BGE Config Wizard</shortDescription>
         <value>WARNING: There are records saved to this batch. Any changes you make won&apos;t affect existing records. If you remove fields, those fields no longer appear on the gift entry screen, but data isn&apos;t deleted from those fields on existing records. Therefore, we recommend that you do not remove fields.</value>
     </labels>
     <labels>
