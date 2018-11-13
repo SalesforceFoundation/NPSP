@@ -23,10 +23,12 @@ API Create Contact
     [return]         &{contact}
  
 API Create Opportunity
-    [Arguments]      ${account_id}      &{fields}    
+    [Arguments]      ${account_id}    ${opp_type}      &{fields} 
+    ${rt_id} =       Get Record Type Id  Opportunity  ${opp_type}   
     ${opp_id} =  Salesforce Insert    Opportunity
     ...               AccountId=${account_id}
-    ...               StageName=ClosedWon
+    ...               RecordTypeId=${rt_id}
+    ...               StageName=Closed Won
     ...               CloseDate=2018-09-10
     ...               Amount=100
     ...               Name=Test Donation
@@ -182,8 +184,6 @@ Create Primary Affiliation
 Create Secondary Affiliation
     [Arguments]      ${acc_name}      ${con_id}
     Go To Record Home  ${con_id}
-    Wait For Locator    record.related.title    Volunteer Hours 
-    Scroll Page To Location    50    400
     Click Related List Button   Organization Affiliations    New
     Populate Lookup Field    Organization    ${acc_name}
     Click Modal Button    Save
@@ -254,10 +254,7 @@ Verify Engagement Plan
 
 Create GAU
     ${gau_name} =         Generate Random String
-    Sleep    5
-    Open App Launcher
-    Populate Address    Search apps or items...    General Accounting Units
-    Select App Launcher Link    General Accounting Units
+    Select App Launcher Tab    General Accounting Units
     Click Object Button       New
     Populate Form
     ...                    General Accounting Unit Name=${gau_name}
