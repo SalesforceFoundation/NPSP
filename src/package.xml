@@ -1395,6 +1395,7 @@
         <members>bdiTime</members>
         <members>bgeBatchInfoWizard</members>
         <members>bgeBatchTemplateAvailableFields</members>
+        <members>bgeBatchTemplateDonorLookupInfo</members>
         <members>bgeBatchTemplateEdit</members>
         <members>bgeBatchTemplateErrorDefaultValue</members>
         <members>bgeBatchTemplateErrorRequiredAmount</members>

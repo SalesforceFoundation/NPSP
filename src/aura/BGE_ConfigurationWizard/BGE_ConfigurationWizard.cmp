@@ -178,6 +178,7 @@
                 <!-- Step 3: Select Fields -->
                 <div class="{!if(v.templateMetadata.progressIndicatorStep == '3', '', 'slds-hide')}">
                     <div class="slds-m-around_medium">
+                        <p class="slds-p-bottom_small">{!$Label.c.bgeBatchTemplateDonorLookupInfo}</p>
                         <aura:iteration items="{!v.templateFields.fieldGroups}" var="currentFieldGroup">
                             <div class="slds-section slds-p-bottom_medium">
                                 <h3 class="slds-section__title slds-theme_shade slds-m-bottom_small">
