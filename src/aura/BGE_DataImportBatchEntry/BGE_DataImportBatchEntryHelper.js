@@ -83,6 +83,21 @@
      * @description: invoke the Data Importer on all records associated with this Batch
      */
     processBatch: function(component) {
+        var totals = component.get('v.totals');
+        var record = component.get('v.record');
+        if (record.RequireTotalMatch__c) {
+            if (totals.countGifts == 0 && totals.totalGiftAmount == 0) {
+                this.showToast(component, $A.get('$Label.c.PageMessagesError'), $A.get('$Label.c.bgeGridWarningRequiredTotalsExpected'), 'warning');
+                return;
+            }
+            
+            if ((record.Expected_Total_Batch_Amount__c != 0 && totals.totalGiftAmount != record.Expected_Total_Batch_Amount__c) ||
+                (record.Expected_Count_of_Gifts__c != 0 && totals.countGifts != record.Expected_Count_of_Gifts__c)) {
+                this.showToast(component, $A.get('$Label.c.PageMessagesError'), $A.get('$Label.c.bgeGridErrorRequiredTotalsExpected'), 'error');
+                return;
+            }
+        }
+        
         var batchId = component.get('v.recordId');
         var bdiBatchClass = component.get('v.labels.bdiBatchClass');
         var url = '/apex/' + bdiBatchClass + '?batchId=' + batchId + '&retURL=' + batchId;
@@ -223,6 +238,7 @@
         var fields = [];
         fields.push(labels.expectedCountField);
         fields.push(labels.expectedTotalField);
+        fields.push(labels.requireTotalMatch);
         fields.push('Name');
         component.set('v.batchFields', fields);
     },
