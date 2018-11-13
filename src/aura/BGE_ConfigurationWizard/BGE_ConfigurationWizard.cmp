@@ -280,6 +280,7 @@
                                                                      value="{!field.defaultValue}"
                                                                      formatter="{!field.formatter}"
                                                                      readonly="{!v.isReadOnly}"
+                                                                     step="0.01"
                                                                      variant="label-hidden" />
                                                 </aura:set>
                                             </aura:if>
