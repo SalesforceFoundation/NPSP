@@ -8,6 +8,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Matching Donation
+    [tags]  unstable
     &{Org} =  API Create Organization Account    npsp__Matching_Gift_Company__c=true    npsp__Matching_Gift_Percent__c=100
     &{contact1} =  API Create Contact    Email=skristem@robot.com
     &{opportunity1} =  API Create Opportunity    &{Contact1}[AccountId]    Donation    Name=&{Contact1}[FirstName] $50 donation    Amount=50
@@ -43,9 +44,6 @@ Create Matching Donation
     ...                     &{contact2}[LastName] Household=$25.00  
     Go To Record Home  &{opportunity3}[Id]
     Load Related List    Matched Gifts
-    # ${locator}    Get NPSP Locator    record.related.title    Matched Gifts
-    # Scroll Element Into View    ${locator}
-    #Select Relatedlist    Matched Gifts
     Click Viewall Related List    Matched Gifts
     Verify Related List Field Values
     ...                     &{opportunity1}[Name]=$50.00

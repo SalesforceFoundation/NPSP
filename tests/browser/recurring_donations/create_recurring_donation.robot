@@ -2,7 +2,7 @@
 
 Resource        tests/NPSP.robot
 Suite Setup     Open Test Browser
-#Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Delete Records and Close Browser
 
 
 *** Test Cases ***
@@ -10,7 +10,6 @@ Suite Setup     Open Test Browser
 Create Open Recurring Donation With Monthly Installment
     [tags]  unstable
     Select App Launcher Tab  NPSP Settings
-    Sleep    3
     Wait For Locator    frame    Nonprofit Success Pack Settings
     Select Frame With Title    Nonprofit Success Pack Settings
     Wait for Locator    npsp_settings.side_panel

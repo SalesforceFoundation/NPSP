@@ -17,6 +17,7 @@ from cumulusci.robotframework.utils import selenium_retry
 #import os
 import sys
 from email.mime import text
+from test.test_deque import fail
 #sys.path.append(os.path.abspath(os.path.join('..',
 #sys.path.append("/Users/skristem/Documents/GitHub/CumulusCI/cumulusci/robotframework/tests")
 #import Salesforce
@@ -190,23 +191,31 @@ class NPSP(object):
         locator=npsp_lex_locators['click_aff_id'].format(self.aff_id_text)
         self.selenium.get_webelement(locator).click()   
         
+        
     def confirm_value(self, field,value,status):
-        locator=npsp_lex_locators['check_status'].format(field,value)
-        if status.upper()=="Y":
-            self.selenium.page_should_contain_element(locator)
-        elif status.upper()=="N":
-            self.selenium.page_should_not_contain_element(locator)
-        #verify_former=self.selenium.get_webelement(locator).text
-        #return verify_former
-    
+        locator=npsp_lex_locators['check_status'].format(field)
+        actual_value=self.selenium.get_webelement(locator).text
+        if status.upper() == "Y":
+            assert value == actual_value, "Expected value to be {} but found {}".format(
+                value, actual_value
+            )
+        elif status.upper() == "N":
+             assert value != actual_value, "Expected value {} and actual value {} should not match".format(
+                value, actual_value
+            )   
+            
     def verify_field_value(self, field,value,status):
-        locator=npsp_lex_locators['check_field'].format(field,value)
-        if status.upper()=="Y":
-            self.selenium.page_should_contain_element(locator)
-        elif status.upper()=="N":
-            self.selenium.page_should_not_contain_element(locator)
-#         verify_former=self.selenium.get_webelement(locator).text
-#         return verify_former
+        locator=npsp_lex_locators['check_field'].format(field)
+        actual_value=self.selenium.get_webelement(locator).text
+        if status.upper() == "Y":
+            assert value == actual_value, "Expected value to be {} but found {}".format(
+                value, actual_value
+            )
+        elif status.upper() == "N":
+             assert value != actual_value, "Expected value {} and actual value {} should not match".format(
+                value, actual_value
+            )         
+    
     
     def verify_record(self, name):
         """ Checks for the record in the object page and returns true if found else returns false
@@ -354,7 +363,7 @@ class NPSP(object):
     def verify_related_list_field_values(self, **kwargs):
         """verifies the values in the related list objects page""" 
         for name, value in kwargs.items():
-            locator= npsp_lex_locators['object']['contact_role'].format(name,value)
+            locator= npsp_lex_locators['object']['field_value'].format(name,value)
             self.selenium.page_should_contain_element(locator)   
             
     def page_contains_record(self,title):   
