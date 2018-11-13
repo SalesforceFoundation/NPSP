@@ -78,16 +78,13 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                     model.requireTotalMatch = (Boolean)recordDetails.get('RequireTotalMatch__c');
                     model.activeFields = (String)recordDetails.get('Active_Fields__c');
                     model.batchProcessSize = (Decimal)recordDetails.get('Batch_Process_Size__c');
-                    model.runOpportunityRollupsWhileProcessing = (Boolean)recordDetails.get('Run_Opportunity_Rollups_while_Processing__c');
+                    model.donationDateRange = (Decimal)recordDetails.get('Donation_Date_Range__c');
                     model.donationMatchingBehavior = (String)recordDetails.get('Donation_Matching_Behavior__c');
                     model.donationMatchingClass = (String)recordDetails.get('Donation_Matching_Implementing_Class__c');
-                    model.donationDateRange = (Decimal)recordDetails.get('Donation_Date_Range__c');
+                    model.donationMatchingRule = ((String)recordDetails.get('Donation_Matching_Rule__c')).split(';');
                     model.postProcessClass = (String)recordDetails.get('Post_Process_Implementing_Class__c');
                     model.processUsingScheduledJob = (Boolean)recordDetails.get('Process_Using_Scheduled_Job__c');
-
-                    String donationMatchingRule = (String)recordDetails.get('Donation_Matching_Rule__c');
-                    List<String> donationMatchingRules = new List<String>();
-                    donationMatchingRules.addAll(donationMatchingRule.split(';'));
+                    model.runOpportunityRollupsWhileProcessing = (Boolean)recordDetails.get('Run_Opportunity_Rollups_while_Processing__c');
 
                     if (sObjectName == 'DataImportBatch__c') {
                         model.expectedCount = (Integer)recordDetails.get('Expected_Count_of_Gifts__c');
@@ -249,13 +246,13 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         model.requireTotalMatch = false;
         model.templateFields = new List<BGEField>();
         model.batchProcessSize = 50;
-        model.runOpportunityRollupsWhileProcessing = false;
         model.contactMatchingRule = 'Firstname,Lastname,Email';
+        model.donationDateRange = 0;
         model.donationMatchingBehavior = BDI_DataImport_API.ExactMatchOrCreate;
         model.donationMatchingClass = '';
-        model.donationDateRange = 0;
         model.processUsingScheduledJob = false;
         model.postProcessClass = '';
+        model.runOpportunityRollupsWhileProcessing = false;
         model.activeFields = getDefaultActiveFields();
 
         List<String> donationMatchingRules = new List<String>();
@@ -503,13 +500,13 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         dataImportBatch.RequireTotalMatch__c = recordDetails.requireTotalMatch;
         dataImportBatch.Active_Fields__c = recordDetails.activeFields;
         dataImportBatch.Batch_Process_Size__c = recordDetails.batchProcessSize;
-        dataImportBatch.Run_Opportunity_Rollups_while_Processing__c = recordDetails.runOpportunityRollupsWhileProcessing;
+        dataImportBatch.Donation_Date_Range__c = recordDetails.donationDateRange;
         dataImportBatch.Donation_Matching_Behavior__c = recordDetails.donationMatchingBehavior;
         dataImportBatch.Donation_Matching_Implementing_Class__c = recordDetails.donationMatchingClass;
         dataImportBatch.Donation_Matching_Rule__c = String.join(recordDetails.donationMatchingRule, ';');
-        dataImportBatch.Donation_Date_Range__c = recordDetails.donationDateRange;
         dataImportBatch.Post_Process_Implementing_Class__c = recordDetails.postProcessClass;
         dataImportBatch.Process_Using_Scheduled_Job__c = recordDetails.processUsingScheduledJob;
+        dataImportBatch.Run_Opportunity_Rollups_while_Processing__c = recordDetails.runOpportunityRollupsWhileProcessing;
         dataImportBatch.Expected_Count_of_Gifts__c = recordDetails.expectedCount;
         dataImportBatch.Expected_Total_Batch_Amount__c = recordDetails.expectedTotal;
         dataImportBatch.Active_Fields__c = recordDetails.activeFields;
@@ -537,14 +534,14 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         batchTemplate.RequireTotalMatch__c = recordDetails.requireTotalMatch;
         batchTemplate.Active_Fields__c = recordDetails.activeFields;
         batchTemplate.Batch_Process_Size__c = recordDetails.batchProcessSize;
-        batchTemplate.Run_Opportunity_Rollups_while_Processing__c = recordDetails.runOpportunityRollupsWhileProcessing;
         batchTemplate.Contact_Matching_Rule__c = recordDetails.contactMatchingRule;
+        batchTemplate.Donation_Date_Range__c = recordDetails.donationDateRange;
         batchTemplate.Donation_Matching_Behavior__c = recordDetails.donationMatchingBehavior;
         batchTemplate.Donation_Matching_Implementing_Class__c = recordDetails.donationMatchingClass;
         batchTemplate.Donation_Matching_Rule__c = String.join(recordDetails.donationMatchingRule, ';');
-        batchTemplate.Donation_Date_Range__c = recordDetails.donationDateRange;
         batchTemplate.Post_Process_Implementing_Class__c = recordDetails.postProcessClass;
         batchTemplate.Process_Using_Scheduled_Job__c = recordDetails.processUsingScheduledJob;
+        batchTemplate.Run_Opportunity_Rollups_while_Processing__c = recordDetails.runOpportunityRollupsWhileProcessing;
 
         upsert batchTemplate;
 
@@ -565,15 +562,15 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public String activeFields;
         @AuraEnabled public Map<String, String> labels;
         @AuraEnabled public Decimal batchProcessSize;
-        @AuraEnabled public Boolean runOpportunityRollupsWhileProcessing;
         @AuraEnabled public String contactMatchingRule;
+        @AuraEnabled public Decimal donationDateRange;
         @AuraEnabled public String donationMatchingBehavior;
         @AuraEnabled public String donationMatchingClass;
         @AuraEnabled public List<String> donationMatchingRule;
         @AuraEnabled public List<Map<String,String>> donationMatchingOptions;
-        @AuraEnabled public Decimal donationDateRange;
         @AuraEnabled public String postProcessClass;
         @AuraEnabled public Boolean processUsingScheduledJob;
+        @AuraEnabled public Boolean runOpportunityRollupsWhileProcessing;
         @AuraEnabled public List<Batch_Template__c> availableBatchTemplates;
 
         public BGEDetailsModel() {
