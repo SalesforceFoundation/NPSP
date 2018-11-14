@@ -700,6 +700,7 @@
         <members>Allocations_Settings__c.Default__c</members>
         <members>Allocations_Settings__c.Excluded_Opp_RecTypes__c</members>
         <members>Allocations_Settings__c.Excluded_Opp_Types__c</members>
+        <members>Allocations_Settings__c.Payment_Allocations_Enabled__c</members>
         <members>Allocations_Settings__c.Rollup_N_Day_Value__c</members>
         <members>Allocations_Settings__c.Use_Fiscal_Year_for_Rollups__c</members>
         <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
@@ -1304,18 +1305,23 @@
         <members>alloCampaignExceedsOppAmount</members>
         <members>alloCantAllocateNothing</members>
         <members>alloDefaultGAUMissing</members>
+        <members>alloDefaultNotEnabled</members>
         <members>alloDefaultNotPercent</members>
         <members>alloDeleteRow</members>
         <members>alloExceedsOppAmount</members>
+        <members>alloExceedsPmtAmount</members>
         <members>alloManageCampaignAllocations</members>
         <members>alloManageOppAllocations</members>
+        <members>alloManagePaymentAllocations</members>
         <members>alloManageRecurringDonationAllocations</members>
         <members>alloModifyCurrency</members>
         <members>alloNegativeAmount</members>
         <members>alloNegativePercent</members>
         <members>alloObjectUnsupported</members>
+        <members>alloPaymentNotEnabled</members>
         <members>alloPercentExceed100</members>
         <members>alloRemainder</members>
+        <members>alloSignMistmatch</members>
         <members>alloSingleParent</members>
         <members>alloTotalExceedsOppAmt</members>
         <members>alloTotals</members>
@@ -1735,6 +1741,7 @@
         <members>stgAdd</members>
         <members>stgAddrGeneralSettingsIntro</members>
         <members>stgAddrMustChooseClass</members>
+        <members>stgAllocationLevel</members>
         <members>stgBtnBack</members>
         <members>stgBtnCancel</members>
         <members>stgBtnClearErrorLog</members>
@@ -1782,6 +1789,7 @@
         <members>stgHelpAccountModel</members>
         <members>stgHelpAlloFiscalYearRollups</members>
         <members>stgHelpAlloNDayValue</members>
+        <members>stgHelpAllocationLevel</members>
         <members>stgHelpAutoAffil</members>
         <members>stgHelpAutoRelCampaignRT</members>
         <members>stgHelpAutoRelField</members>
@@ -1918,6 +1926,7 @@
         <members>stgLabelAfflSettings</members>
         <members>stgLabelAllRecordTypes</members>
         <members>stgLabelAlloBatchProgress</members>
+        <members>stgLabelAllocationBehaviorSettings</members>
         <members>stgLabelAllocationsRollupSettings</members>
         <members>stgLabelAllocationsSettings</members>
         <members>stgLabelAreYouSure</members>
