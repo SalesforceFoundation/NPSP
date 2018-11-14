@@ -294,9 +294,7 @@ Scroll Page To Location
 
 Open NPSP Settings
     [Arguments]    ${topmenu}    ${submenu}
-    Open App Launcher
-    Populate Address    Search apps or items...    NPSP Settings
-    Select App Launcher Link  NPSP Settings
+    Select App Launcher Tab      NPSP Settings
     Wait For Locator    frame    Nonprofit Success Pack Settings
     Select Frame With Title    Nonprofit Success Pack Settings
     Wait for Locator    npsp_settings.side_panel
