@@ -184,6 +184,10 @@
             || amountObject === labels.objectAccountSoftCredit) {
             potentialDetailObjects.push(labels.objectOpportunity);
         }
+        if (amountObject === labels.objectAllocation) {
+            potentialDetailObjects.push(labels.objectPayment);
+            console.log('should have added the other object');
+        }
         return potentialDetailObjects;
     },
 
@@ -350,6 +354,7 @@
 
         var amountObjectName = rollupTypeObject;
         var potentialDetailObjects = this.getPotentialDetailObjects(cmp, amountObjectName);
+        console.log('potentialDetailObjects ' + potentialDetailObjects);
         this.filterDetailFieldsBySummaryField(cmp, potentialDetailObjects, true);
 
         cmp.set("v.selectedRollupType", {label: rollupTypeLabel, name: rollupTypeObject});
@@ -365,7 +370,7 @@
 
         //reset date fields
         //set date object label and api name based on the selected detail object then reset fields + selected value
-        //defaults field to Payment on the payment object, and CloseDate for everything else
+        //defaults field to Payment Date on the payment object, and CloseDate for everything else
         var dateFieldName;
         if (rollupTypeObject === labels.objectPayment) {
             cmp.set("v.activeRollup.dateObjectLabel", labels.labelPayment);
@@ -376,7 +381,12 @@
             cmp.set("v.activeRollup.dateObject", labels.objectOpportunity);
             dateFieldName = labels.objectOpportunity+' CloseDate';
         }
-        this.resetFields(cmp, activeRollup.dateObject, "date");
+        //allow payment fields for allocation date in order to support payment allocations
+        if (rollupTypeLabel.includes(labels.labelAllocation)) {
+            this.resetFields(cmp, [activeRollup.dateObject, labels.objectPayment], "date");
+        } else {
+            this.resetFields(cmp, activeRollup.dateObject, "date");
+        }
         var dateFields = cmp.get("v.dateFields");
 
         var dateFieldLabel = this.retrieveFieldLabel(dateFieldName, dateFields);
@@ -655,12 +665,20 @@
     },
 
     /**
-     * @description: resets fields based on the selected object and context
-     * @param object: corresponding object to the fields
+     * @description: resets fields based on the selected objects and context
+     * @param objects: objects for which to reset the fields
      * @param context: which fields to reset. values are: detail, summary, date, and amount
      */
-    resetFields: function (cmp, object, context) {
-        var newFields = cmp.get("v.objectDetails")[object];
+    resetFields: function (cmp, objects, context) {
+        var newFields = [];
+        if (Array.isArray(objects)) {
+            newFields = [];
+            objects.forEach(function(object){
+                newFields = newFields.concat(cmp.get("v.objectDetails")[object]);
+            });
+        } else {
+            newFields = cmp.get("v.objectDetails")[objects];
+        }
 
         if (newFields === undefined || newFields.length === 0) {
             cmp.set("v.isIncomplete", true);
@@ -669,7 +687,7 @@
         }
 
         if (context === 'detail') {
-            this.filterDetailFieldsBySummaryField(cmp, object);
+            this.filterDetailFieldsBySummaryField(cmp, objects);
         } else if (context === 'summary') {
             newFields = this.uniqueSummaryFieldCheck(cmp, newFields);
             cmp.set("v.summaryFields", newFields);
