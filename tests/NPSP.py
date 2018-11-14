@@ -329,9 +329,9 @@ class NPSP(object):
         field.clear()
         field.send_keys(value)       
         
-    def verify_occurance(self,title,value):
+    def verify_occurrence(self,title,value):
         """"""
-        locator=npsp_lex_locators['record']['related']['check_occurance'].format(title,value)
+        locator=npsp_lex_locators['record']['related']['check_occurrence'].format(title,value)
         self.selenium.page_should_contain_element(locator)    
      
     def select_related_dropdown(self,title):
@@ -623,9 +623,9 @@ class NPSP(object):
 #                 self.selenium.page_should_contain_element(loc)
 #                 time.sleep(1)
                 
-    def verify_occurance_payments(self,title,value=None):
+    def verify_occurrence_payments(self,title,value=None):
         """"""
-        locator=npsp_lex_locators['payments']['check_occurance'].format(title)
+        locator=npsp_lex_locators['payments']['check_occurrence'].format(title)
         occ_value=self.selenium.get_webelement(locator).text
         return occ_value        
         
