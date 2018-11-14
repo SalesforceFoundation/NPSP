@@ -44,6 +44,10 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     */
     @AuraEnabled
     public static String getRecordDetails(String sObjectName, Id recordId) {
+
+        // instantiate DI field map from UTIL_Describe so field order is guaranteed
+        Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
+
         BGEDetailsModel model = new BGEDetailsModel();
 
         sObjectName = UTIL_Namespace.StrTokenRemoveNSPrefix(sObjectName);
@@ -94,6 +98,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         setDefaultValuesOnBGEDetailsModel(model);
 
         model.templateFields = getAvailableFields();
+
         model.labels = getLabels(sObjectName);
 
         return JSON.serialize(model);
@@ -184,6 +189,14 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                     field.systemRequired = true;
                 }
 
+                String rawFieldType = fieldResult.getType().name().toLowerCase();
+                field.type = getLightningFieldType(rawFieldType);
+                if (rawFieldType == 'currency') {
+                    field.formatter = 'currency';
+                }
+
+                field.options = getPicklistOptions(field.name);
+
                 fields.add(field);
             }
         }
@@ -191,39 +204,108 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description Returns the corresponding Lightning field type from an Apex field type
+    */
+    public static String getLightningFieldType(String apexFieldType) {
+        if (apexFieldType == 'currency') {
+            return 'number';
+        } else if (apexFieldType == 'string') {
+            return 'text';
+        } else if (apexFieldType == 'boolean') {
+            return 'checkbox';
+        } else {
+            return apexFieldType;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the source field's options formatted for lightning:select if the source field is a picklist
+    * or the target field's options formatted for lightning:select if the source field is a string and the target
+    * field is a picklist
+    * Returns an empty map if neither case applies
+    */
+    public static List<Map<String, String>> getPicklistOptions(String dataImportField){
+        List<Map<String, String>> options = new List<Map<String, String>>();
+
+        String dataImportObject = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
+
+        String rawSourceFieldType = UTIL_Describe.getFieldDisplaytype(dataImportObject, dataImportField.toLowerCase()).name().toLowerCase();
+
+        if (rawSourceFieldType == 'picklist') {
+            options = UTIL_Describe.getLightningSelectOptions(dataImportObject, dataImportField);
+
+        } else if (rawSourceFieldType == 'string') {
+
+            String targetObject = BDI_DataImportService.getTargetObject(dataImportField);
+            if (targetObject == 'Payment') {
+                targetObject = 'npe01__OppPayment__c';
+            }
+
+            String targetField = BDI_DataImportService.getTargetField(dataImportField);
+            Schema.DisplayType targetFieldType = UTIL_Describe.getFieldDisplaytype(targetObject, targetField);
+
+            if (targetFieldType == Schema.DisplayType.PICKLIST) {
+                options = UTIL_Describe.getLightningSelectOptions(targetObject, targetField);
+            }
+        }
+
+        return options;
+    }
+
+    /*******************************************************************************************************
     * @description Retrieves the default active fields for a new Batch or Template in a JSON String
     */
     public static String getDefaultActiveFields() {
-        //todo: change this into BGE Field objects instead
-        return '[{"label":"Donation Amount",' +
-                    '"name":"' + UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + '",' +
-                    '"sObjectName":"Opportunity",' +
-                    '"defaultValue":null,' +
-                    '"required":true,' +
-                    '"hide":false,' +
-                    '"sortOrder":0},' +
-                '{"label":"Donation Date",' +
-                    '"name":"' + UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c') + '",' +
-                    '"sObjectName":"Opportunity",' +
-                    '"defaultValue":null,' +
-                    '"required":false,' +
-                    '"hide":false,' +
-                    '"sortOrder":1},' +
-                '{"label":"Method",' +
-                    '"name":"' + UTIL_Namespace.StrTokenNSPrefix('Payment_Method__c') + '",' +
-                    '"sObjectName":"Payment",' +
-                    '"defaultValue":null,' +
-                    '"required":false,' +
-                    '"hide":false,' +
-                    '"sortOrder":2},' +
-                '{"label":"Check/Reference Number",' +
-                    '"name":"' + UTIL_Namespace.StrTokenNSPrefix('Payment_Check_Reference_Number__c') + '",' +
-                    '"sObjectName":"Payment",' +
-                    '"defaultValue":null,' +
-                    '"required":false,' +
-                    '"hide":false,' +
-                    '"sortOrder":3' +
-                '}]';
+        List<BGEField> fields = new List<BGEField>();
+
+        BGEField donationAmount = new BGEField();
+        donationAmount.name = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c');
+        donationAmount.label = 'Donation Amount';
+        donationAmount.sObjectName = 'Opportunity';
+        donationAmount.defaultValue = null;
+        donationAmount.required = true;
+        donationAmount.hide = false;
+        donationAmount.type = getLightningFieldType('number');
+        donationAmount.formatter = 'currency';
+        donationAmount.sortOrder = 0;
+        fields.add(donationAmount);
+
+        BGEField donationDate = new BGEField();
+        donationDate.name = UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        donationDate.label = 'Donation Date';
+        donationDate.sObjectName = 'Opportunity';
+        donationDate.defaultValue = null;
+        donationDate.required = false;
+        donationDate.hide = false;
+        donationDate.type = getLightningFieldType('date');
+        donationDate.sortOrder = 1;
+        fields.add(donationDate);
+
+        BGEField paymentMethod = new BGEField();
+        paymentMethod.name = UTIL_Namespace.StrTokenNSPrefix('Payment_Method__c');
+        paymentMethod.label = 'Method';
+        paymentMethod.sObjectName = 'Payment';
+        paymentMethod.defaultValue = null;
+        paymentMethod.required = false;
+        paymentMethod.hide = false;
+        paymentMethod.type = getLightningFieldType('string');
+        // TODO: figure out why this next line is breaking things and not matching to the existing payment method field in available fields.
+        paymentMethod.options = getPicklistOptions(UTIL_Namespace.StrTokenNSPrefix('Payment_Method__c'));
+        paymentMethod.sortOrder = 2;
+        fields.add(paymentMethod);
+
+        BGEField checkNumber = new BGEField();
+        checkNumber.name = UTIL_Namespace.StrTokenNSPrefix('Payment_Check_Reference_Number__c');
+        checkNumber.label = 'Check/Reference Number';
+        checkNumber.sObjectName = 'Payment';
+        checkNumber.defaultValue = null;
+        checkNumber.required = false;
+        checkNumber.hide = false;
+        checkNumber.type = getLightningFieldType('string');
+        checkNumber.sortOrder = 3;
+        fields.add(checkNumber);
+
+        return JSON.serialize(fields);
     }
 
     /*******************************************************************************************************
@@ -506,6 +588,10 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public Boolean required;
         @AuraEnabled public Boolean systemRequired;
         @AuraEnabled public Boolean hide;
+        @AuraEnabled public String type;
+        @AuraEnabled public String formatter;
+        @AuraEnabled public List<Map<String, String>> options;
+        @AuraEnabled public Integer sortOrder;
 
         public BGEField() {
             isActive = false;
