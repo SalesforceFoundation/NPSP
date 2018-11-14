@@ -26,5 +26,5 @@ Assign GAU to Opportunity
     #sleep    2   
     Add GAU Allocation    amount    1    20
     Click Save    GAU
-    Verify Occurance    GAU Allocations    2
+    Verify Occurrence    GAU Allocations    2
    

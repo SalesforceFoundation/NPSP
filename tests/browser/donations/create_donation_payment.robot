@@ -24,4 +24,4 @@ Create Donation and Opportunity and Create Payment Manually
     Pick Date    Today
     Click Modal Button        Save
     #Sleep    2
-    Verify Occurance    Payments    1
+    Verify Occurrence    Payments    1

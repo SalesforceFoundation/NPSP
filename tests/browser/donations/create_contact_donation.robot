@@ -19,5 +19,5 @@ Create Donation from a Contact
     #Sleep    5  
     Create Opportunities    Test $100 donation    &{Contact}[LastName] Household
     #Sleep    2
-    Verify Occurance    Payments    0
+    Verify Occurrence    Payments    0
     

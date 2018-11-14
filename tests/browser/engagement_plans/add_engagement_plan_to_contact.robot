@@ -14,7 +14,7 @@ Create a Contact and Add Engagement Plan
     Click Related List Button  Engagement Plans    New
     Populate Lookup Field    Engagement Plan Template    ${plan_name}
     Click Modal Button        Save
-    Verify Occurance    Engagement Plans    1
+    Verify Occurrence    Engagement Plans    1
     
 Delete Engagement Plan
     [tags]  unstable
@@ -23,7 +23,7 @@ Delete Engagement Plan
     #Sleep    2
     Click Link    link=Delete
     Click Modal Button        Delete
-    Verify Occurance    Engagement Plans    0    
+    Verify Occurrence    Engagement Plans    0    
     
 Verify Tasks Exist Under Activity
     [tags]  unstable

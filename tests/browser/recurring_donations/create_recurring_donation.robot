@@ -38,8 +38,7 @@ Create Open Recurring Donation With Monthly Installment
     Click Modal Button        Save
     Check Related List Values    Recurring Donations    Robot Recurring Donation
     Reload Page
-    Wait For Locator    record.related.title    Volunteer Hours
-    Page Scroll to Locator    record.related.title    Volunteer Hours
+    Load Related List    Opportunities
     Click ViewAll Related List    Opportunities
     Reload Page
     ${return_value}    Verify Payment Details

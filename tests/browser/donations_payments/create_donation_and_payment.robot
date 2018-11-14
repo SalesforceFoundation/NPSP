@@ -32,7 +32,7 @@ Create Donation from a Contact
     Should be equal as strings    ${value}    ${No_of_payments}
     Verify Date Split    8/15/2018    ${No_of_payments}    ${intervel}
     Click Button with Value    Create Payments
-    ${value}    Verify Occurance Payments    Payments
+    ${value}    Verify Occurrence Payments    Payments
     Should not be equal as strings    ${value}    0
     
 Verify Payments 
