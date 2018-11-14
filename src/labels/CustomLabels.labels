@@ -1716,6 +1716,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You've selected Default Allocations Enabled. You also need to select a Default General Accounting Unit.</value>
     </labels>
     <labels>
+        <fullName>alloDefaultNotEnabled</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>You must enable Default Allocations in order to allocate at the payment level.</shortDescription>
+        <value>You must enable Default Allocations in order to allocate at the payment level.</value>
+    </labels>
+    <labels>
         <fullName>alloDefaultNotPercent</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
@@ -1740,6 +1748,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Allocation totals for this Opportunity exceed the Opportunity amount. Update your Allocation amounts first, then update the Opportunity amount to match.</value>
     </labels>
     <labels>
+        <fullName>alloExceedsPmtAmount</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The Allocations for this Payment are greater than the amount of the Payment.</shortDescription>
+        <value>The Allocations for this Payment exceed the Payment amount. Update your Allocation amounts, and then adjust the Payment amount.</value>
+    </labels>
+    <labels>
         <fullName>alloManageCampaignAllocations</fullName>
         <categories>Allocation</categories>
         <language>en_US</language>
@@ -1754,6 +1770,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>alloManageOppAllocations</shortDescription>
         <value>Manage Opportunity Allocations</value>
+    </labels>
+    <labels>
+        <fullName>alloManagePaymentAllocations</fullName>
+        <categories>Allocation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloManagePaymentAllocations</shortDescription>
+        <value>Manage Payment Allocations</value>
     </labels>
     <labels>
         <fullName>alloManageRecurringDonationAllocations</fullName>
@@ -1793,7 +1817,15 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>alloObjectUnsupported</shortDescription>
-        <value>The Manage Allocations button is only supported from a Campaign, Opportunity or Recurring Donation record.</value>
+        <value>The Manage Allocations button is only supported from a Campaign, Opportunity, Payment or Recurring Donation record.</value>
+    </labels>
+    <labels>
+        <fullName>alloPaymentNotEnabled</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment-level allocations are not enabled.</shortDescription>
+        <value>Payment-level Allocations aren't enabled for your organization. Try allocating at the Opportunity level instead.</value>
     </labels>
     <labels>
         <fullName>alloPercentExceed100</fullName>
@@ -1812,20 +1844,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Remainder:</value>
     </labels>
     <labels>
+        <fullName>alloSignMistmatch</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Sign on Payment and Allocation amount must match(Both positive or both negative)</shortDescription>
+        <value>Negative Allocations are only allowed in negative Payments and positive Allocations are not allowed in negative Payments.</value>
+    </labels>
+    <labels>
         <fullName>alloSingleParent</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Each Allocation must have a single parent object: Opportunity, Recurring Donatio</shortDescription>
-        <value>An Allocation can have only one parent object: Opportunity, Recurring Donation, or Campaign.</value>
+        <shortDescription>Each Allocation must have a single parent object: Pmt, Opp, Rec Donation, Camp.</shortDescription>
+        <value>Ensure that this Allocation has only one parent object: Payment, Opportunity, Recurring Donation, or Campaign.</value>
     </labels>
     <labels>
         <fullName>alloTotalExceedsOppAmt</fullName>
         <categories>Allocation</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Opportunity Allocation totals must not exceed the amount of the Opportunity.</shortDescription>
-        <value>Opportunity Allocation totals can't exceed the amount of the Opportunity.</value>
+        <shortDescription>Allocations cannot exceed the amount of the related Payment or Opportunity.</shortDescription>
+        <value>Allocation totals can't exceed the amount of the related Payment or Opportunity.</value>
     </labels>
     <labels>
         <fullName>alloTotals</fullName>
@@ -4755,8 +4795,8 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Payment Wizard</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Message displayed when the user has no permission to create payments</shortDescription>
-        <value>You do not have permissions to create Payments.</value>
+        <shortDescription>Message displayed when the user has no permission to manage payments</shortDescription>
+        <value>You do not have permissions to manage Payments.</value>
     </labels>
     <labels>
         <fullName>pmtWizardSectionTitle</fullName>
@@ -5151,6 +5191,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You must choose a verification service in order to enable automatic verification.</value>
     </labels>
     <labels>
+        <fullName>stgAllocationLevel</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgAllocationLevel</shortDescription>
+        <value>Allocation Type</value>
+    </labels>
+    <labels>
         <fullName>stgBtnBack</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -5540,6 +5588,20 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
         <protected>false</protected>
         <shortDescription>stgHelpAlloNDayValue</shortDescription>
         <value>Sets the value for 'N day' rollups, where 'N' is the number of days from today into the past. This value defaults to roll up GAU Allocations over the past 365 days.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAllocationLevel</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpAllocationLevel</shortDescription>
+        <value>An allocation is the specific amount of a gift that goes to a designated General Accounting Unit (GAU). This setting determines whether funds are allocated based on the Amount on the Opportunity or the Amount on the Payment.&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;WARNING:&lt;/b&gt; Choosing to use Payment Allocations changes the way Opportunity Allocations work in your org. It's important that you understand these changes and the additional requirements that exist before enabling them.&lt;br/&gt;&lt;br/&gt;
+
+If you enable and start using Payment Allocations and then disable them, you will need to manually reconcile your data and update Opportunity Allocation records to reflect the information previously assigned in Payment Allocations. Review the Payment Allocations documentation to better understand the potential impact.&lt;br/&gt;&lt;br/&gt;
+
+When you enable Payment Allocations, existing rollups remain the same. We do not modify rollups or create new Custom Rollups. You can create new rollups based only on Payments, if you want to.</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoAffil</fullName>
@@ -6716,6 +6778,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelAlloBatchProgress</shortDescription>
         <value>Rollup Allocations Batch Progress</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelAllocationBehaviorSettings</fullName>
+        <categories>Allocation, Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgLabelAllocationsRollupSettings</shortDescription>
+        <value>Allocation Behavior Settings</value>
     </labels>
     <labels>
         <fullName>stgLabelAllocationsRollupSettings</fullName>
