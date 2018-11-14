@@ -85,14 +85,15 @@
     processBatch: function(component) {
         var totals = component.get('v.totals');
         var record = component.get('v.record');
-        if (record.RequireTotalMatch__c) {
-            if (totals.countGifts == 0 && totals.totalGiftAmount == 0) {
+        var labels = component.get('v.labels');
+        if (record[labels.requireTotalMatch]) {
+            if (record[labels.expectedCountField] == 0 && record[labels.expectedTotalField] == 0) {
                 this.showToast(component, $A.get('$Label.c.PageMessagesError'), $A.get('$Label.c.bgeGridWarningRequiredTotalsExpected'), 'warning');
                 return;
             }
             
-            if ((record.Expected_Total_Batch_Amount__c != 0 && totals.totalGiftAmount != record.Expected_Total_Batch_Amount__c) ||
-                (record.Expected_Count_of_Gifts__c != 0 && totals.countGifts != record.Expected_Count_of_Gifts__c)) {
+            if ((record[labels.expectedTotalField] != 0 && totals.totalGiftAmount != record[labels.expectedTotalField]) ||
+                (record[labels.expectedCountField] != 0 && totals.countGifts != record[labels.expectedCountField])) {
                 this.showToast(component, $A.get('$Label.c.PageMessagesError'), $A.get('$Label.c.bgeGridErrorRequiredTotalsExpected'), 'error');
                 return;
             }
