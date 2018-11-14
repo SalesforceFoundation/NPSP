@@ -93,8 +93,8 @@ public class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
         //can't put mapIdToISO.keySet() in dynamic soql query, so creating new set to hold the IDs
         set<id> parentIds = mapIdToISO.keySet();
 
-        string alloQuery = 'SELECT Id, Amount__c, Opportunity__c, Campaign__c, Recurring_Donation__c, CurrencyIsoCode FROM Allocation__c '+
-            'WHERE Opportunity__c IN :parentIds OR Campaign__c IN :parentIds OR Recurring_Donation__c IN :parentIds';
+        string alloQuery = 'SELECT Id, Amount__c, Payment__c, Opportunity__c, Campaign__c, Recurring_Donation__c, CurrencyIsoCode FROM Allocation__c '+
+            'WHERE Payment__c IN :parentIds OR Opportunity__c IN :parentIds OR Campaign__c IN :parentIds OR Recurring_Donation__c IN :parentIds';
         
         //query all allocations associated with the parents, update their ISO code and their amount if needed 
         for (Allocation__c allo : database.query(alloQuery)) {

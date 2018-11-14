@@ -99,6 +99,62 @@ private class ALLO_ManageAllocations_TEST {
     }
 
     /*******************************************************************************************************
+    * @description Runs manage allocations page on a payment with no allocations. Adds then deletes a
+    * row, then inserts an allocation and verifies the allocation was created properly.
+    ********************************************************************************************************/
+    static testMethod void testPayment() {
+        if (strTestOnly != '*' && strTestOnly != 'testPayment') return;
+
+        Decimal amt = 100;
+        Account acc = new Account(Name='foo');
+        insert acc;
+        Opportunity opp = new Opportunity(Name='foo', Amount = amt, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp;
+        npe01__OppPayment__c payment = new npe01__OppPayment__c(
+            npe01__Opportunity__c = opp.Id,
+            npe01__Payment_Amount__c = amt
+        );
+        insert payment;
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='def');
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='foo');
+        insert new List<General_Accounting_Unit__c>{defaultGau, gau};
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id)
+        );
+
+        ALLO_ManageAllocations_CTRL ctrl = setUpController(payment.Id);
+
+        system.assertEquals(1,ctrl.listAllo.size(),'The list of allocations should have a single empty allocation.');
+        system.assertEquals(null,ctrl.listAllo[0].id,'The allocation should have no Id.');
+        system.assertEquals(payment.Id,ctrl.listAllo[0].Payment__c,'The allocation should be attributed to current payment.');
+
+        ctrl.rowNumber = 0;
+        ctrl.addRow();
+        system.assertEquals(2,ctrl.listAllo.size(),'Adding a row increases the size of the allocation list.');
+
+        ctrl.listAllo[0].Percent__c = 25;
+        ctrl.listAllo[0].General_Accounting_Unit__c = gau.Id;
+        ctrl.rowNumber = 1;
+        ctrl.delRow();
+        Test.startTest();
+        ctrl.saveClose();
+        Test.stopTest();
+
+        list<Allocation__c> queryAllo = [SELECT Id, Percent__c, Amount__c 
+            FROM Allocation__c 
+            WHERE Payment__c=:payment.id
+            ORDER BY Amount__c ASC
+        ];
+        Decimal firstAmt = amt/4;
+        Decimal remainderAmt = amt - firstAmt;
+        system.assertEquals(2,queryAllo.size(),'The allocation, and the default to make up the remainder, should be saved.');
+        system.assertEquals(firstAmt,queryAllo[0].Amount__c,'The amount should be calculated based on the percent.');
+        system.assertEquals(remainderAmt,queryAllo[1].Amount__c,'The default allocation should make up the remainder');
+    }
+
+    /*******************************************************************************************************
     * @description Runs manage allocations page on a campaign with two allocations. Adds a new allocation,
     * deletes an existing one, and verifies the results.
     ********************************************************************************************************/
