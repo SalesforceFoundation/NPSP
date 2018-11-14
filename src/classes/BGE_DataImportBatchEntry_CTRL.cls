@@ -203,25 +203,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                     }
                     col.typeAttributes = '{}';
 
-                    // If source field is picklist, display on page as Picklist with its field options
-                    if (col.type == 'picklist') {
-                        col.options = UTIL_Describe.getLightningSelectOptions(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), col.fieldName);
-
-                    // If source field is String and target field is Picklist, display on page as Picklist with target field options
-                    } else if (col.type == 'string') {
-
-                        String targetObject = BDI_DataImportService.getTargetObject(dfr.name);
-                        if (targetObject == 'Payment') {
-                            targetObject = 'npe01__OppPayment__c';
-                        }
-
-                        String targetField = BDI_DataImportService.getTargetField(dfr.name);
-                        Schema.DisplayType targetFieldType = UTIL_Describe.getFieldDisplaytype(targetObject, targetField.toLowerCase());
-
-                        if (targetFieldType == Schema.DisplayType.PICKLIST) {
-                            col.options = UTIL_Describe.getLightningSelectOptions(targetObject, targetField);
-                        }
-                    }
+                    col.options = BGE_ConfigurationWizard_CTRL.getPicklistOptions(col.fieldName);
 
                     columns.add(col);
                 }
