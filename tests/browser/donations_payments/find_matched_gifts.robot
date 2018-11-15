@@ -9,7 +9,8 @@ Suite Teardown  Delete Records and Close Browser
 
 Create Matching Donation
     [tags]  unstable
-    &{Org} =  API Create Organization Account    npsp__Matching_Gift_Company__c=true    npsp__Matching_Gift_Percent__c=100
+    ${ns} =  Get NPSP Namespace Prefix
+    &{Org} =  API Create Organization Account    ${ns}Matching_Gift_Company__c=true  ${ns}Matching_Gift_Percent__c=100
     &{contact1} =  API Create Contact    Email=skristem@robot.com
     &{opportunity1} =  API Create Opportunity    &{Contact1}[AccountId]    Donation    Name=&{Contact1}[FirstName] $50 donation    Amount=50
     Go To Record Home  &{opportunity1}[Id]
