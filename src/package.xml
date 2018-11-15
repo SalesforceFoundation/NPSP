@@ -1718,6 +1718,7 @@
         <members>stgDeploymentTryAgain</members>
         <members>stgDocumentation</members>
         <members>stgDontAutoScheduleHelpText</members>
+        <members>stgEnableIncrementalRollupsHelpText</members>
         <members>stgErrorINaming</members>
         <members>stgErrorInvalidClass</members>
         <members>stgErrorInvalidNameFormat</members>
