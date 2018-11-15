@@ -186,7 +186,6 @@
         }
         if (amountObject === labels.objectAllocation) {
             potentialDetailObjects.push(labels.objectPayment);
-            console.log('should have added the other object');
         }
         return potentialDetailObjects;
     },
@@ -354,7 +353,6 @@
 
         var amountObjectName = rollupTypeObject;
         var potentialDetailObjects = this.getPotentialDetailObjects(cmp, amountObjectName);
-        console.log('potentialDetailObjects ' + potentialDetailObjects);
         this.filterDetailFieldsBySummaryField(cmp, potentialDetailObjects, true);
 
         cmp.set("v.selectedRollupType", {label: rollupTypeLabel, name: rollupTypeObject});
