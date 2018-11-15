@@ -269,7 +269,7 @@
                                                         <lightning:select label="{!$Label.c.stgDefaultValue}"
                                                                           value="{!field.defaultValue}"
                                                                           variant="label-hidden"
-                                                                          class="label-hidden">
+                                                                          class="hideLabel">
                                                             <option value=""></option>
                                                             <aura:iteration items="{!field.options}" var="opt">
                                                                 <option value="{!opt.value}">{!opt.label}</option>

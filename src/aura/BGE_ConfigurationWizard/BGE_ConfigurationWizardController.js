@@ -57,7 +57,12 @@
                 isValid = (possibleError.length === 0);
                 model.getTemplateMetadata().nextStep(isValid, possibleError);
             } else if (step === '4') {
-                model.getTemplateMetadata().nextStep(isValid);
+                isValid = model.getTemplateFields().getDefaultFieldValidity(component);
+                if (isValid) {
+                    var fieldOptions = component.get('v.templateFieldOptions.fieldGroups');
+                    model.getTemplateFields().updateTemplateFieldOptions(fieldOptions);
+                    model.getTemplateMetadata().nextStep(isValid);
+                }
             }
         } else if (channel === 'back' || buttonClick === 'back') {
             model.getTemplateMetadata().backStep();
@@ -70,13 +75,8 @@
             model.getTemplateMetadata().cancel();
         } else if (channel === 'save' || buttonClick === 'save') {
             //todo: add validation
-            var isValid = model.getTemplateFields().getDefaultFieldValidity(component);
-            if (isValid) {
-                var fieldOptions = component.get('v.templateFieldOptions.fieldGroups');
-                model.getTemplateFields().updateTemplateFieldOptions(fieldOptions);
-                model.getTemplateInfo().load(component.get('v.templateInfo'));
-                model.save();
-            }
+            model.getTemplateInfo().load(component.get('v.templateInfo'));
+            model.save();
         }
     },
 

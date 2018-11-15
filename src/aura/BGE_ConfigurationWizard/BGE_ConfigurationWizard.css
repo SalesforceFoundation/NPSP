@@ -30,7 +30,7 @@
     min-width: 240px;
 }
 /*removes the extra label and automatic tooltip for inputFields*/
-.THIS .hideLabel .slds-form-element__label {
+.THIS .hideLabel > label {
     display: none;
     visibility: hidden;
 }
@@ -42,7 +42,6 @@
 .THIS .slds-form-element__icon {
     padding-top: 0px;
 }
-
 /* hide rogue label spacing on lightning:select when variant="label-hidden" */
 .THIS .label-hidden > label {
     display: none;

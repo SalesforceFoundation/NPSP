@@ -521,7 +521,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 'RequireExactMatch' => BDI_DataImport_API.RequireExactMatch,
                 'ExactMatchOrCreate' => BDI_DataImport_API.ExactMatchOrCreate,
                 'RequireBestMatch' => BDI_DataImport_API.RequireBestMatch,
-                'BestMatchOrCreate' => BDI_DataImport_API.RequireBestMatch
+                'BestMatchOrCreate' => BDI_DataImport_API.BestMatchOrCreate
         };
         return labels;
     }
