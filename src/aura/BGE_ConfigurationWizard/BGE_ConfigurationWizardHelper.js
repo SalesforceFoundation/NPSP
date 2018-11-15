@@ -326,7 +326,9 @@
                         defaultValue: currentField.defaultValue,
                         required: currentField.required,
                         hide: currentField.hide,
-                        sortOrder: currentField.sortOrder
+                        sortOrder: currentField.sortOrder,
+                        type: currentField.type,
+                        options: currentField.options
                     });
                 });
 
