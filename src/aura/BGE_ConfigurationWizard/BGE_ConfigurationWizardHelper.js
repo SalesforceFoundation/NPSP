@@ -79,7 +79,6 @@
                 templateMetadataView.mode = templateMetadata.mode;
                 templateMetadataView.hasError = templateMetadata.hasError;
                 templateMetadataView.errorMessage = templateMetadata.errorMessage;
-                templateMetadataView.dataTableChanged = templateMetadata.dataTableChanged;
                 templateMetadataView.pageHeader = templateMetadata.pageHeader;
 
                 if (!templateMetadataView.hasError) {
@@ -113,7 +112,6 @@
                 }
 
                 // when in modal context, need to notify the modal footer component
-                _sendMessage('dataTableChanged', templateMetadataView.dataTableChanged);
                 _sendMessage('setError', templateMetadataView.hasError);
 
                 component.set('v.templateMetadata', templateMetadataView);
@@ -134,8 +132,7 @@
                 mode: '',
                 progressIndicatorStep: '',
                 hasError: false,
-                errorMessage: '',
-                dataTableChanged: false
+                errorMessage: ''
             };
         })(component, model);
     },
@@ -207,85 +204,55 @@
     TemplateFieldOptionsView : function(component, model) {
         return (function (component, model) {
 
-            var isReadOnly = component.get('v.isReadOnly');
-            var _columns = _getColumns(!isReadOnly);
-
-            // Subscribe to the model onMetadataChange event.
-            model.getTemplateMetadata().onMetadataUpdated.subscribe(function() {
-                var templateFieldOptions = component.get('v.templateFieldOptions');
-                var isReadOnly = component.get('v.isReadOnly');
-                templateFieldOptions.columns = _getColumns(!isReadOnly);
-                component.set('v.templateFieldOptions', templateFieldOptions);
-            });
-
             // Subscribe to the model onFieldsUpdated event.
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var templateFieldOptions = component.get('v.templateFieldOptions');
-                templateFieldOptions.data = [];
-                var activeFields = model.getTemplateFields().getActives();
+                templateFieldOptions.fieldGroups = [];
+                var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
                 var templateFields = model.getTemplateFields();
                 templateFieldOptions.errors = templateFields.errors;
+                var isNamespaced = component.get('v.isNamespaced');
 
-                activeFields.forEach(function (currentField) {
+                Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
 
-                    templateFieldOptions.data.push({
-                        name: currentField.name,
-                        sObjectName: currentField.sObjectName,
-                        label: currentField.label,
-                        defaultValue: currentField.defaultValue,
-                        required: currentField.required,
-                        hide: currentField.hide
+                    var currentFieldGroup = {
+                        sObjectName : sObjectName,
+                        fields: []
+                    };
+
+                    activeFieldsBySObject[sObjectName].forEach(function (currentField) {
+
+                        var fieldInfo = {
+                            name: currentField.name,
+                            sObjectName: currentField.sObjectName,
+                            label: currentField.label,
+                            defaultValue: currentField.defaultValue,
+                            required: currentField.required,
+                            hide: currentField.hide,
+                            type: currentField.type,
+                            formatter: currentField.formatter,
+                            options: currentField.options
+                        }
+
+                        if (currentField.sObjectName === 'Opportunity' &&
+                            (currentField.name == 'npsp__Donation_Amount__c' || currentField.name == 'Donation_Amount__c')) {
+                            fieldInfo.systemRequired = true;
+                        }
+
+                        currentFieldGroup.fields.push(fieldInfo);
+
                     });
+
+                    templateFieldOptions.fieldGroups.push(currentFieldGroup);
 
                 });
                 component.set('v.templateFieldOptions', templateFieldOptions);
 
             });
 
-            /**
-             * @description Gets the columns definition.
-             * @param isEditable. The TemplateMetadata mode.
-             * @return List of columns.
-             */
-            function _getColumns(isEditable) {
-                return [
-                    {
-                        type: 'text',
-                        fieldName: 'sObjectName',
-                        label: $A.get('$Label.c.stgLabelObject'),
-                        editable: false
-                    },
-                    {
-                        type: 'text',
-                        fieldName: 'label',
-                        label: $A.get('$Label.c.stgLabelField'),
-                        editable: false
-                    },
-                    {
-                        type: 'text',
-                        fieldName: 'defaultValue',
-                        label: $A.get('$Label.c.stgDefaultValue'),
-                        editable: isEditable
-                    },
-                    {
-                        type: 'boolean',
-                        fieldName: 'required',
-                        label: $A.get('$Label.c.lblRequired'),
-                        editable: isEditable
-                    }/*,
-                    {
-                        type: 'boolean',
-                        fieldName: 'hide',
-                        label: $A.get('$Label.c.stgLabelHidden'),
-                        editable: isEditable
-                    }*/
-                ];
-            }
-
             // TemplateFieldOptionsView module public functions and properties
             return {
-                columns: _columns,
-                data: []
+                fieldGroups: []
             };
 
         })(component, model);
@@ -532,6 +499,9 @@
                         currentField.hide = activeFieldMap.get(currentField.id).hide;
                         currentField.required = activeFieldMap.get(currentField.id).required;
                         currentField.sortOrder = activeFieldMap.get(currentField.id).sortOrder;
+                        currentField.type = activeFieldMap.get(currentField.id).type;
+                        currentField.formatter = activeFieldMap.get(currentField.id).formatter;
+                        currentField.options = activeFieldMap.get(currentField.id).options;
                     } else {
                         currentField.isActive = false;
                     }
@@ -591,6 +561,17 @@
                 });
                 activeFields = _sortFieldsByOrder(activeFields);
                 return _groupFieldsBySObject(activeFields);
+            }
+
+            /**
+             * @description Gets the aggregate validity of provided default values
+             * @return Boolean
+             */
+            function getDefaultFieldValidity(component) {
+                var isValid = component.find("defaultValueField").reduce(function (validSoFar, defaultValueField) {
+                    return validSoFar && defaultValueField.get("v.validity").valid;
+                }, true);
+                return isValid;
             }
 
             /**
@@ -655,22 +636,27 @@
              * @description Updates the selected fields to Active, unselects fields
              * @return void.
              */
-            function updateTemplateFieldOptions(templateFieldOptions) {
+            function updateTemplateFieldOptions(templateFieldGroups) {
 
-                var allValid = true;
-                var errors = { rows: {}, table: {}, size: 0 };
+                var templateFieldOptions = [];
+                templateFieldGroups.forEach(function(currentFieldGroup) {
+                    currentFieldGroup.fields.forEach(function(currentField) {
+                        templateFieldOptions.push(currentField);
+                    });
+                });
 
                 _allFields.forEach(function(currentField) {
                     templateFieldOptions.forEach(function(currentActiveField) {
                         if (currentField.name === currentActiveField.name) {
-                            currentField.required = currentActiveField.hasOwnProperty('required') ? currentActiveField.required : currentField.required;
-                            currentField.hide = currentActiveField.hasOwnProperty('hide') ? currentActiveField.hide : currentField.hide;
-                            currentField.defaultValue = currentActiveField.hasOwnProperty('defaultValue') ? currentActiveField.defaultValue : currentField.defaultValue;
+                            currentField.required = currentActiveField.required;
+                            currentField.hide = currentActiveField.hide;
+                            currentField.defaultValue = currentActiveField.defaultValue;
                         }
                     });
 
-
                     /* todo: put this back when we decide to use hidden attribute
+                    // will need to figure out where/how to display errors
+                    // this error/allvalid handling is remnant from datatable display
                     if (currentField.hide && !currentField.defaultValue) {
 
                         allValid = false;
@@ -683,31 +669,9 @@
                         errors.rows[fieldName] = fieldNameGroup;
                         errors.size += 1;
                     }*/
-                    if ((currentField.name === 'Donation_Amount__c' || currentField.name === 'npsp__Donation_Amount__c')
-                        && !currentField.required) {
-                        allValid = false;
-                        var fieldName = currentField.name;
-                        var fieldNameGroup = {
-                            title: $A.get('$Label.c.PageMessagesError'),
-                            messages: [$A.get('$Label.c.bgeBatchTemplateErrorRequiredAmount')],
-                            fieldNames: ['required']
-                        };
-                        errors.rows[fieldName] = fieldNameGroup;
-                        errors.size += 1;
-                    }
+
                 });
 
-                if (!allValid) {
-                    errors.table = {
-                        title: $A.get('$Label.c.PageMessagesError'),
-                        messages: [$A.get('$Label.c.stgClearErrors')]
-                        };
-                } else {
-                    errors = { rows: [], table: [], size: 0 };
-                }
-
-                this.errors = errors;
-                this.onFieldsUpdated.notify();
             }
 
             /* ******************PRIVATE FUNCTIONS************************/
@@ -772,6 +736,7 @@
                 getAvailablesBySObject: getAvailablesBySObject,
                 getActives: getActives,
                 getActivesBySObject: getActivesBySObject,
+                getDefaultFieldValidity: getDefaultFieldValidity,
                 updateToActive: updateToActive,
                 updateTemplateFieldOptions: updateTemplateFieldOptions,
                 onFieldsUpdated: _onFieldsUpdated
@@ -845,7 +810,6 @@
              */
             function backStep() {
                 this.clearError();
-                this.setDataTableChanged(false);
                 this.stepDown();
                 this.setPageHeader();
             }
@@ -857,7 +821,6 @@
             function cancel() {
                 if (this.mode === 'edit' && this.labels.sObjectNameNoNamespace === 'Batch_Template__c') {
                     this.clearError();
-                    this.setDataTableChanged(false);
                     this.setMode('view');
                 } else {
                     //navigate to record home
@@ -879,19 +842,6 @@
             function setMode(mode) {
                 this.mode = mode;
                 this.progressIndicatorStep = '1';
-                this.onMetadataUpdated.notify();
-            }
-
-            /**
-             * @description Sets attribute logging whether data table info has changed
-             * @param status - boolean
-             * @return void.
-             */
-            function setDataTableChanged(status) {
-                this.dataTableChanged = status;
-                // oncellchange seems to be broken, so we also set the view directly in the controller
-                // this is just updating the model
-                // still need to notify so the modal footer can be notified
                 this.onMetadataUpdated.notify();
             }
 
@@ -997,7 +947,6 @@
                 progressIndicatorStep: '',
                 hasError: false,
                 errorMessage: '',
-                dataTableChanged: false,
                 pageHeader: '',
                 load: load,
                 navigateToRecord: navigateToRecord,
@@ -1010,8 +959,7 @@
                 setPageHeader: setPageHeader,
                 stepUp: stepUp,
                 stepDown: stepDown,
-                onMetadataUpdated: _onMetadataUpdated,
-                setDataTableChanged: setDataTableChanged
+                onMetadataUpdated: _onMetadataUpdated
             }
         })(this.Event());
     },

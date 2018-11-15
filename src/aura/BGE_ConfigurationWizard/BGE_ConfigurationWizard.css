@@ -42,3 +42,8 @@
 .THIS .slds-form-element__icon {
     padding-top: 0px;
 }
+
+/* hide rogue label spacing on lightning:select when variant="label-hidden" */
+.THIS .label-hidden > label {
+    display: none;
+}

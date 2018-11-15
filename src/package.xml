@@ -1402,6 +1402,7 @@
         <members>bdiTime</members>
         <members>bgeBatchInfoWizard</members>
         <members>bgeBatchTemplateAvailableFields</members>
+        <members>bgeBatchTemplateDonorLookupInfo</members>
         <members>bgeBatchTemplateBatchProcessSizeHelp</members>
         <members>bgeBatchTemplateDonationDateRangeHelp</members>
         <members>bgeBatchTemplateDonationMatchingBehaviorHelp</members>

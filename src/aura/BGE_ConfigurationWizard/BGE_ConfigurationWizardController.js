@@ -32,37 +32,6 @@
         model.getTemplateMetadata().setMode('edit');
     },
 
-    /**
-    * @description Saves field options from step 3 to the model
-    */
-    saveFieldOptions: function(component, event, helper) {
-        var model = component.get('v.model');
-        model.getTemplateMetadata().setDataTableChanged(false);
-        model.getTemplateFields().updateTemplateFieldOptions(event.getParam('draftValues'));
-    },
-
-    /**
-    * @description Logs any changes to data table to disable primary save button
-    */
-    logDataTableChange: function(component, event, helper) {
-        var model = component.get('v.model');
-        var dataTableChanged = component.get('v.templateMetadata.dataTableChanged');
-        if (!dataTableChanged) {
-            // oncellchange seems to be broken, so we have to set the view directly
-            component.set('v.templateMetadata.dataTableChanged', true);
-            // this updates the model, but does not call the notifier
-            model.getTemplateMetadata().setDataTableChanged(true);
-        }
-    },
-
-    /**
-    * @description Cancels any changes to data table to re-enable primary save button
-    */
-    cancelDataTableChanges: function(component, event, helper) {
-        var model = component.get('v.model');
-        model.getTemplateMetadata().setDataTableChanged(false);
-    },
-
     handleButtonClick: function(component, event, helper) {
         // opt 1: button came from our own component
         var buttonClick = event.getSource().getLocalId();
@@ -101,8 +70,13 @@
             model.getTemplateMetadata().cancel();
         } else if (channel === 'save' || buttonClick === 'save') {
             //todo: add validation
-            model.getTemplateInfo().load(component.get('v.templateInfo'));
-            model.save();
+            var isValid = model.getTemplateFields().getDefaultFieldValidity(component);
+            if (isValid) {
+                var fieldOptions = component.get('v.templateFieldOptions.fieldGroups');
+                model.getTemplateFields().updateTemplateFieldOptions(fieldOptions);
+                model.getTemplateInfo().load(component.get('v.templateInfo'));
+                model.save();
+            }
         }
     },
 

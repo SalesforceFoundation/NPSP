@@ -705,6 +705,7 @@ global with sharing class BDI_DataImportService {
     * @return String the BDI name of the target object for that field, derived from the help text
     */
     public static String getTargetObject(String sourceFieldName) {
+        sourceFieldName = sourceFieldName.toLowerCase();
         String dataImportObjectName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
         DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(dataImportObjectName, sourceFieldName);
         String targetObject = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[0] : null;
@@ -718,6 +719,7 @@ global with sharing class BDI_DataImportService {
     * @return String the api name of the target field for that source field, derived from the help text
     */
     public static String getTargetField(String sourceFieldName) {
+        sourceFieldName = sourceFieldName.toLowerCase();
         String dataImportObjectName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
         DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(dataImportObjectName, sourceFieldName);
         String targetField = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[1] : null;
