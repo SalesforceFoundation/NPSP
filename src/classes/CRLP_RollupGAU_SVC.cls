@@ -85,9 +85,9 @@ public class CRLP_RollupGAU_SVC extends CRLP_VRollupHandler {
             for (Integer nsr=0, rollupsListSize=this.rollups.size(); nsr<rollupsListSize; nsr++) {
                 CRLP_Rollup rollup = this.rollups[nsr];
                 Id filterGroupId = rollup.filterGroup;
-
+                Boolean isPaymentRollup = rollup.dateObject == pmtObjectName || rollup.detailObject == pmtObjectName;
                 // Process rollups for opportunity allocations... this should only have two items: opp, alloc
-                if (isOpportunityAllocation && rollup.dateObject == oppObjectName) {
+                if (isOpportunityAllocation && !isPaymentRollup) {
                     // Does this row pass the evaluation?
                     if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(detailRows, filterGroupId)) {
                         // YES -- now need to do the actual rollup!
@@ -96,7 +96,7 @@ public class CRLP_RollupGAU_SVC extends CRLP_VRollupHandler {
                 }
                 
                 // Process rollups for payment allocations... this should only have three items for filtering: opp, payment, and alloc
-                if (isPaymentAllocation && rollup.dateObject == pmtObjectName) {
+                if (isPaymentAllocation && isPaymentRollup) {
                     // Does this row pass the evaluation?
                     if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(detailRows, filterGroupId)) {
                         // YES -- now need to do the actual rollup!
