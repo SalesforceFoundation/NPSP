@@ -194,8 +194,10 @@ global with sharing class BDI_DataImportService {
         instantiateClassForInterface('BDI_IPostProcess', diSettings.Post_Process_Implementing_Class__c);
 
         // ensure we are in the household account model!
-        // ignore this check if HEDA + Advancement is installed
-        if (!CAO_Constants.isHHAccountModel() && !ADV_PackageInfo_SVC.useAdv()){
+        // if HEDA + Advancement is installed, one-to-one is also valid
+        Boolean validAccountModel = CAO_Constants.isHHAccountModel() 
+            || (ADV_PackageInfo_SVC.useAdv() && CAO_Constants.isOneToOne());
+        if (!validAccountModel){
             throw(new BDIException(Label.bdiHouseholdModelRequired));
         }
 

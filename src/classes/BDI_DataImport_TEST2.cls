@@ -1564,8 +1564,6 @@ private with sharing class BDI_DataImport_TEST2 {
     *    importData fails
     **********************************************************************************************************/            
     static testMethod void testInvalidAccountModel() {
-        if ((strTestOnly != '*' && strTestOnly != 'testInvalidAccountModel') || ADV_PackageInfo_SVC.useAdv()) return;
-            
         // set 1x1 account model
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -1574,14 +1572,23 @@ private with sharing class BDI_DataImport_TEST2 {
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
         insert listDI;
-          
+        
+        Boolean usingAdv = ADV_PackageInfo_SVC.useAdv();
         //run batch data import
         Test.StartTest();
         try {
             BDI_DataImport_API.importData();
-            System.assert(false, 'importData should have thrown exception');
+            if (usingAdv){
+                System.assert(true, 'importData should NOT have thrown exception');
+            } else {
+                System.assert(false, 'importData should have thrown exception');
+            }
         } catch (exception ex) {
-            System.assert(ex.getMessage().contains('Household Account model'));
+            if (usingAdv){
+                System.assert(false, 'importData should NOT have thrown exception');
+            } else {
+                System.assert(ex.getMessage().contains('Household Account model'));
+            }
         }
         Test.stopTest();
     }
