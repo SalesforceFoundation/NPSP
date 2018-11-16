@@ -216,19 +216,19 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
     public Map<String, UTIL_CurrencyCache.CurrencyData> getRateMapForCurrencies(List<String> currCodes) {
 
         Map<String, UTIL_CurrencyCache.CurrencyData> mapOfCurrencyDataByCurrencyCode
-                = new Map<String, UTIL_CurrencyCache.CurrencyData>();
+            = new Map<String, UTIL_CurrencyCache.CurrencyData>();
 
         // Even if ACM is enabled, the Admin may choose to not use dated conversion rates for roll-ups.
         Boolean useDatedConversionRates = UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()
-                && householdSettings.Use_Dated_Conversion_Rates__c == true;
+            && householdSettings.Use_Dated_Conversion_Rates__c == true;
 
         if (useDatedConversionRates) {
             // When ACM is enabled, query the DatedConversionRate table to retrieve the effective dates
             // but only for the specific currency code requested.
             String soql = 'SELECT IsoCode, ConversionRate, StartDate ' +
-                    'FROM DatedConversionRate ' +
-                    'WHERE IsoCode IN :currCodes ' +
-                    'ORDER By IsoCode, StartDate DESC';
+                'FROM DatedConversionRate ' +
+                'WHERE IsoCode IN :currCodes ' +
+                'ORDER By IsoCode, StartDate DESC';
             for (SObject dcr : database.query(soql)) {
 
                 String currCode = (String) dcr.get('IsoCode');

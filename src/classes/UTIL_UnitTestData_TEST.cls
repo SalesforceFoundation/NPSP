@@ -770,23 +770,17 @@ public class UTIL_UnitTestData_TEST {
     private static UTIL_CurrencyCache.CurrencyData nonDefaultCurrencyType {
         get {
             if (nonDefaultCurrencyType == null) {
-                setupCurrencies();
+                // get a valid ISO code
+                List<SObject> nonDefaultCurrency = Database.query(
+                    'SELECT IsoCode FROM CurrencyType WHERE IsCorporate = false LIMIT 1'
+                );
+                if (nonDefaultCurrency.size() > 0) {
+                    String nonDefaultCurrencyCode = (String)nonDefaultCurrency[0].get('IsoCode');
+                    nonDefaultCurrencyType = UTIL_CurrencyCache.cachedMapOfRatesByCurrencyCode.get(nonDefaultCurrencyCode);
+                }
             }
             return nonDefaultCurrencyType;
         }
         set;
     }
-
-    /**
-    * @description sets a currency that isn't the org default so we can test behavior for multicurrency orgs.
-    */
-    private static void setupCurrencies() {
-        for (UTIL_CurrencyCache.CurrencyData currencyData : UTIL_CurrencyCache.cachedMapOfRatesByCurrencyCode.values()) {
-            if (!currencyData.isOrgDefault) {
-                nonDefaultCurrencyType = currencyData;
-                return;
-            }
-        }
-    }
-
 }
