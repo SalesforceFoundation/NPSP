@@ -124,8 +124,13 @@
                     // put the id on the input tag
                     j$(ctrl).attr('data-id', id);
 
-                    // Set the decoded value in the input.
-                    document.getElementById('{!searchBoxId}').value = value;
+                    // Set the decoded value in the input.                                        
+                    j$({!searchBoxId}).val(value);
+
+                    // Make sure we don't automatically encode it.
+                    j$({!searchBoxId}).blur(function(){
+                        j$({!searchBoxId}).val(value);
+                    })
 
                     // if destinations are defined, set them too
                     j$('[id$={!destinationForSelectedId}]').val( id );
