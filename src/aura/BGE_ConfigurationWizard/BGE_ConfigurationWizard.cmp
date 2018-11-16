@@ -151,6 +151,7 @@
                                             <lightning:input aura:id="expectedTotal" type="number"
                                                              formatter="currency"
                                                              class="slds-p-top_small"
+                                                             step="0.01"
                                                              label="{!v.templateMetadata.labels.expectedTotalLabel}"
                                                              name="expectedTotal"
                                                              value="{!v.templateInfo.expectedTotal}"/>
