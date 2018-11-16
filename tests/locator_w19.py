@@ -84,7 +84,7 @@ npsp_lex_locators={
         
     },
     'engagement_plan':{
-        'input_box':'//*[contains(@id ,"j_id0:theForm:j_id102_{}") and @class= "slds-input"]',
+        'input_box':'//fieldset[./legend[text()="{}"]]/div[@class="slds-grid"]//div[@class="requiredInput"]/input',
         'dropdown':'//div[contains(@class,"slds-p-top_small")]/label[text()="{}"]/following-sibling::div/select',
         'checkbox':'//div[contains(@class,"slds-p-top_small")]/label[@class="slds-checkbox"][./span/following-sibling::{}[text()="{}"]/]',
         
