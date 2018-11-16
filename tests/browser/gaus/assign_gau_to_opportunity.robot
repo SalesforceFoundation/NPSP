@@ -19,12 +19,12 @@ Assign GAU to Opportunity
     Wait For Locator    frame    Manage Allocations
     #Sleep    2
     Select Frame With Title    Manage Allocations
-    Select Search    0    &{gau1}[Name]
-    Add GAU Allocation    percentage    0    50
+    Select Search    General Accounting Unit 0    &{gau1}[Name]
+    Add GAU Allocation    Percent 0    50
     Click Task Button    Add Row    
-    Select Search    1    &{gau2}[Name] 
+    Select Search    General Accounting Unit 1    &{gau2}[Name] 
     #sleep    2   
-    Add GAU Allocation    amount    1    20
+    Add GAU Allocation    Amount 1    20
     Click Save    GAU
     Verify Occurrence    GAU Allocations    2
    
