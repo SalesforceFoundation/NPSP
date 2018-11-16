@@ -15,6 +15,7 @@ Add New Address to Household
     Wait For Locator    frame    Manage Household   
     #Sleep     3        
     Select Frame With Title   Manage Household
+    Wait For Locator    span_button    Change Address
     Click Button    Change Address
     Click ManageHH Link     Enter a new address
     Fill Address Form

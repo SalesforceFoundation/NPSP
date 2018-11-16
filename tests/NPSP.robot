@@ -73,9 +73,10 @@ API Create Secondary Affiliation
    
 API Create GAU
     ${name} =   Generate Random String
-    ${gau_id} =  Salesforce Insert  npsp__General_Accounting_Unit__c
+    ${ns} =    Get Npsp Namespace Prefix
+    ${gau_id} =  Salesforce Insert  ${ns}General_Accounting_Unit__c
     ...               Name=${name}
-    &{gau} =     Salesforce Get  npsp__General_Accounting_Unit__c  ${gau_id}
+    &{gau} =     Salesforce Get  ${ns}General_Accounting_Unit__c  ${gau_id}
     [return]         &{gau}  
    
 Create Contact
@@ -213,11 +214,11 @@ Create Engagement Plan
     ...             Engagement Plan Template Name=${plan_name}
     ...             Description=This plan is created via Automation  
     Click Task Button    Add Task
-    Enter Task Id and Subject    5    ${task1}
+    Enter Task Id and Subject    Task 1    ${task1}
     Click Task Button    Add Dependent Task
-    Enter Task Id and Subject    32    ${sub_task}
+    Enter Task Id and Subject    Task 1-1    ${sub_task}
     Click Task Button    Add Task
-    Enter Task Id and Subject    59    ${task2}
+    Enter Task Id and Subject    Task 1    ${task2}
     Page Scroll To Locator    id    saveBTN
     Click Task Button    Save
     #Sleep    2

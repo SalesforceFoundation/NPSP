@@ -16,7 +16,7 @@ npsp_lex_locators={
         'dropdown':"//div[@class='select-options']/ul[@class='scrollable']/li[@class='uiMenuItem uiRadioMenuItem']/a[contains(text(),'{}')]",
         'related': {
             'button': "//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//a[@title='{}']",
-            'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span[text()=" ({})"]',
+            'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span',
             'drop-down':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]/parent::*/div/div/div/a[contains(@class, "slds-button")]',
             'title':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]',
             'viewall':'//a[.//span[text()="View All"]/span[text()="{}"]]',
@@ -54,7 +54,7 @@ npsp_lex_locators={
     'header_datepicker':'//li[contains(@class, "slds-page-header__detail")][.//p[contains(@class, "slds-text-heading--label")][@title="{}"]]//*[@class="uiOutputDate"]',
     'affiliated_contacts':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")]//tbody//td/span[text()="{}"]/../following-sibling::td/span[text()="{}"]',
     'select_one_record':"//tbody/tr[1]/th/span/a",
-    'click_search':'//*[@id="j_id0:theForm:j_id49:{}:j_id51:util_inputfield:inputX"]',
+    'click_search':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/span/span/input[contains(@id,"inputX")]',
     'field': "//div[contains(@class, 'uiInput')][.//label[contains(@class, 'uiLabel')][.//span[text()='{}']]]//input",
     'field_lookup_value': "//a[@role='option'][.//div[@title='{}']]",
     'header':'//h1[contains(@title,"{}")]',
@@ -84,7 +84,7 @@ npsp_lex_locators={
         
     },
     'engagement_plan':{
-        'input_box':'//*[contains(@id ,"j_id0:theForm:j_id102_{}") and @class= "slds-input"]',
+        'input_box':'//fieldset[./legend[text()="{}"]]/div[@class="slds-grid"]//div[@class="requiredInput"]/input',
         'dropdown':'//div[contains(@class,"slds-p-top_small")]/label[text()="{}"]/following-sibling::div/select',
         'checkbox':'//div[contains(@class,"slds-p-top_small")]/label[@class="slds-checkbox"][./span/following-sibling::{}[text()="{}"]/]',
         
@@ -105,6 +105,9 @@ npsp_lex_locators={
         'pay_amount':'//tbody/tr[{}]/td[3]/span/span[text()="{}"]',
         'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span',
         'text':'//*[@id="j_id0:vfForm:j_id76:util_formfield:inputx:util_inputfield:inputX"]',
+        },
+    'gaus':{
+        'input_field':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/input',
         },
     'npsp_settings':{
         'panel_link':'//div[@id="idPanelRecDonationsNav"]//a[text()="{}"]',

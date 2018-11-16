@@ -347,7 +347,11 @@ class NPSP(object):
     def verify_occurrence(self,title,value):
         """"""
         locator=npsp_lex_locators['record']['related']['check_occurrence'].format(title,value)
-        self.selenium.page_should_contain_element(locator)    
+        actual_value=self.selenium.get_webelement(locator).text
+        exp_value="("+value+")"
+        assert exp_value == actual_value, "Expected value to be {} but found {}".format(
+            exp_value, actual_value
+        )    
      
     def select_related_dropdown(self,title):
         """Clicks on the dropdown next to Related List"""
@@ -544,19 +548,10 @@ class NPSP(object):
         self.selenium.get_webelement("//*[@title='Go!']").click()
         time.sleep(1)
 
-    def add_gau_allocation(self,type,index, value):
-        if type=="percentage":
-            id="j_id0:theForm:j_id49:{}:alloInputPercent"
-            locator = npsp_lex_locators["id"].format(id)
-            locc = locator.format(index)
-            loc = self.selenium.get_webelement(locc)
-            loc.send_keys(value)
-        elif type=="amount":
-            id="j_id0:theForm:j_id49:{}:alloInputAmount"
-            locator = npsp_lex_locators["id"].format(id)
-            locc = locator.format(index)
-            loc = self.selenium.get_webelement(locc)
-            loc.send_keys(value)    
+    def add_gau_allocation(self,field, value):
+        locator = npsp_lex_locators["gaus"]["input_field"].format(field)
+        loc = self.selenium.get_webelement(locator).send_keys(value)
+            
         
     def click_save(self, page):
         if  page== "GAU":
