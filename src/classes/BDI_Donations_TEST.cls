@@ -203,6 +203,11 @@ public with sharing class BDI_Donations_TEST {
             return;
         }
 
+        // only test in multicurrency orgs
+        if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+            return;
+        }
+
         UTIL_CurrencyCache.CurrencyData testCurrency = UTIL_UnitTestData_TEST.nonDefaultCurrencyType;
 
         if (testCurrency == null) {
@@ -307,6 +312,11 @@ public with sharing class BDI_Donations_TEST {
     static void dataImportWithNonMatchingCurrencyDonation() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
+        // only test in multicurrency orgs
+        if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
             return;
         }
 
@@ -804,6 +814,11 @@ public with sharing class BDI_Donations_TEST {
     @isTest
     static void currencyShouldCopyToOpportunity() {
         if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
+        // only test in multicurrency orgs
+        if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
             return;
         }
 
