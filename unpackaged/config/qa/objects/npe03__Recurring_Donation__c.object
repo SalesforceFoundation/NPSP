@@ -7,7 +7,7 @@
         <displayType>button</displayType>
         <encodingKey>UTF-8</encodingKey>
         <linkType>url</linkType>
-        <masterLabel>[NPSP] Refresh Opportunities</masterLabel>
+        <masterLabel>Refresh Opportunities</masterLabel>
         <openType>replace</openType>
         <protected>false</protected>
         <url>{!URLFOR(&apos;/apex/RD_AddDonationsBTN?id=&apos; + npe03__Recurring_Donation__c.Id)}</url>

@@ -14,7 +14,6 @@ from simple_salesforce import SalesforceResourceNotFound
 from locator_w19 import npsp_lex_locators
 from selenium.webdriver import ActionChains
 from cumulusci.robotframework.utils import selenium_retry
-#import os
 import sys
 from email.mime import text
 #sys.path.append(os.path.abspath(os.path.join('..',
@@ -27,7 +26,7 @@ class NPSP(object):
     
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
     ROBOT_LIBRARY_VERSION = 1.0
- 
+
     def __init__(self, debug=False):
         self.debug = debug
         self.current_page = None
@@ -36,14 +35,30 @@ class NPSP(object):
         self.payment_list= []
         # Turn off info logging of all http requests 
         logging.getLogger('requests.packages.urllib3.connectionpool').setLevel(logging.WARN)
- 
+
     @property
     def builtin(self):
-        return BuiltIn()   
- 
+        return BuiltIn()
+
     @property
     def cumulusci(self):
         return self.builtin.get_library_instance('cumulusci.robotframework.CumulusCI')
+
+    def get_namespace_prefix(self, name):
+        parts = name.split('__')
+        if parts[-1] == 'c':
+            parts = parts[:-1]
+        if len(parts) > 1:
+            return parts[0] + '__'
+        else:
+            return ''
+
+    def get_npsp_namespace_prefix(self):
+        if not hasattr(self.cumulusci, '_describe_result'):
+            self.cumulusci._describe_result = self.cumulusci.sf.describe()
+        objects = self.cumulusci._describe_result['sobjects']
+        level_object = [o for o in objects if o['label'] == 'Level'][0]
+        return self.get_namespace_prefix(level_object['name'])
 
     def populate_address(self, loc, value):
         """ Populate address with Place Holder aka Mailing Street etc as a locator
