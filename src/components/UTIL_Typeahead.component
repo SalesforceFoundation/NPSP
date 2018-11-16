@@ -161,8 +161,7 @@
                                 alert('Callout error: ' + event.message);
                                 typeaheadCallback( [] );
                             }
-                        }, 
-                        {escape: false}
+                        },
                     );
                 }
             };
