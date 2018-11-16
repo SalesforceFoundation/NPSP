@@ -212,6 +212,14 @@
         if ('{!secondaryField}'.length) 
             boxData['{!searchBoxId}'].fieldList.push('{!secondaryField}');
 
+        // Decodes a String already encoded by Salesforce.
+        function decode(input) {
+            if (/&amp;|&quot;|&#39;|'&lt;|&gt;/.test(input)) {
+                var doc = new DOMParser().parseFromString(input, "text/html");
+                return doc.documentElement.textContent;
+            }
+            return input;
+        }
 
     </script>
 
