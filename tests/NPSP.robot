@@ -73,9 +73,10 @@ API Create Secondary Affiliation
    
 API Create GAU
     ${name} =   Generate Random String
-    ${gau_id} =  Salesforce Insert  npsp__General_Accounting_Unit__c
+    ${ns} =    Get Npsp Namespace Prefix
+    ${gau_id} =  Salesforce Insert  ${ns}General_Accounting_Unit__c
     ...               Name=${name}
-    &{gau} =     Salesforce Get  npsp__General_Accounting_Unit__c  ${gau_id}
+    &{gau} =     Salesforce Get  ${ns}General_Accounting_Unit__c  ${gau_id}
     [return]         &{gau}  
    
 Create Contact

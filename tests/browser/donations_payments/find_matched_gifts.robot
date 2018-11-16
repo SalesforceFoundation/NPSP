@@ -21,7 +21,7 @@ Create Matching Donation
     Click Modal Button        Save
     &{contact2} =  API Create Contact    Email=skristem@robot.com
     &{opportunity2} =  API Create Opportunity    &{Contact2}[AccountId]    Donation    Name=&{Contact2}[FirstName] $25 donation    Amount=25
-    &{opportunity3} =  API Create Opportunity    &{Org}[Id]    MatchingDonation    Name=&{Org}[Name] $75 matching gift    Amount=75
+    &{opportunity3} =  API Create Opportunity    &{Org}[Id]    Matching    Name=&{Org}[Name] $75 matching gift    Amount=75
     Go To Record Home  &{opportunity3}[Id]
     Click Link    link=Show more actions
     Click Link    link=Find Matched Gifts
