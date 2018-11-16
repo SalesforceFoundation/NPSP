@@ -89,20 +89,34 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     public CON_DeleteContactOverride_CTRL(ApexPages.StandardController stdController) {
         setNavigationParams(ApexPages.currentPage().getParameters());
 
-        queryContact = [SELECT Id, Name, FirstName, LastName, AccountId, Account.Name, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :stdController.getId()];
+        queryContact = [
+            SELECT Id, Name, FirstName, LastName,
+                AccountId, Account.Name, Account.npe01__SYSTEMIsIndividual__c
+            FROM Contact
+            WHERE Id = :stdController.getId()
+        ];
 
         shouldDeleteContactAlone = true;
 
         if (queryContact.AccountId != null && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
             accountId = queryContact.AccountId;
-            list<AggregateResult> contactsInHousehold = [SELECT COUNT(id) ct FROM Contact WHERE AccountId = :accountId GROUP BY AccountId HAVING COUNT(id) = 1];
+            List<AggregateResult> contactsInHousehold = [
+                SELECT COUNT(id) ct
+                FROM Contact
+                WHERE AccountId = :accountId
+                GROUP BY AccountId
+                HAVING COUNT(id) = 1
+            ];
 
             //This contact is alone in a system account, delete the system account and allow the cascading
             //delete to remove the contact
             if (contactsInHousehold.size() == 1 && contactsInHousehold[0].get('ct') == 1) {
                 shouldDeleteContactAlone = false;
 
-                String helpDeleteAccountInstead = String.format(Label.ConfirmDeleteAccount, new List<String>{queryContact.Name, queryContact.Account.Name});
+                String helpDeleteAccountInstead = String.format(
+                    Label.ConfirmDeleteAccount,
+                    new List<String>{ queryContact.Name.escapeHtml4(), queryContact.Account.Name.escapeHtml4() }
+                );
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, helpDeleteAccountInstead));
             }
         }
