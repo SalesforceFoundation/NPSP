@@ -26,10 +26,12 @@
                 templateInfoView.requireTotalMatch = templateInfo.requireTotalMatch;
                 templateInfoView.batchProcessSize = templateInfo.batchProcessSize;
                 templateInfoView.runOpportunityRollupsWhileProcessing = templateInfo.runOpportunityRollupsWhileProcessing;
-                templateInfoView.contactMatchingRule = templateInfo.contactMatchingRule;
                 templateInfoView.donationMatchingBehavior = templateInfo.donationMatchingBehavior;
+                templateInfoView.donationMatchingClass = templateInfo.donationMatchingClass;
+                templateInfoView.donationMatchingOptions = templateInfo.donationMatchingOptions;
                 templateInfoView.donationMatchingRule = templateInfo.donationMatchingRule;
                 templateInfoView.donationDateRange = templateInfo.donationDateRange;
+                templateInfoView.postProcessClass = templateInfo.postProcessClass;
                 templateInfoView.processUsingScheduledJob = templateInfo.processUsingScheduledJob;
 
                 component.set('v.templateInfo', templateInfoView);
@@ -47,10 +49,12 @@
                 requireTotalMatch: false,
                 batchProcessSize: 0,
                 runOpportunityRollupsWhileProcessing: false,
-                contactMatchingRule: '',
                 donationMatchingBehavior: '',
-                donationMatchingRule: '',
+                donationMatchingClass: '',
+                donationMatchingOptions: [],
+                donationMatchingRule: [],
                 donationDateRange: '',
+                postProcessClass: '',
                 processUsingScheduledJob: false
             };
         })(component, model);
@@ -145,7 +149,6 @@
             // Subscribe to the model onFieldsUpdated event.
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var templateFields = component.get('v.templateFields');
-                var isNamespaced = component.get('v.isNamespaced')
                 templateFields.fieldGroups = [];
 
                 var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
@@ -166,17 +169,16 @@
                                 value: currentField.id
                             }
                         );
+                        //special case so Amount object is always visible
+                        if (currentField.id.includes('Donation_Amount__c')) {
+                            currentFieldGroup.requiredOptions.push(currentField.id);
+                        }
                     });
+
                     if (activeFieldsBySObject[sObjectName]) {
                         activeFieldsBySObject[sObjectName].forEach(function(currentField) {
                             currentFieldGroup.values.push(currentField.id);
                         });
-                    }
-                    //special case so Amount object is always visible
-                    if (sObjectName === 'Opportunity' && isNamespaced) {
-                        currentFieldGroup.requiredOptions.push('Opportunity.npsp__Donation_Amount__c');
-                    } else {
-                        currentFieldGroup.requiredOptions.push('Opportunity.Donation_Amount__c');
                     }
                     templateFields.fieldGroups.push(currentFieldGroup);
                 });
@@ -207,7 +209,6 @@
                 var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
                 var templateFields = model.getTemplateFields();
                 templateFieldOptions.errors = templateFields.errors;
-                var isNamespaced = component.get('v.isNamespaced');
 
                 Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
 
@@ -308,10 +309,11 @@
                     requireTotalMatch: _templateInfo.requireTotalMatch,
                     batchProcessSize: _templateInfo.batchProcessSize,
                     runOpportunityRollupsWhileProcessing: _templateInfo.runOpportunityRollupsWhileProcessing,
-                    contactMatchingRule: _templateInfo.contactMatchingRule,
                     donationMatchingBehavior: _templateInfo.donationMatchingBehavior,
+                    donationMatchingClass: _templateInfo.donationMatchingClass,
                     donationMatchingRule: _templateInfo.donationMatchingRule,
                     donationDateRange: _templateInfo.donationDateRange,
+                    postProcessClass: _templateInfo.postProcessClass,
                     processUsingScheduledJob: _templateInfo.processUsingScheduledJob
                 };
                 var activeFields = [];
@@ -409,10 +411,12 @@
                 this.requireTotalMatch = info.requireTotalMatch;
                 this.batchProcessSize = info.batchProcessSize;
                 this.runOpportunityRollupsWhileProcessing = info.runOpportunityRollupsWhileProcessing;
-                this.contactMatchingRule = info.contactMatchingRule;
                 this.donationMatchingBehavior = info.donationMatchingBehavior;
+                this.donationMatchingClass = info.donationMatchingClass;
+                this.donationMatchingOptions = info.donationMatchingOptions;
                 this.donationMatchingRule = info.donationMatchingRule;
-                this.donationDateRange = info.donationDateRange
+                this.donationDateRange = info.donationDateRange;
+                this.postProcessClass = info.postProcessClass;
                 this.processUsingScheduledJob = info.processUsingScheduledJob;
                 this.onInfoUpdated.notify();
             }
@@ -438,10 +442,12 @@
                 requireTotalMatch: false,
                 batchProcessSize: 0,
                 runOpportunityRollupsWhileProcessing: false,
-                contactMatchingRule: '',
                 donationMatchingBehavior: '',
-                donationMatchingRule: '',
+                donationMatchingClass: '',
+                donationMatchingOptions: [],
+                donationMatchingRule: [],
                 donationDateRange: '',
+                postProcessClass: '',
                 processUsingScheduledJob: false,
 
                 load: load,
@@ -862,11 +868,12 @@
              * @return void.
              */
             function setPageHeader() {
-                var headers = [this.labels.recordInfoLabel,
+                var headers = [
+                    this.labels.recordInfoLabel,
                     'Select Template',
                     $A.get('$Label.c.bgeBatchTemplateSelectFields'),
                     $A.get('$Label.c.bgeBatchTemplateSetFieldOptions'),
-                    'Select Matching Rules'
+                    $A.get('$Label.c.bgeBatchTemplateSetBatchOptions')
                 ];
 
                 var progressIndicatorStepBase1 = parseInt(this.progressIndicatorStep) - 1;

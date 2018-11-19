@@ -42,22 +42,27 @@
 
         if (channel === 'next' || buttonClick === 'next') {
             var step = component.get('v.templateMetadata.progressIndicatorStep');
+            var isValid = true;
+            var possibleError = '';
             if (step === '1') {
-                var templateInfoData = component.get('v.templateInfo');
-                model.getTemplateInfo().load(templateInfoData);
-                model.getTemplateMetadata().nextStep(model.getTemplateInfo().isValid(),
-                    component.get('v.templateMetadata.labels.missingNameDescriptionError'));
+                model.getTemplateInfo().load(component.get('v.templateInfo'));
+                isValid = model.getTemplateInfo().isValid();
+                possibleError = component.get('v.templateMetadata.labels.missingNameDescriptionError');
+                model.getTemplateMetadata().nextStep(isValid, possibleError);
             } else if (step === '2') {
                 //handle template selection and copying here
             } else if (step === '3') {
-                var templateFields = component.get('v.templateFields');
-                model.getTemplateFields().updateToActive(templateFields.fieldGroups);
-                var errors = model.getTemplateFields().getRequiredFieldErrors();
-                model.getTemplateMetadata().nextStep(errors.length === 0, errors);
+                model.getTemplateFields().updateToActive(component.get('v.templateFields').fieldGroups);
+                possibleError = model.getTemplateFields().getRequiredFieldErrors();
+                isValid = (possibleError.length === 0);
+                model.getTemplateMetadata().nextStep(isValid, possibleError);
             } else if (step === '4') {
-                //handle customize field options for batch gift entry here
-            } else if (step === '5') {
-                //handle matching rules here
+                isValid = model.getTemplateFields().getDefaultFieldValidity(component);
+                if (isValid) {
+                    var fieldOptions = component.get('v.templateFieldOptions.fieldGroups');
+                    model.getTemplateFields().updateTemplateFieldOptions(fieldOptions);
+                    model.getTemplateMetadata().nextStep(isValid);
+                }
             }
         } else if (channel === 'back' || buttonClick === 'back') {
             model.getTemplateMetadata().backStep();
@@ -69,12 +74,9 @@
             }
             model.getTemplateMetadata().cancel();
         } else if (channel === 'save' || buttonClick === 'save') {
-            var isValid = model.getTemplateFields().getDefaultFieldValidity(component);
-            if (isValid) {
-                var fieldOptions = component.get('v.templateFieldOptions.fieldGroups');
-                model.getTemplateFields().updateTemplateFieldOptions(fieldOptions);
-                model.save();
-            }
+            //todo: add validation
+            model.getTemplateInfo().load(component.get('v.templateInfo'));
+            model.save();
         }
     },
 
