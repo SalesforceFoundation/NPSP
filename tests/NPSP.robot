@@ -5,8 +5,8 @@ Library        tests/NPSP.py
 
 *** Variables ***
 ${task1}  Send Email1
-${sub_task}    Welcome Email1
-${task2}     Make a Phone Call1
+${sub_task}    Welcome Email1-1
+${task2}     Make a Phone Call2
 
 
 *** Keywords ***
@@ -208,19 +208,19 @@ Create Engagement Plan
     ${plan_name} =     Generate Random String
     Select App Launcher Tab  Engagement Plan Templates
     Click Special Object Button       New
-    #Sleep    2
+    Wait For Locator    frame    Manage Engagement Plan Template
     Select Frame With Title    Manage Engagement Plan Template
-    Enter Eng Plan Values
-    ...             Engagement Plan Template Name=${plan_name}
-    ...             Description=This plan is created via Automation  
-    Click Task Button    Add Task
+    Wait For Locator    id    idName
+    Enter Eng Plan Values    idName    ${plan_name}
+    Enter Eng Plan Values    idDesc    This plan is created via Automation  
+    Click Button With Value    Add Task
     Enter Task Id and Subject    Task 1    ${task1}
-    Click Task Button    Add Dependent Task
+    Click Task Button    1    Add Dependent Task
     Enter Task Id and Subject    Task 1-1    ${sub_task}
-    Click Task Button    Add Task
-    Enter Task Id and Subject    Task 1    ${task2}
-    Page Scroll To Locator    id    saveBTN
-    Click Task Button    Save
+    Click Button With Value    Add Task
+    Enter Task Id and Subject    Task 2    ${task2}
+    Page Scroll To Locator    button    Save
+    Click Button With Value    Save
     #Sleep    2
     [Return]    ${plan_name}    ${task1}    ${sub_task}     ${task2}
     

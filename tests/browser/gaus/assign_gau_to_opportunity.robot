@@ -21,7 +21,7 @@ Assign GAU to Opportunity
     Select Frame With Title    Manage Allocations
     Select Search    General Accounting Unit 0    &{gau1}[Name]
     Add GAU Allocation    Percent 0    50
-    Click Task Button    Add Row    
+    Click Button With Value    Add Row    
     Select Search    General Accounting Unit 1    &{gau2}[Name] 
     #sleep    2   
     Add GAU Allocation    Amount 1    20

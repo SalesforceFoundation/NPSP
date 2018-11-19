@@ -44,6 +44,10 @@ class NPSP(object):
     def cumulusci(self):
         return self.builtin.get_library_instance('cumulusci.robotframework.CumulusCI')
 
+    @property
+    def salesforce(self):
+        return self.builtin.get_library_instance('cumulusci.robotframework.Salesforce')
+
     def get_namespace_prefix(self, name):
         parts = name.split('__')
         if parts[-1] == 'c':
@@ -339,10 +343,8 @@ class NPSP(object):
         
     def populate_modal_field(self, title, value):
         locator=npsp_lex_locators['modal_field'].format(title,value)
-        self.selenium.set_focus_to_element(locator)
-        field = self.selenium.get_webelement(locator)
-        field.clear()
-        field.send_keys(value)       
+        self.salesforce._populate_field(locator, value)
+    
         
     def verify_occurrence(self,title,value):
         """"""
@@ -409,17 +411,12 @@ class NPSP(object):
             locator=npsp_lex_locators['engagement_plan']['checkbox'].format("label",title)
             self.selenium.get_webelement(locator).click()
             
-    def enter_eng_plan_values(self, **kwargs):
+    def enter_eng_plan_values(self, name, value):
         """Enter values into corresponding fields in Engagement Plan Templet page"""
-        for name, value in kwargs.items():
-            if name == "Engagement Plan Template Name":
-                id = "idName"
-                locator = npsp_lex_locators['id'].format(id) 
-                self.selenium.get_webelement(locator).send_keys(value)     
-            elif name == "Description":
-                id = "idDesc"
-                locator = npsp_lex_locators['id'].format(id)
-                self.selenium.get_webelement(locator).send_keys(value)  
+        locator = npsp_lex_locators['id'].format(name) 
+        self.salesforce._populate_field(locator, value)
+    
+    
 
                 
     def enter_task_id_and_subject(self, id, value):
@@ -428,23 +425,11 @@ class NPSP(object):
         self.selenium.get_webelement(locator).send_keys(value)
     
     
-    def click_task_button(self, title):
-        if title=="Add Dependent Task":
-            id="btnAddDepTask"           
-            locator = npsp_lex_locators['id'].format(id)
-            self.selenium.get_webelement(locator).click()    
-        elif title=="Add Task":
-            id="btnAddTask"
-            locator = npsp_lex_locators['id'].format(id)
-            self.selenium.get_webelement(locator).click() 
-        elif title=="Save":
-            id="saveBTN"
-            locator = npsp_lex_locators['id'].format(id)
-            self.selenium.get_webelement(locator).click()
-        elif title=="Add Row":
-            id="addRowBTN" 
-            locator = npsp_lex_locators['id'].format(id)
-            self.selenium.get_webelement(locator).click()  
+    def click_task_button(self, task_id, name):
+        """Click Task button based on Task id and button label"""          
+        locator = npsp_lex_locators['engagement_plan']['button'].format(task_id, name)
+        self.selenium.get_webelement(locator).click()    
+          
     
     def check_related_list_values(self,list_name,*args):
         """Verifies the value of custom related list"""
@@ -474,22 +459,15 @@ class NPSP(object):
             if name == "Level Name":
                 id = "fldName"
                 locator = npsp_lex_locators['levels']['id'].format(id)
-                self.selenium.set_focus_to_element(locator)  
-                self.selenium.get_webelement(locator).send_keys(value)      
+                self.salesforce._populate_field(locator, value)      
             elif name == "Minimum Amount":
                 id = "fldMinAmount"
                 locator = npsp_lex_locators['levels']['id'].format(id)
-                self.selenium.set_focus_to_element(locator) 
-                field=self.selenium.get_webelement(locator)
-                field.clear()
-                field.send_keys(value)  
+                self.salesforce._populate_field(locator, value)  
             elif name == "Maximum Amount":
                 id = "fldMaxAmount"
                 locator = npsp_lex_locators['levels']['id'].format(id)
-                self.selenium.set_focus_to_element(locator) 
-                field=self.selenium.get_webelement(locator)
-                field.clear()
-                field.send_keys(value)                    
+                self.salesforce._populate_field(locator, value)                    
 
     def enter_level_dd_values(self, name,value):
         """Enter values into corresponding fields in Levels page"""                 
