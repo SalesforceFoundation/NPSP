@@ -63,17 +63,17 @@
                 <!--<lightning:progressStep label="Step 2" value="2"/>-->
                 <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="3"/>
                 <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="4"/>
-                <!--<lightning:progressStep label="Step 5" value="5"/>-->
+                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetBatchOptions}" value="5"/>
             </lightning:progressIndicator>
         </lightning:layoutItem>
         <!-- End: Progress Indicator -->
 
         <lightning:layoutItem size="3" class="slds-text-align_right">
             <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
-            <aura:if isTrue="{!v.currentStep != '4'}">
+            <aura:if isTrue="{!v.currentStep != '5'}">
                 <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
             </aura:if>
-            <aura:if isTrue="{!v.currentStep == '4'}">
+            <aura:if isTrue="{!v.currentStep == '5'}">
                 <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" disabled="{!v.dataTableChanged}"/>
             </aura:if>
         </lightning:layoutItem>
