@@ -149,7 +149,6 @@
             // Subscribe to the model onFieldsUpdated event.
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var templateFields = component.get('v.templateFields');
-                var isNamespaced = component.get('v.isNamespaced')
                 templateFields.fieldGroups = [];
 
                 var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
@@ -170,17 +169,16 @@
                                 value: currentField.id
                             }
                         );
+                        //special case so Amount object is always visible
+                        if (currentField.id.includes('Donation_Amount__c')) {
+                            currentFieldGroup.requiredOptions.push(currentField.id);
+                        }
                     });
+
                     if (activeFieldsBySObject[sObjectName]) {
                         activeFieldsBySObject[sObjectName].forEach(function(currentField) {
                             currentFieldGroup.values.push(currentField.id);
                         });
-                    }
-                    //special case so Amount object is always visible
-                    if (sObjectName === 'Opportunity' && isNamespaced) {
-                        currentFieldGroup.requiredOptions.push('Opportunity.npsp__Donation_Amount__c');
-                    } else {
-                        currentFieldGroup.requiredOptions.push('Opportunity.Donation_Amount__c');
                     }
                     templateFields.fieldGroups.push(currentFieldGroup);
                 });
@@ -211,7 +209,6 @@
                 var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
                 var templateFields = model.getTemplateFields();
                 templateFieldOptions.errors = templateFields.errors;
-                var isNamespaced = component.get('v.isNamespaced');
 
                 Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
 
