@@ -118,6 +118,7 @@
                                 <lightning:progressStep label="{!v.templateMetadata.labels.recordInfoLabel}" value="1"/>
                                 <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="3"/>
                                 <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="4"/>
+                                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetBatchOptions}" value="5"/>
                             </lightning:progressIndicator>
                         </div>
                     </aura:if>
@@ -148,8 +149,9 @@
                                                              name="expectedCount"
                                                              value="{!v.templateInfo.expectedCount}"/>
                                             <lightning:input aura:id="expectedTotal" type="number"
-                                                             formatter="currency" step="0.01"
+                                                             formatter="currency"
                                                              class="slds-p-top_small"
+                                                             step="0.01"
                                                              label="{!v.templateMetadata.labels.expectedTotalLabel}"
                                                              name="expectedTotal"
                                                              value="{!v.templateInfo.expectedTotal}"/>
@@ -160,8 +162,10 @@
                                                          name="requireTotalMatch"
                                                          checked="{!v.templateInfo.requireTotalMatch}"
                                                          variant="label-hidden"/>
-                                        <c:CRLP_Tooltip helpText="{!v.templateMetadata.labels.totalMatchHelp}"
-                                                        fieldLabel="{!v.templateMetadata.labels.totalMatchLabel}"/>
+                                        <label class="slds-form-element__label" for="totalMatchCheckbox">
+                                            {!v.templateMetadata.labels.totalMatchLabel}
+                                        </label>
+                                        <lightning:helptext content="{!v.templateMetadata.labels.totalMatchHelp}" />
                                     </div>
                                 </aura:set>
                             </aura:if>
@@ -204,7 +208,8 @@
                                 <lightning:layout horizontalAlign="center">
                                     <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center">
                                         <lightning:dualListbox name="multipleOptions"
-                                                               label="Fields"
+                                                               class="wideListbox"
+                                                               label="{!$Label.c.bgeBatchTemplateAvailableFields}"
                                                                sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
                                                                selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
                                                                options="{!currentFieldGroup.options}"
@@ -219,6 +224,7 @@
 
                     </div>
                 </div>
+                <!--End Step 3-->
 
                 <!--Selected Fields Section Header (View Mode Only)-->
                 <aura:if isTrue="{!v.isReadOnly}">
@@ -231,7 +237,6 @@
                     </div>
                 </aura:if>
                 <!--End Selected Fields Section-->
-                <!--End Step 3-->
 
                 <!-- Step 4: Set Field Options -->
                 <aura:if isTrue="{!or(v.templateMetadata.progressIndicatorStep == '4', v.isReadOnly)}">
@@ -298,7 +303,7 @@
                                                         <lightning:select label="{!$Label.c.stgDefaultValue}"
                                                                           value="{!field.defaultValue}"
                                                                           variant="label-hidden"
-                                                                          class="label-hidden">
+                                                                          class="hideLabel">
                                                             <option value=""></option>
                                                             <aura:iteration items="{!field.options}" var="opt">
                                                                 <option value="{!opt.value}">{!opt.label}</option>
@@ -338,7 +343,7 @@
 
                 <!--End Step 4 -->
 
-                <!-- Step 5: Edit Matching Rules (Only Batch Gift Entry) -->
+                <!-- Step 5: Edit Matching Rules -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '5'}">
 
                     <aura:if isTrue="{!greaterthan(v.templateInfo.recordCount,0)}">
@@ -355,6 +360,130 @@
                         </lightning:layout>
                     </aura:if>
 
+                    <lightning:layout>
+                        <lightning:layoutItem size="6" class="slds-p-bottom_small">
+                            <lightning:layout horizontalAlign="spread" multipleRows="true">
+                                <lightning:layoutItem class="slds-p-horizontal_x-small" size="12">
+                                    <div class="slds-section">
+                                        <h3 class="slds-section__title slds-theme_shade">
+                                                <span class="slds-p-left_small slds-truncate">
+                                                    {!$Label.c.bdiSettingsSectionDonationMatching}
+                                                </span>
+                                        </h3>
+                                    </div>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                    <label class="slds-form-element__label" for="donationMatchingBehavior">
+                                        {!v.templateMetadata.labels.donationMatchingBehaviorLabel}
+                                    </label>
+                                    <lightning:helptext content="{!$Label.c.bgeBatchTemplateDonationMatchingBehaviorHelp}" />
+                                    <lightning:select aura:id="donationMatchingBehavior"
+                                                      label="{!v.templateMetadata.labels.donationMatchingBehaviorLabel}"
+                                                      value="{!v.templateInfo.donationMatchingBehavior}"
+                                                      class="hideLabel" variant="label-hidden">
+                                        <option value="{!v.templateMetadata.labels.DoNotMatch}" text="{!$Label.c.bdiBehaviorDoNotMatch}"/>
+                                        <option value="{!v.templateMetadata.labels.RequireNoMatch}" text="{!$Label.c.bdiBehaviorRequireNoMatch}"/>
+                                        <option value="{!v.templateMetadata.labels.RequireExactMatch}" text="{!$Label.c.bdiBehaviorRequireExactMatch}"/>
+                                        <option value="{!v.templateMetadata.labels.ExactMatchOrCreate}" text="{!$Label.c.bdiBehaviorExactMatchOrCreate}"/>
+                                        <option value="{!v.templateMetadata.labels.RequireBestMatch}" text="{!$Label.c.bdiBehaviorRequireBestMatch}"/>
+                                        <option value="{!v.templateMetadata.labels.BestMatchOrCreate}" text="{!$Label.c.bdiBehaviorBestMatchOrCreate}"/>
+                                    </lightning:select>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                    <label class="slds-form-element__label" for="donationMatchingRule">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                        {!v.templateMetadata.labels.donationMatchingRuleLabel}
+                                    </label>
+                                    <lightning:helptext content="{!$Label.c.bgeBatchTemplateDonationMatchingRuleHelp}" />
+                                    <lightning:dualListbox aura:id="donationMatchingRule"
+                                                           name="{!v.templateMetadata.labels.donationMatchingRuleLabel}"
+                                                           class="donationMatchingRuleListbox hideLabel"
+                                                           label="{!v.templateMetadata.labels.donationMatchingRuleLabel}"
+                                                           sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
+                                                           selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
+                                                           options="{!v.templateInfo.donationMatchingOptions}"
+                                                           value="{!v.templateInfo.donationMatchingRule}"
+                                                           required="true" variant="label-hidden"
+                                                           disableReordering="true"
+                                                           size="5"/>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                    <label class="slds-form-element__label" for="donationDateRange">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                        {!v.templateMetadata.labels.donationDateRangeLabel}
+                                    </label>
+                                    <lightning:helptext content="{!$Label.c.bgeBatchTemplateDonationDateRangeHelp}" />
+                                    <lightning:input aura:id="donationDateRange"
+                                                     label="{!v.templateMetadata.labels.donationDateRangeLabel}"
+                                                     type="number" required="true" variant="label-hidden"
+                                                     value="{!v.templateInfo.donationDateRange}"/>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                    <label class="slds-form-element__label" for="donationMatchingClass">
+                                        {!v.templateMetadata.labels.donationMatchingClassLabel}
+                                    </label>
+                                    <lightning:helptext content="{!$Label.c.bgeBatchTemplateDonationMatchingClassHelp}" />
+                                    <lightning:input aura:id="donationMatchingClass"
+                                                     label="{!v.templateMetadata.labels.donationMatchingClassLabel}"
+                                                     value="{!v.templateInfo.donationMatchingClass}" variant="label-hidden"/>
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="6" class="slds-p-bottom_small">
+                            <lightning:layout multipleRows="true">
+                                <lightning:layoutItem class="slds-p-horizontal_x-small" size="12">
+                                    <div class="slds-section">
+                                        <h3 class="slds-section__title slds-theme_shade">
+                                            <span class="slds-p-left_small slds-truncate">
+                                                {!$Label.c.stgLabelBatchProcessingOptions}
+                                            </span>
+                                        </h3>
+                                    </div>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                    <label class="slds-form-element__label" for="batchProcessSize">
+                                        <abbr class="slds-required" title="required">*</abbr>
+                                        {!v.templateMetadata.labels.batchProcessSizeLabel}
+                                    </label>
+                                    <lightning:helptext content="{!$Label.c.bgeBatchTemplateBatchProcessSizeHelp}" />
+                                    <lightning:input aura:id="batchProcessSize"
+                                                     label="{!v.templateMetadata.labels.batchProcessSizeLabel}"
+                                                     type="number" step="0" required="true" variant="label-hidden"
+                                                     value="{!v.templateInfo.batchProcessSize}"/>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                    <lightning:input aura:id="runOpportunityRollupsWhileProcessing"
+                                                     label="{!v.templateMetadata.labels.runOpportunityRollupsWhileProcessingLabel}"
+                                                     type="checkbox" variant="label-hidden" class="inputCheckbox"
+                                                     checked="{!v.templateInfo.runOpportunityRollupsWhileProcessing}"/>
+                                    <label class="slds-form-element__label" for="runOpportunityRollupsWhileProcessing">
+                                        {!v.templateMetadata.labels.runOpportunityRollupsWhileProcessingLabel}
+                                    </label>
+                                    <lightning:helptext content="{!$Label.c.bgeBatchTemplateRunOpportunityRollupsWhileProcessingHelp}" />
+                                </lightning:layoutItem>
+                                <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                    <lightning:input aura:id="processUsingScheduledJob"
+                                                     label="{!v.templateMetadata.labels.processUsingScheduledJobLabel}"
+                                                     type="checkbox" variant="label-hidden" class="inputCheckbox"
+                                                     checked="{!v.templateInfo.processUsingScheduledJob}"/>
+                                    <label class="slds-form-element__label" for="processUsingScheduledJob">
+                                        {!v.templateMetadata.labels.processUsingScheduledJobLabel}
+                                    </label>
+                                    <lightning:helptext content="{!$Label.c.bgeBatchTemplateProcessUsingScheduledJobHelp}" />
+                                </lightning:layoutItem>
+                                <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                    <label class="slds-form-element__label" for="postProcessClass">
+                                        {!v.templateMetadata.labels.postProcessClassLabel}
+                                    </label>
+                                    <lightning:helptext content="{!$Label.c.bgeBatchTemplatePostProcessClassHelp}" />
+                                    <lightning:input aura:id="postProcessClass"
+                                                     label="{!v.templateMetadata.labels.postProcessClassLabel}"
+                                                     value="{!v.templateInfo.postProcessClass}"
+                                                     variant="label-hidden"/>
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                        </lightning:layoutItem>
+                    </lightning:layout>
                 </aura:if>
                 <!-- End Step 5 -->
 
@@ -370,10 +499,10 @@
                             <aura:if isTrue="{!not(v.isReadOnly)}">
                                 <lightning:button aura:id="cancel" variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.handleButtonClick}" />
                             </aura:if>
-                            <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '4' }">
+                            <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '5' }">
                                 <lightning:button aura:id="next" variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.handleButtonClick}" />
                             </aura:if>
-                            <aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '4') }">
+                            <aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '5') }">
                                 <lightning:button aura:id="save" variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.handleButtonClick}" disabled="{!or (v.templateMetadata.dataTableChanged, v.templateFieldOptions.errors.size > 0)}" />
                             </aura:if>
                         </lightning:layoutItem>

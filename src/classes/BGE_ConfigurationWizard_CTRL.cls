@@ -68,8 +68,10 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                             'Run_Opportunity_Rollups_while_Processing__c',
                             'Contact_Matching_Rule__c',
                             'Donation_Matching_Behavior__c',
+                            'Donation_Matching_Implementing_Class__c',
                             'Donation_Matching_Rule__c',
                             'Donation_Date_Range__c',
+                            'Post_Process_Implementing_Class__c',
                             'Process_Using_Scheduled_Job__c'
                     };
 
@@ -86,17 +88,23 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
                     SObject recordDetails = Database.query(soql);
 
-                    model.name = (String) recordDetails.get('Name');
-                    model.id = (String) recordDetails.get('Id');
-                    model.description = (String) recordDetails.get(descriptionField);
-                    model.requireTotalMatch = (Boolean) recordDetails.get('RequireTotalMatch__c');
-                    model.activeFields = (String) recordDetails.get('Active_Fields__c');
-
-                    // TODO: If/When users are able to change the processing settings, we will need to retrieve their defined values here as well.
+                    model.name = (String)recordDetails.get('Name');
+                    model.id = (String)recordDetails.get('Id');
+                    model.description = (String)recordDetails.get(descriptionField);
+                    model.requireTotalMatch = (Boolean)recordDetails.get('RequireTotalMatch__c');
+                    model.activeFields = (String)recordDetails.get('Active_Fields__c');
+                    model.batchProcessSize = (Decimal)recordDetails.get('Batch_Process_Size__c');
+                    model.donationDateRange = (Decimal)recordDetails.get('Donation_Date_Range__c');
+                    model.donationMatchingBehavior = (String)recordDetails.get('Donation_Matching_Behavior__c');
+                    model.donationMatchingClass = (String)recordDetails.get('Donation_Matching_Implementing_Class__c');
+                    model.donationMatchingRule = ((String)recordDetails.get('Donation_Matching_Rule__c')).split(';');
+                    model.postProcessClass = (String)recordDetails.get('Post_Process_Implementing_Class__c');
+                    model.processUsingScheduledJob = (Boolean)recordDetails.get('Process_Using_Scheduled_Job__c');
+                    model.runOpportunityRollupsWhileProcessing = (Boolean)recordDetails.get('Run_Opportunity_Rollups_while_Processing__c');
 
                     if (sObjectName == 'DataImportBatch__c') {
                         model.expectedCount = Integer.valueOf(recordDetails.get('Expected_Count_of_Gifts__c'));
-                        model.expectedTotal = (Decimal) recordDetails.get('Expected_Total_Batch_Amount__c');
+                        model.expectedTotal = (Decimal)recordDetails.get('Expected_Total_Batch_Amount__c');
                     }
                 } catch (Exception ex) {
                     throw new AuraHandledException('ERROR: ' + ex.getMessage());
@@ -112,6 +120,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         setDefaultValuesOnBGEDetailsModel(model);
 
+        model.donationMatchingOptions = getDonationMatchingOptions();
         model.templateFields = getAvailableFields();
 
         model.labels = getLabels(sObjectName);
@@ -334,13 +343,19 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         model.requireTotalMatch = false;
         model.templateFields = new List<BGEField>();
         model.batchProcessSize = 50;
-        model.runOpportunityRollupsWhileProcessing = false;
         model.contactMatchingRule = 'Firstname,Lastname,Email';
-        model.donationMatchingBehavior = BDI_DataImport_API.ExactMatchOrCreate;
-        model.donationMatchingRule = UTIL_Namespace.StrAllNSPrefix('Donation_Amount__c') + ';' + UTIL_Namespace.StrAllNSPrefix('Donation_Date__c');
         model.donationDateRange = 0;
+        model.donationMatchingBehavior = BDI_DataImport_API.ExactMatchOrCreate;
+        model.donationMatchingClass = '';
         model.processUsingScheduledJob = false;
+        model.postProcessClass = '';
+        model.runOpportunityRollupsWhileProcessing = false;
         model.activeFields = getDefaultActiveFields();
+
+        List<String> donationMatchingRules = new List<String>();
+        donationMatchingRules.add(UTIL_Namespace.StrAllNSPrefix('Donation_Amount__c').toLowerCase());
+        donationMatchingRules.add(UTIL_Namespace.StrAllNSPrefix('Donation_Date__c').toLowerCase());
+        model.donationMatchingRule = donationMatchingRules;
 
         return model;
     }
@@ -388,8 +403,16 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             model.donationMatchingRule = defaultModel.donationMatchingRule;
         }
 
+        if (model.donationMatchingClass == null) {
+            model.donationMatchingClass = defaultModel.donationMatchingClass;
+        }
+
         if (model.donationDateRange == null) {
             model.donationDateRange = defaultModel.donationDateRange;
+        }
+
+        if (model.postProcessClass == null) {
+            model.postProcessClass = defaultModel.postProcessClass;
         }
 
         if (model.processUsingScheduledJob == null) {
@@ -400,6 +423,30 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             model.activeFields = defaultModel.activeFields;
         }
     }
+
+    /*******************************************************************************************************
+    * @description Sets donation field options for BGEDetailsModel
+    * @return List<Map<String,String>> donationMatchingOptions
+    */
+    private static List<Map<String, String>> getDonationMatchingOptions() {
+        List<Map<String, String>> donationMatchingOptions = new List<Map<String, String>>();
+
+        Set<String> setFields = new Set<String>();
+        setFields.addAll(BDI_Donations.mapDIFieldToOppField.keySet());
+        setFields.addAll(BDI_Donations.mapDIFieldToPmtField.keySet());
+        List<String> donationFields = new List<String>(setFields);
+        donationFields.sort();
+
+        for (String donationField: donationFields) {
+            String donationFieldLabel = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), donationField);
+            Map<String, String> option = new Map<String, String>();
+            option.put('value', donationField);
+            option.put('label', donationFieldLabel);
+            donationMatchingOptions.add(option);
+        }
+        return donationMatchingOptions;
+    }
+
 
     /*******************************************************************************************************
     * @description Retrieves the object and field labels for the component.
@@ -433,8 +480,17 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 'description' => Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
                 'totalMatchHelp' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
                 'totalMatchLabel' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getLabel(),
-                'recordInfoLabel' => Label.bgeBatchTemplateOverviewWizard
+                'recordInfoLabel' => Label.bgeBatchTemplateOverviewWizard,
+                'batchProcessSizeLabel' => Schema.Batch_Template__c.Batch_Process_Size__c.getDescribe().getLabel(),
+                'donationDateRangeLabel' => Schema.Batch_Template__c.Donation_Date_Range__c.getDescribe().getLabel(),
+                'donationMatchingBehaviorLabel' => Schema.Batch_Template__c.Donation_Matching_Behavior__c.getDescribe().getLabel(),
+                'donationMatchingClassLabel' => Schema.Batch_Template__c.Donation_Matching_Implementing_Class__c.getDescribe().getLabel(),
+                'donationMatchingRuleLabel' => Schema.Batch_Template__c.Donation_Matching_Rule__c.getDescribe().getLabel(),
+                'postProcessClassLabel' => Schema.Batch_Template__c.Post_Process_Implementing_Class__c.getDescribe().getLabel(),
+                'processUsingScheduledJobLabel' => Schema.Batch_Template__c.Process_Using_Scheduled_Job__c.getDescribe().getLabel(),
+                'runOpportunityRollupsWhileProcessingLabel' => Schema.Batch_Template__c.Run_Opportunity_Rollups_while_Processing__c.getDescribe().getLabel()
         };
+        labels.putAll(getMatchingValues());
         return labels;
     }
 
@@ -455,7 +511,32 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 'expectedCountField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Count_of_Gifts__c.getName(),
                 'expectedCountLabel' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Count_of_Gifts__c.getLabel(),
                 'expectedTotalField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getName(),
-                'expectedTotalLabel' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getLabel()
+                'expectedTotalLabel' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getLabel(),
+                'batchProcessSizeLabel' => Schema.DataImportBatch__c.Batch_Process_Size__c.getDescribe().getLabel(),
+                'donationDateRangeLabel' => Schema.DataImportBatch__c.Donation_Date_Range__c.getDescribe().getLabel(),
+                'donationMatchingBehaviorLabel' => Schema.DataImportBatch__c.Donation_Matching_Behavior__c.getDescribe().getLabel(),
+                'donationMatchingClassLabel' => Schema.DataImportBatch__c.Donation_Matching_Implementing_Class__c.getDescribe().getLabel(),
+                'donationMatchingRuleLabel' => Schema.DataImportBatch__c.Donation_Matching_Rule__c.getDescribe().getLabel(),
+                'postProcessClassLabel' => Schema.DataImportBatch__c.Post_Process_Implementing_Class__c.getDescribe().getLabel(),
+                'processUsingScheduledJobLabel' => Schema.DataImportBatch__c.Process_Using_Scheduled_Job__c.getDescribe().getLabel(),
+                'runOpportunityRollupsWhileProcessingLabel' => Schema.DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c.getDescribe().getLabel()
+        };
+        labels.putAll(getMatchingValues());
+        return labels;
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieves Matching string values from BDI_DataImport_API
+    * @return Map of object and field name keys to their labels.
+    */
+    private static Map<String, String> getMatchingValues() {
+        Map<String, String> labels = new Map<String, String> {
+                'DoNotMatch' => BDI_DataImport_API.DoNotMatch,
+                'RequireNoMatch' => BDI_DataImport_API.RequireNoMatch,
+                'RequireExactMatch' => BDI_DataImport_API.RequireExactMatch,
+                'ExactMatchOrCreate' => BDI_DataImport_API.ExactMatchOrCreate,
+                'RequireBestMatch' => BDI_DataImport_API.RequireBestMatch,
+                'BestMatchOrCreate' => BDI_DataImport_API.BestMatchOrCreate
         };
         return labels;
     }
@@ -516,12 +597,13 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         dataImportBatch.RequireTotalMatch__c = recordDetails.requireTotalMatch;
         dataImportBatch.Active_Fields__c = recordDetails.activeFields;
         dataImportBatch.Batch_Process_Size__c = recordDetails.batchProcessSize;
-        dataImportBatch.Run_Opportunity_Rollups_while_Processing__c = recordDetails.runOpportunityRollupsWhileProcessing;
-        dataImportBatch.Contact_Matching_Rule__c = recordDetails.contactMatchingRule;
-        dataImportBatch.Donation_Matching_Behavior__c = recordDetails.donationMatchingBehavior;
-        dataImportBatch.Donation_Matching_Rule__c = recordDetails.donationMatchingRule;
         dataImportBatch.Donation_Date_Range__c = recordDetails.donationDateRange;
+        dataImportBatch.Donation_Matching_Behavior__c = recordDetails.donationMatchingBehavior;
+        dataImportBatch.Donation_Matching_Implementing_Class__c = recordDetails.donationMatchingClass;
+        dataImportBatch.Donation_Matching_Rule__c = String.join(recordDetails.donationMatchingRule, ';');
+        dataImportBatch.Post_Process_Implementing_Class__c = recordDetails.postProcessClass;
         dataImportBatch.Process_Using_Scheduled_Job__c = recordDetails.processUsingScheduledJob;
+        dataImportBatch.Run_Opportunity_Rollups_while_Processing__c = recordDetails.runOpportunityRollupsWhileProcessing;
         dataImportBatch.Expected_Count_of_Gifts__c = recordDetails.expectedCount;
         dataImportBatch.Expected_Total_Batch_Amount__c = recordDetails.expectedTotal;
         dataImportBatch.Active_Fields__c = recordDetails.activeFields;
@@ -549,12 +631,14 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         batchTemplate.RequireTotalMatch__c = recordDetails.requireTotalMatch;
         batchTemplate.Active_Fields__c = recordDetails.activeFields;
         batchTemplate.Batch_Process_Size__c = recordDetails.batchProcessSize;
-        batchTemplate.Run_Opportunity_Rollups_while_Processing__c = recordDetails.runOpportunityRollupsWhileProcessing;
         batchTemplate.Contact_Matching_Rule__c = recordDetails.contactMatchingRule;
-        batchTemplate.Donation_Matching_Behavior__c = recordDetails.donationMatchingBehavior;
-        batchTemplate.Donation_Matching_Rule__c = recordDetails.donationMatchingRule;
         batchTemplate.Donation_Date_Range__c = recordDetails.donationDateRange;
+        batchTemplate.Donation_Matching_Behavior__c = recordDetails.donationMatchingBehavior;
+        batchTemplate.Donation_Matching_Implementing_Class__c = recordDetails.donationMatchingClass;
+        batchTemplate.Donation_Matching_Rule__c = String.join(recordDetails.donationMatchingRule, ';');
+        batchTemplate.Post_Process_Implementing_Class__c = recordDetails.postProcessClass;
         batchTemplate.Process_Using_Scheduled_Job__c = recordDetails.processUsingScheduledJob;
+        batchTemplate.Run_Opportunity_Rollups_while_Processing__c = recordDetails.runOpportunityRollupsWhileProcessing;
 
         upsert batchTemplate;
 
@@ -574,13 +658,16 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public List<BGEField> templateFields;
         @AuraEnabled public String activeFields;
         @AuraEnabled public Map<String, String> labels;
-        @AuraEnabled public Integer batchProcessSize;
-        @AuraEnabled public Boolean runOpportunityRollupsWhileProcessing;
+        @AuraEnabled public Decimal batchProcessSize;
         @AuraEnabled public String contactMatchingRule;
+        @AuraEnabled public Decimal donationDateRange;
         @AuraEnabled public String donationMatchingBehavior;
-        @AuraEnabled public String donationMatchingRule;
-        @AuraEnabled public Integer donationDateRange;
+        @AuraEnabled public String donationMatchingClass;
+        @AuraEnabled public List<String> donationMatchingRule;
+        @AuraEnabled public List<Map<String,String>> donationMatchingOptions;
+        @AuraEnabled public String postProcessClass;
         @AuraEnabled public Boolean processUsingScheduledJob;
+        @AuraEnabled public Boolean runOpportunityRollupsWhileProcessing;
         @AuraEnabled public List<Batch_Template__c> availableBatchTemplates;
         @AuraEnabled public Integer recordCount;
 
