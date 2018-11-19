@@ -581,6 +581,7 @@
     renderDateField: function (cmp, rollupLabel, renderMap) {
         var operation = cmp.get("v.activeRollup.operation");
         var timeBoundOperation = cmp.get("v.activeRollup.timeBoundOperationType");
+        var labels = cmp.get("v.labels");
         if (timeBoundOperation !== null &&
             (operation === 'First'
                 || operation === 'Last'
@@ -591,6 +592,9 @@
                 || timeBoundOperation === 'Years_Ago'
                 || timeBoundOperation === 'Days_Back')
             && rollupLabel) {
+            //enable date field
+            renderMap["dateField"] = true;
+        } else if (rollupLabel.includes(labels.labelAllocation)) {
             //enable date field
             renderMap["dateField"] = true;
         } else {
