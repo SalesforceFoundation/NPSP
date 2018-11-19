@@ -44,6 +44,10 @@ class NPSP(object):
     def cumulusci(self):
         return self.builtin.get_library_instance('cumulusci.robotframework.CumulusCI')
 
+    @property
+    def salesforce(self):
+        return self.builtin.get_library_instance('cumulusci.robotframework.Salesforce')
+
     def get_namespace_prefix(self, name):
         parts = name.split('__')
         if parts[-1] == 'c':
@@ -339,10 +343,8 @@ class NPSP(object):
         
     def populate_modal_field(self, title, value):
         locator=npsp_lex_locators['modal_field'].format(title,value)
-        self.selenium.set_focus_to_element(locator)
-        field = self.selenium.get_webelement(locator)
-        field.clear()
-        field.send_keys(value)       
+        self.salesforce._populate_field(locator, value)
+    
         
     def verify_occurrence(self,title,value):
         """"""
@@ -412,10 +414,8 @@ class NPSP(object):
     def enter_eng_plan_values(self, name, value):
         """Enter values into corresponding fields in Engagement Plan Templet page"""
         locator = npsp_lex_locators['id'].format(name) 
-        self.selenium.set_focus_to_element(locator)
-        field=self.selenium.get_webelement(locator)
-        field.clear()
-        field.send_keys(value)     
+        self.salesforce._populate_field(locator, value)
+    
     
 
                 
@@ -459,22 +459,15 @@ class NPSP(object):
             if name == "Level Name":
                 id = "fldName"
                 locator = npsp_lex_locators['levels']['id'].format(id)
-                self.selenium.set_focus_to_element(locator)  
-                self.selenium.get_webelement(locator).send_keys(value)      
+                self.salesforce._populate_field(locator, value)      
             elif name == "Minimum Amount":
                 id = "fldMinAmount"
                 locator = npsp_lex_locators['levels']['id'].format(id)
-                self.selenium.set_focus_to_element(locator) 
-                field=self.selenium.get_webelement(locator)
-                field.clear()
-                field.send_keys(value)  
+                self.salesforce._populate_field(locator, value)  
             elif name == "Maximum Amount":
                 id = "fldMaxAmount"
                 locator = npsp_lex_locators['levels']['id'].format(id)
-                self.selenium.set_focus_to_element(locator) 
-                field=self.selenium.get_webelement(locator)
-                field.clear()
-                field.send_keys(value)                    
+                self.salesforce._populate_field(locator, value)                    
 
     def enter_level_dd_values(self, name,value):
         """Enter values into corresponding fields in Levels page"""                 

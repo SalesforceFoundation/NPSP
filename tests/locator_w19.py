@@ -4,7 +4,6 @@ npsp_lex_locators={
     'app_launcher':{
         'select-option':'//span/mark[text()="{}"]',
     },
-    #'object_dd':"//h1[contains(@class,'slds-page-header__title')]/a/div[contains(@class,'triggerLinkTextAndIconWrapper')][.//lightning-primitive-icon]",
     'object_dd':'//h1[contains(@class,"slds-page-header__title")]//a',
     "record": {
         'button': "//div[@class='actionsContainer']/button[@title='{}']",
@@ -95,12 +94,10 @@ npsp_lex_locators={
     'levels':{
         'id':'//input[contains(@id,"{}")]',
         'select':'//select[contains(@id,"{}")]',
-        #'button':'//input[@id="j_id0:j_id4:j_id6:j_id7:{}"]',
         
     },
     'payments':{
-        'date_loc':"//*[@id='pmtTable']/tbody/tr/td[3]/div//input",
-        #'date_loc':"//input[@value='{}']",        
+        'date_loc':"//*[@id='pmtTable']/tbody/tr/td[3]/div//input",       
         'no_payments':'//tbody/tr/td[3]',
         'pay_amount':'//tbody/tr[{}]/td[3]/span/span[text()="{}"]',
         'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span',
