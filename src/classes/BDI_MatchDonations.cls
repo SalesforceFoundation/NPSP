@@ -84,23 +84,25 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     * @param mapDIIdToOpp Map to fill in of DI Id's to matched Opportunities
     * @param mapDIIdToPmt Map to fill in of DI Id's to matched Payments
     * @return void
-    */ 
+    */
     public void match(BDI_DataImportService bdi, list<DataImport__c> listDI,
-        map<Id, Opportunity> mapDIIdToOpp, map<Id, npe01__OppPayment__c> mapDIIdToPmt) {
+            map<Id, Opportunity> mapDIIdToOpp, map<Id, npe01__OppPayment__c> mapDIIdToPmt) {
 
         this.bdi = bdi;
-        
+
         // query for potential Opportunities & Payments based off our matching criteria
         list<Opportunity> listOpp = getPotentialDonationMatches(listDI);
         if (listOpp == null) {
             return;
         }
-        
+
         // put each contact's and account's opps in their own list
         map<Id, list<Opportunity>> mapConAccIdToOpps = createMapConAccIdToOpps(listOpp);
-        
+
         // now look for the matching Opp for each donation
         for (DataImport__c di : listDI) {
+            // User told us in BGE interface to not match this record and only create new Opportunity
+            //if (di.DonationImportStatus__c == label.bdiIgnored) {
             ID id;
             if (di.Donation_Donor__c == 'Account1') {
                 id = bdi.AccountFromDi(di, 1).Id;
@@ -248,6 +250,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 di.DonationImportStatus__c = label.bdiMatchedNone;
             }
         }
+        //}
     }
 
     /*******************************************************************************************************
