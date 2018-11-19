@@ -381,7 +381,7 @@
         }
         //allow payment fields for allocation date in order to support payment allocations
         if (rollupTypeLabel.includes(labels.labelAllocation)) {
-            this.resetFields(cmp, [activeRollup.dateObject, labels.objectPayment], "date");
+            this.resetFields(cmp, [labels.objectOpportunity, labels.objectPayment], "date");
         } else {
             this.resetFields(cmp, activeRollup.dateObject, "date");
         }
