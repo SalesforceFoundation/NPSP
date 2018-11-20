@@ -86,18 +86,18 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     * @return void
     */ 
     public void match(BDI_DataImportService bdi, list<DataImport__c> listDI,
-        map<Id, Opportunity> mapDIIdToOpp, map<Id, npe01__OppPayment__c> mapDIIdToPmt) {
+        Map<Id, Opportunity> mapDIIdToOpp, Map<Id, npe01__OppPayment__c> mapDIIdToPmt) {
 
         this.bdi = bdi;
-        
+
         // query for potential Opportunities & Payments based off our matching criteria
-        list<Opportunity> listOpp = getPotentialDonationMatches(listDI);
+        List<Opportunity> listOpp = getPotentialDonationMatches(listDI);
         if (listOpp == null) {
             return;
         }
-        
+
         // put each contact's and account's opps in their own list
-        map<Id, list<Opportunity>> mapConAccIdToOpps = createMapConAccIdToOpps(listOpp);
+        Map<Id, List<Opportunity>> mapConAccIdToOpps = createMapConAccIdToOpps(listOpp);
         
         // now look for the matching Opp for each donation
         for (DataImport__c di : listDI) {
@@ -107,27 +107,27 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
             } else { // can assume Contact1
                 id = bdi.ContactFromDi(di, 1).Id;
             }
-            list<Opportunity> listCAOpps = mapConAccIdToOpps.get(id);
-            list<Integer> listIMatches = new list<Integer>();
-            map<ID, npe01__OppPayment__c> mapOppIdToPmt = new map<ID, npe01__OppPayment__c>();
-            list<ID> listPmtIdMatches = new list<ID>();
+            List<Opportunity> listCAOpps = mapConAccIdToOpps.get(id);
+            List<Integer> listIMatches = new list<Integer>();
+            Map<ID, npe01__OppPayment__c> mapOppIdToPmt = new Map<ID, npe01__OppPayment__c>();
+            List<ID> listPmtIdMatches = new List<ID>();
             
-            boolean isMatchedByOppId = false;
-            boolean isMatchedByPmtId = false;
-            integer ioppBest = null;
+            Boolean isMatchedByOppId = false;
+            Boolean isMatchedByPmtId = false;
+            Integer ioppBest = null;
 
             if (listCAOpps != null) {
-                integer dtVarianceOpp = null;
+                Integer dtVarianceOpp = null;
 
                 // go thru each opp for this contact or account
-                for (integer i = 0; i < listCAOpps.size(); i++) {
+                for (Integer i = 0; i < listCAOpps.size(); i++) {
                     Opportunity opp = listCAOpps[i];
                     MatchInfo matchInfo = new MatchInfo(MATCHTYPE.NO_MATCH, 0);
 
                     // if 1 or more payments, use Payment matching rules
                     if (opp.npe01__Number_of_Payments__c >= 1) {
                         npe01__OppPayment__c pmtBest = null;
-                        integer dtVariancePmt = null;
+                        Integer dtVariancePmt = null;
 
                         for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
                             matchInfo = getMatchInfoByPmtRules(di, pmt);
@@ -201,7 +201,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 } else {
                     // we have multiple matches, we want to record them all, and fixup our status
                     di.DonationImportStatus__c = label.bdiMatchedBest;
-                    for (integer i = 0; i < listIMatches.size(); i++) {
+                    for (Integer i = 0; i < listIMatches.size(); i++) {
                         Opportunity oppT = listCAOpps[listIMatches[i]];
                         if (di.Donation_Possible_Matches__c == null) {
                             di.Donation_Possible_Matches__c = oppT.Id;
