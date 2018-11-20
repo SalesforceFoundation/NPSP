@@ -80,48 +80,48 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     * update, storing the lookup and status back in the BDI record.
     *
     * @param bdi The BDI instance currently running
-    * @param listDI The list of Data Import records with donations
+    * @param dataImports The list of Data Import records with donations
     * @param opportunitiesById Map to fill in of DI Id's to matched Opportunities
     * @param paymentsById Map to fill in of DI Id's to matched Payments
     * @return void
     */
-    public void match(BDI_DataImportService bdi, list<DataImport__c> listDI,
+    public void match(BDI_DataImportService bdi, list<DataImport__c> dataImports,
         Map<Id, Opportunity> opportunitiesById, Map<Id, npe01__OppPayment__c> paymentsById) {
 
         this.bdi = bdi;
 
         // query for potential Opportunities & Payments based off our matching criteria
-        List<Opportunity> listOpp = getPotentialDonationMatches(listDI);
-        if (listOpp == null) {
+        List<Opportunity> potentialDonationMatches = getPotentialDonationMatches(dataImports);
+        if (potentialDonationMatches == null) {
             return;
         }
 
         // put each contact's and account's opps in their own list
-        Map<Id, List<Opportunity>> mapConAccIdToOpps = createMapConAccIdToOpps(listOpp);
-        
+        Map<Id, List<Opportunity>> opportunitiesByContactsAndAccountsId = createMapConAccIdToOpps(potentialDonationMatches);
+
         // now look for the matching Opp for each donation
-        for (DataImport__c di : listDI) {
+        for (DataImport__c di : dataImports) {
             ID id;
             if (di.Donation_Donor__c == 'Account1') {
                 id = bdi.AccountFromDi(di, 1).Id;
             } else { // can assume Contact1
                 id = bdi.ContactFromDi(di, 1).Id;
             }
-            List<Opportunity> listCAOpps = mapConAccIdToOpps.get(id);
+            List<Opportunity> contactAndAccountOpportunities = opportunitiesByContactsAndAccountsId.get(id);
             List<Integer> listIMatches = new list<Integer>();
-            Map<ID, npe01__OppPayment__c> mapOppIdToPmt = new Map<ID, npe01__OppPayment__c>();
-            List<ID> listPmtIdMatches = new List<ID>();
-            
+            Map<ID, npe01__OppPayment__c> paymentsByOpportunityId = new Map<ID, npe01__OppPayment__c>();
+            List<ID> paymentIdMatches = new List<ID>();
+
             Boolean isMatchedByOppId = false;
             Boolean isMatchedByPmtId = false;
             Integer ioppBest = null;
 
-            if (listCAOpps != null) {
+            if (contactAndAccountOpportunities != null) {
                 Integer dtVarianceOpp = null;
 
                 // go thru each opp for this contact or account
-                for (Integer i = 0; i < listCAOpps.size(); i++) {
-                    Opportunity opp = listCAOpps[i];
+                for (Integer i = 0; i < contactAndAccountOpportunities.size(); i++) {
+                    Opportunity opp = contactAndAccountOpportunities[i];
                     MatchInfo matchInfo = new MatchInfo(MATCHTYPE.NO_MATCH, 0);
 
                     // if 1 or more payments, use Payment matching rules
@@ -136,10 +136,10 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                                 pmtBest = pmt;
                                 isMatchedByPmtId = true;
                                 // clear possible other matches
-                                listPmtIdMatches.clear();
+                                paymentIdMatches.clear();
                                 break;
                             } else if (matchInfo.matchType == MATCHTYPE.FIELD_MATCH) {
-                                listPmtIdMatches.add(pmt.Id);
+                                paymentIdMatches.add(pmt.Id);
                                 // we start with the first field match as possible best, and then look for closer matches
                                 if (pmtBest == null || matchInfo.dateVariance < dtVariancePmt) {
                                     pmtBest = pmt;
@@ -150,13 +150,13 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
 
                         // save our best match
                         if (pmtBest != null) {
-                            mapOppIdToPmt.put(opp.Id, pmtBest);
+                            paymentsByOpportunityId.put(opp.Id, pmtBest);
 
                             // treat a field match as Id match if the Opp was specified
                             if (opp.Id == di.DonationImported__c) {
                                 matchInfo.matchType = MATCHTYPE.ID_MATCH;
                             }
-                            
+
                             if (matchInfo.matchType != MATCHTYPE.ID_MATCH) {
                                 matchInfo.matchType = MATCHTYPE.FIELD_MATCH;
                             }
@@ -174,7 +174,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                         listIMatches.add(i);
                         ioppBest = i;
                         isMatchedByOppId = true;
-                        listPmtIdMatches.clear();
+                        paymentIdMatches.clear();
                         break;
                     } else if (matchInfo.matchType == MATCHTYPE.FIELD_MATCH) {
                         listIMatches.add(i);
@@ -189,7 +189,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
             
             // if we have 1 or more matches, record the best one
             if (listIMatches.size() > 0) {
-                Opportunity opp = listCAOpps[ioppBest];
+                Opportunity opp = contactAndAccountOpportunities[ioppBest];
                 di.DonationImported__c = opp.Id;
                 // put the existing opp in our map for caller's use
                 opportunitiesById.put(di.Id, opp);
@@ -197,12 +197,12 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 // if unique, remove this opp from the list to avoid matching it again.
                 if (listIMatches.size() == 1) {
                     di.DonationImportStatus__c = (isMatchedByOppId ? label.bdiMatchedId : label.bdiMatched);
-                    listCAOpps.remove(ioppBest);
+                    contactAndAccountOpportunities.remove(ioppBest);
                 } else {
                     // we have multiple matches, we want to record them all, and fixup our status
                     di.DonationImportStatus__c = label.bdiMatchedBest;
                     for (Integer i = 0; i < listIMatches.size(); i++) {
-                        Opportunity oppT = listCAOpps[listIMatches[i]];
+                        Opportunity oppT = contactAndAccountOpportunities[listIMatches[i]];
                         if (di.Donation_Possible_Matches__c == null) {
                             di.Donation_Possible_Matches__c = oppT.Id;
                         } else {
@@ -215,7 +215,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 }
                 
                 // also record the payment
-                npe01__OppPayment__c pmt = mapOppIdToPmt.get(opp.Id);
+                npe01__OppPayment__c pmt = paymentsByOpportunityId.get(opp.Id);
 
                 // if we didn't match a payment for the Opp, but it has only one payment, let's use it!
                 if (pmt == null && opp.npe01__Number_of_Payments__c == 1) {
@@ -228,14 +228,14 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 if (pmt != null) {
                     di.PaymentImported__c = pmt.Id;
                     di.PaymentImportStatus__c = (isMatchedByPmtId ? label.bdiMatchedId :
-                        (listPmtIdMatches.size() > 1 ? label.bdiMatchedBest : label.bdiMatched));
+                        (paymentIdMatches.size() > 1 ? label.bdiMatchedBest : label.bdiMatched));
                     // put the existing pmt in our map for caller's use
                     paymentsById.put(di.Id, pmt);
 
                     // also record payment matches if any
-                    if (listPmtIdMatches.size() > 1) {
-                        for (integer i = 0; i < listPmtIdMatches.size(); i++) {
-                            ID idPmt = listPmtIdMatches[i];
+                    if (paymentIdMatches.size() > 1) {
+                        for (integer i = 0; i < paymentIdMatches.size(); i++) {
+                            ID idPmt = paymentIdMatches[i];
                             if (di.Payment_Possible_Matches__c == null) {
                                 di.Payment_Possible_Matches__c = idPmt;
                             } else {
