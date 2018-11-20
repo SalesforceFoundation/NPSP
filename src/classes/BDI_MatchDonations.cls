@@ -108,16 +108,16 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 id = bdi.ContactFromDi(di, 1).Id;
             }
             List<Opportunity> contactAndAccountOpportunities = opportunitiesByContactsAndAccountsId.get(id);
-            List<Integer> listIMatches = new list<Integer>();
+            List<Integer> indexesOfDonationMatches = new List<Integer>();
             Map<ID, npe01__OppPayment__c> paymentsByOpportunityId = new Map<ID, npe01__OppPayment__c>();
             List<ID> paymentIdMatches = new List<ID>();
 
             Boolean isMatchedByOppId = false;
             Boolean isMatchedByPmtId = false;
-            Integer ioppBest = null;
+            Integer bestOpportunityIndex = null;
 
             if (contactAndAccountOpportunities != null) {
-                Integer dtVarianceOpp = null;
+                Integer opportunityDateVariance = null;
 
                 // go thru each opp for this contact or account
                 for (Integer i = 0; i < contactAndAccountOpportunities.size(); i++) {
@@ -170,47 +170,48 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
 
                     if (matchInfo.matchType == MATCHTYPE.ID_MATCH) {
                         // if we matched by Id, then we don't even care about other matches by field.
-                        listIMatches.clear();
-                        listIMatches.add(i);
-                        ioppBest = i;
+                        indexesOfDonationMatches.clear();
+                        indexesOfDonationMatches.add(i);
+                        bestOpportunityIndex = i;
                         isMatchedByOppId = true;
                         paymentIdMatches.clear();
                         break;
                     } else if (matchInfo.matchType == MATCHTYPE.FIELD_MATCH) {
-                        listIMatches.add(i);
+                        indexesOfDonationMatches.add(i);
                         // we start with the first field match as possible best, and then look for closer matches
-                        if (ioppBest == null || matchInfo.dateVariance < dtVarianceOpp) {
-                            ioppBest = i;
-                            dtVarianceOpp = matchInfo.dateVariance;
+                        if (bestOpportunityIndex == null || matchInfo.dateVariance < opportunityDateVariance) {
+                            bestOpportunityIndex = i;
+                            opportunityDateVariance = matchInfo.dateVariance;
                         }
                     }
                 } // end looping thru opps
             } 
             
             // if we have 1 or more matches, record the best one
-            if (listIMatches.size() > 0) {
-                Opportunity opp = contactAndAccountOpportunities[ioppBest];
+            if (indexesOfDonationMatches.size() > 0) {
+                Opportunity opp = contactAndAccountOpportunities[bestOpportunityIndex];
                 di.DonationImported__c = opp.Id;
                 // put the existing opp in our map for caller's use
                 opportunitiesById.put(di.Id, opp);
 
                 // if unique, remove this opp from the list to avoid matching it again.
-                if (listIMatches.size() == 1) {
+                if (indexesOfDonationMatches.size() == 1) {
                     di.DonationImportStatus__c = (isMatchedByOppId ? label.bdiMatchedId : label.bdiMatched);
-                    contactAndAccountOpportunities.remove(ioppBest);
+                    contactAndAccountOpportunities.remove(bestOpportunityIndex);
                 } else {
                     // we have multiple matches, we want to record them all, and fixup our status
                     di.DonationImportStatus__c = label.bdiMatchedBest;
-                    for (Integer i = 0; i < listIMatches.size(); i++) {
-                        Opportunity oppT = contactAndAccountOpportunities[listIMatches[i]];
+                    for (Integer i = 0; i < indexesOfDonationMatches.size(); i++) {
+                        Opportunity oppT = contactAndAccountOpportunities[indexesOfDonationMatches[i]];
                         if (di.Donation_Possible_Matches__c == null) {
                             di.Donation_Possible_Matches__c = oppT.Id;
                         } else {
                             di.Donation_Possible_Matches__c += ',' + oppT.Id;
                         }
                         // only take the first 10 matches to not blow our 255 char limit.
-                        if (i == 9)
+                        if (i == 9) {
                             break;
+                        }
                     }
                 }
                 
