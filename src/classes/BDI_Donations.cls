@@ -337,47 +337,51 @@ public class BDI_Donations {
         bdi.LogBDIError(di, strError, 'DonationImportStatus__c');        
         return false;
     }
-    
+
     /*******************************************************************************************************
     * @description for the provided DataImport record, create or update the appropriate Opp (in memory)
     * with data from the DI record, and return it unsaved.
     *
     * @param di The DataImport record to prepare the Opportunity for
     * @return Opportunity A new or existing Opportunity. Null if there was an error.
-    */ 
-    private Opportunity prepareOppForUpdateInsert(DataImport__c di) {        
+    */
+    private Opportunity prepareOppForUpdateInsert(DataImport__c di) {
         Opportunity opp = mapDIIdToOpp.get(di.Id);
-        string strOppName;
+        String opportunityName;
 
         // if there is no opp matched, create one for it
-        boolean isNew = (opp == null);
+        Boolean isNew = (opp == null);
         if (isNew) {
             opp = new Opportunity();
             mapDIIdToOpp.put(di.Id, opp);
             if (di.Donation_Donor__c == 'Account1') {
                 Account acc = bdi.AccountFromDi(di, 1);
                 opp.accountId = acc.Id;
-                strOppName = acc.Name;
+                opportunityName = acc.Name;
             } else { // we can assume it's for Contact1
                 Contact con = bdi.ContactFromDi(di, 1);
                 opp.npe01__Contact_Id_for_Role__c = con.Id;
                 opp.Primary_Contact__c = con.Id;
                 opp.Primary_Contact_Campaign_Member_Status__c = di.Campaign_Member_Status__c;
                 opp.AccountId = con.AccountId;
-                strOppName = con.Firstname + ' ' + con.Lastname;
+                opportunityName =  (!String.isBlank(con.Firstname)
+                                    ? con.Firstname
+                                    : '')
+                                    + con.Lastname;
             }
         }
 
         if (di.Donation_Record_Type_Name__c != null) {
-            Id idRt = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, di.Donation_Record_Type_Name__c);
-            if (idRt == null) {
+            Id donationRecordTypeId = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType,
+                                                        di.Donation_Record_Type_Name__c);
+            if (donationRecordTypeId == null) {
                 bdi.LogBDIError(di, label.bdiErrorInvalidOppRTName, 'DonationImportStatus__c');
                 return null;
             }
-            opp.RecordTypeId = idRt;
-            strOppName += ' ' + di.Donation_Record_Type_Name__c;
+            opp.RecordTypeId = donationRecordTypeId;
+            opportunityName += ' ' + di.Donation_Record_Type_Name__c;
         } else {
-            strOppName += ' ' + label.bdiDonation;
+            opportunityName += ' ' + label.bdiDonation;
         }
 
         // in Dry Run, we don't save campaigns, nor do we try to validate that all of the
@@ -388,12 +392,12 @@ public class BDI_Donations {
         }
 
         if (di.Donation_Campaign_Name__c != null) {
-            Id idCmp = bdi.mapStrNameToCampaignId.get(di.Donation_Campaign_Name__c);
-            if (idCmp == null) {
+            Id campaignId = bdi.mapStrNameToCampaignId.get(di.Donation_Campaign_Name__c);
+            if (campaignId == null) {
                 bdi.LogBDIError(di, label.bdiErrorInvalidCampaignName, 'DonationImportStatus__c');
                 return null;
             }
-            opp.CampaignId = idCmp;
+            opp.CampaignId = campaignId;
         }
 
         if (di.Donation_Date__c == null) {
@@ -406,7 +410,7 @@ public class BDI_Donations {
 
         if (di.Donation_Name__c == null) {
             if (isNew) {
-                di.Donation_Name__c = strOppName + ' ' + di.Donation_Date__c.format();
+                di.Donation_Name__c = opportunityName + ' ' + di.Donation_Date__c.format();
             } else {
                 di.Donation_Name__c = opp.Name;
             }
@@ -417,20 +421,25 @@ public class BDI_Donations {
         }
 
         // now copy over all the data to the Opp
-        for (string strDIField : mapDIFieldToOppField.keySet()) {
+        for (String dataImportField : mapDIFieldToOppField.keySet()) {
+
+            String donationRecordTypeName = UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c').toLowercase();
+            String donationStage = UTIL_Namespace.StrTokenNSPrefix('Donation_Stage__c').toLowercase();
+            String donationAmount = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase();
+
             // skip recordtype which we special cased above
-            if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c').toLowercase()) {
+            if (dataImportField == donationRecordTypeName) {
                 continue;
             }
             // only honor Stage if we aren't updating its payment
-            if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Stage__c').toLowercase() && di.PaymentImported__c != null) {
+            if (dataImportField == donationStage && di.PaymentImported__c != null) {
                 continue;
             }
             // only honor Amount if we aren't updating its payment
-            if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase() && di.PaymentImported__c != null) {
+            if (dataImportField == donationAmount && di.PaymentImported__c != null) {
                 continue;
             }
-            BDI_DataImportService.isCopiedDIField(di, strDIField, opp, mapDIFieldToOppField);
+            BDI_DataImportService.isCopiedDIField(di, dataImportField, opp, mapDIFieldToOppField);
         }
 
         // the Opp is ready!
