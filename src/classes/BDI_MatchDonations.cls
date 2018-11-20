@@ -81,12 +81,12 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     *
     * @param bdi The BDI instance currently running
     * @param listDI The list of Data Import records with donations
-    * @param mapDIIdToOpp Map to fill in of DI Id's to matched Opportunities
-    * @param mapDIIdToPmt Map to fill in of DI Id's to matched Payments
+    * @param opportunitiesById Map to fill in of DI Id's to matched Opportunities
+    * @param paymentsById Map to fill in of DI Id's to matched Payments
     * @return void
-    */ 
+    */
     public void match(BDI_DataImportService bdi, list<DataImport__c> listDI,
-        Map<Id, Opportunity> mapDIIdToOpp, Map<Id, npe01__OppPayment__c> mapDIIdToPmt) {
+        Map<Id, Opportunity> opportunitiesById, Map<Id, npe01__OppPayment__c> paymentsById) {
 
         this.bdi = bdi;
 
@@ -192,8 +192,8 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 Opportunity opp = listCAOpps[ioppBest];
                 di.DonationImported__c = opp.Id;
                 // put the existing opp in our map for caller's use
-                mapDIIdToOpp.put(di.Id, opp);
-                
+                opportunitiesById.put(di.Id, opp);
+
                 // if unique, remove this opp from the list to avoid matching it again.
                 if (listIMatches.size() == 1) {
                     di.DonationImportStatus__c = (isMatchedByOppId ? label.bdiMatchedId : label.bdiMatched);
@@ -230,7 +230,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                     di.PaymentImportStatus__c = (isMatchedByPmtId ? label.bdiMatchedId :
                         (listPmtIdMatches.size() > 1 ? label.bdiMatchedBest : label.bdiMatched));
                     // put the existing pmt in our map for caller's use
-                    mapDIIdToPmt.put(di.Id, pmt);
+                    paymentsById.put(di.Id, pmt);
 
                     // also record payment matches if any
                     if (listPmtIdMatches.size() > 1) {
