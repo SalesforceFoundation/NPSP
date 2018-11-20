@@ -219,7 +219,10 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
 
                 // if we didn't match a payment for the Opp, but it has only one payment, let's use it!
                 if (pmt == null && opp.npe01__Number_of_Payments__c == 1) {
-                    pmt = opp.npe01__OppPayment__r[0];
+                    npe01__OppPayment__c onlyPaymentAssociatedWithTheOpportunity = opp.npe01__OppPayment__r[0];
+                    if (!onlyPaymentAssociatedWithTheOpportunity.npe01__Paid__c) {
+                        pmt = onlyPaymentAssociatedWithTheOpportunity;
+                    }
                 }
 
                 if (pmt != null) {
