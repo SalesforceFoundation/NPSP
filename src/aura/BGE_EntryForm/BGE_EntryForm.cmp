@@ -48,7 +48,7 @@
     <aura:attribute name="unpaidPayments" type="List" description="" access="public" />
 
     <!--Modal Attributes-->
-    <aura:attribute name="matchingModalInstance" type="Object" />
+    <aura:attribute name="matchingModalPromise" type="Object" />
     <aura:attribute name="matchingModalHeader" type="Aura.ComponentDefRef[]">
         <h2 class="title slds-text-heading_medium">{!$Label.c.bgeMatchingSelect}</h2>
     </aura:attribute>
@@ -95,7 +95,7 @@
                                 </div>
                                 <div class="slds-media__body">
                                     <p>{!$Label.c.bgeMatchingAlert}
-                                        <a class="slds-p-left_small" onclick="{!c.openMatchModal}" id="selectMatchLink">
+                                        <a class="slds-m-left_small" onclick="{!c.openMatchModal}" id="selectMatchLink">
                                             {!$Label.c.bgeMatchingSelect}
                                         </a>
                                     </p>

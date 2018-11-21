@@ -82,11 +82,11 @@
 
                 component.set('v.options', options);
 
-                //document.getElementById("selectMatchLink").focus();
             } else {
                 this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
             }
             this.sendMessage('hideFormSpinner', '');
+            document.getElementById("selectMatchLink").focus();
         });
         $A.enqueueAction(action);
     },

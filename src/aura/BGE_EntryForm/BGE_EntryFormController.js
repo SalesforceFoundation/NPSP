@@ -3,7 +3,12 @@
      * @description: called during render to place the focus at the start of the form
      */
     callFocus: function(component){
-        component.find('donorType').focus();
+        let openDonationsLink = document.getElementById("selectMatchLink");
+        if (openDonationsLink) {
+            openDonationsLink.focus();
+        } else {
+            component.find('donorType').focus();
+        }
     },
 
     /**
@@ -18,9 +23,9 @@
      * @description: closes match modal
      */
     closeModal: function (component) {
-        //todo: troubleshoot why this isn't working
-        component.find('overlayLib').notifyClose();
-        //component.get('v.matchingModalInstance').close();
+        component.get("v.matchingModalPromise").then(function(modal) {
+            modal.close();
+        });
     },
 
     /**
@@ -75,14 +80,13 @@
      * @description: alerts parent component that record is saved and needs to be reset
      */
     openMatchModal: function(component, event, helper) {
-        component.find('overlayLib').showCustomModal({
+        component.set('v.matchingModalPromise', component.find('overlayLib').showCustomModal({
             header: component.get('v.matchingModalHeader'),
             body: component.get('v.matchingModalBody'),
             footer: component.get('v.matchingModalFooter'),
             showCloseButton: true
-        }).then(function(overlay) {
-            component.set('v.matchingModalInstance', overlay);
-        });
+        }));
+
     },
 
     /**
