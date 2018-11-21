@@ -788,7 +788,35 @@ global with sharing class BDI_DataImportService {
                 }
             }
         }
+
+        if (isCurrencyMapped(targetObjectName)) {
+            addCurrencyIsoCode(dataImportFieldToTargetField);
+        }
+
         return dataImportFieldToTargetField;
+    }
+
+    /*******************************************************************************************************
+    * @description Checks if this is one of the objects where we want to have a currency mapped.
+    * As of now, that object is Opportunity. Payment CurrencyISOCode is inherited from the Opportunity.
+    * @param strBaseObj the underlying object the bdi object is (ie, Contact, Account, etc)
+    * @return Boolean if the strBaseObj is an Opportunity.
+    */
+    private static Boolean isCurrencyMapped(String objectName) {
+        return objectName.equalsIgnoreCase('Opportunity');
+    }
+
+    /*******************************************************************************************************
+    * @description Adds the currencyisocode to the Map passed as parameter.
+    * @param Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
+    * @return void.
+    */
+    private static void addCurrencyIsoCode(Map<String, String> fieldMap) {
+
+        // handle multicurrency if it's enabled
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            fieldMap.put('currencyisocode', 'CurrencyIsoCode');
+        }
     }
 
     /*******************************************************************************************************
