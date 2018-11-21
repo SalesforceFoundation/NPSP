@@ -594,8 +594,9 @@
             && rollupLabel) {
             //enable date field
             renderMap["dateField"] = true;
-        } else if (rollupLabel.includes(labels.labelAllocation)) {
-            //enable date field
+        //show date field for all operations when selecting the Allocations rollup type
+        } else if (operation && 
+            rollupLabel.includes(labels.labelAllocation)) {
             renderMap["dateField"] = true;
         } else {
             //disable date field
