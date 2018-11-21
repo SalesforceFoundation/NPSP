@@ -37,20 +37,12 @@
 @isTest
 public with sharing class CON_ContactMergeTDTM_TEST2 {
 
-    /*********************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-
     /*******************************************************************************************************
     * @description merge three Contacts from different Household Accounts with many Relationships.  
     * verify: 
     *   No Duplicate Relationships
     */
     static testMethod void mergeContactsDifferentHHAccountManyRel() {
-        if (strTestOnly != '*' && strTestOnly != 'mergeContactsDifferentHHAccountManyRel') return;
-        
         // this creates 3 Household Accounts, each with 2 Contacts, and a default Address for each HH
         ADDR_Addresses_TEST.createHHTestData(3, 2);
         
@@ -113,7 +105,6 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeHHToHH() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToHH') return;
         testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -122,7 +113,6 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeOne2OneToOne2One() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOne2One') return;
         testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -131,7 +121,6 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeOrgToHH() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOrgToHH') return;
         testNamesAndOppsMerge(null, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -140,7 +129,6 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeHHToOrg() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToOrg') return;
         testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, null);
     }
 
@@ -149,7 +137,6 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeOrgToOne2One() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOrgToOne2One') return;
         testNamesAndOppsMerge(null, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -158,7 +145,6 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeOne2OneToOrg() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
         testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, null);
     }
     
@@ -167,7 +153,6 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeOrgToOrg() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOrgToOrg') return;
         testNamesAndOppsMerge(null, null);
     }
 
