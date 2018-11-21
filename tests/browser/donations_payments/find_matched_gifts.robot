@@ -65,20 +65,24 @@ Create Matching Donation
     Click Link    link=Bulk Data Processes
     Click Link    link=Rollup Donations Batch
     Click Button With Value    Run Batch
-    Wait For Locator    npsp_settings.status    CRLP_Account_SoftCredit_BATCH    Completed
-    Wait For Locator    npsp_settings.status    CRLP_RD_BATCH    Completed
-    Wait For Locator    npsp_settings.status    CRLP_Account_AccSoftCredit_BATCH    Completed
-    Wait For Locator    npsp_settings.status    CRLP_Contact_SoftCredit_BATCH    Completed
-    Wait For Locator    npsp_settings.status    CRLP_Account_BATCH    Completed
-    Wait For Locator    npsp_settings.status    CRLP_Contact_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    CRLP_Account_SoftCredit_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    CRLP_RD_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    CRLP_Account_AccSoftCredit_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    CRLP_Contact_SoftCredit_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    CRLP_Account_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    CRLP_Contact_BATCH    Completed
+    Wait For Locator    npsp_settings.status    RLLP_OppAccRollup_BATCH    Completed
+    Wait For Locator    npsp_settings.status    RLLP_OppContactRollup_BATCH    Completed
+    Wait For Locator    npsp_settings.status    RLLP_OppHouseholdRollup_BATCH    Completed
+    Wait For Locator    npsp_settings.status    RLLP_OppSoftCreditRollup_BATCH    Completed
     Go To Record Home    &{Contact1}[Id]
-    ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
+    ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Totals
     Select Tab    Details
     Scroll Element Into View    ${locator}
     Confirm Value    Total Gifts    $50.00    Y
     Confirm Value    Soft Credit Total    $50.00    Y
     Go To Record Home    &{Contact2}[Id]
-    ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
+    ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Totals
     Select Tab    Details
     Scroll Element Into View    ${locator}
     Confirm Value    Total Gifts    $25.00    Y
