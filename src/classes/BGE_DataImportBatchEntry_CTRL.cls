@@ -223,7 +223,16 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     public static List<DataImportRow> runDryRun(List<Id> dataImportIds, Id batchId) {
         Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
         Set<Id> recordIds = new Set<Id>(dataImportIds);
-        List<DataImport__c> dataImportRecords = getDataImportRecordsByIds(batchId, recordIds);
+        List<DataImport__c> dataImportRecordsToCheck = getDataImportRecordsByIds(batchId, recordIds);
+        List<DataImport__c> dataImportRecords = new List<DataImport__c>();
+
+        // Skip records where user has explicitly selected a matching record in BGE UI
+        for (DataImport__c dataImport : dataImportRecordsToCheck) {
+            if (dataImport.DonationImportStatus__c != 'User-Selected Match'
+                    || dataImport.PaymentImportStatus__c != 'User-Selected Match') {
+                dataImportRecords.add(dataImport);
+            }
+        }
 
         // Clear Dry Run fields before running Dry Run so new field values are accounted for
         for (DataImport__c dataImport : dataImportRecords) {
@@ -236,7 +245,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         }
         update dataImportRecords;
 
-        BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportRecords, true);
+        if (dataImportRecords.size() > 0){
+            BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportRecords, true);
+        }
 
         return getDataImportRows(batchId);
     }
