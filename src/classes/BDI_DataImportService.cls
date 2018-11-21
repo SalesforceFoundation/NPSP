@@ -788,7 +788,7 @@ global with sharing class BDI_DataImportService {
                 }
             }
         }
-        return dataImportFieldToTargetField;
+
         if (isCurrencyMapped(targetObjectName)) {
             addCurrencyIsoCode(dataImportFieldToTargetField);
         }
