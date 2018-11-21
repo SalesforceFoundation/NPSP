@@ -46,21 +46,12 @@ public with sharing class UTIL_DMLService_TEST {
 
 
     /*********************************************************************************************************
-    * @description If you only want to run a single test in this class, fill in its name here.
-    * If you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-    
-
-    /*********************************************************************************************************
     * @description Tests insert of a record with default DMLOption settings.
     * verify:
     *   Record inserted
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRecordInsertWithDefaults() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordInsertWithDefaults') return;
-        
         Account acct = new Account(Name = 'DMLOptionsAccount');
         insert acct;
 
@@ -84,8 +75,6 @@ public with sharing class UTIL_DMLService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRecordsInsertWithDefaults() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordsInsertWithDefaults') return;
-        
         Account acct = new Account(Name = 'DMLOptionsAccount');
         insert acct;
 
@@ -110,8 +99,6 @@ public with sharing class UTIL_DMLService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRecordInsertWithAllOrNone() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordInsertWithAllOrNone') return;
-        
         Account acct = new Account(Name = 'DMLOptionsAccount');
         insert acct;
 
@@ -135,8 +122,6 @@ public with sharing class UTIL_DMLService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRecordsInsertWithAllOrNoneTrue() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordsInsertWithAllOrNone') return;
-        
         Account acct = new Account(Name = 'DMLOptionsAccount');
         insert acct;
 
@@ -163,8 +148,6 @@ public with sharing class UTIL_DMLService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRecordsInsertWithAllOrNoneFalse() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordsInsertWithAllOrNone') return;
-        
         Account acct = new Account(Name = 'DMLOptionsAccount');
         insert acct;
 
@@ -189,8 +172,6 @@ public with sharing class UTIL_DMLService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRecordInsertDMLOptions() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordInsertDMLOptions') return;
-        
         Account acct = new Account(Name = 'DMLOptionsAccount');
         insert acct;
 
@@ -214,8 +195,6 @@ public with sharing class UTIL_DMLService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRecordsInsertWithDMLOptions() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordsInsertWithDMLOptions') return;
-        
         Account acct = new Account(Name = 'DMLOptionsAccount');
         insert acct;
 
@@ -240,8 +219,6 @@ public with sharing class UTIL_DMLService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRecordUpdateWithDefaults() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordUpdateWithDefaults') return;
-        
         Account acct = new Account(Name = 'DMLOptionsAccount');
         insert acct;
 
@@ -274,8 +251,6 @@ public with sharing class UTIL_DMLService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRecordsUpdateWithDefaults() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordsUpdateWithDefaults') return;
-        
         Account acct = new Account(Name = 'DMLOptionsAccount');
         insert acct;
 
@@ -311,8 +286,6 @@ public with sharing class UTIL_DMLService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRecordUpdateWithAllOrNone() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordUpdateWithAllOrNone') return;
-        
         Account acct = new Account(Name = 'DMLOptionsAccount');
         insert acct;
 
@@ -345,8 +318,6 @@ public with sharing class UTIL_DMLService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRecordsUpdateWithAllOrNone() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordsUpdateWithAllOrNone') return;
-        
         Account acct = new Account(Name = 'DMLOptionsAccount');
         insert acct;
 
@@ -382,8 +353,6 @@ public with sharing class UTIL_DMLService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRecordUpdateWithDMLOptions() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordUpdateWithDMLOptions') return;
-        
         Account acct = new Account(Name = 'DMLOptionsAccount');
         insert acct;
 
@@ -416,8 +385,6 @@ public with sharing class UTIL_DMLService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRecordsUpdateWithDMLOptions() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordsUpdateWithDMLOptions') return;
-        
         Account acct = new Account(Name = 'DMLOptionsAccount');
         insert acct;
 
@@ -453,8 +420,6 @@ public with sharing class UTIL_DMLService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRecordUpsertWithDefaults() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordUpsertWithDefaults') return;
-
         Account acct = new Account(Name = 'UpsertedAccount');
         Test.startTest();
         UTIL_DMLService.upsertRecord(acct);
@@ -482,8 +447,6 @@ public with sharing class UTIL_DMLService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRecordsUpsertWithDefaults() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordsUpsertWithDefaults') return;
-
         Account acct = new Account(Name = 'UpsertedAccount');
         insert acct;
 
@@ -518,8 +481,6 @@ public with sharing class UTIL_DMLService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRecordUpsertWithAllOrNone() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordUpsertWithAllOrNone') return;
-
         Account acct = new Account(Name = 'UpsertedAccount');
         insert acct;
 
@@ -551,8 +512,6 @@ public with sharing class UTIL_DMLService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRecordsUpsertWithAllOrNone() {
-        if (strTestOnly != '*' && strTestOnly != 'testRecordsUpsertWithAllOrNone') return;
-
         Account acct = new Account(Name = 'UpsertedAccount');
         insert acct;
 
@@ -588,8 +547,6 @@ public with sharing class UTIL_DMLService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRespectDuplicateRuleSettingsForAccounts() {
-        if (strTestOnly != '*' && strTestOnly != 'testRespectDuplicateRuleSettingsForAccounts') return;
-
         UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Respect_Duplicate_Rule_Settings__c = false));
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
         UTIL_DMLService.insertRecord(errorSettings);
@@ -645,8 +602,6 @@ public with sharing class UTIL_DMLService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRespectDuplicateRuleSettingsForContacts() {
-        if (strTestOnly != '*' && strTestOnly != 'testRespectDuplicateRuleSettingsForContacts') return;
-
         UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(Respect_Duplicate_Rule_Settings__c = false));
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
         UTIL_DMLService.insertRecord(errorSettings);
