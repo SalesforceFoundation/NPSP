@@ -44,15 +44,15 @@ ${contact_id}
     # --------------------------------
     &{contact} =  API Create Contact
     Set Global Variable     ${contact_id}       &{contact}[Id]
-    API Modify Contact      ${contact_id}       npo02__SmallestAmount__c=0.75
+    ##API Modify Contact      ${contact_id}       npo02__SmallestAmount__c=0.75
     Go To Record Home       ${contact_id}
     Select Tab              Details
     Scroll Element Into View    xpath: //span[text()='Donation Totals']
-    #Click Edit Button       Edit Smallest Gift
-    #Populate Field          Smallest Gift     0.75
-    #Click Record Button     Save
-    #Wait Until Loading Is Complete
-    #Scroll Element Into View    xpath: //span[text()='Donation Totals']
+    Click Edit Button       Edit Smallest Gift
+    Populate Field          Smallest Gift     0.75
+    Click Record Button     Save
+    Wait Until Loading Is Complete
+    Scroll Element Into View    xpath: //span[text()='Donation Totals']
     Confirm Value           Smallest Gift    $0.75    Y
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
