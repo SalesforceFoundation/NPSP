@@ -38,12 +38,6 @@
 @isTest
 class BDI_DataImportDeleteBTN_TEST {
 
-    /**
-     * @description Specify '*' to run all tests, 
-     * otherwise, specify a test name to execute the specified test only
-     */
-    static String strTestOnly = '*';
-
     /** @description Error message returned when user does not have Delete permission on the SObject */
     static String INSUFFICIENT_ACCESS_ERROR_MSG = 'INSUFFICIENT_ACCESS_OR_READONLY';
 
@@ -62,8 +56,6 @@ class BDI_DataImportDeleteBTN_TEST {
      */
     @isTest
     static void TestErrorMessageDisplayWhenPageActionParameterIsNotProvided() {
-        if (isNotRunnable('TestErrorMessageDisplayWhenPageActionParameterIsNotProvided')) return;
-        
         PageReference returnPage;
         DataImport__c[] records = setUpData();
         
@@ -92,8 +84,6 @@ class BDI_DataImportDeleteBTN_TEST {
      */
     @isTest
     static void TestErrorMessageDisplayWhenPageActionParameterIsInvalid() {
-        if (isNotRunnable('TestErrorMessageDisplayWhenPageActionParameterIsInvalid')) return;
-        
         String actionType = 'TestInvalidAction';
         DataImport__c[] records = setUpData();
         
@@ -116,8 +106,6 @@ class BDI_DataImportDeleteBTN_TEST {
      */
     @isTest
     static void TestDeleteAllDataImportRecordsBtn() {
-        if (isNotRunnable('TestDeleteAllDataImportRecordsBtn')) return;
-            
         DataImport__c[] records = setUpData();
         
         Test.startTest();
@@ -154,8 +142,6 @@ class BDI_DataImportDeleteBTN_TEST {
     */
     @isTest
     static void TestDeleteImportedDataImportRecordsBtn() {
-        if (isNotRunnable('TestDeleteImportedDataImportRecordsBtn')) return;
-            
         DataImport__c[] records = setUpData();
         records[3].Status__c = BDI_DataImport_API.bdiImported;
         update records;
@@ -197,8 +183,6 @@ class BDI_DataImportDeleteBTN_TEST {
      */
     @isTest
     static void TestCloseWhenRetUrlIsBlank() {
-        if (isNotRunnable('TestCloseWhenRetUrlIsBlank')) return;
-
         for (String retURL : new String[] { null, '', ' ' }) {
             ApexPages.currentPage().getParameters().put('retURL', retURL);
 
@@ -214,8 +198,6 @@ class BDI_DataImportDeleteBTN_TEST {
      */
     @isTest
     static void TestCloseWhenRetUrlIsNotProvided() {
-        if (isNotRunnable('TestCloseWhenRetUrlIsNotProvided')) return;
-
         assertHomePage(new BDI_DataImportDeleteBTN_CTRL().close());
     }
 
@@ -227,8 +209,6 @@ class BDI_DataImportDeleteBTN_TEST {
      */
     @isTest
     static void TestCloseWhenRetUrlIsProvided() {
-        if (isNotRunnable('TestCloseWhenRetUrlIsProvided')) return;
-
         String retURL = '/testpage.jsp';
         ApexPages.currentPage().getParameters().put('retURL', retURL);
 
@@ -254,15 +234,6 @@ class BDI_DataImportDeleteBTN_TEST {
 
         insert records;
         return records;
-    }
-
-    /**
-     * @description Check if the specified test should not be executed
-     * @param testMethodName Name of the test method
-     * @return Boolean true if the test should not be executed, otherwise false
-     */
-    static Boolean isNotRunnable(String testMethodName) {
-        return strTestOnly != '*' && strTestOnly != testMethodName;
     }
 
     /**
@@ -297,8 +268,6 @@ class BDI_DataImportDeleteBTN_TEST {
         String actionType,
         String expectedMsg
     ) {
-        if (isNotRunnable(testMethodName)) return;
-
         PageReference returnPage;
         DataImport__c[] records = setUpData();
         
