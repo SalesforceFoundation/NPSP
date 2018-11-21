@@ -675,7 +675,6 @@
     resetFields: function (cmp, objects, context) {
         var newFields = [];
         if (Array.isArray(objects)) {
-            newFields = [];
             objects.forEach(function(object){
                 newFields = newFields.concat(cmp.get("v.objectDetails")[object]);
             });
