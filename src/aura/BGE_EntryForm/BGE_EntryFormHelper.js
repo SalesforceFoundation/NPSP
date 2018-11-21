@@ -1,9 +1,9 @@
 ({
     /**
-     * @description: adds hidden and non-lightning:inputfield fields to the Data Import record before submitting.
-     * @return: Object rowFields with hidden fields added
+     * @description: queries open donations for upcoming donations
+     * @return: void
      */
-    getOpenDonations: function (component) {
+    queryOpenDonations: function (component) {
         let donorType = component.get('v.donorType');
         let donorId;
         if (donorType === 'Contact1') {
@@ -17,10 +17,11 @@
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
-                var response = JSON.parse(response.getReturnValue());
-                console.log('success!');
+                var openDonations = JSON.parse(response.getReturnValue());
                 console.log(response);
                 // call another function here to create the scoped notification
+                component.set('v.openOpportunities', openDonations.openOpportunities);
+                component.set('v.unpaidPayments', openDonations.unpaidPayments);
             } else {
                 this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
             }

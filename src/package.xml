@@ -1423,6 +1423,8 @@
         <members>bgeGridNoGiftsHeader</members>
         <members>bgeGridTotalAmount</members>
         <members>bgeGridTotalCount</members>
+        <members>bgeMatchingAlert</members>
+        <members>bgeMatchingSelect</members>
         <members>bgeNewBatch</members>
         <members>bgeNewGift</members>
         <members>bgeTabHeader</members>

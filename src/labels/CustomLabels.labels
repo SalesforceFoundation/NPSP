@@ -2559,18 +2559,18 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Set Field Options</value>
     </labels>
     <labels>
-        <fullName>bgeGridDonorType</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Label for Donor Type picklist</shortDescription>
-        <value>Donor Type</value>
-    </labels>
-    <labels>
         <fullName>bgeGridAllGifts</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label for Gift Entry Grid</shortDescription>
         <value>All Gifts</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridDonorType</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Donor Type picklist</shortDescription>
+        <value>Donor Type</value>
     </labels>
     <labels>
         <fullName>bgeGridGiftCountHeader</fullName>
@@ -2608,13 +2608,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Matched Record</value>
     </labels>
     <labels>
-        <fullName>bgeNewGift</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Label for Gift Entry Form</shortDescription>
-        <value>New Gift</value>
-    </labels>
-    <labels>
         <fullName>bgeGridNoGiftsHeader</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2643,11 +2636,31 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Total Count:</value>
     </labels>
     <labels>
+        <fullName>bgeMatchingAlert</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alerts user that there are matched donations</shortDescription>
+        <value>This donor has pending payments that might match this one. Choose an existing payment instead?</value>
+    </labels><labels>
+        <fullName>bgeMatchingSelect</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Select Open Donation text and modal header</shortDescription>
+        <value>Select Open Donation</value>
+    </labels>
+    <labels>
         <fullName>bgeNewBatch</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Button to create a new batch.</shortDescription>
         <value>New Batch</value>
+    </labels>
+    <labels>
+        <fullName>bgeNewGift</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gift Entry Form</shortDescription>
+        <value>New Gift</value>
     </labels>
     <labels>
         <fullName>bgeTabHeader</fullName>

@@ -43,9 +43,33 @@
     <aura:attribute name="recordId" type="Id" description="Populated by force:hasRecordId" access="public"/>
     <aura:attribute name="record" type="DataImport__c" description="Object" access="public"/>
     <aura:attribute name="dataImportFields" type="Object[]" description="List of dynamic field objects to use in the field iteration" access="public"/>
+    <aura:attribute name="options" type="List" description="" access="public" />
+    <aura:attribute name="openPayments" type="List" description="" access="public" />
+    <aura:attribute name="unpaidPayments" type="List" description="" access="public" />
+
+    <!--Modal Attributes-->
+    <aura:attribute name="matchingModalInstance" type="Object" />
+    <aura:attribute name="matchingModalFooter" type="Aura.ComponentDefRef[]">
+        <lightning:button label="{!$Label.c.stgBtnCancel}"
+                          onclick="{!c.closeModal}" />
+        <lightning:button label="{!$Label.c.mtchSelectCbxTitle}"
+                          variant="brand"
+                          onclick="{!c.handleStatusSave}"/>
+    </aura:attribute>
+
+    <aura:attribute name="matchingModalBody" type="Aura.ComponentDefRef[]">
+        <lightning:radioGroup name="radioGroup"
+                              label="Radio Group"
+                              options="{!v.options}"
+                              value="{!v.value}"
+                              type="radio"/>
+    </aura:attribute>
 
     <!--Events-->
     <aura:handler name="render" action="{!c.callFocus}" value="{!this}"/>
+
+    <!--Markup-->
+    <lightning:overlayLibrary aura:id="overlayLib"/>
 
     <lightning:recordEditForm aura:id="recordEditForm"
                               objectApiName="{!v.labels.dataImportObject}"
@@ -55,6 +79,32 @@
         <lightning:messages />
 
         <lightning:layout multipleRows="true">
+            <!--BEGIN SCOPED MATCH NOTIFICATION-->
+            <!--<aura:if isTrue="{!or(not(empty(v.openPayments)), not(empty(v.unpaidPayments)))}">-->
+                <lightning:layoutItem size="12" smallDeviceSize="12" class="slds-p-horizontal_small">
+                    <lightning:layout class="slds-grid_align-center">
+                        <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="10">
+                            <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light slds-m-bottom_small" role="alert">
+                                <div class="slds-media__figure slds-text-align_center">
+                                    <lightning:icon iconName="utility:info"
+                                                    alternativeText="Information"
+                                                    size="x-small"
+                                                    aria-hidden="true"/>
+                                </div>
+                                <div class="slds-media__body">
+                                    <p>{!$Label.c.bgeMatchingAlert}
+                                        <a class="slds-p-left_small" onclick="{!c.openMatchModal}" aura:id="selectMatchLink">
+                                            {!$Label.c.bgeMatchingSelect}
+                                        </a>
+                                    </p>
+                                </div>
+                            </div>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </lightning:layoutItem>
+            <!--</aura:if>-->
+            <!--END SCOPED MATCH NOTIFICATION-->
+
             <!-- BEGIN DONOR FIELDS -->
             <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
                 <label for="donorType" class="slds-form-element__label">{!$Label.c.bgeGridDonorType}</label>

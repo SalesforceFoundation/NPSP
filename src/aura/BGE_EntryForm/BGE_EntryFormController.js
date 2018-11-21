@@ -15,6 +15,14 @@
     },
 
     /**
+     * @description: closes match modal
+     */
+    closeModal: function (component) {
+        component.find('overlayLib').notifyClose();
+        //component.get('v.matchingModalInstance').close();
+    },
+
+    /**
      * @description: alerts parent component that form is loaded
      */
     onFormLoad: function (component, event, helper) {
@@ -26,7 +34,7 @@
      */
     onDonorChange: function (component, event, helper) {
         helper.sendMessage('showFormSpinner', '');
-        helper.getOpenDonations(component);
+        helper.queryOpenDonations(component);
     },
 
     /**
@@ -53,6 +61,22 @@
         var message = {'recordId': event.getParams().response.id};
         helper.sendMessage('onSuccess', message);
         component.destroy();
+    },
+
+    /**
+     * @description: alerts parent component that record is saved and needs to be reset
+     */
+    openMatchModal: function(component, event, helper) {
+        component.find('overlayLib').showCustomModal({
+            header: $A.get('$Label.c.bgeMatchingSelect'),
+            body: component.get('v.matchingModalBody'),
+            footer: component.get('v.matchingModalFooter'),
+            showCloseButton: true
+        }).then(function(overlay) {
+            console.log('before overlay updated');
+            component.set('v.matchingModalInstance', overlay);
+            console.log('overlay updated');
+        });
     },
 
     /**
