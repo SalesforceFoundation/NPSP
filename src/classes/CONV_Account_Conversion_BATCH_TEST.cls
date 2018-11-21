@@ -37,18 +37,11 @@
 public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
     /*******************************************************************************************************
-    * @description Sets the test methods in the class you want to run for development testing purposes
-    */
-    private static string strTestOnly = '*';
-
-    /*******************************************************************************************************
     * @description Tests the conversion process for 1to1 Contacts & Households to Household Contacts and Household Accounts
     */
     public testmethod static void testAccountConversion1to1(){
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'testAccountConversion1to1') return;
 
         // Create one temp and one inactive User
         User tempUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
@@ -157,8 +150,6 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'testAccountConversionBucket') return;
-
         if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
         //setup bucket model and test account creation
@@ -217,8 +208,6 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     public testMethod static void testSingleContactAddress(){
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-        
-        if (strTestOnly != '*' && strTestOnly != 'testSingleContactAddress') return;
 
         if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
@@ -271,8 +260,6 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     public testMethod static void test2ContactAddresses(){
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'test2ContactAddresses') return;
 
         //setup individual model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
@@ -350,8 +337,6 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'testContactDisableAddresses') return;
-
         //setup individual model and test account creation
         npe01__Contacts_And_Orgs_Settings__c contactsSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(Household_Account_Addresses_Disabled__c=true, npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Enable_Opp_Rollup_Triggers__c = true));
@@ -427,8 +412,6 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     * @description Tests the conversion process when setting primary affiliation
     */
     public testMethod static void testSettingPrimaryAffiliation(){
-        if (strTestOnly != '*' && strTestOnly != 'testSettingPrimaryAffiliation') return;
-
         //skip the test if Advancement is installed - Bucket Account not supported in ADV
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
