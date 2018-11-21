@@ -18,6 +18,7 @@
      * @description: closes match modal
      */
     closeModal: function (component) {
+        //todo: troubleshoot why this isn't working
         component.find('overlayLib').notifyClose();
         //component.get('v.matchingModalInstance').close();
     },
@@ -33,8 +34,15 @@
      * @description: alerts parent component that form is loaded
      */
     onDonorChange: function (component, event, helper) {
-        helper.sendMessage('showFormSpinner', '');
-        helper.queryOpenDonations(component);
+        var lookupField = component.get("v.donorType") === 'Contact1' ? 'contactLookup' : 'accountLookup';
+        var lookupValueIsValidId = (component.find(lookupField).get("v.value")).length === 18;
+
+        if (lookupValueIsValidId) {
+            helper.sendMessage('showFormSpinner', '');
+            helper.queryOpenDonations(component);
+        } else {
+            helper.removeOpenDonations(component);
+        }
     },
 
     /**
@@ -68,14 +76,12 @@
      */
     openMatchModal: function(component, event, helper) {
         component.find('overlayLib').showCustomModal({
-            header: $A.get('$Label.c.bgeMatchingSelect'),
+            header: component.get('v.matchingModalHeader'),
             body: component.get('v.matchingModalBody'),
             footer: component.get('v.matchingModalFooter'),
             showCloseButton: true
         }).then(function(overlay) {
-            console.log('before overlay updated');
             component.set('v.matchingModalInstance', overlay);
-            console.log('overlay updated');
         });
     },
 
@@ -88,6 +94,7 @@
 
         var message = {'donorType': donorType};
         helper.sendMessage('setDonorType', message);
+        helper.removeOpenDonations(component);
     }
 
 })

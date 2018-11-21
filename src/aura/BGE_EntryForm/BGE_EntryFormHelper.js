@@ -1,34 +1,4 @@
 ({
-    /**
-     * @description: queries open donations for upcoming donations
-     * @return: void
-     */
-    queryOpenDonations: function (component) {
-        let donorType = component.get('v.donorType');
-        let donorId;
-        if (donorType === 'Contact1') {
-            donorId = component.find('contactLookup').get('v.value');
-        } else if (donorType === 'Account1') {
-            donorId = component.find('accountLookup').get('v.value');
-        }
-
-        var action = component.get('c.getOpenDonations');
-        action.setParams({donorId: donorId, donorType: donorType});
-        action.setCallback(this, function (response) {
-            var state = response.getState();
-            if (state === 'SUCCESS') {
-                var openDonations = JSON.parse(response.getReturnValue());
-                console.log(response);
-                // call another function here to create the scoped notification
-                component.set('v.openOpportunities', openDonations.openOpportunities);
-                component.set('v.unpaidPayments', openDonations.unpaidPayments);
-            } else {
-                this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
-            }
-            this.sendMessage('hideFormSpinner', '');
-        });
-        $A.enqueueAction(action);
-    },
 
     /**
      * @description: adds hidden and non-lightning:inputfield fields to the Data Import record before submitting.
@@ -60,6 +30,65 @@
         }
 
         return rowFields;
+    },
+
+    /**
+     * @description: removes open donation values
+     * @return: void
+     */
+    removeOpenDonations: function(component) {
+        component.set('v.openOpportunities', []);
+        component.set('v.unpaidPayments', []);
+    },
+
+    /**
+     * @description: queries open donations for upcoming donations
+     * @return: void
+     */
+    queryOpenDonations: function (component) {
+        let donorType = component.get('v.donorType');
+        let donorId;
+        if (donorType === 'Contact1') {
+            donorId = component.find('contactLookup').get('v.value');
+        } else if (donorType === 'Account1') {
+            donorId = component.find('accountLookup').get('v.value');
+        }
+
+        var action = component.get('c.getOpenDonations');
+        action.setParams({donorId: donorId, donorType: donorType});
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === 'SUCCESS') {
+                var openDonations = JSON.parse(response.getReturnValue());
+                console.log(response);
+                // call another function here to create the scoped notification
+                component.set('v.openOpportunities', openDonations.openOpportunities);
+                component.set('v.unpaidPayments', openDonations.unpaidPayments);
+
+                let options = [{'label': 'None, create a new opportunity', 'value': 'none'}];
+
+                openDonations.openOpportunities.forEach(function(opp) {
+                    const label = opp.Name + ' (' + opp.StageName + ')';
+                    const value = opp.Id;
+                    options.push({'label': label, 'value': value});
+                    //let option = {'label': opp.}
+                });
+
+                openDonations.unpaidPayments.forEach(function(pmt) {
+                    const label = pmt.Name + ' (' + pmt.npe01__Opportunity__r.Name + ', ' + pmt.npe01__Scheduled_Date__c + ')';
+                    const value = pmt.Id;
+                    options.push({'label': label, 'value': value});
+                });
+
+                component.set('v.options', options);
+
+                //document.getElementById("selectMatchLink").focus();
+            } else {
+                this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
+            }
+            this.sendMessage('hideFormSpinner', '');
+        });
+        $A.enqueueAction(action);
     },
 
     /**

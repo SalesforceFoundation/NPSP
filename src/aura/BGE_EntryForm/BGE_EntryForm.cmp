@@ -49,6 +49,9 @@
 
     <!--Modal Attributes-->
     <aura:attribute name="matchingModalInstance" type="Object" />
+    <aura:attribute name="matchingModalHeader" type="Aura.ComponentDefRef[]">
+        <h2 class="title slds-text-heading_medium">{!$Label.c.bgeMatchingSelect}</h2>
+    </aura:attribute>
     <aura:attribute name="matchingModalFooter" type="Aura.ComponentDefRef[]">
         <lightning:button label="{!$Label.c.stgBtnCancel}"
                           onclick="{!c.closeModal}" />
@@ -61,7 +64,6 @@
         <lightning:radioGroup name="radioGroup"
                               label="Radio Group"
                               options="{!v.options}"
-                              value="{!v.value}"
                               type="radio"/>
     </aura:attribute>
 
@@ -80,7 +82,7 @@
 
         <lightning:layout multipleRows="true">
             <!--BEGIN SCOPED MATCH NOTIFICATION-->
-            <!--<aura:if isTrue="{!or(not(empty(v.openPayments)), not(empty(v.unpaidPayments)))}">-->
+            <aura:if isTrue="{!or(not(empty(v.openPayments)), not(empty(v.unpaidPayments)))}">
                 <lightning:layoutItem size="12" smallDeviceSize="12" class="slds-p-horizontal_small">
                     <lightning:layout class="slds-grid_align-center">
                         <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="10">
@@ -93,7 +95,7 @@
                                 </div>
                                 <div class="slds-media__body">
                                     <p>{!$Label.c.bgeMatchingAlert}
-                                        <a class="slds-p-left_small" onclick="{!c.openMatchModal}" aura:id="selectMatchLink">
+                                        <a class="slds-p-left_small" onclick="{!c.openMatchModal}" id="selectMatchLink">
                                             {!$Label.c.bgeMatchingSelect}
                                         </a>
                                     </p>
@@ -102,7 +104,7 @@
                         </lightning:layoutItem>
                     </lightning:layout>
                 </lightning:layoutItem>
-            <!--</aura:if>-->
+            </aura:if>
             <!--END SCOPED MATCH NOTIFICATION-->
 
             <!-- BEGIN DONOR FIELDS -->
