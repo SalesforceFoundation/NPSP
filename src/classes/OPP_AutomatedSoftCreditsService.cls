@@ -181,7 +181,7 @@ public class OPP_AutomatedSoftCreditsService {
         Schema.DescribeFieldResult fieldResult = npe5__Affiliation__c.Related_Opportunity_Contact_Role__c.getDescribe();
         List<Schema.PicklistEntry> picklistValues = fieldResult.getPicklistValues();
         for (Schema.PicklistEntry picklistValue : picklistValues) {
-            relatedContactRoles.add(picklistValue.getLabel());
+            relatedContactRoles.add(picklistValue.getValue());
         }
 
         List<npe5__Affiliation__c> allAffiliations
