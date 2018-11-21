@@ -35,7 +35,7 @@
   @description Component used to create DataImport__c records on the related NPSP_Data_Import_Batch__c record home.
 -->
 
-<aura:component>
+<aura:component controller="BGE_DataImportBatchEntry_CTRL">
 
     <!--Public Attributes-->
     <aura:attribute name="labels" type="Map" description="Labels retrieved in Apex related to Schema information." access="public"/>
@@ -71,8 +71,10 @@
                         <abbr class="slds-required" title="required">* </abbr>
                         {!v.labels.contactObject}
                     </label>
-                    <lightning:inputField aura:id="contactLookup" fieldName="{!v.labels.contactLookup}"
+                    <lightning:inputField aura:id="contactLookup"
+                                          fieldName="{!v.labels.contactLookup}"
                                           class="hideLabel"
+                                          onchange="{!c.onDonorChange}"
                     />
                 </aura:if>
                 <aura:if isTrue="{!v.donorType == 'Account1'}">
@@ -80,10 +82,13 @@
                         <abbr class="slds-required" title="required">* </abbr>
                         {!v.labels.accountObject}
                     </label>
-                    <lightning:inputField aura:id="accountLookup" fieldName="{!v.labels.accountLookup}"
+                    <lightning:inputField aura:id="accountLookup"
+                                          fieldName="{!v.labels.accountLookup}"
                                           class="hideLabel"
+                                          onchange="{!c.onDonorChange}"
                     />
                 </aura:if>
+
             </lightning:layoutItem>
             <!--END DONOR FIELDS-->
 

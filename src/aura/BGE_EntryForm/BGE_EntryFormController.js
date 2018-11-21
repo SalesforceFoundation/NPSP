@@ -22,6 +22,14 @@
     },
 
     /**
+     * @description: alerts parent component that form is loaded
+     */
+    onDonorChange: function (component, event, helper) {
+        helper.sendMessage('showFormSpinner', '');
+        helper.getOpenDonations(component);
+    },
+
+    /**
      * @description: override submit function in recordEditForm to handle hidden fields and validation
      */
     onSubmit: function (component, event, helper) {

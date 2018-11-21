@@ -3,6 +3,36 @@
      * @description: adds hidden and non-lightning:inputfield fields to the Data Import record before submitting.
      * @return: Object rowFields with hidden fields added
      */
+    getOpenDonations: function (component) {
+        let donorType = component.get('v.donorType');
+        let donorId;
+        if (donorType === 'Contact1') {
+            donorId = component.find('contactLookup').get('v.value');
+        } else if (donorType === 'Account1') {
+            donorId = component.find('accountLookup').get('v.value');
+        }
+
+        var action = component.get('c.getOpenDonations');
+        action.setParams({donorId: donorId, donorType: donorType});
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === 'SUCCESS') {
+                var response = JSON.parse(response.getReturnValue());
+                console.log('success!');
+                console.log(response);
+                // call another function here to create the scoped notification
+            } else {
+                this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
+            }
+            this.sendMessage('hideFormSpinner', '');
+        });
+        $A.enqueueAction(action);
+    },
+
+    /**
+     * @description: adds hidden and non-lightning:inputfield fields to the Data Import record before submitting.
+     * @return: Object rowFields with hidden fields added
+     */
     getRowWithHiddenFields: function (component, event) {
         var rowFields = event.getParam('fields');
 

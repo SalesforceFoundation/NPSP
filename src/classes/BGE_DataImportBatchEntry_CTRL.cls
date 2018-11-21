@@ -126,6 +126,45 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description Retrieves all open Opportunities and unpaid Payments for the selected Donor (Account or Contact)
+    * @return JSON of data model TBD
+    */
+    @AuraEnabled
+    public static String getOpenDonations(Id donorId, String donorType) {
+        String relationshipField;
+        if (donorType == 'Account1') {
+            relationshipField = 'AccountId';
+        } else if (donorType == 'Contact1') {
+            relationshipField = 'Primary_Contact__c';
+        }
+
+        String opportunitySOQL = 'SELECT Id, ' +
+                                'Name, ' +
+                                'StageName ' +
+                                'FROM Opportunity ' +
+                                'WHERE ' + relationshipField + ' = :donorId ' +
+                                'AND IsClosed = false';
+
+        String paymentSOQL = 'SELECT Id, ' +
+                                'Name, ' +
+                                'npe01__Scheduled_Date__c, ' +
+                                'npe01__Opportunity__r.Name ' +
+                                'FROM npe01__OppPayment__c ' +
+                                'WHERE npe01__Opportunity__r.' + relationshipField + ' = :donorId ' +
+                                'AND npe01__Paid__c = false';
+
+        List<Opportunity> openOpportunities = Database.query(opportunitySOQL);
+        List<npe01__OppPayment__c> unpaidPayments = Database.query(paymentSOQL);
+
+        Map<String,List<SObject>> response = new Map<String, List<SObject>>{
+                'openOpportunities' => openOpportunities,
+                'unpaidPayments' => unpaidPayments
+        };
+
+        return JSON.serialize(response);
+    }
+
+    /*******************************************************************************************************
     * @description Retrieves required schema information for the component.
     * @return Map of DataImport__c object and field name keys to their labels.
     */
