@@ -36,11 +36,6 @@
 @isTest
 private class LD_LeadConvertOverride_TEST {
 
-    /*******************************************************************************************************
-    * @description Sets the test methods in the class you want to run for development testing purposes
-    */
-    private static string strTestOnly = '*';
-
     private static final String SPECIAL_ACCOUNT_NAME = 'Self';
 
     /*******************************************************************************************************
@@ -73,8 +68,6 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs Lead Conversion with a new Contact selection for the conversion
     */
     public static void newLeadConversion_Test(string strProcessor) {
-        if (strTestOnly != '*' && strTestOnly != 'newLeadConversion_Test') return;
-
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -159,8 +152,6 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs Lead conversion when a merge into an existing Contact is chosen by the user
     */
     public static void newLeadConversionMerge_Test(string strProcessor) {
-        if (strTestOnly != '*' && strTestOnly != 'newLeadConversionMerge_Test') return;
-
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -240,8 +231,6 @@ private class LD_LeadConvertOverride_TEST {
     * @description Tests Lead conversion with a non-existant Account name in the Company field
     */
     public static void newLeadConversionNewNamedCompany_Test(string strProcessor) {
-        if (strTestOnly != '*' && strTestOnly != 'newLeadConversionNewNamedCompany_Test') return;
-
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -313,8 +302,6 @@ private class LD_LeadConvertOverride_TEST {
     * @description Tests merging a Lead into a an existing Account name set in the Company field
     */
     public static void newLeadConversionExistingNamedCompany_Test(string strProcessor) {
-        if (strTestOnly != '*' && strTestOnly != 'newLeadConversionExistingNamedCompany_Test') return;
-
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -393,8 +380,6 @@ private class LD_LeadConvertOverride_TEST {
     * an existing Account name set in the Company field
     */
     public static void newLeadConversionExistingNamedCompanyAffl_Test(string strProcessor) {
-        if (strTestOnly != '*' && strTestOnly != 'newLeadConversionExistingNamedCompanyAffl_Test') return;
-
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -470,8 +455,6 @@ private class LD_LeadConvertOverride_TEST {
     * @description Tests if it's a regular lead conversion and HH Objects are in use, we still get Household Object
     */
     public static void newLeadConversionHHObj(string strProcessor) {
-        if (strTestOnly != '*' && strTestOnly != 'newLeadConversionHHObj') return;
-
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -537,7 +520,6 @@ private class LD_LeadConvertOverride_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'newNativeLeadConversion_TestOne2One') return;
         newNativeLeadConversion_Test(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*******************************************************************************************************
@@ -547,7 +529,6 @@ private class LD_LeadConvertOverride_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'newNativeLeadConversion_TestHHAccount') return;
         newNativeLeadConversion_Test(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*******************************************************************************************************
@@ -556,8 +537,6 @@ private class LD_LeadConvertOverride_TEST {
     static testMethod void newNativeLeadConversion_TestBucketAccount(){
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'newNativeLeadConversion_TestBucketAccount') return;
 
         if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
@@ -642,8 +621,6 @@ private class LD_LeadConvertOverride_TEST {
     * address object created correctly in the Household Account model.
     */
     public static void newLeadConvert_HHAddressTest() {
-        if (strTestOnly != '*' && strTestOnly != 'newLeadConvert_HHAddressTest') return;
-
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
 
@@ -739,8 +716,6 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs Lead Conversion with a new Contact selection for the conversion and verify Opp OCRs and Primary Contact are correct.
     */
     public static void newLeadConversion_TestOppOCR(string strProcessor) {
-        if (strTestOnly != '*' && strTestOnly != 'newLeadConversion_TestOppOCR') return;
-
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -842,8 +817,6 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs Lead Conversion with a merge to existing Contact selection for the conversion and verify Opp OCRs and Primary Contact are correct.
     */
     public static void mergeLeadConversion_TestOppOCR(string strProcessor) {
-        if (strTestOnly != '*' && strTestOnly != 'mergeLeadConversion_TestOppOCR') return;
-
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -954,8 +927,6 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs Lead Conversion with a new Contact selection for the conversion and verify Opp created for affiliation.
     */
     public static void newLeadConversion_TestOppAFF(string strProcessor) {
-        if (strTestOnly != '*' && strTestOnly != 'newLeadConversion_TestOppAFF') return;
-
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
@@ -1029,8 +1000,6 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs lead conversion to create a company and test Lead.CompanyAddress bhvr
     */
     public testmethod static void convertCompanyLead_Test() {
-        if (strTestOnly != '*' && strTestOnly != 'convertCompanyLead_Test') return;
-
         Lead l = new Lead();
         l.FirstName = 'Test';
         l.LastName = 'TestContact';
