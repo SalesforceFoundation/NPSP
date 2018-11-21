@@ -37,12 +37,6 @@
 private with sharing class PMT_PaymentCreator_TEST {
 
     /*********************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-        
-    /*********************************************************************************************************
     * @description
     operation:
         close an Opp as Lost that has a mixture of paid & unpaid payments, some written off 
@@ -53,8 +47,6 @@ private with sharing class PMT_PaymentCreator_TEST {
         unpaid (and not written off) are deleted
     **********************************************************************************************************/            
     static testMethod void CloseLostOppWithMixOfPayments() {
-        if (strTestOnly != '*' && strTestOnly != 'CloseLostOppWithMixOfPayments') return;
-        
         npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
         
@@ -138,8 +130,6 @@ private with sharing class PMT_PaymentCreator_TEST {
         payment is written off, no infinite recursion takes place
     **********************************************************************************************************/            
     static testMethod void nullAmount() {
-        if (strTestOnly != '*' && strTestOnly != 'nullAmount') return;
-        
         npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
         
@@ -450,8 +440,6 @@ private with sharing class PMT_PaymentCreator_TEST {
         no payment created
     **********************************************************************************************************/            
     static testMethod void createOppWithTypeNotExcluded() {
-        if (strTestOnly != '*' && strTestOnly != 'createOppWithTypeNotExcluded') return;
-        
         npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true, Opp_Types_Excluded_for_Payments__c='NO-PAYMENT'));
         
@@ -485,8 +473,6 @@ private with sharing class PMT_PaymentCreator_TEST {
         no payment created
     **********************************************************************************************************/            
     static testMethod void createOppWithTypeExcluded() {
-        if (strTestOnly != '*' && strTestOnly != 'createOppWithTypeExcluded') return;
-        
         npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true, Opp_Types_Excluded_for_Payments__c='NO-PAYMENT'));
         
@@ -520,8 +506,6 @@ private with sharing class PMT_PaymentCreator_TEST {
         no payment created
     **********************************************************************************************************/            
     static testMethod void createOppWithRecordTypeExcluded() {
-        if (strTestOnly != '*' && strTestOnly != 'createOppWithRecordTypeExcluded') return;
-        
         // see if this org has any record types we can use!
         Id rtIdGift = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.sObjectType);
 
@@ -916,8 +900,6 @@ private with sharing class PMT_PaymentCreator_TEST {
         Included opps payments are created correctly.
     **********************************************************************************************************/            
     static testMethod void testBatchPaymentCreation() {
-        if (strTestOnly != '*' && strTestOnly != 'testBatchPaymentCreation') return;
-        
         npe01__Contacts_And_Orgs_Settings__c consSettings = new npe01__Contacts_And_Orgs_Settings__c (
             npe01__Payments_Enabled__c= true, 
             Opp_Types_Excluded_for_Payments__c='NO-PAYMENT'

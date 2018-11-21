@@ -37,12 +37,6 @@
 @isTest
 private class RLLP_OppPartialSoftCreditRollup_TEST {
 
-    /*********************************************************************************************************
-    * @description If you only want to run a single test in this class, fill in its name here.
-    * If you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-
     /*******************************************************************************************************
     * @description test data for Soft Credit and Partial Soft Credit tests
     */ 
@@ -105,7 +99,6 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     * @description tests the original NPSP Soft Credit rollups for OCR's (not Partial Soft Credits)
     * @return void
     static testmethod void testOLDSoftCreditRollups() {
-        if (strTestOnly != '*' && strTestOnly != 'testOLDSoftCreditRollups') return;
         createPSCData(cContactTest, cOppTest, amountTest);
         
         RLLP_OppRollup rllp = new RLLP_OppRollup();
@@ -138,8 +131,6 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     * @return void
     */ 
     static testmethod void testDuplicateOCRSoftCredits() {
-      if (strTestOnly != '*' && strTestOnly != 'testDuplicateOCRSoftCredits') return;
-      
       Contact con = new Contact(lastname='Testy');
       insert con;
       con = [select Id, lastname, AccountId from Contact];
@@ -186,7 +177,6 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     * @return void
     */ 
     static testmethod void testPartialSoftCreditRollups() {
-        if (strTestOnly != '*' && strTestOnly != 'testPartialSoftCreditRollups') return;
         createPSCData(cContactTest, cOppTest, amountTest);
 
         RLLP_OppRollup rllp = new RLLP_OppRollup();
@@ -218,8 +208,6 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     * @return void
     */ 
     static testmethod void testPartialSoftCreditRollupsAllStats() {
-        if (strTestOnly != '*' && strTestOnly != 'testPartialSoftCreditRollupsAllStats') return;
-        
         // to deal with leap years, need to make N a little larger!
         npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings(); 
         hs.npo02__Rollup_N_Day_Value__c = 366;
@@ -327,7 +315,6 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     * @return void
     */ 
     static testmethod void testMulticurrencyPartialSoftCreditRollups() {
-        if (strTestOnly != '*' && strTestOnly != 'testMulticurrencyPartialSoftCreditRollups') return;
         //only run test in multicurrency orgs
         if (!RLLP_OppRollup_UTIL.isMultiCurrency())
             return;
