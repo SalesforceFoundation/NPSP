@@ -107,7 +107,7 @@ public class BDI_Donations {
     public static map<String, String> mapDIFieldToOppField {
         get {
             if (mapDIFieldToOppField == null) {
-                mapDIFieldToOppField = BDI_DataImportService.mapFieldsForDIObject('Opportunity', 'Opportunity', 
+                mapDIFieldToOppField = BDI_DataImportService.mapFieldsForDIObject('Opportunity', 'Opportunity',
                     BDI_DataImportService.listStrDataImportFields);
             }
             return mapDIFieldToOppField;
@@ -121,7 +121,7 @@ public class BDI_Donations {
     public static map<string, string> mapDIFieldToPmtField { 
         get {
             if (mapDIFieldToPmtField == null) {
-                mapDIFieldToPmtField = BDI_DataImportService.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c', 
+                mapDIFieldToPmtField = BDI_DataImportService.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c',
                     BDI_DataImportService.listStrDataImportFields);
             }
             return mapDIFieldToPmtField;
@@ -221,7 +221,7 @@ public class BDI_Donations {
         }
         
         // update payments with any data from the DI record
-        updatePayments(listDIDonations);      
+        updatePayments(listDIDonations);
     }
 
     /*******************************************************************************************************
@@ -337,15 +337,15 @@ public class BDI_Donations {
         bdi.LogBDIError(di, strError, 'DonationImportStatus__c');        
         return false;
     }
-    
+
     /*******************************************************************************************************
     * @description for the provided DataImport record, create or update the appropriate Opp (in memory)
     * with data from the DI record, and return it unsaved.
     *
     * @param di The DataImport record to prepare the Opportunity for
     * @return Opportunity A new or existing Opportunity. Null if there was an error.
-    */ 
-    private Opportunity prepareOppForUpdateInsert(DataImport__c di) {        
+    */
+    private Opportunity prepareOppForUpdateInsert(DataImport__c di) {
         Opportunity opp = mapDIIdToOpp.get(di.Id);
         string strOppName;
 
@@ -416,8 +416,25 @@ public class BDI_Donations {
             di.Donation_Stage__c = defaultClosedWonStage;
         }
 
+        Boolean useCustomMappingInsteadOfCurrencyIsoCode = false;
+
+        // Set useCustomMappingInsteadOfCurrencyIsoCode
+        for (string strDIField : mapDIFieldToOppField.keySet()) {
+            String currentValue = mapDIFieldToOppField.get(strDIField);
+
+            // If we have a custom mapping against the field CurrencyIsoCode of the Data Import object.
+            if (strDIField != 'CurrencyIsoCode' && currentValue == 'CurrencyIsoCode') {
+                String customCurrencyIsoCodeFieldOnDataImport = (String)di.get(strDIField);
+                if (!String.isEmpty(customCurrencyIsoCodeFieldOnDataImport)) {                    
+                    useCustomMappingInsteadOfCurrencyIsoCode = true;
+                    break;
+                }
+            }
+        }
+
         // now copy over all the data to the Opp
         for (string strDIField : mapDIFieldToOppField.keySet()) {
+
             // skip recordtype which we special cased above
             if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c').toLowercase()) {
                 continue;
@@ -428,6 +445,10 @@ public class BDI_Donations {
             }
             // only honor Amount if we aren't updating its payment
             if (strDIField == UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase() && di.PaymentImported__c != null) {
+                continue;
+            }
+            // If the user has a custom field on the Data Import which maps to CurrencyIsoCode
+            if (strDIField == 'CurrencyIsoCode' && useCustomMappingInsteadOfCurrencyIsoCode) {
                 continue;
             }
             BDI_DataImportService.isCopiedDIField(di, strDIField, opp, mapDIFieldToOppField);
@@ -578,7 +599,7 @@ public class BDI_Donations {
         for (DataImport__c di : listDIDonations) {
             // skip di's that already have an error
             if (di.Status__c == BDI_DataImport_API.bdiFailed)
-               continue;            
+               continue;
             if (di.PaymentImported__c != null) {
                 npe01__OppPayment__c pmt = mapDIIdToPmt.get(di.Id);
                 if (pmt != null) {
