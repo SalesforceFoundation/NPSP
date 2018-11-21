@@ -115,9 +115,9 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
                 '"requireTotalMatch":false,' +
                 '"batchProcessSize":5,' +
                 '"runOpportunityRollupsWhileProcessing":false,' +
-                '"contactMatchingRule":null,' +
-                '"donationMatchingBehavior":null,' +
-                '"donationMatchingRule":null,' +
+                '"contactMatchingRule":"Firstname,Lastname,Email",' +
+                '"donationMatchingBehavior":"'+ BDI_DataImport_API.RequireBestMatch + '",' +
+                '"donationMatchingRule":["' + UTIL_Namespace.StrAllNSPrefix('Donation_Amount__c').toLowerCase() + '"],' +
                 '"donationDateRange":1,' +
                 '"processUsingScheduledJob":false,' +
                 '"templateFields":null,' +
@@ -157,9 +157,9 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
                 '"requireTotalMatch":false,' +
                 '"batchProcessSize":5,' +
                 '"runOpportunityRollupsWhileProcessing":false,' +
-                '"contactMatchingRule":null,' +
-                '"donationMatchingBehavior":null,' +
-                '"donationMatchingRule":null,' +
+                '"contactMatchingRule":"Firstname,Lastname,Email",' +
+                '"donationMatchingBehavior":"'+ BDI_DataImport_API.RequireBestMatch + '",' +
+                '"donationMatchingRule":["' + UTIL_Namespace.StrAllNSPrefix('Donation_Amount__c').toLowerCase() + '"],' +
                 '"donationDateRange":1,' +
                 '"processUsingScheduledJob":false,' +
                 '"templateFields":null,' +
