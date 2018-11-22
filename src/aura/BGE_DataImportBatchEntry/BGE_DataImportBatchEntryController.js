@@ -68,6 +68,36 @@
         component.find('dataImportRowsDataTable').set('v.draftValues', null);
     },
 
+    openBatchWizard:function(component, event) {
+        var modalBody;
+        var modalHeader;
+        var modalFooter;
+        var batchId = component.get('v.recordId');
+
+        $A.createComponents([
+                ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c', recordId: batchId, isReadOnly: false}],
+                ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
+                ['c:modalFooter', {}]
+            ],
+            function(components, status, errorMessage){
+                if (status === 'SUCCESS') {
+                    modalBody = components[0];
+                    modalHeader = components[1];
+                    modalFooter = components[2];
+                    component.find('overlayLib').showCustomModal({
+                        body: modalBody,
+                        header: modalHeader,
+                        footer: modalFooter,
+                        showCloseButton: true,
+                        cssClass: 'slds-modal_large'
+                    })
+                } else {
+                    this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
+                }
+            }
+        );
+    },
+
     /**
      * @description: called when the 'Process Batch' button is clicked
      */

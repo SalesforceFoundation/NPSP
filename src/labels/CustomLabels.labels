@@ -2616,6 +2616,27 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Set Batch Options</value>
     </labels>
     <labels>
+        <fullName>bgeEditBatchFieldOptionsWarning</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message for Field Options step of BGE Config Wizard</shortDescription>
+        <value>WARNING: There are records saved to this batch. Any changes you make won&apos;t affect existing records.</value>
+    </labels>
+    <labels>
+        <fullName>bgeEditBatchFieldSelectionWarning</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message for Select Fields step of BGE Config Wizard</shortDescription>
+        <value>WARNING: There are records saved to this batch. Any changes you make won&apos;t affect existing records. If you remove fields, those fields no longer appear on the gift entry screen, but data isn&apos;t deleted from those fields on existing records. Therefore, we recommend that you do not remove fields.</value>
+    </labels>
+    <labels>
+        <fullName>bgeEditBatchOptionsWarning</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message for Batch Options step of BGE Config Wizard</shortDescription>
+        <value>WARNING: There are records saved to this batch. Any changes you make won&apos;t affect existing records. We will not attempt to match existing records using updated donation matching rule settings, unless those records are edited.</value>
+    </labels>
+    <labels>
         <fullName>bgeBatchTemplateSetFieldOptions</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2679,13 +2700,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Matched Record</value>
     </labels>
     <labels>
-        <fullName>bgeNewGift</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Label for Gift Entry Form</shortDescription>
-        <value>New Gift</value>
-    </labels>
-    <labels>
         <fullName>bgeGridNoGiftsHeader</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2721,11 +2735,25 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Require Expected Totals Match is selected but the Expected Count of Gifts and Expected Total Batch Amount fields are blank. Edit the batch details and either uncheck Require Expected Totals Match or add values in the related fields.</value>
     </labels>
     <labels>
+        <fullName>bgeNewGift</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gift Entry Form</shortDescription>
+        <value>New Gift</value>
+    </labels>
+    <labels>
         <fullName>bgeNewBatch</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Button to create a new batch.</shortDescription>
         <value>New Batch</value>
+    </labels>
+    <labels>
+        <fullName>bgeProcessBatch</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to process a batch.</shortDescription>
+        <value>Process Batch</value>
     </labels>
     <labels>
         <fullName>bgeTabHeader</fullName>
