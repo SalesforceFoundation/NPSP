@@ -50,7 +50,7 @@ public class BDI_Donations {
     * @description The Batch Data Import Service the helper should use
     */ 
     private BDI_DataImportService bdi { get; set; }
-    
+
     /*******************************************************************************************************
     * @description map to track the Opportunity created/matched for each DI record
     */ 
@@ -365,7 +365,7 @@ public class BDI_Donations {
                 opp.Primary_Contact_Campaign_Member_Status__c = di.Campaign_Member_Status__c;
                 opp.AccountId = con.AccountId;
                 opportunityName =  (!String.isBlank(con.Firstname)
-                                    ? con.Firstname
+                                    ? con.Firstname + ' '
                                     : '')
                                     + con.Lastname;
             }
@@ -423,12 +423,12 @@ public class BDI_Donations {
         Boolean useCustomMappingInsteadOfCurrencyIsoCode = false;
 
         // Set useCustomMappingInsteadOfCurrencyIsoCode
-        for (string strDIField : mapDIFieldToOppField.keySet()) {
-            String currentValue = mapDIFieldToOppField.get(strDIField);
+        for (string dataImportField : mapDIFieldToOppField.keySet()) {
+            String currentValue = mapDIFieldToOppField.get(dataImportField);
 
             // If we have a custom mapping against the field CurrencyIsoCode of the Data Import object.
-            if (strDIField != 'CurrencyIsoCode' && currentValue == 'CurrencyIsoCode') {
-                String customCurrencyIsoCodeFieldOnDataImport = (String)di.get(strDIField);
+            if (dataImportField != 'CurrencyIsoCode' && currentValue == 'CurrencyIsoCode') {
+                String customCurrencyIsoCodeFieldOnDataImport = (String)di.get(dataImportField);
                 if (!String.isEmpty(customCurrencyIsoCodeFieldOnDataImport)) {                    
                     useCustomMappingInsteadOfCurrencyIsoCode = true;
                     break;
@@ -456,10 +456,10 @@ public class BDI_Donations {
                 continue;
             }
             // If the user has a custom field on the Data Import which maps to CurrencyIsoCode
-            if (strDIField == 'CurrencyIsoCode' && useCustomMappingInsteadOfCurrencyIsoCode) {
+            if (dataImportField == 'CurrencyIsoCode' && useCustomMappingInsteadOfCurrencyIsoCode) {
                 continue;
             }
-            BDI_DataImportService.isCopiedDIField(di, strDIField, opp, mapDIFieldToOppField);
+            BDI_DataImportService.isCopiedDIField(di, dataImportField, opp, mapDIFieldToOppField);
         }
 
         // the Opp is ready!
