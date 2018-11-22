@@ -1650,7 +1650,6 @@
         <members>pscManageSoftCreditsAmountMissing</members>
         <members>pscManageSoftCreditsAmountOrPercent</members>
         <members>pscManageSoftCreditsCantChangeCurrency</members>
-        <members>pscManageSoftCreditsPermissionDenied</members>
         <members>pscManageSoftCreditsFull</members>
         <members>pscManageSoftCreditsInvalidContact</members>
         <members>pscManageSoftCreditsNoRoles</members>
@@ -1658,6 +1657,7 @@
         <members>pscManageSoftCreditsPSCAmount</members>
         <members>pscManageSoftCreditsPartial</members>
         <members>pscManageSoftCreditsPercent</members>
+        <members>pscManageSoftCreditsPermissionDenied</members>
         <members>pscManageSoftCreditsPrimaryDonor</members>
         <members>pscManageSoftCreditsReconcileFail</members>
         <members>pscManageSoftCreditsRestrictions</members>
