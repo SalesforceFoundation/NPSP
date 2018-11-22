@@ -36,12 +36,6 @@
 
 @isTest
 private with sharing class ACCT_HHAccounts_TEST {
-
-    /*********************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
     
     	
     /*********************************************************************************************************
@@ -56,9 +50,7 @@ private with sharing class ACCT_HHAccounts_TEST {
     static testMethod void NewContactsNoAccounts() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-        
-    	if (strTestOnly != '*' && strTestOnly != 'NewContactsNoAccounts') return;
-    	
+
     	//Using the API class just to give it test coverage.
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettings_API.getContactsSettings();
     
@@ -103,8 +95,6 @@ private with sharing class ACCT_HHAccounts_TEST {
     static testMethod void NewContactsEmptyHHAccounts() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'NewContactsEmptyHHAccounts') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
     
@@ -190,8 +180,6 @@ private with sharing class ACCT_HHAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'NewContactsNonEmptyHHAccounts') return;
-
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
     
         list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
@@ -272,8 +260,6 @@ private with sharing class ACCT_HHAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'NewContactsNoAccountsWithHHObj') return;
-
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
     
         list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
@@ -331,8 +317,6 @@ private with sharing class ACCT_HHAccounts_TEST {
      static testMethod void UpdateContactsMergeHHAccounts() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'UpdateContactsMergeHHAccounts') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
     
@@ -419,8 +403,6 @@ private with sharing class ACCT_HHAccounts_TEST {
      static testMethod void UpdateContactsSplitHHAccounts() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'UpdateContactsSplitHHAccounts') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
     
@@ -523,8 +505,6 @@ private with sharing class ACCT_HHAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'DeleteContactsFromHHAccounts') return;
-
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
     
         list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
@@ -594,8 +574,6 @@ private with sharing class ACCT_HHAccounts_TEST {
     static testMethod void UndeleteContactsFromHHAccounts() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'UndeleteContactsFromHHAccounts') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
     
@@ -690,8 +668,6 @@ private with sharing class ACCT_HHAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'UpdateOneToOneAndBucketContactsToHHAccounts') return;
-
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
     
         list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(6);
@@ -771,9 +747,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'changeContactOwners') return;
-        
-        Id ownerId1 = UserInfo.getUserId();             
+        Id ownerId1 = UserInfo.getUserId();
         User u2 = UTIL_UnitTestData_TEST.CreateNewUserForTests('changeContactOnwerTest@bar.com');
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
@@ -847,8 +821,6 @@ private with sharing class ACCT_HHAccounts_TEST {
     *    open opps move to new HH accounts
     **********************************************************************************************************/            
     static testMethod void changeContactsCheckOpps() {
-        if (strTestOnly != '*' && strTestOnly != 'changeContactsCheckOpps') return;
-
        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
             npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
             npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -918,8 +890,6 @@ private with sharing class ACCT_HHAccounts_TEST {
     *    the Account's Primary Contact doesn't change
     **********************************************************************************************************/            
     static testMethod void addContactCheckAccountPrimaryContact() {
-        if (strTestOnly != '*' && strTestOnly != 'addContactCheckAccountPrimaryContact') return;
-
        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
             npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
             npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
@@ -959,8 +929,6 @@ private with sharing class ACCT_HHAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'newHHAccountWithRecordTypeOnly') return;
-        
         ID rtIdAccountHH = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true);
         if (rtIdAccountHH != null) {
             Account acc = new Account(name='test', RecordTypeId = rtIdAccountHH);
@@ -982,8 +950,6 @@ private with sharing class ACCT_HHAccounts_TEST {
     static testMethod void updateAccountToHHRecordType() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-        
-        if (strTestOnly != '*' && strTestOnly != 'updateAccountToHHRecordType') return;
         
         ID rtIdAccountHH = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true);
         if (rtIdAccountHH != null) {
@@ -1014,9 +980,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'addContactCheckNumberHHMembers') return;
-
-        // turn off household naming        
+        // turn off household naming
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (
                 npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,

@@ -107,7 +107,7 @@ public class BDI_Donations {
     public static map<String, String> mapDIFieldToOppField {
         get {
             if (mapDIFieldToOppField == null) {
-                mapDIFieldToOppField = BDI_DataImportService.mapFieldsForDIObject('Opportunity', 'Opportunity', 
+                mapDIFieldToOppField = BDI_DataImportService.mapFieldsForDIObject('Opportunity', 'Opportunity',
                     BDI_DataImportService.listStrDataImportFields);
             }
             return mapDIFieldToOppField;
@@ -121,7 +121,7 @@ public class BDI_Donations {
     public static map<string, string> mapDIFieldToPmtField { 
         get {
             if (mapDIFieldToPmtField == null) {
-                mapDIFieldToPmtField = BDI_DataImportService.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c', 
+                mapDIFieldToPmtField = BDI_DataImportService.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c',
                     BDI_DataImportService.listStrDataImportFields);
             }
             return mapDIFieldToPmtField;
@@ -221,7 +221,7 @@ public class BDI_Donations {
         }
         
         // update payments with any data from the DI record
-        updatePayments(listDIDonations);      
+        updatePayments(listDIDonations);
     }
 
     /*******************************************************************************************************
@@ -420,6 +420,22 @@ public class BDI_Donations {
             di.Donation_Stage__c = defaultClosedWonStage;
         }
 
+        Boolean useCustomMappingInsteadOfCurrencyIsoCode = false;
+
+        // Set useCustomMappingInsteadOfCurrencyIsoCode
+        for (string strDIField : mapDIFieldToOppField.keySet()) {
+            String currentValue = mapDIFieldToOppField.get(strDIField);
+
+            // If we have a custom mapping against the field CurrencyIsoCode of the Data Import object.
+            if (strDIField != 'CurrencyIsoCode' && currentValue == 'CurrencyIsoCode') {
+                String customCurrencyIsoCodeFieldOnDataImport = (String)di.get(strDIField);
+                if (!String.isEmpty(customCurrencyIsoCodeFieldOnDataImport)) {                    
+                    useCustomMappingInsteadOfCurrencyIsoCode = true;
+                    break;
+                }
+            }
+        }
+
         // now copy over all the data to the Opp
         for (String dataImportField : mapDIFieldToOppField.keySet()) {
 
@@ -439,7 +455,11 @@ public class BDI_Donations {
             if (dataImportField == donationAmount && di.PaymentImported__c != null) {
                 continue;
             }
-            BDI_DataImportService.isCopiedDIField(di, dataImportField, opp, mapDIFieldToOppField);
+            // If the user has a custom field on the Data Import which maps to CurrencyIsoCode
+            if (strDIField == 'CurrencyIsoCode' && useCustomMappingInsteadOfCurrencyIsoCode) {
+                continue;
+            }
+            BDI_DataImportService.isCopiedDIField(di, strDIField, opp, mapDIFieldToOppField);
         }
 
         // the Opp is ready!
@@ -587,7 +607,7 @@ public class BDI_Donations {
         for (DataImport__c di : listDIDonations) {
             // skip di's that already have an error
             if (di.Status__c == BDI_DataImport_API.bdiFailed)
-               continue;            
+               continue;
             if (di.PaymentImported__c != null) {
                 npe01__OppPayment__c pmt = mapDIIdToPmt.get(di.Id);
                 if (pmt != null) {

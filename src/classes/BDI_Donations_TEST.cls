@@ -39,12 +39,6 @@
 public with sharing class BDI_Donations_TEST {
 
     /*********************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-
-    /*********************************************************************************************************
     * @description holds test Contacts for BDI donations tests
     */
     private static List<Contact> listConT;
@@ -125,8 +119,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIWithExistingDonations') return;
-        
         createTestData();
             
         list<DataImport__c> listDI = new list<DataImport__c>();
@@ -190,13 +182,220 @@ public with sharing class BDI_Donations_TEST {
 
     /*********************************************************************************************************
     * @description operation
+    *        import existing contacts with existing open Opportunities in a currency other than the org default
+    *        ex. 100 CAD should match 100 CAD
+    * verify:
+    *       opportunity objects matched & closed
+    *       payment objects updated
+    */
+    @isTest
+    static void dataImportWithExistingDonationInNonDefaultCurrency() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
+        // only test in multicurrency orgs
+        if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        UTIL_CurrencyCache.CurrencyData testCurrency = UTIL_UnitTestData_TEST.nonDefaultCurrencyType;
+
+        if (testCurrency == null) {
+            return; // don't run the test if there's nothing to test
+        }
+
+        String testCurrencyCode = testCurrency.IsoCode;
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
+        insert testContacts;
+
+        Contact testContact = testContacts[0];
+
+        List<Opportunity> testOpportunities = UTIL_UnitTestData_TEST.OppsForContactList(testContacts, null,
+            UTIL_UnitTestData_TEST.getOpenStage(), System.today(), 100, null, null);
+        testOpportunities[0].put('CurrencyIsoCode', testCurrencyCode);
+
+        insert testOpportunities;
+
+        Opportunity testOpportunity = testOpportunities[0];
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+
+        DataImport__c matchingImport = new DataImport__c(
+            Contact1_Firstname__c = testContact.FirstName,
+            Contact1_Lastname__c = testContact.LastName,
+            Contact1_Work_Email__c = testContact.npe01__WorkEmail__c,
+            Donation_Amount__c = testOpportunity.Amount,
+            Donation_Date__c = testOpportunity.CloseDate,
+            Payment_Check_Reference_Number__c = 'abc',
+            Payment_Method__c = 'Check'
+        );
+        matchingImport.put('CurrencyIsoCode', testCurrencyCode);
+        dataImports.add(matchingImport);
+        insert dataImports;
+
+        // set the specified settings
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c') + ';' +
+            'CurrencyIsoCode';
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+
+        //run batch data import
+        Test.startTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        Id ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        // verify expected results
+
+        List<Opportunity> resultOpportunities =
+            Database.query(
+                'SELECT Id, AccountId, Amount, CurrencyIsoCode, IsClosed, IsWon, Name, StageName ' +
+                'FROM Opportunity ' +
+                'ORDER BY Id'
+            );
+
+        System.assertEquals(1, resultOpportunities.size());
+        // This is failing due to Issue #3682: Opportunities in currency other than org default not auto-closing
+        // Restore this line once that bug is fixed
+        // System.assertEquals(true, resultOpportunities[0].IsWon);
+        System.assertEquals(dataImports[0].Donation_Amount__c, resultOpportunities[0].Amount);
+        System.assertEquals(testCurrencyCode, (String)resultOpportunities[0].get('CurrencyIsoCode'));
+
+        List<npe01__OppPayment__c> resultPayments =
+            Database.query(
+              'SELECT Id, CurrencyIsoCode, npe01__Check_Reference_Number__c, ' +
+                  'npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Method__c ' +
+              'FROM npe01__OppPayment__c ' +
+              'ORDER BY npe01__Opportunity__r.Id'
+            );
+
+        System.assertEquals(1, resultPayments.size());
+
+        System.assertEquals('Check', resultPayments[0].npe01__Payment_Method__c);
+        System.assertEquals('abc', resultPayments[0].npe01__Check_Reference_Number__c);
+        System.assertEquals(dataImports[0].Donation_Amount__c, resultPayments[0].npe01__Payment_Amount__c);
+        System.assertEquals(testCurrencyCode, (String)resultPayments[0].get('CurrencyIsoCode'));
+
+
+        dataImports = [
+            SELECT Id, DonationImported__c, DonationImportStatus__c
+            FROM DataImport__c
+            ORDER BY Id
+        ];
+        System.assertEquals(1, dataImports.size());
+        System.assertEquals(dataImports[0].DonationImported__c, resultOpportunities[0].Id);
+        System.assertEquals(System.Label.bdiMatched, dataImports[0].DonationImportStatus__c);
+    }
+
+    /*********************************************************************************************************
+    * @description operation
+    *        import existing contacts with existing open Opportunities in a currency other than the org default -
+    *        everything matches except the currency code, which means the amounts aren't actually equivalent
+    *        ex. 100 USD should not match 100 CAD
+    * verify:
+    *       opportunity objects not matched & closed
+    *       payment objects updated
+    */
+    @isTest
+    static void dataImportWithNonMatchingCurrencyDonation() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
+        // only test in multicurrency orgs
+        if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        UTIL_CurrencyCache.CurrencyData testCurrency = UTIL_UnitTestData_TEST.nonDefaultCurrencyType;
+
+        if (testCurrency == null) {
+            return; // don't run the test if there's nothing to test
+        }
+
+        String testCurrencyCode = testCurrency.IsoCode;
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
+        insert testContacts;
+
+        Contact testContact = testContacts[0];
+
+        List<Opportunity> testOpportunities = UTIL_UnitTestData_TEST.OppsForContactList(testContacts, null,
+            UTIL_UnitTestData_TEST.getOpenStage(), System.today(), 100, null, null);
+        // leave currency as the org default; do not set it to the test currency
+        insert testOpportunities;
+
+        Opportunity testOpportunity = testOpportunities[0];
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+
+        DataImport__c matchingImport = new DataImport__c(
+            Contact1_Firstname__c = testContact.FirstName,
+            Contact1_Lastname__c = testContact.LastName,
+            Contact1_Work_Email__c = testContact.npe01__WorkEmail__c,
+            Donation_Amount__c = testOpportunity.Amount,
+            Donation_Date__c = testOpportunity.CloseDate,
+            Payment_Check_Reference_Number__c = 'abc',
+            Payment_Method__c = 'Check'
+        );
+        matchingImport.put('CurrencyIsoCode', testCurrencyCode);
+        dataImports.add(matchingImport);
+        insert dataImports;
+
+        // set the specified settings
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c') + ';' +
+            'CurrencyIsoCode';
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+
+        //run batch data import
+        Test.startTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        Id ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        // verify expected results
+
+        List<Opportunity> resultOpportunities =
+            Database.query(
+                'SELECT Id, AccountId, Amount, CurrencyIsoCode, IsClosed, IsWon, Name, StageName ' +
+                    'FROM Opportunity ' +
+                    'ORDER BY Id'
+            );
+        System.assertEquals(2, resultOpportunities.size());
+
+        List<npe01__OppPayment__c> resultPayments =
+            Database.query(
+                'SELECT Id, CurrencyIsoCode, npe01__Check_Reference_Number__c, ' +
+                    'npe01__Payment_Amount__c, npe01__Payment_Method__c ' +
+                    'FROM npe01__OppPayment__c ' +
+                    'ORDER BY npe01__Opportunity__r.Id'
+            );
+        System.assertEquals(2, resultPayments.size());
+
+        dataImports = [
+            SELECT Id, DonationImported__c, DonationImportStatus__c
+            FROM DataImport__c
+            ORDER BY Id
+        ];
+        System.assertEquals(1, dataImports.size());
+        System.assertEquals(System.Label.bdiCreated, dataImports[0].DonationImportStatus__c);
+    }
+
+    /*********************************************************************************************************
+    * @description operation
     *        import existing contacts with existing open Opportunities
     * verify:
     *       opportunity objects matched & closed
     *       payment objects marked paid (even when no other payment fields need updating)
     */
     static testMethod void TwoDIWithExistingDonationsNoExtraPaymentUpdates() {
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIWithExistingDonationsNoExtraPaymentUpdates') return;
 
         createTestData();
 
@@ -264,7 +463,6 @@ public with sharing class BDI_Donations_TEST {
     *       original payment date not changed
     */
     static testMethod void TwoDIWithExistingDonationsPreservePaymentDate() {
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIWithExistingDonationsPreservePaymentDate') return;
 
         createTestData();
 
@@ -343,8 +541,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIWithExistingDonationsSpecified') return;
-        
         createTestData();
             
         list<DataImport__c> listDI = new list<DataImport__c>();
@@ -421,8 +617,6 @@ public with sharing class BDI_Donations_TEST {
     static testMethod void TwoDIWithExistingPaymentsSpecified() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIWithExistingPaymentsSpecified') return;
         
         createTestData();
         // for the first Opp, let's create multiple payments equal payments for it.
@@ -523,8 +717,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIWithExistingDonationsOneDupe') return;
-        
         createTestData();
             
         list<DataImport__c> listDI = new list<DataImport__c>();
@@ -601,6 +793,71 @@ public with sharing class BDI_Donations_TEST {
     }
 
     /*********************************************************************************************************
+    * @description Verifies currency is copied to opportunity and payment in multicurrency orgs
+    */
+    @isTest
+    static void currencyShouldCopyToOpportunity() {
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
+        // only test in multicurrency orgs
+        if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+            return;
+        }
+
+        UTIL_CurrencyCache.CurrencyData testCurrency = UTIL_UnitTestData_TEST.nonDefaultCurrencyType;
+
+        if (testCurrency == null) {
+            return; // don't run the test if there's nothing to test
+        }
+
+        String testCurrencyCode = testCurrency.IsoCode;
+
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+        diSettings.Run_Opportunity_Rollups_while_Processing__c = false;
+
+        DataImport__c dataImport = new DataImport__c(
+            Contact1_Firstname__c = 'Jane', Contact1_Lastname__c = 'Smith',
+            Contact1_Personal_Email__c = 'jane.smith@norollups.com',
+            Donation_Donor__c = 'Contact1',
+            Donation_Name__c = 'Test',
+            Donation_Amount__c = 1000,
+            Donation_Date__c = Date.today().addMonths(3),
+            Donation_Stage__c = UTIL_UnitTestData_TEST.getClosedWonStage()
+        );
+        dataImport.put('CurrencyIsoCode', testCurrencyCode);
+        insert dataImport;
+
+        Test.startTest();
+        BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH();
+        Database.executeBatch(batch, 10);
+        Test.stopTest();
+
+        List<Opportunity> opps = Database.query(
+            'SELECT Name, Amount, StageName, IsWon, CurrencyIsoCode ' +
+            'FROM Opportunity'
+        );
+        System.assertEquals(1, opps.size());
+        System.assertEquals(true, opps[0].IsWon);
+        System.assertEquals(testCurrencyCode, (String)opps[0].get('CurrencyIsoCode'));
+
+        List<npe01__OppPayment__c> payments = Database.query(
+            'SELECT Id, CurrencyIsoCode FROM npe01__OppPayment__c'
+        );
+        System.assertEquals(1, payments.size());
+        System.assertEquals(testCurrencyCode, (String)payments[0].get('CurrencyIsoCode'));
+
+        List<DataImport__c> dataImports = [SELECT DonationImported__c, DonationImportStatus__c FROM DataImport__c];
+        System.assertEquals(1, dataImports.size());
+        System.assertEquals(opps[0].Id, dataImports[0].DonationImported__c);
+        System.assertEquals(System.Label.bdiCreated, dataImports[0].DonationImportStatus__c);
+    }
+
+    /*********************************************************************************************************
     * @description operation: 
     *    import donations using different matching rules: Date, Amount, PaymentId to paid Pmt, Opp Closed
     *    requireExactMatch
@@ -609,7 +866,6 @@ public with sharing class BDI_Donations_TEST {
     *    error reported on bdi
     **********************************************************************************************************/            
     static testMethod void matchPaymentIdToPaidClosedOppRequireExactMatch() {
-        if (strTestOnly != '*' && strTestOnly != 'matchPaymentIdToPaidClosedOppRequireExactMatch') return;
         matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.RequireExactMatch, 
             label.bdiErrorDonationLookupMatch, true);
     }
@@ -623,7 +879,6 @@ public with sharing class BDI_Donations_TEST {
     *    error reported on bdi
     **********************************************************************************************************/            
     static testMethod void matchPaymentIdToPaidClosedOppRequireNoMatch() {
-        if (strTestOnly != '*' && strTestOnly != 'matchPaymentIdToPaidClosedOppRequireNoMatch') return;
         matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.RequireNoMatch, 
             label.bdiErrorDonationLookupMatch, true);
     }
@@ -637,7 +892,6 @@ public with sharing class BDI_Donations_TEST {
     *    error reported on bdi
     **********************************************************************************************************/            
     static testMethod void matchPaymentIdToPaidClosedOppDoNotMatch() {
-        if (strTestOnly != '*' && strTestOnly != 'matchPaymentIdToPaidClosedOppDoNotMatch') return;
         matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.DoNotMatch, null, true);
     }
 
@@ -650,7 +904,6 @@ public with sharing class BDI_Donations_TEST {
     *    error reported on bdi
     **********************************************************************************************************/            
     static testMethod void matchPaymentIdToPaidClosedOppBestMatchOrCreate() {
-        if (strTestOnly != '*' && strTestOnly != 'matchPaymentIdToPaidClosedOppBestMatchOrCreate') return;
         matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.BestMatchOrCreate, 
             label.bdiErrorDonationLookupMatch, true);
     }
@@ -664,7 +917,6 @@ public with sharing class BDI_Donations_TEST {
     *    error reported on bdi
     **********************************************************************************************************/            
     static testMethod void matchPaymentIdToPaidClosedOppExactMatchOrCreate() {
-        if (strTestOnly != '*' && strTestOnly != 'matchPaymentIdToPaidClosedOppExactMatchOrCreate') return;
         matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.ExactMatchOrCreate, 
             label.bdiErrorDonationLookupMatch, true);
     }
@@ -678,7 +930,6 @@ public with sharing class BDI_Donations_TEST {
     *    error reported on bdi
     **********************************************************************************************************/            
     static testMethod void matchPaymentIdToPaidClosedOppRequireBestMatch() {
-        if (strTestOnly != '*' && strTestOnly != 'matchPaymentIdToPaidClosedOppRequireBestMatch') return;
         matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.RequireBestMatch, 
             label.bdiErrorDonationLookupMatch, true);
     }
@@ -692,7 +943,6 @@ public with sharing class BDI_Donations_TEST {
     *    error reported on bdi
     **********************************************************************************************************/            
     static testMethod void matchDonationIdToPaidClosedOppRequireExactMatch() {
-        if (strTestOnly != '*' && strTestOnly != 'matchDonationIdToPaidClosedOppRequireExactMatch') return;
         matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.RequireExactMatch, 
             label.bdiErrorDonationLookupMatch, false);
     }
@@ -706,7 +956,6 @@ public with sharing class BDI_Donations_TEST {
     *    error reported on bdi
     **********************************************************************************************************/            
     static testMethod void matchDonationIdToPaidClosedOppRequireNoMatch() {
-        if (strTestOnly != '*' && strTestOnly != 'matchDonationIdToPaidClosedOppRequireNoMatch') return;
         matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.RequireNoMatch, 
             label.bdiErrorDonationLookupMatch, false);
     }
@@ -720,7 +969,6 @@ public with sharing class BDI_Donations_TEST {
     *    error reported on bdi
     **********************************************************************************************************/            
     static testMethod void matchDonationIdToPaidClosedOppDoNotMatch() {
-        if (strTestOnly != '*' && strTestOnly != 'matchDonationIdToPaidClosedOppDoNotMatch') return;
         matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.DoNotMatch, null, false);
     }
 
@@ -733,7 +981,6 @@ public with sharing class BDI_Donations_TEST {
     *    error reported on bdi
     **********************************************************************************************************/            
     static testMethod void matchDonationIdToPaidClosedOppBestMatchOrCreate() {
-        if (strTestOnly != '*' && strTestOnly != 'matchDonationIdToPaidClosedOppBestMatchOrCreate') return;
         matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.BestMatchOrCreate, 
             label.bdiErrorDonationLookupMatch, false);
     }
@@ -747,7 +994,6 @@ public with sharing class BDI_Donations_TEST {
     *    error reported on bdi
     **********************************************************************************************************/            
     static testMethod void matchDonationIdToPaidClosedOppExactMatchOrCreate() {
-        if (strTestOnly != '*' && strTestOnly != 'matchDonationIdToPaidClosedOppExactMatchOrCreate') return;
         matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.ExactMatchOrCreate, 
             label.bdiErrorDonationLookupMatch, false);
     }
@@ -761,7 +1007,6 @@ public with sharing class BDI_Donations_TEST {
     *    error reported on bdi
     **********************************************************************************************************/            
     static testMethod void matchDonationIdToPaidClosedOppRequireBestMatch() {
-        if (strTestOnly != '*' && strTestOnly != 'matchDonationIdToPaidClosedOppRequireBestMatch') return;
         matchDonationIdToPaidClosedOppWithBehavior(BDI_DataImport_API.RequireBestMatch, 
             label.bdiErrorDonationLookupMatch, false);
     }
@@ -843,7 +1088,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules1') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=100,
             Donation_Date__c=System.Today(),
@@ -867,7 +1111,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules1b') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=100,
             Donation_Date__c=System.Today()+1,
@@ -891,7 +1134,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules1c') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=100,
             Donation_Date__c=System.Today(),
@@ -915,7 +1157,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules1d') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=100,
             Donation_Date__c=System.Today(),
@@ -938,7 +1179,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules2') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=300,
             Donation_Date__c=System.Today(),
@@ -958,7 +1198,6 @@ public with sharing class BDI_Donations_TEST {
     *    correct donations matched
     **********************************************************************************************************/            
     static testMethod void donationMatchRules3() {
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules3') return;
         
         string strRTName = UTIL_RecordTypes.getRecordTypeNameForMembershipTests(Opportunity.sObjectType);
 
@@ -991,7 +1230,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules4') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=200,
             Donation_Date__c=System.Today(),
@@ -1015,7 +1253,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules4b') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=99,
             Donation_Date__c=System.Today(),
@@ -1038,7 +1275,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules5') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=200,
             Donation_Date__c=System.Today(),
@@ -1062,7 +1298,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules5b') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=99,
             Donation_Date__c=System.Today(),
@@ -1085,7 +1320,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules6') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=100,
             Donation_Date__c=System.Today(),
@@ -1109,7 +1343,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules7') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=200,
             Donation_Date__c=System.Today(),
@@ -1132,7 +1365,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules7b') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=99,
             Donation_Date__c=System.Today(),
@@ -1156,7 +1388,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules8') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=99,
             Donation_Date__c=System.Today(),
@@ -1180,7 +1411,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules9') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=200,
             Donation_Date__c=System.Today(),
@@ -1204,7 +1434,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules9b') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=100,
             Donation_Date__c=System.Today(),
@@ -1228,7 +1457,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules10') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=200,
             Donation_Date__c=System.Today(),
@@ -1252,7 +1480,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules10b') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=99,
             Donation_Date__c=System.Today(),
@@ -1276,7 +1503,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules11') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=99,
             Donation_Date__c=System.Today(),
@@ -1300,7 +1526,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules11b') return;
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=300,
             Donation_Date__c=System.Today().addDays(-100),
@@ -1322,8 +1547,6 @@ public with sharing class BDI_Donations_TEST {
     static testMethod void donationMatchRules12() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules12') return;
 
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=700,
@@ -1348,8 +1571,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules13') return;
-
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=550,
             Donation_Date__c=System.Today(),
@@ -1372,8 +1593,6 @@ public with sharing class BDI_Donations_TEST {
     static testMethod void donationMatchRules14() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules14') return;
 
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=25,
@@ -1400,8 +1619,6 @@ public with sharing class BDI_Donations_TEST {
     static testMethod void donationMatchRules14b() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules14b') return;
 
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=300,
@@ -1431,8 +1648,6 @@ public with sharing class BDI_Donations_TEST {
     static testMethod void donationMatchRules14c() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules14c') return;
 
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=350,
@@ -1473,8 +1688,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules15') return;
-
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=25,
             Donation_Date__c=System.Today(),
@@ -1499,8 +1712,6 @@ public with sharing class BDI_Donations_TEST {
     static testMethod void donationMatchRules16() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
-        
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules16') return;
 
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=125,
@@ -1526,8 +1737,6 @@ public with sharing class BDI_Donations_TEST {
     static testMethod void donationMatchRules17() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules17') return;
 
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=1100,
@@ -1555,8 +1764,6 @@ public with sharing class BDI_Donations_TEST {
     static testMethod void donationMatchRules18a() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules18a') return;
 
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=12,
@@ -1598,8 +1805,6 @@ public with sharing class BDI_Donations_TEST {
     static testMethod void donationMatchRules18b() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules18a') return;
 
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=12,
@@ -1643,8 +1848,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules18c') return;
-
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=12,
             Donation_Date__c=System.Today()+1,
@@ -1684,8 +1887,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules18d') return;
-
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=12,
             Donation_Date__c=System.Today()+1,
@@ -1710,8 +1911,6 @@ public with sharing class BDI_Donations_TEST {
     static testMethod void donationMatchRules19() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'donationMatchRules19') return;
 
         insert new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='c0', Contact1_Personal_Email__c='c0@c0.com',
             Donation_Amount__c=15,
@@ -1890,4 +2089,5 @@ public with sharing class BDI_Donations_TEST {
             (SELECT Id, npe01__Payment_Amount__c, npe01__Written_Off__c, npe01__Paid__c FROM  npe01__OppPayment__r)
             FROM Opportunity WHERE Id = :oppId LIMIT 1];
     }
+
 }
