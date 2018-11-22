@@ -2637,6 +2637,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Donor Type</value>
     </labels>
     <labels>
+        <fullName>bgeGridErrorRequiredTotalsExpected</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message preventing user from processing batch if totals don&apos;t match expected</shortDescription>
+        <value>Either the count of gifts or the total gifts doesn&apos;t match the expected values for this batch. These values must match before you can process the batch.</value>
+    </labels>
+    <labels>
         <fullName>bgeGridGiftCountHeader</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2700,12 +2707,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Total Count:</value>
     </labels>
     <labels>
+        <fullName>bgeGridWarningRequiredTotalsExpected</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message warning user if totals don&apos;t match expected</shortDescription>
+        <value>Require Expected Totals Match is selected but the Expected Count of Gifts and Expected Total Batch Amount fields are blank. Edit the batch details and either uncheck Require Expected Totals Match or add values in the related fields.</value>
+    </labels>
+    <labels>
         <fullName>bgeMatchingAlert</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alerts user that there are matched donations</shortDescription>
         <value>This donor has pending payments that might match this one. Choose an existing payment instead?</value>
-    </labels><labels>
+    </labels>
+    <labels>
         <fullName>bgeMatchingSelect</fullName>
         <language>en_US</language>
         <protected>true</protected>
