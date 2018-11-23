@@ -58,19 +58,31 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 try {
                     String descriptionField = (sObjectName == 'DataImportBatch__c') ? 'Batch_Description__c' : 'Description__c';
 
-                    String soql = 'SELECT Name, Id, ' +
-                            descriptionField + ', ' +
-                            'RequireTotalMatch__c, ' +
-                            'Active_Fields__c, ' +
-                            'Batch_Process_Size__c, ' +
-                            'Run_Opportunity_Rollups_while_Processing__c, ' +
-                            'Contact_Matching_Rule__c, ' +
-                            'Donation_Matching_Behavior__c, ' +
-                            'Donation_Matching_Implementing_Class__c, ' +
-                            'Donation_Matching_Rule__c, ' +
-                            'Donation_Date_Range__c, ' +
-                            'Post_Process_Implementing_Class__c, ' +
-                            'Process_Using_Scheduled_Job__c' +
+                    List<String> fields = new List<String>{
+                            descriptionField,
+                            'Name',
+                            'Id',
+                            'RequireTotalMatch__c',
+                            'Active_Fields__c',
+                            'Batch_Process_Size__c',
+                            'Run_Opportunity_Rollups_while_Processing__c',
+                            'Contact_Matching_Rule__c',
+                            'Donation_Matching_Behavior__c',
+                            'Donation_Matching_Implementing_Class__c',
+                            'Donation_Matching_Rule__c',
+                            'Donation_Date_Range__c',
+                            'Post_Process_Implementing_Class__c',
+                            'Process_Using_Scheduled_Job__c'
+                    };
+
+                    if (sObjectName == 'DataImportBatch__c') {
+                        fields.add('Expected_Count_of_Gifts__c');
+                        fields.add('Expected_Total_Batch_Amount__c');
+                    }
+
+
+                    String soql = 'SELECT ' +
+                            String.join(fields, ', ') +
                             ' FROM ' + sObjectName +
                             ' WHERE Id=:recordId';
 
@@ -91,15 +103,18 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                     model.runOpportunityRollupsWhileProcessing = (Boolean)recordDetails.get('Run_Opportunity_Rollups_while_Processing__c');
 
                     if (sObjectName == 'DataImportBatch__c') {
-                        model.expectedCount = (Integer)recordDetails.get('Expected_Count_of_Gifts__c');
+                        model.expectedCount = Integer.valueOf(recordDetails.get('Expected_Count_of_Gifts__c'));
                         model.expectedTotal = (Decimal)recordDetails.get('Expected_Total_Batch_Amount__c');
                     }
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     throw new AuraHandledException('ERROR: ' + ex.getMessage());
                 }
             } else {
                 throw new AuraHandledException('ERROR: Only Batch_Template__c and DataImportBatch__c are supported objects.');
+            }
+
+            if (sObjectName == 'DataImportBatch__c') {
+                model.recordCount = [SELECT COUNT() FROM DataImport__c WHERE NPSP_Data_Import_Batch__c = :recordId];
             }
         }
 
@@ -654,6 +669,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public Boolean processUsingScheduledJob;
         @AuraEnabled public Boolean runOpportunityRollupsWhileProcessing;
         @AuraEnabled public List<Batch_Template__c> availableBatchTemplates;
+        @AuraEnabled public Integer recordCount;
 
         public BGEDetailsModel() {
             requireTotalMatch = false;

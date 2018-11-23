@@ -41,6 +41,7 @@
                 var response = JSON.parse(response.getReturnValue());
                 this.setModel(component, response);
                 this.createEntryForm(component, response);
+                component.find('forceRecordCmp').reloadRecord(true);
             } else {
                 this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
             }

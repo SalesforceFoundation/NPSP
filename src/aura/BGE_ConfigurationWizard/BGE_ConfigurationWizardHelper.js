@@ -21,6 +21,7 @@
                 templateInfoView.description = templateInfo.description;
                 templateInfoView.expectedCount = templateInfo.expectedCount;
                 templateInfoView.expectedTotal = templateInfo.expectedTotal;
+                templateInfoView.recordCount = templateInfo.recordCount;
 
                 // batch processing settings
                 templateInfoView.requireTotalMatch = templateInfo.requireTotalMatch;
@@ -44,6 +45,7 @@
                 description: '',
                 expectedCount: 0,
                 expectedTotal: 0,
+                recordCount: 0,
 
                 // batch processing settings
                 requireTotalMatch: false,
@@ -326,7 +328,9 @@
                         defaultValue: currentField.defaultValue,
                         required: currentField.required,
                         hide: currentField.hide,
-                        sortOrder: currentField.sortOrder
+                        sortOrder: currentField.sortOrder,
+                        type: currentField.type,
+                        options: currentField.options
                     });
                 });
 
@@ -406,6 +410,7 @@
                 this.id = info.id;
                 this.expectedCount = info.expectedCount;
                 this.expectedTotal = info.expectedTotal;
+                this.recordCount = info.recordCount;
 
                 //batch processing settings
                 this.requireTotalMatch = info.requireTotalMatch;
@@ -437,6 +442,7 @@
                 description: '',
                 expectedCount: 0,
                 expectedTotal: 0,
+                recordCount: 0,
 
                 // batch processing settings
                 requireTotalMatch: false,

@@ -1422,6 +1422,9 @@
         <members>bgeBatchTemplateSelectedFields</members>
         <members>bgeBatchTemplateSetBatchOptions</members>
         <members>bgeBatchTemplateSetFieldOptions</members>
+        <members>bgeEditBatchFieldOptionsWarning</members>
+        <members>bgeEditBatchFieldSelectionWarning</members>
+        <members>bgeEditBatchOptionsWarning</members>
         <members>bgeGridAllGifts</members>
         <members>bgeGridDonorType</members>
         <members>bgeGridErrorRequiredTotalsExpected</members>
@@ -1439,6 +1442,7 @@
         <members>bgeMatchingSelect</members>
         <members>bgeNewBatch</members>
         <members>bgeNewGift</members>
+        <members>bgeProcessBatch</members>
         <members>bgeTabHeader</members>
         <members>btnRemove</members>
         <members>campaignMemberStatusDefault</members>
