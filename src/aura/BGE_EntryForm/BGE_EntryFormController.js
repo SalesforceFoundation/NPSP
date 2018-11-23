@@ -1,13 +1,11 @@
 ({
     /**
-     * @description: called during render to place the focus at the start of the form
+     * @description: called during render to place the focus on SelectOpenDonation link if present
      */
     callFocus: function(component){
-        let openDonationsLink = document.getElementById("selectMatchLink");
+        let openDonationsLink = document.getElementById('selectMatchLink');
         if (openDonationsLink) {
             openDonationsLink.focus();
-        } else {
-            component.find('donorType').focus();
         }
     },
 
@@ -23,7 +21,7 @@
      * @description: closes match modal
      */
     closeModal: function (component) {
-        component.get("v.matchingModalPromise").then(function(modal) {
+        component.get('v.matchingModalPromise').then(function(modal) {
             modal.close();
         });
     },
@@ -33,14 +31,15 @@
      */
     onFormLoad: function (component, event, helper) {
         helper.sendMessage('hideFormSpinner', '');
+        component.find('donorType').focus();
     },
 
     /**
      * @description: alerts parent component that form is loaded
      */
     onDonorChange: function (component, event, helper) {
-        var lookupField = component.get("v.donorType") === 'Contact1' ? 'contactLookup' : 'accountLookup';
-        var lookupValueIsValidId = (component.find(lookupField).get("v.value")).length === 18;
+        var lookupField = component.get('v.donorType') === 'Contact1' ? 'contactLookup' : 'accountLookup';
+        var lookupValueIsValidId = (component.find(lookupField).get('v.value')).length === 18;
 
         if (lookupValueIsValidId) {
             helper.sendMessage('showFormSpinner', '');

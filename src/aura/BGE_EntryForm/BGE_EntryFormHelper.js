@@ -47,12 +47,8 @@
      */
     queryOpenDonations: function (component) {
         let donorType = component.get('v.donorType');
-        let donorId;
-        if (donorType === 'Contact1') {
-            donorId = component.find('contactLookup').get('v.value');
-        } else if (donorType === 'Account1') {
-            donorId = component.find('accountLookup').get('v.value');
-        }
+        let lookupField = donorType === 'Contact1' ? 'contactLookup' : 'accountLookup';
+        let donorId = component.find(lookupField).get('v.value');
 
         var action = component.get('c.getOpenDonations');
         action.setParams({donorId: donorId, donorType: donorType});
@@ -60,26 +56,28 @@
             var state = response.getState();
             if (state === 'SUCCESS') {
                 var openDonations = JSON.parse(response.getReturnValue());
-                console.log(response);
-                // call another function here to create the scoped notification
                 component.set('v.openOpportunities', openDonations.openOpportunities);
                 component.set('v.unpaidPayments', openDonations.unpaidPayments);
 
-                let options = [{'label': 'None, create a new opportunity', 'value': 'none'}];
+                let noneOption = [{'label': 'None, create a new opportunity', 'value': 'none'}];
 
+                let oppOptions = [];
                 openDonations.openOpportunities.forEach(function(opp) {
                     const label = opp.Name + ' (' + opp.StageName + ')';
                     const value = opp.Id;
-                    options.push({'label': label, 'value': value});
-                    //let option = {'label': opp.}
+                    oppOptions.push({'label': label, 'value': value});
                 });
 
+                let pmtOptions = [];
                 openDonations.unpaidPayments.forEach(function(pmt) {
                     const label = pmt.Name + ' (' + pmt.npe01__Opportunity__r.Name + ', ' + pmt.npe01__Scheduled_Date__c + ')';
                     const value = pmt.Id;
-                    options.push({'label': label, 'value': value});
+                    pmtOptions.push({'label': label, 'value': value});
                 });
 
+                let options = {'noneOption': noneOption, 'oppOptions': oppOptions, 'pmtOptions': pmtOptions};
+                console.log(options);
+                console.log(options.oppOptions);
                 component.set('v.options', options);
 
             } else {
