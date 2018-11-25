@@ -1142,6 +1142,9 @@ public class RD_RecurringDonations {
             // start date in the current month
             startDt = adjustDayOfMonth(startDt, r); // fix the date to account for end of month
         }
+
+        startDt = startDt >= r.npe03__Date_Established__c ? startDt : startDt.addMonths(1); // fix the date to account for date established
+
         return startDt;
     }
 
@@ -1169,6 +1172,7 @@ public class RD_RecurringDonations {
             dayOfMonth = getPreferredDay(installmentDate.day(), recurringDonation);
         }
 
+        // Set to last day in month if day of month is larger (e.g. dayOfMonth > 31)
         dayOfMonth = dayOfMonth > daysInMonth ? daysInMonth : dayOfMonth;
 
         return Date.newInstance(installmentDate.year(), installmentDate.month(), dayOfMonth);
