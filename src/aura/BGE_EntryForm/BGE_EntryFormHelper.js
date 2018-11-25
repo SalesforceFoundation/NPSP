@@ -76,8 +76,6 @@
                 });
 
                 let options = {'noneOption': noneOption, 'oppOptions': oppOptions, 'pmtOptions': pmtOptions};
-                console.log(options);
-                console.log(options.oppOptions);
                 component.set('v.options', options);
 
             } else {

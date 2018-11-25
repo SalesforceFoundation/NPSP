@@ -1402,12 +1402,12 @@
         <members>bdiTime</members>
         <members>bgeBatchInfoWizard</members>
         <members>bgeBatchTemplateAvailableFields</members>
-        <members>bgeBatchTemplateDonorLookupInfo</members>
         <members>bgeBatchTemplateBatchProcessSizeHelp</members>
         <members>bgeBatchTemplateDonationDateRangeHelp</members>
         <members>bgeBatchTemplateDonationMatchingBehaviorHelp</members>
         <members>bgeBatchTemplateDonationMatchingClassHelp</members>
         <members>bgeBatchTemplateDonationMatchingRuleHelp</members>
+        <members>bgeBatchTemplateDonorLookupInfo</members>
         <members>bgeBatchTemplateEdit</members>
         <members>bgeBatchTemplateErrorDefaultValue</members>
         <members>bgeBatchTemplateErrorRequiredAmount</members>
@@ -2064,6 +2064,7 @@
         <members>stgNavTriggerConfig</members>
         <members>stgNavUserDefinedRollups</members>
         <members>stgNoObjectsFound</members>
+        <members>stgNone</members>
         <members>stgNotApplicable</members>
         <members>stgOppNamingDescription</members>
         <members>stgPowerOfUsHub</members>

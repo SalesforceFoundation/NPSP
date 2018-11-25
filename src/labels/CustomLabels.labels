@@ -7519,6 +7519,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Del</value>
     </labels>
     <labels>
+        <fullName>stgNone</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Generic reusable label for "None".</shortDescription>
+        <value>None</value>
+    </labels>
+    <labels>
         <fullName>stgNoObjectsFound</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

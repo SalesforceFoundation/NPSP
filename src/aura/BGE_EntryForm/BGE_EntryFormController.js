@@ -89,13 +89,33 @@
     },
 
     /**
+     * @description: ensures only one open donation is selected among the three radio groups
+     */
+    onOpenDonationSelectChange: function (component, event, helper) {
+        let selectedDonation = event.getSource().get('v.value');
+        let selectedGroup = event.getSource().get('v.name');
+        console.log(selectedDonation);
+        console.log(selectedGroup);
+        if (selectedGroup === 'noneGroup') {
+            component.set('v.selectedOpportunity', null);
+            component.set('v.selectedPayment', null);
+        } else if (selectedGroup === 'oppGroup') {
+            component.set('v.selectedNone', null);
+            component.set('v.selectedPayment', null);
+        } else if (selectedGroup === 'pmtGroup') {
+            component.set('v.selectedNone', null);
+            component.set('v.selectedOpportunity', null);
+        }
+    },
+
+    /**
      * @description: sets the donor type and alerts the parent. Used to circumvent the unhelpful labeling of Account1/Contact1.
      */
     setDonorType: function (component, event, helper) {
-        var donorType = event.getSource().get('v.value');
+        let donorType = event.getSource().get('v.value');
         component.set('v.donorType', donorType);
 
-        var message = {'donorType': donorType};
+        let message = {'donorType': donorType};
         helper.sendMessage('setDonorType', message);
         helper.removeOpenDonations(component);
     }
