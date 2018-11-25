@@ -35,10 +35,6 @@
 */
 @isTest
 public class ERR_Handler_TEST {
-
-    // if you only want to run one test in this class, fill in its name here.
-    // if you want to run all tests, then use '*'
-    private static string strTestOnly = '*';
     
     private static Id chatterGroupId;
     /*******************************************************************************************************
@@ -89,8 +85,6 @@ public class ERR_Handler_TEST {
      * Chatter.
      */
     public testmethod static void errorsStoredInDbTdtmCustomConfigPostToChatter() {
-    	if (strTestOnly != '*' && strTestOnly != 'errorsStoredInDbTdtmCustomConfigPostToChatter') return;
-    	
     	setupWithChatterNotifications();
     	
         StringException testException = new StringException('Test Exception');
@@ -116,8 +110,6 @@ public class ERR_Handler_TEST {
      * ERR_Handler.processError() and verify that the error was emailed
      */
     public testmethod static void errorsStoredInDbTdtmCustomConfigEmailErrors() {
-        if (strTestOnly != '*' && strTestOnly != 'errorsStoredInDbTdtmCustomConfigEmailErrors') return;
-        
         setupWithEmailNotifications();
 
         Test.startTest();
@@ -141,8 +133,6 @@ public class ERR_Handler_TEST {
     * but using simple insert instead of Database.insert
     */
     static testMethod void errorStoredInDatabaseFromInsert() {
-        if (strTestOnly != '*' && strTestOnly != 'errorStoredInDatabaseFromInsert') return;
-        
         setupWithChatterNotifications();
         
         Contact contact1 = new Contact(FirstName = 'test', LastName = 'testerson1', Title = 'VP1');
@@ -180,8 +170,6 @@ public class ERR_Handler_TEST {
     * error-handling design, and that the error is properly stored.
     */
     static testMethod void controllerWithManualRollback() {
-        if (strTestOnly != '*' && strTestOnly != 'controllerWithManualRollback') return;
-        
         setupWithChatterNotifications();
         
         ERR_Handler_CTRL_TEST controller = new ERR_Handler_CTRL_TEST();
@@ -203,9 +191,6 @@ public class ERR_Handler_TEST {
     * @description Test that an inactive user won't receive email as the primary error user 
     */
     static testMethod void testInactiveUserEmailBehavior() {
-
-        if (strTestOnly != '*' && strTestOnly != 'testInactiveUserEmailBehavior') return;
-
         String un = System.now().getTime() + '@testerson.com';
         User u = UTIL_UnitTestData_TEST.createNewInactiveUserForTests(un);
 

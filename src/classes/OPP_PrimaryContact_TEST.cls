@@ -36,18 +36,11 @@
 @isTest
 public with sharing class OPP_PrimaryContact_TEST {
 
-    /*********************************************************************************************************
-    * @description If you only want to run a single test in this class, fill in its name here.
-    * If you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-    
     /*******************************************************************************************************
     * @description Tests insert, update, and delete of the primary opportunity contact role based on the opportunity
     * Primary Contact field.
     ********************************************************************************************************/
     static testMethod void testCreateUpdateOCR() {
-        if (strTestOnly != '*' && strTestOnly != 'testCreateUpdateOCR') return;
         list<Contact> conList = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(2);
         insert conList;
 
@@ -85,7 +78,6 @@ public with sharing class OPP_PrimaryContact_TEST {
     * Runs the batch utility and verifies the Primary Contact field has been populated.
     ********************************************************************************************************/
     static testMethod void testBatch() {
-        if (strTestOnly != '*' && strTestOnly != 'testBatch') return;
         list<Contact> conList = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(1);
         insert conList;
 
@@ -122,8 +114,6 @@ public with sharing class OPP_PrimaryContact_TEST {
     * @description Bulk creates opportunities with Primary Contact set, verifies Contact Roles are created.
     ********************************************************************************************************/
     static testMethod void testBulkInsert() {
-        if (strTestOnly != '*' && strTestOnly != 'testBulk') return;
-        
         integer bulkSize = 50;
         
         list<Contact> conList = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(bulkSize);
@@ -144,8 +134,6 @@ public with sharing class OPP_PrimaryContact_TEST {
     * old OCR is deleted.
     ********************************************************************************************************/
     static testMethod void testExistingConRoles() {
-        if (strTestOnly != '*' && strTestOnly != 'testExistingConRoles') return;
-        
         list<Contact> conList = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(2);
         insert conList;
         
