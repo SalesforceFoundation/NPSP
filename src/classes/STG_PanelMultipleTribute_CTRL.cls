@@ -33,7 +33,7 @@
 * @group Settings
 * @description Controller for the Multiple Tribute panel.
 */
-public with sharing class STG_PanelMultipleTribute_CTRL extends STG_Panel {
+public class STG_PanelMultipleTribute_CTRL extends STG_Panel {
     /*********************************************************************************************************
     * @description Returns the string Id of the Multiple Tribute panel.
     */
