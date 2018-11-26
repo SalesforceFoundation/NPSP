@@ -974,7 +974,6 @@
         <members>Opportunity.Notification_Recipient_Contact__c</members>
         <members>Opportunity.Notification_Recipient_Information__c</members>
         <members>Opportunity.Notification_Recipient_Name__c</members>
-        <members>Opportunity.Number_of_Tributes__c</members>
         <members>Opportunity.Previous_Grant_Opportunity__c</members>
         <members>Opportunity.Primary_Contact_Campaign_Member_Status__c</members>
         <members>Opportunity.Primary_Contact__c</members>
@@ -998,6 +997,10 @@
         <members>Schedulable__c.Class_Name__c</members>
         <members>Schedulable__c.Frequency__c</members>
         <members>Schedulable__c.Last_Time_Run__c</members>
+        <members>Tribute__c.Honoree_Contact__c</members>
+        <members>Tribute__c.Honoree_Name__c</members>
+        <members>Tribute__c.Opportunity__c</members>
+        <members>Tribute__c.Tribute_Type__c</members>
         <members>Trigger_Handler__c.Active__c</members>
         <members>Trigger_Handler__c.Asynchronous__c</members>
         <members>Trigger_Handler__c.Class__c</members>
@@ -1030,15 +1033,6 @@
         <members>Rollup__mdt.Summary_Object__c</members>
         <members>Rollup__mdt.Time_Bound_Operation_Type__c</members>
         <members>Rollup__mdt.Use_Fiscal_Year__c</members>
-        <members>Tribute__c.Honoree_Contact__c</members>
-        <members>Tribute__c.Honoree_Name__c</members>
-        <members>Tribute__c.Notification_Message__c</members>
-        <members>Tribute__c.Notification_Preference__c</members>
-        <members>Tribute__c.Notification_Recipient_Contact__c</members>
-        <members>Tribute__c.Notification_Recipient_Information__c</members>
-        <members>Tribute__c.Notification_Recipient_Name__c</members>
-        <members>Tribute__c.Opportunity__c</members>
-        <members>Tribute__c.Tribute_Type__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Advancement_Namespace__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Automatic_Campaign_Member_Management__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Non_Responded_Status__c</members>
@@ -1666,7 +1660,6 @@
         <members>pscManageSoftCreditsAmountMissing</members>
         <members>pscManageSoftCreditsAmountOrPercent</members>
         <members>pscManageSoftCreditsCantChangeCurrency</members>
-        <members>pscManageSoftCreditsPermissionDenied</members>
         <members>pscManageSoftCreditsFull</members>
         <members>pscManageSoftCreditsInvalidContact</members>
         <members>pscManageSoftCreditsNoRoles</members>
@@ -1674,6 +1667,7 @@
         <members>pscManageSoftCreditsPSCAmount</members>
         <members>pscManageSoftCreditsPartial</members>
         <members>pscManageSoftCreditsPercent</members>
+        <members>pscManageSoftCreditsPermissionDenied</members>
         <members>pscManageSoftCreditsPrimaryDonor</members>
         <members>pscManageSoftCreditsReconcileFail</members>
         <members>pscManageSoftCreditsRestrictions</members>
