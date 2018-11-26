@@ -44,7 +44,7 @@
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
     <description>A recognition of an individual associated with a gift made in honor or memory of an honoree.</description>
-    <enableActivities>false</enableActivities>
+    <enableActivities>true</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableChangeDataCapture>false</enableChangeDataCapture>
     <enableFeeds>false</enableFeeds>
@@ -80,88 +80,6 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Notification_Message__c</fullName>
-        <description>A personalized message for the notification recipient.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>A personalized message for the notification recipient.</inlineHelpText>
-        <label>Notification Message</label>
-        <length>32768</length>
-        <trackTrending>false</trackTrending>
-        <type>LongTextArea</type>
-        <visibleLines>3</visibleLines>
-    </fields>
-    <fields>
-        <fullName>Notification_Preference__c</fullName>
-        <description>Indicates how the notification recipient should be notified, for example, by email or phone.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Indicates how the notification recipient should be notified, for example, by email or phone.</inlineHelpText>
-        <label>Notification Preference</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Picklist</type>
-        <valueSet>
-            <valueSetDefinition>
-                <sorted>false</sorted>
-                <value>
-                    <fullName>Email</fullName>
-                    <default>false</default>
-                    <label>Email</label>
-                </value>
-                <value>
-                    <fullName>Postal Mail</fullName>
-                    <default>false</default>
-                    <label>Postal Mail</label>
-                </value>
-                <value>
-                    <fullName>Phone</fullName>
-                    <default>false</default>
-                    <label>Phone</label>
-                </value>
-                <value>
-                    <fullName>Do Not Notify</fullName>
-                    <default>false</default>
-                    <label>Do Not Notify</label>
-                </value>
-            </valueSetDefinition>
-        </valueSet>
-    </fields>
-    <fields>
-        <fullName>Notification_Recipient_Contact__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
-        <description>Lookup to the Contact record of the person who should be notified about this Donation.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Lookup to the Contact record of the person who should be notified about this Donation.</inlineHelpText>
-        <label>Notification Recipient Contact</label>
-        <referenceTo>Contact</referenceTo>
-        <relationshipLabel>Tributes (Notification Recipient Contact)</relationshipLabel>
-        <relationshipName>Notification_Tributes</relationshipName>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Lookup</type>
-    </fields>
-    <fields>
-        <fullName>Notification_Recipient_Information__c</fullName>
-        <description>Enter any contact information such as address, phone, or email that the donor provided for the notification recipient.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Enter any contact information such as address, phone, or email that the donor provided for the notification recipient.</inlineHelpText>
-        <label>Notification Recipient Information</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>TextArea</type>
-    </fields>
-    <fields>
-        <fullName>Notification_Recipient_Name__c</fullName>
-        <description>The name that the donor provided of the person you should notify about this Donation. If this field is left blank and the Notification Recipient Contact field contains a value, NPSP automatically populates this field with that value.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>The name that the donor provided of the person you should notify about this Donation. If this field is left blank and the Notification Recipient Contact field contains a value, NPSP automatically populates this field with that value.</inlineHelpText>
-        <label>Notification Recipient Name</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>Opportunity__c</fullName>
         <description>The name of the Opportunity that the Tribute is associated with.</description>
         <externalId>false</externalId>
@@ -170,11 +88,8 @@
         <referenceTo>Opportunity</referenceTo>
         <relationshipLabel>Tributes</relationshipLabel>
         <relationshipName>Tributes</relationshipName>
-        <relationshipOrder>0</relationshipOrder>
-        <reparentableMasterDetail>false</reparentableMasterDetail>
-        <trackTrending>false</trackTrending>
-        <type>MasterDetail</type>
-        <writeRequiresMasterRead>false</writeRequiresMasterRead>
+       <trackTrending>false</trackTrending>
+        <type>Lookup</type>
     </fields>
     <fields>
         <fullName>Tribute_Type__c</fullName>
@@ -214,6 +129,6 @@
     </nameField>
     <pluralLabel>Tributes</pluralLabel>
     <searchLayouts/>
-    <sharingModel>ControlledByParent</sharingModel>
+    <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
 </CustomObject>
