@@ -136,9 +136,7 @@ public with sharing class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable
                 Notification_Recipient_Information__c, Notification_Preference__c, Notification_Message__c FROM Opportunity WHERE  Id in:oppIds]) {
 
             if (opp.Honoree_Contact__c != null || opp.Honoree_Name__c != null ||
-                    opp.Notification_Recipient_Contact__c != null || opp.Notification_Recipient_Name__c != null ||
-                    opp.Tribute_Type__c != null || opp.Notification_Recipient_Information__c != null ||
-                    opp.Notification_Preference__c != null || opp.Notification_Message__c != null) {
+                    opp.Tribute_Type__c != null) {
                 oppMap.put(opp.Id, opp);
             }
         }
@@ -292,11 +290,6 @@ public with sharing class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable
             opp.Tribute_Type__c = null;
             opp.Honoree_Contact__c = null;
             opp.Honoree_Name__c = null;
-            opp.Notification_Recipient_Contact__c = null;
-            opp.Notification_Recipient_Name__c = null;
-            opp.Notification_Recipient_Information__c = null;
-            opp.Notification_Preference__c = null;
-            opp.Notification_Message__c = null;
             oppsToUpdateMap.put(opp.Id, opp);
         }
         if (oppsToUpdateMap != null && oppsToUpdateMap.values().size() > 0) {
