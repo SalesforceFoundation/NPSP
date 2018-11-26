@@ -7132,7 +7132,8 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The Warning for Donations - Create Tribute from Opportunity</shortDescription>
-        <value>&lt;b&gt;WARNING:&lt;/b&gt;This batch will create Tribute records based on the Tribute settings for all Opportunities. Depending on the number of Opportunity records in your org with Tribute information, this process might consume &lt;b&gt;A LOT &lt;/b&gt;of storage space in your org. Test this feature in your sandbox before using it in your Production environment.&lt;br/&gt;&lt;br/&gt;
+        <value>Run this batch to migrate tribute data from Opportunity records to separate Tribute records that are associated with the Opportunities. This will affect all Opportunities with tribute fields populated. &lt;br/&gt; &lt;br/&gt;
+&lt;b&gt;WARNING:&lt;/b&gt; Be sure that you understand the potentially significant impact on storage before proceeding. Depending on the number of Opportunity records with Tribute data in your org, this process can consume &lt;b&gt;a lot &lt;/b&gt;of storage. Test this feature in your Sandbox before using it in your Production org.&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;This process cannot be reversed.&lt;/b&gt; 
 Before starting this process, back up your data and disable the following items when they affect Opportunities: 
@@ -7157,34 +7158,28 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Value for multiple Tributes on either Opportunity or Tribute object</shortDescription>
-        <value>(mixed tributes) Allow single (Opportunity) or multiple (Multiple Tribute) tribute records.</value>
+        <value>Mixed</value>
     </labels>
     <labels>
         <fullName>stgMultipleTributesLimited</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Value for multiple Tributes on Tribute object only</shortDescription>
-        <value>(multiple tributes) Allow only multiple Tribute records. Tribute data entered on new Opportunities are migrated to Tribute records.</value>
+        <value>Multiple</value>
     </labels>
     <labels>
         <fullName>stgMultipleTributesSettings</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>The Warning for Donations - Multiple Tributes page</shortDescription>
-        <value>&lt;b&gt;WARNING:&lt;/b&gt;When you enable Multiple Tributes, tributes are tracked on Tribute records instead of Opportunities. If you&apos;re enabling Multiple Tributes, consider:&lt;br/&gt;&lt;br/&gt; 
-
-● Adding the Tribute related list to the Opportunity page layout so that Tribute records are visible from Opportunities. Also consider removing the Tribute section from the Opportunity page layout if you don&apos;t need the Tribute data stored on Opportunities.&lt;br/&gt; 
-● Updating existing reports or creating new ones to include Tribute objects that are now generated.&lt;br/&gt; 
-● Running the Create Tribute from Opportunity batch job to migrate from the single-tribute to multiple-tributes model. Tribute data on Opportunities will be migrated to new Tribute records. &lt;b&gt;Before proceeding, be sure that you understand the potentially significant storage impact of this action.&lt;/b&gt; &lt;br/&gt;
-
-Once you start using Multiple Tributes, you can&apos;t revert to single tributes. There is no way to return Tribute data to Opportunities.&lt;br/&gt;</value>
+        <value>Enable Multiple Tributes to specify more than one person as an honoree of a gift. When enabled, tribute data is tracked on Tribute records, instead of Opportunity records, for all new Opportunities.&lt;br/&gt;&lt;/br&gt; Once you start using Multiple Tributes, there is no way to move Tribute records back to a single Opportunity record, so it is very important that you understand the impact on storage and reporting before proceeding. See &lt;a href=&quot;https://powerofus.force.com/articles/Resource/NPSP-Create-Multiple-Tributes&quot;&gt;Create and Manage Multiple Tributes.&lt;/a&gt;&lt;br/&gt;&lt;/br&gt;</value>
     </labels>
     <labels>
         <fullName>stgMultipleTributesSingleOpp</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Value for single Tribute on Opportunity object only</shortDescription>
-        <value>(single tribute) Allow only single tributes (Opportunity records).</value>
+        <value>Single</value>
     </labels>
     <labels>
         <fullName>stgNoObjectsFound</fullName>
