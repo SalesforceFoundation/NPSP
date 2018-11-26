@@ -38,27 +38,54 @@ public class OPP_CreateTribute_TEST {
     ********************************************************************************************************/
     static testMethod void testCreateTributeBatch() {
         //Make sure there is no Tribute record in the org
-        List<Tribute__c> tributes = [Select Id from Tribute__c];
-        system.assertEquals(0, tributes.size());
+        List<Tribute__c> tributeList = [Select Id from Tribute__c];
+        System.assertEquals(0, tributeList.size(), 'No Tributes Expected');
+        
         //Create and Insert Opportunity
-        Account acc = new Account(Name='TheAccount');
+        Account acc = new Account(Name = 'TheAccount');
         insert acc;
+        
         List<Opportunity> oppsToInsert = new List<Opportunity>();
-
         for(Integer i = 0; i < 10; i++) {
-            Opportunity opp = new Opportunity( AccountId = acc.id, StageName = 'Close Won', Name='Donation' + i,
-                    Amount= i, CloseDate = Date.newInstance(2018, 1, 2), Honoree_Name__c = 'John Smith', Notification_Recipient_Name__c = 'Mark Smith');
+            Opportunity opp = new Opportunity(  AccountId = acc.id, 
+                                                StageName = 'Close Won', 
+                                                Name='Donation' + i,
+                                                Amount= i, 
+                                                CloseDate = Date.newInstance(2018, 1, 2), 
+                                                Honoree_Name__c = 'John Smith' + i, 
+                                                Notification_Recipient_Name__c = 'Mark Smith');
             oppsToInsert.add(opp);
         }
         insert oppsToInsert;
+
+        Map<String, Id> honNmToOppIdMap = new Map<String, Id>();
+
+        for (Opportunity opp : oppsToInsert) {
+            honNmToOppIdMap.put (opp.Honoree_Name__c, opp.Id);
+        }
+
         Test.startTest();
+        // Execute Batch
         Database.executeBatch(new OPP_CreateTribute_BATCH(), 2000);
         Test.stopTest();
+        
         //System should create the Tribute record for the Opportunity
-        tributes = [Select Id from Tribute__c];
-        system.assertEquals(10, tributes.size());
+        tributeList = [Select Id, Opportunity__c, Honoree_Name__c from Tribute__c order by Honoree_Name__c ASC];
+
+     
+        System.assertEquals(10, tributeList.size(), '10 Tributes Expected');
+
+        for (Integer i=0; i < 10; i++) {
+            System.assertEquals('John Smith' + i, tributeList[i].Honoree_Name__c, 'Honoree Name #' + i);
+            System.assertEquals(honNmToOppIdMap.get(tributeList[i].Honoree_Name__c), tributeList[i].Opportunity__c, 'Opportunity Id, #' + i);
+        }
+
         //System should clear the Tribute fields on the Opportunity
-        List<Opportunity> opps = [Select Id from Opportunity where Honoree_Name__c != null OR Notification_Recipient_Name__c != null];
-        system.assertEquals(0, opps.size());
+        List<Opportunity> oppList = [select     Id 
+                                     from Opportunity 
+                                     where      Honoree_Name__c != null or 
+                                                Tribute_Type__c != null or 
+                                                Honoree_Contact__c != null];
+        System.assertEquals(0, oppList.size(), 'Opps should not have Tribute Info');
     }
 }
