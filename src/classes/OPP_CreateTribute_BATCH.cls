@@ -40,15 +40,10 @@ public class OPP_CreateTribute_BATCH implements Database.Batchable<sObject> {
     */
     public Database.QueryLocator start(Database.BatchableContext info) {
         return Database.getQueryLocator('SELECT Id, Tribute_Type__c, Honoree_Contact__c, ' +
-                'Honoree_Name__c, Notification_Recipient_Contact__c, Notification_Recipient_Name__c, ' +
-                'Notification_Recipient_Information__c, Notification_Preference__c, Notification_Message__c  FROM Opportunity WHERE ' +
+                'Honoree_Name__c FROM Opportunity WHERE ' +
                 'Honoree_Contact__c != null OR ' +
                 'Honoree_Name__c != null OR ' +
-                'Notification_Recipient_Contact__c != null OR ' +
-                'Notification_Recipient_Name__c != null OR ' +
-                'Tribute_Type__c != null OR ' +
-                'Notification_Recipient_Information__c != null OR ' +
-                'Notification_Preference__c != null');
+                'Tribute_Type__c != null');
     }
 
     /*******************************************************************************************************
@@ -65,22 +60,13 @@ public class OPP_CreateTribute_BATCH implements Database.Batchable<sObject> {
             newTribute.Tribute_Type__c = opp.Tribute_Type__c;
             newTribute.Honoree_Contact__c = opp.Honoree_Contact__c;
             newTribute.Honoree_Name__c = opp.Honoree_Name__c;
-            newTribute.Notification_Recipient_Contact__c = opp.Notification_Recipient_Contact__c;
-            newTribute.Notification_Recipient_Name__c = opp.Notification_Recipient_Name__c;
-            newTribute.Notification_Recipient_Information__c = opp.Notification_Recipient_Information__c;
-            newTribute.Notification_Preference__c = opp.Notification_Preference__c;
-            newTribute.Notification_Message__c = opp.Notification_Message__c;
             newTributes.add(newTribute);
 
             //clear the Opportunity fields
             opp.Tribute_Type__c = null;
             opp.Honoree_Contact__c = null;
             opp.Honoree_Name__c = null;
-            opp.Notification_Recipient_Contact__c = null;
-            opp.Notification_Recipient_Name__c = null;
-            opp.Notification_Recipient_Information__c = null;
-            opp.Notification_Preference__c = null;
-            opp.Notification_Message__c = null;
+
         }
         
         //We do not want to run through opportunity trigger when clear Tribute Fields
