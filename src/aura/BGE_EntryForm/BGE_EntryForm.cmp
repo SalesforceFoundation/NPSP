@@ -43,12 +43,8 @@
     <aura:attribute name="recordId" type="Id" description="Populated by force:hasRecordId" access="public"/>
     <aura:attribute name="record" type="DataImport__c" description="Object" access="public"/>
     <aura:attribute name="dataImportFields" type="Object[]" description="List of dynamic field objects to use in the field iteration" access="public"/>
-    <aura:attribute name="options" type="Object" description="" access="public" />
-    <aura:attribute name="openOpportunities" type="List" description="" access="public" />
-    <aura:attribute name="unpaidPayments" type="List" description="" access="public" />
-    <aura:attribute name="selectedNone" type="String" description="" access="public" />
-    <aura:attribute name="selectedOpportunity" type="String" description="" access="public" />
-    <aura:attribute name="selectedPayment" type="String" description="" access="public" />
+    <aura:attribute name="donationOptions" type="List" description="List of possible donations (payments and opportunities)" access="public" />
+    <aura:attribute name="selectedDonationId" type="String" description="Stored ID of the selected open donation" access="public" />
 
     <!--Modal Attributes-->
     <aura:attribute name="matchingModalPromise" type="Object" />
@@ -60,30 +56,7 @@
                           onclick="{!c.closeModal}" />
         <lightning:button label="{!$Label.c.mtchSelectCbxTitle}"
                           variant="brand"
-                          onclick="{!c.handleStatusSave}"/>
-    </aura:attribute>
-
-    <aura:attribute name="matchingModalBody" type="Aura.ComponentDefRef[]">
-        <!--keyboard accessibility seems REALLY crappy here-->
-        <lightning:radioGroup name="noneGroup"
-                              label="{!$Label.c.stgNone}"
-                              options="{!v.options.noneOption}"
-                              value="{!v.selectedNone}"
-                              type="radio"
-                              variant="label-hidden"
-                              onchange="{!c.onOpenDonationSelectChange}"/>
-        <lightning:radioGroup name="oppGroup"
-                              label="{!v.labels.opportunityObject}"
-                              options="{!v.options.oppOptions}"
-                              value="{!v.selectedOpportunity}"
-                              type="radio"
-                              onchange="{!c.onOpenDonationSelectChange}"/>
-        <lightning:radioGroup name="pmtGroup"
-                              label="{!v.labels.paymentObject}"
-                              options="{!v.options.pmtOptions}"
-                              value="{!v.selectedPayment}"
-                              type="radio"
-                              onchange="{!c.onOpenDonationSelectChange}"/>
+                          onclick="{!c.handleDonationSelection}"/>
     </aura:attribute>
 
     <!--Events-->
@@ -101,7 +74,7 @@
 
         <lightning:layout multipleRows="true">
             <!--BEGIN SCOPED MATCH NOTIFICATION-->
-            <aura:if isTrue="{!or(not(empty(v.openOpportunities)), not(empty(v.unpaidPayments)))}">
+            <aura:if isTrue="{!not(empty(v.donationOptions))}">
                 <lightning:layoutItem size="12" smallDeviceSize="12" class="slds-p-horizontal_small">
                     <lightning:layout class="slds-grid_align-center">
                         <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="10">

@@ -140,7 +140,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
         String opportunitySOQL = 'SELECT Id, ' +
                                 'Name, ' +
-                                'StageName ' +
+                                'StageName, ' +
+                                'Amount ' +
                                 'FROM Opportunity ' +
                                 'WHERE ' + relationshipField + ' = :donorId ' +
                                 'AND IsClosed = false';
@@ -148,7 +149,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         String paymentSOQL = 'SELECT Id, ' +
                                 'Name, ' +
                                 'npe01__Scheduled_Date__c, ' +
-                                'npe01__Opportunity__r.Name ' +
+                                'npe01__Opportunity__r.Name, ' +
+                                'npe01__Payment_Amount__c ' +
                                 'FROM npe01__OppPayment__c ' +
                                 'WHERE npe01__Opportunity__r.' + relationshipField + ' = :donorId ' +
                                 'AND npe01__Paid__c = false';

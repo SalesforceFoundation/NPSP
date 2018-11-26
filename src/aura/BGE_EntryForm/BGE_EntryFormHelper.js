@@ -1,4 +1,12 @@
 ({
+    /**
+     * @description: closes the donation modal and clears selected options **todo: do we want to clear options?**
+     */
+    closeDonationModal: function(component) {
+        component.get('v.matchingModalPromise').then(function(modal) {
+            modal.close();
+        });
+    },
 
     /**
      * @description: adds hidden and non-lightning:inputfield fields to the Data Import record before submitting.
@@ -33,50 +41,38 @@
     },
 
     /**
-     * @description: removes open donation values
-     * @return: void
-     */
-    removeOpenDonations: function(component) {
-        component.set('v.openOpportunities', []);
-        component.set('v.unpaidPayments', []);
-    },
-
-    /**
      * @description: queries open donations for upcoming donations
      * @return: void
      */
-    queryOpenDonations: function (component) {
-        let donorType = component.get('v.donorType');
-        let lookupField = donorType === 'Contact1' ? 'contactLookup' : 'accountLookup';
-        let donorId = component.find(lookupField).get('v.value');
+    queryOpenDonations: function (component, donorId) {
+        const donorType = component.get('v.donorType');
 
-        var action = component.get('c.getOpenDonations');
+        let action = component.get('c.getOpenDonations');
         action.setParams({donorId: donorId, donorType: donorType});
         action.setCallback(this, function (response) {
-            var state = response.getState();
+            const state = response.getState();
             if (state === 'SUCCESS') {
-                var openDonations = JSON.parse(response.getReturnValue());
-                component.set('v.openOpportunities', openDonations.openOpportunities);
-                component.set('v.unpaidPayments', openDonations.unpaidPayments);
+                const openDonations = JSON.parse(response.getReturnValue());
 
-                let noneOption = [{'label': 'None, create a new opportunity', 'value': 'none'}];
-
-                let oppOptions = [];
-                openDonations.openOpportunities.forEach(function(opp) {
-                    const label = opp.Name + ' (' + opp.StageName + ')';
-                    const value = opp.Id;
-                    oppOptions.push({'label': label, 'value': value});
-                });
+                let options = [{'label': 'None, create a new opportunity', 'value': ''}];
 
                 let pmtOptions = [];
+                const paymentLabel = component.get('v.labels.paymentObject');
                 openDonations.unpaidPayments.forEach(function(pmt) {
-                    const label = pmt.Name + ' (' + pmt.npe01__Opportunity__r.Name + ', ' + pmt.npe01__Scheduled_Date__c + ')';
+                    const label = paymentLabel + ': ' + pmt.Name + ' (' + pmt.npe01__Opportunity__r.Name + ', ' + pmt.npe01__Payment_Amount__c + ', ' + pmt.npe01__Scheduled_Date__c + ')';
                     const value = pmt.Id;
-                    pmtOptions.push({'label': label, 'value': value});
+                    options.push({'label': label, 'value': value});
                 });
 
-                let options = {'noneOption': noneOption, 'oppOptions': oppOptions, 'pmtOptions': pmtOptions};
-                component.set('v.options', options);
+                let oppOptions = [];
+                const opportunityLabel = component.get('v.labels.opportunityObject');
+                openDonations.openOpportunities.forEach(function(opp) {
+                    const label = opportunityLabel + ': ' + opp.Name + ' (' + opp.Amount + ', ' + opp.StageName + ')';
+                    const value = opp.Id;
+                    options.push({'label': label, 'value': value});
+                });
+
+                component.set('v.donationOptions', options);
 
             } else {
                 this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
