@@ -69,8 +69,7 @@ private class TBU_OpportunityContactRoles_TEST {
         insert opp;
 
         //insert Tribute Record
-        Tribute__c newTri = new Tribute__c(Opportunity__c = opp.Id, Honoree_Contact__c = cons[1].Id,
-                Notification_Recipient_Contact__c = cons[2].Id);
+        Tribute__c newTri = new Tribute__c(Opportunity__c = opp.Id, Honoree_Contact__c = cons[1].Id);
 
         Test.startTest();
         insert newTri;
@@ -78,18 +77,15 @@ private class TBU_OpportunityContactRoles_TEST {
 
         cons = [SELECT Id, Name FROM Contact WHERE Id IN :cons];
 
-        newTri = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Tribute__c WHERE Id = :newTri.id];
+        newTri = [SELECT Id, Honoree_Name__c FROM Tribute__c WHERE Id = :newTri.id];
         system.assertEquals(cons[1].Name, newTri.Honoree_Name__c);
-        system.assertEquals(cons[2].Name, newTri.Notification_Recipient_Name__c);
 
         //Now update the Tribute Honoree Contact and Notification Contact, system should update the corresponding Name field
         newTri.Honoree_Contact__c = cons[2].Id;
-        newTri.Notification_Recipient_Contact__c = cons[1].Id;
         update newTri;
 
-        newTri = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Tribute__c WHERE Id = :newTri.id];
+        newTri = [SELECT Id, Honoree_Name__c FROM Tribute__c WHERE Id = :newTri.id];
         system.assertEquals(cons[2].Name, newTri.Honoree_Name__c);
-        system.assertEquals(cons[1].Name, newTri.Notification_Recipient_Name__c);
 
         Test.stopTest();
 
@@ -123,8 +119,7 @@ private class TBU_OpportunityContactRoles_TEST {
         insert opp;
 
         //insert Tribute Record
-        Tribute__c newTri = new Tribute__c(Opportunity__c = opp.Id, Honoree_Contact__c = cons[1].Id,
-                Notification_Recipient_Contact__c = cons[2].Id);
+        Tribute__c newTri = new Tribute__c(Opportunity__c = opp.Id, Honoree_Contact__c = cons[1].Id);
 
         Test.startTest();
         try {
@@ -166,8 +161,7 @@ private class TBU_OpportunityContactRoles_TEST {
         insert opp;
 
         //insert Tribute Record
-        Tribute__c newTri = new Tribute__c(Opportunity__c = opp.Id, Honoree_Contact__c = cons[1].Id,
-                Notification_Recipient_Contact__c = cons[2].Id);
+        Tribute__c newTri = new Tribute__c(Opportunity__c = opp.Id, Honoree_Contact__c = cons[1].Id);
 
         Test.startTest();
         try {
@@ -200,6 +194,7 @@ private class TBU_OpportunityContactRoles_TEST {
         Opportunity opp = new Opportunity(
                 Name = 'Test',
                 Primary_Contact__c = cons[0].id,
+                Notification_Recipient_Contact__c = cons[2].Id,
                 CloseDate = date.today(),
                 StageName = 'Close Won'
         );
@@ -207,8 +202,7 @@ private class TBU_OpportunityContactRoles_TEST {
         insert opp;
 
         Tribute__c newTribute = new Tribute__c(Opportunity__c = opp.Id,
-                Honoree_Contact__c = cons[1].Id,
-                Notification_Recipient_Contact__c = cons[2].id);
+                Honoree_Contact__c = cons[1].Id);
 
         Test.startTest();
         insert newTribute;
@@ -216,9 +210,8 @@ private class TBU_OpportunityContactRoles_TEST {
 
         //System should create a Tribute Record and Populate the Honoree/Notification Name
         List<Contact> queryCon = [SELECT Id, Name FROM Contact WHERE Id IN :cons];
-        List<Tribute__c> queryTribute = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Tribute__c WHERE Opportunity__c = :opp.id];
+        List<Tribute__c> queryTribute = [SELECT Id, Honoree_Name__c FROM Tribute__c WHERE Opportunity__c = :opp.id];
         system.assertEquals(queryCon[1].Name, queryTribute[0].Honoree_Name__c);
-        system.assertEquals(queryCon[2].Name, queryTribute[0].Notification_Recipient_Name__c);
 
         //System should create 3 OCR with different Role
         List<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
@@ -268,7 +261,7 @@ private class TBU_OpportunityContactRoles_TEST {
 
         //System should populate Honoree Name on Tribute
         List<Contact> queryCon = [SELECT Id, Name FROM Contact WHERE Id IN :cons];
-        List<Tribute__c> queryTribute = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Tribute__c WHERE Opportunity__c = :opp.id];
+        List<Tribute__c> queryTribute = [SELECT Id, Honoree_Name__c FROM Tribute__c WHERE Opportunity__c = :opp.id];
         system.assertEquals(queryCon[2].Name, queryTribute[0].Honoree_Name__c);
 
         //System should create 2 OCR
@@ -285,16 +278,14 @@ private class TBU_OpportunityContactRoles_TEST {
 
         //Now Try to update the Honoree/Notification on tribute
         queryTribute[0].Honoree_Contact__c = cons[1].id;
-        queryTribute[0].Notification_Recipient_Contact__c = cons[0].id;
 
         Test.startTest();
         update queryTribute;
         Test.stopTest();
 
         //System should update the Honoree/Notification Name based on the changes
-        queryTribute = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Tribute__c WHERE Opportunity__c = :opp.id];
+        queryTribute = [SELECT Id, Honoree_Name__c FROM Tribute__c WHERE Opportunity__c = :opp.id];
         system.assertEquals(queryCon[1].Name, queryTribute[0].Honoree_Name__c);
-        system.assertEquals(queryCon[0].Name, queryTribute[0].Notification_Recipient_Name__c);
 
         //System should update the OCR based on the changes. Since Notification Recipient is the same as Primary, it will not create additional OCR
         queryOCR = [SELECT Id, ContactId, Contact.Name, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
@@ -311,8 +302,9 @@ private class TBU_OpportunityContactRoles_TEST {
         queryTribute[0].Honoree_Contact__c = null;
         update queryTribute;
 
-        queryTribute = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Tribute__c WHERE Opportunity__c = :opp.id];
+        queryTribute = [SELECT Id, Honoree_Name__c FROM Tribute__c WHERE Opportunity__c = :opp.id];
         system.assert(String.isBlank(queryTribute[0].Honoree_Name__c));
 
     }
+    
 }
