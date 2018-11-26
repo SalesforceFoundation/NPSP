@@ -99,7 +99,7 @@
         <fullName>Multiple_Tributes__c</fullName>
         <description>Allows multiple Tributes per Opportunity.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Valid values: 1) &quot;Allow only one tribute per Opportunity record&quot; 2) “Allow only one tribute per Opportunity, or multiple tributes on Tribute records” 3) “Allow only multiple Tribute records and migrate Tribute data entered on Opportunities to Tributes&quot;</inlineHelpText>
+        <inlineHelpText>Specify that your org can have one tribute per Opportunity (single), one per Opportunity and multiple tributes in separate Tributes (mixed), or multiple tributes in separate Tribute records. Choosing multiple creates Tributes only for new Opportunities.</inlineHelpText>
         <label>Multiple Tributes</label>
         <length>255</length>
         <required>false</required>

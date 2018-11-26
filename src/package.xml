@@ -1961,6 +1961,7 @@
         <members>stgMultipleTributesBatch</members>
         <members>stgMultipleTributesBatchPanel</members>
         <members>stgMultipleTributesFlexible</members>
+        <members>stgMultipleTributesHelp</members>
         <members>stgMultipleTributesLimited</members>
         <members>stgMultipleTributesSettings</members>
         <members>stgMultipleTributesSingleOpp</members>
