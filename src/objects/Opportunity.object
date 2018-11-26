@@ -1227,17 +1227,6 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Number_of_Tributes__c</fullName>
-        <description>Calculated based on the number of Tribute records associated with the Opportunity.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Total number of Tributes associated with this Opportunity</inlineHelpText>
-        <label>Number of Tributes</label>
-        <summaryForeignKey>Tribute__c.Opportunity__c</summaryForeignKey>
-        <summaryOperation>count</summaryOperation>
-        <trackTrending>false</trackTrending>
-        <type>Summary</type>
-    </fields>
-    <fields>
         <fullName>Previous_Grant_Opportunity__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <description>If this Grant is a renewal of a previous Grant, use this field to relate this record to the previous Grant.</description>
