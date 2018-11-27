@@ -152,4 +152,65 @@ private class CMT_FilterRule_TEST {
         System.AssertEquals(true, CMT_FilterRuleEvaluation_SVC.compareDateTypeWithConstant(SoapType.DATETIME, DateTime.Now().addYears(-2), 'TWO_YEARS_AGO', CMT_FilterRule.FilterOperation.EQUALS),
                 'A DateTime comparison for TWO_YEARS_AGO should return true');
     }
+
+    /**
+     * @description Validates constructor can handle when Constant__c is a string for instead of Id for RecordTypeId
+     */
+    private static testMethod void constructorShouldHandleRecordTypeDeveloperName() {
+        String filterRulesJSON =
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, null, 'TestRule1', 'Opportunity', 'RecordTypeId', 'In_List', 'Membership');
+
+        Filter_Rule__mdt ruleMetadata = (Filter_Rule__mdt)JSON.deserialize(filterRulesJSON, Filter_Rule__mdt.class);
+
+        CMT_FilterRule filterRule = new CMT_FilterRule(ruleMetadata);
+
+        System.assert(filterRule.compare instanceOf CMT_FilterRule.CompareStrings, 'The filter should have the correct compare type');
+    }
+
+    /**
+     * @description Validates constructor can handle when Constant__c is in a date format for instead of datetime for
+     * a datetime field
+     */
+    private static testMethod void constructorShouldHandleDateTimesStoredAsDates() {
+        String filterRulesJSON =
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, null, 'TestRule1', 'Opportunity', 'CreatedDate', 'Greater', '2018-01-01');
+
+        Filter_Rule__mdt ruleMetadata = (Filter_Rule__mdt)JSON.deserialize(filterRulesJSON, Filter_Rule__mdt.class);
+        //need to null out Constant__c since null is cast as a string
+        CMT_FilterRule filterRule = new CMT_FilterRule(ruleMetadata);
+
+        System.assert(filterRule.compare instanceOf CMT_FilterRule.CompareDates, 'The filter should have the correct compare type');
+    }
+
+    /**
+     * @description Validates constructor can handle when Constant__c is null for a record type ID
+     */
+    private static testMethod void constructorShouldHandleNullRecordTypeIds() {
+        String filterRulesJSON =
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, null, 'TestRule1', 'Opportunity', 'RecordTypeId', 'In_List', null);
+
+        Filter_Rule__mdt ruleMetadata = (Filter_Rule__mdt)JSON.deserialize(filterRulesJSON, Filter_Rule__mdt.class);
+        //need to null out Constant__c since null is cast as a string
+        ruleMetadata.Constant__c = null;
+
+        CMT_FilterRule filterRule = new CMT_FilterRule(ruleMetadata);
+
+        System.assert(filterRule.compare instanceOf CMT_FilterRule.CompareIds, 'The filter should have the correct compare type');
+    }
+
+    /**
+     * @description Validates constructor can handle when Constant__c is null for a datetime
+     */
+    private static testMethod void constructorShouldHandleNullDates() {
+        String filterRulesJSON =
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, null, 'TestRule1', 'Opportunity', 'CreatedDate', 'Greater', null);
+
+        Filter_Rule__mdt ruleMetadata = (Filter_Rule__mdt)JSON.deserialize(filterRulesJSON, Filter_Rule__mdt.class);
+        //need to null out Constant__c since null is cast as a string
+        ruleMetadata.Constant__c = null;
+
+        CMT_FilterRule filterRule = new CMT_FilterRule(ruleMetadata);
+
+        System.assert(filterRule.compare instanceOf CMT_FilterRule.CompareDateTimes, 'The filter should have the correct compare type');
+    }
 }
