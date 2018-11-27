@@ -100,7 +100,7 @@
                 } else {
                     thisRowAmount.prop('disabled', true);
                     //if we have a parent amount, set the calculated amount based on the percent
-                    if (parentAmount > 0) {
+                    if (parentAmount != 0) {
                         var pct = thisRowPercent.val();
                         // if the users locale uses commas as the decimal separator, replace
                         // those with a period so it works with js. don't have to worry about
