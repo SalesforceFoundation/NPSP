@@ -1427,6 +1427,7 @@
         <members>bgeEditBatchOptionsWarning</members>
         <members>bgeGridAllGifts</members>
         <members>bgeGridDonorType</members>
+        <members>bgeGridErrorFromDryRun</members>
         <members>bgeGridErrorRequiredTotalsExpected</members>
         <members>bgeGridGiftCountHeader</members>
         <members>bgeGridGiftDeleted</members>

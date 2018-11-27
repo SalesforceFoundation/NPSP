@@ -51,6 +51,26 @@
     },
 
     /**
+     * @description: handles the display or clearing of errors from the results of dry run
+     * @param rowErrors: object with row Id, title, and list of associated messages
+     */
+    handleTableErrors: function(component, rowErrors) {
+        var tableErrors = { rows: {}, table: {}, size: 0 };
+
+        rowErrors.forEach(function(error) {
+            var rowError = {
+                title: error.title,
+                messages: error.messages
+            };
+            tableErrors.rows[error.id] = rowError;
+        });
+
+        tableErrors.size = rowErrors.length;
+
+        component.set('v.errors', tableErrors);
+    },
+
+    /**
      * @description: saves inline edits from dataTable.
      * @param values: changed values in the table
      */
@@ -81,33 +101,22 @@
     },
 
     /**
-     * @description: invoke the Data Importer on all records associated with this Batch
+     * @description: redirects the user to the Process Batch page if validity conditions are met
      */
     processBatch: function(component) {
-        var totals = component.get('v.totals');
-        var record = component.get('v.record');
-        var labels = component.get('v.labels');
-        if (record[labels.requireTotalMatch]) {
-            if (record[labels.expectedCountField] == 0 && record[labels.expectedTotalField] == 0) {
-                this.showToast(component, $A.get('$Label.c.PageMessagesError'), $A.get('$Label.c.bgeGridWarningRequiredTotalsExpected'), 'warning');
-                return;
-            }
-            
-            if ((record[labels.expectedTotalField] != 0 && totals.totalGiftAmount != record[labels.expectedTotalField]) ||
-                (record[labels.expectedCountField] != 0 && totals.countGifts != record[labels.expectedCountField])) {
-                this.showToast(component, $A.get('$Label.c.PageMessagesError'), $A.get('$Label.c.bgeGridErrorRequiredTotalsExpected'), 'error');
-                return;
-            }
+        debugger;
+        let userCanProcessBatch = (this.totalsMatchIfRequired(component) && this.tableHasNoDryRunErrors(component));
+
+        if (userCanProcessBatch) {
+            const batchId = component.get('v.recordId');
+            const bdiBatchClass = component.get('v.labels.bdiBatchClass');
+            let url = '/apex/' + bdiBatchClass + '?batchId=' + batchId + '&retURL=' + batchId;
+            let urlEvent = $A.get('e.force:navigateToURL');
+            urlEvent.setParams({
+                'url': url
+            });
+            urlEvent.fire();
         }
-        
-        var batchId = component.get('v.recordId');
-        var bdiBatchClass = component.get('v.labels.bdiBatchClass');
-        var url = '/apex/' + bdiBatchClass + '?batchId=' + batchId + '&retURL=' + batchId;
-        var urlEvent = $A.get('e.force:navigateToURL');
-        urlEvent.setParams({
-            'url': url
-        });
-        urlEvent.fire();
     },
 
     /**
@@ -246,26 +255,6 @@
     },
 
     /**
-     * @description: handles the display or clearing of errors from the results of dry run
-     * @param rowErrors: object with row Id, title, and list of associated messages
-     */
-    handleTableErrors: function(component, rowErrors) {
-        var tableErrors = { rows: {}, table: {}, size: 0 };
-
-        rowErrors.forEach(function(error) {
-            var rowError = {
-                title: error.title,
-                messages: error.messages
-            };
-            tableErrors.rows[error.id] = rowError;
-        });
-
-        tableErrors.size = rowErrors.length;
-
-        component.set('v.errors', tableErrors);
-    },
-
-    /**
      * @description: Calculates actual totals from queried Data Import rows
      * @param rows: rows returned from the Apex controller
      */
@@ -284,6 +273,50 @@
         totals.countGifts = countGifts;
         totals.totalGiftAmount = totalGiftAmount;
         component.set('v.totals', totals);
+    },
+
+    /**
+     * @description: if totals are required, verifies that totals match. Otherwise, shows an error toast and returns false.
+     * @return: boolean indicating if table has errors
+     */
+    tableHasNoDryRunErrors: function(component) {
+        debugger;
+        const errors = component.get("v.errors");
+        let tableHasNoDryRunErrors = true;
+
+        if (errors && errors.size > 0) {
+            this.showToast(component, $A.get('$Label.c.PageMessagesError'), $A.get('$Label.c.bgeGridErrorFromDryRun'), 'error');
+            tableHasNoDryRunErrors = false;
+        }
+        return tableHasNoDryRunErrors;
+    },
+
+    /**
+     * @description: if totals are required, verifies that totals match. Otherwise, shows an error toast and returns false.
+     * @return: boolean indicating if totals match if required
+     */
+    totalsMatchIfRequired: function(component) {
+        const totals = component.get('v.totals');
+        const record = component.get('v.record');
+        const labels = component.get('v.labels');
+
+        let totalsMatchIfRequired = true;
+
+        //ensure totals match if they are required to do so
+        if (record[labels.requireTotalMatch]) {
+            if (record[labels.expectedCountField] == 0 && record[labels.expectedTotalField] == 0) {
+                this.showToast(component, $A.get('$Label.c.PageMessagesError'), $A.get('$Label.c.bgeGridWarningRequiredTotalsExpected'), 'warning');
+                return false;
+            }
+
+            if ((record[labels.expectedTotalField] != 0 && totals.totalGiftAmount != record[labels.expectedTotalField]) ||
+                (record[labels.expectedCountField] != 0 && totals.countGifts != record[labels.expectedCountField])) {
+                this.showToast(component, $A.get('$Label.c.PageMessagesError'), $A.get('$Label.c.bgeGridErrorRequiredTotalsExpected'), 'error');
+                return false;
+            }
+        }
+
+        return totalsMatchIfRequired;
     },
 
     /**
