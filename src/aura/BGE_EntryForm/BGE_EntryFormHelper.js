@@ -6,11 +6,10 @@
         component.set('v.donationOptions', null);
         component.set('v.selectedDonationId', null);
         component.set('v.openDonations', null);
-
     },
 
     /**
-     * @description: closes the donation modal and clears selected options
+     * @description: closes the donation modal
      */
     closeDonationModal: function(component) {
         component.get('v.matchingModalPromise').then(function(modal) {
@@ -41,7 +40,9 @@
         // add opportunity/payment lookup and import status
         const selectedDonationId = component.get('v.selectedDonationId');
         const userSelectedMatch = $A.get('$Label.c.bdiMatchedByUser');
-        if (selectedDonationId && selectedDonationId.substring(0, 3) === '006') {
+        if (selectedDonationId === '') {
+            rowFields[labels.opportunityImportedStatusField] = userSelectedMatch;
+        } else if (selectedDonationId && selectedDonationId.substring(0, 3) === '006') {
             rowFields[labels.opportunityImportedLookupField] = selectedDonationId;
             rowFields[labels.opportunityImportedStatusField] = userSelectedMatch;
         } else if (selectedDonationId) {
