@@ -83,9 +83,17 @@
             const state = response.getState();
             if (state === 'SUCCESS') {
                 const openDonations = JSON.parse(response.getReturnValue());
+                openDonations.unpaidPayments.forEach(function(pmt) {
+                    pmt.isSelected = true;
+                });
+                openDonations.openOpportunities.forEach(function(opp) {
+                    opp.isSelected = false;
+                });
                 component.set('v.openDonations', openDonations);
+                component.set('v.openOpportunities', openDonations.openOpportunities);
+                component.set('v.unpaidPayments', openDonations.unpaidPayments);
 
-                let options = [{'label': $A.get('$Label.c.bgeNoneOption'), 'value': ''}];
+                /*let options = [{'label': $A.get('$Label.c.bgeNoneOption'), 'value': ''}];
 
                 let pmtOptions = [];
                 const paymentLabel = component.get('v.labels.paymentObject');
@@ -105,7 +113,7 @@
                     options.push({'label': label, 'value': value});
                 });
 
-                component.set('v.donationOptions', options);
+                component.set('v.donationOptions', options);*/
 
             } else {
                 this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');

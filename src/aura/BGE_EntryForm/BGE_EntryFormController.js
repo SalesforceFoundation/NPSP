@@ -90,37 +90,19 @@
     },
 
     /**
-     * @description: alerts parent component that record is saved and needs to be reset
+     * @description: launches modal so user can select open donation
      */
     openMatchModal: function(component, event, helper) {
-        const selectedDonation = component.get('v.selectedDonationId');
-        $A.createComponents([
-            ["lightning:radioGroup", {
-                'aura:id': 'donationOptions',
-                'name': 'donationOptions',
-                'label': $A.get('$Label.c.stgNavDonations'),
-                'options': component.get('v.donationOptions'),
-                'variant': 'label-hidden',
-                'value': selectedDonation
-            }]
-            ],
-            function(components, status, errorMessage) {
-                if (status === 'SUCCESS') {
-                    component.set('v.matchingModalPromise', component.find('overlayLib').showCustomModal({
-                        header: component.get('v.matchingModalHeader'),
-                        body: components[0],
-                        footer: component.get('v.matchingModalFooter'),
-                        showCloseButton: true
-                    }));
-                } else if (status === 'INCOMPLETE') {
-                    const message = {title: $A.get('$Label.c.PageMessagesError'), errorMessage: $A.get('$Label.c.stgUnknownError')};
-                    helper.sendMessage('onError', message);
-                }
-                else if (status === 'ERROR') {
-                    const message = {title: $A.get('$Label.c.PageMessagesError'), errorMessage: errorMessage};
-                    helper.sendMessage('onError', message);
-                }
-            });
+        // todo: how to maintain previously-selected option if they re-enter the modal?
+        // const selectedDonation = component.get('v.selectedDonationId');
+        component.find('overlayLib').showCustomModal({
+            header: component.get('v.matchingModalHeader'),
+            body: component.get('v.matchingModalBody'),
+            //body: components[0],
+            //footer: component.get('v.matchingModalFooter'),
+            showCloseButton: true,
+            cssClass: 'slds-modal_large'
+        });
     },
 
     /**

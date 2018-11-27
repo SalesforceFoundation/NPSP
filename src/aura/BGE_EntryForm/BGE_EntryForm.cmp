@@ -44,7 +44,8 @@
     <aura:attribute name="record" type="DataImport__c" description="Object" access="public"/>
     <aura:attribute name="dataImportFields" type="Object[]" description="List of dynamic field objects to use in the field iteration" access="public"/>
     <aura:attribute name="openDonations" type="Object" description="List of possible donations (payments and opportunities)" access="public" />
-    <aura:attribute name="donationOptions" type="List" description="List of select options for radio button selection" access="public" />
+    <aura:attribute name="openOpportunities" type="List" description="List of open Opportunities" access="public" />
+    <aura:attribute name="unpaidPayments" type="List" description="List of unpaid Payments" access="public" />
     <aura:attribute name="selectedDonationId" type="String" description="Stored ID of the selected open donation" access="public" />
 
     <!--Modal Attributes-->
@@ -52,12 +53,69 @@
     <aura:attribute name="matchingModalHeader" type="Aura.ComponentDefRef[]">
         <h2 class="title slds-text-heading_medium">{!$Label.c.bgeMatchingSelect}</h2>
     </aura:attribute>
-    <aura:attribute name="matchingModalFooter" type="Aura.ComponentDefRef[]">
-        <lightning:button label="{!$Label.c.stgBtnCancel}"
-                          onclick="{!c.closeModal}" />
-        <lightning:button label="{!$Label.c.mtchSelectCbxTitle}"
-                          variant="brand"
-                          onclick="{!c.handleDonationSelection}"/>
+    <aura:attribute name="matchingModalBody" type="Aura.ComponentDefRef[]">
+        <lightning:tabset selectedTabId="payments">
+
+            <lightning:tab label="Payments" id="payments">
+                <lightning:layout multipleRows="true">
+                    <aura:iteration var="donation" items="{!v.unpaidPayments}">
+                        <lightning:layoutItem size="4" padding="around-small">
+                            <lightning:card title="{!donation.Name}" class="slds-card_boundary">
+                                <aura:set attribute="footer">
+                                    <lightning:button label="{!if(donation.isSelected,'Updating this Payment','Update this Payment')}"
+                                                      onclick="{!c.handleDonationSelection}"
+                                                      class="{!if(donation.isSelected,'slds-button_brand','')}"/>
+                                </aura:set>
+                                <p class="slds-p-horizontal_small">Opportunity Name: {!donation.npe01__Opportunity__r.Name}</p>
+                                <p class="slds-p-horizontal_small">Payment Amount: <ui:outputCurrency value="{!donation.npe01__Payment_Amount__c}"/></p>
+                                <p class="slds-p-horizontal_small">Scheduled Date: {!donation.npe01__Scheduled_Date__c}</p>
+                            </lightning:card>
+                        </lightning:layoutItem>
+                    </aura:iteration>
+                </lightning:layout>
+            </lightning:tab>
+
+            <lightning:tab label="Opportunities" id="opportunities">
+                <lightning:layout multipleRows="true">
+                    <aura:iteration var="donation" items="{!v.openOpportunities}">
+                        <lightning:layoutItem size="4" padding="around-small">
+                            <lightning:card title="{!donation.Name}" class="slds-card_boundary">
+                                <aura:set attribute="footer">
+                                    <div class="slds-p-around_xx-small">
+                                        <lightning:button label="{!if(donation.isSelected,'Updating this Opportunity','Update this Opportunity')}"
+                                                          onclick="{!c.handleDonationSelection}"
+                                                          class="{!if(donation.isSelected,'slds-button_brand','')}"/>
+                                    </div>
+                                    <div class="slds-p-around_x-small">
+                                        <lightning:button label="{!if(donation.isSelected,'Applying a new Payment to this Opportunity','Apply a new Payment to this Opportunity')}"
+                                                          onclick="{!c.handleDonationSelection}"
+                                                          class="{!if(donation.isSelected,'slds-button_brand','')}"/>
+                                    </div>
+                                </aura:set>
+                                <p class="slds-p-horizontal_small">Amount: <ui:outputCurrency value="{!donation.Amount}"/></p>
+                                <p class="slds-p-horizontal_small">Stage: {!donation.StageName}</p>
+                            </lightning:card>
+                        </lightning:layoutItem>
+                    </aura:iteration>
+                </lightning:layout>
+            </lightning:tab>
+
+            <lightning:tab label="None" id="none">
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem size="4" padding="around-small">
+                        <lightning:card title="None" class="slds-card_boundary">
+                            <aura:set attribute="footer">
+                                <lightning:button label="Create New Opportunity"
+                                                  onclick="{!c.handleDonationSelection}"
+                                />
+                            </aura:set>
+                            <p class="slds-p-horizontal_small">{!$Label.c.bgeNoneOption}</p>
+                        </lightning:card>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:tab>
+
+        </lightning:tabset>
     </aura:attribute>
 
     <!--Events-->
@@ -75,7 +133,7 @@
 
         <lightning:layout multipleRows="true">
             <!--BEGIN SCOPED MATCH NOTIFICATION-->
-            <aura:if isTrue="{!v.donationOptions.length > 1}">
+            <aura:if isTrue="{!or(not(empty(v.openOpportunities)), not(empty(v.unpaidPayments)))}">
                 <lightning:layoutItem size="12" smallDeviceSize="12" class="slds-p-horizontal_small">
                     <lightning:layout class="slds-grid_align-center">
                         <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="10">
