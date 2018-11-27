@@ -1386,6 +1386,7 @@
         <members>bdiInvalidDonationMatchingBehavior</members>
         <members>bdiMatched</members>
         <members>bdiMatchedBest</members>
+        <members>bdiMatchedByUser</members>
         <members>bdiMatchedId</members>
         <members>bdiMatchedNone</members>
         <members>bdiPositiveNumber</members>
@@ -1442,6 +1443,7 @@
         <members>bgeMatchingSelect</members>
         <members>bgeNewBatch</members>
         <members>bgeNewGift</members>
+        <members>bgeNoneOption</members>
         <members>bgeProcessBatch</members>
         <members>bgeTabHeader</members>
         <members>btnRemove</members>
@@ -2064,7 +2066,6 @@
         <members>stgNavTriggerConfig</members>
         <members>stgNavUserDefinedRollups</members>
         <members>stgNoObjectsFound</members>
-        <members>stgNone</members>
         <members>stgNotApplicable</members>
         <members>stgOppNamingDescription</members>
         <members>stgPowerOfUsHub</members>

@@ -1,6 +1,16 @@
 ({
     /**
-     * @description: closes the donation modal and clears selected options **todo: do we want to clear options?**
+     * @description: clears all info on user-selected open donation
+     */
+    clearDonationSelectionOptions: function(component) {
+        component.set('v.donationOptions', null);
+        component.set('v.selectedDonationId', null);
+        component.set('v.openDonations', null);
+
+    },
+
+    /**
+     * @description: closes the donation modal and clears selected options
      */
     closeDonationModal: function(component) {
         component.get('v.matchingModalPromise').then(function(modal) {
@@ -13,20 +23,39 @@
      * @return: Object rowFields with hidden fields added
      */
     getRowWithHiddenFields: function (component, event) {
+        debugger;
         var rowFields = event.getParam('fields');
+        const labels = component.get('v.labels');
 
         var recId = component.get('v.recordId');
-        var batchField = component.get('v.labels.batchIdField');
-        rowFields[batchField] = recId;
+        rowFields[labels.batchIdField] = recId;
 
         // add donor type hidden fields
         var donorType = component.get('v.donorType');
-        var donorField = component.get('v.labels.donationDonor');
-        rowFields[donorField] = donorType;
+        rowFields[labels.donationDonor] = donorType;
 
         // add any picklist fields manually, because they use lightning:select
         var dynamicInputFields = component.find('dynamicInputFields');
         var dataImportFields = component.get('v.dataImportFields');
+
+        // add opportunity/payment lookup and import status
+        const selectedDonationId = component.get('v.selectedDonationId');
+        const userSelectedMatch = $A.get('$Label.c.bdiMatchedByUser');
+        if (selectedDonationId && selectedDonationId.substring(0, 3) === '006') {
+            rowFields[labels.opportunityImportedLookupField] = selectedDonationId;
+            rowFields[labels.opportunityImportedStatusField] = userSelectedMatch;
+        } else if (selectedDonationId) {
+            rowFields[labels.paymentImportedLookupField] = selectedDonationId;
+            rowFields[labels.paymentImportedStatusField] = userSelectedMatch;
+            const openDonations = component.get('v.openDonations');
+            for (let i = 0; i < openDonations.unpaidPayments.length; i++) {
+                if (openDonations.unpaidPayments[i].Id === selectedDonationId) {
+                    rowFields[labels.opportunityImportedLookupField] = openDonations.unpaidPayments[i].npe01__Opportunity__c;
+                    rowFields[labels.opportunityImportedStatusField] = userSelectedMatch;
+                    break;
+                }
+            }
+        }
 
         //dataImportFields and dynamicInputFields have the same order, so can loop both to get the value
         for (var i=0; i<dataImportFields.length; i++) {
@@ -53,13 +82,15 @@
             const state = response.getState();
             if (state === 'SUCCESS') {
                 const openDonations = JSON.parse(response.getReturnValue());
+                component.set('v.openDonations', openDonations);
 
-                let options = [{'label': 'None, create a new opportunity', 'value': ''}];
+                let options = [{'label': $A.get('$Label.c.bgeNoneOption'), 'value': ''}];
 
                 let pmtOptions = [];
                 const paymentLabel = component.get('v.labels.paymentObject');
                 openDonations.unpaidPayments.forEach(function(pmt) {
-                    const label = paymentLabel + ': ' + pmt.Name + ' (' + pmt.npe01__Opportunity__r.Name + ', ' + pmt.npe01__Payment_Amount__c + ', ' + pmt.npe01__Scheduled_Date__c + ')';
+                    // limited information displayed because we assume they have opportunity naming turned on
+                    const label = paymentLabel + ': ' + pmt.Name + ' (' + pmt.npe01__Opportunity__r.Name + ', ' + pmt.npe01__Scheduled_Date__c + ')';
                     const value = pmt.Id;
                     options.push({'label': label, 'value': value});
                 });
@@ -67,7 +98,8 @@
                 let oppOptions = [];
                 const opportunityLabel = component.get('v.labels.opportunityObject');
                 openDonations.openOpportunities.forEach(function(opp) {
-                    const label = opportunityLabel + ': ' + opp.Name + ' (' + opp.Amount + ', ' + opp.StageName + ')';
+                    // limited information displayed because we assume they have opportunity naming turned on
+                    const label = opportunityLabel + ': ' + opp.Name + ' (' + opp.StageName + ')';
                     const value = opp.Id;
                     options.push({'label': label, 'value': value});
                 });

@@ -2372,6 +2372,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Matched None</value>
     </labels>
     <labels>
+        <fullName>bdiMatchedByUser</fullName>
+        <categories>Data Import</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>status on a BDI object when user has selected matching record in BGE interface</shortDescription>
+        <value>User-Selected Match</value>
+    </labels>
+    <labels>
         <fullName>bdiPositiveNumber</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -2761,6 +2769,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Label for Gift Entry Form</shortDescription>
         <value>New Gift</value>
+    </labels>
+    <labels>
+        <fullName>bgeNoneOption</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gift Entry Donation Selection modal</shortDescription>
+        <value>None, create a new opportunity</value>
     </labels>
     <labels>
         <fullName>bgeProcessBatch</fullName>
@@ -7517,14 +7532,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLinkDelete</shortDescription>
         <value>Del</value>
-    </labels>
-    <labels>
-        <fullName>stgNone</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Generic reusable label for "None".</shortDescription>
-        <value>None</value>
     </labels>
     <labels>
         <fullName>stgNoObjectsFound</fullName>

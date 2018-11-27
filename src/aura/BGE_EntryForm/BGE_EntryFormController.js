@@ -4,8 +4,10 @@
      */
     callFocus: function(component){
         let openDonationsLink = document.getElementById('selectMatchLink');
-        if (openDonationsLink) {
+        if (openDonationsLink && !component.get('v.selectedDonationId')) {
             openDonationsLink.focus();
+        } else if (openDonationsLink) {
+            component.find('donorType').focus();
         }
     },
 
@@ -50,7 +52,7 @@
      * @description: alerts parent component that form is loaded
      */
     onDonorChange: function (component, event, helper) {
-        component.set('v.donationOptions', []);
+        helper.clearDonationSelectionOptions(component);
         var lookupField = component.get('v.donorType') === 'Contact1' ? 'contactLookup' : 'accountLookup';
         var lookupValue = component.find(lookupField).get('v.value');
         var lookupValueIsValidId = lookupValue.length === 18;
@@ -130,7 +132,7 @@
 
         let message = {'donorType': donorType};
         helper.sendMessage('setDonorType', message);
-        component.set('v.donationOptions', []);
+        helper.clearDonationSelectionOptions(component);
     }
 
 })

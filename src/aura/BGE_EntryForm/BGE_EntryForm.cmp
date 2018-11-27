@@ -43,7 +43,8 @@
     <aura:attribute name="recordId" type="Id" description="Populated by force:hasRecordId" access="public"/>
     <aura:attribute name="record" type="DataImport__c" description="Object" access="public"/>
     <aura:attribute name="dataImportFields" type="Object[]" description="List of dynamic field objects to use in the field iteration" access="public"/>
-    <aura:attribute name="donationOptions" type="List" description="List of possible donations (payments and opportunities)" access="public" />
+    <aura:attribute name="openDonations" type="Object" description="List of possible donations (payments and opportunities)" access="public" />
+    <aura:attribute name="donationOptions" type="List" description="List of select options for radio button selection" access="public" />
     <aura:attribute name="selectedDonationId" type="String" description="Stored ID of the selected open donation" access="public" />
 
     <!--Modal Attributes-->
@@ -74,7 +75,7 @@
 
         <lightning:layout multipleRows="true">
             <!--BEGIN SCOPED MATCH NOTIFICATION-->
-            <aura:if isTrue="{!not(empty(v.donationOptions))}">
+            <aura:if isTrue="{!v.donationOptions.length > 1}">
                 <lightning:layoutItem size="12" smallDeviceSize="12" class="slds-p-horizontal_small">
                     <lightning:layout class="slds-grid_align-center">
                         <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="10">

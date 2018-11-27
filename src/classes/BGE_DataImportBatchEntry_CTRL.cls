@@ -150,6 +150,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                                 'Name, ' +
                                 'npe01__Scheduled_Date__c, ' +
                                 'npe01__Opportunity__r.Name, ' +
+                                'npe01__Opportunity__c, ' +
                                 'npe01__Payment_Amount__c ' +
                                 'FROM npe01__OppPayment__c ' +
                                 'WHERE npe01__Opportunity__r.' + relationshipField + ' = :donorId ' +
@@ -185,9 +186,12 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 'expectedCountField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Count_of_Gifts__c.getName(),
                 'expectedTotalField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getName(),
                 'noDataImportsFound' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.DataImport__c.getName()}),
+                'opportunityImportedLookupField' => Schema.SObjectType.DataImport__c.fields.DonationImported__c.getName(),
+                'opportunityImportedStatusField' => Schema.SObjectType.DataImport__c.fields.DonationImportStatus__c.getName(),
                 'opportunityObject' => Schema.SObjectType.Opportunity.getLabel(),
                 'paymentObject' => Schema.SObjectType.npe01__OppPayment__c.getLabel(),
-                'processBatchButton' => 'Process Batch',
+                'paymentImportedLookupField' => Schema.SObjectType.DataImport__c.fields.PaymentImported__c.getName(),
+                'paymentImportedStatusField' => Schema.SObjectType.DataImport__c.fields.PaymentImportStatus__c.getName(),
                 'requireTotalMatch' => Schema.SObjectType.DataImportBatch__c.fields.RequireTotalMatch__c.getName()
         };
 
@@ -272,8 +276,10 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
         // Skip records where user has explicitly selected a matching record in BGE UI
         for (DataImport__c dataImport : dataImportRecordsToCheck) {
-            if (dataImport.DonationImportStatus__c != 'User-Selected Match'
-                    || dataImport.PaymentImportStatus__c != 'User-Selected Match') {
+            if (dataImport.DonationImportStatus__c == Label.bdiMatchedByUser
+                    || dataImport.PaymentImportStatus__c == Label.bdiMatchedByUser) {
+                // do nothing
+            } else {
                 dataImportRecords.add(dataImport);
             }
         }
