@@ -54,68 +54,75 @@
         <h2 class="title slds-text-heading_medium">{!$Label.c.bgeMatchingSelect}</h2>
     </aura:attribute>
     <aura:attribute name="matchingModalBody" type="Aura.ComponentDefRef[]">
-        <lightning:tabset selectedTabId="payments">
+        <h3 class="slds-text-heading_small slds-p-around_medium">Use one of these options or <a onclick="{!c.handleDonationSelection}">create a new opportunity?</a></h3>
+        <lightning:layout multipleRows="true">
+            <aura:iteration var="donation" items="{!v.unpaidPayments}">
+                <lightning:layoutItem size="4" padding="around-small">
+                    <lightning:card title="{!donation.Name}" class="slds-card_boundary">
+                        <aura:set attribute="footer">
+                            <lightning:button
+                                    label="{!if(donation.isSelected,'Updating this Payment','Update this Payment')}"
+                                    onclick="{!c.handleDonationSelection}"
+                            variant="base"/>
+                            <!--class="{!if(donation.isSelected,'slds-button_brand','')}"-->
+                        </aura:set>
+                        <lightning:layout class="slds-p-horizontal_medium" multipleRows="true">
+                            <lightning:layoutItem size="4">
+                                Opportunity Name:
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="8">
+                                {!donation.npe01__Opportunity__r.Name}
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="4">
+                                Payment Amount:
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="8">
+                                <ui:outputCurrency value="{!donation.npe01__Payment_Amount__c}"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="4">
+                                Scheduled Date:
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="8">
+                                {!donation.npe01__Scheduled_Date__c}
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </lightning:card>
+                </lightning:layoutItem>
+            </aura:iteration>
+            <aura:iteration var="donation" items="{!v.openOpportunities}">
+                <lightning:layoutItem size="4" padding="around-small">
+                    <lightning:card title="{!donation.Name}" class="slds-card_boundary">
+                        <aura:set attribute="footer">
+                            <lightning:button
+                                    label="{!if(donation.isSelected,'Updating this Opportunity','Update this Opportunity')}"
+                                    onclick="{!c.handleDonationSelection}"
+                                    variant="base"/>
+                            <br/>
+                            <!--class="{!if(donation.isSelected,'slds-button_brand','')}"-->
+                            <lightning:button
+                                    label="{!if(donation.isSelected,'Applying a new Payment to this Opportunity','Apply a new Payment to this Opportunity')}"
+                                    onclick="{!c.handleDonationSelection}"
+                                    variant="base"/>
+                        </aura:set>
+                        <lightning:layout class="slds-p-horizontal_medium" multipleRows="true">
+                            <lightning:layoutItem size="4">
+                                Amount:
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="8">
+                                <ui:outputCurrency value="{!donation.Amount}"/>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="4">
+                                Stage:
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="8">
+                                {!donation.StageName}
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </lightning:card>
+                </lightning:layoutItem>
+            </aura:iteration>
+        </lightning:layout>
 
-            <lightning:tab label="Payments" id="payments">
-                <lightning:layout multipleRows="true">
-                    <aura:iteration var="donation" items="{!v.unpaidPayments}">
-                        <lightning:layoutItem size="4" padding="around-small">
-                            <lightning:card title="{!donation.Name}" class="slds-card_boundary">
-                                <aura:set attribute="footer">
-                                    <lightning:button label="{!if(donation.isSelected,'Updating this Payment','Update this Payment')}"
-                                                      onclick="{!c.handleDonationSelection}"
-                                                      class="{!if(donation.isSelected,'slds-button_brand','')}"/>
-                                </aura:set>
-                                <p class="slds-p-horizontal_small">Opportunity Name: {!donation.npe01__Opportunity__r.Name}</p>
-                                <p class="slds-p-horizontal_small">Payment Amount: <ui:outputCurrency value="{!donation.npe01__Payment_Amount__c}"/></p>
-                                <p class="slds-p-horizontal_small">Scheduled Date: {!donation.npe01__Scheduled_Date__c}</p>
-                            </lightning:card>
-                        </lightning:layoutItem>
-                    </aura:iteration>
-                </lightning:layout>
-            </lightning:tab>
-
-            <lightning:tab label="Opportunities" id="opportunities">
-                <lightning:layout multipleRows="true">
-                    <aura:iteration var="donation" items="{!v.openOpportunities}">
-                        <lightning:layoutItem size="4" padding="around-small">
-                            <lightning:card title="{!donation.Name}" class="slds-card_boundary">
-                                <aura:set attribute="footer">
-                                    <div class="slds-p-around_xx-small">
-                                        <lightning:button label="{!if(donation.isSelected,'Updating this Opportunity','Update this Opportunity')}"
-                                                          onclick="{!c.handleDonationSelection}"
-                                                          class="{!if(donation.isSelected,'slds-button_brand','')}"/>
-                                    </div>
-                                    <div class="slds-p-around_x-small">
-                                        <lightning:button label="{!if(donation.isSelected,'Applying a new Payment to this Opportunity','Apply a new Payment to this Opportunity')}"
-                                                          onclick="{!c.handleDonationSelection}"
-                                                          class="{!if(donation.isSelected,'slds-button_brand','')}"/>
-                                    </div>
-                                </aura:set>
-                                <p class="slds-p-horizontal_small">Amount: <ui:outputCurrency value="{!donation.Amount}"/></p>
-                                <p class="slds-p-horizontal_small">Stage: {!donation.StageName}</p>
-                            </lightning:card>
-                        </lightning:layoutItem>
-                    </aura:iteration>
-                </lightning:layout>
-            </lightning:tab>
-
-            <lightning:tab label="None" id="none">
-                <lightning:layout multipleRows="true">
-                    <lightning:layoutItem size="4" padding="around-small">
-                        <lightning:card title="None" class="slds-card_boundary">
-                            <aura:set attribute="footer">
-                                <lightning:button label="Create New Opportunity"
-                                                  onclick="{!c.handleDonationSelection}"
-                                />
-                            </aura:set>
-                            <p class="slds-p-horizontal_small">{!$Label.c.bgeNoneOption}</p>
-                        </lightning:card>
-                    </lightning:layoutItem>
-                </lightning:layout>
-            </lightning:tab>
-
-        </lightning:tabset>
     </aura:attribute>
 
     <!--Events-->

@@ -27,6 +27,7 @@
     },
 
     handleDonationSelection: function(component, event, helper) {
+        //if null, then it's none
         const donationField = component.find('donationOptions');
         let donationId;
         //need an array check because the destroy is not removing the reference in the find() map

@@ -22,7 +22,6 @@
      * @return: Object rowFields with hidden fields added
      */
     getRowWithHiddenFields: function (component, event) {
-        debugger;
         var rowFields = event.getParam('fields');
         const labels = component.get('v.labels');
 
@@ -84,7 +83,7 @@
             if (state === 'SUCCESS') {
                 const openDonations = JSON.parse(response.getReturnValue());
                 openDonations.unpaidPayments.forEach(function(pmt) {
-                    pmt.isSelected = true;
+                    pmt.isSelected = false;
                 });
                 openDonations.openOpportunities.forEach(function(opp) {
                     opp.isSelected = false;
@@ -92,28 +91,6 @@
                 component.set('v.openDonations', openDonations);
                 component.set('v.openOpportunities', openDonations.openOpportunities);
                 component.set('v.unpaidPayments', openDonations.unpaidPayments);
-
-                /*let options = [{'label': $A.get('$Label.c.bgeNoneOption'), 'value': ''}];
-
-                let pmtOptions = [];
-                const paymentLabel = component.get('v.labels.paymentObject');
-                openDonations.unpaidPayments.forEach(function(pmt) {
-                    // limited information displayed because we assume they have opportunity naming turned on
-                    const label = paymentLabel + ': ' + pmt.Name + ' (' + pmt.npe01__Opportunity__r.Name + ', ' + pmt.npe01__Scheduled_Date__c + ')';
-                    const value = pmt.Id;
-                    options.push({'label': label, 'value': value});
-                });
-
-                let oppOptions = [];
-                const opportunityLabel = component.get('v.labels.opportunityObject');
-                openDonations.openOpportunities.forEach(function(opp) {
-                    // limited information displayed because we assume they have opportunity naming turned on
-                    const label = opportunityLabel + ': ' + opp.Name + ' (' + opp.StageName + ')';
-                    const value = opp.Id;
-                    options.push({'label': label, 'value': value});
-                });
-
-                component.set('v.donationOptions', options);*/
 
             } else {
                 this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
