@@ -104,8 +104,7 @@
      * @description: redirects the user to the Process Batch page if validity conditions are met
      */
     processBatch: function(component) {
-        debugger;
-        let userCanProcessBatch = (this.totalsMatchIfRequired(component) && this.tableHasNoDryRunErrors(component));
+        let userCanProcessBatch = (this.tableHasNoDryRunErrors(component) && this.totalsMatchIfRequired(component));
 
         if (userCanProcessBatch) {
             const batchId = component.get('v.recordId');
@@ -280,8 +279,7 @@
      * @return: boolean indicating if table has errors
      */
     tableHasNoDryRunErrors: function(component) {
-        debugger;
-        const errors = component.get("v.errors");
+        const errors = component.get('v.errors');
         let tableHasNoDryRunErrors = true;
 
         if (errors && errors.size > 0) {
@@ -302,17 +300,16 @@
 
         let totalsMatchIfRequired = true;
 
-        //ensure totals match if they are required to do so
         if (record[labels.requireTotalMatch]) {
             if (record[labels.expectedCountField] == 0 && record[labels.expectedTotalField] == 0) {
                 this.showToast(component, $A.get('$Label.c.PageMessagesError'), $A.get('$Label.c.bgeGridWarningRequiredTotalsExpected'), 'warning');
-                return false;
+                totalsMatchIfRequired = false;
             }
 
             if ((record[labels.expectedTotalField] != 0 && totals.totalGiftAmount != record[labels.expectedTotalField]) ||
                 (record[labels.expectedCountField] != 0 && totals.countGifts != record[labels.expectedCountField])) {
                 this.showToast(component, $A.get('$Label.c.PageMessagesError'), $A.get('$Label.c.bgeGridErrorRequiredTotalsExpected'), 'error');
-                return false;
+                totalsMatchIfRequired = false;
             }
         }
 
