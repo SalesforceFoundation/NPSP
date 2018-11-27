@@ -353,7 +353,16 @@ class NPSP(object):
         exp_value="("+value+")"
         assert exp_value == actual_value, "Expected value to be {} but found {}".format(
             exp_value, actual_value
-        )    
+        )  
+        
+    def check_record_related_item(self,title,value):
+        """"""
+        locator=npsp_lex_locators['record']['related']['item'].format(title,value)
+        actual_value=self.selenium.get_webelement(locator).text
+        assert value == actual_value, "Expected value to be {} but found {}".format(
+            value, actual_value
+        )      
+          
      
     def select_related_dropdown(self,title):
         """Clicks on the dropdown next to Related List"""

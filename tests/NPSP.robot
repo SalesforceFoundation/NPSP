@@ -63,7 +63,19 @@ API Create Secondary Affiliation
     ...               npe5__Contact__c=${contact_id}
     ...               npe5__Primary__c=false 
     ...               &{fields}
- 
+
+API Create Relationship
+    [Arguments]      ${contact_id}      ${relcontact_id}    ${relation}    &{fields}
+    ${rel_id} =  Salesforce Insert  npe4__Relationship__c
+    ...                  npe4__Contact__c=${contact_id}
+    ...                  npe4__RelatedContact__c=${relcontact_id}
+    ...                  npe4__Type__c=${relation}
+    ...                  npe4__Status__c=Current    
+    ...                  &{fields}  
+    &{relation} =     Salesforce Get  npe4__Relationship__c  ${rel_id}
+    [return]         &{relation}
+    
+     
 # API Create Engagement Plan
     # [Arguments]      ${plan_name}     &{fields}    
     # ${opp_id} =  Salesforce Insert    npsp__Engagement_Plan_Template__c
@@ -263,6 +275,24 @@ Create GAU
     Click Modal Button        Save
     #Sleep    2
     [Return]           ${gau_name}    
+
+Run Donations Batch Process
+    Select App Launcher Tab    NPSP Settings
+    Wait For Locator    frame    Nonprofit Success Pack Settings
+    Select Frame With Title    Nonprofit Success Pack Settings
+    Click Link    link=Bulk Data Processes
+    Click Link    link=Rollup Donations Batch
+    Click Button With Value    Run Batch
+    # Wait For Locator    npsp_settings.status    CRLP_Account_SoftCredit_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    CRLP_RD_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    CRLP_Account_AccSoftCredit_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    CRLP_Contact_SoftCredit_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    CRLP_Account_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    CRLP_Contact_BATCH    Completed
+    Wait For Locator    npsp_settings.status    RLLP_OppAccRollup_BATCH    Completed
+    Wait For Locator    npsp_settings.status    RLLP_OppContactRollup_BATCH    Completed
+    Wait For Locator    npsp_settings.status    RLLP_OppHouseholdRollup_BATCH    Completed
+    Wait For Locator    npsp_settings.status    RLLP_OppSoftCreditRollup_BATCH    Completed
     
 Choose Frame
     [Arguments]    ${frame}

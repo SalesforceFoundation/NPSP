@@ -19,6 +19,7 @@ npsp_lex_locators={
             'drop-down':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]/parent::*/div/div/div/a[contains(@class, "slds-button")]',
             'title':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]',
             'viewall':'//a[.//span[text()="View All"]/span[text()="{}"]]',
+            'item':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//h3//a",
          },    
     },
     'test':'/html/body/div[6]/table/tbody/tr[23]/td[1]/a',
