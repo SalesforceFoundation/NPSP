@@ -20,21 +20,24 @@
     },
 
     handleApplyPaymentSelection: function(component, event, helper) {
-        let selectedDonation = event.getSource().get('v.value');
+        const selectedDonation = event.getSource().get('v.value');
         selectedDonation.applyPayment = true;
-        component.set('v.selectedDonation', selectedDonation);
-        helper.closeDonationModal(component);
+        helper.processDonationSelection(component, selectedDonation);
+
     },
 
     handleNoneDonationSelection: function(component, event, helper) {
-        component.set('v.selectedDonation', '');
-        helper.closeDonationModal(component);
+        debugger;
+        const selectedDonation = '';
+        const eventVal = event.getSource().get('v.value');
+        helper.processDonationSelection(component, selectedDonation);
+
     },
 
     handleDonationSelection: function(component, event, helper) {
         const selectedDonation = event.getSource().get('v.value');
-        component.set('v.selectedDonation', selectedDonation);
-        helper.closeDonationModal(component);
+        helper.processDonationSelection(component, selectedDonation);
+
     },
 
     /**
@@ -90,8 +93,6 @@
      * @description: launches modal so user can select open donation
      */
     openMatchModal: function(component, event, helper) {
-        // todo: how to maintain previously-selected option if they re-enter the modal?
-        // const selectedDonation = component.get('v.selectedDonation');
         component.set('v.matchingModalPromise', component.find('overlayLib').showCustomModal({
             header: component.get('v.matchingModalHeader'),
             body: component.get('v.matchingModalBody'),

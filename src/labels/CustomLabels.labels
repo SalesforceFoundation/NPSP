@@ -2762,14 +2762,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alerts user that there are matched donations</shortDescription>
-        <value>This donor has pending payments that might match this one. Choose an existing payment instead?</value>
+        <value>This donor has pending Payments or Donations that might match this one. Choose an existing Payment or Donation instead?</value>
     </labels>
     <labels>
         <fullName>bgeMatchingSelect</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label for Select Open Donation text and modal header</shortDescription>
-        <value>Select Open Donation</value>
+        <value>Existing Donations</value>
     </labels>
     <labels>
         <fullName>bgeNewBatch</fullName>

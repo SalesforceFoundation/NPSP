@@ -76,6 +76,16 @@
     },
 
     /**
+     * @description: sets the donation selection and closes the modal
+     */
+    processDonationSelection: function(component, selectedDonation) {
+        const previousDonation = component.get('v.selectedDonation');
+        component.set('v.selectedDonation', selectedDonation);
+        this.closeDonationModal(component);
+        this.setSelectedDonationForMarkup(component, selectedDonation, previousDonation);
+    },
+
+    /**
      * @description: queries open donations for upcoming donations
      * @return: void
      */
@@ -128,6 +138,40 @@
             'message': message
         });
         sendMessage.fire();
+    },
+
+    /**
+     * @description: sets the isSelected flag on the selected donation and unsets it on any other selected donation
+     */
+    setSelectedDonationForMarkup: function(component, selectedDonation, previousDonation) {
+        let openOpportunities = component.get('v.openOpportunities');
+        let unpaidPayments = component.get('v.unpaidPayments');
+
+        for (let i=0; i<openOpportunities.length; i++) {
+            let currentDonation = openOpportunities[i];
+            let isItAMatch = openOpportunities[i] === selectedDonation;
+            if (openOpportunities[i] === selectedDonation) {
+                openOpportunities[i].isSelected = true;
+            }
+            if (openOpportunities[i] === previousDonation) {
+                openOpportunities[i].isSelected = false;
+            }
+        }
+
+        for (let i=0; i<unpaidPayments.length; i++) {
+            let currentDonation = unpaidPayments[i];
+            let isItAMatch = unpaidPayments[i] === selectedDonation;
+            if (unpaidPayments[i] === selectedDonation) {
+                unpaidPayments[i].isSelected = true;
+            }
+            if (unpaidPayments[i] === previousDonation) {
+                unpaidPayments[i].isSelected = false;
+            }
+        }
+
+        component.set('v.openOpportunities', openOpportunities);
+        component.set('v.unpaidPayments', unpaidPayments);
+
     },
 
     /**

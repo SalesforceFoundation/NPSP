@@ -60,40 +60,41 @@
                 <lightning:layoutItem largeDeviceSize="4" mediumDeviceSize="6" smallDeviceSize="12" size="12" padding="around-small">
                     <lightning:card class="slds-card_boundary">
                         <aura:set attribute="title">
-                            <lightning:icon iconName="standard:currency" size="small" class="icn-teal slds-m-right_small" />
+                            <lightning:icon iconName="standard:currency" size="small" class="slds-m-right_small" />
                             {!donation.Name}
                         </aura:set>
                         <aura:set attribute="footer">
-                            <lightning:button
-                                    value="{!donation}"
-                                    label="Update this Payment"
-                                    onclick="{!c.handleDonationSelection}"
-                            variant="base"/>
+                            <aura:if isTrue="{!donation.isSelected}">
+                                <lightning:icon iconName="utility:check" size="small" class="slds-p-right_small"
+                                                alternativeText="Selected" title="Selected"/>
+                                <lightning:formattedText value="Selected Payment"/>
+                                <aura:set attribute="else">
+                                    <lightning:button
+                                            value="{!donation}"
+                                            label="Update this Payment"
+                                            onclick="{!c.handleDonationSelection}"
+                                            variant="base"/>
+                                </aura:set>
+                            </aura:if>
                         </aura:set>
-<!--
-                        <lightning:icon iconName="action:check" class="upper-right"/>
 
-                        <div class="selected-corner-check">
-                            X
-                        </div>
--->
                         <lightning:layout class="slds-p-horizontal_medium" multipleRows="true">
-                            <lightning:layoutItem size="4">
+                            <lightning:layoutItem size="4" smallDeviceSize="6">
                                 Opportunity Name:
                             </lightning:layoutItem>
-                            <lightning:layoutItem size="8">
+                            <lightning:layoutItem size="8" smallDeviceSize="6">
                                 {!donation.npe01__Opportunity__r.Name}
                             </lightning:layoutItem>
-                            <lightning:layoutItem size="4">
+                            <lightning:layoutItem size="4" smallDeviceSize="6">
                                 Payment Amount:
                             </lightning:layoutItem>
-                            <lightning:layoutItem size="8">
+                            <lightning:layoutItem size="8" smallDeviceSize="6">
                                 <ui:outputCurrency value="{!donation.npe01__Payment_Amount__c}"/>
                             </lightning:layoutItem>
-                            <lightning:layoutItem size="4">
+                            <lightning:layoutItem size="4" smallDeviceSize="6">
                                 Scheduled Date:
                             </lightning:layoutItem>
-                            <lightning:layoutItem size="8">
+                            <lightning:layoutItem size="8" smallDeviceSize="6">
                                 {!donation.npe01__Scheduled_Date__c}
                             </lightning:layoutItem>
                         </lightning:layout>
@@ -102,21 +103,35 @@
             </aura:iteration>
             <aura:iteration var="donation" items="{!v.openOpportunities}">
                 <lightning:layoutItem largeDeviceSize="4" mediumDeviceSize="6" smallDeviceSize="12" size="12" padding="around-small">
-                    <lightning:card title="{!donation.Name}" iconName="standard:opportunity" class="slds-card_boundary">
+                    <lightning:card title="{!donation.Name}" iconName="standard:opportunity"
+                                    class="slds-card_boundary">
                         <aura:set attribute="footer">
-                            <lightning:button
-                                    value="{!donation}"
-                                    label="Update this Opportunity"
-                                    onclick="{!c.handleDonationSelection}"
-                                    variant="base"/>
+                            <aura:if isTrue="{!donation.isSelected}">
+                                <!--<aura:if isTrue="{!donation.applyPayment}">-->
+                                    <lightning:icon iconName="utility:check" size="small" class="slds-p-right_small"
+                                                    alternativeText="Selected Opportunity" title="Selected Opportunity"/>
+                                    <lightning:formattedText value="Selected Opportunity"/>
+                                    <!--<aura:set attribute="else">
+                                        <lightning:icon iconName="utility:check" size="small" class="slds-p-right_small"
+                                                        alternativeText="Selected" title="Selected"/>
+                                        <lightning:formattedText value="Selected Payment"/>
+                                    </aura:set>
+                                </aura:if>-->
+                                <aura:set attribute="else">
+                                    <lightning:button
+                                            value="{!donation}"
+                                            label="Update this Opportunity"
+                                            onclick="{!c.handleDonationSelection}"
+                                            variant="base"/>
+                                </aura:set>
 <!--
-                            <br/>
                             <lightning:button
                                     value="{!donation}"
                                     label="{!$Label.c.bdiMatchingApplyNewPayment}"
                                     onclick="{!c.handleApplyPaymentSelection}"
                                     variant="base"/>
 -->
+                            </aura:if>
                         </aura:set>
                         <lightning:layout class="slds-p-horizontal_medium" multipleRows="true">
                             <lightning:layoutItem size="4">
