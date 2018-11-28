@@ -44,6 +44,11 @@
         <name>Max_Payments__c</name>
     </fields>
     <fields>
+        <help><!-- Specify that your org can have one tribute per Opportunity (single), one per Opportunity and multiple tributes in separate Tributes (mixed), or multiple tributes in separate Tribute records. Choosing multiple creates Tributes only for new Opportunities. --></help>
+        <label><!-- Multiple Tributes --></label>
+        <name>Multiple_Tributes__c</name>
+    </fields>
+    <fields>
         <help>Renseigner ce paramètre créera automatiquement un rôle de contact pour les opportunités avec un contact destinataire de notification. Si ce champ est laissé vide, la création automatique de rôle de contact destinataire de notification sera désactivée.</help>
         <label>Rôle de destinataire de notification</label>
         <name>Notification_Recipient_Opp_Contact_Role__c</name>

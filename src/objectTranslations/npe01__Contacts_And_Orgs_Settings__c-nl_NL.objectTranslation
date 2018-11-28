@@ -44,6 +44,11 @@
         <name>Max_Payments__c</name>
     </fields>
     <fields>
+        <help><!-- Specify that your org can have one tribute per Opportunity (single), one per Opportunity and multiple tributes in separate Tributes (mixed), or multiple tributes in separate Tribute records. Choosing multiple creates Tributes only for new Opportunities. --></help>
+        <label><!-- Multiple Tributes --></label>
+        <name>Multiple_Tributes__c</name>
+    </fields>
+    <fields>
         <help>Deze instelling zorgt voor het automatisch aanmaken van een Contactpersoon Rol voor Opportunities met een notificatie ontvangende Contactpersoon. Het leeglaten van dit veld schakelt het automatisch aanmaken van Contactpersoon Rol uit.</help>
         <label>Notificatie Ontvanger Opp Contact Rol</label>
         <name>Notification_Recipient_Opp_Contact_Role__c</name>
