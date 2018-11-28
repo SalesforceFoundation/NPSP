@@ -1402,12 +1402,12 @@
         <members>bdiTime</members>
         <members>bgeBatchInfoWizard</members>
         <members>bgeBatchTemplateAvailableFields</members>
-        <members>bgeBatchTemplateDonorLookupInfo</members>
         <members>bgeBatchTemplateBatchProcessSizeHelp</members>
         <members>bgeBatchTemplateDonationDateRangeHelp</members>
         <members>bgeBatchTemplateDonationMatchingBehaviorHelp</members>
         <members>bgeBatchTemplateDonationMatchingClassHelp</members>
         <members>bgeBatchTemplateDonationMatchingRuleHelp</members>
+        <members>bgeBatchTemplateDonorLookupInfo</members>
         <members>bgeBatchTemplateEdit</members>
         <members>bgeBatchTemplateErrorDefaultValue</members>
         <members>bgeBatchTemplateErrorRequiredAmount</members>
@@ -1427,6 +1427,7 @@
         <members>bgeEditBatchOptionsWarning</members>
         <members>bgeGridAllGifts</members>
         <members>bgeGridDonorType</members>
+        <members>bgeGridErrorFromDryRun</members>
         <members>bgeGridErrorRequiredTotalsExpected</members>
         <members>bgeGridGiftCountHeader</members>
         <members>bgeGridGiftDeleted</members>
