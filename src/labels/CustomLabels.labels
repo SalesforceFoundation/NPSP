@@ -2380,6 +2380,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>User-Selected Match</value>
     </labels>
     <labels>
+        <fullName>bdiMatchedApplyNewPayment</fullName>
+        <categories>Data Import</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>status on BDI object when user selected opp in BGE interface for new payment</shortDescription>
+        <value>Apply New Payment</value>
+    </labels>
+    <labels>
         <fullName>bdiPositiveNumber</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>

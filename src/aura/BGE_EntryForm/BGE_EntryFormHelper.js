@@ -4,7 +4,7 @@
      */
     clearDonationSelectionOptions: function(component) {
         component.set('v.donationOptions', null);
-        component.set('v.selectedDonationId', null);
+        component.set('v.selectedDonation', null);
         component.set('v.openDonations', null);
     },
 
@@ -37,24 +37,23 @@
         var dataImportFields = component.get('v.dataImportFields');
 
         // add opportunity/payment lookup and import status
-        const selectedDonationId = component.get('v.selectedDonationId');
+        const selectedDonation = component.get('v.selectedDonation');
         const userSelectedMatch = $A.get('$Label.c.bdiMatchedByUser');
-        if (selectedDonationId === '') {
+        const applyNewPayment = $A.get('$Label.c.bdiMatchedApplyNewPayment');
+        if (selectedDonation && selectedDonation.Id === '') {
             rowFields[labels.opportunityImportedStatusField] = userSelectedMatch;
-        } else if (selectedDonationId && selectedDonationId.substring(0, 3) === '006') {
-            rowFields[labels.opportunityImportedLookupField] = selectedDonationId;
-            rowFields[labels.opportunityImportedStatusField] = userSelectedMatch;
-        } else if (selectedDonationId) {
-            rowFields[labels.paymentImportedLookupField] = selectedDonationId;
-            rowFields[labels.paymentImportedStatusField] = userSelectedMatch;
-            const openDonations = component.get('v.openDonations');
-            for (let i = 0; i < openDonations.unpaidPayments.length; i++) {
-                if (openDonations.unpaidPayments[i].Id === selectedDonationId) {
-                    rowFields[labels.opportunityImportedLookupField] = openDonations.unpaidPayments[i].npe01__Opportunity__c;
-                    rowFields[labels.opportunityImportedStatusField] = userSelectedMatch;
-                    break;
-                }
+        } else if (selectedDonation && selectedDonation.Id.substring(0, 3) === '006') {
+            rowFields[labels.opportunityImportedLookupField] = selectedDonation.Id;
+            if (selectedDonation.applyPayment) {
+                rowFields[labels.opportunityImportedStatusField] = applyNewPayment;
+            } else {
+                rowFields[labels.opportunityImportedStatusField] = userSelectedMatch;
             }
+        } else if (selectedDonation) {
+            rowFields[labels.paymentImportedLookupField] = selectedDonation.Id;
+            rowFields[labels.paymentImportedStatusField] = userSelectedMatch;
+            rowFields[labels.opportunityImportedLookupField] = selectedDonation.npe01__Opportunity__c;
+            rowFields[labels.opportunityImportedStatusField] = userSelectedMatch;
         }
 
         //dataImportFields and dynamicInputFields have the same order, so can loop both to get the value

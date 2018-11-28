@@ -277,6 +277,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         // Skip records where user has explicitly selected a matching record in BGE UI
         for (DataImport__c dataImport : dataImportRecordsToCheck) {
             if (dataImport.DonationImportStatus__c == Label.bdiMatchedByUser
+                    || dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment
                     || dataImport.PaymentImportStatus__c == Label.bdiMatchedByUser) {
                 // do nothing
             } else {

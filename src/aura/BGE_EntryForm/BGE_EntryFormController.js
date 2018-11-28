@@ -19,25 +19,21 @@
         component.destroy();
     },
 
-    /**
-     * @description: closes match modal
-     */
-    closeModal: function (component, event, helper) {
+    handleApplyPaymentSelection: function(component, event, helper) {
+        let selectedDonation = event.getSource().get('v.value');
+        selectedDonation.applyPayment = true;
+        component.set('v.selectedDonation', selectedDonation);
+        helper.closeDonationModal(component);
+    },
+
+    handleNoneDonationSelection: function(component, event, helper) {
+        component.set('v.selectedDonation', '');
         helper.closeDonationModal(component);
     },
 
     handleDonationSelection: function(component, event, helper) {
-        //if null, then it's none
-        const donationField = component.find('donationOptions');
-        let donationId;
-        //need an array check because the destroy is not removing the reference in the find() map
-        //see: https://salesforce.stackexchange.com/questions/227712/lightning-component-findauraid-returns-an-array-consisting-of-one-element
-        if (Array.isArray(donationField)) {
-            donationId = donationField[0].get('v.value');
-        } else {
-            donationId = donationField.get('v.value');
-        }
-        component.set('v.selectedDonationId', donationId);
+        const selectedDonation = event.getSource().get('v.value');
+        component.set('v.selectedDonation', selectedDonation);
         helper.closeDonationModal(component);
     },
 
@@ -95,15 +91,13 @@
      */
     openMatchModal: function(component, event, helper) {
         // todo: how to maintain previously-selected option if they re-enter the modal?
-        // const selectedDonation = component.get('v.selectedDonationId');
-        component.find('overlayLib').showCustomModal({
+        // const selectedDonation = component.get('v.selectedDonation');
+        component.set('v.matchingModalPromise', component.find('overlayLib').showCustomModal({
             header: component.get('v.matchingModalHeader'),
             body: component.get('v.matchingModalBody'),
-            //body: components[0],
-            //footer: component.get('v.matchingModalFooter'),
             showCloseButton: true,
             cssClass: 'slds-modal_large'
-        });
+        }));
     },
 
     /**
