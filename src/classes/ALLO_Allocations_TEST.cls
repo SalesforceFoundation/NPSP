@@ -37,12 +37,6 @@
 @isTest
 private with sharing class ALLO_Allocations_TEST {
     
-    /*********************************************************************************************************
-    * @description If you only want to run a single test in this class, fill in its name here.
-    * If you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-    
     /*******************************************************************************************************
     * @description Setup of allocations settings.
     * @param alloset An instance of Allocations_Settings__c custom setting. Calling this method with a null
@@ -69,7 +63,6 @@ private with sharing class ALLO_Allocations_TEST {
     * error is thrown and the opportunity update is blocked.
     ********************************************************************************************************/
     static testMethod void oppAmountChange() {
-        if (strTestOnly != '*' && strTestOnly != 'oppAmountChange') return;
         setupSettings(null);
 
         Account acc = new Account(Name='foo');
@@ -134,8 +127,6 @@ private with sharing class ALLO_Allocations_TEST {
     * error is thrown and the payment update is blocked.
     ********************************************************************************************************/
     static testMethod void pmtAmountChange() {
-        if (strTestOnly != '*' && strTestOnly != 'pmtAmountChange') return;
-        
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
         insert defaultGau;
 
@@ -204,8 +195,6 @@ private with sharing class ALLO_Allocations_TEST {
     * amount, an error is thrown and the payment update is blocked.
     ********************************************************************************************************/
     static testMethod void pmtsWithNegativeAmount() {
-        if (strTestOnly != '*' && strTestOnly != 'pmtAmountChange') return;
-        
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
         insert defaultGau;
 
@@ -275,8 +264,6 @@ private with sharing class ALLO_Allocations_TEST {
     * Creating an allocation for the total amount deletes the default allocation.
     ********************************************************************************************************/
     static testMethod void defaultAllocations() {
-        if (strTestOnly != '*' && strTestOnly != 'defaultAllocations') return;
-        
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
         insert defaultGau;
 
@@ -318,8 +305,6 @@ private with sharing class ALLO_Allocations_TEST {
     * allocation created
     ********************************************************************************************************/
     static testMethod void campaignAllocations() {
-        if (strTestOnly != '*' && strTestOnly != 'campaignAllocations') return;
-        
         General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
         insert defaultgau;
 
@@ -375,8 +360,6 @@ private with sharing class ALLO_Allocations_TEST {
         - The Amount reminder is covered by the NPSP Default Allocation. 
     **********************************************************************************************************/ 
     private static testMethod void testOppAllocationGauMatchesCampaignGau() {
-        if (strTestOnly != '*' && strTestOnly != 'testOppAllocationGauMatchesCampaignGau') return;
-
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name = 'Default');
         General_Accounting_Unit__c campaignGau = new General_Accounting_Unit__c(Name = 'Campaign');
         insert new General_Accounting_Unit__c[] {
@@ -437,8 +420,6 @@ private with sharing class ALLO_Allocations_TEST {
     * Delete a recurring donation allocation: corresponding opportunity allocation is also deleted.
     ********************************************************************************************************/
     static testMethod void recurringDonationsValidation() {
-        if (strTestOnly != '*' && strTestOnly != 'recurringDonationsValidation') return;
-
         General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
         insert defaultgau;
 
@@ -526,8 +507,6 @@ private with sharing class ALLO_Allocations_TEST {
     * allocations were deleted when no longer needed.
     ********************************************************************************************************/
     static testMethod void bulkOppInsert() {
-        if (strTestOnly != '*' && strTestOnly != 'bulkOppInsert') return;
-
         General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
         insert defaultgau;
 
@@ -572,8 +551,6 @@ private with sharing class ALLO_Allocations_TEST {
     * allocations are created.
     ********************************************************************************************************/
     static testMethod void testExcludedOpps() {
-        if (strTestOnly != '*' && strTestOnly != 'testExcludedOpps') return;
-
         General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
         insert defaultgau;
 
@@ -604,8 +581,6 @@ private with sharing class ALLO_Allocations_TEST {
     * default allocation was deleted.
     ********************************************************************************************************/
     static testMethod void testOppNullAmount() {
-        if (strTestOnly != '*' && strTestOnly != 'testOppNullAmount') return;
-
         General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
         insert defaultgau;
 
@@ -641,8 +616,6 @@ private with sharing class ALLO_Allocations_TEST {
     * allocation to the inactive GAU isn't modified.
     ********************************************************************************************************/
     static testMethod void testInactiveGAU() {
-        if (strTestOnly != '*' && strTestOnly != 'testInactiveGAU') return;
-
         setupSettings(null);
 
         Account acc = new Account(Name='foo');
@@ -699,8 +672,6 @@ private with sharing class ALLO_Allocations_TEST {
     * one for the total amount, and one for the unallocated remainder.
     ********************************************************************************************************/
     static testMethod void testMakeDefaultAllocations() {
-        if (strTestOnly != '*' && strTestOnly != 'testMakeDefaultAllocations') return;
-        
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='General');
         insert defaultGau;
 

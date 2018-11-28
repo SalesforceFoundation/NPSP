@@ -775,8 +775,8 @@ public class UTIL_UnitTestData_TEST {
                     'SELECT IsoCode FROM CurrencyType WHERE IsCorporate = false LIMIT 1'
                 );
                 if (nonDefaultCurrency.size() > 0) {
-                    String nondefaultCurrencyCode = (String)nonDefaultCurrency[0].get('IsoCode');
-                    nonDefaultCurrencyType = UTIL_CurrencyCache.cachedMapOfRatesByCurrencyCode.get(nondefaultCurrencyCode);
+                    String nonDefaultCurrencyCode = (String)nonDefaultCurrency[0].get('IsoCode');
+                    nonDefaultCurrencyType = UTIL_CurrencyCache.cachedMapOfRatesByCurrencyCode.get(nonDefaultCurrencyCode);
                 }
             }
             return nonDefaultCurrencyType;

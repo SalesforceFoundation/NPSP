@@ -37,21 +37,13 @@
 @isTest
 private class CON_DoNotContact_TEST {
 
-    /*********************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-
     /*******************************************************************************************************
     * @description Marks a sole contact in household as Deceased, verifies DoNotCall and HasOptedOutOfEmail
     * are set, but naming exclusions aren't set. Removes deceased flag, verifies DoNotCall and HasOptedOutOfEmail
     * have been removed, and naming exclusions are still not set.
     */
     static testMethod void testDeceasedAlone() {
-        if (strTestOnly != '*' && strTestOnly != 'testDeceasedAlone') return;
-
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));    
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
         
         Contact con = new Contact(LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS);
         insert con;
@@ -90,9 +82,7 @@ private class CON_DoNotContact_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
         
-        if (strTestOnly != '*' && strTestOnly != 'testDeceasedInHousehold') return;
-
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));    
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
         
         Contact con = new Contact(LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS);
         insert con;
@@ -126,8 +116,6 @@ private class CON_DoNotContact_TEST {
     * Removes Do Not Contact flag, verifies DoNotCall and HasOptedOutOfEmail are no longer set.
     */
     static testMethod void testDoNotContact() {
-        if (strTestOnly != '*' && strTestOnly != 'testDoNotContact') return;
-
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
         
         Contact con = new Contact(LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS);
