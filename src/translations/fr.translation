@@ -1304,6 +1304,22 @@ Pour vérifier vos paramètres d’allocations UCG, accédez à Dons | Allocatio
         <name>engagementPlanTwoLookups</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error when current Multiple Tribute setting prevents batch update --></label>
+        <name>errMultipleTributesBatchInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when updating Tribute on Opportunity --></label>
+        <name>errMultipleTributesEnforceMultiple</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when only single Tribute per Opportunity is allowed --></label>
+        <name>errMultipleTributesEnforceSingle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when Opportunity has existing Tribute --></label>
+        <name>errMultipleTributesFlexibleUpdate</name>
+    </customLabels>
+    <customLabels>
         <label><!-- exceptionDeletePermission --></label>
         <name>exceptionDeletePermission</name>
     </customLabels>
@@ -3549,6 +3565,38 @@ Remarque : L’onglet de paramètres NPSP est visible dans l’application NPSP
     <customLabels>
         <label>Suppr</label>
         <name>stgLinkDelete</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The string of Multiple Tributes --></label>
+        <name>stgMultipleTributes</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The Warning for Donations - Create Tribute from Opportunity --></label>
+        <name>stgMultipleTributesBatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The string on Multiple Tribute Batch Panel --></label>
+        <name>stgMultipleTributesBatchPanel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Value for multiple Tributes on either Opportunity or Tribute object --></label>
+        <name>stgMultipleTributesFlexible</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Value for single Tribute on Opportunity object only --></label>
+        <name>stgMultipleTributesHelp</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Value for multiple Tributes on Tribute object only --></label>
+        <name>stgMultipleTributesLimited</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The Warning for Donations - Multiple Tributes page --></label>
+        <name>stgMultipleTributesSettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Value for single Tribute on Opportunity object only --></label>
+        <name>stgMultipleTributesSingleOpp</name>
     </customLabels>
     <customLabels>
         <label>Guide NPSP sur l’importation de données</label>
