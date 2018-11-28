@@ -375,7 +375,7 @@ public class CMT_FilterRule {
                 List<String> selectedValues = compareValue.split(';');
                 Boolean found = false;
                 for (String compVal : selectedValues) {
-                    if (fieldValue != null && fieldValue.equals(compVal.trim())) {
+                    if (!String.isEmpty(compVal) && fieldValue != null && fieldValue.equals(compVal.trim())) {
                         found = true;
                         break;
                     }
