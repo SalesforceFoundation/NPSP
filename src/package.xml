@@ -252,6 +252,7 @@
         <members>OPP_INaming</members>
         <members>OPP_MatchingDonationsBTN_CTRL</members>
         <members>OPP_MatchingDonationsBTN_TEST</members>
+        <members>OPP_OpportunityContactRolesTribute_TEST</members>
         <members>OPP_OpportunityContactRoles_TDTM</members>
         <members>OPP_OpportunityContactRoles_TEST</members>
         <members>OPP_OpportunityNaming</members>
