@@ -925,7 +925,7 @@ private class OPP_OpportunityContactRoles_TEST {
                         npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
                         Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
                         Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
-                        Multiple_Tributes__c = Label.stgMultipleTributesSingleOpp
+                        Multiple_Tributes__c = TBU_MultipleTributesSettingsFacade.TRIBUTE_SINGLE_VAL
                 )
         );
 
@@ -942,12 +942,12 @@ private class OPP_OpportunityContactRoles_TEST {
 
         //verify that the there is no tribute in the org
         List<Tribute__c> tributes = [Select Id from Tribute__c];
-        system.assertEquals(0, tributes.size());
+        System.assertEquals(0, tributes.size());
 
         //verify that the Tribute field is still on opp
         List<Opportunity> opp = [Select Id from Opportunity where Honoree_Name__c = 'John Smith' and Notification_Recipient_Name__c = 'Mark Smith'
         and Id =: oppToInsert.Id];
-        system.assertEquals(1, opp.size());
+        System.assertEquals(1, opp.size());
     }
 
     /******************************************************************************************************
@@ -964,7 +964,7 @@ private class OPP_OpportunityContactRoles_TEST {
                         npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
                         Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
                         Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
-                        Multiple_Tributes__c = Label.stgMultipleTributesFlexible
+                        Multiple_Tributes__c = TBU_MultipleTributesSettingsFacade.TRIBUTE_MIXED_VAL
                 )
         );
 
@@ -990,7 +990,7 @@ private class OPP_OpportunityContactRoles_TEST {
 
         //verify that the there is no tribute in the org
         List<Tribute__c> tributes = [Select Id from Tribute__c];
-        system.assertEquals(0, tributes.size());
+        System.assertEquals(0, tributes.size());
 
         //Now insert a Tribute for opp2, should not have any issue
         Tribute__c tri = new Tribute__c(Opportunity__c = opp2.Id, Honoree_Name__c = 'John Smith');
@@ -1001,16 +1001,16 @@ private class OPP_OpportunityContactRoles_TEST {
         update opp1;
 
         opp1 = [Select Id, Honoree_Name__c from Opportunity where Id =: opp1.Id];
-        system.assertEquals('Mike Brown', opp1.Honoree_Name__c);
+        System.assertEquals('Mike Brown', opp1.Honoree_Name__c);
 
 
         //system should prevent update Tribute on Opp2 since Opp2 has a separate Tribute record on it
         try{
             opp2.Honoree_Name__c = 'Mike Brown';
             update opp2; //System should throw an exception here
-            system.assert(false);
+            System.assert(false);
         } catch (Exception ex) {
-            system.assert(ex.getMessage().contains(Label.errMultipleTributesEnforceMultiple) == true);
+            System.assert(ex.getMessage().contains(Label.errMultipleTributesEnforceMultiple) == true);
         }
 
         Test.stopTest();
@@ -1029,7 +1029,7 @@ private class OPP_OpportunityContactRoles_TEST {
                         npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
                         Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
                         Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
-                        Multiple_Tributes__c = Label.stgMultipleTributesLimited
+                        Multiple_Tributes__c = TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL
                 )
         );
 
@@ -1045,18 +1045,18 @@ private class OPP_OpportunityContactRoles_TEST {
 
         //verify that the there is one tribute in the org, and Tribute fields get cleared
         List<Tribute__c> tributes = [Select Id, Opportunity__c, Honoree_Name__c, Opportunity__r.Honoree_Name__c, Opportunity__r.Notification_Recipient_Name__c from Tribute__c];
-        system.assertEquals(1, tributes.size());
-        system.assertEquals(opp.Id, tributes[0].Opportunity__c);
-        system.assertEquals('John Smith', tributes[0].Honoree_Name__c);
-        system.assertEquals(null, tributes[0].Opportunity__r.Honoree_Name__c);
+        System.assertEquals(1, tributes.size());
+        System.assertEquals(opp.Id, tributes[0].Opportunity__c);
+        System.assertEquals('John Smith', tributes[0].Honoree_Name__c);
+        System.assertEquals(null, tributes[0].Opportunity__r.Honoree_Name__c);
 
         //verify that system will not Allow update Tribute on Opp
         try{
             opp.Honoree_Name__c = 'Mike Brown';
             update opp; //System should throw an exception here
-            system.assert(false);
+            System.assert(false);
         } catch (Exception ex) {
-            system.assert(ex.getMessage().contains(Label.errMultipleTributesEnforceMultiple) == true);
+            System.assert(ex.getMessage().contains(Label.errMultipleTributesEnforceMultiple) == true);
         }
 
         Test.stopTest();
@@ -1072,7 +1072,7 @@ private class OPP_OpportunityContactRoles_TEST {
                         npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
                         Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
                         Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
-                        Multiple_Tributes__c = Label.stgMultipleTributesLimited
+                        Multiple_Tributes__c = TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL
                 )
         );
 
@@ -1111,18 +1111,18 @@ private class OPP_OpportunityContactRoles_TEST {
         Test.stopTest();
 
         List<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, Contact.Name, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY Contact.Name];
-        //system.assertEquals(3,queryOCR.size());
+        System.assertEquals(3, queryOCR.size());
+        
+        System.assertEquals(cons[1].id, queryOCR[0].ContactId);
+        System.assertEquals(false, queryOCR[0].isPrimary);
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_HONOREE, queryOCR[0].Role);
 
-        system.assertEquals(cons[1].id, queryOCR[0].ContactId);
-        system.assertEquals(false, queryOCR[0].isPrimary);
-        system.assertEquals(OPPORTUNITY_CONTACT_ROLE_HONOREE, queryOCR[0].Role);
+        System.assertEquals(cons[2].id, queryOCR[1].ContactId);
+        System.assertEquals(false, queryOCR[1].isPrimary);
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT, queryOCR[1].Role);
 
-        system.assertEquals(cons[2].id, queryOCR[1].ContactId);
-        system.assertEquals(false, queryOCR[1].isPrimary);
-        system.assertEquals(OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT, queryOCR[1].Role);
-
-        system.assertEquals(cons[4].id, queryOCR[2].ContactId);
-        system.assertEquals(true, queryOCR[2].isPrimary);
-        system.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, queryOCR[2].Role);
+        System.assertEquals(cons[4].id, queryOCR[2].ContactId);
+        System.assertEquals(true, queryOCR[2].isPrimary);
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, queryOCR[2].Role);
     }
 }

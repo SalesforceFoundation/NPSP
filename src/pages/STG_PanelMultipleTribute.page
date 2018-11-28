@@ -10,11 +10,9 @@
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Multiple_Tributes__c.label}" for="multipleTributeModel" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:outputField value="{!stgService.stgCon.Multiple_Tributes__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:outputText value="{!multipleTributesSettingForDisplay}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                     <apex:selectList value="{!stgService.stgCon.Multiple_Tributes__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="multipleTributeModel" html-aria-describedby="{!$Component.multipleTributeModelHelp}" styleClass="slds-select" >
-                        <apex:selectOption itemValue="{!$Label.stgMultipleTributesSingleOpp}" itemLabel="{!$Label.stgMultipleTributesSingleOpp}"/>
-                        <apex:selectOption itemValue="{!$Label.stgMultipleTributesFlexible}" itemLabel="{!$Label.stgMultipleTributesFlexible}"/>
-                        <apex:selectOption itemValue="{!$Label.stgMultipleTributesLimited}" itemLabel="{!$Label.stgMultipleTributesLimited}"/>
+                        <apex:selectOptions value="{!multipleTributesOptions}"/>
                     </apex:selectList>
                     <apex:outputPanel id="multipleTributeModelHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgMultipleTributesHelp}" />

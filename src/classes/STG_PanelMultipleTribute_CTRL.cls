@@ -37,7 +37,7 @@ public class STG_PanelMultipleTribute_CTRL extends STG_Panel {
     /*********************************************************************************************************
     * @description Returns the string Id of the Multiple Tribute panel.
     */
-    public override string idPanel() { return 'idPaneMultipleTribute'; }
+    public override string idPanel() { return 'idPanelMultipleTribute'; }
 
 
     /*********************************************************************************************************
@@ -47,9 +47,23 @@ public class STG_PanelMultipleTribute_CTRL extends STG_Panel {
 
     public boolean isBatchDisabled {
         get {
-            return UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesSingleOpp;
+            return TBU_MultipleTributesSettingsFacade.isMultipleTributesSingle();
         }
         set;
+    }
+
+    public String getMultipleTributesSettingForDisplay() {
+        return TBU_MultipleTributesSettingsFacade.getMultipleTributesSettingLocalized();
+    }
+
+    public List<SelectOption> getMultipleTributesOptions() {
+        List<SelectOption> mtSettingsOptions = new List<SelectOption>();
+
+        mtSettingsOptions.add(new SelectOption(TBU_MultipleTributesSettingsFacade.TRIBUTE_SINGLE_VAL, Label.stgMultipleTributesSingleOpp));
+        mtSettingsOptions.add(new SelectOption(TBU_MultipleTributesSettingsFacade.TRIBUTE_MIXED_VAL, Label.stgMultipleTributesFlexible));
+        mtSettingsOptions.add(new SelectOption(TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL, Label.stgMultipleTributesLimited));
+
+        return mtSettingsOptions;
     }
 
     /*********************************************************************************************************
@@ -58,7 +72,7 @@ public class STG_PanelMultipleTribute_CTRL extends STG_Panel {
     */
     public PageReference runBatch() {
         //We only allow user to run the batch if user only use Tribute object
-        if(UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c != Label.stgMultipleTributesLimited) {
+        if(!TBU_MultipleTributesSettingsFacade.isMultipleTributesLimited()) {
             isRunningBatch = false;
             ApexPages.addMessage(new ApexPages.message(ApexPages.Severity.ERROR, Label.errMultipleTributesBatchInvalid));
             return null;

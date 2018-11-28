@@ -57,7 +57,6 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
     TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-            
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
             setOpportunityAccountField((list<Opportunity>) newlist);
 
@@ -65,12 +64,12 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             //If the Setting is Multiple Tribute Only, we need to prevent updating existing Tribute Fields on Opportunity
-            if (UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesLimited) {
+            if (TBU_MultipleTributesSettingsFacade.isMultipleTributesLimited()) {
                 preventUpdateTributeInfoOnOpportunity((List<Opportunity>) newlist, (list<Opportunity>) oldlist, false);
             }
 
             //If the Setting allow Mix mode, then we only prevent updating Tribute when there is a Tribute record attached to it
-            if (UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesFlexible) {
+            if (TBU_MultipleTributesSettingsFacade.isMultipleTributesFlexible()) {
                 preventUpdateTributeInfoOnOpportunity((List<Opportunity>) newlist, (list<Opportunity>) oldlist, true);
             }
 
@@ -82,10 +81,10 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 updateOpportunityNames((list<Opportunity>) newList);            
             } catch (Exception ex) {
                 ERR_Handler.processError(ex, ERR_Handler_API.Context.OPP);
-            }
-
+            }                
+            
             //If the Setting is Multiple Tribute Only, system should Auto create Tribute record
-            if (UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesLimited) {
+            if (TBU_MultipleTributesSettingsFacade.isMultipleTributesLimited()) {
                 createTributeFromOpportunity((list<Opportunity>) newlist);
             }
 
@@ -1075,7 +1074,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
         for (Opportunity eachOppty : primaryContactAccountChangeOpptys) {
             for (OpportunityContactRole eachOldOCR : opportunityToContactToOCR.get(eachOppty.Id).values()) {
-                if ((orgContactSettings.Multiple_Tributes__c == Label.stgMultipleTributesFlexible || orgContactSettings.Multiple_Tributes__c == Label.stgMultipleTributesLimited) &&
+                if ((TBU_MultipleTributesSettingsFacade.isMultipleTributesFlexible() || TBU_MultipleTributesSettingsFacade.isMultipleTributesLimited()) &&
                         (allTributesByOpp.get(eachOppty.Id) != null && allTributesByOpp.get(eachOppty.Id).size() > 0)) {
                     for(Tribute__c tri: allTributesByOpp.get(eachOppty.Id)) {
                         if (!eachOldOCR.isPrimary
@@ -1123,9 +1122,8 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             for (OpportunityContactRole eachOldOCR : opportunityToContactToOCR.get(eachOppty.Id).values()) {
                 ocrs.add(eachOldOCR.ContactId);
             }
-
-            if ((UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c != Label.stgMultipleTributesFlexible ||
-                    UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c != Label.stgMultipleTributesLimited) &&
+            
+            if ((TBU_MultipleTributesSettingsFacade.isMultipleTributesFlexible() || TBU_MultipleTributesSettingsFacade.isMultipleTributesLimited()) &&
                     allTributesByOpp.get(eachOppty.Id) != null && allTributesByOpp.get(eachOppty.Id).size() > 0) {
                 for(Tribute__c tri: allTributesByOpp.get(eachOppty.Id)) {
                     Id honoreeContactId = tri.Honoree_Contact__c;
@@ -1136,9 +1134,6 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                         transactionOCRs = populateTransactionOCRs(transactionOCRs, honoreeOCR);
                     }
                 }
-
-                
-
             } else {
                 Id honoreeContactId = eachOppty.Honoree_Contact__c;
                 
@@ -1245,4 +1240,5 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             }
         }
     }
+
 }

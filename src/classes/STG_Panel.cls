@@ -54,7 +54,7 @@ public with sharing virtual class STG_Panel {
     */ 
     static public string oppLabel {
         get {
-            if(oppLabel == null){
+            if(oppLabel == null) {
                 oppLabel = Schema.sObjectType.Opportunity.getLabel();
             }
             return oppLabel;

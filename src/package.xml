@@ -343,6 +343,7 @@
         <members>STG_PanelMakeDefaultAllocations_CTRL</members>
         <members>STG_PanelMembership_CTRL</members>
         <members>STG_PanelMultipleTribute_CTRL</members>
+        <members>STG_PanelMultipleTribute_TEST</members>
         <members>STG_PanelOppBatch_CTRL</members>
         <members>STG_PanelOppCampaignMembers_CTRL</members>
         <members>STG_PanelOppNamingBatch_CTRL</members>
@@ -369,6 +370,8 @@
         <members>STG_SettingsService</members>
         <members>STG_UninstallScript</members>
         <members>STG_UninstallScript_TEST</members>
+        <members>TBU_MultipleTributesSettingsFacade</members>
+        <members>TBU_MultipleTributesSettingsFacade_TEST</members>
         <members>TBU_OpportunityContactRoles_TDTM</members>
         <members>TBU_OpportunityContactRoles_TEST</members>
         <members>TDTM_Config_API</members>
