@@ -2632,6 +2632,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Set Batch Options</value>
     </labels>
     <labels>
+        <fullName>bgeBatchTemplateSetFieldOptions</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Template Field Options</shortDescription>
+        <value>Set Field Options</value>
+    </labels>
+    <labels>
         <fullName>bgeEditBatchFieldOptionsWarning</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2653,11 +2660,32 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>WARNING: There are records saved to this batch. Any changes you make won&apos;t affect existing records. We will not attempt to match existing records using updated donation matching rule settings, unless those records are edited.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateSetFieldOptions</fullName>
+        <fullName>bgeFormMatchingModalText</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for Batch Template Field Options</shortDescription>
-        <value>Set Field Options</value>
+        <shortDescription>Header text to explain the options on the page</shortDescription>
+        <value>Select the Donation you want to update.</value>
+    </labels>
+    <labels>
+        <fullName>bgeFormNoneLink</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link to create a new opportunity</shortDescription>
+        <value>Alternatively, create a new Donation.</value>
+    </labels>
+    <labels>
+        <fullName>bgeFormSelectedDonation</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Denotes donation selected in the BGE UI entry form.</shortDescription>
+        <value>Selected Donation</value>
+    </labels>
+    <labels>
+        <fullName>bgeFormUpdateDonation</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button text to select a opportunity to update in BGE</shortDescription>
+        <value>Update this donation</value>
     </labels>
     <labels>
         <fullName>bgeGridAllGifts</fullName>
@@ -2762,14 +2790,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alerts user that there are matched donations</shortDescription>
-        <value>This donor has pending Payments or Donations that might match this one. Choose an existing Payment or Donation instead?</value>
+        <value>This donor has pending donations.</value>
     </labels>
     <labels>
         <fullName>bgeMatchingSelect</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label for Select Open Donation text and modal header</shortDescription>
-        <value>Existing Donations</value>
+        <value>Review Donations</value>
     </labels>
     <labels>
         <fullName>bgeNewBatch</fullName>

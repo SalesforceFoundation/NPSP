@@ -142,14 +142,16 @@
 
     /**
      * @description: sets the isSelected flag on the selected donation and unsets it on any other selected donation
+     * @param selectedDonation: full row of selected donation
      */
     setSelectedDonationForMarkup: function(component, selectedDonation, previousDonation) {
         let openOpportunities = component.get('v.openOpportunities');
         let unpaidPayments = component.get('v.unpaidPayments');
 
+        //check if selectedDonation is opp or payment
+        //check if previousDonation is opp or payment
+
         for (let i=0; i<openOpportunities.length; i++) {
-            let currentDonation = openOpportunities[i];
-            let isItAMatch = openOpportunities[i] === selectedDonation;
             if (openOpportunities[i] === selectedDonation) {
                 openOpportunities[i].isSelected = true;
             }
@@ -159,8 +161,6 @@
         }
 
         for (let i=0; i<unpaidPayments.length; i++) {
-            let currentDonation = unpaidPayments[i];
-            let isItAMatch = unpaidPayments[i] === selectedDonation;
             if (unpaidPayments[i] === selectedDonation) {
                 unpaidPayments[i].isSelected = true;
             }

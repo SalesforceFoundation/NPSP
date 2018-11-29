@@ -188,8 +188,13 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 'noDataImportsFound' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.DataImport__c.getName()}),
                 'opportunityImportedLookupField' => Schema.SObjectType.DataImport__c.fields.DonationImported__c.getName(),
                 'opportunityImportedStatusField' => Schema.SObjectType.DataImport__c.fields.DonationImportStatus__c.getName(),
+                'opportunityAmount' => Schema.SObjectType.Opportunity.fields.Amount.getLabel(),
                 'opportunityObject' => Schema.SObjectType.Opportunity.getLabel(),
+                'opportunityName' => Schema.SObjectType.Opportunity.getLabel(),
+                'opportunityStage' => Schema.SObjectType.Opportunity.fields.StageName.getLabel(),
+                'paymentAmount' => Schema.SObjectType.npe01__OppPayment__c.fields.npe01__Payment_Amount__c.getLabel(),
                 'paymentObject' => Schema.SObjectType.npe01__OppPayment__c.getLabel(),
+                'paymentScheduledDate' => Schema.SObjectType.npe01__OppPayment__c.fields.npe01__Scheduled_Date__c.getLabel(),
                 'paymentImportedLookupField' => Schema.SObjectType.DataImport__c.fields.PaymentImported__c.getName(),
                 'paymentImportedStatusField' => Schema.SObjectType.DataImport__c.fields.PaymentImportStatus__c.getName(),
                 'requireTotalMatch' => Schema.SObjectType.DataImportBatch__c.fields.RequireTotalMatch__c.getName()
