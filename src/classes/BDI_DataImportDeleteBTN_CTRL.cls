@@ -41,48 +41,61 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
 
     /** @description Action type specified to delete all Data Import records */
     public static final String ACTION_DELETE_ALL = 'deleteAll';
-    
+
     /** @description Controller constructor */
     public BDI_DataImportDeleteBTN_CTRL() {}
 
-    /** 
+    /**
      * @description Delete all or imported only Data Import records based on the
      * action provided in the Visualforce page 'action' parameter.
      * @return PageReference Page specified in 'retURL' parameter or Home page
      */
-    public PageReference buttonClick() {        
+    public PageReference buttonClick() {
         String actionType = ApexPages.currentPage().getParameters().get('action');
 
         if (actionType == ACTION_DELETE_IMPORTED) {
-            return deleteDIRecords(false);    
+            return deleteDIRecords(false);
 
         } else if (actionType == ACTION_DELETE_ALL) {
-            return deleteDIRecords(true);    
+            return deleteDIRecords(true);
         }
 
         String errMsg = String.isBlank(actionType)
             ? 'Please specify an action type'
-            : actionType + ' is not a valid action type'; 
+            : actionType + ' is not a valid action type';
 
-        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, errMsg)); 
+        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, errMsg));
+
         return null;
     }
 
-    /** 
+    /**
      * @description Delete Data Import records
      * @param isDeleteAll If true, delete all Data Import records, otherwise delete imported records only
      * @return PageReference Page specified in the 'retURL' parameter or Home page
      */
     PageReference deleteDIRecords(Boolean isDeleteAll) {
         try {
-            if (isDeleteAll) {
-                delete [SELECT Id FROM DataImport__c LIMIT 10000];
-            } else {
-                delete [SELECT Id FROM DataImport__c WHERE Status__c = :BDI_DataImport_API.bdiImported LIMIT 10000];
+
+            // Check if the user has delete access on the Lead object
+            if (!DataImport__c.sObjectType.getDescribe().isDeletable()){
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL,'You do not have access to perform the requested action'));
+                return null;
             }
+            else {
+                if (isDeleteAll) {
+                    delete [SELECT Id
+                            FROM DataImport__c
+                            LIMIT 10000];
+                } else {
+                    delete [SELECT Id
+                            FROM DataImport__c
+                            WHERE Status__c = :BDI_DataImport_API.bdiImported
+                            LIMIT 10000];
+                }
 
-            return close(); 
-
+                return close();
+            }
         } catch (Exception e) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage())); 
             return null; 
