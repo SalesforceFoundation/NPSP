@@ -109,6 +109,47 @@ private class CRLP_DefaultConfigBuilder_TEST {
     }
 
     /**
+     * @description Validates that "Memberships: Won" filter group and associated rollups is not created when
+     * the Membership record type does not exist
+     */
+    static testMethod void test_createDefaults_MembershipRecordTypeDoesNotExist() {
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
+            npo02__Membership_Record_Types__c = UTIL_UnitTestData_TEST.mockId(RecordType.getSObjectType())
+        ));
+
+        Test.startTest();
+        CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
+        Test.stopTest();
+
+        Set<String> filterGroupDeveloperNames = new Set<String>();
+        Set<String> rollupFilterReferences = new Set<String>();
+
+        for (Metadata.CustomMetadata md : CRLP_ConfigBuilder_SVC.queuedMetadataTypes) {
+            if (md.fullName.contains('Filter_Group__mdt')) {
+                filterGroupDeveloperNames.add(md.fullName);
+
+            } else if (md.fullName.contains('Rollup__mdt')) {
+                for (Metadata.CustomMetadataValue val : md.values) {
+                    if ((String)val.field == 'Filter_Group__c') {
+                        rollupFilterReferences.add((String) val.value);
+                    }
+                }
+            }
+        }
+
+        String unexpectedfilterName =
+            String.valueOf(Filter_Group__mdt.SObjectType) +'.'+ CRLP_DefaultConfigBuilder.FilterGroup_Membership;
+
+        System.assert(!filterGroupDeveloperNames.contains(unexpectedfilterName),
+            'Default membership filter group should not be created if Membership Record Type does not exist'
+        );
+
+        System.assert(!rollupFilterReferences.contains(CRLP_DefaultConfigBuilder.FilterGroup_Membership),
+            'Rollups should not reference default membership filter group if the Membership Record Type does not exist'
+        );
+    }
+
+    /**
      * @description Test creating the default rollup configuration where there the legacy rollup settings are different
      * for the Account and Contact rollups; and the 'Enable Soft Credit Rollups' field is unchecked.
      */
