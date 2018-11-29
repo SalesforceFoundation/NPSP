@@ -1427,6 +1427,8 @@
         <members>bgeEditBatchFieldOptionsWarning</members>
         <members>bgeEditBatchFieldSelectionWarning</members>
         <members>bgeEditBatchOptionsWarning</members>
+        <members>bgeFormMatchingModalText</members>
+        <members>bgeFormNoneLink</members>
         <members>bgeFormSelectedDonation</members>
         <members>bgeFormUpdateDonation</members>
         <members>bgeGridAllGifts</members>

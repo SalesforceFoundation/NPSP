@@ -3,9 +3,10 @@
      * @description: clears all info on user-selected open donation
      */
     clearDonationSelectionOptions: function(component) {
-        component.set('v.donationOptions', null);
         component.set('v.selectedDonation', null);
         component.set('v.openDonations', null);
+        component.set('v.openOpportunities', null);
+        component.set('v.unpaidPayments', null);
     },
 
     /**
