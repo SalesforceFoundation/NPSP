@@ -1429,8 +1429,10 @@
         <members>bgeEditBatchOptionsWarning</members>
         <members>bgeFormMatchingModalText</members>
         <members>bgeFormNoneLink</members>
-        <members>bgeFormSelectedDonation</members>
-        <members>bgeFormUpdateDonation</members>
+        <members>bgeFormSelectedOpportunity</members>
+        <members>bgeFormSelectedPayment</members>
+        <members>bgeFormUpdateOpportunity</members>
+        <members>bgeFormUpdatePayment</members>
         <members>bgeGridAllGifts</members>
         <members>bgeGridDonorType</members>
         <members>bgeGridErrorFromDryRun</members>

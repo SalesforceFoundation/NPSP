@@ -2664,28 +2664,42 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header text to explain the options on the page</shortDescription>
-        <value>Select the Donation you want to update.</value>
+        <value>Select the record you want to update.</value>
     </labels>
     <labels>
         <fullName>bgeFormNoneLink</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Link to create a new opportunity</shortDescription>
-        <value>Alternatively, create a new Donation.</value>
+        <value>Alternatively, create a new Opportunity.</value>
     </labels>
     <labels>
-        <fullName>bgeFormSelectedDonation</fullName>
+        <fullName>bgeFormSelectedOpportunity</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Denotes donation selected in the BGE UI entry form.</shortDescription>
-        <value>Selected Donation</value>
+        <value>Selected Opportunity</value>
     </labels>
     <labels>
-        <fullName>bgeFormUpdateDonation</fullName>
+        <fullName>bgeFormSelectedPayment</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Denotes donation selected in the BGE UI entry form.</shortDescription>
+        <value>Selected Payment</value>
+    </labels>
+    <labels>
+        <fullName>bgeFormUpdateOpportunity</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Button text to select a opportunity to update in BGE</shortDescription>
-        <value>Update this donation</value>
+        <value>Update this Opportunity</value>
+    </labels>
+    <labels>
+        <fullName>bgeFormUpdatePayment</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button text to select a opportunity to update in BGE</shortDescription>
+        <value>Update this Payment</value>
     </labels>
     <labels>
         <fullName>bgeGridAllGifts</fullName>

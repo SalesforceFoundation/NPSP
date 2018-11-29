@@ -43,7 +43,6 @@
     <aura:attribute name="recordId" type="Id" description="Populated by force:hasRecordId" access="public"/>
     <aura:attribute name="record" type="DataImport__c" description="Object" access="public"/>
     <aura:attribute name="dataImportFields" type="Object[]" description="List of dynamic field objects to use in the field iteration" access="public"/>
-    <aura:attribute name="openDonations" type="Object" description="List of possible donations (payments and opportunities)" access="public" />
     <aura:attribute name="openOpportunities" type="List" description="List of open Opportunities" access="public" />
     <aura:attribute name="unpaidPayments" type="List" description="List of unpaid Payments" access="public" />
     <aura:attribute name="selectedDonation" type="SObject" description="Stored selected open donation" access="public" />
@@ -56,7 +55,7 @@
     <aura:attribute name="matchingModalBody" type="Aura.ComponentDefRef[]">
         <h3 class="slds-text-heading_small slds-p-around_medium">
             {!$Label.c.bgeFormMatchingModalText}
-            <a class="slds-m-left_small" onclick="{!c.handleNoneDonationSelection}">{!$Label.c.bgeFormNoneLink}</a>
+            <a class="slds-m-left_x-small" onclick="{!c.handleNoneDonationSelection}">{!$Label.c.bgeFormNoneLink}</a>
         </h3>
         <lightning:layout multipleRows="true">
             <aura:iteration var="donation" items="{!v.unpaidPayments}">
@@ -67,14 +66,14 @@
                             <lightning:formattedText value="{!donation.Name}"/>
                         </aura:set>
                         <aura:set attribute="footer">
-                            <aura:if isTrue="{!donation.isSelected}">
+                            <aura:if isTrue="{!equals(donation.Id, v.selectedDonation.Id)}">
                                 <lightning:icon iconName="utility:check" size="small" class="slds-p-right_small"
                                                 alternativeText="{!$Label.c.stgCheckboxTrue}" title="{!$Label.c.stgCheckboxTrue}"/>
-                                <lightning:formattedText value="{!$Label.c.bgeFormSelectedDonation}"/>
+                                <lightning:formattedText value="{!$Label.c.bgeFormSelectedPayment}"/>
                                 <aura:set attribute="else">
                                     <lightning:button
                                             value="{!donation}"
-                                            label="{!$Label.c.bgeFormUpdateDonation}"
+                                            label="{!$Label.c.bgeFormUpdatePayment}"
                                             onclick="{!c.handleDonationSelection}"
                                             variant="base"/>
                                 </aura:set>
@@ -109,11 +108,11 @@
                     <lightning:card title="{!donation.Name}" iconName="standard:opportunity"
                                     class="slds-card_boundary">
                         <aura:set attribute="footer">
-                            <aura:if isTrue="{!donation.isSelected}">
+                            <aura:if isTrue="{!equals(donation.Id, v.selectedDonation.Id)}">
                                 <!--<aura:if isTrue="{!donation.applyPayment}">-->
                                     <lightning:icon iconName="utility:check" size="small" class="slds-p-right_small"
                                                     alternativeText="{!$Label.c.stgCheckboxTrue}" title="{!$Label.c.stgCheckboxTrue}"/>
-                                    <lightning:formattedText value="{!$Label.c.bgeFormSelectedDonation}"/>
+                                    <lightning:formattedText value="{!$Label.c.bgeFormSelectedOpportunity}"/>
                                     <!--<aura:set attribute="else">
                                         <lightning:icon iconName="utility:check" size="small" class="slds-p-right_small"
                                                         alternativeText="Selected" title="Selected"/>
@@ -123,7 +122,7 @@
                                 <aura:set attribute="else">
                                     <lightning:button
                                             value="{!donation}"
-                                            label="{!$Label.c.bgeFormUpdateDonation}"
+                                            label="{!$Label.c.bgeFormUpdateOpportunity}"
                                             onclick="{!c.handleDonationSelection}"
                                             variant="base"/>
                                 </aura:set>
@@ -136,7 +135,7 @@
 -->
                             </aura:if>
                         </aura:set>
-                        <lightning:layout class="slds-p-horizontal_medium" multipleRows="true">
+                        <lightning:layout class="slds-p-horizontal_medium slds-p-bottom_large" multipleRows="true">
                             <lightning:layoutItem size="4">
                                 <lightning:formattedText value="{!v.labels.opportunityAmount + ': '}"/>
                             </lightning:layoutItem>
@@ -185,7 +184,7 @@
                                 </div>
                                 <div class="slds-media__body">
                                     <p>{!$Label.c.bgeMatchingAlert}
-                                        <a class="slds-m-left_small" onclick="{!c.openMatchModal}" id="selectMatchLink">
+                                        <a class="slds-m-left_x-small" onclick="{!c.openMatchModal}" id="selectMatchLink">
                                             {!$Label.c.bgeMatchingSelect}
                                         </a>
                                     </p>
