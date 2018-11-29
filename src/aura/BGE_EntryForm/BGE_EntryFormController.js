@@ -75,6 +75,7 @@
      * @description: override submit function in recordEditForm to handle hidden fields and validation
      */
     onSubmit: function (component, event, helper) {
+        debugger;
         event.preventDefault();
         var completeRow = helper.getRowWithHiddenFields(component, event);
         var validity = helper.validateFields(component, completeRow);

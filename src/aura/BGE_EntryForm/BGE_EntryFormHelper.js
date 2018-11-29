@@ -22,6 +22,7 @@
      * @return: Object rowFields with hidden fields added
      */
     getRowWithHiddenFields: function (component, event) {
+        debugger;
         var rowFields = event.getParam('fields');
         const labels = component.get('v.labels');
 

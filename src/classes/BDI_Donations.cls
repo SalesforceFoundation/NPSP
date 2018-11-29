@@ -145,6 +145,7 @@ public class BDI_Donations {
         // call the extension to match against existing donations
         if (matchBehavior != BDI_DataImport_API.DoNotMatch) {
             BDI_PerfLogger.PerfLog pl = BDI_DataImportService.perfLogger.newPerfLog('iMatchDonations.match');
+            System.debug('heading in to Match!');
             iMatchDonations.match(bdi, listDIDonations, mapDIIdToOpp, mapDIIdToPmt);
             pl.stop();
         }
@@ -154,8 +155,11 @@ public class BDI_Donations {
         list<Opportunity> listOppUpdate = new list<Opportunity>();
         list<DataImport__c> listDIInsert = new list<DataImport__c>();
         list<DataImport__c> listDIUpdate = new list<DataImport__c>();
-        
+
+
         for (DataImport__c di : listDIDonations) {
+            //TODO: add a sieve here to filter out user-selected matches?
+
             // validate against our desired matching behavior (exact match, best match, new, etc.)
             if (!isValidMatchBehavior(di, matchBehavior)) {
                 continue;
@@ -163,6 +167,7 @@ public class BDI_Donations {
             
             // update the new or existing Opp with the DI's field data
             Opportunity opp = prepareOppForUpdateInsert(di);
+            // TODO: this is probably where the "set up new payment" part needs to be as well
             
             // handle any error from the prepare
             if (opp == null) {
@@ -173,6 +178,7 @@ public class BDI_Donations {
                 listOppInsert.add(opp);
                 listDIInsert.add(di);
             } else {
+                // TODO: add block here for not updating the opp if they selected new payment
                 listOppUpdate.add(opp);
                 listDIUpdate.add(di);
             }

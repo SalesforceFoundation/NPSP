@@ -86,8 +86,8 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     * @return void
     */
     public void match(BDI_DataImportService bdi, list<DataImport__c> listDI,
-            map<Id, Opportunity> mapDIIdToOpp, map<Id, npe01__OppPayment__c> mapDIIdToPmt) {
-
+        map<Id, Opportunity> mapDIIdToOpp, map<Id, npe01__OppPayment__c> mapDIIdToPmt) {
+System.debug('trying to match!');
         this.bdi = bdi;
 
         // query for potential Opportunities & Payments based off our matching criteria
@@ -98,7 +98,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
 
         // put each contact's and account's opps in their own list
         map<Id, list<Opportunity>> mapConAccIdToOpps = createMapConAccIdToOpps(listOpp);
-
+        
         // now look for the matching Opp for each donation
         for (DataImport__c di : listDI) {
             // User told us in BGE interface to not match this record and only create new Opportunity

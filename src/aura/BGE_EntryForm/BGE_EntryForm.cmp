@@ -163,6 +163,8 @@
     <!--Markup-->
     <lightning:overlayLibrary aura:id="overlayLib"/>
 
+    {!v.selectedDonation.Id}<br/>
+
     <lightning:recordEditForm aura:id="recordEditForm"
                               objectApiName="{!v.labels.dataImportObject}"
                               onsuccess="{!c.onSuccess}"
