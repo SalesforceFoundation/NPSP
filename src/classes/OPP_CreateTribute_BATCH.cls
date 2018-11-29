@@ -35,15 +35,44 @@
 */
 public class OPP_CreateTribute_BATCH implements Database.Batchable<sObject> {
 
+    /*******************************************************************************************************
+    * @description Opportunity Query used to find Opportunities to Convert
+    */ 
+    private static final String OPP_QUERY = 'SELECT Id, Tribute_Type__c, Honoree_Contact__c, Honoree_Name__c ' +
+                                            'FROM Opportunity WHERE (' +
+                                            'Honoree_Contact__c != null OR ' +
+                                            'Honoree_Name__c != null OR ' +
+                                            'Tribute_Type__c != null)';
+    
+    private String additionalWhereClause = null;
+
+    /*******************************************************************************************************
+    * @description no argument constructor for the class
+    */ 
+    public OPP_CreateTribute_BATCH() {
+
+    }
+
+    /*******************************************************************************************************
+    * @description constructor for the class
+    * @param additionalWhereClause - String allowing batch job to be invoked with alternative/additional constraints
+    */ 
+    public OPP_CreateTribute_BATCH(String additionalWhereClause) {
+        this.additionalWhereClause = additionalWhereClause;
+    }
+
     /******************************************************************************************************
-    * @description Batch start method. Runs through all the Opportunities in the org.
+    * @description Batch start method. Runs through all the Opportunities to be converted.
     */
     public Database.QueryLocator start(Database.BatchableContext info) {
-        return Database.getQueryLocator('SELECT Id, Tribute_Type__c, Honoree_Contact__c, ' +
-                'Honoree_Name__c FROM Opportunity WHERE ' +
-                'Honoree_Contact__c != null OR ' +
-                'Honoree_Name__c != null OR ' +
-                'Tribute_Type__c != null');
+        String soqlQuery = ((additionalWhereClause != null) && (additionalWhereClause.trim().length() > 0)) ?
+                            OPP_QUERY + 'AND (' + additionalWhereClause + ')' : OPP_QUERY;
+
+        // Deliberately not trapping this potentially invalid query (since Where Clause might be invalid).
+        // This will display an error in the job widget used on the settings page, and send the person who 
+        // launched it a script error.  Decided this was best option with Nicolas Campbell
+        return Database.getQueryLocator(soqlQuery);
+        
     }
 
     /*******************************************************************************************************

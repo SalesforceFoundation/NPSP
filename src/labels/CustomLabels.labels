@@ -7198,6 +7198,20 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Multiple Tributes</value>
     </labels>
     <labels>
+        <fullName>stgMultipleTributesAdditionalWhere</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Field Label for Additional Where Clause on Settings Page</shortDescription>
+        <value>Opportunities to Include</value>
+    </labels>
+    <labels>
+        <fullName>stgMultipleTributesAdditionalWhereHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for Additional Where Clause on Settings Page</shortDescription>
+        <value>(Advanced admins only) If you want the batch job to process only a subset of Opportunities that have Tribute fields populated, enter a valid SOQL WHERE clause. Be sure to exclude the WHERE keyword and reference standard or custom fields on or directly related to the Opportunity object. For example, RecordType.Name='Donation'</value>
+    </labels>
+    <labels>
         <fullName>stgMultipleTributesBatch</fullName>
         <language>en_US</language>
         <protected>true</protected>

@@ -30,6 +30,17 @@
         </div>
         <div class="slds-text-body--small slds-m-around--medium"><apex:outputText value="{!$Label.stgMultipleTributesBatch}" escape="false" /></div>
         <c:UTIL_PageMessages />
+        <div class="slds-form_horizontal slds-m-around_large">
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$Label.stgMultipleTributesAdditionalWhere}" for="multipleTributesAdditionalWhere" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:inputTextarea id="multipleTributesAdditionalWhere" value="{!additionalWhereClause}" cols="40" rows="4" disabled="{!OR(isRunningBatch, isBatchDisabled)}"/>
+                    <apex:outputPanel id="multipleTributeAdditionalWhereModelHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgMultipleTributesAdditionalWhereHelp}" escape="false" />
+                    </apex:outputPanel>
+                </div>
+            </div>
+        </div>
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
             <apex:commandButton id="runCreateTributeFromOpportunityBatch" value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}"
                                 disabled="{!OR(isRunningBatch, isBatchDisabled)}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />

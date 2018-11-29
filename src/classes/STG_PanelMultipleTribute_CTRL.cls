@@ -39,6 +39,11 @@ public class STG_PanelMultipleTribute_CTRL extends STG_Panel {
     */
     public override string idPanel() { return 'idPanelMultipleTribute'; }
 
+    /*********************************************************************************************************
+    * @description Allows admins to pass in additional constraints to the Create Tribute Batch Job processing
+    * Opportunities.
+    */
+    public String additionalWhereClause { public get; public set; }
 
     /*********************************************************************************************************
     * @description Whether we are running the Create Tribute from Opportunity Batch process.
@@ -78,7 +83,10 @@ public class STG_PanelMultipleTribute_CTRL extends STG_Panel {
             return null;
         }
         isRunningBatch = true;
-        Database.executeBatch(new OPP_CreateTribute_BATCH(), 2000);
+
+        Database.executeBatch(new OPP_CreateTribute_BATCH(additionalWhereClause), 200);
+       
+
         return null;
     }
 }

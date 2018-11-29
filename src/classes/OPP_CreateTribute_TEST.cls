@@ -66,7 +66,7 @@ public class OPP_CreateTribute_TEST {
 
         Test.startTest();
         // Execute Batch
-        Database.executeBatch(new OPP_CreateTribute_BATCH(), 2000);
+        Database.executeBatch(new OPP_CreateTribute_BATCH(), 200);
         Test.stopTest();
         
         //System should create the Tribute record for the Opportunity
@@ -88,4 +88,65 @@ public class OPP_CreateTribute_TEST {
                                                 Honoree_Contact__c != null];
         System.assertEquals(0, oppList.size(), 'Opps should not have Tribute Info');
     }
+
+        /******************************************************************************************************
+    * @description Test the batch process for Tribute creation
+    ********************************************************************************************************/
+    static testMethod void testCreateTributeBatchWithAdditionalWhereClause() {
+        //Make sure there is no Tribute record in the org
+        List<Tribute__c> tributeList = [Select Id from Tribute__c];
+        System.assertEquals(0, tributeList.size(), 'No Tributes Expected');
+        
+        //Create and Insert Opportunity
+        Account acc = new Account(Name = 'TheAccount');
+        insert acc;
+        
+        List<Opportunity> oppsToInsert = new List<Opportunity>();
+        for(Integer i = 0; i < 10; i++) {
+            Opportunity opp = new Opportunity(  AccountId = acc.id, 
+                                                StageName = 'Close Won', 
+                                                Name='Donation' + i,
+                                                Amount= i, 
+                                                CloseDate = Date.newInstance(2018, 1, 2), 
+                                                Honoree_Name__c = 'John Smith' + i, 
+                                                Notification_Recipient_Name__c = 'Mark Smith');
+            oppsToInsert.add(opp);
+        }
+
+        oppsToInsert[0].Name = 'Convert it';
+        oppsToInsert[1].Name = 'Convert it';
+
+        insert oppsToInsert;
+
+        Map<String, Id> honNmToOppIdMap = new Map<String, Id>();
+
+        for (Opportunity opp : oppsToInsert) {
+            honNmToOppIdMap.put (opp.Honoree_Name__c, opp.Id);
+        }
+
+        Test.startTest();
+        // Execute Batch
+        Database.executeBatch(new OPP_CreateTribute_BATCH('Name=\'Convert it\''), 200);
+        Test.stopTest();
+        
+        //System should create the Tribute record for the Opportunity
+        tributeList = [Select Id, Opportunity__c, Honoree_Name__c from Tribute__c order by Honoree_Name__c ASC];
+
+     
+        System.assertEquals(2, tributeList.size(), '2 Tributes Expected');
+
+        for (Integer i=0; i < 2; i++) {
+            System.assertEquals('John Smith' + i, tributeList[i].Honoree_Name__c, 'Honoree Name #' + i);
+            System.assertEquals(honNmToOppIdMap.get(tributeList[i].Honoree_Name__c), tributeList[i].Opportunity__c, 'Opportunity Id, #' + i);
+        }
+
+        //System should clear the Tribute fields on the Opportunity
+        List<Opportunity> oppList = [select     Id 
+                                     from Opportunity 
+                                     where      Honoree_Name__c != null or 
+                                                Tribute_Type__c != null or 
+                                                Honoree_Contact__c != null];
+        System.assertEquals(8, oppList.size(), 'Opps should have Tribute Info');
+    }
+
 }

@@ -1962,6 +1962,8 @@
         <members>stgLabelYearPicklistYearsAgo</members>
         <members>stgLinkDelete</members>
         <members>stgMultipleTributes</members>
+        <members>stgMultipleTributesAdditionalWhere</members>
+        <members>stgMultipleTributesAdditionalWhereHelp</members>
         <members>stgMultipleTributesBatch</members>
         <members>stgMultipleTributesBatchPanel</members>
         <members>stgMultipleTributesFlexible</members>

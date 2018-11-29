@@ -3572,6 +3572,14 @@
         <name>stgMultipleTributes</name>
     </customLabels>
     <customLabels>
+        <label><!-- Field Label for Additional Where Clause on Settings Page --></label>
+        <name>stgMultipleTributesAdditionalWhere</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for Additional Where Clause on Settings Page --></label>
+        <name>stgMultipleTributesAdditionalWhereHelp</name>
+    </customLabels>
+    <customLabels>
         <label><!-- The Warning for Donations - Create Tribute from Opportunity --></label>
         <name>stgMultipleTributesBatch</name>
     </customLabels>
