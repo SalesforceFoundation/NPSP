@@ -4061,6 +4061,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Street</value>
     </labels>
     <labels>
+        <fullName>lblToday</fullName>
+        <categories>UTIL_InputField</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>lblToday</shortDescription>
+        <value>Today</value>
+    </labels>
+    <labels>
         <fullName>lblYouAreHere</fullName>
         <categories>UTIL_PageHeader</categories>
         <language>en_US</language>

@@ -1567,6 +1567,7 @@
         <members>lblState</members>
         <members>lblStatus</members>
         <members>lblStreet</members>
+        <members>lblToday</members>
         <members>lblYouAreHere</members>
         <members>leadConvertAccountName</members>
         <members>leadConvertAffilationName</members>

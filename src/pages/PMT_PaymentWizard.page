@@ -61,7 +61,7 @@
                 <!-- Opportunity Info -->
                 <apex:outputText rendered="{!AND(hasPaymentAccess, NOT(ISNULL(paymentsSettings)), paymentsSettings.npe01__Payments_Enabled__c == true, isScheduleWizard == true)}">
                     <div class="slds-section-title_divider" id="pmtWizardTitle">
-                        <apex:outputText value="{!$Label.pmtWizardSectionTitle}"/>
+                        <h2><apex:outputText value="{!$Label.pmtWizardSectionTitle}"/></h2>
                     </div>
                     <apex:outputText rendered="{!NOT(ISNULL(currentOpp))}">
                         <div class="slds-grid slds-wrap slds-form_horizontal">
@@ -70,7 +70,7 @@
                                     <label class="slds-form-element__label" for="oppLink">{!$ObjectType.Opportunity.label}</label>
                                     <div class="slds-form-element__control">
                                         <span class="slds-form-element__static">
-                                            <a href="{!URLFOR($Action.Opportunity.View, currentOpp.id)}">
+                                            <a href="{!URLFOR($Action.Opportunity.View, currentOpp.id)}" id="oppLink">
                                                 {!currentOpp.Name}
                                             </a>
                                         </span>
@@ -134,13 +134,13 @@
                     <!-- Create payment schedule -->
                     <apex:outputText rendered="{!AND(hasPaymentAccess, NOT(isClosedLost), OR(haveAmount, removePaidPayments))}" styleClass="slds-m-around_medium slds-p-top_medium">
                         <div class="slds-section-title_divider" id="pmtCreateTitle">
-                            <apex:outputText value="{!$Label.pmtWizardCreateSchedule}"/>
+                            <h2><apex:outputText value="{!$Label.pmtWizardCreateSchedule}"/></h2>
                         </div>
                         <div class="slds-form slds-form_stacked">
                             <div class="slds-grid slds-gutters_small slds-p-top_x-small">
                                 <div class="slds-col slds-has-flexi-truncate slds-grid">
                                     <div class="slds-form-element">
-                                        <label class="slds-form-element__label"><apex:outputText value="{!$Label.pmtWizardNumberOfPayments}"/></label>
+                                        <apex:outputLabel value="{!$Label.pmtWizardNumberOfPayments}" for="paymentCount" styleClass="slds-form-element__label"/>
                                         <div class="slds-form-element__control slds-select_container">
                                             <apex:selectList value="{!numberofPayments}" id="paymentCount" multiselect="false" size="1" styleClass="slds-select">
                                                 <apex:selectOptions value="{!items}"/>
@@ -200,7 +200,7 @@
                     <!-- Show Payments to be Created -->
                     <apex:outputText rendered="{!AND(NOT(isClosedLost), payments.size>0, OR(haveAmount, removePaidPayments))}" styleClass="slds-p-around_medium">
                         <div class="slds-section-title_divider" id="pmtsToCreateTitle">
-                            <apex:outputText value="{!$Label.pmtWizardToBeCreated}"/>
+                            <h2><apex:outputText value="{!$Label.pmtWizardToBeCreated}"/></h2>
                         </div>
                         <table class="slds-table" id="pmtTable">
                             <thead>
@@ -246,7 +246,7 @@
                 <!-- START PAYMENT WRITEOFF  -->
                 <apex:outputText rendered="{!AND(hasPaymentAccess, NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isWriteoffWizard == true)}">
                     <div class="slds-section-title_divider" id="pmtWizardTitle2">
-                        <apex:outputText value="{!$Label.pmtWizardSectionTitle}"/>
+                        <h2><apex:outputText value="{!$Label.pmtWizardSectionTitle}"/></h2>
                     </div>
                     <apex:outputText rendered="{!NOT(ISNULL(currentOpp))}">
                         <div class="slds-grid slds-wrap slds-form_horizontal">
@@ -318,7 +318,7 @@
 
                     <apex:outputText rendered="{!AND(NOT(ISNULL(CurrentOpp)), haveAmount, NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true)}" styleClass="slds-p-around_medium">
                         <div class="slds-section-title_divider" id="writeoffPmtsTitle">
-                            <apex:outputText value="{!$Label.pmtWizardSectionWriteoffPayments}"/>
+                            <h2><apex:outputText value="{!$Label.pmtWizardSectionWriteoffPayments}"/></h2>
                         </div>
                         <div class="slds-m-around_medium">
                             <div class="slds-notify_container slds-is-relative">
