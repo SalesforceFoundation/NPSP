@@ -279,29 +279,25 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     public static List<DataImportRow> runDryRun(List<Id> dataImportIds, Id batchId) {
         Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
         Set<Id> recordIds = new Set<Id>(dataImportIds);
-        List<DataImport__c> dataImportRecordsToCheck = getDataImportRecordsByIds(batchId, recordIds);
-        List<DataImport__c> dataImportRecords = new List<DataImport__c>();
+        List<DataImport__c> dataImportRecords = getDataImportRecordsByIds(batchId, recordIds);
 
         // Skip records where user has explicitly selected a matching record in BGE UI
-        for (DataImport__c dataImport : dataImportRecordsToCheck) {
+        for (DataImport__c dataImport : dataImportRecords) {
             if (dataImport.DonationImportStatus__c == Label.bdiMatchedByUser
                     || dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment
                     || dataImport.PaymentImportStatus__c == Label.bdiMatchedByUser) {
-                // do nothing
+                // User defined match, so we do nothing and retain the values
             } else {
-                dataImportRecords.add(dataImport);
+                // Clear Dry Run fields before running Dry Run so new field values are accounted for
+                dataImport.Status__c = null;
+                dataImport.FailureInformation__c = null;
+                dataImport.DonationImported__c = null;
+                dataImport.DonationImportStatus__c = null;
+                dataImport.PaymentImported__c = null;
+                dataImport.PaymentImportStatus__c = null;
             }
         }
 
-        // Clear Dry Run fields before running Dry Run so new field values are accounted for
-        for (DataImport__c dataImport : dataImportRecords) {
-            dataImport.Status__c = null;
-            dataImport.FailureInformation__c = null;
-            dataImport.DonationImported__c = null;
-            dataImport.DonationImportStatus__c = null;
-            dataImport.PaymentImported__c = null;
-            dataImport.PaymentImportStatus__c = null;
-        }
         update dataImportRecords;
 
         if (dataImportRecords.size() > 0){
