@@ -3,9 +3,9 @@
      * @description: clears all info on user-selected open donation
      */
     clearDonationSelectionOptions: function(component) {
-        component.set('v.donationOptions', null);
         component.set('v.selectedDonation', null);
-        component.set('v.openDonations', null);
+        component.set('v.openOpportunities', null);
+        component.set('v.unpaidPayments', null);
     },
 
     /**
@@ -22,11 +22,10 @@
      * @return: Object rowFields with hidden fields added
      */
     getRowWithHiddenFields: function (component, event) {
-        debugger;
-        var rowFields = event.getParam('fields');
+        let rowFields = event.getParam('fields');
         const labels = component.get('v.labels');
 
-        var recId = component.get('v.recordId');
+        const recId = component.get('v.recordId');
         rowFields[labels.batchIdField] = recId;
 
         // add donor type hidden fields
@@ -80,10 +79,8 @@
      * @description: sets the donation selection and closes the modal
      */
     processDonationSelection: function(component, selectedDonation) {
-        const previousDonation = component.get('v.selectedDonation');
         component.set('v.selectedDonation', selectedDonation);
         this.closeDonationModal(component);
-        this.setSelectedDonationForMarkup(component, selectedDonation, previousDonation);
     },
 
     /**
@@ -99,18 +96,18 @@
             const state = response.getState();
             if (state === 'SUCCESS') {
                 const openDonations = JSON.parse(response.getReturnValue());
-                openDonations.unpaidPayments.forEach(function(pmt) {
-                    pmt.isSelected = false;
-                });
-                openDonations.openOpportunities.forEach(function(opp) {
-                    opp.isSelected = false;
-                });
-                component.set('v.openDonations', openDonations);
                 component.set('v.openOpportunities', openDonations.openOpportunities);
                 component.set('v.unpaidPayments', openDonations.unpaidPayments);
 
             } else {
-                this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
+                const errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        this.sendMessage('onError', {title: $A.get('$Label.c.PageMessagesError'), errorMessage: errors[0].message});
+                    } else {
+                        this.sendMessage('onError', {title: $A.get('$Label.c.PageMessagesError'), errorMessage: $A.get('$Label.c.stgUnknownError')});
+                    }
+                }
             }
             this.sendMessage('hideFormSpinner', '');
             document.getElementById("selectMatchLink").focus();
@@ -139,40 +136,6 @@
             'message': message
         });
         sendMessage.fire();
-    },
-
-    /**
-     * @description: sets the isSelected flag on the selected donation and unsets it on any other selected donation
-     * @param selectedDonation: full row of selected donation
-     */
-    setSelectedDonationForMarkup: function(component, selectedDonation, previousDonation) {
-        let openOpportunities = component.get('v.openOpportunities');
-        let unpaidPayments = component.get('v.unpaidPayments');
-
-        //check if selectedDonation is opp or payment
-        //check if previousDonation is opp or payment
-
-        for (let i=0; i<openOpportunities.length; i++) {
-            if (openOpportunities[i] === selectedDonation) {
-                openOpportunities[i].isSelected = true;
-            }
-            if (openOpportunities[i] === previousDonation) {
-                openOpportunities[i].isSelected = false;
-            }
-        }
-
-        for (let i=0; i<unpaidPayments.length; i++) {
-            if (unpaidPayments[i] === selectedDonation) {
-                unpaidPayments[i].isSelected = true;
-            }
-            if (unpaidPayments[i] === previousDonation) {
-                unpaidPayments[i].isSelected = false;
-            }
-        }
-
-        component.set('v.openOpportunities', openOpportunities);
-        component.set('v.unpaidPayments', unpaidPayments);
-
     },
 
     /**

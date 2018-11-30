@@ -156,15 +156,18 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                                 'WHERE npe01__Opportunity__r.' + relationshipField + ' = :donorId ' +
                                 'AND npe01__Paid__c = false';
 
-        List<Opportunity> openOpportunities = Database.query(opportunitySOQL);
-        List<npe01__OppPayment__c> unpaidPayments = Database.query(paymentSOQL);
+        try {
+            List<Opportunity> openOpportunities = Database.query(opportunitySOQL);
+            List<npe01__OppPayment__c> unpaidPayments = Database.query(paymentSOQL);
 
-        Map<String,List<SObject>> response = new Map<String, List<SObject>>{
-                'openOpportunities' => openOpportunities,
-                'unpaidPayments' => unpaidPayments
-        };
-
-        return JSON.serialize(response);
+            Map<String,List<SObject>> response = new Map<String, List<SObject>>{
+                    'openOpportunities' => openOpportunities,
+                    'unpaidPayments' => unpaidPayments
+            };
+            return JSON.serialize(response);
+        } catch (Exception ex){
+            throw new AuraHandledException('ERROR: ' + ex.getMessage());
+        }
     }
 
     /*******************************************************************************************************
