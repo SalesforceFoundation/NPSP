@@ -136,7 +136,7 @@
                         <div class="slds-section-title_divider" id="pmtCreateTitle">
                             <apex:outputText value="{!$Label.pmtWizardCreateSchedule}"/>
                         </div>
-                        <div class="slds-form slds-form_horizontal">
+                        <div class="slds-form slds-form_stacked">
                             <div class="slds-grid slds-gutters_small slds-p-top_x-small">
                                 <div class="slds-col slds-has-flexi-truncate slds-grid">
                                     <div class="slds-form-element">
@@ -156,19 +156,33 @@
                             </div>
                             <div class="slds-grid slds-gutters_small slds-p-top_x-small">
                                 <div class="slds-col slds-has-flexi-truncate slds-grid">
-                                    <div class="slds-form-element">
-                                        <label class="slds-form-element__label"><apex:outputText value="{!$Label.pmtWizardInterval}"/></label>
-                                        <div class="slds-form-element__control slds-select_container">
-                                            <apex:selectList value="{!interval}" id="intervals" multiselect="false" size="1" styleClass="slds-select">
-                                                <apex:selectOptions value="{!intervals}"/>
-                                            </apex:selectList>
+                                    <fieldset class="slds-form-element slds-form_compound">
+                                        <legend class="slds-form-element__legend slds-form-element__label" id="intervals">
+                                            <apex:outputText value="{!$Label.pmtWizardInterval}"/>
+                                        </legend>
+                                        <div class="slds-form-element__control">
+                                            <div class="slds-form-element__group">
+                                                <div class="slds-form-element__row">
+                                                    <div class="slds-form-element slds-size_1-of-2">
+                                                        <label class="slds-form-element__label" id="intervalnumberlabel" for="{!$Component.intervalnumber}"><apex:outputText value="{!$Label.pmtWizardIntervalNumber}"/></label>
+                                                        <div class="slds-form-element__control slds-select_container">
+                                                            <apex:selectList value="{!interval}" html-aria-labelledby="intervals intervalnumberlabel" id="intervalnumber" multiselect="false" size="1" styleClass="slds-select">
+                                                                <apex:selectOptions value="{!intervals}"/>
+                                                            </apex:selectList>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-form-element slds-size_1-of-2">
+                                                        <label class="slds-form-element__label" id="intervalperiodlabel" for="{!$Component.intervalunits}"><apex:outputText value="{!$Label.pmtWizardIntervalPeriod}"/></label>
+                                                        <div class="slds-form-element__control slds-select_container">
+                                                            <apex:selectList value="{!intervalunit}" html-aria-labelledby="intervals intervalperiodlabel" id="intervalunits" multiselect="false" size="1" styleClass="slds-select">
+                                                                <apex:selectOptions value="{!intervalunits}"/>
+                                                            </apex:selectList>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="slds-form-element__control slds-select_container">
-                                            <apex:selectList value="{!intervalunit}" id="intervalunits" multiselect="false" size="1" styleClass="slds-select">
-                                                <apex:selectOptions value="{!intervalunits}"/>
-                                            </apex:selectList>
-                                        </div>
-                                    </div>
+                                    </fieldset>
                                 </div>
                                 <div class="slds-col slds-has-flexi-truncate slds-grid">
                                     <c:UTIL_FormField sObj="{!samplePayment}" sObjType="npe01__OppPayment__c" field="npe01__Payment_Method__c" />

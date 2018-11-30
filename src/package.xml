@@ -1624,6 +1624,8 @@
         <members>pmtWizardCreateSchedule</members>
         <members>pmtWizardFirstPaymentDate</members>
         <members>pmtWizardInterval</members>
+        <members>pmtWizardIntervalNumber</members>
+        <members>pmtWizardIntervalPeriod</members>
         <members>pmtWizardMonth</members>
         <members>pmtWizardMsgNoOppFound</members>
         <members>pmtWizardNoUnpaidAmount</members>

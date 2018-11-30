@@ -4517,6 +4517,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Interval</value>
     </labels>
     <labels>
+        <fullName>pmtWizardIntervalNumber</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardIntervalNumber</shortDescription>
+        <value>Number</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardIntervalPeriod</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>pmtWizardIntervalPeriod</shortDescription>
+        <value>Period</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardMonth</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
