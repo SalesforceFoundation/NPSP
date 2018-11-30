@@ -38,6 +38,11 @@
 @isTest(IsParallel=true)
 private class BGE_DataImportBatchEntry_CTRL_TEST {
 
+    private class OpenDonations {
+        private List<Opportunity> openOpportunities;
+        private List<npe01__OppPayment__c> unpaidPayments;
+    }
+
     /*********************************************************************************************************
     * @description Sets up a new NPSP_Data_Import_Batch__c Record
     * @return Id of the new NPSP_Data_Import_Batch__c
@@ -123,6 +128,52 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
 
         System.assertEquals(dataImports.size(), 2, 'Data Imports should return 2 rows');
         System.assertEquals(updatedDataImports.size(), 1, 'Updated Data Imports should return only 1 row');
+    }
+
+    /*********************************************************************************************************
+    * @description Tests getOpenDonations() for donor with no donation
+    */
+
+    @isTest
+    public static void testGetEmptyOpenDonations() {
+
+        Account donorAccount = new Account(Name='Test Acc');
+        insert donorAccount;
+
+        Test.startTest();
+        String jsonModel = BGE_DataImportBatchEntry_CTRL.getOpenDonations(donorAccount.Id, 'Account1');
+        Test.stopTest();
+
+        OpenDonations openDonations = (OpenDonations)JSON.deserialize(jsonModel, openDonations.class);
+
+        System.assertNotEquals(jsonModel, null);
+        System.assertEquals(openDonations.openOpportunities.size(), 0, 'Donor should have no open opportunities.');
+        System.assertEquals(openDonations.unpaidPayments.size(), 0, 'Donor should have no unpaid payments.');
+    }
+
+    /*********************************************************************************************************
+    * @description Tests getOpenDonations() for donor with an open donation
+    */
+
+    @isTest
+    public static void testGetOpenDonations() {
+
+        List<Contact> donorContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(1);
+        insert donorContacts;
+
+        List<Opportunity> donations = UTIL_UnitTestData_TEST.OppsForContactList(donorContacts, null,
+                UTIL_unitTestData_TEST.getOpenStage(), system.Today(), 100, null, null);
+        insert donations;
+
+        Test.startTest();
+        String jsonModel = BGE_DataImportBatchEntry_CTRL.getOpenDonations(donorContacts[0].Id, 'Contact1');
+        Test.stopTest();
+
+        OpenDonations openDonations = (OpenDonations)JSON.deserialize(jsonModel, openDonations.class);
+
+        System.assertNotEquals(openDonations.openOpportunities.size(), 0, 'Donor should have open opportunities.');
+        System.assertNotEquals(openDonations.unpaidPayments.size(), 0, 'Donor should have unpaid payments.');
+        System.assertEquals(openDonations.openOpportunities[0].Id, donations[0].Id, 'Open opportunity ' + donations[0].Name + ' not retrieved');
     }
 
 }

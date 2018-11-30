@@ -160,7 +160,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             List<Opportunity> openOpportunities = Database.query(opportunitySOQL);
             List<npe01__OppPayment__c> unpaidPayments = Database.query(paymentSOQL);
 
-            Map<String,List<SObject>> response = new Map<String, List<SObject>>{
+            Map<String, List<SObject>> response = new Map<String, List<SObject>>{
                     'openOpportunities' => openOpportunities,
                     'unpaidPayments' => unpaidPayments
             };
