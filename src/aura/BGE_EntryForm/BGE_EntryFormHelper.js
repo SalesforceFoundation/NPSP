@@ -48,6 +48,7 @@
         // assign opportunity/payment lookup and import status
         const selectedDonation = component.get('v.selectedDonation');
         const userSelectedMatch = $A.get('$Label.c.bdiMatchedByUser');
+        const userSelectedNewOpp = $A.get('$Label.c.bdiMatchedByUserNewOpp');
         const applyNewPayment = $A.get('$Label.c.bdiMatchedApplyNewPayment');
 
         if (selectedDonation) {
@@ -69,7 +70,7 @@
         } else if (selectedDonation === '') {
             //create new opportunity if selectedDonation is set as empty string
             //else status fields are left null to allow for dry-run
-            rowFields[labels.opportunityImportedStatusField] = userSelectedMatch;
+            rowFields[labels.opportunityImportedStatusField] = userSelectedNewOpp;
         }
 
         return rowFields;

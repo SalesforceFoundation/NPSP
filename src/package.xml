@@ -1388,6 +1388,7 @@
         <members>bdiMatchedApplyNewPayment</members>
         <members>bdiMatchedBest</members>
         <members>bdiMatchedByUser</members>
+        <members>bdiMatchedByUserNewOpp</members>
         <members>bdiMatchedId</members>
         <members>bdiMatchedNone</members>
         <members>bdiPositiveNumber</members>

@@ -284,8 +284,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         // Skip records where user has explicitly selected a matching record in BGE UI
         for (DataImport__c dataImport : dataImportRecords) {
             if (dataImport.DonationImportStatus__c == Label.bdiMatchedByUser
-                    || dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment
-                    || dataImport.PaymentImportStatus__c == Label.bdiMatchedByUser) {
+                    || dataImport.DonationImportStatus__c == Label.bdiMatchedByUserNewOpp
+                    || dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
                 // User defined match, so we do nothing and retain the values
             } else {
                 // Clear Dry Run fields before running Dry Run so new field values are accounted for

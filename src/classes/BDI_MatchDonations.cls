@@ -103,7 +103,8 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         for (DataImport__c di : listDI) {
             // User told us in BGE interface to not match this record and use specified record
             if (di.DonationImportStatus__c != label.bdiMatchedByUser
-                   // || di.DonationImportStatus__c == label.bdiMatchedApplyNewPayment
+                    && di.DonationImportStatus__c != label.bdiMatchedByUserNewOpp
+                   // && di.DonationImportStatus__c == label.bdiMatchedApplyNewPayment
                     ) {
                 ID id;
                 if (di.Donation_Donor__c == 'Account1') {

@@ -283,7 +283,8 @@ public class BDI_Donations {
         string strError;
 
         // always allow matching by Id, regardless of specified behavior
-        if (di.DonationImportStatus__c == label.bdiMatchedId) {
+        if (di.DonationImportStatus__c == label.bdiMatchedId
+                || di.DonationImportStatus__c == label.bdiMatchedByUser) {
             return true;
         }
         // always error if they provided Donation or Payment ID, but it wasn't valid
