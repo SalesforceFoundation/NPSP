@@ -565,6 +565,7 @@
         <members>BGE_BatchGiftEntryTab</members>
         <members>BGE_ConfigurationWizard</members>
         <members>BGE_DataImportBatchEntry</members>
+        <members>BGE_DonationSelector</members>
         <members>BGE_EntryForm</members>
         <members>CRLP_FilterGroup</members>
         <members>CRLP_Rollup</members>

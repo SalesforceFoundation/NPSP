@@ -20,32 +20,15 @@
     },
 
     /**
-     * @description:
+     * @description: alerts parent component that form needs to be reset
      */
-    /* for next ticket:
-    handleApplyPaymentSelection: function(component, event, helper) {
-        const selectedDonation = event.getSource().get('v.value');
-        selectedDonation.applyPayment = true;
-        helper.processDonationSelection(component, selectedDonation);
+    handleMessage: function (component, event, helper) {
+        var message = event.getParam('message');
+        var channel = event.getParam('channel');
 
-    },*/
-
-    /**
-     * @description: handles none option to create a new opportunity and prevent dry run
-     */
-    handleNoneDonationSelection: function(component, event, helper) {
-        const selectedDonation = '';
-        helper.processDonationSelection(component, selectedDonation);
-
-    },
-
-    /**
-     * @description: handles selected donation option to select the payment or opportunity and prevent dry run
-     */
-    handleDonationSelection: function(component, event, helper) {
-        const selectedDonation = event.getSource().get('v.value');
-        helper.processDonationSelection(component, selectedDonation);
-
+        if (channel === 'closeDonationSelectorModal') {
+            this.closeDonationModal(component);
+        }
     },
 
     /**
@@ -101,12 +84,36 @@
      * @description: launches modal so user can select open donation
      */
     openMatchModal: function(component, event, helper) {
-        component.set('v.matchingModalPromise', component.find('overlayLib').showCustomModal({
-            header: component.get('v.matchingModalHeader'),
-            body: component.get('v.matchingModalBody'),
-            showCloseButton: true,
-            cssClass: 'slds-modal_large'
-        }));
+        $A.createComponent(['c:BGE_DonationSelector', {
+                'aura:id': 'donationSelector',
+                'name': 'donationSelector',
+                'unpaidPayments': component.get('v.unpaidPayments'),
+                'openOpportunities': component.get('v.openOpportunities'),
+                'selectedDonation': component.get('v.selectedDonation'),
+                'labels': component.get('v.labels')
+            }],
+            function (newcomponent, status, errorMessage) {
+            debugger;
+                if (status === 'SUCCESS') {
+                    component.set('v.matchingModalPromise', component.find('overlayLib').showCustomModal({
+                        header: component.get('v.matchingModalHeader'),
+                        body: newcomponent,
+                        showCloseButton: true,
+                        cssClass: 'slds-modal_large'
+                    }));
+                } else if (status === 'INCOMPLETE') {
+                    const message = {
+                        title: $A.get('$Label.c.PageMessagesError'),
+                        errorMessage: $A.get('$Label.c.stgUnknownError')
+                    };
+                    helper.sendMessage('onError', message);
+
+                } else if (status === 'ERROR') {
+                    debugger;
+                    const message = {title: $A.get('$Label.c.PageMessagesError'), errorMessage: errorMessage};
+                    helper.sendMessage('onError', message);
+                }
+            });
     },
 
     /**

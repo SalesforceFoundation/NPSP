@@ -77,14 +77,6 @@
     },
 
     /**
-     * @description: sets the donation selection and closes the modal
-     */
-    processDonationSelection: function(component, selectedDonation) {
-        component.set('v.selectedDonation', selectedDonation);
-        this.closeDonationModal(component);
-    },
-
-    /**
      * @description: queries open donations for upcoming donations
      * @return: void
      */
