@@ -57,7 +57,8 @@ public with sharing class ADDR_Validator_TEST {
         return settings;
     }
     
-    static testMethod void testContactAddress() {
+    @isTest
+    private static void testContactAddress() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -103,7 +104,8 @@ public with sharing class ADDR_Validator_TEST {
             System.assertEquals('CA', contact.MailingState);
     }
 
-    static testMethod void testContactInvalidAddress() {
+    @isTest
+    private static void testContactInvalidAddress() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -135,7 +137,8 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals(Label.Address_Not_Found, av[0].Verification_Status__c);
     }
     
-    static testMethod void test400() {
+    @isTest
+    private static void test400() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -167,7 +170,8 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals('Bad input. Required fields missing from input or are malformed.', av[0].Verification_Status__c);
     }
     
-    static testMethod void test401() {
+    @isTest
+    private static void test401() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -199,7 +203,8 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals('Unauthorized. Authentication failure; invalid credentials.', av[0].Verification_Status__c);
     }
     
-    static testMethod void test402() {
+    @isTest
+    private static void test402() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -231,7 +236,8 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals('Payment required. No active subscription found.', av[0].Verification_Status__c);
     }
     
-    static testMethod void test500() {
+    @isTest
+    private static void test500() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -263,7 +269,8 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals('Internal server error. General service failure; retry request.', av[0].Verification_Status__c);
     }
     
-    static testMethod void testContactAmbiguousAddress() {
+    @isTest
+    private static void testContactAmbiguousAddress() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -297,7 +304,8 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals(Label.Addr_Verified, av[0].Verification_Status__c);
     }
 
-    static testMethod void testContactZipOnly() {
+    @isTest
+    private static void testContactZipOnly() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -334,7 +342,8 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals('98236', c1[0].MailingPostalCode);
     }
 
-    static testMethod void testContactCityAndStateOnly() {
+    @isTest
+    private static void testContactCityAndStateOnly() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -372,7 +381,8 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals('98236', c1[0].MailingPostalCode);
     }
 
-    static testMethod void testController() {
+    @isTest
+    private static void testController() {
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
         sc.initDynamicFields(); //this will also set the settings property
         
@@ -396,7 +406,8 @@ public with sharing class ADDR_Validator_TEST {
         System.assertEquals(true, sc.isRunningBatch);
     }
 
-    static testMethod void testBlankService() {
+    @isTest
+    private static void testBlankService() {
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
         sc.initDynamicFields(); //this will also set the settings property
         
@@ -409,7 +420,8 @@ public with sharing class ADDR_Validator_TEST {
 
     }
 
-    static testMethod void testControllerMissingSetting() {
+    @isTest
+    private static void testControllerMissingSetting() {
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
         sc.initDynamicFields(); //this will also set the settings property
         
@@ -424,8 +436,44 @@ public with sharing class ADDR_Validator_TEST {
         System.assert(sc.apiSettingsErrorMessage.contains('You must provide an Auth Token'), 'Error message should contain "You must provide an Auth Token": ' + sc.apiSettingsErrorMessage);
     }
 
+    /*******************************************************************************************************
+    * @description Verify the page displays a message when the user has no permission to view the page
+    */
+    @isTest
+    private static void shouldDisplayMessageWhenUserDoesNotHavePermissions() {
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
 
-    static testMethod void dontValidatePreviouslyValidatedAddresses() {
+        System.runAs(readOnlyUser) {
+            Test.setCurrentPage(Page.STG_PanelAddrVerification);
+            STG_PanelAddrVerification_CTRL ctrl = new STG_PanelAddrVerification_CTRL();
+
+            UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.stgAddrPermissionDenied, ApexPages.Severity.INFO);
+        }
+    }
+    /*******************************************************************************************************
+    * @description Verify the page does not display API key and other address verification settings
+    * when user has no permission to view the page
+    */
+    @isTest
+    private static void shouldNotRetrieveAddressVerificationSettingsWhenUserDoesNotHavePermissions() {        
+        createDefaultSettings();
+
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
+
+        System.runAs(readOnlyUser) {
+            Test.setCurrentPage(Page.STG_PanelAddrVerification);
+            STG_PanelAddrVerification_CTRL ctrl = new STG_PanelAddrVerification_CTRL();
+
+            ctrl.initDynamicFields();
+            System.assertEquals(null, ctrl.addrVerifSettings, 'Address Verification Settings should not be retrieved');
+
+            ctrl.testApi();
+            System.assertEquals(System.Label.stgAddrPermissionDenied, ctrl.apiTestResult);
+        }
+    }
+
+    @isTest
+    private static void dontValidatePreviouslyValidatedAddresses() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 

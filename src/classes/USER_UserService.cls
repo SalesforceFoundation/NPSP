@@ -68,6 +68,19 @@ public with sharing class USER_UserService {
         return userIdToIsSysAdmin;
     }
 
+    /*********************************************************************************************************
+    * @description Returns user Customize Application permission
+    * @param profileId User profile Id
+    * @return Boolean True if the user has Customize Application permission
+    **********************************************************************************************************/
+    public static Boolean hasCustomizeApplicationPermission(Id profileId) {
+        Profile userProfile = [
+            SELECT Id, PermissionsCustomizeApplication
+            FROM Profile
+            WHERE Id = :profileId];
+
+        return userProfile != null ? userProfile.PermissionsCustomizeApplication : false;
+    }
 
     /*********************************************************************************************************
     * @description Determines if a User in the List is active based on IsActive field.
