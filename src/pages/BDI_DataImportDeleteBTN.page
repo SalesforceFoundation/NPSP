@@ -18,7 +18,7 @@
             <div class="slds-card__header slds-grid">
                 <div class="slds-no-flex">
                     <apex:commandButton value="Delete Data Imports"
-                        onclick="return confirm('Do you want to proceed deleting Data Imports?');"
+                        onclick="return confirm('{!$Label.bdiBtnDeleteConfirm}');"
                         action="{!buttonClick}"
                         styleClass="slds-button slds-button_neutral" />
                 </div>

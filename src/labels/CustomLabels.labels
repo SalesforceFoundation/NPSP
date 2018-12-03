@@ -1956,6 +1956,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Close</value>
     </labels>
     <labels>
+        <fullName>bdiBtnDeleteConfirm</fullName>
+        <categories>Data Importer, Opportunity Send Acknowledgment</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>bdiBtnDeleteConfirm</shortDescription>
+        <value>Do you want to proceed deleting Data Imports?</value>
+    </labels>
+    <labels>
         <fullName>bdiComplete</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
