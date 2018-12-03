@@ -20,14 +20,15 @@
     },
 
     /**
-     * @description: alerts parent component that form needs to be reset
+     * @description: listens for event listeners from other components
      */
     handleMessage: function (component, event, helper) {
+
         var message = event.getParam('message');
         var channel = event.getParam('channel');
 
-        if (channel === 'closeDonationSelectorModal') {
-            this.closeDonationModal(component);
+        if (channel === 'closeDonationModal') {
+            helper.closeDonationModal(component, message);
         }
     },
 
@@ -84,18 +85,17 @@
      * @description: launches modal so user can select open donation
      */
     openMatchModal: function(component, event, helper) {
-        $A.createComponent(['c:BGE_DonationSelector', {
+        $A.createComponent('c:BGE_DonationSelector', {
                 'aura:id': 'donationSelector',
                 'name': 'donationSelector',
                 'unpaidPayments': component.get('v.unpaidPayments'),
                 'openOpportunities': component.get('v.openOpportunities'),
                 'selectedDonation': component.get('v.selectedDonation'),
                 'labels': component.get('v.labels')
-            }],
+            },
             function (newcomponent, status, errorMessage) {
-            debugger;
                 if (status === 'SUCCESS') {
-                    component.set('v.matchingModalPromise', component.find('overlayLib').showCustomModal({
+                    component.set('v.matchingModalPromise', component.find('overlayLib1').showCustomModal({
                         header: component.get('v.matchingModalHeader'),
                         body: newcomponent,
                         showCloseButton: true,
@@ -109,7 +109,6 @@
                     helper.sendMessage('onError', message);
 
                 } else if (status === 'ERROR') {
-                    debugger;
                     const message = {title: $A.get('$Label.c.PageMessagesError'), errorMessage: errorMessage};
                     helper.sendMessage('onError', message);
                 }

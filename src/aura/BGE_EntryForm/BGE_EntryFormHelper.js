@@ -11,10 +11,9 @@
     /**
      * @description: closes the donation modal
      */
-    closeDonationModal: function(component) {
-        component.get('v.matchingModalPromise').then(function(modal) {
-            modal.close();
-        });
+    closeDonationModal: function(component, selectedDonation) {
+        component.set('v.selectedDonation', selectedDonation);
+        component.find('overlayLib1').notifyClose();
     },
 
     /**
@@ -120,7 +119,7 @@
     },
 
     /**
-     * @description: generic component used to send a message to parent component.
+     * @description: send a message to other components
      */
     sendMessage: function (channel, message) {
         var sendMessage = $A.get('e.ltng:sendMessage');
