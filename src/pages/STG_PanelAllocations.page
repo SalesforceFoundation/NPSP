@@ -86,7 +86,9 @@
                 <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default__c.Label}" for="inputDefaultGAU" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <apex:outputText value="{!strDefaultGAUName}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                    <apex:inputfield value="{!allo.General_Accounting_Unit__c}" required="false" rendered="{!isEditMode}" id="inputDefaultGAU" html-aria-describedby="{!$Component.inputDefaultGAUHelp}" styleClass="lookupInput" />
+                    <apex:outputPanel id="inputDefaultGAU" layout="block" rendered="{!isEditMode}" html-aria-describedby="{!$Component.inputDefaultGAUHelp}">	
+                        <c:UTIL_InputField sObj="{!allo}" sObjType="Allocation__c" required="false" field="General_Accounting_Unit__c"/>	
+                    </apex:outputPanel>
                     <apex:outputPanel id="inputDefaultGAUHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpDefaultGAU}" />
                     </apex:outputPanel>
