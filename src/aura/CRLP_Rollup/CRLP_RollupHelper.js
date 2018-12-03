@@ -158,6 +158,9 @@
         //if type is undefined, return all fields
         if (type === undefined || allFields === undefined) {
             newFields = allFields;
+        //allow rolling up of text area fields to string fields and vice versa
+        } else if (type === 'TEXTAREA' || type === 'STRING') {
+            newFields = this.filterFieldsByType(cmp, ['TEXTAREA','STRING'], allFields, summaryFieldReferenceTo);
         } else {
             newFields = this.filterFieldsByType(cmp, [type], allFields, summaryFieldReferenceTo);
         }

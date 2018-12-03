@@ -110,6 +110,11 @@ private class CRLP_RollupAccount_TEST {
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
                         'npo02__LargestAmount__c', CRLP_Operation.RollupType.LARGEST, 'Amount') + ',' +
 
+                CMT_UnitTestData_TEST.createRollupRecord('Test Field Truncation', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        //Sic is a standard field of type Text(20), allowing us to verify text field truncation
+                        'Sic', CRLP_Operation.RollupType.LARGEST, 'Name', 'Amount') + ',' +
+
                 CMT_UnitTestData_TEST.createRollupRecord('Smallest Donation All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
                         'npo02__SmallestAmount__c', CRLP_Operation.RollupType.Smallest, 'Amount') + ',' +
@@ -393,6 +398,7 @@ private class CRLP_RollupAccount_TEST {
             System.assertEquals(null, hardCreditAcc.npo02__LastCloseDate__c);
             System.assertEquals(null, hardCreditAcc.npo02__FirstCloseDate__c);
             System.assertEquals(null, hardCreditAcc.npo02__Best_Gift_Year__c);
+            System.assertEquals(null, hardCreditAcc.Sic);
         }
 
         // Now test the rollups to the Account from the Opportunity
@@ -429,7 +435,8 @@ private class CRLP_RollupAccount_TEST {
         System.assertEquals(maxAmt, hardCreditAcc.npo02__LargestAmount__c);
         System.assertEquals(baseAmt, hardCreditAcc.npo02__SmallestAmount__c);
         System.assertEquals(bestGiftYear, hardCreditAcc.npo02__Best_Gift_Year__c);
-
+        System.assert(hardCreditAcc.Sic.endsWith('...'),
+                'Target text field that cannnot contain full rollup contents should truncate.');
         // These 4 use other fields on the Account object since there are no NPSP related fields to store the values in
         System.assertEquals(totalDonations - baseAmt, hardCreditAcc.AnnualRevenue,
                 'Total Payments should match total donations less $100 because one payment has been marked as written off');
