@@ -13,7 +13,10 @@
      */
     closeDonationModal: function(component, selectedDonation) {
         component.set('v.selectedDonation', selectedDonation);
-        component.find('overlayLib1').notifyClose();
+        component.get('v.donationModal').then(function(modal) {
+           modal.close();
+        });
+        component.set('v.donationModal', null);
     },
 
     /**

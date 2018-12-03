@@ -4,7 +4,8 @@
      */
     callFocus: function(component){
         let openDonationsLink = document.getElementById('selectMatchLink');
-        if (openDonationsLink && !component.get('v.selectedDonationId')) {
+
+        if (openDonationsLink && component.get('v.selectedDonation') == null) {
             openDonationsLink.focus();
         } else if (openDonationsLink) {
             component.find('donorType').focus();
@@ -23,7 +24,6 @@
      * @description: listens for event listeners from other components
      */
     handleMessage: function (component, event, helper) {
-
         var message = event.getParam('message');
         var channel = event.getParam('channel');
 
@@ -95,8 +95,8 @@
             },
             function (newcomponent, status, errorMessage) {
                 if (status === 'SUCCESS') {
-                    component.set('v.matchingModalPromise', component.find('overlayLib1').showCustomModal({
-                        header: component.get('v.matchingModalHeader'),
+                    component.set('v.donationModal', component.find('overlayLib1').showCustomModal({
+                        header: component.get('v.donationModalHeader'),
                         body: newcomponent,
                         showCloseButton: true,
                         cssClass: 'slds-modal_large'

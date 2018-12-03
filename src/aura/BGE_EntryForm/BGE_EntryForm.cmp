@@ -48,18 +48,10 @@
     <aura:attribute name="selectedDonation" type="SObject" description="Stored selected open donation" access="public" />
 
     <!--Modal Attributes-->
-    <aura:attribute name="matchingModalPromise" type="Object" />
-    <aura:attribute name="matchingModalHeader" type="Aura.ComponentDefRef[]">
+    <aura:attribute name="donationModal" type="Object" description="Instance of the overay modal used to close it later. Necessary for a child component modal."/>
+    <aura:attribute name="donationModalHeader" type="Aura.ComponentDefRef[]" description="Formatted header text used in donation modal.">
         <h2 class="title slds-text-heading_medium">{!$Label.c.bgeMatchingSelect}</h2>
     </aura:attribute>
-<!--
-    <aura:attribute name="matchingModalBody" type="Aura.ComponentDefRef[]">
-        <c:BGE_DonationSelector unpaidPayments="{!v.unpaidPayments}"
-                                openOpportunities="{!v.openOpportunities}"
-                                selectedDonation="{!v.selectedDonation}"
-                                labels="{!v.labels}"/>
-    </aura:attribute>
--->
 
     <!--Events-->
     <aura:handler name="render" action="{!c.callFocus}" value="{!this}"/>

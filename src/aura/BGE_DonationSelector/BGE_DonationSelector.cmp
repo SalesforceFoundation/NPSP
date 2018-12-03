@@ -37,7 +37,7 @@
 
 <aura:component controller="BGE_DataImportBatchEntry_CTRL">
     <!--Public Attributes-->
-    <aura:attribute name="selectedDonation" type="SObject" description="Stored selected open donation" access="public" />
+    <aura:attribute name="selectedDonation" type="SObject" description="Stored selected open donation object" access="public" />
     <aura:attribute name="unpaidPayments" type="List" description="List of unpaid Payments" access="public" />
     <aura:attribute name="openOpportunities" type="List" description="List of open Opportunities" access="public" />
     <aura:attribute name="labels" type="Map" description="Labels retrieved in Apex related to Schema information." access="public"/>
