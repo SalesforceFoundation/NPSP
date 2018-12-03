@@ -436,12 +436,12 @@ public class BDI_Donations {
             }
         }
 
+        String donationRecordTypeName = UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c').toLowercase();
+        String donationStage = UTIL_Namespace.StrTokenNSPrefix('Donation_Stage__c').toLowercase();
+        String donationAmount = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase();
+
         // now copy over all the data to the Opp
         for (String dataImportField : mapDIFieldToOppField.keySet()) {
-
-            String donationRecordTypeName = UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c').toLowercase();
-            String donationStage = UTIL_Namespace.StrTokenNSPrefix('Donation_Stage__c').toLowercase();
-            String donationAmount = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase();
 
             // skip recordtype which we special cased above
             if (dataImportField == donationRecordTypeName) {
