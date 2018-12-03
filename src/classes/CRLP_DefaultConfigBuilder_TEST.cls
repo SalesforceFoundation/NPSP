@@ -112,7 +112,7 @@ private class CRLP_DefaultConfigBuilder_TEST {
      * @description Validates that "Memberships: Won" filter group and associated rollups is not created when
      * the Membership record type does not exist
      */
-    static testMethod void test_createDefaults_MembershipRecordTypeDoesNotExist() {
+    static testMethod void test_createMembershipDefaults_MembershipRecordTypeDoesNotExist() {
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
             npo02__Membership_Record_Types__c = UTIL_UnitTestData_TEST.mockId(RecordType.getSObjectType())
         ));
@@ -146,6 +146,34 @@ private class CRLP_DefaultConfigBuilder_TEST {
 
         System.assert(!rollupFilterReferences.contains(CRLP_DefaultConfigBuilder.FilterGroup_Membership),
             'Rollups should not reference default membership filter group if the Membership Record Type does not exist'
+        );
+    }
+
+    /**
+     * @description Validates that "Allocations: Won excluding Rec Types'" filter group and associated rollups is not created when
+     * excluded record types do not exist
+     */
+    static testMethod void test_createAllocationDefaults_MembershipRecordTypeDoesNotExist() {
+        UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(
+            Use_Fiscal_Year_for_Rollups__c = true,
+            Excluded_Opp_Types__c = 'foo;bar',
+            Excluded_Opp_RecTypes__c= UTIL_UnitTestData_TEST.mockId(RecordType.getSObjectType())
+        ));
+
+        Test.startTest();
+        CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
+        Test.stopTest();
+
+        Set<String> filterRuleLabels = new Set<String>();
+
+        for (Metadata.CustomMetadata md : CRLP_ConfigBuilder_SVC.queuedMetadataTypes) {
+            if (md.fullName.contains('Filter_Rule__mdt')) {
+                filterRuleLabels.add(md.label);
+            }
+        }
+
+        System.assert(!filterRuleLabels.contains('Allocations: Excluded Record Types'),
+            'The exclusion filter rule should not be created if the excluded Record Type does not exist'
         );
     }
 

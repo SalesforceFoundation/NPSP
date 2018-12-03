@@ -373,7 +373,8 @@ public class CRLP_DefaultConfigBuilder_SVC {
         // Default "Allocations" filter group
         // ==============================================================================================================
 
-        Boolean alloRTExclusionsExist = (CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_RecTypes__c != null);
+        String alloRTExclusionsDeveloperNames = buildAllocationsExcludedRecordTypesDeveloperNames();
+        Boolean alloRTExclusionsExist = !String.isEmpty(alloRTExclusionsDeveloperNames);
 
         CRLP_RollupCMT.FilterGroup groupAllocations = new CRLP_RollupCMT.FilterGroup('Allocations: Won' + (alloRTExclusionsExist ? ' excluding Rec Types' : ''));
         groupAllocations.description = 'Closed/Won Opportunities used for GAU Allocation to General Accounting Unit rollups.' + (alloRTExclusionsExist ? ' Excludes Record Types as defined in legacy NPSP Rollup Settings.' : '');
@@ -395,7 +396,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleRecordType.objectName = 'Opportunity';
             ruleRecordType.fieldName = 'RecordTypeId';
             ruleRecordType.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-            ruleRecordType.value = convertRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_RecTypes__c);
+            ruleRecordType.value = alloRTExclusionsDeveloperNames;
             ruleRecordType.isDeleted = false;
             groupAllocations.rules.add(ruleRecordType);
         }
@@ -940,6 +941,15 @@ public class CRLP_DefaultConfigBuilder_SVC {
     private static String buildMembershipRecordTypeDeveloperNames() {
         return CRLP_DefaultConfigBuilder.legacySettings.npo02__Membership_Record_Types__c != null ?
             convertRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Membership_Record_Types__c)
+            : null;
+    }
+
+    /**
+     * @description Builds semi-colon delimited string of record type names excluded from allocations
+     */
+    private static String buildAllocationsExcludedRecordTypesDeveloperNames() {
+        return CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_RecTypes__c != null ?
+            convertRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_RecTypes__c)
             : null;
     }
 }
