@@ -101,11 +101,6 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
 
         // now look for the matching Opp for each donation
         for (DataImport__c di : listDI) {
-            // User told us in BGE interface to not match this record and use specified record
-            if (di.DonationImportStatus__c != label.bdiMatchedByUser
-                    && di.DonationImportStatus__c != label.bdiMatchedByUserNewOpp
-                   // && di.DonationImportStatus__c == label.bdiMatchedApplyNewPayment
-                    ) {
                 ID id;
                 if (di.Donation_Donor__c == 'Account1') {
                     id = bdi.AccountFromDi(di, 1).Id;
@@ -201,7 +196,10 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
 
                     // if unique, remove this opp from the list to avoid matching it again.
                     if (listIMatches.size() == 1) {
-                        di.DonationImportStatus__c = (isMatchedByOppId ? label.bdiMatchedId : label.bdiMatched);
+                        // User told us in BGE interface to not match this record and use specified record
+                        if (di.DonationImportStatus__c != label.bdiMatchedByUser) {
+                            di.DonationImportStatus__c = (isMatchedByOppId ? label.bdiMatchedId : label.bdiMatched);
+                        }
                         listCAOpps.remove(ioppBest);
                     } else {
                         // we have multiple matches, we want to record them all, and fixup our status
@@ -224,13 +222,18 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
 
                     // if we didn't match a payment for the Opp, but it has only one payment, let's use it!
                     if (pmt == null && opp.npe01__Number_of_Payments__c == 1) {
-                        pmt = opp.npe01__OppPayment__r[0];
+                        if (!opp.npe01__OppPayment__r.isEmpty()) {
+                            pmt = opp.npe01__OppPayment__r[0];
+                        }
                     }
 
                     if (pmt != null) {
                         di.PaymentImported__c = pmt.Id;
-                        di.PaymentImportStatus__c = (isMatchedByPmtId ? label.bdiMatchedId :
-                                (listPmtIdMatches.size() > 1 ? label.bdiMatchedBest : label.bdiMatched));
+                        // User told us in BGE interface to not match this record and use specified record
+                        if (di.PaymentImportStatus__c != label.bdiMatchedByUser) {
+                            di.PaymentImportStatus__c = (isMatchedByPmtId ? label.bdiMatchedId :
+                                    (listPmtIdMatches.size() > 1 ? label.bdiMatchedBest : label.bdiMatched));
+                        }
                         // put the existing pmt in our map for caller's use
                         mapDIIdToPmt.put(di.Id, pmt);
 
@@ -253,7 +256,6 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                     di.DonationImportStatus__c = label.bdiMatchedNone;
                 }
             }
-        }
     }
 
     /*******************************************************************************************************
