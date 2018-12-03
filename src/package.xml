@@ -1303,6 +1303,7 @@
         <members>bdiBehaviorRequireExactMatch</members>
         <members>bdiBehaviorRequireNoMatch</members>
         <members>bdiBtnClose</members>
+        <members>bdiBtnDeleteConfirm</members>
         <members>bdiComplete</members>
         <members>bdiCompleteWithErrors</members>
         <members>bdiContactCustomIdError</members>
