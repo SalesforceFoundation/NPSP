@@ -176,7 +176,6 @@ private class CMT_FilterRule_TEST {
             CMT_UnitTestData_TEST.createFilterRuleRecord(null, null, 'TestRule1', 'Opportunity', 'CreatedDate', 'Greater', '2018-01-01');
 
         Filter_Rule__mdt ruleMetadata = (Filter_Rule__mdt)JSON.deserialize(filterRulesJSON, Filter_Rule__mdt.class);
-        //need to null out Constant__c since null is cast as a string
         CMT_FilterRule filterRule = new CMT_FilterRule(ruleMetadata);
 
         System.assert(filterRule.compare instanceOf CMT_FilterRule.CompareDates, 'The filter should have the correct compare type');
