@@ -57,10 +57,6 @@
             $A.util.removeClass(spinner, 'slds-hide');
         } else if (channel === 'onError') {
             helper.showToast(component, message.title, message.errorMessage, 'Error');
-        } else if (channel === 'closeDonationSelectorModal') {
-            component.get('v.matchingModalPromise').then(function(modal) {
-                modal.close();
-            });
         }
     },
 

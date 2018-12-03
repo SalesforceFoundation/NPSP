@@ -218,7 +218,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         //add derived matched record column
         Column col = new Column();
 
-        col.label = Label.bgeGridMatchedRecord;
+        col.label = Label.bdiDonation;
         col.fieldName = 'matchedRecordUrl';
         col.readOnly = true;
         col.type = 'url';

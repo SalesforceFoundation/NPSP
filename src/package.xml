@@ -1443,7 +1443,6 @@
         <members>bgeGridGiftDeleted</members>
         <members>bgeGridGiftSaved</members>
         <members>bgeGridGiftUpdated</members>
-        <members>bgeGridMatchedRecord</members>
         <members>bgeGridNoGiftsBody</members>
         <members>bgeGridNoGiftsHeader</members>
         <members>bgeGridTotalAmount</members>

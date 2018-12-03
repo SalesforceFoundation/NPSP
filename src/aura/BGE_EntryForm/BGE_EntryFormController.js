@@ -24,8 +24,8 @@
      * @description: listens for event listeners from other components
      */
     handleMessage: function (component, event, helper) {
-        var message = event.getParam('message');
-        var channel = event.getParam('channel');
+        const message = event.getParam('message');
+        const channel = event.getParam('channel');
 
         if (channel === 'closeDonationModal') {
             helper.closeDonationModal(component, message);
@@ -95,7 +95,7 @@
             },
             function (newcomponent, status, errorMessage) {
                 if (status === 'SUCCESS') {
-                    component.set('v.donationModal', component.find('overlayLib1').showCustomModal({
+                    component.set('v.donationModal', component.find('entryFormOverlayLib').showCustomModal({
                         header: component.get('v.donationModalHeader'),
                         body: newcomponent,
                         showCloseButton: true,

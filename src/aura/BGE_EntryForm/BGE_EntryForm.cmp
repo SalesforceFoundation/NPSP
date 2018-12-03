@@ -58,7 +58,7 @@
     <aura:handler event="ltng:sendMessage" action="{!c.handleMessage}"/>
 
     <!--Markup-->
-    <lightning:overlayLibrary aura:id="overlayLib1"/>
+    <lightning:overlayLibrary aura:id="entryFormOverlayLib"/>
 
     <lightning:recordEditForm aura:id="recordEditForm"
                               objectApiName="{!v.labels.dataImportObject}"
@@ -72,7 +72,7 @@
             <aura:if isTrue="{!or(not(empty(v.openOpportunities)), not(empty(v.unpaidPayments)))}">
                 <lightning:layoutItem size="12" smallDeviceSize="12" class="slds-p-horizontal_small">
                     <lightning:layout class="slds-grid_align-center">
-                        <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="10">
+                        <lightning:layoutItem size="12" smallDeviceSize="12">
                             <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light slds-m-bottom_small" role="alert">
                                 <div class="slds-media__figure slds-text-align_center">
                                     <lightning:icon iconName="utility:info"
