@@ -194,9 +194,9 @@
                 }
                 */
             }).on('typeahead:selected', function (object, datum) {
-                boxData['{!searchBoxId}'].setSelectedValue( this, datum.id, decode(datum.value) );
+                boxData['{!searchBoxId}'].setSelectedValue( this, datum.id, htmlDecode(datum.value) );
             }).on('typeahead:autocompleted', function (object, datum) {
-                boxData['{!searchBoxId}'].setSelectedValue( this, datum.id, decode(datum.value) );
+                boxData['{!searchBoxId}'].setSelectedValue( this, datum.id, htmlDecode(datum.value) );
             //}).on('typeahead:cursorchanged', function (object, datum) {
                 //boxData['{!searchBoxId}'].setSelectedValue( this, datum.id, datum.value );
             //}).on('typeahead:closed', function (object, datum) {
@@ -216,8 +216,9 @@
             boxData['{!searchBoxId}'].fieldList.push('{!secondaryField}');
 
         // Decodes a String already encoded by Salesforce.
-        function decode(input) {
-            if (/&amp;|&quot;|&#39;|'&lt;|&gt;/.test(input)) {
+        function htmlDecode(input) {
+            var encodedHtml = /[^&amp;]|[^&quot;]|[^&#39;]|[^&lt;]|[^&gt;]/;
+            if (encodedHtml.test(input)) {
                 var doc = new DOMParser().parseFromString(input, "text/html");
                 return doc.documentElement.textContent;
             }
