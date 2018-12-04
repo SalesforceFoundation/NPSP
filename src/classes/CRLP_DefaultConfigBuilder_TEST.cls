@@ -150,14 +150,25 @@ private class CRLP_DefaultConfigBuilder_TEST {
     }
 
     /**
-     * @description Validates that "Allocations: Won excluding Rec Types'" filter group and associated rollups is not created when
-     * excluded record types do not exist
+     * @description Validates that exclusion filter rules are not created if record type does not exist for Id in setting
      */
-    static testMethod void test_createAllocationDefaults_MembershipRecordTypeDoesNotExist() {
+    static testMethod void test_excludedRecordTypes_RecordTypeDoesNotExist() {
         UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(
             Use_Fiscal_Year_for_Rollups__c = true,
             Excluded_Opp_Types__c = 'foo;bar',
             Excluded_Opp_RecTypes__c= UTIL_UnitTestData_TEST.mockId(RecordType.getSObjectType())
+        ));
+
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                npo02__Always_Rollup_to_Primary_Contact__c = false,
+                npo02__Enable_Opp_Rollup_Triggers__c = false,
+                npo02__Excluded_Account_Opp_Rectypes__c = UTIL_UnitTestData_TEST.mockId(RecordType.getSObjectType()),
+                npo02__Excluded_Account_Opp_Types__c = null,
+                npo02__Excluded_Contact_Opp_Rectypes__c = UTIL_UnitTestData_TEST.mockId(RecordType.getSObjectType()),
+                npo02__Excluded_Contact_Opp_Types__c = null,
+                npo02__Membership_Record_Types__c = membershipRecordTypeIdForTests,
+                npo02__Enable_Soft_Credit_Rollups__c = false
         ));
 
         Test.startTest();
@@ -172,9 +183,23 @@ private class CRLP_DefaultConfigBuilder_TEST {
             }
         }
 
-        System.assert(!filterRuleLabels.contains('Allocations: Excluded Record Types'),
-            'The exclusion filter rule should not be created if the excluded Record Type does not exist'
-        );
+        Set<String> unexpectedFilterRuleNames = new Set<String>{
+            'Allocations: Excluded Record Types',
+            'Opps-Acct: Excl RT (HC)',
+            'Opps-Acct: Excl RT (SC)',
+            'Pmts-Acct: Excl RT (Paid)',
+            'Pmts-Acct: Excl RT (Written Off)',
+            'Opps-Cont: Excl RT (HC)',
+            'Opps-Cont: Excl RT (SC)',
+            'Pmts-Cont: Excl RT (Paid)',
+            'Pmts-Cont: Excl RT (Written Off)'
+        };
+
+        for (String unexpectedFilterRuleName : unexpectedFilterRuleNames) {
+            System.assert(!filterRuleLabels.contains(unexpectedFilterRuleName),
+                'The exclusion filter rule \'' + unexpectedFilterRuleName + '\' should not be created if the excluded Record Type does not exist'
+            );
+        }
     }
 
     /**
