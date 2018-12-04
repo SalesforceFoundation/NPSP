@@ -217,12 +217,8 @@
 
         // Decodes a String already encoded by Salesforce.
         function htmlDecode(input) {
-            var encodedHtml = /[^&amp;]|[^&quot;]|[^&#39;]|[^&lt;]|[^&gt;]/;
-            if (encodedHtml.test(input)) {
-                var doc = new DOMParser().parseFromString(input, "text/html");
-                return doc.documentElement.textContent;
-            }
-            return input;
+            var doc = new DOMParser().parseFromString(input, "text/html");
+            return doc.documentElement.textContent;
         }
 
     </script>
