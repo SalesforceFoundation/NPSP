@@ -79,7 +79,7 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
 
             // Check if the user has delete access on the Data_Import__c object
             if (!DataImport__c.sObjectType.getDescribe().isDeletable()){
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL,'You do not have access to perform the requested action'));
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR,'INSUFFICIENT_ACCESS_OR_READONLY'));
                 return null;
             }
             else {
