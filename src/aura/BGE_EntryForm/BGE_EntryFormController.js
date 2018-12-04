@@ -95,12 +95,13 @@
             },
             function (newcomponent, status, errorMessage) {
                 if (status === 'SUCCESS') {
-                    component.set('v.donationModal', component.find('entryFormOverlayLib').showCustomModal({
+                    let modal = component.find('entryFormOverlayLib').showCustomModal({
                         header: component.get('v.donationModalHeader'),
                         body: newcomponent,
                         showCloseButton: true,
                         cssClass: 'slds-modal_large'
-                    }));
+                    });
+                    component.set('v.donationModal', modal);
                 } else if (status === 'INCOMPLETE') {
                     const message = {
                         title: $A.get('$Label.c.PageMessagesError'),

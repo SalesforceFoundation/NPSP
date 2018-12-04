@@ -105,7 +105,7 @@
                 }
             }
             this.sendMessage('hideFormSpinner', '');
-            document.getElementById("selectMatchLink").focus();
+            document.getElementById('selectMatchLink').focus();
         });
         $A.enqueueAction(action);
     },
