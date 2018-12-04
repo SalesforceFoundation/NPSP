@@ -43,6 +43,8 @@
     <aura:attribute name="labels" type="Map" description="Labels retrieved in Apex related to Schema information." access="public"/>
 
     <!--Markup-->
+    <lightning:overlayLibrary aura:id="overlayLibSelector"/>
+
     <h3 class="slds-text-heading_small slds-p-around_medium">
         {!$Label.c.bgeFormMatchingModalText}
         <a class="slds-m-left_x-small" onclick="{!c.handleNoneDonationSelection}">{!$Label.c.bgeFormNoneLink}</a>

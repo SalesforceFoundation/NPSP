@@ -9,14 +9,10 @@
     },
 
     /**
-     * @description: closes the donation modal
+     * @description: sets the value of the selected donation
      */
-    closeDonationModal: function(component, selectedDonation) {
+    setDonation: function(component, selectedDonation) {
         component.set('v.selectedDonation', selectedDonation);
-        component.get('v.donationModal').then(function(modal) {
-           modal.close();
-        });
-        component.set('v.donationModal', null);
     },
 
     /**
@@ -88,7 +84,6 @@
         let action = component.get('c.getOpenDonations');
         action.setParams({donorId: donorId, donorType: donorType});
         action.setCallback(this, function (response) {
-            debugger;
             const state = response.getState();
             if (state === 'SUCCESS') {
                 const openDonations = JSON.parse(response.getReturnValue());

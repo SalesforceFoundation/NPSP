@@ -28,8 +28,8 @@
         const message = event.getParam('message');
         const channel = event.getParam('channel');
 
-        if (channel === 'closeDonationModal') {
-            helper.closeDonationModal(component, message);
+        if (channel === 'selectedDonation') {
+            helper.setDonation(component, message);
         }
     },
 
@@ -96,13 +96,12 @@
             },
             function (newcomponent, status, errorMessage) {
                 if (status === 'SUCCESS') {
-                    let modal = component.find('entryFormOverlayLib').showCustomModal({
+                    component.find('overlayLib').showCustomModal({
                         header: component.get('v.donationModalHeader'),
                         body: newcomponent,
                         showCloseButton: true,
                         cssClass: 'slds-modal_large'
                     });
-                    component.set('v.donationModal', modal);
                 } else if (status === 'INCOMPLETE') {
                     const message = {
                         title: $A.get('$Label.c.PageMessagesError'),
