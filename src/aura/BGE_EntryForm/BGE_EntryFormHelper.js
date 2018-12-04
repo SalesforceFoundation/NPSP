@@ -88,6 +88,7 @@
         let action = component.get('c.getOpenDonations');
         action.setParams({donorId: donorId, donorType: donorType});
         action.setCallback(this, function (response) {
+            debugger;
             const state = response.getState();
             if (state === 'SUCCESS') {
                 const openDonations = JSON.parse(response.getReturnValue());
@@ -105,7 +106,8 @@
                 }
             }
             this.sendMessage('hideFormSpinner', '');
-            document.getElementById('selectMatchLink').focus();
+            const matchLink = document.getElementById('selectMatchLink');
+            matchLink.focus();
         });
         $A.enqueueAction(action);
     },
