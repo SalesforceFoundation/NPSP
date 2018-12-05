@@ -318,6 +318,11 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         return fields;
     }
 
+    /*******************************************************************************************************
+    * @description checks for read, create, and edit FLS for a given field
+    * @param dfr DescribeFieldResult of the field to check
+    * @return void, throws AuraHandledException to display UI error
+    */
     private static void checkFLS(DescribeFieldResult dfr) {
         if (!dfr.isAccessible() || !dfr.isCreateable() || !dfr.isUpdateable()) {
             throw new AuraHandledException(label.bgeFLSError);

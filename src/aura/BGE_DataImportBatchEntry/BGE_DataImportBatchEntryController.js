@@ -25,8 +25,7 @@
                         helper.setTotals(component, response);
                         helper.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftDeleted'), 'success');
                     } else {
-                        const errors = response.getError();
-                        helper.handleApexErrors(component, errors);
+                        helper.handleApexErrors(component, response.getError());
                     }
                     helper.hideSpinner(component);
                 });

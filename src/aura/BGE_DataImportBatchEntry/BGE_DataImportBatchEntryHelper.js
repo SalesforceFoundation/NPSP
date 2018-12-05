@@ -43,8 +43,7 @@
                 this.createEntryForm(component, response);
                 component.find('forceRecordCmp').reloadRecord(true);
             } else {
-                const errors = response.getError();
-                this.handleApexErrors(component, errors);
+                this.handleApexErrors(component, response.getError());
                 this.hideFormSpinner(component);
             }
             this.hideSpinner(component);
@@ -111,8 +110,7 @@
                 });
                 this.runDryRun(component, recordIds);
             } else {
-                const errors = response.getError();
-                this.handleApexErrors(component, errors);
+                this.handleApexErrors(component, response.getError());
             }
             this.hideSpinner(component);
         });
@@ -152,8 +150,7 @@
                 this.setDataTableRows(component, responseRows);
                 this.setTotals(component, responseRows);
             } else {
-                const errors = response.getError();
-                this.handleApexErrors(component, errors);
+                this.handleApexErrors(component, response.getError());
             }
         });
         $A.enqueueAction(action);
