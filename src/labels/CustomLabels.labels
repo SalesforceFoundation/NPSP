@@ -2152,7 +2152,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Data Importer</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>status on a bdi object to specify it was matched from an ambiguous set in Dry Rn</shortDescription>
+        <shortDescription>Status on a bdi object to specify it was matched from an ambiguous set in Dry Run</shortDescription>
         <value>Dry Run - Best Match Used</value>
     </labels>
     <labels>
@@ -2352,7 +2352,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Data Importer</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>status on a bdi object to specify it was matched from an ambiguous set</shortDescription>
+        <shortDescription>Status on a bdi object to specify it was matched from an ambiguous set</shortDescription>
         <value>Best Match Used</value>
     </labels>
     <labels>
@@ -2368,7 +2368,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Data Import</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>status on a bdi object when no matching record found</shortDescription>
+        <shortDescription>Status on a bdi object when no matching record found</shortDescription>
         <value>Matched None</value>
     </labels>
     <labels>
@@ -2376,7 +2376,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Data Import</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>status on a BDI object when user has selected matching record in BGE interface</shortDescription>
+        <shortDescription>Status on a BDI object when user has selected matching record in BGE interface</shortDescription>
         <value>User-Selected Match</value>
     </labels>
     <labels>
@@ -2384,7 +2384,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Data Import</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>status on a BDI object when user chose to create a new Opportunity in BGE</shortDescription>
+        <shortDescription>Status on a BDI object when user chose to create a new Opportunity in BGE</shortDescription>
         <value>User-Selected New Opportunity</value>
     </labels>
     <labels>
@@ -2671,7 +2671,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bgeFormMatchingModalText</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header text to explain the options on the page</shortDescription>
+        <shortDescription>Header text to prompt user to select a donation to update</shortDescription>
         <value>Select the record you want to update.</value>
     </labels>
     <labels>
@@ -2699,14 +2699,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bgeFormUpdateOpportunity</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Button text to select a opportunity to update in BGE</shortDescription>
+        <shortDescription>Button text to select an opportunity to update in BGE</shortDescription>
         <value>Update this Opportunity</value>
     </labels>
     <labels>
         <fullName>bgeFormUpdatePayment</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Button text to select a opportunity to update in BGE</shortDescription>
+        <shortDescription>Button text to select a payment to update in BGE</shortDescription>
         <value>Update this Payment</value>
     </labels>
     <labels>

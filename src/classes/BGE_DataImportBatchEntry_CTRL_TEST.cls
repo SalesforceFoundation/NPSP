@@ -80,7 +80,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
     */
 
     @isTest
-    public static void testGetNewDataImport() {
+    static void testGetNewDataImport() {
 
         try {
             String jsonModel = BGE_DataImportBatchEntry_CTRL.getDataImportModel(null);
@@ -94,7 +94,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
     */
 
     @isTest
-    public static void testGetExistingDataImport() {
+    static void testGetExistingDataImport() {
 
         Id batchId = createDataImportBatch();
         List<DataImport__c> dataImports = createDataImports(1, batchId);
@@ -116,7 +116,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
     */
 
     @isTest
-    public static void testDeleteDataImportRow() {
+    static void testDeleteDataImportRow() {
 
         Id batchId = createDataImportBatch();
         List<DataImport__c> dataImports = createDataImports(2, batchId);
@@ -135,7 +135,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
     */
 
     @isTest
-    public static void testGetEmptyOpenDonations() {
+    static void testGetEmptyOpenDonations() {
 
         Account donorAccount = new Account(Name='Test Acc');
         insert donorAccount;
@@ -156,13 +156,13 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
     */
 
     @isTest
-    public static void testGetOpenDonations() {
+    static void testGetOpenDonations() {
 
         List<Contact> donorContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(1);
         insert donorContacts;
 
         List<Opportunity> donations = UTIL_UnitTestData_TEST.OppsForContactList(donorContacts, null,
-                UTIL_unitTestData_TEST.getOpenStage(), system.Today(), 100, null, null);
+                UTIL_UnitTestData_TEST.getOpenStage(), System.today(), 100, null, null);
         insert donations;
 
         Test.startTest();

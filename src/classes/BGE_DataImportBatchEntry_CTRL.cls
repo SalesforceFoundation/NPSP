@@ -481,9 +481,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             catch (Exception e) {
                 throw new AuraHandledException(e.getMessage());
             }
-
-
-
         }
     }
 }

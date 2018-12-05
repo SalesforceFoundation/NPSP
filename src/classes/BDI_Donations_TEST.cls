@@ -538,7 +538,8 @@ public with sharing class BDI_Donations_TEST {
     *       payment objects updated
     *       user-selected payment status preserved
     */
-    static testMethod void TwoDIWithUserSelectedExistingDonations() {
+    @isTest
+    private static void TwoDIWithUserSelectedExistingDonations() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -556,74 +557,72 @@ public with sharing class BDI_Donations_TEST {
         WHERE npe01__Opportunity__c IN :listOppT
         ORDER BY npe01__Opportunity__r.Id];
 
-        List<DataImport__c> ListDI = new List<DataImport__c>();
+        List<DataImport__c> dataImports = new List<DataImport__c>();
 
         // BGE interface, user selects an unpaid payment
-        ListDI.add(new DataImport__c(Contact1_Firstname__c=listConT[0].Firstname, Contact1_Lastname__c=listConT[0].Lastname,
+        dataImports.add(new DataImport__c(Contact1_Firstname__c=listConT[0].Firstname, Contact1_Lastname__c=listConT[0].Lastname,
                 Contact1_Work_Email__c=listConT[0].npe01__WorkEmail__c));
-        ListDI[0].Donation_Donor__c = 'Contact1';
-        ListDI[0].Donation_Amount__c = listOppT[0].Amount;
-        ListDI[0].DonationImported__c = listOppT[0].Id;
-        ListDI[0].DonationImportStatus__c = label.bdiMatchedByUser;
-        ListDI[0].PaymentImported__c = payments[0].Id;
-        ListDI[0].PaymentImportStatus__c = label.bdiMatchedByUser;
-        ListDI[0].Payment_Check_Reference_Number__c = 'abc';
-        ListDI[0].Payment_Method__c = 'Check';
-        ListDI[0].NPSP_Data_Import_Batch__c = batch.Id;
+        dataImports[0].Donation_Donor__c = 'Contact1';
+        dataImports[0].Donation_Amount__c = listOppT[0].Amount;
+        dataImports[0].DonationImported__c = listOppT[0].Id;
+        dataImports[0].DonationImportStatus__c = Label.bdiMatchedByUser;
+        dataImports[0].PaymentImported__c = payments[0].Id;
+        dataImports[0].PaymentImportStatus__c = Label.bdiMatchedByUser;
+        dataImports[0].Payment_Check_Reference_Number__c = 'abc';
+        dataImports[0].Payment_Method__c = 'Check';
+        dataImports[0].NPSP_Data_Import_Batch__c = batch.Id;
 
         // BGE interface, user selects an unpaid payment
-        ListDI.add(new DataImport__c(Contact1_Firstname__c=listConT[1].Firstname, Contact1_Lastname__c=listConT[1].Lastname,
+        dataImports.add(new DataImport__c(Contact1_Firstname__c=listConT[1].Firstname, Contact1_Lastname__c=listConT[1].Lastname,
                 Contact1_Work_Email__c=listConT[1].npe01__WorkEmail__c));
-        ListDI[1].Donation_Donor__c = 'Contact1';
-        ListDI[1].Donation_Amount__c = listOppT[1].Amount;
-        ListDI[1].DonationImported__c = listOppT[1].Id;
-        ListDI[1].DonationImportStatus__c = label.bdiMatchedByUser;
-        ListDI[1].PaymentImported__c = payments[1].Id;
-        ListDI[1].PaymentImportStatus__c = label.bdiMatchedByUser;
-        ListDI[1].Payment_Check_Reference_Number__c = '1234';
-        ListDI[1].Payment_Method__c = 'Visa';
-        ListDI[1].NPSP_Data_Import_Batch__c = batch.Id;
+        dataImports[1].Donation_Donor__c = 'Contact1';
+        dataImports[1].Donation_Amount__c = listOppT[1].Amount;
+        dataImports[1].DonationImported__c = listOppT[1].Id;
+        dataImports[1].DonationImportStatus__c = Label.bdiMatchedByUser;
+        dataImports[1].PaymentImported__c = payments[1].Id;
+        dataImports[1].PaymentImportStatus__c = Label.bdiMatchedByUser;
+        dataImports[1].Payment_Check_Reference_Number__c = '1234';
+        dataImports[1].Payment_Method__c = 'Visa';
+        dataImports[1].NPSP_Data_Import_Batch__c = batch.Id;
 
-        insert ListDI;
+        insert dataImports;
 
         //run batch data import
         Test.StartTest();
-        BDI_DataImport_API.processDataImportBatches(new list<Id>{batch.Id});
+        BDI_DataImport_API.processDataImportBatches(new List<Id>{batch.Id});
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Id];
-        System.assertEquals(2, listCon.size());
-        System.assertEquals(listOppT[0].Amount, listCon[0].npo02__TotalOppAmount__c);
-        System.assertEquals(listOppT[1].Amount, listCon[1].npo02__TotalOppAmount__c);
+        List<Contact> contacts = [SELECT Id, Name, AccountId, npo02__TotalOppAmount__c FROM Contact ORDER BY Id];
+        System.assertEquals(2, contacts.size());
+        System.assertEquals(listOppT[0].Amount, contacts[0].npo02__TotalOppAmount__c);
+        System.assertEquals(listOppT[1].Amount, contacts[1].npo02__TotalOppAmount__c);
 
-        List<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Id];
-        System.assertEquals(2, listAcc.size());
-        System.assertEquals(listOppT[0].Amount, listAcc[0].npo02__TotalOppAmount__c);
-        System.assertEquals(listOppT[1].Amount, listAcc[1].npo02__TotalOppAmount__c);
+        List<Account> accounts = [SELECT Id, Name, npo02__TotalOppAmount__c FROM Account ORDER BY Id];
+        System.assertEquals(2, accounts.size());
+        System.assertEquals(listOppT[0].Amount, accounts[0].npo02__TotalOppAmount__c);
+        System.assertEquals(listOppT[1].Amount, accounts[1].npo02__TotalOppAmount__c);
 
-        List<Opportunity> listOpp = [select Id, Name, Amount, StageName, isWon, isClosed, AccountId from Opportunity order by Id];
-        System.assertEquals(2, listOpp.size());
-        System.assertEquals(true, listOpp[0].isWon);
-        System.assertEquals(true, listOpp[1].isWon);
+        List<Opportunity> opps = [SELECT Id, Name, Amount, StageName, isWon, isClosed, AccountId FROM Opportunity ORDER BY Id];
+        System.assertEquals(2, opps.size());
+        System.assertEquals(true, opps[0].isWon);
+        System.assertEquals(true, opps[1].isWon);
 
+        payments = [SELECT Id, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Method__c, npe01__Check_Reference_Number__c FROM npe01__OppPayment__c ORDER BY npe01__Opportunity__r.Id];
+        System.assertEquals(2, payments.size());
+        System.assertEquals('Check', payments[0].npe01__Payment_Method__c);
+        System.assertEquals('Visa', payments[1].npe01__Payment_Method__c);
+        System.assertEquals('abc', payments[0].npe01__Check_Reference_Number__c);
+        System.assertEquals('1234', payments[1].npe01__Check_Reference_Number__c);
+        System.assertEquals(true, payments[0].npe01__Paid__c);
+        System.assertEquals(true, payments[1].npe01__Paid__c);
 
-        List<npe01__OppPayment__c> listPmt = [SELECT Id, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Method__c, npe01__Check_Reference_Number__c from npe01__OppPayment__c order by npe01__Opportunity__r.Id];
-        System.assertEquals(2, listPmt.size());
-        System.assertEquals('Check', listPmt[0].npe01__Payment_Method__c);
-        System.assertEquals('Visa', listPmt[1].npe01__Payment_Method__c);
-        System.assertEquals('abc', listPmt[0].npe01__Check_Reference_Number__c);
-        System.assertEquals('1234', listPmt[1].npe01__Check_Reference_Number__c);
-        System.assertEquals(true, listPmt[0].npe01__Paid__c);
-        System.assertEquals(true, listPmt[1].npe01__Paid__c);
-
-
-        ListDI = [select Id, Status__c, DonationImported__c, DonationImportStatus__c, PaymentImported__c, PaymentImportStatus__c from DataImport__c order by Id];
-        System.assertEquals(2, ListDI.size());
-        System.assertEquals(ListDI[0].DonationImported__c, listOpp[0].Id);
-        System.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
-        System.assertEquals(label.bdiMatchedByUser, ListDI[0].DonationImportStatus__c);
-        System.assertEquals(label.bdiMatchedByUser, listDI[1].DonationImportStatus__c);
+        dataImports = [SELECT Id, Status__c, DonationImported__c, DonationImportStatus__c, PaymentImported__c, PaymentImportStatus__c FROM DataImport__c ORDER BY Id];
+        System.assertEquals(2, dataImports.size());
+        System.assertEquals(dataImports[0].DonationImported__c, opps[0].Id);
+        System.assertEquals(dataImports[1].DonationImported__c, opps[1].Id);
+        System.assertEquals(Label.bdiMatchedByUser, dataImports[0].DonationImportStatus__c);
+        System.assertEquals(Label.bdiMatchedByUser, dataImports[1].DonationImportStatus__c);
     }
 
     /*********************************************************************************************************
@@ -634,7 +633,8 @@ public with sharing class BDI_Donations_TEST {
     *       new opportunity objects created and closed
     *       user-selected payment status preserved
     */
-    static testMethod void TwoDIWithUserSelectedNewOpportunities() {
+    @isTest
+    private static void TwoDIWithUserSelectedNewOpportunities() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -654,7 +654,7 @@ public with sharing class BDI_Donations_TEST {
                 Contact1_Work_Email__c=listConT[0].npe01__WorkEmail__c));
         dataImports[0].Donation_Donor__c = 'Contact1';
         dataImports[0].Donation_Amount__c = listOppT[0].Amount;
-        dataImports[0].DonationImportStatus__c = label.bdiMatchedByUserNewOpp;
+        dataImports[0].DonationImportStatus__c = Label.bdiMatchedByUserNewOpp;
         dataImports[0].Payment_Check_Reference_Number__c = 'abc';
         dataImports[0].Payment_Method__c = 'Check';
         dataImports[0].NPSP_Data_Import_Batch__c = batch.Id;
@@ -664,7 +664,7 @@ public with sharing class BDI_Donations_TEST {
                 Contact1_Work_Email__c=listConT[1].npe01__WorkEmail__c));
         dataImports[1].Donation_Donor__c = 'Contact1';
         dataImports[1].Donation_Amount__c = listOppT[1].Amount;
-        dataImports[1].DonationImportStatus__c = label.bdiMatchedByUserNewOpp;
+        dataImports[1].DonationImportStatus__c = Label.bdiMatchedByUserNewOpp;
         dataImports[1].Payment_Check_Reference_Number__c = '1234';
         dataImports[1].Payment_Method__c = 'Visa';
         dataImports[1].NPSP_Data_Import_Batch__c = batch.Id;
@@ -694,7 +694,6 @@ public with sharing class BDI_Donations_TEST {
         System.assertEquals(true, opps[2].isWon);
         System.assertEquals(true, opps[3].isWon);
 
-
         List<npe01__OppPayment__c> payments = [SELECT Id, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Method__c, npe01__Check_Reference_Number__c FROM npe01__OppPayment__c ORDER BY npe01__Opportunity__r.Id];
         System.assertEquals(4, payments.size());
         System.assertEquals('Check', payments[2].npe01__Payment_Method__c);
@@ -706,13 +705,12 @@ public with sharing class BDI_Donations_TEST {
         System.assertEquals(true, payments[2].npe01__Paid__c);
         System.assertEquals(true, payments[3].npe01__Paid__c);
 
-
         dataImports = [SELECT Id, Status__c, DonationImported__c, DonationImportStatus__c, PaymentImported__c, PaymentImportStatus__c FROM DataImport__c ORDER BY Id];
         System.assertEquals(2, dataImports.size());
         System.assertEquals(dataImports[0].DonationImported__c, opps[2].Id);
         System.assertEquals(dataImports[1].DonationImported__c, opps[3].Id);
-        System.assertEquals(label.bdiMatchedByUserNewOpp, dataImports[0].DonationImportStatus__c);
-        System.assertEquals(label.bdiMatchedByUserNewOpp, dataImports[1].DonationImportStatus__c);
+        System.assertEquals(Label.bdiMatchedByUserNewOpp, dataImports[0].DonationImportStatus__c);
+        System.assertEquals(Label.bdiMatchedByUserNewOpp, dataImports[1].DonationImportStatus__c);
     }
 
     /*********************************************************************************************************
