@@ -352,7 +352,7 @@
                     // If the value doesn't match though, the countOfRuleUsage map value is decremented to indicate
                     // that the Rule for the field isn't used consistently across all Filter Groups
                     if (!targetFieldAndConstant.containsKey(fieldName)) {
-                        targetFieldAndConstant.put(fieldName, rule.Constant__c);
+                        targetFieldAndConstant.put(fieldName, rule.Constant__c == null ? '' : rule.Constant__c);
                         targetFieldAndOperator.put(fieldName, rule.Operator__c);
                     } else if (targetFieldAndConstant.get(fieldName) != rule.Constant__c ||
                             targetFieldAndOperator.get(fieldName) != rule.Operator__c) {
