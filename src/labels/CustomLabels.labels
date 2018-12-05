@@ -142,8 +142,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Verification Batch Body</shortDescription>
-        <value>&lt;p&gt;Click Verify All Addresses to verify and standardize all addresses in your organization.
-        The mass verification process uses the settings from above.&lt;/p&gt;
+        <value>Click Verify All Addresses to verify and standardize all addresses in your organization. The mass verification process uses the settings from above.
  &lt;br/&gt;</value>
     </labels>
     <labels>
