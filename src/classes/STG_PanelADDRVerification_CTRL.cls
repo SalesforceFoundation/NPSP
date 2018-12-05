@@ -35,10 +35,25 @@
 */
 public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
+    private static final String SMARTY_STREETS_VALIDATOR = 'ADDR_SmartyStreets_Validator';
+
     /*******************************************************************************************************
     * @description The panel ID.
     */
     public override String idPanel() { return 'idPanelAddressVerification'; }
+
+    /*******************************************************************************************************
+    * @description Returns True if the current user has permission to validate the address
+    */ 
+    public Boolean hasAccess {
+        get {
+            if (hasAccess == null) {
+                hasAccess = hasAddressAccess() && USER_UserService.hasCustomizeApplicationPermission(UserInfo.getProfileId());
+            }
+            return hasAccess;
+        }
+        set;
+    }
     
     /*******************************************************************************************************
     * @description The address verification settings.
@@ -104,19 +119,6 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     * @description The name of the selected address verification service.
     */
     public String serviceName { public get; set; }
-
-    /*******************************************************************************************************
-    * @description Returns True if the current user has permission to view the page
-    */ 
-    public Boolean hasAccess {
-        get {
-            if (hasAccess == null) {
-                hasAccess = hasAddressAccess() && USER_UserService.hasCustomizeApplicationPermission(UserInfo.getProfileId());
-            }
-            return hasAccess;
-        }
-        set;
-    }
 
     /*******************************************************************************************************
     * @description The address validator service options to provide on the drop-down list. 
@@ -215,6 +217,8 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         validators.add(new SelectOption('', ''));
 
         if (!hasAccess) {
+            addrVerifSettings = new Addr_Verification_Settings__c();
+
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, System.Label.stgAddrPermissionDenied));
             return;
         }
@@ -227,10 +231,16 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         String tdtmLikeClause = '%TDTM';
         String batchLikeClause = '%Batch';
         String schedLikeClause = '%SCHED'; 
-        ApexClass[] classes = [select Name, NamespacePrefix from ApexClass where Name like :addrLikeClause 
-                  and (not Name like :testLikeClause) and (not Name like :ctrlLikeClause) 
-                  and (not Name like :tdtmLikeClause) and (not Name like :batchLikeClause) 
-                  and (not Name like :schedLikeClause) and (not Name IN :validatorExclussions)];
+        ApexClass[] classes = [
+            SELECT Name, NamespacePrefix 
+            FROM ApexClass 
+            WHERE Name LIKE :addrLikeClause 
+            AND (NOT Name LIKE :testLikeClause) 
+            AND (NOT Name LIKE :ctrlLikeClause) 
+            AND (NOT Name LIKE :tdtmLikeClause) 
+            AND (NOT Name LIKE :batchLikeClause) 
+            AND (NOT Name LIKE :schedLikeClause) 
+            AND (NOT Name IN :validatorExclussions)];
         UTIL_Debug.debug('****Validators: ' + JSON.serializePretty(classes));
 
         for (ApexClass c : classes) {
@@ -248,12 +258,6 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
                 }
             }
         }
-    }
-    /*******************************************************************************************************
-    * @description Returns True if the current user has permission to view the page
-    */ 
-    public static Boolean hasAddressVerificationSettingsAccess() {
-        return hasAddressAccess() && USER_UserService.hasCustomizeApplicationPermission(UserInfo.getProfileId());
     }
 
     /*******************************************************************************************************
@@ -285,13 +289,13 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
                         
             Boolean validationError = false;
             apiSettingsErrorMessage = '';
-            if (addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator' && String.isBlank(addrVerifSettings.Auth_ID__c)) {
+            if (addrVerifSettings.Class__c == SMARTY_STREETS_VALIDATOR && String.isBlank(addrVerifSettings.Auth_ID__c)) {
                 apiSettingsErrorMessage = Label.Addr_Id_Error;
                 apiSettingsSaveMessage = null;
                 validationError = true;
             }
             
-            if (addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator' && String.isBlank(addrVerifSettings.Auth_Token__c)) {
+            if (addrVerifSettings.Class__c == SMARTY_STREETS_VALIDATOR && String.isBlank(addrVerifSettings.Auth_Token__c)) {
                 String validationMessage = Label.Addr_Token_Error;
                 apiSettingsErrorMessage = apiSettingsErrorMessage == null ? validationMessage : apiSettingsErrorMessage + validationMessage; 
                 apiSettingsSaveMessage = null;
@@ -359,25 +363,29 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     * @return void
     */    
     public static void verifyAddressVerificationService(STG_PanelHealthCheck_CTRL ctrl) {
-        if (!hasAddressVerificationSettingsAccess()) {
+        Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
+
+        if (avs.Class__c != SMARTY_STREETS_VALIDATOR) {
             return;
         }
 
-        Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
+        String strSetting = Schema.SObjectType.Addr_Verification_Settings__c.getLabel(); 
+        String strResult = strVerifyAddressVerificationService(avs, '98005');
+        String strStatus = strResult.contains('is valid') ? STG_PanelHealthCheck_CTRL.statusSuccess : STG_PanelHealthCheck_CTRL.statusError;
 
-        if (avs.Class__c == 'ADDR_SmartyStreets_Validator') {
-            String strSetting = Schema.Sobjecttype.Addr_Verification_Settings__c.getLabel(); 
-            String strResult = strVerifyAddressVerificationService(avs, '98005');
-            String strStatus = strResult.contains('is valid') ? STG_PanelHealthCheck_CTRL.statusSuccess : STG_PanelHealthCheck_CTRL.statusError;
-            String strSolution = strStatus == STG_PanelHealthCheck_CTRL.statusSuccess ? strResult : 
-                String.format(system.Label.healthSolutionEditSetting, new String[]{strSetting, Label.stgNavHouseholds, Label.stgNavAddressVerification});
-            
-            if (strStatus == STG_PanelHealthCheck_CTRL.statusSuccess) {
-                strResult = null;
-            }
+        String strSolution;
+        if (strStatus == STG_PanelHealthCheck_CTRL.statusSuccess) {
+            strSolution = strResult;
+            strResult = null;
 
-            ctrl.createDR(strSetting, strStatus, strResult, strSolution);
-        } 
+        } else if (strResult != System.Label.stgAddrPermissionDenied) {
+            strSolution = String.format(
+                System.Label.healthSolutionEditSetting, 
+                new String[]{ strSetting, System.Label.stgNavHouseholds, System.Label.stgNavAddressVerification }
+            );
+        }
+
+        ctrl.createDR(strSetting, strStatus, strResult, strSolution);
     }
     
     /*******************************************************************************************************
@@ -387,39 +395,41 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     * @return String Result of the address verification
     */   
     private static String strVerifyAddressVerificationService(Addr_Verification_Settings__c addrVerifSettings, String strZip) {
-        if (!hasAddressVerificationSettingsAccess()) {
+        if (!hasAddressAccess() || !USER_UserService.hasCustomizeApplicationPermission(UserInfo.getProfileId())) {
             return System.Label.stgAddrPermissionDenied;
         }
 
-        String strResult;
         Addr_Verification_Settings__c avs = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
+        if (addrVerifSettings.Class__c != SMARTY_STREETS_VALIDATOR) {
+            return null;
+        }
 
-        if (addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator') {
-            try {
-                encodeTokenIfNotEncoded(addrVerifSettings);
+        String strResult;
+        try {
+            encodeTokenIfNotEncoded(addrVerifSettings);
 
-                ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(addrVerifSettings);
-                ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(strZip);
-                strResult = Label.Addr_Valid_Key_Pair; //no exception thrown when deserializing it
+            ADDR_SmartyStreets_Gateway la = new ADDR_SmartyStreets_Gateway(addrVerifSettings);
+            ADDR_SmartyStreets_Gateway.ZipResponse sz = la.verifyZip(strZip);
+            strResult = Label.Addr_Valid_Key_Pair; //no exception thrown when deserializing it
 
-            } catch (Exception e) {
-                if (!(avs.Class__c == 'ADDR_SmartyStreets_Validator') || 
-                    String.isBlank(addrVerifSettings.Auth_ID__c) ||
-                    String.isBlank(addrVerifSettings.Auth_Token__c)
-                ) {
-                    strResult = Label.Addr_Verify_Settings;
+        } catch (Exception e) {
+            if (!(avs.Class__c == SMARTY_STREETS_VALIDATOR) || 
+                String.isBlank(addrVerifSettings.Auth_ID__c) ||
+                String.isBlank(addrVerifSettings.Auth_Token__c)
+            ) {
+                strResult = Label.Addr_Verify_Settings;
 
-                } else if (e.getMessage().startsWith('no protocol')) {
-                    strResult = Label.Addr_Verify_Endpoint;
+            } else if (e.getMessage().startsWith('no protocol')) {
+                strResult = Label.Addr_Verify_Endpoint;
 
-                } else if (e.getMessage().startsWith('Unauthorized endpoint')) {
-                    strResult = Label.Addr_Unauthorized_Endpoint;
+            } else if (e.getMessage().startsWith('Unauthorized endpoint')) {
+                strResult = Label.Addr_Unauthorized_Endpoint;
 
-                } else {
-                    strResult = e.getMessage();
-                }
+            } else {
+                strResult = e.getMessage();
             }
         }
+
         return strResult;
     }
     
@@ -428,10 +438,11 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     * @return void
     */
     private static void encodeTokenIfNotEncoded(Addr_Verification_Settings__c addrVerifSettings) {
-        //SmartyStreets' unencoded token is always 88 chars long
-        if (addrVerifSettings.Class__c == 'ADDR_SmartyStreets_Validator' && 
+        final Integer smartyStreetsUnencodedTokenLen = 88;
+
+        if (addrVerifSettings.Class__c == SMARTY_STREETS_VALIDATOR && 
             !String.isBlank(addrVerifSettings.Auth_Token__c) && 
-            addrVerifSettings.Auth_Token__c.length() == 88
+            addrVerifSettings.Auth_Token__c.length() == smartyStreetsUnencodedTokenLen
         ) {
             addrVerifSettings.Auth_Token__c = EncodingUtil.urlEncode(addrVerifSettings.Auth_Token__c, 'UTF-8');
         }
