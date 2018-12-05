@@ -255,6 +255,7 @@
                     <p>
                         <apex:outputText value="{!$Label.Addr_Verification_Batch_Body}" />
                     </p>
+                    <br/>
                     <div class="slds-form_horizontal slds-m-around_large">
                         <div class="slds-form-element">
                             <apex:outputLabel value="{!$Label.Addr_Skip_Verified}" for="iAddr_Skip_Verified" styleClass="slds-form-element__label" />
