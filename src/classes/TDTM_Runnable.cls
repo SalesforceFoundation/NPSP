@@ -141,33 +141,35 @@ global abstract class TDTM_Runnable {
         }
         
         /*******************************************************************************************************
-        * @description Groups records by object type.To avoid the "Cannot have more than 10 chunks in a single operation. 
-        * Please rearrange the data to reduce chunking" error.
-        * @param sobjects The records to group by type.
+        * @description Groups records by object type to avoid the following error:
+        * "Cannot have more than 10 chunks in a single operation. Please rearrange the data to reduce chunking".
+        * Also, remove duplicate records to avoid the "Duplicate id in list" error.
+        * @param sObjects The records to group by type.
         * @return List<SObject> A list with the records passed as parameters ordered by type. Duplicates removed.
         */
-        private List<SObject> groupSObjects(List<SObject> sobjects) {
-                        
-            map<string,list<SObject>> mapNameToListSObject = new map<string,list<SObject>>();
-            list<SObject> sorted = new list<SObject>();
+        private List<SObject> groupSObjects(List<SObject> sObjects) {                        
+            Map<String, List<SObject>> sObjectsByType = new Map<String, List<SObject>>();
+            List<SObject> sorted = new List<SObject>();
 
-            //First remove duplicates to avoid the "Duplicate id in list" error
-            sobjects = new list<SObject>(new set<SObject>(sobjects));
+            //Remove duplicates
+            sObjects = new List<SObject>(new Set<SObject>(sObjects));
 
-            for (SObject SObj : sobjects) {
-                string objName = SObj.getSObjectType().getDescribe().getName();
-                if (mapNameToListSObject.containsKey(objName)) {
-                    mapNameToListSObject.get(objName).add(SObj);
+            //Group records by sObjectType
+            for (SObject sObj : sObjects) {
+                String sObjType = sObj.getSObjectType().getDescribe().getName();
+
+                if (sObjectsByType.containsKey(sObjType)) {
+                    sObjectsByType.get(sObjType).add(sObj);
                 } else {
-                    mapNameToListSObject.put(objName, new list<SObject>{SObj});
+                    sObjectsByType.put(sObjType, new List<SObject>{ sObj });
                 }
             }
 
-
-            for (list<SObject> groupedObjects : mapNameToListSObject.values())
+            for (List<SObject> groupedObjects : sObjectsByType.values()) {
                 sorted.addAll(groupedObjects);
+            }
 
-            return sorted;
+            return sorted;            
         }
     }
     
