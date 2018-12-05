@@ -3,7 +3,6 @@
      * @description: called during render to place the focus on SelectOpenDonation link if present
      */
     callFocus: function(component){
-        debugger;
         let openDonationsLink = document.getElementById('selectMatchLink');
 
         if (openDonationsLink && component.get('v.selectedDonation') == null) {

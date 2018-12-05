@@ -195,7 +195,9 @@ public class BDI_Donations {
                 bdi.LogBDIError(listDIInsert[i], sr.getErrors()[0].getMessage(), 'DonationImportStatus__c');
             } else {
                 listDIInsert[i].DonationImported__c = listOppInsert[i].Id;
-                listDIInsert[i].DonationImportStatus__c = label.bdiCreated;
+                if (listDIInsert[i].DonationImportStatus__c != label.bdiMatchedByUserNewOpp) {
+                    listDIInsert[i].DonationImportStatus__c = label.bdiCreated;
+                }
             }
         }
         
