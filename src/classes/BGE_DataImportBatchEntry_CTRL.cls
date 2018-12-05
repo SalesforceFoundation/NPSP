@@ -121,7 +121,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             return rows;
         }
         catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
+            AuraHandledException ex = new AuraHandledException(e.getMessage());
+            ex.setMessage(e.getMessage());
+            throw ex;
         }
     }
 
@@ -187,16 +189,19 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
             Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
             for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
-                Schema.DescribeFieldResult dfr = fieldMap.get(field.name.toLowerCase());
-                if (dfr != null) {
+                Schema.DescribeFieldResult dataimportdfr = fieldMap.get(field.name.toLowerCase());
+                if (dataimportdfr != null) {
+
+                    checkFLS(dataimportdfr);
+
                     Column col = new Column();
-                    col.label = dfr.getLabel();
-                    col.fieldName = dfr.getName();
+                    col.label = dataimportdfr.getLabel();
+                    col.fieldName = dataimportdfr.getName();
                     col.readOnly = false;
                     col.defaultValue = field.defaultValue;
                     col.required = field.required;
                     col.hide = field.hide;
-                    col.type = dfr.getType().name().toLowerCase();
+                    col.type = dataimportdfr.getType().name().toLowerCase();
                     if (col.type == 'date') {
                         col.type = 'date-local';
                     }
@@ -208,6 +213,16 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                     col.options = BGE_ConfigurationWizard_CTRL.getPicklistOptions(col.fieldName);
 
                     columns.add(col);
+
+                    String targetObject = BDI_DataImportService.getTargetObject(col.fieldName);
+                    if (targetObject == 'Payment') {
+                        targetObject = 'npe01__OppPayment__c';
+                    }
+                    String targetField = BDI_DataImportService.getTargetField(col.fieldName);
+                    DescribeFieldResult targetdfr = UTIL_Describe.getFieldDescribe(targetObject,targetField);
+
+                    checkFLS(targetdfr);
+
                 }
             }
         }
@@ -305,6 +320,14 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         fields.addAll(activeFieldNames);
 
         return fields;
+    }
+
+    private static void checkFLS(DescribeFieldResult dfr) {
+        if (!dfr.isAccessible() || !dfr.isCreateable() || !dfr.isUpdateable()) {
+            AuraHandledException ex = new AuraHandledException(label.bgeFLSError);
+            ex.setMessage(label.bgeFLSError);
+            throw ex;
+        }
     }
 
     /*******************************************************************************************************
@@ -414,11 +437,10 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
             }
             catch (Exception e) {
-                throw new AuraHandledException(e.getMessage());
+                AuraHandledException ex = new AuraHandledException(e.getMessage());
+                ex.setMessage(e.getMessage());
+                throw ex;
             }
-
-
-
         }
     }
 }

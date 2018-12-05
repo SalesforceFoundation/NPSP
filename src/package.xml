@@ -1425,6 +1425,7 @@
         <members>bgeEditBatchFieldOptionsWarning</members>
         <members>bgeEditBatchFieldSelectionWarning</members>
         <members>bgeEditBatchOptionsWarning</members>
+        <members>bgeFLSError</members>
         <members>bgeGridAllGifts</members>
         <members>bgeGridDonorType</members>
         <members>bgeGridErrorFromDryRun</members>

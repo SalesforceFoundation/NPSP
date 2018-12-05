@@ -18,14 +18,15 @@
                 var action = component.get('c.deleteDataImportRow');
                 action.setParams({batchId: component.get('v.recordId'), dataImportId: row.Id});
                 action.setCallback(this, function (response) {
-                    var state = response.getState();
+                    const state = response.getState();
                     if (state === 'SUCCESS') {
-                        var response = JSON.parse(response.getReturnValue());
+                        const response = JSON.parse(response.getReturnValue());
                         helper.setDataTableRows(component, response);
                         helper.setTotals(component, response);
                         helper.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftDeleted'), 'success');
                     } else {
-                        helper.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
+                        const errors = response.getError();
+                        helper.handleApexErrors(component, errors);
                     }
                     helper.hideSpinner(component);
                 });
@@ -50,10 +51,9 @@
         } else if (channel === 'setDonorType') {
             component.set('v.donorType', message.donorType);
         } else if (channel === 'hideFormSpinner') {
-            var spinner = component.find('formSpinner');
-            $A.util.addClass(spinner, 'slds-hide');
+            helper.hideFormSpinner(component);
         } else if (channel === 'onError') {
-            helper.showToast(component, message.title, message.errorMessage, 'Error');
+            helper.showToast(component, message.title, message.errorMessage, 'error');
         }
     },
 
