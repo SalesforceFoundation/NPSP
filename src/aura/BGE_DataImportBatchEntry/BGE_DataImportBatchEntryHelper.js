@@ -111,7 +111,8 @@
                 });
                 this.runDryRun(component, recordIds);
             } else {
-                this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
+                const errors = response.getError();
+                this.handleApexErrors(component, errors);
             }
             this.hideSpinner(component);
         });
@@ -151,7 +152,8 @@
                 this.setDataTableRows(component, responseRows);
                 this.setTotals(component, responseRows);
             } else {
-                this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
+                const errors = response.getError();
+                this.handleApexErrors(component, errors);
             }
         });
         $A.enqueueAction(action);

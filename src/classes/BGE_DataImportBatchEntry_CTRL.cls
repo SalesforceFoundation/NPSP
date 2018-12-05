@@ -58,9 +58,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     public static String getDataImportModel(Id batchId) {
 
         if (batchId == null) {
-            AuraHandledException e = new AuraHandledException('Data Import Model must receive a Batch ID.');
-            e.setMessage('Data Import Model must receive a Batch ID.');
-            throw e;
+            throw new AuraHandledException('Data Import Model must receive a Batch ID.');
         }
 
         DataImportModel dataImportModel = new DataImportModel();
@@ -121,9 +119,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             return rows;
         }
         catch (Exception e) {
-            AuraHandledException ex = new AuraHandledException(e.getMessage());
-            ex.setMessage(e.getMessage());
-            throw ex;
+            throw new AuraHandledException(e.getMessage());
         }
     }
 
@@ -324,9 +320,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
     private static void checkFLS(DescribeFieldResult dfr) {
         if (!dfr.isAccessible() || !dfr.isCreateable() || !dfr.isUpdateable()) {
-            AuraHandledException ex = new AuraHandledException(label.bgeFLSError);
-            ex.setMessage(label.bgeFLSError);
-            throw ex;
+            throw new AuraHandledException(label.bgeFLSError);
         }
     }
 
@@ -437,9 +431,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
             }
             catch (Exception e) {
-                AuraHandledException ex = new AuraHandledException(e.getMessage());
-                ex.setMessage(e.getMessage());
-                throw ex;
+                throw new AuraHandledException(e.getMessage());
             }
         }
     }
