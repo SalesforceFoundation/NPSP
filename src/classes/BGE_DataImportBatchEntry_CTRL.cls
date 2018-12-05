@@ -185,19 +185,19 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
             Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
             for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
-                Schema.DescribeFieldResult dataimportdfr = fieldMap.get(field.name.toLowerCase());
-                if (dataimportdfr != null) {
+                Schema.DescribeFieldResult dataImportDFR = fieldMap.get(field.name.toLowerCase());
+                if (dataImportDFR != null) {
 
-                    checkFLS(dataimportdfr);
+                    checkFLS(dataImportDFR);
 
                     Column col = new Column();
-                    col.label = dataimportdfr.getLabel();
-                    col.fieldName = dataimportdfr.getName();
+                    col.label = dataImportDFR.getLabel();
+                    col.fieldName = dataImportDFR.getName();
                     col.readOnly = false;
                     col.defaultValue = field.defaultValue;
                     col.required = field.required;
                     col.hide = field.hide;
-                    col.type = dataimportdfr.getType().name().toLowerCase();
+                    col.type = dataImportDFR.getType().name().toLowerCase();
                     if (col.type == 'date') {
                         col.type = 'date-local';
                     }
@@ -215,9 +215,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                         targetObject = 'npe01__OppPayment__c';
                     }
                     String targetField = BDI_DataImportService.getTargetField(col.fieldName);
-                    DescribeFieldResult targetdfr = UTIL_Describe.getFieldDescribe(targetObject,targetField);
+                    DescribeFieldResult targetDFR = UTIL_Describe.getFieldDescribe(targetObject,targetField);
 
-                    checkFLS(targetdfr);
+                    checkFLS(targetDFR);
 
                 }
             }
