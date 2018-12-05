@@ -2,7 +2,7 @@
     <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.stgLabelCreateMissingPayments}" />
         <div class="slds-text-body_small slds-m-around_medium">
-            <apex:outputText value="{!$Label.stgHelpCreateMissingPayments}" escape="false" />
+            <c:UTIL_HtmlOutput html="{!$Label.stgHelpCreateMissingPayments}" />
         </div>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
