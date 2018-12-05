@@ -1,9 +1,11 @@
 <apex:component id="util_htmloutput">
     <apex:attribute name="html" type="String" description="The html string to output." required="true" />
 
-    <apex:variable var="temp" value="{!SUBSTITUTE(html, '<br/>', '|br|')}" />
+    <apex:variable var="temp" value="{!SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(html, '<br/>', '|br|'),'<b>', '|b|'), '<b/>', '|bb|'), '<a href', '|a href'), '</a>', '|/a|')}"
+    />
     <apex:variable var="escaped" value="{!HTMLENCODE(temp)}" />
-    <apex:variable var="purified" value="{!SUBSTITUTE(html, '|br|', '<br/>')}" />
+    <apex:variable var="purified" value="{!SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(html, '|br|', '<br/>'), '|b|', '<b>'), '|bb|', '<b/>'), '|a href', '<a href'), '|/a|', '</a>')}"
+    />
 
     <apex:outputText value="{!purified}" escape="false" id="htmloutput" />
 </apex:component>

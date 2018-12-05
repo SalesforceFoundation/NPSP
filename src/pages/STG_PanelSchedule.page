@@ -150,7 +150,7 @@
                         id="cbxDatedConvOff" html-aria-describedby="{!$Component.cbxDatedConvHelp}" styleClass="slds-checkbox"
                     />
                     <apex:outputPanel id="cbxDatedConvHelp" layout="block">
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpUseDatedConvRates}" escape="false" />
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpUseDatedConvRates}" />
                     </apex:outputPanel>
                 </div>
             </div>
@@ -163,7 +163,9 @@
                     <apex:inputCheckbox value="{!stgService.stgErr.Don_t_Auto_Schedule_Default_NPSP_Jobs__c}" rendered="{!isReadOnlyMode}" disabled="true"
                         id="cbxDOCO" html-aria-describedby="{!$Component.cbxDASDNJHelp}" styleClass="slds-checkbox" />
                     <apex:outputPanel id="cbxDASDNJHelp" layout="block">
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgDontAutoScheduleHelpText}" escape="false" />
+                        <apex:outputText styleClass="slds-form-element__help">
+                            <c:UTIL_HtmlOutput html="{!$Label.stgDontAutoScheduleHelpText}" />
+                        </apex:outputText>
                     </apex:outputPanel>
                 </div>
             </div>
