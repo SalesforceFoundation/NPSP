@@ -53,11 +53,7 @@
             if (selectedDonation.attributes.type === 'Opportunity') {
                 //matched opportunity; create new payment or update opportunity
                 rowFields[labels.opportunityImportedLookupField] = selectedDonation.Id;
-                if (selectedDonation.applyPayment) {
-                    rowFields[labels.opportunityImportedStatusField] = applyNewPayment;
-                } else {
-                    rowFields[labels.opportunityImportedStatusField] = userSelectedMatch;
-                }
+                rowFields[labels.opportunityImportedStatusField] = userSelectedMatch;
             } else {
                 //matched payment; update payment
                 rowFields[labels.paymentImportedLookupField] = selectedDonation.Id;

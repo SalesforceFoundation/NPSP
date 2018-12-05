@@ -118,13 +118,7 @@
                                         onclick="{!c.handleDonationSelection}"
                                         variant="base"/>
                             </aura:set>
-                            <!--
-                            <lightning:button
-                                    value="{!donation}"
-                                    label="{!$Label.c.bdiMatchingApplyNewPayment}"
-                                    onclick="{!c.handleApplyPaymentSelection}"
-                                    variant="base"/>
--->
+
                         </aura:if>
                     </aura:set>
                     <lightning:layout class="slds-p-horizontal_medium slds-p-bottom_large" multipleRows="true">
