@@ -35,7 +35,7 @@
 */
 @isTest
 public with sharing class ADDR_Validator_TEST {
-    private static final String SMARTY_STREETS_VALIDATOR = 'ADDR_SmartyStreets_Validator';
+    private static final String SMARTY_STREETS_VALIDATOR_CLASS = 'ADDR_SmartyStreets_Validator';
     private static final String SMARTY_STREETS_VERIFICATION_ENDPOINT = 'https://api.smartystreets.com/street-address';
     private static final String SETTINGS_NAME = Schema.SObjectType.Addr_Verification_Settings__c.getLabel();
     
@@ -365,7 +365,7 @@ public with sharing class ADDR_Validator_TEST {
         sc.addrVerifSettings.Auth_ID__c = 'testID';
         sc.addrVerifSettings.Auth_Token__c = 'testToken';
         sc.addrVerifSettings.Address_Verification_Endpoint__c = SMARTY_STREETS_VERIFICATION_ENDPOINT;
-        sc.addrVerifSettings.Class__c = SMARTY_STREETS_VALIDATOR;
+        sc.addrVerifSettings.Class__c = SMARTY_STREETS_VALIDATOR_CLASS;
         sc.saveSettings();
         System.assertEquals('Saved.\n', sc.apiSettingsSaveMessage);
 
@@ -401,7 +401,7 @@ public with sharing class ADDR_Validator_TEST {
         STG_PanelADDRVerification_CTRL sc = new STG_PanelADDRVerification_CTRL();
         sc.initDynamicFields(); //this will also set the settings property
         
-        sc.addrVerifSettings.Class__c = SMARTY_STREETS_VALIDATOR;
+        sc.addrVerifSettings.Class__c = SMARTY_STREETS_VALIDATOR_CLASS;
         
         Test.startTest();
         sc.saveSettings();
@@ -512,24 +512,23 @@ public with sharing class ADDR_Validator_TEST {
     * when address read only user verifies address
     */
     @isTest
-    private static void healthCheckShouldDisplayPermissionDeniedMessageWhenUserHasNoAccess() {   
-        STG_PanelHealthCheck_CTRL healthCheckPanel = new STG_PanelHealthCheck_CTRL();
-
+    private static void healthCheckShouldDisplayPermissionDeniedMessageWhenUserHasNoAccess() { 
         Addr_Verification_Settings__c addrSettings = createDefaultSettings();
-        System.assertEquals(SMARTY_STREETS_VALIDATOR, addrSettings.Class__c, 
+        System.assertEquals(SMARTY_STREETS_VALIDATOR_CLASS, addrSettings.Class__c, 
             'Address Verification Settings should have SmartyStreets validator class set');
 
         User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
+        System.runAs(readOnlyUser) {  
+            STG_PanelHealthCheck_CTRL healthCheckPanel = new STG_PanelHealthCheck_CTRL();
+            STG_PanelAddrVerification_CTRL ctrl = new STG_PanelAddrVerification_CTRL();
+            ctrl.verifyAddressVerificationService(healthCheckPanel);
 
-        System.runAs(readOnlyUser) {
-            STG_PanelAddrVerification_CTRL.verifyAddressVerificationService(healthCheckPanel);
+            System.assertEquals(1, healthCheckPanel.listDR.size(), 
+                'One defect result should be returned: ' + healthCheckPanel.listDR);
+            System.assertEquals(System.Label.stgAddrPermissionDenied, healthCheckPanel.listDR[0].strDetails);
+            System.assertEquals(SETTINGS_NAME, healthCheckPanel.listDR[0].strName);
+            System.assertEquals(null, healthCheckPanel.listDR[0].strSolution);
         }
-
-        System.assertEquals(1, healthCheckPanel.listDR.size(), 
-            'One defect result should be returned: ' + healthCheckPanel.listDR);
-        System.assertEquals(System.Label.stgAddrPermissionDenied, healthCheckPanel.listDR[0].strDetails);
-        System.assertEquals(SETTINGS_NAME, healthCheckPanel.listDR[0].strName);
-        System.assertEquals(null, healthCheckPanel.listDR[0].strSolution);
     }
 
     /*******************************************************************************************************
@@ -540,15 +539,14 @@ public with sharing class ADDR_Validator_TEST {
         Addr_Verification_Settings__c addrSettings = createDefaultSettings();
         addrSettings.Class__c = 'ADDR_Foo_Validator';
 
-        STG_PanelHealthCheck_CTRL healthCheckPanel = new STG_PanelHealthCheck_CTRL();
         User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
-
         System.runAs(readOnlyUser) {
-            STG_PanelAddrVerification_CTRL.verifyAddressVerificationService(healthCheckPanel);
+            STG_PanelHealthCheck_CTRL healthCheckPanel = new STG_PanelHealthCheck_CTRL();
+            STG_PanelAddrVerification_CTRL ctrl = new STG_PanelAddrVerification_CTRL();
+            ctrl.verifyAddressVerificationService(healthCheckPanel);
+            System.assertEquals(0, healthCheckPanel.listDR.size(), 
+                'No defect result should be returned: ' + healthCheckPanel.listDR);
         }
-
-        System.assertEquals(0, healthCheckPanel.listDR.size(), 
-            'No defect result should be returned: ' + healthCheckPanel.listDR);
     }
 
     /*******************************************************************************************************
@@ -564,11 +562,12 @@ public with sharing class ADDR_Validator_TEST {
         );
 
         Addr_Verification_Settings__c addrSettings = createDefaultSettings();
-        System.assertEquals(SMARTY_STREETS_VALIDATOR, addrSettings.Class__c, 
+        System.assertEquals(SMARTY_STREETS_VALIDATOR_CLASS, addrSettings.Class__c, 
             'Address Verification Settings should have SmartyStreets validator class set');
 
         STG_PanelHealthCheck_CTRL healthCheckPanel = new STG_PanelHealthCheck_CTRL();
-        STG_PanelAddrVerification_CTRL.verifyAddressVerificationService(healthCheckPanel);
+        STG_PanelAddrVerification_CTRL ctrl = new STG_PanelAddrVerification_CTRL();
+        ctrl.verifyAddressVerificationService(healthCheckPanel);
 
         System.assertEquals(1, healthCheckPanel.listDR.size(), 
             'One defect result should be returned: ' + healthCheckPanel.listDR);
@@ -601,7 +600,7 @@ public with sharing class ADDR_Validator_TEST {
         Addr_Verification_Settings__c settings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
         settings.Auth_ID__c = 'hey';
         settings.Auth_Token__c = 'there';
-        settings.Class__c = SMARTY_STREETS_VALIDATOR;
+        settings.Class__c = SMARTY_STREETS_VALIDATOR_CLASS;
         settings.Enable_Automatic_Verification__c = true;
         settings.Reject_Ambiguous_Addresses__c = true;
         
