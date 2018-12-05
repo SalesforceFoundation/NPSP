@@ -46,7 +46,7 @@
         <div class="slds-grid">
             <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
                 <p class="slds-text-body_small slds-m-top_x-small">
-                    <apex:outputText value="{!$Label.stgOppNamingDescription}" escape="false" />
+                    <apex:outputText value="{!$Label.stgOppNamingDescription}" />
                 </p>
             </div>
         </div>
@@ -154,7 +154,9 @@
                                 rendered="{!isEditMode}" id="txtFormatOppName" style="display:none;" />
                         </apex:outputPanel>
                         <apex:outputPanel id="slstrFormatOppNameHelp" layout="block">
-                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOppNamingFormat}" escape="false" />
+                            <apex:outputText styleClass="slds-form-element__help">
+                                <c:UTIL_HtmlOutput html="{!$Label.stgHelpOppNamingFormat}" />
+                            </apex:outputText>
                         </apex:outputPanel>
                     </div>
                 </div>

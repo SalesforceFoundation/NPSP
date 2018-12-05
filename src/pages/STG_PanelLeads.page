@@ -16,7 +16,9 @@
                     <apex:inputCheckbox value="{!stgService.stgCon.npe01__Default_Opp_on_Convert__c}" rendered="{!isReadOnlyMode}" disabled="true"
                         id="cbxDOCO" html-aria-describedby="{!$Component.cbxDOCHelp}" styleClass="slds-checkbox" />
                     <apex:outputPanel id="cbxDOCHelp" layout="block">
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpLeadConvert}" escape="false" />
+                        <apex:outputText styleClass="slds-form-element__help">
+                            <c:UTIL_HtmlOutput html="{!$Label.stgHelpLeadConvert}" />
+                        </apex:outputText>
                     </apex:outputPanel>
                 </div>
             </div>

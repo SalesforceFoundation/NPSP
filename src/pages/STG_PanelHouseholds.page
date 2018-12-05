@@ -246,7 +246,9 @@
                         </ul>
                     </div>
                     <apex:outputPanel layout="block">
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpExampleHHNames}" escape="false" />
+                        <apex:outputText styleClass="slds-form-element__help">
+                            <c:UTIL_HtmlOutput html="{!$Label.stgHelpExampleHHNames}" />
+                        </apex:outputText>
                     </apex:outputPanel>
                 </div>
             </apex:outputPanel>
@@ -302,7 +304,7 @@
             </div>
         </div>
         <p class="slds-text-body_small slds-m-around_large">
-            <apex:outputText value="{!$Label.stgHelpHHObjectOverview}" escape="false" />
+            <c:UTIL_HtmlOutput html="{!$Label.stgHelpHHObjectOverview}" />
         </p>
         <div class="slds-form_horizontal slds-p-bottom_large">
             <div class="slds-form-element">
