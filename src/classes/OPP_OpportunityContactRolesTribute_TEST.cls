@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -35,10 +35,10 @@
 */
 @isTest
 private class OPP_OpportunityContactRolesTribute_TEST {
- 
+
     /*******************************************************************************************************
     * @description Role values to use in settings.
-    */    
+    */
     private static final String OPPORTUNITY_CONTACT_ROLE_DONOR = 'Donor';
     private static final String OPPORTUNITY_CONTACT_ROLE_HONOREE = 'Honoree';
     private static final String OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT = 'Notification Recipient';
@@ -46,9 +46,13 @@ private class OPP_OpportunityContactRolesTribute_TEST {
     /******************************************************************************************************
     * @description Test Create Opporunity with SingleTribute Only mode
     */
-    static testMethod void createOppWithTributeSingle() {
+    @isTest static void createOppWithTributeSingle() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) {
+                return;
+        }
+
+        String closedWonStageName = UTIL_UnitTestData_TEST.getClosedWonStage();
 
         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
                 new npe01__Contacts_and_Orgs_Settings__c(
@@ -61,23 +65,35 @@ private class OPP_OpportunityContactRolesTribute_TEST {
         );
 
         //Create and Insert Opportunity
-        Account orgAcct = new Account(Name = 'MultipleTributeAccount1', npe01__SYSTEMIsIndividual__c = false);
+        Account orgAcct = new Account(
+                Name = 'MultipleTributeAccount1',
+                npe01__SYSTEMIsIndividual__c = false
+        );
         insert orgAcct;
 
-        Opportunity oppToInsert = new Opportunity( AccountId = orgAcct.id, StageName = 'Close Won', Name='Donation1',
-                Amount= 1000, CloseDate = date.today(), Honoree_Name__c = 'John Smith', Notification_Recipient_Name__c = 'Mark Smith');
+        Opportunity oppToInsert = new Opportunity(
+                AccountId = orgAcct.Id,
+                StageName = closedWonStageName,
+                Name='Donation1',
+                Amount= 1000,
+                CloseDate = date.today(),
+                Honoree_Name__c = 'John Smith',
+                Notification_Recipient_Name__c = 'Mark Smith'
+        );
 
         Test.startTest();
         insert oppToInsert;
         Test.stopTest();
 
         //verify that the there is no tribute in the org
-        List<Tribute__c> tributes = [Select Id from Tribute__c];
+        List<Tribute__c> tributes = [SELECT Id FROM Tribute__c];
         System.assertEquals(0, tributes.size());
 
         //verify that the Tribute field is still on opp
-        List<Opportunity> opp = [Select Id from Opportunity where Honoree_Name__c = 'John Smith' and Notification_Recipient_Name__c = 'Mark Smith'
-        and Id =: oppToInsert.Id];
+        List<Opportunity> opp = [SELECT Id FROM Opportunity
+                                 WHERE  Honoree_Name__c = 'John Smith' AND
+                                        Notification_Recipient_Name__c = 'Mark Smith' AND
+                                        Id =: oppToInsert.Id];
         System.assertEquals(1, opp.size());
     }
 
@@ -85,9 +101,13 @@ private class OPP_OpportunityContactRolesTribute_TEST {
     * @description Test Create/Update Opportunity/Tribute with Mix mode (Allow both Tribute object
     * and Tribute Field)
     ********************************************************************************************************/
-    static testMethod void createOppWithTributeMultipleLoose() {
+    @isTest static void createOppWithTributeMultipleLoose() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) {
+                return;
+        }
+
+        String closedWonStageName = UTIL_UnitTestData_TEST.getClosedWonStage();
 
         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
                 new npe01__Contacts_and_Orgs_Settings__c(
@@ -100,19 +120,32 @@ private class OPP_OpportunityContactRolesTribute_TEST {
         );
 
         //Create and Insert Opportunity
-        Account orgAcct = new Account(Name = 'MultipleTributeAccount2', npe01__SYSTEMIsIndividual__c = false);
+        Account orgAcct = new Account(
+                Name = 'MultipleTributeAccount2',
+                npe01__SYSTEMIsIndividual__c = false
+        );
         insert orgAcct;
 
         List<Opportunity> oppsToInsert = new List<Opportunity>();
 
-        Opportunity opp1 = new Opportunity( AccountId = orgAcct.id, StageName = 'Close Won', Name='Donation2',
-                Amount= 1000, CloseDate = date.today(), Honoree_Name__c = 'John Smith', Notification_Recipient_Name__c = 'Mark Smith');
-
+        Opportunity opp1 = new Opportunity(
+                AccountId = orgAcct.Id,
+                StageName = closedWonStageName,
+                Name='Donation2',
+                Amount= 1000,
+                CloseDate = date.today(),
+                Honoree_Name__c = 'John Smith',
+                Notification_Recipient_Name__c = 'Mark Smith'
+        );
         oppsToInsert.add(opp1);
 
-        Opportunity opp2 = new Opportunity( AccountId = orgAcct.id, StageName = 'Close Won', Name='Donation3',
-                Amount= 1000, CloseDate = date.today());
-
+        Opportunity opp2 = new Opportunity(
+                AccountId = orgAcct.Id,
+                StageName = closedWonStageName,
+                Name='Donation3',
+                Amount= 1000,
+                CloseDate = date.today()
+        );
         oppsToInsert.add(opp2);
 
         Test.startTest();
@@ -120,28 +153,34 @@ private class OPP_OpportunityContactRolesTribute_TEST {
         insert oppsToInsert;
 
         //verify that the there is no tribute in the org
-        List<Tribute__c> tributes = [Select Id from Tribute__c];
+        List<Tribute__c> tributes = [SELECT Id FROM Tribute__c];
         System.assertEquals(0, tributes.size());
 
         //Now insert a Tribute for opp2, should not have any issue
-        Tribute__c tri = new Tribute__c(Opportunity__c = opp2.Id, Honoree_Name__c = 'John Smith');
+        Tribute__c tri = new Tribute__c(
+                Opportunity__c = opp2.Id,
+                Honoree_Name__c = 'John Smith'
+        );
         insert tri;
 
         //System should allow update of Tribute info on Opp1
         opp1.Honoree_Name__c = 'Mike Brown';
         update opp1;
 
-        opp1 = [Select Id, Honoree_Name__c from Opportunity where Id =: opp1.Id];
+        opp1 = [SELECT  Id, 
+                        Honoree_Name__c 
+                FROM Opportunity 
+                WHERE   Id =: opp1.Id];
         System.assertEquals('Mike Brown', opp1.Honoree_Name__c);
 
-
-        //system should prevent update Tribute on Opp2 since Opp2 has a separate Tribute record on it
+        //system should prevent update of Tribute information on Opp2 since Opp2 has a separate related Tribute record on it
+        //and this is not allowed
         try{
             opp2.Honoree_Name__c = 'Mike Brown';
             update opp2; //System should throw an exception here
             System.assert(false);
         } catch (Exception ex) {
-            System.assert(ex.getMessage().contains(Label.errMultipleTributesEnforceMultiple) == true);
+            System.assert(ex.getMessage().contains(Label.errMultipleTributesEnforceMultiple));
         }
 
         Test.stopTest();
@@ -150,9 +189,13 @@ private class OPP_OpportunityContactRolesTribute_TEST {
     /******************************************************************************************************
     * @description Test Create/Update Opportunity with Multiple Tribute only mode
     ********************************************************************************************************/
-    static testMethod void createOppWithTributeMultipleStrict() {
+    @isTest static void createOppWithTributeMultipleStrict() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) {
+                return;
+        }
+
+        String closedWonStageName = UTIL_UnitTestData_TEST.getClosedWonStage();
 
         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
                 new npe01__Contacts_and_Orgs_Settings__c(
@@ -165,17 +208,32 @@ private class OPP_OpportunityContactRolesTribute_TEST {
         );
 
         //Create and Insert Opportunity
-        Account orgAcct = new Account(Name = 'MultipleTributeAccount3', npe01__SYSTEMIsIndividual__c = false);
+        Account orgAcct = new Account(
+                Name = 'MultipleTributeAccount3',
+                npe01__SYSTEMIsIndividual__c = false
+        );
         insert orgAcct;
 
-        Opportunity opp = new Opportunity( AccountId = orgAcct.id, StageName = 'Close Won', Name='Donation2',
-                Amount= 1000, CloseDate = date.today(), Honoree_Name__c = 'John Smith', Notification_Recipient_Name__c = 'Mark Smith');
+        Opportunity opp = new Opportunity(
+                AccountId = orgAcct.Id,
+                StageName = closedWonStageName,
+                Name='Donation2',
+                Amount= 1000,
+                CloseDate = date.today(),
+                Honoree_Name__c = 'John Smith',
+                Notification_Recipient_Name__c = 'Mark Smith'
+        );
 
         Test.startTest();
         insert opp;
 
         //verify that the there is one tribute in the org, and Tribute fields get cleared
-        List<Tribute__c> tributes = [Select Id, Opportunity__c, Honoree_Name__c, Opportunity__r.Honoree_Name__c, Opportunity__r.Notification_Recipient_Name__c from Tribute__c];
+        List<Tribute__c> tributes = [SELECT     Id,
+                                                Opportunity__c,
+                                                Honoree_Name__c,
+                                                Opportunity__r.Honoree_Name__c,
+                                                Opportunity__r.Notification_Recipient_Name__c
+                                     FROM Tribute__c];
         System.assertEquals(1, tributes.size());
         System.assertEquals(opp.Id, tributes[0].Opportunity__c);
         System.assertEquals('John Smith', tributes[0].Honoree_Name__c);
@@ -187,7 +245,7 @@ private class OPP_OpportunityContactRolesTribute_TEST {
             update opp; //System should throw an exception here
             System.assert(false);
         } catch (Exception ex) {
-            System.assert(ex.getMessage().contains(Label.errMultipleTributesEnforceMultiple) == true);
+            System.assert(ex.getMessage().contains(Label.errMultipleTributesEnforceMultiple));
         }
 
         Test.stopTest();
@@ -196,7 +254,10 @@ private class OPP_OpportunityContactRolesTribute_TEST {
     /******************************************************************************************************
     * @description Test clear OCR and Sync OCR for Multiple Tributes
     ********************************************************************************************************/
-    static testMethod void updatePrimaryContactOfOpportunity(){
+    @isTest static void updatePrimaryContactOfOpportunity(){
+
+        String closedWonStageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+
         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
                 new npe01__Contacts_and_Orgs_Settings__c(
                         npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
@@ -213,16 +274,15 @@ private class OPP_OpportunityContactRolesTribute_TEST {
 
         Opportunity opp = new Opportunity(
                 Name = 'Test',
-                Primary_Contact__c = cons[0].id,
-                Honoree_Contact__c = cons[1].id,
+                Primary_Contact__c = cons[0].Id,
+                Honoree_Contact__c = cons[1].Id,
                 Notification_Recipient_Contact__c = cons[2].Id,
                 CloseDate = date.today(),
-                StageName = 'Close Won'
+                StageName = closedWonStageName
         );
-
         insert opp;
 
-        List<OpportunityContactRole> ocrs = [SELECT Id FROM OpportunityContactRole WHERE OpportunityId = :opp.id];
+        List<OpportunityContactRole> ocrs = [SELECT Id FROM OpportunityContactRole WHERE OpportunityId = :opp.Id];
         delete ocrs;
 
         OpportunityContactRole garbageOCR = new OpportunityContactRole();
@@ -235,25 +295,33 @@ private class OPP_OpportunityContactRolesTribute_TEST {
 
         //When the Primary Contact changes on the Opp, system should run Clear OCR to delete unnecessary OCR and create
         //the missing OCR based on the Tribute
-        opp = [Select Primary_Contact__c from Opportunity where Id =: opp.Id];
-        opp.Primary_Contact__c = cons[4].id;
+        opp = [SELECT Primary_Contact__c FROM Opportunity WHERE Id =: opp.Id];
+        opp.Primary_Contact__c = cons[4].Id;
         Test.startTest();
         update opp;
         Test.stopTest();
 
-        List<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, Contact.Name, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY Contact.Name];
-        System.assertEquals(3, queryOCR.size());
+        ocrs = [SELECT  Id,
+                        ContactId,
+                        Contact.Name,
+                        OpportunityId,
+                        IsPrimary,
+                        Role
+                FROM OpportunityContactRole 
+                WHERE      OpportunityId =:opp.Id 
+                ORDER BY Contact.Name];
+        System.assertEquals(3, ocrs.size());
         
-        System.assertEquals(cons[1].id, queryOCR[0].ContactId);
-        System.assertEquals(false, queryOCR[0].isPrimary);
-        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_HONOREE, queryOCR[0].Role);
+        System.assertEquals(cons[1].Id, ocrs[0].ContactId);
+        System.assertEquals(false, ocrs[0].IsPrimary);
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_HONOREE, ocrs[0].Role);
 
-        System.assertEquals(cons[2].id, queryOCR[1].ContactId);
-        System.assertEquals(false, queryOCR[1].isPrimary);
-        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT, queryOCR[1].Role);
+        System.assertEquals(cons[2].Id, ocrs[1].ContactId);
+        System.assertEquals(false, ocrs[1].isPrimary);
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT, ocrs[1].Role);
 
-        System.assertEquals(cons[4].id, queryOCR[2].ContactId);
-        System.assertEquals(true, queryOCR[2].isPrimary);
-        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, queryOCR[2].Role);
+        System.assertEquals(cons[4].Id, ocrs[2].ContactId);
+        System.assertEquals(true, ocrs[2].isPrimary);
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, ocrs[2].Role);
     }
 }
