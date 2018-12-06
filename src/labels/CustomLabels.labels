@@ -5724,7 +5724,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHealthCheck</shortDescription>
-        <value>Use &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;Health Check&lt;/a&gt; to verify your NPSP configuration!</value>
+        <value>Use {0}Health Check{1} to verify your NPSP configuration!</value>
     </labels>
     <labels>
         <fullName>stgHelpIGFormat</fullName>
@@ -6000,7 +6000,7 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpPowerOfUsHub</shortDescription>
-        <value>Got questions? The Hub has answers! Try the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; group for questions about NPSP and the &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; group for questions about Salesforce administration and cofiguration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; group.</value>
+        <value>Got questions? The Hub has answers! Try the {0}Nonprofit Success Pack{3} group for questions about NPSP and the {1}System Administrators{3} group for questions about Salesforce administration and cofiguration.&lt;br/&gt;&lt;br/&gt;Keep up with the latest NPSP release notes in the {2}NPSP Release Announcements{3} group.</value>
     </labels>
     <labels>
         <fullName>stgHelpPrimaryContactBatch</fullName>
@@ -6277,7 +6277,7 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpReviewErrorLog</shortDescription>
-        <value>Review &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;Error Logs&lt;/a&gt; to see if there are issues.</value>
+        <value>Review {0}Error Logs{1} to see if there are issues.</value>
     </labels>
     <labels>
         <fullName>stgHelpRollupBatchSize</fullName>
@@ -6365,7 +6365,7 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpSalesforceSetup</shortDescription>
-        <value>Looking to customize page layouts, add fields, or add users?  Try the &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;Salesforce Setup&lt;/a&gt; pages.</value>
+        <value>Looking to customize page layouts, add fields, or add users?  Try the {0}Salesforce Setup{1} pages.</value>
     </labels>
     <labels>
         <fullName>stgHelpSimpleAddrChangeIsUpdate</fullName>

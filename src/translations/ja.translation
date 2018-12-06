@@ -2839,7 +2839,7 @@
         <name>stgHelpHHRules</name>
     </customLabels>
     <customLabels>
-        <label>&lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;状態チェック&lt;/a&gt;を使用して NPSP 設定を検証してください!</label>
+        <label>{0}状態チェック{1}を使用して NPSP 設定を検証してください!</label>
         <name>stgHelpHealthCheck</name>
     </customLabels>
     <customLabels>
@@ -2976,7 +2976,7 @@
         <name>stgHelpPaymentsEnabled</name>
     </customLabels>
     <customLabels>
-        <label>質問を受けましたか? ハブに答えがあります! NPSP に関する質問には、&lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;「Nonprofit Success Pack」&lt;/a&gt;グループをお試しください。Salesforce の管理と設定に関する質問には、&lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;「System Administrators (システム管理者)」&lt;/a&gt;グループをお試しください。&lt;br/&gt;&lt;br/&gt;最新の NPSP リリースノートについては、&lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;「NPSP Release Announcements (NPSP リリースのお知らせ)」&lt;/a&gt;グループで確認できます。</label>
+        <label>質問を受けましたか? ハブに答えがあります! NPSP に関する質問には、{0}「Nonprofit Success Pack」{3}グループをお試しください。Salesforce の管理と設定に関する質問には、{1}「System Administrators (システム管理者)」{3}グループをお試しください。&lt;br/&gt;&lt;br/&gt;最新の NPSP リリースノートについては、{2}「NPSP Release Announcements (NPSP リリースのお知らせ)」{3}グループで確認できます。</label>
         <name>stgHelpPowerOfUsHub</name>
     </customLabels>
     <customLabels>
@@ -3119,7 +3119,7 @@
         <name>stgHelpRespectDuplicateRuleSettings</name>
     </customLabels>
     <customLabels>
-        <label>&lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;エラーログ&lt;/a&gt;で、問題があるかどうかを確認してください。</label>
+        <label>{0}エラーログ{1}で、問題があるかどうかを確認してください。</label>
         <name>stgHelpReviewErrorLog</name>
     </customLabels>
     <customLabels>
@@ -3159,7 +3159,7 @@
         <name>stgHelpRollupSkewLimit</name>
     </customLabels>
     <customLabels>
-        <label>ページレイアウトのカスタマイズ、項目の追加、またはユーザの追加を行いますか?  &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;「Salesforce Setup (Salesforce の設定)」&lt;/a&gt;ページをお試しください。</label>
+        <label>ページレイアウトのカスタマイズ、項目の追加、またはユーザの追加を行いますか?  {0}「Salesforce Setup (Salesforce の設定)」{1}‏ページをお試しください。</label>
         <name>stgHelpSalesforceSetup</name>
     </customLabels>
     <customLabels>

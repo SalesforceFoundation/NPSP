@@ -2839,7 +2839,7 @@ Weitere Informationen zum empfohlenen Haushalt-Account-Modell finden Sie in der 
         <name>stgHelpHHRules</name>
     </customLabels>
     <customLabels>
-        <label>Verwenden Sie die &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;Statusprüfung&lt;/a&gt;, um Ihre NPSP-Konfiguration zu prüfen.</label>
+        <label>Verwenden Sie die {0}Statusprüfung{1}, um Ihre NPSP-Konfiguration zu prüfen.</label>
         <name>stgHelpHealthCheck</name>
     </customLabels>
     <customLabels>
@@ -2976,7 +2976,7 @@ WICHTIG: Die Datentypen beider Felder müssen identisch sein.</label>
         <name>stgHelpPaymentsEnabled</name>
     </customLabels>
     <customLabels>
-        <label>Haben Sie Fragen? Auf dem Hub finden Sie Antworten. Antworten zu Fragen über NPSP können Sie in der Gruppe &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; finden. Antworten zu Fragen über die Verwaltung und Konfiguration von Salesforce können Sie in der Gruppe &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; finden.&lt;br/&gt;&lt;br/&gt;Lesen Sie die NPSP-Versionshinweise in der Gruppe &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt;, um auf dem Laufenden zu bleiben.</label>
+        <label>Haben Sie Fragen? Auf dem Hub finden Sie Antworten. Antworten zu Fragen über NPSP können Sie in der Gruppe {0}Nonprofit Success Pack{3} finden. Antworten zu Fragen über die Verwaltung und Konfiguration von Salesforce können Sie in der Gruppe {1}System Administrators{3} finden.&lt;br/&gt;&lt;br/&gt;Lesen Sie die NPSP-Versionshinweise in der Gruppe {2}NPSP Release Announcements{3}, um auf dem Laufenden zu bleiben.</label>
         <name>stgHelpPowerOfUsHub</name>
     </customLabels>
     <customLabels>
@@ -3119,7 +3119,7 @@ Dieser Vorgang kann etwas Zeit in Anspruch nehmen, Sie können die Seite jedoch 
         <name>stgHelpRespectDuplicateRuleSettings</name>
     </customLabels>
     <customLabels>
-        <label>Lesen Sie &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;Fehlerprotokolle&lt;/a&gt;, um zu sehen, ob Probleme vorhanden sind.</label>
+        <label>Lesen Sie {0}Fehlerprotokolle{1}, um zu sehen, ob Probleme vorhanden sind.</label>
         <name>stgHelpReviewErrorLog</name>
     </customLabels>
     <customLabels>
@@ -3159,7 +3159,7 @@ Dieser Vorgang kann etwas Zeit in Anspruch nehmen, Sie können die Seite jedoch 
         <name>stgHelpRollupSkewLimit</name>
     </customLabels>
     <customLabels>
-        <label>Möchten Sie Seitenlayouts anpassen, Felder oder Benutzer hinzufügen?  Versuchen Sie es auf den &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;Salesforce-Setup&lt;/a&gt;-Seiten.</label>
+        <label>Möchten Sie Seitenlayouts anpassen, Felder oder Benutzer hinzufügen?  Versuchen Sie es auf den {0}Salesforce-Setup{1}-Seiten.</label>
         <name>stgHelpSalesforceSetup</name>
     </customLabels>
     <customLabels>

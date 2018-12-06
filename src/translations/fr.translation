@@ -2835,7 +2835,7 @@ Attendez que le processus soit terminé à 100 % pour quitter ou rafraîchir ce
         <name>stgHelpHHRules</name>
     </customLabels>
     <customLabels>
-        <label>Utilisez le &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;contrôle d’intégrité&lt;/a&gt; pour vérifier votre configuration NPSP !</label>
+        <label>Utilisez le {0}contrôle d’intégrité{1} pour vérifier votre configuration NPSP !</label>
         <name>stgHelpHealthCheck</name>
     </customLabels>
     <customLabels>
@@ -2972,7 +2972,7 @@ IMPORTANT : Ces deux champs doivent avoir le même type de données.</label>
         <name>stgHelpPaymentsEnabled</name>
     </customLabels>
     <customLabels>
-        <label>Vous avez des questions ? Le hub a les réponses ! Essayez le groupe &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;NPSP&lt;/a&gt; pour des questions sur NPSP et le groupe &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;Administrateurs système&lt;/a&gt; pour des questions sur l’administration et la configuration de Salesforce.&lt;br/&gt;&lt;br/&gt;Et pour rester informé sur les dernières notes de version de NPSP, le groupe &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;Notes de publication NPSP&lt;/a&gt;.</label>
+        <label>Vous avez des questions ? Le hub a les réponses ! Essayez le groupe {0}NPSP{3} pour des questions sur NPSP et le groupe {1}Administrateurs système{3} pour des questions sur l’administration et la configuration de Salesforce.&lt;br/&gt;&lt;br/&gt;Et pour rester informé sur les dernières notes de version de NPSP, le groupe {2}Notes de publication NPSP{3}.</label>
         <name>stgHelpPowerOfUsHub</name>
     </customLabels>
     <customLabels>
@@ -3113,7 +3113,7 @@ Ce processus peut prendre un certain temps, mais vous pouvez fermer cette page 
         <name>stgHelpRespectDuplicateRuleSettings</name>
     </customLabels>
     <customLabels>
-        <label>Examinez les &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;Journaux d’erreurs&lt;/a&gt; pour voir si des problèmes sont présents.</label>
+        <label>Examinez les {0}Journaux d’erreurs{1} pour voir si des problèmes sont présents.</label>
         <name>stgHelpReviewErrorLog</name>
     </customLabels>
     <customLabels>
@@ -3153,7 +3153,7 @@ Ce processus peut prendre un certain temps, mais vous pouvez fermer cette page 
         <name>stgHelpRollupSkewLimit</name>
     </customLabels>
     <customLabels>
-        <label>Vous souhaitez personnaliser des présentations de page, ou ajouter des champs ou des utilisateurs ?  Essayez les pages de &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;configuration de Salesforce&lt;/a&gt;.</label>
+        <label>Vous souhaitez personnaliser des présentations de page, ou ajouter des champs ou des utilisateurs ?  Essayez les pages de {0}configuration de Salesforce{1}.</label>
         <name>stgHelpSalesforceSetup</name>
     </customLabels>
     <customLabels>
