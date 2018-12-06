@@ -88,6 +88,11 @@ private class CRLP_Query_SEL_TEST {
      * associated to a filter group.
      */
     private static testMethod void test_buildCommonQueryFilterOnOpportunity_NoFilterGroups() {
+        CRLP_Rollup_SEL_TEST.mockRollupCMTValues();
+        Id filterGroupId = CMT_FilterRule_SEL.cachedFilterGroups[0].Id;
+
+        cacheFilterRule(filterGroupId, 'IsClosed', 'Equals', 'False');
+
         String whereClause = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Account.SObjectType, Opportunity.SObjectType);
         System.assert(!String.isEmpty(whereClause), 'A WHERE clause should be returned when there are rollups');
 
@@ -114,27 +119,62 @@ private class CRLP_Query_SEL_TEST {
         }
         String recordTypeConstantIds = String.join(recordTypeIds,';');
 
-        executeQueryWithOppFilter(filterGroupId, 'RecordTypeId', 'In_List', recordTypeConstantIds);
-        executeQueryWithOppFilter(filterGroupId, 'RecordTypeId', 'Not_In_List', recordTypeConstantIds);
-        executeQueryWithOppFilter(filterGroupId, 'RecordTypeId', 'Equals', recordTypeConstantIds);
-        executeQueryWithOppFilter(filterGroupId, 'RecordTypeId', 'Not_Equals', recordTypeConstantIds);
-        executeQueryWithOppFilter(filterGroupId, 'RecordTypeId', 'In_List', null);
-        executeQueryWithOppFilter(filterGroupId, 'RecordTypeId', 'Not_In_List', null);
-        executeQueryWithOppFilter(filterGroupId, 'RecordTypeId', 'Equals', null);
-        executeQueryWithOppFilter(filterGroupId, 'RecordTypeId', 'Not_Equals', null);
+        cacheFilterRule(filterGroupId, 'RecordTypeId', 'In_List', recordTypeConstantIds);
+        executeQueryWithOppFilter();
 
-        executeQueryWithOppFilter(filterGroupId, 'IsClosed', 'Equals', 'False');
-        executeQueryWithOppFilter(filterGroupId, 'IsClosed', 'Not_Equals', 'False');
+        cacheFilterRule(filterGroupId, 'RecordTypeId', 'Not_In_List', recordTypeConstantIds);
+        executeQueryWithOppFilter();
 
-        executeQueryWithOppFilter(filterGroupId, 'IsWon', 'Equals', 'True');
-        executeQueryWithOppFilter(filterGroupId, 'IsWon', 'Not_Equals', 'True');
+        cacheFilterRule(filterGroupId, 'RecordTypeId', 'Equals', recordTypeConstantIds);
+        executeQueryWithOppFilter();
+
+        cacheFilterRule(filterGroupId, 'RecordTypeId', 'Not_Equals', recordTypeConstantIds);
+        executeQueryWithOppFilter();
+
+        cacheFilterRule(filterGroupId, 'RecordTypeId', 'In_List', null);
+        executeQueryWithOppFilter();
+
+        cacheFilterRule(filterGroupId, 'RecordTypeId', 'Not_In_List', null);
+        executeQueryWithOppFilter();
+
+        cacheFilterRule(filterGroupId, 'RecordTypeId', 'Equals', null);
+        executeQueryWithOppFilter();
+
+        cacheFilterRule(filterGroupId, 'RecordTypeId', 'Not_Equals', null);
+        executeQueryWithOppFilter();
+
+        cacheFilterRule(filterGroupId, 'IsClosed', 'Equals', 'False');
+        executeQueryWithOppFilter();
+
+        cacheFilterRule(filterGroupId, 'IsClosed', 'Not_Equals', 'False');
+        executeQueryWithOppFilter();
+
+        cacheFilterRule(filterGroupId, 'IsWon', 'Equals', 'True');
+        executeQueryWithOppFilter();
+
+        cacheFilterRule(filterGroupId, 'IsWon', 'Not_Equals', 'True');
+        executeQueryWithOppFilter();
     }
 
     /**
      * @description Builds filter rule and executes SOQL query using buildCommonQueryFilterOnOpportunity results
      */
-    private static void executeQueryWithOppFilter(Id filterGroupId, String field, String operator, String constant) {
-        String filterRulesJSON = '[' +
+    private static void executeQueryWithOppFilter() {
+        String soql = 'SELECT Id FROM Opportunity WHERE ';
+        try {
+            soql += CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Account.SObjectType, Opportunity.SObjectType);
+            Database.query(soql);
+
+        } catch (QueryException ex) {
+            System.assert(false, 'The query is invalid: ' + soql + '\n' + ex.getStackTraceString());
+        }
+    }
+
+    /**
+     * @description Replaces the filter rule cache with a filter rule for the given filter group
+     */
+    private static void cacheFilterRule(Id filterGroupId, String field, String operator, String constant) {
+         String filterRulesJSON = '[' +
             CMT_UnitTestData_TEST.createFilterRuleRecord(
                 null,
                 filterGroupId,
@@ -157,14 +197,5 @@ private class CRLP_Query_SEL_TEST {
         }
 
         CMT_FilterRule_SEL.cachedFilterRules = rulesMetadata;
-
-        String soql = 'SELECT Id FROM Opportunity WHERE ';
-        try {
-            soql += CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Account.SObjectType, Opportunity.SObjectType);
-            Database.query(soql);
-
-        } catch (QueryException ex) {
-            System.assert(false, 'The query is invalid: ' + soql + '\n' + ex.getStackTraceString());
-        }
     }
 }
