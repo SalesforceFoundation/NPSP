@@ -54,7 +54,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     /*******************************************************************************************************
     * @description Verifies address validator service
     */ 
-    private IAddressVerifier addrVerifier {
+    @TestVisible private static IAddressVerifier addrVerifier {
         get {
             if (addrVerifier == null) {
                 addrVerifier = new AddressVerifier();
@@ -383,7 +383,8 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         }
 
         String settingsName = Schema.SObjectType.Addr_Verification_Settings__c.getLabel(); 
-        String result = addrVerifier.verifyService(avs, '98005');
+        String zipCode = '98005';
+        String result = addrVerifier.verifyService(avs, zipCode);
         String status = result.contains('is valid') ? STG_PanelHealthCheck_CTRL.statusSuccess : STG_PanelHealthCheck_CTRL.statusError;
 
         String solution;
@@ -444,7 +445,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
     /*******************************************************************************************************
     * @description Verifies address validation service
     */   
-    public class AddressVerifier implements IAddressVerifier {
+    public virtual class AddressVerifier implements IAddressVerifier {
 
         /*******************************************************************************************************
         * @description verify the current address settings - used both by the UI panel, as well as Health Check.
@@ -493,8 +494,9 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
         /*******************************************************************************************************
         * @description Returns True if the current user has permission to verify the address
+        * @return Boolean
         */ 
-        public Boolean hasAccess() {
+        public virtual Boolean hasAccess() {
             return hasAddressAccess() && USER_UserService.hasCustomizeApplicationPermission(UserInfo.getProfileId());
         }
 
@@ -517,7 +519,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
             final Integer smartyStreetsUnencodedTokenLen = 88;
 
             if (settings.Class__c == SMARTY_STREETS_VALIDATOR_CLASS && 
-                !String.isBlank(settings.Auth_Token__c) && 
+                String.isNotBlank(settings.Auth_Token__c) && 
                 settings.Auth_Token__c.length() == smartyStreetsUnencodedTokenLen
             ) {
                 settings.Auth_Token__c = EncodingUtil.urlEncode(settings.Auth_Token__c, 'UTF-8');
