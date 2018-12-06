@@ -2152,7 +2152,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Data Importer</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Status on bdi object to specify it was matched from an ambiguous set in Dry Run</shortDescription>
+        <shortDescription>Status on a bdi object to specify it was matched from an ambiguous set in Dry Run</shortDescription>
         <value>Dry Run - Best Match Used</value>
     </labels>
     <labels>
