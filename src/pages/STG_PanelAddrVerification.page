@@ -135,7 +135,7 @@
                     <apex:outputText value="{!$Label.Addr_Settings_Intro_Body1}" />
                 </p>
                 <p>
-                    <c:UTIL_HtmlOutput html="{!$Label.Addr_Settings_Intro_Body2}" />
+                    <c:UTIL_HtmlOutput labelName="Addr_Settings_Intro_Body2" />
                 </p>
             </div>
             <div class="slds-form_horizontal slds-m-around_large">

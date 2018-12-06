@@ -2,7 +2,7 @@
     <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRDBatch}" />
         <div class="slds-text-body_small slds-m-around_medium">
-            <c:UTIL_HtmlOutput html="{!$Label.stgHelpRDBatch}" />
+            <c:UTIL_HtmlOutput labelName="stgHelpRDBatch" />
         </div>
         <c:UTIL_PageMessages />
         <apex:outputPanel rendered="{!isReadOnlyMode}">

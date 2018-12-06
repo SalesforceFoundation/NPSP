@@ -4,7 +4,7 @@
         <div class="slds-grid">
             <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
                 <p class="slds-text-body_small slds-m-top_x-small">
-                    <c:UTIL_HtmlOutput html="{!$Label.npe4__relationshipslookupdescription}" />
+                    <c:UTIL_HtmlOutput labelName="npe4__relationshipslookupdescription" />
                 </p>
             </div>
         </div>

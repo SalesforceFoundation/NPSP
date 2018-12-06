@@ -1,12 +1,6 @@
-<apex:component layout="none" id="util_htmloutput">
-    <!-- This component will strip out the whitelisted html tags then encode the rest of the html and finally substitue back in the original tags -->
-    <apex:attribute name="html" type="String" description="The html string to output." required="true" />
+<apex:component layout="none" id="util_htmloutput" controller="UTIL_HtmlOutput_CTRL">
+    <apex:attribute name="labelName" type="String" assignTo="{!label}" required="true" description="The html string to output."
+    />
 
-    <apex:variable var="temp" value="{!SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(html,
-        '<br/>', '|br|'),'<b>', '|b|'), '<b/>', '|bb|'), '<a href', '|a href'), '</a>', '|/a|')}" />
-    <apex:variable var="escaped" value="{!HTMLENCODE(temp)}" />
-    <apex:variable var="purified" value="{!SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(html,
-        '|br|', '<br/>'), '|b|', '<b>'), '|bb|', '<b/>'), '|a href', '<a href'), '|/a|', '</a>')}" />
-
-    <apex:outputText value="{!purified}" escape="false" id="htmloutput" />
+    <apex:outputText escape="false" id="htmloutput" value="{!safeHtml}" />
 </apex:component>
