@@ -828,7 +828,7 @@ public with sharing class ADDR_Validator_TEST {
     private class AddressVerifierExtension extends STG_PanelAddrVerification_CTRL.AddressVerifier {
         private Boolean hasAccess = true;
 
-        public AddressVerifierExtension returnHasAccess(Boolean hasAccess) {
+        private AddressVerifierExtension returnHasAccess(Boolean hasAccess) {
             this.hasAccess = hasAccess;
             return this;
         }
@@ -848,12 +848,12 @@ public with sharing class ADDR_Validator_TEST {
         private Integer runHasAccess = 0;
         private Integer runEncodeTokenCount = 0;
 
-        public MockAddressVerifier returnVerifyServiceResult(String result) {
+        private MockAddressVerifier returnVerifyServiceResult(String result) {
             this.result = result;
             return this;
         }
 
-        public MockAddressVerifier returnHasAccess(Boolean hasAccess) {
+        private MockAddressVerifier returnHasAccess(Boolean hasAccess) {
             this.hasAccess = hasAccess;
             return this;
         }
@@ -876,16 +876,16 @@ public with sharing class ADDR_Validator_TEST {
     /*******************************************************************************************************
     * @description Smarty Streets Service Mock
     */
-    public class MockSmartyStreetsService implements HttpCalloutMock {
+    private class MockSmartyStreetsService implements HttpCalloutMock {
         private Integer statusCode = 201;
         private String status = null;
 
-        public MockSmartyStreetsService returnStatusCode(Integer statusCode) {
+        private MockSmartyStreetsService returnStatusCode(Integer statusCode) {
             this.statusCode = statusCode;
             return this;
         }
 
-        public MockSmartyStreetsService returnStatus(String status) {
+        private MockSmartyStreetsService returnStatus(String status) {
             this.status = status;
             return this;
         }
