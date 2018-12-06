@@ -1,5 +1,7 @@
 <apex:component layout="none" id="util_htmloutput" controller="UTIL_HtmlOutput_CTRL">
-    <apex:attribute name="labelName" type="String" assignTo="{!label}" required="true" description="The html string to output."
+    <apex:attribute name="html" type="String" assignTo="{!unsafeHtml}" required="true" description="The html string to output."
+    />
+    <apex:attribute name="hasLink" type="Boolean" assignTo="{!hasUrl}" default="false" description="If the html includes a link."
     />
 
     <apex:outputText escape="false" id="htmloutput" value="{!safeHtml}" />

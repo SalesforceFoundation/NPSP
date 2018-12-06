@@ -304,7 +304,7 @@
             </div>
         </div>
         <p class="slds-text-body_small slds-m-around_large">
-            <c:UTIL_HtmlOutput html="{!$Label.stgHelpHHObjectOverview}" />
+            <c:UTIL_HtmlOutput html="{!$Label.stgHelpHHObjectOverview}" hasLink="true" />
         </p>
         <div class="slds-form_horizontal slds-p-bottom_large">
             <div class="slds-form-element">

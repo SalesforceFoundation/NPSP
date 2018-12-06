@@ -1,55 +1,67 @@
 public with sharing class UTIL_HtmlOutput_CTRL {
     private static final Map<String, String> SUBSTITUTION_BY_ALLOWED_TAG = new Map<String, String> {
+        '<br>' => '|badBreak|',
         '<br/>' => '|break|',
         '<b>' => '|startBold|',
         '</b>' => '|endBold|'
     };
-    public String label { 
+    private static final Map<String, String> SUBSTITUTION_BY_ALLOWED_URL = new Map<String, String> {
+        '<a href="https://powerofus.force.com/' => '|hubURL|',
+        'target="_blank">' => '|blankTarget|',
+        '</a>' => '|endURL|',
+        '<a href="/setup/' => '|setupURL|',
+        '<a href="#" onclick="ShowPanel(\'idPanelHealthCheck\');return false;">' => '|showPanelHealthCheck|',
+        '<a href="#" onclick="ShowPanel(\'idPanelErrorLog\');return false;">' => '|showPanelErrorLog|'
+    };
+    public String unsafeHtml { 
         get; 
         set {
             if (value != null) {
-                label = value;
+                unsafeHtml = value;
             }
         }
     }
-    private static final Map<String, List<String>> FORMATTING_ARGUMENTS_BY_LABEL = new Map<String, List<String>>{
-        'stgHelpSalesforceSetup' => new List<String>{ '<a href="/setup/forcecomHomepage.apexp?setupid=ForceCom" target="_blank">', '</a>' },
-        'stgHelpHealthCheck' => new List<String>{ '<a href="#" onclick="ShowPanel(\'idPanelHealthCheck\');return false;">', '</a>' },
-        'stgHelpReviewErrorLog' => new List<String>{ '<a href="#" onclick="ShowPanel(\'idPanelErrorLog\');return false;">', '</a>' },
-        'stgHelpPowerOfUsHub' => new List<String>{
-            '<a href="https://powerofus.force.com/HUB_NPSP_Group" target="_blank">',
-            '<a href="https://powerofus.force.com/HUB_System_Admin_Group" target="_blank">',
-            '<a href="https://powerofus.force.com/HUB_NPSP_Release_Group" target="_blank">', '</a>'
+    public Boolean hasURL {
+        get; 
+        set {
+            if (value != null) {
+                hasURL = value;
+            } else {
+                hasURL = false;
+            }
         }
-    };
+    }
 
     public String getSafeHtml() {
-        if (String.isBlank(label)) {
+        if (String.isBlank(unsafeHtml)) {
             return '';
         }
-
-        String labelBody = getLabelBody();
-
-        for (String allowedTag : SUBSTITUTION_BY_ALLOWED_TAG.keySet()) {
-            labelBody = labelBody.replace(allowedTag, SUBSTITUTION_BY_ALLOWED_TAG.get(allowedTag));
-        }
-
-        labelBody = labelBody.escapeHtml4();
+        System.debug(unsafeHtml);
 
         for (String allowedTag : SUBSTITUTION_BY_ALLOWED_TAG.keySet()) {
-            labelBody = labelBody.replace(SUBSTITUTION_BY_ALLOWED_TAG.get(allowedTag), allowedTag);
+            unsafeHtml = unsafeHtml.replace(allowedTag, SUBSTITUTION_BY_ALLOWED_TAG.get(allowedTag));
         }
 
-        if (FORMATTING_ARGUMENTS_BY_LABEL.containsKey(label)) {
-            labelBody = String.format(labelBody, FORMATTING_ARGUMENTS_BY_LABEL.get(label));
+        if (hasURL) {
+            for (String allowedUrl : SUBSTITUTION_BY_ALLOWED_URL.keySet()) {
+                unsafeHtml = unsafeHtml.replace(allowedUrl, SUBSTITUTION_BY_ALLOWED_URL.get(allowedUrl));
+            }
         }
-        return labelBody;
+
+        unsafeHtml = unsafeHtml.escapeHtml4();
+
+        for (String allowedTag : SUBSTITUTION_BY_ALLOWED_TAG.keySet()) {
+            unsafeHtml = unsafeHtml.replace(SUBSTITUTION_BY_ALLOWED_TAG.get(allowedTag), allowedTag);
+        }
+
+        if (hasURL) {
+            for (String allowedUrl : SUBSTITUTION_BY_ALLOWED_URL.keySet()) {
+                unsafeHtml = unsafeHtml.replace(SUBSTITUTION_BY_ALLOWED_URL.get(allowedUrl), allowedUrl);
+            }
+        }
+        System.debug(unsafeHtml);
+
+        return unsafeHtml;
     }
 
-    private String getLabelBody() {
-        Component.Apex.OutputText output = new Component.Apex.OutputText();
-
-        output.expressions.value = '{!$Label.' + label + '}';
-        return String.valueOf(output.value);
-    }
 }
