@@ -5,7 +5,7 @@
                 <h3 class="slds-text-heading_large slds-m-bottom_large">{!$Label.stgNPSPSettings}</h3>
                 <p>{!$Label.stgHelpNPSPSettings}</p>
                 <p class="slds-text-body_small slds-m-top_x-small">
-                    <c:UTIL_HtmlOutput labelName="stgHelpSalesforceSetup" />
+                    <c:UTIL_HtmlOutput html="{!$Label.stgHelpSalesforceSetup}" />
                 </p>
             </div>
             <div class="slds-media__figure slds-media__figure_reverse">
@@ -21,10 +21,10 @@
             </div>
             <ul>
                 <li>
-                    <c:UTIL_HtmlOutput labelName="stgHelpHealthCheck" />
+                    <c:UTIL_HtmlOutput html="{!$Label.stgHelpHealthCheck}" />
                 </li>
                 <li>
-                    <c:UTIL_HtmlOutput labelName="stgHelpReviewErrorLog" />
+                    <c:UTIL_HtmlOutput html="{!$Label.stgHelpReviewErrorLog}" />
                 </li>
             </ul>
         </div>
@@ -51,7 +51,7 @@
                 {!$Label.stgPowerOfUsHub}
             </div>
             <p>
-                <c:UTIL_HtmlOutput labelName="stgHelpPowerOfUsHub" />
+                <c:UTIL_HtmlOutput html="{!$Label.stgHelpPowerOfUsHub}" />
             </p>
         </div>
     </div>

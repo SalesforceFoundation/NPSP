@@ -3,7 +3,7 @@
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.stgLabelPrimaryContactRoleMergeBatch}"
         />
         <div class="slds-text-body_small slds-m-around_medium">
-            <c:UTIL_HtmlOutput labelName="stgHelpPrimaryContactRoleMergeBatch" />
+            <c:UTIL_HtmlOutput html="{!$Label.stgHelpPrimaryContactRoleMergeBatch}" />
         </div>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">

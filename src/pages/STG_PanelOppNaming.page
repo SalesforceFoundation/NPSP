@@ -155,7 +155,7 @@
                         </apex:outputPanel>
                         <apex:outputPanel id="slstrFormatOppNameHelp" layout="block">
                             <apex:outputText styleClass="slds-form-element__help">
-                                <c:UTIL_HtmlOutput labelName="stgHelpOppNamingFormat" />
+                                <c:UTIL_HtmlOutput html="{!$Label.stgHelpOppNamingFormat}" />
                             </apex:outputText>
                         </apex:outputPanel>
                     </div>

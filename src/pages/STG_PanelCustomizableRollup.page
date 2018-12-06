@@ -68,7 +68,7 @@
                 <apex:outputPanel rendered="{! !isPolling }">
                     <div class="slds-m-vertical_medium">
                         <apex:outputText styleClass="slds-text-body_small">
-                            <c:UTIL_HtmlOutput labelName="stgHelpCustomizableRollupsEnable1" />
+                            <c:UTIL_HtmlOutput html="{!$Label.stgHelpCustomizableRollupsEnable1}" />
                         </apex:outputText>
                     </div>
 
@@ -90,7 +90,7 @@
             <!-- BEGIN HELP TEXT -->
             <div class="slds-grid {!IF(!isPolling, '', 'slds-hide')}">
                 <p class="slds-text-body_small slds-m-top_x-small">
-                    <c:UTIL_HtmlOutput labelName="stgHelpCustomizableRollupsEnable2" />
+                    <c:UTIL_HtmlOutput html="{!$Label.stgHelpCustomizableRollupsEnable2}" />
                 </p>
             </div>
             <!-- END HELP TEXT -->

@@ -21,7 +21,7 @@
                     </apex:selectList>
                     <apex:outputPanel id="slRMHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help">
-                            <c:UTIL_HtmlOutput labelName="stgHelpRelReciprocalMethod" />
+                            <c:UTIL_HtmlOutput html="{!$Label.stgHelpRelReciprocalMethod}" />
                         </apex:outputText>
                     </apex:outputPanel>
                 </div>

@@ -25,7 +25,7 @@
                                 <apex:outputText value="{!$Label.stgCRLPInfoOnUDRHeading}" escape="true" />
                             </h2>
                             <apex:outputText styleClass="slds-m-top_medium slds-m-top_medium">
-                                <c:UTIL_HtmlOutput labelName="stgCRLPInfoOnUDRBody" />
+                                <c:UTIL_HtmlOutput html="{!$Label.stgCRLPInfoOnUDRBody}" />
                             </apex:outputText>
                         </div>
                     </div>

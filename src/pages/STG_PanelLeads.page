@@ -17,7 +17,7 @@
                         id="cbxDOCO" html-aria-describedby="{!$Component.cbxDOCHelp}" styleClass="slds-checkbox" />
                     <apex:outputPanel id="cbxDOCHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help">
-                            <c:UTIL_HtmlOutput labelName="stgHelpLeadConvert" />
+                            <c:UTIL_HtmlOutput html="{!$Label.stgHelpLeadConvert}" />
                         </apex:outputText>
                     </apex:outputPanel>
                 </div>
