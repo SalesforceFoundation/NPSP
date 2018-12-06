@@ -83,8 +83,7 @@
     </customLabels>
     <customLabels>
         <label>Klicken Sie auf &quot;Alle Adressen überprüfen&quot;, um alle Adressen in Ihrer Organisation zu überprüfen und zu standardisieren.
-        Die oben genannten Einstellungen werden im Massenüberprüfungsvorgang verwendet.
- &lt;br/&gt;</label>
+        Die oben genannten Einstellungen werden im Massenüberprüfungsvorgang verwendet.</label>
         <name>Addr_Verification_Batch_Body</name>
     </customLabels>
     <customLabels>

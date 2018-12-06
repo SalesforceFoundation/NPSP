@@ -78,8 +78,7 @@
     </customLabels>
     <customLabels>
         <label>Cliquez sur « Vérifier toutes les adresses » pour vérifier et standardiser toutes les adresses dans votre organisation.
-        Le processus de vérification d’ensemble utilise les paramètres plus haut.
- &lt;br/&gt;</label>
+        Le processus de vérification d’ensemble utilise les paramètres plus haut.</label>
         <name>Addr_Verification_Batch_Body</name>
     </customLabels>
     <customLabels>

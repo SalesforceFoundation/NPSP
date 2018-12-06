@@ -78,8 +78,7 @@
     </customLabels>
     <customLabels>
         <label>לחץ על &apos;אימות כל הכתובות&apos; כדי לאמת ולהאחיד את כל הכתובות בארגון שלך.
-        התהליך של אימות הפריטים המרובים משתמש בהגדרות מהסעיפים לעיל.
- &lt;br/&gt;</label>
+        התהליך של אימות הפריטים המרובים משתמש בהגדרות מהסעיפים לעיל.</label>
         <name>Addr_Verification_Batch_Body</name>
     </customLabels>
     <customLabels>

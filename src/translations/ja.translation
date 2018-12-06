@@ -83,8 +83,7 @@
     </customLabels>
     <customLabels>
         <label>団体のすべての住所を検証および標準化するには、[すべての住所を検証] をクリックします。
-        一括検証プロセスには上記の設定が使用されます。
- &lt;br/&gt;</label>
+        一括検証プロセスには上記の設定が使用されます。</label>
         <name>Addr_Verification_Batch_Body</name>
     </customLabels>
     <customLabels>

@@ -78,8 +78,7 @@
     </customLabels>
     <customLabels>
         <label>Klik Verifieer Alle Adressen om alle adressen in de organisatie te verifiëren.
-        Dit proces gebruikt de instellingen hierboven.
- &lt;br/&gt;</label>
+        Dit proces gebruikt de instellingen hierboven.</label>
         <name>Addr_Verification_Batch_Body</name>
     </customLabels>
     <customLabels>
