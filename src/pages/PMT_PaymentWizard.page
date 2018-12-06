@@ -12,6 +12,9 @@
         td:first-child {
             width: 8%;
         }
+        .slds-grid_vertical-align-end .slds-form_compound .slds-form-element__row {
+            margin-bottom: 0;
+        }
     </style>
 
     <script>
@@ -154,7 +157,7 @@
                                                       labelOverride="{!$Label.pmtWizardFirstPaymentDate}" />
                                 </div>
                             </div>
-                            <div class="slds-grid slds-gutters_small slds-p-top_x-small">
+                            <div class="slds-grid slds-gutters_small slds-p-top_x-small slds-grid_vertical-align-end">
                                 <div class="slds-col slds-has-flexi-truncate slds-grid">
                                     <fieldset class="slds-form-element slds-form_compound">
                                         <legend class="slds-form-element__legend slds-form-element__label" id="intervals">
