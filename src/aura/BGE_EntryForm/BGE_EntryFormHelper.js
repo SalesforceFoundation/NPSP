@@ -16,6 +16,19 @@
     },
 
     /**
+     * @description: handle apex errors on the page by displaying a toast with the returned information
+     */
+    handleApexErrors: function(component, errors) {
+        let message = $A.get('$Label.c.stgUnknownError');
+        if (errors) {
+            if (errors[0] && errors[0].message) {
+                message = errors[0].message;
+            }
+        }
+        this.sendMessage('onError', {title: $A.get('$Label.c.PageMessagesError'), errorMessage: message});
+    },
+
+    /**
      * @description: adds hidden and non-lightning:inputfield fields to the Data Import record before submitting.
      * @return: Object rowFields with hidden fields added
      */
@@ -27,15 +40,15 @@
         rowFields[labels.batchIdField] = recId;
 
         // add donor type hidden fields
-        var donorType = component.get('v.donorType');
+        const donorType = component.get('v.donorType');
         rowFields[labels.donationDonor] = donorType;
 
         // add any picklist fields manually, because they use lightning:select
-        var dynamicInputFields = component.find('dynamicInputFields');
-        var dataImportFields = component.get('v.dataImportFields');
+        const dynamicInputFields = component.find('dynamicInputFields');
+        const dataImportFields = component.get('v.dataImportFields');
 
         //dataImportFields and dynamicInputFields have the same order, so can loop both to get the value
-        for (var i=0; i<dataImportFields.length; i++) {
+        for (let i=0; i<dataImportFields.length; i++) {
             if (dataImportFields[i].options && dataImportFields[i].options.length > 0) {
                 var fieldValue = dynamicInputFields[i].get('v.value');
                 var fieldName = dataImportFields[i].name;
@@ -47,15 +60,16 @@
         const selectedDonation = component.get('v.selectedDonation');
         const userSelectedMatch = $A.get('$Label.c.bdiMatchedByUser');
         const userSelectedNewOpp = $A.get('$Label.c.bdiMatchedByUserNewOpp');
-        const applyNewPayment = $A.get('$Label.c.bdiMatchedApplyNewPayment');
 
+        //set status fields to prevent dry run overwrite of lookup fields
+        //else status fields are left null to allow for dry run in grid
         if (selectedDonation) {
             if (selectedDonation.attributes.type === 'Opportunity') {
-                //matched opportunity; create new payment or update opportunity
+                //selected opportunity; BDI will update the opportunity
                 rowFields[labels.opportunityImportedLookupField] = selectedDonation.Id;
                 rowFields[labels.opportunityImportedStatusField] = userSelectedMatch;
             } else {
-                //matched payment; update payment
+                //selected payment; BDI will update the payment
                 rowFields[labels.paymentImportedLookupField] = selectedDonation.Id;
                 rowFields[labels.paymentImportedStatusField] = userSelectedMatch;
                 rowFields[labels.opportunityImportedLookupField] = selectedDonation.npe01__Opportunity__c;
@@ -63,7 +77,6 @@
             }
         } else if (selectedDonation === '') {
             //create new opportunity if selectedDonation is set as empty string
-            //else status fields are left null to allow for dry-run
             rowFields[labels.opportunityImportedStatusField] = userSelectedNewOpp;
         }
 
@@ -74,7 +87,7 @@
      * @description: queries open donations for upcoming donations
      * @return: void
      */
-    queryOpenDonations: function (component, donorId) {
+    queryOpenDonations: function(component, donorId) {
         const donorType = component.get('v.donorType');
 
         let action = component.get('c.getOpenDonations');
@@ -85,19 +98,11 @@
                 const openDonations = JSON.parse(response.getReturnValue());
                 component.set('v.openOpportunities', openDonations.openOpportunities);
                 component.set('v.unpaidPayments', openDonations.unpaidPayments);
-
             } else {
-                const errors = response.getError();
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        this.sendMessage('onError', {title: $A.get('$Label.c.PageMessagesError'), errorMessage: errors[0].message});
-                    } else {
-                        this.sendMessage('onError', {title: $A.get('$Label.c.PageMessagesError'), errorMessage: $A.get('$Label.c.stgUnknownError')});
-                    }
-                }
+                this.handleApexErrors(component, response.getError());
             }
             this.sendMessage('hideFormSpinner', '');
-            const matchLink = document.getElementById('selectMatchLink');
+            const matchLink = document.getElementById('selectOpenDonation');
             matchLink.focus();
         });
         $A.enqueueAction(action);
@@ -108,9 +113,9 @@
      * @param missingFields: Array of missing fields
      */
     sendErrorToast: function(component, missingFields) {
-        var channel = 'onError';
-        var error = $A.get('$Label.c.exceptionRequiredField') + ' ' + missingFields.join(', ') + '.';
-        var message = {title: $A.get('$Label.c.PageMessagesError'), errorMessage: error};
+        let channel = 'onError';
+        let error = $A.get('$Label.c.exceptionRequiredField') + ' ' + missingFields.join(', ') + '.';
+        let message = {title: $A.get('$Label.c.PageMessagesError'), errorMessage: error};
         this.sendMessage(channel, message);
     },
 
@@ -118,7 +123,7 @@
      * @description: send a message to other components
      */
     sendMessage: function (channel, message) {
-        var sendMessage = $A.get('e.ltng:sendMessage');
+        let sendMessage = $A.get('e.ltng:sendMessage');
         sendMessage.setParams({
             'channel': channel,
             'message': message
@@ -131,16 +136,16 @@
      * @return: validity Object with Boolean for validity and an array of any missing fields to display
      */
     validateFields: function(component, rowFields) {
-        var validity = {isValid: true, missingFields: []};
+        let validity = {isValid: true, missingFields: []};
 
-        var hasDonor = this.verifyRowHasDonor(component, rowFields);
+        const hasDonor = this.verifyRowHasDonor(component, rowFields);
         if (!hasDonor) {
-            var labels = component.get("v.labels");
-            var missingDonor = (component.get("v.donorType") === 'Contact1') ? labels.contactObject : labels.accountObject;
+            const labels = component.get("v.labels");
+            const missingDonor = (component.get("v.donorType") === 'Contact1') ? labels.contactObject : labels.accountObject;
             validity.missingFields.push(missingDonor);
         }
 
-        var missingRequiredFields = this.verifyRequiredFields(component, rowFields);
+        let missingRequiredFields = this.verifyRequiredFields(component, rowFields);
         if (missingRequiredFields.length != 0) {
             validity.missingFields = validity.missingFields.concat(missingRequiredFields);
         }
@@ -158,18 +163,18 @@
      * @return missingFields: list of any fields by label that are missing
      */
     verifyRequiredFields: function(component, rowFields) {
-        var missingFields = [];
-        var dataImportFields = component.get('v.dataImportFields');
-        var dynamicInputFields = component.find('dynamicInputFields');
+        let missingFields = [];
+        const dataImportFields = component.get('v.dataImportFields');
+        let dynamicInputFields = component.find('dynamicInputFields');
 
         if (! Array.isArray(dynamicInputFields)) {
             dynamicInputFields = [dynamicInputFields];
         }
 
         //dataImportFields and dynamicInputFields have the same order, so can loop both to check validity
-        for (var i=0; i<dataImportFields.length; i++) {
+        for (let i=0; i<dataImportFields.length; i++) {
             if (dataImportFields[i].required) {
-                var fieldValue = dynamicInputFields[i].get('v.value');
+                const fieldValue = dynamicInputFields[i].get('v.value');
                 if (fieldValue === '' || fieldValue === null) {
                     missingFields.push(dataImportFields[i].label);
                 }
@@ -185,8 +190,8 @@
      * @return hasDonor: Boolean to indicate if row has a donor
      */
     verifyRowHasDonor: function(component, rowFields) {
-        var hasDonor = true;
-        var lookupValue;
+        let hasDonor = true;
+        let lookupValue;
 
         if (component.get("v.donorType") === 'Contact1') {
             lookupValue = rowFields[component.get("v.labels.contactLookup")];

@@ -1452,7 +1452,6 @@
         <members>bgeMatchingSelect</members>
         <members>bgeNewBatch</members>
         <members>bgeNewGift</members>
-        <members>bgeNoneOption</members>
         <members>bgeProcessBatch</members>
         <members>bgeTabHeader</members>
         <members>btnRemove</members>

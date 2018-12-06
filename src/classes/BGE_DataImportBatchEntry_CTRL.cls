@@ -127,7 +127,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
     /*******************************************************************************************************
     * @description Retrieves all open Opportunities and unpaid Payments for the selected Donor (Account or Contact)
-    * @return JSON of data model TBD
+    * @return Map<String, List<SObject>> of all openOpportunities and unpaidPayments for the given donor
     */
     @AuraEnabled
     public static String getOpenDonations(Id donorId, String donorType) {

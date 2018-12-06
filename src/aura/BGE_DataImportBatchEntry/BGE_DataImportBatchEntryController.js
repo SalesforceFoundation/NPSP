@@ -74,7 +74,7 @@
     /**
      * @description: opens the batch wizard modal for edit mode of the component
      */
-    openBatchWizard:function(component, event) {
+    openBatchWizard: function(component, event) {
         var modalBody;
         var modalHeader;
         var modalFooter;

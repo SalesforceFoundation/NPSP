@@ -45,7 +45,7 @@
     <aura:attribute name="dataImportFields" type="Object[]" description="List of dynamic field objects to use in the field iteration" access="public"/>
     <aura:attribute name="openOpportunities" type="List" description="List of open Opportunities" access="public" />
     <aura:attribute name="unpaidPayments" type="List" description="List of unpaid Payments" access="public" />
-    <aura:attribute name="selectedDonation" type="SObject" description="Stored selected open donation" access="public" />
+    <aura:attribute name="selectedDonation" type="SObject" description="Stored selected open donation. Can also be null or empty." access="public" />
 
     <!--Modal Attributes-->
     <aura:attribute name="donationModalHeader" type="Aura.ComponentDefRef[]" description="Formatted header text used in donation modal.">
@@ -70,25 +70,22 @@
             <!--BEGIN SCOPED MATCH NOTIFICATION-->
             <aura:if isTrue="{!or(not(empty(v.openOpportunities)), not(empty(v.unpaidPayments)))}">
                 <lightning:layoutItem size="12" smallDeviceSize="12" class="slds-p-horizontal_small">
-                    <lightning:layout class="slds-grid_align-center">
-                        <lightning:layoutItem size="12" smallDeviceSize="12">
-                            <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light slds-m-bottom_small" role="alert">
-                                <div class="slds-media__figure slds-text-align_center">
-                                    <lightning:icon iconName="utility:info"
-                                                    alternativeText="Information"
-                                                    size="x-small"
-                                                    aria-hidden="true"/>
-                                </div>
-                                <div class="slds-media__body">
-                                    <p>{!$Label.c.bgeMatchingAlert}
-                                        <a class="slds-m-left_x-small" onclick="{!c.openMatchModal}" id="selectMatchLink">
-                                            {!$Label.c.bgeMatchingSelect}
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </lightning:layoutItem>
-                    </lightning:layout>
+                    <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light slds-m-bottom_small"
+                         role="alert">
+                        <div class="slds-media__figure slds-text-align_center">
+                            <lightning:icon iconName="utility:info"
+                                            alternativeText="{!$Label.c.PageMessagesInfo}"
+                                            size="x-small"
+                                            aria-hidden="true"/>
+                        </div>
+                        <div class="slds-media__body">
+                            <p>{!$Label.c.bgeMatchingAlert}
+                                <a class="slds-m-left_x-small" onclick="{!c.openMatchModal}" id="selectOpenDonation">
+                                    {!$Label.c.bgeMatchingSelect}
+                                </a>
+                            </p>
+                        </div>
+                    </div>
                 </lightning:layoutItem>
             </aura:if>
             <!--END SCOPED MATCH NOTIFICATION-->

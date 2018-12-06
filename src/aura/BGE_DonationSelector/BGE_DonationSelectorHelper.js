@@ -1,6 +1,6 @@
 ({
     /**
-     * @description: sets the donation selection and closes the modal
+     * @description: sends the donation selection as a message and closes the modal
      */
     processDonationSelection: function(component, selectedDonation) {
         let sendMessage = $A.get('e.ltng:sendMessage');

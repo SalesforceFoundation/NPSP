@@ -72,7 +72,7 @@
 
     /**
      * @description: saves inline edits from dataTable.
-     * @param values: changed values in the table
+     * @param draftValues: changed values in the table
      */
     handleTableSave: function(component, draftValues) {
         this.showSpinner(component);
