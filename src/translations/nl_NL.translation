@@ -2828,7 +2828,7 @@ Wanneer het proces 100% is voltooid, is het veilig de pagina te sluiten.</label>
         <name>stgHelpHHRules</name>
     </customLabels>
     <customLabels>
-        <label>Gebruik {0}Gezondheidscontrole{1} om de NPSP configuratie te controleren!</label>
+        <label>Gebruik &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;Gezondheidscontrole&lt;/a&gt; om de NPSP configuratie te controleren!</label>
         <name>stgHelpHealthCheck</name>
     </customLabels>
     <customLabels>
@@ -2965,7 +2965,7 @@ BELANGRIJK: Beide velden moeten van hetzelfde data type zijn.</label>
         <name>stgHelpPaymentsEnabled</name>
     </customLabels>
     <customLabels>
-        <label>Heeft u vragen? De Hub heeft antwoorden! Probeer de {0}Nonprofit Success Pack{3} groep voor vragen over NPSP en de {1}System Administrators{3} groep voor vragen over Salesforce configuratie.&lt;br/&gt;&lt;br/&gt;Blijf op de hoogte met de laatste NPSP release notes in de {2}NPSP Release Announcements{3} groep.</label>
+        <label>Heeft u vragen? De Hub heeft antwoorden! Probeer de &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; groep voor vragen over NPSP en de &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; groep voor vragen over Salesforce configuratie.&lt;br/&gt;&lt;br/&gt;Blijf op de hoogte met de laatste NPSP release notes in de &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; groep.</label>
         <name>stgHelpPowerOfUsHub</name>
     </customLabels>
     <customLabels>
@@ -3108,7 +3108,7 @@ Dit proces kan enige tijd duren, maar deze pagina kan gesloten worden en het pro
         <name>stgHelpRespectDuplicateRuleSettings</name>
     </customLabels>
     <customLabels>
-        <label>Bekijk de {0}Foutlogboeken{1} om te zien of er problemen zijn.</label>
+        <label>Bekijk de &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;Foutlogboeken&lt;/a&gt; om te zien of er problemen zijn.</label>
         <name>stgHelpReviewErrorLog</name>
     </customLabels>
     <customLabels>
@@ -3148,7 +3148,7 @@ Dit proces kan enige tijd duren, maar deze pagina kan gesloten worden en het pro
         <name>stgHelpRollupSkewLimit</name>
     </customLabels>
     <customLabels>
-        <label>Wilt u de pagina layout, velden of gebruikers aanpassen? Probeer de {0}Salesforce Setup{1}‏ pagina&apos;s.</label>
+        <label>Wilt u de pagina layout, velden of gebruikers aanpassen? Probeer de &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;Salesforce Setup&lt;/a&gt; pagina&apos;s.</label>
         <name>stgHelpSalesforceSetup</name>
     </customLabels>
     <customLabels>

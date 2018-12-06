@@ -2836,7 +2836,7 @@
         <name>stgHelpHHRules</name>
     </customLabels>
     <customLabels>
-        <label>השתמש {0}בבדיקת התקינות {1} כדי לאמת את תצורת NPSP שלך!</label>
+        <label>השתמש &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;בבדיקת התקינות&lt;/a&gt; כדי לאמת את תצורת NPSP שלך!</label>
         <name>stgHelpHealthCheck</name>
     </customLabels>
     <customLabels>
@@ -2973,7 +2973,7 @@
         <name>stgHelpPaymentsEnabled</name>
     </customLabels>
     <customLabels>
-        <label>שאלות? ל-HUb יש תשובות! נסה את הקבוצה של {0}ערכת ההצלחה למלכ&quot;רים {3} לתשובות בנושא NPSP ואת קבוצת {1}מנהלי המערכת {3} לתשובות בנושא ניהול והגדרת התצורה של Salesforce‏.&lt;br/&gt;&lt;br/&gt;הישאר מעודכן בהערות המוצר החדשות ביותר של NPSP בקבוצת {2}הודעות המוצר של NPSP{3}.</label>
+        <label>שאלות? ל-HUb יש תשובות! נסה את הקבוצה של &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;ערכת ההצלחה למלכ&quot;רים&lt;/a&gt; לתשובות בנושא NPSP ואת קבוצת &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;מנהלי המערכת&lt;/a&gt; לתשובות בנושא ניהול והגדרת התצורה של Salesforce‏.&lt;br/&gt;&lt;br/&gt;הישאר מעודכן בהערות המוצר החדשות ביותר של NPSP בקבוצת &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;הודעות המוצר של NPSP‏&lt;/a&gt;.</label>
         <name>stgHelpPowerOfUsHub</name>
     </customLabels>
     <customLabels>
@@ -3114,7 +3114,7 @@
         <name>stgHelpRespectDuplicateRuleSettings</name>
     </customLabels>
     <customLabels>
-        <label>עיין {0}ביומני השגיאות {1} כדי לבדוק אם קיימות בעיות.</label>
+        <label>עיין &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;ביומני השגיאות&lt;/a&gt; כדי לבדוק אם קיימות בעיות.</label>
         <name>stgHelpReviewErrorLog</name>
     </customLabels>
     <customLabels>
@@ -3154,7 +3154,7 @@
         <name>stgHelpRollupSkewLimit</name>
     </customLabels>
     <customLabels>
-        <label>רוצה לבצע התאמה אישית של פריסות דפים, או להוסיף משתמשים?  נסה את דפי {0}ההגדרות של Salesforce{1}‏.</label>
+        <label>רוצה לבצע התאמה אישית של פריסות דפים, או להוסיף משתמשים?  נסה את דפי &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;ההגדרות של Salesforce‏&lt;/a&gt;.</label>
         <name>stgHelpSalesforceSetup</name>
     </customLabels>
     <customLabels>
