@@ -160,6 +160,34 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             List<Opportunity> openOpportunities = Database.query(opportunitySOQL);
             List<npe01__OppPayment__c> unpaidPayments = Database.query(paymentSOQL);
 
+            // Opportunities List should only include open Opportunities with with NO UNPAID PAYMENTS
+            // (open means IsClosed = false)
+
+            // References from the payment do not work as expected using the list "contains" method
+            // Hence we should look for the id of the opportunity,
+            // which means we need to use a list of the Opportunity ids
+            // instead of using directly the list of Opportunities that we already have.
+            List<Id> openOpportunitiesIds = new List<Id>();
+
+            for (Opportunity currentOpportunity : openOpportunities) {
+                openOpportunitiesIds.add(currentOpportunity.Id);
+            }
+
+            // Check for every unpaid payment if its parent Opportunity is included in the "openOpportunities" List
+            for (npe01__OppPayment__c payment : unpaidPayments) {
+                // Get the Id of the parent Opportunity
+                Id idOfCurrentOpportunity = payment.npe01__Opportunity__c;
+                // Check if the parent Opportunity is in openOpportunities
+                if (openOpportunitiesIds.contains(idOfCurrentOpportunity)) {
+                    // Get the index on the Ids List.
+                    // The index should be the same for the List of Ids and the List of Opportunities.
+                    Integer opportunityIndex = openOpportunitiesIds.indexOf(idOfCurrentOpportunity);
+                    // Remove the element on that index from booth lists.
+                    openOpportunities.remove(opportunityIndex);
+                    openOpportunitiesIds.remove(opportunityIndex);
+                }
+            }
+
             Map<String, List<SObject>> response = new Map<String, List<SObject>>{
                     'openOpportunities' => openOpportunities,
                     'unpaidPayments' => unpaidPayments
