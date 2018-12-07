@@ -74,7 +74,7 @@ ${contact_id}
     Click Record Button     Save
     Wait Until Loading Is Complete
     Scroll Element Into View    xpath: //span[text()='Donation Totals']
-    Confirm Value           Smallest Gift    $2.0    Y
+    Confirm Value           Smallest Gift    $2.00    Y
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
     # --------------------------------
