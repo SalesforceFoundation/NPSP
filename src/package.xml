@@ -400,6 +400,7 @@
         <members>UTIL_Finder</members>
         <members>UTIL_Finder_TEST</members>
         <members>UTIL_HtmlOutput_CTRL</members>
+        <members>UTIL_HtmlOutput_TEST</members>
         <members>UTIL_IScheduled</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>

@@ -54,8 +54,8 @@ public with sharing class UTIL_HtmlOutput_CTRL {
         '<a href="#" onclick="ShowPanel(\'idPanelHealthCheck\');return false;">' => '|showPanelHealthCheck|',
         '<a href="#" onclick="ShowPanel(\'idPanelErrorLog\');return false;">' => '|showPanelErrorLog|',
         '</a>' => '|endURL|',
-        'target="_blank">' => '|blankTarget|',
-        'target="_new">' => '|newTarget|',
+        '" target="_blank">' => '|blankTarget|',
+        '" target="_new">' => '|newTarget|',
         '">' => '|noTarget|'
     };
     /** @description The unescaped html passed in by the page. */
@@ -114,7 +114,7 @@ public with sharing class UTIL_HtmlOutput_CTRL {
     }
 
     /*******************************************************************************************************************
-    * @description Returns the escaped html with the temporary tags and url reset to the whitelisted values
+    * @description Returns the escaped html with the temporary tags and url to their original whitelisted values
     */
     private String resetWhitelist(String escapedHtml) {
         String html = escapedHtml;
