@@ -181,7 +181,14 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 if (openOpportunitiesIds.contains(idOfCurrentOpportunity)) {
                     // Get the index on the Ids List.
                     // The index should be the same for the List of Ids and the List of Opportunities.
-                    Integer opportunityIndex = openOpportunitiesIds.indexOf(idOfCurrentOpportunity);
+                    Integer opportunityIndex;
+                    for (Integer index = 0; index < openOpportunitiesIds.size(); index ++ ) {
+                        Id currentId = openOpportunitiesIds[index];
+                        if (currentId == idOfCurrentOpportunity) {
+                            opportunityIndex = index;
+                        }
+                    }
+
                     // Remove the element on that index from booth lists.
                     openOpportunities.remove(opportunityIndex);
                     openOpportunitiesIds.remove(opportunityIndex);
