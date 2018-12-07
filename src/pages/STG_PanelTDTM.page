@@ -1,10 +1,4 @@
 <apex:page controller="STG_PanelTDTM_CTRL" action="{!addPageMessages}" docType="html-5.0" standardStylesheets="false">
-    <style type="text/css">
-        .slds .slds-table.slds-table_bordered th,
-        .slds .slds-table.slds-table_bordered td {
-            padding: 3px;
-        }
-    </style>
     <apex:form id="form">
         <div class="slds-m-around_x-large">
             <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavTriggerConfig}" />
@@ -128,51 +122,83 @@
                 </div>
             </apex:outputPanel>
         </div>
-        <table class="slds-table slds-table_bordered" style="width:100%; table-layout:fixed;">
+        <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
             <thead>
-                <tr class="slds-text-heading_label">
-                    <th scope="col" class="slds-cell-wrap">{!$ObjectType.Trigger_Handler__c.Fields.Object__c.Label}</th>
-                    <th scope="col" class="slds-cell-wrap">{!$ObjectType.Trigger_Handler__c.Fields.Class__c.Label}</th>
-                    <th scope="col" style="width:60px;" class="slds-cell-wrap">{!$ObjectType.Trigger_Handler__c.Fields.Load_Order__c.Label}</th>
-                    <th scope="col" style="width:100px;" class="slds-cell-wrap">{!$ObjectType.Trigger_Handler__c.Fields.Trigger_Action__c.Label}</th>
-                    <th scope="col" style="width:60px;" class="slds-cell-wrap">{!$ObjectType.Trigger_Handler__c.Fields.Active__c.Label}</th>
-                    <th scope="col" style="width:130px;" class="slds-cell-wrap">{!$ObjectType.Trigger_Handler__c.Fields.Asynchronous__c.Label}</th>
-                    <th scope="col" style="width:100px;" class="slds-cell-wrap">{!$ObjectType.Trigger_Handler__c.Fields.User_Managed__c.Label}</th>
-                    <th scope="col" style="width:130px;" class="slds-cell-wrap">{!$ObjectType.Trigger_Handler__c.Fields.Usernames_to_Exclude__c.Label}</th>
+                <tr class="slds-line-height_reset">
+                    <th scope="col" class="slds-text-title_caps slds-size_1-of-8">
+                        <div class="slds-truncate" title="{!$ObjectType.Trigger_Handler__c.Fields.Object__c.Label}">
+                            {!$ObjectType.Trigger_Handler__c.Fields.Object__c.Label}
+                        </div>
+                    </th>
+                    <th scope="col" class="slds-text-title_caps slds-size_1-of-8">
+                        <div class="slds-truncate" title="{!$ObjectType.Trigger_Handler__c.Fields.Class__c.Label}">
+                            {!$ObjectType.Trigger_Handler__c.Fields.Class__c.Label}
+                        </div>
+                    </th>
+                    <th scope="col" class="slds-text-title_caps slds-cell-wrap slds-size_1-of-8">
+                        <div title="{!$ObjectType.Trigger_Handler__c.Fields.Load_Order__c.Label}">
+                            {!$ObjectType.Trigger_Handler__c.Fields.Load_Order__c.Label}
+                        </div>
+                    </th>
+                    <th scope="col" class="slds-text-title_caps slds-cell-wrap slds-size_1-of-8">
+                        <div title="{!$ObjectType.Trigger_Handler__c.Fields.Trigger_Action__c.Label}">
+                            {!$ObjectType.Trigger_Handler__c.Fields.Trigger_Action__c.Label}
+                        </div>
+                    </th>
+                    <th scope="col" class="slds-text-title_caps slds-size_1-of-8">
+                        <div class="slds-truncate" title="{!$ObjectType.Trigger_Handler__c.Fields.Active__c.Label}">
+                            {!$ObjectType.Trigger_Handler__c.Fields.Active__c.Label}
+                        </div>
+                    </th>
+                    <th scope="col" class="slds-text-title_caps slds-cell-wrap slds-size_1-of-8">
+                        <div title="{!$ObjectType.Trigger_Handler__c.Fields.Asynchronous__c.Label}">
+                            {!$ObjectType.Trigger_Handler__c.Fields.Asynchronous__c.Label}
+                        </div>
+                    </th>
+                    <th scope="col" class="slds-text-title_caps slds-cell-wrap slds-size_1-of-8">
+                        <div title="{!$ObjectType.Trigger_Handler__c.Fields.User_Managed__c.Label}">
+                            {!$ObjectType.Trigger_Handler__c.Fields.User_Managed__c.Label}
+                        </div>
+                    </th>
+                    <th scope="col" class="slds-text-title_caps slds-cell-wrap slds-size_1-of-8">
+                        <div title="{!$ObjectType.Trigger_Handler__c.Fields.Usernames_to_Exclude__c.Label}">
+                            {!$ObjectType.Trigger_Handler__c.Fields.Usernames_to_Exclude__c.Label}
+                        </div>
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 <apex:repeat var="th" value="{!listTH}">
-                    <tr>
-                        <td class="slds-cell-wrap">
-                            <div class="slds-truncate slds-text-body_small">{!th.Object__c}</div>
+                    <tr class="slds-hint-parent">
+                        <th scope="row" data-label="{!$ObjectType.Trigger_Handler__c.Fields.Object__c.Label}">
+                            <div class="slds-truncate" title="{!th.Object__c}">{!th.Object__c}</div>
+                        </th>
+                        <td data-label="{!$ObjectType.Trigger_Handler__c.Fields.Class__c.Label}">
+                            <div class="slds-truncate" title="{!th.Class__c}">{!th.Class__c}</div>
                         </td>
-                        <td class="slds-cell-wrap">
-                            <div class="slds-truncate slds-text-body_small">{!th.Class__c}</div>
+                        <td data-label="{!$ObjectType.Trigger_Handler__c.Fields.Load_Order__c.Label}">
+                            <div title="{!th.Load_Order__c}">{!th.Load_Order__c}</div>
                         </td>
-                        <td class="slds-cell-wrap">
-                            <div class="slds-text-body_small">{!th.Load_Order__c}</div>
+                        <td data-label="{!$ObjectType.Trigger_Handler__c.Fields.Trigger_Action__c.Label}" class="slds-cell-wrap">
+                            <div title="{!th.Trigger_Action__c}">{!th.Trigger_Action__c}</div>
                         </td>
-                        <td class="slds-cell-wrap">
-                            <div class="slds-text-body_small">{!th.Trigger_Action__c}</div>
-                        </td>
-                        <td class="slds-cell-wrap">
-                            <div class="slds-text-body_small">
+                        <td data-label="{!$ObjectType.Trigger_Handler__c.Fields.Active__c.Label}">
+                            <div title="{!th.Active__c}">
                                 <apex:inputCheckbox value="{!th.Active__c}" disabled="true" />
                             </div>
                         </td>
-                        <td class="slds-cell-wrap">
-                            <div class="slds-text-body_small">
+                        <td data-label="{!$ObjectType.Trigger_Handler__c.Fields.Asynchronous__c.Label}">
+                            <div title="{!th.Asynchronous__c}">
                                 <apex:inputCheckbox value="{!th.Asynchronous__c}" disabled="true" />
                             </div>
                         </td>
-                        <td class="slds-cell-wrap">
-                            <div class="slds-text-body_small">
+                        <td data-label="{!$ObjectType.Trigger_Handler__c.Fields.User_Managed__c.Label}">
+                            <div title="{!th.User_Managed__c}">
                                 <apex:inputCheckbox value="{!th.User_Managed__c}" disabled="true" />
                             </div>
                         </td>
-                        <td class="slds-cell-wrap" style="overflow-wrap: break-word;">
-                            <div class="slds-text-body_small">{!th.Usernames_to_Exclude__c}</div>
+                        <td data-label="{!$ObjectType.Trigger_Handler__c.Fields.Usernames_to_Exclude__c.Label}">
+                            <div class="slds-truncate" title="{!th.Usernames_to_Exclude__c}">{!th.Usernames_to_Exclude__c}</div>
                         </td>
                     </tr>
                 </apex:repeat>
