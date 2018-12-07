@@ -77,11 +77,15 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
     @isTest
     public static void testGetNewDataImport() {
 
+        Boolean errorIsThrownForNullId = false;
+
         try {
             String jsonModel = BGE_DataImportBatchEntry_CTRL.getDataImportModel(null);
         } catch (AuraHandledException e) {
-            System.assert(e.getMessage().contains('Data Import Model must receive a Batch ID.'));
+            errorIsThrownForNullId = true;
         }
+
+        System.assert(true, errorIsThrownForNullId);
     }
 
     /*********************************************************************************************************
