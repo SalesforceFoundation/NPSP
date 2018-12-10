@@ -321,6 +321,11 @@ class NPSP(object):
         locator=npsp_lex_locators['detail_page']['verify_field_value'].format(title,value)
         self.selenium.page_should_contain_element(locator)
         
+    def click_managehh_add_button(self,title):  
+        """clicks on the + button next to contact on manage hh page"""      
+        locator=npsp_lex_locators['record']['edit_button'].format(title)
+        self.selenium.get_webelement(locator).click()    
+        
     def click_managehh_button(self,title):  
         """clicks on the new contact button on manage hh page"""      
         locator=npsp_lex_locators['manage_hh_page']['button'].format(title)
@@ -647,7 +652,13 @@ class NPSP(object):
         locator = npsp_lex_locators['npsp_settings']['list'].format(list_name)
         loc = self.selenium.get_webelement(locator)
         self.selenium.set_focus_to_element(locator)       
-        self.selenium.select_from_list_by_label(loc,value)   
+        self.selenium.select_from_list_by_label(loc,value) 
+        
+    def select_multiple_values_from_list(self,list_name,*args): 
+        locator = npsp_lex_locators['npsp_settings']['multi_list'].format(list_name)
+        loc = self.selenium.get_webelement(locator)
+        self.selenium.set_focus_to_element(locator)       
+        self.selenium.select_from_list_by_label(loc,*args)      
         
     def get_npsp_locator(self, path, *args, **kwargs):
         """ Returns a rendered locator string from the npsp_lex_locators
@@ -673,7 +684,11 @@ class NPSP(object):
         """clicks on the button on the payments page"""      
         locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
         self.selenium.get_webelement(locator).click()
-        
+     
+    def click_settings_button (self,page,title):  
+        """clicks on the buttons on npsp settings page"""      
+        locator=npsp_lex_locators['npsp_settings']['button'].format(page,title)
+        self.selenium.get_webelement(locator).click()    
         
     def verify_payment_details(self):
         locator = "//tbody/tr/td[3]"
@@ -715,6 +730,13 @@ class NPSP(object):
                 date = "/".join(date)
                 loctor_contains = "//tbody//a[contains(@title , '{}')]".format(date)
                 self.selenium.page_should_contain_element(loctor_contains)
+    
+    def click_object_manager_button(self,title):  
+        """clicks on the + button next to contact on manage hh page"""      
+        locator=npsp_lex_locators['object_manager']['button'].format(title)
+        self.selenium.get_webelement(locator).click()  
+    
+    
                 
     
     def page_scroll_to_locator(self, path, *args, **kwargs):

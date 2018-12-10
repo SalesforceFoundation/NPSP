@@ -281,6 +281,7 @@ Run Donations Batch Process
     Wait For Locator    frame    Nonprofit Success Pack Settings
     Select Frame With Title    Nonprofit Success Pack Settings
     Click Link    link=Bulk Data Processes
+    Wait For Locator    link    Rollup Donations Batch
     Click Link    link=Rollup Donations Batch
     Click Button With Value    Run Batch
     # Wait For Locator    npsp_settings.status    CRLP_Account_SoftCredit_BATCH    Completed
