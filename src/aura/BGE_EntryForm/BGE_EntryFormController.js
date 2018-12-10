@@ -1,9 +1,15 @@
 ({
     /**
-     * @description: called during render to place the focus at the start of the form
+     * @description: called during render to focus on open donation link if present and donation not selected
      */
     callFocus: function(component){
-        component.find('donorType').focus();
+        let openDonationsLink = document.getElementById('selectOpenDonation');
+
+        if (openDonationsLink && component.get('v.selectedDonation') == null) {
+            openDonationsLink.focus();
+        } else if (openDonationsLink) {
+            component.find('donorType').focus();
+        }
     },
 
     /**
@@ -15,10 +21,38 @@
     },
 
     /**
+     * @description: listens for event listeners from other components
+     */
+    handleMessage: function (component, event, helper) {
+        const message = event.getParam('message');
+        const channel = event.getParam('channel');
+
+        if (channel === 'selectedDonation') {
+            helper.setDonation(component, message);
+        }
+    },
+
+    /**
      * @description: alerts parent component that form is loaded
      */
     onFormLoad: function (component, event, helper) {
         helper.sendMessage('hideFormSpinner', '');
+        component.find('donorType').focus();
+    },
+
+    /**
+     * @description: alerts parent component that form is loaded
+     */
+    onDonorChange: function (component, event, helper) {
+        helper.clearDonationSelectionOptions(component);
+        const lookupField = component.get('v.donorType') === 'Contact1' ? 'contactLookup' : 'accountLookup';
+        const lookupValue = component.find(lookupField).get('v.value');
+        const lookupValueIsValidId = lookupValue.length === 18;
+
+        if (lookupValueIsValidId) {
+            helper.sendMessage('showFormSpinner', '');
+            helper.queryOpenDonations(component, lookupValue);
+        }
     },
 
     /**
@@ -48,14 +82,49 @@
     },
 
     /**
+     * @description: launches modal so user can select open donation
+     */
+    openMatchModal: function(component, event, helper) {
+        $A.createComponent('c:BGE_DonationSelector', {
+                'aura:id': 'donationSelector',
+                'name': 'donationSelector',
+                'unpaidPayments': component.get('v.unpaidPayments'),
+                'openOpportunities': component.get('v.openOpportunities'),
+                'selectedDonation': component.get('v.selectedDonation'),
+                'labels': component.get('v.labels')
+            },
+            function (newcomponent, status, errorMessage) {
+                if (status === 'SUCCESS') {
+                    component.find('overlayLib').showCustomModal({
+                        header: component.get('v.donationModalHeader'),
+                        body: newcomponent,
+                        showCloseButton: true,
+                        cssClass: 'slds-modal_large'
+                    });
+                } else if (status === 'INCOMPLETE') {
+                    const message = {
+                        title: $A.get('$Label.c.PageMessagesError'),
+                        errorMessage: $A.get('$Label.c.stgUnknownError')
+                    };
+                    helper.sendMessage('onError', message);
+
+                } else if (status === 'ERROR') {
+                    const message = {title: $A.get('$Label.c.PageMessagesError'), errorMessage: errorMessage};
+                    helper.sendMessage('onError', message);
+                }
+            });
+    },
+
+    /**
      * @description: sets the donor type and alerts the parent. Used to circumvent the unhelpful labeling of Account1/Contact1.
      */
     setDonorType: function (component, event, helper) {
-        var donorType = event.getSource().get('v.value');
+        let donorType = event.getSource().get('v.value');
         component.set('v.donorType', donorType);
 
-        var message = {'donorType': donorType};
+        let message = {'donorType': donorType};
         helper.sendMessage('setDonorType', message);
+        helper.clearDonationSelectionOptions(component);
     }
 
 })
