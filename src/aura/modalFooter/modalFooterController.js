@@ -9,10 +9,10 @@
 
         if (channel === 'setStep') {
             component.set('v.currentStep', message);
-        } else if (channel === 'dataTableChanged') {
-            component.set('v.dataTableChanged', message);
         } else if (channel === 'setError') {
             component.set('v.hasError', message);
+        } else if (channel === 'pendingSave') {
+            component.set('v.pendingSave', message);
         }
     },
 
