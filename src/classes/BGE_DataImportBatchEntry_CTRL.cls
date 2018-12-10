@@ -162,19 +162,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
             Map<Id, Opportunity> openOpportunitiesById = new Map<Id, Opportunity>(openOpportunities);
 
-            // Opportunities List should only include open Opportunities with with NO UNPAID PAYMENTS
-            // (open means IsClosed = false)
-
-            // References from the payment do not work as expected using the list "contains" method
-            // Hence we should look for the id of the opportunity,
-            // which means we need to use a list of the Opportunity ids
-            // instead of using directly the list of Opportunities that we already have.
-
-            // Check for every unpaid payment if its parent Opportunity is included in the "openOpportunities" List
+            // openOpportunities should only include opps with NO UNPAID PAYMENTS for BDI to process donations correctly
             for (npe01__OppPayment__c payment : unpaidPayments) {
-                // Get the Id of the parent Opportunity
                 Id idOfCurrentOpportunity = payment.npe01__Opportunity__c;
-                // Check if the parent Opportunity is in openOpportunities
                 if (openOpportunitiesById.containsKey(idOfCurrentOpportunity)) {
                     openOpportunitiesById.remove(idOfCurrentOpportunity);
                 }
