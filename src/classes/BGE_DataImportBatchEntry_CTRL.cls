@@ -324,7 +324,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return void, throws AuraHandledException to display UI error
     */
     private static void checkFLS(DescribeFieldResult dfr) {
-        if (!dfr.isAccessible() || !dfr.isCreateable() || !dfr.isUpdateable()) {
+        if (!dfr.isCreateable() || !dfr.isUpdateable()) {
             throw new AuraHandledException(label.bgeFLSError);
         }
     }
