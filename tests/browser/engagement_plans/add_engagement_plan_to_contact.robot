@@ -20,7 +20,7 @@ Delete Engagement Plan
     [tags]  unstable
     #Sleep    2
     ${plan_num}    Verify Eng Plan Exists    Engagement Plans    True
-    #Sleep    2
+    Wait For Locator    link-title    Delete
     Click Link    link=Delete
     Click Modal Button        Delete
     Verify Occurrence    Engagement Plans    0    
