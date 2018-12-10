@@ -52,6 +52,9 @@
         } else if (channel === 'hideFormSpinner') {
             var spinner = component.find('formSpinner');
             $A.util.addClass(spinner, 'slds-hide');
+        } else if (channel === 'showFormSpinner') {
+            var spinner = component.find('formSpinner');
+            $A.util.removeClass(spinner, 'slds-hide');
         } else if (channel === 'onError') {
             helper.showToast(component, message.title, message.errorMessage, 'Error');
         }
@@ -68,7 +71,10 @@
         component.find('dataImportRowsDataTable').set('v.draftValues', null);
     },
 
-    openBatchWizard:function(component, event) {
+    /**
+     * @description: opens the batch wizard modal for edit mode of the component
+     */
+    openBatchWizard: function(component, event) {
         var modalBody;
         var modalHeader;
         var modalFooter;
