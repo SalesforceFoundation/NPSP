@@ -903,7 +903,7 @@ public with sharing class STG_SettingsManager_TEST {
         System.assertEquals(true, panel.isAdmin);
         System.assertEquals(false, panel.isPolling);
         System.assertEquals(false, ApexPages.hasMessages());
-        System.assert(panel.isHHAccount);
+        System.assert(panel.showCRLPSettings);
         System.assert(panel.isAdmin);
         System.assertEquals(false, ApexPages.hasMessages());
 
