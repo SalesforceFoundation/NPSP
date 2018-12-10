@@ -285,7 +285,7 @@
                 _bgeTemplateController.getRecordDetails(sObjectName, recordId, {
                     success: function(response) {
                         _templateInfo.load(response);
-                        _templateFields.load(response.templateFields, JSON.parse(response.activeFields));
+                        _templateFields.load(response.availableFields, JSON.parse(response.activeFields));
                         _templateMetadata.load(response.labels, component);
                     },
                     error: function(error) {

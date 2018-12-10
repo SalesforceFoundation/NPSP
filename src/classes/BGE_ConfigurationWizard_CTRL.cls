@@ -37,10 +37,10 @@
 public with sharing class BGE_ConfigurationWizard_CTRL {
 
     /*******************************************************************************************************
-    * @description Retrieves the Template Details information, the related list of fields, and component labels.
+    * @description Retrieves the Batch Details information, the related list of fields, and component labels.
     * @param sObjectName string of the sObjectName retrieved with force:hasSObjectName
     * @param recordId Id of the record to be queried
-    * @return JSON model of all template details data.
+    * @return JSON model of all batch details data.
     */
     @AuraEnabled
     public static String getRecordDetails(String sObjectName, Id recordId) {
@@ -54,83 +54,70 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         if (recordId != null) {
 
-            if (sObjectName == 'Batch_Template__c' || sObjectName == 'DataImportBatch__c') {
-                try {
-                    String descriptionField = (sObjectName == 'DataImportBatch__c') ? 'Batch_Description__c' : 'Description__c';
+            try {
 
-                    List<String> fields = new List<String>{
-                            descriptionField,
-                            'Name',
-                            'Id',
-                            'RequireTotalMatch__c',
-                            'Active_Fields__c',
-                            'Batch_Process_Size__c',
-                            'Run_Opportunity_Rollups_while_Processing__c',
-                            'Contact_Matching_Rule__c',
-                            'Donation_Matching_Behavior__c',
-                            'Donation_Matching_Implementing_Class__c',
-                            'Donation_Matching_Rule__c',
-                            'Donation_Date_Range__c',
-                            'Post_Process_Implementing_Class__c',
-                            'Process_Using_Scheduled_Job__c'
-                    };
+                List<String> fields = new List<String>{
+                        'Batch_Description__c',
+                        'Name',
+                        'Id',
+                        'RequireTotalMatch__c',
+                        'Active_Fields__c',
+                        'Batch_Process_Size__c',
+                        'Run_Opportunity_Rollups_while_Processing__c',
+                        'Contact_Matching_Rule__c',
+                        'Donation_Matching_Behavior__c',
+                        'Donation_Matching_Implementing_Class__c',
+                        'Donation_Matching_Rule__c',
+                        'Donation_Date_Range__c',
+                        'Post_Process_Implementing_Class__c',
+                        'Process_Using_Scheduled_Job__c',
+                        'Expected_Count_of_Gifts__c',
+                        'Expected_Total_Batch_Amount__c'
+                };
 
-                    if (sObjectName == 'DataImportBatch__c') {
-                        fields.add('Expected_Count_of_Gifts__c');
-                        fields.add('Expected_Total_Batch_Amount__c');
-                    }
+                String soql = 'SELECT ' +
+                        String.join(fields, ', ') +
+                        ' FROM DataImportBatch__c' +
+                        ' WHERE Id=:recordId';
 
+                DataImportBatch__c recordDetails = Database.query(soql);
 
-                    String soql = 'SELECT ' +
-                            String.join(fields, ', ') +
-                            ' FROM ' + sObjectName +
-                            ' WHERE Id=:recordId';
+                model.name = recordDetails.Name;
+                model.id = recordDetails.Id;
+                model.description = recordDetails.Batch_Description__c;
+                model.requireTotalMatch = recordDetails.RequireTotalMatch__c;
+                model.activeFields = recordDetails.Active_Fields__c;
+                model.batchProcessSize = recordDetails.Batch_Process_Size__c;
+                model.donationDateRange = recordDetails.Donation_Date_Range__c;
+                model.donationMatchingBehavior = recordDetails.Donation_Matching_Behavior__c;
+                model.donationMatchingClass = recordDetails.Donation_Matching_Implementing_Class__c;
+                model.donationMatchingRule = (recordDetails.Donation_Matching_Rule__c).split(';');
+                model.postProcessClass = recordDetails.Post_Process_Implementing_Class__c;
+                model.processUsingScheduledJob = recordDetails.Process_Using_Scheduled_Job__c;
+                model.runOpportunityRollupsWhileProcessing = recordDetails.Run_Opportunity_Rollups_while_Processing__c;
+                model.expectedCount = Integer.valueOf(recordDetails.Expected_Count_of_Gifts__c);
+                model.expectedTotal = recordDetails.Expected_Total_Batch_Amount__c;
 
-                    SObject recordDetails = Database.query(soql);
-
-                    model.name = (String)recordDetails.get('Name');
-                    model.id = (String)recordDetails.get('Id');
-                    model.description = (String)recordDetails.get(descriptionField);
-                    model.requireTotalMatch = (Boolean)recordDetails.get('RequireTotalMatch__c');
-                    model.activeFields = (String)recordDetails.get('Active_Fields__c');
-                    model.batchProcessSize = (Decimal)recordDetails.get('Batch_Process_Size__c');
-                    model.donationDateRange = (Decimal)recordDetails.get('Donation_Date_Range__c');
-                    model.donationMatchingBehavior = (String)recordDetails.get('Donation_Matching_Behavior__c');
-                    model.donationMatchingClass = (String)recordDetails.get('Donation_Matching_Implementing_Class__c');
-                    model.donationMatchingRule = ((String)recordDetails.get('Donation_Matching_Rule__c')).split(';');
-                    model.postProcessClass = (String)recordDetails.get('Post_Process_Implementing_Class__c');
-                    model.processUsingScheduledJob = (Boolean)recordDetails.get('Process_Using_Scheduled_Job__c');
-                    model.runOpportunityRollupsWhileProcessing = (Boolean)recordDetails.get('Run_Opportunity_Rollups_while_Processing__c');
-
-                    if (sObjectName == 'DataImportBatch__c') {
-                        model.expectedCount = Integer.valueOf(recordDetails.get('Expected_Count_of_Gifts__c'));
-                        model.expectedTotal = (Decimal)recordDetails.get('Expected_Total_Batch_Amount__c');
-                    }
-                } catch (Exception ex) {
-                    throw new AuraHandledException('ERROR: ' + ex.getMessage());
-                }
-            } else {
-                throw new AuraHandledException('ERROR: Only Batch_Template__c and DataImportBatch__c are supported objects.');
+            } catch (Exception ex) {
+                throw new AuraHandledException('ERROR: ' + ex.getMessage());
             }
 
-            if (sObjectName == 'DataImportBatch__c') {
-                model.recordCount = [SELECT COUNT() FROM DataImport__c WHERE NPSP_Data_Import_Batch__c = :recordId];
-            }
+            model.recordCount = [SELECT COUNT() FROM DataImport__c WHERE NPSP_Data_Import_Batch__c = :recordId];
         }
 
         setDefaultValuesOnBGEDetailsModel(model);
 
         model.donationMatchingOptions = getDonationMatchingOptions();
-        model.templateFields = getAvailableFields();
+        model.availableFields = getAvailableFields();
 
-        model.labels = getLabels(sObjectName);
+        model.labels = getBatchLabels();
 
         return JSON.serialize(model);
     }
 
     /*******************************************************************************************************
     * @description Retrieves the related list of fields.
-    * @return list of Template Fields with sObjectName and Name.
+    * @return list of Available Fields with sObjectName and Name.
     */
     public static List<BGEField> getAvailableFields() {
 
@@ -277,7 +264,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Retrieves the default active fields for a new Batch or Template in a JSON String
+    * @description Retrieves the default active fields for a new Batch in a JSON String
     */
     public static String getDefaultActiveFields() {
         List<BGEField> fields = new List<BGEField>();
@@ -341,7 +328,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         model.expectedCount = 0;
         model.expectedTotal = 0;
         model.requireTotalMatch = false;
-        model.templateFields = new List<BGEField>();
+        model.availableFields = new List<BGEField>();
         model.batchProcessSize = 50;
         model.contactMatchingRule = 'Firstname,Lastname,Email';
         model.donationDateRange = 0;
@@ -379,8 +366,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             model.requireTotalMatch = defaultModel.requireTotalMatch;
         }
 
-        if (model.templateFields == null) {
-            model.templateFields = defaultModel.templateFields;
+        if (model.availableFields == null) {
+            model.availableFields = defaultModel.availableFields;
         }
 
         if (model.batchProcessSize == null) {
@@ -445,53 +432,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             donationMatchingOptions.add(option);
         }
         return donationMatchingOptions;
-    }
-
-
-    /*******************************************************************************************************
-    * @description Retrieves the object and field labels for the component.
-    * @param sObjectName the object being used by the component (already stripped of the namespace prefix)
-    * @return Map of object and field name keys to their labels.
-    */
-    public static Map<String, String> getLabels(String sObjectName) {
-
-        if (sObjectName == 'Batch_Template__c') {
-            Map<String, String> labels = getTemplateLabels();
-            return labels;
-        } else if (sObjectName == 'DataImportBatch__c') {
-            Map<String, String> labels = getBatchLabels();
-            return labels;
-        } else {
-            throw new AuraHandledException('ERROR: ' + 'Only Batch_Template__c and DataImportBatch__c are supported objects.');
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description Retrieves the object and field labels for the template object.
-    * @return Map of object and field name keys to their labels.
-    */
-    public static Map<String, String> getTemplateLabels() {
-        Map<String, String> labels = new Map<String, String> {
-                'objectLabel' => Schema.SObjectType.Batch_Template__c.getLabel(),
-                'backToTemplates' => String.format(Label.CRLP_Return, new List<String>{Schema.SObjectType.Batch_Template__c.getLabelPlural()}),
-                'sObjectName' => Schema.SObjectType.Batch_Template__c.getName(),
-                'sObjectNameNoNamespace' => UTIL_Namespace.StrTokenRemoveNSPrefix(Schema.SObjectType.Batch_Template__c.getName()),
-                'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.Batch_Template__c.Name.getDescribe().getLabel() + ', ' + Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
-                'description' => Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
-                'totalMatchHelp' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
-                'totalMatchLabel' => Schema.Batch_Template__c.RequireTotalMatch__c.getDescribe().getLabel(),
-                'recordInfoLabel' => Label.bgeBatchTemplateOverviewWizard,
-                'batchProcessSizeLabel' => Schema.Batch_Template__c.Batch_Process_Size__c.getDescribe().getLabel(),
-                'donationDateRangeLabel' => Schema.Batch_Template__c.Donation_Date_Range__c.getDescribe().getLabel(),
-                'donationMatchingBehaviorLabel' => Schema.Batch_Template__c.Donation_Matching_Behavior__c.getDescribe().getLabel(),
-                'donationMatchingClassLabel' => Schema.Batch_Template__c.Donation_Matching_Implementing_Class__c.getDescribe().getLabel(),
-                'donationMatchingRuleLabel' => Schema.Batch_Template__c.Donation_Matching_Rule__c.getDescribe().getLabel(),
-                'postProcessClassLabel' => Schema.Batch_Template__c.Post_Process_Implementing_Class__c.getDescribe().getLabel(),
-                'processUsingScheduledJobLabel' => Schema.Batch_Template__c.Process_Using_Scheduled_Job__c.getDescribe().getLabel(),
-                'runOpportunityRollupsWhileProcessingLabel' => Schema.Batch_Template__c.Run_Opportunity_Rollups_while_Processing__c.getDescribe().getLabel()
-        };
-        labels.putAll(getMatchingValues());
-        return labels;
     }
 
     /*******************************************************************************************************
@@ -562,14 +502,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         try {
             BGEDetailsModel recordDetails = (BGEDetailsModel) JSON.deserialize(recordInfo, BGEDetailsModel.class);
             recordDetails.activeFields = activeFields;
-
-            if (sObjectName == 'Batch_Template__c') {
-                recordDetails.id = saveRecordTemplate(recordDetails);
-            } else if (sObjectName == 'DataImportBatch__c') {
-                recordDetails.id = saveRecordBatch(recordDetails);
-            } else {
-                throw new AuraHandledException('ERROR: ' + 'Only Batch_Template__c and DataImportBatch__c are supported objects.');
-            }
+            recordDetails.id = saveRecordBatch(recordDetails);
 
             return JSON.serialize(recordDetails);
 
@@ -615,37 +548,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Saves the Template information with the structured list of active fields.
-    * @param recordDetails model of the information to save
-    * @param activeFields JSON string of the active fields to be saved to the record
-    * @return Id of the saved record
-    */
-    public static Id saveRecordTemplate(BGEDetailsModel recordDetails) {
-        Batch_Template__c batchTemplate = new Batch_Template__c();
-
-        if (recordDetails.id != null) {
-            batchTemplate.Id = recordDetails.id;
-        }
-        batchTemplate.Name = recordDetails.name;
-        batchTemplate.Description__c = recordDetails.description;
-        batchTemplate.RequireTotalMatch__c = recordDetails.requireTotalMatch;
-        batchTemplate.Active_Fields__c = recordDetails.activeFields;
-        batchTemplate.Batch_Process_Size__c = recordDetails.batchProcessSize;
-        batchTemplate.Contact_Matching_Rule__c = recordDetails.contactMatchingRule;
-        batchTemplate.Donation_Date_Range__c = recordDetails.donationDateRange;
-        batchTemplate.Donation_Matching_Behavior__c = recordDetails.donationMatchingBehavior;
-        batchTemplate.Donation_Matching_Implementing_Class__c = recordDetails.donationMatchingClass;
-        batchTemplate.Donation_Matching_Rule__c = String.join(recordDetails.donationMatchingRule, ';');
-        batchTemplate.Post_Process_Implementing_Class__c = recordDetails.postProcessClass;
-        batchTemplate.Process_Using_Scheduled_Job__c = recordDetails.processUsingScheduledJob;
-        batchTemplate.Run_Opportunity_Rollups_while_Processing__c = recordDetails.runOpportunityRollupsWhileProcessing;
-
-        upsert batchTemplate;
-
-        return batchTemplate.Id;
-    }
-
-    /*******************************************************************************************************
     * @description a class to retrieve and save the required information for the BGE_ConfigurationWizard component.
     */
     public class BGEDetailsModel {
@@ -655,7 +557,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public Boolean requireTotalMatch;
         @AuraEnabled public Integer expectedCount;
         @AuraEnabled public Decimal expectedTotal;
-        @AuraEnabled public List<BGEField> templateFields;
+        @AuraEnabled public List<BGEField> availableFields;
         @AuraEnabled public String activeFields;
         @AuraEnabled public Map<String, String> labels;
         @AuraEnabled public Decimal batchProcessSize;
@@ -668,14 +570,13 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public String postProcessClass;
         @AuraEnabled public Boolean processUsingScheduledJob;
         @AuraEnabled public Boolean runOpportunityRollupsWhileProcessing;
-        @AuraEnabled public List<Batch_Template__c> availableBatchTemplates;
         @AuraEnabled public Integer recordCount;
 
         public BGEDetailsModel() {
             requireTotalMatch = false;
             expectedCount = 0;
             expectedTotal = 0;
-            templateFields = new List<BGEField>();
+            availableFields = new List<BGEField>();
         }
     }
 
