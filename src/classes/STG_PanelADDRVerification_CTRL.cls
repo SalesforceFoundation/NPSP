@@ -47,7 +47,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         void encodeToken(Addr_Verification_Settings__c settings);
     }
 
-    private static final String SMARTY_STREETS_VALIDATOR_CLASS = ADDR_SmartyStreets_Validator.class.getName();
+    private static final String SMARTY_STREETS_VALIDATOR_CLASS = 'ADDR_SmartyStreets_Validator';
 
     /*******************************************************************************************************
     * @description The panel ID.

@@ -35,7 +35,7 @@
 */
 @isTest
 public with sharing class ADDR_Validator_TEST {
-    private static final String SMARTY_STREETS_VALIDATOR_CLASS = ADDR_SmartyStreets_Validator.class.getName();
+    private static final String SMARTY_STREETS_VALIDATOR_CLASS = 'ADDR_SmartyStreets_Validator';
     private static final String SMARTY_STREETS_VERIFICATION_ENDPOINT = 'https://api.smartystreets.com/street-address';
     private static final String SETTINGS_NAME = Schema.SObjectType.Addr_Verification_Settings__c.getLabel();
     private static final String ZIP_CODE = '94105';
