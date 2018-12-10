@@ -15,7 +15,7 @@
                 selection = j$('[id$=iServiceName]').text();
             }
 
-            if (selection == 'SmartyStreets') {
+            if (selection === 'SmartyStreets') {
                 j$('[id$=iAuthIdDiv]').show();
                 j$('[id$=iAuthTokenDiv]').show();
                 j$('[id$=iBatchVerifyDiv]').show();

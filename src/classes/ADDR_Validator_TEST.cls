@@ -35,7 +35,7 @@
 */
 @isTest
 public with sharing class ADDR_Validator_TEST {
-    private static final String SMARTY_STREETS_VALIDATOR_CLASS = 'ADDR_SmartyStreets_Validator';
+    private static final String SMARTY_STREETS_VALIDATOR_CLASS = ADDR_SmartyStreets_Validator.class.getName();
     private static final String SMARTY_STREETS_VERIFICATION_ENDPOINT = 'https://api.smartystreets.com/street-address';
     private static final String SETTINGS_NAME = Schema.SObjectType.Addr_Verification_Settings__c.getLabel();
     private static final String ZIP_CODE = '94105';
@@ -54,7 +54,7 @@ public with sharing class ADDR_Validator_TEST {
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
-        Contact contact = new Contact(FirstName = 'Test', LastName = 'Person'); 
+        Contact contact = new Contact(FirstName = 'Test', LastName = getContactLastName()); 
         contact.MailingStreet = 'single-address';
         contact.MailingCity = 'Cupertino';
         contact.MailingState = 'California';
@@ -120,7 +120,7 @@ public with sharing class ADDR_Validator_TEST {
         // address validation is async, so no way to successfully test if other related triggers are already async!
         if (hasAsyncAddrTriggers()) return;
         
-        Addr_Verification_Settings__c settings = createDefaultSettings();
+        createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
         Contact contact = buildContactOnStreet('400 error');
@@ -143,7 +143,7 @@ public with sharing class ADDR_Validator_TEST {
         // address validation is async, so no way to successfully test if other related triggers are already async!
         if (hasAsyncAddrTriggers()) return;
         
-        Addr_Verification_Settings__c settings = createDefaultSettings();
+        createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
         Contact contact = buildContactOnStreet('401 error');
@@ -166,7 +166,7 @@ public with sharing class ADDR_Validator_TEST {
         // address validation is async, so no way to successfully test if other related triggers are already async!
         if (hasAsyncAddrTriggers()) return;
         
-        Addr_Verification_Settings__c settings = createDefaultSettings();
+        createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
         Contact contact = buildContactOnStreet('402 error');
@@ -189,7 +189,7 @@ public with sharing class ADDR_Validator_TEST {
         // address validation is async, so no way to successfully test if other related triggers are already async!
         if (hasAsyncAddrTriggers()) return;
         
-        Addr_Verification_Settings__c settings = createDefaultSettings();
+        createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
               
         Contact contact = buildContactOnStreet('500 error');
@@ -245,7 +245,7 @@ public with sharing class ADDR_Validator_TEST {
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         
-        Contact contact = new Contact(FirstName = 'Test', LastName = 'Person'); 
+        Contact contact = new Contact(FirstName = 'Test', LastName = getContactLastName()); 
         contact.MailingPostalCode = '94105';
         contact.MailingCity = 'single-zip';
         contact.MailingCountry = 'United States';
@@ -282,7 +282,7 @@ public with sharing class ADDR_Validator_TEST {
         createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
         
-        Contact contact = new Contact(FirstName = 'Test', LastName = 'Person'); 
+        Contact contact = new Contact(FirstName = 'Test', LastName = getContactLastName()); 
         contact.MailingCity = 'single-zip';
         contact.MailingState = 'Illinois';
         contact.MailingCountry = 'United States';
@@ -379,7 +379,7 @@ public with sharing class ADDR_Validator_TEST {
         // address validation is async, so no way to successfully test if other related triggers are already async!
         if (hasAsyncAddrTriggers()) return;
         
-        Contact contact = new Contact(FirstName = 'Test', LastName = 'Person'); 
+        Contact contact = new Contact(FirstName = 'Test', LastName = getContactLastName()); 
         contact.MailingStreet = 'single-address';
         contact.MailingCity = 'Cupertino';
         contact.MailingState = 'California';
@@ -456,7 +456,7 @@ public with sharing class ADDR_Validator_TEST {
     */
     @isTest
     private static void healthCheckShouldDisplayPermissionDeniedMessageWhenUserHasNoAccess() { 
-        Addr_Verification_Settings__c settings = createDefaultSettings();
+        createDefaultSettings();
 
         STG_PanelHealthCheck_CTRL healthCheckPanel = new STG_PanelHealthCheck_CTRL();
         AddressVerifierExtension addrVerifier = new AddressVerifierExtension().returnHasAccess(false);
@@ -501,7 +501,7 @@ public with sharing class ADDR_Validator_TEST {
             new String[]{ SETTINGS_NAME, System.Label.stgNavHouseholds, System.Label.stgNavAddressVerification }
         );
 
-        Addr_Verification_Settings__c settings = createDefaultSettings();
+        createDefaultSettings();
         MockAddressVerifier addrVerifier = new MockAddressVerifier()
             .returnHasAccess(true)
             .returnVerifyServiceResult(expectedMessage);
@@ -526,7 +526,7 @@ public with sharing class ADDR_Validator_TEST {
     private static void healthCheckShouldDisplaySuccessWhenAddressIsValidated() { 
         final String expectedMessage = 'Test Smarty Streets: is valid';
 
-        Addr_Verification_Settings__c settings = createDefaultSettings();
+        createDefaultSettings();
         MockAddressVerifier addrVerifier = new MockAddressVerifier()
             .returnHasAccess(true)
             .returnVerifyServiceResult(expectedMessage);
@@ -713,7 +713,7 @@ public with sharing class ADDR_Validator_TEST {
     * @return Contact
     */
     private static Contact buildContactOnStreet(String street) {
-        Contact contact = new Contact(FirstName = 'Test', LastName = 'Person'); 
+        Contact contact = new Contact(FirstName = 'Test', LastName = getContactLastName()); 
         contact.MailingStreet = street;
         contact.MailingCity = 'chicago';
         contact.MailingState = 'Illinois';
@@ -721,6 +721,18 @@ public with sharing class ADDR_Validator_TEST {
         contact.MailingCountry = 'United States';
 
         return contact;
+    }
+
+    /*******************************************************************************************************
+    * @description Builds a random string that can represent a random contact last name
+    * @return String
+    */
+    private static String getContactLastName() {
+        final Integer maxLastNameLength = 80;
+
+        Blob key = crypto.generateAesKey(128);
+        String encodedKey = EncodingUtil.base64encode(key);
+        return encodedKey.left(maxLastNameLength);
     }
 
     /*******************************************************************************************************

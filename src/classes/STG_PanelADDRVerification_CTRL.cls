@@ -37,6 +37,9 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
     /*******************************************************************************************************
     * @description Interface for the address verifier
+    * The purpose of the interface is to extract common code of address verification into a class, but most
+    * importantly to create a testable code so that results of hasAccess() and verifyService() 
+    * are provided without creating a user w/o access or calling the address verification service.
     */
     public Interface IAddressVerifier {
         String verifyService(Addr_Verification_Settings__c settings, String zipCode);
@@ -44,7 +47,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         void encodeToken(Addr_Verification_Settings__c settings);
     }
 
-    private static final String SMARTY_STREETS_VALIDATOR_CLASS = 'ADDR_SmartyStreets_Validator';
+    private static final String SMARTY_STREETS_VALIDATOR_CLASS = ADDR_SmartyStreets_Validator.class.getName();
 
     /*******************************************************************************************************
     * @description The panel ID.
@@ -497,7 +500,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         * @return Boolean
         */ 
         public virtual Boolean hasAccess() {
-            return hasAddressAccess() && USER_UserService.hasCustomizeApplicationPermission(UserInfo.getProfileId());
+            return hasAddressAccess() && USER_UserService.isCustomizeApplicationUser();
         }
 
         /*******************************************************************************************************
