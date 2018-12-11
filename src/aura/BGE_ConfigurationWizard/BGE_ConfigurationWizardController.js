@@ -78,9 +78,6 @@
             model.getTemplateMetadata().togglePendingSave();
             model.getTemplateInfo().load(component.get('v.templateInfo'));
             model.save();
-
-            // if save redirect wasn't successful, set pendingSave back to false
-            model.getTemplateMetadata().togglePendingSave();
         }
     },
 

@@ -347,6 +347,7 @@
                     },
                     error: function(error) {
                         console.log(error);
+                        _templateMetadata.togglePendingSave();
                     }
                 });
             }
@@ -1078,13 +1079,12 @@
                 }
                 else if (state === 'ERROR') {
                     var errors = response.getError();
-                    if (errors) {
-                        if (errors[0] && errors[0].message) {
-                            this.errors = errors[0].message;
-                        }
+                    if (errors && errors[0] && errors[0].message) {
+                        errors = errors[0].message;
                     } else {
-                        this.errors = 'Unknown error';
+                        errors = 'Unknown error';
                     }
+                    this.error(errors);
                 }
             }
             
