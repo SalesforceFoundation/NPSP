@@ -49,6 +49,6 @@
     <standardLabel>NewRecordType</standardLabel>
     <targetObject>Opportunity</targetObject>
     <targetParentField>npsp__Primary_Contact__c</targetParentField>
-    <targetRecordType>Opportunity.Major_Gift</targetRecordType>
+    <targetRecordType>Opportunity.MajorGift</targetRecordType>
     <type>Create</type>
 </QuickAction>

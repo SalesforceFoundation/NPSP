@@ -64,6 +64,25 @@
         <name>Layout</name>
     </types>
     <types>
+        <members>Nonprofit_Success_Pack_UtilityBar</members>
+        <members>NPSP_Account_Record_Page</members>
+        <members>NPSP_Address_Record_Page</members>
+        <members>NPSP_Affiliation_Record_Page</members>
+        <members>NPSP_Campaign_Record_Page</members>
+        <members>NPSP_Contact_Record_Page</members>
+        <members>NPSP_Data_Import</members>
+        <members>NPSP_Deliverable</members>
+        <members>NPSP_Engagement_Plan_Record_Page</members>
+        <members>NPSP_GAU_Allocation</members>
+        <members>NPSP_General_Accounting_Unit</members>
+        <members>NPSP_Lead_Record_Page</members>
+        <members>NPSP_Opportunity_Record_Page</members>
+        <members>NPSP_Payment</members>
+        <members>NPSP_Recurring_Donation</members>
+        <members>NPSP_Relationship_Record_Page</members>
+        <name>FlexiPage</name>
+    </types>
+    <types>
         <members>Contact.New_Open_Recurring_Donation</members>
         <members>Contact.NewDonation</members>
         <members>Contact.NewInKind</members>
@@ -84,7 +103,16 @@
     <types>
         <members>ContactRole</members>
         <members>OpportunityStage</members>
+        <members>OpportunityType</members>
         <name>StandardValueSet</name>
+    </types>
+    <types>
+        <members>Nonprofit_Success_Pack</members>
+        <name>CustomApplication</name>
+    </types>
+    <types>
+        <members>RGB_nspscolor_copy</members>
+        <name>ContentAsset</name>
     </types>
     <types>
         <members>Admin</members>

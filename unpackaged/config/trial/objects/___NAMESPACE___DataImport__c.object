@@ -3,15 +3,9 @@
     <actionOverrides>
         <actionName>View</actionName>
         <comment>Action override created by Lightning App Builder during activation.</comment>
-        <content>NPSP_Lead_Record_Page</content>
+        <content>NPSP_Data_Import</content>
         <formFactor>Large</formFactor>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>Flexipage</type>
-    </actionOverrides>
-    <actionOverrides>
-        <actionName>Convert</actionName>
-        <content>%%%NAMESPACE%%%LD_LeadConvertOverride</content>
-        <skipRecordTypeSelect>false</skipRecordTypeSelect>
-        <type>Visualforce</type>
     </actionOverrides>
 </CustomObject>
