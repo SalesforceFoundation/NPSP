@@ -44,6 +44,7 @@ Find Matching Gifts
     ...                     &{contact1}[LastName] Household=$50.00
     ...                     &{contact2}[LastName] Household=$25.00  
     Go To Record Home  &{opportunity3}[Id]
+    Capture Page Screenshot
     Load Related List    Matched Gifts
     Click Viewall Related List    Matched Gifts
     Verify Related List Field Values

@@ -14,7 +14,6 @@ Create Donation and Opportunity and Create Payment Manually
     Go To Record Home  &{opportunity}[Id]
     Load Related List    Payments
     Select Related Dropdown    Payments
-    Wait For Locator    link-title    New
     Click Link    link=New
     #Sleep    2
     Select Window

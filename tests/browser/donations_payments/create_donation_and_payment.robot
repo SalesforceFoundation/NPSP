@@ -21,7 +21,6 @@ Create Donation from a Contact
     Set Global Variable      ${opp_name}
     Load Related List    Payments
     Select Related Dropdown    Payments
-    Wait For Locator    link-title    Schedule Payments
     Click Link    link=Schedule Payments
     Wait For Locator    frame    Create one or more Payments for this Opportunity
     Select Frame with Title    Create one or more Payments for this Opportunity
