@@ -132,10 +132,10 @@ private class CRLP_DefaultConfigBuilder_TEST {
                 Boolean isRelatedToMembershipFilterGroup = false;
                 Boolean isActive;
                 for (Metadata.CustomMetadataValue val : md.values) {
-                    if ((String) val.field == 'Filter_Group__c' && (String) val.value == CRLP_DefaultConfigBuilder.FilterGroup_Membership ) {
+                    if (val.field == String.valueOf(Rollup__mdt.Filter_Group__c) && val.value == CRLP_DefaultConfigBuilder.FilterGroup_Membership ) {
                         isRelatedToMembershipFilterGroup = true;
                     }
-                    if ((String)val.field == 'Active__c') {
+                    if (val.field == String.valueOf(Rollup__mdt.Active__c)) {
                         isActive = (Boolean) val.value;
                     }
                 }
