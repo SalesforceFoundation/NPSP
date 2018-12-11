@@ -34,30 +34,34 @@
 * @description The UTIL_HtmlOutput_CTRL is used to safely unescape any whitelisted tags and urls
 */
 public with sharing class UTIL_HtmlOutput_CTRL {
+
     /** @description The map of allowed tags and their temporary substitution values */
     private static final Map<String, String> SUBSTITUTION_BY_ALLOWED_TAG = new Map<String, String> {
-        '<br>' => '|badBreak|',
-        '<br/>' => '|break|',
-        '<b>' => '|startBold|',
-        '</b>' => '|endBold|',
-        '<ol>' => '|orderList|',
-        '</ol>' => '|endOrderList|',
-        '<ul>' => '|unorderList|',
-        '</ul>' => '|endunOrderList|',
-        '<li>' => '|lineItem|',
-        '</li>' => '|endLineItem|'
+        '/>' => '|backClose|',
+        '</' => '|closeFront|',
+        '>' => '|emptyClose|',
+        '<br' => '|break|',
+        '<b' => '|bold|',
+        '<ol' => '|orderList|',
+        '<ul' => '|unorderedList|',
+        '<li' => '|lineItem|',
+        '<p' => '|para|',
+        '<h1' => '|head1|',
+        '<h2' => '|head2|',
+        '<h3' => '|head3|'
     };
+
     /** @description The map of allowed urls and their temporary substitution values */
     private static final Map<String, String> SUBSTITUTION_BY_ALLOWED_URL = new Map<String, String> {
         '<a href="https://powerofus.force.com/' => '|hubURL|',
         '<a href="/setup/' => '|setupURL|',
-        '<a href="#" onclick="ShowPanel(\'idPanelHealthCheck\');return false;">' => '|showPanelHealthCheck|',
-        '<a href="#" onclick="ShowPanel(\'idPanelErrorLog\');return false;">' => '|showPanelErrorLog|',
-        '</a>' => '|endURL|',
-        '" target="_blank">' => '|blankTarget|',
-        '" target="_new">' => '|newTarget|',
-        '">' => '|noTarget|'
+        '<a href="#" onclick="ShowPanel(\'idPanelHealthCheck\');return false;"' => '|showPanelHealthCheck|',
+        '<a href="#" onclick="ShowPanel(\'idPanelErrorLog\');return false;"' => '|showPanelErrorLog|',
+        '" target="_blank"' => '|blankTarget|',
+        '" target="_new"' => '|newTarget|',
+        '"' => '|quote|'
     };
+
     /** @description The unescaped html passed in by the page. */
     public String unsafeHtml { 
         get; 
@@ -67,6 +71,7 @@ public with sharing class UTIL_HtmlOutput_CTRL {
             }
         }
     }
+
     /** @description True when the html contains a url that should be safely escaped. */
     public Boolean hasURL {
         get; 
@@ -98,7 +103,7 @@ public with sharing class UTIL_HtmlOutput_CTRL {
     * @description Returns the unescaped html with the whitelisted tags and url replaced with temporary values
     */
     private String replaceWhitelist(String unescapedHtml) {
-        String replacedHtml = unescapedHtml;
+        String replacedHtml = unescapedHtml.normalizeSpace();
 
         for (String allowedTag : SUBSTITUTION_BY_ALLOWED_TAG.keySet()) {
             replacedHtml = replacedHtml.replace(allowedTag, SUBSTITUTION_BY_ALLOWED_TAG.get(allowedTag));

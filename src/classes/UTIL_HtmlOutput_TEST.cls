@@ -36,6 +36,20 @@
 @isTest(IsParallel=true)
 public with sharing class UTIL_HtmlOutput_TEST {
     /*******************************************************************************************************
+    * @description Verifies a string with whitelisted tag with extra space is returned without escaping
+    */
+    @isTest
+    private static void shouldReturnOriginalTagWithSpace() {
+        String html = '<b> Bold is allowed </ b>';
+        UTIL_HtmlOutput_CTRL controller = new UTIL_HtmlOutput_CTRL();
+
+        controller.unsafeHtml = html;
+        controller.hasUrl = false;
+
+        System.assertEquals(html, controller.getSafeHtml());
+    }
+
+    /*******************************************************************************************************
     * @description Verifies a string with whitelisted tag is returned without escaping
     */
     @isTest
@@ -71,6 +85,20 @@ public with sharing class UTIL_HtmlOutput_TEST {
     @isTest
     private static void shouldReturnOriginalUrl() {
         String html = '<a href="https://powerofus.force.com/NPSP_Documentation">';
+        UTIL_HtmlOutput_CTRL controller = new UTIL_HtmlOutput_CTRL();
+
+        controller.unsafeHtml = html;
+        controller.hasUrl = true;
+
+        System.assertEquals(html, controller.getSafeHtml());
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies a string with whitelisted url with extra space is returned without escaping
+    */
+    @isTest
+    private static void shouldReturnOriginalUrlWithSpace() {
+        String html = '<a href="https://powerofus.force.com/NPSP_Documentation" >';
         UTIL_HtmlOutput_CTRL controller = new UTIL_HtmlOutput_CTRL();
 
         controller.unsafeHtml = html;
