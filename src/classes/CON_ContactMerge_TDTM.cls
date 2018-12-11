@@ -37,7 +37,8 @@
 * has completed, in order to fixup an assortment of affected information.
 */
 public class CON_ContactMerge_TDTM extends TDTM_Runnable {
-        
+    @TestVisible
+    private static RLLP_OppRollup oppRollup = new RLLP_OppRollup();
     
     /*******************************************************************************************************
     * @description Trigger Handler on Contact that handles detecting when an Contact Merge 
@@ -179,17 +180,18 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
             // recalc Account Rollups
             ACCT_IndividualAccounts_TDTM.rollupAccounts(listAccId);            
         }
-        
+
         // recalc Contact Rollups
-        RLLP_OppRollup opprollup = new RLLP_OppRollup();
-        opprollup.rollupContacts(new map<Id, Contact>(listContactWinner));
-        
+        if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
+            CRLP_RollupQueueable.runRollupsForIds(listContactIdWinner);
+        } else {
+            oppRollup.rollupContacts(new map<Id, Contact>(listContactWinner));
+        }
+
         // fixup duplicate Affiliations & Primary Affiliation
         AFFL_Affiliations_TDTM.cleanupContactAffiliations(listContactWinner);
         
         // remove duplicate Relationships
         REL_Relationships_TDTM.cleanupContactRelationships(listContactWinner);
-                
     }
-    
 }
