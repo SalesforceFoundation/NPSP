@@ -124,6 +124,61 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description Retrieves all open Opportunities and unpaid Payments for the selected Donor (Account or Contact)
+    * @return Map<String, List<SObject>> of all openOpportunities and unpaidPayments for the given donor
+    */
+    @AuraEnabled
+    public static String getOpenDonations(Id donorId, String donorType) {
+        String relationshipField;
+        if (donorType == 'Account1') {
+            relationshipField = 'AccountId';
+        } else if (donorType == 'Contact1') {
+            relationshipField = 'Primary_Contact__c';
+        }
+
+        String opportunitySOQL = 'SELECT Id, ' +
+                                'Name, ' +
+                                'StageName, ' +
+                                'Amount ' +
+                                'FROM Opportunity ' +
+                                'WHERE ' + relationshipField + ' = :donorId ' +
+                                'AND IsClosed = false';
+
+        String paymentSOQL = 'SELECT Id, ' +
+                                'Name, ' +
+                                'npe01__Scheduled_Date__c, ' +
+                                'npe01__Opportunity__r.Name, ' +
+                                'npe01__Opportunity__c, ' +
+                                'npe01__Payment_Amount__c ' +
+                                'FROM npe01__OppPayment__c ' +
+                                'WHERE npe01__Opportunity__r.' + relationshipField + ' = :donorId ' +
+                                'AND npe01__Paid__c = false';
+
+        try {
+            List<Opportunity> openOpportunities = Database.query(opportunitySOQL);
+            List<npe01__OppPayment__c> unpaidPayments = Database.query(paymentSOQL);
+
+            Map<Id, Opportunity> openOpportunitiesById = new Map<Id, Opportunity>(openOpportunities);
+
+            // openOpportunities should only include opps with NO UNPAID PAYMENTS for BDI to process donations correctly
+            for (npe01__OppPayment__c payment : unpaidPayments) {
+                Id idOfCurrentOpportunity = payment.npe01__Opportunity__c;
+                if (openOpportunitiesById.containsKey(idOfCurrentOpportunity)) {
+                    openOpportunitiesById.remove(idOfCurrentOpportunity);
+                }
+            }
+
+            Map<String, List<SObject>> response = new Map<String, List<SObject>>{
+                    'openOpportunities' => openOpportunitiesById.values(),
+                    'unpaidPayments' => unpaidPayments
+            };
+            return JSON.serialize(response);
+        } catch (Exception ex){
+            throw new AuraHandledException('ERROR: ' + ex.getMessage());
+        }
+    }
+
+    /*******************************************************************************************************
     * @description Retrieves required schema information for the component.
     * @return Map of DataImport__c object and field name keys to their labels.
     */
@@ -141,9 +196,19 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 'donationAmountField' => Schema.SObjectType.DataImport__c.fields.Donation_Amount__c.getName(),
                 'expectedCountField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Count_of_Gifts__c.getName(),
                 'expectedTotalField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getName(),
-                'requireTotalMatch' => Schema.SObjectType.DataImportBatch__c.fields.RequireTotalMatch__c.getName(),
                 'noDataImportsFound' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.DataImport__c.getName()}),
-                'processBatchButton' => 'Process Batch'
+                'opportunityImportedLookupField' => Schema.SObjectType.DataImport__c.fields.DonationImported__c.getName(),
+                'opportunityImportedStatusField' => Schema.SObjectType.DataImport__c.fields.DonationImportStatus__c.getName(),
+                'opportunityAmount' => Schema.SObjectType.Opportunity.fields.Amount.getLabel(),
+                'opportunityObject' => Schema.SObjectType.Opportunity.getLabel(),
+                'opportunityName' => Schema.SObjectType.Opportunity.getLabel(),
+                'opportunityStage' => Schema.SObjectType.Opportunity.fields.StageName.getLabel(),
+                'paymentAmount' => Schema.SObjectType.npe01__OppPayment__c.fields.npe01__Payment_Amount__c.getLabel(),
+                'paymentObject' => Schema.SObjectType.npe01__OppPayment__c.getLabel(),
+                'paymentScheduledDate' => Schema.SObjectType.npe01__OppPayment__c.fields.npe01__Scheduled_Date__c.getLabel(),
+                'paymentImportedLookupField' => Schema.SObjectType.DataImport__c.fields.PaymentImported__c.getName(),
+                'paymentImportedStatusField' => Schema.SObjectType.DataImport__c.fields.PaymentImportStatus__c.getName(),
+                'requireTotalMatch' => Schema.SObjectType.DataImportBatch__c.fields.RequireTotalMatch__c.getName()
         };
 
         return labels;
@@ -161,7 +226,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         //add derived matched record column
         Column col = new Column();
 
-        col.label = Label.bgeGridMatchedRecord;
+        col.label = Label.bdiDonation;
         col.fieldName = 'matchedRecordUrl';
         col.readOnly = true;
         col.type = 'url';
@@ -237,18 +302,28 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         Set<Id> recordIds = new Set<Id>(dataImportIds);
         List<DataImport__c> dataImportRecords = getDataImportRecordsByIds(batchId, recordIds);
 
-        // Clear Dry Run fields before running Dry Run so new field values are accounted for
+        // Skip records where user has explicitly selected a matching record in BGE UI
         for (DataImport__c dataImport : dataImportRecords) {
-            dataImport.Status__c = null;
-            dataImport.FailureInformation__c = null;
-            dataImport.DonationImported__c = null;
-            dataImport.DonationImportStatus__c = null;
-            dataImport.PaymentImported__c = null;
-            dataImport.PaymentImportStatus__c = null;
+            if (dataImport.DonationImportStatus__c == Label.bdiMatchedByUser
+                    || dataImport.DonationImportStatus__c == Label.bdiMatchedByUserNewOpp
+                    || dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
+                // User defined match, so we do nothing and retain the values
+            } else {
+                // Clear Dry Run fields before running Dry Run so new field values are accounted for
+                dataImport.Status__c = null;
+                dataImport.FailureInformation__c = null;
+                dataImport.DonationImported__c = null;
+                dataImport.DonationImportStatus__c = null;
+                dataImport.PaymentImported__c = null;
+                dataImport.PaymentImportStatus__c = null;
+            }
         }
+
         update dataImportRecords;
 
-        BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportRecords, true);
+        if (dataImportRecords.size() > 0){
+            BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportRecords, true);
+        }
 
         return getDataImportRows(batchId);
     }

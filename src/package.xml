@@ -565,6 +565,7 @@
         <members>BGE_BatchGiftEntryTab</members>
         <members>BGE_ConfigurationWizard</members>
         <members>BGE_DataImportBatchEntry</members>
+        <members>BGE_DonationSelector</members>
         <members>BGE_EntryForm</members>
         <members>CRLP_FilterGroup</members>
         <members>CRLP_Rollup</members>
@@ -1377,6 +1378,7 @@
         <members>bdiErrorInvalidLastname</members>
         <members>bdiErrorInvalidOppRTName</members>
         <members>bdiErrorNonHHAccountContact</members>
+        <members>bdiErrorNonHHAccountContactWithAdv</members>
         <members>bdiErrorPaymentMultiMatch</members>
         <members>bdiFailed</members>
         <members>bdiHouseholdModelRequired</members>
@@ -1385,7 +1387,10 @@
         <members>bdiInvalidBatchId</members>
         <members>bdiInvalidDonationMatchingBehavior</members>
         <members>bdiMatched</members>
+        <members>bdiMatchedApplyNewPayment</members>
         <members>bdiMatchedBest</members>
+        <members>bdiMatchedByUser</members>
+        <members>bdiMatchedByUserNewOpp</members>
         <members>bdiMatchedId</members>
         <members>bdiMatchedNone</members>
         <members>bdiPositiveNumber</members>
@@ -1426,6 +1431,12 @@
         <members>bgeEditBatchFieldSelectionWarning</members>
         <members>bgeEditBatchOptionsWarning</members>
         <members>bgeFLSError</members>
+        <members>bgeFormMatchingModalText</members>
+        <members>bgeFormNoneLink</members>
+        <members>bgeFormSelectedOpportunity</members>
+        <members>bgeFormSelectedPayment</members>
+        <members>bgeFormUpdateOpportunity</members>
+        <members>bgeFormUpdatePayment</members>
         <members>bgeGridAllGifts</members>
         <members>bgeGridDonorType</members>
         <members>bgeGridErrorFromDryRun</members>
@@ -1434,12 +1445,13 @@
         <members>bgeGridGiftDeleted</members>
         <members>bgeGridGiftSaved</members>
         <members>bgeGridGiftUpdated</members>
-        <members>bgeGridMatchedRecord</members>
         <members>bgeGridNoGiftsBody</members>
         <members>bgeGridNoGiftsHeader</members>
         <members>bgeGridTotalAmount</members>
         <members>bgeGridTotalCount</members>
         <members>bgeGridWarningRequiredTotalsExpected</members>
+        <members>bgeMatchingAlert</members>
+        <members>bgeMatchingSelect</members>
         <members>bgeNewBatch</members>
         <members>bgeNewGift</members>
         <members>bgeProcessBatch</members>
