@@ -19,12 +19,14 @@ npsp_lex_locators={
             'drop-down':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]/parent::*/div/div/div/a[contains(@class, "slds-button")]',
             'title':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]',
             'viewall':'//a[.//span[text()="View All"]/span[text()="{}"]]',
+            'item':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//h3//a",
          },    
     },
     'test':'/html/body/div[6]/table/tbody/tr[23]/td[1]/a',
     'frame':'//iframe[@title= "{}"]',
     'id':'//*[contains(@id,"{}")]',
-    'button':'//input[@value="{}"]',
+    'button':'//input[contains(@value,"{}")]',
+    'link':'//a[text()="{}"]',
     'checkbox':'//div[contains(@class,"uiInputCheckbox")]/label/span[text()="{}"]/../following-sibling::input[@type="checkbox"]',
     'table_checkbox':'//tbody/tr[./td[2]/a[text()="{}"]]/td/input[@type="checkbox"]',
     'tab': "//div[@class='uiTabBar']/ul[@class='tabs__nav']/li[contains(@class,'uiTabItem')]/a[@class='tabHeader']/span[contains(text(), '{}')]",
@@ -111,13 +113,18 @@ npsp_lex_locators={
         'panel_sub_link':'//ul/li/a[text()="{}"]',
         'field_value':"//div[@class='slds-form-element'][./label[contains(text(),'{}')]]/div/span",
         'side_panel':"//ul/div[contains(@id,'RecDonations')]/button[1]",
-        'list':"//div[contains(@class,'slds-form_horizontal')]/div[@class='slds-form-element'][./label[text()='{}']]/div/select",
+        'list':"//div[contains(@class,'slds-form_horizontal')]/div[@class='slds-form-element']/label[text()='{}']/following-sibling::div/select",
+        'multi_list':'//div[contains(@class,"slds-form_horizontal")]/div[@class="slds-form-element"][./label[text()="{}"]]/div//select',
         'list_val':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/span[text()="{}"]',
         'status':'//div[contains(@class,"slds-tile__title")][.//span[text()="{}"]]/div[contains(@class,"slds-col")]//span[text()="{}"]',
+        'button':'//form[.//h1[contains(text(),"{}")]]//input[contains(@value,"{}")]'
         },
     'data_imports':{
         'status':'//div[contains(@class,"slds-tile__title")][./p[text()="BDI_DataImport_BATCH"]]/div[contains(@class,"slds-col")]/span[text()="{}"]',
         },
+    'object_manager':{
+        'button':'//input[@title="{}"]'
+        }
 }
     
 
