@@ -339,30 +339,30 @@ public class CRLP_DefaultConfigBuilder_SVC {
 
         CRLP_RollupCMT.FilterGroup groupMemberships;
 
+        groupMemberships = new CRLP_RollupCMT.FilterGroup('Memberships: Won');
+        groupMemberships.description = 'Won Membership Opportunities used for all Membership Rollups. Record Types as defined in legacy NPSP Membership Settings.';
+        groupMemberships.recordName = CRLP_DefaultConfigBuilder.FilterGroup_Membership;
+        groupMemberships.isDeleted = false;
+
+        CRLP_RollupCMT.FilterRule ruleCloseWonStage2 = new CRLP_RollupCMT.FilterRule(groupMemberships.recordName, 'Membership: Won Only');
+        ruleCloseWonStage2.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleCloseWonStage2.recordName;
+        ruleCloseWonStage2.objectName = 'Opportunity';
+        ruleCloseWonStage2.fieldName = 'IsWon';
+        ruleCloseWonStage2.operationName = CMT_FilterRule.FilterOperation.EQUALS.name();
+        ruleCloseWonStage2.value = 'true';
+        ruleCloseWonStage2.isDeleted = false;
+        groupMemberships.rules.add(ruleCloseWonStage2);
+
+        CRLP_RollupCMT.FilterRule ruleAmountNotNullMembership = new CRLP_RollupCMT.FilterRule(groupMemberships.recordName, 'Membership: Amount Not Null');
+        ruleAmountNotNullMembership.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleAmountNotNullMembership.recordName;
+        ruleAmountNotNullMembership.objectName = 'Opportunity';
+        ruleAmountNotNullMembership.fieldName = 'Amount';
+        ruleAmountNotNullMembership.operationName = CMT_FilterRule.FilterOperation.NOT_EQUALS.name();
+        ruleAmountNotNullMembership.value = null;
+        ruleAmountNotNullMembership.isDeleted = false;
+        groupMemberships.rules.add(ruleAmountNotNullMembership);
+
         if (!String.isEmpty(membershipRecordTypeDeveloperNames)) {
-            groupMemberships = new CRLP_RollupCMT.FilterGroup('Memberships: Won');
-            groupMemberships.description = 'Won Membership Opportunities used for all Membership Rollups. Record Types as defined in legacy NPSP Membership Settings.';
-            groupMemberships.recordName = CRLP_DefaultConfigBuilder.FilterGroup_Membership;
-            groupMemberships.isDeleted = false;
-
-            CRLP_RollupCMT.FilterRule ruleCloseWonStage2 = new CRLP_RollupCMT.FilterRule(groupMemberships.recordName, 'Membership: Won Only');
-            ruleCloseWonStage2.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleCloseWonStage2.recordName;
-            ruleCloseWonStage2.objectName = 'Opportunity';
-            ruleCloseWonStage2.fieldName = 'IsWon';
-            ruleCloseWonStage2.operationName = CMT_FilterRule.FilterOperation.EQUALS.name();
-            ruleCloseWonStage2.value = 'true';
-            ruleCloseWonStage2.isDeleted = false;
-            groupMemberships.rules.add(ruleCloseWonStage2);
-
-            CRLP_RollupCMT.FilterRule ruleAmountNotNullMembership = new CRLP_RollupCMT.FilterRule(groupMemberships.recordName, 'Membership: Amount Not Null');
-            ruleAmountNotNullMembership.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleAmountNotNullMembership.recordName;
-            ruleAmountNotNullMembership.objectName = 'Opportunity';
-            ruleAmountNotNullMembership.fieldName = 'Amount';
-            ruleAmountNotNullMembership.operationName = CMT_FilterRule.FilterOperation.NOT_EQUALS.name();
-            ruleAmountNotNullMembership.value = null;
-            ruleAmountNotNullMembership.isDeleted = false;
-            groupMemberships.rules.add(ruleAmountNotNullMembership);
-
             CRLP_RollupCMT.FilterRule ruleRecordType = new CRLP_RollupCMT.FilterRule(groupMemberships.recordName, 'Membership: for Record Types');
             ruleRecordType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleRecordType.recordName;
             ruleRecordType.objectName = 'Opportunity';
@@ -625,15 +625,13 @@ public class CRLP_DefaultConfigBuilder_SVC {
         List<CRLP_RollupCMT.FilterGroup> groups = new List<CRLP_RollupCMT.FilterGroup>{
                 groupClosedWonDonationsHC,
                 groupClosedWonDonationsSC,
+                groupMemberships,
                 groupAllocations,
                 groupOpenDonations,
                 groupClosedWonDonationsNoRTExclusions,
                 groupPaymentsPaid,
                 groupPaymentsWrittenOff
         };
-        if (groupMemberships != null) {
-            groups.add(groupMemberships);
-        }
         if (groupClosedWonDonationsContactsHC != null) {
             groups.add(groupClosedWonDonationsContactsHC);
         }
@@ -818,8 +816,8 @@ public class CRLP_DefaultConfigBuilder_SVC {
             } else if (rollupDetails[1] == CRLP_DefaultConfigBuilder.FilterGroup_Membership
                 && String.isEmpty(membershipRecordTypeDeveloperNames)) {
                 // If the legacy Membership Record Type setting does not match existing record types,
-                // skip building rollup
-                continue;
+                // set all the membership rollup definitions to inactive.
+                rollup.isActive = false;
 
             } else {
                 rollup.isActive = true;

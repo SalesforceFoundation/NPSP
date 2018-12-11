@@ -121,32 +121,39 @@ private class CRLP_DefaultConfigBuilder_TEST {
         CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
         Test.stopTest();
 
-        Set<String> filterGroupDeveloperNames = new Set<String>();
-        Set<String> rollupFilterReferences = new Set<String>();
+        Set<String> filterRuleLabels = new Set<String>();
+        Map<String,Boolean> membershipRollupLabelsByActiveState = new Map<String,Boolean>();
 
         for (Metadata.CustomMetadata md : CRLP_ConfigBuilder_SVC.queuedMetadataTypes) {
-            if (md.fullName.contains('Filter_Group__mdt')) {
-                filterGroupDeveloperNames.add(md.fullName);
-
-            } else if (md.fullName.contains('Rollup__mdt')) {
+            if (md.fullName.contains('Filter_Rule__mdt')) {
+                filterRuleLabels.add(md.label);
+            }
+            else if (md.fullName.contains('Rollup__mdt')) {
+                Boolean isRelatedToMembershipFilterGroup = false;
+                Boolean isActive;
                 for (Metadata.CustomMetadataValue val : md.values) {
-                    if ((String)val.field == 'Filter_Group__c') {
-                        rollupFilterReferences.add((String) val.value);
+                    if ((String) val.field == 'Filter_Group__c' && (String) val.value == CRLP_DefaultConfigBuilder.FilterGroup_Membership ) {
+                        isRelatedToMembershipFilterGroup = true;
                     }
+                    if ((String)val.field == 'Active__c') {
+                        isActive = (Boolean) val.value;
+                    }
+                }
+                if (isRelatedToMembershipFilterGroup) {
+                    membershipRollupLabelsByActiveState.put(md.label, isActive);
                 }
             }
         }
 
-        String unexpectedfilterName =
-            String.valueOf(Filter_Group__mdt.SObjectType) +'.'+ CRLP_DefaultConfigBuilder.FilterGroup_Membership;
-
-        System.assert(!filterGroupDeveloperNames.contains(unexpectedfilterName),
-            'Default membership filter group should not be created if Membership Record Type does not exist'
+        System.assert(!filterRuleLabels.contains('Membership: for Record Types'),
+            'Default membership filter rule should not be created if Membership Record Type does not exist'
         );
 
-        System.assert(!rollupFilterReferences.contains(CRLP_DefaultConfigBuilder.FilterGroup_Membership),
-            'Rollups should not reference default membership filter group if the Membership Record Type does not exist'
-        );
+        System.assert(!membershipRollupLabelsByActiveState.isEmpty(), 'The membership rollups should exist');
+        for (String label : membershipRollupLabelsByActiveState.keySet()) {
+            System.assertEquals(false, membershipRollupLabelsByActiveState.get(label),
+                'Rollups related to the default membership filter group should not be active');
+        }
     }
 
     /**
