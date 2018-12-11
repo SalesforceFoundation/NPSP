@@ -4,35 +4,27 @@
         <p class="slds-text-body_small slds-m-top_x-small">{!$Label.npe4__relationshipssettingsdescription}</p>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
-            <apex:commandButton id="editRel" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}"
-                immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
+                <apex:commandButton id="editRel" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
         <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element">
-                <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.npe4__Reciprocal_Method__c.Label}" for="slRM"
-                    styleClass="col-md-4 slds-form-element__label" />
+                <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.npe4__Reciprocal_Method__c.Label}" for="slRM" styleClass="col-md-4 slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:outputField value="{!stgService.stgRel.npe4__Reciprocal_Method__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static"
-                    />
-                    <apex:selectList value="{!stgService.stgRel.npe4__Reciprocal_Method__c}" size="1" multiselect="false" rendered="{!isEditMode}"
-                        id="slRM" html-aria-describedby="{!$Component.slRMHelp}" styleClass="slds-select">
-                        <apex:selectOption itemValue="List Setting" itemLabel="List Settings" />
+                    <apex:outputField value="{!stgService.stgRel.npe4__Reciprocal_Method__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:selectList value="{!stgService.stgRel.npe4__Reciprocal_Method__c}" size="1" multiselect="false" rendered="{!isEditMode}" id="slRM" html-aria-describedby="{!$Component.slRMHelp}" styleClass="slds-select" >
+                        <apex:selectOption itemValue="List Setting" itemLabel="List Settings"/>
                         <apex:selectOption itemValue="Value Inversion" itemLabel="Value Inversion" />
                     </apex:selectList>
                     <apex:outputPanel id="slRMHelp" layout="block">
-                        <apex:outputText styleClass="slds-form-element__help">
-                            <c:UTIL_HtmlOutput html="{!$Label.stgHelpRelReciprocalMethod}" hasLink="true" />
-                        </apex:outputText>
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRelReciprocalMethod}" escape="false"/>
                     </apex:outputPanel>
                 </div>
             </div>
             <div class="slds-form-element">
-                <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.npe4__Gender_Field__c.Label}" for="slGF" styleClass="col-md-4 slds-form-element__label"
-                />
+                <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.npe4__Gender_Field__c.Label}" for="slGF" styleClass="col-md-4 slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <apex:outputText value="{!strGenderFieldLabel}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                    <apex:selectList value="{!stgService.stgRel.npe4__Gender_Field__c}" size="1" multiselect="false" rendered="{!isEditMode}"
-                        id="slGF" html-aria-describedby="{!$Component.slGFHelp}" styleClass="slds-select">
+                    <apex:selectList value="{!stgService.stgRel.npe4__Gender_Field__c}" size="1" multiselect="false" rendered="{!isEditMode}" id="slGF" html-aria-describedby="{!$Component.slGFHelp}" styleClass="slds-select">
                         <apex:SelectOptions value="{!listSOGenderFieldOptions}" />
                     </apex:selectList>
                     <apex:outputPanel id="slGFHelp" layout="block">
@@ -41,13 +33,10 @@
                 </div>
             </div>
             <div class="slds-form-element">
-                <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.npe4__Allow_AutoCreated_Duplicates__c.Label}"
-                    for="cbxAACD" styleClass="col-md-4 slds-form-element__label" />
+                <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.npe4__Allow_AutoCreated_Duplicates__c.Label}" for="cbxAACD" styleClass="col-md-4 slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:inputCheckbox value="{!stgService.stgRel.npe4__Allow_AutoCreated_Duplicates__c}" rendered="{!isEditMode}" id="cbxAACD"
-                        html-aria-describedby="{!$Component.cbxAACDHelp}" styleClass="slds-checkbox" />
-                    <apex:inputCheckbox value="{!stgService.stgRel.npe4__Allow_AutoCreated_Duplicates__c}" rendered="{!isReadOnlyMode}" disabled="true"
-                        id="cbxAACDO" html-aria-describedby="{!$Component.cbxAACDHelp}" styleClass="slds-checkbox" />
+                    <apex:inputCheckbox value="{!stgService.stgRel.npe4__Allow_AutoCreated_Duplicates__c}" rendered="{!isEditMode}" id="cbxAACD" html-aria-describedby="{!$Component.cbxAACDHelp}" styleClass="slds-checkbox"/>
+                    <apex:inputCheckbox value="{!stgService.stgRel.npe4__Allow_AutoCreated_Duplicates__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxAACDO" html-aria-describedby="{!$Component.cbxAACDHelp}" styleClass="slds-checkbox"/>
                     <apex:outputPanel id="cbxAACDHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRelAutoCreatedDup}" />
                     </apex:outputPanel>
@@ -55,29 +44,23 @@
             </div>
             <apex:outputPanel layout="block" id="excludedFields">
                 <div class="slds-form-element">
-                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.Enable_Custom_Field_Sync__c.Label}" for="cbxCFS"
-                        styleClass="col-md-4 slds-form-element__label" />
+                    <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Settings__c.Fields.Enable_Custom_Field_Sync__c.Label}" for="cbxCFS" styleClass="col-md-4 slds-form-element__label" />
                     <div class="slds-form-element__control">
-                        <apex:inputCheckbox value="{!stgService.stgRel.Enable_Custom_Field_Sync__c}" rendered="{!isEditMode}" id="cbxCFS" html-aria-describedby="{!$Component.cbxCFSHelp}"
-                            styleClass="slds-checkbox">
-                            <apex:actionSupport event="onchange" reRender="excludedFields" status="statusLoad" />
+                        <apex:inputCheckbox value="{!stgService.stgRel.Enable_Custom_Field_Sync__c}" rendered="{!isEditMode}" id="cbxCFS" html-aria-describedby="{!$Component.cbxCFSHelp}" styleClass="slds-checkbox">
+                            <apex:actionSupport event="onchange" reRender="excludedFields"  status="statusLoad"/>
                         </apex:inputCheckbox>
-                        <apex:inputCheckbox value="{!stgService.stgRel.Enable_Custom_Field_Sync__c}" rendered="{!isReadOnlyMode}" disabled="true"
-                            id="cbxCFSO" html-aria-describedby="{!$Component.cbxCFSHelp}" styleClass="slds-checkbox" />
+                        <apex:inputCheckbox value="{!stgService.stgRel.Enable_Custom_Field_Sync__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxCFSO" html-aria-describedby="{!$Component.cbxCFSHelp}" styleClass="slds-checkbox"/>
                         <apex:outputPanel id="cbxCFSHelp" layout="block">
                             <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRelFieldSyncToggle}" />
                         </apex:outputPanel>
                     </div>
                 </div>
                 <apex:outputPanel styleClass="slds-form-element" rendered="{!stgService.stgRel.Enable_Custom_Field_Sync__c}">
-                    <apex:outputLabel value="{!$ObjectType.Relationship_Sync_Excluded_Fields__c.Label}" for="slCFSF" styleClass="col-md-4 slds-form-element__label"
-                    />
+                    <apex:outputLabel value="{!$ObjectType.Relationship_Sync_Excluded_Fields__c.Label}" for="slCFSF" styleClass="col-md-4 slds-form-element__label" />
                     <div class="slds-form-element__control">
-                        <apex:outputText value="{!IF(excludedLabels == '', $Label.stgLabelNone, excludedLabels)}" rendered="{!isReadOnlyMode}" id="slCFSFO"
-                            html-aria-describedby="{!$Component.slCFSHelp}" styleClass="slds-form-element__static" />
-                        <apex:selectList value="{!listExcludedFields}" multiselect="true" size="5" rendered="{!isEditMode}" id="slCFSF" html-aria-describedby="{!$Component.slCFSFHelp}"
-                            styleClass="slds-select">
-                            <apex:selectOptions value="{!listSOSyncFieldOptions}" />
+                        <apex:outputText value="{!IF(excludedLabels == '', $Label.stgLabelNone, excludedLabels)}" rendered="{!isReadOnlyMode}" id="slCFSFO" html-aria-describedby="{!$Component.slCFSHelp}" styleClass="slds-form-element__static"/>
+                        <apex:selectList value="{!listExcludedFields}" multiselect="true" size="5" rendered="{!isEditMode}" id="slCFSF" html-aria-describedby="{!$Component.slCFSFHelp}" styleClass="slds-select">
+                            <apex:selectOptions value="{!listSOSyncFieldOptions}"/>
                         </apex:selectList>
                         <apex:outputPanel id="slCFSFHelp" layout="block">
                             <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRelSyncFields}" />
@@ -87,10 +70,8 @@
             </apex:outputPanel>
         </div>
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
-            <apex:commandButton id="saveRel" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}"
-                immediate="false" rerender="form" styleClass="slds-button slds-button_small slds-button_brand" />
-            <apex:commandButton id="cancelRel" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}"
-                immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
+            <apex:commandButton id="saveRel" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button_small slds-button_brand" />
+            <apex:commandButton id="cancelRel" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
     </apex:form>
 </apex:page>

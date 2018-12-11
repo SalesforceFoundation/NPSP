@@ -1,64 +1,60 @@
 <apex:page controller="STG_PanelOppNaming_CTRL" docType="html-5.0" standardStylesheets="false">
     <script type="text/javascript">
-        (function ($) {
-            // called when the user changes an option in the selectlist (or it gets the focus)
-            // sets the format to the current picklist value
-            function setOppNameSpec(sl, idTxt) {
-                var strVal = sl.value;
-                if (strVal == '{!$Label.stgLabelOther}') {
-                    $("[id$='" + idTxt + "']").show();
-                    strVal = $("[id$='" + idTxt + "']").val();
-                } else if (idTxt != null) {
-                    $("[id$='" + idTxt + "']").hide();
-                    $("[id$='" + idTxt + "']").val(strVal);
-                }
+    (function($) {
+        // called when the user changes an option in the selectlist (or it gets the focus)
+        // sets the format to the current picklist value
+        function setOppNameSpec(sl, idTxt) {
+            var strVal = sl.value;
+            if (strVal == '{!$Label.stgLabelOther}') {
+                $("[id$='" + idTxt + "']").show();
+                strVal = $("[id$='" + idTxt + "']").val();
+            } else if (idTxt != null) {
+                $("[id$='" + idTxt + "']").hide();
+                $("[id$='" + idTxt + "']").val(strVal);
             }
+        }
 
-            // initialize the format selectlists in case they need to display other,
-            // and set our examples, when the user goes into edit mode.
-            function initOppEditMode() {
-                initOppSelectListsForOther('slstrFormatDate', 'txtFormatDate');
-                initOppSelectListsForOther('slstrFormatOppName', 'txtFormatOppName');
+        // initialize the format selectlists in case they need to display other,
+        // and set our examples, when the user goes into edit mode.
+        function initOppEditMode() {
+            initOppSelectListsForOther('slstrFormatDate', 'txtFormatDate');
+            initOppSelectListsForOther('slstrFormatOppName', 'txtFormatOppName');
+        }
+
+        // if the given format isn't shown in the select list, then set it to 'other' and show the other textbox.
+        function initOppSelectListsForOther(idSl, idTxt) {
+            var sl = $("[id$='" + idSl + "']");
+            var txt = $("[id$='" + idTxt + "']");
+
+            if (sl.val() == '' && txt.val() != '') {
+                sl.val('{!$Label.stgLabelOther}');
+                txt.show();
             }
+        }
 
-            // if the given format isn't shown in the select list, then set it to 'other' and show the other textbox.
-            function initOppSelectListsForOther(idSl, idTxt) {
-                var sl = $("[id$='" + idSl + "']");
-                var txt = $("[id$='" + idTxt + "']");
+        $(document).ready(function() {
+            initOppEditMode();
+        });
 
-                if (sl.val() == '' && txt.val() != '') {
-                    sl.val('{!$Label.stgLabelOther}');
-                    txt.show();
-                }
-            }
-
-            $(document).ready(function () {
-                initOppEditMode();
-            });
-
-            //bind functions to window that are needed in the page
-            window.initOppEditMode = initOppEditMode;
-            window.setOppNameSpec = setOppNameSpec;
-        })(jQuery);
+        //bind functions to window that are needed in the page
+        window.initOppEditMode = initOppEditMode;
+        window.setOppNameSpec = setOppNameSpec;
+    })(jQuery);
     </script>
     <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgLabelOppNamingSettings}" />
         <div class="slds-grid">
             <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
-                <p class="slds-text-body_small slds-m-top_x-small">
-                    <apex:outputText value="{!$Label.stgOppNamingDescription}" />
-                </p>
-            </div>
+                <p class="slds-text-body_small slds-m-top_x-small"><apex:outputText value="{!$Label.stgOppNamingDescription}" escape="false"/></p>
+            </div>        
         </div>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
-            <apex:commandButton id="newONS" value="{!$Label.stgBtnNewONS}" action="{!newONS}" oncomplete="window.initOppEditMode();"
-                status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn slds-button slds-button_small slds-button_neutral"
-            />
+            <apex:commandButton id="newONS" value="{!$Label.stgBtnNewONS}" action="{!newONS}" oncomplete="window.initOppEditMode();" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="btn slds-button slds-button_small slds-button_neutral" />
         </div>
         <!-- Settings List View -->
         <apex:outputPanel rendered="{!isReadOnlyMode && listOppNameSettings.size>0}">
-            <table class="slds-table slds-table_bordered">
+            <table class="slds-table slds-table_bordered" >
                 <thead>
                     <tr class="slds-text-heading_label">
                         <th scope="col" class="slds-cell-wrap">
@@ -79,50 +75,37 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <apex:repeat var="ons" value="{!listOppNameSettings}">
+                    <apex:repeat var="ons" value="{!listOppNameSettings}" >
                         <tr class="slds-text-body_small">
                             <td class="slds-cell-wrap">
-                                <apex:commandLink id="editONS" action="{!editONS}" title="{!$Label.stgBtnEdit}" oncomplete="window.initOppEditMode();" styleClass="actionLink"
-                                    status="statusLoad" value="{!$Label.stgBtnEdit}" rerender="form">
+                                <apex:commandLink id="editONS" action="{!editONS}" title="{!$Label.stgBtnEdit}" oncomplete="window.initOppEditMode();" styleClass="actionLink" status="statusLoad" value="{!$Label.stgBtnEdit}" rerender="form" >
                                     <apex:param assignTo="{!currentONSName}" name="idEdit" value="{!ons.so.Name}" />
                                 </apex:commandLink>
-                                <apex:outputText value=" | " />
-                                <apex:commandLink id="deleteONS" action="{!delONS}" title="{!$Label.stgLinkDelete}" styleClass="actionLink" status="statusLoad"
-                                    value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}"
-                                    rerender="form">
+                                <apex:outputText value=" | "/>
+                                <apex:commandLink id="deleteONS" action="{!delONS}" title="{!$Label.stgLinkDelete}" styleClass="actionLink" status="statusLoad" value="{!$Label.stgLinkDelete}" onclick="if (confirm('{!$Label.stgLabelAreYouSure}')==false) { return false;}" rerender="form" >
                                     <apex:param assignTo="{!currentONSName}" name="idDelete" value="{!ons.so.Name}" />
                                 </apex:commandLink>
                             </td>
-                            <td class="slds-cell-wrap">
-                                <apex:outputField value="{!ons.so.Attribution__c}" />
-                            </td>
-                            <td class="slds-cell-wrap">
-                                <apex:outputText value="{!ons.oppRecordTypesString}" />
-                            </td>
-                            <td class="slds-cell-wrap">
-                                <apex:outputText value="{!ons.nameFormatString}" />
-                            </td>
-                            <td class="slds-cell-wrap">
-                                <apex:outputField value="{!ons.so.Date_Format__c}" />
-                            </td>
+                            <td class="slds-cell-wrap"><apex:outputField value="{!ons.so.Attribution__c}" /></td>
+                            <td class="slds-cell-wrap"><apex:outputText value="{!ons.oppRecordTypesString}" /></td>
+                            <td class="slds-cell-wrap"><apex:outputText value="{!ons.nameFormatString}" /></td>
+                            <td class="slds-cell-wrap"><apex:outputField value="{!ons.so.Date_Format__c}" /></td>
                         </tr>
                     </apex:repeat>
-                </tbody>
+               </tbody>
             </table>
         </apex:outputPanel>
         <!-- Edit View -->
         <apex:outputPanel rendered="{!isEditMode}">
             <div class="slds-section">
-                <div class="slds-section-title_divider">{!$Label.stgLabelONS}</div>
+                <div class="slds-section-title_divider" >{!$Label.stgLabelONS}</div>
             </div>
             <div class="slds-form_horizontal slds-m-around_large">
                 <div class="slds-form-element">
-                    <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Attribution__c.Label}" for="slOppAttr" styleClass="slds-form-element__label"
-                    />
+                    <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Attribution__c.Label}" for="slOppAttr" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
-                        <apex:selectList value="{!currentONS.Attribution__c}" styleClass="slds-select" multiselect="false" size="1" id="slOppAttr"
-                            html-aria-describedby="{!$Component.slOppAttrHelp}">
-                            <apex:selectOptions value="{!listSOOpportunityAttribution}" />
+                        <apex:selectList value="{!currentONS.Attribution__c}" styleClass="slds-select" multiselect="false" size="1" id="slOppAttr" html-aria-describedby="{!$Component.slOppAttrHelp}">
+                            <apex:selectOptions value="{!listSOOpportunityAttribution}"/>
                         </apex:selectList>
                         <apex:outputPanel id="slOppAttrHelp" layout="block">
                             <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOppNamingAttribution}" />
@@ -130,49 +113,46 @@
                     </div>
                 </div>
                 <div class="slds-form-element">
-                    <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Opportunity_Record_Types__c.Label}" for="mslOppRecTypes"
-                        styleClass="slds-form-element__label" />
+                    <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Opportunity_Record_Types__c.Label}" for="mslOppRecTypes" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
-                        <c:STG_DataBoundMultiSelect settingObject="{!currentONS}" fieldname="Opportunity_Record_Types__c" listSO="{!listSOOppRecTypesIds}"
-                            inEditMode="{!isEditMode}" id="mslOppRecTypes" />
+                        <c:STG_DataBoundMultiSelect settingObject="{!currentONS}" fieldname="Opportunity_Record_Types__c" listSO="{!listSOOppRecTypesIds}" inEditMode="{!isEditMode}" id="mslOppRecTypes"/>
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOppNamingRecTypes}" />
                     </div>
                 </div>
                 <div class="slds-form-element">
-                    <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Opportunity_Name_Format__c.Label}" for="slstrFormatOppName"
-                        styleClass="slds-form-element__label" />
+                    <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Opportunity_Name_Format__c.Label}" for="slstrFormatOppName" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
                         <apex:outputText value="{!currentONS.Opportunity_Name_Format__c}" rendered="{!isReadOnlyMode}" />
-                        <apex:outputPanel rendered="{!isEditMode}">
-                            <apex:selectList value="{!currentONS.Opportunity_Name_Format__c}" styleClass="slds-select" onchange="window.setOppNameSpec(this, 'txtFormatOppName');"
+                        <apex:outputPanel rendered="{!isEditMode}" >
+                            <apex:selectList value="{!currentONS.Opportunity_Name_Format__c}" styleClass="slds-select"
+                                onchange="window.setOppNameSpec(this, 'txtFormatOppName');"
                                 multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatOppName" html-aria-describedby="{!$Component.slstrFormatOppNameHelp}">
-                                <apex:selectOptions value="{!listSOOpportunityNamingFormats}" />
+                                    <apex:selectOptions value="{!listSOOpportunityNamingFormats}"/>
                             </apex:selectList>
-                            <apex:outputLabel value="{!$Label.stgLabelOtherOpportunigyNamingFormat}" styleClass="slds-assistive-text" for="txtFormatOppName"
-                            />
-                            <apex:inputText value="{!currentONS.Opportunity_Name_Format__c}" styleClass="slds-input txtOther" onchange="window.setOppNameSpec(this, null);"
-                                rendered="{!isEditMode}" id="txtFormatOppName" style="display:none;" />
+                            <apex:outputLabel value="{!$Label.stgLabelOtherOpportunigyNamingFormat}" styleClass="slds-assistive-text" for="txtFormatOppName" />
+                            <apex:inputText value="{!currentONS.Opportunity_Name_Format__c}" styleClass="slds-input txtOther"
+                                onchange="window.setOppNameSpec(this, null);"
+                                rendered="{!isEditMode}" id="txtFormatOppName" style="display:none;"/>
                         </apex:outputPanel>
                         <apex:outputPanel id="slstrFormatOppNameHelp" layout="block">
-                            <apex:outputText styleClass="slds-form-element__help">
-                                <c:UTIL_HtmlOutput html="{!$Label.stgHelpOppNamingFormat}" hasLink="true" />
-                            </apex:outputText>
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOppNamingFormat}" escape="false" />
                         </apex:outputPanel>
                     </div>
                 </div>
                 <div class="slds-form-element">
-                    <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Date_Format__c.Label}" for="slstrFormatDate"
-                        styleClass="slds-form-element__label" />
+                    <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Date_Format__c.Label}" for="slstrFormatDate" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
                         <apex:outputText value="{!currentONS.Date_Format__c}" rendered="{!isReadOnlyMode}" />
-                        <apex:outputPanel rendered="{!isEditMode}">
-                            <apex:selectList value="{!currentONS.Date_Format__c}" styleClass="slds-select" onchange="window.setOppNameSpec(this, 'txtFormatDate');"
+                        <apex:outputPanel rendered="{!isEditMode}" >
+                            <apex:selectList value="{!currentONS.Date_Format__c}" styleClass="slds-select"
+                                onchange="window.setOppNameSpec(this, 'txtFormatDate');"
                                 multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatDate" html-aria-describedby="{!$Component.slstrFormatDateHelp}">
-                                <apex:selectOptions value="{!listSODateFormats}" />
+                                    <apex:selectOptions value="{!listSODateFormats}"/>
                             </apex:selectList>
                             <apex:outputLabel value="{!$Label.stgLabelOtherDateFormat}" styleClass="slds-assistive-text" for="txtFormatDate" />
-                            <apex:inputText value="{!currentONS.Date_Format__c}" styleClass="slds-input txtOther" onchange="window.setOppNameSpec(this, null);"
-                                rendered="{!isEditMode}" id="txtFormatDate" style="display:none;" />
+                            <apex:inputText value="{!currentONS.Date_Format__c}" styleClass="slds-input txtOther"
+                                onchange="window.setOppNameSpec(this, null);"
+                                rendered="{!isEditMode}" id="txtFormatDate" style="display:none;"/>
                         </apex:outputPanel>
                         <apex:outputPanel id="slstrFormatDateHelp" layout="block">
                             <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOppNamingDateFormat}" />
@@ -181,11 +161,8 @@
                 </div>
             </div>
             <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
-                <apex:commandButton id="saveONS" value="{!$Label.stgBtnSave}" action="{!saveONS}" status="statusLoad" rendered="{!isEditMode}"
-                    oncomplete="window.initOppEditMode()" immediate="false" rerender="form" styleClass="slds-button slds-button_small slds-button_brand"
-                />
-                <apex:commandButton id="cancelONS" value="{!$Label.stgBtnCancel}" action="{!cancelEdit}" status="statusLoad" rendered="{!isEditMode}"
-                    immediate="true" rerender="form" styleClass="btn slds-button slds-button_small slds-button_neutral" />
+                <apex:commandButton id="saveONS" value="{!$Label.stgBtnSave}" action="{!saveONS}" status="statusLoad" rendered="{!isEditMode}" oncomplete="window.initOppEditMode()" immediate="false" rerender="form" styleClass="slds-button slds-button_small slds-button_brand" />
+                <apex:commandButton id="cancelONS" value="{!$Label.stgBtnCancel}" action="{!cancelEdit}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="btn slds-button slds-button_small slds-button_neutral" />
             </div>
         </apex:outputPanel>
     </apex:form>
