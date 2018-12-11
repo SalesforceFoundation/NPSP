@@ -71,7 +71,7 @@
             } else if (step === '2') {
                 //handle template selection and copying here
             } else if (step === '3') {
-                // model.getTemplateFields().updateToActive(component.get('v.templateFields').fieldGroups);
+                model.getTemplateFields().updateToActive(component.get('v.templateFields').fieldGroups);
                 possibleError = model.getTemplateFields().getRequiredFieldErrors();
                 isValid = (possibleError.length === 0);
             } else if (step === '4') {
