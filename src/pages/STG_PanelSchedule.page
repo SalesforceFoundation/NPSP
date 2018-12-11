@@ -124,9 +124,7 @@
                     <apex:inputCheckbox value="{!stgService.stgErr.Don_t_Auto_Schedule_Default_NPSP_Jobs__c}" rendered="{!isEditMode}" id="cbxDASDNJ" html-aria-describedby="{!$Component.cbxDASDNJHelp}" styleClass="slds-checkbox"/>
                     <apex:inputCheckbox value="{!stgService.stgErr.Don_t_Auto_Schedule_Default_NPSP_Jobs__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxDOCO" html-aria-describedby="{!$Component.cbxDASDNJHelp}" styleClass="slds-checkbox"/>
                     <apex:outputPanel id="cbxDASDNJHelp" layout="block">
-                        <apex:outputText styleClass="slds-form-element__help" >
-                            <c:UTIL_HtmlOutput html="{!$Label.stgDontAutoScheduleHelpText}" />
-                        </apex:outputText>
+                        <c:UTIL_HtmlOutput html="{!$Label.stgDontAutoScheduleHelpText}" styleClass="slds-form-element__help" />
                     </apex:outputPanel>
                 </div>
             </div>

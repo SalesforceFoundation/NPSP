@@ -223,7 +223,7 @@
                         </ul>
                     </div>
                     <apex:outputPanel layout="block">
-                        <c:UTIL_HtmlOutput html="{!$Label.stgHelpExampleHHNames}" />
+                        <c:UTIL_HtmlOutput html="{!$Label.stgHelpExampleHHNames}" styleClass="slds-form-element__help" />
                     </apex:outputPanel>
                 </div>
             </apex:outputPanel>
