@@ -70,22 +70,11 @@ public with sharing class USER_UserService {
 
     /*********************************************************************************************************
     * @description Returns user Customize Application permission
-    * @param profileId User profile Id
     * @return Boolean True if the user has Customize Application permission at profile level or 
     * an assigned custom permission set
     **********************************************************************************************************/
     public static Boolean isCustomizeApplicationUser() {
-        Id profileId = UserInfo.getProfileId();
         Id userId = UserInfo.getUserId();
-
-        Profile userProfile = [
-            SELECT Id, PermissionsCustomizeApplication
-            FROM Profile
-            WHERE Id = :profileId];
-
-        if (userProfile.PermissionsCustomizeApplication == true) {
-            return true;
-        }
 
         List<PermissionSetAssignment> permissions = [
             SELECT Id
