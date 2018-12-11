@@ -120,8 +120,8 @@
                 </div>
             </div>
             <div class="slds-text-body_small slds-m-around_large">
-                <p><apex:outputText value="{!$Label.Addr_Settings_Intro_Body1}" escape="false" /></p>
-                <p><apex:outputText value="{!$Label.Addr_Settings_Intro_Body2}" escape="false" /></p>
+                <p><apex:outputText value="{!$Label.Addr_Settings_Intro_Body1}" /></p>
+                <p><c:UTIL_HtmlOutput html="{!$Label.Addr_Settings_Intro_Body2}" hasLink="true" /></p>
             </div>
             <div class="slds-form_horizontal slds-m-around_large">
                 <div class="slds-form-element">
@@ -190,24 +190,7 @@
                 </div>
             </div>
         </apex:outputPanel>
-        <!--
-        <apex:outputPanel id="addrValidationTest">
-            <apex:outputPanel rendered="{!isEditMode}">
-                 <h4>{!$Label.Addr_Settings_Test_Title}</h4>
-                 <p>
-                 <apex:outputText escape="false" value="{!$Label.Addr_Settings_Test_Body}" />&nbsp;&nbsp;
-                 <apex:inputText id="zipTest" value="{!apiTestEntry}" />&nbsp;&nbsp;
-                 <apex:commandButton id="submitZipTest" action="{!testApi}" status="statusLoad" rerender="testResult" value="Submit Test"/>
-                 </p>
-                 <br/>
-                 <apex:outputPanel id="testResult">
-                     <apex:outputPanel rendered="{!NOT(ISNULL(apiTestResult))}">
-                         <p><b>{!$Label.Addr_Settings_Test_Response_Title}:</b> <apex:outputText value="{!apiTestResult}" /></p>
-                     </apex:outputPanel>
-                 </apex:outputPanel>
-            </apex:outputPanel>
-        </apex:outputPanel>
-        -->
+
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
             <apex:commandButton id="saveAddr" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}"
                         immediate="false" rerender="form" styleClass="slds-button slds-button_small slds-button_brand"
@@ -232,14 +215,14 @@
                     <h3 class="slds-text-heading_small">{!$Label.Addr_Verification_Batch_Title}</h3>
                 </div>
                 <div class="slds-card__body slds-text-body_small slds-p-around_medium">
-                    <apex:outputText escape="false" value="{!$Label.Addr_Verification_Batch_Body}" />
+                    <p><apex:outputText value="{!$Label.Addr_Verification_Batch_Body}" /></p>
                     <div class="slds-form_horizontal slds-m-around_large">
                         <div class="slds-form-element">
                             <apex:outputLabel value="{!$Label.Addr_Skip_Verified}" for="iAddr_Skip_Verified" styleClass="slds-form-element__label"/>
                             <div class="slds-form-element__control">
                                 <apex:inputCheckbox value="{!skipPreviouslyVerifiedObjects}" id="iAddr_Skip_Verified" html-aria-describedby="{!$Component.iAddr_Skip_VerifiedHelp}" styleClass="slds-checkbox"/>
                                 <apex:outputPanel id="iAddr_Skip_VerifiedHelp" layout="block">
-                                    <apex:outputText id="validatorBatchHelpText" escape="false" value="{!validatorBatchHelpText}" styleClass="slds-form-element__help" />
+                                    <apex:outputText id="validatorBatchHelpText" value="{!validatorBatchHelpText}" styleClass="slds-form-element__help" />
                                 </apex:outputPanel>
                             </div>
                         </div>

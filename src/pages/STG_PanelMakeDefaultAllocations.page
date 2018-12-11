@@ -1,7 +1,7 @@
 <apex:page controller="STG_PanelMakeDefaultAllocations_CTRL" docType="html-5.0" standardStylesheets="false" >
     <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.alloBatchCreateDefault}" />
-        <div class="slds-text-body_small slds-m-around_medium"><apex:outputText value="{!$Label.alloBatchDefaultInfo}" escape="false" /></div>
+        <div class="slds-text-body_small slds-m-around_medium"><c:UTIL_HtmlOutput html="{!$Label.alloBatchDefaultInfo}" /></div>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
             <apex:commandButton id="runMakeDefaultAlloBatch" value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}" disabled="{!NOT(stgService.stgAllo.Default_Allocations_Enabled__c)||ISNULL(stgService.stgAllo.Default__c)||isRunningBatch}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />

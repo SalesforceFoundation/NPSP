@@ -31,7 +31,7 @@
     <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavHealthCheck}" />
         <div class="slds-text-body_small slds-m-around_medium">
-            <apex:outputText value="{!$Label.healthLabelIntro}" escape="false" />
+            <apex:outputText value="{!$Label.healthLabelIntro}" />
         </div>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
@@ -113,10 +113,10 @@
                         <div class="slds-media__body slds-size-5-of-6">
                             <div class="slds-text-heading_small">{!dr.strName}</div>
                             <p class="clsDRDetails slds-p-top_x-small">
-                                <apex:outputText value="{!dr.strDetails}" escape="false"/>
+                                <c:UTIL_HtmlOutput html="{!dr.strDetails}" />
                             </p>
                             <p class="clsDRSolution slds-p-top_x-small">
-                                <apex:outputText value="{!dr.strSolution}" escape="false"/>
+                                <c:UTIL_HtmlOutput html="{!dr.strSolution}" />
                             </p>
                         </div>
                     </div>
