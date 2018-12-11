@@ -36,8 +36,6 @@
 
 @isTest
 public with sharing class CON_ContactMergeTDTM_TEST2 {
-    private final static Double OPP_AMOUNT = 100;
-
     /*******************************************************************************************************
     * @description merge three Contacts from different Household Accounts with many Relationships.  
     * verify: 
@@ -302,9 +300,9 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
         merge contactsToMerge[0] contactsToMerge[1];
         Test.stopTest();
 
-        List<Contact> contacts = [SELECT npo02__TotalOppAmount__c FROM Contact];
+        List<Contact> contacts = [SELECT npo02__NumberOfClosedOpps__c FROM Contact];
         System.assertEquals(1, contacts.size(), 'There should only be one contact after merge');
-        System.assertEquals(OPP_AMOUNT * 2, contacts[0].npo02__TotalOppAmount__c, 'The rollup should have been calculated');
+        System.assertEquals(2, contacts[0].npo02__NumberOfClosedOpps__c, 'The rollup should have been calculated');
     }
 
     /*******************************************************************************************************
@@ -332,14 +330,16 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
         List<Contact> contactsToMerge = buildContactsWithOpps();
 
         TDTM_ObjectDataGateway.ClearCachedTriggerHandlersForTest();
+
         Test.startTest();
         merge contactsToMerge[0] contactsToMerge[1];
         Test.stopTest();
 
         //CRLP rollup method is static, so we cannot mock it so just confirming that legacy is not called and rollup is still calculated
         System.assert(!mock.rollupContactsCalled, 'Legacy rollup should not have been called');
-        List<Contact> contacts = [SELECT npo02__TotalOppAmount__c FROM Contact];
-        System.assertEquals(OPP_AMOUNT * 2, contacts[0].npo02__TotalOppAmount__c, 'The rollup should have been calculated');
+
+        List<Contact> contacts = [SELECT npo02__NumberOfClosedOpps__c FROM Contact];
+        System.assertEquals(2, contacts[0].npo02__NumberOfClosedOpps__c, 'The rollup should have been calculated');
     }
 
     /*******************************************************************************************************************
@@ -354,7 +354,7 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
             null,
             UTIL_UnitTestData_TEST.getclosedWonStage(),
             System.Today(),
-            OPP_AMOUNT,
+            100,
             null,
             null
         );
