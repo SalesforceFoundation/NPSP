@@ -153,13 +153,13 @@
                             <li>{!$Label.CONV_Master_Address_Set}</li>
                             <li>{!$Label.CONV_Address_Overrides_Set}</li>
                             <li>{!$Label.CONV_Primary_Contacts_Set}</li>
-                            <li><apex:outputText value="{!$Label.CONV_Triggers_Reenabled}" escape="false"/></li>
+                            <li><c:UTIL_HtmlOutput html="{!$Label.CONV_Triggers_Reenabled}"/></li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="slds-grid slds-m-bottom_large">
-                    <div class="slds-col slds-size_1-of-1 slds-m-horizontal_xx-large slds-col-rule_top">
+                    <div class="slds-col slds-col-rule_top slds-size_2-of-2 slds-p-left_x-large slds-p-right_xx-large">
                         <h3 class="slds-text-heading_small slds-m-vertical_medium">
                             {!$Label.CONV_Configuration_Options}
                         </h3>
