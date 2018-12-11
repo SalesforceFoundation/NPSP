@@ -34,35 +34,38 @@
 * @description Tests for OpportunityContactRoles as pertains to Multiple Tributes functionality
 */
 @isTest
-private class OPP_OpportunityContactRolesTribute_TEST {
+public class OPP_OpportunityContactRolesTribute_TEST {
 
     /*******************************************************************************************************
-    * @description Role values to use in settings.
-    */
-    private static final String OPPORTUNITY_CONTACT_ROLE_DONOR = 'Donor';
-    private static final String OPPORTUNITY_CONTACT_ROLE_HONOREE = 'Honoree';
-    private static final String OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT = 'Notification Recipient';
+    * @description Initializes NPSP Contact and Org Settings for OCR Tribute Tests, allowing calling method
+    * to specify Multiple Tributes Type supported
+    * @param tributeType Type of Tributes supported
+    *******************************************************************************************************/
+    @TestVisible private static npe01__Contacts_and_Orgs_Settings__c createContactAndOrgSettingsForOCRTributeTests(String tributeType) {
+        return UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                new npe01__Contacts_and_Orgs_Settings__c(
+                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                        npe01__Opportunity_Contact_Role_Default_role__c = OPP_OpportunityContactRoles_TEST.OPPORTUNITY_CONTACT_ROLE_DONOR,
+                        Honoree_Opportunity_Contact_Role__c = OPP_OpportunityContactRoles_TEST.OPPORTUNITY_CONTACT_ROLE_HONOREE,
+                        Notification_Recipient_Opp_Contact_Role__c = OPP_OpportunityContactRoles_TEST.OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
+                        Multiple_Tributes__c = tributeType
+                )
+        );
+    }
 
     /******************************************************************************************************
     * @description Test Create Opporunity with SingleTribute Only mode
     */
-    @isTest static void createOppWithTributeSingle() {
+    @isTest
+    static void createOppWithTributeSingle() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) {
                 return;
         }
 
-        String closedWonStageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        npe01__Contacts_and_Orgs_Settings__c testSettings = createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_SINGLE_VAL);
 
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c(
-                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                        npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
-                        Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
-                        Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
-                        Multiple_Tributes__c = TBU_MultipleTributesSettingsFacade.TRIBUTE_SINGLE_VAL
-                )
-        );
+        String closedWonStageName = UTIL_UnitTestData_TEST.getClosedWonStage();
 
         //Create and Insert Opportunity
         Account orgAcct = new Account(
@@ -101,23 +104,16 @@ private class OPP_OpportunityContactRolesTribute_TEST {
     * @description Test Create/Update Opportunity/Tribute with Mix mode (Allow both Tribute object
     * and Tribute Field)
     ********************************************************************************************************/
-    @isTest static void createOppWithTributeMultipleLoose() {
+    @isTest
+    static void createOppWithTributeMultipleLoose() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) {
                 return;
         }
 
-        String closedWonStageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        npe01__Contacts_and_Orgs_Settings__c testSettings = createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MIXED_VAL);
 
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c(
-                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                        npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
-                        Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
-                        Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
-                        Multiple_Tributes__c = TBU_MultipleTributesSettingsFacade.TRIBUTE_MIXED_VAL
-                )
-        );
+        String closedWonStageName = UTIL_UnitTestData_TEST.getClosedWonStage();
 
         //Create and Insert Opportunity
         Account orgAcct = new Account(
@@ -153,7 +149,8 @@ private class OPP_OpportunityContactRolesTribute_TEST {
         insert oppsToInsert;
 
         //verify that the there is no tribute in the org
-        List<Tribute__c> tributes = [SELECT Id FROM Tribute__c];
+        List<Tribute__c> tributes = [SELECT     Id
+                                     FROM Tribute__c];
         System.assertEquals(0, tributes.size());
 
         //Now insert a Tribute for opp2, should not have any issue
@@ -189,23 +186,16 @@ private class OPP_OpportunityContactRolesTribute_TEST {
     /******************************************************************************************************
     * @description Test Create/Update Opportunity with Multiple Tribute only mode
     ********************************************************************************************************/
-    @isTest static void createOppWithTributeMultipleStrict() {
+    @isTest
+    static void createOppWithTributeMultipleStrict() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) {
                 return;
         }
 
-        String closedWonStageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        npe01__Contacts_and_Orgs_Settings__c testSettings = createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL);
 
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c(
-                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                        npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
-                        Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
-                        Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
-                        Multiple_Tributes__c = TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL
-                )
-        );
+        String closedWonStageName = UTIL_UnitTestData_TEST.getClosedWonStage();
 
         //Create and Insert Opportunity
         Account orgAcct = new Account(
@@ -254,19 +244,12 @@ private class OPP_OpportunityContactRolesTribute_TEST {
     /******************************************************************************************************
     * @description Test clear OCR and Sync OCR for Multiple Tributes
     ********************************************************************************************************/
-    @isTest static void updatePrimaryContactOfOpportunity(){
+    @isTest
+    static void updatePrimaryContactOfOpportunity(){
+
+        npe01__Contacts_and_Orgs_Settings__c testSettings = createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL);
 
         String closedWonStageName = UTIL_UnitTestData_TEST.getClosedWonStage();
-
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c(
-                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                        npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
-                        Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
-                        Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
-                        Multiple_Tributes__c = TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL
-                )
-        );
 
         //Insert three Contacts
         List<Contact> cons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
@@ -282,20 +265,24 @@ private class OPP_OpportunityContactRolesTribute_TEST {
         );
         insert opp;
 
-        List<OpportunityContactRole> ocrs = [SELECT Id FROM OpportunityContactRole WHERE OpportunityId = :opp.Id];
+        List<OpportunityContactRole> ocrs = [SELECT     Id
+                                             FROM OpportunityContactRole
+                                             WHERE      OpportunityId = :opp.Id];
         delete ocrs;
 
         OpportunityContactRole garbageOCR = new OpportunityContactRole();
         garbageOCR.OpportunityId = opp.Id;
         garbageOCR.ContactId = cons[3].Id;
-        garbageOCR.Role = OPPORTUNITY_CONTACT_ROLE_HONOREE;
+        garbageOCR.Role = OPP_OpportunityContactRoles_TEST.OPPORTUNITY_CONTACT_ROLE_HONOREE;
         garbageOCR.isPrimary = false;
 
         insert garbageOCR;
 
         //When the Primary Contact changes on the Opp, system should run Clear OCR to delete unnecessary OCR and create
         //the missing OCR based on the Tribute
-        opp = [SELECT Primary_Contact__c FROM Opportunity WHERE Id =: opp.Id];
+        opp = [SELECT   Primary_Contact__c
+               FROM Opportunity
+               WHERE    Id =: opp.Id];
         opp.Primary_Contact__c = cons[4].Id;
         Test.startTest();
         update opp;
@@ -314,14 +301,14 @@ private class OPP_OpportunityContactRolesTribute_TEST {
         
         System.assertEquals(cons[1].Id, ocrs[0].ContactId);
         System.assertEquals(false, ocrs[0].IsPrimary);
-        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_HONOREE, ocrs[0].Role);
+        System.assertEquals(OPP_OpportunityContactRoles_TEST.OPPORTUNITY_CONTACT_ROLE_HONOREE, ocrs[0].Role);
 
         System.assertEquals(cons[2].Id, ocrs[1].ContactId);
         System.assertEquals(false, ocrs[1].isPrimary);
-        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT, ocrs[1].Role);
+        System.assertEquals(OPP_OpportunityContactRoles_TEST.OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT, ocrs[1].Role);
 
         System.assertEquals(cons[4].Id, ocrs[2].ContactId);
         System.assertEquals(true, ocrs[2].isPrimary);
-        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, ocrs[2].Role);
+        System.assertEquals(OPP_OpportunityContactRoles_TEST.OPPORTUNITY_CONTACT_ROLE_DONOR, ocrs[2].Role);
     }
 }

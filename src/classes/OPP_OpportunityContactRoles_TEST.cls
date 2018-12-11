@@ -33,21 +33,22 @@
 * @description Tests for OpportunityContactRoles
 */
 @isTest
-private class OPP_OpportunityContactRoles_TEST {
+public class OPP_OpportunityContactRoles_TEST {
 
     /*******************************************************************************************************
     * @description Role values to use in settings.
     */
-    private static final String OPPORTUNITY_CONTACT_ROLE_DONOR = 'Donor';
-    private static final String OPPORTUNITY_CONTACT_ROLE_HONOREE = 'Honoree';
-    private static final String OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT = 'Notification Recipient';
-    private static final String OPPORTUNITY_CONTACT_ROLE_INFLUENCER = 'Influencer';
-    private static final String OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT = 'Soft Credit';
+    @TestVisible private static final String OPPORTUNITY_CONTACT_ROLE_DONOR = 'Donor';
+    @TestVisible private static final String OPPORTUNITY_CONTACT_ROLE_HONOREE = 'Honoree';
+    @TestVisible private static final String OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT = 'Notification Recipient';
+    @TestVisible private static final String OPPORTUNITY_CONTACT_ROLE_INFLUENCER = 'Influencer';
+    @TestVisible private static final String OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT = 'Soft Credit';
 
     /*******************************************************************************************************
     * @description Test creation or upate of contact role for Organizational Account.
     */
-    @isTest static void testCreateUpdateCRForOrganizationalAccount() {
+    @isTest
+    static void testCreateUpdateCRForOrganizationalAccount() {
         Account acc = new Account(
             Name='test77',
             npe01__SYSTEMIsIndividual__c = false
@@ -113,7 +114,8 @@ private class OPP_OpportunityContactRoles_TEST {
     /*******************************************************************************************************
     * @description Test creation or upate of contact role for Individual Accounts.
     */
-    @isTest static void createOrUpdateCRForIndividualAccount() {
+    @isTest
+    static void createOrUpdateCRForIndividualAccount() {
         Account acc = new Account(
             Name='test77',
             npe01__SYSTEMIsIndividual__c = true
@@ -179,7 +181,8 @@ private class OPP_OpportunityContactRoles_TEST {
     /*******************************************************************************************************
     * @description Disables OCR and verifies contact role isn't created.
     */
-    @isTest static void oppCRTriggerTurnedOff() {
+    @isTest
+    static void oppCRTriggerTurnedOff() {
         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR, 
                 npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR));
@@ -222,13 +225,20 @@ private class OPP_OpportunityContactRoles_TEST {
     /*******************************************************************************************************
     * @description Tests contact role creation for 1:1 model, using contact attribution.
     */
-    @isTest static void oppRolesForOneToOneContact() {
+    @isTest
+    static void oppRolesForOneToOneContact() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) {
             return;
         }
 
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR));
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, 
+                npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR
+            )
+        );
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
@@ -267,13 +277,20 @@ private class OPP_OpportunityContactRoles_TEST {
     /*******************************************************************************************************
     * @description Tests contact role creation for individual/bucket model using contact attribution.
     */
-    @isTest static void oppRolesForIndividualContact() {
+    @isTest
+    static void oppRolesForIndividualContact() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) {
             return;
         }
 
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR));
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR,
+                npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+                npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR
+            )
+        );
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
@@ -313,13 +330,20 @@ private class OPP_OpportunityContactRoles_TEST {
     /*******************************************************************************************************
     * @description Tests contact role creation for 1:1 model, using account attribution.
     */
-    @isTest static void oppRolesForOneToOneAccount() {
+    @isTest
+    static void oppRolesForOneToOneAccount() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) {
             return;
         }
 
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR));
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+                npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR
+            )
+        );
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
@@ -352,13 +376,20 @@ private class OPP_OpportunityContactRoles_TEST {
     /*******************************************************************************************************
     * @description Tests contact role creation for 1:1 model, using contact attribution.
     */
-    @isTest static void oppRolesForIndividualAccount() {
+    @isTest
+    static void oppRolesForIndividualAccount() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) {
             return;
         }
 
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR));
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR,
+                npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+                npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR
+            )
+        );
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
@@ -398,7 +429,8 @@ private class OPP_OpportunityContactRoles_TEST {
     /*******************************************************************************************************
     * @description Puts a bad ID vaue in the Contact ID for Role field, verifies exception is thrown.
     */
-    @isTest static void oppRolesForBadId() {
+    @isTest
+    static void oppRolesForBadId() {
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
             npe01__Contact_Id_for_Role__c = 'junk',
@@ -434,7 +466,8 @@ private class OPP_OpportunityContactRoles_TEST {
     * Honoree and Notification recipient contacts. Verifies Name fields updated when blank, verifies no
     * contact roles are created.
     */
-    @isTest static void honoreeNotificationBlankSettings(){
+    @isTest
+    static void honoreeNotificationBlankSettings(){
         List<contact> testCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
         insert testCons;
 
@@ -480,7 +513,8 @@ private class OPP_OpportunityContactRoles_TEST {
     * @description Populates Honoree and Notification Recipient contact role settings. Adds contacts for 
     * Honoree and Notification recipient contacts. Verifies contact roles are created correctly.
     */
-    @isTest static void honoreeNotificationInsert(){
+    @isTest
+    static void honoreeNotificationInsert(){
         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c(
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
@@ -543,7 +577,8 @@ private class OPP_OpportunityContactRoles_TEST {
     * contact role deleted for first honoree, and created for the second honoree, but that no duplicate role
     * is created for the donor/notification recipient.
     */
-    @isTest static void honoreeNotificationUpdate(){
+    @isTest
+    static void honoreeNotificationUpdate(){
         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c(
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
@@ -638,7 +673,8 @@ private class OPP_OpportunityContactRoles_TEST {
     * @description Verifies that contact roles for household members aren't created as duplicates to contact
     * roles
     */
-    @isTest static void avoidDuplicateCRs(){
+    @isTest
+    static void avoidDuplicateCRs(){
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) {
             return;
@@ -733,7 +769,8 @@ private class OPP_OpportunityContactRoles_TEST {
     *   The updated Opportunity Contact Role has the IsPrimary flag selected.
     * @return void
     *********************************************************************************************************/
-    @isTest static void testUpdatingPrimaryContact() {
+    @isTest
+    static void testUpdatingPrimaryContact() {
         List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(2);
         insert testContacts;
 
@@ -805,7 +842,8 @@ private class OPP_OpportunityContactRoles_TEST {
     *   The Opportunity's Account details are retrieved.
     * @return void
     *********************************************************************************************************/
-    @isTest static void testPopulateAccountDetails() {
+    @isTest
+    static void testPopulateAccountDetails() {
         Map<Id, Account> accountDetails = new Map<Id, Account>();
 
         List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
@@ -872,7 +910,8 @@ private class OPP_OpportunityContactRoles_TEST {
     *   The Map was populated accordingly.
     * @return void
     *********************************************************************************************************/
-    @isTest static void testPopulateAccountToOpportunities() {
+    @isTest
+    static void testPopulateAccountToOpportunities() {
         Map<Id, List<Id>> accountToOpportunities = new Map<Id, List<Id>>();
         Map<Id, Account> accountDetails = new Map<Id, Account>();
         List<Account> testAccounts = new List<Account>();
@@ -913,7 +952,8 @@ private class OPP_OpportunityContactRoles_TEST {
     *   The Map was populated accordingly.
     * @return void
     *********************************************************************************************************/
-    @isTest static void testPopulateTransactionOCRs() {
+    @isTest
+    static void testPopulateTransactionOCRs() {
         Map<Id, List<OpportunityContactRole>> transactionOCRs = new Map<Id, List<OpportunityContactRole>>();
         List<OpportunityContactRole> testOCRs = new List<OpportunityContactRole>();
 
@@ -976,7 +1016,8 @@ private class OPP_OpportunityContactRoles_TEST {
     *   The OpportunityContactRoles were deleted accordingly.
     * @return void
     *********************************************************************************************************/
-    @isTest static void testClearOCRs() {
+    @isTest
+    static void testClearOCRs() {
         List<OpportunityContactRole> ocrsToDelete = new List<OpportunityContactRole>();
         List<OpportunityContactRole> testOCRs = new List<OpportunityContactRole>();
         List<OpportunityContactRole> ocrsToDeleteImmediately = new List<OpportunityContactRole>();
@@ -1063,7 +1104,8 @@ private class OPP_OpportunityContactRoles_TEST {
     * @description Validates that changing the Opp.AccountId to a null value or to a different Account does not
     * cause an error and that the related OCR's are valid
     */
-    @isTest static void testOppAccountIdChanges() {
+    @isTest
+    static void testOppAccountIdChanges() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) {
             return;

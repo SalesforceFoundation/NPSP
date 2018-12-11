@@ -117,13 +117,8 @@
         </valueSet>
     </fields>
     <label>Tribute</label>
-    <listViews>
-        <fullName>All</fullName>
-        <filterScope>Everything</filterScope>
-        <label>All</label>
-    </listViews>
     <nameField>
-        <displayFormat>TRB-{00000}</displayFormat>
+        <displayFormat>TRIB-{000000000}</displayFormat>
         <label>Tribute Name</label>
         <type>AutoNumber</type>
     </nameField>

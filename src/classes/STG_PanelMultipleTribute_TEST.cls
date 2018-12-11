@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017 Salesforce.org
+    Copyright (c) 2018 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -35,33 +35,20 @@
 */
 @isTest
 private class STG_PanelMultipleTribute_TEST {
-    /*******************************************************************************************************
-    * @description Role values to use in settings.
-    */
-    private static final String OPPORTUNITY_CONTACT_ROLE_DONOR = 'Donor';
-    private static final String OPPORTUNITY_CONTACT_ROLE_HONOREE = 'Honoree';
-    private static final String OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT = 'Notification Recipient';
 
     /*********************************************************************************************************
     * @description Tests basic settings page functionality and confirms expected values and errors when ≈
     *              Multiple Tributes Setting is in Single Tribute Mode
-    **********************************************************************************************************/ 
-    private static testMethod void testPanelPageSingleTributeMode() {
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c(
-                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                        npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
-                        Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
-                        Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
-                        Multiple_Tributes__c = TBU_MultipleTributesSettingsFacade.TRIBUTE_SINGLE_VAL
-                )
-        );
-        
+    **********************************************************************************************************/
+    @isTest
+    static void testPanelPageSingleTributeMode() {
+        npe01__Contacts_and_Orgs_Settings__c testSettings = OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_SINGLE_VAL);
+
         Test.setCurrentPage(Page.STG_PanelMultipleTribute);
 
         STG_PanelMultipleTribute_CTRL ctrl = new STG_PanelMultipleTribute_CTRL();
-        
-        System.assertEquals('idPanelMultipleTribute', ctrl.idPanel(), 'ctrl.idPanel()');     
+
+        System.assertEquals('idPanelMultipleTribute', ctrl.idPanel(), 'ctrl.idPanel()');
         System.assertEquals(true, ctrl.isBatchDisabled, 'ctrl.isBatchDisabled');
         System.assertEquals(Label.stgMultipleTributesSingleOpp, ctrl.getMultipleTributesSettingForDisplay(), 'Multiple Tributes Setting For Display()');
 
@@ -74,22 +61,15 @@ private class STG_PanelMultipleTribute_TEST {
     * @description Tests basic settings page functionality and confirms expected values and errors when ≈
     *              Multiple Tributes Setting is in Mixed Tribute Mode
     **********************************************************************************************************/ 
-    private static testMethod void testPanelPageMixedTributeMode() {
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c(
-                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                        npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
-                        Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
-                        Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
-                        Multiple_Tributes__c = TBU_MultipleTributesSettingsFacade.TRIBUTE_MIXED_VAL
-                )
-        );
-        
+    @isTest
+    static void testPanelPageMixedTributeMode() {
+        npe01__Contacts_and_Orgs_Settings__c testSettings = OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MIXED_VAL);
+
         Test.setCurrentPage(Page.STG_PanelMultipleTribute);
 
         STG_PanelMultipleTribute_CTRL ctrl = new STG_PanelMultipleTribute_CTRL();
-        
-        System.assertEquals('idPanelMultipleTribute', ctrl.idPanel(), 'ctrl.idPanel()');     
+
+        System.assertEquals('idPanelMultipleTribute', ctrl.idPanel(), 'ctrl.idPanel()');
         System.assertEquals(false, ctrl.isBatchDisabled, 'ctrl.isBatchDisabled');
         System.assertEquals(Label.stgMultipleTributesFlexible, ctrl.getMultipleTributesSettingForDisplay(), 'Multiple Tributes Setting For Display()');
 
@@ -102,42 +82,39 @@ private class STG_PanelMultipleTribute_TEST {
     * @description Tests basic settings page functionality and confirms expected values and behavior when ≈
     *              Multiple Tributes Setting is in Multiple Tribute Mode
     **********************************************************************************************************/ 
-    private static testMethod void testPanelPageMultipleTributeMode() {
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c(
-                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                        npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
-                        Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
-                        Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
-                        Multiple_Tributes__c = TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL
-                )
-        );
-        
+    @isTest
+    static void testPanelPageMultipleTributeMode() {
+        npe01__Contacts_and_Orgs_Settings__c testSettings = OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL);
+
         Test.setCurrentPage(Page.STG_PanelMultipleTribute);
 
         STG_PanelMultipleTribute_CTRL ctrl = new STG_PanelMultipleTribute_CTRL();
-        
-        System.assertEquals('idPanelMultipleTribute', ctrl.idPanel(), 'ctrl.idPanel()');     
+
+        System.assertEquals('idPanelMultipleTribute', ctrl.idPanel(), 'ctrl.idPanel()');
         System.assertEquals(false, ctrl.isBatchDisabled, 'ctrl.isBatchDisabled');
         System.assertEquals(Label.stgMultipleTributesLimited, ctrl.getMultipleTributesSettingForDisplay(), 'Multiple Tributes Setting For Display()');
 
         //Make sure there is no Tribute record in the org
         List<Tribute__c> tributeList = [Select Id from Tribute__c];
-        System.assertEquals(0, tributeList.size(), 'No Tributes Expected');
-        
+        System.assertEquals(true, tributeList.isEmpty(), 'No Tributes Expected');
+
         //Create and Insert Opportunity
-        Account acc = new Account(Name = 'TheAccount');
+        Account acc = new Account(Name = 'TestPanelPageMultipleTributeMode');
         insert acc;
-        
+
+        String closeWonStageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+
         List<Opportunity> oppsToInsert = new List<Opportunity>();
-        for(Integer i = 0; i < 10; i++) {
-            Opportunity opp = new Opportunity(  AccountId = acc.id, 
-                                                StageName = 'Close Won', 
-                                                Name='Donation' + i,
-                                                Amount= i, 
-                                                CloseDate = Date.newInstance(2018, 1, 2), 
-                                                Honoree_Name__c = 'John Smith' + i, 
-                                                Notification_Recipient_Name__c = 'Mark Smith');
+        for (Integer i = 0; i < 10; i++) {
+            Opportunity opp = new Opportunity(
+                AccountId = acc.Id, 
+                StageName = closeWonStageName,
+                Name='Donation' + i,
+                Amount= i,
+                CloseDate = Date.newInstance(2018, 1, 2),
+                Honoree_Name__c = 'John Smith' + i,
+                Notification_Recipient_Name__c = 'Mark Smith'
+            );
             oppsToInsert.add(opp);
         }
         insert oppsToInsert;
@@ -154,11 +131,14 @@ private class STG_PanelMultipleTribute_TEST {
         ctrl.runBatch();
 
         Test.stopTest();
-        
-        //System should create the Tribute record for the Opportunity
-        tributeList = [Select Id, Opportunity__c, Honoree_Name__c from Tribute__c order by Honoree_Name__c ASC];
 
-     
+        //System should create the Tribute record for the Opportunity
+        tributeList = [SELECT       Id,
+                                    Opportunity__c,
+                                    Honoree_Name__c
+                       FROM Tribute__c 
+                       ORDER BY     Honoree_Name__c ASC];
+
         System.assertEquals(10, tributeList.size(), '10 Tributes Expected');
 
         for (Integer i=0; i < 10; i++) {
@@ -167,24 +147,25 @@ private class STG_PanelMultipleTribute_TEST {
         }
 
         //System should clear the Tribute fields on the Opportunity
-        List<Opportunity> oppList = [select     Id 
-                                     from Opportunity 
-                                     where      Honoree_Name__c != null or 
-                                                Tribute_Type__c != null or 
+        List<Opportunity> oppList = [SELECT     Id 
+                                     FROM Opportunity
+                                     WHERE      Honoree_Name__c != null OR
+                                                Tribute_Type__c != null OR
                                                 Honoree_Contact__c != null];
-        System.assertEquals(0, oppList.size(), 'Opps should not have Tribute Info');
+        System.assertEquals(true, oppList.isEmpty(), 'Opps should not have Tribute Info');
     }
 
     /*********************************************************************************************************
     * @description Confirms list of SelectOptions are returned as possible SelectOption settings.
     **********************************************************************************************************/ 
-    private static testMethod void testPanelPageMultipleTributesOptions() {
-        
-        STG_PanelMultipleTribute_CTRL ctrl = new STG_PanelMultipleTribute_CTRL();    
-        
+    @isTest
+    static void testPanelPageMultipleTributesOptions() {
+
+        STG_PanelMultipleTribute_CTRL ctrl = new STG_PanelMultipleTribute_CTRL();
+
         List<SelectOption> selectOptions = ctrl.getMultipleTributesOptions();
         // Confirming at least some items are returned.  Didn't want to code to a specific number in case additional
         // option added later.
-        System.assertEquals(true, selectOptions.size() > 0, 'Multiple Tributes Options List Size');
+        System.assertEquals(true, !selectOptions.isEmpty(), 'Multiple Tributes Options List Size');
     }
 }

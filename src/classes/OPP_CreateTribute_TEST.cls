@@ -38,13 +38,15 @@ private class OPP_CreateTribute_TEST {
     ********************************************************************************************************/
     @isTest 
     static void testCreateTributeBatch() {
+
         //Make sure there is no Tribute record in the org
-        List<Tribute__c> tributes = [SELECT Id FROM Tribute__c];
+        List<Tribute__c> tributes = [SELECT     Id
+                                     FROM Tribute__c];
         System.assertEquals(0, tributes.size(), 'No Tributes Expected');
 
         //Create and Insert Opportunity
         Account acc = new Account(
-            Name = 'TheAccount'
+            Name = 'TestCreateTributeBatch'
         );
         insert acc;
 
@@ -71,6 +73,8 @@ private class OPP_CreateTribute_TEST {
         for (Opportunity opp : oppsToInsert) {
             honNmToOppIdMap.put (opp.Honoree_Name__c, opp.Id);
         }
+
+        npe01__Contacts_and_Orgs_Settings__c testSettings = OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL);
 
         Test.startTest();
         Database.executeBatch(new OPP_CreateTribute_BATCH(), 200);
@@ -104,13 +108,15 @@ private class OPP_CreateTribute_TEST {
     ********************************************************************************************************/
     @isTest
     static void testCreateTributeBatchWithAdditionalWhereClause() {
+
         //Make sure there is no Tribute record in the org
-        List<Tribute__c> tributes = [SELECT Id FROM Tribute__c];
+        List<Tribute__c> tributes = [SELECT     Id
+                                     FROM Tribute__c];
         System.assertEquals(0, tributes.size(), 'No Tributes Expected');
 
         //Create and Insert Opportunity
         Account acc = new Account(
-            Name = 'TheAccount'
+            Name = 'TestCreateTributeBatchWAddWhereClause'
         );
         insert acc;
 
@@ -142,6 +148,8 @@ private class OPP_CreateTribute_TEST {
             honNmToOppIdMap.put (opp.Honoree_Name__c, opp.Id);
         }
 
+        npe01__Contacts_and_Orgs_Settings__c testSettings = OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL);
+
         Test.startTest();
        
         Database.executeBatch(new OPP_CreateTribute_BATCH('Name=\'Convert it\''), 200);
@@ -169,5 +177,4 @@ private class OPP_CreateTribute_TEST {
                                             Honoree_Contact__c != null];
         System.assertEquals(8, opps.size(), 'Opps should have Tribute Info');
     }
-
 }

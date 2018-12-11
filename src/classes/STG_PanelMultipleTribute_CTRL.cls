@@ -37,7 +37,9 @@ public class STG_PanelMultipleTribute_CTRL extends STG_Panel {
     /*********************************************************************************************************
     * @description Returns the string Id of the Multiple Tribute panel.
     */
-    public override string idPanel() { return 'idPanelMultipleTribute'; }
+    public override string idPanel() { 
+        return 'idPanelMultipleTribute'; 
+        }
 
     /*********************************************************************************************************
     * @description Allows admins to pass in additional constraints to the Create Tribute Batch Job processing
@@ -51,10 +53,10 @@ public class STG_PanelMultipleTribute_CTRL extends STG_Panel {
     public boolean isRunningBatch { get; set; }
 
     public boolean isBatchDisabled {
-        get {
+        public get {
             return TBU_MultipleTributesSettingsFacade.isMultipleTributesSingle();
         }
-        set;
+        private set;
     }
 
     public String getMultipleTributesSettingForDisplay() {
@@ -77,7 +79,7 @@ public class STG_PanelMultipleTribute_CTRL extends STG_Panel {
     */
     public PageReference runBatch() {
         //We only allow user to run the batch if user only use Tribute object
-        if(!TBU_MultipleTributesSettingsFacade.isMultipleTributesLimited()) {
+        if (!TBU_MultipleTributesSettingsFacade.isMultipleTributesLimited()) {
             isRunningBatch = false;
             ApexPages.addMessage(new ApexPages.message(ApexPages.Severity.ERROR, Label.errMultipleTributesBatchInvalid));
             return null;
@@ -85,7 +87,6 @@ public class STG_PanelMultipleTribute_CTRL extends STG_Panel {
         isRunningBatch = true;
 
         Database.executeBatch(new OPP_CreateTribute_BATCH(additionalWhereClause), 200);
-       
 
         return null;
     }

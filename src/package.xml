@@ -2486,7 +2486,6 @@
         <members>General_Accounting_Unit__c.All</members>
         <members>Level__c.All</members>
         <members>Opportunity.To_Be_Acknowledged</members>
-        <members>Tribute__c.All</members>
         <members>Trigger_Handler__c.All</members>
         <name>ListView</name>
     </types>

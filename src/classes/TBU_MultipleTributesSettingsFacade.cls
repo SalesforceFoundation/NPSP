@@ -42,7 +42,6 @@ public class TBU_MultipleTributesSettingsFacade {
 
     private static npe01__Contacts_And_Orgs_Settings__c settings = null;
 
-
     /*******************************************************************************************************
     * @description Returns the MultipleTributesSetting, or a default of Single Tribute, if setting value is null;
     * @return Value of Multiple Tributes Setting, or Single if null
@@ -55,30 +54,66 @@ public class TBU_MultipleTributesSettingsFacade {
         return ((val != null) && (val.trim().length() > 0)) ? val : TRIBUTE_SINGLE_VAL;
     }
 
+    /*******************************************************************************************************
+    * @description Returns the localized version of the MultipleTributesSetting for display, or null
+    * if not found.
+    * @return String Display value for Currentl Multiple Tributes Setting, in user's local language
+    ********************************************************************************************************/
     public static String getMultipleTributesSettingLocalized() {
-        
-        Map<String, String> mtValToLocalized = new Map<String, String> {
-            TRIBUTE_SINGLE_VAL => Label.stgMultipleTributesSingleOpp,
-            TRIBUTE_MIXED_VAL => Label.stgMultipleTributesFlexible,
-            TRIBUTE_MULTIPLE_VAL => Label.stgMultipleTributesLimited
-        };        
-        
-        return mtValToLocalized.get(getMultipleTributesSetting());
 
+        return getMultipleTributesSettingLocalized(getMultipleTributesSetting());
     }
 
+    /*******************************************************************************************************
+    * @description Returns the localized version of the display value of the requested tribute settings 
+    * value, or null if not found.
+    * @param tributeSettingVal Value
+    * @return String Display value for Currentl Multiple Tributes Setting, in user's local language
+    ********************************************************************************************************/
+    public static String getMultipleTributesSettingLocalized(String tributeSettingVal) {
+
+        if (tributeSettingVal.equalsIgnoreCase(TRIBUTE_SINGLE_VAL))
+                return Label.stgMultipleTributesSingleOpp;
+        else if (tributeSettingVal.equalsIgnoreCase(TRIBUTE_MIXED_VAL))
+                return Label.stgMultipleTributesFlexible;
+        else if (tributeSettingVal.equalsIgnoreCase(TRIBUTE_MULTIPLE_VAL))
+                return Label.stgMultipleTributesLimited;
+        else
+            return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Boolean indicator indicating if Multiple Tributes is in "Single Tribute Only" mode,
+    * where tribute information exists only on the Opportunity.  Single Mode is the default if not value is set
+    * @return Boolean True if set to Single Tribute Only mode, false otherwise
+    ********************************************************************************************************/
     public static boolean isMultipleTributesSingle() {
         return TRIBUTE_SINGLE_VAL.equalsIgnoreCase(getMultipleTributesSetting());
     }
 
+    /*******************************************************************************************************
+    * @description Boolean indicator indicating if Multiple Tributes is in "flexible" mode,
+    * where tribute information can exist eitbher as related Tribute records, or on the Opportunity
+    * @return Boolean True if set to "flexible" mode, false otherwise
+    ********************************************************************************************************/
     public static boolean isMultipleTributesFlexible() {
         return TRIBUTE_MIXED_VAL.equalsIgnoreCase(getMultipleTributesSetting());
     }
-    
+
+    /*******************************************************************************************************
+    * @description Boolean indicator indicating if Multiple Tributes is in "multiple tributes only" mode,
+    * where tribute information can exist only as related Tribute records
+    * @return Boolean True if set to "multiple tributes only" mode, false otherwise
+    ********************************************************************************************************/
     public static boolean isMultipleTributesLimited() {
         return TRIBUTE_MULTIPLE_VAL.equalsIgnoreCase(getMultipleTributesSetting());
     }
 
+    /*******************************************************************************************************
+    * @description Retrieves NPSP Contact And Orgs Settings via existing
+    * UTIL_CustomSettingsFacade.getContactSettings method
+    * @return npe01__Contact_And_Orgs_Settings__c populated NPSP Contact And Org Settingsd record
+    ********************************************************************************************************/
     private static npe01__Contacts_And_Orgs_Settings__c getSettings() {
         if (settings == null) {
             settings = UTIL_CustomSettingsFacade.getContactsSettings();
@@ -86,5 +121,4 @@ public class TBU_MultipleTributesSettingsFacade {
 
         return settings;
     }
-
 }

@@ -65,8 +65,7 @@ public with sharing class OPP_CreateTribute_BATCH implements Database.Batchable<
     * @description Batch start method. Runs through all the Opportunities to be converted.
     */
     public Database.QueryLocator start(Database.BatchableContext info) {
-        String soqlQuery = ((additionalWhereClause != null) && (additionalWhereClause.trim().length() > 0)) ?
-                            OPP_QUERY + ' WHERE (' + additionalWhereClause + ')' : OPP_QUERY;
+        String soqlQuery = (String.isNotBlank(additionalWhereClause)) ? OPP_QUERY + ' WHERE (' + additionalWhereClause + ')' : OPP_QUERY;
 
         // Deliberately not trapping this potentially invalid query (since Where Clause might be invalid).
         // This will display an error in the job widget used on the settings page, and send the person who 
@@ -79,6 +78,8 @@ public with sharing class OPP_CreateTribute_BATCH implements Database.Batchable<
     * @return void.
     ********************************************************************************************************/
     public void execute(Database.BatchableContext BC, List<Opportunity> scope) {
+
+        List<Opportunity> updOpportunities = new List<Opportunity>();
 
         List<Tribute__c> newTributes = new List<Tribute__c>();
         for (Opportunity opp : scope) {
@@ -96,15 +97,19 @@ public with sharing class OPP_CreateTribute_BATCH implements Database.Batchable<
                 opp.Tribute_Type__c = null;
                 opp.Honoree_Contact__c = null;
                 opp.Honoree_Name__c = null;
+                
+                updOpportunities.add(opp);
             }
         }
         
-        //We do not want to run through Opportunity or Tribute triggers when clearing Tribute Fields
-        //on the Opportunity
-        TDTM_TriggerHandler.disableTDTM = true;
-        insert newTributes;
-        update scope;
-        TDTM_TriggerHandler.disableTDTM = false;
+        if (updOpportunities.size() > 0) {
+            //We do not want to run through Opportunity or Tribute triggers when clearing Tribute Fields
+            //on the Opportunity
+            TDTM_TriggerHandler.disableTDTM = true;
+            insert newTributes;
+            update updOpportunities;
+            TDTM_TriggerHandler.disableTDTM = false;
+        }
     }
 
     /*******************************************************************************************************
@@ -115,9 +120,7 @@ public with sharing class OPP_CreateTribute_BATCH implements Database.Batchable<
     * @return Boolean true if Tribute info is present, false otherwise
     ********************************************************************************************************/
     @testVisible private static Boolean hasTributeInfo(Opportunity opp) {
-        return ((opp.Honoree_Contact__c != null) || 
-                ((opp.Honoree_Name__c != null) && (opp.Honoree_Name__c.trim().length() > 0)) || 
-                ((opp.Tribute_Type__c != null) && (opp.Tribute_Type__c.trim().length() > 0)));
+        return ((opp.Honoree_Contact__c != null) || (String.isNotBlank(opp.Honoree_Name__c)) || (String.isNotBlank(opp.Tribute_Type__c)));
     }
 
     /******************************************************************************************************

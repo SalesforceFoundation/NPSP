@@ -34,15 +34,8 @@
 * @group-content ../../ApexDocContent/Tribute.htm
 * @description Tests for the MultipleTributesSettingsFacade class
 */
-@isTest
+@isTest(IsParallel=True)
 private class TBU_MultipleTributesSettingsFacade_TEST {
-    /*******************************************************************************************************
-    * @description Role values to use in settings.
-    */
-    private static final String OPPORTUNITY_CONTACT_ROLE_DONOR = 'Donor';
-    private static final String OPPORTUNITY_CONTACT_ROLE_HONOREE = 'Honoree';
-    private static final String OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT = 'Notification Recipient';
-
     /*******************************************************************************************************
     * @description Test setting defaults when initially not set
     */
@@ -60,15 +53,8 @@ private class TBU_MultipleTributesSettingsFacade_TEST {
     * @description Test setting defaults when NPSP Settings are present but Multiple Settings field is set
     */
    static testMethod void testMultipleTributesSettingNoMultipleSettingDefaults() {
-        
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c(
-                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                        npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
-                        Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
-                        Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT
-                )
-        );
+
+        npe01__Contacts_and_Orgs_Settings__c testSettings = OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(null);
 
         System.assertEquals (TBU_MultipleTributesSettingsFacade.TRIBUTE_SINGLE_VAL, TBU_MultipleTributesSettingsFacade.getMultipleTributesSetting(), 'Multiple Tributes - Single if not set');
         System.assertEquals (true, TBU_MultipleTributesSettingsFacade.isMultipleTributesSingle(), 'isMultipleTributesSingle()');
@@ -81,16 +67,7 @@ private class TBU_MultipleTributesSettingsFacade_TEST {
     * @description Test settings when Multiple Tributes set to Multiple Tributes Only
     */
     static testMethod void testMultipleTributesSettingMultiple() {
-
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c(
-                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                        npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
-                        Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
-                        Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
-                        Multiple_Tributes__c = TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL
-                )
-        );
+        npe01__Contacts_and_Orgs_Settings__c testSettings = OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL);
 
         System.assertEquals (TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL, TBU_MultipleTributesSettingsFacade.getMultipleTributesSetting(), 'Multiple Tributes Setting');
         System.assertEquals (false, TBU_MultipleTributesSettingsFacade.isMultipleTributesSingle(), 'isMultipleTributesSingle()');
@@ -104,16 +81,7 @@ private class TBU_MultipleTributesSettingsFacade_TEST {
     * @description Test settings when Multiple Tributes set to Mixed Mode (Multiple Tributes and Single Tributes [on Opportunity])
     */
     static testMethod void testMultipleTributesSettingMixed() {
-
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c(
-                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                        npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
-                        Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
-                        Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
-                        Multiple_Tributes__c = TBU_MultipleTributesSettingsFacade.TRIBUTE_MIXED_VAL
-                )
-        );
+        npe01__Contacts_and_Orgs_Settings__c testSettings = OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MIXED_VAL);
 
         System.assertEquals (TBU_MultipleTributesSettingsFacade.TRIBUTE_MIXED_VAL, TBU_MultipleTributesSettingsFacade.getMultipleTributesSetting(), 'Multiple Tributes Setting');
         System.assertEquals (false, TBU_MultipleTributesSettingsFacade.isMultipleTributesSingle(), 'isMultipleTributesSingle()');
@@ -127,15 +95,7 @@ private class TBU_MultipleTributesSettingsFacade_TEST {
     */
     static testMethod void testMultipleTributesSettingSingle() {
 
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c(
-                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                        npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
-                        Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
-                        Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT,
-                        Multiple_Tributes__c = TBU_MultipleTributesSettingsFacade.TRIBUTE_SINGLE_VAL
-                )
-        );
+        npe01__Contacts_and_Orgs_Settings__c testSettings = OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_SINGLE_VAL);
 
         System.assertEquals (TBU_MultipleTributesSettingsFacade.TRIBUTE_SINGLE_VAL, TBU_MultipleTributesSettingsFacade.getMultipleTributesSetting(), 'Multiple Tributes Setting');
         System.assertEquals (true, TBU_MultipleTributesSettingsFacade.isMultipleTributesSingle(), 'isMultipleTributesSingle()');
@@ -143,5 +103,4 @@ private class TBU_MultipleTributesSettingsFacade_TEST {
         System.assertEquals (false, TBU_MultipleTributesSettingsFacade.isMultipleTributesLimited(), 'isMultipleTributesLimited()');
         System.assertEquals (Label.stgMultipleTributesSingleOpp, TBU_MultipleTributesSettingsFacade.getMultipleTributesSettingLocalized(), 'getMultipleTributesSettingLocalized()');
     }
-
 }

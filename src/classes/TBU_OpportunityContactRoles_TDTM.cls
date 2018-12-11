@@ -131,9 +131,17 @@ public class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable {
         Map<Id, Opportunity> oppMap = new Map<Id, Opportunity>();
 
         //Build the map of Opportunity which has the Tribute info on it
-        for (Opportunity opp : [SELECT Id, Tribute_Type__c, Honoree_Contact__c,
-                Honoree_Name__c, Notification_Recipient_Contact__c, Notification_Recipient_Name__c,
-                Notification_Recipient_Information__c, Notification_Preference__c, Notification_Message__c FROM Opportunity WHERE  Id in:oppIds]) {
+        for (Opportunity opp : [SELECT  Id,
+                                        Tribute_Type__c,
+                                        Honoree_Contact__c,
+                                        Honoree_Name__c,
+                                        Notification_Recipient_Contact__c,
+                                        Notification_Recipient_Name__c,
+                                        Notification_Recipient_Information__c,
+                                        Notification_Preference__c,
+                                        Notification_Message__c
+                                FROM Opportunity
+                                WHERE  Id in:oppIds]) {
 
             if (opp.Honoree_Contact__c != null || opp.Honoree_Name__c != null ||
                     opp.Tribute_Type__c != null) {
@@ -196,7 +204,7 @@ public class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable {
             oppIds.add(tri.Opportunity__c);
 
             if(tributesByOpp.get(tri.Opportunity__c) == null) {
-                tributesByOpp.put(tri.Opportunity__c, new List<Tribute__c>{tri});
+                tributesByOpp.put(tri.Opportunity__c, new List<Tribute__c>{ tri });
             } else {
                 tributesByOpp.put(tri.Opportunity__c, (List<Tribute__c>) tributesByOpp.get(tri.Opportunity__c).add(tri));
             }
@@ -206,7 +214,7 @@ public class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable {
             oppIds.add(tri.Opportunity__c);
 
             if(oldtributesByOpp.get(tri.Opportunity__c) == null) {
-                oldtributesByOpp.put(tri.Opportunity__c, new List<Tribute__c>{tri});
+                oldtributesByOpp.put(tri.Opportunity__c, new List<Tribute__c>{ tri });
             } else {
                 oldtributesByOpp.put(tri.Opportunity__c, (List<Tribute__c>) oldtributesByOpp.get(tri.Opportunity__c).add(tri));
             }
@@ -222,58 +230,6 @@ public class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable {
 
         oppOCRTDTM.upsertContactRolesAfterUpdate(opps, opps, tributesByOpp, oldtributesByOpp, true);
     }
-    /*private void upsertContactRolesAfterUpdate(list<Tribute__c> tributes, list<Tribute__c> oldTributes) {
-        Map<Id, Id> mapOppIdPrimaryContact = new Map<Id, Id>();
-
-        OPP_OpportunityContactRoles_TDTM oppOCRTDTM = new OPP_OpportunityContactRoles_TDTM();
-
-        //Get the opportunity information
-        List<Id> oppIds = new List<Id>();
-        for (Tribute__c tri : tributes) {
-            oppIds.add(tri.Opportunity__c);
-        }
-
-        //Get existing primary contact roles for the trigger opps.
-        for (Opportunity opp : [SELECT Id, Primary_Contact__c FROM Opportunity WHERE Id IN :oppIds]) {
-            mapOppIdPrimaryContact.put(opp.Id, opp.Primary_Contact__c);
-        }
-
-        Map<Id, Map<Id,OpportunityContactRole>> mapOppIdMapConIdOCR = new Map<Id, Map<Id,OpportunityContactRole>>();
-
-        //find changed opportunities and instantiate a map entry to hold OCRs
-        for (integer i = 0; i< tributes.size(); i++) {
-            Tribute__c newTri = tributes[i];
-            Tribute__c oldTri = oldTributes[i];
-            if (oppOCRTDTM.needsManageOCR(newTri, oldTri, FIELD_NAME_HONOREE_CONTACT, mapOppIdPrimaryContact.get(newTri.Opportunity__c)) ||
-                    oppOCRTDTM.needsManageOCR(newTri, oldTri, FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, mapOppIdPrimaryContact.get(newTri.Opportunity__c))) {
-
-                mapOppIdMapConIdOCR.put(newTri.Opportunity__c, new Map<Id,OpportunityContactRole>());
-            }
-        }
-
-        //query for OCRs, hand off to processing methods
-        if (!mapOppIdMapConIdOCR.isEmpty()) {
-            for (OpportunityContactRole ocr : [SELECT OpportunityId, ContactId, isPrimary, Role FROM OpportunityContactRole
-            WHERE OpportunityId IN :mapOppIdMapConIdOCR.keyset()]) {
-                mapOppIdMapConIdOCR.get(ocr.OpportunityId).put(ocr.ContactId, ocr);
-            }
-
-            for (integer i = 0; i < tributes.size(); i++) {
-                Tribute__c newTri = tributes[i];
-                Tribute__c oldTri = oldTributes[i];
-                //then manage honoree, if it has changed and it's not the same as the primary contact
-                if (oppOCRTDTM.needsManageOCR(newTri, oldTri, FIELD_NAME_HONOREE_CONTACT, mapOppIdPrimaryContact.get(newTri.Opportunity__c))) {
-                    oppOCRTDTM.manageOtherOCR(newTri, oldTri, mapOppIdMapConIdOCR.get(newTri.Opportunity__c), FIELD_NAME_HONOREE_CONTACT, new Map<Id, List<OpportunityContactRole>> (),
-                    new List<OpportunityContactRole> (), true);
-                }
-                //finally, manage the notification, if it has changed and it's not the same as either contact already dealt with
-                if (oppOCRTDTM.needsManageOCR(newTri, oldTri, FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, mapOppIdPrimaryContact.get(newTri.Opportunity__c))) {
-                    oppOCRTDTM.manageOtherOCR(newTri, oldTri, mapOppIdMapConIdOCR.get(newTri.Opportunity__c), FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, new Map<Id, List<OpportunityContactRole>> (),
-                    new List<OpportunityContactRole> (),  true);
-                }
-            }
-        }
-    }*/
 
     /******************************************************************************************************
     * @description Clear Tribute fields on the Opportunity
@@ -281,8 +237,6 @@ public class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable {
     * @return void
     ******************************************************************************************************/
     private void clearTributeFieldsOnOpportunity(List<Tribute__c> tributes) {
-        //We do not want the Trigger to run when just clear the field
-
         Map<Id, Opportunity> oppsToUpdateMap = new Map<Id, Opportunity>();
         for (Tribute__c tri : tributes) {
             Opportunity opp = new Opportunity(Id = tri.Opportunity__c);
@@ -292,7 +246,7 @@ public class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable {
             opp.Honoree_Name__c = null;
             oppsToUpdateMap.put(opp.Id, opp);
         }
-        if (oppsToUpdateMap != null && oppsToUpdateMap.values().size() > 0) {
+        if (oppsToUpdateMap != null && (!oppsToUpdateMap.isEmpty())) {
             TDTM_TriggerHandler.disableTDTM = true;
             update oppsToUpdateMap.values();
             TDTM_TriggerHandler.disableTDTM = false;
