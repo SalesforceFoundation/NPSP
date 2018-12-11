@@ -15,6 +15,7 @@ Assign GAU to Opportunity
     Go To Record Home  &{opportunity}[Id]
     Load Related List    GAU Allocations
     Select Related Dropdown    GAU Allocations
+    Wait For Locator    link-title    Manage Allocations
     Click Link    link=Manage Allocations
     Wait For Locator    frame    Manage Allocations
     #Sleep    2

@@ -7,7 +7,7 @@ Suite Teardown  Delete Records and Close Browser
 
 *** Test Cases ***
 
-Create Matching Donation
+Find Matching Gifts
     [tags]  unstable
     ${ns} =  Get NPSP Namespace Prefix
     &{Org} =  API Create Organization Account    ${ns}Matching_Gift_Company__c=true  ${ns}Matching_Gift_Percent__c=100
