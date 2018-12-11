@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Profile xmlns="http://soap.sforce.com/2006/04/metadata">
     <applicationVisibilities>
-        <application>Nonprofit_CRM</application>
+        <application>%%%NAMESPACE%%%Nonprofit_CRM</application>
         <default>true</default>
         <visible>true</visible>
     </applicationVisibilities>
     <layoutAssignments>
-        <layout>Account-Household Layout</layout>
+        <layout>Account-%%%NAMESPACE%%%Household Layout</layout>
         <recordType>Account.HH_Account</recordType>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>Account-Organization Layout</layout>
+        <layout>Account-%%%NAMESPACE%%%Organization Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>Account-Organization Layout</layout>
+        <layout>Account-%%%NAMESPACE%%%Organization Layout</layout>
         <recordType>Account.Organization</recordType>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>Campaign-NPSP Campaign Layout</layout>
+        <layout>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>Opportunity-Donation Layout</layout>
+        <layout>Opportunity-%%%NAMESPACE%%%Donation Layout</layout>
         <recordType>Opportunity.NPSP_Default</recordType>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>Opportunity-Donation Layout</layout>
+        <layout>Opportunity-%%%NAMESPACE%%%Donation Layout</layout>
         <recordType>Opportunity.Donation</recordType>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>Opportunity-Grant Layout</layout>
+        <layout>Opportunity-%%%NAMESPACE%%%Grant Layout</layout>
         <recordType>Opportunity.Grant</recordType>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>Opportunity-In-Kind Gift Layout</layout>
+        <layout>Opportunity-%%%NAMESPACE%%%In-Kind Gift Layout</layout>
         <recordType>Opportunity.InKindGift</recordType>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>Opportunity-Major Gift Layout</layout>
+        <layout>Opportunity-%%%NAMESPACE%%%Major Gift Layout</layout>
         <recordType>Opportunity.MajorGift</recordType>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>Opportunity-Matching Gift Layout</layout>
+        <layout>Opportunity-%%%NAMESPACE%%%Matching Gift Layout</layout>
         <recordType>Opportunity.MatchingGift</recordType>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>Opportunity-Membership Layout</layout>
+        <layout>Opportunity-%%%NAMESPACE%%%Membership Layout</layout>
         <recordType>Opportunity.Membership</recordType>
     </layoutAssignments>
     <recordTypeVisibilities>
@@ -83,43 +83,39 @@
         <visible>false</visible>
     </recordTypeVisibilities>
     <tabVisibilities>
-        <tab>Address__c</tab>
+        <tab>%%%NAMESPACE%%%Address__c</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>Batch_Data_Entry</tab>
+        <tab>%%%NAMESPACE%%%Batch_Data_Entry</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>Contact_Merge</tab>
+        <tab>%%%NAMESPACE%%%Contact_Merge</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>DataImport__c</tab>
+        <tab>%%%NAMESPACE%%%DataImport__c</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>DataImportBatch__c</tab>
+        <tab>%%%NAMESPACE%%%Engagement_Plan_Template__c</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>Engagement_Plan_Template__c</tab>
+        <tab>%%%NAMESPACE%%%General_Accounting_Unit__c</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>General_Accounting_Unit__c</tab>
+        <tab>%%%NAMESPACE%%%Level__c</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>Level__c</tab>
+        <tab>%%%NAMESPACE%%%NPSP_Resources</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>NPSP_Resources</tab>
-        <visibility>DefaultOn</visibility>
-    </tabVisibilities>
-    <tabVisibilities>
-        <tab>NPSP_Settings</tab>
+        <tab>%%%NAMESPACE%%%NPSP_Settings</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>

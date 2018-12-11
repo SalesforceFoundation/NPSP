@@ -3,7 +3,9 @@
     <recordTypes>
         <fullName>Donation</fullName>
         <active>true</active>
-        <businessProcess>NPSP_Default</businessProcess>
+        <businessProcess>Donation</businessProcess>
+        <compactLayoutAssignment>%%%NAMESPACE%%%NPSP_Donation_Compact_Layout</compactLayoutAssignment>
+        <description>Donation Received</description>
         <label>Donation</label>
         <picklistValues>
             <picklist>ForecastCategoryName</picklist>
@@ -54,19 +56,11 @@
         <picklistValues>
             <picklist>Type</picklist>
             <values>
-                <fullName>Existing Customer - Downgrade</fullName>
+                <fullName>Existing Funding</fullName>
                 <default>false</default>
             </values>
             <values>
-                <fullName>Existing Customer - Replacement</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Existing Customer - Upgrade</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>New Customer</fullName>
+                <fullName>New Funding</fullName>
                 <default>false</default>
             </values>
         </picklistValues>
@@ -111,11 +105,46 @@
                 <default>false</default>
             </values>
         </picklistValues>
+        <picklistValues>
+            <picklist>%%%NAMESPACE%%%Acknowledgment_Status__c</picklist>
+            <values>
+                <fullName>Acknowledged</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Do Not Acknowledge</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Email Acknowledgment Not Sent</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Email Acknowledgment Now</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>To Be Acknowledged</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>%%%NAMESPACE%%%Tribute_Type__c</picklist>
+            <values>
+                <fullName>Honor</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Memorial</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
     </recordTypes>
     <recordTypes>
         <fullName>Grant</fullName>
         <active>true</active>
-        <businessProcess>NPSP_Default</businessProcess>
+        <businessProcess>Grant</businessProcess>
+        <description>Grant Received</description>
         <label>Grant</label>
         <picklistValues>
             <picklist>ForecastCategoryName</picklist>
@@ -166,19 +195,11 @@
         <picklistValues>
             <picklist>Type</picklist>
             <values>
-                <fullName>Existing Customer - Downgrade</fullName>
+                <fullName>Existing Funding</fullName>
                 <default>false</default>
             </values>
             <values>
-                <fullName>Existing Customer - Replacement</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Existing Customer - Upgrade</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>New Customer</fullName>
+                <fullName>New Funding</fullName>
                 <default>false</default>
             </values>
         </picklistValues>
@@ -223,11 +244,61 @@
                 <default>false</default>
             </values>
         </picklistValues>
+        <picklistValues>
+            <picklist>%%%NAMESPACE%%%Acknowledgment_Status__c</picklist>
+            <values>
+                <fullName>Acknowledged</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Do Not Acknowledge</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Email Acknowledgment Not Sent</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Email Acknowledgment Now</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>To Be Acknowledged</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>%%%NAMESPACE%%%Gift_Strategy__c</picklist>
+            <values>
+                <fullName>New Donor</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Renewal</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Upgrade</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>%%%NAMESPACE%%%Tribute_Type__c</picklist>
+            <values>
+                <fullName>Honor</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Memorial</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
     </recordTypes>
     <recordTypes>
         <fullName>InKindGift</fullName>
         <active>true</active>
-        <businessProcess>NPSP_Default</businessProcess>
+        <businessProcess>In-Kind Gift</businessProcess>
+        <description>Goods or Services received as In-Kind</description>
         <label>In-Kind Gift</label>
         <picklistValues>
             <picklist>ForecastCategoryName</picklist>
@@ -278,19 +349,11 @@
         <picklistValues>
             <picklist>Type</picklist>
             <values>
-                <fullName>Existing Customer - Downgrade</fullName>
+                <fullName>Existing Funding</fullName>
                 <default>false</default>
             </values>
             <values>
-                <fullName>Existing Customer - Replacement</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Existing Customer - Upgrade</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>New Customer</fullName>
+                <fullName>New Funding</fullName>
                 <default>false</default>
             </values>
         </picklistValues>
@@ -335,11 +398,91 @@
                 <default>false</default>
             </values>
         </picklistValues>
+        <picklistValues>
+            <picklist>%%%NAMESPACE%%%Acknowledgment_Status__c</picklist>
+            <values>
+                <fullName>Acknowledged</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Do Not Acknowledge</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Email Acknowledgment Not Sent</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Email Acknowledgment Now</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>To Be Acknowledged</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>%%%NAMESPACE%%%In_Kind_Type__c</picklist>
+            <values>
+                <fullName>Goods</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Services</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>%%%NAMESPACE%%%Matching_Gift_Status__c</picklist>
+            <values>
+                <fullName>Potential</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Received</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Submitted</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>%%%NAMESPACE%%%Notification_Preference__c</picklist>
+            <values>
+                <fullName>Do Not Notify</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Email</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Phone</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Postal Mail</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>%%%NAMESPACE%%%Tribute_Type__c</picklist>
+            <values>
+                <fullName>Honor</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Memorial</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
     </recordTypes>
     <recordTypes>
         <fullName>MajorGift</fullName>
         <active>true</active>
-        <businessProcess>NPSP_Default</businessProcess>
+        <businessProcess>Major Gift</businessProcess>
+        <description>Large Donation from a Major Donor</description>
         <label>Major Gift</label>
         <picklistValues>
             <picklist>ForecastCategoryName</picklist>
@@ -390,19 +533,11 @@
         <picklistValues>
             <picklist>Type</picklist>
             <values>
-                <fullName>Existing Customer - Downgrade</fullName>
+                <fullName>Existing Funding</fullName>
                 <default>false</default>
             </values>
             <values>
-                <fullName>Existing Customer - Replacement</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Existing Customer - Upgrade</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>New Customer</fullName>
+                <fullName>New Funding</fullName>
                 <default>false</default>
             </values>
         </picklistValues>
@@ -447,11 +582,61 @@
                 <default>false</default>
             </values>
         </picklistValues>
+        <picklistValues>
+            <picklist>%%%NAMESPACE%%%Acknowledgment_Status__c</picklist>
+            <values>
+                <fullName>Acknowledged</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Do Not Acknowledge</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Email Acknowledgment Not Sent</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Email Acknowledgment Now</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>To Be Acknowledged</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>%%%NAMESPACE%%%Gift_Strategy__c</picklist>
+            <values>
+                <fullName>New Donor</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Renewal</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Upgrade</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>%%%NAMESPACE%%%Tribute_Type__c</picklist>
+            <values>
+                <fullName>Honor</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Memorial</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
     </recordTypes>
     <recordTypes>
         <fullName>MatchingGift</fullName>
         <active>true</active>
-        <businessProcess>NPSP_Default</businessProcess>
+        <businessProcess>Donation</businessProcess>
+        <description>Matching Donation from an Donor&apos;s Employer or other Organization</description>
         <label>Matching Gift</label>
         <picklistValues>
             <picklist>ForecastCategoryName</picklist>
@@ -502,19 +687,11 @@
         <picklistValues>
             <picklist>Type</picklist>
             <values>
-                <fullName>Existing Customer - Downgrade</fullName>
+                <fullName>Existing Funding</fullName>
                 <default>false</default>
             </values>
             <values>
-                <fullName>Existing Customer - Replacement</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Existing Customer - Upgrade</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>New Customer</fullName>
+                <fullName>New Funding</fullName>
                 <default>false</default>
             </values>
         </picklistValues>
@@ -559,11 +736,61 @@
                 <default>false</default>
             </values>
         </picklistValues>
+        <picklistValues>
+            <picklist>%%%NAMESPACE%%%Acknowledgment_Status__c</picklist>
+            <values>
+                <fullName>Acknowledged</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Do Not Acknowledge</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Email Acknowledgment Not Sent</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Email Acknowledgment Now</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>To Be Acknowledged</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>%%%NAMESPACE%%%Matching_Gift_Status__c</picklist>
+            <values>
+                <fullName>Potential</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Received</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Submitted</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>%%%NAMESPACE%%%Tribute_Type__c</picklist>
+            <values>
+                <fullName>Honor</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Memorial</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
     </recordTypes>
     <recordTypes>
         <fullName>Membership</fullName>
         <active>true</active>
-        <businessProcess>NPSP_Default</businessProcess>
+        <businessProcess>Donation</businessProcess>
+        <description>A membership record type</description>
         <label>Membership</label>
         <picklistValues>
             <picklist>ForecastCategoryName</picklist>
@@ -614,19 +841,11 @@
         <picklistValues>
             <picklist>Type</picklist>
             <values>
-                <fullName>Existing Customer - Downgrade</fullName>
+                <fullName>Existing Funding</fullName>
                 <default>false</default>
             </values>
             <values>
-                <fullName>Existing Customer - Replacement</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Existing Customer - Upgrade</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>New Customer</fullName>
+                <fullName>New Funding</fullName>
                 <default>false</default>
             </values>
         </picklistValues>
@@ -668,6 +887,40 @@
             </values>
             <values>
                 <fullName>No Opportunities</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>%%%NAMESPACE%%%Acknowledgment_Status__c</picklist>
+            <values>
+                <fullName>Acknowledged</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Do Not Acknowledge</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Email Acknowledgment Not Sent</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Email Acknowledgment Now</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>To Be Acknowledged</fullName>
+                <default>false</default>
+            </values>
+        </picklistValues>
+        <picklistValues>
+            <picklist>%%%NAMESPACE%%%Tribute_Type__c</picklist>
+            <values>
+                <fullName>Honor</fullName>
+                <default>false</default>
+            </values>
+            <values>
+                <fullName>Memorial</fullName>
                 <default>false</default>
             </values>
         </picklistValues>

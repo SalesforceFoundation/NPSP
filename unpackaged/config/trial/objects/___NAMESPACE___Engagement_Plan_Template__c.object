@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <compactLayoutAssignment>NPSP_Engagement_Plan_Template</compactLayoutAssignment>
+    <compactLayouts>
+        <fullName>NPSP_Engagement_Plan_Template</fullName>
+        <fields>Name</fields>
+        <fields>%%%NAMESPACE%%%Total_Engagement_Plans__c</fields>
+        <fields>%%%NAMESPACE%%%Total_Tasks__c</fields>
+        <label>NPSP Engagement Plan Template</label>
+    </compactLayouts>
+
+    <label>Engagement Plan Template</label>
+    <pluralLabel>Engagement Plan Templates</pluralLabel>
+    <nameField>
+        <label>Engagement Plan Template Name</label>
+        <type>Text</type>
+    </nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>ReadWrite</sharingModel>
+    <description>An Engagement Plan Template defines the process and associated set of tasks required to complete an Engagement Plan. To apply the process to a particular record, you must assign the Engagement Plan to the record.</description>
+</CustomObject>
