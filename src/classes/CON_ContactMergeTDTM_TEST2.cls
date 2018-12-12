@@ -349,7 +349,7 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * @description Verifies legacy rollup is NOT used when Customizable Rollups is activated
     */
     @isTest
-    private static void contactMergeShouldUseCRLPWhenEnabled() {
+    private static void contactMergeShouldNotUseLegacyRollupWhenCRLPEnabled() {
         UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Customizable_Rollups_Enabled__c = true;
         RLLP_OppRollupMock mock = setRollupMock();
 
