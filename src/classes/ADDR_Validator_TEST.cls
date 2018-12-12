@@ -438,7 +438,6 @@ public with sharing class ADDR_Validator_TEST {
         STG_PanelAddrVerification_CTRL.addrVerifier = addrVerifier;
         STG_PanelAddrVerification_CTRL ctrl = new STG_PanelAddrVerification_CTRL();
 
-        UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.stgAddrPermissionDenied, ApexPages.Severity.INFO);
         assertAuthIdAndTokenAreNull(ctrl);
 
         ctrl.initDynamicFields();

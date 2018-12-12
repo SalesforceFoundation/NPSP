@@ -47,7 +47,7 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
         void encodeToken(Addr_Verification_Settings__c settings);
     }
 
-    private static final String SMARTY_STREETS_VALIDATOR_CLASS = UTIL_Namespace.removeNamespace(ADDR_SmartyStreets_Validator.class.getName());
+    private static final String SMARTY_STREETS_VALIDATOR_CLASS = UTIL_Namespace.removeClassNamespace(ADDR_SmartyStreets_Validator.class.getName());
 
     /*******************************************************************************************************
     * @description The panel ID.
@@ -243,8 +243,6 @@ public with sharing class STG_PanelADDRVerification_CTRL extends STG_Panel {
 
         if (!hasAccess) {
             addrVerifSettings = new Addr_Verification_Settings__c();
-
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, System.Label.stgAddrPermissionDenied));
             return;
         }
 

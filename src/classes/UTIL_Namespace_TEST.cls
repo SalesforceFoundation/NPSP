@@ -65,9 +65,9 @@ private with sharing class UTIL_Namespace_TEST {
     * @description Verifies namespace is removed
     */
     @isTest 
-    private static void shouldRemoveNamespace() {
+    private static void shouldRemoveClassNamespace() {
         String className = 'foo.BarClassName';
-        String actualClassName = UTIL_Namespace.removeNamespace(className);
+        String actualClassName = UTIL_Namespace.removeClassNamespace(className);
 
         System.assertEquals('BarClassName', actualClassName, 'Namespace should be removed from the class name');
     }
@@ -78,7 +78,7 @@ private with sharing class UTIL_Namespace_TEST {
     @isTest 
     private static void shouldReturnClassNameWhenNoNamespacePresent() {
         String className = 'BarClassName';
-        String actualClassName = UTIL_Namespace.removeNamespace(className);
+        String actualClassName = UTIL_Namespace.removeClassNamespace(className);
 
         System.assertEquals(className, actualClassName, 'The class name should be returned as is');
     }              

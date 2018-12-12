@@ -452,6 +452,7 @@
         <members>UTIL_JobProgressLightning</members>
         <members>UTIL_NavigateBack</members>
         <members>UTIL_PageHeader</members>
+        <members>UTIL_PageMessageInfo</members>
         <members>UTIL_PageMessages</members>
         <members>UTIL_SLDS_Icon</members>
         <members>UTIL_SoqlListView</members>

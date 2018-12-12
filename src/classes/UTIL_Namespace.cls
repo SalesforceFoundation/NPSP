@@ -61,7 +61,7 @@ public class UTIL_Namespace {
     /*******************************************************************************************************
     * @description Returns class name without the namespace (if any)
     */
-    public static String removeNamespace(String className) {
+    public static String removeClassNamespace(String className) {
         String classNameNoNamespace = className.substringAfter('.');
 
         return String.isBlank(classNameNoNamespace) ? className : classNameNoNamespace;
