@@ -11,15 +11,18 @@
         <visible>true</visible>
     </applicationVisibilities>
     <layoutAssignments>
-        <layout>Account-%%%NAMESPACE%%%Household Layout</layout>
+        <layout>Account-Household Lightning Layout</layout>
         <recordType>Account.HH_Account</recordType>
     </layoutAssignments>
     <layoutAssignments>
         <layout>Account-%%%NAMESPACE%%%Organization Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>Account-%%%NAMESPACE%%%Organization Layout</layout>
+        <layout>Account-Organization Lightning Layout</layout>
         <recordType>Account.Organization</recordType>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Contact-Contact Lightning Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
         <layout>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</layout>
@@ -51,6 +54,9 @@
     <layoutAssignments>
         <layout>Opportunity-%%%NAMESPACE%%%Membership Layout</layout>
         <recordType>Opportunity.Membership</recordType>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>%%%NAMESPACE%%%Grant_Deadline__c-Deliverable</layout>
     </layoutAssignments>
     <recordTypeVisibilities>
         <default>true</default>

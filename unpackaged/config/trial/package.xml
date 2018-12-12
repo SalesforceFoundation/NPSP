@@ -31,14 +31,14 @@
         <name>CompactLayout</name>
     </types>
     <types>
-        <members>Account-%%%NAMESPACE%%%Household Layout</members>
-        <members>Account-%%%NAMESPACE%%%Organization Layout</members>
+        <members>Account-Household Lightning Layout</members>
+        <members>Account-Organization Lightning Layout</members>
         <members>%%%NAMESPACE%%%Account_Soft_Credit__c-%%%NAMESPACE%%%Account Soft Credit Layout</members>
         <members>%%%NAMESPACE%%%Address__c-%%%NAMESPACE%%%Address Layout</members>
         <members>%%%NAMESPACE%%%Allocation__c-%%%NAMESPACE%%%Allocation Layout</members>
         <members>%%%NAMESPACE%%%Batch__c-%%%NAMESPACE%%%Batch Layout</members>
         <members>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</members>
-        <members>Contact-%%%NAMESPACE%%%Contact Layout</members>
+        <members>Contact-Contact Lightning Layout</members>
         <members>%%%NAMESPACE%%%DataImportBatch__c-%%%NAMESPACE%%%NPSP Data Import Batch Layout</members>
         <members>%%%NAMESPACE%%%DataImport__c-%%%NAMESPACE%%%Data Import Layout</members>
         <members>%%%NAMESPACE%%%Engagement_Plan_Task__c-%%%NAMESPACE%%%Engagement Plan Task Layout</members>
@@ -49,7 +49,7 @@
         <members>%%%NAMESPACE%%%Filter_Rule__mdt-%%%NAMESPACE%%%Filter Rule Layout</members>
         <members>%%%NAMESPACE%%%Fund__c-%%%NAMESPACE%%%Fund Layout</members>
         <members>%%%NAMESPACE%%%General_Accounting_Unit__c-%%%NAMESPACE%%%General Accounting Unit Layout</members>
-        <members>%%%NAMESPACE%%%Grant_Deadline__c-%%%NAMESPACE%%%Grant Deadline Layout</members>
+        <members>%%%NAMESPACE%%%Grant_Deadline__c-Deliverable</members>
         <members>%%%NAMESPACE%%%Level__c-%%%NAMESPACE%%%Level Layout</members>
         <members>Opportunity-%%%NAMESPACE%%%Donation Layout</members>
         <members>Opportunity-%%%NAMESPACE%%%Grant Layout</members>
@@ -62,6 +62,14 @@
         <members>%%%NAMESPACE%%%Schedulable__c-%%%NAMESPACE%%%Schedulable Layout</members>
         <members>%%%NAMESPACE%%%Trigger_Handler__c-%%%NAMESPACE%%%Trigger Handler Layout</members>
         <name>Layout</name>
+    </types>
+    <types>
+        <members>Account.Household_Accounts</members>
+        <members>Account.Organization_Accounts</members>
+        <members>Account.AllAccounts</members>
+        <members>%%%NAMESPACE%%%Grant_Deadline__c.All</members>
+        <members>Opportunity.AllDonations</members>
+        <name>ListView</name>
     </types>
     <types>
         <members>Nonprofit_Success_Pack_UtilityBar</members>

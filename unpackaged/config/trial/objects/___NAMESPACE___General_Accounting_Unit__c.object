@@ -17,6 +17,7 @@
         <fields>%%%NAMESPACE%%%Total_Number_of_Allocations__c</fields>
         <label>NPSP General Accounting Unit</label>
     </compactLayouts>
+    <enableActivities>true</enableActivities>
 
     <label>General Accounting Unit</label>
     <pluralLabel>General Accounting Units</pluralLabel>

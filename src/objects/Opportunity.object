@@ -6,7 +6,7 @@
         <fields>Amount</fields>
         <fields>CloseDate</fields>
         <fields>StageName</fields>
-        <label>DEPRICATED: Donation Compact Layout</label>
+        <label>DEPRECATED: Donation Compact Layout</label>
     </compactLayouts>
     <compactLayouts>
         <fullName>Membership_Compact_Layout</fullName>
@@ -16,7 +16,7 @@
         <fields>npe01__Membership_Start_Date__c</fields>
         <fields>npe01__Membership_End_Date__c</fields>
         <fields>npe01__Member_Level__c</fields>
-        <label>DEPRICATED: Membership Compact Layout</label>
+        <label>DEPRECATED: Membership Compact Layout</label>
     </compactLayouts>
     <compactLayouts>
         <fullName>NPSP_Donation_Compact_Layout</fullName>
