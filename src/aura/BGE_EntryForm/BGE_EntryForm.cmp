@@ -68,24 +68,26 @@
 
         <lightning:layout multipleRows="true">
             <!--BEGIN SCOPED MATCH NOTIFICATION-->
-            <lightning:layoutItem size="12" smallDeviceSize="12" class="{!'slds-p-horizontal_small'+if(or(not(empty(v.openOpportunities)), not(empty(v.unpaidPayments))),'',' slds-hide')}">
-                <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light slds-m-bottom_small"
-                        role="alert">
-                    <div class="slds-media__figure slds-text-align_center">
-                        <lightning:icon iconName="utility:info"
-                                        alternativeText="{!$Label.c.PageMessagesInfo}"
-                                        size="x-small"
-                                        aria-hidden="true"/>
+            <aura:if isTrue="{!or(not(empty(v.openOpportunities)), not(empty(v.unpaidPayments)))}">
+                <lightning:layoutItem size="12" smallDeviceSize="12" class="slds-p-horizontal_small">
+                    <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light slds-m-bottom_small"
+                         role="alert">
+                        <div class="slds-media__figure slds-text-align_center">
+                            <lightning:icon iconName="utility:info"
+                                            alternativeText="{!$Label.c.PageMessagesInfo}"
+                                            size="x-small"
+                                            aria-hidden="true"/>
+                        </div>
+                        <div class="slds-media__body">
+                            <p>{!$Label.c.bgeMatchingAlert}
+                                <a class="slds-m-left_x-small" onclick="{!c.openMatchModal}" id="selectOpenDonation">
+                                    {!$Label.c.bgeMatchingSelect}
+                                </a>
+                            </p>
+                        </div>
                     </div>
-                    <div class="slds-media__body">
-                        <p>{!$Label.c.bgeMatchingAlert}
-                            <a class="slds-m-left_x-small" onclick="{!c.openMatchModal}" id="selectOpenDonation">
-                                {!$Label.c.bgeMatchingSelect}
-                            </a>
-                        </p>
-                    </div>
-                </div>
-            </lightning:layoutItem>
+                </lightning:layoutItem>
+            </aura:if>
             <!--END SCOPED MATCH NOTIFICATION-->
 
             <!-- BEGIN DONOR FIELDS -->
