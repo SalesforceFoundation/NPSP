@@ -48,36 +48,38 @@
     <lightning:overlayLibrary aura:id="overlayLib"/>
 
     <!--Start Markup-->
-    <lightning:layout horizontalAlign="spread" multipleRows="true">
-        <lightning:layoutItem size="3" class="slds-text-align_left">
-            <aura:if isTrue="{! v.currentStep != '1' }">
-                <lightning:button variant="neutral" label="{!$Label.c.stgBtnBack}" onclick="{!c.back}" />
-            </aura:if>
-        </lightning:layoutItem>
+    <aura:if isTrue="{!not(v.hasError)}">
+        <lightning:layout horizontalAlign="spread" multipleRows="true">
+            <lightning:layoutItem size="3" class="slds-text-align_left">
+                <aura:if isTrue="{! v.currentStep != '1' }">
+                    <lightning:button variant="neutral" label="{!$Label.c.stgBtnBack}" onclick="{!c.back}" />
+                </aura:if>
+            </lightning:layoutItem>
 
-        <!-- Start: Progress Indicator -->
-        <lightning:layoutItem size="6" class="slds-grid_vertical-align-center">
-            <lightning:progressIndicator currentStep="{!v.currentStep}" type="base" hasError="{!v.hasError}"
-                                         variant="base" class="slds-text-align_center">
-                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateOverviewWizard}" value="1"/>
-                <!--<lightning:progressStep label="Step 2" value="2"/>-->
-                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="3"/>
-                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="4"/>
-                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetBatchOptions}" value="5"/>
-            </lightning:progressIndicator>
-        </lightning:layoutItem>
-        <!-- End: Progress Indicator -->
+            <!-- Start: Progress Indicator -->
+            <lightning:layoutItem size="6" class="slds-grid_vertical-align-center">
+                <lightning:progressIndicator currentStep="{!v.currentStep}" type="base" hasError="{!v.hasError}"
+                                             variant="base" class="slds-text-align_center">
+                    <lightning:progressStep label="{!$Label.c.bgeBatchTemplateOverviewWizard}" value="1"/>
+                    <!--<lightning:progressStep label="Step 2" value="2"/>-->
+                    <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="3"/>
+                    <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="4"/>
+                    <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetBatchOptions}" value="5"/>
+                </lightning:progressIndicator>
+            </lightning:layoutItem>
+            <!-- End: Progress Indicator -->
 
-        <lightning:layoutItem size="3" class="slds-text-align_right">
-            <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
-            <aura:if isTrue="{!v.currentStep != '5'}">
-                <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
-            </aura:if>
-            <aura:if isTrue="{!v.currentStep == '5'}">
-                <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" disabled="{!v.dataTableChanged}"/>
-            </aura:if>
-        </lightning:layoutItem>
-    </lightning:layout>
+            <lightning:layoutItem size="3" class="slds-text-align_right">
+                <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
+                <aura:if isTrue="{!v.currentStep != '5'}">
+                    <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
+                </aura:if>
+                <aura:if isTrue="{!v.currentStep == '5'}">
+                    <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" disabled="{!v.dataTableChanged}"/>
+                </aura:if>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </aura:if>
 
     <!--End Markup-->
 

@@ -52,35 +52,13 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         sObjectName = UTIL_Namespace.StrTokenRemoveNSPrefix(sObjectName);
 
+        String descriptionField = (sObjectName == 'DataImportBatch__c') ? 'Batch_Description__c' : 'Description__c';
+        List<String> fields = getRecordFields(sObjectName, descriptionField);
+
         if (recordId != null) {
 
             if (sObjectName == 'Batch_Template__c' || sObjectName == 'DataImportBatch__c') {
                 try {
-                    String descriptionField = (sObjectName == 'DataImportBatch__c') ? 'Batch_Description__c' : 'Description__c';
-
-                    List<String> fields = new List<String>{
-                            descriptionField,
-                            'Name',
-                            'Id',
-                            'RequireTotalMatch__c',
-                            'Active_Fields__c',
-                            'Batch_Process_Size__c',
-                            'Run_Opportunity_Rollups_while_Processing__c',
-                            'Contact_Matching_Rule__c',
-                            'Donation_Matching_Behavior__c',
-                            'Donation_Matching_Implementing_Class__c',
-                            'Donation_Matching_Rule__c',
-                            'Donation_Date_Range__c',
-                            'Post_Process_Implementing_Class__c',
-                            'Process_Using_Scheduled_Job__c'
-                    };
-
-                    if (sObjectName == 'DataImportBatch__c') {
-                        fields.add('Expected_Count_of_Gifts__c');
-                        fields.add('Expected_Total_Batch_Amount__c');
-                    }
-
-
                     String soql = 'SELECT ' +
                             String.join(fields, ', ') +
                             ' FROM ' + sObjectName +
@@ -106,11 +84,15 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                         model.expectedCount = Integer.valueOf(recordDetails.get('Expected_Count_of_Gifts__c'));
                         model.expectedTotal = (Decimal)recordDetails.get('Expected_Total_Batch_Amount__c');
                     }
-                } catch (Exception ex) {
-                    throw new AuraHandledException('ERROR: ' + ex.getMessage());
+                } catch (Exception e) {
+                    AuraHandledException ex = new AuraHandledException(e.getMessage());
+                    ex.setMessage('ERROR: ' + e.getMessage());
+                    throw ex;
                 }
             } else {
-                throw new AuraHandledException('ERROR: Only Batch_Template__c and DataImportBatch__c are supported objects.');
+                AuraHandledException e = new AuraHandledException('ERROR: Only Batch_Template__c and DataImportBatch__c are supported objects.');
+                e.setMessage('ERROR: Only Batch_Template__c and DataImportBatch__c are supported objects.');
+                throw e;
             }
 
             if (sObjectName == 'DataImportBatch__c') {
@@ -187,14 +169,22 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         };
 
         // looping through the fields on DataImport__c
-        for (Schema.DescribeFieldResult fieldResult : fieldMap.values()) {
-            String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldResult.getName());
+        for (Schema.DescribeFieldResult dfr : fieldMap.values()) {
+            String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.getName());
 
-            String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(fieldResult.getName());
+            String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(dfr.getName());
             Boolean fieldAllowed = allowedObjects.contains(dataImportFieldMappedObject)
-                    && allowedDataTypes.contains(fieldResult.getType().name())
+                    && allowedDataTypes.contains(dfr.getType().name())
                     && !bannedFields.contains(dataImportFieldApiName)
-                    && fieldResult.getInlineHelpText() != null;
+                    && dfr.getInlineHelpText() != null
+                    && checkFLS(dfr);
+
+            // Donation Amount is required, so throw critical error if it wasn't allowed
+            if (dfr.name == 'Donation_Amount__c' && !fieldAllowed) {
+                AuraHandledException e = new AuraHandledException(label.bgeFLSError);
+                e.setMessage(label.bgeFLSError);
+                throw e;
+            }
 
             if (fieldAllowed) {
 
@@ -204,16 +194,16 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 field.sObjectName = dataImportFieldMappedObject;
 
                 // TODO: pull these labels from target fields' schema based on help text mapping
-                Boolean fieldHasSpacesAndObjName = fieldResult.getLabel().contains(' ') && fieldResult.getLabel().split(' ',2)[0] == field.sObjectName;
-                field.label = (fieldHasSpacesAndObjName) ? fieldResult.getLabel().split(' ',2)[1] : fieldResult.getLabel();
-                field.name = fieldResult.getName();
+                Boolean fieldHasSpacesAndObjName = dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == field.sObjectName;
+                field.label = (fieldHasSpacesAndObjName) ? dfr.getLabel().split(' ',2)[1] : dfr.getLabel();
+                field.name = dfr.getName();
 
                 String unnamespacedField = UTIL_Namespace.StrTokenRemoveNSPrefix(field.name);
                 if (systemRequiredFields.contains(unnamespacedField)) {
                     field.systemRequired = true;
                 }
 
-                String rawFieldType = fieldResult.getType().name().toLowerCase();
+                String rawFieldType = dfr.getType().name().toLowerCase();
                 field.type = getLightningFieldType(rawFieldType);
                 if (rawFieldType == 'currency') {
                     field.formatter = 'currency';
@@ -224,6 +214,48 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 fields.add(field);
             }
         }
+        return fields;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the relevant Batch or Template fields for soql, checking for FLS
+    * @return list of field API names
+    */
+    public static List<String> getRecordFields(String sObjectName, String descriptionField) {
+
+        List<String> fields = new List<String>{
+                descriptionField,
+                'Name',
+                'Id',
+                'RequireTotalMatch__c',
+                'Active_Fields__c',
+                'Batch_Process_Size__c',
+                'Run_Opportunity_Rollups_while_Processing__c',
+                'Contact_Matching_Rule__c',
+                'Donation_Matching_Behavior__c',
+                'Donation_Matching_Implementing_Class__c',
+                'Donation_Matching_Rule__c',
+                'Donation_Date_Range__c',
+                'Post_Process_Implementing_Class__c',
+                'Process_Using_Scheduled_Job__c'
+        };
+
+        if (sObjectName == 'DataImportBatch__c') {
+            fields.add('Expected_Count_of_Gifts__c');
+            fields.add('Expected_Total_Batch_Amount__c');
+        }
+        System.debug(fields);
+        // user must have access to all of these fields
+        for (String field : fields) {
+            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(sObjectName, field);
+            if (field!= 'Id' && !checkFLS(dfr)) {
+                System.debug('checking '+dfr.name);
+                AuraHandledException e = new AuraHandledException(label.bgeFLSError);
+                e.setMessage(label.bgeFLSError);
+                throw e;
+            }
+        }
+
         return fields;
     }
 
@@ -447,7 +479,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         return donationMatchingOptions;
     }
 
-
     /*******************************************************************************************************
     * @description Retrieves the object and field labels for the component.
     * @param sObjectName the object being used by the component (already stripped of the namespace prefix)
@@ -548,6 +579,19 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     @AuraEnabled
     public static Boolean isOrgNamespaced() {
         return UTIL_Namespace.getNamespace() != '';
+    }
+
+    /*******************************************************************************************************
+    * @description checks for read, create, and edit FLS for a given field
+    * @param dfr DescribeFieldResult of the field to check
+    * @return Boolean
+    */
+    private static Boolean checkFLS(DescribeFieldResult dfr) {
+        if (!dfr.isCreateable() || !dfr.isUpdateable()) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /*******************************************************************************************************

@@ -2553,7 +2553,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Explanation text for hidden lookup fields.</shortDescription>
-        <value>Select the fields to use for entering gifts in this batch. Donor Type and an Account or Contact lookup will always appear.</value>
+        <value>Select the fields to use for entering gifts in this batch. Donor Type and an Account or Contact lookup will always appear. You will only see fields that you have access to.</value>
     </labels>
     <labels>
         <fullName>bgeBatchTemplateEdit</fullName>

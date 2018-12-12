@@ -86,15 +86,6 @@
                 if (!templateMetadataView.hasError) {
                     templateMetadataView.progressIndicatorStep = templateMetadata.progressIndicatorStep;
                     _sendMessage('setStep',templateMetadata.progressIndicatorStep);
-                } else {
-                    component.find('notifLib').showNotice({
-                        'variant': 'error',
-                        'header': $A.get('$Label.c.PageMessagesError'),
-                        'message': templateMetadataView.errorMessage,
-                        closeCallback: function() {
-                            //callback action here
-                        }
-                    });
                 }
 
                 if (templateMetadataView.mode === 'view') {
@@ -289,6 +280,7 @@
                         _templateMetadata.load(response.labels, component);
                     },
                     error: function(error) {
+                        _templateMetadata.showError(error);
                         console.log(error);
                     }
                 });
@@ -1064,11 +1056,12 @@
                     var errors = response.getError();
                     if (errors) {
                         if (errors[0] && errors[0].message) {
-                            this.errors = errors[0].message;
+                            errors = errors[0].message;
                         }
                     } else {
-                        this.errors = 'Unknown error';
+                        errors = 'Unknown error';
                     }
+                    this.error(errors);
                 }
             }
             
