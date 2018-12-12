@@ -35,7 +35,6 @@
      * @param errors: list of potential errors passed back from apex
      */
     handleApexErrors: function(component, errors) {
-        debugger;
         let message;
         if (errors && errors[0] && errors[0].message) {
             message = errors[0].message;
@@ -49,7 +48,6 @@
      * @description: checks that user has all necessary permissions and then launches modal or displays error
      */
     openNewBatchWizard: function(component) {
-        debugger;
         var action = component.get('c.checkFieldPermissions');
         action.setParams({sObjectName: component.get('v.listView.objectApiName')});
         action.setCallback(this, function (response) {
