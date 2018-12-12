@@ -46,6 +46,7 @@
 
     <!-- Start Markup -->
     <lightning:overlayLibrary aura:id="overlayLib"/>
+    <lightning:notificationsLibrary aura:id="notifLib"/>
 
     <!-- Banner -->
     <header role="banner" class="header slds-p-bottom_medium">

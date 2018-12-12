@@ -37,6 +37,39 @@
 public with sharing class BGE_ConfigurationWizard_CTRL {
 
     /*******************************************************************************************************
+    * @description Checks for field permissions to create a new Batch/Template
+    * @param sObjectName string of the sObjectName retrieved with force:hasSObjectName
+    * @return void; throws an AuraHandledException if any fields fail FLS check
+    */
+    @AuraEnabled
+    public static void checkFieldPermissions(String sObjectName) {
+
+        List<DescribeFieldResult> fieldsToCheck = new List<DescribeFieldResult>();
+
+        List<String> fields = getRecordFieldNames(sObjectName);
+        for (String field : fields) {
+            if (field != 'Id') {
+                fieldsToCheck.add(UTIL_Describe.getFieldDescribe(sObjectName, UTIL_Namespace.StrTokenNSPrefix(field)));
+            }
+        }
+
+        // Donation Amount is also required
+        fieldsToCheck.add(UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c')));
+
+        for (DescribeFieldResult dfr : fieldsToCheck) {
+            System.debug(dfr.name);
+            System.debug(dfr.isUpdateable());
+            System.debug(dfr.isCreateable());
+            if (!checkFLS(dfr)) {
+                AuraHandledException e = new AuraHandledException(label.bgeFLSError);
+                e.setMessage(label.bgeFLSError);
+                System.debug(e);
+                throw e;
+            }
+        }
+    }
+
+    /*******************************************************************************************************
     * @description Retrieves the Template Details information, the related list of fields, and component labels.
     * @param sObjectName string of the sObjectName retrieved with force:hasSObjectName
     * @param recordId Id of the record to be queried
@@ -52,8 +85,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         sObjectName = UTIL_Namespace.StrTokenRemoveNSPrefix(sObjectName);
 
-        String descriptionField = (sObjectName == 'DataImportBatch__c') ? 'Batch_Description__c' : 'Description__c';
-        List<String> fields = getRecordFields(sObjectName, descriptionField);
+        List<String> fields = getRecordFieldNames(sObjectName);
 
         if (recordId != null) {
 
@@ -65,6 +97,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                             ' WHERE Id=:recordId';
 
                     SObject recordDetails = Database.query(soql);
+
+                    String descriptionField = (sObjectName == 'DataImportBatch__c') ? 'Batch_Description__c' : 'Description__c';
 
                     model.name = (String)recordDetails.get('Name');
                     model.id = (String)recordDetails.get('Id');
@@ -176,15 +210,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             Boolean fieldAllowed = allowedObjects.contains(dataImportFieldMappedObject)
                     && allowedDataTypes.contains(dfr.getType().name())
                     && !bannedFields.contains(dataImportFieldApiName)
-                    && dfr.getInlineHelpText() != null
-                    && checkFLS(dfr);
-
-            // Donation Amount is required, so throw critical error if it wasn't allowed
-            if (dfr.name == 'Donation_Amount__c' && !fieldAllowed) {
-                AuraHandledException e = new AuraHandledException(label.bgeFLSError);
-                e.setMessage(label.bgeFLSError);
-                throw e;
-            }
+                    && dfr.getInlineHelpText() != null;
 
             if (fieldAllowed) {
 
@@ -218,10 +244,13 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Returns the relevant Batch or Template fields for soql, checking for FLS
+    * @description Returns the relevant Batch or Template fields for soql
     * @return list of field API names
     */
-    public static List<String> getRecordFields(String sObjectName, String descriptionField) {
+    @AuraEnabled
+    public static List<String> getRecordFieldNames(String sObjectName) {
+
+        String descriptionField = (sObjectName == 'DataImportBatch__c') ? 'Batch_Description__c' : 'Description__c';
 
         List<String> fields = new List<String>{
                 descriptionField,
@@ -243,17 +272,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         if (sObjectName == 'DataImportBatch__c') {
             fields.add('Expected_Count_of_Gifts__c');
             fields.add('Expected_Total_Batch_Amount__c');
-        }
-        System.debug(fields);
-        // user must have access to all of these fields
-        for (String field : fields) {
-            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(sObjectName, field);
-            if (field!= 'Id' && !checkFLS(dfr)) {
-                System.debug('checking '+dfr.name);
-                AuraHandledException e = new AuraHandledException(label.bgeFLSError);
-                e.setMessage(label.bgeFLSError);
-                throw e;
-            }
+            sObjectName = UTIL_Namespace.StrTokenNSPrefix(sObjectName);
         }
 
         return fields;
@@ -464,6 +483,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         List<Map<String, String>> donationMatchingOptions = new List<Map<String, String>>();
 
         Set<String> setFields = new Set<String>();
+        // todo: consider adding only fields that the user has adequate FLS for.
+        // this currently causes a fatal error if user lacks FLS on any target fields
         setFields.addAll(BDI_Donations.mapDIFieldToOppField.keySet());
         setFields.addAll(BDI_Donations.mapDIFieldToPmtField.keySet());
         List<String> donationFields = new List<String>(setFields);

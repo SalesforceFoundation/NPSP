@@ -126,21 +126,6 @@
 
                 <!--Template Container-->
 
-                <!-- Permissions Error -->
-                <aura:if isTrue="{!v.templateMetadata.hasError}">
-                    <lightning:layout horizontalAlign="center">
-                        <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center slds-p-bottom_medium">
-                            <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
-                                <span class="slds-assistive-text">error</span>
-                                <lightning:icon iconName="utility:error" variant="inverse" alternativeText="error" class="slds-icon_container slds-icon-utility-error"/>
-                                <h2>
-                                    {!v.templateMetadata.errorMessage}
-                                </h2>
-                            </div>
-                        </lightning:layoutItem>
-                    </lightning:layout>
-                </aura:if>
-
                 <!-- Step 1: Overview -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '1' }">
                     <lightning:layout horizontalAlign="center">
