@@ -36,19 +36,19 @@
             </quickActionLayoutItems>
             <quickActionLayoutItems>
                 <emptySpace>false</emptySpace>
-                <field>npsp__Gift_Strategy__c</field>
+                <field>%%%NAMESPACE%%%Gift_Strategy__c</field>
                 <uiBehavior>Edit</uiBehavior>
             </quickActionLayoutItems>
             <quickActionLayoutItems>
                 <emptySpace>false</emptySpace>
-                <field>npsp__Qualified_Date__c</field>
+                <field>%%%NAMESPACE%%%Qualified_Date__c</field>
                 <uiBehavior>Edit</uiBehavior>
             </quickActionLayoutItems>
         </quickActionLayoutColumns>
     </quickActionLayout>
     <standardLabel>NewRecordType</standardLabel>
     <targetObject>Opportunity</targetObject>
-    <targetParentField>npsp__Primary_Contact__c</targetParentField>
+    <targetParentField>%%%NAMESPACE%%%Primary_Contact__c</targetParentField>
     <targetRecordType>Opportunity.MajorGift</targetRecordType>
     <type>Create</type>
 </QuickAction>

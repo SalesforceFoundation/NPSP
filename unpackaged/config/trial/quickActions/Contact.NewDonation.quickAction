@@ -46,7 +46,7 @@
     </quickActionLayout>
     <standardLabel>NewRecordType</standardLabel>
     <targetObject>Opportunity</targetObject>
-    <targetParentField>npsp__Primary_Contact__c</targetParentField>
+    <targetParentField>%%%NAMESPACE%%%Primary_Contact__c</targetParentField>
     <targetRecordType>Opportunity.Donation</targetRecordType>
     <type>Create</type>
 </QuickAction>

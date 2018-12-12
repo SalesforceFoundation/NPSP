@@ -35,19 +35,19 @@
         <quickActionLayoutColumns>
             <quickActionLayoutItems>
                 <emptySpace>false</emptySpace>
-                <field>npsp__In_Kind_Type__c</field>
+                <field>%%%NAMESPACE%%%In_Kind_Type__c</field>
                 <uiBehavior>Edit</uiBehavior>
             </quickActionLayoutItems>
             <quickActionLayoutItems>
                 <emptySpace>false</emptySpace>
-                <field>npsp__In_Kind_Description__c</field>
+                <field>%%%NAMESPACE%%%In_Kind_Description__c</field>
                 <uiBehavior>Edit</uiBehavior>
             </quickActionLayoutItems>
         </quickActionLayoutColumns>
     </quickActionLayout>
     <standardLabel>NewRecordType</standardLabel>
     <targetObject>Opportunity</targetObject>
-    <targetParentField>npsp__Primary_Contact__c</targetParentField>
+    <targetParentField>%%%NAMESPACE%%%Primary_Contact__c</targetParentField>
     <targetRecordType>Opportunity.InKindGift</targetRecordType>
     <type>Create</type>
 </QuickAction>
