@@ -16,7 +16,7 @@ npsp_lex_locators={
         'related': {
             'button': "//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//a[@title='{}']",
             'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span',
-            'drop-down':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]/parent::*/div/div/div/a[contains(@class, "slds-button")]',
+            'drop-down':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]/parent::*/div/div/div/a[contains(@class, "slds-button")]/lightning-icon',
             'title':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]',
             'viewall':'//a[.//span[text()="View All"]/span[text()="{}"]]',
             'item':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//h3//a",
@@ -91,7 +91,7 @@ npsp_lex_locators={
         'checkbox':'//div[contains(@class,"slds-p-top_small")]/label[@class="slds-checkbox"][./span/following-sibling::{}[text()="{}"]/]',
         'button':'//div[contains(@class,"slds-button-group")][.//span[text()="toTask {}"]]/button[contains(text(),"{}")]',
         'check_eng_plan':'//h2/a/span[@title="{}"]//ancestor::div[@class = "slds-card__header slds-grid"]/following-sibling::div//tbody/tr/th/div/a',
-        'dd':'//h2/a/span[@title="{}"]//ancestor::div[@class = "slds-card__header slds-grid"]/following-sibling::div//tbody/tr/th/div/a/ancestor::th/following-sibling::td//lightning-primitive-icon',
+        'dd':'//h2/a/span[@title="{}"]//ancestor::div[@class = "slds-card__header slds-grid"]/following-sibling::div//tbody/tr/th/div/a/ancestor::th/following-sibling::td//a//lightning-primitive-icon',
         'tasks':'//div[@class="slds-section__content"]/ul/li//a[text()="{}"]',
     },
     'levels':{
