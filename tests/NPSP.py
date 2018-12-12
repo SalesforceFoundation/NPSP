@@ -372,8 +372,11 @@ class NPSP(object):
     def select_related_dropdown(self,title):
         """Clicks on the dropdown next to Related List"""
         locator=npsp_lex_locators['record']['related']['drop-down'].format(title)
-        self.selenium.get_webelement(locator).click()
-        time.sleep(1)   
+        self.selenium.get_webelement(locator)
+        self.selenium.wait_until_page_contains_element(locator)
+        self.selenium.click_link(locator)
+#         self.selenium.get_webelement(locator).click()
+#         time.sleep(1)   
         
     def get_header_date_value(self,title):   
         """Validates if the specified header field has specified value"""   
@@ -459,8 +462,11 @@ class NPSP(object):
         plan=self.selenium.get_webelement(locator).text   
         if delete == "True":
                locator = npsp_lex_locators['engagement_plan']['dd'].format(name)
-               self.selenium.get_webelement(locator).click()
-               time.sleep(1)      
+               self.selenium.get_webelement(locator)
+               self.selenium.wait_until_page_contains_element(locator)
+               self.selenium.click_link(locator)
+               #self.selenium.get_webelement(locator).click()
+               #time.sleep(1)      
         return plan
     
     def check_activity_tasks(self, *args):
