@@ -34,24 +34,42 @@
 * @description Controller for Relationships viewer VF page 
 */
 global with sharing class REL_RelationshipsViewer_CTRL{
-	
-    public REL_RelationshipsViewer_CTRL(ApexPages.StandardController controller) {}
-    
+
+    public Boolean showPermissionError {get; set;}
+
+    public REL_RelationshipsViewer_CTRL(ApexPages.StandardController controller) {
+
+        showNoAccess();
+    }
+
+
+    private Pagereference showNoAccess() {
+
+        if (!Contact.sObjectType.getDescribe().isAccessible()) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL,'Insufficient access'));
+            showPermissionError = true;
+        }
+
+        return null;
+    }
+
     @RemoteAction
     global static List<Node> getRelationships(id cid, boolean isInitialLoad, List<String> relIds) {
         list<Node> returnList = new list<Node>();
         list<npe4__Relationship__c> relationshipList = new list<npe4__Relationship__c>();
-        
+
         List<Id> renderedRelationships;
-        if (relIds != null)
+        if (relIds != null) {
             renderedRelationships = (List<Id>)relIds;
-        else
+        }
+        else {
             renderedRelationships = new List<Id>();
-        
-        if (isInitialLoad){         
+        }
+
+        if (isInitialLoad) {
             //base node
             Node basenode = new Node();
-      
+
             Contact c = [select LastName, FirstName, id, Title, Account.Name from Contact where id = :cid];
             basenode.LastName = c.LastName;
             basenode.FirstName = c.FirstName;
@@ -59,21 +77,21 @@ global with sharing class REL_RelationshipsViewer_CTRL{
             basenode.AccountName = c.Account.Name;
             basenode.id = c.id;
             returnList.add(basenode);
-        }        
-        else{
+        }
+        else {
             relationshipList.clear();
             returnList.clear();
-        }        
-        
-        relationshipList = [select id, npe4__RelatedContact__r.LastName, toLabel(npe4__Type__c), npe4__Status__c, npe4__RelatedContact__r.FirstName, 
+        }
+
+        relationshipList = [select id, npe4__RelatedContact__r.LastName, toLabel(npe4__Type__c), npe4__Status__c, npe4__RelatedContact__r.FirstName,
                                     npe4__RelatedContact__r.id, npe4__RelatedContact__r.Account.Name, npe4__RelatedContact__r.Title,
-                                    npe4__ReciprocalRelationship__r.id 
-                                    from npe4__Relationship__c 
-                                    where npe4__Contact__c = :cid and id NOT IN :renderedRelationships 
+                                    npe4__ReciprocalRelationship__r.id
+                                    from npe4__Relationship__c
+                                    where npe4__Contact__c = :cid and id NOT IN :renderedRelationships
                                     and npe4__ReciprocalRelationship__r.id NOT IN :renderedRelationships];
 
-        for (npe4__Relationship__c r : relationshipList){
-            Node n = new Node();             
+        for (npe4__Relationship__c r : relationshipList) {
+            Node n = new Node();
             n.LastName = r.npe4__RelatedContact__r.LastName;
             n.id = r.npe4__RelatedContact__r.id;
             n.Type = r.npe4__Type__c;
@@ -82,19 +100,19 @@ global with sharing class REL_RelationshipsViewer_CTRL{
             n.link =  URL.getSalesforceBaseUrl().toExternalForm() + '/' + r.npe4__RelatedContact__r.id;
             n.AccountName = r.npe4__RelatedContact__r.Account.Name;
             n.Title = r.npe4__RelatedContact__r.Title;
-            n.relId = r.id;            
+            n.relId = r.id;
             returnList.add(n);
         }
         return returnList;
     }
-        
+
     //get Relationship object prefix for links
     @RemoteAction
-    global static RelationshipInfo getRelationshipInfo(){
+    global static RelationshipInfo getRelationshipInfo() {
         return new RelationshipInfo();
     }
-    
-    global class RelationshipInfo{
+
+    global class RelationshipInfo {
         String prefix;
         String NameField;
         String NameIdField;
@@ -102,10 +120,10 @@ global with sharing class REL_RelationshipsViewer_CTRL{
             npe4__Relationship_Settings__c rs = UTIL_CustomSettingsFacade.getRelationshipSettings();
             
             this.prefix = npe4__Relationship__c.sObjectType.getDescribe().getKeyPrefix();
-            if (rs.npe4__Relationship_Name_Field_Id__c != null){
+            if (rs.npe4__Relationship_Name_Field_Id__c != null) {
                 this.NameField = rs.npe4__Relationship_Name_Field_Id__c;
             }
-            if (rs.npe4__Relationship_Name_Id_Field_Id__c != null){
+            if (rs.npe4__Relationship_Name_Id_Field_Id__c != null) {
                 this.NameIdField = rs.npe4__Relationship_Name_Id_Field_Id__c;
             }           
         }       
