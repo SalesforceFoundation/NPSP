@@ -317,7 +317,7 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * @description Verifies rollup is calculted on merge
     */
     @isTest
-    private static void contactMergeShouldRecalculteRollup() {
+    private static void contactMergeShouldRecalculateRollup() {
         List<Contact> contactsToMerge = buildContactsWithOppsForAccount();
 
         Test.startTest();
