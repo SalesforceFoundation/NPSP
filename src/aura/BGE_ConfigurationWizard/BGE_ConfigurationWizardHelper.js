@@ -91,7 +91,7 @@
                         'variant': 'error',
                         'header': $A.get('$Label.c.PageMessagesError'),
                         'message': templateMetadataView.errorMessage,
-                        closeCallback: function () {
+                        closeCallback: function() {
                             //callback action here
                         }
                     });
