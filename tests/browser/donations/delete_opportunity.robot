@@ -7,9 +7,8 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Donation from a Contact and Delete Opportunity
-    [tags]  unstable
     &{contact} =  API Create Contact    Email=skristem@robot.com
-    &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Name=Delete test $100 donation
+    &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Donation    Name=Delete test $100 donation
     Go To Record Home  &{opportunity}[Id]
     ${donation_name}    Get Main Header
     Go To Object Home         Opportunity
