@@ -62,8 +62,6 @@
         $A.enqueueAction(action);
     },
 
-
-
     /**
      * @description: opens New Batch Wizard in modal
      */
