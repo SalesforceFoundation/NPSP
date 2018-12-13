@@ -26,10 +26,8 @@
             } else {
                 const errors = response.getError();
                 let message;
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        message = errors[0].message;
-                    }
+                if (errors && errors[0] && errors[0].message) {
+                    message = errors[0].message;
                 } else {
                     message = 'Unknown error';
                 }
