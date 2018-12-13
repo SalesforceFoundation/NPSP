@@ -7,7 +7,6 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Add New Address to Household 
-    [tags]  unstable
     &{contact1} =  API Create Contact    MailingStreet=50 Fremont Street    MailingCity=San Francisco    MailingPostalCode=95320    MailingState=CA    MailingCountry=USA
     Go To Record Home  &{contact1}[AccountId]    
     Click Link    link=Show more actions

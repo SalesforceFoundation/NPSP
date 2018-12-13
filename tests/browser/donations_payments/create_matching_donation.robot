@@ -8,7 +8,6 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Matching Donation
-    [tags]  unstable
     &{contact} =  API Create Contact    Email=skristem@robot.com
     Go To Object Home         Opportunity
     Click Object Button       New
