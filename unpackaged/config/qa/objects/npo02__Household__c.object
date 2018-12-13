@@ -8,7 +8,7 @@
         <encodingKey>UTF-8</encodingKey>
         <height>600</height>
         <linkType>url</linkType>
-        <masterLabel>[NPSP] Copy Household Address to Contacts</masterLabel>
+        <masterLabel>Copy Household Address to Contacts</masterLabel>
         <openType>sidebar</openType>
         <protected>false</protected>
         <url>/apex/ADDR_CopyAddrHHObjBTN?id={!npo02__Household__c.Id}</url>
