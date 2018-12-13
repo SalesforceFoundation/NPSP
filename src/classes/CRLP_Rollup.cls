@@ -245,7 +245,12 @@ public class CRLP_Rollup {
             Object val;
             Object otherVal = otherMdtRollup.get(fld);
             if (fld == 'Filter_Group__c') {
-                val = this.filterGroup;
+                // Because a null filter group is allowed, and the logic below this block only
+                // compares non-null values, it's necessary to replace a null for a FilterGroupId
+                // with another non-null value to support a valid comparison to ensure grouping
+                // works as expected.
+                val = (this.filterGroup == null ? 'NO-FILTER-GROUP' : this.filterGroup);
+                otherVal = (otherVal == null ? 'NO-FILTER-GROUP' : otherVal);
             } else if (fld == 'Use_Fiscal_Year__c') {
                 val = this.useFiscalYear;
             } else {
