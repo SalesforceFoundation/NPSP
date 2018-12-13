@@ -7,7 +7,6 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Add Existing Contact to Existing Household through Manage Household Page
-    [tags]  unstable
     &{contact1} =  API Create Contact    Email=skristem@robot.com   
     &{contact2} =  API Create Contact
     Go To Record Home  &{contact2}[AccountId] 
@@ -18,7 +17,7 @@ Add Existing Contact to Existing Household through Manage Household Page
     Select Frame With Title   Manage Household
     #Wait until element is visible    //div[text()="Household Address"]
     Populate Address    Find a Contact or add a new Contact to the Household    &{contact1}[FirstName] &{contact1}[LastName]
-    Click Edit Button      Add
+    Click Managehh Add Button      Add
     Sleep  5  Input-textbox-notloaded-properly
     Click Managehh Button       Save
     Wait For Locator    header    &{contact2}[LastName] and &{contact1}[LastName] Household
