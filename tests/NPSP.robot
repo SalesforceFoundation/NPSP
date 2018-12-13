@@ -5,8 +5,8 @@ Library        tests/NPSP.py
 
 *** Variables ***
 ${task1}  Send Email1
-${sub_task}    Welcome Email1
-${task2}     Make a Phone Call1
+${sub_task}    Welcome Email1-1
+${task2}     Make a Phone Call2
 
 
 *** Keywords ***
@@ -23,10 +23,12 @@ API Create Contact
     [return]         &{contact}
  
 API Create Opportunity
-    [Arguments]      ${account_id}      &{fields}    
+    [Arguments]      ${account_id}    ${opp_type}      &{fields} 
+    ${rt_id} =       Get Record Type Id  Opportunity  ${opp_type}   
     ${opp_id} =  Salesforce Insert    Opportunity
     ...               AccountId=${account_id}
-    ...               StageName=ClosedWon
+    ...               RecordTypeId=${rt_id}
+    ...               StageName=Closed Won
     ...               CloseDate=2018-09-10
     ...               Amount=100
     ...               Name=Test Donation
@@ -61,7 +63,19 @@ API Create Secondary Affiliation
     ...               npe5__Contact__c=${contact_id}
     ...               npe5__Primary__c=false 
     ...               &{fields}
- 
+
+API Create Relationship
+    [Arguments]      ${contact_id}      ${relcontact_id}    ${relation}    &{fields}
+    ${rel_id} =  Salesforce Insert  npe4__Relationship__c
+    ...                  npe4__Contact__c=${contact_id}
+    ...                  npe4__RelatedContact__c=${relcontact_id}
+    ...                  npe4__Type__c=${relation}
+    ...                  npe4__Status__c=Current    
+    ...                  &{fields}  
+    &{relation} =     Salesforce Get  npe4__Relationship__c  ${rel_id}
+    [return]         &{relation}
+    
+     
 # API Create Engagement Plan
     # [Arguments]      ${plan_name}     &{fields}    
     # ${opp_id} =  Salesforce Insert    npsp__Engagement_Plan_Template__c
@@ -71,9 +85,10 @@ API Create Secondary Affiliation
    
 API Create GAU
     ${name} =   Generate Random String
-    ${gau_id} =  Salesforce Insert  npsp__General_Accounting_Unit__c
+    ${ns} =    Get Npsp Namespace Prefix
+    ${gau_id} =  Salesforce Insert  ${ns}General_Accounting_Unit__c
     ...               Name=${name}
-    &{gau} =     Salesforce Get  npsp__General_Accounting_Unit__c  ${gau_id}
+    &{gau} =     Salesforce Get  ${ns}General_Accounting_Unit__c  ${gau_id}
     [return]         &{gau}  
    
 Create Contact
@@ -182,8 +197,6 @@ Create Primary Affiliation
 Create Secondary Affiliation
     [Arguments]      ${acc_name}      ${con_id}
     Go To Record Home  ${con_id}
-    Wait For Locator    record.related.title    Volunteer Hours 
-    Scroll Page To Location    50    400
     Click Related List Button   Organization Affiliations    New
     Populate Lookup Field    Organization    ${acc_name}
     Click Modal Button    Save
@@ -207,19 +220,19 @@ Create Engagement Plan
     ${plan_name} =     Generate Random String
     Select App Launcher Tab  Engagement Plan Templates
     Click Special Object Button       New
-    #Sleep    2
+    Wait For Locator    frame    Manage Engagement Plan Template
     Select Frame With Title    Manage Engagement Plan Template
-    Enter Eng Plan Values
-    ...             Engagement Plan Template Name=${plan_name}
-    ...             Description=This plan is created via Automation  
-    Click Task Button    Add Task
-    Enter Task Id and Subject    5    ${task1}
-    Click Task Button    Add Dependent Task
-    Enter Task Id and Subject    32    ${sub_task}
-    Click Task Button    Add Task
-    Enter Task Id and Subject    59    ${task2}
-    Page Scroll To Locator    id    saveBTN
-    Click Task Button    Save
+    Wait For Locator    id    idName
+    Enter Eng Plan Values    idName    ${plan_name}
+    Enter Eng Plan Values    idDesc    This plan is created via Automation  
+    Click Button With Value    Add Task
+    Enter Task Id and Subject    Task 1    ${task1}
+    Click Task Button    1    Add Dependent Task
+    Enter Task Id and Subject    Task 1-1    ${sub_task}
+    Click Button With Value    Add Task
+    Enter Task Id and Subject    Task 2    ${task2}
+    Page Scroll To Locator    button    Save
+    Click Button With Value    Save
     #Sleep    2
     [Return]    ${plan_name}    ${task1}    ${sub_task}     ${task2}
     
@@ -254,10 +267,7 @@ Verify Engagement Plan
 
 Create GAU
     ${gau_name} =         Generate Random String
-    Sleep    5
-    Open App Launcher
-    Populate Address    Search apps or items...    General Accounting Units
-    Select App Launcher Link    General Accounting Units
+    Select App Launcher Tab    General Accounting Units
     Click Object Button       New
     Populate Form
     ...                    General Accounting Unit Name=${gau_name}
@@ -265,6 +275,25 @@ Create GAU
     Click Modal Button        Save
     #Sleep    2
     [Return]           ${gau_name}    
+
+Run Donations Batch Process
+    Select App Launcher Tab    NPSP Settings
+    Wait For Locator    frame    Nonprofit Success Pack Settings
+    Select Frame With Title    Nonprofit Success Pack Settings
+    Click Link    link=Bulk Data Processes
+    Wait For Locator    link-text    Rollup Donations Batch
+    Click Link    link=Rollup Donations Batch
+    Click Button With Value    Run Batch
+    # Wait For Locator    npsp_settings.status    CRLP_Account_SoftCredit_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    CRLP_RD_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    CRLP_Account_AccSoftCredit_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    CRLP_Contact_SoftCredit_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    CRLP_Account_BATCH    Completed
+    # Wait For Locator    npsp_settings.status    CRLP_Contact_BATCH    Completed
+    Wait For Locator    npsp_settings.status    RLLP_OppAccRollup_BATCH    Completed
+    Wait For Locator    npsp_settings.status    RLLP_OppContactRollup_BATCH    Completed
+    Wait For Locator    npsp_settings.status    RLLP_OppHouseholdRollup_BATCH    Completed
+    Wait For Locator    npsp_settings.status    RLLP_OppSoftCreditRollup_BATCH    Completed
     
 Choose Frame
     [Arguments]    ${frame}
