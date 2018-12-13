@@ -1430,6 +1430,7 @@
         <members>bgeEditBatchFieldOptionsWarning</members>
         <members>bgeEditBatchFieldSelectionWarning</members>
         <members>bgeEditBatchOptionsWarning</members>
+        <members>bgeFLSError</members>
         <members>bgeFormMatchingModalText</members>
         <members>bgeFormNoneLink</members>
         <members>bgeFormSelectedOpportunity</members>

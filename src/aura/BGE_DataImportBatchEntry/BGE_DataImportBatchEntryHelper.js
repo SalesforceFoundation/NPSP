@@ -43,11 +43,26 @@
                 this.createEntryForm(component, response);
                 component.find('forceRecordCmp').reloadRecord(true);
             } else {
-                this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
+                this.handleApexErrors(component, response.getError());
+                this.hideFormSpinner(component);
             }
             this.hideSpinner(component);
         });
         $A.enqueueAction(action);
+    },
+
+    /**
+     * @description: handles the display of errors from an apex callout
+     * @param errors: list of potential errors passed back from apex
+     */
+    handleApexErrors: function(component, errors) {
+        let message;
+        if (errors && errors[0] && errors[0].message) {
+            message = errors[0].message;
+        } else {
+            message = 'Unknown error';
+        }
+        this.showToast(component, $A.get('$Label.c.PageMessagesError'), message, 'error');
     },
 
     /**
@@ -93,7 +108,7 @@
                 });
                 this.runDryRun(component, recordIds);
             } else {
-                this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
+                this.handleApexErrors(component, response.getError());
             }
             this.hideSpinner(component);
         });
@@ -133,7 +148,7 @@
                 this.setDataTableRows(component, responseRows);
                 this.setTotals(component, responseRows);
             } else {
-                this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
+                this.handleApexErrors(component, response.getError());
             }
         });
         $A.enqueueAction(action);
@@ -323,7 +338,7 @@
      * @param type: configures type of toast
      */
     showToast: function(component, title, message, type) {
-        var mode = (type === 'Error') ? 'sticky' : 'pester';
+        var mode = (type === 'error') ? 'sticky' : 'pester';
 
         component.find('notifLib').showToast({
             'variant': type,
@@ -339,6 +354,14 @@
     showSpinner: function (component) {
         var spinner = component.find('dataTableSpinner');
         $A.util.removeClass(spinner, 'slds-hide');
+    },
+
+    /**
+     * @description: hides BGE_EntryForm spinner
+     */
+    hideFormSpinner: function (component) {
+        var spinner = component.find('formSpinner');
+        $A.util.addClass(spinner, 'slds-hide');
     },
 
     /**
