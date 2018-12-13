@@ -16,7 +16,7 @@ npsp_lex_locators={
         'dropdown':"//div[@class='select-options']/ul[@class='scrollable']/li[@class='uiMenuItem uiRadioMenuItem']/a[contains(text(),'{}')]",
         'related': {
             'button': "//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//a[@title='{}']",
-            'check_occurance':'//h2/a/span[@title="{}"]/following-sibling::span[text()=" ({})"]',
+            'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span[text()=" ({})"]',
             'drop-down':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]/parent::*/div/div/div/a[contains(@class, "slds-button")]',
             'title':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]',
             'viewall':'//a[.//span[text()="View All"]/span[text()="{}"]]',
@@ -104,7 +104,7 @@ npsp_lex_locators={
         'date_loc':"//*[@id='pmtTable']/tbody/tr/td[3]/div//input",        
         'no_payments':'//tbody/tr/td[3]',
         'pay_amount':'//tbody/tr[{}]/td[3]/span/span[text()="{}"]',
-        'check_occurance':'//h2/a/span[@title="{}"]/following-sibling::span',
+        'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span',
         'text':'//*[@id="j_id0:vfForm:j_id76:util_formfield:inputx:util_inputfield:inputX"]',
         },
     'npsp_settings':{
