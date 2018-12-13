@@ -8,7 +8,7 @@
         <encodingKey>UTF-8</encodingKey>
         <height>600</height>
         <linkType>url</linkType>
-        <masterLabel>[NPSP] Household Mailing List</masterLabel>
+        <masterLabel>Household Mailing List</masterLabel>
         <openType>sidebar</openType>
         <protected>false</protected>
         <url>/apex/HH_CampaignDedupeBTN?id={!Campaign.Id}</url>
