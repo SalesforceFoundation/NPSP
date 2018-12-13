@@ -224,6 +224,11 @@ public without sharing class TDTM_DefaultConfig {
               Class__c = 'ADDR_Validator_TDTM', Load_Order__c = 1, Object__c = 'Address__c',
               Trigger_Action__c = 'BeforeInsert;BeforeUpdate;AfterInsert;AfterUpdate'));
 
+        // Payment and Opportunity Allocation Sync on Allocation object
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+              Class__c = 'ALLO_PaymentSync_TDTM', Load_Order__c = 4, Object__c = 'Allocation__c',
+              Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete')); //TODO AfterUndelete?
+
         // Payment Allocation on Allocation object
         handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
               Class__c = 'ALLO_Allocations_TDTM', Load_Order__c = 1, Object__c = 'Allocation__c',
