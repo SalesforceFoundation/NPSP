@@ -1344,6 +1344,7 @@
         <members>bdiErrorInvalidLastname</members>
         <members>bdiErrorInvalidOppRTName</members>
         <members>bdiErrorNonHHAccountContact</members>
+        <members>bdiErrorNonHHAccountContactWithAdv</members>
         <members>bdiErrorPaymentMultiMatch</members>
         <members>bdiFailed</members>
         <members>bdiHouseholdModelRequired</members>
@@ -1567,6 +1568,7 @@
         <members>lblState</members>
         <members>lblStatus</members>
         <members>lblStreet</members>
+        <members>lblToday</members>
         <members>lblYouAreHere</members>
         <members>leadConvertAccountName</members>
         <members>leadConvertAffilationName</members>
@@ -1624,6 +1626,8 @@
         <members>pmtWizardCreateSchedule</members>
         <members>pmtWizardFirstPaymentDate</members>
         <members>pmtWizardInterval</members>
+        <members>pmtWizardIntervalNumber</members>
+        <members>pmtWizardIntervalPeriod</members>
         <members>pmtWizardMonth</members>
         <members>pmtWizardMsgNoOppFound</members>
         <members>pmtWizardNoUnpaidAmount</members>
