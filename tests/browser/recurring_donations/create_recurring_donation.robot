@@ -8,11 +8,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Open Recurring Donation With Monthly Installment
-    [tags]  unstable
-    Sleep    5
-    Open App Launcher
-    Populate Address    Search apps or items...    NPSP Settings
-    Select App Launcher Link  NPSP Settings
+    Select App Launcher Tab  NPSP Settings
     Wait For Locator    frame    Nonprofit Success Pack Settings
     Select Frame With Title    Nonprofit Success Pack Settings
     Wait for Locator    npsp_settings.side_panel
@@ -24,7 +20,6 @@ Create Open Recurring Donation With Monthly Installment
     Log To Console    ${value}
     &{contact} =  API Create Contact    Email=skristem@robot.com
     Go To Record Home  &{contact}[Id]
-    Page Scroll to Locator    record.related.title    Volunteer Hours
     Click Related List Button  Recurring Donations    New
     Populate Form
     ...                       Recurring Donation Name= Robot Recurring Donation
@@ -42,8 +37,7 @@ Create Open Recurring Donation With Monthly Installment
     Click Modal Button        Save
     Check Related List Values    Recurring Donations    Robot Recurring Donation
     Reload Page
-    Wait For Locator    record.related.title    Volunteer Hours
-    Page Scroll to Locator    record.related.title    Volunteer Hours
+    Load Related List    Opportunities
     Click ViewAll Related List    Opportunities
     Reload Page
     ${return_value}    Verify Payment Details
