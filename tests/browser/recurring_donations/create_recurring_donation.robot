@@ -8,7 +8,6 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Open Recurring Donation With Monthly Installment
-    [tags]  unstable
     Select App Launcher Tab  NPSP Settings
     Wait For Locator    frame    Nonprofit Success Pack Settings
     Select Frame With Title    Nonprofit Success Pack Settings

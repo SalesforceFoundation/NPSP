@@ -7,7 +7,6 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Relationships for contacts
-    [tags]  unstable
     &{contact1} =  API Create Contact    Email=skristem@robot.com
     Go To Record Home  &{contact1}[AccountId]
     
@@ -28,4 +27,3 @@ Create Relationships for contacts
     Click Link    link=Show more actions
     Click Link    link=Relationships Viewer
     Sleep    5 
-    
