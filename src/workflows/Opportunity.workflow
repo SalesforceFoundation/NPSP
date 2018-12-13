@@ -48,7 +48,7 @@
             <type>FieldUpdate</type>
         </actions>
         <active>false</active>
-        <booleanFilter>(1 OR 2) AND 3</booleanFilter>
+        <booleanFilter>(1 OR 2) AND (3 AND 4)</booleanFilter>
         <criteriaItems>
             <field>Opportunity.Amount</field>
             <operation>equals</operation>
@@ -62,6 +62,10 @@
             <field>Opportunity.Fair_Market_Value__c</field>
             <operation>notEqual</operation>
             <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Fair_Market_Value__c</field>
+            <operation>notEqual</operation>
         </criteriaItems>
         <description>Enable this rule to copy the Fair Market Value to the Amount field, when the Amount is zero or blank.</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
