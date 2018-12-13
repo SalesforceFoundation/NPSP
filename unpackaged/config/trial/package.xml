@@ -109,6 +109,20 @@
         <name>WebLink</name>
     </types>
     <types>
+        <members>Contact.npe01__Contact%2EEmailChanged_Alternate</members>
+        <members>Contact.npe01__Contact%2EEmailChanged_Personal</members>
+        <members>Contact.npe01__Contact%2EEmailChanged_Work</members>
+        <members>Contact.npe01__Contact%2EPhoneChanged_Home</members>
+        <members>Contact.npe01__Contact%2EPhoneChanged_Mobile</members>
+        <members>Contact.npe01__Contact%2EPhoneChanged_Other</members>
+        <members>Contact.npe01__Contact%2EPhoneChanged_Work</members>
+        <members>Contact.npe01__Contact%2EPreferred_Email%5F%5Fc</members>
+        <members>Contact.npe01__Contact%2EPreferred_Phone%5F%5Fc</members>
+        <members>Contact.npe01__Email only%3A Paste to Work</members>
+        <members>Contact.npe01__Phone only%3A Paste to Work</members>
+        <name>WorkflowRule</name>
+    </types>
+    <types>
         <members>ContactRole</members>
         <members>LeadSource</members>
         <members>OpportunityStage</members>
