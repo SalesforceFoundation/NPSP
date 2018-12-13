@@ -77,7 +77,9 @@ public class CMT_UnitTestData_TEST {
 
         // Append each field
         for (CMT_Field fld : fields) {
-            record += fld.getFieldJSON() + ',';
+            if (fld.fldValue != null) {
+                record += fld.getFieldJSON() + ',';
+            }
         }
 
         // Remove the ending comma
