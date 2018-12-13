@@ -333,7 +333,7 @@
 
     /**
      * @description: displays standard toast to user based on success or failure of their action
-     * @param title: Title displayed in toast
+     * @param title: title displayed in toast
      * @param message: body of message to display
      * @param type: configures type of toast
      */
@@ -349,7 +349,15 @@
     },
 
     /**
-     * @description: shows lightning:dataTable spinner
+     * @description: shows spinner over BGE_EntryForm component
+     */
+    showFormSpinner: function (component) {
+        var spinner = component.find('formSpinner');
+        $A.util.removeClass(spinner, 'slds-hide');
+    },
+
+    /**
+     * @description: shows spinner over lightning:dataTable component
      */
     showSpinner: function (component) {
         var spinner = component.find('dataTableSpinner');
@@ -357,7 +365,7 @@
     },
 
     /**
-     * @description: hides BGE_EntryForm spinner
+     * @description: hides spinner over BGE_EntryForm component
      */
     hideFormSpinner: function (component) {
         var spinner = component.find('formSpinner');
@@ -365,7 +373,7 @@
     },
 
     /**
-     * @description: hides lightning:dataTable spinner
+     * @description: hides spinner over lightning:dataTable component
      */
     hideSpinner: function (component) {
         var spinner = component.find('dataTableSpinner');

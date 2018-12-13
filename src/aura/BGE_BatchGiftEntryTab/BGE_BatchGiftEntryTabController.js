@@ -9,8 +9,8 @@
     /**
      * @description: checks that user has all necessary permissions and then launches modal or displays error
      */
-    openNewBatchWizard:function(component, event, helper) {
-        helper.openNewBatchWizard(component);
+    onNewBatchClick: function(component, event, helper) {
+        helper.checkFieldPermissions(component, event, helper);
     }
 
 })

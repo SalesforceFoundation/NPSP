@@ -86,6 +86,15 @@
                 if (!templateMetadataView.hasError) {
                     templateMetadataView.progressIndicatorStep = templateMetadata.progressIndicatorStep;
                     _sendMessage('setStep',templateMetadata.progressIndicatorStep);
+                } else {
+                    component.find('notifLib').showNotice({
+                        'variant': 'error',
+                        'header': $A.get('$Label.c.PageMessagesError'),
+                        'message': templateMetadataView.errorMessage,
+                        closeCallback: function () {
+                            //callback action here
+                        }
+                    });
                 }
 
                 if (templateMetadataView.mode === 'view') {

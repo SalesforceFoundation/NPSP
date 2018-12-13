@@ -52,8 +52,7 @@
         } else if (channel === 'hideFormSpinner') {
             helper.hideFormSpinner(component);
         } else if (channel === 'showFormSpinner') {
-            var spinner = component.find('formSpinner');
-            $A.util.removeClass(spinner, 'slds-hide');
+            helper.showFormSpinner(component);
         } else if (channel === 'onError') {
             helper.showToast(component, message.title, message.errorMessage, 'error');
         }

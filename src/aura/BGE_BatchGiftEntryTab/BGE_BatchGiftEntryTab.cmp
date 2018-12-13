@@ -59,7 +59,7 @@
                 </div>
                 <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
                     <lightning:buttonGroup>
-                        <lightning:button aura:id="newBGEBatch" label="{!$Label.c.bgeNewBatch}" onclick="{!c.openNewBatchWizard}"/>
+                        <lightning:button aura:id="newBGEBatch" label="{!$Label.c.bgeNewBatch}" onclick="{!c.onNewBatchClick}"/>
                     </lightning:buttonGroup>
                 </div>
             </div>

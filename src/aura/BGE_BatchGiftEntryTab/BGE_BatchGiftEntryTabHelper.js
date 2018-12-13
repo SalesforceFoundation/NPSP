@@ -47,38 +47,13 @@
     /**
      * @description: checks that user has all necessary permissions and then launches modal or displays error
      */
-    openNewBatchWizard: function(component) {
+    checkFieldPermissions: function(component, event, helper) {
         var action = component.get('c.checkFieldPermissions');
         action.setParams({sObjectName: component.get('v.listView.objectApiName')});
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
-                var modalBody;
-                var modalHeader;
-                var modalFooter;
-
-                $A.createComponents([
-                        ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c'}],
-                        ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
-                        ['c:modalFooter', {}]
-                    ],
-                    function(components, status, errorMessage){
-                        if (status === 'SUCCESS') {
-                            modalBody = components[0];
-                            modalHeader = components[1];
-                            modalFooter = components[2];
-                            component.find('overlayLib').showCustomModal({
-                                body: modalBody,
-                                header: modalHeader,
-                                footer: modalFooter,
-                                showCloseButton: true,
-                                cssClass: 'slds-modal_large'
-                            })
-                        } else {
-                            this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
-                        }
-                    }
-                );
+                this.openNewBatchWizard(component);
             } else if (state === 'ERROR') {
                 console.log(response.getError());
                 this.handleApexErrors(component, response.getError());
@@ -87,9 +62,43 @@
         $A.enqueueAction(action);
     },
 
+
+
+    /**
+     * @description: opens New Batch Wizard in modal
+     */
+    openNewBatchWizard: function(component) {
+        var modalBody;
+        var modalHeader;
+        var modalFooter;
+
+        $A.createComponents([
+                ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c'}],
+                ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
+                ['c:modalFooter', {}]
+            ],
+            function(components, status, errorMessage){
+                if (status === 'SUCCESS') {
+                    modalBody = components[0];
+                    modalHeader = components[1];
+                    modalFooter = components[2];
+                    component.find('overlayLib').showCustomModal({
+                        body: modalBody,
+                        header: modalHeader,
+                        footer: modalFooter,
+                        showCloseButton: true,
+                        cssClass: 'slds-modal_large'
+                    })
+                } else {
+                    this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
+                }
+            }
+        );
+    },
+
     /**
      * @description: displays standard toast to user based on success or failure of their action
-     * @param title: Title displayed in toast
+     * @param title: title displayed in toast
      * @param message: body of message to display
      * @param type: configures type of toast
      */

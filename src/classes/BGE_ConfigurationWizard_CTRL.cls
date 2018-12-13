@@ -68,10 +68,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         for (DescribeFieldResult dfr : fieldsToCheck) {
             if (!checkFLS(dfr)) {
-                AuraHandledException e = new AuraHandledException(label.bgeFLSError);
-                e.setMessage(label.bgeFLSError);
-                System.debug(e);
-                throw e;
+                throw new AuraHandledException(Label.bgeFLSError);
             }
         }
     }
@@ -126,14 +123,10 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                         model.expectedTotal = (Decimal)recordDetails.get('Expected_Total_Batch_Amount__c');
                     }
                 } catch (Exception e) {
-                    AuraHandledException ex = new AuraHandledException(e.getMessage());
-                    ex.setMessage('ERROR: ' + e.getMessage());
-                    throw ex;
+                    throw new AuraHandledException('ERROR: ' + e.getMessage());
                 }
             } else {
-                AuraHandledException e = new AuraHandledException('ERROR: Only Batch_Template__c and DataImportBatch__c are supported objects.');
-                e.setMessage('ERROR: Only Batch_Template__c and DataImportBatch__c are supported objects.');
-                throw e;
+                throw new AuraHandledException('ERROR: Only Batch_Template__c and DataImportBatch__c are supported objects.');
             }
 
             if (sObjectName == 'DataImportBatch__c') {
@@ -270,7 +263,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     * @description Returns the relevant Batch or Template fields for soql
     * @return list of field API names
     */
-    @AuraEnabled
     public static List<String> getRecordFieldNames(String sObjectName) {
 
         String descriptionField = (sObjectName == 'DataImportBatch__c') ? 'Batch_Description__c' : 'Description__c';
