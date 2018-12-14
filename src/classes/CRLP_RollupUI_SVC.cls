@@ -455,6 +455,16 @@ public with sharing class CRLP_RollupUI_SVC {
     }
 
     /*******************************************************************************************************
+    * @description Whether payment allocations are enabled. We only show payment fields for GAU rollups if
+    * they are.
+    * @return Boolean
+    */
+    @AuraEnabled
+    public static Boolean isPaymentAllocationsEnabled() {
+        return UTIL_CustomSettingsFacade.getAllocationsSettings().Payment_Allocations_Enabled__c;
+    }
+
+    /*******************************************************************************************************
     * @description Returns a map of field names to data types, excluding system fields; meant for detail objects
     * @param objectName the name of the object to look up
     * @return List<Map<String, String>> an object with field api names, labels and data type.

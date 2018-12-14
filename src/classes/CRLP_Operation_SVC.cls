@@ -81,7 +81,7 @@ public class CRLP_Operation_SVC {
         if (rollup.dateObject == oppObjectName && dateField == 'CloseDate' && oppSObject != null) {
             dateValue = oppSObject.CloseDate;
         }
-        SObject dateSObject = rollup.dateObject == parentSObject.getSObjectType().getDescribe().getName() ? parentSObject : detailSObject;
+        SObject dateSObject = rollup.dateObject == UTIL_Describe.getObjectDescribe(parentSObject.getSObjectType()).getName() ? parentSObject : detailSObject;
         if (dateValue == null && dateField != null && dateSObject.get(dateField) != null) {
             if (rollup.dateFieldType == SoapType.DATE) {
                 dateValue = (Date) dateSObject.get(dateField);
