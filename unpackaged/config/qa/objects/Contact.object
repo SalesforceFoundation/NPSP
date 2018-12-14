@@ -75,7 +75,7 @@
         <displayType>button</displayType>
         <encodingKey>UTF-8</encodingKey>
         <linkType>url</linkType>
-        <masterLabel>[NPSP] Relationships Viewer</masterLabel>
+        <masterLabel>Relationships Viewer</masterLabel>
         <openType>replace</openType>
         <protected>false</protected>
         <url>{!URLFOR(&apos;/apex/REL_RelationshipsViewer?id=&apos; + Contact.Id)}</url>
@@ -88,7 +88,7 @@
         <encodingKey>UTF-8</encodingKey>
         <height>600</height>
         <linkType>url</linkType>
-        <masterLabel>[NPSP] Copy Address to Household</masterLabel>
+        <masterLabel>Copy Address to Household</masterLabel>
         <openType>sidebar</openType>
         <protected>false</protected>
         <url>/apex/ADDR_CopyAddrHHObjBTN?id={!Contact.Id}</url>
