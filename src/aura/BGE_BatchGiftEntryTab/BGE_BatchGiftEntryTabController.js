@@ -24,12 +24,18 @@
                     component.set('v.listView', listViewUnnamespaced);
                 }
             } else {
-                this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
+                const errors = response.getError();
+                let message;
+                if (errors && errors[0] && errors[0].message) {
+                    message = errors[0].message;
+                } else {
+                    message = 'Unknown error';
+                }
                 component.find('notifLib').showToast({
                     'variant': 'error',
                     'mode': 'sticky',
                     'title': $A.get('$Label.c.PageMessagesError'),
-                    'message': response.getReturnValue()
+                    'message': message
                 });
             }
         });

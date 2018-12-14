@@ -14,7 +14,6 @@ from simple_salesforce import SalesforceResourceNotFound
 from locator_w19 import npsp_lex_locators
 from selenium.webdriver import ActionChains
 from cumulusci.robotframework.utils import selenium_retry
-#import os
 import sys
 from email.mime import text
 #sys.path.append(os.path.abspath(os.path.join('..',
@@ -27,7 +26,7 @@ class NPSP(object):
     
     ROBOT_LIBRARY_SCOPE = 'GLOBAL'
     ROBOT_LIBRARY_VERSION = 1.0
- 
+
     def __init__(self, debug=False):
         self.debug = debug
         self.current_page = None
@@ -36,14 +35,34 @@ class NPSP(object):
         self.payment_list= []
         # Turn off info logging of all http requests 
         logging.getLogger('requests.packages.urllib3.connectionpool').setLevel(logging.WARN)
- 
+
     @property
     def builtin(self):
-        return BuiltIn()   
- 
+        return BuiltIn()
+
     @property
     def cumulusci(self):
         return self.builtin.get_library_instance('cumulusci.robotframework.CumulusCI')
+
+    @property
+    def salesforce(self):
+        return self.builtin.get_library_instance('cumulusci.robotframework.Salesforce')
+
+    def get_namespace_prefix(self, name):
+        parts = name.split('__')
+        if parts[-1] == 'c':
+            parts = parts[:-1]
+        if len(parts) > 1:
+            return parts[0] + '__'
+        else:
+            return ''
+
+    def get_npsp_namespace_prefix(self):
+        if not hasattr(self.cumulusci, '_describe_result'):
+            self.cumulusci._describe_result = self.cumulusci.sf.describe()
+        objects = self.cumulusci._describe_result['sobjects']
+        level_object = [o for o in objects if o['label'] == 'Level'][0]
+        return self.get_namespace_prefix(level_object['name'])
 
     def populate_address(self, loc, value):
         """ Populate address with Place Holder aka Mailing Street etc as a locator
@@ -190,23 +209,31 @@ class NPSP(object):
         locator=npsp_lex_locators['click_aff_id'].format(self.aff_id_text)
         self.selenium.get_webelement(locator).click()   
         
+        
     def confirm_value(self, field,value,status):
-        locator=npsp_lex_locators['check_status'].format(field,value)
-        if status.upper()=="Y":
-            self.selenium.page_should_contain_element(locator)
-        elif status.upper()=="N":
-            self.selenium.page_should_not_contain_element(locator)
-        #verify_former=self.selenium.get_webelement(locator).text
-        #return verify_former
-    
+        locator=npsp_lex_locators['check_status'].format(field)
+        actual_value=self.selenium.get_webelement(locator).text
+        if status.upper() == "Y":
+            assert value == actual_value, "Expected value to be {} but found {}".format(
+                value, actual_value
+            )
+        elif status.upper() == "N":
+             assert value != actual_value, "Expected value {} and actual value {} should not match".format(
+                value, actual_value
+            )   
+            
     def verify_field_value(self, field,value,status):
-        locator=npsp_lex_locators['check_field'].format(field,value)
-        if status.upper()=="Y":
-            self.selenium.page_should_contain_element(locator)
-        elif status.upper()=="N":
-            self.selenium.page_should_not_contain_element(locator)
-#         verify_former=self.selenium.get_webelement(locator).text
-#         return verify_former
+        locator=npsp_lex_locators['check_field'].format(field)
+        actual_value=self.selenium.get_webelement(locator).text
+        if status.upper() == "Y":
+            assert value == actual_value, "Expected value to be {} but found {}".format(
+                value, actual_value
+            )
+        elif status.upper() == "N":
+             assert value != actual_value, "Expected value {} and actual value {} should not match".format(
+                value, actual_value
+            )         
+    
     
     def verify_record(self, name):
         """ Checks for the record in the object page and returns true if found else returns false
@@ -294,6 +321,11 @@ class NPSP(object):
         locator=npsp_lex_locators['detail_page']['verify_field_value'].format(title,value)
         self.selenium.page_should_contain_element(locator)
         
+    def click_managehh_add_button(self,title):  
+        """clicks on the + button next to contact on manage hh page"""      
+        locator=npsp_lex_locators['record']['edit_button'].format(title)
+        self.selenium.get_webelement(locator).click()    
+        
     def click_managehh_button(self,title):  
         """clicks on the new contact button on manage hh page"""      
         locator=npsp_lex_locators['manage_hh_page']['button'].format(title)
@@ -309,10 +341,33 @@ class NPSP(object):
         locator=npsp_lex_locators['checkbox'].format(title)
         self.selenium.get_webelement(locator).click()
         
-    def verify_occurance(self,title,value):
+    def select_lightning_table_checkbox(self,title):
         """"""
-        locator=npsp_lex_locators['record']['related']['check_occurance'].format(title,value)
-        self.selenium.page_should_contain_element(locator)    
+        locator=npsp_lex_locators['table_checkbox'].format(title)
+        self.selenium.get_webelement(locator).click() 
+        
+    def populate_modal_field(self, title, value):
+        locator=npsp_lex_locators['modal_field'].format(title,value)
+        self.salesforce._populate_field(locator, value)
+    
+        
+    def verify_occurrence(self,title,value):
+        """"""
+        locator=npsp_lex_locators['record']['related']['check_occurrence'].format(title,value)
+        actual_value=self.selenium.get_webelement(locator).text
+        exp_value="("+value+")"
+        assert exp_value == actual_value, "Expected value to be {} but found {}".format(
+            exp_value, actual_value
+        )  
+        
+    def check_record_related_item(self,title,value):
+        """"""
+        locator=npsp_lex_locators['record']['related']['item'].format(title,value)
+        actual_value=self.selenium.get_webelement(locator).text
+        assert value == actual_value, "Expected value to be {} but found {}".format(
+            value, actual_value
+        )      
+          
      
     def select_related_dropdown(self,title):
         """Clicks on the dropdown next to Related List"""
@@ -339,10 +394,10 @@ class NPSP(object):
         locator=npsp_lex_locators['record']['related']['title'].format(title)
         self.selenium.get_webelement(locator).click()  
         
-    def verify_contact_roles(self, **kwargs):
-        """verifies the role of a specific contact on Opportunities page""" 
+    def verify_related_list_field_values(self, **kwargs):
+        """verifies the values in the related list objects page""" 
         for name, value in kwargs.items():
-            locator= npsp_lex_locators['object']['contact_role'].format(name,value)
+            locator= npsp_lex_locators['object']['field_value'].format(name,value)
             self.selenium.page_should_contain_element(locator)   
             
     def page_contains_record(self,title):   
@@ -370,17 +425,12 @@ class NPSP(object):
             locator=npsp_lex_locators['engagement_plan']['checkbox'].format("label",title)
             self.selenium.get_webelement(locator).click()
             
-    def enter_eng_plan_values(self, **kwargs):
+    def enter_eng_plan_values(self, name, value):
         """Enter values into corresponding fields in Engagement Plan Templet page"""
-        for name, value in kwargs.items():
-            if name == "Engagement Plan Template Name":
-                id = "idName"
-                locator = npsp_lex_locators['id'].format(id) 
-                self.selenium.get_webelement(locator).send_keys(value)     
-            elif name == "Description":
-                id = "idDesc"
-                locator = npsp_lex_locators['id'].format(id)
-                self.selenium.get_webelement(locator).send_keys(value)  
+        locator = npsp_lex_locators['id'].format(name) 
+        self.salesforce._populate_field(locator, value)
+    
+    
 
                 
     def enter_task_id_and_subject(self, id, value):
@@ -389,23 +439,11 @@ class NPSP(object):
         self.selenium.get_webelement(locator).send_keys(value)
     
     
-    def click_task_button(self, title):
-        if title=="Add Dependent Task":
-            id="btnAddDepTask"           
-            locator = npsp_lex_locators['id'].format(id)
-            self.selenium.get_webelement(locator).click()    
-        elif title=="Add Task":
-            id="btnAddTask"
-            locator = npsp_lex_locators['id'].format(id)
-            self.selenium.get_webelement(locator).click() 
-        elif title=="Save":
-            id="saveBTN"
-            locator = npsp_lex_locators['id'].format(id)
-            self.selenium.get_webelement(locator).click()
-        elif title=="Add Row":
-            id="addRowBTN" 
-            locator = npsp_lex_locators['id'].format(id)
-            self.selenium.get_webelement(locator).click()  
+    def click_task_button(self, task_id, name):
+        """Click Task button based on Task id and button label"""          
+        locator = npsp_lex_locators['engagement_plan']['button'].format(task_id, name)
+        self.selenium.get_webelement(locator).click()    
+          
     
     def check_related_list_values(self,list_name,*args):
         """Verifies the value of custom related list"""
@@ -435,22 +473,15 @@ class NPSP(object):
             if name == "Level Name":
                 id = "fldName"
                 locator = npsp_lex_locators['levels']['id'].format(id)
-                self.selenium.set_focus_to_element(locator)  
-                self.selenium.get_webelement(locator).send_keys(value)      
+                self.salesforce._populate_field(locator, value)      
             elif name == "Minimum Amount":
                 id = "fldMinAmount"
                 locator = npsp_lex_locators['levels']['id'].format(id)
-                self.selenium.set_focus_to_element(locator) 
-                field=self.selenium.get_webelement(locator)
-                field.clear()
-                field.send_keys(value)  
+                self.salesforce._populate_field(locator, value)  
             elif name == "Maximum Amount":
                 id = "fldMaxAmount"
                 locator = npsp_lex_locators['levels']['id'].format(id)
-                self.selenium.set_focus_to_element(locator) 
-                field=self.selenium.get_webelement(locator)
-                field.clear()
-                field.send_keys(value)                    
+                self.salesforce._populate_field(locator, value)                    
 
     def enter_level_dd_values(self, name,value):
         """Enter values into corresponding fields in Levels page"""                 
@@ -509,19 +540,10 @@ class NPSP(object):
         self.selenium.get_webelement("//*[@title='Go!']").click()
         time.sleep(1)
 
-    def add_gau_allocation(self,type,index, value):
-        if type=="percentage":
-            id="j_id0:theForm:j_id49:{}:alloInputPercent"
-            locator = npsp_lex_locators["id"].format(id)
-            locc = locator.format(index)
-            loc = self.selenium.get_webelement(locc)
-            loc.send_keys(value)
-        elif type=="amount":
-            id="j_id0:theForm:j_id49:{}:alloInputAmount"
-            locator = npsp_lex_locators["id"].format(id)
-            locc = locator.format(index)
-            loc = self.selenium.get_webelement(locc)
-            loc.send_keys(value)    
+    def add_gau_allocation(self,field, value):
+        locator = npsp_lex_locators["gaus"]["input_field"].format(field)
+        loc = self.selenium.get_webelement(locator).send_keys(value)
+            
         
     def click_save(self, page):
         if  page== "GAU":
@@ -603,9 +625,9 @@ class NPSP(object):
 #                 self.selenium.page_should_contain_element(loc)
 #                 time.sleep(1)
                 
-    def verify_occurance_payments(self,title,value=None):
+    def verify_occurrence_payments(self,title,value=None):
         """"""
-        locator=npsp_lex_locators['payments']['check_occurance'].format(title)
+        locator=npsp_lex_locators['payments']['check_occurrence'].format(title)
         occ_value=self.selenium.get_webelement(locator).text
         return occ_value        
         
@@ -630,7 +652,13 @@ class NPSP(object):
         locator = npsp_lex_locators['npsp_settings']['list'].format(list_name)
         loc = self.selenium.get_webelement(locator)
         self.selenium.set_focus_to_element(locator)       
-        self.selenium.select_from_list_by_label(loc,value)   
+        self.selenium.select_from_list_by_label(loc,value) 
+        
+    def select_multiple_values_from_list(self,list_name,*args): 
+        locator = npsp_lex_locators['npsp_settings']['multi_list'].format(list_name)
+        loc = self.selenium.get_webelement(locator)
+        self.selenium.set_focus_to_element(locator)       
+        self.selenium.select_from_list_by_label(loc,*args)      
         
     def get_npsp_locator(self, path, *args, **kwargs):
         """ Returns a rendered locator string from the npsp_lex_locators
@@ -656,7 +684,11 @@ class NPSP(object):
         """clicks on the button on the payments page"""      
         locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
         self.selenium.get_webelement(locator).click()
-        
+     
+    def click_settings_button (self,page,title):  
+        """clicks on the buttons on npsp settings page"""      
+        locator=npsp_lex_locators['npsp_settings']['button'].format(page,title)
+        self.selenium.get_webelement(locator).click()    
         
     def verify_payment_details(self):
         locator = "//tbody/tr/td[3]"
@@ -698,6 +730,13 @@ class NPSP(object):
                 date = "/".join(date)
                 loctor_contains = "//tbody//a[contains(@title , '{}')]".format(date)
                 self.selenium.page_should_contain_element(loctor_contains)
+    
+    def click_object_manager_button(self,title):  
+        """clicks on the + button next to contact on manage hh page"""      
+        locator=npsp_lex_locators['object_manager']['button'].format(title)
+        self.selenium.get_webelement(locator).click()  
+    
+    
                 
     
     def page_scroll_to_locator(self, path, *args, **kwargs):

@@ -51,7 +51,7 @@
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-    <aura:handler event="ltng:sendMessage" action="{!c.handleButtonClick}"/>
+    <aura:handler event="ltng:sendMessage" action="{!c.handleUserInput}"/>
 
     <!-- START MARKUP -->
     <lightning:notificationsLibrary aura:id="notifLib"/>
@@ -78,7 +78,7 @@
                         <aura:if isTrue="{!v.isReadOnly}">
                             <lightning:buttonGroup>
                                 <lightning:button label="{!$Label.c.stgBtnEdit}" onclick="{!c.changeModeToEdit}"/>
-                                <lightning:button aura:id="backToTemplates" label="{!v.templateMetadata.labels.backToTemplates}" onclick="{!c.handleButtonClick}"/>
+                                <lightning:button aura:id="backToTemplates" label="{!v.templateMetadata.labels.backToTemplates}" onclick="{!c.handleUserInput}"/>
                             </lightning:buttonGroup>
                         </aura:if>
                     </div>
@@ -145,12 +145,14 @@
                                         <!--<aura:if isTrue="{!v.templateMetadata.labels.sObjectNameNoNamespace == 'DataImportBatch__c'}">-->
                                             <lightning:input aura:id="expectedCount" type="number"
                                                              class="slds-p-top_small"
+                                                             min="0"
                                                              label="{!v.templateMetadata.labels.expectedCountLabel}"
                                                              name="expectedCount"
                                                              value="{!v.templateInfo.expectedCount}"/>
                                             <lightning:input aura:id="expectedTotal" type="number"
                                                              formatter="currency"
                                                              class="slds-p-top_small"
+                                                             min="0"
                                                              step="0.01"
                                                              label="{!v.templateMetadata.labels.expectedTotalLabel}"
                                                              name="expectedTotal"
@@ -508,7 +510,7 @@
                         <!--</lightning:layoutItem>-->
                     <!--</lightning:layout>-->
                 <!--</aura:if>-->
-                <!--End Buttons-->
+
 
                 <!--End Template Container-->
             </lightning:layoutItem>
