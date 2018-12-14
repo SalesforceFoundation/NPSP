@@ -39,9 +39,9 @@
     <aura:attribute name="hasError" default="false" type="Boolean"
                     description="Indicates if there is an error in the current step" />
     <aura:attribute name="pendingSave" default="false" type="Boolean"
-                    description="Controls whether Save is disabled because Data Table has uncommitted changes" />
-    <aura:attribute name="progressSteps" default="[]" type="List"
-                    description="List of mapped labels and values for progress indicator" />
+                    description="Controls whether Save is disabled because modal body has uncommitted changes" />
+    <aura:attribute name="progressStepLabels" default="[]" type="List"
+                    description="List of labels to use for progress steps" />
 
     <!--Events-->
     <aura:handler event="ltng:sendMessage" action="{!c.handleMessage}"/>
@@ -59,26 +59,23 @@
         <lightning:layoutItem size="6" class="slds-grid_vertical-align-center">
             <lightning:progressIndicator currentStep="{!v.currentStep}" type="base" hasError="{!v.hasError}"
                                          variant="base" class="slds-text-align_center">
-                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateOverviewWizard}" value="1"/>
-                <!--<lightning:progressStep label="Step 2" value="2"/>-->
-                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="3"/>
-                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="4"/>
-                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetBatchOptions}" value="5"/>
+                <aura:iteration items="{!v.progressStepLabels}" var="step" indexVar="index">
+                    <lightning:progressStep label="{!step}" value="{!index}"/>
+                </aura:iteration>
             </lightning:progressIndicator>
         </lightning:layoutItem>
         <!-- End: Progress Indicator -->
 
         <lightning:layoutItem size="3" class="slds-text-align_right">
             <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
-            <aura:if isTrue="{!v.currentStep != '5'}">
+            <aura:if isTrue="{!v.currentStep != v.progressStep.length}">
                 <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
             </aura:if>
-            <aura:if isTrue="{!v.currentStep == '5'}">
+            <aura:if isTrue="{!v.currentStep == v.progressStep.length}">
                 <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" disabled="{!v.pendingSave}"/>
             </aura:if>
         </lightning:layoutItem>
     </lightning:layout>
-
     <!--End Markup-->
 
 </aura:component>

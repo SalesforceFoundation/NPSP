@@ -82,7 +82,11 @@
         $A.createComponents([
                 ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c', recordId: batchId, isReadOnly: false}],
                 ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
-                ['c:modalFooter', {}]
+                ['c:modalFooter', {progressStepLabels:
+                        [$A.get('$Label.c.bgeBatchTemplateOverviewWizard'),
+                        $A.get('$Label.c.bgeBatchTemplateSelectFields'),
+                        $A.get('$Label.c.bgeBatchTemplateSetFieldOptions'),
+                        $A.get('$Label.c.bgeBatchTemplateSetBatchOptions')]}]
             ],
             function(components, status, errorMessage){
                 if (status === 'SUCCESS') {
