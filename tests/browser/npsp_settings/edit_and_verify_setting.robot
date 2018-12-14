@@ -8,10 +8,8 @@ Suite Teardown  Delete Records and Close Browser
 
 Make Changes to Settings and Verify Changes
     [tags]  unstable
-    Sleep    5
-    Open App Launcher
-    Populate Address    Search apps or items...    NPSP Settings
-    Select App Launcher Link  NPSP Settings
+    Select App Launcher Tab  NPSP Settings
+    #Sleep    3
     Wait For Locator    frame    Nonprofit Success Pack Settings
     Select Frame With Title    Nonprofit Success Pack Settings
     Click Link    link=People
