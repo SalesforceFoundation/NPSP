@@ -534,6 +534,16 @@
         <relatedList>npe5__Affiliation__c.npe5__Contact__c</relatedList>
     </relatedLists>
     <relatedLists>
+        <excludeButtons>MassChangeOwner</excludeButtons>
+        <fields>NAME</fields>
+        <fields>Engagement_Plan_Template__c</fields>
+        <fields>Status__c</fields>
+        <fields>Total_EP_Tasks__c</fields>
+        <fields>Completed_Tasks__c</fields>
+        <fields>CREATED_DATE</fields>
+        <relatedList>Engagement_Plan__c.Contact__c</relatedList>
+    </relatedLists>
+    <relatedLists>
         <fields>TASK.SUBJECT</fields>
         <fields>TASK.WHAT_NAME</fields>
         <fields>ACTIVITY.TASK</fields>
