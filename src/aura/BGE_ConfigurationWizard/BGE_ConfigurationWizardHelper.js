@@ -797,20 +797,13 @@
             }
 
             /**
-             * @description Increments Wizard to next step if no errors exist
-             * @param isValid - string that is the selected mode
-             * @param error - existing errors
+             * @description Increments Wizard to next step
              * @return void.
              */
-            function nextStep(isValid, error) {
-
-                if (isValid) {
-                    this.clearError();
-                    this.stepUp();
-                    this.setPageHeader();
-                } else {
-                    this.showError(error);
-                }
+            function nextStep() {
+                this.clearError();
+                this.stepUp();
+                this.setPageHeader();
             }
 
             /**
@@ -860,9 +853,11 @@
              * @return void.
              */
             function showError(message) {
-                this.hasError = true;
-                this.errorMessage = message;
-                this.onMetadataUpdated.notify();
+                if (message) {
+                    this.hasError = true;
+                    this.errorMessage = message;
+                    this.onMetadataUpdated.notify();
+                }
             }
 
             /**
