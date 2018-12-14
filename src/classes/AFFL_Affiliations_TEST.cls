@@ -608,26 +608,26 @@ public class AFFL_Affiliations_TEST {
     /*******************************************************************************************************
     * @description Creates new primary affiliations for contacts with existing primary affiliations. 
     * Verifies that the contacts' Primary Affiliation field is updated, and the formerly primary 
-    * affiliations are no longer marked as primary.
+    * affiliations are no longer marked as primary, have an end date and have a status of Former
     */
     @isTest
     private static void newPrimaryAffiliationsFromAffl() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
-            
+
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
-    
+
         list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(8);
         system.assertEquals(null, listCon[0].AccountId); 
-        
+
         list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.HH_ACCOUNT_TYPE);
         listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE));
         listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, null));
         listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(1, CAO_Constants.BUCKET_ORGANIZATION_TYPE));
         insert listAcc;
-        
+
         listCon[0].AccountId = listAcc[0].Id;   // HH account
         listCon[1].AccountId = listAcc[1].Id;   // HH account
         listCon[2].AccountId = listAcc[2].Id;   // 1:1 account
@@ -635,14 +635,12 @@ public class AFFL_Affiliations_TEST {
         listCon[4].AccountId = listAcc[4].Id;   // Org1 account
         listCon[5].AccountId = listAcc[5].Id;   // Org2 account
         listCon[6].AccountId = listAcc[6].Id;   // Bucket account
-        listCon[7].AccountId = listAcc[6].Id;   // Bucket account        
+        listCon[7].AccountId = listAcc[6].Id;   // Bucket account
         insert listCon;
-        
+
         //Which ones cause an affiliation to be created? Is it listAcc[4] and listAcc[5]? 
-        npe5__Affiliation__c[] listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
-            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];
-        System.assertEquals(2, listAffl.size());
-        
+        System.assertEquals(2, [SELECT COUNT() FROM npe5__Affiliation__c]);
+
         // now create our affiliation records directly
         List<npe5__Affiliation__c> originalPrimaryAffiliations = new list<npe5__Affiliation__c>();
         for (integer i = 0; i < 8; i++) {
@@ -657,12 +655,9 @@ public class AFFL_Affiliations_TEST {
         // must manually clear this, since our context is still active
         insert originalPrimaryAffiliations;
         
-        // make sure primary affiliation set on Contacts
-        listCon = [Select Id, Primary_Affiliation__c, AccountId from Contact];
-        system.assertEquals(8, listCon.size());        
-        for (Contact con : listCon) {
-            system.assertEquals(listAcc[4].Id, con.Primary_Affiliation__c);
-        }
+        System.assertEquals(8, [SELECT COUNT() FROM Contact WHERE Primary_Affiliation__c = :listAcc[4].Id],
+            'The primary affiliation on the contacts should be set to the correct account'
+        );
 
         // now set a new primary affiliations record for each
         List<npe5__Affiliation__c> newPrimaryAffiliations = new list<npe5__Affiliation__c>();
@@ -677,13 +672,10 @@ public class AFFL_Affiliations_TEST {
         }
         // must manually clear this, since our context is still active
         insert newPrimaryAffiliations;
-                
-        // make sure primary affiliation set on Contacts
-        listCon = [Select Id, Primary_Affiliation__c, AccountId from Contact];
-        system.assertEquals(8, listCon.size());
-        for (Contact con : listCon) {
-            system.assertEquals(listAcc[5].Id, con.Primary_Affiliation__c);
-        }
+
+        System.assertEquals(8, [SELECT COUNT() FROM Contact WHERE Primary_Affiliation__c = :listAcc[5].Id],
+            'The primary affiliation on the contacts should be updated to the correct account'
+        );
 
         originalPrimaryAffiliations = [
             SELECT npe5__Status__c, npe5__EndDate__c, npe5__Primary__c
