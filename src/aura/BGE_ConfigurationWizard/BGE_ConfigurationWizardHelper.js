@@ -82,6 +82,7 @@
                 templateMetadataView.hasError = templateMetadata.hasError;
                 templateMetadataView.errorMessage = templateMetadata.errorMessage;
                 templateMetadataView.pageHeader = templateMetadata.pageHeader;
+                templateMetadataView.pendingSave = templateMetadata.pendingSave;
 
                 if (!templateMetadataView.hasError) {
                     templateMetadataView.progressIndicatorStep = templateMetadata.progressIndicatorStep;
@@ -113,6 +114,9 @@
                     _sendMessage('setHeader', templateMetadataView.pageHeader);
                 }
 
+                //update footer in modal to keep save button appropriately enabled/disabled
+                _sendMessage('pendingSave', templateMetadataView.pendingSave);
+
                 // when in modal context, need to notify the modal footer component
                 _sendMessage('setError', templateMetadataView.hasError);
 
@@ -134,7 +138,8 @@
                 mode: '',
                 progressIndicatorStep: '',
                 hasError: false,
-                errorMessage: ''
+                errorMessage: '',
+                pendingSave: false
             };
         })(component, model);
     },
@@ -342,6 +347,7 @@
                     },
                     error: function(error) {
                         console.log(error);
+                        _templateMetadata.togglePendingSave();
                     }
                 });
             }
@@ -888,6 +894,15 @@
             }
 
             /**
+             * @description sets the pendingsave flag to disable Save button so duplicates can't be created
+             * @return void.
+             */
+            function togglePendingSave() {
+                this.pendingSave = !this.pendingSave;
+                this.onMetadataUpdated.notify();
+            }
+
+            /**
              * @description Increments the step for the progressIndicator
              * @return void.
              */
@@ -951,6 +966,7 @@
                 hasError: false,
                 errorMessage: '',
                 pageHeader: '',
+                pendingSave: false,
                 load: load,
                 navigateToRecord: navigateToRecord,
                 nextStep: nextStep,
@@ -962,6 +978,7 @@
                 setPageHeader: setPageHeader,
                 stepUp: stepUp,
                 stepDown: stepDown,
+                togglePendingSave: togglePendingSave,
                 onMetadataUpdated: _onMetadataUpdated
             }
         })(this.Event());
@@ -1062,13 +1079,12 @@
                 }
                 else if (state === 'ERROR') {
                     var errors = response.getError();
-                    if (errors) {
-                        if (errors[0] && errors[0].message) {
-                            this.errors = errors[0].message;
-                        }
+                    if (errors && errors[0] && errors[0].message) {
+                        errors = errors[0].message;
                     } else {
-                        this.errors = 'Unknown error';
+                        errors = 'Unknown error';
                     }
+                    this.error(errors);
                 }
             }
             

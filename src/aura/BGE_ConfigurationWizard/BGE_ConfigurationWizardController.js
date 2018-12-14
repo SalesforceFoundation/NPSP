@@ -74,7 +74,8 @@
             }
             model.getTemplateMetadata().cancel();
         } else if (channel === 'save' || buttonClick === 'save') {
-            //todo: add validation
+            //todo: add validation for processing settings
+            model.getTemplateMetadata().togglePendingSave();
             model.getTemplateInfo().load(component.get('v.templateInfo'));
             model.save();
         }
