@@ -35,6 +35,7 @@ Edit Level and Verify
     Confirm Value    Source Field    npo02__SmallestAmount__c    Y
 
 Delete Level
+    [tags]  unstable
     &{contact} =  API Create Contact
     Go To Record Home  &{contact}[Id]
     Select Tab    Details
