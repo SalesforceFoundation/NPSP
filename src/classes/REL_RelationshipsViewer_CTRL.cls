@@ -61,13 +61,13 @@ global with sharing class REL_RelationshipsViewer_CTRL{
 
     /*******************************************************************************************************
     * @description constructs the soql String to run a Data Import process with or without a Batch.
-    * @param cid the Id of the Contact
+    * @param contactId the Id of the Contact
     * @param isInitialLoad Boolean stating if the base node info has been retrieved.
     * @param relIds a List of Relationship Ids.
     * @return List containing the Nodes.
     */
     @RemoteAction
-    global static List<Node> getRelationships(id cid, boolean isInitialLoad, List<String> relIds) {
+    global static List<Node> getRelationships(id contactId, boolean isInitialLoad, List<String> relIds) {
         List<Node> nodes = new List<Node>();
         List<npe4__Relationship__c> relationships = new List<npe4__Relationship__c>();
 
@@ -89,7 +89,7 @@ global with sharing class REL_RelationshipsViewer_CTRL{
                             Title,
                             Account.Name
                         FROM Contact
-                        WHERE Id = :cid];
+                        WHERE Id = :contactId];
 
             basenode.lastName = c.LastName;
             basenode.firstName = c.FirstName;
@@ -113,7 +113,7 @@ global with sharing class REL_RelationshipsViewer_CTRL{
                                 npe4__RelatedContact__r.Title,
                                 npe4__ReciprocalRelationship__r.id
                         FROM    npe4__Relationship__c
-                        WHERE   npe4__Contact__c = :cid AND
+                        WHERE   npe4__Contact__c = :contactId AND
                                 id NOT IN :renderedRelationships AND
                                 npe4__ReciprocalRelationship__r.id NOT IN :renderedRelationships];
 
