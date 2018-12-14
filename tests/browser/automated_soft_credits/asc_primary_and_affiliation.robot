@@ -7,6 +7,7 @@ Suite Teardown  Delete Records and Close Browser
  
 *** Test Cases ***    
 Create ASC Test for Primary and Affiliations
+    [tags]  unstable
     &{account} =  API Create Organization Account   
     &{contact1} =  API Create Contact    Email=skristem@robot.com 
     &{contact2} =  API Create Contact    Email=skristem@robot.com
