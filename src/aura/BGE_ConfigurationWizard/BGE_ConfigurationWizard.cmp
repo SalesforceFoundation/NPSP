@@ -56,73 +56,10 @@
     <!-- START MARKUP -->
     <lightning:notificationsLibrary aura:id="notifLib"/>
 
-    <!-- Banner -->
-    <!--<aura:if isTrue="{!v.templateMetadata.labels.sObjectNameNoNamespace == 'Batch_Template__c'}">
-        <header role="banner" class="header">
-            <div class="slds-page-header">
-                <div class="slds-grid">
-                    <div class="slds-col slds-has-flexi-truncate headerText">
-                        <div class="slds-media slds-no-space slds-grow">
-                            <div class="slds-media__figure">
-                                <lightning:icon iconName="standard:contract" alternativeText="{!v.templateMetadata.labels.objectLabel}" size="medium"/>
-                            </div>
-                            <div class="slds-media__body">
-                                <p class="slds-breadcrumb__item slds-line-height_reset">{!v.templateMetadata.labels.objectLabel}</p>
-                                <h1 class="slds-page-header__title slds-m-right_small slds-truncate">
-                                    {!if(v.isReadOnly, v.templateInfo.name, v.templateMetadata.labels.batchTemplateHeader)}
-                                </h1>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
-                        <aura:if isTrue="{!v.isReadOnly}">
-                            <lightning:buttonGroup>
-                                <lightning:button label="{!$Label.c.stgBtnEdit}" onclick="{!c.changeModeToEdit}"/>
-                                <lightning:button aura:id="backToTemplates" label="{!v.templateMetadata.labels.backToTemplates}" onclick="{!c.handleUserInput}"/>
-                            </lightning:buttonGroup>
-                        </aura:if>
-                    </div>
-                </div>
-            </div>
-        </header>
-    </aura:if>-->
-
     <!--Body-->
     <div aura:id="body">
         <lightning:layout horizontalAlign="center" multipleRows="true">
             <lightning:layoutItem size="12" largeDeviceSize="8" mediumDeviceSize="11" smallDeviceSize="12">
-
-                <!--&lt;!&ndash; Header for Batch Template Only &ndash;&gt;-->
-                <!--<aura:if isTrue="{!v.templateMetadata.labels.sObjectNameNoNamespace == 'Batch_Template__c'}">-->
-                    <!--<aura:if isTrue="{!not(v.isReadOnly)}">-->
-                        <!--<div class="slds-text-align_center slds-m-vertical_medium">-->
-                            <!--<h2 class="slds-text-heading_medium">{!v.templateMetadata.pageHeader}</h2>-->
-                        <!--</div>-->
-                        <!--<aura:set attribute="else">-->
-                            <!--<div class="slds-section slds-is-open slds-p-bottom_small">-->
-                                <!--<h3 class="slds-section__title slds-theme_shade">-->
-                                    <!--<span class="slds-truncate slds-p-horizontal_small"-->
-                                          <!--title="{!$Label.c.bgeBatchTemplateOverview}">-->
-                                            <!--{!$Label.c.bgeBatchTemplateOverview}-->
-                                    <!--</span>-->
-                                <!--</h3>-->
-                            <!--</div>-->
-                        <!--</aura:set>-->
-                    <!--</aura:if>-->
-
-                    <!--&lt;!&ndash;Progress Indicator&ndash;&gt;-->
-                    <!--<aura:if isTrue="{!not(v.isReadOnly)}">-->
-                        <!--<div class="slds-p-bottom_large">-->
-                            <!--<lightning:progressIndicator currentStep="{!v.templateMetadata.progressIndicatorStep}" type="base"-->
-                                                         <!--hasError="{!v.templateMetadata.hasError}" variant="base" class="slds-text-align_center">-->
-                                <!--<lightning:progressStep label="{!v.templateMetadata.labels.recordInfoLabel}" value="1"/>-->
-                                <!--<lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="3"/>-->
-                                <!--<lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="4"/>-->
-                                <!--<lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetBatchOptions}" value="5"/>-->
-                            <!--</lightning:progressIndicator>-->
-                        <!--</div>-->
-                    <!--</aura:if>-->
-                <!--</aura:if>-->
 
                 <!-- Container-->
 
@@ -488,29 +425,6 @@
                     </lightning:layout>
                 </aura:if>
                 <!-- End Step 5 -->
-
-                <!-- Buttons (Only for Batch Template) -->
-                <!--<aura:if isTrue="{!and(not(v.isReadOnly), v.templateMetadata.labels.sObjectNameNoNamespace == 'Batch_Template__c')}">-->
-                    <!--<lightning:layout horizontalAlign="spread" multipleRows="true">-->
-                        <!--<lightning:layoutItem size="3">-->
-                            <!--<aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '1' }">-->
-                                <!--<lightning:button aura:id="back" variant="neutral" label="{!$Label.c.stgBtnBack}" onclick="{!c.handleButtonClick}" />-->
-                            <!--</aura:if>-->
-                        <!--</lightning:layoutItem>-->
-                        <!--<lightning:layoutItem size="6" class="slds-text-align_right">-->
-                            <!--<aura:if isTrue="{!not(v.isReadOnly)}">-->
-                                <!--<lightning:button aura:id="cancel" variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.handleButtonClick}" />-->
-                            <!--</aura:if>-->
-                            <!--<aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '5' }">-->
-                                <!--<lightning:button aura:id="next" variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.handleButtonClick}" />-->
-                            <!--</aura:if>-->
-                            <!--<aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '5') }">-->
-                                <!--<lightning:button aura:id="save" variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.handleButtonClick}" disabled="{!or (v.templateMetadata.dataTableChanged, v.templateFieldOptions.errors.size > 0)}" />-->
-                            <!--</aura:if>-->
-                        <!--</lightning:layoutItem>-->
-                    <!--</lightning:layout>-->
-                <!--</aura:if>-->
-
 
                 <!--End Template Container-->
             </lightning:layoutItem>
