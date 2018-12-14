@@ -363,7 +363,7 @@
                     </aura:if>
 
                     <lightning:layout>
-                        <lightning:layoutItem size="6" class="slds-p-bottom_small">
+                        <lightning:layoutItem size="12" class="slds-p-bottom_small">
                             <lightning:layout horizontalAlign="spread" multipleRows="true">
                                 <lightning:layoutItem class="slds-p-horizontal_x-small" size="12">
                                     <div class="slds-section">
@@ -420,69 +420,77 @@
                                                      type="number" required="true" variant="label-hidden"
                                                      value="{!v.templateInfo.donationDateRange}"/>
                                 </lightning:layoutItem>
+
                                 <lightning:layoutItem class="slds-p-around_x-small" size="12">
-                                    <label class="slds-form-element__label" for="donationMatchingClass">
-                                        {!v.templateMetadata.labels.donationMatchingClassLabel}
-                                    </label>
-                                    <lightning:helptext content="{!$Label.c.bgeBatchTemplateDonationMatchingClassHelp}" />
-                                    <lightning:input aura:id="donationMatchingClass"
-                                                     label="{!v.templateMetadata.labels.donationMatchingClassLabel}"
-                                                     value="{!v.templateInfo.donationMatchingClass}" variant="label-hidden"/>
+                                    <a href="http://google.com" title="Show Advanced Options">Show Advanced Options</a>
                                 </lightning:layoutItem>
-                            </lightning:layout>
-                        </lightning:layoutItem>
-                        <lightning:layoutItem size="6" class="slds-p-bottom_small">
-                            <lightning:layout multipleRows="true">
-                                <lightning:layoutItem class="slds-p-horizontal_x-small" size="12">
-                                    <div class="slds-section">
-                                        <h3 class="slds-section__title slds-theme_shade">
-                                            <span class="slds-p-left_small slds-truncate">
-                                                {!$Label.c.stgLabelBatchProcessingOptions}
-                                            </span>
-                                        </h3>
-                                    </div>
+
+                                <!-- BEGIN ADVANCED OPTIONS FOR STEP 5 -->
+                                <lightning:layoutItem size="12">
+                                    <lightning:layout horizontalAlign="spread" multipleRows="true">
+                                        <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                            <label class="slds-form-element__label" for="donationMatchingClass">
+                                                {!v.templateMetadata.labels.donationMatchingClassLabel}
+                                            </label>
+                                            <lightning:helptext content="{!$Label.c.bgeBatchTemplateDonationMatchingClassHelp}" />
+                                            <lightning:input aura:id="donationMatchingClass"
+                                                            label="{!v.templateMetadata.labels.donationMatchingClassLabel}"
+                                                            value="{!v.templateInfo.donationMatchingClass}" variant="label-hidden"/>
+                                        </lightning:layoutItem>
+
+                                        <lightning:layoutItem class="slds-p-horizontal_x-small" size="12">
+                                            <div class="slds-section">
+                                                <h3 class="slds-section__title slds-theme_shade">
+                                                    <span class="slds-p-left_small slds-truncate">
+                                                        {!$Label.c.stgLabelBatchProcessingOptions}
+                                                    </span>
+                                                </h3>
+                                            </div>
+                                        </lightning:layoutItem>
+                                        <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                            <label class="slds-form-element__label" for="batchProcessSize">
+                                                <abbr class="slds-required" title="required">*</abbr>
+                                                {!v.templateMetadata.labels.batchProcessSizeLabel}
+                                            </label>
+                                            <lightning:helptext content="{!$Label.c.bgeBatchTemplateBatchProcessSizeHelp}" />
+                                            <lightning:input aura:id="batchProcessSize"
+                                                            label="{!v.templateMetadata.labels.batchProcessSizeLabel}"
+                                                            type="number" step="0" required="true" variant="label-hidden"
+                                                            value="{!v.templateInfo.batchProcessSize}"/>
+                                        </lightning:layoutItem>
+                                        <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                            <lightning:input aura:id="runOpportunityRollupsWhileProcessing"
+                                                            label="{!v.templateMetadata.labels.runOpportunityRollupsWhileProcessingLabel}"
+                                                            type="checkbox" variant="label-hidden" class="inputCheckbox"
+                                                            checked="{!v.templateInfo.runOpportunityRollupsWhileProcessing}"/>
+                                            <label class="slds-form-element__label" for="runOpportunityRollupsWhileProcessing">
+                                                {!v.templateMetadata.labels.runOpportunityRollupsWhileProcessingLabel}
+                                            </label>
+                                            <lightning:helptext content="{!$Label.c.bgeBatchTemplateRunOpportunityRollupsWhileProcessingHelp}" />
+                                        </lightning:layoutItem>
+                                        <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                            <lightning:input aura:id="processUsingScheduledJob"
+                                                            label="{!v.templateMetadata.labels.processUsingScheduledJobLabel}"
+                                                            type="checkbox" variant="label-hidden" class="inputCheckbox"
+                                                            checked="{!v.templateInfo.processUsingScheduledJob}"/>
+                                            <label class="slds-form-element__label" for="processUsingScheduledJob">
+                                                {!v.templateMetadata.labels.processUsingScheduledJobLabel}
+                                            </label>
+                                            <lightning:helptext content="{!$Label.c.bgeBatchTemplateProcessUsingScheduledJobHelp}" />
+                                        </lightning:layoutItem>
+                                        <lightning:layoutItem class="slds-p-around_x-small" size="12">
+                                            <label class="slds-form-element__label" for="postProcessClass">
+                                                {!v.templateMetadata.labels.postProcessClassLabel}
+                                            </label>
+                                            <lightning:helptext content="{!$Label.c.bgeBatchTemplatePostProcessClassHelp}" />
+                                            <lightning:input aura:id="postProcessClass"
+                                                            label="{!v.templateMetadata.labels.postProcessClassLabel}"
+                                                            value="{!v.templateInfo.postProcessClass}"
+                                                            variant="label-hidden"/>
+                                        </lightning:layoutItem>
+                                    </lightning:layout>
                                 </lightning:layoutItem>
-                                <lightning:layoutItem class="slds-p-around_x-small" size="12">
-                                    <label class="slds-form-element__label" for="batchProcessSize">
-                                        <abbr class="slds-required" title="required">*</abbr>
-                                        {!v.templateMetadata.labels.batchProcessSizeLabel}
-                                    </label>
-                                    <lightning:helptext content="{!$Label.c.bgeBatchTemplateBatchProcessSizeHelp}" />
-                                    <lightning:input aura:id="batchProcessSize"
-                                                     label="{!v.templateMetadata.labels.batchProcessSizeLabel}"
-                                                     type="number" step="0" required="true" variant="label-hidden"
-                                                     value="{!v.templateInfo.batchProcessSize}"/>
-                                </lightning:layoutItem>
-                                <lightning:layoutItem class="slds-p-around_x-small" size="12">
-                                    <lightning:input aura:id="runOpportunityRollupsWhileProcessing"
-                                                     label="{!v.templateMetadata.labels.runOpportunityRollupsWhileProcessingLabel}"
-                                                     type="checkbox" variant="label-hidden" class="inputCheckbox"
-                                                     checked="{!v.templateInfo.runOpportunityRollupsWhileProcessing}"/>
-                                    <label class="slds-form-element__label" for="runOpportunityRollupsWhileProcessing">
-                                        {!v.templateMetadata.labels.runOpportunityRollupsWhileProcessingLabel}
-                                    </label>
-                                    <lightning:helptext content="{!$Label.c.bgeBatchTemplateRunOpportunityRollupsWhileProcessingHelp}" />
-                                </lightning:layoutItem>
-                                <lightning:layoutItem class="slds-p-around_x-small" size="12">
-                                    <lightning:input aura:id="processUsingScheduledJob"
-                                                     label="{!v.templateMetadata.labels.processUsingScheduledJobLabel}"
-                                                     type="checkbox" variant="label-hidden" class="inputCheckbox"
-                                                     checked="{!v.templateInfo.processUsingScheduledJob}"/>
-                                    <label class="slds-form-element__label" for="processUsingScheduledJob">
-                                        {!v.templateMetadata.labels.processUsingScheduledJobLabel}
-                                    </label>
-                                    <lightning:helptext content="{!$Label.c.bgeBatchTemplateProcessUsingScheduledJobHelp}" />
-                                </lightning:layoutItem>
-                                <lightning:layoutItem class="slds-p-around_x-small" size="12">
-                                    <label class="slds-form-element__label" for="postProcessClass">
-                                        {!v.templateMetadata.labels.postProcessClassLabel}
-                                    </label>
-                                    <lightning:helptext content="{!$Label.c.bgeBatchTemplatePostProcessClassHelp}" />
-                                    <lightning:input aura:id="postProcessClass"
-                                                     label="{!v.templateMetadata.labels.postProcessClassLabel}"
-                                                     value="{!v.templateInfo.postProcessClass}"
-                                                     variant="label-hidden"/>
-                                </lightning:layoutItem>
+                                <!-- END ADVANCED OPTIONS FOR STEP 5 -->
                             </lightning:layout>
                         </lightning:layoutItem>
                     </lightning:layout>
