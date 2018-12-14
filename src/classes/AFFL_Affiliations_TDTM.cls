@@ -560,6 +560,9 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
             for (npe5__Affiliation__c affl : queryAffl) {
                 if (!currentPrimaryAffl.contains(affl.id)) {
                     affl.npe5__Primary__c = false;
+                    affl.npe5__Status__c = system.label.npe5.DefaultFormerStatus;
+                    affl.npe5__EndDate__c = System.Today();
+
                     afflForUpdate.add(affl);
                 }
             }

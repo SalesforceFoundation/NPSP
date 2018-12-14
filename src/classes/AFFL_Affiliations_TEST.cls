@@ -632,7 +632,7 @@ public class AFFL_Affiliations_TEST {
         System.assertEquals(2, listAffl.size());
         
         // now create our affiliation records directly
-        listAffl = new list<npe5__Affiliation__c>();
+        List<npe5__Affiliation__c> originalPrimaryAffiliations = new list<npe5__Affiliation__c>();
         for (integer i = 0; i < 8; i++) {
             npe5__Affiliation__c affl = new npe5__Affiliation__c();
             affl.npe5__Contact__c = listCon[i].Id;
@@ -640,10 +640,10 @@ public class AFFL_Affiliations_TEST {
             affl.npe5__StartDate__c = System.Today();
             affl.npe5__Primary__c = true;
             affl.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
-            listAffl.add(affl);
+            originalPrimaryAffiliations.add(affl);
         }
         // must manually clear this, since our context is still active
-        insert listAffl;
+        insert originalPrimaryAffiliations;
         
         // make sure primary affiliation set on Contacts
         listCon = [Select Id, Primary_Affiliation__c, AccountId from Contact];
@@ -653,7 +653,7 @@ public class AFFL_Affiliations_TEST {
         }
 
         // now set a new primary affiliations record for each
-        listAffl = new list<npe5__Affiliation__c>();
+        List<npe5__Affiliation__c> newPrimaryAffiliations = new list<npe5__Affiliation__c>();
         for (integer i = 0; i < 8; i++) {
             npe5__Affiliation__c affl = new npe5__Affiliation__c();
             affl.npe5__Contact__c = listCon[i].Id;
@@ -661,29 +661,49 @@ public class AFFL_Affiliations_TEST {
             affl.npe5__StartDate__c = System.Today();
             affl.npe5__Primary__c = true;
             affl.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
-            listAffl.add(affl);
+            newPrimaryAffiliations.add(affl);
         }
         // must manually clear this, since our context is still active
-        insert listAffl;
+        insert newPrimaryAffiliations;
                 
         // make sure primary affiliation set on Contacts
         listCon = [Select Id, Primary_Affiliation__c, AccountId from Contact];
-        system.assertEquals(8, listCon.size());        
+        system.assertEquals(8, listCon.size());
         for (Contact con : listCon) {
             system.assertEquals(listAcc[5].Id, con.Primary_Affiliation__c);
         }
-        
-        // make sure other affiliations are not primary
-        listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
-            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];
-        integer cPrimary = 0;
-        for (npe5__Affiliation__c affl : listAffl) {
-        	if (affl.npe5__Primary__c) {
-        	   system.assertEquals(listAcc[5].Id, affl.npe5__Organization__c);
-        	   cPrimary++; 
-        	}
+
+        originalPrimaryAffiliations = [
+            SELECT npe5__Status__c, npe5__EndDate__c, npe5__Primary__c
+            FROM npe5__Affiliation__c
+            WHERE Id IN :originalPrimaryAffiliations
+        ];
+
+        System.assert(!originalPrimaryAffiliations.isEmpty(), 'The affiliations should exist');
+        for (npe5__Affiliation__c affl : originalPrimaryAffiliations) {
+            System.assertEquals(false, affl.npe5__Primary__c,
+                'The original primary affiliation should not be marked as primary');
+            System.assertEquals(Date.today(), affl.npe5__EndDate__c,
+                'The original primary affiliation should have an End Date of today');
+            System.assertEquals(System.Label.npe5.DefaultFormerStatus, affl.npe5__Status__c,
+                'The original primary affiliation should have the former status');
         }
-        system.assertEquals(8, cPrimary);
+
+        newPrimaryAffiliations = [
+            SELECT npe5__Status__c, npe5__EndDate__c, npe5__Primary__c
+            FROM npe5__Affiliation__c
+            WHERE Id IN :newPrimaryAffiliations
+        ];
+
+        System.assert(!newPrimaryAffiliations.isEmpty(), 'The affiliations should exist');
+        for (npe5__Affiliation__c affl : newPrimaryAffiliations) {
+            System.assertEquals(true, affl.npe5__Primary__c,
+                'The new primary affiliation should be marked as primary');
+            System.assertEquals(null, affl.npe5__EndDate__c,
+                'The new primary affiliation should have no End Date');
+            System.assertEquals(System.Label.npe5.DefaultCurrentStatus, affl.npe5__Status__c,
+                'The new primary affiliation should have the current status');
+        }
    }
 
     /*******************************************************************************************************
