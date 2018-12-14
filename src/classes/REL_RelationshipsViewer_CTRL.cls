@@ -37,10 +37,18 @@ global with sharing class REL_RelationshipsViewer_CTRL{
 
     public Boolean showPermissionError {get; set;}
 
+    /*******************************************************************************************************
+    * @description constructor.
+    * @param isDryRun ApexPages Standard controller.
+    */
     public REL_RelationshipsViewer_CTRL(ApexPages.StandardController controller) {
         showNoAccess();
     }
 
+    /*******************************************************************************************************
+    * @description Sets the flag and error message if the current user does not have permission on he Contacts object.
+    * @return Pagereference to the current page.
+    */
     private Pagereference showNoAccess() {
 
         if (!Contact.sObjectType.getDescribe().isAccessible()) {
@@ -51,6 +59,13 @@ global with sharing class REL_RelationshipsViewer_CTRL{
         return null;
     }
 
+    /*******************************************************************************************************
+    * @description constructs the soql String to run a Data Import process with or without a Batch.
+    * @param cid the Id of the Contact
+    * @param isInitialLoad Boolean stating if the base node info has been retrieved.
+    * @param relIds a List of Relationship Ids.
+    * @return List containing the Nodes.
+    */
     @RemoteAction
     global static List<Node> getRelationships(id cid, boolean isInitialLoad, List<String> relIds) {
         List<Node> nodes = new List<Node>();
@@ -118,7 +133,10 @@ global with sharing class REL_RelationshipsViewer_CTRL{
         return nodes;
     }
 
-    //get Relationship object prefix for links
+    /*******************************************************************************************************
+    * @description get Relationship object prefix for links
+    * @return a new RelationshipInfo object.
+    */
     @RemoteAction
     global static RelationshipInfo getRelationshipInfo() {
         return new RelationshipInfo();
@@ -129,6 +147,10 @@ global with sharing class REL_RelationshipsViewer_CTRL{
         String prefix;
         String nameField;
         String nameIdField;
+
+        /*******************************************************************************************************
+        * @description constructor.
+        */
         public RelationshipInfo() {
             npe4__Relationship_Settings__c rs = UTIL_CustomSettingsFacade.getRelationshipSettings();
 
