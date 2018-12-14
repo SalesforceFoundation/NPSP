@@ -7,6 +7,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Change Naming on Manage Household Page
+    [tags]  unstable
     &{contact1} =  API Create Contact    Email=skristem@robot.com
     Go To Record Home  &{contact1}[AccountId] 
     #2 Create a new contact under HouseHold Validation
