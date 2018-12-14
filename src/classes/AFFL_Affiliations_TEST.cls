@@ -40,7 +40,8 @@ public class AFFL_Affiliations_TEST {
     /*******************************************************************************************************
     * @description Creates a new contact with an organizational account. Verifies an affiliation was created.
     */
-    static testMethod void newContactOnOrgAccount() {
+    @isTest
+    private static void newContactOnOrgAccount() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
         
@@ -91,7 +92,8 @@ public class AFFL_Affiliations_TEST {
     * affiliation was created.
     */
 
-    static testMethod void newContactOnOrgAccountAutoOff() {
+    @isTest
+    private static void newContactOnOrgAccountAutoOff() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = false));
         
@@ -113,7 +115,8 @@ public class AFFL_Affiliations_TEST {
     /*******************************************************************************************************
     * @description Creates a new contact with an individual account. Verifies an affiliation was created.
     */
-    static testMethod void newContactOnIndividualAccount() {
+    @isTest
+    private static void newContactOnIndividualAccount() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
         
@@ -133,7 +136,8 @@ public class AFFL_Affiliations_TEST {
     * @description Creates a contact with a primary affiliation. Updates primary affiliation to new account.
     * Verifies old affiliation marked as former, and new affiliation marked as current.
     */
-    static testMethod void contactWithMultipleAffiliations_v2() {
+    @isTest
+    private static void contactWithMultipleAffiliations_v2() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
         
@@ -173,7 +177,8 @@ public class AFFL_Affiliations_TEST {
     /*******************************************************************************************************
     * @description Creates contacts with a primary affiliation. Verifies primary affiliations are created.
     */
-    static testMethod void newContactsWithPrimaryAffiliation() {
+    @isTest
+    private static void newContactsWithPrimaryAffiliation() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
             
@@ -225,7 +230,8 @@ public class AFFL_Affiliations_TEST {
     /*******************************************************************************************************
     * @description Creates a new contact with a one-to-one account. Verifies an affiliation was created.
     */
-    static testMethod void newContactsWithPrimaryAffiliationOnetoOne() {
+    @isTest
+    private static void newContactsWithPrimaryAffiliationOnetoOne() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
             
@@ -273,7 +279,8 @@ public class AFFL_Affiliations_TEST {
     * @description Updates contacts' primary affiliation, verifies new primary affiliations are created and
     * old affiliations are not marked primary.
     */
-    static testMethod void updateContactsWithPrimaryAffiliation() {
+    @isTest
+    private static void updateContactsWithPrimaryAffiliation() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
             
@@ -331,7 +338,8 @@ public class AFFL_Affiliations_TEST {
     * @description Updates contacts' primary affiliation and account, verifies new primary affiliations are created and
     * old affiliations are not marked primary.
     */
-    static testMethod void updateContactsWithPrimaryAffiliationAndAccount() {
+    @isTest
+    private static void updateContactsWithPrimaryAffiliationAndAccount() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
             
@@ -394,7 +402,8 @@ public class AFFL_Affiliations_TEST {
     * @description Updates contacts' primary affiliation, verifies new primary affiliations are created and
     * old affiliations are not marked primary.
     */
-    static testMethod void updateContactsWithPrimaryAffiliationToDiffAccount() {
+    @isTest
+    private static void updateContactsWithPrimaryAffiliationToDiffAccount() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
             
@@ -466,7 +475,8 @@ public class AFFL_Affiliations_TEST {
     * @description Creates contacts with primary affiliations. Verifies primary affiliations are created. 
     * Removes primary affiliation lookup from contacts. Verifies affiliations no longer marked primary.
     */
-    static testMethod void updateContactsWithPrimaryAffiliationClearPrimary() {
+    @isTest
+    private static void updateContactsWithPrimaryAffiliationClearPrimary() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
             
@@ -526,7 +536,8 @@ public class AFFL_Affiliations_TEST {
     * Verifies that the contacts' Primary Affiliation field is updated. Unchecks primary for these
     * affiliations, then verifies that the Primary Affiliation field has been nulled out on the contacts.
     */
-    static testMethod void newPrimaryAffiliations() {
+    @isTest
+    private static void newPrimaryAffiliations() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
             
@@ -599,7 +610,8 @@ public class AFFL_Affiliations_TEST {
     * Verifies that the contacts' Primary Affiliation field is updated, and the formerly primary 
     * affiliations are no longer marked as primary.
     */
-    static testMethod void newPrimaryAffiliationsFromAffl() {
+    @isTest
+    private static void newPrimaryAffiliationsFromAffl() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
             
@@ -711,7 +723,8 @@ public class AFFL_Affiliations_TEST {
     * account's primary contact. Verifies that an affiliation was created between new account and existing
     * contact, and a primary affiliation created with the account's new primary contact.
     */
-    static testMethod void newAccountNewAffl() {
+    @isTest
+    private static void newAccountNewAffl() {
         UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
         
         list<contact> listCon = new list<Contact>();
@@ -754,7 +767,8 @@ public class AFFL_Affiliations_TEST {
     * @description Deletes a primary affiliation, verifies it's removed from the contact. Undeletes it,
     * verifies it's added back to the contact.
     */
-    static testMethod void deletePrimaryAffl() {
+    @isTest
+    private static void deletePrimaryAffl() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true)
         );
@@ -803,7 +817,8 @@ public class AFFL_Affiliations_TEST {
     * @description When undeleting a primary affiliation, if the contact has a new primary affiliation,
     * the undeleted record should have primary unchecked, and the contact shouldn't be updated.
     */
-    static testMethod void undeletePrimaryAfflNewAffl() {
+    @isTest
+    private static void undeletePrimaryAfflNewAffl() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true)
         );
