@@ -7,6 +7,7 @@ Suite Teardown  Delete Records and Close Browser
  
 *** Test Cases ***    
 ASC Reciprocal Relationship Test Case 1
+    [tags]  unstable
     &{contact1} =  API Create Contact    Email=skristem@robot.com 
     &{contact2} =  API Create Contact    AccountId=&{contact1}[AccountId]
     ${ns} =  Get NPSP Namespace Prefix
