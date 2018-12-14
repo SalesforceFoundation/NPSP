@@ -505,7 +505,7 @@
                                 <lightning:button aura:id="next" variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.handleButtonClick}" />
                             </aura:if>
                             <aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '5') }">
-                                <lightning:button aura:id="save" variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.handleButtonClick}" disabled="{!or (v.templateMetadata.dataTableChanged, v.templateFieldOptions.errors.size > 0)}" />
+                                <lightning:button aura:id="save" variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.handleButtonClick}" disabled="{!v.templateMetadata.pendingSave}" />
                             </aura:if>
                         </lightning:layoutItem>
                     </lightning:layout>
