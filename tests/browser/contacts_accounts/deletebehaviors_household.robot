@@ -13,8 +13,9 @@ Delete Contact with Closed Won Opportunity from Household
     Header Field Value    Account Name    &{contact}[LastName] Household
     # &{Contact} =  API Create Contact    Email=skristem@robot.com
     # Go To Record Home  &{Contact}[Id]
-    Scroll Page To Location    0    500
+    #Scroll Page To Location    0    500
     #Sleep    5
+    Load Related List    Opportunities
     Click Special Related List Button   Opportunities    New Contact Donation
     Choose Frame    New Opportunity
     Click Element    p3

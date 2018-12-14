@@ -7,7 +7,7 @@
         <encodingKey>UTF-8</encodingKey>
         <height>600</height>
         <linkType>url</linkType>
-        <masterLabel>[NPSP] Schedule Payments</masterLabel>
+        <masterLabel>Schedule Payments</masterLabel>
         <openType>sidebar</openType>
         <protected>false</protected>
         <requireRowSelection>false</requireRowSelection>
@@ -20,7 +20,7 @@
         <encodingKey>UTF-8</encodingKey>
         <height>600</height>
         <linkType>url</linkType>
-        <masterLabel>[NPSP] Write Off Payments</masterLabel>
+        <masterLabel>Write Off Payments</masterLabel>
         <openType>sidebar</openType>
         <protected>false</protected>
         <requireRowSelection>false</requireRowSelection>
