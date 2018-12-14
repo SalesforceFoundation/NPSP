@@ -36,12 +36,6 @@
 @isTest
 private class REL_Relationships_TEST {
     
-    /*********************************************************************************************************
-    * @description If you only want to run a single test in this class, fill in its name here.
-    * If you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-    
     private static Contact c1;//male
     private static Contact c2;//female
     private static Contact c3;//unknown
@@ -94,9 +88,7 @@ private class REL_Relationships_TEST {
     * @description Tests relationships and mirroring
     */
     static testMethod void testContactRel() {
-        if (strTestOnly != '*' && strTestOnly != 'testContactRel') return;
-             
-        setupRelationshipTestData(null);     
+        setupRelationshipTestData(null);
       
         npe4__Relationship__c rel = new npe4__Relationship__c(
               npe4__contact__c = c1.id, 
@@ -164,8 +156,6 @@ private class REL_Relationships_TEST {
     * @description Test method for relationships and deleting the mirror record
     */
     static testMethod void testOrphanedRelDelete() {
-        if (strTestOnly != '*' && strTestOnly != 'testOrphanedRelDelete') return;
-            
         setupRelationshipTestData(null);
 
         npe4__Relationship__c[] crel = new npe4__Relationship__c[]{
@@ -197,8 +187,6 @@ private class REL_Relationships_TEST {
     * @description Test method for deleting the original, should delete the reciprocal
     */    
     static testMethod void testRelationshipDelete(){
-        if (strTestOnly != '*' && strTestOnly != 'testRelationshipDelete') return;
-        
         setupRelationshipTestData(null);
         npe4__Relationship__c crel_original = new npe4__Relationship__c(npe4__contact__c = c1.id, npe4__Relatedcontact__c = c2.id, 
                                                                 npe4__Type__c='Buddies');
@@ -234,8 +222,6 @@ private class REL_Relationships_TEST {
     * @description Test method for campaign member auto create relationships
     */
     static testMethod void testAutoCreateCampaignMemberInsert(){
-        if (strTestOnly != '*' && strTestOnly != 'testAutoCreateCampaignMemberInsert') return;
-        
         setupRelationshipTestData(null);
         
         //reset the process controller to mimic a second user action
@@ -272,9 +258,7 @@ private class REL_Relationships_TEST {
     * We can't do a true test as ContactId is not updatable, but we'll hit the update for coverage.
     */
     static testMethod void testAutoCreateCampaignMemberUpdate(){
-        if (strTestOnly != '*' && strTestOnly != 'testAutoCreateCampaignMemberUpdate') return;
-        
-        setupRelationshipTestData(null);        
+        setupRelationshipTestData(null);
         //reset the process controller to mimic a second user action
         //Relationships_ProcessControl.hasRun = false;        
         //insert a campaignmember
@@ -295,8 +279,6 @@ private class REL_Relationships_TEST {
     * @description Test method for auto creating relationships based on contact fields on contact insert.
     */
     static testMethod void testAutoCreateContactInsert(){
-        if (strTestOnly != '*' && strTestOnly != 'testAutoCreateContactInsert') return;
-        
         setupRelationshipTestData(null);
         
         //reset the process controller to mimic a second user action
@@ -322,8 +304,6 @@ private class REL_Relationships_TEST {
     * @description Test method for auto creating relationships based on contact fields on contact update.
     */
     static testMethod void testAutoCreateContactUpdate(){
-        if (strTestOnly != '*' && strTestOnly != 'testAutoCreateContactUpdate') return;
-        
         setupRelationshipTestData(null);
         
         //reset the process controller to mimic a second user action
@@ -348,8 +328,6 @@ private class REL_Relationships_TEST {
     * @description Test value inversion reciprocal method, verify type.
     */
     static testMethod void testInversionSettingsHaveType(){
-        if (strTestOnly != '*' && strTestOnly != 'testInversionSettingsHaveType') return;
-        
         setupRelationshipTestData(new npe4__Relationship_Settings__c(npe4__Reciprocal_Method__c = 'Value Inversion'));
         
         npe4__Relationship__c[] crel = new npe4__Relationship__c[]{
@@ -378,8 +356,6 @@ private class REL_Relationships_TEST {
     * @description Test value inversion reciprocal method, verify type.
     */
     static testMethod void testInversionSettingsNoType(){
-        if (strTestOnly != '*' && strTestOnly != 'testInversionSettingsNoType') return;
-        
         setupRelationshipTestData(new npe4__Relationship_Settings__c(npe4__Reciprocal_Method__c = 'Value Inversion'));
         
         npe4__Relationship__c[] crel = new npe4__Relationship__c[]{
@@ -408,8 +384,6 @@ private class REL_Relationships_TEST {
     * @description Test invalid settings config, verify mirror relationship works correctly
     */
     static testMethod void testNoValidSettingsConfig(){
-        if (strTestOnly != '*' && strTestOnly != 'testNoValidSettingsConfig') return;
-        
         setupRelationshipTestData(new npe4__Relationship_Settings__c(npe4__Reciprocal_Method__c = 'BAD_VALUE'));
         
         npe4__Relationship__c[] crel = new npe4__Relationship__c[]{
@@ -438,8 +412,6 @@ private class REL_Relationships_TEST {
     * @description Test male contact (by salutation) gets male relationship type
     */
     static testMethod void testMaleSalutationReciprocal(){
-        if (strTestOnly != '*' && strTestOnly != 'testMaleSalutationReciprocal') return;
-        
         setupRelationshipTestData(null);
         npe4__Relationship__c[] crel = new npe4__Relationship__c[]{
             new npe4__Relationship__c(npe4__contact__c = c1.id, npe4__Relatedcontact__c = c2.id, npe4__Type__c='TestLookupType')
@@ -459,8 +431,6 @@ private class REL_Relationships_TEST {
     * @description Test female contact (by salutation) gets female relationship type
     */
     static testMethod void testFemaleSalutationReciprocal(){
-        if (strTestOnly != '*' && strTestOnly != 'testFemaleSalutationReciprocal') return;
-        
         setupRelationshipTestData(null);
         npe4__Relationship__c[] crel = new npe4__Relationship__c[]{
             new npe4__Relationship__c(npe4__contact__c = c2.id, npe4__Relatedcontact__c = c1.id, npe4__Type__c='TestLookupType')
@@ -480,8 +450,6 @@ private class REL_Relationships_TEST {
     * @description Test neutral contact (by salutation) gets neutral relationship type
     */
     static testMethod void testNeutralSalutationReciprocal(){
-        if (strTestOnly != '*' && strTestOnly != 'testNeutralSalutationReciprocal') return;
-        
         setupRelationshipTestData(null);
         npe4__Relationship__c[] crel = new npe4__Relationship__c[]{
             new npe4__Relationship__c(npe4__contact__c = c3.id, npe4__Relatedcontact__c = c2.id, npe4__Type__c='TestLookupType')
@@ -501,8 +469,6 @@ private class REL_Relationships_TEST {
     * @description Test neutral contact (by gender field) gets neutral relationship type
     */
     static testMethod void testNeutralGenderFieldReciprocal(){
-        if (strTestOnly != '*' && strTestOnly != 'testNeutralGenderFieldReciprocal') return;
-        
         setupRelationshipTestData(new npe4__Relationship_Settings__c(npe4__Reciprocal_Method__c = 'List Setting', npe4__Gender_Field__c = 'Description'));
         npe4__Relationship__c[] crel = new npe4__Relationship__c[]{
             new npe4__Relationship__c(npe4__contact__c = c3.id, npe4__Relatedcontact__c = c2.id, npe4__Type__c='TestLookupType')
@@ -525,8 +491,6 @@ private class REL_Relationships_TEST {
     * @description Test male contact (by gender field) gets male relationship type
     */
     static testMethod void testMaleGenderFieldReciprocal(){
-        if (strTestOnly != '*' && strTestOnly != 'testMaleGenderFieldReciprocal') return;
-        
         setupRelationshipTestData(new npe4__Relationship_Settings__c(npe4__Reciprocal_Method__c = 'List Setting', npe4__Gender_Field__c = 'Description'));
         c1.Description = 'Male';
         c3.Salutation = null;
@@ -549,8 +513,6 @@ private class REL_Relationships_TEST {
     * @description Test female contact (by gender field) gets female relationship type
     */
     static testMethod void testFemaleGenderFieldReciprocal(){
-        if (strTestOnly != '*' && strTestOnly != 'testFemaleGenderFieldReciprocal') return;
-        
         setupRelationshipTestData(new npe4__Relationship_Settings__c(npe4__Reciprocal_Method__c = 'List Setting', npe4__Gender_Field__c = 'Description'));
         c2.Description = 'Female';
         c3.Salutation = null;
@@ -575,8 +537,6 @@ private class REL_Relationships_TEST {
     * and that the reciprocal gets the neutral type by default.
     */
     static testMethod void testNoGenderManualRel(){
-        if (strTestOnly != '*' && strTestOnly != 'testNoGenderManualRel') return;
-
         setupRelationshipTestData(new npe4__Relationship_Settings__c(npe4__Reciprocal_Method__c = 'List Setting'));
 
         list<Contact> conList = new list<Contact>{
@@ -605,8 +565,6 @@ private class REL_Relationships_TEST {
     * verify gendered relationship type hasn't changed, but that the status has changed.
     */
     static testMethod void testNoGenderManualRelStatusChange(){
-        if (strTestOnly != '*' && strTestOnly != 'testNoGenderManualRelStatusChange') return;
-
         setupRelationshipTestData(new npe4__Relationship_Settings__c(npe4__Reciprocal_Method__c = 'List Setting'));
 
         list<Contact> conList = new list<Contact>{
@@ -651,8 +609,6 @@ private class REL_Relationships_TEST {
     * hasn't changed.
     */
     static testMethod void testGenderChange(){
-        if (strTestOnly != '*' && strTestOnly != 'testGenderChange') return;
-
         setupRelationshipTestData(new npe4__Relationship_Settings__c(npe4__Reciprocal_Method__c = 'List Setting', npe4__Gender_Field__c = 'Description'));
 
         list<Contact> conList = new list<Contact>{
@@ -689,8 +645,6 @@ private class REL_Relationships_TEST {
     * @description Test error record creation when inserting a relationship with a required field missing.
     */
     static testMethod void testErrorRecordCreation() {
-        if (strTestOnly != '*' && strTestOnly != 'testErrorRecordCreation') return;
-        
         UTIL_CustomSettingsFacade.getErrorSettings();
         
         setupRelationshipTestData(null);
@@ -719,8 +673,6 @@ private class REL_Relationships_TEST {
     * @description Test method throws an exception for relationships and verifies an error is logged.
     */
     static testMethod void testExceptionRecordCreation(){
-        if (strTestOnly != '*' && strTestOnly != 'testExceptionRecordCreation') return;
-        
         setupRelationshipTestData(null);
         
         Test.startTest();
@@ -735,8 +687,6 @@ private class REL_Relationships_TEST {
     * @description Test method for verifying automatic relationship creation won't create a duplicate.
     */
     static testMethod void testAutoCreateDupePrevention(){
-        if (strTestOnly != '*' && strTestOnly != 'testAutoCreateDupePrevention') return;
-        
         setupRelationshipTestData(null);
         
         npe4__Relationship__c[] crel = new npe4__Relationship__c[]{
@@ -763,9 +713,6 @@ private class REL_Relationships_TEST {
     * @description Method to test the UTIL_CustomSettingsFacade class as a different user
     */
     static testMethod void testRelationshipUTILS(){
-        if (strTestOnly != '*' && strTestOnly != 'testRelationshipUTILS') return;
-        
-        
         System.runAs(new User(id = UserInfo.getUserId())){
            delete [select id from npe4__Relationship_Settings__c];
            Test.startTest();
@@ -780,8 +727,6 @@ private class REL_Relationships_TEST {
     * @description Test method for inserting two relationships in a single transaction.
     */
     static testmethod void test2Rels1Transaction_v2() {
-        if (strTestOnly != '*' && strTestOnly != 'test2Rels1Transaction_v2') return;
-        
          // Create three contacts
         Contact mainClient = new Contact(FirstName='Main',LastName='AAAClient');
         Contact friend = new Contact(FirstName='Test',LastName='AAAFriend');
@@ -818,9 +763,7 @@ private class REL_Relationships_TEST {
     */
     // from REL_RelationshipsViewer_CTRL
     public static testMethod void RelationshipsViewer_TEST(){
-        if (strTestOnly != '*' && strTestOnly != 'RelationshipsViewer_TEST') return;
-        
-        //set running user to avoid dml issue            
+        //set running user to avoid dml issue
         System.runAs(new User(id = UserInfo.getUserId())){ 
             //insert two contacts
             c1 = new Contact(LastName = 'Testy');
@@ -945,8 +888,6 @@ private class REL_Relationships_TEST {
     * @description Test method for verifying field sync exclusion.
     */
     static testMethod void testFieldSyncExclusion(){
-        if (strTestOnly != '*' && strTestOnly != 'testFieldSyncExclusion') return;
-        
         setupRelationshipTestData(null);
         Relationship_Sync_Excluded_Fields__c noDesc = new Relationship_Sync_Excluded_Fields__c(name = 'npe4__description__c');
         insert noDesc;
@@ -968,8 +909,6 @@ private class REL_Relationships_TEST {
     * @description Test method for change to Type field only.
     */
     static testMethod void testTypeChangeOnly(){
-        if (strTestOnly != '*' && strTestOnly != 'testFieldSyncExclusion') return;
-        
         setupRelationshipTestData(null);
         Relationship_Sync_Excluded_Fields__c noDesc = new Relationship_Sync_Excluded_Fields__c(name = 'npe4__description__c');
         insert noDesc;
@@ -1021,8 +960,6 @@ private class REL_Relationships_TEST {
     * hasn't changed.
     */
     static testMethod void testGenderChangeWithMissingReciprocal(){
-        if (strTestOnly != '*' && strTestOnly != 'testGenderChangeWithMissingReciprocal') return;
-
         // new npe4__Relationship_Settings__c(npe4__Reciprocal_Method__c = 'List Setting', npe4__Gender_Field__c = 'Description')
         setupRelationshipTestData(null);
 

@@ -171,6 +171,8 @@ private class CRLP_RollupSoftCredit_TEST {
      */
     private static void testRollupsServices(TestType tt) {
 
+        Boolean usingAdv = ADV_PackageInfo_SVC.useAdv();
+
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true,
@@ -294,18 +296,26 @@ private class CRLP_RollupSoftCredit_TEST {
         orgOCR.Role = label.npo02.Household_Member_Contact_Role;
         update orgOCR;
 
+        // Because HEDA defaults to One-to-one Accounts, OCR values are different for these test Opps
+        Integer ocrCount = cnt;
+        Boolean isPrimaryTest = true;
+        if(!usingAdv){
+            isPrimaryTest = false;
+            ocrCount = (cnt * 3);
+        }
+
         //Create duplicate Non Primary OCRs to test the Rollup for duplicate OCRs.
         List<OpportunityContactRole> duplicateNonPrimaryOCRs = [
             SELECT OpportunityId, ContactId, Role, IsPrimary 
             FROM OpportunityContactRole 
-            WHERE IsPrimary = false 
+            WHERE IsPrimary = :isPrimaryTest 
             AND Opportunity.IsWon = true
         ].deepClone();
         insert duplicateNonPrimaryOCRs;
 
         Test.startTest();
 
-        system.assertEquals((cnt * 3) + duplicateNonPrimaryOCRs.size() + 1, [SELECT Count() FROM OpportunityContactRole WHERE Opportunity.IsWon = true],
+        system.assertEquals(ocrCount + duplicateNonPrimaryOCRs.size() + 1, [SELECT Count() FROM OpportunityContactRole WHERE Opportunity.IsWon = true],
                 'There should be 301 OCR records on closed won opps');
 
         List<Id> contactIds = new List<Id>{ c1.Id, c2.Id, c3.Id, c4.Id };
@@ -329,13 +339,24 @@ private class CRLP_RollupSoftCredit_TEST {
             String conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c2Id LIMIT 1';
             c2 = database.query(conQuery);
 
-            // Basic rollup asserts using existing NPSP rollup fields.
-            System.assertEquals(totalDonations, c2.npo02__Soft_Credit_Total__c);
-            System.assertEquals(cnt, c2.Number_of_Soft_Credits__c);
-            System.assertEquals(firstCloseDate, c2.First_Soft_Credit_Date__c);
-            System.assertEquals(largestGiftDate, c2.Largest_Soft_Credit_Date__c);
-            System.assertEquals(baseAmt, c2.Last_Soft_Credit_Amount__c);
-            System.assertEquals(maxAmt, c2.Largest_Soft_Credit_Amount__c);
+            if(usingAdv){
+                // Because the default HEDA Account model is Administrative (One-to-one),
+                // these results differ when Advancement is installed
+                System.assertEquals(null, c2.npo02__Soft_Credit_Total__c);
+                System.assertEquals(null, c2.Number_of_Soft_Credits__c);
+                System.assertEquals(null, c2.First_Soft_Credit_Date__c);
+                System.assertEquals(null, c2.Largest_Soft_Credit_Date__c);
+                System.assertEquals(null, c2.Last_Soft_Credit_Amount__c);
+                System.assertEquals(null, c2.Largest_Soft_Credit_Amount__c);
+            } else {
+                // Basic rollup asserts using existing NPSP rollup fields.
+                System.assertEquals(totalDonations, c2.npo02__Soft_Credit_Total__c);
+                System.assertEquals(cnt, c2.Number_of_Soft_Credits__c);
+                System.assertEquals(firstCloseDate, c2.First_Soft_Credit_Date__c);
+                System.assertEquals(largestGiftDate, c2.Largest_Soft_Credit_Date__c);
+                System.assertEquals(baseAmt, c2.Last_Soft_Credit_Amount__c);
+                System.assertEquals(maxAmt, c2.Largest_Soft_Credit_Amount__c);
+            }
 
             // Query the Primary Contact (should have NO Soft Credit)
             conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
@@ -363,11 +384,22 @@ private class CRLP_RollupSoftCredit_TEST {
             String acctQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
             Account a = database.query(acctQuery);
 
-            System.assertEquals(totalDonations, a.npo02__TotalOppAmount__c);
-            System.assertEquals(cnt, a.npo02__NumberOfClosedOpps__c);
-            System.assertEquals(firstCloseDate, a.npo02__FirstCloseDate__c);
-            System.assertEquals(baseAmt, a.npo02__LastOppAmount__c);
-            System.assertEquals(maxAmt, a.npo02__LargestAmount__c);
+            // Because the default HEDA Account model is Administrative (One-to-one),
+            // these results differ when Advancement is installed
+            if(usingAdv){
+                System.assertEquals(0, a.npo02__TotalOppAmount__c);
+                System.assertEquals(0, a.npo02__NumberOfClosedOpps__c);
+                System.assertEquals(null, a.npo02__FirstCloseDate__c);
+                System.assertEquals(0, a.npo02__LastOppAmount__c);
+                System.assertEquals(0, a.npo02__LargestAmount__c);
+            } else {
+                System.assertEquals(totalDonations, a.npo02__TotalOppAmount__c);
+                System.assertEquals(cnt, a.npo02__NumberOfClosedOpps__c);
+                System.assertEquals(firstCloseDate, a.npo02__FirstCloseDate__c);
+                System.assertEquals(baseAmt, a.npo02__LastOppAmount__c);
+                System.assertEquals(maxAmt, a.npo02__LargestAmount__c);
+            }
+
         }
     }
 }

@@ -36,25 +36,17 @@
 */
 @isTest
 private class CON_ContactMerge_TEST2 {
-
-    /**
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
     
     static testMethod void merge3OneToOneOne2One(){
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'merge3OneToOneOne2One') return;
         merge3OneToOne(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge3OneToOneHHAccount(){
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'merge3OneToOneHHAccount') return;
         merge3OneToOne(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     static void merge3OneToOne(string strProcessor) {
@@ -163,11 +155,9 @@ private class CON_ContactMerge_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'merge2OneToOneInSameAccountOne2One') return;
         merge2OneToOneInSameAccount(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2OneToOneInSameAccountHHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'merge2OneToOneInSameAccountHHAccount') return;
         merge2OneToOneInSameAccount(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     //merge two contacts that are both in the one-to-one account model
@@ -233,11 +223,9 @@ private class CON_ContactMerge_TEST2 {
     }
     
     static testMethod void ghIssue6One2One(){
-        if (strTestOnly != '*' && strTestOnly != 'ghIssue6One2One') return;
         ghIssue6(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void ghIssue6HHAccount(){
-        if (strTestOnly != '*' && strTestOnly != 'ghIssue6HHAccount') return;
         ghIssue6(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     static void ghIssue6(string strProcessor){
@@ -292,7 +280,6 @@ private class CON_ContactMerge_TEST2 {
     }
   
     public static testmethod  void householdDifferentFromMaster() {
-        if (strTestOnly != '*' && strTestOnly != 'householdDifferentFromMaster') return;
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
@@ -350,8 +337,6 @@ private class CON_ContactMerge_TEST2 {
     
     //check a standard set controller passed into the page is handled correctly
     static testMethod void testStandardSetSelected(){
-        if (strTestOnly != '*' && strTestOnly != 'testStandardSetSelected') return;
-        
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
@@ -381,8 +366,6 @@ private class CON_ContactMerge_TEST2 {
   
     //check a search term passed into the page is handled correctly
     static testMethod void testSearchSpecPassed(){
-        if (strTestOnly != '*' && strTestOnly != 'testSearchSpecPassed') return;
-        
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
@@ -411,8 +394,6 @@ private class CON_ContactMerge_TEST2 {
     
     //check a comma separated list of Ids are handled correctly
     static testMethod void testGoodIdsPassed(){
-        if (strTestOnly != '*' && strTestOnly != 'testGoodIdsPassed') return;
-        
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
@@ -439,8 +420,6 @@ private class CON_ContactMerge_TEST2 {
     
     //check invalid Ids are handled
     static testMethod void testBadIdsPassed(){
-        if (strTestOnly != '*' && strTestOnly != 'testBadIdsPassed') return;
-        
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         
@@ -469,8 +448,6 @@ private class CON_ContactMerge_TEST2 {
     }
     
     static testMethod void personAccountErrorDetection() {
-        if (strTestOnly != '*' && strTestOnly != 'personAccountErrorDetection') return;
-        
         // detect PersonAccounts
         boolean isPAEnabled = UTIL_Describe.isValidField('Account', 'isPersonAccount');
         if (!isPAEnabled)
@@ -526,7 +503,6 @@ private class CON_ContactMerge_TEST2 {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeHHToHH() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToHH') return;
         testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -538,7 +514,6 @@ private class CON_ContactMerge_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOne2One') return;
         testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -547,7 +522,6 @@ private class CON_ContactMerge_TEST2 {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeOrgToHH() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOrgToHH') return;
         testNamesAndOppsMerge(null, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -556,7 +530,6 @@ private class CON_ContactMerge_TEST2 {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeHHToOrg() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToOrg') return;
         testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, null);
     }
 
@@ -568,7 +541,6 @@ private class CON_ContactMerge_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOrgToOne2One') return;
         testNamesAndOppsMerge(null, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -580,7 +552,6 @@ private class CON_ContactMerge_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
         testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, null);
     }
     
@@ -589,7 +560,6 @@ private class CON_ContactMerge_TEST2 {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeOrgToOrg() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOrgToOrg') return;
         testNamesAndOppsMerge(null, null);
     }
 
@@ -601,7 +571,6 @@ private class CON_ContactMerge_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
         testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -613,7 +582,6 @@ private class CON_ContactMerge_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
         testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -622,8 +590,6 @@ private class CON_ContactMerge_TEST2 {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeBucketToHH() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
-
         if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
         testNamesAndOppsMerge(CAO_Constants.BUCKET_ORGANIZATION_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
@@ -634,8 +600,6 @@ private class CON_ContactMerge_TEST2 {
     * are updated as appropriate for the account types.
     */ 
     static testmethod void testNamesAndOppsMergeHHToBucket() {
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToBucket') return;
-
         if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
         testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.BUCKET_ORGANIZATION_TYPE);
@@ -648,8 +612,6 @@ private class CON_ContactMerge_TEST2 {
     static testmethod void testNamesAndOppsMergeBucketToOne2One() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeBucketToOne2One') return;
 
         if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
@@ -664,8 +626,6 @@ private class CON_ContactMerge_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
         
-        if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToBucket') return;
-
         if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
         testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.BUCKET_ORGANIZATION_TYPE);

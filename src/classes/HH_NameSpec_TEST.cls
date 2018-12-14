@@ -38,12 +38,6 @@
 private with sharing class HH_NameSpec_TEST {
 
     /*********************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-        
-    /*********************************************************************************************************
     @description
     operation:
         1 contact in household 
@@ -51,8 +45,6 @@ private with sharing class HH_NameSpec_TEST {
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
     static testMethod void OneContact() {
-        if (strTestOnly != '*' && strTestOnly != 'OneContact') return;
-        
         Contact[] listCon = new Contact[] {
             new Contact (
                 Salutation = 'Skipper',
@@ -92,8 +84,6 @@ private with sharing class HH_NameSpec_TEST {
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
     static testMethod void TwoContactSameLastname() {
-        if (strTestOnly != '*' && strTestOnly != 'TwoContactSameLastname') return;
-                
         Contact[] listCon = new Contact[] {
             new Contact (
                 Salutation = 'Skipper',
@@ -140,8 +130,6 @@ private with sharing class HH_NameSpec_TEST {
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
     static testMethod void TwoContactDifferentLastname() {
-        if (strTestOnly != '*' && strTestOnly != 'TwoContactDifferentLastname') return;
-                
         Contact[] listCon = new Contact[] {
             new Contact (
                 Salutation = 'Skipper',
@@ -182,8 +170,6 @@ private with sharing class HH_NameSpec_TEST {
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
     static testMethod void ThreeContactsTwoLastnames() {
-        if (strTestOnly != '*' && strTestOnly != 'ThreeContactsTwoLastnames') return;
-                
         Contact[] listCon = new Contact[] {
             new Contact (
                 Salutation = 'Skipper',
@@ -234,8 +220,6 @@ private with sharing class HH_NameSpec_TEST {
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
     static testMethod void ThreeContactsTwoLastNamesNotInSequenceWhenTheNameFormatHasLastName() {
-        if (strTestOnly != '*' && strTestOnly != 'ThreeContactsTwoLastNamesNotInSequenceWhenTheNameFormatHasLastName') return;
-                
         Contact[] listCon = new Contact[] {
             new Contact (
                 Salutation = 'Mr',
@@ -294,8 +278,6 @@ private with sharing class HH_NameSpec_TEST {
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
     static testMethod void ThreeContactsTwoLastNamesNotInSequenceWhenTheNameFormatHasNoLastName() {
-        if (strTestOnly != '*' && strTestOnly != 'ThreeContactsTwoLastNamesNotInSequenceWhenTheNameFormatHasNoLastName') return;
-                
         Contact[] listCon = new Contact[] {
             new Contact (
                 Salutation = 'Mr',
@@ -351,8 +333,6 @@ private with sharing class HH_NameSpec_TEST {
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
     static testMethod void ThreeContactsTwoLastnamesCustomFields() {
-        if (strTestOnly != '*' && strTestOnly != 'ThreeContactsTwoLastnamesCustomFields') return;                
-        
         Contact[] listCon = new Contact[] {
             new Contact (
                 Salutation = 'Skipper',
@@ -406,8 +386,6 @@ private with sharing class HH_NameSpec_TEST {
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
     static testMethod void testHHNamingWhenContactFieldNamesAreCaseInsensitive() {
-        if (strTestOnly != '*' && strTestOnly != 'testHHNamingWhenContactFieldNamesAreCaseInsensitive') return;
-                
         Contact[] listCon = new Contact[] {
             new Contact (
                 Salutation = 'Skipper',
@@ -452,8 +430,6 @@ private with sharing class HH_NameSpec_TEST {
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
     static testMethod void SixContactsOneLastnamesContactOverrun() {
-        if (strTestOnly != '*' && strTestOnly != 'SixContactsOneLastnamesContactOverrun') return;
-                
         list<Contact> listCon = new list<Contact>();
         Contact c1 = new Contact (
             Salutation = 'Skipper',
@@ -530,8 +506,6 @@ private with sharing class HH_NameSpec_TEST {
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
     static testMethod void SixContactsTwoLastnamesContactOverrun() {
-        if (strTestOnly != '*' && strTestOnly != 'SixContactsTwoLastnamesContactOverrun') return;
-                
         list<Contact> listCon = new list<Contact>();
         Contact c1 = new Contact (
             Salutation = 'Skipper',
@@ -647,8 +621,6 @@ private with sharing class HH_NameSpec_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNaming') return;
-
         Contact c1 = new Contact(
             Salutation = 'Skipper',
             Firstname = 'John',
@@ -717,8 +689,6 @@ private with sharing class HH_NameSpec_TEST {
     static testMethod void testRefreshAllHHNamingWithCustom() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-        
-        if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNamingWithCustom') return;
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
     
@@ -823,8 +793,6 @@ private with sharing class HH_NameSpec_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNamingManyHH') return;
-        
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
     
         // turn off household naming        
@@ -881,8 +849,6 @@ private with sharing class HH_NameSpec_TEST {
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
     static testMethod void OneAnonymousContact() {
-        if (strTestOnly != '*' && strTestOnly != 'OneContact') return;
-        
         list<Contact> listCon = new list<Contact>();
                
         HH_NameSpec ns = new HH_NameSpec();
@@ -910,8 +876,6 @@ private with sharing class HH_NameSpec_TEST {
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
     static testMethod void TwoContactSameLastnameAccountReference() {
-        if (strTestOnly != '*' && strTestOnly != 'TwoContactSameLastnameAccountReference') return;
-        
         Account acc = new Account(
             Name = 'TestAcc',
             BillingCity = 'Seattle'
@@ -969,8 +933,6 @@ private with sharing class HH_NameSpec_TEST {
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
     static testMethod void OneContactXReferences() {
-        if (strTestOnly != '*' && strTestOnly != 'OneContactXReferences') return;
-        
         Account acc = new Account(Name='MyEmployer');
         insert acc;
 

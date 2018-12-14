@@ -45,7 +45,7 @@ public with sharing class ADDR_Addresses_TEST {
     /*********************************************************************************************************
     * @description Holds the number of Contacts per Household to create in tests.
     */
-    static Integer cCon = 2;    
+    static Integer cCon = 2;
 
     /*********************************************************************************************************
     * @description The list of created test Contacts.
@@ -55,7 +55,7 @@ public with sharing class ADDR_Addresses_TEST {
     /*********************************************************************************************************
     * @description The list of created test Accounts.
     */
-    public static List<Account> listAccT;            
+    public static List<Account> listAccT;
 
     /*********************************************************************************************************
     * @description The list of created test Addresses.
@@ -129,9 +129,9 @@ public with sharing class ADDR_Addresses_TEST {
         }
 
         List<Address__c> listAddr = [
-                select Id, Default_Address__c, MailingStreet__c, Household_Account__c, Address_Type__c
-                from Address__c
-                where Default_Address__c = true
+            select Id, Default_Address__c, MailingStreet__c, Household_Account__c, Address_Type__c
+            from Address__c
+            where Default_Address__c = true
         ];
         system.assertEquals(cCon, listAddr.size());
         for (Address__c addr : listAddr) {
@@ -483,7 +483,7 @@ public with sharing class ADDR_Addresses_TEST {
         listCon = [select Id, Name, AccountId, is_Address_Override__c, Current_Address__c, Current_Address__r.Default_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude from Contact];
 
         system.assertEquals(cHH, [SELECT Count() FROM Address__c WHERE MailingCity__c LIKE 'not%' AND Default_Address__c = False],
-                'There should be one "not override" address per Household not set as default address');
+            'There should be one "not override" address per Household not set as default address');
 
         Integer cNotOverride = 0;
         for (Contact con : listCon) {
@@ -757,12 +757,12 @@ public with sharing class ADDR_Addresses_TEST {
         }
     }
 
-   /*********************************************************************************************************
-    @description
-        clear contacts' Address Override and modify a new address
-    verify:
-        new default address created
-    **********************************************************************************************************/
+    /*********************************************************************************************************
+     @description
+         clear contacts' Address Override and modify a new address
+     verify:
+         new default address created
+     **********************************************************************************************************/
     @isTest
     private static void clearAddrOverrideNewAddr() {
         //skip the test if Advancement is installed
@@ -936,7 +936,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        Update Contact's mailing address and mark it as override, to cause creation of a new non-default Address 
+        Update Contact's mailing address and mark it as override, to cause creation of a new non-default Address
         record with the Mailing State value set as expected when State & Country Picklists are enabled.
     verify:
         Contact gets new Address
@@ -1038,7 +1038,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        Update the Address' Mailing State when it is empty or does not match the source sObject's StateCode 
+        Update the Address' Mailing State when it is empty or does not match the source sObject's StateCode
         and State & Country Picklists are enabled.
     verify:
         Does not populate the Address' Mailing State if the source sObject's StateCode is empty
@@ -1120,10 +1120,10 @@ public with sharing class ADDR_Addresses_TEST {
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c(
-                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                        Simple_Address_Change_Treated_as_Update__c = true
-                ));
+            new npe01__Contacts_and_Orgs_Settings__c(
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Simple_Address_Change_Treated_as_Update__c = true
+            ));
 
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
@@ -1187,10 +1187,10 @@ public with sharing class ADDR_Addresses_TEST {
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c(
-                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                        Simple_Address_Change_Treated_as_Update__c = true
-                ));
+            new npe01__Contacts_and_Orgs_Settings__c(
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Simple_Address_Change_Treated_as_Update__c = true
+            ));
 
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
@@ -1264,10 +1264,10 @@ public with sharing class ADDR_Addresses_TEST {
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c (
-                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                        Simple_Address_Change_Treated_as_Update__c = true
-                )
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Simple_Address_Change_Treated_as_Update__c = true
+            )
         );
 
         Integer hhSize = 1;
@@ -1326,10 +1326,10 @@ public with sharing class ADDR_Addresses_TEST {
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c (
-                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                        Simple_Address_Change_Treated_as_Update__c = true
-                )
+            new npe01__Contacts_and_Orgs_Settings__c (
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Simple_Address_Change_Treated_as_Update__c = true
+            )
         );
 
         Integer hhSize = 1;
@@ -1379,10 +1379,10 @@ public with sharing class ADDR_Addresses_TEST {
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c(
-                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                        Simple_Address_Change_Treated_as_Update__c = true
-                ));
+            new npe01__Contacts_and_Orgs_Settings__c(
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Simple_Address_Change_Treated_as_Update__c = true
+            ));
 
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
@@ -1541,10 +1541,10 @@ public with sharing class ADDR_Addresses_TEST {
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c(
-                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                        Simple_Address_Change_Treated_as_Update__c = true
-                ));
+            new npe01__Contacts_and_Orgs_Settings__c(
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                Simple_Address_Change_Treated_as_Update__c = true
+            ));
 
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
@@ -1831,7 +1831,7 @@ public with sharing class ADDR_Addresses_TEST {
 
     /*********************************************************************************************************
     @description
-        Insert more than 200 addresses to require multiple trigger calls, and to ensure our static counters 
+        Insert more than 200 addresses to require multiple trigger calls, and to ensure our static counters
         are handled appropriately.
     verify:
         Addresses are propagated to all contacts and accounts
@@ -1841,7 +1841,7 @@ public with sharing class ADDR_Addresses_TEST {
         Integer totalHH = 210;
         Integer totalContactPerHH = 1;
 
-        UTIL_Debug.disableDebugLogging();     
+        UTIL_Debug.disableDebugLogging();
         UTIL_UnitTestData_TEST.disableAffiliationsTriggers();
         UTIL_UnitTestData_TEST.disableRelationshipTriggers();
         UTIL_UnitTestData_TEST.disableMergeTriggers();
@@ -1851,9 +1851,9 @@ public with sharing class ADDR_Addresses_TEST {
 
         // verify that the HH and Contacts share the same address
         Map<Id, Account> accountById = new Map<Id, Account>([
-            SELECT Id, Name, BillingStreet, BillingCity, 
-                BillingState, BillingPostalCode, BillingCountry, 
-                BillingLatitude, BillingLongitude 
+            SELECT Id, Name, BillingStreet, BillingCity,
+                BillingState, BillingPostalCode, BillingCountry,
+                BillingLatitude, BillingLongitude
             FROM Account]);
         List<Contact> contacts = getContacts();
         System.assertEquals(totalHH * totalContactPerHH, contacts.size());
@@ -1909,7 +1909,7 @@ public with sharing class ADDR_Addresses_TEST {
         // restore async behavior as appropriate
         TDTM_DefaultConfig.stopTestDataInit();
     }
-    
+
     /*********************************************************************************************************
     * @description Initializes (but not inserts) N new Address objects.
     * @param cAddr the number of Address objects to create
@@ -2035,12 +2035,12 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     public static boolean isMatchAddressAccCon(Account acc, Contact con) {
         return (acc.BillingStreet == con.MailingStreet &&
-                acc.BillingCity == con.MailingCity &&
-                acc.BillingState == con.MailingState &&
-                acc.BillingPostalCode == con.MailingPostalCode &&
-                acc.BillingCountry == con.MailingCountry &&
-                acc.BillingLatitude == con.MailingLatitude &&
-                acc.BillingLongitude == con.MailingLongitude
+            acc.BillingCity == con.MailingCity &&
+            acc.BillingState == con.MailingState &&
+            acc.BillingPostalCode == con.MailingPostalCode &&
+            acc.BillingCountry == con.MailingCountry &&
+            acc.BillingLatitude == con.MailingLatitude &&
+            acc.BillingLongitude == con.MailingLongitude
         );
     }
 

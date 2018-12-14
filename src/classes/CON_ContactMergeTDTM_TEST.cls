@@ -36,12 +36,6 @@
 
 @isTest
 public with sharing class CON_ContactMergeTDTM_TEST {
-
-    /*********************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
         
     /*******************************************************************************************************
     * @description merge two Contacts in the same Household Account.  
@@ -52,8 +46,6 @@ public with sharing class CON_ContactMergeTDTM_TEST {
     *   No Duplicate and Primary Affiliations
     */
     static testMethod void mergeContactsSameHHAccount() {
-        if (strTestOnly != '*' && strTestOnly != 'mergeContactsSameHHAccount') return;
-        
         // this creates 1 Household Accounts, with 2 Contacts, and a default Address for each HH
         ADDR_Addresses_TEST.createHHTestData(1, 2);
         
@@ -129,8 +121,6 @@ public with sharing class CON_ContactMergeTDTM_TEST {
     *   No Duplicate and Primary Affiliations
     */
     static testMethod void mergeContactsDifferentHHAccount() {
-        if (strTestOnly != '*' && strTestOnly != 'mergeContactsDifferentHHAccount') return;
-        
         // this creates 2 Household Accounts, each with 2 Contacts, and a default Address for each HH
         ADDR_Addresses_TEST.createHHTestData(2, 2);
         
@@ -220,8 +210,6 @@ public with sharing class CON_ContactMergeTDTM_TEST {
     *   No Duplicate and Primary Affiliations
     */
     static testMethod void mergeContactsDifferentHHAccountManyAffl() {
-        if (strTestOnly != '*' && strTestOnly != 'mergeContactsDifferentHHAccountManyAffl') return;
-        
         // this creates 3 Household Accounts, each with 2 Contacts, and a default Address for each HH
         ADDR_Addresses_TEST.createHHTestData(3, 2);
         
@@ -284,8 +272,6 @@ public with sharing class CON_ContactMergeTDTM_TEST {
     static testMethod void mergeContactsDifferentHHAccountAddressOverride() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-        
-        if (strTestOnly != '*' && strTestOnly != 'mergeContactsDifferentHHAccountAddressOverride') return;
         
         // this creates 2 Household Accounts, each with 2 Contacts, and a default Address for each HH
         ADDR_Addresses_TEST.createHHTestData(2, 2);

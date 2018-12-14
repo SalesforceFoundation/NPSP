@@ -36,11 +36,6 @@
 
 @isTest
 public with sharing class ADDR_Addresses_TEST2 {
-    /*********************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
 
     /*********************************************************************************************************
     * @description Holds the number of Households to create in tests.
@@ -102,8 +97,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         old default addresses still marked default
     **********************************************************************************************************/            
     static testMethod void updateSeasonalAddr() {
-        if (strTestOnly != '*' && strTestOnly != 'updateSeasonalAddr') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
         
@@ -159,8 +152,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         contact's && hh address updated to default
     **********************************************************************************************************/            
     static testMethod void deleteSeasonalAddr() {
-        if (strTestOnly != '*' && strTestOnly != 'deleteSeasonalAddr') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
         
@@ -218,8 +209,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         overlap detected, seasonal addresses don't save
     **********************************************************************************************************/            
     static testMethod void insertSeasonalAddrWithOverlap() {
-        if (strTestOnly != '*' && strTestOnly != 'insertSeasonalAddrWithOverlap') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
         
@@ -263,8 +252,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         overlap detected
     **********************************************************************************************************/            
     static testMethod void testSeasonalAddrOverlapLogic() {
-        if (strTestOnly != '*' && strTestOnly != 'testSeasonalAddrOverlapLogic') return;
-        
         Address__c a1 = new Address__c();
         Address__c a2 = new Address__c();
 
@@ -374,8 +361,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         overlap detected, seasonal addresses don't save
     **********************************************************************************************************/            
     static testMethod void insertSeasonalAddrOverlapExisting() {
-        if (strTestOnly != '*' && strTestOnly != 'insertSeasonalAddrOverlapExisting') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
         
@@ -425,8 +410,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         partial seasonal detected, seasonal addresses don't save
     **********************************************************************************************************/            
     static testMethod void insertPartialSeasonalAddr() {
-        if (strTestOnly != '*' && strTestOnly != 'insertPartialSeasonalAddr') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
         
@@ -460,8 +443,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         old default addresses still marked default
     **********************************************************************************************************/            
     static testMethod void scheduleSeasonalAddrUpdate() {
-        if (strTestOnly != '*' && strTestOnly != 'scheduleSeasonalAddrUpdate') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
         
@@ -519,8 +500,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         old default addresses still marked default
     **********************************************************************************************************/            
     static testMethod void scheduleSeasonalAddrReset() {
-        if (strTestOnly != '*' && strTestOnly != 'scheduleSeasonalAddrReset') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
         
@@ -599,8 +578,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         duplicates not created
     **********************************************************************************************************/            
     static testMethod void newDupeAccountAddr() {
-        if (strTestOnly != '*' && strTestOnly != 'newDupeAccountAddr') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -628,8 +605,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         duplicates not created
     **********************************************************************************************************/            
     static testMethod void newDupeContactAddr() {
-        if (strTestOnly != '*' && strTestOnly != 'newDupeContactAddr') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -663,8 +638,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'newDupeAccountAddrNonDefault') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -725,8 +698,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'newDupeContactAddrNonDefault') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -790,8 +761,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'updateConAddrWithOverride') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -875,8 +844,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'updateConAddrWithExternalOverride') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -951,8 +918,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'insertConWithNoAddrToExistingHH') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
         
@@ -988,8 +953,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'insertConWithAddrToExistingHH') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
         
@@ -1035,8 +998,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'insertConWithDefaultAddrToExistingHH') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
         
@@ -1087,8 +1048,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'insertContactWithMultilineStreetAddress') return;
-        
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
             
         listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(cCon);
@@ -1129,8 +1088,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         street & street2 combined into contact and account single street field
     **********************************************************************************************************/            
     static testMethod void insertNewDefaultMultilineStreetAddr() {
-        if (strTestOnly != '*' && strTestOnly != 'insertNewDefaultMultilineStreetAddr') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
         
@@ -1173,8 +1130,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'updateAccMultilineStreetAddr') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -1225,8 +1180,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'updateAccMultilineStreetAddrNL') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
 
@@ -1276,8 +1229,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'newOrgAccounts') return;
-        
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
@@ -1320,8 +1271,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'updateOrgAccounts') return;
-        
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
@@ -1392,8 +1341,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         contact addresses not updated
     **********************************************************************************************************/            
     static testMethod void newAddrForOrgAccounts() {
-        if (strTestOnly != '*' && strTestOnly != 'newAddrForOrgAccounts') return;
-
         TDTM_DefaultConfig.startTestDataInit();
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -1472,8 +1419,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'testDisabledHHAccountAddr') return;
-        
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
@@ -1517,8 +1462,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'clearConAddrExisting') return;
-        
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
@@ -1588,8 +1531,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'setConAddrOverrideAndLookupOnNewContact') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
         
@@ -1626,8 +1567,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
         
-        if (strTestOnly != '*' && strTestOnly != 'updateOrgContactToHH') return;
-        
         Account acc = new Account(Name='Org Account');
         insert acc;
         Contact con = new Contact(Lastname='Testy', AccountId=acc.Id);
@@ -1661,8 +1600,6 @@ public with sharing class ADDR_Addresses_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'updateOrgContactToHH') return;
-        
         // this creates a default Address for each HH
         createHHTestData(cHH, cCon);
         

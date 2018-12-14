@@ -37,12 +37,6 @@
 @isTest
 public class ALLO_Multicurrency_TEST {
     
-    /*********************************************************************************************************
-    * @description If you only want to run a single test in this class, fill in its name here.
-    * If you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-    
     /*******************************************************************************************************
     * @description Setup of allocations settings.
     * @param alloset An instance of Allocations_Settings__c custom setting. Calling this method with a null
@@ -89,8 +83,6 @@ public class ALLO_Multicurrency_TEST {
     * modifying an allocation's currency.
     */
     static testMethod void alloMultiCurrency() {
-        if (strTestOnly != '*' && strTestOnly != 'alloMultiCurrency') return;
-
         //only run test in multicurrency orgs
         if (!userInfo.isMultiCurrencyOrganization())
             return;
@@ -153,8 +145,6 @@ public class ALLO_Multicurrency_TEST {
     * otherwise. Verifies that rollups correctly convert amounts of different currencies.
     */
     static testMethod void rollupMultiCurrency() {
-        if (strTestOnly != '*' && strTestOnly != 'rollupMultiCurrency') return;
-
         //only run test in multicurrency orgs
         if (!userInfo.isMultiCurrencyOrganization())
             return;
@@ -218,8 +208,6 @@ public class ALLO_Multicurrency_TEST {
     * otherwise. Verifies that Make Default Allocations respects multicurrency configuration.
     */
     static testMethod void testMakeDefaultAllocations() {
-        if (strTestOnly != '*' && strTestOnly != 'testMakeDefaultAllocations') return;
-        
         //only run test in multicurrency orgs
         if (!userInfo.isMultiCurrencyOrganization())
             return;

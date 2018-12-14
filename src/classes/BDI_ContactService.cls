@@ -317,8 +317,19 @@ public with sharing class BDI_ContactService {
             List<String> listDiKey = listDIKeyCx(di, strCx);
             Contact con = ContactFromDiKeys(listDiKey);
             if (con != null) {
-                if (con.Id != null && con.AccountId != null && con.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
-                    bdi.LogBDIError(di, label.bdiErrorNonHHAccountContact, strCx + 'ImportStatus__c');
+                Boolean usingAdv = ADV_PackageInfo_SVC.useAdv();
+                Boolean contactAndAccountExist = con.Id != null && con.AccountId != null;
+                Boolean accountIsNotHousehold = contactAndAccountExist
+                    && (con.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE);
+                Boolean usingAdvAccountOneToOne = usingAdv && contactAndAccountExist
+                    && (con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
+                // Only Contacts with Household Accounts are allowed, unless Advancement is installed, 
+                // where One-to-one Accounts (Administrative in HEDA) are also valid
+                if (accountIsNotHousehold && !usingAdvAccountOneToOne) {
+                    String accountError = usingAdv 
+                        ? label.bdiErrorNonHHAccountContactWithAdv
+                        : label.bdiErrorNonHHAccountContact;
+                    bdi.LogBDIError(di, accountError, strCx + 'ImportStatus__c');
                     continue;
                 }
                 di.put(strCx + 'Imported__c', con.id);

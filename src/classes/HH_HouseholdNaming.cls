@@ -67,8 +67,9 @@ public without sharing class HH_HouseholdNaming {
     */
     public void UpdateNames(list<id> hhids){
 
-        // for Batch Data Import performance
-        if (isHouseholdNamingDisabled) {
+        // Skip automatic naming during Batch Data Import to improve performance
+        // Similarily, if Advancement is installed, we want to rely on HEDA naming settings
+        if (isHouseholdNamingDisabled || ADV_PackageInfo_SVC.useAdv()) {
             return;
         }
 

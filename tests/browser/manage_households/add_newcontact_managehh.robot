@@ -7,7 +7,6 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Add New Contact to Existing Household 
-    [tags]  unstable
     &{contact} =  API Create Contact    Email=skristem@robot.com
     Go To Record Home  &{contact}[AccountId] 
     Click Link    link=Show more actions

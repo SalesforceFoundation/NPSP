@@ -36,31 +36,22 @@
 @isTest
 private class HH_OppContactRoles_TEST {
     
-    /*********************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-
     private static testMethod void opportunityWithHouseholdOne2One() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-    	if (strTestOnly != '*' && strTestOnly != 'opportunityWithHouseholdOne2One') return;
         opportunityWithHousehold(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     private static testMethod void opportunityWithHouseholdBucket() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'opportunityWithHouseholdBucket') return;
         opportunityWithHousehold(CAO_Constants.BUCKET_PROCESSOR);
     }
     private static testMethod void opportunityWithHouseholdHHAccount() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'opportunityWithHouseholdHHAccount') return;
         opportunityWithHousehold(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*********************************************************************************************************
@@ -148,21 +139,18 @@ private class HH_OppContactRoles_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'opportunityWithHouseholdNoRolesOne2One') return;
         opportunityWithHouseholdNoRoles(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     private static testMethod void opportunityWithHouseholdNoRolesBucket() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
         
-        if (strTestOnly != '*' && strTestOnly != 'opportunityWithHouseholdNoRolesBucket') return;
         opportunityWithHouseholdNoRoles(CAO_Constants.BUCKET_PROCESSOR);
     }
     private static testMethod void opportunityWithHouseholdNoRolesHHAccount() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'opportunityWithHouseholdNoRolesHHAccount') return;
         opportunityWithHouseholdNoRoles(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*********************************************************************************************************
@@ -230,14 +218,12 @@ private class HH_OppContactRoles_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
         
-        if (strTestOnly != '*' && strTestOnly != 'opportunityWithNoHouseholdOne2One') return;
         opportunityWithNoHousehold(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     private static testMethod void opportunityWithNoHouseholdHHAccount() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'opportunityWithNoHouseholdHHAccount') return;
         opportunityWithNoHousehold(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*********************************************************************************************************
@@ -299,11 +285,9 @@ private class HH_OppContactRoles_TEST {
     
     
     private static testMethod void opportunityRegularAccountOne2One() {
-        if (strTestOnly != '*' && strTestOnly != 'opportunityRegularAccountOne2One') return;
         opportunityRegularAccount(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     private static testMethod void opportunityRegularAccountHHAccount() {
-        if (strTestOnly != '*' && strTestOnly != 'opportunityRegularAccountHHAccount') return;
         opportunityRegularAccount(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*********************************************************************************************************
@@ -397,15 +381,12 @@ private class HH_OppContactRoles_TEST {
     }  
     
     private static testmethod void updateOppHHAccountRefreshNone() {
-        if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccountRefreshNone') return;
         updateOppHHAccount('none');
     }
     private static testmethod void updateOppHHAccountRefreshOpen() {
-        if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccountRefreshOpen') return;
         updateOppHHAccount('Open Opportunities');
     }
 	private static testmethod void updateOppHHAccountRefreshOpenAndClosed() {
-        if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccounRefreshOpenAndClosed') return;
         updateOppHHAccount('Open and Closed Opportunities');
 	}
     /*********************************************************************************************************
@@ -420,8 +401,7 @@ private class HH_OppContactRoles_TEST {
     * @return void
     **********************************************************************************************************/            
     private static void updateOppHHAccount(string strRefresh) {
-        if (strTestOnly != '*' && strTestOnly != 'updateOppHHAccount') return;
-        
+
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
@@ -536,7 +516,6 @@ private class HH_OppContactRoles_TEST {
     * @description Move an Opportunity to a different HH Account and verifies primary OCR remains
     */ 
     static testmethod void testOppsAcctChangeHHToHH() {
-        if (strTestOnly != '*' && strTestOnly != 'testOppsAcctChangeHHToHH') return;
         testOppsAcctChange(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -544,7 +523,6 @@ private class HH_OppContactRoles_TEST {
     * @description Move an Opportunity to a different One2One Account and verifies primary OCR remains
     */ 
     static testmethod void testOppsAcctChangeOne2OneToOne2One() {
-        if (strTestOnly != '*' && strTestOnly != 'testOppsAcctChangeOne2OneToOne2One') return;
         testOppsAcctChange(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -552,7 +530,6 @@ private class HH_OppContactRoles_TEST {
     * @description MMove an Opportunity from Org to HH Account and verifies primary OCR remains
     */ 
     static testmethod void testOppsAcctChangeOrgToHH() {
-        if (strTestOnly != '*' && strTestOnly != 'testOppsAcctChangeOrgToHH') return;
         testOppsAcctChange(null, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -560,7 +537,6 @@ private class HH_OppContactRoles_TEST {
     * @description Move an Opportunity from HH to Org Account and verifies primary OCR remains
     */ 
     static testmethod void testOppsAcctChangeHHToOrg() {
-        if (strTestOnly != '*' && strTestOnly != 'testOppsAcctChangeHHToOrg') return;
         testOppsAcctChange(CAO_Constants.HH_ACCOUNT_TYPE, null);
     }
 
@@ -568,7 +544,6 @@ private class HH_OppContactRoles_TEST {
     * @description Move an Opportunity from Org to One2One Account and verifies primary OCR remains
     */ 
     static testmethod void testOppsAcctChangeOrgToOne2One() {
-        if (strTestOnly != '*' && strTestOnly != 'testOppsAcctChangeOrgToOne2One') return;
         testOppsAcctChange(null, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -576,7 +551,6 @@ private class HH_OppContactRoles_TEST {
     * @description Move an Opportunity frome One2One to Org Account and verifies primary OCR remains
     */ 
     static testmethod void testOppsAcctChangeOne2OneToOrg() {
-        if (strTestOnly != '*' && strTestOnly != 'testOppsAcctChangeOne2OneToOrg') return;
         testOppsAcctChange(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, null);
     }
     

@@ -39,20 +39,12 @@
 private with sharing class BDI_DataImport_TEST2 {
 
     /*********************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-
-    /*********************************************************************************************************
     * @description operation: 
     *    import matching contacts within multiple di records in the same batch, using different email fields 
     * verify: 
     *    only one contact created
     **********************************************************************************************************/            
     static testMethod void ManyDIDuplicateEmailNewContacts() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIDuplicateEmailNewContacts') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Work_Email__c='c1@foo.com'));
@@ -90,8 +82,6 @@ private with sharing class BDI_DataImport_TEST2 {
     *    only one contact created
     **********************************************************************************************************/            
     static testMethod void ManyDIDuplicatePhoneNewContacts() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIDuplicatePhoneNewContacts') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Home_Phone__c='123-456-7890'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Work_Phone__c='123-456-7890'));
@@ -136,8 +126,6 @@ private with sharing class BDI_DataImport_TEST2 {
     *    only one contact created
     **********************************************************************************************************/            
     static testMethod void ManyDIDuplicateNewContactManyFields() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIDuplicateNewContactManyFields') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com', 
             Contact1_Title__c='myTitle'));
@@ -183,9 +171,7 @@ private with sharing class BDI_DataImport_TEST2 {
     static testMethod void ManyDIDuplicateEmailExistingContacts() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-        
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIDuplicateEmailExistingContacts') return;
-            
+
          // existing contacts
         List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com'));
@@ -238,8 +224,6 @@ private with sharing class BDI_DataImport_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIOverlappingEmailExistingContacts') return;
-            
          // existing contacts
         List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com'));
@@ -290,8 +274,6 @@ private with sharing class BDI_DataImport_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIOverlappingPhoneExistingContacts') return;
-            
          // existing contacts
         List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Phone='123-456-7890'));
@@ -345,8 +327,6 @@ private with sharing class BDI_DataImport_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingExistingContacts') return;
-
         //Since Data Import API does not have other non-encryptable fields to test matching on,
         //we need to exit the test if the matching is done on the encrypted field. 
         if (!Schema.sObjectType.Contact.fields.Title.isFilterable()) return;
@@ -396,8 +376,6 @@ private with sharing class BDI_DataImport_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'ManyDISalesforceIdMatchingExistingContacts') return;
-            
          // existing contacts
         List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='foo@bar.com', Title='t1'));
@@ -443,8 +421,6 @@ private with sharing class BDI_DataImport_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'ManyDISalesforceIdMatchingExistingAndNewContacts') return;
-            
          // existing contacts
         List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='foo@bar.com', Title='t1'));
@@ -498,8 +474,6 @@ private with sharing class BDI_DataImport_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'OneDISalesforceIdMatchingExistingAndNewContact') return;
-            
          // existing contacts
         List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1'));
@@ -547,8 +521,6 @@ private with sharing class BDI_DataImport_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'SingleDISalesforceIdMatchingExistingHousehold') return;
-            
          // existing contacts
         List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com', Title='t1'));
@@ -589,8 +561,6 @@ private with sharing class BDI_DataImport_TEST2 {
     *    all contacts matched
     **********************************************************************************************************/            
     static testMethod void ManyDIUniqueIdNotMatchingExistingContacts() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdNotMatchingExistingContacts') return;
-
         //Since Data Import API does not have other non-encryptable fields to test matching on,
         //we need to exit the test if the matching is done on the encrypted field. 
         if (!Schema.sObjectType.Contact.fields.Title.isFilterable()) return;
@@ -637,8 +607,6 @@ private with sharing class BDI_DataImport_TEST2 {
     *    all contacts created, since unique Id's provided
     **********************************************************************************************************/            
     static testMethod void ManyDIUniqueIdNewContacts() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdNewContacts') return;
-
         //Since Data Import API does not have other non-encryptable fields to test matching on,
         //we need to exit the test if the matching is done on the encrypted field. 
         if (!Schema.sObjectType.Contact.fields.Title.isFilterable()) return;
@@ -679,8 +647,6 @@ private with sharing class BDI_DataImport_TEST2 {
     static testMethod void ManyDIUniqueIdMatchingNewAndExistingContacts() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingNewAndExistingContacts') return;
 
         //Since Data Import API does not have other non-encryptable fields to test matching on,
         //we need to exit the test if the matching is done on the encrypted field. 
@@ -740,8 +706,6 @@ private with sharing class BDI_DataImport_TEST2 {
     *    all accounts matched
     **********************************************************************************************************/            
     static testMethod void ManyDIUniqueIdMatchingExistingAccounts() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingExistingAccounts') return;
-            
          // existing Accounts
         List<Account> listAccExisting = new List<Account>();
         listAccExisting.add(new Account(Name='foo', Phone='415-111-4567'));
@@ -785,9 +749,6 @@ private with sharing class BDI_DataImport_TEST2 {
     *    all accounts matched
     **********************************************************************************************************/            
     static testMethod void ManyDIUniqueIdNewAccounts() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdNewAccounts') return;
-            
- 
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Phone__c='415-111-4567'));
         listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Phone__c='415-222-4567'));
@@ -820,8 +781,6 @@ private with sharing class BDI_DataImport_TEST2 {
     *    all accounts matched
     **********************************************************************************************************/            
     static testMethod void ManyDIUniqueIdMatchingNewAndExistingAccounts() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingNewAndExistingAccounts') return;
-            
          // existing Accounts
         List<Account> listAccExisting = new List<Account>();
         listAccExisting.add(new Account(Name='a1', Phone='415-111-4567'));
@@ -877,8 +836,6 @@ private with sharing class BDI_DataImport_TEST2 {
         preferred email left null for contants with multiple emails specified
     **********************************************************************************************************/            
     static testMethod void testPreferredEmailAutoSetting() {
-        if (strTestOnly != '*' && strTestOnly != 'testPreferredEmailAutoSetting') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(BDI_DataImport_TEST.newDI('c0', 'C0'));
         listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
@@ -927,8 +884,6 @@ private with sharing class BDI_DataImport_TEST2 {
         preferred Phone left null for contants with multiple Phones specified
     **********************************************************************************************************/            
     static testMethod void testPreferredPhoneAutoSetting() {
-        if (strTestOnly != '*' && strTestOnly != 'testPreferredPhoneAutoSetting') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(BDI_DataImport_TEST.newDI('c0', 'C0'));
         listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
@@ -975,39 +930,30 @@ private with sharing class BDI_DataImport_TEST2 {
     *    only one contact created
     **********************************************************************************************************/            
     static testMethod void ManyDIMultiContactMatchRules1() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules1') return;
         ManyDIMultiContactMatchRules('Firstname,Lastname,Email');
     }
     static testMethod void ManyDIMultiContactMatchRules2() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules2') return;
         ManyDIMultiContactMatchRules('Lastname,Email');
     }
     static testMethod void ManyDIMultiContactMatchRules3() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules3') return;
         ManyDIMultiContactMatchRules('Email');
     }
     static testMethod void ManyDIMultiContactMatchRules4() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules4') return;
         ManyDIMultiContactMatchRules('Firstname,Lastname');
     }
     static testMethod void ManyDIMultiContactMatchRules5() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules5') return;
         ManyDIMultiContactMatchRules('Firstname,Email');
     }
     static testMethod void ManyDIMultiContactMatchRules6() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules6') return;
         ManyDIMultiContactMatchRules('Firstname,Lastname,Phone');
     }
     static testMethod void ManyDIMultiContactMatchRules7() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules7') return;
         ManyDIMultiContactMatchRules('Firstname,Phone');
     }
     static testMethod void ManyDIMultiContactMatchRules8() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules8') return;
         ManyDIMultiContactMatchRules('Lastname,Phone');
     }
     static testMethod void ManyDIMultiContactMatchRules9() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDIMultiContactMatchRules9') return;
         ManyDIMultiContactMatchRules('Phone');
     }
     static void ManyDIMultiContactMatchRules(string strRule) {            
@@ -1063,8 +1009,6 @@ private with sharing class BDI_DataImport_TEST2 {
         contacts without errors are created
     **********************************************************************************************************/            
     static testMethod void ManyDISomeInvalidContactData() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDISomeInvalidContactData') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c=null, Contact1_Personal_Email__c='c0@foo.com', Contact2_Firstname__c='c0b', Contact2_Lastname__c='C0b', Account1_Name__c='foo'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Work_Email__c='c1@foo.com'));
@@ -1122,8 +1066,6 @@ private with sharing class BDI_DataImport_TEST2 {
     *    contacts without errors are created
     **********************************************************************************************************/            
     static testMethod void ManyDITestContactDataErrorHandling() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDITestContactDataErrorHandling') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='FailTest', Contact1_Personal_Email__c='c0@foo.com'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Work_Email__c='c1@foo.com'));
@@ -1174,8 +1116,6 @@ private with sharing class BDI_DataImport_TEST2 {
     *    accounts without errors are created
     **********************************************************************************************************/            
     static testMethod void ManyDITestAccountDataErrorHandling() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDITestAccountDataErrorHandling') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='a0'));
         listDI.add(new DataImport__c(Account1_Name__c='FailTest1'));
@@ -1230,8 +1170,6 @@ private with sharing class BDI_DataImport_TEST2 {
     *    donations without errors are created
     **********************************************************************************************************/            
     static testMethod void ManyDITestDonationDataErrorHandling() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDITestDonationDataErrorHandling') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='a0', Donation_Donor__c='Account1', Donation_Amount__c=10));
         listDI.add(new DataImport__c(Account1_Name__c='a0', Donation_Donor__c='Account1', Donation_Amount__c=20, Donation_Name__c='FailTest1'));
@@ -1275,8 +1213,6 @@ private with sharing class BDI_DataImport_TEST2 {
     *    campaigns without errors are created
     **********************************************************************************************************/            
     static testMethod void ManyDITestCampaignDataErrorHandling() {
-        if (strTestOnly != '*' && strTestOnly != 'ManyDITestCampaignDataErrorHandling') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='a0', Donation_Donor__c='Account1', Donation_Amount__c=10, Donation_Campaign_Name__c='cmp1'));
         listDI.add(new DataImport__c(Account1_Name__c='FailTest1', Donation_Donor__c='Account1', Donation_Amount__c=20, Donation_Campaign_Name__c='cmpNotCreated'));
@@ -1322,8 +1258,6 @@ private with sharing class BDI_DataImport_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'ManyDITestAddressDataErrorHandling') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='C0', Contact1_Personal_Email__c='c0@foo.com',Home_City__c='Seattle'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com',Home_City__c='FailTest1'));
@@ -1363,8 +1297,6 @@ private with sharing class BDI_DataImport_TEST2 {
     *    duplicate C2's not created
     **********************************************************************************************************/            
     static testMethod void TwoDINewC2PartialMatch() {
-        if (strTestOnly != '*' && strTestOnly != 'TwoDINewC2PartialMatch') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@C1.com',
             Contact2_Firstname__c='c2'));
@@ -1401,8 +1333,6 @@ private with sharing class BDI_DataImport_TEST2 {
     *    duplicate C2's not created
     **********************************************************************************************************/            
     static testMethod void TwoDIExistingC2PartialMatch() {
-        if (strTestOnly != '*' && strTestOnly != 'TwoDIExistingC2PartialMatch') return;
-            
          // existing contacts in same household
         Account hh = new Account(Name='household', npe01__SYSTEM_AccountType__c=CAO_Constants.HH_ACCOUNT_TYPE);
         insert hh;
@@ -1452,8 +1382,6 @@ private with sharing class BDI_DataImport_TEST2 {
     *    records marked with fls error
     **********************************************************************************************************/            
     static testMethod void testFieldLevelSecurity() {
-        if (strTestOnly != '*' && strTestOnly != 'testFieldLevelSecurity') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(BDI_DataImport_TEST.newDI('c0', 'C0'));
         listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
@@ -1497,8 +1425,6 @@ private with sharing class BDI_DataImport_TEST2 {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'testInvalidAddressHandling') return;
-            
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
         listDI.add(BDI_DataImport_TEST.newDI('c2', 'C2'));
@@ -1564,8 +1490,6 @@ private with sharing class BDI_DataImport_TEST2 {
     *    importData fails
     **********************************************************************************************************/            
     static testMethod void testInvalidAccountModel() {
-        if (strTestOnly != '*' && strTestOnly != 'testInvalidAccountModel') return;
-            
         // set 1x1 account model
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -1574,14 +1498,23 @@ private with sharing class BDI_DataImport_TEST2 {
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
         insert listDI;
-          
+        
+        Boolean usingAdv = ADV_PackageInfo_SVC.useAdv();
         //run batch data import
         Test.StartTest();
         try {
             BDI_DataImport_API.importData();
-            System.assert(false, 'importData should have thrown exception');
+            if (usingAdv){
+                System.assert(true, 'importData should NOT have thrown exception');
+            } else {
+                System.assert(false, 'importData should have thrown exception');
+            }
         } catch (exception ex) {
-            System.assert(ex.getMessage().contains('Household Account model'));
+            if (usingAdv){
+                System.assert(false, 'importData should NOT have thrown exception');
+            } else {
+                System.assert(ex.getMessage().contains('Household Account model'));
+            }
         }
         Test.stopTest();
     }

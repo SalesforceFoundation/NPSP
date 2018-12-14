@@ -10,7 +10,7 @@
             <c:UTIL_PageMessages allowClose="false" id="messages"/>
 
             <!-- BEGIN NON-HH ACCOUNT MODEL MESSAGE -->
-            <apex:outputPanel rendered="{! !isHHAccount }">
+            <apex:outputPanel rendered="{! !showCRLPSettings }">
                 <div class="slds" id="page_messages">
                     <div role="alert" class="slds-notify slds-notify_toast slds-notify_toast slds-theme_info slds-theme_info">
                         <div class="notify__content">
@@ -62,7 +62,7 @@
             <!-- BEGIN NON-ADMIN MESSAGE -->
 
             <!-- BEGIN INTRO TEXT AND TOGGLE -->
-            <div class="slds-grid {!IF(isHHAccount, '', 'slds-hide')}">
+            <div class="slds-grid {!IF(showCRLPSettings, '', 'slds-hide')}">
                 <apex:outputPanel rendered="{! !isPolling }">
                     <div class="slds-m-vertical_medium">
                         <apex:outputText escape="false" styleClass="slds-text-body_small" value="{!$Label.stgHelpCustomizableRollupsEnable1}"/>

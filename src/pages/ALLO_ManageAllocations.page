@@ -69,20 +69,21 @@
 
             //write total amount. if we have a parent amount, include the unallocated remainder. 
             //if we're over the parent amount, make it red.
-            if (parentAmount > 0) {
-                var unallocated = (Math.round((parentAmount*100) - sumAmount)/100).toFixed(2);
-                $('#totalAmount').text(reformatCurrency(unallocated));
-                if (unallocated < 0) {
-                    $('#totalAmount').css({ "color": "red", "font-weight": "bold" });
-                    $('[id$="saveBTN"]').attr('disabled','disabled');
-                } else {
-                    $('#totalAmount').css({ "color": "black", "font-weight": "normal" });
-                    $('[id$="saveBTN"]').removeAttr('disabled');
-                }
+            //also supports negative payments, rejecting positive allocations in that case
+            var unallocated = (Math.round((parentAmount*100) - sumAmount)/100).toFixed(2);
+            var totalToShow = unallocated;
+            if (parentAmount > 0 && unallocated < 0 || parentAmount < 0 && unallocated > 0){
+                // Disable the save button when the total is invalid
+                $('#totalAmount').css({ "color": "red", "font-weight": "bold" });
+                $('[id$="saveBTN"]').attr('disabled','disabled');
+            } else if(parentAmount) {
+                $('#totalAmount').css({ "color": "black", "font-weight": "normal" });
+                $('[id$="saveBTN"]').removeAttr('disabled');
             } else {
-                $('#totalAmount').text(reformatCurrency((Math.round(sumAmount)/100).toFixed(2)));
+                // Only used when parentAmount is 0
+                totalToShow = (Math.round(sumAmount)/100).toFixed(2);
             }
-            
+            $('#totalAmount').text(reformatCurrency(totalToShow));
         }
 
         //adds all percent fields together
@@ -99,7 +100,7 @@
                 } else {
                     thisRowAmount.prop('disabled', true);
                     //if we have a parent amount, set the calculated amount based on the percent
-                    if (parentAmount > 0) {
+                    if (parentAmount != 0) {
                         var pct = thisRowPercent.val();
                         // if the users locale uses commas as the decimal separator, replace
                         // those with a period so it works with js. don't have to worry about

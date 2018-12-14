@@ -37,12 +37,6 @@
 @isTest
 private class ALLO_ManageAllocations_TEST {
 
-    /*********************************************************************************************************
-    * @description If you only want to run a single test in this class, fill in its name here.
-    * If you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-
     /*******************************************************************************************************
     * @description Setup of allocations settings.
     * @param alloset An instance of Allocations_Settings__c custom setting. Calling this method with a null
@@ -65,7 +59,6 @@ private class ALLO_ManageAllocations_TEST {
     * row, then inserts an allocation and verifies the allocation was created properly.
     ********************************************************************************************************/
     static testMethod void testOpp() {
-        if (strTestOnly != '*' && strTestOnly != 'testOpp') return;
         setupSettings(null);
         
         Account acc = new Account(Name='foo');
@@ -103,8 +96,6 @@ private class ALLO_ManageAllocations_TEST {
     * row, then inserts an allocation and verifies the allocation was created properly.
     ********************************************************************************************************/
     static testMethod void testPayment() {
-        if (strTestOnly != '*' && strTestOnly != 'testPayment') return;
-
         Decimal amt = 100;
         Account acc = new Account(Name='foo');
         insert acc;
@@ -159,7 +150,6 @@ private class ALLO_ManageAllocations_TEST {
     * deletes an existing one, and verifies the results.
     ********************************************************************************************************/
     @isTest static void testCam() {
-        if (strTestOnly != '*' && strTestOnly != 'testCam') return;
         setupSettings(null);
         
         General_Accounting_Unit__c campaigngau = new General_Accounting_Unit__c(Name='foo');
@@ -200,7 +190,6 @@ private class ALLO_ManageAllocations_TEST {
     * deletes an existing one, and verifies the results.
     ********************************************************************************************************/
     @isTest static void testRD() {
-        if (strTestOnly != '*' && strTestOnly != 'testRD') return;
         setupSettings(null);
         
         Account acc = new Account(Name='foo');
@@ -260,8 +249,6 @@ private class ALLO_ManageAllocations_TEST {
         The transaction is completely rolled back and there is no partial commit
     **********************************************************************************************************/ 
     private static testMethod void testSaveRollsBackAllDmlsOnError() {
-        if (strTestOnly != '*' && strTestOnly != 'testSaveRollsBackAllDmlsOnError') return;
-
         setupSettings(null);
 
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'gau');
@@ -317,8 +304,6 @@ private class ALLO_ManageAllocations_TEST {
         Records are saved as expected
     **********************************************************************************************************/ 
     private static testMethod void testResaveSucceedsWhenErrorIsFixed() {
-        if (strTestOnly != '*' && strTestOnly != 'testResaveSucceedsWhenErrorIsFixed') return;
-
         setupSettings(null);
 
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'gau');
@@ -371,7 +356,6 @@ private class ALLO_ManageAllocations_TEST {
     ********************************************************************************************************/
     @isTest
     private static void testUnsupportedObject() {
-        if (strTestOnly != '*' && strTestOnly != 'testUnsupportedObject') return;
         setupSettings(null);
 
         Account acc = new Account(Name='foo');
@@ -396,7 +380,6 @@ private class ALLO_ManageAllocations_TEST {
     ********************************************************************************************************/
     @isTest
     private static void testSupportedObject() {
-        if (strTestOnly != '*' && strTestOnly != 'testUnsupportedObject') return;
         setupSettings(null);
 
         Account acc = new Account(Name='foo');
@@ -423,7 +406,6 @@ private class ALLO_ManageAllocations_TEST {
     ********************************************************************************************************/
     @isTest
     private static void testOppNoAmount() {
-        if (strTestOnly != '*' && strTestOnly != 'testUnsupportedObject') return;
         setupSettings(null);
 
         Account acc = new Account(Name='foo');

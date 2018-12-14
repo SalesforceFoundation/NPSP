@@ -216,10 +216,12 @@ flows:
             4:
                 task: deploy_dev_config
             5:
-                task: deploy_qa_config
+                task: npsp_default_settings
             6:
-                task: update_admin_profile
+                task: deploy_qa_config
             7:
+                task: update_admin_profile
+            8:
                 task: test_data_relationships
 
     config_acctsc_rollups:

@@ -471,6 +471,15 @@ public class CRLP_Rollup {
             }
         }
 
+        // abbreviate strings that are too long for the target field
+        if (resultValue instanceof String) {
+            String stringValue = (String) resultValue;
+            Integer maxFieldLength = targetField.getLength();
+            if (stringValue.length() > maxFieldLength && maxFieldLength >= 4) {
+                resultValue = stringValue.abbreviate(maxFieldLength);
+            }
+        }
+        
 //        CRLP_Debug_UTIL.amendLastCurrentRollupState('==> ' + resultValue);
         return resultValue;
     }

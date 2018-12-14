@@ -37,16 +37,9 @@
 private class ACCT_IndividualAccounts_TEST {    
 
     /*********************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-    
-    /*********************************************************************************************************
     * @description tests default contructor
     */
     private static testMethod void ACCT_IndividualAccounts_TEST() {
-    	if (strTestOnly != '*' && strTestOnly != 'ACCT_IndividualAccounts_TEST') return;
         ACCT_IndividualAccounts_TDTM testIndividualAccounts = new ACCT_IndividualAccounts_TDTM();
     }
 
@@ -57,21 +50,18 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-    	if (strTestOnly != '*' && strTestOnly != 'insertPrivateOneToOne') return;
         insertPrivateProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }   
     private static testMethod void insertPrivateBucket() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'insertPrivateBucket') return;
         insertPrivateProcessor(CAO_Constants.BUCKET_PROCESSOR);
     }
     private static testMethod void insertPrivateHHAccount() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'insertPrivateHHAccount') return;
         insertPrivateProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     private static void insertPrivateProcessor(string strProcessor) {
@@ -106,8 +96,6 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-    	if (strTestOnly != '*' && strTestOnly != 'changeFromOneToOneToHouseholdAccount') return;
-    	
     	UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
             
@@ -146,7 +134,6 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'insertHHAccountContactTitleForRename') return;
         insertContactTitleForRename(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     private static void insertContactTitleForRename(string strProcessor) {
@@ -198,22 +185,19 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-    	if (strTestOnly != '*' && strTestOnly != 'insertOneToOneChangeToPrivate') return;
-        insertChangeToPrivateProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);	
+    	insertChangeToPrivateProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     private static testMethod void insertBucketChangeToPrivate() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'insertBucketChangeToPrivate') return;        
-        insertChangeToPrivateProcessor(CAO_Constants.BUCKET_PROCESSOR); 
+        insertChangeToPrivateProcessor(CAO_Constants.BUCKET_PROCESSOR);
     }
     private static testMethod void insertHHAccountChangeToPrivate() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'insertHHAccountChangeToPrivate') return;
-        insertChangeToPrivateProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR); 
+        insertChangeToPrivateProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     } 
     private static void insertChangeToPrivateProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -255,15 +239,13 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-    	if (strTestOnly != '*' && strTestOnly != 'insertOneToOneTriggerOff') return;
-        insertTriggerOffProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    	insertTriggerOffProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     private static testMethod void insertHHAccountTriggerOff() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'insertHHAccountTriggerOff') return;
-        insertTriggerOffProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);    
+        insertTriggerOffProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     private static void insertTriggerOffProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -315,7 +297,6 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-    	if (strTestOnly != '*' && strTestOnly != 'insertUpdateOneToOne') return;
     	insertUpdateOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
 
@@ -326,8 +307,7 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'insertUpdateOneToOneHouseholds') return;
-        insertUpdateOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR); 
+        insertUpdateOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     
     private static void insertUpdateOneToOneProcessor(string strProcessor) {
@@ -405,14 +385,12 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-    	if (strTestOnly != '*' && strTestOnly != 'detachOneToOne') return;
-        detachProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    	detachProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     private static testMethod void detachHHAccount() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'detachHHAccount') return;
         detachProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     private static void detachProcessor(string strProcessor) {
@@ -459,15 +437,13 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-    	if (strTestOnly != '*' && strTestOnly != 'editContactDuringDetachOneToOne') return;
-        editContactDuringDetachProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    	editContactDuringDetachProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     private static testMethod void editContactDuringDetachHHAccount() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'editContactDuringDetachHHAccount') return;
-        editContactDuringDetachProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);   
+        editContactDuringDetachProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     private static void editContactDuringDetachProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -538,15 +514,13 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-    	if (strTestOnly != '*' && strTestOnly != 'attachToIndividualAccount') return;
-        attachToProcessor(CAO_Constants.BUCKET_PROCESSOR);
+    	attachToProcessor(CAO_Constants.BUCKET_PROCESSOR);
     }
     private static testMethod void attachToHHAccount() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'attachToHHAccount') return;
-        attachToProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR); 
+        attachToProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     private static void attachToProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -588,15 +562,12 @@ private class ACCT_IndividualAccounts_TEST {
 
         if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'detachIndividualAccount') return;
-
         detachAccountProcessor(CAO_Constants.BUCKET_PROCESSOR);
     }
     private static testMethod void detachHHAccount2() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'detachHHAccount2') return;
         detachAccountProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     private static void detachAccountProcessor(string strProcessor) {
@@ -647,8 +618,7 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-    	if (strTestOnly != '*' && strTestOnly != 'detachFromNormalAccountToBucket') return;
-        detachFromNormalAccountToBucketProcessor(CAO_Constants.BUCKET_PROCESSOR);
+    	detachFromNormalAccountToBucketProcessor(CAO_Constants.BUCKET_PROCESSOR);
     }
     
     /*********************************************************************************************************
@@ -658,7 +628,6 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'detachFromNormalAccountToBucketAccountProcessor') return;
         detachFromNormalAccountToBucketProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     
@@ -714,12 +683,10 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-    	if (strTestOnly != '*' && strTestOnly != 'contactAddedToExistingOneToOne') return;
-        contactAddedToExistingProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    	contactAddedToExistingProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     private static testMethod void contactAddedToExistingHHAccount() {
-        if (strTestOnly != '*' && strTestOnly != 'contactAddedToExistingHHAccount') return;
-        contactAddedToExistingProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);   
+        contactAddedToExistingProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     private static void contactAddedToExistingProcessor(string strProcessor) {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -762,13 +729,11 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-    	if (strTestOnly != '*' && strTestOnly != 'contactUpdatedToExistingOneToOne') return;
-        contactUpdatedToExistingOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    	contactUpdatedToExistingOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     
     private static testMethod void contactUpdatedToExistingOneToOneHH() {
-        if (strTestOnly != '*' && strTestOnly != 'contactUpdatedToExistingOneToOneHH') return;
-        contactUpdatedToExistingOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);   
+        contactUpdatedToExistingOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     
     private static void contactUpdatedToExistingOneToOneProcessor(string strProcessor) {
@@ -815,14 +780,12 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
         
-    	if (strTestOnly != '*' && strTestOnly != 'contactInNormalOrgNameChangeOneToOne') return;
-        contactInNormalOrgNameChangeProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    	contactInNormalOrgNameChangeProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     private static testMethod void contactInNormalOrgNameChangeHHAccount() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'contactInNormalOrgNameChangeHHAccount') return;
         contactInNormalOrgNameChangeProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     private static void contactInNormalOrgNameChangeProcessor(string strProcessor) {
@@ -871,7 +834,6 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-    	if (strTestOnly != '*' && strTestOnly != 'detachFromNormalAccountToOneToOne') return;
     	detachFromNormalAccountToOneToOneProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     
@@ -882,7 +844,6 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'detachFromNormalAccountToOneToOneHousehold') return;
         detachFromNormalAccountToOneToOneProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     
@@ -935,11 +896,9 @@ private class ACCT_IndividualAccounts_TEST {
     * @description Delete a Contact and verify its One-to-One or Household Account is not deleted.
     */
      public static testMethod void deleteContactNoOppOneToOne() {
-     	if (strTestOnly != '*' && strTestOnly != 'deleteContactNoOppOneToOne') return;
-        deleteContactNoOppProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+     	deleteContactNoOppProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
      }
      public static testMethod void deleteContactNoOppHHAccount() {
-        if (strTestOnly != '*' && strTestOnly != 'deleteContactNoOppHHAccount') return;
         deleteContactNoOppProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
      }     
      public static void deleteContactNoOppProcessor(string strProcessor) {
@@ -982,11 +941,9 @@ private class ACCT_IndividualAccounts_TEST {
     * @description Delete a Contact with Opps and verify its One-to-One or Household Account is not deleted.
     */
     public static testMethod void deleteContactWithOppOneToOne() {
-    	if (strTestOnly != '*' && strTestOnly != 'deleteContactWithOppOneToOne') return;
-        deleteContactWithOppProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    	deleteContactWithOppProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }    
     public static testMethod void deleteContactWithOppHHAccount() {
-        if (strTestOnly != '*' && strTestOnly != 'deleteContactWithOppHHAccount') return;
         deleteContactWithOppProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }        
     public static void deleteContactWithOppProcessor(string strProcessor) {
@@ -1036,15 +993,13 @@ private class ACCT_IndividualAccounts_TEST {
     * @description Delete a Contact from an Org Account and make sure the Account is not deleted.
     */
     public static testMethod void deleteContactNormalAccountOneToOne() {
-    	if (strTestOnly != '*' && strTestOnly != 'deleteContactNormalAccountOneToOne') return;
-        deleteContactNormalAccountProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    	deleteContactNormalAccountProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     
     /*********************************************************************************************************
     * @description Delete a Contact from an Org Account and make sure the Account is not deleted.
     */
     public static testMethod void deleteContactNormalAccountHouseholdAcc() {
-        if (strTestOnly != '*' && strTestOnly != 'deleteContactNormalAccountHouseholdAcc') return;
         deleteContactNormalAccountProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     
@@ -1093,8 +1048,7 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-    	if (strTestOnly != '*' && strTestOnly != 'ghIssue16a') return;
-        ghIssue16Processor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    	ghIssue16Processor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     
     /*********************************************************************************************************
@@ -1104,8 +1058,7 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-    	if (strTestOnly != '*' && strTestOnly != 'ghIssue16b') return;
-        ghIssue16Processor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    	ghIssue16Processor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     
     private static void ghIssue16Processor(string strProcessor){

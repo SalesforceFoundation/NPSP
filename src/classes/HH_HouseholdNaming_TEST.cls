@@ -37,17 +37,9 @@
 public class HH_HouseholdNaming_TEST {
 
     /*********************************************************************************************************
-    * @description if you only want to run one test in this class, fill in its name here.
-    * if you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-    
-    /*********************************************************************************************************
     * @description Test method for batch
     */
     public static testMethod void testBatch() {
-        if (strTestOnly != '*' && strTestOnly != 'testBatch') return;
-        
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (
                 npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
@@ -98,7 +90,6 @@ public class HH_HouseholdNaming_TEST {
     * @description tests FutureUpdateNames
     */
     public static testMethod void HouseholdNamingTest(){
-      if (strTestOnly != '*' && strTestOnly != 'HouseholdNamingTest') return;
       //settings
       npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
@@ -160,7 +151,6 @@ public class HH_HouseholdNaming_TEST {
     * @description tests updating and Household object's contact names
     */
     public static testMethod void HouseholdNamingUpdateTest(){
-      if (strTestOnly != '*' && strTestOnly != 'HouseholdNamingUpdateTest') return;
       //settings
       npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
@@ -242,7 +232,6 @@ public class HH_HouseholdNaming_TEST {
     * @description tests setting the naming order on Contacts
     */
     public static testMethod void testNamingOrder() {
-      if (strTestOnly != '*' && strTestOnly != 'testNamingOrder') return;
       //settings
       npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
@@ -424,8 +413,6 @@ public class HH_HouseholdNaming_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'testCaseChanges') return;
-  
         Contact con = new Contact(firstname='joe', lastname='smith');
         insert con;
   
@@ -455,8 +442,6 @@ public class HH_HouseholdNaming_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        if (strTestOnly != '*' && strTestOnly != 'testNamingOrder2') return;
-  
         Contact con0 = new Contact(FirstName='c0', LastName='smith');
         insert con0;
         con0 = [Select Id, FirstName, LastName, AccountId from Contact];

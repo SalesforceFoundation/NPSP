@@ -38,12 +38,6 @@
 @isTest
 private with sharing class ALLO_Rollup_TEST {
 
-    /*********************************************************************************************************
-    * @description If you only want to run a single test in this class, fill in its name here.
-    * If you want to run all tests, then use '*'
-    */
-    private static string strTestOnly = '*';
-
     /*******************************************************************************************************
     * @description Setup of allocations settings.
     * @param alloset An instance of Allocations_Settings__c custom setting. Calling this method with a null
@@ -63,7 +57,6 @@ private with sharing class ALLO_Rollup_TEST {
 
     /** @description Tests rollup button on general accounting units. */
     static testMethod void rollupBTN() {
-        if (strTestOnly != '*' && strTestOnly != 'rollupBTN') return;
         setupSettings(null);
 
         Account acc = new Account(Name='foo');
@@ -105,7 +98,6 @@ private with sharing class ALLO_Rollup_TEST {
     /** @description Tests rollup button on general accounting units with fiscal year enabled. This test is only different
     * from the above test if fiscal years are enabled in the current org; we can't set that setting in tests. */
     static testMethod void rollupFiscalYear() {
-        if (strTestOnly != '*' && strTestOnly != 'rollupBTN') return;
         setupSettings(new Allocations_Settings__c(Use_Fiscal_Year_for_Rollups__c=true));
 
         Account acc = new Account(Name='foo');
