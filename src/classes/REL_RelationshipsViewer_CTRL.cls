@@ -44,7 +44,7 @@ global with sharing class REL_RelationshipsViewer_CTRL{
     private Pagereference showNoAccess() {
 
         if (!Contact.sObjectType.getDescribe().isAccessible()) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL,'Insufficient access'));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL,String.format(Label.flsError, new list<String>{'Contact'})));
             showPermissionError = true;
         }
 

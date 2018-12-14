@@ -190,18 +190,18 @@
                                             for (var i = 0; i < result.length; i++) {
                                                 // if a node for result contact does not exist on the page, create it
                                                 relatedNode = particleSystem.getNode(result[i].id);
-                                                if (result[i].Status == '{!$Label.REL_Former}') {
-                                                    thisLabel = result[i].Type + ' ({!$Label.REL_Former})';
+                                                if (result[i].status == '{!$Label.REL_Former}') {
+                                                    thisLabel = result[i].type + ' ({!$Label.REL_Former})';
                                                 }else{
-                                                    thisLabel = result[i].Type;
+                                                    thisLabel = result[i].type;
                                                 }                                               
                                 
                                                 if (!relatedNode) {
-                                                    relatedNode = particleSystem.addNode(result[i].id, {label:result[i].FirstName + ' ' + result[i].LastName, color:colors[childColorIndex]})
+                                                    relatedNode = particleSystem.addNode(result[i].id, {label:result[i].firstName + ' ' + result[i].lastName, color:colors[childColorIndex]})
                                                 }
                                                 // only add edge if the relationship is not already drawn
                                                 if (particleSystem.getEdges(currNode, relatedNode).length == 0 && particleSystem.getEdges(relatedNode, currNode).length == 0) {
-                                                    particleSystem.addEdge(currNode, relatedNode, {label:thisLabel, status:result[i].Status, colorIndex:childColorIndex, link:result[i].link, id:result[i].id, title:result[i].Title, accountName:result[i].AccountName, relId:result[i].relId});
+                                                    particleSystem.addEdge(currNode, relatedNode, {label:thisLabel, status:result[i].status, colorIndex:childColorIndex, link:result[i].link, id:result[i].id, title:result[i].title, accountName:result[i].accountName, relId:result[i].relId});
                                                 }
                                                
                                                 //if edge is already drawn, and the type is not listed, append the additional type to the label for this edge
@@ -294,7 +294,7 @@
                                 basenode = sys.addNode(result[0].id, {label:conFirstName + ' ' + result[0].lastName, color:colors[0], colorIndex:0, link:result[0].link, id:result[0].id, title:result[0].title, accountName:result[0].accountName})
                                 for (var i = 1; i < result.length; i++) {
                                     var thisLabel = '';
-                                    if (result[i].Status == '{!$Label.REL_Former}') {
+                                    if (result[i].status == '{!$Label.REL_Former}') {
                                         thisLabel = result[i].type + ' ({!$Label.REL_Former})';
                                     } else {
                                     	thisLabel = result[i].type;
