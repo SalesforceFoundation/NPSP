@@ -3,8 +3,13 @@
      * @description: checks that user has all necessary permissions and then launches modal or displays error
      */
     checkFieldPermissions: function(component, event, helper) {
-        var action = component.get('c.checkFieldPermissions');
-        action.setParams({sObjectName: component.get('v.sObjectName')});
+        let sObjectName = component.get('v.sObjectName');
+        let action;
+        if (sObjectName === 'DataImportBatch__c') {
+            action = component.get('c.checkBatchFieldPermissions');
+        } else if (sObjectName === 'Batch_Template__c') {
+            action = component.get('c.checkBatchFieldPermissions');
+        }
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {

@@ -36,13 +36,32 @@
 */
 
 public with sharing class BGE_DataImportBatchEntry_CTRL {
+
+
+    /*******************************************************************************************************
+    * @description Checks for field permissions to create a new Batch
+    * @return void; throws an AuraHandledException if any fields fail FLS check
+    */
+    @AuraEnabled
+    public static void checkBatchFieldPermissions() {
+        checkFieldPermissions(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'));
+    }
+
+    /*******************************************************************************************************
+    * @description Checks for field permissions to create a new Template
+    * @return void; throws an AuraHandledException if any fields fail FLS check
+    */
+    @AuraEnabled
+    public static void checkTemplateFieldPermissions() {
+        checkFieldPermissions(UTIL_Namespace.StrTokenNSPrefix('Batch_Template__c'));
+    }
+
     /*******************************************************************************************************
     * @description Checks for field permissions to create a new Batch/Template
     * @param sObjectName string of the sObjectName retrieved with force:hasSObjectName
     * @return void; throws an AuraHandledException if any fields fail FLS check
     */
-    @AuraEnabled
-    public static void checkFieldPermissions(String sObjectName) {
+    private static void checkFieldPermissions(String sObjectName) {
         BGE_ConfigurationWizard_CTRL.checkFieldPermissions(sObjectName);
     }
 

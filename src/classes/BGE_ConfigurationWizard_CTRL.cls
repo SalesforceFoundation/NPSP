@@ -56,8 +56,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         List<DescribeFieldResult> fieldsToCheck = new List<DescribeFieldResult>();
 
-        List<String> fields = getRecordFieldNames(sObjectName);
-        for (String field : fields) {
+        List<String> fieldNames = getRecordFieldNames(sObjectName);
+        for (String field : fieldNames) {
             if (field != 'Id') {
                 fieldsToCheck.add(UTIL_Describe.getFieldDescribe(sObjectName, UTIL_Namespace.StrTokenNSPrefix(field)));
             }
