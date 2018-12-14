@@ -79,7 +79,7 @@
                 var fieldOptions = component.get('v.templateFieldOptions.fieldGroups');
                 model.getTemplateFields().updateTemplateFieldOptions(fieldOptions);
             } else if (step === '5') {
-                //todo: add validation
+                //todo: add validation for processing settings
                 model.getTemplateInfo().load(component.get('v.templateInfo'));
             }
 
@@ -90,6 +90,8 @@
                 } else if (task === 'back') {
                     model.getTemplateMetadata().backStep();
                 } else if (task === 'save') {
+                    model.getTemplateMetadata().togglePendingSave();
+                    model.getTemplateInfo().load(component.get('v.templateInfo'));
                     model.save();
                 }
             } else {

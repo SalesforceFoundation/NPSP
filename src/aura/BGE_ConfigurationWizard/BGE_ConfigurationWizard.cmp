@@ -145,12 +145,14 @@
                                         <aura:if isTrue="{!v.templateMetadata.labels.sObjectNameNoNamespace == 'DataImportBatch__c'}">
                                             <lightning:input aura:id="expectedCount" type="number"
                                                              class="slds-p-top_small"
+                                                             min="0"
                                                              label="{!v.templateMetadata.labels.expectedCountLabel}"
                                                              name="expectedCount"
                                                              value="{!v.templateInfo.expectedCount}"/>
                                             <lightning:input aura:id="expectedTotal" type="number"
                                                              formatter="currency"
                                                              class="slds-p-top_small"
+                                                             min="0"
                                                              step="0.01"
                                                              label="{!v.templateMetadata.labels.expectedTotalLabel}"
                                                              name="expectedTotal"
@@ -503,7 +505,7 @@
                                 <lightning:button aura:id="next" variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.handleUserInput}" />
                             </aura:if>
                             <aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '5') }">
-                                <lightning:button aura:id="save" variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.handleUserInput}" disabled="{!or (v.templateMetadata.dataTableChanged, v.templateFieldOptions.errors.size > 0)}" />
+                                <lightning:button aura:id="save" variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.handleUserInput}" disabled="{!v.templateMetadata.pendingSave}" />
                             </aura:if>
                         </lightning:layoutItem>
                     </lightning:layout>
