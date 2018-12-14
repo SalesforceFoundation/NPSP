@@ -67,7 +67,7 @@ global with sharing class REL_RelationshipsViewer_CTRL{
     * @return List containing the Nodes.
     */
     @RemoteAction
-    global static List<Node> getRelationships(id contactId, boolean isInitialLoad, List<String> relIds) {
+    global static List<Node> getRelationships(Id contactId, Boolean isInitialLoad, List<String> relIds) {
         List<Node> nodes = new List<Node>();
         List<npe4__Relationship__c> relationships = new List<npe4__Relationship__c>();
 
@@ -95,7 +95,7 @@ global with sharing class REL_RelationshipsViewer_CTRL{
             basenode.firstName = c.FirstName;
             basenode.title = c.Title;
             basenode.accountName = c.Account.Name;
-            basenode.id = c.id;
+            basenode.id = c.Id;
             nodes.add(basenode);
         } else {
             relationships.clear();
@@ -108,26 +108,26 @@ global with sharing class REL_RelationshipsViewer_CTRL{
                                 toLabel(npe4__Type__c),
                                 npe4__Status__c,
                                 npe4__RelatedContact__r.FirstName,
-                                npe4__RelatedContact__r.id,
+                                npe4__RelatedContact__r.Id,
                                 npe4__RelatedContact__r.Account.Name,
                                 npe4__RelatedContact__r.Title,
-                                npe4__ReciprocalRelationship__r.id
+                                npe4__ReciprocalRelationship__r.Id
                         FROM    npe4__Relationship__c
                         WHERE   npe4__Contact__c = :contactId AND
-                                id NOT IN :renderedRelationships AND
-                                npe4__ReciprocalRelationship__r.id NOT IN :renderedRelationships];
+                                Id NOT IN :renderedRelationships AND
+                                npe4__ReciprocalRelationship__r.Id NOT IN :renderedRelationships];
 
-        for (npe4__Relationship__c r : relationships) {
+        for (npe4__Relationship__c currentRelationship : relationships) {
             Node n = new Node();
-            n.lastName = r.npe4__RelatedContact__r.LastName;
-            n.id = r.npe4__RelatedContact__r.id;
-            n.type = r.npe4__Type__c;
-            n.status = r.npe4__Status__c;
-            n.firstName = r.npe4__RelatedContact__r.FirstName;
-            n.link =  URL.getSalesforceBaseUrl().toExternalForm() + '/' + r.npe4__RelatedContact__r.id;
-            n.accountName = r.npe4__RelatedContact__r.Account.Name;
-            n.title = r.npe4__RelatedContact__r.Title;
-            n.relId = r.id;
+            n.lastName = currentRelationship.npe4__RelatedContact__r.LastName;
+            n.id = currentRelationship.npe4__RelatedContact__r.Id;
+            n.type = currentRelationship.npe4__Type__c;
+            n.status = currentRelationship.npe4__Status__c;
+            n.firstName = currentRelationship.npe4__RelatedContact__r.FirstName;
+            n.link =  URL.getSalesforceBaseUrl().toExternalForm() + '/' + currentRelationship.npe4__RelatedContact__r.Id;
+            n.accountName = currentRelationship.npe4__RelatedContact__r.Account.Name;
+            n.title = currentRelationship.npe4__RelatedContact__r.Title;
+            n.relId = currentRelationship.Id;
             nodes.add(n);
         }
         return nodes;
