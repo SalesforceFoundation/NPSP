@@ -11,9 +11,9 @@ Create Matching Donation
     &{contact} =  API Create Contact    Email=skristem@robot.com
     Go To Object Home         Opportunity
     Click Object Button       New
-    Select Record Type        Matching 
+    Select Record Type        Matching Gift
     #Sleep    2
-    Create Opportunities    Robot $100 matching donation    &{Contact}[LastName] Household
+    Create Opportunities    Robot $100 matching donation    Closed Won
     #Sleep     5
     ${match_name}    Get Main Header
     Go To Object Home         Opportunity

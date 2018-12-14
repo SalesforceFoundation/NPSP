@@ -13,23 +13,13 @@ Delete Contact with Closed Won Opportunity from Household
     Header Field Value    Account Name    &{contact}[LastName] Household
     # &{Contact} =  API Create Contact    Email=skristem@robot.com
     # Go To Record Home  &{Contact}[Id]
-    #Scroll Page To Location    0    500
-    #Sleep    5
-    Load Related List    Opportunities
-    Click Special Related List Button   Opportunities    New Contact Donation
-    Choose Frame    New Opportunity
-    Click Element    p3
-    Select Option    Donation  
-    Click Button With Value    Continue  
-    #Sleep    5  
-    Select Window
-    #Sleep    5   
+    Select Tab  Related
+    Click Object Button  New Donation
     Populate Form
     ...                       Opportunity Name= Sravani $100 donation
     ...                       Amount=100 
     Click Dropdown    Stage
     Click Link    link=Closed Won
-    Populate Lookup Field    Account Name    &{Contact}[LastName] Household
     Click Dropdown    Close Date
     Pick Date    10
     Click Modal Button        Save
@@ -42,4 +32,3 @@ Delete Contact with Closed Won Opportunity from Household
     Click Button With Value    Delete Account
     #Sleep    5
     Page Should Contain    Error
-    

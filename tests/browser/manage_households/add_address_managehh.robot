@@ -31,13 +31,11 @@ Add New Address to Household
     Go To Object Home    Contact
     Click Link    link=&{contact1}[FirstName] &{contact1}[LastName]
     #Sleep    3
-    Select Tab    Details
     Scroll Page To Location    0    1200
     ${status}    Verify Details Address    Mailing Address    123 Dummy Street     Tracy, CA 99999     US
     Should Be Equal as Strings    ${status}    pass
     Go To Object Home          Account
     Click Link    link=&{contact1}[LastName] Household
-    Select Tab    Details
     Scroll Page To Location    0    300
     ${status}    Verify Details Address    Billing Address    123 Dummy Street     Tracy, CA 99999     US
     Should Be Equal as Strings    ${status}    pass

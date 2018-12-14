@@ -38,8 +38,9 @@ Delete Level
     [tags]  unstable
     &{contact} =  API Create Contact
     Go To Record Home  &{contact}[Id]
-    Select Tab    Details
-    Click Edit Button    Edit Level
+    Scroll Element Into View  text:Level
+    Click Button  title:Edit Level
+    Wait For Locator  record.edit_form
     Populate Lookup Field    Level    ${level_name}
     Click Record Button    Save
     Verify Field Value    Level    ${level_name}    Y
@@ -49,5 +50,4 @@ Delete Level
     Click Modal Button    Delete
     Go To Object Home    Contact
     Click Link    link=&{contact}[FirstName] &{contact}[LastName]
-    Select Tab    Details
     Confirm Value    Level    ${level_name}    N

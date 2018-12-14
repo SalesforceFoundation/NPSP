@@ -13,7 +13,7 @@ Create Grant
     Click Object Button       New
     Select Record Type        Grant 
     #Sleep    2
-    Create Opportunities    Robot $100 grant    &{Contact}[LastName] Household
+    Create Opportunities    Robot $100 grant    Awarded
     #Sleep     5
     ${grant_name}    Get Main Header
     Go To Object Home         Opportunity

@@ -72,8 +72,7 @@ class NPSP(object):
         field = self.selenium.get_webelement(xpath)
         field.send_keys(value)
         time.sleep(1)
-        
-        
+
     def click_record_button(self, title):
         """ Pass title of the button to click the buttons on the records edit page. Usually save and cancel are the buttons seen.
         """
@@ -183,11 +182,6 @@ class NPSP(object):
         """To click on x """
         locator=npsp_lex_locators['delete_icon'].format(field_name,value)
         self.selenium.get_webelement(locator).click() 
-        
-    def click_edit_button(self, title):  
-        locator=npsp_lex_locators['record']['edit_button'].format(title)
-        self.selenium.get_webelement(locator).click()
-        self.wait_for_locator('record.edit_form')
 
     def click_id(self, title):  
         locator=npsp_lex_locators['aff_id'].format(title)
@@ -269,8 +263,9 @@ class NPSP(object):
         self.selenium.page_should_contain_element(locator)    
         
     def Verify_affiliated_contact(self,list_name,first_name,last_name, y):   
-        """Validates if the affiliated contacts have the added contact details enter Y for positive case and N for negative case"""   
-        locator= npsp_lex_locators['affiliated_contacts'].format(list_name,first_name,last_name)
+        """Validates if the affiliated contacts have the added contact details enter Y for positive case and N for negative case"""
+        name = first_name + ' ' + last_name
+        locator = self.salesforce.get_locator('record.related.link', list_name, name)
         if y.upper()=="Y":
             self.selenium.page_should_contain_element(locator)
         elif y.upper()=="N":
@@ -320,11 +315,6 @@ class NPSP(object):
         """checks value of a field in details page(section without header)"""
         locator=npsp_lex_locators['detail_page']['verify_field_value'].format(title,value)
         self.selenium.page_should_contain_element(locator)
-        
-    def click_managehh_add_button(self,title):  
-        """clicks on the + button next to contact on manage hh page"""      
-        locator=npsp_lex_locators['record']['edit_button'].format(title)
-        self.selenium.get_webelement(locator).click()    
         
     def click_managehh_button(self,title):  
         """clicks on the new contact button on manage hh page"""      
@@ -397,8 +387,8 @@ class NPSP(object):
     def verify_related_list_field_values(self, **kwargs):
         """verifies the values in the related list objects page""" 
         for name, value in kwargs.items():
-            locator= npsp_lex_locators['object']['field_value'].format(name,value)
-            self.selenium.page_should_contain_element(locator)   
+            locator= npsp_lex_locators['record']['related']['field_value'].format(name,value)
+            self.selenium.page_should_contain_element(locator)
             
     def page_contains_record(self,title):   
         """Validates if the specified record is present on the page"""   
@@ -730,21 +720,12 @@ class NPSP(object):
                 date = "/".join(date)
                 loctor_contains = "//tbody//a[contains(@title , '{}')]".format(date)
                 self.selenium.page_should_contain_element(loctor_contains)
-    
+
     def click_object_manager_button(self,title):  
         """clicks on the + button next to contact on manage hh page"""      
         locator=npsp_lex_locators['object_manager']['button'].format(title)
         self.selenium.get_webelement(locator).click()  
-    
-    
-                
-    
+
     def page_scroll_to_locator(self, path, *args, **kwargs):
-        loc=self.get_npsp_locator(path, *args, **kwargs)
-        self.selenium.execute_javascript("window.document.evaluate('{}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)".format(loc))
-        
-        
-        
-        
-        
-                
+        locator = self.get_npsp_locator(path, *args, **kwargs)
+        self.selenium.scroll_element_into_view(locator)
