@@ -34,7 +34,8 @@ ASC Reciprocal Relationship Test Case 1
     Confirm Value    Soft Credit This Year    $0.00    Y
     Confirm Value    Soft Credit Total    $0.00    Y
     
-Test Case 2    
+Test Case 2
+    [tags]  unstable
     &{contact1} =  API Create Contact    Email=skristem@robot.com 
     &{contact2} =  API Create Contact    AccountId=&{contact1}[AccountId]
     ${ns} =  Get NPSP Namespace Prefix
