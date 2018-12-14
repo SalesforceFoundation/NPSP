@@ -262,8 +262,10 @@
             }    
  
             j$(document).ready(function(){
-
-                if (!'{!showPermissionError}') {
+                var showPermissionError = '{!showPermissionError}';
+				console.log('showPermissionError',showPermissionError);
+                if (showPermissionError == "false") {
+                    console.log('The initial call to the controller');
                     //The initial call to the controller
                     Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.REL_RelationshipsViewer_CTRL.getRelationships}', '{!JSENCODE(id)}', true, null, function(result, event){
                         if (event.status){
@@ -274,59 +276,39 @@
                             sys.renderer = Renderer("#viewport") // our newly created renderer will have its .init() method called shortly by sys...
 
                             var conFirstName;
-                            if (result[0].FirstName === "undefined" || result[0].FirstName == null){
+                            //if (result[0].firstName === "undefined" || result[0].firstName == null) {
+                            if (!result[0].firstName) {
                                 conFirstName = "";
-                            }
-                            else{
-                                conFirstName = result[0].FirstName;
+                            } else {
+                                conFirstName = result[0].firstName;
                             }
 
                             // if there are no relationships, arbor kind of freaks out, so don't let it try to draw a standalone node
                             if (result.length < 2) {
                                 var notice = '<p><strong>{!$Label.REL_No_Relationships}</strong></p>';
                                 notice += '<p><a href="/' + result[0].id + '" style="color: white; font-weight: bold;" >[ {!$Label.REL_Return_to_Contact} ] </a><br/>';
-                                /*
-                                //the async callback means we can't guarantee the value is there when
-                                //we go to render the link, so we'll just remove it for now
-                                var ri = getRelationshipInfo();
-                                var RelPrefix = ri.prefix;
-                                var RelNameId = '';
-                                if (ri.NameField != null)
-                                    RelNameId = ri.NameField + '=';
-                                alert(RelPrefix);
-                                var RelNameIdId = '';
-                                if (ri.NameIdField != null)
-                                    RelNameIdId = ri.NameIdField + '=';
-
-                                var uriString = '/' + RelPrefix + '/e?';
-                                alert(uriString);
-                                if (RelNameId != '' && RelNameIdId != '')
-                                    uriString += RelNameId + conFirstName + ' ' + result[0].LastName + '&' + RelNameIdId + result[0].id + '&';
-
-                                uriString += 'retURL=' + result[0].id;
-                                var encodedNewRel = encodeURI(uriString);
-
-                                notice += '<a href=' + encodedNewRel + ' style="color: white; font-weight: bold;" >[ {!$Label.REL_Create_New_Relationship} ]</a><br />'; */
+                                
                                 drawToolTip(20, 20, notice);
                             }
-                            else{
-                                basenode = sys.addNode(result[0].id, {label:conFirstName + ' ' + result[0].LastName, color:colors[0], colorIndex:0, link:result[0].link, id:result[0].id, title:result[0].Title, accountName:result[0].AccountName})
+                            else {
+                                basenode = sys.addNode(result[0].id, {label:conFirstName + ' ' + result[0].lastName, color:colors[0], colorIndex:0, link:result[0].link, id:result[0].id, title:result[0].title, accountName:result[0].accountName})
                                 for (var i = 1; i < result.length; i++) {
                                     var thisLabel = '';
                                     if (result[i].Status == '{!$Label.REL_Former}') {
-                                        thisLabel = result[i].Type + ' ({!$Label.REL_Former})';
+                                        thisLabel = result[i].type + ' ({!$Label.REL_Former})';
                                     } else {
-                                    thisLabel = result[i].Type;
+                                    	thisLabel = result[i].type;
                                     }
                                     var thisConFirstName = '';
-                                    if (result[i].FirstName === "undefined" || result[i].FirstName == null){
+                                    // if (result[i].firstName === "undefined" || result[i].firstName == null){
+                                    if (!result[i].firstName) {
                                         thisConFirstName = '';
                                     }
-                                    else{
-                                        thisConFirstName = result[i].FirstName;
+                                    else {
+                                        thisConFirstName = result[i].firstName;
                                     }
 
-                                    relatednode = sys.addNode(result[i].id, {label:thisConFirstName + ' ' + result[i].LastName, color:colors[1], colorIndex:1, link:result[i].link, id:result[i].id, title:result[i].Title, accountName:result[i].AccountName})
+                                    relatednode = sys.addNode(result[i].id, {label:thisConFirstName + ' ' + result[i].lastName, color:colors[1], colorIndex:1, link:result[i].link, id:result[i].id, title:result[i].title, accountName:result[i].accountName})
 
                                     //if edge is already drawn, and the type is not listed, append the additional type to the label for this edge
                                     if (sys.getEdges(basenode, relatednode).length != 0){
@@ -337,13 +319,13 @@
                                         thisEdge[0].data.label = thisEdgeLabel + ', ' + thisLabel;
                                     }
                                     else{
-                                        sys.addEdge(basenode, relatednode, {label:thisLabel, status:result[i].Status, relId:result[i].relId})
+                                        sys.addEdge(basenode, relatednode, {label:thisLabel, status:result[i].status, relId:result[i].relId})
                                     }
                                 }
                             }
                         }
                     },{escape:true});
-                } else{
+                } else {
                     document.getElementById("viewport").style.display = "none";
                 }
 
