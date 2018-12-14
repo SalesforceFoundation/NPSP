@@ -20,7 +20,7 @@
                 action.setCallback(this, function (response) {
                     const state = response.getState();
                     if (state === 'SUCCESS') {
-                        const response = JSON.parse(response.getReturnValue());
+                        var response = JSON.parse(response.getReturnValue());
                         helper.setDataTableRows(component, response);
                         helper.setTotals(component, response);
                         helper.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftDeleted'), 'success');
