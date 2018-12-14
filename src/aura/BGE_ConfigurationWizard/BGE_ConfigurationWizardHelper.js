@@ -822,10 +822,10 @@
              * @return void.
              */
             function cancel() {
-                if (this.mode === 'edit' && this.labels.sObjectNameNoNamespace === 'Batch_Template__c') {
-                    this.clearError();
-                    this.setMode('view');
-                } else {
+                // if (this.mode === 'edit' && this.labels.sObjectNameNoNamespace === 'Batch_Template__c') {
+                //     this.clearError();
+                //     this.setMode('view');
+                // } else {
                     //navigate to record home
                     var homeEvent = $A.get('e.force:navigateToObjectHome');
                     var objectName = this.labels.sObjectName;
@@ -833,7 +833,7 @@
                         'scope': objectName
                     });
                     homeEvent.fire();
-                }
+                // }
             }
 
             /**

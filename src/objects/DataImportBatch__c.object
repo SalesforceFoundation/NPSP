@@ -398,7 +398,6 @@
     </nameField>
     <pluralLabel>NPSP Data Import Batches</pluralLabel>
     <searchLayouts>
-        <listViewButtons>View_Templates</listViewButtons>
         <lookupDialogsAdditionalFields>Batch_Description__c</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>UPDATEDBY_USER</lookupDialogsAdditionalFields>
         <searchResultsAdditionalFields>Batch_Description__c</searchResultsAdditionalFields>
@@ -430,19 +429,5 @@
         <openType>sidebar</openType>
         <protected>false</protected>
         <url>/apex/{!$Setup.Package_Settings__c.Namespace_Prefix__c}BDI_DataImport?batchId={!DataImportBatch__c.Id}&amp;retURL={!URLFOR(&apos;/&apos; + DataImportBatch__c.Id)}</url>
-    </webLinks>
-    <webLinks>
-        <fullName>View_Templates</fullName>
-        <availability>online</availability>
-        <description>Navigate to Batch Template list view</description>
-        <displayType>massActionButton</displayType>
-        <encodingKey>UTF-8</encodingKey>
-        <height>600</height>
-        <linkType>url</linkType>
-        <masterLabel>View Templates</masterLabel>
-        <openType>sidebar</openType>
-        <protected>false</protected>
-        <requireRowSelection>false</requireRowSelection>
-        <url>{!URLFOR($Action.Batch_Template__c.Tab, $ObjectType.Batch_Template__c)}</url>
     </webLinks>
 </CustomObject>
