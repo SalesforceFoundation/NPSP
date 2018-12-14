@@ -7,6 +7,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Donation from a Contact
+    [tags]  unstable
     &{contact} =  API Create Contact    Email=skristem@robot.com
     Go To Record Home  &{contact}[Id]
     Load Related List    Opportunities
