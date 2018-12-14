@@ -67,7 +67,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         fieldsToCheck.add(UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c')));
 
         for (DescribeFieldResult dfr : fieldsToCheck) {
-            if (!checkFLS(dfr)) {
+            if (!canUpdateField(dfr)) {
                 throw new AuraHandledException(Label.bgeFLSError);
             }
         }
@@ -95,9 +95,11 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
             if (sObjectName == 'Batch_Template__c' || sObjectName == 'DataImportBatch__c') {
                 try {
+                    String namespacedSObjectName = UTIL_Namespace.StrTokenNSPrefix(sObjectName);
+
                     String soql = 'SELECT ' +
                             String.join(fields, ', ') +
-                            ' FROM ' + sObjectName +
+                            ' FROM ' + namespacedSObjectName +
                             ' WHERE Id=:recordId';
 
                     SObject recordDetails = Database.query(soql);
@@ -249,7 +251,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                     && allowedDataTypes.contains(dfr.getType().name())
                     && !bannedFields.contains(dataImportFieldApiName)
                     && dfr.getInlineHelpText() != null
-                    && checkFLS(dfr);
+                    && canUpdateField(dfr);
 
             if (fieldAllowed) {
                 dfrs.add(dfr);
@@ -267,7 +269,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         String descriptionField = (sObjectName == 'DataImportBatch__c') ? 'Batch_Description__c' : 'Description__c';
 
-        List<String> fields = new List<String>{
+        List<String> recordFieldNames = new List<String>{
                 descriptionField,
                 'Name',
                 'Id',
@@ -285,12 +287,11 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         };
 
         if (sObjectName == 'DataImportBatch__c') {
-            fields.add('Expected_Count_of_Gifts__c');
-            fields.add('Expected_Total_Batch_Amount__c');
-            sObjectName = UTIL_Namespace.StrTokenNSPrefix(sObjectName);
+            recordFieldNames.add('Expected_Count_of_Gifts__c');
+            recordFieldNames.add('Expected_Total_Batch_Amount__c');
         }
 
-        return fields;
+        return recordFieldNames;
     }
 
     /*******************************************************************************************************
@@ -619,7 +620,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     * @param dfr DescribeFieldResult of the field to check
     * @return Boolean
     */
-    private static Boolean checkFLS(DescribeFieldResult dfr) {
+    private static Boolean canUpdateField(DescribeFieldResult dfr) {
         if (!dfr.isCreateable() || !dfr.isUpdateable()) {
             return false;
         } else {

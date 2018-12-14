@@ -2,7 +2,7 @@
     /**
      * @description: instantiates component. Only called when component is first loaded.
      */
-    doInit: function(component, event, helper) {
+    doInit: function(component) {
         var action = component.get('c.isOrgNamespaced');
         action.setCallback(this, function (response) {
             var state = response.getState();
@@ -47,7 +47,7 @@
     /**
      * @description: checks that user has all necessary permissions and then launches modal or displays error
      */
-    checkFieldPermissions: function(component, event, helper) {
+    checkFieldPermissions: function(component) {
         var action = component.get('c.checkFieldPermissions');
         action.setParams({sObjectName: component.get('v.listView.objectApiName')});
         action.setCallback(this, function (response) {

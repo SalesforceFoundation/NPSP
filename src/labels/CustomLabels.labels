@@ -2715,7 +2715,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label that appears when user does not pass FLS check in BGE</shortDescription>
-        <value>You don&apos;t have the required field permissions needed to access this batch. Contact your system administrator to inquire about getting the necessary permissions.</value>
+        <value>You don&apos;t have the required field permissions. Contact your system administrator to inquire about getting the necessary permissions.</value>
     </labels>
     <labels>
         <fullName>bgeFormUpdatePayment</fullName>
