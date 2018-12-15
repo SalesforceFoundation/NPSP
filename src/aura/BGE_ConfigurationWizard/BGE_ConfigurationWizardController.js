@@ -14,8 +14,8 @@
 
         var batchInfoView = helper.BatchInfoView(component, model);
         component.set('v.batchInfo', batchInfoView);
-        var templateMetadataView = helper.TemplateMetadataView(component, model);
-        component.set('v.templateMetadata', templateMetadataView);
+        var batchMetadataView = helper.BatchMetadataView(component, model);
+        component.set('v.batchMetadata', batchMetadataView);
         var templateFieldsView = helper.TemplateFieldsView(component, model);
         component.set('v.availableFields', templateFieldsView);
         var templateFieldOptionsView = helper.TemplateFieldOptionsView(component, model);
@@ -29,7 +29,7 @@
      */
     changeModeToEdit: function(component, event, helper) {
         var model = component.get('v.model');
-        model.getTemplateMetadata().setMode('edit');
+        model.getBatchMetadata().setMode('edit');
     },
 
     /**
@@ -51,23 +51,23 @@
         if (task === 'cancel' || task === 'backToTemplates') {
 
             //Set off init here to reset view
-            var mode = component.get('v.templateMetadata.mode');
+            var mode = component.get('v.batchMetadata.mode');
             if (mode === 'edit') {
                 model.init(component);
             }
-            model.getTemplateMetadata().cancel();
+            model.getBatchMetadata().cancel();
 
         } else if (task === 'next' || task === 'back' || task === 'save') {
 
             var isValid = true;
             var possibleError = '';
-            var step = component.get('v.templateMetadata.progressIndicatorStep');
+            var step = component.get('v.batchMetadata.progressIndicatorStep');
 
             // check validity and load values
             if (step === '1') {
                 model.getBatchInfo().load(component.get('v.batchInfo'));
                 isValid = model.getBatchInfo().isValid();
-                possibleError = component.get('v.templateMetadata.labels.missingNameDescriptionError');
+                possibleError = component.get('v.batchMetadata.labels.missingNameDescriptionError');
             } else if (step === '2') {
                 //handle template selection and copying here
             } else if (step === '3') {
@@ -86,16 +86,16 @@
             // proceed or display error
             if (isValid) {
                 if (task === 'next') {
-                    model.getTemplateMetadata().nextStep();
+                    model.getBatchMetadata().nextStep();
                 } else if (task === 'back') {
-                    model.getTemplateMetadata().backStep();
+                    model.getBatchMetadata().backStep();
                 } else if (task === 'save') {
-                    model.getTemplateMetadata().togglePendingSave();
+                    model.getBatchMetadata().togglePendingSave();
                     model.getBatchInfo().load(component.get('v.batchInfo'));
                     model.save();
                 }
             } else {
-                model.getTemplateMetadata().showError(possibleError);
+                model.getBatchMetadata().showError(possibleError);
             }
         }
     },

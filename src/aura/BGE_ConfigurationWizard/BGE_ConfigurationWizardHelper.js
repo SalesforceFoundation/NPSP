@@ -63,64 +63,64 @@
     },
 
     /**
-     * @description Returns the Template Metadata View module.
+     * @description Returns the Batch Metadata View module.
      * @param component. Lightning Component reference.
      * @param model. The Model.
-     * @return View of the Template Metadata module.
+     * @return View of the Batch Metadata module.
      */
-    TemplateMetadataView : function(component, model) {
+    BatchMetadataView : function(component, model) {
         return (function (component, model) {
 
             // Subscribe to the model onMetadataUpdated event.
-            model.getTemplateMetadata().onMetadataUpdated.subscribe(function() {
-                var templateMetadataView = component.get('v.templateMetadata');
-                var templateMetadata = model.getTemplateMetadata();
-                var headerChanged = Boolean(templateMetadataView.pageHeader !== templateMetadata.pageHeader);
+            model.getBatchMetadata().onMetadataUpdated.subscribe(function() {
+                var batchMetadataView = component.get('v.batchMetadata');
+                var batchMetadata = model.getBatchMetadata();
+                var headerChanged = Boolean(batchMetadataView.pageHeader !== batchMetadata.pageHeader);
 
-                templateMetadataView.labels = templateMetadata.labels;
-                templateMetadataView.mode = templateMetadata.mode;
-                templateMetadataView.hasError = templateMetadata.hasError;
-                templateMetadataView.errorMessage = templateMetadata.errorMessage;
-                templateMetadataView.pageHeader = templateMetadata.pageHeader;
-                templateMetadataView.pendingSave = templateMetadata.pendingSave;
+                batchMetadataView.labels = batchMetadata.labels;
+                batchMetadataView.mode = batchMetadata.mode;
+                batchMetadataView.hasError = batchMetadata.hasError;
+                batchMetadataView.errorMessage = batchMetadata.errorMessage;
+                batchMetadataView.pageHeader = batchMetadata.pageHeader;
+                batchMetadataView.pendingSave = batchMetadata.pendingSave;
 
-                if (!templateMetadataView.hasError) {
-                    templateMetadataView.progressIndicatorStep = templateMetadata.progressIndicatorStep;
-                    _sendMessage('setStep',templateMetadata.progressIndicatorStep);
+                if (!batchMetadataView.hasError) {
+                    batchMetadataView.progressIndicatorStep = batchMetadata.progressIndicatorStep;
+                    _sendMessage('setStep',batchMetadata.progressIndicatorStep);
                 } else {
                     component.find('notifLib').showNotice({
                         'variant': 'error',
                         'header': $A.get('$Label.c.PageMessagesError'),
-                        'message': templateMetadataView.errorMessage,
+                        'message': batchMetadataView.errorMessage,
                         closeCallback: function() {
                             //callback action here
                         }
                     });
                 }
 
-                if (templateMetadataView.mode === 'view') {
+                if (batchMetadataView.mode === 'view') {
                     component.set('v.isReadOnly', true);
-                } else if (templateMetadataView.mode === 'create' || templateMetadataView.mode === 'edit') {
+                } else if (batchMetadataView.mode === 'create' || batchMetadataView.mode === 'edit') {
                     component.set('v.isReadOnly', false);
-                    if (templateMetadata.mode === 'edit') {
-                        templateMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchTemplateEdit')
-                    } else if (templateMetadata.mode === 'create') {
-                        templateMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchTemplateNew');
+                    if (batchMetadata.mode === 'edit') {
+                        batchMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchTemplateEdit')
+                    } else if (batchMetadata.mode === 'create') {
+                        batchMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchTemplateNew');
                     }
                 }
 
                 //update page header in modal if page header has changed and modal is used
                 if (headerChanged) {
-                    _sendMessage('setHeader', templateMetadataView.pageHeader);
+                    _sendMessage('setHeader', batchMetadataView.pageHeader);
                 }
 
                 //update footer in modal to keep save button appropriately enabled/disabled
-                _sendMessage('pendingSave', templateMetadataView.pendingSave);
+                _sendMessage('pendingSave', batchMetadataView.pendingSave);
 
                 // when in modal context, need to notify the modal footer component
-                _sendMessage('setError', templateMetadataView.hasError);
+                _sendMessage('setError', batchMetadataView.hasError);
 
-                component.set('v.templateMetadata', templateMetadataView);
+                component.set('v.batchMetadata', batchMetadataView);
             });
 
             function _sendMessage(channel, message) {
@@ -132,7 +132,7 @@
                 sendMessage.fire();
             }
 
-            // TemplateMetadataView module public functions and properties
+            // BatchMetadataView module public functions and properties
             return {
                 labels: {},
                 mode: '',
@@ -273,10 +273,10 @@
      * @return Model module of Template Details.
      */
     TemplateDetailsModel : function() {
-        return (function (availableFields, batchInfo, templateMetadata) {
+        return (function (availableFields, batchInfo, batchMetadata) {
             var _availableFields = availableFields;
             var _batchInfo = batchInfo;
-            var _templateMetadata = templateMetadata;
+            var _batchMetadata = batchMetadata;
             var _bgeTemplateController;
 
             /* **********************************************************
@@ -290,7 +290,7 @@
                     success: function(response) {
                         _batchInfo.load(response);
                         _availableFields.load(response.availableFields, JSON.parse(response.activeFields));
-                        _templateMetadata.load(response.labels, component);
+                        _batchMetadata.load(response.labels, component);
                     },
                     error: function(error) {
                         console.log(error);
@@ -340,11 +340,11 @@
 
                 _bgeTemplateController.saveRecord(templateDetailsData, activeFields, {
                     success: function(response) {
-                        _templateMetadata.navigateToRecord(response.id);
+                        _batchMetadata.navigateToRecord(response.id);
                     },
                     error: function(error) {
                         console.log(error);
-                        _templateMetadata.togglePendingSave();
+                        _batchMetadata.togglePendingSave();
                     }
                 });
             }
@@ -377,8 +377,8 @@
              * @description Gets the Template Metadata module.
              * @return Template Metadata module.
              */
-            function getTemplateMetadata() {
-                return _templateMetadata;
+            function getBatchMetadata() {
+                return _batchMetadata;
             }
 
             // TemplateDetailsModel module public functions and properties
@@ -388,9 +388,9 @@
                 setBackendController: setBackendController,
                 getAvailableFields: getAvailableFields,
                 getBatchInfo: getBatchInfo,
-                getTemplateMetadata: getTemplateMetadata
+                getBatchMetadata: getBatchMetadata
             }
-        })(this.TemplateFields(), this.BatchInfo(), this.TemplateMetadata());
+        })(this.TemplateFields(), this.BatchInfo(), this.BatchMetadata());
     },
 
     /**
@@ -756,7 +756,7 @@
      * such as page mode and labels.
      * @return Model module of the Template Metadata.
      */
-    TemplateMetadata : function() {
+    BatchMetadata : function() {
         return (function (Event) {
             var _onMetadataUpdated = new Event(this);
 
@@ -950,7 +950,7 @@
                 this.onMetadataUpdated.notify();
             }
 
-            // TemplateMetadata module public functions and properties
+            // BatchMetadata module public functions and properties
             return {
                 labels: {},
                 mode: '',
