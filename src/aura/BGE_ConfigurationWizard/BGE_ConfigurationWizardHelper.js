@@ -103,9 +103,9 @@
                 } else if (batchMetadataView.mode === 'create' || batchMetadataView.mode === 'edit') {
                     component.set('v.isReadOnly', false);
                     if (batchMetadata.mode === 'edit') {
-                        batchMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchTemplateEdit')
+                        batchMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchEdit')
                     } else if (batchMetadata.mode === 'create') {
-                        batchMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchTemplateNew');
+                        batchMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchNew');
                     }
                 }
 
@@ -611,7 +611,7 @@
                     }
                 });
 
-                return errors.length > 0 ? $A.get('$Label.c.bgeBatchTemplateErrorRequiredFields') + ' ' + errors.join(', ') + '.' : '';
+                return errors.length > 0 ? $A.get('$Label.c.bgeBatchErrorRequiredFields') + ' ' + errors.join(', ') + '.' : '';
             }
 
             /**
@@ -669,7 +669,7 @@
                         var fieldName = currentField.name;
                         var fieldNameGroup = {
                             title: $A.get('$Label.c.PageMessagesError'),
-                            messages: [$A.get('$Label.c.bgeBatchTemplateErrorDefaultValue')],
+                            messages: [$A.get('$Label.c.bgeBatchErrorDefaultValue')],
                             fieldNames: ['defaultValue']
                         };
                         errors.rows[fieldName] = fieldNameGroup;
@@ -869,9 +869,9 @@
                 var headers = [
                     this.labels.recordInfoLabel,
                     'Select Template',
-                    $A.get('$Label.c.bgeBatchTemplateSelectFields'),
-                    $A.get('$Label.c.bgeBatchTemplateSetFieldOptions'),
-                    $A.get('$Label.c.bgeBatchTemplateSetBatchOptions')
+                    $A.get('$Label.c.bgeBatchSelectFields'),
+                    $A.get('$Label.c.bgeBatchSetFieldOptions'),
+                    $A.get('$Label.c.bgeBatchSetBatchOptions')
                 ];
 
                 var progressIndicatorStepBase1 = parseInt(this.progressIndicatorStep) - 1;

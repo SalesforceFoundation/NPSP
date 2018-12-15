@@ -2500,105 +2500,105 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Time:</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateSelectedFields</fullName>
+        <fullName>bgeBatchSelectedFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>bgeBatchTemplateActiveFields</shortDescription>
+        <shortDescription>bgeBatchActiveFields</shortDescription>
         <value>Selected Fields</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateAvailableFields</fullName>
+        <fullName>bgeBatchAvailableFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>bgeBatchTemplateAvailableFields</shortDescription>
+        <shortDescription>bgeBatchAvailableFields</shortDescription>
         <value>Available Fields</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateBatchProcessSizeHelp</fullName>
+        <fullName>bgeBatchBatchProcessSizeHelp</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
         <value>The number of records to process at a time in each batch.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateDonationDateRangeHelp</fullName>
+        <fullName>bgeBatchDonationDateRangeHelp</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
         <value>Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. NPSP will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateDonationMatchingBehaviorHelp</fullName>
+        <fullName>bgeBatchDonationMatchingBehaviorHelp</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
         <value>Defines how NPSP should handle matching Donations.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateDonationMatchingClassHelp</fullName>
+        <fullName>bgeBatchDonationMatchingClassHelp</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
         <value>The developer name of an Apex class that implements the BDI_IMatching interface for Donations. Leave blank to let NPSP handle matching.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateDonationMatchingRuleHelp</fullName>
+        <fullName>bgeBatchDonationMatchingRuleHelp</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
         <value>Specifies which fields to match by when trying to match Donations in batch records against existing Opportunties and Payments.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateDonorLookupInfo</fullName>
+        <fullName>bgeBatchDonorLookupInfo</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Explanation text for hidden lookup fields.</shortDescription>
         <value>Select the fields to use for entering gifts in this batch. Donor Type and an Account or Contact lookup will always appear.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateEdit</fullName>
+        <fullName>bgeBatchEdit</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for Batch Template in Edit mode</shortDescription>
-        <value>Edit Batch Template</value>
+        <shortDescription>Header for Batch in Edit mode</shortDescription>
+        <value>Edit Batch</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateErrorDefaultValue</fullName>
+        <fullName>bgeBatchErrorDefaultValue</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Error shown when template field is hidden and missing the default value.</shortDescription>
+        <shortDescription>Error shown when batch field is hidden and missing the default value.</shortDescription>
         <value>Hidden fields must have a default value.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateErrorRequiredAmount</fullName>
+        <fullName>bgeBatchErrorRequiredAmount</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error shown when opportunity amount is not required.</shortDescription>
         <value>Amount field must be required.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateErrorRequiredFields</fullName>
+        <fullName>bgeBatchErrorRequiredFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>bgeErrorBatchTemplateMissing</shortDescription>
+        <shortDescription>Error shown when required fields are missing.</shortDescription>
         <value>The following fields are required because other fields from their object are selected. Select them before proceeding:</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateNew</fullName>
+        <fullName>bgeBatchNew</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for Batch Template in Create mode</shortDescription>
-        <value>New Batch Template</value>
+        <shortDescription>Header for Batch in Create mode</shortDescription>
+        <value>New Batch</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateOverviewWizard</fullName>
+        <fullName>bgeBatchOverviewWizard</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for Batch Template Info in Wizard</shortDescription>
-        <value>Enter Template Info</value>
+        <shortDescription>Header for Batch Info in Wizard</shortDescription>
+        <value>Enter Batch Info</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplatePostProcessClassHelp</fullName>
+        <fullName>bgeBatchPostProcessClassHelp</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
@@ -2606,14 +2606,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         </value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateProcessUsingScheduledJobHelp</fullName>
+        <fullName>bgeBatchProcessUsingScheduledJobHelp</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
         <value>When checked, the batch will be automatically processed based on the schedule for the associated job.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateRunOpportunityRollupsWhileProcessingHelp</fullName>
+        <fullName>bgeBatchRunOpportunityRollupsWhileProcessingHelp</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
@@ -2627,31 +2627,31 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Enter Batch Info</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateOverview</fullName>
+        <fullName>bgeBatchOverview</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for Batch Template Info in View Mode</shortDescription>
-        <value>Template Info</value>
+        <shortDescription>Header for Batch Info in View Mode</shortDescription>
+        <value>Batch Info</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateSelectFields</fullName>
+        <fullName>bgeBatchSelectFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header and text for Field Selection</shortDescription>
         <value>Select Fields</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateSetBatchOptions</fullName>
+        <fullName>bgeBatchSetBatchOptions</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for Batch Template Batch Options</shortDescription>
+        <shortDescription>Header for Batch Options</shortDescription>
         <value>Set Batch Options</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateSetFieldOptions</fullName>
+        <fullName>bgeBatchSetFieldOptions</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for Batch Template Field Options</shortDescription>
+        <shortDescription>Header for Batch Field Options</shortDescription>
         <value>Set Field Options</value>
     </labels>
     <labels>
