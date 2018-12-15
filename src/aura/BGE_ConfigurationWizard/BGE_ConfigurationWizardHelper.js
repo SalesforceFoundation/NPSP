@@ -201,10 +201,10 @@
     },
 
     /**
-     * @description Returns the Template Field Options View module.
+     * @description Returns the Batch Field Options View module.
      * @param component. Lightning Component reference.
      * @param model. The Batch Fields Model.
-     * @return View of the Template Field Options module.
+     * @return View of the Batch Field Options module.
      */
     BatchFieldOptionsView : function(component, model) {
         return (function (component, model) {
@@ -266,11 +266,11 @@
     /*********************************************** Model Modules *********************************************/
 
     /**
-     * @description Gets the Model module of Template Details.
-     * This is the main and only Model module for the Template
+     * @description Gets the Model module of Batch Details.
+     * This is the main and only Model module for the Batch
      * Details components. Contains references to BatchFields
-     * and TemplateInfo sub-modules.
-     * @return Model module of Template Details.
+     * and BatchInfo sub-modules.
+     * @return Model module of Batch Details.
      */
     DetailsModel : function() {
         return (function (availableFields, batchInfo, batchMetadata) {
@@ -280,7 +280,7 @@
             var _bgeBatchController;
 
             /* **********************************************************
-             * @Description Gets the Template Details and loads sub-modules.
+             * @Description Gets the Batch Details and loads sub-modules.
              * @param component. Lightning Component reference.
              * @return void.
              ************************************************************/
@@ -366,16 +366,16 @@
             }
 
             /**
-             * @description Gets the Template Info module.
-             * @return Template Info module.
+             * @description Gets the Batch Info module.
+             * @return Batch Info module.
              */
             function getBatchInfo() {
                 return _batchInfo;
             }
 
             /**
-             * @description Gets the Template Metadata module.
-             * @return Template Metadata module.
+             * @description Gets the Batch Metadata module.
+             * @return Batch Metadata module.
              */
             function getBatchMetadata() {
                 return _batchMetadata;
@@ -394,8 +394,8 @@
     },
 
     /**
-     * @description Gets the Model module of the Template Info.
-     * @return Model module of the Template Info.
+     * @description Gets the Model module of the Batch Info.
+     * @return Model module of the Batch Info.
      */
     BatchInfo : function() {
         return (function (Event) {
@@ -752,9 +752,9 @@
     },
 
     /**
-     * @description Gets the Model module of the Template Metadata,
+     * @description Gets the Model module of the Batch Metadata,
      * such as page mode and labels.
-     * @return Model module of the Template Metadata.
+     * @return Model module of the Batch Metadata.
      */
     BatchMetadata : function() {
         return (function (Event) {
