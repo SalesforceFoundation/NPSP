@@ -11,31 +11,31 @@
         return (function (component, model) {
 
             // Subscribe to the model onInfoUpdated event.
-            model.getTemplateInfo().onInfoUpdated.subscribe(function() {
-                var templateInfoView = component.get('v.templateInfo');
-                var templateInfo = model.getTemplateInfo();
+            model.getBatchInfo().onInfoUpdated.subscribe(function() {
+                var templateInfoView = component.get('v.batchInfo');
+                var batchInfo = model.getBatchInfo();
 
                 // record info
-                templateInfoView.name = templateInfo.name;
-                templateInfoView.id = templateInfo.id;
-                templateInfoView.description = templateInfo.description;
-                templateInfoView.expectedCount = templateInfo.expectedCount;
-                templateInfoView.expectedTotal = templateInfo.expectedTotal;
-                templateInfoView.recordCount = templateInfo.recordCount;
+                templateInfoView.name = batchInfo.name;
+                templateInfoView.id = batchInfo.id;
+                templateInfoView.description = batchInfo.description;
+                templateInfoView.expectedCount = batchInfo.expectedCount;
+                templateInfoView.expectedTotal = batchInfo.expectedTotal;
+                templateInfoView.recordCount = batchInfo.recordCount;
 
                 // batch processing settings
-                templateInfoView.requireTotalMatch = templateInfo.requireTotalMatch;
-                templateInfoView.batchProcessSize = templateInfo.batchProcessSize;
-                templateInfoView.runOpportunityRollupsWhileProcessing = templateInfo.runOpportunityRollupsWhileProcessing;
-                templateInfoView.donationMatchingBehavior = templateInfo.donationMatchingBehavior;
-                templateInfoView.donationMatchingClass = templateInfo.donationMatchingClass;
-                templateInfoView.donationMatchingOptions = templateInfo.donationMatchingOptions;
-                templateInfoView.donationMatchingRule = templateInfo.donationMatchingRule;
-                templateInfoView.donationDateRange = templateInfo.donationDateRange;
-                templateInfoView.postProcessClass = templateInfo.postProcessClass;
-                templateInfoView.processUsingScheduledJob = templateInfo.processUsingScheduledJob;
+                templateInfoView.requireTotalMatch = batchInfo.requireTotalMatch;
+                templateInfoView.batchProcessSize = batchInfo.batchProcessSize;
+                templateInfoView.runOpportunityRollupsWhileProcessing = batchInfo.runOpportunityRollupsWhileProcessing;
+                templateInfoView.donationMatchingBehavior = batchInfo.donationMatchingBehavior;
+                templateInfoView.donationMatchingClass = batchInfo.donationMatchingClass;
+                templateInfoView.donationMatchingOptions = batchInfo.donationMatchingOptions;
+                templateInfoView.donationMatchingRule = batchInfo.donationMatchingRule;
+                templateInfoView.donationDateRange = batchInfo.donationDateRange;
+                templateInfoView.postProcessClass = batchInfo.postProcessClass;
+                templateInfoView.processUsingScheduledJob = batchInfo.processUsingScheduledJob;
 
-                component.set('v.templateInfo', templateInfoView);
+                component.set('v.batchInfo', templateInfoView);
             });
 
             // TemplateInfoView module public functions and properties
@@ -273,9 +273,9 @@
      * @return Model module of Template Details.
      */
     TemplateDetailsModel : function() {
-        return (function (availableFields, templateInfo, templateMetadata) {
+        return (function (availableFields, batchInfo, templateMetadata) {
             var _availableFields = availableFields;
-            var _templateInfo = templateInfo;
+            var _batchInfo = batchInfo;
             var _templateMetadata = templateMetadata;
             var _bgeTemplateController;
 
@@ -285,10 +285,10 @@
              * @return void.
              ************************************************************/
             function init(component) {
-                var recordId = _templateInfo.id ? _templateInfo.id : component.get('v.recordId');
+                var recordId = _batchInfo.id ? _batchInfo.id : component.get('v.recordId');
                 _bgeTemplateController.getRecordDetails(recordId, {
                     success: function(response) {
-                        _templateInfo.load(response);
+                        _batchInfo.load(response);
                         _availableFields.load(response.availableFields, JSON.parse(response.activeFields));
                         _templateMetadata.load(response.labels, component);
                     },
@@ -305,22 +305,22 @@
             function save() {
                 var templateDetailsData = {
                     //record info
-                    name: _templateInfo.name,
-                    id: _templateInfo.id,
-                    description: _templateInfo.description,
-                    expectedCount: _templateInfo.expectedCount,
-                    expectedTotal: _templateInfo.expectedTotal,
+                    name: _batchInfo.name,
+                    id: _batchInfo.id,
+                    description: _batchInfo.description,
+                    expectedCount: _batchInfo.expectedCount,
+                    expectedTotal: _batchInfo.expectedTotal,
 
                     // batch processing settings
-                    requireTotalMatch: _templateInfo.requireTotalMatch,
-                    batchProcessSize: _templateInfo.batchProcessSize,
-                    runOpportunityRollupsWhileProcessing: _templateInfo.runOpportunityRollupsWhileProcessing,
-                    donationMatchingBehavior: _templateInfo.donationMatchingBehavior,
-                    donationMatchingClass: _templateInfo.donationMatchingClass,
-                    donationMatchingRule: _templateInfo.donationMatchingRule,
-                    donationDateRange: _templateInfo.donationDateRange,
-                    postProcessClass: _templateInfo.postProcessClass,
-                    processUsingScheduledJob: _templateInfo.processUsingScheduledJob
+                    requireTotalMatch: _batchInfo.requireTotalMatch,
+                    batchProcessSize: _batchInfo.batchProcessSize,
+                    runOpportunityRollupsWhileProcessing: _batchInfo.runOpportunityRollupsWhileProcessing,
+                    donationMatchingBehavior: _batchInfo.donationMatchingBehavior,
+                    donationMatchingClass: _batchInfo.donationMatchingClass,
+                    donationMatchingRule: _batchInfo.donationMatchingRule,
+                    donationDateRange: _batchInfo.donationDateRange,
+                    postProcessClass: _batchInfo.postProcessClass,
+                    processUsingScheduledJob: _batchInfo.processUsingScheduledJob
                 };
                 var activeFields = [];
 
@@ -369,8 +369,8 @@
              * @description Gets the Template Info module.
              * @return Template Info module.
              */
-            function getTemplateInfo() {
-                return _templateInfo;
+            function getBatchInfo() {
+                return _batchInfo;
             }
 
             /**
@@ -387,17 +387,17 @@
                 save: save,
                 setBackendController: setBackendController,
                 getAvailableFields: getAvailableFields,
-                getTemplateInfo: getTemplateInfo,
+                getBatchInfo: getBatchInfo,
                 getTemplateMetadata: getTemplateMetadata
             }
-        })(this.TemplateFields(), this.TemplateInfo(), this.TemplateMetadata());
+        })(this.TemplateFields(), this.BatchInfo(), this.TemplateMetadata());
     },
 
     /**
      * @description Gets the Model module of the Template Info.
      * @return Model module of the Template Info.
      */
-    TemplateInfo : function() {
+    BatchInfo : function() {
         return (function (Event) {
             var _onInfoUpdated = new Event(this);
 
@@ -430,14 +430,14 @@
             }
 
             /**
-             * @description Validates the required templateInfo.
+             * @description Validates the required batchInfo.
              * @return Boolean validity.
              */
             function isValid() {
                 return this.name && this.description
             }
 
-            // TemplateInfo module public functions and properties
+            // BatchInfo module public functions and properties
             return {
                 // record info
                 name: '',
@@ -581,7 +581,7 @@
             }
 
             /**
-             * @description Validates the required templateInfo in Select Fields step.
+             * @description Validates the required batchInfo in Select Fields step.
              * @return Boolean validity.
              */
             function getRequiredFieldErrors() {

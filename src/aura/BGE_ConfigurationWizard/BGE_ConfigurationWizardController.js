@@ -13,7 +13,7 @@
         component.set('v.model', model);
 
         var templateInfoView = helper.TemplateInfoView(component, model);
-        component.set('v.templateInfo', templateInfoView);
+        component.set('v.batchInfo', templateInfoView);
         var templateMetadataView = helper.TemplateMetadataView(component, model);
         component.set('v.templateMetadata', templateMetadataView);
         var templateFieldsView = helper.TemplateFieldsView(component, model);
@@ -65,8 +65,8 @@
 
             // check validity and load values
             if (step === '1') {
-                model.getTemplateInfo().load(component.get('v.templateInfo'));
-                isValid = model.getTemplateInfo().isValid();
+                model.getBatchInfo().load(component.get('v.batchInfo'));
+                isValid = model.getBatchInfo().isValid();
                 possibleError = component.get('v.templateMetadata.labels.missingNameDescriptionError');
             } else if (step === '2') {
                 //handle template selection and copying here
@@ -80,7 +80,7 @@
                 model.getAvailableFields().updateTemplateFieldOptions(fieldOptions);
             } else if (step === '5') {
                 //todo: add validation for processing settings
-                model.getTemplateInfo().load(component.get('v.templateInfo'));
+                model.getBatchInfo().load(component.get('v.batchInfo'));
             }
 
             // proceed or display error
@@ -91,7 +91,7 @@
                     model.getTemplateMetadata().backStep();
                 } else if (task === 'save') {
                     model.getTemplateMetadata().togglePendingSave();
-                    model.getTemplateInfo().load(component.get('v.templateInfo'));
+                    model.getBatchInfo().load(component.get('v.batchInfo'));
                     model.save();
                 }
             } else {

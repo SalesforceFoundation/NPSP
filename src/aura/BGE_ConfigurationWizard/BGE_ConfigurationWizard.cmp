@@ -32,14 +32,14 @@
   @date 2018
   @group Batch Gift Entry
   @group-content ../../ApexDocContent/BatchDataImport.htm
-  @description Component used to view, edit, or create a Batch or Batch Template record.
+  @description Component used to view, edit, or create a Batch record.
 -->
 <aura:component controller="BGE_ConfigurationWizard_CTRL"
                 implements="lightning:actionOverride,force:hasRecordId,flexipage:availableForRecordHome,force:hasSObjectName">
 
     <!-- private attributes -->
     <aura:attribute name="model" type="Object" access="PRIVATE" />
-    <aura:attribute name="templateInfo" type="Object" access="PRIVATE" />
+    <aura:attribute name="batchInfo" type="Object" access="PRIVATE" />
     <aura:attribute name="templateMetadata" type="Object" access="PRIVATE"/>
     <aura:attribute name="availableFields" type="Object" access="PRIVATE" />
     <aura:attribute name="templateFieldOptions" type="Object" access="PRIVATE" />
@@ -68,12 +68,12 @@
                     <lightning:layout horizontalAlign="center">
                         <lightning:layoutItem size="10">
                             <lightning:input type="text" name="name" label="{!$Label.c.stgLabelName}"
-                                             value="{!v.templateInfo.name}" readonly="{!v.isReadOnly}" required="true"/>
+                                             value="{!v.batchInfo.name}" readonly="{!v.isReadOnly}" required="true"/>
                             <lightning:textarea name="description" label="{!v.templateMetadata.labels.description}"
-                                                value="{!v.templateInfo.description}" readonly="{!v.isReadOnly}"
+                                                value="{!v.batchInfo.description}" readonly="{!v.isReadOnly}"
                                                 required="true" class="slds-p-top_medium"/>
                             <aura:if isTrue="{!v.isReadOnly}">
-                                <ui:outputCheckbox value="{!v.templateInfo.requireTotalMatch}"
+                                <ui:outputCheckbox value="{!v.batchInfo.requireTotalMatch}"
                                                    class="slds-form-element__control"/>
                                 <span class="slds-form-element__label">{!v.templateMetadata.labels.totalMatchLabel}</span>
 
@@ -85,7 +85,7 @@
                                                              min="0"
                                                              label="{!v.templateMetadata.labels.expectedCountLabel}"
                                                              name="expectedCount"
-                                                             value="{!v.templateInfo.expectedCount}"/>
+                                                             value="{!v.batchInfo.expectedCount}"/>
                                             <lightning:input aura:id="expectedTotal" type="number"
                                                              formatter="currency"
                                                              class="slds-p-top_small"
@@ -93,13 +93,13 @@
                                                              step="0.01"
                                                              label="{!v.templateMetadata.labels.expectedTotalLabel}"
                                                              name="expectedTotal"
-                                                             value="{!v.templateInfo.expectedTotal}"/>
+                                                             value="{!v.batchInfo.expectedTotal}"/>
                                         <!--</aura:if>-->
                                         <lightning:input aura:id="totalMatchCheckbox" type="checkbox"
                                                          class="templateInputCheckbox slds-p-top_small"
                                                          label="{!v.templateMetadata.labels.totalMatchLabel}"
                                                          name="requireTotalMatch"
-                                                         checked="{!v.templateInfo.requireTotalMatch}"
+                                                         checked="{!v.batchInfo.requireTotalMatch}"
                                                          variant="label-hidden"/>
                                         <label class="slds-form-element__label" for="totalMatchCheckbox">
                                             {!v.templateMetadata.labels.totalMatchLabel}
@@ -123,7 +123,7 @@
 
                     <div class="slds-m-around_medium">
 
-                        <aura:if isTrue="{!greaterthan(v.templateInfo.recordCount,0)}">
+                        <aura:if isTrue="{!greaterthan(v.batchInfo.recordCount,0)}">
                             <lightning:layout horizontalAlign="center">
                                 <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center slds-p-bottom_medium">
                                     <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
@@ -181,7 +181,7 @@
                 <aura:if isTrue="{!or(v.templateMetadata.progressIndicatorStep == '4', v.isReadOnly)}">
                     <div class="slds-m-around_medium">
 
-                        <aura:if isTrue="{!greaterthan(v.templateInfo.recordCount,0)}">
+                        <aura:if isTrue="{!greaterthan(v.batchInfo.recordCount,0)}">
                             <lightning:layout horizontalAlign="center">
                                 <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center slds-p-bottom_medium">
                                     <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
@@ -285,7 +285,7 @@
                 <!-- Step 5: Edit Matching Rules -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '5'}">
 
-                    <aura:if isTrue="{!greaterthan(v.templateInfo.recordCount,0)}">
+                    <aura:if isTrue="{!greaterthan(v.batchInfo.recordCount,0)}">
                         <lightning:layout horizontalAlign="center">
                             <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center slds-p-bottom_medium">
                                 <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
@@ -318,7 +318,7 @@
                                     <lightning:helptext content="{!$Label.c.bgeBatchTemplateDonationMatchingBehaviorHelp}" />
                                     <lightning:select aura:id="donationMatchingBehavior"
                                                       label="{!v.templateMetadata.labels.donationMatchingBehaviorLabel}"
-                                                      value="{!v.templateInfo.donationMatchingBehavior}"
+                                                      value="{!v.batchInfo.donationMatchingBehavior}"
                                                       class="hideLabel" variant="label-hidden">
                                         <option value="{!v.templateMetadata.labels.DoNotMatch}" text="{!$Label.c.bdiBehaviorDoNotMatch}"/>
                                         <option value="{!v.templateMetadata.labels.RequireNoMatch}" text="{!$Label.c.bdiBehaviorRequireNoMatch}"/>
@@ -340,8 +340,8 @@
                                                            label="{!v.templateMetadata.labels.donationMatchingRuleLabel}"
                                                            sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
                                                            selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
-                                                           options="{!v.templateInfo.donationMatchingOptions}"
-                                                           value="{!v.templateInfo.donationMatchingRule}"
+                                                           options="{!v.batchInfo.donationMatchingOptions}"
+                                                           value="{!v.batchInfo.donationMatchingRule}"
                                                            required="true" variant="label-hidden"
                                                            disableReordering="true"
                                                            size="5"/>
@@ -355,7 +355,7 @@
                                     <lightning:input aura:id="donationDateRange"
                                                      label="{!v.templateMetadata.labels.donationDateRangeLabel}"
                                                      type="number" required="true" variant="label-hidden"
-                                                     value="{!v.templateInfo.donationDateRange}"/>
+                                                     value="{!v.batchInfo.donationDateRange}"/>
                                 </lightning:layoutItem>
                                 <lightning:layoutItem class="slds-p-around_x-small" size="12">
                                     <label class="slds-form-element__label" for="donationMatchingClass">
@@ -364,7 +364,7 @@
                                     <lightning:helptext content="{!$Label.c.bgeBatchTemplateDonationMatchingClassHelp}" />
                                     <lightning:input aura:id="donationMatchingClass"
                                                      label="{!v.templateMetadata.labels.donationMatchingClassLabel}"
-                                                     value="{!v.templateInfo.donationMatchingClass}" variant="label-hidden"/>
+                                                     value="{!v.batchInfo.donationMatchingClass}" variant="label-hidden"/>
                                 </lightning:layoutItem>
                             </lightning:layout>
                         </lightning:layoutItem>
@@ -388,13 +388,13 @@
                                     <lightning:input aura:id="batchProcessSize"
                                                      label="{!v.templateMetadata.labels.batchProcessSizeLabel}"
                                                      type="number" step="0" required="true" variant="label-hidden"
-                                                     value="{!v.templateInfo.batchProcessSize}"/>
+                                                     value="{!v.batchInfo.batchProcessSize}"/>
                                 </lightning:layoutItem>
                                 <lightning:layoutItem class="slds-p-around_x-small" size="12">
                                     <lightning:input aura:id="runOpportunityRollupsWhileProcessing"
                                                      label="{!v.templateMetadata.labels.runOpportunityRollupsWhileProcessingLabel}"
                                                      type="checkbox" variant="label-hidden" class="inputCheckbox"
-                                                     checked="{!v.templateInfo.runOpportunityRollupsWhileProcessing}"/>
+                                                     checked="{!v.batchInfo.runOpportunityRollupsWhileProcessing}"/>
                                     <label class="slds-form-element__label" for="runOpportunityRollupsWhileProcessing">
                                         {!v.templateMetadata.labels.runOpportunityRollupsWhileProcessingLabel}
                                     </label>
@@ -404,7 +404,7 @@
                                     <lightning:input aura:id="processUsingScheduledJob"
                                                      label="{!v.templateMetadata.labels.processUsingScheduledJobLabel}"
                                                      type="checkbox" variant="label-hidden" class="inputCheckbox"
-                                                     checked="{!v.templateInfo.processUsingScheduledJob}"/>
+                                                     checked="{!v.batchInfo.processUsingScheduledJob}"/>
                                     <label class="slds-form-element__label" for="processUsingScheduledJob">
                                         {!v.templateMetadata.labels.processUsingScheduledJobLabel}
                                     </label>
@@ -417,7 +417,7 @@
                                     <lightning:helptext content="{!$Label.c.bgeBatchTemplatePostProcessClassHelp}" />
                                     <lightning:input aura:id="postProcessClass"
                                                      label="{!v.templateMetadata.labels.postProcessClassLabel}"
-                                                     value="{!v.templateInfo.postProcessClass}"
+                                                     value="{!v.batchInfo.postProcessClass}"
                                                      variant="label-hidden"/>
                                 </lightning:layoutItem>
                             </lightning:layout>
