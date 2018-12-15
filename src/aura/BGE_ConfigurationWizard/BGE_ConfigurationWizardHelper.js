@@ -2,10 +2,10 @@
     /********************************************* View Modules *********************************************/
 
     /**
-     * @description Returns the Template Info View module.
+     * @description Returns the Batch Info View module.
      * @param component. Lightning Component reference.
      * @param model. The Model.
-     * @return View of the Template Info module.
+     * @return View of the Batch Info module.
      */
     BatchInfoView : function(component, model) {
         return (function (component, model) {
@@ -272,12 +272,12 @@
      * and TemplateInfo sub-modules.
      * @return Model module of Template Details.
      */
-    TemplateDetailsModel : function() {
+    DetailsModel : function() {
         return (function (availableFields, batchInfo, batchMetadata) {
             var _availableFields = availableFields;
             var _batchInfo = batchInfo;
             var _batchMetadata = batchMetadata;
-            var _bgeTemplateController;
+            var _bgeBatchController;
 
             /* **********************************************************
              * @Description Gets the Template Details and loads sub-modules.
@@ -286,7 +286,7 @@
              ************************************************************/
             function init(component) {
                 var recordId = _batchInfo.id ? _batchInfo.id : component.get('v.recordId');
-                _bgeTemplateController.getRecordDetails(recordId, {
+                _bgeBatchController.getRecordDetails(recordId, {
                     success: function(response) {
                         _batchInfo.load(response);
                         _availableFields.load(response.availableFields, JSON.parse(response.activeFields));
@@ -303,7 +303,7 @@
              * @return void.
              */
             function save() {
-                var templateDetailsData = {
+                var batchDetailsData = {
                     //record info
                     name: _batchInfo.name,
                     id: _batchInfo.id,
@@ -338,7 +338,7 @@
                     });
                 });
 
-                _bgeTemplateController.saveRecord(templateDetailsData, activeFields, {
+                _bgeBatchController.saveRecord(batchDetailsData, activeFields, {
                     success: function(response) {
                         _batchMetadata.navigateToRecord(response.id);
                     },
@@ -353,8 +353,8 @@
              * @description Sets the Apex backend controller module.
              * @return void.
              */
-            function setBackendController(bgeTemplateController) {
-                _bgeTemplateController = bgeTemplateController
+            function setBackendController(bgeBatchController) {
+                _bgeBatchController = bgeBatchController
             }
 
             /**
@@ -381,7 +381,7 @@
                 return _batchMetadata;
             }
 
-            // TemplateDetailsModel module public functions and properties
+            // DetailsModel module public functions and properties
             return {
                 init: init,
                 save: save,
@@ -1021,7 +1021,7 @@
      * @description Gets Template Details Controller
      * @return Template Details Controller.
      */
-    BGETemplateController : function(component) {
+    BGEBatchController : function(component) {
         return (function (component) {
             var _component = component;
 
@@ -1042,7 +1042,7 @@
 
             /**
              * @description Calls the saveRecord method.
-             * @param templateDetails. The Template fields.
+             * @param batchDetails. The Template fields.
              * @param activeFields. The active fields (JSON format)
              * @param callback. The callback function to execute.
              * @return void.
@@ -1078,7 +1078,7 @@
                 }
             }
 
-            // BGETemplateController module public functions.
+            // BGEBatchController module public functions.
             return {
                 errors: '',
                 getRecordDetails: getRecordDetails,

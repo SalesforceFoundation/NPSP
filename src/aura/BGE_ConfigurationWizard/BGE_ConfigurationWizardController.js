@@ -6,10 +6,10 @@
      * @description Constructs the Model Module, and the View Modules.
      */
     doInit: function (component, event, helper) {
-        var bgeTemplateController = helper.BGETemplateController(component);
+        var bgeBatchController = helper.BGEBatchController(component);
 
-        var model = helper.TemplateDetailsModel();
-        model.setBackendController(bgeTemplateController);
+        var model = helper.DetailsModel();
+        model.setBackendController(bgeBatchController);
         component.set('v.model', model);
 
         var batchInfoView = helper.BatchInfoView(component, model);
