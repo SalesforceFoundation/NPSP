@@ -38,8 +38,6 @@
 @isTest(IsParallel=true)
 private class BGE_ConfigurationWizard_CTRL_TEST {
 
-    // TODO: It looks like all of tests need to be re-written against batch config fields
-
     /*********************************************************************************************************
     * @description Tests sets up a new Batch Record
     */
