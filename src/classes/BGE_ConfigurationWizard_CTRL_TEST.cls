@@ -43,7 +43,7 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
     */
     private static DataImportBatch__c initBatchConfigTest() {
         DataImportBatch__c batchConfig = new DataImportBatch__c();
-        batchConfig.Name = 'Test Template 1';
+        batchConfig.Name = 'Test Batch 1';
         batchConfig.Batch_Description__c = 'Test Record';
         batchConfig.RequireTotalMatch__c = true;
 
@@ -57,57 +57,57 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
     */
 
     @isTest
-    private static void testGetNewTemplateDetails() {
+    private static void testGetNewBatchDetails() {
 
         Test.startTest();
         String jsonModel = BGE_ConfigurationWizard_CTRL.getRecordDetails(null);
-        BGE_ConfigurationWizard_CTRL.BGEDetailsModel templateDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
+        BGE_ConfigurationWizard_CTRL.BGEDetailsModel batchDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
         Test.stopTest();
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
         //for null, only these fields are populated
-        System.assertNotEquals(null, templateDetails.availableFields, 'Available fields should not be null');
-        System.assertNotEquals(null, templateDetails.labels, 'Batch config labels should not be null');
+        System.assertNotEquals(null, batchDetails.availableFields, 'Available fields should not be null');
+        System.assertNotEquals(null, batchDetails.labels, 'Batch config labels should not be null');
 
-        System.assertEquals(null, templateDetails.name, 'Batch name should be null');
-        System.assertEquals(null, templateDetails.description, 'Batch description should be null');
-        System.assertEquals(false, templateDetails.requireTotalMatch, 'Require total match should be false');
-        System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), templateDetails.activeFields, 'Active Fields should match default');
-        System.assertEquals(null, templateDetails.id, 'Batch ID should be null');
+        System.assertEquals(null, batchDetails.name, 'Batch name should be null');
+        System.assertEquals(null, batchDetails.description, 'Batch description should be null');
+        System.assertEquals(false, batchDetails.requireTotalMatch, 'Require total match should be false');
+        System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), batchDetails.activeFields, 'Active Fields should match default');
+        System.assertEquals(null, batchDetails.id, 'Batch ID should be null');
     }
 
     /*********************************************************************************************************
-    * @description Tests getTemplateDetails() for an existing record
+    * @description Tests getRecordDetails() for an existing record
     */
 
     @isTest
-    private static void testGetExistingTemplateDetails() {
+    private static void testGetExistingRecordDetails() {
         DataImportBatch__c batchConfig = initBatchConfigTest();
 
         Test.startTest();
         String jsonModel = BGE_ConfigurationWizard_CTRL.getRecordDetails(batchConfig.Id);
-        BGE_ConfigurationWizard_CTRL.BGEDetailsModel templateDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
+        BGE_ConfigurationWizard_CTRL.BGEDetailsModel batchDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
         Test.stopTest();
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
-        System.assertNotEquals(null, templateDetails.availableFields, 'Fields should not be null');
-        System.assertNotEquals(null, templateDetails.labels, 'Labels should not be null');
+        System.assertNotEquals(null, batchDetails.availableFields, 'Fields should not be null');
+        System.assertNotEquals(null, batchDetails.labels, 'Labels should not be null');
 
-        System.assertEquals(batchConfig.Name, templateDetails.name, 'Details name should match');
-        System.assertEquals(batchConfig.Batch_Description__c, templateDetails.description, 'Details description should match');
-        System.assertEquals(batchConfig.RequireTotalMatch__c, templateDetails.requireTotalMatch, 'Require total match should match');
-        System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), templateDetails.activeFields, 'Active Fields should match default');
-        System.assertEquals(batchConfig.Id, templateDetails.id, 'Batch ID should match');
+        System.assertEquals(batchConfig.Name, batchDetails.name, 'Details name should match');
+        System.assertEquals(batchConfig.Batch_Description__c, batchDetails.description, 'Details description should match');
+        System.assertEquals(batchConfig.RequireTotalMatch__c, batchDetails.requireTotalMatch, 'Require total match should match');
+        System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), batchDetails.activeFields, 'Active Fields should match default');
+        System.assertEquals(batchConfig.Id, batchDetails.id, 'Batch ID should match');
     }
 
     /*********************************************************************************************************
-    * @description Tests saveTemplateDetails() for a new record
+    * @description Tests saveBatchDetails() for a new record
     */
 
     @isTest
-    private static void testSaveNewTemplateDetails() {
+    private static void testSaveNewBatch() {
 
-        String templateInfoJSON = '{' +
+        String batchInfoJSON = '{' +
                 '"name":"Test 4",' +
                 '"id":null,' +
                 '"description":"Test Record",' +
@@ -124,32 +124,32 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
                 '}';
         String activeFieldsJSON = BGE_ConfigurationWizard_CTRL.getDefaultActiveFields();
         Test.startTest();
-        String jsonModel = BGE_ConfigurationWizard_CTRL.saveRecord(templateInfoJSON, activeFieldsJSON);
-        BGE_ConfigurationWizard_CTRL.BGEDetailsModel templateDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
+        String jsonModel = BGE_ConfigurationWizard_CTRL.saveRecord(batchInfoJSON, activeFieldsJSON);
+        BGE_ConfigurationWizard_CTRL.BGEDetailsModel batchDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
         Test.stopTest();
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
-        System.assertEquals('Test 4', templateDetails.name, 'Template details name should be Test 4');
-        System.assertEquals('Test Record', templateDetails.description, 'Template details description should be Test Record');
-        System.assertEquals(false, templateDetails.requireTotalMatch, 'Require total match should be false');
-        System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), templateDetails.activeFields, 'Active Fields should match default');
-        System.assertNotEquals(null, templateDetails.id, 'Template details should not be null');
+        System.assertEquals('Test 4', batchDetails.name, 'Template details name should be Test 4');
+        System.assertEquals('Test Record', batchDetails.description, 'Template details description should be Test Record');
+        System.assertEquals(false, batchDetails.requireTotalMatch, 'Require total match should be false');
+        System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), batchDetails.activeFields, 'Active Fields should match default');
+        System.assertNotEquals(null, batchDetails.id, 'Template details should not be null');
 
     }
 
     /*********************************************************************************************************
-    * @description Tests saveTemplateDetails() for an existing record
+    * @description Tests saveRecord() for an existing record
     */
 
     @isTest
-    private static void testSaveExistingTemplateDetails() {
+    private static void testSaveExistingBatch() {
 
         DataImportBatch__c batchConfig = initBatchConfigTest();
         String newName = 'New Name';
         System.assertNotEquals(newName, batchConfig.Name);
 
         String sObjectName = 'DataImportBatch__c';
-        String templateInfoJSON = '{' +
+        String batchInfoJSON = '{' +
                 '"name":"' + newName + '",' +
                 '"id":"' + batchConfig.Id + '",' +
                 '"description":"Test Record",' +
@@ -177,13 +177,13 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
 
         Test.startTest();
         System.debug(batchConfig);
-        String jsonModel = BGE_ConfigurationWizard_CTRL.saveRecord(templateInfoJSON, activeFieldsJSON);
-        BGE_ConfigurationWizard_CTRL.BGEDetailsModel templateDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
+        String jsonModel = BGE_ConfigurationWizard_CTRL.saveRecord(batchInfoJSON, activeFieldsJSON);
+        BGE_ConfigurationWizard_CTRL.BGEDetailsModel batchDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
         Test.stopTest();
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
-        System.assertEquals(newName, templateDetails.name, 'Batch name does not match.');
-        System.assertEquals(batchConfig.Id, templateDetails.id, 'Wrong Batch record was updated.');
+        System.assertEquals(newName, batchDetails.name, 'Batch name does not match.');
+        System.assertEquals(batchConfig.Id, batchDetails.id, 'Wrong Batch record was updated.');
     }
 
 }
