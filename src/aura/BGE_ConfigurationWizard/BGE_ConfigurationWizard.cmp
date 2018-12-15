@@ -41,7 +41,7 @@
     <aura:attribute name="model" type="Object" access="PRIVATE" />
     <aura:attribute name="templateInfo" type="Object" access="PRIVATE" />
     <aura:attribute name="templateMetadata" type="Object" access="PRIVATE"/>
-    <aura:attribute name="templateFields" type="Object" access="PRIVATE" />
+    <aura:attribute name="availableFields" type="Object" access="PRIVATE" />
     <aura:attribute name="templateFieldOptions" type="Object" access="PRIVATE" />
 
     <!-- public attributes -->
@@ -139,7 +139,7 @@
 
                         <p class="slds-p-bottom_small">{!$Label.c.bgeBatchTemplateDonorLookupInfo}</p>
 
-                        <aura:iteration items="{!v.templateFields.fieldGroups}" var="currentFieldGroup">
+                        <aura:iteration items="{!v.availableFields.fieldGroups}" var="currentFieldGroup">
                             <div class="slds-section slds-p-bottom_medium">
                                 <h3 class="slds-section__title slds-theme_shade slds-m-bottom_small">
                                     <span class="slds-truncate slds-p-around_x-small">{!currentFieldGroup.sObjectName}</span>

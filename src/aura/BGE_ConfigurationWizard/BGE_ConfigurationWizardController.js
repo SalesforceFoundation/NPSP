@@ -17,7 +17,7 @@
         var templateMetadataView = helper.TemplateMetadataView(component, model);
         component.set('v.templateMetadata', templateMetadataView);
         var templateFieldsView = helper.TemplateFieldsView(component, model);
-        component.set('v.templateFields', templateFieldsView);
+        component.set('v.availableFields', templateFieldsView);
         var templateFieldOptionsView = helper.TemplateFieldOptionsView(component, model);
         component.set('v.templateFieldOptions', templateFieldOptionsView);
 
@@ -71,13 +71,13 @@
             } else if (step === '2') {
                 //handle template selection and copying here
             } else if (step === '3') {
-                model.getTemplateFields().updateToActive(component.get('v.templateFields').fieldGroups);
-                possibleError = model.getTemplateFields().getRequiredFieldErrors();
+                model.getAvailableFields().updateToActive(component.get('v.availableFields').fieldGroups);
+                possibleError = model.getAvailableFields().getRequiredFieldErrors();
                 isValid = (possibleError.length === 0);
             } else if (step === '4') {
-                isValid = model.getTemplateFields().getDefaultFieldValidity(component);
+                isValid = model.getAvailableFields().getDefaultFieldValidity(component);
                 var fieldOptions = component.get('v.templateFieldOptions.fieldGroups');
-                model.getTemplateFields().updateTemplateFieldOptions(fieldOptions);
+                model.getAvailableFields().updateTemplateFieldOptions(fieldOptions);
             } else if (step === '5') {
                 //todo: add validation for processing settings
                 model.getTemplateInfo().load(component.get('v.templateInfo'));

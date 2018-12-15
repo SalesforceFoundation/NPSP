@@ -68,7 +68,7 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
         //for null, only these fields are populated
-        System.assertNotEquals(null, templateDetails.templateFields, 'Available fields should not be null');
+        System.assertNotEquals(null, templateDetails.availableFields, 'Available fields should not be null');
         System.assertNotEquals(null, templateDetails.labels, 'Batch config labels should not be null');
 
         System.assertEquals(null, templateDetails.name, 'Batch name should be null');
@@ -92,7 +92,7 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
         Test.stopTest();
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
-        System.assertNotEquals(null, templateDetails.templateFields, 'Fields should not be null');
+        System.assertNotEquals(null, templateDetails.availableFields, 'Fields should not be null');
         System.assertNotEquals(null, templateDetails.labels, 'Labels should not be null');
 
         System.assertEquals(batchConfig.Name, templateDetails.name, 'Details name should match');

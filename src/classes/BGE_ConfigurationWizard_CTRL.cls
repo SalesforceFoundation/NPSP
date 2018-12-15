@@ -104,7 +104,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         setDefaultValuesOnBGEDetailsModel(model);
 
         model.donationMatchingOptions = getDonationMatchingOptions();
-        model.templateFields = getAvailableFields();
+        model.availableFields = getAvailableFields();
 
         model.labels = getLabels('DataImportBatch__c');
 
@@ -324,7 +324,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         model.expectedCount = 0;
         model.expectedTotal = 0;
         model.requireTotalMatch = false;
-        model.templateFields = new List<BGEField>();
+        model.availableFields = new List<BGEField>();
         model.batchProcessSize = 50;
         model.contactMatchingRule = 'Firstname,Lastname,Email';
         model.donationDateRange = 0;
@@ -362,8 +362,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             model.requireTotalMatch = defaultModel.requireTotalMatch;
         }
 
-        if (model.templateFields == null) {
-            model.templateFields = defaultModel.templateFields;
+        if (model.availableFields == null) {
+            model.availableFields = defaultModel.availableFields;
         }
 
         if (model.batchProcessSize == null) {
@@ -603,7 +603,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public Boolean requireTotalMatch;
         @AuraEnabled public Integer expectedCount;
         @AuraEnabled public Decimal expectedTotal;
-        @AuraEnabled public List<BGEField> templateFields;
+        @AuraEnabled public List<BGEField> availableFields;
         @AuraEnabled public String activeFields;
         @AuraEnabled public Map<String, String> labels;
         @AuraEnabled public Decimal batchProcessSize;
@@ -622,7 +622,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             requireTotalMatch = false;
             expectedCount = 0;
             expectedTotal = 0;
-            templateFields = new List<BGEField>();
+            availableFields = new List<BGEField>();
         }
     }
 

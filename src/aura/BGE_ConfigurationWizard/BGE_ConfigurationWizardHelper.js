@@ -154,12 +154,12 @@
         return (function (component, model) {
 
             // Subscribe to the model onFieldsUpdated event.
-            model.getTemplateFields().onFieldsUpdated.subscribe(function() {
-                var templateFields = component.get('v.templateFields');
-                templateFields.fieldGroups = [];
+            model.getAvailableFields().onFieldsUpdated.subscribe(function() {
+                var availableFields = component.get('v.availableFields');
+                availableFields.fieldGroups = [];
 
-                var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
-                var allFieldsBySObject = model.getTemplateFields().getAllFieldsBySObject();
+                var activeFieldsBySObject = model.getAvailableFields().getActivesBySObject();
+                var allFieldsBySObject = model.getAvailableFields().getAllFieldsBySObject();
 
                 Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
                     var currentFieldGroup = {
@@ -187,10 +187,10 @@
                             currentFieldGroup.values.push(currentField.id);
                         });
                     }
-                    templateFields.fieldGroups.push(currentFieldGroup);
+                    availableFields.fieldGroups.push(currentFieldGroup);
                 });
 
-                component.set('v.templateFields', templateFields);
+                component.set('v.availableFields', availableFields);
             });
 
             // TemplateFieldsView module public functions and properties
@@ -210,12 +210,12 @@
         return (function (component, model) {
 
             // Subscribe to the model onFieldsUpdated event.
-            model.getTemplateFields().onFieldsUpdated.subscribe(function() {
+            model.getAvailableFields().onFieldsUpdated.subscribe(function() {
                 var templateFieldOptions = component.get('v.templateFieldOptions');
                 templateFieldOptions.fieldGroups = [];
-                var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
-                var templateFields = model.getTemplateFields();
-                templateFieldOptions.errors = templateFields.errors;
+                var activeFieldsBySObject = model.getAvailableFields().getActivesBySObject();
+                var availableFields = model.getAvailableFields();
+                templateFieldOptions.errors = availableFields.errors;
 
                 Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
 
@@ -273,8 +273,8 @@
      * @return Model module of Template Details.
      */
     TemplateDetailsModel : function() {
-        return (function (templateFields, templateInfo, templateMetadata) {
-            var _templateFields = templateFields;
+        return (function (availableFields, templateInfo, templateMetadata) {
+            var _availableFields = availableFields;
             var _templateInfo = templateInfo;
             var _templateMetadata = templateMetadata;
             var _bgeTemplateController;
@@ -289,7 +289,7 @@
                 _bgeTemplateController.getRecordDetails(recordId, {
                     success: function(response) {
                         _templateInfo.load(response);
-                        _templateFields.load(response.templateFields, JSON.parse(response.activeFields));
+                        _availableFields.load(response.availableFields, JSON.parse(response.activeFields));
                         _templateMetadata.load(response.labels, component);
                     },
                     error: function(error) {
@@ -324,7 +324,7 @@
                 };
                 var activeFields = [];
 
-                _templateFields.getActives().forEach(function(currentField) {
+                _availableFields.getActives().forEach(function(currentField) {
                     activeFields.push({
                         label: currentField.label,
                         name: currentField.name,
@@ -361,8 +361,8 @@
              * @description Gets the Template Fields module.
              * @return Template Fields module.
              */
-            function getTemplateFields() {
-                return _templateFields;
+            function getAvailableFields() {
+                return _availableFields;
             }
 
             /**
@@ -386,7 +386,7 @@
                 init: init,
                 save: save,
                 setBackendController: setBackendController,
-                getTemplateFields: getTemplateFields,
+                getAvailableFields: getAvailableFields,
                 getTemplateInfo: getTemplateInfo,
                 getTemplateMetadata: getTemplateMetadata
             }
