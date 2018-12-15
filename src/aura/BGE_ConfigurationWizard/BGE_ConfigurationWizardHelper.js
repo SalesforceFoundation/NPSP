@@ -1,6 +1,6 @@
 ({
     /********************************************* View Modules *********************************************/
-    
+
     /**
      * @description Returns the Template Info View module.
      * @param component. Lightning Component reference.
@@ -267,7 +267,7 @@
 
     /**
      * @description Gets the Model module of Template Details.
-     * This is the main and only Model module for the Template 
+     * This is the main and only Model module for the Template
      * Details components. Contains references to TemplateFields
      * and TemplateInfo sub-modules.
      * @return Model module of Template Details.
@@ -278,7 +278,7 @@
             var _templateInfo = templateInfo;
             var _templateMetadata = templateMetadata;
             var _bgeTemplateController;
-            
+
             /* **********************************************************
              * @Description Gets the Template Details and loads sub-modules.
              * @param component. Lightning Component reference.
@@ -286,11 +286,10 @@
              ************************************************************/
             function init(component) {
                 var recordId = _templateInfo.id ? _templateInfo.id : component.get('v.recordId');
-                var sObjectName = component.get('v.sObjectName');
-                _bgeTemplateController.getRecordDetails(sObjectName, recordId, {
+                _bgeTemplateController.getRecordDetails(recordId, {
                     success: function(response) {
                         _templateInfo.load(response);
-                        _templateFields.load(response.availableFields, JSON.parse(response.activeFields));
+                        _templateFields.load(response.templateFields, JSON.parse(response.activeFields));
                         _templateMetadata.load(response.labels, component);
                     },
                     error: function(error) {
@@ -339,9 +338,7 @@
                     });
                 });
 
-                var sObjectName = _templateMetadata.labels.sObjectNameNoNamespace;
-
-                _bgeTemplateController.saveRecord(sObjectName, templateDetailsData, activeFields, {
+                _bgeTemplateController.saveRecord(templateDetailsData, activeFields, {
                     success: function(response) {
                         _templateMetadata.navigateToRecord(response.id);
                     },
@@ -403,7 +400,7 @@
     TemplateInfo : function() {
         return (function (Event) {
             var _onInfoUpdated = new Event(this);
-            
+
             /**
              * @description Loads the Info, and notify all the
              * _onInfoUpdated listeners.
@@ -439,7 +436,7 @@
             function isValid() {
                 return this.name && this.description
             }
-            
+
             // TemplateInfo module public functions and properties
             return {
                 // record info
@@ -522,9 +519,9 @@
             }
 
             /**
-            * @description Gets all fields grouped by SObject.
-            * @return Map of SObject group to List of all fields.
-            */
+             * @description Gets all fields grouped by SObject.
+             * @return Map of SObject group to List of all fields.
+             */
             function getAllFieldsBySObject() {
                 return _groupFieldsBySObject(_allFields);
             }
@@ -752,7 +749,7 @@
 
             }
         })(this.Event());
-	},
+    },
 
     /**
      * @description Gets the Model module of the Template Metadata,
@@ -821,13 +818,18 @@
              * @return void.
              */
             function cancel() {
-                //navigate to record home
-                var homeEvent = $A.get('e.force:navigateToObjectHome');
-                var objectName = this.labels.sObjectName;
-                homeEvent.setParams({
-                    'scope': objectName
-                });
-                homeEvent.fire();
+                if (this.mode === 'edit' && this.labels.sObjectNameNoNamespace === 'Batch_Template__c') {
+                    this.clearError();
+                    this.setMode('view');
+                } else {
+                    //navigate to record home
+                    var homeEvent = $A.get('e.force:navigateToObjectHome');
+                    var objectName = this.labels.sObjectName;
+                    homeEvent.setParams({
+                        'scope': objectName
+                    });
+                    homeEvent.fire();
+                }
             }
 
             /**
@@ -983,7 +985,7 @@
         return function(sender) {
             var _sender = sender;
             var _listeners = [];
-            
+
             /**
              * @description Subscribes the listener to the current Event.
              * @param listener. The event listener.
@@ -992,7 +994,7 @@
             function subscribe(listener) {
                 _listeners.push(listener);
             }
-            
+
             /**
              * @description Notifies the listeners of the current Event.
              * @param args. The parameters to provide to the listeners.
@@ -1004,7 +1006,7 @@
                     _listeners[index](_sender, args);
                 }
             }
-            
+
             // Event module public functions.
             return {
                 subscribe: subscribe,
@@ -1012,7 +1014,7 @@
             };
         };
     },
-    
+
     /*********************************************** Template Detail Controller *********************************************/
 
     /**
@@ -1029,10 +1031,9 @@
              * @param callback. The callback function to execute.
              * @return void.
              */
-            function getRecordDetails(sObjectName, recordId, callback) {
+            function getRecordDetails(recordId, callback) {
                 var action = _component.get('c.getRecordDetails');
                 action.setParams({
-                    'sObjectName': sObjectName,
                     'recordId': recordId
                 });
                 action.setCallback(callback, _processResponse);
@@ -1046,10 +1047,9 @@
              * @param callback. The callback function to execute.
              * @return void.
              */
-            function saveRecord(sObjectName, recordDetails, activeFields, callback) {
+            function saveRecord(recordDetails, activeFields, callback) {
                 var action = _component.get('c.saveRecord');
                 action.setParams({
-                    'sObjectName' : sObjectName,
                     'recordInfo': JSON.stringify(recordDetails),
                     'activeFields': JSON.stringify(activeFields)
                 });
@@ -1077,7 +1077,7 @@
                     this.error(errors);
                 }
             }
-            
+
             // BGETemplateController module public functions.
             return {
                 errors: '',

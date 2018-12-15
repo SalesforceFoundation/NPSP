@@ -114,8 +114,8 @@
                 <!--End Step 1-->
 
                 <!-- Step 2: Template Selection (Only for Batch Gift Entry) -->
-                <!--<aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '2'}">-->
-                <!--</aura:if>-->
+                <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '2'}">
+                </aura:if>
                 <!-- End Step 2 -->
 
                 <!-- Step 3: Select Fields -->
