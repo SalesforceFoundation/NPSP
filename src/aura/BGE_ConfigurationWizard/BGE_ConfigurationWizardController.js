@@ -12,8 +12,8 @@
         model.setBackendController(bgeTemplateController);
         component.set('v.model', model);
 
-        var templateInfoView = helper.TemplateInfoView(component, model);
-        component.set('v.batchInfo', templateInfoView);
+        var batchInfoView = helper.BatchInfoView(component, model);
+        component.set('v.batchInfo', batchInfoView);
         var templateMetadataView = helper.TemplateMetadataView(component, model);
         component.set('v.templateMetadata', templateMetadataView);
         var templateFieldsView = helper.TemplateFieldsView(component, model);

@@ -7,38 +7,38 @@
      * @param model. The Model.
      * @return View of the Template Info module.
      */
-    TemplateInfoView : function(component, model) {
+    BatchInfoView : function(component, model) {
         return (function (component, model) {
 
             // Subscribe to the model onInfoUpdated event.
             model.getBatchInfo().onInfoUpdated.subscribe(function() {
-                var templateInfoView = component.get('v.batchInfo');
+                var batchInfoView = component.get('v.batchInfo');
                 var batchInfo = model.getBatchInfo();
 
                 // record info
-                templateInfoView.name = batchInfo.name;
-                templateInfoView.id = batchInfo.id;
-                templateInfoView.description = batchInfo.description;
-                templateInfoView.expectedCount = batchInfo.expectedCount;
-                templateInfoView.expectedTotal = batchInfo.expectedTotal;
-                templateInfoView.recordCount = batchInfo.recordCount;
+                batchInfoView.name = batchInfo.name;
+                batchInfoView.id = batchInfo.id;
+                batchInfoView.description = batchInfo.description;
+                batchInfoView.expectedCount = batchInfo.expectedCount;
+                batchInfoView.expectedTotal = batchInfo.expectedTotal;
+                batchInfoView.recordCount = batchInfo.recordCount;
 
                 // batch processing settings
-                templateInfoView.requireTotalMatch = batchInfo.requireTotalMatch;
-                templateInfoView.batchProcessSize = batchInfo.batchProcessSize;
-                templateInfoView.runOpportunityRollupsWhileProcessing = batchInfo.runOpportunityRollupsWhileProcessing;
-                templateInfoView.donationMatchingBehavior = batchInfo.donationMatchingBehavior;
-                templateInfoView.donationMatchingClass = batchInfo.donationMatchingClass;
-                templateInfoView.donationMatchingOptions = batchInfo.donationMatchingOptions;
-                templateInfoView.donationMatchingRule = batchInfo.donationMatchingRule;
-                templateInfoView.donationDateRange = batchInfo.donationDateRange;
-                templateInfoView.postProcessClass = batchInfo.postProcessClass;
-                templateInfoView.processUsingScheduledJob = batchInfo.processUsingScheduledJob;
+                batchInfoView.requireTotalMatch = batchInfo.requireTotalMatch;
+                batchInfoView.batchProcessSize = batchInfo.batchProcessSize;
+                batchInfoView.runOpportunityRollupsWhileProcessing = batchInfo.runOpportunityRollupsWhileProcessing;
+                batchInfoView.donationMatchingBehavior = batchInfo.donationMatchingBehavior;
+                batchInfoView.donationMatchingClass = batchInfo.donationMatchingClass;
+                batchInfoView.donationMatchingOptions = batchInfo.donationMatchingOptions;
+                batchInfoView.donationMatchingRule = batchInfo.donationMatchingRule;
+                batchInfoView.donationDateRange = batchInfo.donationDateRange;
+                batchInfoView.postProcessClass = batchInfo.postProcessClass;
+                batchInfoView.processUsingScheduledJob = batchInfo.processUsingScheduledJob;
 
-                component.set('v.batchInfo', templateInfoView);
+                component.set('v.batchInfo', batchInfoView);
             });
 
-            // TemplateInfoView module public functions and properties
+            // BatchInfoView module public functions and properties
             return {
                 name: '',
                 id: '',
