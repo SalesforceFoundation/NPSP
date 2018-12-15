@@ -40,153 +40,152 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
 
     // TODO: It looks like all of tests need to be re-written against batch config fields
 
-//    /*********************************************************************************************************
-//    * @description Tests sets up a new Batch Template Record
-//    */
-//    private static Batch_Template__c initBatchTemplateTest() {
-//        Batch_Template__c batchTemplate = new Batch_Template__c();
-//        batchTemplate.Name = 'Test Template 1';
-//        batchTemplate.Description__c = 'Test Record';
-//        batchTemplate.RequireTotalMatch__c = true;
-//
-//        insert batchTemplate;
-//
-//        return batchTemplate;
-//    }
-//
-//    /*********************************************************************************************************
-//    * @description Tests getRecordDetails() for a new record
-//    */
-//
-//    @isTest
-//    public static void testGetNewTemplateDetails() {
-//
-//        Test.startTest();
-//        String jsonModel = BGE_ConfigurationWizard_CTRL.getRecordDetails('Batch_Template__c', null);
-//        BGE_ConfigurationWizard_CTRL.BGEDetailsModel templateDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
-//        Test.stopTest();
-//
-//        System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
-//        //for null, only these fields are populated
-//        System.assertNotEquals(null, templateDetails.templateFields, 'Batch Template fields should not be null');
-//        System.assertNotEquals(null, templateDetails.labels, 'Batch template labels should not be null');
-//
-//        System.assertEquals(null, templateDetails.name, 'Batch Template name should be null');
-//        System.assertEquals(null, templateDetails.description, 'Batch Template description should be null');
-//        System.assertEquals(false, templateDetails.requireTotalMatch, 'Require total match should be false');
-//        System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), templateDetails.activeFields, 'Active Fields should match default');
-//        System.assertEquals(null, templateDetails.id, 'Batch Template ID should be null');
-//    }
-//
-//    /*********************************************************************************************************
-//    * @description Tests getTemplateDetails() for an existing record
-//    */
-//
-//    @isTest
-//    public static void testGetExistingTemplateDetails() {
-//        Batch_Template__c batchTemplate = initBatchTemplateTest();
-//
-//        Test.startTest();
-//        String jsonModel = BGE_ConfigurationWizard_CTRL.getRecordDetails('Batch_Template__c', batchTemplate.Id);
-//        BGE_ConfigurationWizard_CTRL.BGEDetailsModel templateDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
-//        Test.stopTest();
-//
-//        System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
-//        System.assertNotEquals(null, templateDetails.templateFields, 'Template Fields should not be null');
-//        System.assertNotEquals(null, templateDetails.labels, 'Template Labels should not be null');
-//
-//        System.assertEquals(batchTemplate.Name, templateDetails.name, 'Template details name should match');
-//        System.assertEquals(batchTemplate.Description__c, templateDetails.description, 'Template details description should match');
-//        System.assertEquals(batchTemplate.RequireTotalMatch__c, templateDetails.requireTotalMatch, 'Require total match should match');
-//        System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), templateDetails.activeFields, 'Active Fields should match default');
-//        System.assertEquals(batchTemplate.Id, templateDetails.id, 'Batch template ID should match');
-//    }
-//
-//    /*********************************************************************************************************
-//    * @description Tests saveTemplateDetails() for a new record
-//    */
-//
-//    @isTest
-//    public static void testSaveNewTemplateDetails() {
-//
-//        String sObjectName = 'Batch_Template__c';
-//        String templateInfoJSON = '{' +
-//                '"name":"Test 4",' +
-//                '"id":null,' +
-//                '"description":"Test Record",' +
-//                '"requireTotalMatch":false,' +
-//                '"batchProcessSize":5,' +
-//                '"runOpportunityRollupsWhileProcessing":false,' +
-//                '"contactMatchingRule":"Firstname,Lastname,Email",' +
-//                '"donationMatchingBehavior":"'+ BDI_DataImport_API.RequireBestMatch + '",' +
-//                '"donationMatchingRule":["' + UTIL_Namespace.StrAllNSPrefix('Donation_Amount__c').toLowerCase() + '"],' +
-//                '"donationDateRange":1,' +
-//                '"processUsingScheduledJob":false,' +
-//                '"templateFields":null,' +
-//                '"labels":null' +
-//                '}';
-//        String activeFieldsJSON = BGE_ConfigurationWizard_CTRL.getDefaultActiveFields();
-//        Test.startTest();
-//        String jsonModel = BGE_ConfigurationWizard_CTRL.saveRecord(sObjectName, templateInfoJSON, activeFieldsJSON);
-//        BGE_ConfigurationWizard_CTRL.BGEDetailsModel templateDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
-//        Test.stopTest();
-//
-//        System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
-//        System.assertEquals('Test 4', templateDetails.name, 'Template details name should be Test 4');
-//        System.assertEquals('Test Record', templateDetails.description, 'Template details description should be Test Record');
-//        System.assertEquals(false, templateDetails.requireTotalMatch, 'Require total match should be false');
-//        System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), templateDetails.activeFields, 'Active Fields should match default');
-//        System.assertNotEquals(null, templateDetails.id, 'Template details should not be null');
-//
-//    }
-//
-//    /*********************************************************************************************************
-//    * @description Tests saveTemplateDetails() for an existing record
-//    */
-//
-//    @isTest
-//    public static void testSaveExistingTemplateDetails() {
-//
-//        Batch_Template__c batchTemplate = initBatchTemplateTest();
-//        String newName = 'New Name';
-//        System.assertNotEquals(newName, batchTemplate.Name);
-//
-//        String sObjectName = 'Batch_Template__c';
-//        String templateInfoJSON = '{' +
-//                '"name":"' + newName + '",' +
-//                '"id":"' + batchTemplate.Id + '",' +
-//                '"description":"Test Record",' +
-//                '"requireTotalMatch":false,' +
-//                '"batchProcessSize":5,' +
-//                '"runOpportunityRollupsWhileProcessing":false,' +
-//                '"contactMatchingRule":"Firstname,Lastname,Email",' +
-//                '"donationMatchingBehavior":"'+ BDI_DataImport_API.RequireBestMatch + '",' +
-//                '"donationMatchingRule":["' + UTIL_Namespace.StrAllNSPrefix('Donation_Amount__c').toLowerCase() + '"],' +
-//                '"donationDateRange":1,' +
-//                '"processUsingScheduledJob":false,' +
-//                '"templateFields":null,' +
-//                '"activeFields":null,' +
-//                '"labels":null' +
-//                '}';
-//        String activeFieldsJSON = '[{' +
-//                '"label":"Name",'+
-//                '"name":"npsp__Account1_Name__c",'+
-//                '"sObjectName":"Account1",'+
-//                '"defaultValue":null,'+
-//                '"required":false,'+
-//                '"hide":false,'+
-//                '"sortOrder":0'+
-//                '}]';
-//
-//        Test.startTest();
-//        System.debug(batchTemplate);
-//        String jsonModel = BGE_ConfigurationWizard_CTRL.saveRecord(sObjectName, templateInfoJSON, activeFieldsJSON);
-//        BGE_ConfigurationWizard_CTRL.BGEDetailsModel templateDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
-//        Test.stopTest();
-//
-//        System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
-//        System.assertEquals(newName, templateDetails.name, 'Batch Template name does not match.');
-//        System.assertEquals(batchTemplate.Id, templateDetails.id, 'Wrong Batch Template record was updated.');
-//    }
+    /*********************************************************************************************************
+    * @description Tests sets up a new Batch Record
+    */
+    private static DataImportBatch__c initBatchConfigTest() {
+        DataImportBatch__c batchConfig = new DataImportBatch__c();
+        batchConfig.Name = 'Test Template 1';
+        batchConfig.Batch_Description__c = 'Test Record';
+        batchConfig.RequireTotalMatch__c = true;
+
+        insert batchConfig;
+
+        return batchConfig;
+    }
+
+    /*********************************************************************************************************
+    * @description Tests getRecordDetails() for a new record
+    */
+
+    @isTest
+    private static void testGetNewTemplateDetails() {
+
+        Test.startTest();
+        String jsonModel = BGE_ConfigurationWizard_CTRL.getRecordDetails(null);
+        BGE_ConfigurationWizard_CTRL.BGEDetailsModel templateDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
+        Test.stopTest();
+
+        System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
+        //for null, only these fields are populated
+        System.assertNotEquals(null, templateDetails.templateFields, 'Available fields should not be null');
+        System.assertNotEquals(null, templateDetails.labels, 'Batch config labels should not be null');
+
+        System.assertEquals(null, templateDetails.name, 'Batch name should be null');
+        System.assertEquals(null, templateDetails.description, 'Batch description should be null');
+        System.assertEquals(false, templateDetails.requireTotalMatch, 'Require total match should be false');
+        System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), templateDetails.activeFields, 'Active Fields should match default');
+        System.assertEquals(null, templateDetails.id, 'Batch ID should be null');
+    }
+
+    /*********************************************************************************************************
+    * @description Tests getTemplateDetails() for an existing record
+    */
+
+    @isTest
+    private static void testGetExistingTemplateDetails() {
+        DataImportBatch__c batchConfig = initBatchConfigTest();
+
+        Test.startTest();
+        String jsonModel = BGE_ConfigurationWizard_CTRL.getRecordDetails(batchConfig.Id);
+        BGE_ConfigurationWizard_CTRL.BGEDetailsModel templateDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
+        Test.stopTest();
+
+        System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
+        System.assertNotEquals(null, templateDetails.templateFields, 'Fields should not be null');
+        System.assertNotEquals(null, templateDetails.labels, 'Labels should not be null');
+
+        System.assertEquals(batchConfig.Name, templateDetails.name, 'Details name should match');
+        System.assertEquals(batchConfig.Batch_Description__c, templateDetails.description, 'Details description should match');
+        System.assertEquals(batchConfig.RequireTotalMatch__c, templateDetails.requireTotalMatch, 'Require total match should match');
+        System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), templateDetails.activeFields, 'Active Fields should match default');
+        System.assertEquals(batchConfig.Id, templateDetails.id, 'Batch ID should match');
+    }
+
+    /*********************************************************************************************************
+    * @description Tests saveTemplateDetails() for a new record
+    */
+
+    @isTest
+    private static void testSaveNewTemplateDetails() {
+
+        String templateInfoJSON = '{' +
+                '"name":"Test 4",' +
+                '"id":null,' +
+                '"description":"Test Record",' +
+                '"requireTotalMatch":false,' +
+                '"batchProcessSize":5,' +
+                '"runOpportunityRollupsWhileProcessing":false,' +
+                '"contactMatchingRule":"Firstname,Lastname,Email",' +
+                '"donationMatchingBehavior":"'+ BDI_DataImport_API.RequireBestMatch + '",' +
+                '"donationMatchingRule":["' + UTIL_Namespace.StrAllNSPrefix('Donation_Amount__c').toLowerCase() + '"],' +
+                '"donationDateRange":1,' +
+                '"processUsingScheduledJob":false,' +
+                '"availableFields":null,' +
+                '"labels":null' +
+                '}';
+        String activeFieldsJSON = BGE_ConfigurationWizard_CTRL.getDefaultActiveFields();
+        Test.startTest();
+        String jsonModel = BGE_ConfigurationWizard_CTRL.saveRecord(templateInfoJSON, activeFieldsJSON);
+        BGE_ConfigurationWizard_CTRL.BGEDetailsModel templateDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
+        Test.stopTest();
+
+        System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
+        System.assertEquals('Test 4', templateDetails.name, 'Template details name should be Test 4');
+        System.assertEquals('Test Record', templateDetails.description, 'Template details description should be Test Record');
+        System.assertEquals(false, templateDetails.requireTotalMatch, 'Require total match should be false');
+        System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), templateDetails.activeFields, 'Active Fields should match default');
+        System.assertNotEquals(null, templateDetails.id, 'Template details should not be null');
+
+    }
+
+    /*********************************************************************************************************
+    * @description Tests saveTemplateDetails() for an existing record
+    */
+
+    @isTest
+    private static void testSaveExistingTemplateDetails() {
+
+        DataImportBatch__c batchConfig = initBatchConfigTest();
+        String newName = 'New Name';
+        System.assertNotEquals(newName, batchConfig.Name);
+
+        String sObjectName = 'DataImportBatch__c';
+        String templateInfoJSON = '{' +
+                '"name":"' + newName + '",' +
+                '"id":"' + batchConfig.Id + '",' +
+                '"description":"Test Record",' +
+                '"requireTotalMatch":false,' +
+                '"batchProcessSize":5,' +
+                '"runOpportunityRollupsWhileProcessing":false,' +
+                '"contactMatchingRule":"Firstname,Lastname,Email",' +
+                '"donationMatchingBehavior":"'+ BDI_DataImport_API.RequireBestMatch + '",' +
+                '"donationMatchingRule":["' + UTIL_Namespace.StrAllNSPrefix('Donation_Amount__c').toLowerCase() + '"],' +
+                '"donationDateRange":1,' +
+                '"processUsingScheduledJob":false,' +
+                '"availableFields":null,' +
+                '"activeFields":null,' +
+                '"labels":null' +
+                '}';
+        String activeFieldsJSON = '[{' +
+                '"label":"Name",'+
+                '"name":"npsp__Account1_Name__c",'+
+                '"sObjectName":"Account1",'+
+                '"defaultValue":null,'+
+                '"required":false,'+
+                '"hide":false,'+
+                '"sortOrder":0'+
+                '}]';
+
+        Test.startTest();
+        System.debug(batchConfig);
+        String jsonModel = BGE_ConfigurationWizard_CTRL.saveRecord(templateInfoJSON, activeFieldsJSON);
+        BGE_ConfigurationWizard_CTRL.BGEDetailsModel templateDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
+        Test.stopTest();
+
+        System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
+        System.assertEquals(newName, templateDetails.name, 'Batch name does not match.');
+        System.assertEquals(batchConfig.Id, templateDetails.id, 'Wrong Batch record was updated.');
+    }
 
 }
