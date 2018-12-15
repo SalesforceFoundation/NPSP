@@ -145,12 +145,12 @@
     },
 
     /**
-     * @description Returns the Template Fields View module.
+     * @description Returns the Batch Fields View module.
      * @param component. Lightning Component reference.
-     * @param model. The Template Fields Model.
-     * @return View of the Template Fields module.
+     * @param model. The Batch Fields Model.
+     * @return View of the Batch Fields module.
      */
-    TemplateFieldsView : function(component, model) {
+    BatchFieldsView : function(component, model) {
         return (function (component, model) {
 
             // Subscribe to the model onFieldsUpdated event.
@@ -193,7 +193,7 @@
                 component.set('v.availableFields', availableFields);
             });
 
-            // TemplateFieldsView module public functions and properties
+            // BatchFieldsView module public functions and properties
             return {
                 fieldGroups: []
             };
@@ -203,19 +203,19 @@
     /**
      * @description Returns the Template Field Options View module.
      * @param component. Lightning Component reference.
-     * @param model. The Template Fields Model.
+     * @param model. The Batch Fields Model.
      * @return View of the Template Field Options module.
      */
-    TemplateFieldOptionsView : function(component, model) {
+    BatchFieldOptionsView : function(component, model) {
         return (function (component, model) {
 
             // Subscribe to the model onFieldsUpdated event.
             model.getAvailableFields().onFieldsUpdated.subscribe(function() {
-                var templateFieldOptions = component.get('v.templateFieldOptions');
-                templateFieldOptions.fieldGroups = [];
+                var batchFieldOptions = component.get('v.batchFieldOptions');
+                batchFieldOptions.fieldGroups = [];
                 var activeFieldsBySObject = model.getAvailableFields().getActivesBySObject();
                 var availableFields = model.getAvailableFields();
-                templateFieldOptions.errors = availableFields.errors;
+                batchFieldOptions.errors = availableFields.errors;
 
                 Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
 
@@ -247,14 +247,14 @@
 
                     });
 
-                    templateFieldOptions.fieldGroups.push(currentFieldGroup);
+                    batchFieldOptions.fieldGroups.push(currentFieldGroup);
 
                 });
-                component.set('v.templateFieldOptions', templateFieldOptions);
+                component.set('v.batchFieldOptions', batchFieldOptions);
 
             });
 
-            // TemplateFieldOptionsView module public functions and properties
+            // BatchFieldOptionsView module public functions and properties
             return {
                 fieldGroups: []
             };
@@ -268,7 +268,7 @@
     /**
      * @description Gets the Model module of Template Details.
      * This is the main and only Model module for the Template
-     * Details components. Contains references to TemplateFields
+     * Details components. Contains references to BatchFields
      * and TemplateInfo sub-modules.
      * @return Model module of Template Details.
      */
@@ -358,8 +358,8 @@
             }
 
             /**
-             * @description Gets the Template Fields module.
-             * @return Template Fields module.
+             * @description Gets the Batch Fields module.
+             * @return Batch Fields module.
              */
             function getAvailableFields() {
                 return _availableFields;
@@ -390,7 +390,7 @@
                 getBatchInfo: getBatchInfo,
                 getBatchMetadata: getBatchMetadata
             }
-        })(this.TemplateFields(), this.BatchInfo(), this.BatchMetadata());
+        })(this.BatchFields(), this.BatchInfo(), this.BatchMetadata());
     },
 
     /**
@@ -467,10 +467,10 @@
     },
 
     /**
-     * @description Gets the Template Fields module.
-     * @return Model module of the Template Fields.
+     * @description Gets the Batch Fields module.
+     * @return Model module of the Batch Fields.
      */
-    TemplateFields : function() {
+    BatchFields : function() {
         return (function (Event) {
             var _allFields = [];
             var _onFieldsUpdated = new Event(this);
@@ -618,11 +618,11 @@
              * @description Updates isActive flag and sort Order of all fields
              * @return void.
              */
-            function updateToActive(templateFieldGroups) {
+            function updateToActive(batchFieldGroups) {
                 var fieldCountPreviousObjects = 0;
                 var allFieldsBySObject = getAllFieldsBySObject();
                 Object.keys(allFieldsBySObject).forEach(function(currentSObject) {
-                    templateFieldGroups.forEach(function(currentFieldGroup) {
+                    batchFieldGroups.forEach(function(currentFieldGroup) {
                         if (currentFieldGroup.sObjectName === currentSObject) {
                             allFieldsBySObject[currentSObject].forEach(function (currentField) {
                                 currentField.isActive = currentFieldGroup.values.includes(currentField.id);
@@ -642,17 +642,17 @@
              * @description Updates the selected fields to Active, unselects fields
              * @return void.
              */
-            function updateTemplateFieldOptions(templateFieldGroups) {
+            function updateBatchFieldOptions(batchFieldGroups) {
 
-                var templateFieldOptions = [];
-                templateFieldGroups.forEach(function(currentFieldGroup) {
+                var batchFieldOptions = [];
+                batchFieldGroups.forEach(function(currentFieldGroup) {
                     currentFieldGroup.fields.forEach(function(currentField) {
-                        templateFieldOptions.push(currentField);
+                        batchFieldOptions.push(currentField);
                     });
                 });
 
                 _allFields.forEach(function(currentField) {
-                    templateFieldOptions.forEach(function(currentActiveField) {
+                    batchFieldOptions.forEach(function(currentActiveField) {
                         if (currentField.name === currentActiveField.name) {
                             currentField.required = currentActiveField.required;
                             currentField.hide = currentActiveField.hide;
@@ -733,7 +733,7 @@
                 return fields;
             }
 
-            // TemplateFieldsModel module public functions and properties
+            // BatchFieldsModel module public functions and properties
             return {
                 errors: {},
                 load: load,
@@ -744,7 +744,7 @@
                 getActivesBySObject: getActivesBySObject,
                 getDefaultFieldValidity: getDefaultFieldValidity,
                 updateToActive: updateToActive,
-                updateTemplateFieldOptions: updateTemplateFieldOptions,
+                updateBatchFieldOptions: updateBatchFieldOptions,
                 onFieldsUpdated: _onFieldsUpdated
 
             }

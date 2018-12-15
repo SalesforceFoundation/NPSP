@@ -42,7 +42,7 @@
     <aura:attribute name="batchInfo" type="Object" access="PRIVATE" />
     <aura:attribute name="batchMetadata" type="Object" access="PRIVATE"/>
     <aura:attribute name="availableFields" type="Object" access="PRIVATE" />
-    <aura:attribute name="templateFieldOptions" type="Object" access="PRIVATE" />
+    <aura:attribute name="batchFieldOptions" type="Object" access="PRIVATE" />
 
     <!-- public attributes -->
     <aura:attribute name="isReadOnly" type="Boolean" description="Determines if fields are read-only, buttons are visible, and dual picklists are active."/>
@@ -195,7 +195,7 @@
                             </lightning:layout>
                         </aura:if>
 
-                        <aura:iteration items="{!v.templateFieldOptions.fieldGroups}" var="currentFieldGroup">
+                        <aura:iteration items="{!v.batchFieldOptions.fieldGroups}" var="currentFieldGroup">
                             <div class="slds-section slds-is-open">
                                 <h3 class="slds-section__title slds-theme_shade">
                                     <span class="slds-truncate slds-p-horizontal_small">
@@ -426,7 +426,7 @@
                 </aura:if>
                 <!-- End Step 5 -->
 
-                <!--End Template Container-->
+                <!--End Container-->
             </lightning:layoutItem>
         </lightning:layout>
     </div>

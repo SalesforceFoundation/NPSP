@@ -1,6 +1,6 @@
 ({
 
-    /******************************** Template Details Controller Functions *****************************/
+    /******************************** Batch Details Controller Functions *****************************/
 
     /**
      * @description Constructs the Model Module, and the View Modules.
@@ -16,10 +16,10 @@
         component.set('v.batchInfo', batchInfoView);
         var batchMetadataView = helper.BatchMetadataView(component, model);
         component.set('v.batchMetadata', batchMetadataView);
-        var templateFieldsView = helper.TemplateFieldsView(component, model);
-        component.set('v.availableFields', templateFieldsView);
-        var templateFieldOptionsView = helper.TemplateFieldOptionsView(component, model);
-        component.set('v.templateFieldOptions', templateFieldOptionsView);
+        var batchFieldsView = helper.BatchFieldsView(component, model);
+        component.set('v.availableFields', batchFieldsView);
+        var batchFieldOptionsView = helper.BatchFieldOptionsView(component, model);
+        component.set('v.batchFieldOptions', batchFieldOptionsView);
 
         model.init(component);
     },
@@ -76,8 +76,8 @@
                 isValid = (possibleError.length === 0);
             } else if (step === '4') {
                 isValid = model.getAvailableFields().getDefaultFieldValidity(component);
-                var fieldOptions = component.get('v.templateFieldOptions.fieldGroups');
-                model.getAvailableFields().updateTemplateFieldOptions(fieldOptions);
+                var fieldOptions = component.get('v.batchFieldOptions.fieldGroups');
+                model.getAvailableFields().updateBatchFieldOptions(fieldOptions);
             } else if (step === '5') {
                 //todo: add validation for processing settings
                 model.getBatchInfo().load(component.get('v.batchInfo'));
