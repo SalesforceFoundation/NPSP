@@ -1391,27 +1391,27 @@
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
         <members>bgeBatchInfoWizard</members>
-        <members>bgeBatchTemplateAvailableFields</members>
-        <members>bgeBatchTemplateBatchProcessSizeHelp</members>
-        <members>bgeBatchTemplateDonationDateRangeHelp</members>
-        <members>bgeBatchTemplateDonationMatchingBehaviorHelp</members>
-        <members>bgeBatchTemplateDonationMatchingClassHelp</members>
-        <members>bgeBatchTemplateDonationMatchingRuleHelp</members>
-        <members>bgeBatchTemplateDonorLookupInfo</members>
-        <members>bgeBatchTemplateEdit</members>
-        <members>bgeBatchTemplateErrorDefaultValue</members>
-        <members>bgeBatchTemplateErrorRequiredAmount</members>
-        <members>bgeBatchTemplateErrorRequiredFields</members>
-        <members>bgeBatchTemplateNew</members>
-        <members>bgeBatchTemplateOverview</members>
-        <members>bgeBatchTemplateOverviewWizard</members>
-        <members>bgeBatchTemplatePostProcessClassHelp</members>
-        <members>bgeBatchTemplateProcessUsingScheduledJobHelp</members>
-        <members>bgeBatchTemplateRunOpportunityRollupsWhileProcessingHelp</members>
-        <members>bgeBatchTemplateSelectFields</members>
-        <members>bgeBatchTemplateSelectedFields</members>
-        <members>bgeBatchTemplateSetBatchOptions</members>
-        <members>bgeBatchTemplateSetFieldOptions</members>
+        <members>bgeBatchAvailableFields</members>
+        <members>bgeBatchBatchProcessSizeHelp</members>
+        <members>bgeBatchDonationDateRangeHelp</members>
+        <members>bgeBatchDonationMatchingBehaviorHelp</members>
+        <members>bgeBatchDonationMatchingClassHelp</members>
+        <members>bgeBatchDonationMatchingRuleHelp</members>
+        <members>bgeBatchDonorLookupInfo</members>
+        <members>bgeBatchEdit</members>
+        <members>bgeBatchErrorDefaultValue</members>
+        <members>bgeBatchErrorRequiredAmount</members>
+        <members>bgeBatchErrorRequiredFields</members>
+        <members>bgeBatchNew</members>
+        <members>bgeBatchOverview</members>
+        <members>bgeBatchOverviewWizard</members>
+        <members>bgeBatchPostProcessClassHelp</members>
+        <members>bgeBatchProcessUsingScheduledJobHelp</members>
+        <members>bgeBatchRunOpportunityRollupsWhileProcessingHelp</members>
+        <members>bgeBatchSelectFields</members>
+        <members>bgeBatchSelectedFields</members>
+        <members>bgeBatchSetBatchOptions</members>
+        <members>bgeBatchSetFieldOptions</members>
         <members>bgeEditBatchFieldOptionsWarning</members>
         <members>bgeEditBatchFieldSelectionWarning</members>
         <members>bgeEditBatchOptionsWarning</members>
