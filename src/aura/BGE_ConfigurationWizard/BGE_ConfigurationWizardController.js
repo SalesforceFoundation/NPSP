@@ -97,6 +97,12 @@
             } else {
                 model.getTemplateMetadata().showError(possibleError);
             }
+        } else if (task === 'showAdvanced') {
+            var step = component.get('v.templateMetadata.progressIndicatorStep');
+            if (step === '5') {
+                model.getTemplateInfo().load(component.get('v.templateInfo'));
+                model.getTemplateMetadata().toggleShowAdvanced();
+            }
         }
     },
 

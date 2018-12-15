@@ -83,6 +83,7 @@
                 templateMetadataView.errorMessage = templateMetadata.errorMessage;
                 templateMetadataView.pageHeader = templateMetadata.pageHeader;
                 templateMetadataView.pendingSave = templateMetadata.pendingSave;
+                templateMetadataView.showAdvancedOptions = templateMetadata.showAdvancedOptions;
 
                 if (!templateMetadataView.hasError) {
                     templateMetadataView.progressIndicatorStep = templateMetadata.progressIndicatorStep;
@@ -117,6 +118,9 @@
                 //update footer in modal to keep save button appropriately enabled/disabled
                 _sendMessage('pendingSave', templateMetadataView.pendingSave);
 
+                //update state of the flag to hide/reveal fields for advanced match options
+                _sendMessage('showAdvancedOptions', templateMetadataView.showAdvancedOptions);
+
                 // when in modal context, need to notify the modal footer component
                 _sendMessage('setError', templateMetadataView.hasError);
 
@@ -139,7 +143,8 @@
                 progressIndicatorStep: '',
                 hasError: false,
                 errorMessage: '',
-                pendingSave: false
+                pendingSave: false,
+                showAdvancedOptions: false
             };
         })(component, model);
     },
@@ -898,6 +903,15 @@
             }
 
             /**
+             * @description sets the showAdvancedOptions flag to hide/reveal the advanced options accordingly
+             * @return void.
+             */
+            function toggleShowAdvanced() {
+                this.showAdvancedOptions = !this.showAdvancedOptions;
+                this.onMetadataUpdated.notify();
+            }            
+
+            /**
              * @description Increments the step for the progressIndicator
              * @return void.
              */
@@ -962,6 +976,7 @@
                 errorMessage: '',
                 pageHeader: '',
                 pendingSave: false,
+                showAdvancedOptions: false,
                 load: load,
                 navigateToRecord: navigateToRecord,
                 nextStep: nextStep,
@@ -974,7 +989,8 @@
                 stepUp: stepUp,
                 stepDown: stepDown,
                 togglePendingSave: togglePendingSave,
-                onMetadataUpdated: _onMetadataUpdated
+                onMetadataUpdated: _onMetadataUpdated,
+                toggleShowAdvanced: toggleShowAdvanced
             }
         })(this.Event());
     },
