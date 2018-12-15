@@ -515,9 +515,31 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             BGEDetailsModel recordDetails = (BGEDetailsModel) JSON.deserialize(recordInfo, BGEDetailsModel.class);
             recordDetails.activeFields = activeFields;
 
+            DataImportBatch__c dataImportBatch = new DataImportBatch__c();
 
-            recordDetails.id = saveRecordBatch(recordDetails);
+            if (recordDetails.id != null) {
+                dataImportBatch.Id = recordDetails.id;
+            }
+            dataImportBatch.Name = recordDetails.name;
+            dataImportBatch.Batch_Description__c = recordDetails.description;
+            dataImportBatch.RequireTotalMatch__c = recordDetails.requireTotalMatch;
+            dataImportBatch.Active_Fields__c = recordDetails.activeFields;
+            dataImportBatch.Batch_Process_Size__c = recordDetails.batchProcessSize;
+            dataImportBatch.Donation_Date_Range__c = recordDetails.donationDateRange;
+            dataImportBatch.Donation_Matching_Behavior__c = recordDetails.donationMatchingBehavior;
+            dataImportBatch.Donation_Matching_Implementing_Class__c = recordDetails.donationMatchingClass;
+            dataImportBatch.Donation_Matching_Rule__c = String.join(recordDetails.donationMatchingRule, ';');
+            dataImportBatch.Post_Process_Implementing_Class__c = recordDetails.postProcessClass;
+            dataImportBatch.Process_Using_Scheduled_Job__c = recordDetails.processUsingScheduledJob;
+            dataImportBatch.Run_Opportunity_Rollups_while_Processing__c = recordDetails.runOpportunityRollupsWhileProcessing;
+            dataImportBatch.Expected_Count_of_Gifts__c = recordDetails.expectedCount;
+            dataImportBatch.Expected_Total_Batch_Amount__c = recordDetails.expectedTotal;
+            dataImportBatch.Active_Fields__c = recordDetails.activeFields;
+            dataImportBatch.UseBatchGiftEntryGrid__c = true;
 
+            upsert dataImportBatch;
+
+            recordDetails.id = dataImportBatch.Id;
 
             return JSON.serialize(recordDetails);
 
@@ -527,71 +549,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             throw new AuraHandledException('ERROR: ' + ex.getMessage());
         }
     }
-
-    /*******************************************************************************************************
-    * @description Saves the Batch information with the structured list of active fields.
-    * @param recordDetails model of the information to save
-    * @param activeFields JSON string of the active fields to be saved to the record
-    * @return Id of the saved record
-    */
-    public static Id saveRecordBatch(BGEDetailsModel recordDetails) {
-        DataImportBatch__c dataImportBatch = new DataImportBatch__c();
-
-        if (recordDetails.id != null) {
-            dataImportBatch.Id = recordDetails.id;
-        }
-        dataImportBatch.Name = recordDetails.name;
-        dataImportBatch.Batch_Description__c = recordDetails.description;
-        dataImportBatch.RequireTotalMatch__c = recordDetails.requireTotalMatch;
-        dataImportBatch.Active_Fields__c = recordDetails.activeFields;
-        dataImportBatch.Batch_Process_Size__c = recordDetails.batchProcessSize;
-        dataImportBatch.Donation_Date_Range__c = recordDetails.donationDateRange;
-        dataImportBatch.Donation_Matching_Behavior__c = recordDetails.donationMatchingBehavior;
-        dataImportBatch.Donation_Matching_Implementing_Class__c = recordDetails.donationMatchingClass;
-        dataImportBatch.Donation_Matching_Rule__c = String.join(recordDetails.donationMatchingRule, ';');
-        dataImportBatch.Post_Process_Implementing_Class__c = recordDetails.postProcessClass;
-        dataImportBatch.Process_Using_Scheduled_Job__c = recordDetails.processUsingScheduledJob;
-        dataImportBatch.Run_Opportunity_Rollups_while_Processing__c = recordDetails.runOpportunityRollupsWhileProcessing;
-        dataImportBatch.Expected_Count_of_Gifts__c = recordDetails.expectedCount;
-        dataImportBatch.Expected_Total_Batch_Amount__c = recordDetails.expectedTotal;
-        dataImportBatch.Active_Fields__c = recordDetails.activeFields;
-        dataImportBatch.UseBatchGiftEntryGrid__c = true;
-
-        upsert dataImportBatch;
-
-        return dataImportBatch.Id;
-    }
-
-    /*******************************************************************************************************
-    * @description Saves the Template information with the structured list of active fields.
-    * @param recordDetails model of the information to save
-    * @param activeFields JSON string of the active fields to be saved to the record
-    * @return Id of the saved record
-    */
-//    public static Id saveRecordTemplate(BGEDetailsModel recordDetails) {
-//        Batch_Template__c batchTemplate = new Batch_Template__c();
-//
-//        if (recordDetails.id != null) {
-//            batchTemplate.Id = recordDetails.id;
-//        }
-//        batchTemplate.Name = recordDetails.name;
-//        batchTemplate.Description__c = recordDetails.description;
-//        batchTemplate.RequireTotalMatch__c = recordDetails.requireTotalMatch;
-//        batchTemplate.Active_Fields__c = recordDetails.activeFields;
-//        batchTemplate.Batch_Process_Size__c = recordDetails.batchProcessSize;
-//        batchTemplate.Contact_Matching_Rule__c = recordDetails.contactMatchingRule;
-//        batchTemplate.Donation_Date_Range__c = recordDetails.donationDateRange;
-//        batchTemplate.Donation_Matching_Behavior__c = recordDetails.donationMatchingBehavior;
-//        batchTemplate.Donation_Matching_Implementing_Class__c = recordDetails.donationMatchingClass;
-//        batchTemplate.Donation_Matching_Rule__c = String.join(recordDetails.donationMatchingRule, ';');
-//        batchTemplate.Post_Process_Implementing_Class__c = recordDetails.postProcessClass;
-//        batchTemplate.Process_Using_Scheduled_Job__c = recordDetails.processUsingScheduledJob;
-//        batchTemplate.Run_Opportunity_Rollups_while_Processing__c = recordDetails.runOpportunityRollupsWhileProcessing;
-//
-//        upsert batchTemplate;
-//
-//        return batchTemplate.Id;
-//    }
 
     /*******************************************************************************************************
     * @description a class to retrieve and save the required information for the BGE_ConfigurationWizard component.
