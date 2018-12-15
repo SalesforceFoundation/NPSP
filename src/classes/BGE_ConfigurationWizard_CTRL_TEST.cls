@@ -108,20 +108,20 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
     private static void testSaveNewBatch() {
 
         String batchInfoJSON = '{' +
-                '"name":"Test 4",' +
-                '"id":null,' +
-                '"description":"Test Record",' +
-                '"requireTotalMatch":false,' +
-                '"batchProcessSize":5,' +
-                '"runOpportunityRollupsWhileProcessing":false,' +
-                '"contactMatchingRule":"Firstname,Lastname,Email",' +
-                '"donationMatchingBehavior":"'+ BDI_DataImport_API.RequireBestMatch + '",' +
-                '"donationMatchingRule":["' + UTIL_Namespace.StrAllNSPrefix('Donation_Amount__c').toLowerCase() + '"],' +
-                '"donationDateRange":1,' +
-                '"processUsingScheduledJob":false,' +
-                '"availableFields":null,' +
-                '"labels":null' +
-                '}';
+            '"name":"Test 4",' +
+            '"id":null,' +
+            '"description":"Test Record",' +
+            '"requireTotalMatch":false,' +
+            '"batchProcessSize":5,' +
+            '"runOpportunityRollupsWhileProcessing":false,' +
+            '"contactMatchingRule":"Firstname,Lastname,Email",' +
+            '"donationMatchingBehavior":"'+ BDI_DataImport_API.RequireBestMatch + '",' +
+            '"donationMatchingRule":["' + UTIL_Namespace.StrAllNSPrefix('Donation_Amount__c').toLowerCase() + '"],' +
+            '"donationDateRange":1,' +
+            '"processUsingScheduledJob":false,' +
+            '"availableFields":null,' +
+            '"labels":null' +
+        '}';
         String activeFieldsJSON = BGE_ConfigurationWizard_CTRL.getDefaultActiveFields();
         Test.startTest();
         String jsonModel = BGE_ConfigurationWizard_CTRL.saveRecord(batchInfoJSON, activeFieldsJSON);
@@ -148,32 +148,31 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
         String newName = 'New Name';
         System.assertNotEquals(newName, batchConfig.Name);
 
-        String sObjectName = 'DataImportBatch__c';
         String batchInfoJSON = '{' +
-                '"name":"' + newName + '",' +
-                '"id":"' + batchConfig.Id + '",' +
-                '"description":"Test Record",' +
-                '"requireTotalMatch":false,' +
-                '"batchProcessSize":5,' +
-                '"runOpportunityRollupsWhileProcessing":false,' +
-                '"contactMatchingRule":"Firstname,Lastname,Email",' +
-                '"donationMatchingBehavior":"'+ BDI_DataImport_API.RequireBestMatch + '",' +
-                '"donationMatchingRule":["' + UTIL_Namespace.StrAllNSPrefix('Donation_Amount__c').toLowerCase() + '"],' +
-                '"donationDateRange":1,' +
-                '"processUsingScheduledJob":false,' +
-                '"availableFields":null,' +
-                '"activeFields":null,' +
-                '"labels":null' +
-                '}';
+            '"name":"' + newName + '",' +
+            '"id":"' + batchConfig.Id + '",' +
+            '"description":"Test Record",' +
+            '"requireTotalMatch":false,' +
+            '"batchProcessSize":5,' +
+            '"runOpportunityRollupsWhileProcessing":false,' +
+            '"contactMatchingRule":"Firstname,Lastname,Email",' +
+            '"donationMatchingBehavior":"'+ BDI_DataImport_API.RequireBestMatch + '",' +
+            '"donationMatchingRule":["' + UTIL_Namespace.StrAllNSPrefix('Donation_Amount__c').toLowerCase() + '"],' +
+            '"donationDateRange":1,' +
+            '"processUsingScheduledJob":false,' +
+            '"availableFields":null,' +
+            '"activeFields":null,' +
+            '"labels":null' +
+        '}';
         String activeFieldsJSON = '[{' +
-                '"label":"Name",'+
-                '"name":"npsp__Account1_Name__c",'+
-                '"sObjectName":"Account1",'+
-                '"defaultValue":null,'+
-                '"required":false,'+
-                '"hide":false,'+
-                '"sortOrder":0'+
-                '}]';
+            '"label":"Name",'+
+            '"name":"npsp__Account1_Name__c",'+
+            '"sObjectName":"Account1",'+
+            '"defaultValue":null,'+
+            '"required":false,'+
+            '"hide":false,'+
+            '"sortOrder":0'+
+        '}]';
 
         Test.startTest();
         System.debug(batchConfig);
