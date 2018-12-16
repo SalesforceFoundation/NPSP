@@ -51,14 +51,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
         ctrl.SendAcknowledgment();
         Test.stopTest();
         
-        listOpp = [
-                SELECT 
-                    Id, 
-                    name, 
-                    toLabel(Acknowledgment_Status__c), 
-                    Acknowledgment_Date__c 
-                FROM Opportunity
-        ];
+        listOpp = getOpps();
 
         System.assertEquals(1, listOpp.size());
 
@@ -89,6 +82,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
         ApexPages.StandardSetController sc = new ApexPages.StandardSetController(opps);
         sc.setSelected(opps);
         OPP_SendAcknowledgmentBTN_CTRL ctrl = new OPP_SendAcknowledgmentBTN_CTRL(sc);
+        ctrl.oppsToAcknowledge = opps;
         
         Test.startTest();
         ctrl.SendAcknowledgment();
@@ -96,7 +90,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
 
         UTIL_UnitTestData_TEST.assertPageHasError('invalid cross reference');
 
-        for (Opportunity opp : [SELECT Acknowledgment_Status__c FROM Opportunity]) {
+        for (Opportunity opp : getOpps()) {
             System.assertEquals(
                 TO_BE_ACKNOWLEDGED_STATUS, opp.Acknowledgment_Status__c, 
                 'The Acknowledgment Status should be unchanged'
@@ -146,14 +140,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
         Test.stopTest();
 
         // check the resulting acknowledgement status 
-        allOpps = [
-            SELECT 
-                Id, 
-                name, 
-                Acknowledgment_Status__c, 
-                Acknowledgment_Date__c 
-            FROM Opportunity         
-        ];        
+        allOpps = getOpps();
 
         System.assertEquals(5, allOpps.size(), 'Opportunity Size mismatch');     
         System.assertEquals(3, ctrl.cAlreadySent, 'Incorrect # of acks already sent');
@@ -180,7 +167,6 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
                 notSentCount++;
             }                  
         }  
-
 
         System.assertEquals(notSentCount, ctrl.cNotSent, 'Incorrect # of not sent acks');
         System.assertEquals(sentCount, ctrl.cSent, 'Incorrect # of sent acks');
@@ -225,16 +211,16 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
     * @return List<Opportunity> List of Opportunities
     **********************************************************************************************************/
     private static List<Opportunity> setUpOpportunities(Integer oppCount) {
-        Account testAccount = new Account(Name = 'Test Company');
-        insert testAccount;
+        Account acc = new Account(Name = 'Test Company');
+        insert acc;
         
-        Contact testContact = new Contact(
-            AccountID = testAccount.Id, 
+        Contact con = new Contact(
+            AccountID = acc.Id, 
             FirstName = 'Test', 
             LastName = 'Company', 
             Email = 'Test.Company@example.com'
         );
-        insert testContact;
+        insert con;
         
         List<Opportunity> opps = new List<Opportunity>();
         Date today = system.today();
@@ -243,8 +229,8 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
         for (Integer i = 0; i < oppCount; i++) {
             opps.add(
                 new Opportunity(
-                    AccountId = testAccount.Id, 
-                    Primary_Contact__c = testContact.Id,
+                    AccountId = acc.Id, 
+                    Primary_Contact__c = con.Id,
                     CloseDate = today, 
                     Amount = 100, Name = 'Test Company Donation', 
                     StageName = closedWonStage, 
@@ -259,7 +245,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
             ocrs.add(
                 new OpportunityContactRole(
                     OpportunityId = opp.Id, 
-                    ContactId = testContact.Id, 
+                    ContactId = con.Id, 
                     IsPrimary = true
                 )
             );
@@ -269,4 +255,17 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
         return opps;
     }
 
+    /*********************************************************************************************************
+    * @description Return all opportunities
+    * @return List<Opportunity> List of Opportunities
+    **********************************************************************************************************/
+  
+    private static List<Opportunity> getOpps() {
+        return [SELECT 
+                    Id, 
+                    name, 
+                    toLabel(Acknowledgment_Status__c), 
+                    Acknowledgment_Date__c 
+                FROM Opportunity];
+    }
 }

@@ -4936,7 +4936,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>sendAcknowledgmentNumberAlreadySent</fullName>
         <categories>Send Acknowledgment Button</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>sendAcknowledgmentNumberAlreadySent</shortDescription>
         <value>{0} acknowledgment(s) already sent.</value>
     </labels>    

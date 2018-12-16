@@ -48,6 +48,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
     /*******************************************************************************************************
     * @description List of Opportunities that should receive email acknowledgements 
     */
+    @TestVisible
     private List<Opportunity> oppsToAcknowledge { 
         get {
             if (oppsToAcknowledge == null) {
@@ -107,26 +108,14 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
             }
 
         } else {
-
-            if (Test.isRunningTest()) {
-                oppsToAcknowledge = setController.getSelected();
-            } else {
-                oppIds.addAll(
-                    extractIds(setController.getSelected())
-                );
-                recordId = Opportunity.SObjectType.getDescribe().getKeyPrefix();
-            }
+            oppIds.addAll(
+                extractIds(setController.getSelected())
+            );
+            recordId = Opportunity.SObjectType.getDescribe().getKeyPrefix();            
         }
     }
 
-    /*******************************************************************************************************
-    * @description Extracts Ids from the list of SObjects
-    * @param sobjects List of SObjects
-    * @return Set<Id>
-    */
-    private Set<Id> extractIds(List<SObject> sobjects) {
-        return (new Map<Id, Sobject>(sobjects)).keySet();
-    }
+   
     
     /*******************************************************************************************************
     * @description Action method called when the user clicks on the Send Acknowledgment button.
@@ -152,13 +141,13 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
             return null;        
         }
 
-        List<Opportunity> oppsToUpdate = new List<Opportunity>();
+        List<Opportunity> oppsToAttemptAck = new List<Opportunity>();
 
         //update status to ready for acknowledgement
         for (Opportunity opp : oppsToAcknowledge) {      
             if (opp.Acknowledgment_Status__c != System.Label.sendAcknowledgmentSucceeded) {
                 opp.Acknowledgment_Status__c = System.Label.sendAcknowledgmentFireStatus;
-                oppsToUpdate.add(opp);
+                oppsToAttemptAck.add(opp);
             } else {
                 cAlreadySent++;
             }
@@ -166,16 +155,13 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
 
         Savepoint sp = Database.setSavepoint(); 
         try {
-            update oppsToUpdate;
+            update oppsToAttemptAck;
             
             // detect how many were not sent via the workflow
             listOppNotSent = [
-                SELECT 
-                    Id, 
-                    Name, 
-                    Acknowledgment_Status__c
+                SELECT Id
                 FROM Opportunity 
-                WHERE Id IN :oppsToUpdate 
+                WHERE Id IN :oppsToAttemptAck 
                 AND Acknowledgment_Status__c = :System.Label.sendAcknowledgmentFireStatus
             ];
             
@@ -186,6 +172,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
             for (Opportunity opp : listOppNotSent) {
                 opp.Acknowledgment_Status__c = System.Label.sendAcknowledgmentFailedStatus;
             }
+            
             update listOppNotSent;
 
             reportSendAckStatus();
@@ -195,7 +182,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
             
             // Rollback variables since only DMLs are rolledback.
             // Report none of Opportunities was acknowledged.
-            listOppNotSent = [SELECT Name FROM Opportunity WHERE Id IN :oppsToUpdate];
+            listOppNotSent = [SELECT Name FROM Opportunity WHERE Id IN :oppsToAttemptAck];
             cNotSent = listOppNotSent.size();
             cSent = 0;
 
@@ -211,35 +198,17 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
     * @description Report send acknowledgement status to the user
     * @return void
     */
-    private void reportSendAckStatus() {
-         // report how many sent
+    private void reportSendAckStatus() {                 
         if (cSent > 0) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, 
-                String.format(
-                    System.Label.sendAcknowledgmentNumberSent, 
-                    new List<String>{ String.valueOf(cSent) }
-                )
-            ));
+            addStatusMessage(ApexPages.Severity.INFO, System.Label.sendAcknowledgmentNumberSent, cSent);            
         }       
 
         if (cAlreadySent > 0) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, 
-                String.format(
-                    System.Label.sendAcknowledgmentNumberAlreadySent, 
-                    new List<String>{ String.valueOf(cAlreadySent) }
-                )
-            ));
+             addStatusMessage(ApexPages.Severity.INFO, System.Label.sendAcknowledgmentNumberAlreadySent, cAlreadySent);            
         }       
-                 
-
-        // report how many skipped
+                         
         if (cNotSent > 0) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 
-                String.format(
-                    System.Label.sendAcknowledgmentNumberNoEmail, 
-                    new String[] { String.valueOf(cNotSent) }
-                )
-            ));                
+            addStatusMessage(ApexPages.Severity.WARNING, System.Label.sendAcknowledgmentNumberNoEmail, cNotSent);                       
         }
     }
 
@@ -251,4 +220,32 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
         redirect = true;
         return null;
     }
+
+
+    /*******************************************************************************************************
+    * @description Extracts Ids from the list of SObjects
+    * @param sobjects - List of SObjects
+    * @return Set<Id>
+    */
+    private Set<Id> extractIds(List<SObject> sobjects) {
+        return (new Map<Id, Sobject>(sobjects)).keySet();
+    }
+    
+    /*******************************************************************************************************
+    * @description Add a message to the ApexPages context
+    * @param Apexpages.Severity - severity of the message
+    * @param String - the message to display
+    * @param Integer - count parameter to the message
+    * @return Set<Id>
+    */
+    private void addStatusMessage(Apexpages.Severity severityLevel, String statusMessage, Integer statusCount) {
+        ApexPages.addMessage(new ApexPages.Message(severityLevel, 
+            String.format(
+                statusMessage, 
+                new List<String>{ String.valueOf(statusCount) }
+            )
+        ));
+    }
+
+
 }
