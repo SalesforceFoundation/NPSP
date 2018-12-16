@@ -135,9 +135,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
         // one little feature.
         
         if (oppsToAcknowledge.isEmpty()) {
-            ApexPages.addMessage(
-                new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.sendAcknowledgmentNoneSelected)
-            );
+            addStatusMessage(ApexPages.Severity.ERROR, System.Label.sendAcknowledgmentNoneSelected);
             return null;        
         }
 
@@ -145,7 +143,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
 
         //update status to ready for acknowledgement
         for (Opportunity opp : oppsToAcknowledge) {      
-            if (opp.Acknowledgment_Status__c != System.Label.sendAcknowledgmentSucceeded) {
+            if (shouldSendAck(opp)) {
                 opp.Acknowledgment_Status__c = System.Label.sendAcknowledgmentFireStatus;
                 oppsToAttemptAck.add(opp);
             } else {
@@ -188,7 +186,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
 
             // Make the error look more readable on the page
             ERR_ExceptionHandler.beautifyExceptionMessage(ex);
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
+            addStatusMessage(ApexPages.Severity.ERROR, ex.getMessage());
         }
 
         return null;
@@ -200,15 +198,15 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
     */
     private void reportSendAckStatus() {                 
         if (cSent > 0) {
-            addStatusMessage(ApexPages.Severity.INFO, System.Label.sendAcknowledgmentNumberSent, cSent);            
+            addStatusMessageWithCount(ApexPages.Severity.INFO, System.Label.sendAcknowledgmentNumberSent, cSent);            
         }       
 
         if (cAlreadySent > 0) {
-             addStatusMessage(ApexPages.Severity.INFO, System.Label.sendAcknowledgmentNumberAlreadySent, cAlreadySent);            
+             addStatusMessageWithCount(ApexPages.Severity.INFO, System.Label.sendAcknowledgmentNumberAlreadySent, cAlreadySent);            
         }       
                          
         if (cNotSent > 0) {
-            addStatusMessage(ApexPages.Severity.WARNING, System.Label.sendAcknowledgmentNumberNoEmail, cNotSent);                       
+            addStatusMessageWithCount(ApexPages.Severity.WARNING, System.Label.sendAcknowledgmentNumberNoEmail, cNotSent);                       
         }
     }
 
@@ -235,17 +233,35 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
     * @description Add a message to the ApexPages context
     * @param Apexpages.Severity - severity of the message
     * @param String - the message to display
+    * @return Set<Id>
+    */
+    private void addStatusMessage(Apexpages.Severity severityLevel, String statusMessage) {
+        ApexPages.addMessage(new ApexPages.Message(severityLevel, statusMessage));
+    }
+
+    /*******************************************************************************************************
+    * @description Add a message to the ApexPages context with a specific count parameter
+    * @param Apexpages.Severity - severity of the message
+    * @param String - the message to display
     * @param Integer - count parameter to the message
     * @return Set<Id>
     */
-    private void addStatusMessage(Apexpages.Severity severityLevel, String statusMessage, Integer statusCount) {
-        ApexPages.addMessage(new ApexPages.Message(severityLevel, 
+    private void addStatusMessageWithCount(Apexpages.Severity severityLevel, String statusMessage, Integer statusCount) {
+       addStatusMessage(severityLevel, 
             String.format(
                 statusMessage, 
                 new List<String>{ String.valueOf(statusCount) }
             )
-        ));
+       );
     }
 
+     /*******************************************************************************************************
+    * @description checks if the system should send an email for the particular opportunity
+    * @param Opportunity - opportunity to check
+    * @return Boolean - returns true if the system should send an acknowledgement email
+    */
+    private Boolean shouldSendAck(Opportunity opp) {
+       return (opp.Acknowledgment_Status__c != System.Label.sendAcknowledgmentSucceeded);
+    }
 
 }
