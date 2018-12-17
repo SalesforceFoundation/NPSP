@@ -36,6 +36,16 @@
 public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
 
     /*******************************************************************************************************
+    * @description Acknowledgement Status Picklist API Names
+    */
+    @TestVisible
+    private static final String ACKNOWLEDGED = 'Acknowledged';
+    @TestVisible
+    private static final String ACKNOWLEDGEMENT_READY_TO_EMAIL = 'Email Acknowledgment Now';
+    @TestVisible
+    private static final String ACKNOWLEDGEMENT_FAILED = 'Email Acknowledgment Not Sent';
+
+    /*******************************************************************************************************
     * @description the id to return the user to or first object prefix for the list actions
     */
     public String recordId { get; set; }
@@ -53,7 +63,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
         get {
             if (oppsToAcknowledge == null) {
                 oppsToAcknowledge = [
-                    SELECT toLabel(Acknowledgment_Status__c)  // Need toLabel() to handle translated picklist
+                    SELECT Acknowledgment_Status__c 
                     FROM Opportunity
                     WHERE Id IN :oppIds
                 ]; 
@@ -144,7 +154,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
         //update status to ready for acknowledgement
         for (Opportunity opp : oppsToAcknowledge) {      
             if (shouldSendAck(opp)) {
-                opp.Acknowledgment_Status__c = System.Label.sendAcknowledgmentFireStatus;
+                opp.Acknowledgment_Status__c = ACKNOWLEDGEMENT_READY_TO_EMAIL;
                 oppsToAttemptAck.add(opp);
             } else {
                 cAlreadySent++;
@@ -160,7 +170,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
                 SELECT Id
                 FROM Opportunity 
                 WHERE Id IN :oppsToAttemptAck 
-                AND Acknowledgment_Status__c = :System.Label.sendAcknowledgmentFireStatus
+                AND Acknowledgment_Status__c = :ACKNOWLEDGEMENT_READY_TO_EMAIL
             ];
             
             cNotSent = listOppNotSent.size();
@@ -168,7 +178,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
             
             // for those Opps that failed, set status to acknowledgement failed
             for (Opportunity opp : listOppNotSent) {
-                opp.Acknowledgment_Status__c = System.Label.sendAcknowledgmentFailedStatus;
+                opp.Acknowledgment_Status__c = ACKNOWLEDGEMENT_FAILED;
             }
             
             update listOppNotSent;
@@ -261,7 +271,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
     * @return Boolean - returns true if the system should send an acknowledgement email
     */
     private Boolean shouldSendAck(Opportunity opp) {
-       return (opp.Acknowledgment_Status__c != System.Label.sendAcknowledgmentSucceeded);
+       return (opp.Acknowledgment_Status__c != ACKNOWLEDGED);
     }
 
 }

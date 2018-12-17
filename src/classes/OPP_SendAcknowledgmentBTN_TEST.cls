@@ -57,10 +57,10 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
 
         // we don't know if the workflow is active or not.
         System.assert(
-            listOpp[0].Acknowledgment_Status__c == System.Label.sendAcknowledgmentFailedStatus ||
-            listOpp[0].Acknowledgment_Status__c == System.Label.sendAcknowledgmentSucceeded, 
-            'Acknowledge Status Mismatch Expected: (' +  System.Label.sendAcknowledgmentFailedStatus +
-             ' OR ' + System.Label.sendAcknowledgmentSucceeded + ') ACTUAL: ' + listOpp[0].Acknowledgment_Status__c
+            listOpp[0].Acknowledgment_Status__c == OPP_SendAcknowledgmentBTN_CTRL.ACKNOWLEDGEMENT_FAILED ||
+            listOpp[0].Acknowledgment_Status__c == OPP_SendAcknowledgmentBTN_CTRL.ACKNOWLEDGED, 
+            'Acknowledge Status Mismatch Expected: (' +  OPP_SendAcknowledgmentBTN_CTRL.ACKNOWLEDGEMENT_FAILED +
+             ' OR ' + OPP_SendAcknowledgmentBTN_CTRL.ACKNOWLEDGED + ') ACTUAL: ' + listOpp[0].Acknowledgment_Status__c
         );  
         System.assertNotEquals(null, ctrl.listOppNotSent);
         System.assertNotEquals(ctrl.cSent, ctrl.cNotSent);   
@@ -122,7 +122,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
             Opportunity o = allOpps[oppIndex];
             o.Acknowledgment_Date__c = INITIAL_DATE;
             if (oppIndex < 3) {
-                o.Acknowledgment_Status__c = System.Label.sendAcknowledgmentSucceeded;
+                o.Acknowledgment_Status__c = OPP_SendAcknowledgmentBTN_CTRL.ACKNOWLEDGED;
                 resendOppIds.add(o.Id);
             } else {
                 sendOppIds.add(o.Id);
@@ -151,7 +151,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
         for (Opportunity o : allOpps) {
             if (resendOppIds.contains(o.Id)) {
                 System.assertEquals(
-                    System.Label.sendAcknowledgmentSucceeded, 
+                    OPP_SendAcknowledgmentBTN_CTRL.ACKNOWLEDGED, 
                     o.Acknowledgment_Status__c, 
                     'Acknowledgement status is wrong'
                 );
@@ -159,11 +159,11 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
                 continue;
             } 
 
-            if (o.Acknowledgment_Status__c == System.Label.sendAcknowledgmentSucceeded) {
+            if (o.Acknowledgment_Status__c == OPP_SendAcknowledgmentBTN_CTRL.ACKNOWLEDGED) {
                 sentCount++;
             }
 
-            if (o.Acknowledgment_Status__c == System.Label.sendAcknowledgmentFailedStatus) {
+            if (o.Acknowledgment_Status__c == OPP_SendAcknowledgmentBTN_CTRL.ACKNOWLEDGEMENT_FAILED) {
                 notSentCount++;
             }                  
         }  
@@ -264,8 +264,8 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
         return [SELECT 
                     Id, 
                     name, 
-                    toLabel(Acknowledgment_Status__c), 
+                    Acknowledgment_Status__c, 
                     Acknowledgment_Date__c 
                 FROM Opportunity];
-    }
+    }    
 }
