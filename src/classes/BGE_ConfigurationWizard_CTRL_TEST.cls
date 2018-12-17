@@ -129,11 +129,11 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
         Test.stopTest();
 
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
-        System.assertEquals('Test 4', batchDetails.name, 'Template details name should be Test 4');
-        System.assertEquals('Test Record', batchDetails.description, 'Template details description should be Test Record');
+        System.assertEquals('Test 4', batchDetails.name, 'Batch details name should be Test 4');
+        System.assertEquals('Test Record', batchDetails.description, 'Batch details description should be Test Record');
         System.assertEquals(false, batchDetails.requireTotalMatch, 'Require total match should be false');
         System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), batchDetails.activeFields, 'Active Fields should match default');
-        System.assertNotEquals(null, batchDetails.id, 'Template details should not be null');
+        System.assertNotEquals(null, batchDetails.id, 'Batch details should not be null');
 
     }
 
