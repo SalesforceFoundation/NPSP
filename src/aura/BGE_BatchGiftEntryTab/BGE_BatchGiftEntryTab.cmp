@@ -31,18 +31,13 @@
   @author Salesforce.org
   @date 2018
   @group Batch Gift Entry
-  @group-content ../../ApexDocContent/BatchDataImport.htm
-  @description Component used to view, edit, or create a Batch Template record.
+  @description Tab component used to view all DataImportBatch records used for Batch Gift Entry.
 -->
 
-<aura:component implements="force:appHostable" controller="BGE_ConfigurationWizard_CTRL">
-
-    <!-- public attributes -->
-    <aura:attribute name="listView" type="Map" description="Namespace correct objectApiName and listName" access="public"
-                    default="{'isLoaded':false}"/>
+<aura:component implements="force:appHostable" controller="BGE_ConfigurationWizard_CTRL" access="public">
 
     <!-- events we handle -->
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
     <!-- Start Markup -->
     <lightning:overlayLibrary aura:id="overlayLib"/>
@@ -65,14 +60,8 @@
         </div>
     </header>
 
-    <!--listView does not rerender dynamically, so need aura:if to have it wait before loading-->
-    <aura:if isTrue="{!v.listView.isLoaded}">
-        <lightning:listView objectApiName="{!v.listView.objectApiName}"
-                            listName="{!v.listView.listName}"
-                            showActionBar="false"
-                            enableInlineEdit="false"
-                            showRowLevelActions="false"/>
-    </aura:if>
+    <!--List View created dynamically-->
+    {!v.body}
 
     <!-- End Markup -->
 

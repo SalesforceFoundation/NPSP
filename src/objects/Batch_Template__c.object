@@ -294,6 +294,6 @@
         <masterLabel>Edit Processing Settings</masterLabel>
         <openType>sidebar</openType>
         <protected>false</protected>
-        <url>/apex/BGE_BatchTemplateOverride?Id={!Batch_Template__c.Id}</url>
+        <url>/apex/{!$Setup.Package_Settings__c.Namespace_Prefix__c}BGE_BatchTemplateOverride?Id={!Batch_Template__c.Id}</url>
     </webLinks>
 </CustomObject>

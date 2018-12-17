@@ -429,7 +429,7 @@
         <masterLabel>Edit Processing Settings</masterLabel>
         <openType>sidebar</openType>
         <protected>false</protected>
-        <url>/apex/BDI_BatchOverride?Id={!DataImportBatch__c.Id}</url>
+        <url>/apex/{!$Setup.Package_Settings__c.Namespace_Prefix__c}BDI_BatchOverride?Id={!DataImportBatch__c.Id}</url>
     </webLinks>
     <webLinks>
         <fullName>Process_Batch</fullName>
