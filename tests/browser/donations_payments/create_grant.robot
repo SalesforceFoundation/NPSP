@@ -11,11 +11,8 @@ Create Grant
     &{contact} =  API Create Contact    Email=skristem@robot.com
     Go To Object Home         Opportunity
     Click Object Button       New
-    Select Record Type        Grant 
-    #Sleep    2
-    Create Opportunities    Robot $100 grant    Awarded
-    #Sleep     5
+    Select Record Type        Grant
+    Create Opportunities    Robot $100 grant    &{Contact}[LastName] Household    Awarded
     ${grant_name}    Get Main Header
     Go To Object Home         Opportunity
     Click Link    link=${grant_name} 
-    #Sleep    2

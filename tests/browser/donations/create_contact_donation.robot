@@ -11,5 +11,12 @@ Create Donation from a Contact
     &{contact} =  API Create Contact    Email=skristem@robot.com
     Go To Record Home  &{contact}[Id]
     Click Object Button  New Donation
-    Create Opportunities    Test $100 donation    Closed Won
+    Populate Form
+    ...                       Opportunity Name= Test $100 donation
+    ...                       Amount=100
+    Click Dropdown    Stage
+    Click Link    link=Closed Won
+    Click Dropdown    Close Date
+    Pick Date    10
+    Click Modal Button        Save
     Verify Occurrence    Payments    0

@@ -108,7 +108,6 @@ npsp_lex_locators={
         'input_field':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/input',
         },
     'npsp_settings':{
-        'panel_link':'//div[@id="idPanelRecDonationsNav"]//a[text()="{}"]',
         'panel_sub_link':'//ul/li/a[text()="{}"]',
         'field_value':"//div[@class='slds-form-element'][./label[contains(text(),'{}')]]/div/span",
         'side_panel':"//ul/div[contains(@id,'RecDonations')]/button[1]",

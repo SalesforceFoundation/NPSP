@@ -205,14 +205,16 @@ Create Secondary Affiliation
     Click Modal Button    Save
     
 Create Opportunities
-    [Arguments]    ${opp_name}    ${stage}
+    [Arguments]    ${opp_name}    ${hh_name}    ${stage}
     Populate Form
     ...                       Opportunity Name= ${opp_name}
     ...                       Amount=100 
     Click Dropdown    Stage
     Click Link    link=${stage}
+    Populate Lookup Field    Account Name    ${hh_name}
     Click Dropdown    Close Date
     Pick Date    10
+    Select Lightning Checkbox    Do Not Automatically Create Payment
     Click Modal Button        Save
 
 Create Engagement Plan
@@ -224,15 +226,16 @@ Create Engagement Plan
     Wait For Locator    id    idName
     Enter Eng Plan Values    idName    ${plan_name}
     Enter Eng Plan Values    idDesc    This plan is created via Automation  
-    Click Button With Value    Add Task
+    Click Button    Add Task
+    Wait Until Page Contains  Task 1
     Enter Task Id and Subject    Task 1    ${task1}
     Click Task Button    1    Add Dependent Task
     Enter Task Id and Subject    Task 1-1    ${sub_task}
-    Click Button With Value    Add Task
+    Click Button    Add Task
+    Wait Until Page Contains  Task 2
     Enter Task Id and Subject    Task 2    ${task2}
     Page Scroll To Locator    button    Save
-    Click Button With Value    Save
-    #Sleep    2
+    Click Button    Save
     [Return]    ${plan_name}    ${task1}    ${sub_task}     ${task2}
     
 Create Level

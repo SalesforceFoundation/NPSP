@@ -8,18 +8,9 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Open Recurring Donation With Monthly Installment
-    Select App Launcher Tab  NPSP Settings
-    Wait For Locator    frame    Nonprofit Success Pack Settings
-    Select Frame With Title    Nonprofit Success Pack Settings
-    Wait for Locator    npsp_settings.side_panel
-    Click Link    link=Recurring Donations
-    #Sleep    2
-    Click Panel Sub Link    Recurring Donations
-    #Sleep    2
-    ${value}    Get NPSP Settings Value    Opportunity Forecast Months
-    Log To Console    ${value}
     &{contact} =  API Create Contact    Email=skristem@robot.com
     Go To Record Home  &{contact}[Id]
+    Select Tab  Related
     Click Related List Button  Recurring Donations    New
     Populate Form
     ...                       Recurring Donation Name= Robot Recurring Donation
@@ -37,11 +28,9 @@ Create Open Recurring Donation With Monthly Installment
     Click Modal Button        Save
     Check Related List Values    Recurring Donations    Robot Recurring Donation
     Reload Page
+    Select Tab  Related
     Load Related List    Opportunities
     Click ViewAll Related List    Opportunities
-    Reload Page
     ${return_value}    Verify Payment Details
-    Should be equal as strings    ${return_value}    ${value}
-    Verify Opportunities    ${value}
- 
-    
+    Should be equal as strings    ${return_value}    12
+    Verify Opportunities    12

@@ -681,9 +681,9 @@ class NPSP(object):
         self.selenium.get_webelement(locator).click()    
         
     def verify_payment_details(self):
-        locator = "//tbody/tr/td[3]"
+        locator = "//tbody/tr/td[2]/span/span"
         locs1 = self.selenium.get_webelements(locator)
-        locator2 = "//tbody/tr/td[4]"
+        locator2 = "//tbody/tr/td[3]/span/span"
         locs2 = self.selenium.get_webelements(locator2)
         for i, j in list(zip(locs1, locs2)):
             #loc1_vaue = self.selenium.get_webelemt(i).text
@@ -691,7 +691,7 @@ class NPSP(object):
             if i.text == "Pledged" and j.text == "$100.00":
                 pass
             else:
-                return "fail"    
+                return "fail"
         return len(locs1)-1
     
     def verify_opportunities(self, len_value):
