@@ -73,25 +73,26 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 String soql = 'SELECT ' +
                     String.join(fields, ', ') +
                     ' FROM DataImportBatch__c'+
-                    ' WHERE Id=:recordId';
+                    ' WHERE Id=:recordId' +
+                    ' LIMIT 1';
 
-                SObject recordDetails = Database.query(soql);
+                DataImportBatch__c recordDetails = Database.query(soql);
 
-                model.name = (String)recordDetails.get('Name');
-                model.id = (String)recordDetails.get('Id');
-                model.description = (String)recordDetails.get('Batch_Description__c');
-                model.requireTotalMatch = (Boolean)recordDetails.get('RequireTotalMatch__c');
-                model.activeFields = (String)recordDetails.get('Active_Fields__c');
-                model.batchProcessSize = (Decimal)recordDetails.get('Batch_Process_Size__c');
-                model.donationDateRange = (Decimal)recordDetails.get('Donation_Date_Range__c');
-                model.donationMatchingBehavior = (String)recordDetails.get('Donation_Matching_Behavior__c');
-                model.donationMatchingClass = (String)recordDetails.get('Donation_Matching_Implementing_Class__c');
-                model.donationMatchingRule = ((String)recordDetails.get('Donation_Matching_Rule__c')).split(';');
-                model.postProcessClass = (String)recordDetails.get('Post_Process_Implementing_Class__c');
-                model.processUsingScheduledJob = (Boolean)recordDetails.get('Process_Using_Scheduled_Job__c');
-                model.runOpportunityRollupsWhileProcessing = (Boolean)recordDetails.get('Run_Opportunity_Rollups_while_Processing__c');
-                model.expectedCount = Integer.valueOf(recordDetails.get('Expected_Count_of_Gifts__c'));
-                model.expectedTotal = (Decimal)recordDetails.get('Expected_Total_Batch_Amount__c');
+                model.name = recordDetails.Name;
+                model.id = recordDetails.Id;
+                model.description = recordDetails.Batch_Description__c;
+                model.requireTotalMatch = recordDetails.RequireTotalMatch__c;
+                model.activeFields = recordDetails.Active_Fields__c;
+                model.batchProcessSize = recordDetails.Batch_Process_Size__c;
+                model.donationDateRange = recordDetails.Donation_Date_Range__c;
+                model.donationMatchingBehavior = recordDetails.Donation_Matching_Behavior__c;
+                model.donationMatchingClass = recordDetails.Donation_Matching_Implementing_Class__c;
+                model.donationMatchingRule = recordDetails.Donation_Matching_Rule__c.split(';');
+                model.postProcessClass = recordDetails.Post_Process_Implementing_Class__c;
+                model.processUsingScheduledJob = recordDetails.Process_Using_Scheduled_Job__c;
+                model.runOpportunityRollupsWhileProcessing = recordDetails.Run_Opportunity_Rollups_while_Processing__c;
+                model.expectedCount = (Integer)recordDetails.Expected_Count_of_Gifts__c;
+                model.expectedTotal = recordDetails.Expected_Total_Batch_Amount__c;
 
             } catch (Exception ex) {
                 throw new AuraHandledException('ERROR: ' + ex.getMessage());
