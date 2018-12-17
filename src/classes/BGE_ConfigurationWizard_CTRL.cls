@@ -54,6 +54,9 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     @AuraEnabled
     public static void checkFieldPermissions(String sObjectName) {
 
+        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(sObjectName);
+
+/*
         List<DescribeFieldResult> fieldsToCheck = new List<DescribeFieldResult>();
 
         List<String> fieldNames = getRecordFieldNames(sObjectName);
@@ -71,6 +74,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 throw new AuraHandledException(Label.bgeFLSError);
             }
         }
+*/
     }
 
     /*******************************************************************************************************
@@ -89,7 +93,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         sObjectName = UTIL_Namespace.StrTokenRemoveNSPrefix(sObjectName);
 
-        List<String> fields = getRecordFieldNames(sObjectName);
+        List<String> fields = BGE_BatchGiftEntry_UTIL.getRecordFieldNames(sObjectName);
 
         if (recordId != null) {
 
@@ -251,7 +255,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                     && allowedDataTypes.contains(dfr.getType().name())
                     && !bannedFields.contains(dataImportFieldApiName)
                     && dfr.getInlineHelpText() != null
-                    && canUpdateField(dfr);
+                    && BGE_BatchGiftEntry_UTIL.canUpdateField(dfr);
 
             if (fieldAllowed) {
                 dfrs.add(dfr);
@@ -259,39 +263,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         }
 
         return dfrs;
-    }
-
-    /*******************************************************************************************************
-    * @description Returns the relevant Batch or Template fields for soql
-    * @return list of field API names
-    */
-    public static List<String> getRecordFieldNames(String sObjectName) {
-
-        String descriptionField = (sObjectName == 'DataImportBatch__c') ? 'Batch_Description__c' : 'Description__c';
-
-        List<String> recordFieldNames = new List<String>{
-                descriptionField,
-                'Name',
-                'Id',
-                'RequireTotalMatch__c',
-                'Active_Fields__c',
-                'Batch_Process_Size__c',
-                'Run_Opportunity_Rollups_while_Processing__c',
-                'Contact_Matching_Rule__c',
-                'Donation_Matching_Behavior__c',
-                'Donation_Matching_Implementing_Class__c',
-                'Donation_Matching_Rule__c',
-                'Donation_Date_Range__c',
-                'Post_Process_Implementing_Class__c',
-                'Process_Using_Scheduled_Job__c'
-        };
-
-        if (sObjectName == 'DataImportBatch__c') {
-            recordFieldNames.add('Expected_Count_of_Gifts__c');
-            recordFieldNames.add('Expected_Total_Batch_Amount__c');
-        }
-
-        return recordFieldNames;
     }
 
     /*******************************************************************************************************
@@ -615,18 +586,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         return UTIL_Namespace.getNamespace() != '';
     }
 
-    /*******************************************************************************************************
-    * @description checks for read, create, and edit FLS for a given field
-    * @param dfr DescribeFieldResult of the field to check
-    * @return Boolean
-    */
-    private static Boolean canUpdateField(DescribeFieldResult dfr) {
-        if (!dfr.isCreateable() || !dfr.isUpdateable()) {
-            return false;
-        } else {
-            return true;
-        }
-    }
 
     /*******************************************************************************************************
     * @description Deserializes information to the model and selects which record to save.

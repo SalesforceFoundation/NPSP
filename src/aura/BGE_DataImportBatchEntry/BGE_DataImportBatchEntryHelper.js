@@ -8,7 +8,7 @@
         if (sObjectName === 'DataImportBatch__c') {
             action = component.get('c.checkBatchFieldPermissions');
         } else if (sObjectName === 'Batch_Template__c') {
-            action = component.get('c.checkBatchFieldPermissions');
+            action = component.get('c.checkTemplateFieldPermissions');
         }
         action.setCallback(this, function (response) {
             var state = response.getState();
