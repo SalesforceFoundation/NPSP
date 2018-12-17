@@ -223,14 +223,14 @@ private with sharing class BDI_DataImportCTRL_TEST {
 
     /*********************************************************************************************************
     * @description operation:
-    *    Open the Data Import Run/Settings page, with UseBatchGiftEntryGrid__c = false
+    *    Open the Data Import Run/Settings page, with GiftBatch__c = false
     * verify:
     *    The UserCanEditSettings flag is correct.
     **********************************************************************************************************/
     static testMethod void testUserCanEditSettings() {
 
         DataImportBatch__c diBatch = BDI_BatchOverride_TEST.newDIBatch();
-        diBatch.UseBatchGiftEntryGrid__c = false;
+        diBatch.GiftBatch__c = false;
         insert diBatch;
 
         // Create an admin User
@@ -253,14 +253,14 @@ private with sharing class BDI_DataImportCTRL_TEST {
 
     /*********************************************************************************************************
     * @description operation:
-    *    Open the Data Import Run/Settings page, with UseBatchGiftEntryGrid__c = true
+    *    Open the Data Import Run/Settings page, with GiftBatch__c = true
     * verify:
     *    The UserCanEditSettings flag is correct.
     **********************************************************************************************************/
     static testMethod void testUserCannotEditSettings() {
 
         DataImportBatch__c diBatch = BDI_BatchOverride_TEST.newDIBatch();
-        diBatch.UseBatchGiftEntryGrid__c = true;
+        diBatch.GiftBatch__c = true;
         insert diBatch;
 
         // Create an admin User

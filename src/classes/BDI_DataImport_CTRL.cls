@@ -144,7 +144,7 @@ public with sharing class BDI_DataImport_CTRL {
     */
     public Boolean isBGERecord {
         get {
-            return diBatch.UseBatchGiftEntryGrid__c;
+            return diBatch.GiftBatch__c;
         } private set;
     }
 

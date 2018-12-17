@@ -399,7 +399,7 @@
         <columns>CREATED_DATE</columns>
         <filterScope>Everything</filterScope>
         <filters>
-            <field>UseBatchGiftEntryGrid__c</field>
+            <field>GiftBatch__c</field>
             <operation>equals</operation>
             <value>1</value>
         </filters>
