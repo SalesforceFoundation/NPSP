@@ -20,9 +20,9 @@
                 action.setCallback(this, function (response) {
                     const state = response.getState();
                     if (state === 'SUCCESS') {
-                        const response = JSON.parse(response.getReturnValue());
-                        helper.setDataTableRows(component, response);
-                        helper.setTotals(component, response);
+                        const returnValue = JSON.parse(response.getReturnValue());
+                        helper.setDataTableRows(component, returnValue);
+                        helper.setTotals(component, returnValue);
                         helper.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftDeleted'), 'success');
                     } else {
                         helper.handleApexErrors(component, response.getError());
