@@ -246,7 +246,7 @@ private with sharing class BDI_DataImportCTRL_TEST {
             BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
 
             System.assertEquals(true, ctrl.UserCanEditSettings, 'User should be able to edit settings');
-            System.assertEquals(false, ctrl.isBGERecord, 'Record should not be flagged for BGE.');
+            System.assertEquals(false, ctrl.isGiftBatch, 'Record should not be flagged for Batch Gift Entry.');
         }
         Test.stopTest();
     }
@@ -276,7 +276,7 @@ private with sharing class BDI_DataImportCTRL_TEST {
             BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
 
             System.assertEquals(false, ctrl.UserCanEditSettings, 'User should not be able to edit settings');
-            System.assertEquals(true, ctrl.isBGERecord, 'Record should be flagged for BGE.');
+            System.assertEquals(true, ctrl.isGiftBatch, 'Record should be flagged for Batch Gift Entry.');
         }
         Test.stopTest();
     }
