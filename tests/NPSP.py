@@ -692,10 +692,10 @@ class NPSP(object):
                 pass
             else:
                 return "fail"
-        return len(locs1)-1
-    
+        return len(locs1)
+
     def verify_opportunities(self, len_value):
-        locator = "//tbody/tr[13]/th"
+        locator = "//tbody/tr[12]/th"
         s = self.selenium.get_webelement(locator).text
         #return s
         strip_list = s.split(" ")

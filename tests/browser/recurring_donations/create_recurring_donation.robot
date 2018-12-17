@@ -10,25 +10,19 @@ Suite Teardown  Delete Records and Close Browser
 Create Open Recurring Donation With Monthly Installment
     &{contact} =  API Create Contact    Email=skristem@robot.com
     Go To Record Home  &{contact}[Id]
-    Select Tab  Related
-    Click Related List Button  Recurring Donations    New
+    Click Link    link=Show more actions
+    Click Link    link=New Open Recurring Donation
+    Wait Until Modal Is Open
     Populate Form
     ...                       Recurring Donation Name= Robot Recurring Donation
     ...                       Amount=100 
-    ...                       Installments=1 
-    Click Dropdown    Date Established
-    Change Month      Go to previous month
-    Pick Date         10 
-    Click Dropdown    Open Ended Status
-    Click Link        link=Open
     Click Dropdown    Installment Period
     Click Link        link=Monthly
-    Click Dropdown    Schedule Type
-    Click Link        link=Multiply By
     Click Modal Button        Save
-    Check Related List Values    Recurring Donations    Robot Recurring Donation
     Reload Page
     Select Tab  Related
+    Load Related List    Recurring Donations
+    Check Related List Values    Recurring Donations    Robot Recurring Donation
     Load Related List    Opportunities
     Click ViewAll Related List    Opportunities
     ${return_value}    Verify Payment Details
