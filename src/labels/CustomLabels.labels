@@ -2556,13 +2556,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Select the fields to use for entering gifts in this batch. Donor Type and an Account or Contact lookup will always appear.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchEdit</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Header for Batch in Edit mode</shortDescription>
-        <value>Edit Batch</value>
-    </labels>
-    <labels>
         <fullName>bgeBatchErrorDefaultValue</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2582,13 +2575,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Error shown when required fields are missing.</shortDescription>
         <value>The following fields are required because other fields from their object are selected. Select them before proceeding:</value>
-    </labels>
-    <labels>
-        <fullName>bgeBatchNew</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Header for Batch in Create mode</shortDescription>
-        <value>New Batch</value>
     </labels>
     <labels>
         <fullName>bgeBatchOverviewWizard</fullName>

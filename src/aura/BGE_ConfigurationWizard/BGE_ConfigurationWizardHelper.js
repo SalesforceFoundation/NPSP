@@ -102,11 +102,6 @@
                     component.set('v.isReadOnly', true);
                 } else if (batchMetadataView.mode === 'create' || batchMetadataView.mode === 'edit') {
                     component.set('v.isReadOnly', false);
-                    if (batchMetadata.mode === 'edit') {
-                        batchMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchEdit')
-                    } else if (batchMetadata.mode === 'create') {
-                        batchMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchNew');
-                    }
                 }
 
                 //update page header in modal if page header has changed and modal is used
