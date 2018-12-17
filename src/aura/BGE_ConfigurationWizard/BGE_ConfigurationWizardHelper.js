@@ -1,44 +1,44 @@
 ({
     /********************************************* View Modules *********************************************/
-    
+
     /**
-     * @description Returns the Template Info View module.
+     * @description Returns the Batch Info View module.
      * @param component. Lightning Component reference.
      * @param model. The Model.
-     * @return View of the Template Info module.
+     * @return View of the Batch Info module.
      */
-    TemplateInfoView : function(component, model) {
+    BatchInfoView : function(component, model) {
         return (function (component, model) {
 
             // Subscribe to the model onInfoUpdated event.
-            model.getTemplateInfo().onInfoUpdated.subscribe(function() {
-                var templateInfoView = component.get('v.templateInfo');
-                var templateInfo = model.getTemplateInfo();
+            model.getBatchInfo().onInfoUpdated.subscribe(function() {
+                var batchInfoView = component.get('v.batchInfo');
+                var batchInfo = model.getBatchInfo();
 
                 // record info
-                templateInfoView.name = templateInfo.name;
-                templateInfoView.id = templateInfo.id;
-                templateInfoView.description = templateInfo.description;
-                templateInfoView.expectedCount = templateInfo.expectedCount;
-                templateInfoView.expectedTotal = templateInfo.expectedTotal;
-                templateInfoView.recordCount = templateInfo.recordCount;
+                batchInfoView.name = batchInfo.name;
+                batchInfoView.id = batchInfo.id;
+                batchInfoView.description = batchInfo.description;
+                batchInfoView.expectedCount = batchInfo.expectedCount;
+                batchInfoView.expectedTotal = batchInfo.expectedTotal;
+                batchInfoView.recordCount = batchInfo.recordCount;
 
                 // batch processing settings
-                templateInfoView.requireTotalMatch = templateInfo.requireTotalMatch;
-                templateInfoView.batchProcessSize = templateInfo.batchProcessSize;
-                templateInfoView.runOpportunityRollupsWhileProcessing = templateInfo.runOpportunityRollupsWhileProcessing;
-                templateInfoView.donationMatchingBehavior = templateInfo.donationMatchingBehavior;
-                templateInfoView.donationMatchingClass = templateInfo.donationMatchingClass;
-                templateInfoView.donationMatchingOptions = templateInfo.donationMatchingOptions;
-                templateInfoView.donationMatchingRule = templateInfo.donationMatchingRule;
-                templateInfoView.donationDateRange = templateInfo.donationDateRange;
-                templateInfoView.postProcessClass = templateInfo.postProcessClass;
-                templateInfoView.processUsingScheduledJob = templateInfo.processUsingScheduledJob;
+                batchInfoView.requireTotalMatch = batchInfo.requireTotalMatch;
+                batchInfoView.batchProcessSize = batchInfo.batchProcessSize;
+                batchInfoView.runOpportunityRollupsWhileProcessing = batchInfo.runOpportunityRollupsWhileProcessing;
+                batchInfoView.donationMatchingBehavior = batchInfo.donationMatchingBehavior;
+                batchInfoView.donationMatchingClass = batchInfo.donationMatchingClass;
+                batchInfoView.donationMatchingOptions = batchInfo.donationMatchingOptions;
+                batchInfoView.donationMatchingRule = batchInfo.donationMatchingRule;
+                batchInfoView.donationDateRange = batchInfo.donationDateRange;
+                batchInfoView.postProcessClass = batchInfo.postProcessClass;
+                batchInfoView.processUsingScheduledJob = batchInfo.processUsingScheduledJob;
 
-                component.set('v.templateInfo', templateInfoView);
+                component.set('v.batchInfo', batchInfoView);
             });
 
-            // TemplateInfoView module public functions and properties
+            // BatchInfoView module public functions and properties
             return {
                 name: '',
                 id: '',
@@ -63,64 +63,59 @@
     },
 
     /**
-     * @description Returns the Template Metadata View module.
+     * @description Returns the Batch Metadata View module.
      * @param component. Lightning Component reference.
      * @param model. The Model.
-     * @return View of the Template Metadata module.
+     * @return View of the Batch Metadata module.
      */
-    TemplateMetadataView : function(component, model) {
+    BatchMetadataView : function(component, model) {
         return (function (component, model) {
 
             // Subscribe to the model onMetadataUpdated event.
-            model.getTemplateMetadata().onMetadataUpdated.subscribe(function() {
-                var templateMetadataView = component.get('v.templateMetadata');
-                var templateMetadata = model.getTemplateMetadata();
-                var headerChanged = Boolean(templateMetadataView.pageHeader !== templateMetadata.pageHeader);
+            model.getBatchMetadata().onMetadataUpdated.subscribe(function() {
+                var batchMetadataView = component.get('v.batchMetadata');
+                var batchMetadata = model.getBatchMetadata();
+                var headerChanged = Boolean(batchMetadataView.pageHeader !== batchMetadata.pageHeader);
 
-                templateMetadataView.labels = templateMetadata.labels;
-                templateMetadataView.mode = templateMetadata.mode;
-                templateMetadataView.hasError = templateMetadata.hasError;
-                templateMetadataView.errorMessage = templateMetadata.errorMessage;
-                templateMetadataView.pageHeader = templateMetadata.pageHeader;
-                templateMetadataView.pendingSave = templateMetadata.pendingSave;
+                batchMetadataView.labels = batchMetadata.labels;
+                batchMetadataView.mode = batchMetadata.mode;
+                batchMetadataView.hasError = batchMetadata.hasError;
+                batchMetadataView.errorMessage = batchMetadata.errorMessage;
+                batchMetadataView.pageHeader = batchMetadata.pageHeader;
+                batchMetadataView.pendingSave = batchMetadata.pendingSave;
 
-                if (!templateMetadataView.hasError) {
-                    templateMetadataView.progressIndicatorStep = templateMetadata.progressIndicatorStep;
-                    _sendMessage('setStep',templateMetadata.progressIndicatorStep);
+                if (!batchMetadataView.hasError) {
+                    batchMetadataView.progressIndicatorStep = batchMetadata.progressIndicatorStep;
+                    _sendMessage('setStep',batchMetadata.progressIndicatorStep);
                 } else {
                     component.find('notifLib').showNotice({
                         'variant': 'error',
                         'header': $A.get('$Label.c.PageMessagesError'),
-                        'message': templateMetadataView.errorMessage,
+                        'message': batchMetadataView.errorMessage,
                         closeCallback: function() {
                             //callback action here
                         }
                     });
                 }
 
-                if (templateMetadataView.mode === 'view') {
+                if (batchMetadataView.mode === 'view') {
                     component.set('v.isReadOnly', true);
-                } else if (templateMetadataView.mode === 'create' || templateMetadataView.mode === 'edit') {
+                } else if (batchMetadataView.mode === 'create' || batchMetadataView.mode === 'edit') {
                     component.set('v.isReadOnly', false);
-                    if (templateMetadata.mode === 'edit') {
-                        templateMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchTemplateEdit')
-                    } else if (templateMetadata.mode === 'create') {
-                        templateMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchTemplateNew');
-                    }
                 }
 
                 //update page header in modal if page header has changed and modal is used
                 if (headerChanged) {
-                    _sendMessage('setHeader', templateMetadataView.pageHeader);
+                    _sendMessage('setHeader', batchMetadataView.pageHeader);
                 }
 
                 //update footer in modal to keep save button appropriately enabled/disabled
-                _sendMessage('pendingSave', templateMetadataView.pendingSave);
+                _sendMessage('pendingSave', batchMetadataView.pendingSave);
 
                 // when in modal context, need to notify the modal footer component
-                _sendMessage('setError', templateMetadataView.hasError);
+                _sendMessage('setError', batchMetadataView.hasError);
 
-                component.set('v.templateMetadata', templateMetadataView);
+                component.set('v.batchMetadata', batchMetadataView);
             });
 
             function _sendMessage(channel, message) {
@@ -132,7 +127,7 @@
                 sendMessage.fire();
             }
 
-            // TemplateMetadataView module public functions and properties
+            // BatchMetadataView module public functions and properties
             return {
                 labels: {},
                 mode: '',
@@ -145,21 +140,21 @@
     },
 
     /**
-     * @description Returns the Template Fields View module.
+     * @description Returns the Batch Fields View module.
      * @param component. Lightning Component reference.
-     * @param model. The Template Fields Model.
-     * @return View of the Template Fields module.
+     * @param model. The Batch Fields Model.
+     * @return View of the Batch Fields module.
      */
-    TemplateFieldsView : function(component, model) {
+    BatchFieldsView : function(component, model) {
         return (function (component, model) {
 
             // Subscribe to the model onFieldsUpdated event.
-            model.getTemplateFields().onFieldsUpdated.subscribe(function() {
-                var templateFields = component.get('v.templateFields');
-                templateFields.fieldGroups = [];
+            model.getAvailableFields().onFieldsUpdated.subscribe(function() {
+                var availableFields = component.get('v.availableFields');
+                availableFields.fieldGroups = [];
 
-                var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
-                var allFieldsBySObject = model.getTemplateFields().getAllFieldsBySObject();
+                var activeFieldsBySObject = model.getAvailableFields().getActivesBySObject();
+                var allFieldsBySObject = model.getAvailableFields().getAllFieldsBySObject();
 
                 Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
                     var currentFieldGroup = {
@@ -187,13 +182,13 @@
                             currentFieldGroup.values.push(currentField.id);
                         });
                     }
-                    templateFields.fieldGroups.push(currentFieldGroup);
+                    availableFields.fieldGroups.push(currentFieldGroup);
                 });
 
-                component.set('v.templateFields', templateFields);
+                component.set('v.availableFields', availableFields);
             });
 
-            // TemplateFieldsView module public functions and properties
+            // BatchFieldsView module public functions and properties
             return {
                 fieldGroups: []
             };
@@ -201,21 +196,21 @@
     },
 
     /**
-     * @description Returns the Template Field Options View module.
+     * @description Returns the Batch Field Options View module.
      * @param component. Lightning Component reference.
-     * @param model. The Template Fields Model.
-     * @return View of the Template Field Options module.
+     * @param model. The Batch Fields Model.
+     * @return View of the Batch Field Options module.
      */
-    TemplateFieldOptionsView : function(component, model) {
+    BatchFieldOptionsView : function(component, model) {
         return (function (component, model) {
 
             // Subscribe to the model onFieldsUpdated event.
-            model.getTemplateFields().onFieldsUpdated.subscribe(function() {
-                var templateFieldOptions = component.get('v.templateFieldOptions');
-                templateFieldOptions.fieldGroups = [];
-                var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
-                var templateFields = model.getTemplateFields();
-                templateFieldOptions.errors = templateFields.errors;
+            model.getAvailableFields().onFieldsUpdated.subscribe(function() {
+                var batchFieldOptions = component.get('v.batchFieldOptions');
+                batchFieldOptions.fieldGroups = [];
+                var activeFieldsBySObject = model.getAvailableFields().getActivesBySObject();
+                var availableFields = model.getAvailableFields();
+                batchFieldOptions.errors = availableFields.errors;
 
                 Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
 
@@ -247,14 +242,14 @@
 
                     });
 
-                    templateFieldOptions.fieldGroups.push(currentFieldGroup);
+                    batchFieldOptions.fieldGroups.push(currentFieldGroup);
 
                 });
-                component.set('v.templateFieldOptions', templateFieldOptions);
+                component.set('v.batchFieldOptions', batchFieldOptions);
 
             });
 
-            // TemplateFieldOptionsView module public functions and properties
+            // BatchFieldOptionsView module public functions and properties
             return {
                 fieldGroups: []
             };
@@ -266,32 +261,31 @@
     /*********************************************** Model Modules *********************************************/
 
     /**
-     * @description Gets the Model module of Template Details.
-     * This is the main and only Model module for the Template 
-     * Details components. Contains references to TemplateFields
-     * and TemplateInfo sub-modules.
-     * @return Model module of Template Details.
+     * @description Gets the Model module of Batch Details.
+     * This is the main and only Model module for the Batch
+     * Details components. Contains references to BatchFields
+     * and BatchInfo sub-modules.
+     * @return Model module of Batch Details.
      */
-    TemplateDetailsModel : function() {
-        return (function (templateFields, templateInfo, templateMetadata) {
-            var _templateFields = templateFields;
-            var _templateInfo = templateInfo;
-            var _templateMetadata = templateMetadata;
-            var _bgeTemplateController;
-            
+    DetailsModel : function() {
+        return (function (availableFields, batchInfo, batchMetadata) {
+            var _availableFields = availableFields;
+            var _batchInfo = batchInfo;
+            var _batchMetadata = batchMetadata;
+            var _bgeBatchController;
+
             /* **********************************************************
-             * @Description Gets the Template Details and loads sub-modules.
+             * @Description Gets the Batch Details and loads sub-modules.
              * @param component. Lightning Component reference.
              * @return void.
              ************************************************************/
             function init(component) {
-                var recordId = _templateInfo.id ? _templateInfo.id : component.get('v.recordId');
-                var sObjectName = component.get('v.sObjectName');
-                _bgeTemplateController.getRecordDetails(sObjectName, recordId, {
+                var recordId = _batchInfo.id ? _batchInfo.id : component.get('v.recordId');
+                _bgeBatchController.getRecordDetails(recordId, {
                     success: function(response) {
-                        _templateInfo.load(response);
-                        _templateFields.load(response.templateFields, JSON.parse(response.activeFields));
-                        _templateMetadata.load(response.labels, component);
+                        _batchInfo.load(response);
+                        _availableFields.load(response.availableFields, JSON.parse(response.activeFields));
+                        _batchMetadata.load(response.labels, component);
                     },
                     error: function(error) {
                         console.log(error);
@@ -304,28 +298,28 @@
              * @return void.
              */
             function save() {
-                var templateDetailsData = {
+                var batchDetailsData = {
                     //record info
-                    name: _templateInfo.name,
-                    id: _templateInfo.id,
-                    description: _templateInfo.description,
-                    expectedCount: _templateInfo.expectedCount,
-                    expectedTotal: _templateInfo.expectedTotal,
+                    name: _batchInfo.name,
+                    id: _batchInfo.id,
+                    description: _batchInfo.description,
+                    expectedCount: _batchInfo.expectedCount,
+                    expectedTotal: _batchInfo.expectedTotal,
 
                     // batch processing settings
-                    requireTotalMatch: _templateInfo.requireTotalMatch,
-                    batchProcessSize: _templateInfo.batchProcessSize,
-                    runOpportunityRollupsWhileProcessing: _templateInfo.runOpportunityRollupsWhileProcessing,
-                    donationMatchingBehavior: _templateInfo.donationMatchingBehavior,
-                    donationMatchingClass: _templateInfo.donationMatchingClass,
-                    donationMatchingRule: _templateInfo.donationMatchingRule,
-                    donationDateRange: _templateInfo.donationDateRange,
-                    postProcessClass: _templateInfo.postProcessClass,
-                    processUsingScheduledJob: _templateInfo.processUsingScheduledJob
+                    requireTotalMatch: _batchInfo.requireTotalMatch,
+                    batchProcessSize: _batchInfo.batchProcessSize,
+                    runOpportunityRollupsWhileProcessing: _batchInfo.runOpportunityRollupsWhileProcessing,
+                    donationMatchingBehavior: _batchInfo.donationMatchingBehavior,
+                    donationMatchingClass: _batchInfo.donationMatchingClass,
+                    donationMatchingRule: _batchInfo.donationMatchingRule,
+                    donationDateRange: _batchInfo.donationDateRange,
+                    postProcessClass: _batchInfo.postProcessClass,
+                    processUsingScheduledJob: _batchInfo.processUsingScheduledJob
                 };
                 var activeFields = [];
 
-                _templateFields.getActives().forEach(function(currentField) {
+                _availableFields.getActives().forEach(function(currentField) {
                     activeFields.push({
                         label: currentField.label,
                         name: currentField.name,
@@ -339,15 +333,13 @@
                     });
                 });
 
-                var sObjectName = _templateMetadata.labels.sObjectNameNoNamespace;
-
-                _bgeTemplateController.saveRecord(sObjectName, templateDetailsData, activeFields, {
+                _bgeBatchController.saveRecord(batchDetailsData, activeFields, {
                     success: function(response) {
-                        _templateMetadata.navigateToRecord(response.id);
+                        _batchMetadata.navigateToRecord(response.id);
                     },
                     error: function(error) {
                         console.log(error);
-                        _templateMetadata.togglePendingSave();
+                        _batchMetadata.togglePendingSave();
                     }
                 });
             }
@@ -356,54 +348,54 @@
              * @description Sets the Apex backend controller module.
              * @return void.
              */
-            function setBackendController(bgeTemplateController) {
-                _bgeTemplateController = bgeTemplateController
+            function setBackendController(bgeBatchController) {
+                _bgeBatchController = bgeBatchController
             }
 
             /**
-             * @description Gets the Template Fields module.
-             * @return Template Fields module.
+             * @description Gets the Batch Fields module.
+             * @return Batch Fields module.
              */
-            function getTemplateFields() {
-                return _templateFields;
+            function getAvailableFields() {
+                return _availableFields;
             }
 
             /**
-             * @description Gets the Template Info module.
-             * @return Template Info module.
+             * @description Gets the Batch Info module.
+             * @return Batch Info module.
              */
-            function getTemplateInfo() {
-                return _templateInfo;
+            function getBatchInfo() {
+                return _batchInfo;
             }
 
             /**
-             * @description Gets the Template Metadata module.
-             * @return Template Metadata module.
+             * @description Gets the Batch Metadata module.
+             * @return Batch Metadata module.
              */
-            function getTemplateMetadata() {
-                return _templateMetadata;
+            function getBatchMetadata() {
+                return _batchMetadata;
             }
 
-            // TemplateDetailsModel module public functions and properties
+            // DetailsModel module public functions and properties
             return {
                 init: init,
                 save: save,
                 setBackendController: setBackendController,
-                getTemplateFields: getTemplateFields,
-                getTemplateInfo: getTemplateInfo,
-                getTemplateMetadata: getTemplateMetadata
+                getAvailableFields: getAvailableFields,
+                getBatchInfo: getBatchInfo,
+                getBatchMetadata: getBatchMetadata
             }
-        })(this.TemplateFields(), this.TemplateInfo(), this.TemplateMetadata());
+        })(this.BatchFields(), this.BatchInfo(), this.BatchMetadata());
     },
 
     /**
-     * @description Gets the Model module of the Template Info.
-     * @return Model module of the Template Info.
+     * @description Gets the Model module of the Batch Info.
+     * @return Model module of the Batch Info.
      */
-    TemplateInfo : function() {
+    BatchInfo : function() {
         return (function (Event) {
             var _onInfoUpdated = new Event(this);
-            
+
             /**
              * @description Loads the Info, and notify all the
              * _onInfoUpdated listeners.
@@ -433,14 +425,14 @@
             }
 
             /**
-             * @description Validates the required templateInfo.
+             * @description Validates the required batchInfo.
              * @return Boolean validity.
              */
             function isValid() {
                 return this.name && this.description
             }
-            
-            // TemplateInfo module public functions and properties
+
+            // BatchInfo module public functions and properties
             return {
                 // record info
                 name: '',
@@ -470,10 +462,10 @@
     },
 
     /**
-     * @description Gets the Template Fields module.
-     * @return Model module of the Template Fields.
+     * @description Gets the Batch Fields module.
+     * @return Model module of the Batch Fields.
      */
-    TemplateFields : function() {
+    BatchFields : function() {
         return (function (Event) {
             var _allFields = [];
             var _onFieldsUpdated = new Event(this);
@@ -522,9 +514,9 @@
             }
 
             /**
-            * @description Gets all fields grouped by SObject.
-            * @return Map of SObject group to List of all fields.
-            */
+             * @description Gets all fields grouped by SObject.
+             * @return Map of SObject group to List of all fields.
+             */
             function getAllFieldsBySObject() {
                 return _groupFieldsBySObject(_allFields);
             }
@@ -584,7 +576,7 @@
             }
 
             /**
-             * @description Validates the required templateInfo in Select Fields step.
+             * @description Validates the required batchInfo in Select Fields step.
              * @return Boolean validity.
              */
             function getRequiredFieldErrors() {
@@ -614,18 +606,18 @@
                     }
                 });
 
-                return errors.length > 0 ? $A.get('$Label.c.bgeBatchTemplateErrorRequiredFields') + ' ' + errors.join(', ') + '.' : '';
+                return errors.length > 0 ? $A.get('$Label.c.bgeBatchErrorRequiredFields') + ' ' + errors.join(', ') + '.' : '';
             }
 
             /**
              * @description Updates isActive flag and sort Order of all fields
              * @return void.
              */
-            function updateToActive(templateFieldGroups) {
+            function updateToActive(batchFieldGroups) {
                 var fieldCountPreviousObjects = 0;
                 var allFieldsBySObject = getAllFieldsBySObject();
                 Object.keys(allFieldsBySObject).forEach(function(currentSObject) {
-                    templateFieldGroups.forEach(function(currentFieldGroup) {
+                    batchFieldGroups.forEach(function(currentFieldGroup) {
                         if (currentFieldGroup.sObjectName === currentSObject) {
                             allFieldsBySObject[currentSObject].forEach(function (currentField) {
                                 currentField.isActive = currentFieldGroup.values.includes(currentField.id);
@@ -645,17 +637,17 @@
              * @description Updates the selected fields to Active, unselects fields
              * @return void.
              */
-            function updateTemplateFieldOptions(templateFieldGroups) {
+            function updateBatchFieldOptions(batchFieldGroups) {
 
-                var templateFieldOptions = [];
-                templateFieldGroups.forEach(function(currentFieldGroup) {
+                var batchFieldOptions = [];
+                batchFieldGroups.forEach(function(currentFieldGroup) {
                     currentFieldGroup.fields.forEach(function(currentField) {
-                        templateFieldOptions.push(currentField);
+                        batchFieldOptions.push(currentField);
                     });
                 });
 
                 _allFields.forEach(function(currentField) {
-                    templateFieldOptions.forEach(function(currentActiveField) {
+                    batchFieldOptions.forEach(function(currentActiveField) {
                         if (currentField.name === currentActiveField.name) {
                             currentField.required = currentActiveField.required;
                             currentField.hide = currentActiveField.hide;
@@ -672,7 +664,7 @@
                         var fieldName = currentField.name;
                         var fieldNameGroup = {
                             title: $A.get('$Label.c.PageMessagesError'),
-                            messages: [$A.get('$Label.c.bgeBatchTemplateErrorDefaultValue')],
+                            messages: [$A.get('$Label.c.bgeBatchErrorDefaultValue')],
                             fieldNames: ['defaultValue']
                         };
                         errors.rows[fieldName] = fieldNameGroup;
@@ -736,7 +728,7 @@
                 return fields;
             }
 
-            // TemplateFieldsModel module public functions and properties
+            // BatchFieldsModel module public functions and properties
             return {
                 errors: {},
                 load: load,
@@ -747,19 +739,19 @@
                 getActivesBySObject: getActivesBySObject,
                 getDefaultFieldValidity: getDefaultFieldValidity,
                 updateToActive: updateToActive,
-                updateTemplateFieldOptions: updateTemplateFieldOptions,
+                updateBatchFieldOptions: updateBatchFieldOptions,
                 onFieldsUpdated: _onFieldsUpdated
 
             }
         })(this.Event());
-	},
+    },
 
     /**
-     * @description Gets the Model module of the Template Metadata,
+     * @description Gets the Model module of the Batch Metadata,
      * such as page mode and labels.
-     * @return Model module of the Template Metadata.
+     * @return Model module of the Batch Metadata.
      */
-    TemplateMetadata : function() {
+    BatchMetadata : function() {
         return (function (Event) {
             var _onMetadataUpdated = new Event(this);
 
@@ -821,18 +813,12 @@
              * @return void.
              */
             function cancel() {
-                if (this.mode === 'edit' && this.labels.sObjectNameNoNamespace === 'Batch_Template__c') {
-                    this.clearError();
-                    this.setMode('view');
-                } else {
-                    //navigate to record home
-                    var homeEvent = $A.get('e.force:navigateToObjectHome');
-                    var objectName = this.labels.sObjectName;
-                    homeEvent.setParams({
-                        'scope': objectName
-                    });
-                    homeEvent.fire();
-                }
+                var homeEvent = $A.get('e.force:navigateToObjectHome');
+                var objectName = this.labels.sObjectName;
+                homeEvent.setParams({
+                    'scope': objectName
+                });
+                homeEvent.fire();
             }
 
             /**
@@ -878,9 +864,9 @@
                 var headers = [
                     this.labels.recordInfoLabel,
                     'Select Template',
-                    $A.get('$Label.c.bgeBatchTemplateSelectFields'),
-                    $A.get('$Label.c.bgeBatchTemplateSetFieldOptions'),
-                    $A.get('$Label.c.bgeBatchTemplateSetBatchOptions')
+                    $A.get('$Label.c.bgeBatchSelectFields'),
+                    $A.get('$Label.c.bgeBatchSetFieldOptions'),
+                    $A.get('$Label.c.bgeBatchSetBatchOptions')
                 ];
 
                 var progressIndicatorStepBase1 = parseInt(this.progressIndicatorStep) - 1;
@@ -953,7 +939,7 @@
                 this.onMetadataUpdated.notify();
             }
 
-            // TemplateMetadata module public functions and properties
+            // BatchMetadata module public functions and properties
             return {
                 labels: {},
                 mode: '',
@@ -988,7 +974,7 @@
         return function(sender) {
             var _sender = sender;
             var _listeners = [];
-            
+
             /**
              * @description Subscribes the listener to the current Event.
              * @param listener. The event listener.
@@ -997,7 +983,7 @@
             function subscribe(listener) {
                 _listeners.push(listener);
             }
-            
+
             /**
              * @description Notifies the listeners of the current Event.
              * @param args. The parameters to provide to the listeners.
@@ -1009,7 +995,7 @@
                     _listeners[index](_sender, args);
                 }
             }
-            
+
             // Event module public functions.
             return {
                 subscribe: subscribe,
@@ -1017,14 +1003,14 @@
             };
         };
     },
-    
+
     /*********************************************** Template Detail Controller *********************************************/
 
     /**
      * @description Gets Template Details Controller
      * @return Template Details Controller.
      */
-    BGETemplateController : function(component) {
+    BGEBatchController : function(component) {
         return (function (component) {
             var _component = component;
 
@@ -1034,10 +1020,9 @@
              * @param callback. The callback function to execute.
              * @return void.
              */
-            function getRecordDetails(sObjectName, recordId, callback) {
+            function getRecordDetails(recordId, callback) {
                 var action = _component.get('c.getRecordDetails');
                 action.setParams({
-                    'sObjectName': sObjectName,
                     'recordId': recordId
                 });
                 action.setCallback(callback, _processResponse);
@@ -1046,15 +1031,14 @@
 
             /**
              * @description Calls the saveRecord method.
-             * @param templateDetails. The Template fields.
+             * @param batchDetails. The Template fields.
              * @param activeFields. The active fields (JSON format)
              * @param callback. The callback function to execute.
              * @return void.
              */
-            function saveRecord(sObjectName, recordDetails, activeFields, callback) {
+            function saveRecord(recordDetails, activeFields, callback) {
                 var action = _component.get('c.saveRecord');
                 action.setParams({
-                    'sObjectName' : sObjectName,
                     'recordInfo': JSON.stringify(recordDetails),
                     'activeFields': JSON.stringify(activeFields)
                 });
@@ -1082,8 +1066,8 @@
                     this.error(errors);
                 }
             }
-            
-            // BGETemplateController module public functions.
+
+            // BGEBatchController module public functions.
             return {
                 errors: '',
                 getRecordDetails: getRecordDetails,
