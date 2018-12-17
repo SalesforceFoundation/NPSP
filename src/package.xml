@@ -1398,11 +1398,8 @@
         <members>bgeBatchDonationMatchingClassHelp</members>
         <members>bgeBatchDonationMatchingRuleHelp</members>
         <members>bgeBatchDonorLookupInfo</members>
-        <members>bgeBatchEdit</members>
         <members>bgeBatchErrorDefaultValue</members>
-        <members>bgeBatchErrorRequiredAmount</members>
         <members>bgeBatchErrorRequiredFields</members>
-        <members>bgeBatchNew</members>
         <members>bgeBatchOverview</members>
         <members>bgeBatchOverviewWizard</members>
         <members>bgeBatchPostProcessClassHelp</members>

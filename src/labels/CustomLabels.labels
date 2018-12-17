@@ -2563,13 +2563,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Hidden fields must have a default value.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchErrorRequiredAmount</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error shown when opportunity amount is not required.</shortDescription>
-        <value>Amount field must be required.</value>
-    </labels>
-    <labels>
         <fullName>bgeBatchErrorRequiredFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
