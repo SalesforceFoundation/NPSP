@@ -409,8 +409,8 @@
                 this.name = info.name;
                 this.description = info.description;
                 this.id = info.id;
-                this.expectedCount = info.expectedCount;
-                this.expectedTotal = info.expectedTotal;
+                this.expectedCount = (info.expectedCount === null || info.expectedCount === '') ? 0 : info.expectedCount;
+                this.expectedTotal = (info.expectedTotal === null || info.expectedTotal === '') ? 0 : info.expectedTotal;
                 this.recordCount = info.recordCount;
 
                 //batch processing settings
