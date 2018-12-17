@@ -43,17 +43,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return void; throws an AuraHandledException if any fields fail FLS check
     */
     @AuraEnabled
-    public static void checkBatchFieldPermissions() {
-        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'));
-    }
-
-    /*******************************************************************************************************
-    * @description Checks for field permissions to create a new Template
-    * @return void; throws an AuraHandledException if any fields fail FLS check
-    */
-    @AuraEnabled
-    public static void checkTemplateFieldPermissions() {
-        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(UTIL_Namespace.StrTokenNSPrefix('Batch_Template__c'));
+    public static void checkFieldPermissions() {
+        BGE_BatchGiftEntry_UTIL.checkFieldPermissions();
     }
 
     /*******************************************************************************************************

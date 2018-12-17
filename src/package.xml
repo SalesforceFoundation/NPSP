@@ -707,20 +707,6 @@
         <members>Allocations_Settings__c.Use_Fiscal_Year_for_Rollups__c</members>
         <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
         <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
-        <members>Batch_Template__c.Account_Custom_Unique_ID__c</members>
-        <members>Batch_Template__c.Active_Fields__c</members>
-        <members>Batch_Template__c.Batch_Process_Size__c</members>
-        <members>Batch_Template__c.Contact_Custom_Unique_ID__c</members>
-        <members>Batch_Template__c.Contact_Matching_Rule__c</members>
-        <members>Batch_Template__c.Description__c</members>
-        <members>Batch_Template__c.Donation_Date_Range__c</members>
-        <members>Batch_Template__c.Donation_Matching_Behavior__c</members>
-        <members>Batch_Template__c.Donation_Matching_Implementing_Class__c</members>
-        <members>Batch_Template__c.Donation_Matching_Rule__c</members>
-        <members>Batch_Template__c.Post_Process_Implementing_Class__c</members>
-        <members>Batch_Template__c.Process_Using_Scheduled_Job__c</members>
-        <members>Batch_Template__c.RequireTotalMatch__c</members>
-        <members>Batch_Template__c.Run_Opportunity_Rollups_while_Processing__c</members>
         <members>Batch__c.Batch_Status__c</members>
         <members>Batch__c.Description__c</members>
         <members>Batch__c.Number_of_Items__c</members>
@@ -765,7 +751,6 @@
         <members>DataImportBatch__c.Active_Fields__c</members>
         <members>DataImportBatch__c.Batch_Description__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>
-        <members>DataImportBatch__c.Batch_Template__c</members>
         <members>DataImportBatch__c.Contact_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Contact_Matching_Rule__c</members>
         <members>DataImportBatch__c.Donation_Date_Range__c</members>
@@ -1407,27 +1392,24 @@
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
         <members>bgeBatchInfoWizard</members>
-        <members>bgeBatchTemplateAvailableFields</members>
-        <members>bgeBatchTemplateBatchProcessSizeHelp</members>
-        <members>bgeBatchTemplateDonationDateRangeHelp</members>
-        <members>bgeBatchTemplateDonationMatchingBehaviorHelp</members>
-        <members>bgeBatchTemplateDonationMatchingClassHelp</members>
-        <members>bgeBatchTemplateDonationMatchingRuleHelp</members>
-        <members>bgeBatchTemplateDonorLookupInfo</members>
-        <members>bgeBatchTemplateEdit</members>
-        <members>bgeBatchTemplateErrorDefaultValue</members>
-        <members>bgeBatchTemplateErrorRequiredAmount</members>
-        <members>bgeBatchTemplateErrorRequiredFields</members>
-        <members>bgeBatchTemplateNew</members>
-        <members>bgeBatchTemplateOverview</members>
-        <members>bgeBatchTemplateOverviewWizard</members>
-        <members>bgeBatchTemplatePostProcessClassHelp</members>
-        <members>bgeBatchTemplateProcessUsingScheduledJobHelp</members>
-        <members>bgeBatchTemplateRunOpportunityRollupsWhileProcessingHelp</members>
-        <members>bgeBatchTemplateSelectFields</members>
-        <members>bgeBatchTemplateSelectedFields</members>
-        <members>bgeBatchTemplateSetBatchOptions</members>
-        <members>bgeBatchTemplateSetFieldOptions</members>
+        <members>bgeBatchAvailableFields</members>
+        <members>bgeBatchBatchProcessSizeHelp</members>
+        <members>bgeBatchDonationDateRangeHelp</members>
+        <members>bgeBatchDonationMatchingBehaviorHelp</members>
+        <members>bgeBatchDonationMatchingClassHelp</members>
+        <members>bgeBatchDonationMatchingRuleHelp</members>
+        <members>bgeBatchDonorLookupInfo</members>
+        <members>bgeBatchErrorDefaultValue</members>
+        <members>bgeBatchErrorRequiredFields</members>
+        <members>bgeBatchOverview</members>
+        <members>bgeBatchOverviewWizard</members>
+        <members>bgeBatchPostProcessClassHelp</members>
+        <members>bgeBatchProcessUsingScheduledJobHelp</members>
+        <members>bgeBatchRunOpportunityRollupsWhileProcessingHelp</members>
+        <members>bgeBatchSelectFields</members>
+        <members>bgeBatchSelectedFields</members>
+        <members>bgeBatchSetBatchOptions</members>
+        <members>bgeBatchSetFieldOptions</members>
         <members>bgeEditBatchFieldOptionsWarning</members>
         <members>bgeEditBatchFieldSelectionWarning</members>
         <members>bgeEditBatchOptionsWarning</members>
@@ -2102,7 +2084,6 @@
         <members>Allocation__c</members>
         <members>Allocations_Settings__c</members>
         <members>Batch_Data_Entry_Settings__c</members>
-        <members>Batch_Template__c</members>
         <members>Batch__c</members>
         <members>Customizable_Rollup_Settings__c</members>
         <members>DataImportBatch__c</members>
@@ -2437,7 +2418,6 @@
         <members>Address__c</members>
         <members>Batch_Data_Entry</members>
         <members>Batch_Gift_Entry</members>
-        <members>Batch_Template__c</members>
         <members>Contact_Merge</members>
         <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
@@ -2499,7 +2479,6 @@
         <name>FieldSet</name>
     </types>
     <types>
-        <members>Batch_Template_Record_Home</members>
         <members>Data_Import_Batch_Record_Home</members>
         <name>FlexiPage</name>
     </types>
@@ -2509,7 +2488,6 @@
         <members>Account_Soft_Credit__c-Account Soft Credit Layout</members>
         <members>Address__c-Address Layout</members>
         <members>Allocation__c-Allocation Layout</members>
-        <members>Batch_Template__c-BGE Batch Template Layout</members>
         <members>Batch__c-Batch Layout</members>
         <members>Campaign-NPSP Campaign Layout</members>
         <members>Contact-Contact Layout</members>
@@ -2542,7 +2520,6 @@
         <name>Letterhead</name>
     </types>
     <types>
-        <members>Batch_Template__c.All</members>
         <members>Batch__c.All</members>
         <members>Batch__c.Completed_Batches</members>
         <members>Batch__c.Open_Batches</members>
@@ -2637,12 +2614,10 @@
         <members>Account.Recalculate_Rollups</members>
         <members>Address__c.Verify_Address</members>
         <members>Allocation__c.Manage_Allocations</members>
-        <members>Batch_Template__c.Edit_Processing_Settings</members>
         <members>Contact.Merge_Contacts</members>
         <members>Contact.Recalculate_Rollups</members>
         <members>DataImportBatch__c.Edit_Processing_Settings</members>
         <members>DataImportBatch__c.Process_Batch</members>
-        <members>DataImportBatch__c.View_Templates</members>
         <members>DataImport__c.Delete_All_Data_Import_Records</members>
         <members>DataImport__c.Delete_Imported_Data_Import_Records</members>
         <members>DataImport__c.Process_Data_Import</members>
