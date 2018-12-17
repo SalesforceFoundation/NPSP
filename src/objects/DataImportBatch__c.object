@@ -262,10 +262,7 @@
         <defaultValue>false</defaultValue>
         <description>This flag is set during batch creation to use the gift entry batch feature.</description>
         <externalId>false</externalId>
-        <inlineHelpText>This batch is intended for use with Batch Gift Entry. Batches are automatically marked as gift
-            batches when they are set up through the Gift Batches tab. Manually changing this field could have
-            unintended consequences.
-        </inlineHelpText>
+        <inlineHelpText>This batch is intended for use with Batch Gift Entry. Batches are automatically marked as gift batches when they are set up through the Gift Batches tab. Manually changing this field could have unintended consequences.</inlineHelpText>
         <label>Gift Batch</label>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
