@@ -211,16 +211,12 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs newLeadConversionNewNameCompany with the 1x1 account model
     */
     static testMethod void newLeadConversionNewNamedCompany_TestOne2One(){
-        // Because HEDA Account model settings overwrite NPSP settings, this test fails with ADV installed
-        if (ADV_PackageInfo_SVC.useAdv()) return;
         newLeadConversionNewNamedCompany_Test(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*******************************************************************************************************
     * @description Runs newLeadConversionNewNameCompany with the Household account model
     */
     static testMethod void newLeadConversionNewNamedCompany_TestHHAccount(){
-        // Because HEDA Account model settings overwrite NPSP settings, this test fails with ADV installed
-        if (ADV_PackageInfo_SVC.useAdv()) return;
         newLeadConversionNewNamedCompany_Test(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*******************************************************************************************************
