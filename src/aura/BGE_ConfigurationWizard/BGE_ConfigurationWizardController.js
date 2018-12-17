@@ -48,7 +48,7 @@
         var model = component.get('v.model');
 
         // handle cancel
-        if (task === 'cancel' || task === 'backToTemplates') {
+        if (task === 'cancel') {
 
             //Set off init here to reset view
             var mode = component.get('v.batchMetadata.mode');
