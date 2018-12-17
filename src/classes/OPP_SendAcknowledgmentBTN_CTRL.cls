@@ -125,8 +125,6 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
         }
     }
 
-   
-    
     /*******************************************************************************************************
     * @description Action method called when the user clicks on the Send Acknowledgment button.
     * @return null to the calling page
@@ -228,7 +226,6 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
         redirect = true;
         return null;
     }
-
 
     /*******************************************************************************************************
     * @description Extracts Ids from the list of SObjects

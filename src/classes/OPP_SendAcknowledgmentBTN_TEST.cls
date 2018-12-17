@@ -38,7 +38,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
     private static final String TO_BE_ACKNOWLEDGED_STATUS = 'To Be Acknowledged';
 
     /*********************************************************************************************************
-    * @description Tests the controller for the Send Acknowledgment Button
+    * @description verify the page attempts to send the acknowledgement
     */
     @isTest
     private static void testSendAcknowledgment() {        
@@ -67,10 +67,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
     }
 
     /*********************************************************************************************************
-    @description 
-        Test SendAcknowledgment() rollback when an exception occurs 
-    verify:
-        The transaction is completely rolled back and there is no partial commit
+    @description verify the page will rollback the opportunity changes when an exception occurs     
     **********************************************************************************************************/ 
     private static testMethod void testSendAcknowledgmentRollsBackAllDmlsOnError() { 
         Test.setCurrentPage(Page.OPP_SendAcknowledgmentBTN);
@@ -102,26 +99,25 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
 
     }
 
-
     /*********************************************************************************************************
-    @description 
-        Test testResendOfAcknowledgement() will attempt to send the acknowledgement when the opportunity is 
-        already acknowledged
-    verify:
-        The opportunity should not resend the acknowledgement multiple times
+    @description verify the page will not attempt to send the acknowledgement when the opportunity is already 
+    * acknowledged but will still attempt other opportunities
     **********************************************************************************************************/     
     @isTest
-    private static void testResendAcknowledgements() { 
+    private static void shouldNotSendAckWhenAlreadySent() { 
+        Integer TOTAL_OPPS_CREATED = 5;
+        Integer OPPS_ALREADY_ACKNOWLEDGED = 3;
+
         Date INITIAL_DATE = Date.newInstance(2018, 1, 1);
 
-        List<Opportunity> allOpps = setUpOpportunities(5);
+        List<Opportunity> allOpps = setUpOpportunities(TOTAL_OPPS_CREATED);
         Set<Id> resendOppIds = new Set<Id>();
         Set<Id> sendOppIds = new Set<Id>();
         
         for (Integer oppIndex=0; oppIndex < allOpps.size(); oppIndex++) {
             Opportunity o = allOpps[oppIndex];
             o.Acknowledgment_Date__c = INITIAL_DATE;
-            if (oppIndex < 3) {
+            if (oppIndex < OPPS_ALREADY_ACKNOWLEDGED) {
                 o.Acknowledgment_Status__c = OPP_SendAcknowledgmentBTN_CTRL.ACKNOWLEDGED;
                 resendOppIds.add(o.Id);
             } else {
@@ -142,8 +138,8 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
         // check the resulting acknowledgement status 
         allOpps = getOpps();
 
-        System.assertEquals(5, allOpps.size(), 'Opportunity Size mismatch');     
-        System.assertEquals(3, ctrl.cAlreadySent, 'Incorrect # of acks already sent');
+        System.assertEquals(TOTAL_OPPS_CREATED, allOpps.size(), 'Opportunity Size mismatch');     
+        System.assertEquals(OPPS_ALREADY_ACKNOWLEDGED, ctrl.cAlreadySent, 'Incorrect # of acks already sent');
 
         Integer sentCount = 0;
         Integer notSentCount = 0;
@@ -175,14 +171,10 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
 
 
     /*********************************************************************************************************
-    * @description  
-        Test testEmptyOpportunityList() send an empty Opportunity List to the controller        
-    * verify:
-    *   The appropriate error message is displayed
-    **********************************************************************************************************/   
-    
+    * @description Verify the page displays an error message if no opportunity is selected 
+    **********************************************************************************************************/     
     @isTest
-    private static void testEmptyOpportunity() { 
+    private static void shouldDisplayErrorWhenNoOppSelected() { 
         Test.setCurrentPage(Page.OPP_SendAcknowledgmentBTN);
 
         List<Opportunity> opps = new List<Opportunity>();
@@ -196,14 +188,11 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
         Test.stopTest();
 
         UTIL_UnitTestData_TEST.assertPageHasError(System.Label.sendAcknowledgmentNoneSelected);
-
-
     }
 
-
-
-    // Helpers
-    ////////////
+    /*********************************************************************************************************
+     * Helpers
+     **********************************************************************************************************/
 
     /*********************************************************************************************************
     * @description Create Opportunities and Opportunity Contact Roles
@@ -211,14 +200,14 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
     * @return List<Opportunity> List of Opportunities
     **********************************************************************************************************/
     private static List<Opportunity> setUpOpportunities(Integer oppCount) {
-        Account acc = new Account(Name = 'Test Company');
+        Account acc = new Account(Name = 'SendAcknowledgement TestCompany');
         insert acc;
         
         Contact con = new Contact(
             AccountID = acc.Id, 
-            FirstName = 'Test', 
-            LastName = 'Company', 
-            Email = 'Test.Company@example.com'
+            FirstName = 'SendAcknowledgement', 
+            LastName = 'TestCompany', 
+            Email = 'SendAcknowledgement.TestCompany@example.com'
         );
         insert con;
         
@@ -261,11 +250,13 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
     **********************************************************************************************************/
   
     private static List<Opportunity> getOpps() {
-        return [SELECT 
-                    Id, 
-                    name, 
-                    Acknowledgment_Status__c, 
-                    Acknowledgment_Date__c 
-                FROM Opportunity];
+        return [
+            SELECT 
+                Id, 
+                Name, 
+                Acknowledgment_Status__c, 
+                Acknowledgment_Date__c 
+            FROM Opportunity
+        ];
     }    
 }
