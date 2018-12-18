@@ -288,7 +288,7 @@
                         _batchMetadata.load(response.labels, component);
                     },
                     error: function(error) {
-                        _templateMetadata.showError(error);
+                        _batchMetadatas.showError(error);
                         console.log(error);
                     }
                 });
@@ -1005,11 +1005,11 @@
         };
     },
 
-    /*********************************************** Template Detail Controller *********************************************/
+    /*********************************************** Batch Detail Controller *********************************************/
 
     /**
-     * @description Gets Template Details Controller
-     * @return Template Details Controller.
+     * @description Gets Batch Details Controller
+     * @return Batch Details Controller.
      */
     BGEBatchController : function(component) {
         return (function (component) {
@@ -1017,7 +1017,7 @@
 
             /**
              * @description Calls the getRecordDetails method.
-             * @param recordId. The Id of the Template.
+             * @param recordId. The Id of the Batch.
              * @param callback. The callback function to execute.
              * @return void.
              */
@@ -1032,7 +1032,7 @@
 
             /**
              * @description Calls the saveRecord method.
-             * @param batchDetails. The Template fields.
+             * @param batchDetails. The Batch fields.
              * @param activeFields. The active fields (JSON format)
              * @param callback. The callback function to execute.
              * @return void.

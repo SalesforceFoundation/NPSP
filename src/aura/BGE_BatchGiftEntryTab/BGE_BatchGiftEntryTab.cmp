@@ -32,7 +32,7 @@
   @date 2018
   @group Batch Gift Entry
   @group-content ../../ApexDocContent/BatchDataImport.htm
-  @description Component used to view, edit, or create a Batch Template record.
+  @description Component used to view, edit, or create a Batch record.
 -->
 
 <aura:component implements="force:appHostable" controller="BGE_ConfigurationWizard_CTRL">
