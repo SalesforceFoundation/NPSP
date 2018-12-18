@@ -1352,6 +1352,8 @@
         <members>bdiImported</members>
         <members>bdiInvalidBatchId</members>
         <members>bdiInvalidDonationMatchingBehavior</members>
+        <members>bdiMassDelete</members>
+        <members>bdiMassDeleteWarning</members>
         <members>bdiMatched</members>
         <members>bdiMatchedBest</members>
         <members>bdiMatchedId</members>

@@ -2348,6 +2348,25 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>{0} is an invalid Donation Matching Behavior.</value>
     </labels>
     <labels>
+        <fullName>bdiMassDelete</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BDI Confirm Mass Delete Button</shortDescription>
+        <value>Mass Delete</value>
+    </labels>
+    <labels>
+        <fullName>bdiMassDeleteWarning</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning for Mass Delete Buttons</shortDescription>
+        <value>There were {0} record(s) found.
+        &lt;br/&gt;
+        &lt;br/&gt;&lt;b&gt;NOTE:&lt;/b&gt; We do not recommend using the mass delete button if you are using the new Batch Gift Entry feature.
+        &lt;br/&gt;Please see the documentation for instructions on deleting records via the data loader.</value>
+    </labels>
+    <labels>
         <fullName>bdiMatched</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>

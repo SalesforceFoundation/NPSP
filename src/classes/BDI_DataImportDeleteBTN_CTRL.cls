@@ -41,23 +41,50 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
 
     /** @description Action type specified to delete all Data Import records */
     public static final String ACTION_DELETE_ALL = 'deleteAll';
-    
+
+    /** @description The list of found Data Import records to be deleted */
+    @TestVisible
+    private List<DataImport__c> dataImports;
+
+    /** @description True when user can delete data import records */
+    @TestVisible
+    public Boolean canDelete {
+        get {
+            if (canDelete == null) {
+                canDelete = SObjectType.DataImport__c.isDeletable();
+            }
+
+            return canDelete;
+        }
+        private set;
+    }
+
     /** @description Controller constructor */
     public BDI_DataImportDeleteBTN_CTRL() {}
 
     /** 
-     * @description Delete all or imported only Data Import records based on the
+     * @description Find all or imported only Data Import records to be deleted based on the
      * action provided in the Visualforce page 'action' parameter.
      * @return PageReference Page specified in 'retURL' parameter or Home page
      */
-    public PageReference buttonClick() {        
+    public PageReference buttonClick() {
+        if (!canDelete) {
+            ApexPages.addMessage(new ApexPages.Message(
+                ApexPages.Severity.ERROR,
+                String.format(
+                    System.Label.exceptionDeletePermission,
+                    new List<String>{ SObjectType.DataImport__c.getLabel() })));
+
+            return null;
+        }
+
         String actionType = ApexPages.currentPage().getParameters().get('action');
 
         if (actionType == ACTION_DELETE_IMPORTED) {
-            return deleteDIRecords(false);    
+            return findDIRecords(false);    
 
         } else if (actionType == ACTION_DELETE_ALL) {
-            return deleteDIRecords(true);    
+            return findDIRecords(true);    
         }
 
         String errMsg = String.isBlank(actionType)
@@ -69,19 +96,39 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
     }
 
     /** 
-     * @description Delete Data Import records
-     * @param isDeleteAll If true, delete all Data Import records, otherwise delete imported records only
+     * @description Finds Data Import records to be deleted
+     * @param isDeleteAll If true, find all Data Import records, otherwise find imported records only
      * @return PageReference Page specified in the 'retURL' parameter or Home page
      */
-    PageReference deleteDIRecords(Boolean isDeleteAll) {
-        try {
-            if (isDeleteAll) {
-                delete [SELECT Id FROM DataImport__c LIMIT 10000];
-            } else {
-                delete [SELECT Id FROM DataImport__c WHERE Status__c = :BDI_DataImport_API.bdiImported LIMIT 10000];
-            }
+    private PageReference findDIRecords(Boolean isDeleteAll) {
+        if (isDeleteAll) {
+            dataImports = [SELECT Id FROM DataImport__c LIMIT 10000];
+        } else {
+            dataImports = [SELECT Id FROM DataImport__c WHERE Status__c = :BDI_DataImport_API.bdiImported LIMIT 10000];
+        }
 
-            return close(); 
+        ApexPages.addMessage(
+            new ApexPages.Message(
+                ApexPages.Severity.WARNING,
+                String.format(
+                    System.Label.bdiMassDeleteWarning,
+                    new List<String>{ String.valueOf(dataImports.size()) })));
+
+        return null;
+    }
+
+    /** 
+     * @description Delete found Data Import records
+     * @return PageReference based returned from the close method
+     */
+    public PageReference deleteFoundRecords() {
+        if (dataImports == null || dataImports.isEmpty()) {
+            return close();
+        }
+
+        try {
+            delete dataImports;
+            return close();
 
         } catch (Exception e) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage())); 
