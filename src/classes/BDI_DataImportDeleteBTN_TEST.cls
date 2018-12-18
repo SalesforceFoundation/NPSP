@@ -56,7 +56,6 @@ class BDI_DataImportDeleteBTN_TEST {
      */
     @isTest
     static void TestErrorMessageDisplayWhenPageActionParameterIsNotProvided() {
-        BDI_DataImportDeleteBTN_CTRL ctrl;
         DataImport__c[] records = setUpData();
         
         Test.startTest();
