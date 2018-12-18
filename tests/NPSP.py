@@ -64,6 +64,29 @@ class NPSP(object):
         level_object = [o for o in objects if o['label'] == 'Level'][0]
         return self.get_namespace_prefix(level_object['name'])
 
+    def npsp_load_related_list(self, heading):
+        """Scrolls down until the specified related list loads.
+        """
+        locator = self.salesforce.get_locator('record.related.card', heading)
+        el = None
+        i = 0
+        while el is None:
+            i += 1
+            if i > 50:
+                raise AssertionError(
+                    "Timed out waiting for {} related list to load.".format(heading)
+                )
+            self.selenium.execute_javascript(
+                "window.scrollTo(0,Math.max(document.body.scrollHeight, document.documentElement.scrollHeight))"
+            )
+            self.salesforce.wait_for_aura()
+            try:
+                self.selenium.scroll_element_into_view(locator)
+                break
+            except ElementNotFound:
+                time.sleep(0.2)
+                continue
+
     def populate_address(self, loc, value):
         """ Populate address with Place Holder aka Mailing Street etc as a locator
             and actual value of the place holder.
@@ -694,32 +717,31 @@ class NPSP(object):
                 return "fail"
         return len(locs1)
 
-    def verify_opportunities(self, len_value):
-        locator = "//tbody/tr[12]/th"
-        s = self.selenium.get_webelement(locator).text
-        #return s
-        strip_list = s.split(" ")
-        date = strip_list[-1]
-        date = date.split("/")
-        date = list(map(int, date))
-        mm, dd, yyyy = date
-        for _ in range(int(len_value)):
-            if mm == 12:
-                mm = 1
-                yyyy = yyyy + 1
-                date = [mm, dd, yyyy]
-                date = list(map(str, date))
-                date = "/".join(date)
-                loctor_contains = "//tbody//a[contains(@title , '{}')]".format(date)
-                time.sleep(1)
-                self.selenium.page_should_contain_element(loctor_contains)            
-            else:
-                mm = mm + 1
-                date = [mm, dd, yyyy]
-                date = list(map(str, date))
-                date = "/".join(date)
-                loctor_contains = "//tbody//a[contains(@title , '{}')]".format(date)
-                self.selenium.page_should_contain_element(loctor_contains)
+    # def verify_opportunities(self, len_value):
+    #     locator = "//tbody/tr[12]/th"
+    #     s = self.selenium.get_webelement(locator).text
+    #     #return s
+    #     strip_list = s.split(" ")
+    #     date = strip_list[-1]
+    #     date = date.split("/")
+    #     date = list(map(int, date))
+    #     mm, dd, yyyy = date
+    #     for _ in range(int(len_value)):
+    #         if mm == 12:
+    #             mm = 1
+    #             yyyy = yyyy + 1
+    #             date = [mm, dd, yyyy]
+    #             date = list(map(str, date))
+    #             date = "/".join(date)
+    #             loctor_contains = "//tbody//a[contains(@title , '{}')]".format(date)
+    #             self.selenium.page_should_contain_element(loctor_contains)            
+    #         else:
+    #             mm = mm + 1
+    #             date = [mm, dd, yyyy]
+    #             date = list(map(str, date))
+    #             date = "/".join(date)
+    #             loctor_contains = "//tbody//a[contains(@title , '{}')]".format(date)
+    #             self.selenium.page_should_contain_element(loctor_contains)
 
     def click_object_manager_button(self,title):  
         """clicks on the + button next to contact on manage hh page"""      
