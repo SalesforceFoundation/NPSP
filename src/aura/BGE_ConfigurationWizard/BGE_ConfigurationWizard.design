@@ -1,4 +1,4 @@
-<design:component>
+<design:component label="Batch Gift Entry Configuration">
     <design:attribute name="isReadOnly" default="true" label="Is Read Only"
                       description="Necessary for component when shown on the record home."/>
 </design:component>
