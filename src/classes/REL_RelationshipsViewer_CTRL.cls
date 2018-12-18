@@ -55,14 +55,15 @@ global with sharing class REL_RelationshipsViewer_CTRL{
         List<String> blockingSObjects = new List<String>();
 
         if(!contactAccessible) { 
-            blockingSObjects.add(UTIL_Descibe.getObjectLabel('Contact'));
+            blockingSObjects.add(UTIL_Describe.getObjectLabel('Contact'));
         }
         if(!relationshipAccessible) {
-            blockingSObjects.add(UTIL_Descibe.getObjectLabel('npe4__Relationship__c'));
+            blockingSObjects.add(UTIL_Describe.getObjectLabel('npe4__Relationship__c'));
         }
         
         if(!blockingSObjects.isEmpty()) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL,String.format(Label.flsError, blockingSObjects)));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL,String.format(Label.flsError, 
+                new List<String> {String.join(blockingSObjects, ', ')})));
             showPermissionError = true;
         }
 
