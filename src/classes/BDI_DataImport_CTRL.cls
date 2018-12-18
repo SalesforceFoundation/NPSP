@@ -60,9 +60,9 @@ public with sharing class BDI_DataImport_CTRL {
     /*******************************************************************************************************
     * @description does the user have permissions and an eligible DataImportBatch record to update the batch/settings
     */
-    public boolean userCanEditSettings {
+    public Boolean userCanEditSettings {
         get {
-            if (!isBGERecord) {
+            if (!isGiftBatch) {
                 return isTrueBatch ?
                         DataImportBatch__c.SobjectType.getDescribe().isUpdateable() :
                         Data_Import_Settings__c.SobjectType.getDescribe().isUpdateable();
@@ -142,9 +142,9 @@ public with sharing class BDI_DataImport_CTRL {
     /*******************************************************************************************************
     * @description whether we are processing a record created for Batch Gift Entry or only the Data Importer
     */
-    public Boolean isBGERecord {
+    public Boolean isGiftBatch {
         get {
-            return diBatch.UseBatchGiftEntryGrid__c;
+            return diBatch.GiftBatch__c;
         } private set;
     }
 
