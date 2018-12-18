@@ -1,28 +1,29 @@
 ({
-    /**
-     * @description: instantiates component. Only called when component is first loaded.
-     */
     doInit: function(component) {
-        var action = component.get('c.isOrgNamespaced');
+        var action = component.get('c.getNamespacedListView');
         action.setCallback(this, function (response) {
-            var state = response.getState();
+            const state = response.getState();
             if (state === 'SUCCESS') {
-                var isOrgNamespaced = JSON.parse(response.getReturnValue());
-                if (isOrgNamespaced) {
-                    var listViewNamespaced = {
-                        'objectApiName': 'npsp__DataImportBatch__c',
-                        'listName': 'npsp__Gift_Batches',
-                        'isLoaded': true
-                    };
-                    component.set('v.listView', listViewNamespaced);
-                } else {
-                    var listViewUnnamespaced = {
-                        'objectApiName': 'DataImportBatch__c',
-                        'listName': 'Gift_Batches',
-                        'isLoaded': true
-                    };
-                    component.set('v.listView', listViewUnnamespaced);
-                }
+                let namespacedListView = response.getReturnValue();
+                $A.createComponent(
+                    "lightning:listView",
+                    {
+                        "objectApiName": namespacedListView.objectApiName,
+                        "listName": namespacedListView.listName,
+                        "showActionBar": false,
+                        "enableInlineEdit": false,
+                        "showRowLevelActions": false
+                    },
+                    function (listView, status, errorMessage) {
+                        if (status === "SUCCESS") {
+                            let body = component.get("v.body");
+                            body.push(listView);
+                            component.set("v.body", body);
+                        } else {
+                            this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
+                        }
+                    }
+                );
             } else {
                 this.handleApexErrors(component, response.getError());
             }
