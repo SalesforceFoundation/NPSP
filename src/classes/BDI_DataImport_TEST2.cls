@@ -1499,13 +1499,23 @@ private with sharing class BDI_DataImport_TEST2 {
         listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
         insert listDI;
 
+        Boolean usingAdv = ADV_PackageInfo_SVC.useAdv();
+
         //run batch data import
         Test.StartTest();
         try {
             BDI_DataImport_API.importData();
-            System.assert(false, 'importData should have thrown exception');
+            if (usingAdv){
+                System.assert(true, 'importData should NOT have thrown exception');
+            } else {
+                System.assert(false, 'importData should have thrown exception');
+            }
         } catch (exception ex) {
-            System.assert(ex.getMessage().contains('Household Account model'));
+            if (usingAdv){
+                System.assert(false, 'importData should NOT have thrown exception');
+            } else {
+                System.assert(ex.getMessage().contains('Household Account model'));
+            }
         }
         Test.stopTest();
     }
