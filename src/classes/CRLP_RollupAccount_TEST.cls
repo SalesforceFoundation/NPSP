@@ -141,6 +141,16 @@ private class CRLP_RollupAccount_TEST {
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
                         'npo02__FirstCloseDate__c', CRLP_Operation.RollupType.First, 'CloseDate') + ',' +
 
+                // Allow counting of all Opportunities regardless of the filter. This should have a different
+                // result than the normal expected count. It is meant to validate proper grouping of rollups.
+                CMT_UnitTestData_TEST.createRollupRecord('Total Count with NO filter', null,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        'npo02__OppAmountThisYear__c', CRLP_Operation.RollupType.Count, '') + ',' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('Total Count of Opps', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        'npo02__OppAmountLastYear__c', CRLP_Operation.RollupType.Count, '') + ',' +
+
                 /* Payment Rollups for Total Paid and Total Written Off - using a field that can hold the value */
                 CMT_UnitTestData_TEST.createRollupRecord('Total Payments', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.PmtToAcct,
@@ -154,6 +164,7 @@ private class CRLP_RollupAccount_TEST {
                 CMT_UnitTestData_TEST.createRollupRecord('Total Account Soft Credits', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.AccountSoftCreditToAccount, 'npo02__Best_Gift_Year_Total__c',
                         CRLP_Operation.RollupType.SUM, 'Amount__c') +
+
                 ']';
 
         // Deserialize the rollups to use for testing
@@ -392,6 +403,8 @@ private class CRLP_RollupAccount_TEST {
 
         // Make sure everything is null first!
         if (tt != TestType.TestTrigger && tt != TestType.TestReparentOpp) {
+            System.assertEquals(0, hardCreditAcc.npo02__OppAmountThisYear__c);
+            System.assertEquals(0, hardCreditAcc.npo02__OppAmountLastYear__c);
             System.assertEquals(0, hardCreditAcc.npo02__TotalOppAmount__c);
             System.assertEquals(0, hardCreditAcc.npo02__AverageAmount__c);
             System.assertEquals(0, hardCreditAcc.npo02__OppAmount2YearsAgo__c);
@@ -445,6 +458,9 @@ private class CRLP_RollupAccount_TEST {
         System.assertEquals(baseAmt, hardCreditAcc.npo02__LastMembershipAmount__c, 'The Amount written off does not match');
         System.assertEquals(donationYears.size(), hardCreditAcc.npo02__NumberOfMembershipOpps__c, 'The current streak should be all the years');
         System.assertEquals(donationYears.size(), hardCreditAcc.Description.split(';').size(), 'The list of donated years should match');
+
+        System.assertEquals(cnt, hardCreditAcc.npo02__OppAmountLastYear__c, 'Count should be all Won Opps');
+        System.assertEquals(opps.size(), hardCreditAcc.npo02__OppAmountThisYear__c, 'Count should be ALL opps regardless of stage');
 
         if (tt == TestType.TestMultiCurrBatch) {
             // Query the MultiCurrency Account with all the target fields specified in the rollups
