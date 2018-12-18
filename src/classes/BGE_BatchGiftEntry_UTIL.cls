@@ -37,17 +37,18 @@
 public with sharing class BGE_BatchGiftEntry_UTIL {
 
     /*******************************************************************************************************
-    * @description Checks for field permissions to create a new Batch/Template
-    * @param sObjectName string of the sObjectName
+    * @description Checks for field permissions needed to create a new Batch
+    * User must have fields on DataImportBatch__c that appear in the config wizard
+    * as well as Donation_Amount__c on DataImport__c because it is locked as a required field in config wizard
     * @return void; throws an AuraHandledException if any fields fail FLS check
     */
-    public static void checkFieldPermissions() {
+    public static void checkFieldPermissionsNeededForBatch() {
 
         List<DescribeFieldResult> fieldsToCheck = new List<DescribeFieldResult>();
 
-        List<String> fieldNames = getBatchFieldNames();
+        List<String> batchFieldNames = getBatchFieldNames();
 
-        for (String field : fieldNames) {
+        for (String field : batchFieldNames) {
             if (field != 'Id') {
                 fieldsToCheck.add(UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), UTIL_Namespace.StrTokenNSPrefix(field)));
             }
@@ -69,11 +70,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     * @return Boolean
     */
     public static Boolean canUpdateField(DescribeFieldResult dfr) {
-        if (!dfr.isCreateable() || !dfr.isUpdateable()) {
-            return false;
-        } else {
-            return true;
-        }
+        return dfr.isCreateable() && dfr.isUpdateable();
     }
 
     /*******************************************************************************************************
