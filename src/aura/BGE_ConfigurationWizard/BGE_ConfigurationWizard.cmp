@@ -51,7 +51,7 @@
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-    <aura:handler event="ltng:sendMessage" action="{!c.handleUserInput}"/>
+    <aura:handler event="ltng:sendMessage" action="{!c.handleSendMessage}"/>
 
     <!-- START MARKUP -->
     <lightning:notificationsLibrary aura:id="notifLib"/>

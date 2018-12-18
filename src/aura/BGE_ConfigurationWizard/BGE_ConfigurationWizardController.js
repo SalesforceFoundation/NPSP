@@ -33,19 +33,12 @@
     },
 
     /**
-     * @description handles User Input from ltng:sendMessage and onclick handlers
+     * @description handles ltng:sendMessage
      * must be explicit about channel because other messages may be sent
      */
-    handleUserInput: function(component, event, helper) {
-        // check if user input came from ltng:sendMessage or an onclick handler
-        var task;
-        if (event.getSource().getLocalId()) {
-            task = event.getSource().getLocalId();
-        } else if (event.getParam('channel')) {
-            task = event.getParam('channel');
-        }
-
-        var model = component.get('v.model');
+    handleSendMessage: function(component, event, helper) {
+        const task = event.getParam('channel');
+        let model = component.get('v.model');
 
         // handle cancel
         if (task === 'cancel') {

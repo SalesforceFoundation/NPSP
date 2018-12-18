@@ -78,15 +78,15 @@
         var modalHeader;
         var modalFooter;
         var batchId = component.get('v.recordId');
+        let progressStepLabels = [$A.get('$Label.c.bgeBatchOverviewWizard'),
+            $A.get('$Label.c.bgeBatchSelectFields'),
+            $A.get('$Label.c.bgeBatchSetFieldOptions'),
+            $A.get('$Label.c.bgeBatchSetBatchOptions')];
 
         $A.createComponents([
                 ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c', recordId: batchId, isReadOnly: false}],
                 ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
-                ['c:modalFooter', {progressStepLabels:
-                        [$A.get('$Label.c.bgeBatchTemplateOverviewWizard'),
-                        $A.get('$Label.c.bgeBatchTemplateSelectFields'),
-                        $A.get('$Label.c.bgeBatchTemplateSetFieldOptions'),
-                        $A.get('$Label.c.bgeBatchTemplateSetBatchOptions')]}]
+                ['c:modalFooter', {progressStepLabels: progressStepLabels}]
             ],
             function(components, status, errorMessage){
                 if (status === 'SUCCESS') {
