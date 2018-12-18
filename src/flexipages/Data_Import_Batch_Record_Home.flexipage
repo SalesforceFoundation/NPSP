@@ -5,7 +5,7 @@
             <componentName>BGE_DataImportBatchEntry</componentName>
             <visibilityRule>
                 <criteria>
-                    <leftValue>{!Record.UseBatchGiftEntryGrid__c}</leftValue>
+                    <leftValue>{!Record.GiftBatch__c}</leftValue>
                     <operator>EQUAL</operator>
                     <rightValue>true</rightValue>
                 </criteria>
@@ -27,7 +27,7 @@
             <componentName>force:highlightsPanel</componentName>
             <visibilityRule>
                 <criteria>
-                    <leftValue>{!Record.UseBatchGiftEntryGrid__c}</leftValue>
+                    <leftValue>{!Record.GiftBatch__c}</leftValue>
                     <operator>EQUAL</operator>
                     <rightValue>false</rightValue>
                 </criteria>
@@ -37,7 +37,7 @@
             <componentName>force:detailPanel</componentName>
             <visibilityRule>
                 <criteria>
-                    <leftValue>{!Record.UseBatchGiftEntryGrid__c}</leftValue>
+                    <leftValue>{!Record.GiftBatch__c}</leftValue>
                     <operator>EQUAL</operator>
                     <rightValue>false</rightValue>
                 </criteria>
