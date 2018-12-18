@@ -33,7 +33,6 @@
                 batchInfoView.donationMatchingRule = batchInfo.donationMatchingRule;
                 batchInfoView.donationDateRange = batchInfo.donationDateRange;
                 batchInfoView.postProcessClass = batchInfo.postProcessClass;
-                batchInfoView.processUsingScheduledJob = batchInfo.processUsingScheduledJob;
 
                 component.set('v.batchInfo', batchInfoView);
             });
@@ -56,8 +55,7 @@
                 donationMatchingOptions: [],
                 donationMatchingRule: [],
                 donationDateRange: '',
-                postProcessClass: '',
-                processUsingScheduledJob: false
+                postProcessClass: ''
             };
         })(component, model);
     },
@@ -314,8 +312,7 @@
                     donationMatchingClass: _batchInfo.donationMatchingClass,
                     donationMatchingRule: _batchInfo.donationMatchingRule,
                     donationDateRange: _batchInfo.donationDateRange,
-                    postProcessClass: _batchInfo.postProcessClass,
-                    processUsingScheduledJob: _batchInfo.processUsingScheduledJob
+                    postProcessClass: _batchInfo.postProcessClass
                 };
                 var activeFields = [];
 
@@ -420,7 +417,6 @@
                 this.donationMatchingRule = info.donationMatchingRule;
                 this.donationDateRange = info.donationDateRange;
                 this.postProcessClass = info.postProcessClass;
-                this.processUsingScheduledJob = info.processUsingScheduledJob;
                 this.onInfoUpdated.notify();
             }
 
@@ -452,7 +448,6 @@
                 donationMatchingRule: [],
                 donationDateRange: '',
                 postProcessClass: '',
-                processUsingScheduledJob: false,
 
                 load: load,
                 isValid: isValid,

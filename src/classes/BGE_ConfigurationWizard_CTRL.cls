@@ -65,7 +65,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                     'Donation_Matching_Rule__c',
                     'Donation_Date_Range__c',
                     'Post_Process_Implementing_Class__c',
-                    'Process_Using_Scheduled_Job__c',
                     'Expected_Count_of_Gifts__c',
                     'Expected_Total_Batch_Amount__c'
                 };
@@ -89,7 +88,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 model.donationMatchingClass = recordDetails.Donation_Matching_Implementing_Class__c;
                 model.donationMatchingRule = recordDetails.Donation_Matching_Rule__c.split(';');
                 model.postProcessClass = recordDetails.Post_Process_Implementing_Class__c;
-                model.processUsingScheduledJob = recordDetails.Process_Using_Scheduled_Job__c;
                 model.runOpportunityRollupsWhileProcessing = recordDetails.Run_Opportunity_Rollups_while_Processing__c;
                 model.expectedCount = (Integer)recordDetails.Expected_Count_of_Gifts__c;
                 model.expectedTotal = recordDetails.Expected_Total_Batch_Amount__c;
@@ -331,7 +329,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         model.donationDateRange = 0;
         model.donationMatchingBehavior = BDI_DataImport_API.ExactMatchOrCreate;
         model.donationMatchingClass = '';
-        model.processUsingScheduledJob = false;
         model.postProcessClass = '';
         model.runOpportunityRollupsWhileProcessing = false;
         model.activeFields = getDefaultActiveFields();
@@ -397,10 +394,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         if (model.postProcessClass == null) {
             model.postProcessClass = defaultModel.postProcessClass;
-        }
-
-        if (model.processUsingScheduledJob == null) {
-            model.processUsingScheduledJob = defaultModel.processUsingScheduledJob;
         }
 
         if (model.activeFields == null) {
@@ -471,7 +464,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'donationMatchingClassLabel' => Schema.DataImportBatch__c.Donation_Matching_Implementing_Class__c.getDescribe().getLabel(),
             'donationMatchingRuleLabel' => Schema.DataImportBatch__c.Donation_Matching_Rule__c.getDescribe().getLabel(),
             'postProcessClassLabel' => Schema.DataImportBatch__c.Post_Process_Implementing_Class__c.getDescribe().getLabel(),
-            'processUsingScheduledJobLabel' => Schema.DataImportBatch__c.Process_Using_Scheduled_Job__c.getDescribe().getLabel(),
             'runOpportunityRollupsWhileProcessingLabel' => Schema.DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c.getDescribe().getLabel()
         };
         labels.putAll(getMatchingValues());
@@ -534,7 +526,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             dataImportBatch.Donation_Matching_Implementing_Class__c = recordDetails.donationMatchingClass;
             dataImportBatch.Donation_Matching_Rule__c = String.join(recordDetails.donationMatchingRule, ';');
             dataImportBatch.Post_Process_Implementing_Class__c = recordDetails.postProcessClass;
-            dataImportBatch.Process_Using_Scheduled_Job__c = recordDetails.processUsingScheduledJob;
             dataImportBatch.Run_Opportunity_Rollups_while_Processing__c = recordDetails.runOpportunityRollupsWhileProcessing;
             dataImportBatch.Expected_Count_of_Gifts__c = recordDetails.expectedCount;
             dataImportBatch.Expected_Total_Batch_Amount__c = recordDetails.expectedTotal;
@@ -575,7 +566,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public List<String> donationMatchingRule;
         @AuraEnabled public List<Map<String,String>> donationMatchingOptions;
         @AuraEnabled public String postProcessClass;
-        @AuraEnabled public Boolean processUsingScheduledJob;
         @AuraEnabled public Boolean runOpportunityRollupsWhileProcessing;
         @AuraEnabled public Integer recordCount;
 
