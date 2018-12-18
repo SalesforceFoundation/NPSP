@@ -50,9 +50,19 @@ global with sharing class REL_RelationshipsViewer_CTRL{
     * @return Pagereference to the current page.
     */
     private Pagereference showNoAccess() {
+        Boolean contactAccessible = Contact.sObjectType.getDescribe().isAccessible();
+        Boolean relationshipAccessible = npe4__Relationship__c.sObjectType.getDescribe().isAccessible();
+        List<String> blockingSObjects = new List<String>();
 
-        if (!Contact.sObjectType.getDescribe().isAccessible()) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL,String.format(Label.flsError, new List<String>{'Contact'})));
+        if(!contactAccessible) { 
+            blockingSObjects.add(UTIL_Descibe.getObjectLabel('Contact'));
+        }
+        if(!relationshipAccessible) {
+            blockingSObjects.add(UTIL_Descibe.getObjectLabel('npe4__Relationship__c'));
+        }
+        
+        if(!blockingSObjects.isEmpty()) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL,String.format(Label.flsError, blockingSObjects)));
             showPermissionError = true;
         }
 
