@@ -41,4 +41,14 @@
         <default>false</default>
         <label>Solicitor</label>
     </standardValue>
+    <standardValue>
+        <fullName>Honoree</fullName>
+        <default>false</default>
+        <label>Honoree</label>
+    </standardValue>
+    <standardValue>
+        <fullName>Notification Recipient</fullName>
+        <default>false</default>
+        <label>Notification Recipient</label>
+    </standardValue>
 </StandardValueSet>
