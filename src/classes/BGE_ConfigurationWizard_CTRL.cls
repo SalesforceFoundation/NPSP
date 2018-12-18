@@ -40,11 +40,12 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     * @description These fields are required only if at least 1 field from its object group is selected
     */
     private static Set<String> systemRequiredFields = new Set<String>{
-            'Account1_Name__c',
-            'Account2_Name__c',
-            'Donation_Amount__c',
-            'Contact1_LastName__c',
-            'Contact2_LastName__c'};
+        'Account1_Name__c',
+        'Account2_Name__c',
+        'Donation_Amount__c',
+        'Contact1_LastName__c',
+        'Contact2_LastName__c'
+    };
 
     /*******************************************************************************************************
     * @description Checks for field permissions to create a new Batch/Template
@@ -125,8 +126,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         List<BGEField> fields = new List<BGEField>();
 
         Set<String> allowedObjects = new Set<String>{
-                'Opportunity',
-                'Payment'
+            'Opportunity',
+            'Payment'
         };
 
         List<DescribeFieldResult> dfrs = getRelevantFields(allowedObjects);
@@ -172,7 +173,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         List<DescribeFieldResult> dfrs = new List<DescribeFieldResult>();
 
         Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
-        Set<String> bannedFields = new Set<String>{'Account1Imported__c',
+        Set<String> bannedFields = new Set<String>{
+            'Account1Imported__c',
             'Account1ImportStatus__c',
             'Account2Imported__c',
             'Account2ImportStatus__c',
@@ -217,10 +219,10 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
             String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(dfr.getName());
             Boolean fieldAllowed = allowedObjects.contains(dataImportFieldMappedObject)
-                    && allowedDataTypes.contains(dfr.getType().name())
-                    && !bannedFields.contains(dataImportFieldApiName)
-                    && dfr.getInlineHelpText() != null
-                    && BGE_BatchGiftEntry_UTIL.canUpdateField(dfr);
+                && allowedDataTypes.contains(dfr.getType().name())
+                && !bannedFields.contains(dataImportFieldApiName)
+                && dfr.getInlineHelpText() != null
+                && BGE_BatchGiftEntry_UTIL.canUpdateField(dfr);
 
             if (fieldAllowed) {
                 dfrs.add(dfr);
@@ -435,8 +437,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         List<Map<String, String>> donationMatchingOptions = new List<Map<String, String>>();
 
         Set<String> donationObjects = new Set<String>{
-                'Opportunity',
-                'Payment'
+            'Opportunity',
+            'Payment'
         };
         List<DescribeFieldResult> dfrs = getRelevantFields(donationObjects);
 
@@ -519,7 +521,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     public static Boolean isOrgNamespaced() {
         return UTIL_Namespace.getNamespace() != '';
     }
-
 
     /*******************************************************************************************************
     * @description Deserializes information to the model and selects which record to save.

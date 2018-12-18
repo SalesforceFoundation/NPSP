@@ -37,7 +37,6 @@
 
 public with sharing class BGE_DataImportBatchEntry_CTRL {
 
-
     /*******************************************************************************************************
     * @description Checks for field permissions to create a new Batch
     * @return void; throws an AuraHandledException if any fields fail FLS check
@@ -110,7 +109,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         return activeFieldNames;
     }
 
-
     /*******************************************************************************************************
     * @description queries the DataImport__c records associated with the given batchId
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
@@ -135,7 +133,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
     /*******************************************************************************************************
     * @description Retrieves all open Opportunities and unpaid Payments for the selected Donor (Account or Contact)
-    * @return Map<String, List<SObject>> of all openOpportunities and unpaidPayments for the given donor
+    * @return JSON stringified Map<String, List<SObject>> of all openOpportunities and unpaidPayments for the given donor
     */
     @AuraEnabled
     public static String getOpenDonations(Id donorId, String donorType) {
@@ -179,8 +177,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             }
 
             Map<String, List<SObject>> response = new Map<String, List<SObject>>{
-                    'openOpportunities' => openOpportunitiesById.values(),
-                    'unpaidPayments' => unpaidPayments
+                'openOpportunities' => openOpportunitiesById.values(),
+                'unpaidPayments' => unpaidPayments
             };
             return JSON.serialize(response);
         } catch (Exception ex){
@@ -195,30 +193,30 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     private static Map<String, String> getBatchDataImportLabels() {
 
         Map<String, String> labels = new Map<String, String> {
-                'accountObject' => Schema.SObjectType.Account.getLabel(),
-                'accountLookup' => Schema.SObjectType.DataImport__c.fields.Account1Imported__c.getName(),
-                'batchIdField' => Schema.SObjectType.DataImport__c.fields.NPSP_Data_Import_Batch__c.getName(),
-                'bdiBatchClass' => UTIL_Namespace.StrTokenNSPrefix('BDI_DataImport'),
-                'contactLookup' => Schema.SObjectType.DataImport__c.fields.Contact1Imported__c.getName(),
-                'contactObject' => Schema.SObjectType.Contact.getLabel(),
-                'dataImportObject' => Schema.SObjectType.DataImport__c.getName(),
-                'donationDonor' => Schema.SObjectType.DataImport__c.fields.Donation_Donor__c.getName(),
-                'donationAmountField' => Schema.SObjectType.DataImport__c.fields.Donation_Amount__c.getName(),
-                'expectedCountField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Count_of_Gifts__c.getName(),
-                'expectedTotalField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getName(),
-                'noDataImportsFound' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.DataImport__c.getName()}),
-                'opportunityImportedLookupField' => Schema.SObjectType.DataImport__c.fields.DonationImported__c.getName(),
-                'opportunityImportedStatusField' => Schema.SObjectType.DataImport__c.fields.DonationImportStatus__c.getName(),
-                'opportunityAmount' => Schema.SObjectType.Opportunity.fields.Amount.getLabel(),
-                'opportunityObject' => Schema.SObjectType.Opportunity.getLabel(),
-                'opportunityName' => Schema.SObjectType.Opportunity.getLabel(),
-                'opportunityStage' => Schema.SObjectType.Opportunity.fields.StageName.getLabel(),
-                'paymentAmount' => Schema.SObjectType.npe01__OppPayment__c.fields.npe01__Payment_Amount__c.getLabel(),
-                'paymentObject' => Schema.SObjectType.npe01__OppPayment__c.getLabel(),
-                'paymentScheduledDate' => Schema.SObjectType.npe01__OppPayment__c.fields.npe01__Scheduled_Date__c.getLabel(),
-                'paymentImportedLookupField' => Schema.SObjectType.DataImport__c.fields.PaymentImported__c.getName(),
-                'paymentImportedStatusField' => Schema.SObjectType.DataImport__c.fields.PaymentImportStatus__c.getName(),
-                'requireTotalMatch' => Schema.SObjectType.DataImportBatch__c.fields.RequireTotalMatch__c.getName()
+            'accountObject' => Schema.SObjectType.Account.getLabel(),
+            'accountLookup' => Schema.SObjectType.DataImport__c.fields.Account1Imported__c.getName(),
+            'batchIdField' => Schema.SObjectType.DataImport__c.fields.NPSP_Data_Import_Batch__c.getName(),
+            'bdiBatchClass' => UTIL_Namespace.StrTokenNSPrefix('BDI_DataImport'),
+            'contactLookup' => Schema.SObjectType.DataImport__c.fields.Contact1Imported__c.getName(),
+            'contactObject' => Schema.SObjectType.Contact.getLabel(),
+            'dataImportObject' => Schema.SObjectType.DataImport__c.getName(),
+            'donationDonor' => Schema.SObjectType.DataImport__c.fields.Donation_Donor__c.getName(),
+            'donationAmountField' => Schema.SObjectType.DataImport__c.fields.Donation_Amount__c.getName(),
+            'expectedCountField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Count_of_Gifts__c.getName(),
+            'expectedTotalField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getName(),
+            'noDataImportsFound' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.DataImport__c.getName()}),
+            'opportunityImportedLookupField' => Schema.SObjectType.DataImport__c.fields.DonationImported__c.getName(),
+            'opportunityImportedStatusField' => Schema.SObjectType.DataImport__c.fields.DonationImportStatus__c.getName(),
+            'opportunityAmount' => Schema.SObjectType.Opportunity.fields.Amount.getLabel(),
+            'opportunityObject' => Schema.SObjectType.Opportunity.getLabel(),
+            'opportunityName' => Schema.SObjectType.Opportunity.getLabel(),
+            'opportunityStage' => Schema.SObjectType.Opportunity.fields.StageName.getLabel(),
+            'paymentAmount' => Schema.SObjectType.npe01__OppPayment__c.fields.npe01__Payment_Amount__c.getLabel(),
+            'paymentObject' => Schema.SObjectType.npe01__OppPayment__c.getLabel(),
+            'paymentScheduledDate' => Schema.SObjectType.npe01__OppPayment__c.fields.npe01__Scheduled_Date__c.getLabel(),
+            'paymentImportedLookupField' => Schema.SObjectType.DataImport__c.fields.PaymentImported__c.getName(),
+            'paymentImportedStatusField' => Schema.SObjectType.DataImport__c.fields.PaymentImportStatus__c.getName(),
+            'requireTotalMatch' => Schema.SObjectType.DataImportBatch__c.fields.RequireTotalMatch__c.getName()
         };
 
         return labels;
@@ -315,8 +313,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         // Skip records where user has explicitly selected a matching record in BGE UI
         for (DataImport__c dataImport : dataImportRecords) {
             if (dataImport.DonationImportStatus__c == Label.bdiMatchedByUser
-                    || dataImport.DonationImportStatus__c == Label.bdiMatchedByUserNewOpp
-                    || dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
+                || dataImport.DonationImportStatus__c == Label.bdiMatchedByUserNewOpp
+                || dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
                 // User defined match, so we do nothing and retain the values
             } else {
                 // Clear Dry Run fields before running Dry Run so new field values are accounted for
@@ -348,9 +346,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         List<String> dataImportFields = getDataImportFields(batchId);
 
         String query = 'SELECT ' + String.join(dataImportFields,', ') +
-                ' FROM DataImport__c' +
-                ' WHERE NPSP_Data_Import_Batch__c = :batchId' +
-                ' ORDER BY Id ASC';
+            ' FROM DataImport__c' +
+            ' WHERE NPSP_Data_Import_Batch__c = :batchId' +
+            ' ORDER BY Id ASC';
 
         return Database.query(query);
     }
@@ -365,9 +363,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         List<String> dataImportFields = getDataImportFields(batchId);
 
         String query = 'SELECT ' + String.join(dataImportFields,', ') +
-                ' FROM DataImport__c' +
-                ' WHERE Id IN :dataImportIds' +
-                ' ORDER BY Id ASC';
+            ' FROM DataImport__c' +
+            ' WHERE Id IN :dataImportIds' +
+            ' ORDER BY Id ASC';
 
         return Database.query(query);
     }
@@ -381,21 +379,21 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         List<String> activeFieldNames = getActiveFieldNamesFromBatch(batchId);
 
         List<String> fields = new List<String> {
-                'Id',
-                'Contact1Imported__c',
-                'Contact1Imported__r.Name',
-                'Account1Imported__c',
-                'Account1Imported__r.Name',
-                'NPSP_Data_Import_Batch__c',
-                'Donation_Donor__c',
-                'DonationImported__c',
-                'Status__c',
-                'FailureInformation__c',
-                'DonationImportStatus__c',
-                'PaymentImportStatus__c',
-                'PaymentImported__c',
-                'PaymentImported__r.Name',
-                'DonationImported__r.Name'
+            'Id',
+            'Account1Imported__c',
+            'Account1Imported__r.Name',
+            'Contact1Imported__c',
+            'Contact1Imported__r.Name',
+            'Donation_Donor__c',
+            'DonationImported__c',
+            'DonationImported__r.Name',
+            'DonationImportStatus__c',
+            'FailureInformation__c',
+            'NPSP_Data_Import_Batch__c',
+            'PaymentImported__c',
+            'PaymentImported__r.Name',
+            'PaymentImportStatus__c',
+            'Status__c'
         };
 
         fields.addAll(activeFieldNames);
