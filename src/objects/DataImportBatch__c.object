@@ -112,19 +112,6 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Batch_Template__c</fullName>
-        <deleteConstraint>Restrict</deleteConstraint>
-        <externalId>false</externalId>
-        <label>Batch Template</label>
-        <referenceTo>Batch_Template__c</referenceTo>
-        <relationshipLabel>NPSP Data Import Batches</relationshipLabel>
-        <relationshipName>NPSP_Data_Import_Batches</relationshipName>
-        <required>false</required>
-        <trackHistory>false</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Lookup</type>
-    </fields>
-    <fields>
         <fullName>Contact_Custom_Unique_ID__c</fullName>
         <description>An optional Unique Id field to use for Contact matching</description>
         <externalId>false</externalId>
@@ -271,6 +258,17 @@
         <type>Currency</type>
     </fields>
     <fields>
+        <fullName>GiftBatch__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>This flag is set during batch creation to use the gift entry batch feature.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This batch is intended for use with Batch Gift Entry. Batches are automatically marked as gift batches when they are set up through the Batch Gift Entry tab. Manually changing this field could have unintended consequences.</inlineHelpText>
+        <label>Gift Batch</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Last_Processed_On__c</fullName>
         <description>The date and time when the batch was last processed.</description>
         <externalId>false</externalId>
@@ -367,17 +365,6 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
-    <fields>
-        <fullName>UseBatchGiftEntryGrid__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>This flag is set during batch creation to use the gift entry batch feature.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Set this flag during batch creation to create a gift entry batch.</inlineHelpText>
-        <label>Use Batch Gift Entry Grid</label>
-        <trackHistory>false</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
-    </fields>
     <label>NPSP Data Import Batch</label>
     <listViews>
         <fullName>All</fullName>
@@ -398,7 +385,7 @@
         <columns>CREATED_DATE</columns>
         <filterScope>Everything</filterScope>
         <filters>
-            <field>UseBatchGiftEntryGrid__c</field>
+            <field>GiftBatch__c</field>
             <operation>equals</operation>
             <value>1</value>
         </filters>
@@ -411,7 +398,6 @@
     </nameField>
     <pluralLabel>NPSP Data Import Batches</pluralLabel>
     <searchLayouts>
-        <listViewButtons>View_Templates</listViewButtons>
         <lookupDialogsAdditionalFields>Batch_Description__c</lookupDialogsAdditionalFields>
         <lookupDialogsAdditionalFields>UPDATEDBY_USER</lookupDialogsAdditionalFields>
         <searchResultsAdditionalFields>Batch_Description__c</searchResultsAdditionalFields>
@@ -443,19 +429,5 @@
         <openType>sidebar</openType>
         <protected>false</protected>
         <url>/apex/{!$Setup.Package_Settings__c.Namespace_Prefix__c}BDI_DataImport?batchId={!DataImportBatch__c.Id}&amp;retURL={!URLFOR(&apos;/&apos; + DataImportBatch__c.Id)}</url>
-    </webLinks>
-    <webLinks>
-        <fullName>View_Templates</fullName>
-        <availability>online</availability>
-        <description>Navigate to Batch Template list view</description>
-        <displayType>massActionButton</displayType>
-        <encodingKey>UTF-8</encodingKey>
-        <height>600</height>
-        <linkType>url</linkType>
-        <masterLabel>View Templates</masterLabel>
-        <openType>sidebar</openType>
-        <protected>false</protected>
-        <requireRowSelection>false</requireRowSelection>
-        <url>{!URLFOR($Action.Batch_Template__c.Tab, $ObjectType.Batch_Template__c)}</url>
     </webLinks>
 </CustomObject>

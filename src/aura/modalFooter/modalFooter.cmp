@@ -59,11 +59,11 @@
         <lightning:layoutItem size="6" class="slds-grid_vertical-align-center">
             <lightning:progressIndicator currentStep="{!v.currentStep}" type="base" hasError="{!v.hasError}"
                                          variant="base" class="slds-text-align_center">
-                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateOverviewWizard}" value="1"/>
+                <lightning:progressStep label="{!$Label.c.bgeBatchOverviewWizard}" value="1"/>
                 <!--<lightning:progressStep label="Step 2" value="2"/>-->
-                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="3"/>
-                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="4"/>
-                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetBatchOptions}" value="5"/>
+                <lightning:progressStep label="{!$Label.c.bgeBatchSelectFields}" value="3"/>
+                <lightning:progressStep label="{!$Label.c.bgeBatchSetFieldOptions}" value="4"/>
+                <lightning:progressStep label="{!$Label.c.bgeBatchSetBatchOptions}" value="5"/>
             </lightning:progressIndicator>
         </lightning:layoutItem>
         <!-- End: Progress Indicator -->
