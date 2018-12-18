@@ -258,6 +258,17 @@
         <type>Currency</type>
     </fields>
     <fields>
+        <fullName>GiftBatch__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>This flag is set during batch creation to use the gift entry batch feature.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This batch is intended for use with Batch Gift Entry. Batches are automatically marked as gift batches when they are set up through the Batch Gift Entry tab. Manually changing this field could have unintended consequences.</inlineHelpText>
+        <label>Gift Batch</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Last_Processed_On__c</fullName>
         <description>The date and time when the batch was last processed.</description>
         <externalId>false</externalId>
@@ -354,17 +365,6 @@
         <type>Text</type>
         <unique>false</unique>
     </fields>
-    <fields>
-        <fullName>UseBatchGiftEntryGrid__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>This flag is set during batch creation to use the gift entry batch feature.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Set this flag during batch creation to create a gift entry batch.</inlineHelpText>
-        <label>Use Batch Gift Entry Grid</label>
-        <trackHistory>false</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
-    </fields>
     <label>NPSP Data Import Batch</label>
     <listViews>
         <fullName>All</fullName>
@@ -385,7 +385,7 @@
         <columns>CREATED_DATE</columns>
         <filterScope>Everything</filterScope>
         <filters>
-            <field>UseBatchGiftEntryGrid__c</field>
+            <field>GiftBatch__c</field>
             <operation>equals</operation>
             <value>1</value>
         </filters>
