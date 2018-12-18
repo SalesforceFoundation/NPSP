@@ -43,7 +43,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     */
     @AuraEnabled
     public static void checkFieldPermissions() {
-        BGE_BatchGiftEntry_UTIL.checkFieldPermissions();
+        BGE_BatchGiftEntry_UTIL.checkFieldPermissionsNeededForBatch();
     }
 
     /*******************************************************************************************************

@@ -54,7 +54,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     */
     @AuraEnabled
     public static void checkFieldPermissions() {
-        BGE_BatchGiftEntry_UTIL.checkFieldPermissions();
+        BGE_BatchGiftEntry_UTIL.checkFieldPermissionsNeededForBatch();
     }
 
     /*******************************************************************************************************
