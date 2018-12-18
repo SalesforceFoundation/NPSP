@@ -35,13 +35,13 @@
 <aura:component>
 
     <!--Public Attributes-->
-    <aura:attribute name="currentStep" default="1" type="String" description="Step in progress indicator" />
+    <aura:attribute name="currentStep" default="1" type="String" description="Step in progress indicator. Note: is a STRING." />
     <aura:attribute name="hasError" default="false" type="Boolean"
                     description="Indicates if there is an error in the current step" />
     <aura:attribute name="pendingSave" default="false" type="Boolean"
                     description="Controls whether Save is disabled because modal body has uncommitted changes" />
-    <aura:attribute name="progressStepLabels" default="[]" type="List"
-                    description="List of labels to use for progress steps" />
+    <aura:attribute name="progressStepLabels" default="{}" type="Map"
+                    description="Map of labels and values to use for progress steps" />
 
     <!--Events-->
     <aura:handler event="ltng:sendMessage" action="{!c.handleMessage}"/>
@@ -50,7 +50,8 @@
     <!--Start Markup-->
     <lightning:layout horizontalAlign="spread" multipleRows="true">
         <lightning:layoutItem size="3" class="slds-text-align_left">
-            <aura:if isTrue="{! v.currentStep != '1' }">
+            <!--Uses 0 based index for steps-->
+            <aura:if isTrue="{! v.currentStep != '0' }">
                 <lightning:button variant="neutral" label="{!$Label.c.stgBtnBack}" onclick="{!c.back}" />
             </aura:if>
         </lightning:layoutItem>
@@ -60,7 +61,8 @@
             <lightning:progressIndicator currentStep="{!v.currentStep}" type="base" hasError="{!v.hasError}"
                                          variant="base" class="slds-text-align_center">
                 <aura:iteration items="{!v.progressStepLabels}" var="step" indexVar="index">
-                    <lightning:progressStep label="{!step}" value="{!index}"/>
+                    <!--Concat forces index to string, and only strings are supported for progressStep-->
+                    <lightning:progressStep label="{!step}" value="{!concat(index, '')}"/>
                 </aura:iteration>
             </lightning:progressIndicator>
         </lightning:layoutItem>
@@ -68,10 +70,11 @@
 
         <lightning:layoutItem size="3" class="slds-text-align_right">
             <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
-            <aura:if isTrue="{!v.currentStep != v.progressStepLabels.length}">
+            <!--Uses 0 based index for steps, which are strings-->
+            <aura:if isTrue="{!v.currentStep != concat(sub(v.progressStepLabels.length,1),'')}">
                 <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
             </aura:if>
-            <aura:if isTrue="{!v.currentStep == v.progressStepLabels.length}">
+            <aura:if isTrue="{!v.currentStep == concat(sub(v.progressStepLabels.length,1),'')}">
                 <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" disabled="{!v.pendingSave}"/>
             </aura:if>
         </lightning:layoutItem>

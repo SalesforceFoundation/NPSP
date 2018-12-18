@@ -793,6 +793,7 @@
 
             /**
              * @description From Edit mode, sets back to View mode, otherwise returns user to dynamic Object home
+             * todo: fix this for tab
              * @return void.
              */
             function cancel() {
@@ -812,7 +813,7 @@
              */
             function setMode(mode) {
                 this.mode = mode;
-                this.progressIndicatorStep = '1';
+                this.progressIndicatorStep = '0';
                 this.onMetadataUpdated.notify();
             }
 
@@ -846,14 +847,13 @@
             function setPageHeader() {
                 var headers = [
                     this.labels.recordInfoLabel,
-                    'Select Template',
                     $A.get('$Label.c.bgeBatchSelectFields'),
                     $A.get('$Label.c.bgeBatchSetFieldOptions'),
                     $A.get('$Label.c.bgeBatchSetBatchOptions')
                 ];
 
-                var progressIndicatorStepBase1 = parseInt(this.progressIndicatorStep) - 1;
-                this.pageHeader = headers[progressIndicatorStepBase1];
+                var progressIndicatorStep = parseInt(this.progressIndicatorStep);
+                this.pageHeader = headers[progressIndicatorStep];
                 this.onMetadataUpdated.notify();
             }
 
@@ -871,25 +871,8 @@
              * @return void.
              */
             function stepUp() {
-                var stepNum = parseInt(this.progressIndicatorStep);
-                switch (stepNum) {
-                    case 1:
-                        // TODO: adjust this when we add in step 2
-                        stepNum = 3;
-                        break;
-                    case 2:
-                        stepNum = 3;
-                        break;
-                    case 3:
-                        stepNum = 4;
-                        break;
-                    case 4:
-                        stepNum = 5;
-                        break;
-                    default:
-                        stepNum = 1;
-                        break;
-                }
+                let stepNum = parseInt(this.progressIndicatorStep);
+                stepNum++;
                 this.progressIndicatorStep = stepNum.toString();
                 this.onMetadataUpdated.notify();
             }
@@ -899,25 +882,8 @@
              * @return void.
              */
             function stepDown() {
-                var stepNum = parseInt(this.progressIndicatorStep);
-                switch (stepNum) {
-                    case 2:
-                        stepNum = 1;
-                        break;
-                    case 3:
-                        // TODO: adjust this when we add in step 2
-                        stepNum = 1;
-                        break;
-                    case 4:
-                        stepNum = 3;
-                        break;
-                    case 5:
-                        stepNum = 4;
-                        break;
-                    default:
-                        stepNum = 1;
-                        break;
-                }
+                let stepNum = parseInt(this.progressIndicatorStep);
+                stepNum--;
                 this.progressIndicatorStep = stepNum.toString();
                 this.onMetadataUpdated.notify();
             }

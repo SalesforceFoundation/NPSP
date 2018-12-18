@@ -57,21 +57,19 @@
             var step = component.get('v.batchMetadata.progressIndicatorStep');
 
             // check validity and load values
-            if (step === '1') {
+            if (step === '0') {
                 model.getBatchInfo().load(component.get('v.batchInfo'));
                 isValid = model.getBatchInfo().isValid();
                 possibleError = component.get('v.batchMetadata.labels.missingNameDescriptionError');
-            } else if (step === '2') {
-                //handle template selection and copying here
-            } else if (step === '3') {
+            } else if (step === '1') {
                 model.getAvailableFields().updateToActive(component.get('v.availableFields').fieldGroups);
                 possibleError = model.getAvailableFields().getRequiredFieldErrors();
                 isValid = (possibleError.length === 0);
-            } else if (step === '4') {
+            } else if (step === '2') {
                 isValid = model.getAvailableFields().getDefaultFieldValidity(component);
                 var fieldOptions = component.get('v.batchFieldOptions.fieldGroups');
                 model.getAvailableFields().updateBatchFieldOptions(fieldOptions);
-            } else if (step === '5') {
+            } else if (step === '3') {
                 //todo: add validation for processing settings
                 model.getBatchInfo().load(component.get('v.batchInfo'));
             }
