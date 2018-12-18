@@ -151,14 +151,15 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'Payment'
         };
 
+/*
         // these fields are required only if at least 1 field from its object group is selected
         Set<String> systemRequiredFields = new Set<String>{
             'Account1_Name__c',
             'Account2_Name__c',
-            'Donation_Amount__c',
             'Contact1_LastName__c',
             'Contact2_LastName__c'
         };
+*/
 
         // these data types have been whitelisted since they already work with BGE
         Set<String> allowedDataTypes = new Set<String>{
@@ -192,10 +193,12 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 field.label = (fieldHasSpacesAndObjName) ? fieldResult.getLabel().split(' ',2)[1] : fieldResult.getLabel();
                 field.name = fieldResult.getName();
 
+/*
                 String unnamespacedField = UTIL_Namespace.StrTokenRemoveNSPrefix(field.name);
                 if (systemRequiredFields.contains(unnamespacedField)) {
                     field.systemRequired = true;
                 }
+*/
 
                 String rawFieldType = fieldResult.getType().name().toLowerCase();
                 field.type = getLightningFieldType(rawFieldType);
@@ -276,6 +279,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         donationAmount.type = getLightningFieldType('number');
         donationAmount.formatter = 'currency';
         donationAmount.sortOrder = 0;
+        donationAmount.locked = true;
         fields.add(donationAmount);
 
         BGEField donationDate = new BGEField();
@@ -287,6 +291,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         donationDate.hide = false;
         donationDate.type = getLightningFieldType('date');
         donationDate.sortOrder = 1;
+        donationDate.locked = true;
         fields.add(donationDate);
 
         BGEField paymentMethod = new BGEField();
@@ -588,23 +593,25 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     * @description a class to retrieve and save information related to Active and Available fields.
     */
     public class BGEField {
-        @AuraEnabled public String label;
-        @AuraEnabled public String name;
-        @AuraEnabled public String sObjectName;
-        @AuraEnabled public Boolean isActive;
         @AuraEnabled public String defaultValue;
-        @AuraEnabled public Boolean required;
-        @AuraEnabled public Boolean systemRequired;
-        @AuraEnabled public Boolean hide;
-        @AuraEnabled public String type;
         @AuraEnabled public String formatter;
+        @AuraEnabled public Boolean hide;
+        @AuraEnabled public Boolean isActive;
+        @AuraEnabled public String label;
+        @AuraEnabled public Boolean locked;
+        @AuraEnabled public String name;
         @AuraEnabled public List<Map<String, String>> options;
+        @AuraEnabled public Boolean required;
+        @AuraEnabled public String sObjectName;
         @AuraEnabled public Integer sortOrder;
+        @AuraEnabled public Boolean systemRequired;
+        @AuraEnabled public String type;
 
         public BGEField() {
             isActive = false;
-            required = false;
             hide = false;
+            locked = false;
+            required = false;
             systemRequired = false;
         }
     }

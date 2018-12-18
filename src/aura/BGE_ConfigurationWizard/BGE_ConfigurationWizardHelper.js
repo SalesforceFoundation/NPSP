@@ -171,8 +171,8 @@
                                 value: currentField.id
                             }
                         );
-                        //special case so Amount object is always visible
-                        if (currentField.id.includes('Donation_Amount__c')) {
+
+                        if (currentField.locked) {
                             currentFieldGroup.requiredOptions.push(currentField.id);
                         }
                     });
@@ -230,12 +230,8 @@
                             hide: currentField.hide,
                             type: currentField.type,
                             formatter: currentField.formatter,
-                            options: currentField.options
-                        }
-
-                        if (currentField.sObjectName === 'Opportunity' &&
-                            (currentField.name == 'npsp__Donation_Amount__c' || currentField.name == 'Donation_Amount__c')) {
-                            fieldInfo.systemRequired = true;
+                            options: currentField.options,
+                            systemRequired: currentField.systemRequired
                         }
 
                         currentFieldGroup.fields.push(fieldInfo);
@@ -503,6 +499,7 @@
                         currentField.type = activeFieldMap.get(currentField.id).type;
                         currentField.formatter = activeFieldMap.get(currentField.id).formatter;
                         currentField.options = activeFieldMap.get(currentField.id).options;
+                        currentField.locked = activeFieldMap.get(currentField.id).locked;
                     } else {
                         currentField.isActive = false;
                     }
