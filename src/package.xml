@@ -758,6 +758,7 @@
         <members>DataImportBatch__c.Donation_Matching_Rule__c</members>
         <members>DataImportBatch__c.Expected_Count_of_Gifts__c</members>
         <members>DataImportBatch__c.Expected_Total_Batch_Amount__c</members>
+        <members>DataImportBatch__c.GiftBatch__c</members>
         <members>DataImportBatch__c.Last_Processed_On__c</members>
         <members>DataImportBatch__c.Post_Process_Implementing_Class__c</members>
         <members>DataImportBatch__c.Process_Using_Scheduled_Job__c</members>
@@ -766,7 +767,6 @@
         <members>DataImportBatch__c.RequireTotalMatch__c</members>
         <members>DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c</members>
         <members>DataImportBatch__c.Status__c</members>
-        <members>DataImportBatch__c.UseBatchGiftEntryGrid__c</members>
         <members>DataImport__c.Account1ImportStatus__c</members>
         <members>DataImport__c.Account1Imported__c</members>
         <members>DataImport__c.Account1_City__c</members>
