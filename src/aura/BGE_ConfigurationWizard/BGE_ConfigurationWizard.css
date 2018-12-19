@@ -2,7 +2,7 @@
     background: white;
 }
 /*formatting for edit mode checkboxes*/
-.THIS .templateInputCheckbox{
+.THIS .bgeInputCheckbox{
     display: inline-flex;
 }
 /*give info icons extra space*/

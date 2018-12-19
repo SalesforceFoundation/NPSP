@@ -94,7 +94,7 @@
                                                          name="expectedTotal"
                                                          value="{!v.batchInfo.expectedTotal}"/>
                                         <lightning:input aura:id="totalMatchCheckbox" type="checkbox"
-                                                         class="templateInputCheckbox slds-p-top_small"
+                                                         class="bgeInputCheckbox slds-p-top_small"
                                                          label="{!v.batchMetadata.labels.totalMatchLabel}"
                                                          name="requireTotalMatch"
                                                          checked="{!v.batchInfo.requireTotalMatch}"
