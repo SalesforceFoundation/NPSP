@@ -143,7 +143,7 @@
         <defaultValue>0</defaultValue>
         <description>Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Enter the numer of days from the Donation Date to consider when looking for a matching Opportunity or Payment. NPSP will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</inlineHelpText>
+        <inlineHelpText>Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. NPSP will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</inlineHelpText>
         <label>Number of Days from Donation Date</label>
         <precision>2</precision>
         <required>true</required>
@@ -219,7 +219,7 @@
         <defaultValue>&quot;npsp__Donation_Amount__c;npsp__Donation_Date__c&quot;</defaultValue>
         <description>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Specifies which fields to match by when trying to match Donations in batch records against existing Opportunties and Payments.</inlineHelpText>
+        <inlineHelpText>Specifies which fields to match by when trying to match Donations in batch records against existing Opportunities and Payments.</inlineHelpText>
         <label>Donation Matching Rule</label>
         <length>255</length>
         <required>true</required>
