@@ -105,19 +105,19 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
     **********************************************************************************************************/     
     @isTest
     private static void shouldNotSendAckWhenAlreadySent() { 
-        Integer TOTAL_OPPS_CREATED = 5;
-        Integer OPPS_ALREADY_ACKNOWLEDGED = 3;
+        final Integer totalOppsCreated = 5;
+        final Integer oppsAlreadyAcknowledged = 3;
 
-        Date INITIAL_DATE = Date.newInstance(2018, 1, 1);
+        final Date initialDate = Date.newInstance(2018, 1, 1);
 
-        List<Opportunity> allOpps = setUpOpportunities(TOTAL_OPPS_CREATED);
+        List<Opportunity> allOpps = setUpOpportunities(totalOppsCreated);
         Set<Id> resendOppIds = new Set<Id>();
         Set<Id> sendOppIds = new Set<Id>();
         
         for (Integer oppIndex=0; oppIndex < allOpps.size(); oppIndex++) {
             Opportunity o = allOpps[oppIndex];
-            o.Acknowledgment_Date__c = INITIAL_DATE;
-            if (oppIndex < OPPS_ALREADY_ACKNOWLEDGED) {
+            o.Acknowledgment_Date__c = initialDate;
+            if (oppIndex < oppsAlreadyAcknowledged) {
                 o.Acknowledgment_Status__c = OPP_SendAcknowledgmentBTN_CTRL.ACKNOWLEDGED;
                 resendOppIds.add(o.Id);
             } else {
@@ -138,8 +138,8 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
         // check the resulting acknowledgement status 
         allOpps = getOpps();
 
-        System.assertEquals(TOTAL_OPPS_CREATED, allOpps.size(), 'Opportunity Size mismatch');     
-        System.assertEquals(OPPS_ALREADY_ACKNOWLEDGED, ctrl.alreadySentCount, 'Incorrect # of acks already sent');
+        System.assertEquals(totalOppsCreated, allOpps.size(), 'Opportunity Size mismatch');     
+        System.assertEquals(oppsAlreadyAcknowledged, ctrl.alreadySentCount, 'Incorrect # of acks already sent');
 
         Integer sentCount = 0;
         Integer notSentCount = 0;
@@ -151,7 +151,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
                     o.Acknowledgment_Status__c, 
                     'Acknowledgement status is wrong'
                 );
-                System.assertEquals(INITIAL_DATE, o.Acknowledgment_Date__c, 'Acknowledgement date is wrong'); 
+                System.assertEquals(initialDate, o.Acknowledgment_Date__c, 'Acknowledgement date is wrong'); 
                 continue;
             } 
 
@@ -184,7 +184,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
         OPP_SendAcknowledgmentBTN_CTRL ctrl = new OPP_SendAcknowledgmentBTN_CTRL(sc);
         
         Test.startTest();
-        ctrl.SendAcknowledgment();
+        ctrl.sendAcknowledgment();
         Test.stopTest();
 
         UTIL_UnitTestData_TEST.assertPageHasError(System.Label.sendAcknowledgmentNoneSelected);
