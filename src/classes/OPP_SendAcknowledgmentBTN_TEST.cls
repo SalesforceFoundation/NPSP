@@ -62,8 +62,8 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
             'Acknowledge Status Mismatch Expected: (' +  OPP_SendAcknowledgmentBTN_CTRL.ACKNOWLEDGEMENT_FAILED +
              ' OR ' + OPP_SendAcknowledgmentBTN_CTRL.ACKNOWLEDGED + ') ACTUAL: ' + listOpp[0].Acknowledgment_Status__c
         );  
-        System.assertNotEquals(null, ctrl.listOppNotSent);
-        System.assertNotEquals(ctrl.cSent, ctrl.cNotSent);   
+        System.assertNotEquals(null, ctrl.oppsNotSent);
+        System.assertNotEquals(ctrl.sentCount, ctrl.notSentCount);   
     }
 
     /*********************************************************************************************************
@@ -94,8 +94,8 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
             );
         }    
 
-        System.assertEquals(0, ctrl.cSent, 'Sent Counter was not rolledback');
-        System.assertEquals(1, ctrl.cNotSent, 'Not Sent Counter was not rolledback');
+        System.assertEquals(0, ctrl.sentCount, 'Sent Counter was not rolledback');
+        System.assertEquals(1, ctrl.notSentCount, 'Not Sent Counter was not rolledback');
 
     }
 
@@ -139,7 +139,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
         allOpps = getOpps();
 
         System.assertEquals(TOTAL_OPPS_CREATED, allOpps.size(), 'Opportunity Size mismatch');     
-        System.assertEquals(OPPS_ALREADY_ACKNOWLEDGED, ctrl.cAlreadySent, 'Incorrect # of acks already sent');
+        System.assertEquals(OPPS_ALREADY_ACKNOWLEDGED, ctrl.alreadySentCount, 'Incorrect # of acks already sent');
 
         Integer sentCount = 0;
         Integer notSentCount = 0;
@@ -164,8 +164,8 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
             }                  
         }  
 
-        System.assertEquals(notSentCount, ctrl.cNotSent, 'Incorrect # of not sent acks');
-        System.assertEquals(sentCount, ctrl.cSent, 'Incorrect # of sent acks');
+        System.assertEquals(notSentCount, ctrl.notSentCount, 'Incorrect # of not sent acks');
+        System.assertEquals(sentCount, ctrl.sentCount, 'Incorrect # of sent acks');
                 
     }
 
@@ -228,19 +228,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_TEST {
             );
         }
         insert opps;
-        
-        List<OpportunityContactRole> ocrs = new List<OpportunityContactRole>();
-        for (Opportunity opp : opps) {
-            ocrs.add(
-                new OpportunityContactRole(
-                    OpportunityId = opp.Id, 
-                    ContactId = con.Id, 
-                    IsPrimary = true
-                )
-            );
-        }      
-        insert ocrs;
-        
+              
         return opps;
     }
 

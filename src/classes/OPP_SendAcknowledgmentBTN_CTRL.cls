@@ -81,22 +81,22 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
     /*******************************************************************************************************
     * @description the list of Opportunities that were not acknowledged
     */
-    public List<Opportunity> listOppNotSent { get; set; }
+    public List<Opportunity> oppsNotSent { get; set; }
 
     /*******************************************************************************************************
     * @description the count of Opportunities that were acknowledged
     */
-    public Integer cSent { get; set; }
+    public Integer sentCount { get; set; }
 
     /*******************************************************************************************************
     * @description the count of Opportunities where acknowledgements were already sent
     */
-    public Integer cAlreadySent { get; set; }
+    public Integer alreadySentCount { get; set; }
 
     /*******************************************************************************************************
     * @description the count of Opportunities that were NOT acknowledged
     */
-    public Integer cNotSent { get; set; }
+    public Integer notSentCount { get; set; }
 
     /*******************************************************************************************************
     * @description Page constructor that takes the set controller
@@ -104,10 +104,10 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
     * @return void
     */
     public OPP_SendAcknowledgmentBTN_CTRL(ApexPages.StandardSetController setController) {
-        listOppNotSent = new List<Opportunity>(); 
-        cSent = 0;
-        cNotSent = 0;
-        cAlreadySent = 0;
+        oppsNotSent = new List<Opportunity>(); 
+        sentCount = 0;
+        notSentCount = 0;
+        alreadySentCount = 0;
 
         if (setController.getSelected().isEmpty()) {
             Id oppId = ApexPages.currentPage().getParameters().get('oppId');
@@ -133,7 +133,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
         // wanted to give an error if they were going to overflow their email limit,
         // but one can only see the Apex email limits (1k/day), 
         // not the workflow email limits (1k/day per user license).
-        // Integer cSent = system.limits.getEmailInvocations();
+        // Integer sentCount = system.limits.getEmailInvocations();
         // Integer cLimit = system.limits.getLimitEmailInvocations();
         
         // wanted to give an error if there were no workflow rules activated on Opportunity
@@ -155,7 +155,7 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
                 opp.Acknowledgment_Status__c = ACKNOWLEDGEMENT_READY_TO_EMAIL;
                 oppsToAttemptAck.add(opp);
             } else {
-                cAlreadySent++;
+                alreadySentCount++;
             }
         }
 
@@ -164,22 +164,22 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
             update oppsToAttemptAck;
             
             // detect how many were not sent via the workflow
-            listOppNotSent = [
-                SELECT Id
+            oppsNotSent = [
+                SELECT Name
                 FROM Opportunity 
                 WHERE Id IN :oppsToAttemptAck 
                 AND Acknowledgment_Status__c = :ACKNOWLEDGEMENT_READY_TO_EMAIL
             ];
             
-            cNotSent = listOppNotSent.size();
-            cSent = oppsToAcknowledge.size() - cNotSent - cAlreadySent;
+            notSentCount = oppsNotSent.size();
+            sentCount = oppsToAcknowledge.size() - notSentCount - alreadySentCount;
             
             // for those Opps that failed, set status to acknowledgement failed
-            for (Opportunity opp : listOppNotSent) {
+            for (Opportunity opp : oppsNotSent) {
                 opp.Acknowledgment_Status__c = ACKNOWLEDGEMENT_FAILED;
             }
             
-            update listOppNotSent;
+            update oppsNotSent;
 
             reportSendAckStatus();
 
@@ -188,9 +188,9 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
             
             // Rollback variables since only DMLs are rolledback.
             // Report none of Opportunities was acknowledged.
-            listOppNotSent = [SELECT Name FROM Opportunity WHERE Id IN :oppsToAttemptAck];
-            cNotSent = listOppNotSent.size();
-            cSent = 0;
+            oppsNotSent = [SELECT Name FROM Opportunity WHERE Id IN :oppsToAttemptAck];
+            notSentCount = oppsNotSent.size();
+            sentCount = 0;
 
             // Make the error look more readable on the page
             ERR_ExceptionHandler.beautifyExceptionMessage(ex);
@@ -205,16 +205,16 @@ public with sharing class OPP_SendAcknowledgmentBTN_CTRL {
     * @return void
     */
     private void reportSendAckStatus() {                 
-        if (cSent > 0) {
-            addStatusMessageWithCount(ApexPages.Severity.INFO, System.Label.sendAcknowledgmentNumberSent, cSent);            
+        if (sentCount > 0) {
+            addStatusMessageWithCount(ApexPages.Severity.INFO, System.Label.sendAcknowledgmentNumberSent, sentCount);            
         }       
 
-        if (cAlreadySent > 0) {
-             addStatusMessageWithCount(ApexPages.Severity.INFO, System.Label.sendAcknowledgmentNumberAlreadySent, cAlreadySent);            
+        if (alreadySentCount > 0) {
+             addStatusMessageWithCount(ApexPages.Severity.INFO, System.Label.sendAcknowledgmentNumberAlreadySent, alreadySentCount);            
         }       
                          
-        if (cNotSent > 0) {
-            addStatusMessageWithCount(ApexPages.Severity.WARNING, System.Label.sendAcknowledgmentNumberNoEmail, cNotSent);                       
+        if (notSentCount > 0) {
+            addStatusMessageWithCount(ApexPages.Severity.WARNING, System.Label.sendAcknowledgmentNumberNoEmail, notSentCount);                       
         }
     }
 
