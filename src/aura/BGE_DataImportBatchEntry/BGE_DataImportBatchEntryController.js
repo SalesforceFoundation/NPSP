@@ -10,26 +10,14 @@
      * @description: handles selected row action in the datatable. Current option list: delete.
      */
     handleRowAction: function (component, event, helper) {
-        helper.showSpinner(component);
-        var action = event.getParam('action');
+        let rowAction = event.getParam('action');
         var row = event.getParam('row');
-        switch (action.name) {
+        switch (rowAction.name) {
             case 'delete':
-                var action = component.get('c.deleteDataImportRow');
-                action.setParams({batchId: component.get('v.recordId'), dataImportId: row.Id});
-                action.setCallback(this, function (response) {
-                    const state = response.getState();
-                    if (state === 'SUCCESS') {
-                        const returnValue = JSON.parse(response.getReturnValue());
-                        helper.setDataTableRows(component, returnValue);
-                        helper.setTotals(component, returnValue);
-                        helper.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftDeleted'), 'success');
-                    } else {
-                        helper.handleApexErrors(component, response.getError());
-                    }
-                    helper.hideSpinner(component);
-                });
-                $A.enqueueAction(action);
+                helper.handleDeleteRowAction(component, row);
+                break;
+            case 'view':
+                helper.handleViewRowAction(component, row);
                 break;
         }
     },
