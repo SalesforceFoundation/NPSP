@@ -37,6 +37,27 @@
 public with sharing class BGE_ConfigurationWizard_CTRL {
 
     /*******************************************************************************************************
+    * @description These fields are required only if at least 1 field from its object group is selected
+    */
+    private static Set<String> systemRequiredFields = new Set<String>{
+        'Account1_Name__c',
+        'Account2_Name__c',
+        'Donation_Amount__c',
+        'Contact1_LastName__c',
+        'Contact2_LastName__c'
+    };
+
+    /*******************************************************************************************************
+    * @description Checks for field permissions to create a new Batch/Template
+    * @param sObjectName string of the sObjectName retrieved with force:hasSObjectName
+    * @return void; throws an AuraHandledException if any fields fail FLS check
+    */
+    @AuraEnabled
+    public static void checkFieldPermissions() {
+        BGE_BatchGiftEntry_UTIL.checkFieldPermissionsNeededForBatch();
+    }
+
+    /*******************************************************************************************************
     * @description Retrieves the Template Details information, the related list of fields, and component labels.
     * @param sObjectName string of the sObjectName retrieved with force:hasSObjectName
     * @param recordId Id of the record to be queried
@@ -49,25 +70,10 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         BGEDetailsModel model = new BGEDetailsModel();
 
+        List<String> fields = BGE_BatchGiftEntry_UTIL.getBatchFieldNames();
+
         if (recordId != null) {
             try {
-                List<String> fields = new List<String>{
-                    'Batch_Description__c',
-                    'Name',
-                    'Id',
-                    'RequireTotalMatch__c',
-                    'Active_Fields__c',
-                    'Batch_Process_Size__c',
-                    'Run_Opportunity_Rollups_while_Processing__c',
-                    'Contact_Matching_Rule__c',
-                    'Donation_Matching_Behavior__c',
-                    'Donation_Matching_Implementing_Class__c',
-                    'Donation_Matching_Rule__c',
-                    'Donation_Date_Range__c',
-                    'Post_Process_Implementing_Class__c',
-                    'Expected_Count_of_Gifts__c',
-                    'Expected_Total_Batch_Amount__c'
-                };
 
                 String soql = 'SELECT ' +
                     String.join(fields, ', ') +
@@ -118,8 +124,56 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         List<BGEField> fields = new List<BGEField>();
 
+        Set<String> allowedObjects = new Set<String>{
+            'Opportunity',
+            'Payment'
+        };
+
+        List<DescribeFieldResult> dfrs = getRelevantFields(allowedObjects);
+
+        for (DescribeFieldResult dfr : dfrs) {
+
+            String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(dfr.getName());
+
+            BGEField field = new BGEField();
+
+            // TODO: make these localized with schema describes
+            field.sObjectName = dataImportFieldMappedObject;
+
+            // TODO: pull these labels from target fields' schema based on help text mapping
+            Boolean fieldHasSpacesAndObjName = dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == field.sObjectName;
+            field.label = (fieldHasSpacesAndObjName) ? dfr.getLabel().split(' ',2)[1] : dfr.getLabel();
+            field.name = dfr.getName();
+
+            String unnamespacedField = UTIL_Namespace.StrTokenRemoveNSPrefix(field.name);
+            if (systemRequiredFields.contains(unnamespacedField)) {
+                field.systemRequired = true;
+            }
+
+            String rawFieldType = dfr.getType().name().toLowerCase();
+            field.type = getLightningFieldType(rawFieldType);
+            if (rawFieldType == 'currency') {
+                field.formatter = 'currency';
+            }
+
+            field.options = getPicklistOptions(field.name);
+
+            fields.add(field);
+        }
+        return fields;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the Data Import DFRs for a set of target objects
+    * @return list of DescribeFieldResults
+    */
+    public static List<DescribeFieldResult> getRelevantFields(Set<String> allowedObjects) {
+
+        List<DescribeFieldResult> dfrs = new List<DescribeFieldResult>();
+
         Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
-        Set<String> bannedFields = new Set<String>{'Account1Imported__c',
+        Set<String> bannedFields = new Set<String>{
+            'Account1Imported__c',
             'Account1ImportStatus__c',
             'Account2Imported__c',
             'Account2ImportStatus__c',
@@ -144,19 +198,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'Account2ImportStatus__c'
         };
 
-        Set<String> allowedObjects = new Set<String>{
-            'Opportunity',
-            'Payment'
-        };
-
-        // these fields are required only if at least 1 field from its object group is selected
-        Set<String> systemRequiredFields = new Set<String>{
-            'Account1_Name__c',
-            'Account2_Name__c',
-            'Donation_Amount__c',
-            'Contact1_LastName__c',
-            'Contact2_LastName__c'
-        };
+        List<String> sortedFieldNames = new List<String>(fieldMap.keySet());
+        sortedFieldNames.sort();
 
         // these data types have been whitelisted since they already work with BGE
         Set<String> allowedDataTypes = new Set<String>{
@@ -169,44 +212,23 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         };
 
         // looping through the fields on DataImport__c
-        for (Schema.DescribeFieldResult fieldResult : fieldMap.values()) {
-            String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldResult.getName());
+        for (String fieldName : sortedFieldNames) {
+            DescribeFieldResult dfr = fieldMap.get(fieldName);
+            String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.getName());
 
-            String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(fieldResult.getName());
+            String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(dfr.getName());
             Boolean fieldAllowed = allowedObjects.contains(dataImportFieldMappedObject)
-                && allowedDataTypes.contains(fieldResult.getType().name())
+                && allowedDataTypes.contains(dfr.getType().name())
                 && !bannedFields.contains(dataImportFieldApiName)
-                && fieldResult.getInlineHelpText() != null;
+                && dfr.getInlineHelpText() != null
+                && BGE_BatchGiftEntry_UTIL.canUpdateField(dfr);
 
             if (fieldAllowed) {
-
-                BGEField field = new BGEField();
-
-                // TODO: make these localized with schema describes
-                field.sObjectName = dataImportFieldMappedObject;
-
-                // TODO: pull these labels from target fields' schema based on help text mapping
-                Boolean fieldHasSpacesAndObjName = fieldResult.getLabel().contains(' ') && fieldResult.getLabel().split(' ',2)[0] == field.sObjectName;
-                field.label = (fieldHasSpacesAndObjName) ? fieldResult.getLabel().split(' ',2)[1] : fieldResult.getLabel();
-                field.name = fieldResult.getName();
-
-                String unnamespacedField = UTIL_Namespace.StrTokenRemoveNSPrefix(field.name);
-                if (systemRequiredFields.contains(unnamespacedField)) {
-                    field.systemRequired = true;
-                }
-
-                String rawFieldType = fieldResult.getType().name().toLowerCase();
-                field.type = getLightningFieldType(rawFieldType);
-                if (rawFieldType == 'currency') {
-                    field.formatter = 'currency';
-                }
-
-                field.options = getPicklistOptions(field.name);
-
-                fields.add(field);
+                dfrs.add(dfr);
             }
         }
-        return fields;
+
+        return dfrs;
     }
 
     /*******************************************************************************************************
@@ -408,22 +430,20 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     private static List<Map<String, String>> getDonationMatchingOptions() {
         List<Map<String, String>> donationMatchingOptions = new List<Map<String, String>>();
 
-        Set<String> setFields = new Set<String>();
-        setFields.addAll(BDI_Donations.mapDIFieldToOppField.keySet());
-        setFields.addAll(BDI_Donations.mapDIFieldToPmtField.keySet());
-        List<String> donationFields = new List<String>(setFields);
-        donationFields.sort();
+        Set<String> donationObjects = new Set<String>{
+            'Opportunity',
+            'Payment'
+        };
+        List<DescribeFieldResult> dfrs = getRelevantFields(donationObjects);
 
-        for (String donationField: donationFields) {
-            String donationFieldLabel = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), donationField);
+        for (DescribeFieldResult donationField: dfrs) {
             Map<String, String> option = new Map<String, String>();
-            option.put('value', donationField);
-            option.put('label', donationFieldLabel);
+            option.put('value', donationField.Name);
+            option.put('label', donationField.Label);
             donationMatchingOptions.add(option);
         }
         return donationMatchingOptions;
     }
-
 
     /*******************************************************************************************************
     * @description Retrieves the object and field labels for the component.
