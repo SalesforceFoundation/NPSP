@@ -48,7 +48,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
     /*******************************************************************************************************
     * @description Checks for field permissions to create a new Batch/Template
-    * @param sObjectName string of the sObjectName retrieved with force:hasSObjectName
     * @return void; throws an AuraHandledException if any fields fail FLS check
     */
     @AuraEnabled
@@ -146,7 +145,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             field.sObjectLabel = translatedObjectLabel;
 
             // TODO: pull these labels from target fields' schema based on help text mapping
-            Boolean fieldHasSpacesAndObjName = dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == field.sObjectName;
+            Boolean fieldHasSpacesAndObjName = dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == field.sObjectLabel;
             field.label = (fieldHasSpacesAndObjName) ? dfr.getLabel().split(' ',2)[1] : dfr.getLabel();
             field.name = dfr.getName();
 

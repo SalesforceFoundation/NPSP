@@ -82,6 +82,7 @@
         <members>BDI_PostProcess_TEST</members>
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
+        <members>BGE_BatchGiftEntry_UTIL</members>
         <members>BGE_ConfigurationWizard_CTRL</members>
         <members>BGE_ConfigurationWizard_CTRL_TEST</members>
         <members>BGE_DataImportBatchEntry_CTRL</members>
@@ -442,7 +443,6 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>BGE_BatchGiftEntry_UTIL</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -1391,7 +1391,6 @@
         <members>bdiStatusProcessed</members>
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
-        <members>bgeBatchInfoWizard</members>
         <members>bgeBatchAvailableFields</members>
         <members>bgeBatchBatchProcessSizeHelp</members>
         <members>bgeBatchDonationDateRangeHelp</members>
@@ -1401,6 +1400,7 @@
         <members>bgeBatchDonorLookupInfo</members>
         <members>bgeBatchErrorDefaultValue</members>
         <members>bgeBatchErrorRequiredFields</members>
+        <members>bgeBatchInfoWizard</members>
         <members>bgeBatchOverview</members>
         <members>bgeBatchOverviewWizard</members>
         <members>bgeBatchPostProcessClassHelp</members>

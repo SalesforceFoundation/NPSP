@@ -487,7 +487,7 @@
                     currentField.id = currentField.sObjectLabel + '.' + currentField.name;
                     //set Active fields with saved sort order
                     if (activeFieldMap.has(currentField.id)) {
-                        currentField.isActive = activeFieldMap.get(currentField.id).isActive;
+                        currentField.isActive = true;
                         currentField.defaultValue = activeFieldMap.get(currentField.id).defaultValue;
                         currentField.hide = activeFieldMap.get(currentField.id).hide;
                         currentField.required = activeFieldMap.get(currentField.id).required;
@@ -495,6 +495,8 @@
                         currentField.type = activeFieldMap.get(currentField.id).type;
                         currentField.formatter = activeFieldMap.get(currentField.id).formatter;
                         currentField.options = activeFieldMap.get(currentField.id).options;
+                    } else {
+                        currentField.isActive = false;
                     }
                     currentField.availableSortOrder = availableSortOrder;
                     availableSortOrder++;
