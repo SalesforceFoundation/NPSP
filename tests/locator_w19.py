@@ -123,9 +123,25 @@ npsp_lex_locators={
     'data_imports':{
         'status':'//div[contains(@class,"slds-tile__title")][./p[text()="BDI_DataImport_BATCH"]]/div[contains(@class,"slds-col")]/span[text()="{}"]',
         },
+    'bge':{
+        'checkbox':'//label/span[text()="{}"]//parent::label/span[@class="slds-checkbox_faux"]',
+        'list':'//div[contains(@class,"slds-p-around_x-small")][./label[text()="{}"]]/div//select',
+        'field-duellist':'//label[text()="{}"]/following-sibling::lightning-dual-listbox//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
+        'duellist':'//h3[./span[text()="{}"]]/following-sibling::div//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
+        'field-select-button':'//label[text()="{}"]/following-sibling::lightning-dual-listbox//div[contains(@class,"slds-dueling-list__column")]//button[@title="{}"]',
+        'select-button':'//h3[./span[text()="{}"]]/following-sibling::div//div[contains(@class,"slds-dueling-list__column")]//button[@title="{}"]',
+        'title':'//p[text()="{}"]/following-sibling::h1',
+        'field-input':'//label[text()="{}"]/following-sibling::div/input',
+        'field-text':'//label[text()="{}"]/following-sibling::div/textarea',
+        'button':'//button[text()="{}"]',
+        'dd':"//div[contains(@class,'slds-grid')]/div[contains(@class,'slds-text-align_left')]/span[text()='{}']/../following-sibling::div//select",
+        'month':"//div[@class='slds-align-middle']//button[@title='{}']",
+        'date':"//div[contains(@class,'slds-datepicker')]/table[@class='slds-datepicker__month']//span[text()='{}']",
+        },    
     'object_manager':{
-        'button':'//input[@title="{}"]'
+        'button':'//input[@title="{}"]',
         }
+    
 }
     
 
