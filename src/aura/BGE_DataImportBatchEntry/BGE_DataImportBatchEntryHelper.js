@@ -175,14 +175,14 @@
             typeAttributes: {
                 rowActions: [
                     {
-                        label: 'View Record',
+                        label: $A.get('$Label.c.bgeActionView'),
                         name: 'view',
-                        title: 'View'
+                        title: $A.get('$Label.c.bgeActionView')
                     },
                     {
-                        label: 'Delete',
+                        label: $A.get('$Label.c.bgeActionDelete'),
                         name: 'delete',
-                        title: 'Delete'
+                        title: $A.get('$Label.c.bgeActionDelete')
                     }
                 ]
             }
