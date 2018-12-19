@@ -353,24 +353,11 @@
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
-    <fields>
-        <fullName>Status__c</fullName>
-        <defaultValue>&apos;Approved&apos;</defaultValue>
-        <externalId>false</externalId>
-        <label>Status</label>
-        <length>255</length>
-        <required>false</required>
-        <trackHistory>false</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
     <label>NPSP Data Import Batch</label>
     <listViews>
         <fullName>All</fullName>
         <columns>OBJECT_ID</columns>
         <columns>NAME</columns>
-        <columns>Status__c</columns>
         <columns>LAST_UPDATE</columns>
         <columns>Batch_Description__c</columns>
         <filterScope>Everything</filterScope>
@@ -380,7 +367,6 @@
         <fullName>Gift_Batches</fullName>
         <columns>NAME</columns>
         <columns>Batch_Description__c</columns>
-        <columns>Status__c</columns>
         <columns>CREATEDBY_USER</columns>
         <columns>CREATED_DATE</columns>
         <filterScope>Everything</filterScope>
