@@ -500,12 +500,15 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Checks if an org uses namespacing
-    * @return Boolean of if namespace is used
+    * @description Gets list view to display on the BGE Batch Gift Entry Tab Controller
+    * @return Map<String, String> listView with namespaced attributes to use to create correctly namespaced list view
     */
     @AuraEnabled
-    public static Boolean isOrgNamespaced() {
-        return UTIL_Namespace.getNamespace() != '';
+    public static Map<String, String> getNamespacedListView() {
+        Map<String, String> listView = new Map<String, String>();
+        listView.put('objectApiName', UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'));
+        listView.put('listName', UTIL_Namespace.StrTokenNSPrefix('Gift_Batches'));
+        return listView;
     }
 
     /*******************************************************************************************************
