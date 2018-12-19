@@ -2614,7 +2614,6 @@
         <members>Allocation__c.Manage_Allocations</members>
         <members>Contact.Merge_Contacts</members>
         <members>Contact.Recalculate_Rollups</members>
-        <members>DataImportBatch__c.Edit_Processing_Settings</members>
         <members>DataImportBatch__c.Process_Batch</members>
         <members>DataImport__c.Delete_All_Data_Import_Records</members>
         <members>DataImport__c.Delete_Imported_Data_Import_Records</members>
