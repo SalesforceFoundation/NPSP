@@ -1396,7 +1396,6 @@
         <members>bgeBatchDonationMatchingClassHelp</members>
         <members>bgeBatchDonationMatchingRuleHelp</members>
         <members>bgeBatchDonorLookupInfo</members>
-        <members>bgeBatchErrorDefaultValue</members>
         <members>bgeBatchErrorRequiredFields</members>
         <members>bgeBatchOverview</members>
         <members>bgeBatchOverviewWizard</members>
