@@ -7,8 +7,11 @@
 
         if (openDonationsLink && component.get('v.selectedDonation') == null) {
             openDonationsLink.focus();
-        } else if (openDonationsLink) {
-            component.find('donorType').focus();
+        } else {
+            let donorType = component.find('donorType');
+            if (donorType) {
+                donorType.focus();
+            }
         }
     },
 
