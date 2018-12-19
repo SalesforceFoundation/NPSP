@@ -144,14 +144,14 @@ public class CMT_UnitTestData_TEST {
 
             // Handle the basic field conversion
             if (this.fieldType == CMTFieldType.FldText || this.fieldType == CMTFieldType.FldEntity || this.fieldType == CMTFieldType.FldField) {
-                fldTemplate = '"{0}":"{1}"';
                 theValue = (String)this.fldValue;
+                fldTemplate = (theValue != null ? '"{0}":"{1}"' : '"{0}":null');
             } else if (this.fieldType == CMTFieldType.FldBoolean) {
-                fldTemplate = '"{0}":{1}';
                 theValue = ((Boolean)fldValue == true ? 'true' : 'false');
-            } else {
                 fldTemplate = '"{0}":{1}';
+            } else {
                 theValue = ((Double)fldValue).format();
+                fldTemplate = '"{0}":{1}';
             }
             String fieldJSON = String.format(fldTemplate, new List<String>{
                 fixedFieldName, theValue
