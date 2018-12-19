@@ -39,10 +39,7 @@
 public class CRLP_DefaultConfigBuilder_SVC {
 
     /** @description Use this Map of Opp RecordTypes by Id to convert the legacy settings into a DeveloperName for the Filter Rule */
-    private static final Map<Id, RecordType> oppRecordTypesById = new Map<Id, RecordType>(
-        [SELECT Id, RecordType.DeveloperName
-            FROM RecordType
-            WHERE SobjectType = 'Opportunity']);
+    private static final Map<Id, RecordTypeInfo> oppRecordTypesById = Opportunity.SObjectType.getDescribe().getRecordTypeInfosById();
 
     /*************************************************************************************************************
      * @description Call each of the methods in this class to build the default Filter Groups and each of the four
@@ -98,9 +95,12 @@ public class CRLP_DefaultConfigBuilder_SVC {
             contPmt = contPmt + '-Cont';
         }
 
-        Boolean acctRTExclusionsExist = (CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c != null);
-        Boolean conRTExclusionsExist = (CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c != null);
+        String acctRTExclusionsDeveloperNames = buildAccountExcludedRecordTypesDeveloperNames();
+        Boolean acctRTExclusionsExist = !String.isEmpty(acctRTExclusionsDeveloperNames);
         Boolean acctOppTypeExclusionsExist = (CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Types__c != null);
+
+        String conRTExclusionsDeveloperNames = buildContactExcludedRecordTypesDeveloperNames();
+        Boolean conRTExclusionsExist = !String.isEmpty(conRTExclusionsDeveloperNames);
         Boolean conOppTypeExclusionsExist = (CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Types__c != null);
 
         // ==============================================================================================================
@@ -137,7 +137,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleRecordTypeHC.objectName = 'Opportunity';
             ruleRecordTypeHC.fieldName = 'RecordTypeId';
             ruleRecordTypeHC.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-            ruleRecordTypeHC.value = convertRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c);
+            ruleRecordTypeHC.value = acctRTExclusionsDeveloperNames;
             ruleRecordTypeHC.isDeleted = false;
             groupClosedWonDonationsHC.rules.add(ruleRecordTypeHC);
         }
@@ -189,7 +189,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 ruleRecordTypeConHC.objectName = 'Opportunity';
                 ruleRecordTypeConHC.fieldName = 'RecordTypeId';
                 ruleRecordTypeConHC.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-                ruleRecordTypeConHC.value = convertRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c);
+                ruleRecordTypeConHC.value = conRTExclusionsDeveloperNames;
                 ruleRecordTypeConHC.isDeleted = false;
                 groupClosedWonDonationsContactsHC.rules.add(ruleRecordTypeConHC);
             }
@@ -241,7 +241,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleRecordTypeSC.objectName = 'Opportunity';
             ruleRecordTypeSC.fieldName = 'RecordTypeId';
             ruleRecordTypeSC.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-            ruleRecordTypeSC.value = convertRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c);
+            ruleRecordTypeSC.value = acctRTExclusionsDeveloperNames;
             ruleRecordTypeSC.isDeleted = false;
             groupClosedWonDonationsSC.rules.add(ruleRecordTypeSC);
         }
@@ -304,7 +304,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 ruleRecordTypeConSC.objectName = 'Opportunity';
                 ruleRecordTypeConSC.fieldName = 'RecordTypeId';
                 ruleRecordTypeConSC.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-                ruleRecordTypeConSC.value = convertRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c);
+                ruleRecordTypeConSC.value = conRTExclusionsDeveloperNames;
                 ruleRecordTypeConSC.isDeleted = false;
                 groupClosedWonDonationsContactsSC.rules.add(ruleRecordTypeConSC);
             }
@@ -335,7 +335,11 @@ public class CRLP_DefaultConfigBuilder_SVC {
         // ==============================================================================================================
         // Default "Memberships: Close/Won Stage" filter group
         // ==============================================================================================================
-        CRLP_RollupCMT.FilterGroup groupMemberships = new CRLP_RollupCMT.FilterGroup('Memberships: Won');
+        String membershipRecordTypeDeveloperNames = buildMembershipRecordTypeDeveloperNames();
+
+        CRLP_RollupCMT.FilterGroup groupMemberships;
+
+        groupMemberships = new CRLP_RollupCMT.FilterGroup('Memberships: Won');
         groupMemberships.description = 'Won Membership Opportunities used for all Membership Rollups. Record Types as defined in legacy NPSP Membership Settings.';
         groupMemberships.recordName = CRLP_DefaultConfigBuilder.FilterGroup_Membership;
         groupMemberships.isDeleted = false;
@@ -358,22 +362,22 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleAmountNotNullMembership.isDeleted = false;
         groupMemberships.rules.add(ruleAmountNotNullMembership);
 
-        if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Membership_Record_Types__c != null) {
+        if (!String.isEmpty(membershipRecordTypeDeveloperNames)) {
             CRLP_RollupCMT.FilterRule ruleRecordType = new CRLP_RollupCMT.FilterRule(groupMemberships.recordName, 'Membership: for Record Types');
             ruleRecordType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleRecordType.recordName;
             ruleRecordType.objectName = 'Opportunity';
             ruleRecordType.fieldName = 'RecordTypeId';
             ruleRecordType.operationName = CMT_FilterRule.FilterOperation.IN_LIST.name();
-            ruleRecordType.value = convertRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Membership_Record_Types__c);
+            ruleRecordType.value = membershipRecordTypeDeveloperNames;
             ruleRecordType.isDeleted = false;
-            groupMemberships.rules.add(ruleRecordType);
         }
 
         // ==============================================================================================================
         // Default "Allocations" filter group
         // ==============================================================================================================
 
-        Boolean alloRTExclusionsExist = (CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_RecTypes__c != null);
+        String alloRTExclusionsDeveloperNames = buildAllocationsExcludedRecordTypesDeveloperNames();
+        Boolean alloRTExclusionsExist = !String.isEmpty(alloRTExclusionsDeveloperNames);
 
         CRLP_RollupCMT.FilterGroup groupAllocations = new CRLP_RollupCMT.FilterGroup('Allocations: Won' + (alloRTExclusionsExist ? ' excluding Rec Types' : ''));
         groupAllocations.description = 'Closed/Won Opportunities used for GAU Allocation to General Accounting Unit rollups.' + (alloRTExclusionsExist ? ' Excludes Record Types as defined in legacy NPSP Rollup Settings.' : '');
@@ -395,7 +399,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleRecordType.objectName = 'Opportunity';
             ruleRecordType.fieldName = 'RecordTypeId';
             ruleRecordType.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-            ruleRecordType.value = convertRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_RecTypes__c);
+            ruleRecordType.value = alloRTExclusionsDeveloperNames;
             ruleRecordType.isDeleted = false;
             groupAllocations.rules.add(ruleRecordType);
         }
@@ -469,7 +473,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleRecordTypePaid.objectName = 'Opportunity';
             ruleRecordTypePaid.fieldName = 'RecordTypeId';
             ruleRecordTypePaid.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-            ruleRecordTypePaid.value = convertRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c);
+            ruleRecordTypePaid.value = acctRTExclusionsDeveloperNames;
             ruleRecordTypePaid.isDeleted = false;
             groupPaymentsPaid.rules.add(ruleRecordTypePaid);
         }
@@ -512,7 +516,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 ruleRecordTypePaidCon.objectName = 'Opportunity';
                 ruleRecordTypePaidCon.fieldName = 'RecordTypeId';
                 ruleRecordTypePaidCon.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-                ruleRecordTypePaidCon.value = convertRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c);
+                ruleRecordTypePaidCon.value = conRTExclusionsDeveloperNames;
                 ruleRecordTypePaidCon.isDeleted = false;
                 groupPaymentsPaidContacts.rules.add(ruleRecordTypePaidCon);
             }
@@ -553,7 +557,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleRecordTypeWrittenOff.objectName = 'Opportunity';
             ruleRecordTypeWrittenOff.fieldName = 'RecordTypeId';
             ruleRecordTypeWrittenOff.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-            ruleRecordTypeWrittenOff.value = convertRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c);
+            ruleRecordTypeWrittenOff.value = acctRTExclusionsDeveloperNames;
             ruleRecordTypeWrittenOff.isDeleted = false;
             groupPaymentsWrittenOff.rules.add(ruleRecordTypeWrittenOff);
         }
@@ -596,7 +600,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 ruleRecordTypeWrittenOffCon.objectName = 'Opportunity';
                 ruleRecordTypeWrittenOffCon.fieldName = 'RecordTypeId';
                 ruleRecordTypeWrittenOffCon.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-                ruleRecordTypeWrittenOffCon.value = convertRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c);
+                ruleRecordTypeWrittenOffCon.value = conRTExclusionsDeveloperNames;
                 ruleRecordTypeWrittenOffCon.isDeleted = false;
                 groupPaymentsWrittenOffContacts.rules.add(ruleRecordTypeWrittenOffCon);
             }
@@ -802,16 +806,19 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 rollup.intValue = Integer.valueOf(rollupDetails[6]);
             }
 
+            String membershipRecordTypeDeveloperNames = buildMembershipRecordTypeDeveloperNames();
             if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Enable_Soft_Credit_Rollups__c == false &&
-                    rollupDetails[2] == CRLP_DefaultConfigBuilder.pscAmountFld) {
+                rollupDetails[2] == CRLP_DefaultConfigBuilder.pscAmountFld) {
                 // If the legacy 'Enable Soft Credit Rollups' field is false,
                 // set all the soft credit rollup definitions to inactive.
                 rollup.isActive = false;
-            } else if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Membership_Record_Types__c == null &&
-                    rollupDetails[1] == CRLP_DefaultConfigBuilder.FilterGroup_Membership) {
-                // If the legacy Membership Record Type setting is null,
+
+            } else if (rollupDetails[1] == CRLP_DefaultConfigBuilder.FilterGroup_Membership
+                && String.isEmpty(membershipRecordTypeDeveloperNames)) {
+                // If the legacy Membership Record Type setting does not match existing record types,
                 // set all the membership rollup definitions to inactive.
                 rollup.isActive = false;
+
             } else {
                 rollup.isActive = true;
             }
@@ -903,7 +910,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
         if (rtIds != null) {
             for (String rtId : rtIds.split(';')) {
                 if (oppRecordTypesById.containsKey(rtId)) {
-                    rtDevNames.add(oppRecordTypesById.get(rtId).DeveloperName);
+                    rtDevNames.add(oppRecordTypesById.get(rtId).getDeveloperName());
                 }
             }
         }
@@ -927,5 +934,40 @@ public class CRLP_DefaultConfigBuilder_SVC {
         } else {
             return UTIL_Namespace.StrAllNSPrefix(objFieldData);
         }
+    }
+
+    /**
+     * @description Builds semi-colon delimited string of membership record type names from household custom settings
+     */
+    private static String buildMembershipRecordTypeDeveloperNames() {
+        return buildRecordTypeNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Membership_Record_Types__c);
+    }
+
+    /**
+     * @description Builds semi-colon delimited string of record type names excluded from accounts from household custom settings
+     */
+    private static String buildAccountExcludedRecordTypesDeveloperNames() {
+        return buildRecordTypeNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c);
+    }
+
+    /**
+     * @description Builds semi-colon delimited string of record type names excluded from contacts from household custom settings
+     */
+    private static String buildContactExcludedRecordTypesDeveloperNames() {
+        return buildRecordTypeNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c);
+    }
+
+    /**
+     * @description Builds semi-colon delimited string of record type names excluded from allocations
+     */
+    private static String buildAllocationsExcludedRecordTypesDeveloperNames() {
+        return buildRecordTypeNames(CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_RecTypes__c);
+    }
+
+    /**
+     * @description Builds semi-colon delimited string of record type developer names from semi-colon delimited Ids
+     */
+    private static String buildRecordTypeNames(String recordTypeIds){
+        return String.isEmpty(recordTypeIds) ? null : convertRecordTypeIdsToDevNames(recordTypeIds);
     }
 }
