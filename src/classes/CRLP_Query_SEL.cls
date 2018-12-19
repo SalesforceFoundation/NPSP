@@ -347,14 +347,16 @@
                 String fieldName = rule.Field__r.QualifiedApiName;
                 if (countOfRuleUsage.containsKey(fieldName)) {
                     countOfRuleUsage.put(fieldName, countOfRuleUsage.get(fieldName)+1);
+                    String constantVal = (rule.Constant__c == null ? '' : rule.Constant__c);
+
                     // Next compare the Constant value for each of the rules. If the value is the same across
                     // each of the Rules for this field, the value will is stored in the targetFieldAndConstant map.
                     // If the value doesn't match though, the countOfRuleUsage map value is decremented to indicate
                     // that the Rule for the field isn't used consistently across all Filter Groups
                     if (!targetFieldAndConstant.containsKey(fieldName)) {
-                        targetFieldAndConstant.put(fieldName, rule.Constant__c);
+                        targetFieldAndConstant.put(fieldName, constantVal);
                         targetFieldAndOperator.put(fieldName, rule.Operator__c);
-                    } else if (targetFieldAndConstant.get(fieldName) != rule.Constant__c ||
+                    } else if (targetFieldAndConstant.get(fieldName) != constantVal ||
                             targetFieldAndOperator.get(fieldName) != rule.Operator__c) {
                         countOfRuleUsage.put(fieldName, countOfRuleUsage.get(fieldName)-1);
                     }
