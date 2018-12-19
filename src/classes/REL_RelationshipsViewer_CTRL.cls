@@ -37,6 +37,27 @@ global with sharing class REL_RelationshipsViewer_CTRL{
 
     public Boolean showPermissionError {get; set;}
 
+    private static List<String> contactFields = new List<String> {
+        'LastName',
+        'FirstName',
+        'Id',
+        'Title',
+        'Account.Name'
+    };
+
+    private static List<String> relationshipFields = new List<String> {
+        'Id',
+        'npe4__Contact__c',
+        'toLabel(npe4__Type__c)',
+        'npe4__RelatedContact__r.FirstName',
+        'npe4__RelatedContact__r.LastName',
+        'npe4__Status__c',
+        'npe4__RelatedContact__r.Id',
+        'npe4__RelatedContact__r.Account.Name',
+        'npe4__RelatedContact__r.Title',
+        'npe4__ReciprocalRelationship__r.Id'
+    };
+
     /*******************************************************************************************************
     * @description constructor.
     * @param isDryRun ApexPages Standard controller.
@@ -46,24 +67,41 @@ global with sharing class REL_RelationshipsViewer_CTRL{
     }
 
     /*******************************************************************************************************
-    * @description Sets the flag and error message if the current user does not have permission on he Contacts object.
-    * @return Pagereference to the current page.
+    * @description Sets the flag and error message if the current user does not have permission on the
+    * objects (Contact, Relationship) or fields used by the viewer.
+    * @return PageReference to the current page.
     */
-    private Pagereference showNoAccess() {
-        Boolean contactAccessible = Contact.sObjectType.getDescribe().isAccessible();
-        Boolean relationshipAccessible = npe4__Relationship__c.sObjectType.getDescribe().isAccessible();
+    private PageReference showNoAccess() {
         List<String> blockingSObjects = new List<String>();
 
-        if(!contactAccessible) { 
+        if(!Contact.sObjectType.getDescribe().isAccessible()) { 
             blockingSObjects.add(UTIL_Describe.getObjectLabel('Contact'));
         }
-        if(!relationshipAccessible) {
+
+        if(!npe4__Relationship__c.sObjectType.getDescribe().isAccessible()) {
             blockingSObjects.add(UTIL_Describe.getObjectLabel('npe4__Relationship__c'));
         }
-        
+
+        String flsErrorMessage = null;
         if(!blockingSObjects.isEmpty()) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL,String.format(Label.flsError, 
-                new List<String> {String.join(blockingSObjects, ', ')})));
+            flsErrorMessage = String.format(Label.flsError, new List<String> {String.join(blockingSObjects, ', ')});
+        } else {
+            Map<String, List<String>> fieldNamesBySObjectNameForSOQL = new Map<String, List<String>> {
+                'Contact' => contactFields,
+                'npe4__Relationship__c' => relationshipFields
+            };
+            // check access on all the soql fields
+            for(String objName: fieldNamesBySObjectNameForSOQL.keySet()) {
+                try {
+                    UTIL_Describe.checkFieldFLS(objName, fieldNamesBySObjectNameForSOQL.get(objName), false);
+                } catch (Exception e) {
+                    flsErrorMessage = e.getMessage();
+                }
+            }
+        }
+
+        if(flsErrorMessage != null) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL,flsErrorMessage));
             showPermissionError = true;
         }
 
@@ -82,6 +120,8 @@ global with sharing class REL_RelationshipsViewer_CTRL{
         List<Node> nodes = new List<Node>();
         List<npe4__Relationship__c> relationships = new List<npe4__Relationship__c>();
 
+        contactId = String.escapeSingleQuotes(contactId);
+
         List<Id> renderedRelationships;
         if (relIds != null) {
             renderedRelationships = (List<Id>)relIds;
@@ -93,42 +133,42 @@ global with sharing class REL_RelationshipsViewer_CTRL{
             //base node
             Node basenode = new Node();
 
-            Contact c = [SELECT
-                            LastName,
-                            FirstName,
-                            Id,
-                            Title,
-                            Account.Name
-                        FROM Contact
-                        WHERE Id = :contactId];
+            String contactQuery = 'SELECT '+String.join(contactFields, ', ')+
+                ' FROM Contact WHERE Id = \''+contactId+'\' LIMIT 1';
 
-            basenode.lastName = c.LastName;
-            basenode.firstName = c.FirstName;
-            basenode.title = c.Title;
-            basenode.accountName = c.Account.Name;
-            basenode.id = c.Id;
+            System.debug(' **** Contact Query: '+contactQuery);
+
+            List<Contact> contacts = Database.query(contactQuery);
+            Contact primaryContact = null;
+            if(!contacts.isEmpty()) {
+                primaryContact = (Contact)Database.query(contactQuery).get(0);
+            }
+
+            basenode.lastName = primaryContact.LastName;
+            basenode.firstName = primaryContact.FirstName;
+            basenode.title = primaryContact.Title;
+            basenode.accountName = primaryContact.Account.Name;
+            basenode.id = primaryContact.Id;
             nodes.add(basenode);
         } else {
             relationships.clear();
             nodes.clear();
         }
 
-        relationships = [SELECT
-                                Id,
-                                npe4__RelatedContact__r.LastName,
-                                toLabel(npe4__Type__c),
-                                npe4__Status__c,
-                                npe4__RelatedContact__r.FirstName,
-                                npe4__RelatedContact__r.Id,
-                                npe4__RelatedContact__r.Account.Name,
-                                npe4__RelatedContact__r.Title,
-                                npe4__ReciprocalRelationship__r.Id
-                        FROM    npe4__Relationship__c
-                        WHERE   npe4__Contact__c = :contactId AND
-                                Id NOT IN :renderedRelationships AND
-                                npe4__ReciprocalRelationship__r.Id NOT IN :renderedRelationships];
+        String relationshipQuery = 'SELECT '+String.join(relationshipFields, ', ')+
+            ' FROM npe4__Relationship__c WHERE npe4__Contact__c = \''+contactId+'\'';
+        
+        if(!renderedRelationships.isEmpty()) {
+            relationshipQuery += ' AND Id NOT IN :renderedRelationships'+
+            ' AND npe4__ReciprocalRelationship__r.Id NOT IN :renderedRelationships'; 
+        }
 
-        for (npe4__Relationship__c currentRelationship : relationships) {
+        System.debug(' **** Relationship Query: '+relationshipQuery);
+
+        relationships = Database.query(relationshipQuery);
+
+        for(npe4__Relationship__c currentRelationship : relationships) {
+            System.debug(' **** RELATIONSHIP ID: '+currentRelationship.Id);
             Node n = new Node();
             n.lastName = currentRelationship.npe4__RelatedContact__r.LastName;
             n.id = currentRelationship.npe4__RelatedContact__r.Id;

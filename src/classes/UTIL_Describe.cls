@@ -464,14 +464,14 @@ public class UTIL_Describe {
         return null;
     }
 
-    /** @description For a given object and field, verifies that the field is accessible and updateable,
-    * throwing an exception if it isn't.*/
-    public static void checkFieldFLS(String objectName, String fieldName) {
+    /** @description For a given object and field, verifies that the field is accessible and (optionally) 
+    *  updateable (as determined by 'checkUpdateable') and throwing an exception if it isn't.*/
+    public static void checkFieldFLS(String objectName, String fieldName, Boolean checkUpdateable) {
         DescribeFieldResult dfr = getFieldDescribe(
             UTIL_Namespace.StrTokenNSPrefix(objectName), 
             fieldName.endsWith('__c')?UTIL_Namespace.StrTokenNSPrefix(fieldName):fieldName
         );
-        if (dfr == null || !dfr.isAccessible() || !dfr.isUpdateable()) {
+        if (dfr == null || !dfr.isAccessible() || (checkUpdateable && !dfr.isUpdateable())) {
             throw (new permsException(
                 string.format(
                     label.flsError, 
@@ -479,6 +479,59 @@ public class UTIL_Describe {
                                  UTIL_Namespace.StrTokenNSPrefix(fieldName)}
                 )
             ));
+        }
+    }
+
+    /** @description For a given object and field, verifies that the field is accessible and updateable,
+    * throwing an exception if it isn't.*/
+    public static void checkFieldFLS(String objectName, String fieldName) {
+        checkFieldFLS(objectName, fieldName, true);
+    }    
+
+    /** @description For a given object and list of fields, verifies that the fields are accessible and updateable,
+    * throwing an exception they aren't. Supports field references. */
+    public static void checkFieldFLS(String objectName, List<String> fieldNames, Boolean checkUpdateable) {
+        Set<String> flsErrorMessages = new Set<String>();
+        for(String fieldName: fieldNames) {
+            String fieldNameFLS = fieldName.remove('toLabel(').remove(')');
+            // if the field is a reference such as "Account.Name", include that sobject and field in our FLS check
+            if(fieldNameFLS.contains('.')) {
+                String[] tokens = fieldNameFLS.split('\\.');
+
+                String referenceObjectName = objectName;
+                while(tokens.size() >= 2) {
+                    fieldNameFLS = tokens.remove(0);
+                    if(fieldNameFLS.contains('__r')) {
+                        fieldNameFLS = fieldNameFLS.replace('__r','__c'); 
+                    } else {
+                        fieldNameFLS += 'Id';
+                    }
+
+                    try {
+                        UTIL_Describe.checkFieldFLS(referenceObjectName, fieldNameFLS, false);
+                    } catch(permsException pe) {
+                        flsErrorMessages.add(UTIL_Namespace.StrTokenNSPrefix(referenceObjectName) + '.' + 
+                                 UTIL_Namespace.StrTokenNSPrefix(fieldNameFLS));                        
+                    } 
+                    String referenceFieldName = fieldNameFLS;
+
+                    referenceObjectName = UTIL_Describe.getFieldDescribe(referenceObjectName,fieldNameFLS)
+                        .getReferenceTo()[0]
+                        .getDescribe()
+                        .getName();                
+                }
+            } else {
+                try {                     
+                    UTIL_Describe.checkFieldFLS(objectName, fieldNameFLS, false);
+                } catch(permsException pe) {
+                    flsErrorMessages.add(UTIL_Namespace.StrTokenNSPrefix(objectName) + '.' + 
+                                UTIL_Namespace.StrTokenNSPrefix(fieldNameFLS));                        
+                }
+            }
+        }
+        if(!flsErrorMessages.isEmpty()) {
+            throw new permsException(String.format(label.flsError, 
+                new String[] {String.join(new List<String>(flsErrorMessages),', ')}));            
         }
     }
 
