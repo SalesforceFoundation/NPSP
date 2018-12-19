@@ -442,6 +442,7 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
+        <members>BGE_BatchGiftEntry_UTIL</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -2467,7 +2468,6 @@
         <members>Contact.BDE_Entry_FS</members>
         <members>Contact.BDE_List_FS</members>
         <members>Contact.ContactMergeFoundFS</members>
-        <members>DataImport__c.Data_Import_Field_Set</members>
         <members>Engagement_Plan_Template__c.ManageEPTemplateFS</members>
         <members>Lead.BDE_Entry_FS</members>
         <members>Lead.BDE_List_FS</members>
