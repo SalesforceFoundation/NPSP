@@ -114,7 +114,6 @@ public class CMT_FilterRule {
      * @param filterRule
      */
     public CMT_FilterRule(Filter_Rule__mdt filterRule) {
-
         this.ruleId = filterRule.Id;
         this.objectName = filterRule.Object__r.QualifiedApiName;
         this.objectType = UTIL_Describe.getObjectDescribe(filterRule.Object__r.QualifiedApiName).getSObjectType();
@@ -123,21 +122,7 @@ public class CMT_FilterRule {
         this.operation = CMT_FilterRuleUI_SVC.getFilterOperationFromString(filterRule.Operator__c);
         this.fieldType = field.getDescribe().getSoapType();
 
-        if (fieldType == SoapType.DATETIME && constant != null &&
-                constant.length() == 10 && !CMT_FilterRule.validDateConstants.contains(constant)) {
-            // If the field is a datetime type, and the constant is a date format (YYYY-DD-MM) then use
-            // DATE comparison class rather than the date time comparison class
-
-            this.compare = (ICompare) converters.get(SoapType.DATE).newInstance();
-
-        } else if (filterRule.Field__r.QualifiedApiName == 'RecordTypeId' && !filterRule.Constant__c.contains(recordTypeIdPrefix)) {
-            // If the field is the RecordTypeId AND the value is not an Id, then treat it as Text
-            // using RecordType.DeveloperName values
-            this.compare = (ICompare) converters.get(SoapType.STRING).newInstance();
-
-        } else {
-            this.compare = (ICompare) converters.get(fieldType).newInstance();
-        }
+        this.compare = buildCompare(filterRule);
     }
 
     /**
@@ -174,9 +159,37 @@ public class CMT_FilterRule {
     }
 
     /**
+     * @description Builds implementation of ICompare interface class
+     */
+    private ICompare buildCompare(Filter_Rule__mdt filterRule) {
+        if (fieldType == SoapType.DATETIME &&
+            constant != null &&
+            constant.length() == 10 &&
+            !CMT_FilterRule.validDateConstants.contains(constant)
+        ) {
+            // If the field is a datetime type, and the constant is a date format (YYYY-DD-MM) then use
+            // DATE comparison class rather than the date time comparison class
+
+            return (ICompare) converters.get(SoapType.DATE).newInstance();
+
+        } else if (
+            filterRule.Field__r.QualifiedApiName == 'RecordTypeId' &&
+            constant != null &&
+            !constant.contains(recordTypeIdPrefix)
+        ) {
+            // If the field is the RecordTypeId AND the value is not an Id, then treat it as Text
+            // using RecordType.DeveloperName values
+            return (ICompare) converters.get(SoapType.STRING).newInstance();
+
+        } else {
+            return (ICompare) converters.get(fieldType).newInstance();
+        }
+    }
+
+    /**
      * @description ICompare interface class used to implement a generic comparison inner class
      */
-    private final ICompare compare;
+    @TestVisible private final ICompare compare;
     public interface ICompare {
         Boolean isIncluded(SObject record, CMT_FilterRule rule);
     }
@@ -362,7 +375,7 @@ public class CMT_FilterRule {
                 List<String> selectedValues = compareValue.split(';');
                 Boolean found = false;
                 for (String compVal : selectedValues) {
-                    if (fieldValue != null && fieldValue.equals(compVal.trim())) {
+                    if (!String.isEmpty(compVal) && fieldValue != null && fieldValue.equals(compVal.trim())) {
                         found = true;
                         break;
                     }
