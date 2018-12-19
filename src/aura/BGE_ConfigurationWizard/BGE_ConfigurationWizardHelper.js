@@ -156,29 +156,25 @@
                 var activeFieldsBySObject = model.getAvailableFields().getActivesBySObject();
                 var allFieldsBySObject = model.getAvailableFields().getAllFieldsBySObject();
 
-                Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
+                Object.keys(allFieldsBySObject).forEach(function(sObjectLabel) {
                     var currentFieldGroup = {
-                        sObjectName : sObjectName,
+                        sObjectLabel: sObjectLabel,
                         options: [],
                         requiredOptions: [],
                         values: []
                     };
 
-                    allFieldsBySObject[sObjectName].forEach(function(currentField) {
+                    allFieldsBySObject[sObjectLabel].forEach(function(currentField) {
                         currentFieldGroup.options.push(
                             {
                                 label: currentField.label,
                                 value: currentField.id
                             }
                         );
-                        //special case so Amount object is always visible
-                        if (currentField.id.includes('Donation_Amount__c')) {
-                            currentFieldGroup.requiredOptions.push(currentField.id);
-                        }
                     });
 
-                    if (activeFieldsBySObject[sObjectName]) {
-                        activeFieldsBySObject[sObjectName].forEach(function(currentField) {
+                    if (activeFieldsBySObject[sObjectLabel]) {
+                        activeFieldsBySObject[sObjectLabel].forEach(function(currentField) {
                             currentFieldGroup.values.push(currentField.id);
                         });
                     }
@@ -212,18 +208,18 @@
                 var availableFields = model.getAvailableFields();
                 batchFieldOptions.errors = availableFields.errors;
 
-                Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
+                Object.keys(activeFieldsBySObject).forEach(function (sObjectLabel) {
 
                     var currentFieldGroup = {
-                        sObjectName : sObjectName,
+                        sObjectLabel: sObjectLabel,
                         fields: []
                     };
 
-                    activeFieldsBySObject[sObjectName].forEach(function (currentField) {
+                    activeFieldsBySObject[sObjectLabel].forEach(function (currentField) {
 
                         var fieldInfo = {
                             name: currentField.name,
-                            sObjectName: currentField.sObjectName,
+                            sObjectLabel: currentField.sObjectLabel,
                             label: currentField.label,
                             defaultValue: currentField.defaultValue,
                             required: currentField.required,
@@ -231,11 +227,6 @@
                             type: currentField.type,
                             formatter: currentField.formatter,
                             options: currentField.options
-                        }
-
-                        if (currentField.sObjectName === 'Opportunity' &&
-                            (currentField.name == 'npsp__Donation_Amount__c' || currentField.name == 'Donation_Amount__c')) {
-                            fieldInfo.systemRequired = true;
                         }
 
                         currentFieldGroup.fields.push(fieldInfo);
@@ -323,7 +314,7 @@
                     activeFields.push({
                         label: currentField.label,
                         name: currentField.name,
-                        sObjectName: currentField.sObjectName,
+                        sObjectLabel: currentField.sObjectLabel,
                         defaultValue: currentField.defaultValue,
                         required: currentField.required,
                         hide: currentField.hide,
@@ -474,8 +465,8 @@
 
             /**
              * @description Load the fields and notify onFieldsUpdated listeners.
-             * @param allFields: list of allFields with sObjectName/Name.
-             * param activeFields: Map of activeFieldsBySObject with sObjectName, Name,
+             * @param allFields: list of allFields with sObjectLabel/Name.
+             * param activeFields: Map of activeFieldsBySObject with sObjectLabel, Name,
              * and Default Value, Hide and Required flags.
              * @return void.
              */
@@ -485,17 +476,17 @@
 
                 if (activeFields) {
                     activeFields.forEach(function(activeField) {
-                        var fieldId = activeField.sObjectName + '.' + activeField.name;
+                        var fieldId = activeField.sObjectLabel + '.' + activeField.name;
                         activeFieldMap.set(fieldId, activeField);
                     });
                 }
 
                 var availableSortOrder = 1;
                 allFields.forEach(function(currentField) {
-                    currentField.id = currentField.sObjectName + '.' + currentField.name;
+                    currentField.id = currentField.sObjectLabel + '.' + currentField.name;
                     //set Active fields with saved sort order
                     if (activeFieldMap.has(currentField.id)) {
-                        currentField.isActive = true;
+                        currentField.isActive = activeFieldMap.get(currentField.id).isActive;
                         currentField.defaultValue = activeFieldMap.get(currentField.id).defaultValue;
                         currentField.hide = activeFieldMap.get(currentField.id).hide;
                         currentField.required = activeFieldMap.get(currentField.id).required;
@@ -503,8 +494,6 @@
                         currentField.type = activeFieldMap.get(currentField.id).type;
                         currentField.formatter = activeFieldMap.get(currentField.id).formatter;
                         currentField.options = activeFieldMap.get(currentField.id).options;
-                    } else {
-                        currentField.isActive = false;
                     }
                     currentField.availableSortOrder = availableSortOrder;
                     availableSortOrder++;
@@ -618,7 +607,7 @@
                 var allFieldsBySObject = getAllFieldsBySObject();
                 Object.keys(allFieldsBySObject).forEach(function(currentSObject) {
                     batchFieldGroups.forEach(function(currentFieldGroup) {
-                        if (currentFieldGroup.sObjectName === currentSObject) {
+                        if (currentFieldGroup.sObjectLabel === currentSObject) {
                             allFieldsBySObject[currentSObject].forEach(function (currentField) {
                                 currentField.isActive = currentFieldGroup.values.includes(currentField.id);
                                 // the field's sort order is its index PLUS the total of all active fields from all previous object groups
@@ -699,10 +688,10 @@
             function _groupFieldsBySObject(fields) {
                 var result = {};
                 fields.forEach(function(currentField) {
-                    if ((currentField.sObjectName in result) === false) {
-                        result[currentField.sObjectName] = [];
+                    if ((currentField.sObjectLabel in result) === false) {
+                        result[currentField.sObjectLabel] = [];
                     }
-                    result[currentField.sObjectName].push(currentField);
+                    result[currentField.sObjectLabel].push(currentField);
                 });
 
                 return result;
@@ -814,7 +803,6 @@
              */
             function cancel() {
                 var homeEvent = $A.get('e.force:navigateToObjectHome');
-                var objectName = this.labels.sObjectName;
                 homeEvent.setParams({
                     'scope': objectName
                 });
