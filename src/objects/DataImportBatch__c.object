@@ -143,7 +143,7 @@
         <defaultValue>0</defaultValue>
         <description>Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Enter the numer of days from the Donation Date to consider when looking for a matching Opportunity or Payment. NPSP will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</inlineHelpText>
+        <inlineHelpText>Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. NPSP will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</inlineHelpText>
         <label>Number of Days from Donation Date</label>
         <precision>2</precision>
         <required>false</required>
