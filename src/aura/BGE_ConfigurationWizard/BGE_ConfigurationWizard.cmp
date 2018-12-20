@@ -411,7 +411,10 @@
                                 </lightning:layoutItem>
 
                                 <lightning:layoutItem class="slds-p-around_x-small" size="12">
-                                    <lightning:button aura:id="showAdvanced" variant="brand" label="Show Advanced Options" onclick="{!c.handleUserInput}" />    
+                                    <lightning:button aura:id="showAdvanced" 
+                                                      label="{!$Label.c.bgeWizardShowAdvancedOptions}"
+                                                      variant="base" 
+                                                      onclick="{!c.handleUserInput}" />    
                                 </lightning:layoutItem>
 
                                 <!-- BEGIN ADVANCED OPTIONS FOR STEP 5 -->

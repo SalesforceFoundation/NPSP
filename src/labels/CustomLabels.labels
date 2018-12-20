@@ -2625,7 +2625,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Header for Batch Info in Wizard prompting user entry</shortDescription>
         <value>Enter Batch Info</value>
-    </labels>
+    </labels>    
     <labels>
         <fullName>bgeBatchTemplateOverview</fullName>
         <language>en_US</language>
@@ -2857,6 +2857,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>Header used for Batch Gift Entry tab</shortDescription>
         <value>Batch Gift Entry</value>
     </labels>
+    <labels>
+        <fullName>bgeWizardShowAdvancedOptions</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for link to show advanced options in the Wizard</shortDescription>
+        <value>Show Advanced Options</value>
+    </labels>
+    <labels>
+        <fullName>bgeWizardHideAdvancedOptions</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for link to hide advanced options in the Wizard</shortDescription>
+        <value>Hide Advanced Options</value>
+    </labels>    
     <labels>
         <fullName>btnRemove</fullName>
         <categories>Manage Household UI</categories>
