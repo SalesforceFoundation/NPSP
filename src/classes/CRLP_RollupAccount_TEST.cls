@@ -321,20 +321,21 @@ private class CRLP_RollupAccount_TEST {
             }
             lastCloseDate = closeDate.addMonths(n);
         }
+        Integer hardCreditAcctOppCount = opps.size();
 
         // In a multi-currency org, create one Opportunity in the default (probably USD), but set the target Account
         // to a different currency so that the Opp amount will be converted. The mocking of the UTIL_CurrencyCache
         // is handled the the test_Rollups_MultiCurrencyBatch() method above.
         if (tt == TestType.TestMultiCurrBatch) {
-            Account mcAccount = [SELECT Id FROM Account WHERE Id != :hardCreditAccId LIMIT 1];
-            mcAccount.put('CurrencyIsoCode', otherCurrencyCode);
-            Database.update(mcAccount);
+            Account multiCurrAcct = [SELECT Id FROM Account WHERE Id != :hardCreditAccId LIMIT 1];
+            multiCurrAcct.put('CurrencyIsoCode', otherCurrencyCode);
+            Database.update(multiCurrAcct);
             Opportunity opp = new Opportunity(
                 Name = 'Test MultiCurrencyOpp',
                 Amount = 1000,
                 CloseDate = Date.today().addDays(-30),
                 StageName = closedStage,
-                AccountId = mcAccount.Id,
+                AccountId = multiCurrAcct.Id,
                 RecordTypeId = rtId
             );
             opp.put('CurrencyIsoCode', defaultCurrCode);
@@ -350,6 +351,7 @@ private class CRLP_RollupAccount_TEST {
                 Primary_Contact__c = c.Id,
                 RecordTypeId = rtId
         ));
+        hardCreditAcctOppCount++;
 
         // create one closed won opportunity from BEFORE the earliest date to ensure it's not included
         Date oldCloseDate = closeDate.addDays(-1);
@@ -362,16 +364,20 @@ private class CRLP_RollupAccount_TEST {
                 RecordTypeId = rtId,
                 npe01__Do_Not_Automatically_Create_Payment__c = true
         ));
+        hardCreditAcctOppCount++;
 
         insert opps;
 
         npe01__OppPayment__c pmt1 = [SELECT npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__c
-        WHERE npe01__Opportunity__r.IsWon = false LIMIT 1];
+                                        WHERE npe01__Opportunity__r.IsWon = false
+                                    LIMIT 1];
         pmt1.npe01__Written_Off__c = true;
         pmt1.npe01__Paid__c = false;    // technically this does not cause a DML change!?
 
         npe01__OppPayment__c pmt2 = [SELECT npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__c
-            WHERE npe01__Opportunity__r.IsWon = true AND npe01__Written_Off__c = false AND Id != :pmt1.Id LIMIT 1];
+                                        WHERE npe01__Opportunity__r.IsWon = true
+                                        AND npe01__Written_Off__c = false AND Id != :pmt1.Id
+                                    LIMIT 1];
         pmt2.npe01__Written_Off__c = true;
         pmt2.npe01__Paid__c = false;
 
@@ -458,7 +464,7 @@ private class CRLP_RollupAccount_TEST {
         System.assertEquals(donationYears.size(), hardCreditAcc.Description.split(';').size(), 'The list of donated years should match');
 
         System.assertEquals(cnt, hardCreditAcc.npo02__OppAmountLastYear__c, 'Count should be all Won Opps');
-        System.assertEquals(opps.size(), hardCreditAcc.npo02__OppAmountThisYear__c, 'Count should be ALL opps regardless of stage');
+        System.assertEquals(hardCreditAcctOppCount, hardCreditAcc.npo02__OppAmountThisYear__c, 'Count should be ALL opps regardless of stage');
 
         if (tt == TestType.TestMultiCurrBatch) {
             // Query the MultiCurrency Account with all the target fields specified in the rollups
