@@ -1142,6 +1142,10 @@ public class RD_RecurringDonations {
             // start date in the current month
             startDt = adjustDayOfMonth(startDt, r); // fix the date to account for end of month
         }
+
+        // fix the date to account for date established
+        startDt = startDt >= r.npe03__Date_Established__c ? startDt : startDt.addMonths(1);
+
         return startDt;
     }
 
