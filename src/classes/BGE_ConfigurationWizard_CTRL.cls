@@ -135,6 +135,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
             BGEField field = new BGEField();
 
+            field.sObjectName = dataImportFieldMappedObject;
+
             // this will require iteration if/when we allow objects beyond Opp and Payment
             String translatedObjectLabel;
             if (dataImportFieldMappedObject == 'Opportunity') {
@@ -145,7 +147,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             field.sObjectLabel = translatedObjectLabel;
 
             // TODO: pull these labels from target fields' schema based on help text mapping
-            Boolean fieldHasSpacesAndObjName = dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == field.sObjectLabel;
+            Boolean fieldHasSpacesAndObjName = dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == field.sObjectName;
             field.label = (fieldHasSpacesAndObjName) ? dfr.getLabel().split(' ',2)[1] : dfr.getLabel();
             field.name = dfr.getName();
 
@@ -611,6 +613,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public String label;
         @AuraEnabled public String name;
         @AuraEnabled public String sObjectLabel;
+        @AuraEnabled public String sObjectName;
         @AuraEnabled public Boolean isActive;
         @AuraEnabled public String defaultValue;
         @AuraEnabled public Boolean required;

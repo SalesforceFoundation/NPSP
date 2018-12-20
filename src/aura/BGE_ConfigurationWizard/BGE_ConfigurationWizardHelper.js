@@ -156,15 +156,16 @@
                 var activeFieldsBySObject = model.getAvailableFields().getActivesBySObject();
                 var allFieldsBySObject = model.getAvailableFields().getAllFieldsBySObject();
 
-                Object.keys(allFieldsBySObject).forEach(function(sObjectLabel) {
+                Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
                     var currentFieldGroup = {
-                        sObjectLabel: sObjectLabel,
+                        sObjectName: sObjectName,
                         options: [],
                         requiredOptions: [],
                         values: []
                     };
 
                     allFieldsBySObject[sObjectLabel].forEach(function(currentField) {
+                        currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
                         currentFieldGroup.options.push(
                             {
                                 label: currentField.label,
@@ -173,8 +174,8 @@
                         );
                     });
 
-                    if (activeFieldsBySObject[sObjectLabel]) {
-                        activeFieldsBySObject[sObjectLabel].forEach(function(currentField) {
+                    if (activeFieldsBySObject[sObjectName]) {
+                        activeFieldsBySObject[sObjectName].forEach(function(currentField) {
                             currentFieldGroup.values.push(currentField.id);
                         });
                     }
@@ -208,10 +209,10 @@
                 var availableFields = model.getAvailableFields();
                 batchFieldOptions.errors = availableFields.errors;
 
-                Object.keys(activeFieldsBySObject).forEach(function (sObjectLabel) {
+                Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
 
                     var currentFieldGroup = {
-                        sObjectLabel: sObjectLabel,
+                        sObjectName: sObjectName,
                         fields: []
                     };
 
@@ -219,6 +220,7 @@
 
                         var fieldInfo = {
                             name: currentField.name,
+                            sObjectName: currentField.sObjectName,
                             sObjectLabel: currentField.sObjectLabel,
                             label: currentField.label,
                             defaultValue: currentField.defaultValue,
@@ -230,6 +232,7 @@
                         }
 
                         currentFieldGroup.fields.push(fieldInfo);
+                        currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
 
                     });
 
@@ -316,6 +319,7 @@
                         label: currentField.label,
                         name: currentField.name,
                         sObjectLabel: currentField.sObjectLabel,
+                        sObjectName: currentField.sObjectName,
                         defaultValue: currentField.defaultValue,
                         required: currentField.required,
                         hide: currentField.hide,
@@ -467,7 +471,7 @@
             /**
              * @description Load the fields and notify onFieldsUpdated listeners.
              * @param allFields: list of allFields with sObjectLabel/Name.
-             * param activeFields: Map of activeFieldsBySObject with sObjectLabel, Name,
+             * param activeFields: Map of activeFieldsBySObject with sObjectName, Name,
              * and Default Value, Hide and Required flags.
              * @return void.
              */
@@ -477,14 +481,14 @@
 
                 if (activeFields) {
                     activeFields.forEach(function(activeField) {
-                        var fieldId = activeField.sObjectLabel + '.' + activeField.name;
+                        var fieldId = activeField.sObjectName + '.' + activeField.name;
                         activeFieldMap.set(fieldId, activeField);
                     });
                 }
 
                 var availableSortOrder = 1;
                 allFields.forEach(function(currentField) {
-                    currentField.id = currentField.sObjectLabel + '.' + currentField.name;
+                    currentField.id = currentField.sObjectName + '.' + currentField.name;
                     //set Active fields with saved sort order
                     if (activeFieldMap.has(currentField.id)) {
                         currentField.isActive = true;
@@ -610,7 +614,7 @@
                 var allFieldsBySObject = getAllFieldsBySObject();
                 Object.keys(allFieldsBySObject).forEach(function(currentSObject) {
                     batchFieldGroups.forEach(function(currentFieldGroup) {
-                        if (currentFieldGroup.sObjectLabel === currentSObject) {
+                        if (currentFieldGroup.sObjectName === currentSObject) {
                             allFieldsBySObject[currentSObject].forEach(function (currentField) {
                                 currentField.isActive = currentFieldGroup.values.includes(currentField.id);
                                 // the field's sort order is its index PLUS the total of all active fields from all previous object groups
@@ -691,10 +695,10 @@
             function _groupFieldsBySObject(fields) {
                 var result = {};
                 fields.forEach(function(currentField) {
-                    if ((currentField.sObjectLabel in result) === false) {
-                        result[currentField.sObjectLabel] = [];
+                    if ((currentField.sObjectName in result) === false) {
+                        result[currentField.sObjectName] = [];
                     }
-                    result[currentField.sObjectLabel].push(currentField);
+                    result[currentField.sObjectName].push(currentField);
                 });
 
                 return result;
