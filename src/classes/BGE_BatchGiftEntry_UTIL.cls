@@ -50,7 +50,10 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
 
         for (String field : batchFieldNames) {
             if (field != 'Id') {
-                fieldsToCheck.add(UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), UTIL_Namespace.StrTokenNSPrefix(field)));
+                if (field.contains('__c')) {
+                    field = UTIL_Namespace.StrTokenNSPrefix(field);
+                }
+                fieldsToCheck.add(UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), field));
             }
         }
 
