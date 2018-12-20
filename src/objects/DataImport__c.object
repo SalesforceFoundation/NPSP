@@ -687,17 +687,6 @@
         <type>Phone</type>
     </fields>
     <fields>
-        <fullName>Contact_Name__c</fullName>
-        <description>Field to test Dry Run.</description>
-        <externalId>false</externalId>
-        <label>Contact Name</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>DonationImportStatus__c</fullName>
         <externalId>false</externalId>
         <label>Donation Import Status</label>
@@ -881,17 +870,6 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>External_Id__c</fullName>
-        <caseSensitive>false</caseSensitive>
-        <externalId>true</externalId>
-        <label>External Id</label>
-        <length>50</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>true</unique>
     </fields>
     <fields>
         <fullName>FailureInformation__c</fullName>
