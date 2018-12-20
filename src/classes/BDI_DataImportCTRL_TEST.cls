@@ -223,6 +223,66 @@ private with sharing class BDI_DataImportCTRL_TEST {
 
     /*********************************************************************************************************
     * @description operation:
+    *    Open the Data Import Run/Settings page, with GiftBatch__c = false
+    * verify:
+    *    The UserCanEditSettings flag is correct.
+    **********************************************************************************************************/
+    static testMethod void testUserCanEditSettings() {
+
+        DataImportBatch__c diBatch = BDI_BatchOverride_TEST.newDIBatch();
+        diBatch.GiftBatch__c = false;
+        insert diBatch;
+
+        // Create an admin User
+        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        adminUser.IsActive = true;
+        insert adminUser;
+
+        Test.startTest();
+        System.runAs(adminUser) {
+            PageReference pageRef = Page.BDI_DataImport;
+            pageRef.getParameters().put('batchId', diBatch.Id);
+            Test.setCurrentPage(pageRef);
+            BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
+
+            System.assertEquals(true, ctrl.UserCanEditSettings, 'User should be able to edit settings');
+            System.assertEquals(false, ctrl.isGiftBatch, 'Record should not be flagged for Batch Gift Entry.');
+        }
+        Test.stopTest();
+    }
+
+    /*********************************************************************************************************
+    * @description operation:
+    *    Open the Data Import Run/Settings page, with GiftBatch__c = true
+    * verify:
+    *    The UserCanEditSettings flag is correct.
+    **********************************************************************************************************/
+    static testMethod void testUserCannotEditSettings() {
+
+        DataImportBatch__c diBatch = BDI_BatchOverride_TEST.newDIBatch();
+        diBatch.GiftBatch__c = true;
+        insert diBatch;
+
+        // Create an admin User
+        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        adminUser.IsActive = true;
+        insert adminUser;
+
+        Test.startTest();
+        System.runAs(adminUser) {
+            PageReference pageRef = Page.BDI_DataImport;
+            pageRef.getParameters().put('batchId', diBatch.Id);
+            Test.setCurrentPage(pageRef);
+            BDI_DataImport_CTRL ctrl = new BDI_DataImport_CTRL();
+
+            System.assertEquals(false, ctrl.UserCanEditSettings, 'User should not be able to edit settings');
+            System.assertEquals(true, ctrl.isGiftBatch, 'Record should be flagged for Batch Gift Entry.');
+        }
+        Test.stopTest();
+    }
+
+    /*********************************************************************************************************
+    * @description operation:
     *    Creates data import records
     **********************************************************************************************************/
     private static void createTestData() {
