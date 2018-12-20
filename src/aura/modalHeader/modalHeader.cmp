@@ -30,6 +30,8 @@
 <!--
   @author Salesforce.org
   @date 2018
+  @group
+  @group-content
   @description Dynamic component used in a modal with a changing header.
 -->
 <aura:component>

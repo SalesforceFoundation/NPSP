@@ -1,5 +1,22 @@
 ({
     /**
+     * @description: checks that user has all necessary permissions and then launches modal or displays error
+     */
+    checkFieldPermissions: function(component, event, helper) {
+        var action = component.get('c.checkFieldPermissions');
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === 'SUCCESS') {
+                this.openBatchWizard(component, event);
+            } else if (state === 'ERROR') {
+                console.log(response.getError());
+                this.handleApexErrors(component, response.getError());
+            }
+        });
+        $A.enqueueAction(action);
+    },
+
+    /**
      * @description: creates the form component
      */
     createEntryForm: function (component) {
@@ -113,6 +130,46 @@
             this.hideSpinner(component);
         });
         $A.enqueueAction(action);
+    },
+
+    /**
+     * @description: opens the batch wizard modal for edit mode of the component
+     */
+    openBatchWizard: function(component, event) {
+        let modalBody;
+        let modalHeader;
+        let modalFooter;
+        const batchId = component.get('v.recordId');
+
+        let progressStepLabels = [
+            $A.get('$Label.c.bgeBatchOverviewWizard'),
+            $A.get('$Label.c.bgeBatchSelectFields'),
+            $A.get('$Label.c.bgeBatchSetFieldOptions'),
+            $A.get('$Label.c.bgeBatchSetBatchOptions')
+        ];
+
+        $A.createComponents([
+                ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c', recordId: batchId, isReadOnly: false}],
+                ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
+                ['c:modalFooter', {progressStepLabels: progressStepLabels}]
+            ],
+            function(components, status, errorMessage){
+                if (status === 'SUCCESS') {
+                    modalBody = components[0];
+                    modalHeader = components[1];
+                    modalFooter = components[2];
+                    component.find('overlayLib').showCustomModal({
+                        body: modalBody,
+                        header: modalHeader,
+                        footer: modalFooter,
+                        showCloseButton: true,
+                        cssClass: 'slds-modal_large'
+                    })
+                } else {
+                    this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
+                }
+            }
+        );
     },
 
     /**
@@ -333,7 +390,7 @@
 
     /**
      * @description: displays standard toast to user based on success or failure of their action
-     * @param title: Title displayed in toast
+     * @param title: title displayed in toast
      * @param message: body of message to display
      * @param type: configures type of toast
      */
@@ -349,7 +406,15 @@
     },
 
     /**
-     * @description: shows lightning:dataTable spinner
+     * @description: shows spinner over BGE_EntryForm component
+     */
+    showFormSpinner: function (component) {
+        var spinner = component.find('formSpinner');
+        $A.util.removeClass(spinner, 'slds-hide');
+    },
+
+    /**
+     * @description: shows spinner over lightning:dataTable component
      */
     showSpinner: function (component) {
         var spinner = component.find('dataTableSpinner');
@@ -357,7 +422,7 @@
     },
 
     /**
-     * @description: hides BGE_EntryForm spinner
+     * @description: hides spinner over BGE_EntryForm component
      */
     hideFormSpinner: function (component) {
         var spinner = component.find('formSpinner');
@@ -365,7 +430,7 @@
     },
 
     /**
-     * @description: hides lightning:dataTable spinner
+     * @description: hides spinner over lightning:dataTable component
      */
     hideSpinner: function (component) {
         var spinner = component.find('dataTableSpinner');
