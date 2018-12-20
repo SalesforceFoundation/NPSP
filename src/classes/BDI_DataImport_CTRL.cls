@@ -58,13 +58,17 @@ public with sharing class BDI_DataImport_CTRL {
     private DateTime dtStart;
 
     /*******************************************************************************************************
-    * @description does the user have permissions to update these batch/settings
+    * @description does the user have permissions and an eligible DataImportBatch record to update the batch/settings
     */
-    public boolean userCanEditSettings {
+    public Boolean userCanEditSettings {
         get {
-            return isTrueBatch ?
-                DataImportBatch__c.SobjectType.getDescribe().isUpdateable() :
-                Data_Import_Settings__c.SobjectType.getDescribe().isUpdateable();
+            if (!isGiftBatch) {
+                return isTrueBatch ?
+                        DataImportBatch__c.SobjectType.getDescribe().isUpdateable() :
+                        Data_Import_Settings__c.SobjectType.getDescribe().isUpdateable();
+            } else {
+                return false;
+            }
         } private set;
     }
     
@@ -111,13 +115,13 @@ public with sharing class BDI_DataImport_CTRL {
     }
     
     /*******************************************************************************************************
-    * @description the initial custom settings object we defaultly load.  will be converted to a diBatch.
+    * @description the initial custom settings object we load by default.  will be converted to a diBatch.
     */
     @TestVisible
     private Data_Import_Settings__c diSettings { get; set; }
 
     /*******************************************************************************************************
-    * @description the current batch we are going to process.  it will be an in-memory only batch (no Id)
+    * @description the current batch we are going to process. it will be an in-memory only batch (no Id)
     * if we are going to process records that have no batch.
     */
     public DataImportBatch__c diBatch { get; private set; }
@@ -133,6 +137,15 @@ public with sharing class BDI_DataImport_CTRL {
             return diTemp;
         }
         private set;
+    }
+
+    /*******************************************************************************************************
+    * @description whether we are processing a record created for Batch Gift Entry or only the Data Importer
+    */
+    public Boolean isGiftBatch {
+        get {
+            return diBatch.GiftBatch__c;
+        } private set;
     }
 
     /*******************************************************************************************************
