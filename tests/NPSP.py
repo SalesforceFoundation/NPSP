@@ -379,7 +379,7 @@ class NPSP(object):
         locator=npsp_lex_locators['table_checkbox'].format(title)
         self.selenium.get_webelement(locator).click()
         
-    def select_modal_checkbox(self,title):
+    def select_bge_checkbox(self,title):
         """"""
         locator=npsp_lex_locators['bge']['checkbox'].format(title)
         self.selenium.get_webelement(locator).click()     

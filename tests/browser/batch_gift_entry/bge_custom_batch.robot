@@ -36,6 +36,7 @@ BGE Batch With Custom Values
     Select Duellist Values    Donation Matching Rule    Selected Fields    Donation Date
     Click Duellist Button    Donation Matching Rule    Move selection to Available Fields
     Select Value From BGE DD    Donation Matching Behavior    Single Match - Only import a record if it matches a single existing record.
+    Select BGE Checkbox    Calculate Donation Rollups with Batch
     Click BGE Button        Save
     Verify Title    Batch Gift Entry    ${batch}
     ${field}    Get NPSP Locator    bge.field-input    Donation Name
@@ -54,4 +55,4 @@ BGE Batch With Custom Values
     Should Be Equal As Strings    &{bge_batch}[Post_Process_Implementing_Class__c]    None
     Should Be Equal As Strings    &{bge_batch}[Process_Using_Scheduled_Job__c]    False
     Should Be Equal As Strings    &{bge_batch}[RequireTotalMatch__c]    False
-    Should Be Equal As Strings    &{bge_batch}[Run_Opportunity_Rollups_while_Processing__c]    False
+    Should Be Equal As Strings    &{bge_batch}[Run_Opportunity_Rollups_while_Processing__c]    True
