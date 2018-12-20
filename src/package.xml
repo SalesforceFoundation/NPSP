@@ -82,6 +82,7 @@
         <members>BDI_PostProcess_TEST</members>
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
+        <members>BGE_BatchGiftEntry_UTIL</members>
         <members>BGE_ConfigurationWizard_CTRL</members>
         <members>BGE_ConfigurationWizard_CTRL_TEST</members>
         <members>BGE_DataImportBatchEntry_CTRL</members>
@@ -456,6 +457,7 @@
         <members>UTIL_JobProgressLightning</members>
         <members>UTIL_NavigateBack</members>
         <members>UTIL_PageHeader</members>
+        <members>UTIL_PageMessageInfo</members>
         <members>UTIL_PageMessages</members>
         <members>UTIL_SLDS_Icon</members>
         <members>UTIL_SoqlListView</members>
@@ -766,7 +768,6 @@
         <members>DataImportBatch__c.Records_Successfully_Processed__c</members>
         <members>DataImportBatch__c.RequireTotalMatch__c</members>
         <members>DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c</members>
-        <members>DataImportBatch__c.Status__c</members>
         <members>DataImport__c.Account1ImportStatus__c</members>
         <members>DataImport__c.Account1Imported__c</members>
         <members>DataImport__c.Account1_City__c</members>
@@ -821,7 +822,6 @@
         <members>DataImport__c.Contact2_Title__c</members>
         <members>DataImport__c.Contact2_Work_Email__c</members>
         <members>DataImport__c.Contact2_Work_Phone__c</members>
-        <members>DataImport__c.Contact_Name__c</members>
         <members>DataImport__c.DonationImportStatus__c</members>
         <members>DataImport__c.DonationImported__c</members>
         <members>DataImport__c.Donation_Amount__c</members>
@@ -838,7 +838,6 @@
         <members>DataImport__c.Donation_Record_Type_Name__c</members>
         <members>DataImport__c.Donation_Stage__c</members>
         <members>DataImport__c.Donation_Type__c</members>
-        <members>DataImport__c.External_Id__c</members>
         <members>DataImport__c.FailureInformation__c</members>
         <members>DataImport__c.HomeAddressImportStatus__c</members>
         <members>DataImport__c.HomeAddressImported__c</members>
@@ -1397,7 +1396,6 @@
         <members>bgeBatchDonationMatchingClassHelp</members>
         <members>bgeBatchDonationMatchingRuleHelp</members>
         <members>bgeBatchDonorLookupInfo</members>
-        <members>bgeBatchErrorDefaultValue</members>
         <members>bgeBatchErrorRequiredFields</members>
         <members>bgeBatchInfoWizard</members>
         <members>bgeBatchOverview</members>
@@ -1759,6 +1757,7 @@
         <members>stgAdd</members>
         <members>stgAddrGeneralSettingsIntro</members>
         <members>stgAddrMustChooseClass</members>
+        <members>stgAddrPermissionDenied</members>
         <members>stgAllocationLevel</members>
         <members>stgBtnBack</members>
         <members>stgBtnCancel</members>
@@ -2470,7 +2469,6 @@
         <members>Contact.BDE_Entry_FS</members>
         <members>Contact.BDE_List_FS</members>
         <members>Contact.ContactMergeFoundFS</members>
-        <members>DataImport__c.Data_Import_Field_Set</members>
         <members>Engagement_Plan_Template__c.ManageEPTemplateFS</members>
         <members>Lead.BDE_Entry_FS</members>
         <members>Lead.BDE_List_FS</members>
@@ -2618,7 +2616,6 @@
         <members>Allocation__c.Manage_Allocations</members>
         <members>Contact.Merge_Contacts</members>
         <members>Contact.Recalculate_Rollups</members>
-        <members>DataImportBatch__c.Edit_Processing_Settings</members>
         <members>DataImportBatch__c.Process_Batch</members>
         <members>DataImport__c.Delete_All_Data_Import_Records</members>
         <members>DataImport__c.Delete_Imported_Data_Import_Records</members>
