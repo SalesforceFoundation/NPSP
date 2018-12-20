@@ -39,9 +39,9 @@ public with sharing class BDI_DataImportBatch_SEL {
     /*******************************************************************************************************
     * @description queries the database for all Data Import Batch records with the specified Id's
     * @param setBatchId The batches to query for.
-    * @return list<DataImportBatch__c>
+    * @return List<DataImportBatch__c>
     */
-    public static list<DataImportBatch__c> selectByIds(Set<Id> setBatchId) {
+    public static List<DataImportBatch__c> selectByIds(Set<Id> setBatchId) {
         return [SELECT Id,
                     Name,
                     Account_Custom_Unique_ID__c,
@@ -58,7 +58,8 @@ public with sharing class BDI_DataImportBatch_SEL {
                     Records_Failed__c,
                     Records_Successfully_Processed__c,
                     Post_Process_Implementing_Class__c,
-                    Run_Opportunity_Rollups_while_Processing__c
+                    Run_Opportunity_Rollups_while_Processing__c,
+                    GiftBatch__c
             FROM DataImportBatch__c
             WHERE Id in :setBatchId];
     }

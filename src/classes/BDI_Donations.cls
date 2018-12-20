@@ -195,7 +195,9 @@ public class BDI_Donations {
                 bdi.LogBDIError(listDIInsert[i], sr.getErrors()[0].getMessage(), 'DonationImportStatus__c');
             } else {
                 listDIInsert[i].DonationImported__c = listOppInsert[i].Id;
-                listDIInsert[i].DonationImportStatus__c = label.bdiCreated;
+                if (listDIInsert[i].DonationImportStatus__c != label.bdiMatchedByUserNewOpp) {
+                    listDIInsert[i].DonationImportStatus__c = label.bdiCreated;
+                }
             }
         }
         
@@ -283,7 +285,8 @@ public class BDI_Donations {
         string strError;
 
         // always allow matching by Id, regardless of specified behavior
-        if (di.DonationImportStatus__c == label.bdiMatchedId) {
+        if (di.DonationImportStatus__c == label.bdiMatchedId
+                || di.DonationImportStatus__c == label.bdiMatchedByUser) {
             return true;
         }
         // always error if they provided Donation or Payment ID, but it wasn't valid
