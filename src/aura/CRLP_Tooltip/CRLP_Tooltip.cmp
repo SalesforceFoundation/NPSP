@@ -60,7 +60,7 @@
                 <lightning:icon class="slds-icon-text-default" size="xx-small"
                                 iconName="utility:info" alternativeText="Help"/>
             </button>
-            <div aura:id="divSelectHelp" id="divHelp" class="slds-popover slds-popover_tooltip slds-nubbin_top-left slds-popover_small slds-fall-into-ground" role="tooltip" aria-live="polite">
+            <div aura:id="divSelectHelp" id="divHelp" class="slds-popover slds-popover_tooltip slds-nubbin_top-left slds-popover_medium slds-fall-into-ground" role="tooltip" aria-live="polite">
                 <div class="slds-popover__body">
                     <ui:outputText value="{!v.helpText}"/>
                 </div>
