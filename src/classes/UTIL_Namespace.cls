@@ -57,6 +57,15 @@ public class UTIL_Namespace {
         }
         return plainNamespace;   
     }
+    
+    /*******************************************************************************************************
+    * @description Returns class name without the namespace (if any)
+    */
+    public static String removeClassNamespace(String className) {
+        String classNameNoNamespace = className.substringAfter('.');
+
+        return String.isBlank(classNameNoNamespace) ? className : classNameNoNamespace;
+    }
 
     /*******************************************************************************************************
     * @description Static method adds the current namespace to a string if we're in a managed context, 
