@@ -33,268 +33,214 @@
 * @group Recurring Donations
 * @description Test class for the RecurringDonations class
 */
-@isTest
+@isTest(isParallel=true)
 public class RD_RecurringDonations_TEST {
+
+    public static final Date DEFAULT_ESTABLISHED_DATE = Date.newInstance(1970,6,12);
+    private static final Date TODAY = System.today();
 
     /*******************************************************************************************************
     * @description test method for insertOpportunities function 
     */ 
-    static testMethod void insertOpportunities()
+    @isTest
+    private static void insertOpportunities()
     {
-        UTIL_Debug.debug('multiply: ' + system.label.npe03.RecurringDonationMultiplyValue);
-        UTIL_Debug.debug('divide: ' + system.label.npe03.RecurringDonationDivideValue);
-        Account a = new Account();
-        a.Name = 'test Individual';
+        UTIL_Debug.debug('multiply: ' + System.Label.npe03.RecurringDonationMultiplyValue);
+        UTIL_Debug.debug('divide: ' + System.Label.npe03.RecurringDonationDivideValue);
+        Account a = buildAccount();
         insert a;
         
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;        
+        Contact c = buildContact(a.Id);        
         insert c;
         
         //added to cover
         npe03__Custom_Field_Mapping__c cfm = new npe03__Custom_Field_Mapping__c(
-        npe03__Recurring_Donation_Field__c = 'Name',
-        npe03__Opportunity_Field__c = 'Description',
-        Name = 'CFMName00001-Test'
+            npe03__Recurring_Donation_Field__c = 'Name',
+            npe03__Opportunity_Field__c = 'Description',
+            Name = 'CFMName00001-Test'
         );
         insert cfm;
 
-        npe03__Recurring_Donation__c r0 = new npe03__Recurring_Donation__c();
-        r0.Name = 'test';
+        npe03__Recurring_Donation__c r0 = buildRecurringDonationYearlyInstallment(null);
         r0.npe03__Installments__c = 3;
-        r0.npe03__Amount__c = 100;
-        r0.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly;
-        r0.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        r0.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
         try {
             insert r0;
         } catch (Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
         }
         //insert should fail because there is no Contact
-        system.assertEquals(null,r0.id);
+        System.assertEquals(null,r0.id);
         
 
-        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
-        r1.Name = 'test';
-        r1.npe03__Installments__c = 2;
-        r1.npe03__Contact__c = c.Id;
-        r1.npe03__Amount__c = 100;
-        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly;
-        r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        r1.npe03__Open_Ended_Status__c = 'None'; 
-        insert r1;
+        npe03__Recurring_Donation__c rd = buildRecurringDonationYearlyInstallment(c.Id); 
+        insert rd;
         
-        Opportunity[] installments1 = [select Name,amount,accountid,CloseDate,Description from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate];
-        system.assertEquals(2,installments1.size());
-        system.assertEquals(100,installments1[0].Amount);
-        system.assertEquals(date.newinstance(1970,6,12),installments1[0].CloseDate);
-        system.assertEquals(a.id,installments1[0].AccountId);
-        system.assertEquals(100,installments1[1].Amount);
-        system.assertEquals(date.newinstance(1971,6,12),installments1[1].CloseDate);
-        system.assertEquals(a.id,installments1[1].AccountId);
-        system.assertNotEquals(null, installments1[0].Description);
-        system.assertNotEquals(null, installments1[1].Description);
+        Opportunity[] installments1 = getOppsOrderByCloseDate(rd.id);
+        System.assertEquals(2,installments1.size());
+        System.assertEquals(100,installments1[0].Amount);
+        System.assertEquals(DEFAULT_ESTABLISHED_DATE,installments1[0].CloseDate);
+        System.assertEquals(a.id,installments1[0].AccountId);
+        System.assertEquals(100,installments1[1].Amount);
+        System.assertEquals(DEFAULT_ESTABLISHED_DATE.addYears(1),installments1[1].CloseDate);
+        System.assertEquals(a.id,installments1[1].AccountId);
+        System.assertNotEquals(null, installments1[0].Description);
+        System.assertNotEquals(null, installments1[1].Description);
         UTIL_Debug.debug('****' + installments1);        
     }
     
-    static testMethod void insertWeeklyOpportunities()
-    {
-         Account a = new Account();
-        a.Name = 'test Individual';
+    
+    @isTest
+    private static void insertWeeklyOpportunities() {
+        Account a = buildAccount();
         insert a;
         
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;
+        Contact c = buildContact(a.Id);
         insert c;       
 
-        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
-        r1.Name = 'test';
-        r1.npe03__Installments__c = 2;
-        r1.npe03__Contact__c = c.Id;
-        r1.npe03__Amount__c = 100;
-        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly;
-        r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        r1.npe03__Open_Ended_Status__c = 'None'; 
-        insert r1;
+        npe03__Recurring_Donation__c rd = buildRecurringDonationWeeklyInstallment(c.Id);
+        insert rd;
         
-        Opportunity[] installments1 = [select Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate];
-        system.assertEquals(2,installments1.size());
-        system.assertEquals(100,installments1[0].Amount);
-        system.assertEquals(date.newinstance(1970,6,12),installments1[0].CloseDate);
-        system.assertEquals(a.id,installments1[0].AccountId);
-        system.assertEquals(100,installments1[1].Amount);
-        system.assertEquals(date.newinstance(1970,6,19),installments1[1].CloseDate);
-        system.assertEquals(a.id,installments1[1].AccountId);
+        Opportunity[] installments1 = getOppsOrderByCloseDate(rd.id);
+        System.assertEquals(2,installments1.size());
+        System.assertEquals(100,installments1[0].Amount);
+        System.assertEquals(DEFAULT_ESTABLISHED_DATE,installments1[0].CloseDate);
+        System.assertEquals(a.id,installments1[0].AccountId);
+        System.assertEquals(100,installments1[1].Amount);
+        System.assertEquals(DEFAULT_ESTABLISHED_DATE.addDays(7),installments1[1].CloseDate);
+        System.assertEquals(a.id,installments1[1].AccountId);
     }
     
-    static testMethod void insertQuarterlyOpportunities()
-    {
-         Account a = new Account();
-        a.Name = 'test Individual';
+    
+    @isTest
+    private static void insertQuarterlyOpportunities() {
+        Account a = buildAccount();
         insert a;
         
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;
+        Contact c = buildContact(a.Id);
         insert c;       
 
-        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
-        r1.Name = 'test';
-        r1.npe03__Installments__c = 2;
-        r1.npe03__Contact__c = c.Id;
-        r1.npe03__Amount__c = 100;
-        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodQuarterly;
-        r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        r1.npe03__Open_Ended_Status__c = 'None'; 
-        insert r1;
+        npe03__Recurring_Donation__c rd = buildRecurringDonationQuarterlyInstallment(c.Id);
+        insert rd;
         
-        Opportunity[] installments1 = [select Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate];
-        system.assertEquals(2,installments1.size());
-        system.assertEquals(100,installments1[0].Amount);
-        system.assertEquals(date.newinstance(1970,6,12),installments1[0].CloseDate);
-        system.assertEquals(a.id,installments1[0].AccountId);
-        system.assertEquals(100,installments1[1].Amount);
-        system.assertEquals(date.newinstance(1970,9,12),installments1[1].CloseDate);
-        system.assertEquals(a.id,installments1[1].AccountId);
+        Opportunity[] installments1 = getOppsOrderByCloseDate(rd.id);
+        System.assertEquals(2,installments1.size());
+        System.assertEquals(100,installments1[0].Amount);
+        System.assertEquals(DEFAULT_ESTABLISHED_DATE,installments1[0].CloseDate);
+        System.assertEquals(a.id,installments1[0].AccountId);
+        System.assertEquals(100,installments1[1].Amount);
+        System.assertEquals(DEFAULT_ESTABLISHED_DATE.addMonths(3),installments1[1].CloseDate);
+        System.assertEquals(a.id,installments1[1].AccountId);
     }
     
-    static testMethod void insertCampaignOpportunities() {
+    
+    @isTest
+    private static void insertCampaignOpportunities() {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c());
-        Account a = new Account();
-        a.Name = 'test Individual';
+        Account a = buildAccount();
         insert a;
         
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;
+        Contact c = buildContact(a.Id);
         insert c;       
 
         Campaign camp = new Campaign();
         camp.Name = 'test campaign';
         insert camp;
-        
-        Id campaignId = camp.id;
 
-        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
-        r1.Name = 'test';
-        r1.npe03__Installments__c = 2;
-        r1.npe03__Contact__c = c.Id;
-        r1.npe03__Amount__c = 100;
-        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly;
-        r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        r1.npe03__Recurring_Donation_Campaign__c = campaignId;
-        r1.npe03__Open_Ended_Status__c = 'None'; 
-        insert r1;
+        npe03__Recurring_Donation__c rd = buildRecurringDonationWeeklyInstallment(c.Id);
+        rd.npe03__Recurring_Donation_Campaign__c = camp.id;
+        insert rd;
         
-        Opportunity[] installments1 = [select Name,amount,accountid,CloseDate,CampaignId from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate];
-        system.assertEquals(2,installments1.size());
-        system.assertEquals(100,installments1[0].Amount);
-        system.assertEquals(date.newinstance(1970,6,12),installments1[0].CloseDate);
-        system.assertEquals(campaignId,installments1[0].CampaignId);
-        system.assertEquals(a.id,installments1[0].AccountId);
-        system.assertEquals(100,installments1[1].Amount);
-        system.assertEquals(date.newinstance(1970,6,19),installments1[1].CloseDate);
-        system.assertEquals(campaignId,installments1[0].CampaignId);
-        system.assertEquals(a.id,installments1[1].AccountId);
+        Opportunity[] installments1 = getOppsOrderByCloseDate(rd.id);
+        System.assertEquals(2,installments1.size());
+        System.assertEquals(100,installments1[0].Amount);
+        System.assertEquals(DEFAULT_ESTABLISHED_DATE,installments1[0].CloseDate);
+        System.assertEquals(camp.id,installments1[0].CampaignId);
+        System.assertEquals(a.id,installments1[0].AccountId);
+        System.assertEquals(100,installments1[1].Amount);
+        System.assertEquals(DEFAULT_ESTABLISHED_DATE.addDays(7),installments1[1].CloseDate);
+        System.assertEquals(camp.id,installments1[0].CampaignId);
+        System.assertEquals(a.id,installments1[1].AccountId);
     }
     
-    static testMethod void deleteRecurringDonation()
-    {
-        Account a = new Account();
-        a.Name = 'test Individual';
+    
+    @isTest
+    private static void deleteRecurringDonation() {
+        Account a = buildAccount();
         insert a;
         
-        npe03__Recurring_Donation__c r2 = new npe03__Recurring_Donation__c();
-        r2.Name = 'test';
+        npe03__Recurring_Donation__c r2 = buildRecurringDonationMonthlyInstallment(null);
         r2.npe03__Installments__c = 3;
         r2.npe03__Organization__c = a.Id;
-        r2.npe03__Amount__c = 100;
-        r2.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly;
-        r2.npe03__Date_Established__c = date.newinstance(1970,6,30);
-        r2.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationDivideValue;
-        r2.npe03__Open_Ended_Status__c = 'None'; 
+        r2.npe03__Date_Established__c = Date.newInstance(1970,6,30);
+        r2.npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationDivideValue;
         insert r2;
         
-        Opportunity[] installments2 = [select Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r2.id];
-        system.assertEquals(3,installments2.size());
-        system.assertEquals(33.33,installments2[0].Amount);
-        system.assertEquals(date.newinstance(1970,6,30),installments2[0].CloseDate);
-        system.assertEquals(33.33,installments2[1].Amount);
-        system.assertEquals(date.newinstance(1970,7,30),installments2[1].CloseDate);
-        system.assertEquals(33.34,installments2[2].Amount);
-        system.assertEquals(date.newinstance(1970,8,30),installments2[2].CloseDate);
-        system.assertEquals(a.id,installments2[0].AccountId);
+        Opportunity[] installments2 = getOpps(r2.id);
+        System.assertEquals(3,installments2.size());
+        System.assertEquals(33.33,installments2[0].Amount);
+        System.assertEquals(Date.newInstance(1970,6,30),installments2[0].CloseDate);
+        System.assertEquals(33.33,installments2[1].Amount);
+        System.assertEquals(Date.newInstance(1970,7,30),installments2[1].CloseDate);
+        System.assertEquals(33.34,installments2[2].Amount);
+        System.assertEquals(Date.newInstance(1970,8,30),installments2[2].CloseDate);
+        System.assertEquals(a.id,installments2[0].AccountId);
         UTIL_Debug.debug('**** '+installments2);
 
         delete r2;
         
         //delete should cascade related opps that aren't closed/won
         Opportunity[] installments3 = [select Amount, IsDeleted from Opportunity where IsDeleted=true ALL ROWS];
-        system.assertEquals(3,installments3.size());
-        system.assertEquals(33.33,installments3[0].Amount);
+        System.assertEquals(3,installments3.size());
+        System.assertEquals(33.33,installments3[0].Amount);
 
         undelete r2;
 
-        installments3 = [select Amount, IsDeleted from Opportunity where npe03__Recurring_Donation__c = :r2.id];
-        system.assertEquals(false,installments3[0].IsDeleted, 'Record should be undeleted.');
+        installments3 = getOpps(r2.id);
+        System.assertEquals(false,installments3[0].IsDeleted, 'Record should be undeleted.');
     }
     
-    static testMethod void contactRolesOnOppsBucket() {
+    
+    @isTest
+    private static void contactRolesOnOppsBucket() {
         //skip the test if Advancement is installed - Bucket Account not supported in ADV
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
         
         contactRolesOnOppsProcessor(CAO_Constants.BUCKET_PROCESSOR);
     }
-    static testMethod void contactRolesOnOppsOne2One() {
+    
+    @isTest
+    private static void contactRolesOnOppsOne2One() {
         contactRolesOnOppsProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
-    static testMethod void contactRolesOnOppsHHAccount() {
+    
+    @isTest
+    private static void contactRolesOnOppsHHAccount() {
         contactRolesOnOppsProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }    
-    static void contactRolesOnOppsProcessor(string strProcessor) {
+    }  
+
+    private static void contactRolesOnOppsProcessor(String strProcessor) {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
             npe01__Account_Processor__c = strProcessor, 
-            npe01__Opportunity_Contact_Role_Default_role__c = system.label.npe03.RecurringDonationContactRole
+            npe01__Opportunity_Contact_Role_Default_role__c = System.Label.npe03.RecurringDonationContactRole
         ));
             
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
+        Contact c = buildContact(null);
         insert c; 
 
         Test.startTest();
-        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
-        r1.Name = 'test';
-        r1.npe03__Installments__c = 2;
-        r1.npe03__Contact__c = c.Id;
-        r1.npe03__Open_Ended_Status__c = 'None'; 
-        r1.npe03__Amount__c = 100;
-        r1.npe03__Installment_Period__c = System.label.npe03.RecurringDonationInstallmentPeriodWeekly;
-        r1.npe03__Date_Established__c = Date.newinstance(1970,6,12);
-        r1.npe03__Schedule_Type__c = System.label.npe03.RecurringDonationMultiplyValue;
-        insert r1;
+        npe03__Recurring_Donation__c rd = buildRecurringDonationWeeklyInstallment(c.Id);
+        insert rd;
         Test.stopTest();
 
         OpportunityContactRole[] installmentCRs = [
             SELECT ContactId, OpportunityId, Role 
             FROM OpportunityContactRole 
-            WHERE Opportunity.npe03__Recurring_Donation__c = :r1.id
+            WHERE Opportunity.npe03__Recurring_Donation__c = :rd.id
         ];
         System.assertEquals(2,installmentCRs.size());
-        System.assertEquals(system.label.npe03.RecurringDonationContactRole, installmentCRs[0].Role);
+        System.assertEquals(System.Label.npe03.RecurringDonationContactRole, installmentCRs[0].Role);
     }
 
     /*********************************************************************************************************
@@ -306,7 +252,8 @@ public class RD_RecurringDonations_TEST {
         - New Primary OCRs are created for provided Opportunities having Recurring Donations 
         with a specified Contact. 
     **********************************************************************************************************/ 
-    private static testMethod void testOppContactRoleMethod() {
+    @isTest
+    private static void testOppContactRoleMethod() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
             npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR, 
             npe01__Opportunity_Contact_Role_Default_role__c = System.Label.npe03.RecurringDonationContactRole
@@ -328,7 +275,7 @@ public class RD_RecurringDonations_TEST {
                 Name = 'Test' + c.LastName,
                 npe03__Amount__c = 100,
                 npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
-                npe03__Date_Established__c = Date.newInstance(1970, 6, 12),
+                npe03__Date_Established__c = DEFAULT_ESTABLISHED_DATE,
                 npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
                 npe03__Contact__c = c.Id
             ));
@@ -341,18 +288,14 @@ public class RD_RecurringDonations_TEST {
         insert rds;
         Test.stopTest();
 
-        List<Opportunity> opps = new List<Opportunity>([
-            SELECT Id, Name
-            FROM Opportunity
-            WHERE npe03__Recurring_Donation__c IN :rds
-        ]);
+        List<Opportunity> opps = getOpps(rds);
 
         opps.add(new Opportunity(
             Amount = 200,
             AccountId = contacts[0].AccountId,
             Name = 'Test Opp',
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-            CloseDate = System.today(),
+            CloseDate = TODAY,
             npe03__Recurring_Donation__c = rds[0].Id
         ));
         upsert opps;
@@ -372,707 +315,700 @@ public class RD_RecurringDonations_TEST {
         System.assertEquals(opps.size(), getPrimaryOppContactRoles(rdIds).size(), 'No new Opportunity Contact Role should be created when oppContactRoles() is called once more');
     }
     
-    static testMethod void testSettingsCreation() {
+    
+    @isTest
+    private static void testSettingsCreation() {
         delete [select id from npe03__Recurring_Donations_Settings__c];
+
         //Using the API class just to give it test coverage.
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettings_API.getRecurringDonationsSettings();
-        system.assertEquals(12, rds.npe03__Opportunity_Forecast_Months__c);
-        system.assertEquals(50, rds.npe03__Maximum_Donations__c);
-        system.assertEquals(RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(), rds.npe03__Open_Opportunity_Behavior__c);           
+        System.assertEquals(12, rds.npe03__Opportunity_Forecast_Months__c);
+        System.assertEquals(50, rds.npe03__Maximum_Donations__c);
+        System.assertEquals(RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(), rds.npe03__Open_Opportunity_Behavior__c);           
     }
     
     
     //tests inserts of various types of open ended donations
-    static testMethod void insertOpenEndedRecurringDonations(){
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-        new npe03__Recurring_Donations_Settings__c(
-        npe03__Opportunity_Forecast_Months__c = 12,
-        npe03__Maximum_Donations__c = 50,
-        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()        
-        ));             
+    @isTest
+    private static void insertOpenEndedRecurringDonations(){
+        createRdSettingsWithYearForecast();             
         
-        Account a = new Account();
-        a.Name = 'test Individual';
+        Account a = buildAccount();
         insert a;
         
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;
+        Contact c = buildContact(a.Id);
         insert c;       
         
-        Campaign camp = new Campaign(name = 'Campaign', isActive = true);
+        Campaign camp = new Campaign(Name = 'Campaign', isActive = true);
         insert camp;
         
-        list<npe03__Recurring_Donation__c> rdlist = new list<npe03__Recurring_Donation__c>();
+        List<npe03__Recurring_Donation__c> rdlist = new List<npe03__Recurring_Donation__c>();
         
-        npe03__Recurring_Donation__c RD = new npe03__Recurring_Donation__c();
-        RD.Name = 'testweekly';
-        RD.npe03__Contact__c = c.Id;
-        RD.npe03__Amount__c = 100;
-        RD.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly;
-        RD.npe03__Date_Established__c = system.today().toStartOfMonth();
-        RD.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        RD.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
-        rdlist.add(RD);
+        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
+        rd.Name = 'testweekly';
+        rd.npe03__Contact__c = c.Id;
+        rd.npe03__Amount__c = 100;
+        rd.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly;
+        rd.npe03__Date_Established__c = TODAY.toStartOfMonth();
+        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rdlist.add(rd);
         
         
-        RD = RD.clone(false);
-        RD.Name = 'testmonthly';
-        RD.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly;
-        RD.npe03__Contact__c = null;
-        RD.npe03__Organization__c = a.id;
-        RD.npe03__Recurring_Donation_Campaign__c = camp.id;
-        rdlist.add(RD);
+        rd = rd.clone(false);
+        rd.Name = 'testmonthly';
+        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly;
+        rd.npe03__Contact__c = null;
+        rd.npe03__Organization__c = a.id;
+        rd.npe03__Recurring_Donation_Campaign__c = camp.id;
+        rdlist.add(rd);
         
-        RD = RD.clone(false);
-        RD.Name = 'testquarterly';
-        RD.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodQuarterly;
-        rdlist.add(RD);
+        rd = rd.clone(false);
+        rd.Name = 'testquarterly';
+        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly;
+        rdlist.add(rd);
         
-        RD = RD.clone(false);
-        RD.Name = 'testyearly';
-        RD.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly;
-        rdlist.add(RD);
+        rd = rd.clone(false);
+        rd.Name = 'testyearly';
+        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly;
+        rdlist.add(rd);
         
-        RD = RD.clone(false);
-        RD.Name = 'testbadinstallment';
-        RD.npe03__Installment_Period__c = 'GarbageValue';
-        rdlist.add(RD);
+        rd = rd.clone(false);
+        rd.Name = 'testbadinstallment';
+        rd.npe03__Installment_Period__c = 'GarbageValue';
+        rdlist.add(rd);
         
         test.startTest();
         insert rdlist;
         test.stopTest();
         
-        system.assertEquals(12, [select count() from Opportunity where npe03__Recurring_Donation__r.Name = 'testmonthly']);
-        system.assertEquals(4, [select count() from Opportunity where npe03__Recurring_Donation__r.Name = 'testquarterly']);
-        system.assertEquals(1, [select count() from Opportunity where npe03__Recurring_Donation__r.Name = 'testyearly']);
-        integer cOpp =  [select count() from Opportunity where npe03__Recurring_Donation__r.Name = 'testweekly'];
-        system.assert(cOpp == 52 || cOpp == 53);        
+        System.assertEquals(12, [select count() from Opportunity where npe03__Recurring_Donation__r.Name = 'testmonthly']);
+        System.assertEquals(4, [select count() from Opportunity where npe03__Recurring_Donation__r.Name = 'testquarterly']);
+        System.assertEquals(1, [select count() from Opportunity where npe03__Recurring_Donation__r.Name = 'testyearly']);
+        Integer cOpp =  [select count() from Opportunity where npe03__Recurring_Donation__r.Name = 'testweekly'];
+        System.assert(cOpp == 52 || cOpp == 53);        
     }
     
-    static testMethod void updateOpenEndedRecurringDonationMonthly(){
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-        new npe03__Recurring_Donations_Settings__c(
-        npe03__Opportunity_Forecast_Months__c = 12,
-        npe03__Maximum_Donations__c = 50,
-        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()        
-        ));           
+    
+    @isTest
+    private static void updateOpenEndedRecurringDonationMonthly(){
+        createRdSettingsWithYearForecast();           
         
-        Account a = new Account();
-        a.Name = 'test Individual';
+        Account a = buildAccount();
         insert a;
         
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;
+        Contact c = buildContact(a.Id);
         insert c;       
 
-        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
-        r1.Name = 'test';
-        r1.npe03__Installments__c = 2;
-        r1.npe03__Contact__c = c.Id;
-        r1.npe03__Amount__c = 100;
-        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly;
-        r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
-        r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
-        insert r1;
+        npe03__Recurring_Donation__c rd = buildRecurringDonationWeeklyInstallment(c.Id);
+        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
+        insert rd;
         
-        list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);          
+        List<Opportunity> originalOpps = getOppsOrderByCloseDate(rd.id); 
         
-        integer cOpp =  originalOpps.size();
-        system.assert(cOpp == 52 || cOpp == 53);        
-        system.assertEquals(100, originalOpps[0].Amount);
+        Integer cOpp =  originalOpps.size();
+        System.assert(cOpp == 52 || cOpp == 53);        
+        System.assertEquals(100, originalOpps[0].Amount);
+
         Test.startTest();
-        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly;
-        update r1;
+        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly;
+        update rd;
         Test.stopTest();
         
-        system.assertEquals(12, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id]);        
+        System.assertEquals(12, getOppsOrderByCloseDate(rd.id).size());    
     }
-    static testMethod void updateOpenEndedRecurringDonation1an15(){
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-        new npe03__Recurring_Donations_Settings__c(
-        npe03__Opportunity_Forecast_Months__c = 12,
-        npe03__Maximum_Donations__c = 50,
-        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(),
-        npe03__Add_Campaign_to_All_Opportunites__c = true        
-        ));           
+    
+    @isTest
+    private static void updateOpenEndedRecurringDonation1an15(){
+        createRdSettingsCampaignWithYearForecast();      
         
-        Account a = new Account();
-        a.Name = 'test Individual';
+        Account a = buildAccount();
         insert a;
         
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;
+        Contact c = buildContact(a.Id);
         insert c;       
 
-        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
-        r1.Name = 'test';
-        r1.npe03__Installments__c = 2;
-        r1.npe03__Contact__c = c.Id;
-        r1.npe03__Amount__c = 100;
-        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriod1stand15th;
-        r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
-        r1.npe03__Next_Payment_Date__c = system.today();
+        npe03__Recurring_Donation__c rd = buildRecurringDonation(
+            c.Id, System.Label.npe03.RecurringDonationInstallmentPeriod1stand15th
+        );
+        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Next_Payment_Date__c = TODAY;
        
         Test.startTest();
-        insert r1;
+        insert rd;
         Test.stopTest();
-        list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);          
-        integer cOpp =  originalOpps.size();
-        system.assert(cOpp == 23 || cOpp == 24);        
-        system.assertEquals(100, originalOpps[0].Amount);        
+
+        List<Opportunity> originalOpps = getOppsOrderByCloseDate(rd.id);          
+        Integer cOpp =  originalOpps.size();
+        System.assert(cOpp == 23 || cOpp == 24);        
+        System.assertEquals(100, originalOpps[0].Amount);        
     }
     
-    static testMethod void updateOpenEndedRecurringDonationYearly(){
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-        new npe03__Recurring_Donations_Settings__c(
-        npe03__Opportunity_Forecast_Months__c = 12,
-        npe03__Maximum_Donations__c = 50,
-        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()        
-        ));           
+    
+    @isTest
+    private static void updateOpenEndedRecurringDonationYearly(){
+        createRdSettingsWithYearForecast();           
         
-        Account a = new Account();
-        a.Name = 'test Individual';
+        Account a = buildAccount();
         insert a;
         
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;
+        Contact c = buildContact(a.Id);
         insert c;       
 
-        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
-        r1.Name = 'test';
-        r1.npe03__Installments__c = 2;
-        r1.npe03__Contact__c = c.Id;
-        r1.npe03__Amount__c = 100;
-        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly;
-        r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
-        r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
-        insert r1;
+        npe03__Recurring_Donation__c rd = buildRecurringDonationWeeklyInstallment(c.Id);
+        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
+        insert rd;
         
-        list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);          
+        List<Opportunity> originalOpps = getOppsOrderByCloseDate(rd.id);          
         
-        integer cOpp =  originalOpps.size();
-        system.assert(cOpp == 52 || cOpp == 53);        
-        system.assertEquals(100, originalOpps[0].Amount);
+        Integer cOpp =  originalOpps.size();
+        System.assert(cOpp == 52 || cOpp == 53);        
+        System.assertEquals(100, originalOpps[0].Amount);
+
         Test.startTest();
-        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly;
-        update r1;
+        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly;
+        update rd;
         Test.stopTest();
         
-        system.assertEquals(1, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
-    }
-    static testMethod void updateOpenEndedRecurringDonationWeekly(){
-            UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-        new npe03__Recurring_Donations_Settings__c(
-        npe03__Opportunity_Forecast_Months__c = 12,
-        npe03__Maximum_Donations__c = 50,
-        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()        
-        ));           
-        
-        Account a = new Account();
-        a.Name = 'test Individual';
-        insert a;
-        
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;
-        insert c;       
-
-        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
-        r1.Name = 'test';
-        r1.npe03__Installments__c = 2;
-        r1.npe03__Contact__c = c.Id;
-        r1.npe03__Amount__c = 100;
-        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly;
-        r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
-        r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
-        insert r1;
-        
-        list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);          
-        
-        system.assertEquals(12, originalOpps.size());
-        system.assertEquals(100, originalOpps[0].Amount);
-        Test.startTest();
-        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly;
-        update r1;
-        Test.stopTest();        
-        integer cOpp = [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id];
-        system.assert(cOpp == 52 || cOpp == 53);        
+        System.assertEquals(1, getOppsOrderByCloseDate(rd.id).size());
     }
     
-    static testMethod void updateOpenEndedRecurringDonationQuarterly(){
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-        new npe03__Recurring_Donations_Settings__c(
-        npe03__Opportunity_Forecast_Months__c = 12,
-        npe03__Maximum_Donations__c = 50,
-        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()        
-        ));           
+    @isTest
+    private static void updateOpenEndedRecurringDonationWeekly(){
+        createRdSettingsWithYearForecast();           
         
-        Account a = new Account();
-        a.Name = 'test Individual';
+        Account a = buildAccount();
         insert a;
         
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;
+        Contact c = buildContact(a.Id);
         insert c;       
 
-        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
-        r1.Name = 'test';
-        r1.npe03__Installments__c = 2;
-        r1.npe03__Contact__c = c.Id;
-        r1.npe03__Amount__c = 100;
-        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly;
-        r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
-        r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
-        insert r1;
+        npe03__Recurring_Donation__c rd = buildRecurringDonationMonthlyInstallment(c.Id);
+        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
+        insert rd;
         
-        list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);          
+        List<Opportunity> originalOpps = getOppsOrderByCloseDate(rd.id);    
         
-        integer cOpp =  originalOpps.size();
-        system.assert(cOpp == 52 || cOpp == 53);        
-        system.assertEquals(100, originalOpps[0].Amount);
+        System.assertEquals(12, originalOpps.size());
+        System.assertEquals(100, originalOpps[0].Amount);
+
         Test.startTest();
-        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodQuarterly;
-        update r1;
+        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodWeekly;
+        update rd;
+        Test.stopTest(); 
+
+        Integer cOpp = getOppsOrderByCloseDate(rd.id).size();
+        System.assert(cOpp == 52 || cOpp == 53);        
+    }
+    
+    
+    @isTest
+    private static void updateOpenEndedRecurringDonationQuarterly(){
+        createRdSettingsWithYearForecast();           
+        
+        Account a = buildAccount();
+        insert a;
+        
+        Contact c = buildContact(a.Id);
+        insert c;       
+
+        npe03__Recurring_Donation__c rd = buildRecurringDonationWeeklyInstallment(c.Id);
+        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
+        insert rd;
+        
+        List<Opportunity> originalOpps = getOppsOrderByCloseDate(rd.id);          
+        
+        Integer cOpp =  originalOpps.size();
+        System.assert(cOpp == 52 || cOpp == 53);        
+        System.assertEquals(100, originalOpps[0].Amount);
+        Test.startTest();
+        rd.npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly;
+        update rd;
         Test.stopTest();
         
-        system.assertEquals(4, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
+        System.assertEquals(4, getOppsOrderByCloseDate(rd.id).size());
     }    
         
     //test closing an opportunity for an open recurring donation
-    static testMethod void closeOppForOpenEndedRecurringDonationWeekly(){
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-        new npe03__Recurring_Donations_Settings__c(
-        npe03__Opportunity_Forecast_Months__c = 12,
-        npe03__Maximum_Donations__c = 50,
-        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()        
-        ));           
+    @isTest
+    private static void closeOppForOpenEndedRecurringDonationWeekly(){
+        createRdSettingsWithYearForecast();           
         
-        Account a = new Account();
-        a.Name = 'test Individual';
+        Account a = buildAccount();
         insert a;
         
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;
+        Contact c = buildContact(a.Id);
         insert c;       
 
-        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
-        r1.Name = 'test';
-        r1.npe03__Installments__c = 2;
-        r1.npe03__Contact__c = c.Id;
-        r1.npe03__Amount__c = 100;
-        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly;
-        r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
-        r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
-        r1.OwnerId = system.Userinfo.getUserId();
-        insert r1;
+        npe03__Recurring_Donation__c rd = buildRecurringDonationWeeklyInstallment(c.Id);
+        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
+        rd.OwnerId = system.Userinfo.getUserId();
+        insert rd;
         
-        list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
-        integer cOpp =  originalOpps.size();
-        system.assert(cOpp == 52 || cOpp == 53);        
+        List<Opportunity> originalOpps = getOppsOrderByCloseDate(rd.id);
+        Integer cOpp =  originalOpps.size();
+        System.assert(cOpp == 52 || cOpp == 53);        
         
         Opportunity o = originalOpps[0];
-        string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
-        o.StageName = closedstage;
-        o.CloseDate = system.today();
+        o.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        o.CloseDate = TODAY;
+
         Test.startTest();
-        //update opp
         update o;
-        //call the update method
-        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{r1});
+        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new List<npe03__Recurring_Donation__c>{rd});
         Test.stopTest();        
         
-        npe03__Recurring_Donation__c rd = [select npe03__Last_Payment_Date__c from npe03__Recurring_Donation__c where id = :r1.id];     
-        
-        system.assertEquals(cOpp - 1, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
-        system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
+        rd = getRecurringDonation(rd.id);     
+        System.assertEquals(cOpp - 1, getOpenOppCount(rd.id));
+        System.assertEquals(TODAY, rd.npe03__Last_Payment_Date__c);
     }
     //test closing an opportunity for an open recurring donation
-    static testMethod void closeOppForOpenEndedRecurringDonationMonthly(){
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-        new npe03__Recurring_Donations_Settings__c(
-        npe03__Opportunity_Forecast_Months__c = 6,
-        npe03__Maximum_Donations__c = 50,
-        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()        
-        ));           
+    @isTest
+    private static void closeOppForOpenEndedRecurringDonationMonthly(){
+        createRdSettingsWithForecast(6);           
         
-        Account a = new Account();
-        a.Name = 'test Individual';
+        Account a = buildAccount();
         insert a;
         
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;
+        Contact c = buildContact(a.Id);
         insert c;       
 
-        list<npe03__Recurring_Donation__c> rdlist = new list<npe03__Recurring_Donation__c>();
-        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
-        r1.Name = 'test';
-        r1.npe03__Installments__c = 2;
-        r1.npe03__Contact__c = c.Id;
-        r1.npe03__Amount__c = 100;
-        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly;
-        r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
-        r1.npe03__Next_Payment_Date__c = system.today();
-        r1.OwnerId = system.Userinfo.getUserId();
-        rdlist.add(r1);
-        insert rdlist; 
+        npe03__Recurring_Donation__c rd = buildRecurringDonationYearlyInstallment(c.Id);
+        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Next_Payment_Date__c = TODAY;
+        rd.OwnerId = system.Userinfo.getUserId();
+        insert rd; 
         
-        system.assertNotEquals(null, r1.id);
-        list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__r.id = :r1.id order by CloseDate]);
-        system.assertEquals(1, originalOpps.size());          
+        System.assertNotEquals(null, rd.id);
+        List<Opportunity> originalOpps = getOppsOrderByCloseDate(rd.id);
+        System.assertEquals(1, originalOpps.size());          
         
         Opportunity o1 = originalOpps[0];
-        string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
-        o1.StageName = closedstage;
-        o1.CloseDate = system.today();
-        list<Opportunity> oppList = new list<Opportunity>{o1};
+        o1.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        o1.CloseDate = TODAY;
+        List<Opportunity> oppList = new List<Opportunity>{o1};
+
         Test.startTest();
-        //update opp
         update oppList;
-        //call the update method
-        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{r1});
+        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new List<npe03__Recurring_Donation__c>{rd});
         Test.stopTest();
-        npe03__Recurring_Donation__c rd = [select npe03__Last_Payment_Date__c from npe03__Recurring_Donation__c where id = :r1.id];     
-        system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
-        originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where isClosed = false and npe03__Recurring_Donation__r.id = :r1.id]);
-        system.assertEquals(0, originalOpps.size());          
+        
+        rd = getRecurringDonation(rd.id);    
+        System.assertEquals(TODAY, rd.npe03__Last_Payment_Date__c);
+
+        originalOpps = new List<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where isClosed = false and npe03__Recurring_Donation__r.id = :rd.id]);
+        System.assertEquals(0, originalOpps.size());          
     }
     
     //test closing an opportunity for an open recurring donation
-    static testMethod void closeOppForOpenEndedRecurringDonationQuarterly(){
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-        new npe03__Recurring_Donations_Settings__c(
-        npe03__Opportunity_Forecast_Months__c = 12,
-        npe03__Maximum_Donations__c = 50,
-        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()        
-        ));           
+    @isTest
+    private static void closeOppForOpenEndedRecurringDonationQuarterly(){
+        createRdSettingsWithYearForecast();           
         
-        Account a = new Account();
-        a.Name = 'test Individual';
+        Account a = buildAccount();
         insert a;
         
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;
+        Contact c = buildContact(a.Id);
         insert c;       
 
-        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
-        r1.Name = 'test';
-        r1.npe03__Installments__c = 2;
-        r1.npe03__Contact__c = c.Id;
-        r1.npe03__Amount__c = 100;
-        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodQuarterly;
-        r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
-        r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
-        r1.OwnerId = system.Userinfo.getUserId();
-        insert r1;
+        npe03__Recurring_Donation__c rd = buildRecurringDonationQuarterlyInstallment(c.Id);
+        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
+        rd.OwnerId = system.Userinfo.getUserId();
+        insert rd;
         
-        list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
-        system.assertEquals(4, originalOpps.size());          
+        List<Opportunity> originalOpps = getOppsOrderByCloseDate(rd.id);
+        System.assertEquals(4, originalOpps.size());          
         
         Opportunity o = originalOpps[0];
         system.debug('**** DJH gonna close opp with date: ' + o.CloseDate);
-        system.assertEquals(system.today().toStartOfMonth(), o.CloseDate);
-        string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
-        o.StageName = closedstage;
-        o.CloseDate = system.today();
+        System.assertEquals(TODAY.toStartOfMonth(), o.CloseDate);
+        o.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        o.CloseDate = TODAY;
+
         Test.startTest();
-        //update opp
         update o;
-        //call the update method
-        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{r1});
+        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new List<npe03__Recurring_Donation__c>{rd});
         Test.stopTest();
                 
-        npe03__Recurring_Donation__c rd = [select npe03__Last_Payment_Date__c from npe03__Recurring_Donation__c where id = :r1.id];     
-        system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
-        system.assertEquals(3, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);        
+        rd = getRecurringDonation(rd.id); 
+        System.assertEquals(TODAY, rd.npe03__Last_Payment_Date__c);
+        System.assertEquals(3, getOpenOppCount(rd.id));        
     }
     
     //test closing an opportunity for an open recurring donation
-    static testMethod void closeOppForOpenEndedRecurringDonationCustomWeeks(){
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-        new npe03__Recurring_Donations_Settings__c(
-        npe03__Opportunity_Forecast_Months__c = 12,
-        npe03__Maximum_Donations__c = 50,
-        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()        
-        ));           
+    @isTest
+    private static void closeOppForOpenEndedRecurringDonationCustomWeeks(){
+        createRdSettingsWithYearForecast();           
         
-        Account a = new Account();
-        a.Name = 'test Individual';
+        Account a = buildAccount();
         insert a;
         
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;
+        Contact c = buildContact(a.Id);
         insert c;       
 
-        npe03__Custom_Installment_Settings__c cis = new npe03__Custom_Installment_Settings__c(
-        npe03__Increment__c = 'Weeks',
-        npe03__Value__c = 2,
-        Name = 'TESTCIS'        
+        npe03__Custom_Installment_Settings__c customInstallment = new npe03__Custom_Installment_Settings__c(
+            npe03__Increment__c = 'Weeks',
+            npe03__Value__c = 2,
+            Name = 'TESTCIS'     
         );
-        insert cis;        
+        insert customInstallment;        
 
-        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
-        r1.Name = 'test';
-        r1.npe03__Installments__c = 2;
-        r1.npe03__Organization__c = a.id;
-        r1.npe03__Amount__c = 100;
-        r1.npe03__Installment_Period__c = 'TESTCIS';
-        r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
-        r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
-        r1.OwnerId = system.Userinfo.getUserId();
-        insert r1;
+        npe03__Recurring_Donation__c rd = buildRecurringDonation(null, customInstallment.Name);
+        rd.npe03__Organization__c = a.id;
+        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
+        rd.OwnerId = system.Userinfo.getUserId();
+        insert rd;
         
-        list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
-        integer cOpp = originalOpps.size();
-        system.assert(cOpp == 26 || cOpp == 27);          
+        List<Opportunity> originalOpps = getOppsOrderByCloseDate(rd.id);
+        Integer cOpp = originalOpps.size();
+        System.assert(cOpp == 26 || cOpp == 27);          
         
         Opportunity o = originalOpps[0];
-        string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
-        o.StageName = closedstage;
-        o.CloseDate = system.today();
+        o.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        o.CloseDate = TODAY;
+
         Test.startTest();
-        //update opp
         update o;
-        //call the update method
-        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{r1});
+        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new List<npe03__Recurring_Donation__c>{rd});
         Test.stopTest();        
         
-        npe03__Recurring_Donation__c rd = [select npe03__Last_Payment_Date__c from npe03__Recurring_Donation__c where id = :r1.id];     
-        
-        system.assert(26 <= [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
-        system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
+        rd = getRecurringDonation(rd.id);
+        System.assert(26 <= getOpenOppCount(rd.id));
+        System.assertEquals(TODAY, rd.npe03__Last_Payment_Date__c);
     }
     
     //test closing an opportunity for an open recurring donation
-    static testMethod void closeOppForOpenEndedRecurringDonationCustomDays(){
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-        new npe03__Recurring_Donations_Settings__c(
-        npe03__Opportunity_Forecast_Months__c = 1,
-        npe03__Maximum_Donations__c = 50,
-        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()        
-        ));           
+    @isTest
+    private static void closeOppForOpenEndedRecurringDonationCustomDays(){
+        createRdSettingsWithForecast(1);           
         
-        Account a = new Account();
-        a.Name = 'test Individual';
+        Account a = buildAccount();
         insert a;
         
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;
+        Contact c = buildContact(a.Id);
         insert c;       
 
-        npe03__Custom_Installment_Settings__c cis = new npe03__Custom_Installment_Settings__c(
-        npe03__Increment__c = 'Days',
-        npe03__Value__c = 2,
-        Name = 'TESTCIS'        
+        npe03__Custom_Installment_Settings__c customInstallment = new npe03__Custom_Installment_Settings__c(
+            npe03__Increment__c = 'Days',
+            npe03__Value__c = 2,
+            Name = 'TESTCIS'        
         );
-        insert cis;        
+        insert customInstallment;        
 
-        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
-        r1.Name = 'test';
-        r1.npe03__Installments__c = 2;
-        r1.npe03__Organization__c = a.id;
-        r1.npe03__Amount__c = 100;
-        r1.npe03__Installment_Period__c = 'TESTCIS';
-        r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
-        r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
-        insert r1;
+        npe03__Recurring_Donation__c rd = buildRecurringDonation(null, customInstallment.Name);
+        rd.npe03__Organization__c = a.id;
+        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
+        insert rd;
         
-        list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
-        integer cOpp =  originalOpps.size();
-        system.assert(cOpp == 14 || cOpp == 15 || cOpp == 16);        
+        List<Opportunity> originalOpps = getOppsOrderByCloseDate(rd.id);
+        Integer cOpp =  originalOpps.size();
+        System.assert(cOpp == 14 || cOpp == 15 || cOpp == 16);        
         
         Opportunity o = originalOpps[0];
-        string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
-        o.StageName = closedstage;
-        o.CloseDate = system.today();
+        o.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        o.CloseDate = TODAY;
+
         Test.startTest();
-        //update opp
-        update o;
-        //call the update method        
+        update o;       
         Test.stopTest();        
         
-        npe03__Recurring_Donation__c rd = [select npe03__Last_Payment_Date__c from npe03__Recurring_Donation__c where id = :r1.id];     
-        
-        system.assertEquals(cOpp - 1, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
-        system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
+        rd = getRecurringDonation(rd.id);  
+        System.assertEquals(cOpp - 1,getOpenOppCount(rd.id));
+        System.assertEquals(TODAY, rd.npe03__Last_Payment_Date__c);
     }
     
     //test closing an opportunity for an open recurring donation
-    static testMethod void closeOppForOpenEndedRecurringDonationCustomMonths(){
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-        new npe03__Recurring_Donations_Settings__c(
-        npe03__Opportunity_Forecast_Months__c = 12,
-        npe03__Maximum_Donations__c = 50,
-        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(),
-        npe03__Add_Campaign_to_All_Opportunites__c = true        
-        ));           
+    @isTest
+    private static void closeOppForOpenEndedRecurringDonationCustomMonths(){
+        createRdSettingsCampaignWithYearForecast();           
         
-        Account a = new Account();
-        a.Name = 'test Individual';
+        Account a = buildAccount();
         insert a;
         
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;
+        Contact c = buildContact(a.Id);
         insert c;       
 
-        npe03__Custom_Installment_Settings__c cis = new npe03__Custom_Installment_Settings__c(
-        npe03__Increment__c = 'Months',
-        npe03__Value__c = 2,
-        Name = 'TESTCIS'        
+        npe03__Custom_Installment_Settings__c customInstallment = new npe03__Custom_Installment_Settings__c(
+            npe03__Increment__c = 'Months',
+            npe03__Value__c = 2,
+            Name = 'TESTCIS'      
         );
-        insert cis;        
+        insert customInstallment;        
 
-        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
-        r1.Name = 'test';
-        r1.npe03__Installments__c = 2;
-        r1.npe03__Organization__c = a.id;
-        r1.npe03__Amount__c = 100;
-        r1.npe03__Installment_Period__c = 'TESTCIS';
-        r1.npe03__Date_Established__c = date.newinstance(2000,1,1);
-        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
-        r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
-        r1.OwnerId = system.Userinfo.getUserId();
-        insert r1;
+        npe03__Recurring_Donation__c rd = buildRecurringDonation(null, customInstallment.Name);
+        rd.npe03__Organization__c = a.id;
+        rd.npe03__Date_Established__c = Date.newInstance(2000,1,1);
+        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Next_Payment_Date__c = TODAY.toStartOfMonth();
+        rd.OwnerId = system.Userinfo.getUserId();
+        insert rd;
         
-        list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
-        system.assertEquals(6, originalOpps.size());          
+        List<Opportunity> originalOpps = getOppsOrderByCloseDate(rd.id);
+        System.assertEquals(6, originalOpps.size());          
         
         Opportunity o = originalOpps[0];
-        string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
-        o.StageName = closedstage;
-        o.CloseDate = system.today();
+        o.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        o.CloseDate = TODAY;
+
         Test.startTest();
-        //update opp
         update o;
-        //call the update method
-        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{r1});
+        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new List<npe03__Recurring_Donation__c>{rd});
         Test.stopTest();        
         
-        npe03__Recurring_Donation__c rd = [select npe03__Last_Payment_Date__c from npe03__Recurring_Donation__c where id = :r1.id];     
-        
-        system.assertEquals(5, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
-        system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
+        rd = getRecurringDonation(rd.id);     
+        System.assertEquals(5, getOpenOppCount(rd.id));
+        System.assertEquals(TODAY, rd.npe03__Last_Payment_Date__c);
     }
 
     //test closing an opportunity for an open recurring donation
-    static testMethod void closeOppForOpenEndedRecurringDonationCustomYears(){
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-        new npe03__Recurring_Donations_Settings__c(
-        npe03__Opportunity_Forecast_Months__c = 12,
-        npe03__Maximum_Donations__c = 50,
-        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(),
-        npe03__Add_Campaign_to_All_Opportunites__c = true       
-        ));           
+    @isTest
+    private static void closeOppForOpenEndedRecurringDonationCustomYears(){
+        createRdSettingsCampaignWithYearForecast();      
         
-        Account a = new Account();
-        a.Name = 'test Individual';
+        Account a = buildAccount();
         insert a;
         
-        Contact c = new Contact();
-        c.FirstName = 'test';
-        c.LastName = 'contact';
-        c.AccountId = a.Id;
+        Contact c = buildContact(a.Id);
         insert c;       
 
-        npe03__Custom_Installment_Settings__c cis = new npe03__Custom_Installment_Settings__c(
-        npe03__Increment__c = 'Years',
-        npe03__Value__c = 2,
-        Name = 'TESTCIS'        
+        npe03__Custom_Installment_Settings__c customInstallment = new npe03__Custom_Installment_Settings__c(
+            npe03__Increment__c = 'Years',
+            npe03__Value__c = 2,
+            Name = 'TESTCIS'        
         );
-        insert cis;        
+        insert customInstallment;        
 
-        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
-        r1.Name = 'test';
-        r1.npe03__Installments__c = 2;
-        r1.npe03__Organization__c = a.id;
-        r1.npe03__Amount__c = 100;
-        r1.npe03__Installment_Period__c = 'TESTCIS';
-        r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
-        r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
-        r1.npe03__Next_Payment_Date__c = system.today();
-        r1.OwnerId = system.Userinfo.getUserId();
-        insert r1;
+        npe03__Recurring_Donation__c rd = buildRecurringDonation(null, customInstallment.Name);
+        rd.npe03__Organization__c = a.id;
+        rd.npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus;
+        rd.npe03__Next_Payment_Date__c = TODAY;
+        rd.OwnerId = system.Userinfo.getUserId();
+        insert rd;
         
-        list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
-        system.assertEquals(1, originalOpps.size());          
+        List<Opportunity> originalOpps = getOppsOrderByCloseDate(rd.id);
+        System.assertEquals(1, originalOpps.size());          
         
         Opportunity o = originalOpps[0];
-        string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
-        o.StageName = closedstage;
-        o.CloseDate = system.today();
+        o.StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        o.CloseDate = TODAY;
+
         Test.startTest();
-        //update opp
         update o;
-        //call the update method
-        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{r1});
+        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new List<npe03__Recurring_Donation__c>{rd});
         Test.stopTest();        
         
-        npe03__Recurring_Donation__c rd = [select npe03__Last_Payment_Date__c from npe03__Recurring_Donation__c where id = :r1.id];     
-        
-        system.assertEquals(0, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
-        system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
+        rd = getRecurringDonation(rd.id);     
+        System.assertEquals(0, getOpenOppCount(rd.id));
+        System.assertEquals(TODAY, rd.npe03__Last_Payment_Date__c);
     }
 
     // Helpers
     ////////////
 
+    /*******************************************************************************************************
+    * @description Builds an account record with default values
+    * @return Account
+    */
+    public static Account buildAccount() {
+        return new Account(Name = 'test Individual');
+    }
+
+    /*******************************************************************************************************
+    * @description Builds a contact record with default values
+    * @param accId Id of the account to assign to the contact
+    * @return Contact
+    */
+    public static Contact buildContact(Id accId) {
+        return new Contact(
+            FirstName = 'test',
+            LastName = 'contact',
+            AccountId = accId
+        );  
+    }
+
+    /*******************************************************************************************************
+    * @description Builds a recurring donation with yearly installment
+    * @param contactId Id of the contact to assign to the recurring donation
+    * @return npe03__Recurring_Donation__c
+    */
+    public static npe03__Recurring_Donation__c buildRecurringDonationYearlyInstallment(Id contactId) {
+        return buildRecurringDonation(contactId, System.Label.npe03.RecurringDonationInstallmentPeriodYearly);
+    }
+
+    /*******************************************************************************************************
+    * @description Builds a recurring donation with quarterly installment
+    * @param contactId Id of the contact to assign to the recurring donation
+    * @return npe03__Recurring_Donation__c
+    */
+    public static npe03__Recurring_Donation__c buildRecurringDonationQuarterlyInstallment(Id contactId) {
+        return buildRecurringDonation(contactId, System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly);
+    }
+
+    /*******************************************************************************************************
+    * @description Builds a recurring donation with monthly installment
+    * @param contactId Id of the contact to assign to the recurring donation
+    * @return npe03__Recurring_Donation__c
+    */
+    public static npe03__Recurring_Donation__c buildRecurringDonationMonthlyInstallment(Id contactId) {
+        return buildRecurringDonation(contactId, System.Label.npe03.RecurringDonationInstallmentPeriodMonthly);
+    }
+
+    /*******************************************************************************************************
+    * @description Builds a recurring donation with weekly installment
+    * @param contactId Id of the contact to assign to the recurring donation
+    * @return npe03__Recurring_Donation__c
+    */
+    public static npe03__Recurring_Donation__c buildRecurringDonationWeeklyInstallment(Id contactId) {
+        return buildRecurringDonation(contactId, System.Label.npe03.RecurringDonationInstallmentPeriodWeekly);
+    }
+
+    /*******************************************************************************************************
+    * @description Builds a recurring donation with default values
+    * @param contactId Id of the contact to assign to the recurring donation
+    * @param installmentPeriod An installment period to assign to the recurring donation
+    * @return npe03__Recurring_Donation__c
+    */
+    public static npe03__Recurring_Donation__c buildRecurringDonation(Id contactId, String installmentPeriod) {
+        return new npe03__Recurring_Donation__c(
+            Name = 'test',
+            npe03__Installments__c = 2,
+            npe03__Contact__c = contactId,
+            npe03__Amount__c = 100,
+            npe03__Installment_Period__c = installmentPeriod,
+            npe03__Date_Established__c = DEFAULT_ESTABLISHED_DATE,
+            npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
+            npe03__Open_Ended_Status__c = 'None'
+        ); 
+    }
+
+    /*******************************************************************************************************
+    * @description Creates recurring donation settings with yearly forecast as default
+    * @return void
+    */
+    public static void createRdSettingsWithYearForecast() {
+        createRdSettingsWithForecast(12);
+    }
+
+    /*******************************************************************************************************
+    * @description Creates recurring donation settings
+    * @param forecastMonths Forecast month number
+    * @return void
+    */
+    public static void createRdSettingsWithForecast(Integer forecastMonths) {
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c(
+            npe03__Opportunity_Forecast_Months__c = forecastMonths,
+            npe03__Maximum_Donations__c = 50,
+            npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()        
+        ));
+    }
+
+    /*******************************************************************************************************
+    * @description Creates recurring donation settings specific to campaigns and 
+    * sets forecast to yearly forecast
+    * @return void
+    */
+    public static void createRdSettingsCampaignWithYearForecast() {
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c(
+            npe03__Opportunity_Forecast_Months__c = 12,
+            npe03__Maximum_Donations__c = 50,
+            npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(),
+            npe03__Add_Campaign_to_All_Opportunites__c = true        
+        ));           
+    }
+
     /*********************************************************************************************************
     * @description Retrieve Primary Opportunity Contact Roles for specified Recurring Donations
     * @param rdIds Recurring Donation Ids
     * @return List<OpportunityContactRole>
-    **********************************************************************************************************/
+    */
     private static List<OpportunityContactRole> getPrimaryOppContactRoles(Set<Id> rdIds) {
         List<OpportunityContactRole> ocrs = new List<OpportunityContactRole>([ 
             SELECT ContactId, OpportunityId, Role 
             FROM OpportunityContactRole 
-            WHERE Opportunity.npe03__Recurring_Donation__c IN :rdIds AND 
-            isPrimary = true
+            WHERE Opportunity.npe03__Recurring_Donation__c IN :rdIds
+            AND isPrimary = true
         ]);
 
         return ocrs == null ? new List<OpportunityContactRole>() : ocrs;
     }
-}
+
+    /*******************************************************************************************************
+    * @description Retrieves Opportunities for the specified recurring donations
+    * @param rds List of recurring donations
+    * @return List<Opportunity>
+    */
+    private static List<Opportunity> getOpps(List<npe03__Recurring_Donation__c> rds) {
+        return getOpps((new Map<Id, Sobject>(rds)).keySet());
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieves Opportunities for the specified recurring donation
+    * @param rdId Id of the recurring donation
+    * @return List<Opportunity>
+    */
+    private static List<Opportunity> getOpps(Id rdId) {
+        return getOpps(new Set<Id> { rdId });
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieves Opportunities for the specified recurring donations
+    * @param rdIds Ids of recurring donations
+    * @return List<Opportunity>
+    */
+    private static List<Opportunity> getOpps(Set<Id> rdIds) {
+        return [
+            SELECT Name, Amount, Accountid, CloseDate, isDeleted
+            FROM Opportunity 
+            WHERE npe03__Recurring_Donation__c IN :rdIds
+        ];
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieves Opportunities for the specified recurring donation and orders them by Close Date
+    * @param rdId Id of the recurring donation
+    * @return List<Opportunity>
+    */
+    public static List<Opportunity> getOppsOrderByCloseDate(Id rdId) {
+        return [
+            SELECT Id, Name, Amount, AccountId, 
+                CloseDate, Description, CampaignId
+            FROM Opportunity 
+            WHERE npe03__Recurring_Donation__c = :rdId 
+            ORDER BY CloseDate
+        ]; 
+    }
+
+    /*******************************************************************************************************
+    * @description Returns numbef of Opportunities for the specified recurring donation
+    * @param rdId Id of the recurring donation
+    * @return Integer
+    */
+    public static Integer getOpenOppCount(Id rdId) {
+        return [
+            SELECT COUNT() 
+            FROM Opportunity 
+            WHERE npe03__Recurring_Donation__c = :rdId 
+            AND isClosed = false
+        ];
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieves recurring donation record for the specified Id
+    * @param rdId Id of the recurring donation
+    * @return npe03__Recurring_Donation__c
+    */
+    public static npe03__Recurring_Donation__c getRecurringDonation(Id rdId) {
+        return [
+            SELECT Name, npe03__Last_Payment_Date__c, npe03__Paid_Amount__c
+            FROM npe03__Recurring_Donation__c 
+            WHERE Id = :rdId
+        ];
+    }
+ }
