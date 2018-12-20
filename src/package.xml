@@ -82,6 +82,11 @@
         <members>BDI_PostProcess_TEST</members>
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
+        <members>BGE_BatchGiftEntry_UTIL</members>
+        <members>BGE_ConfigurationWizard_CTRL</members>
+        <members>BGE_ConfigurationWizard_CTRL_TEST</members>
+        <members>BGE_DataImportBatchEntry_CTRL</members>
+        <members>BGE_DataImportBatchEntry_CTRL_TEST</members>
         <members>CAM_CascadeDeleteLookups_TDTM</members>
         <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
@@ -570,6 +575,11 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>BGE_BatchGiftEntryTab</members>
+        <members>BGE_ConfigurationWizard</members>
+        <members>BGE_DataImportBatchEntry</members>
+        <members>BGE_DonationSelector</members>
+        <members>BGE_EntryForm</members>
         <members>CRLP_FilterGroup</members>
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupApp</members>
@@ -597,6 +607,8 @@
         <members>autocompleteSelectListOption</members>
         <members>dataProviderInterface</members>
         <members>defaultTokens</members>
+        <members>modalFooter</members>
+        <members>modalHeader</members>
         <members>svg</members>
         <name>AuraDefinitionBundle</name>
     </types>
@@ -748,6 +760,7 @@
         <members>Customizable_Rollup_Settings__c.Rollups_Limit_on_Attached_Opps_for_Skew__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Skew_Dispatcher_Batch_Size__c</members>
         <members>DataImportBatch__c.Account_Custom_Unique_ID__c</members>
+        <members>DataImportBatch__c.Active_Fields__c</members>
         <members>DataImportBatch__c.Batch_Description__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>
         <members>DataImportBatch__c.Contact_Custom_Unique_ID__c</members>
@@ -756,11 +769,15 @@
         <members>DataImportBatch__c.Donation_Matching_Behavior__c</members>
         <members>DataImportBatch__c.Donation_Matching_Implementing_Class__c</members>
         <members>DataImportBatch__c.Donation_Matching_Rule__c</members>
+        <members>DataImportBatch__c.Expected_Count_of_Gifts__c</members>
+        <members>DataImportBatch__c.Expected_Total_Batch_Amount__c</members>
+        <members>DataImportBatch__c.GiftBatch__c</members>
         <members>DataImportBatch__c.Last_Processed_On__c</members>
         <members>DataImportBatch__c.Post_Process_Implementing_Class__c</members>
         <members>DataImportBatch__c.Process_Using_Scheduled_Job__c</members>
         <members>DataImportBatch__c.Records_Failed__c</members>
         <members>DataImportBatch__c.Records_Successfully_Processed__c</members>
+        <members>DataImportBatch__c.RequireTotalMatch__c</members>
         <members>DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c</members>
         <members>DataImport__c.Account1ImportStatus__c</members>
         <members>DataImport__c.Account1Imported__c</members>
@@ -1370,7 +1387,10 @@
         <members>bdiInvalidBatchId</members>
         <members>bdiInvalidDonationMatchingBehavior</members>
         <members>bdiMatched</members>
+        <members>bdiMatchedApplyNewPayment</members>
         <members>bdiMatchedBest</members>
+        <members>bdiMatchedByUser</members>
+        <members>bdiMatchedByUserNewOpp</members>
         <members>bdiMatchedId</members>
         <members>bdiMatchedNone</members>
         <members>bdiPositiveNumber</members>
@@ -1385,6 +1405,53 @@
         <members>bdiStatusProcessed</members>
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
+        <members>bgeBatchAvailableFields</members>
+        <members>bgeBatchBatchProcessSizeHelp</members>
+        <members>bgeBatchDonationDateRangeHelp</members>
+        <members>bgeBatchDonationMatchingBehaviorHelp</members>
+        <members>bgeBatchDonationMatchingClassHelp</members>
+        <members>bgeBatchDonationMatchingRuleHelp</members>
+        <members>bgeBatchDonorLookupInfo</members>
+        <members>bgeBatchErrorRequiredFields</members>
+        <members>bgeBatchInfoWizard</members>
+        <members>bgeBatchOverview</members>
+        <members>bgeBatchOverviewWizard</members>
+        <members>bgeBatchPostProcessClassHelp</members>
+        <members>bgeBatchProcessUsingScheduledJobHelp</members>
+        <members>bgeBatchRunOpportunityRollupsWhileProcessingHelp</members>
+        <members>bgeBatchSelectFields</members>
+        <members>bgeBatchSelectedFields</members>
+        <members>bgeBatchSetBatchOptions</members>
+        <members>bgeBatchSetFieldOptions</members>
+        <members>bgeEditBatchFieldOptionsWarning</members>
+        <members>bgeEditBatchFieldSelectionWarning</members>
+        <members>bgeEditBatchOptionsWarning</members>
+        <members>bgeFLSError</members>
+        <members>bgeFormMatchingModalText</members>
+        <members>bgeFormNoneLink</members>
+        <members>bgeFormSelectedOpportunity</members>
+        <members>bgeFormSelectedPayment</members>
+        <members>bgeFormUpdateOpportunity</members>
+        <members>bgeFormUpdatePayment</members>
+        <members>bgeGridAllGifts</members>
+        <members>bgeGridDonorType</members>
+        <members>bgeGridErrorFromDryRun</members>
+        <members>bgeGridErrorRequiredTotalsExpected</members>
+        <members>bgeGridGiftCountHeader</members>
+        <members>bgeGridGiftDeleted</members>
+        <members>bgeGridGiftSaved</members>
+        <members>bgeGridGiftUpdated</members>
+        <members>bgeGridNoGiftsBody</members>
+        <members>bgeGridNoGiftsHeader</members>
+        <members>bgeGridTotalAmount</members>
+        <members>bgeGridTotalCount</members>
+        <members>bgeGridWarningRequiredTotalsExpected</members>
+        <members>bgeMatchingAlert</members>
+        <members>bgeMatchingSelect</members>
+        <members>bgeNewBatch</members>
+        <members>bgeNewGift</members>
+        <members>bgeProcessBatch</members>
+        <members>bgeTabHeader</members>
         <members>btnRemove</members>
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
@@ -1709,6 +1776,7 @@
         <members>stgAddrMustChooseClass</members>
         <members>stgAddrPermissionDenied</members>
         <members>stgAllocationLevel</members>
+        <members>stgBtnBack</members>
         <members>stgBtnCancel</members>
         <members>stgBtnClearErrorLog</members>
         <members>stgBtnClone</members>
@@ -1741,7 +1809,9 @@
         <members>stgCRLPReset</members>
         <members>stgCheckboxFalse</members>
         <members>stgCheckboxTrue</members>
+        <members>stgClearErrors</members>
         <members>stgCountOf</members>
+        <members>stgDefaultValue</members>
         <members>stgDeploymentInProgress</members>
         <members>stgDeploymentTryAgain</members>
         <members>stgDocumentation</members>
@@ -1907,12 +1977,14 @@
         <members>stgLabelExamplesFGFormat</members>
         <members>stgLabelExamplesHHNameFOrmat</members>
         <members>stgLabelExamplesIGFormat</members>
+        <members>stgLabelField</members>
         <members>stgLabelHHGeneral</members>
         <members>stgLabelHHNaming</members>
         <members>stgLabelHHNamingProgress</members>
         <members>stgLabelHHOCR</members>
         <members>stgLabelHHObject</members>
         <members>stgLabelHHSettings</members>
+        <members>stgLabelHidden</members>
         <members>stgLabelHonoreeNotificationHelpText</members>
         <members>stgLabelHonoreeNotificationOCR</members>
         <members>stgLabelLeadSettings</members>
@@ -1928,6 +2000,7 @@
         <members>stgLabelNone</members>
         <members>stgLabelOK</members>
         <members>stgLabelONS</members>
+        <members>stgLabelObject</members>
         <members>stgLabelOppBatchProgress</members>
         <members>stgLabelOppCampMembers</members>
         <members>stgLabelOppNamingRefreshTitle</members>
@@ -2380,6 +2453,7 @@
     <types>
         <members>Address__c</members>
         <members>Batch_Data_Entry</members>
+        <members>Batch_Gift_Entry</members>
         <members>Contact_Merge</members>
         <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
@@ -2440,6 +2514,10 @@
         <name>FieldSet</name>
     </types>
     <types>
+        <members>Data_Import_Batch_Record_Home</members>
+        <name>FlexiPage</name>
+    </types>
+    <types>
         <members>Account-Household Layout</members>
         <members>Account-Organization Layout</members>
         <members>Account_Soft_Credit__c-Account Soft Credit Layout</members>
@@ -2482,6 +2560,7 @@
         <members>Batch__c.Completed_Batches</members>
         <members>Batch__c.Open_Batches</members>
         <members>DataImportBatch__c.All</members>
+        <members>DataImportBatch__c.Gift_Batches</members>
         <members>DataImport__c.All</members>
         <members>DataImport__c.Dry_Run_Errors</members>
         <members>DataImport__c.Dry_Run_Validated</members>
