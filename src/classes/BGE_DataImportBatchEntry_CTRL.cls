@@ -348,7 +348,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         String query = 'SELECT ' + String.join(dataImportFields,', ') +
             ' FROM DataImport__c' +
             ' WHERE NPSP_Data_Import_Batch__c = :batchId' +
-            ' ORDER BY Id ASC';
+            ' ORDER BY CreatedDate ASC';
 
         return Database.query(query);
     }
@@ -365,7 +365,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         String query = 'SELECT ' + String.join(dataImportFields,', ') +
             ' FROM DataImport__c' +
             ' WHERE Id IN :dataImportIds' +
-            ' ORDER BY Id ASC';
+            ' ORDER BY CreatedDate ASC';
 
         return Database.query(query);
     }
