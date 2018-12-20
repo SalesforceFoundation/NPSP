@@ -164,7 +164,7 @@
                         values: []
                     };
 
-                    allFieldsBySObject[sObjectLabel].forEach(function(currentField) {
+                    allFieldsBySObject[sObjectName].forEach(function(currentField) {
                         currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
                         currentFieldGroup.options.push(
                             {
@@ -216,7 +216,7 @@
                         fields: []
                     };
 
-                    activeFieldsBySObject[sObjectLabel].forEach(function (currentField) {
+                    activeFieldsBySObject[sObjectName].forEach(function (currentField) {
 
                         var fieldInfo = {
                             name: currentField.name,
