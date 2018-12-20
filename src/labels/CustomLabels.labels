@@ -5011,6 +5011,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You must choose a verification service in order to enable automatic verification.</value>
     </labels>
     <labels>
+        <fullName>stgAddrPermissionDenied</fullName>
+        <categories>Settings, address</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Permission Denied on Address Verification Panel</shortDescription>
+        <value>You do not have permissions to manage Address settings. Please contact your system administrator for more information.</value>
+    </labels>
+    <labels>
         <fullName>stgAllocationLevel</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
