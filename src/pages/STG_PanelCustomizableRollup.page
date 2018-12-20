@@ -1,65 +1,15 @@
-<apex:page controller="STG_PanelCustomizableRollup_CTRL" docType="html-5.0" standardStylesheets="false" >
+<apex:page controller="STG_PanelCustomizableRollup_CTRL" docType="html-5.0" standardStylesheets="false">
 
     <apex:slds/>
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}" />
 
     <div class="slds-scope">
         <apex:form id="form" styleClass="slds-m-around_x-large">
             <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.CRLP_RollupSummary}" />
 
-            <c:UTIL_PageMessages allowClose="false" id="messages"/>
-
-            <!-- BEGIN NON-HH ACCOUNT MODEL MESSAGE -->
-            <apex:outputPanel rendered="{! !showCRLPSettings }">
-                <div class="slds" id="page_messages">
-                    <div role="alert" class="slds-notify slds-notify_toast slds-notify_toast slds-theme_info slds-theme_info">
-                        <div class="notify__content">
-                            <div class="slds-media">
-                                <div class="slds-media__figure">
-                                    <apex:outputText>
-                                        <svg class="slds-icon" aria-hidden="true" viewBox="0 0 24 24">
-                                            <path  d="M12 .9C5.9.9.9 5.9.9 12s5 11.1 11.1 11.1 11.1-5 11.1-11.1S18.1.9 12 .9zm0 5.6c.8 0 1.4.6 1.4 1.4s-.6 1.4-1.4 1.4-1.4-.6-1.4-1.4.6-1.4 1.4-1.4zm2.3 9.7c0 .2-.2.4-.5.4h-3.6c-.3 0-.5-.1-.5-.4v-.9c0-.3.2-.5.5-.5.2 0 .4-.2.4-.4v-1.9c0-.2-.2-.5-.4-.5-.3 0-.5-.1-.5-.4v-.9c0-.3.2-.5.5-.5h2.7c.3 0 .5.2.5.5v3.7c0 .2.2.4.4.4.3 0 .5.2.5.5v.9z"/>
-                                        </svg>
-                                    </apex:outputText>
-                                </div>
-                                <div class="slds-media__body">
-                                    <h2 class="slds-text-heading_small slds-text-heading_small">
-                                        <apex:outputText value="{!$Label.PageMessagesInfo}: " />
-                                        <apex:outputText value="{!$Label.stgCRLPHouseholdAccountError}"/>
-                                    </h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </apex:outputPanel>
-            <!-- END NON-HH ACCOUNT MODEL MESSAGE -->
-
-            <!-- BEGIN NON-ADMIN MESSAGE -->
-            <apex:outputPanel rendered="{! !isAdmin }">
-                <div class="slds" id="page_messages">
-                    <div role="alert" class="slds-notify slds-notify_toast slds-notify_toast slds-theme_info slds-theme_info">
-                        <div class="notify__content">
-                            <div class="slds-media">
-                                <div class="slds-media__figure">
-                                    <apex:outputText>
-                                        <svg class="slds-icon" aria-hidden="true" viewBox="0 0 24 24">
-                                            <path  d="M12 .9C5.9.9.9 5.9.9 12s5 11.1 11.1 11.1 11.1-5 11.1-11.1S18.1.9 12 .9zm0 5.6c.8 0 1.4.6 1.4 1.4s-.6 1.4-1.4 1.4-1.4-.6-1.4-1.4.6-1.4 1.4-1.4zm2.3 9.7c0 .2-.2.4-.5.4h-3.6c-.3 0-.5-.1-.5-.4v-.9c0-.3.2-.5.5-.5.2 0 .4-.2.4-.4v-1.9c0-.2-.2-.5-.4-.5-.3 0-.5-.1-.5-.4v-.9c0-.3.2-.5.5-.5h2.7c.3 0 .5.2.5.5v3.7c0 .2.2.4.4.4.3 0 .5.2.5.5v.9z"/>
-                                        </svg>
-                                    </apex:outputText>
-                                </div>
-                                <div class="slds-media__body">
-                                    <h2 class="slds-text-heading_small slds-text-heading_small">
-                                        <apex:outputText value="{!$Label.PageMessagesInfo}: " />
-                                        <apex:outputText value="{!$Label.stgCRLPNonAdminError}"/>
-                                    </h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </apex:outputPanel>
-            <!-- BEGIN NON-ADMIN MESSAGE -->
+            <c:UTIL_PageMessages allowClose="false" id="messages" />
+            <c:UTIL_PageMessageInfo isRendered="{!NOT(showCRLPSettings)}" message="{!$Label.stgCRLPHouseholdAccountError}" />
+            <c:UTIL_PageMessageInfo isRendered="{!NOT(isAdmin)}" message="{!$Label.stgCRLPNonAdminError}" />
 
             <!-- BEGIN INTRO TEXT AND TOGGLE -->
             <div class="slds-grid {!IF(showCRLPSettings, '', 'slds-hide')}">
@@ -70,12 +20,13 @@
 
                     <label class="slds-checkbox_toggle slds-grid slds-m-vertical_small">
                         <span class="slds-form-element__label slds-m-bottom_none">Customizable Rollups</span>
-                        <apex:inputCheckbox onClick="onToggle(); return false;" id="enableCRLPToggle" html-name="checkbox-toggle-2" value="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c}" html-aria-describedby="checkbox-toggle-2" />
+                        <apex:inputCheckbox onClick="onToggle(); return false;" id="enableCRLPToggle" html-name="checkbox-toggle-2" value="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c}"
+                            html-aria-describedby="checkbox-toggle-2" />
                         <span class="slds-checkbox_faux_container" aria-live="assertive">
-                                        <span class="slds-checkbox_faux"></span>
-                                        <span class="slds-checkbox_on">Enabled</span>
-                                        <span class="slds-checkbox_off">Disabled</span>
-                                    </span>
+                            <span class="slds-checkbox_faux"></span>
+                            <span class="slds-checkbox_on">Enabled</span>
+                            <span class="slds-checkbox_off">Disabled</span>
+                        </span>
                     </label>
 
                 </apex:outputPanel>
@@ -93,10 +44,12 @@
             <!-- BEGIN ENABLED OPTIONS -->
             <apex:outputPanel rendered="{! stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isPolling}">
 
-                <apex:commandButton id="navigateCRLPs" value="{!$Label.stgCRLPGoToSetup}" styleClass="slds-m-vertical_large slds-button slds-button_brand" action="{!navigate}" /><br/>
+                <apex:commandButton id="navigateCRLPs" value="{!$Label.stgCRLPGoToSetup}" styleClass="slds-m-vertical_large slds-button slds-button_brand"
+                    action="{!navigate}" />
+                <br/>
 
                 <div class="slds-section">
-                    <div class="slds-section-title_divider" >Reset Customizable Rollups</div>
+                    <div class="slds-section-title_divider">Reset Customizable Rollups</div>
                 </div>
 
                 <div class="slds-m-vertical_medium">
@@ -119,16 +72,14 @@
             </div>
             <!-- END POLLING MESSAGE -->
 
-            <apex:actionPoller action="{!checkDeploymentStatus}"
-                               enabled="{!isPolling}"
-                               reRender="form"
-                               interval="5"
-                               status="deploymentStatus"
+            <apex:actionPoller action="{!checkDeploymentStatus}" enabled="{!isPolling}" reRender="form" interval="5" status="deploymentStatus"
             />
 
             <apex:actionFunction name="reset" action="{!resetRollupsToDefaultConfig}" reRender="form" status="statusLoad" />
-            <apex:actionFunction name="enableCRLPs" action="{!enableCRLPs}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem" status="statusLoad" />
-            <apex:actionFunction name="disableCRLPs" action="{!disableCRLPs}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem" status="statusLoad" />
+            <apex:actionFunction name="enableCRLPs" action="{!enableCRLPs}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
+                status="statusLoad" />
+            <apex:actionFunction name="disableCRLPs" action="{!disableCRLPs}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
+                status="statusLoad" />
 
         </apex:form>
 
@@ -139,8 +90,10 @@
                     <div class="slds-modal__header">
                         <h2 id="warning_modal_heading" class="slds-text-heading_medium">{!$Label.CONV_Warning}</h2>
                         <button class="slds-button slds-button_icon-inverse slds-modal__close" data-dismiss="modal" data-target="warning_modal">
-                            <svg aria-hidden="true" class="slds-button__icon slds-button__icon_large" data-dismiss="modal" data-target="warning_modal" viewBox="0 0 24 24">
-                                <path  data-dismiss="modal" data-target="warning_modal" d="M14.6 11.9l6-6c.3-.3.3-.7 0-1l-.9-1c-.3-.3-.7-.3-1 0L12.6 10c-.1.2-.4.2-.6 0L6 3.9c-.3-.3-.7-.3-1 0l-1 .9c-.3.3-.3.7 0 1l6.1 6.1c.1.1.1.4 0 .6L4 18.6c-.3.3-.3.7 0 1l.9.9c.3.3.7.3 1 0l6.1-6c.2-.2.5-.2.6 0l6.1 6c.3.3.7.3 1 0l.9-.9c.3-.3.3-.7 0-1l-6-6c-.2-.2-.2-.5 0-.7z"/>
+                            <svg aria-hidden="true" class="slds-button__icon slds-button__icon_large" data-dismiss="modal" data-target="warning_modal"
+                                viewBox="0 0 24 24">
+                                <path data-dismiss="modal" data-target="warning_modal" d="M14.6 11.9l6-6c.3-.3.3-.7 0-1l-.9-1c-.3-.3-.7-.3-1 0L12.6 10c-.1.2-.4.2-.6 0L6 3.9c-.3-.3-.7-.3-1 0l-1 .9c-.3.3-.3.7 0 1l6.1 6.1c.1.1.1.4 0 .6L4 18.6c-.3.3-.3.7 0 1l.9.9c.3.3.7.3 1 0l6.1-6c.2-.2.5-.2.6 0l6.1 6c.3.3.7.3 1 0l.9-.9c.3-.3.3-.7 0-1l-6-6c-.2-.2-.2-.5 0-.7z"
+                                />
                             </svg>
                             <span class="slds-assistive-text">Close</span>
                         </button>
