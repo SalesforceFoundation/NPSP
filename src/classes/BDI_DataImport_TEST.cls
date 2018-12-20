@@ -366,7 +366,7 @@ public with sharing class BDI_DataImport_TEST {
 
         listDI = getDIs();
         System.assertEquals(1, listDI.size());
-        // the outcome will be different if Advancement is installed because non-household Accounts CAN be donors
+        // the outcome will be different if Advancement is installed because 1x1 Contacts CAN be donors
         if (usingAdv){
             System.assertEquals(listCon[0].Id, listDI[0].Contact1Imported__c);
             System.assertEquals(listCon[1].Id, listDI[0].Contact2Imported__c);
