@@ -767,7 +767,6 @@
         <members>DataImportBatch__c.Records_Successfully_Processed__c</members>
         <members>DataImportBatch__c.RequireTotalMatch__c</members>
         <members>DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c</members>
-        <members>DataImportBatch__c.Status__c</members>
         <members>DataImport__c.Account1ImportStatus__c</members>
         <members>DataImport__c.Account1Imported__c</members>
         <members>DataImport__c.Account1_City__c</members>
@@ -822,7 +821,6 @@
         <members>DataImport__c.Contact2_Title__c</members>
         <members>DataImport__c.Contact2_Work_Email__c</members>
         <members>DataImport__c.Contact2_Work_Phone__c</members>
-        <members>DataImport__c.Contact_Name__c</members>
         <members>DataImport__c.DonationImportStatus__c</members>
         <members>DataImport__c.DonationImported__c</members>
         <members>DataImport__c.Donation_Amount__c</members>
@@ -839,7 +837,6 @@
         <members>DataImport__c.Donation_Record_Type_Name__c</members>
         <members>DataImport__c.Donation_Stage__c</members>
         <members>DataImport__c.Donation_Type__c</members>
-        <members>DataImport__c.External_Id__c</members>
         <members>DataImport__c.FailureInformation__c</members>
         <members>DataImport__c.HomeAddressImportStatus__c</members>
         <members>DataImport__c.HomeAddressImported__c</members>
@@ -1399,7 +1396,6 @@
         <members>bgeBatchDonationMatchingClassHelp</members>
         <members>bgeBatchDonationMatchingRuleHelp</members>
         <members>bgeBatchDonorLookupInfo</members>
-        <members>bgeBatchErrorDefaultValue</members>
         <members>bgeBatchErrorRequiredFields</members>
         <members>bgeBatchOverview</members>
         <members>bgeBatchOverviewWizard</members>
@@ -2615,7 +2611,6 @@
         <members>Allocation__c.Manage_Allocations</members>
         <members>Contact.Merge_Contacts</members>
         <members>Contact.Recalculate_Rollups</members>
-        <members>DataImportBatch__c.Edit_Processing_Settings</members>
         <members>DataImportBatch__c.Process_Batch</members>
         <members>DataImport__c.Delete_All_Data_Import_Records</members>
         <members>DataImport__c.Delete_Imported_Data_Import_Records</members>
