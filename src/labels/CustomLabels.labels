@@ -2570,13 +2570,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Select the fields to use for entering gifts in this batch. Donor Type and an Account or Contact lookup will always appear. You will only see fields that you have access to.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchErrorDefaultValue</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error shown when batch field is hidden and missing the default value.</shortDescription>
-        <value>Hidden fields must have a default value.</value>
-    </labels>
-    <labels>
         <fullName>bgeBatchErrorRequiredFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
