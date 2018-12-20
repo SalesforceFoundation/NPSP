@@ -647,22 +647,6 @@
                         }
                     });
 
-                    /* todo: put this back when we decide to use hidden attribute
-                    // will need to figure out where/how to display errors
-                    // this error/allvalid handling is remnant from datatable display
-                    if (currentField.hide && !currentField.defaultValue) {
-
-                        allValid = false;
-                        var fieldName = currentField.name;
-                        var fieldNameGroup = {
-                            title: $A.get('$Label.c.PageMessagesError'),
-                            messages: [$A.get('$Label.c.bgeBatchErrorDefaultValue')],
-                            fieldNames: ['defaultValue']
-                        };
-                        errors.rows[fieldName] = fieldNameGroup;
-                        errors.size += 1;
-                    }*/
-
                 });
 
             }
