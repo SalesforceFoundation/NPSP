@@ -41,7 +41,8 @@ public with sharing class USER_UserService_TEST {
     * @description Tests if Users are System Administrators.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testIsSysAdmin() {
+    @isTest
+    private static void testIsSysAdmin() {
         List<User> newUsers = createUsers();
 
         Map<Id, Boolean> userIdToIsSysAdmin = USER_UserService.isSysAdmin(newUsers);
@@ -55,7 +56,8 @@ public with sharing class USER_UserService_TEST {
     * @description Tests the IsActive status for Users.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testIsActiveUser() {
+    @isTest
+    private static void testIsActiveUser() {
         List<User> newUsers = createUsers();
 
         Map<Id, Boolean> userIdToIsActive = USER_UserService.isActiveUser(newUsers);
@@ -69,7 +71,8 @@ public with sharing class USER_UserService_TEST {
     * @description Tests the handling of deactivated System Administrators.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testDeactivatedSysAdminHandling() {
+    @isTest
+    private static void testDeactivatedSysAdminHandling() {
         List<User> newUsers = createUsers();
         Set<Id> sysAdminIds = new Map<Id, User>(newUsers).keySet();
 
@@ -91,7 +94,8 @@ public with sharing class USER_UserService_TEST {
     * @description Tests setting the NPSP Settings Error Notification Recipients to 'All Sys Admins'.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testSetErrorNotificationToAllSysAdmins() {
+    @isTest
+    private static void testSetErrorNotificationToAllSysAdmins() {
         List<User> newUsers = createUsers();
         Set<Id> sysAdminIds = new Map<Id, User>(newUsers).keySet();
 
@@ -114,7 +118,8 @@ public with sharing class USER_UserService_TEST {
     *              log an error and send an email.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testHandleScheduledJobsSubmittedByInActiveSysAdmin() {
+    @isTest
+    private static void testHandleScheduledJobsSubmittedByInActiveSysAdmin() {
         List<User> newUsers = createUsers();
         Set<Id> sysAdminIds = new Map<Id, User>(newUsers).keySet();
 
@@ -127,15 +132,16 @@ public with sharing class USER_UserService_TEST {
             UTIL_MasterSchedulableHelper.setScheduledJobs();
         }
 
-        List<CronTrigger> scheduledJobs = [SELECT Id, OwnerId, CronExpression, CronJobDetail.Name, CreatedBy.Name, CreatedBy.IsActive 
-                                            FROM CronTrigger
-                                            WHERE CronJobDetail.JobType = :USER_UserService.JOB_TYPE_SCHEDULED_APEX];
+        List<CronTrigger> scheduledJobs = [
+            SELECT Id, OwnerId, CronExpression, CronJobDetail.Name, CreatedBy.Name, CreatedBy.IsActive 
+            FROM CronTrigger
+            WHERE CronJobDetail.JobType = :USER_UserService.JOB_TYPE_SCHEDULED_APEX];
 
         Test.startTest();
         USER_UserService.handleScheduledJobsSubmittedByInActiveSysAdmin(sysAdminIds);
         Test.stopTest();
 
-        List<Error__c> retrievedErrorAfterEmailSent = [SELECT Email_Sent__c FROM Error__c WHERE Object_Type__c = :USER_UserService.OBJECT_TYPE_USER];
+        List<Error__c> retrievedErrorAfterEmailSent = getErrors();
         System.assertNotEquals(null, retrievedErrorAfterEmailSent);
         System.assertEquals(true, retrievedErrorAfterEmailSent[0].Email_Sent__c);
     }
@@ -145,12 +151,13 @@ public with sharing class USER_UserService_TEST {
     * @description Tests logging and Error__c and sending an email to the org's System Administrators.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testNotifyingSysAdminsAboutInActiveSysAdminUser() {
+    @isTest
+    private static void testNotifyingSysAdminsAboutInActiveSysAdminUser() {
         Test.startTest();
         USER_UserService.notifySysAdminsAboutInActiveSysAdminUser();
         Test.stopTest();
 
-        List<Error__c> retrievedErrorAfterEmailSent = [SELECT Email_Sent__c, Full_Message__c FROM Error__c WHERE Object_Type__c = :USER_UserService.OBJECT_TYPE_USER];
+        List<Error__c> retrievedErrorAfterEmailSent = getErrors();
         System.assertEquals(Label.InactiveScheduledJobsOwnerErrMsg, retrievedErrorAfterEmailSent[0].Full_Message__c);
         System.assertEquals(true, retrievedErrorAfterEmailSent[0].Email_Sent__c);
     }
@@ -160,12 +167,13 @@ public with sharing class USER_UserService_TEST {
     * @description Tests logging and Error__c record.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testLoggingInActiveSysAdminError() {
+    @isTest
+    private static void testLoggingInActiveSysAdminError() {
         Test.startTest();
         USER_UserService.logInActiveSysAdminError();
         Test.stopTest();
 
-        List<Error__c> retrievedError = [SELECT Full_Message__c FROM Error__c WHERE Object_Type__c = :USER_UserService.OBJECT_TYPE_USER];
+        List<Error__c> retrievedError = getErrors();
         System.assertEquals(Label.InactiveScheduledJobsOwnerErrMsg, retrievedError[0].Full_Message__c);
     }
 
@@ -174,14 +182,15 @@ public with sharing class USER_UserService_TEST {
     * @description Tests the sending of the Scheduled Jobs error email to System Administrators.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testSendingInActiveSysAdminEmail() {
+    @isTest
+    private static void testSendingInActiveSysAdminEmail() {
         Test.startTest();
         USER_UserService.logInActiveSysAdminError();
 
         USER_UserService.sendInActiveSysAdminEmail();
         Test.stopTest();
 
-        List<Error__c> retrievedErrorAfterEmailSent = [SELECT Email_Sent__c FROM Error__c WHERE Object_Type__c = :USER_UserService.OBJECT_TYPE_USER];
+        List<Error__c> retrievedErrorAfterEmailSent = getErrors();
         System.assertEquals(true, retrievedErrorAfterEmailSent[0].Email_Sent__c);
     }
 
@@ -209,12 +218,91 @@ public with sharing class USER_UserService_TEST {
     * @description Tests lightning experience methods
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testLEX() {
+    @isTest
+    private static void testLEX() {
 
         if (USER_UserService.isUserRunningLightning()) {
             System.assertEquals(true, USER_UserService.isUserRunningLightning());
         }
         System.assertEquals(false, USER_UserService.isUserRunningMobile());
         System.assertNotEquals(null, USER_UserService.getLightningBaseURL('Test'));
+    }
+
+    /*******************************************************************************************************
+    * @description Verify system admin has the Customize Application flag set
+    */
+    @isTest
+    private static void isCustomizeApplicationUserReturnsTrueForSystemAdmin() {
+        User sysAdmin = UTIL_UnitTestData_TEST.createUser(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+
+        System.runAs(sysAdmin) {
+            System.assertEquals(true, USER_UserService.isCustomizeApplicationUser());
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Verify isCustomizeApplicationUser() returns false for a read-only user 
+    * not having Customize Application flag set.
+    */
+    @isTest
+    private static void isCustomizeApplicationUserReturnsFalseWhenReadOnlyUserDoesNotHaveCustomizeAppPermissionSet() {
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
+
+        System.runAs(readOnlyUser) {
+            System.assertEquals(false, USER_UserService.isCustomizeApplicationUser());
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Verify isCustomizeApplicationUser() returns true for a read-only user 
+    * having Permission Set with the Customize Application flag set.
+    */
+    @isTest
+    private static void isCustomizeApplicationUserReturnsTrueWhenReadOnlyUserHasCustomizeAppPermissionSet() {
+        User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
+        SYstem.assertNotEquals(null, readOnlyUser.Id);
+
+        assignCustomizeApplicationPermissionSet(readOnlyUser.Id);
+
+        System.runAs(readOnlyUser) {
+            System.assertEquals(true, USER_UserService.isCustomizeApplicationUser());
+        }
+    }
+
+    // Helpers
+    //////////////
+
+    /*******************************************************************************************************
+    * @description Returns errors
+    * @return List<Error__c>
+    */
+    private static List<Error__c> getErrors() {
+        return [
+            SELECT Full_Message__c, Email_Sent__c 
+            FROM Error__c 
+            WHERE Object_Type__c = :USER_UserService.OBJECT_TYPE_USER];
+    }
+
+    /*******************************************************************************************************
+    * @description Creates and assigns the permission set with Customize Application flag set
+    */
+    private static void assignCustomizeApplicationPermissionSet(Id userId) {
+        // Create a permission set with CustomizeApplication set ensuring other flags
+        // on which CustomizeApplication settings depends are set as well
+        PermissionSet permission = new PermissionSet(
+            Name = 'PermissionTest',
+            Label = 'PermissionTest',
+            PermissionsManageCustomPermissions = true,
+            PermissionsViewRoles = true, 
+            PermissionsViewSetup = true,
+            PermissionsManageTranslation = true,
+            PermissionsCustomizeApplication = true
+        );
+        insert permission;
+
+        insert new PermissionSetAssignment(
+            AssigneeId = userId,
+            PermissionSetId = permission.Id
+        );
     }
 }
