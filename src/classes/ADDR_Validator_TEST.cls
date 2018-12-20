@@ -656,10 +656,12 @@ public with sharing class ADDR_Validator_TEST {
         Addr_Verification_Settings__c settings = createDefaultSettings();
         AddressVerifierExtension addrVerifier = new AddressVerifierExtension();
 
+        Test.startTest();//required to be called just before Test.setMock();
         Test.setMock(HttpCalloutMock.class, new MockSmartyStreetsService());
 
         String result = addrVerifier.verifyService(settings, ZIP_CODE);
         System.assertEquals(System.Label.Addr_Valid_Key_Pair, result);
+        Test.stopTest();
     }
 
     // Helpers
