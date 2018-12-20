@@ -223,11 +223,18 @@
         columns.push({
             type: 'action',
             typeAttributes: {
-                rowActions: [{
-                    label: 'Delete',
-                    name: 'delete',
-                    title: 'Delete'
-                }]
+                rowActions: [
+                    {
+                        label: $A.get('$Label.c.bgeActionView'),
+                        name: 'view',
+                        title: $A.get('$Label.c.bgeActionView')
+                    },
+                    {
+                        label: $A.get('$Label.c.bgeActionDelete'),
+                        name: 'delete',
+                        title: $A.get('$Label.c.bgeActionDelete')
+                    }
+                ]
             }
         });
 
@@ -379,6 +386,43 @@
         }
 
         return totalsMatchIfRequired;
+    },
+
+    /**
+     * @description: Navigates to the record view of the Data Import record
+     * @param row: Information about which row the action was called from
+     */
+    handleViewRowAction: function(component, row) {
+        let navEvt = $A.get("e.force:navigateToSObject");
+        navEvt.setParams({
+            recordId: row.Id,
+            slideDevName: 'detail'
+        });
+        navEvt.fire();
+    },
+
+    /**
+     * @description: Deletes the data import record displayed in a given row
+     * @param row: Information about which row the action was called from
+     */
+    handleDeleteRowAction: function(component, row) {
+        let self = this;
+        self.showSpinner(component);
+        let action = component.get('c.deleteDataImportRow');
+        action.setParams({batchId: component.get('v.recordId'), dataImportId: row.Id});
+        action.setCallback(this, function (response) {
+            const state = response.getState();
+            if (state === 'SUCCESS') {
+                const returnValue = JSON.parse(response.getReturnValue());
+                self.setDataTableRows(component, returnValue);
+                self.setTotals(component, returnValue);
+                self.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftDeleted'), 'success');
+            } else {
+                self.handleApexErrors(component, response.getError());
+            }
+            self.hideSpinner(component);
+        });
+        $A.enqueueAction(action);
     },
 
     /**
