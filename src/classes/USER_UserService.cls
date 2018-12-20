@@ -68,6 +68,26 @@ public with sharing class USER_UserService {
         return userIdToIsSysAdmin;
     }
 
+    /*********************************************************************************************************
+    * @description Returns user Customize Application permission
+    * @return Boolean True if the user has Customize Application permission at profile level or 
+    * an assigned custom permission set
+    **********************************************************************************************************/
+    public static Boolean isCustomizeApplicationUser() {
+        Id userId = UserInfo.getUserId();
+
+        List<PermissionSetAssignment> permissions = [
+            SELECT Id
+            FROM PermissionSetAssignment
+            WHERE AssigneeId = :userId
+            AND PermissionSetId IN (
+                SELECT Id
+                FROM PermissionSet
+                WHERE PermissionsCustomizeApplication = true)
+        ];
+        
+        return !permissions.isEmpty();
+    }
 
     /*********************************************************************************************************
     * @description Determines if a User in the List is active based on IsActive field.
