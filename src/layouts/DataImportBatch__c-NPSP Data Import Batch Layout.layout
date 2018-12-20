@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
     <customButtons>Process_Batch</customButtons>
-    <customButtons>Edit_Processing_Settings</customButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
         <customLabel>false</customLabel>
@@ -153,7 +152,6 @@
     </platformActionList>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>Status__c</fields>
         <fields>FailureInformation__c</fields>
         <fields>Contact1_Firstname__c</fields>
         <fields>Contact1_Lastname__c</fields>
