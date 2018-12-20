@@ -52,7 +52,7 @@
             <c:UTIL_PageMessages />
 
             <div class="slds-grid slds-p-top_medium">
-                <div class="slds-size_1-of-2 slds-m-horizontal_large">
+                <div class="slds-col slds-m-horizontal_large">
                     <apex:outputText rendered="{!NOT(batchRunning)}">
                         <div class="slds-container_large slds-container_center">
         
@@ -84,7 +84,7 @@
                                     <div class="slds-form-element">
                                         <div class="slds-form-element__control">
                                             <apex:commandButton value="{!$Label.bdiRunBtn}" action="{!importData}" immediate="false" styleClass="slds-button slds-button_brand" rerender="idForm"/>
-                                            <apex:commandButton value="{!$Label.bdiDryRunBeginButton}" action="{!startDryRun}" immediate="false" styleClass="slds-button slds-button_neutral" rerender="idForm"/>
+                                            <apex:commandButton value="{!$Label.bdiDryRunBeginButton}" action="{!startDryRun}" immediate="false" styleClass="slds-button slds-button_neutral" rendered="{!NOT(isGiftBatch)}" rerender="idForm"/>
                                             <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!close}" immediate="true" styleClass="slds-button slds-button_neutral" />
                                         </div>
                                     </div>
@@ -94,8 +94,8 @@
                     </apex:outputText>
                 </div>
 
-                <div class="slds-size_1-of-2 slds-m-horizontal_large">
-                    <apex:outputText rendered="{!AND(NOT(batchRunning), userCanEditSettings)}">
+                <apex:outputText rendered="{!AND(NOT(batchRunning), userCanEditSettings)}">
+                    <div class="slds-col slds-m-horizontal_large">
                         <div class="slds-text-heading_small slds-m-bottom_medium">
                             {!$Label.bdiDataImporterConfigTitle}&nbsp;&nbsp;&nbsp;&nbsp;
                             <apex:commandButton value="{!$Label.stgBtnEdit}" action="{!editBDISettings}" immediate="true" styleClass="slds-button slds-button_neutral" rendered="{!NOT(isEditMode)}"/>
@@ -103,8 +103,8 @@
                             <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!cancelBDISettings}" immediate="true" styleClass="slds-button slds-button_neutral" rendered="{!isEditMode}"/>
                         </div>
                         <c:BDI_SettingsUI bdiBatch="{!diBatch}" editMode="{!isEditMode}" showBatchOnlyFields="{!isTrueBatch}" />
-                   </apex:outputText>
-                </div>
+                    </div>
+                </apex:outputText>
             </div>
 
             <apex:outputText rendered="{!batchRunning}" >
@@ -125,8 +125,8 @@
                                         <apex:commandButton value="{!$Label.bdiBtnClose}" action="{!close}" immediate="true" styleClass="slds-button slds-button_neutral" />
                                     </div>
                                 </div>
-                                <div class="slds-card__body">
-                                    <div class="slds-media slds-tile slds-wrap">
+                                <div class="slds-card__body slds-card__body_inner">
+                                    <div class="slds-media slds-tile slds-wrap slds-p-bottom_small">
                                         <div class="slds-media__figure slds-size_2-of-12">
                                             <svg viewbox="0 0 34 34">
                                                 <circle class="{!statusTheme}" stroke-dasharray="{!percentComplete} 100" r="16" cx="17" cy="17"/>
