@@ -30,9 +30,9 @@
 <!--
   @author Salesforce.org
   @date 2018
-  @group Batch Gift Entry
-  @group-content ../../ApexDocContent/BatchDataImport.htm
-  @description Component used to view, edit, or create a Batch Template record.
+  @group
+  @group-content
+  @description Component used as header in modal
 -->
 <aura:component>
 

@@ -102,8 +102,6 @@
                 this.handleApexErrors(component, response.getError());
             }
             this.sendMessage('hideFormSpinner', '');
-            const matchLink = document.getElementById('selectOpenDonation');
-            matchLink.focus();
         });
         $A.enqueueAction(action);
     },

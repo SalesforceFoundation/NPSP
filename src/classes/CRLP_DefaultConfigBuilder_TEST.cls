@@ -109,6 +109,107 @@ private class CRLP_DefaultConfigBuilder_TEST {
     }
 
     /**
+     * @description Validates that "Memberships: Won" filter group and associated rollups is not created when
+     * the Membership record type does not exist
+     */
+    static testMethod void test_createMembershipDefaults_MembershipRecordTypeDoesNotExist() {
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
+            npo02__Membership_Record_Types__c = UTIL_UnitTestData_TEST.mockId(RecordType.getSObjectType())
+        ));
+
+        Test.startTest();
+        CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
+        Test.stopTest();
+
+        Set<String> filterRuleLabels = new Set<String>();
+        Map<String,Boolean> membershipRollupLabelsByActiveState = new Map<String,Boolean>();
+
+        for (Metadata.CustomMetadata md : CRLP_ConfigBuilder_SVC.queuedMetadataTypes) {
+            if (md.fullName.contains('Filter_Rule__mdt')) {
+                filterRuleLabels.add(md.label);
+            }
+            else if (md.fullName.contains('Rollup__mdt')) {
+                Boolean isRelatedToMembershipFilterGroup = false;
+                Boolean isActive;
+                for (Metadata.CustomMetadataValue val : md.values) {
+                    if (val.field == String.valueOf(Rollup__mdt.Filter_Group__c) && val.value == CRLP_DefaultConfigBuilder.FilterGroup_Membership ) {
+                        isRelatedToMembershipFilterGroup = true;
+                    }
+                    if (val.field == String.valueOf(Rollup__mdt.Active__c)) {
+                        isActive = (Boolean) val.value;
+                    }
+                }
+                if (isRelatedToMembershipFilterGroup) {
+                    membershipRollupLabelsByActiveState.put(md.label, isActive);
+                }
+            }
+        }
+
+        System.assert(!filterRuleLabels.contains('Membership: for Record Types'),
+            'Default membership filter rule should not be created if Membership Record Type does not exist'
+        );
+
+        System.assert(!membershipRollupLabelsByActiveState.isEmpty(), 'The membership rollups should exist');
+        for (String label : membershipRollupLabelsByActiveState.keySet()) {
+            System.assertEquals(false, membershipRollupLabelsByActiveState.get(label),
+                'Rollups related to the default membership filter group should not be active');
+        }
+    }
+
+    /**
+     * @description Validates that exclusion filter rules are not created if record type does not exist for Id in setting
+     */
+    static testMethod void test_excludedRecordTypes_RecordTypeDoesNotExist() {
+        UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(
+            Use_Fiscal_Year_for_Rollups__c = true,
+            Excluded_Opp_Types__c = 'foo;bar',
+            Excluded_Opp_RecTypes__c= UTIL_UnitTestData_TEST.mockId(RecordType.getSObjectType())
+        ));
+
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                npo02__Always_Rollup_to_Primary_Contact__c = false,
+                npo02__Enable_Opp_Rollup_Triggers__c = false,
+                npo02__Excluded_Account_Opp_Rectypes__c = UTIL_UnitTestData_TEST.mockId(RecordType.getSObjectType()),
+                npo02__Excluded_Account_Opp_Types__c = null,
+                npo02__Excluded_Contact_Opp_Rectypes__c = UTIL_UnitTestData_TEST.mockId(RecordType.getSObjectType()),
+                npo02__Excluded_Contact_Opp_Types__c = null,
+                npo02__Membership_Record_Types__c = membershipRecordTypeIdForTests,
+                npo02__Enable_Soft_Credit_Rollups__c = false
+        ));
+
+        Test.startTest();
+        CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
+        Test.stopTest();
+
+        Set<String> filterRuleLabels = new Set<String>();
+
+        for (Metadata.CustomMetadata md : CRLP_ConfigBuilder_SVC.queuedMetadataTypes) {
+            if (md.fullName.contains('Filter_Rule__mdt')) {
+                filterRuleLabels.add(md.label);
+            }
+        }
+
+        Set<String> unexpectedFilterRuleNames = new Set<String>{
+            'Allocations: Excluded Record Types',
+            'Opps-Acct: Excl RT (HC)',
+            'Opps-Acct: Excl RT (SC)',
+            'Pmts-Acct: Excl RT (Paid)',
+            'Pmts-Acct: Excl RT (Written Off)',
+            'Opps-Cont: Excl RT (HC)',
+            'Opps-Cont: Excl RT (SC)',
+            'Pmts-Cont: Excl RT (Paid)',
+            'Pmts-Cont: Excl RT (Written Off)'
+        };
+
+        for (String unexpectedFilterRuleName : unexpectedFilterRuleNames) {
+            System.assert(!filterRuleLabels.contains(unexpectedFilterRuleName),
+                'The exclusion filter rule \'' + unexpectedFilterRuleName + '\' should not be created if the excluded Record Type does not exist'
+            );
+        }
+    }
+
+    /**
      * @description Test creating the default rollup configuration where there the legacy rollup settings are different
      * for the Account and Contact rollups; and the 'Enable Soft Credit Rollups' field is unchecked.
      */

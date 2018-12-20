@@ -20,9 +20,9 @@
                 action.setCallback(this, function (response) {
                     const state = response.getState();
                     if (state === 'SUCCESS') {
-                        const response = JSON.parse(response.getReturnValue());
-                        helper.setDataTableRows(component, response);
-                        helper.setTotals(component, response);
+                        const returnValue = JSON.parse(response.getReturnValue());
+                        helper.setDataTableRows(component, returnValue);
+                        helper.setTotals(component, returnValue);
                         helper.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftDeleted'), 'success');
                     } else {
                         helper.handleApexErrors(component, response.getError());
@@ -52,8 +52,7 @@
         } else if (channel === 'hideFormSpinner') {
             helper.hideFormSpinner(component);
         } else if (channel === 'showFormSpinner') {
-            var spinner = component.find('formSpinner');
-            $A.util.removeClass(spinner, 'slds-hide');
+            helper.showFormSpinner(component);
         } else if (channel === 'onError') {
             helper.showToast(component, message.title, message.errorMessage, 'error');
         }
@@ -71,36 +70,10 @@
     },
 
     /**
-     * @description: opens the batch wizard modal for edit mode of the component
+     * @description: checks that user has all necessary permissions and then launches modal or displays error
      */
-    openBatchWizard: function(component, event) {
-        var modalBody;
-        var modalHeader;
-        var modalFooter;
-        var batchId = component.get('v.recordId');
-
-        $A.createComponents([
-                ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c', recordId: batchId, isReadOnly: false}],
-                ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
-                ['c:modalFooter', {}]
-            ],
-            function(components, status, errorMessage){
-                if (status === 'SUCCESS') {
-                    modalBody = components[0];
-                    modalHeader = components[1];
-                    modalFooter = components[2];
-                    component.find('overlayLib').showCustomModal({
-                        body: modalBody,
-                        header: modalHeader,
-                        footer: modalFooter,
-                        showCloseButton: true,
-                        cssClass: 'slds-modal_large'
-                    })
-                } else {
-                    this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
-                }
-            }
-        );
+    onEditClick: function(component, event, helper) {
+        helper.checkFieldPermissions(component, event, helper);
     },
 
     /**

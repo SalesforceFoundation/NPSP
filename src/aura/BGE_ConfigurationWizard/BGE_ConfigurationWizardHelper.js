@@ -112,9 +112,6 @@
                 //update footer in modal to keep save button appropriately enabled/disabled
                 _sendMessage('pendingSave', batchMetadataView.pendingSave);
 
-                //update state of the flag to hide/reveal fields for advanced match options
-                _sendMessage('showAdvancedOptions', templateMetadataView.showAdvancedOptions);
-
                 // when in modal context, need to notify the modal footer component
                 _sendMessage('setError', batchMetadataView.hasError);
 
