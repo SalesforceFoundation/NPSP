@@ -21,6 +21,7 @@ public static void initializeNPSPSettings() {
     %%%NAMESPACE%%%UTIL_CustomSettingsFacade.getOrgBDESettings();
     %%%NAMESPACE%%%UTIL_CustomSettingsFacade.getOrgAllocationsSettings();
     %%%NAMESPACE%%%UTIL_CustomSettingsFacade.getOrgDataImportSettings();
+    %%%NAMESPACE%%%UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings();
 
     Id rtId = [SELECT Id FROM RecordType WHERE SObjectType = 'Opportunity' AND DeveloperName = 'Membership' LIMIT 1].Id;
 
