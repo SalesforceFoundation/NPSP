@@ -458,7 +458,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         for (DescribeFieldResult donationField: dfrs) {
             Map<String, String> option = new Map<String, String>();
-            option.put('value', donationField.Name);
+            option.put('value', donationField.Name.toLowerCase());
             option.put('label', donationField.Label);
             donationMatchingOptions.add(option);
         }
