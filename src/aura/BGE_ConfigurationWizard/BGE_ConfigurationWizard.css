@@ -1,6 +1,11 @@
 .THIS.slds-tabs_card {
     background: white;
 }
+
+/*remove focus button formatting*/
+.THIS .slds-button:focus {
+    box-shadow: 0 0 3px transparent;
+}
 /*formatting for edit mode checkboxes*/
 .THIS .bgeInputCheckbox{
     display: inline-flex;

@@ -98,10 +98,10 @@
                 model.getBatchMetadata().showError(possibleError);
             }
         } else if (task === 'showAdvanced') {
-            var step = component.get('v.templateMetadata.progressIndicatorStep');
+            var step = component.get('v.batchMetadata.progressIndicatorStep');
             if (step === '5') {
-                model.getTemplateInfo().load(component.get('v.templateInfo'));
-                model.getTemplateMetadata().toggleShowAdvanced();
+                model.getBatchMetadata().toggleShowAdvanced();
+                model.getBatchInfo().load(component.get('v.batchInfo'));
             }
         }
     },

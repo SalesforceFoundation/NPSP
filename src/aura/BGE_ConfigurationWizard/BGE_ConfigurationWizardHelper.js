@@ -83,6 +83,7 @@
                 batchMetadataView.errorMessage = batchMetadata.errorMessage;
                 batchMetadataView.pageHeader = batchMetadata.pageHeader;
                 batchMetadataView.pendingSave = batchMetadata.pendingSave;
+                batchMetadataView.showAdvancedOptions = batchMetadata.showAdvancedOptions;
 
                 if (!batchMetadataView.hasError) {
                     batchMetadataView.progressIndicatorStep = batchMetadata.progressIndicatorStep;

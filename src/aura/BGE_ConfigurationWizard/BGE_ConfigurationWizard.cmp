@@ -35,7 +35,7 @@
   @description Component used to view, edit, or create a Batch record.
 -->
 <aura:component controller="BGE_ConfigurationWizard_CTRL"
-                implements="force:hasRecordId,force:hasSObjectName">
+                implements="force:hasRecordId,force:hasSObjectName,lightning:actionOverride">
 
     <!-- private attributes -->
     <aura:attribute name="model" type="Object" access="PRIVATE" />
@@ -347,34 +347,34 @@
 
                                 <lightning:layoutItem class="slds-p-around_x-small" size="12">
                                     <lightning:button aura:id="showAdvanced" 
-                                                      label="{!$Label.c.bgeWizardShowAdvancedOptions}"
+                                                      label="{!if(v.batchMetadata.showAdvancedOptions, $Label.c.bgeWizardHideAdvancedOptions, $Label.c.bgeWizardShowAdvancedOptions)}"
                                                       variant="base" 
                                                       onclick="{!c.handleUserInput}" />    
-                                </lightning:layoutItem>
+                                    </lightning:layoutItem>
 
                                 <!-- BEGIN ADVANCED OPTIONS FOR STEP 5 -->
-                                <aura:if isTrue="{!v.templateMetadata.showAdvancedOptions}">
+                                <aura:if isTrue="{!v.batchMetadata.showAdvancedOptions}">
                                     <lightning:layoutItem size="12">
                                         <lightning:layout horizontalAlign="spread" multipleRows="true">
                                             <lightning:layoutItem class="slds-p-around_x-small" size="12">
                                                 <label class="slds-form-element__label" for="donationDateRange">
                                                     <abbr class="slds-required" title="required">*</abbr>
-                                                    {!v.templateMetadata.labels.donationDateRangeLabel}
+                                                    {!v.batchMetadata.labels.donationDateRangeLabel}
                                                 </label>
                                                 <lightning:helptext content="{!$Label.c.bgeBatchTemplateDonationDateRangeHelp}" />
                                                 <lightning:input aura:id="donationDateRange"
-                                                                    label="{!v.templateMetadata.labels.donationDateRangeLabel}"
+                                                                    label="{!v.batchMetadata.labels.donationDateRangeLabel}"
                                                                     type="number" required="true" variant="label-hidden"
-                                                                    value="{!v.templateInfo.donationDateRange}"/>
+                                                                    value="{!v.batchInfo.donationDateRange}"/>
                                             </lightning:layoutItem>
                                             <lightning:layoutItem class="slds-p-around_x-small" size="12">
                                                 <label class="slds-form-element__label" for="donationMatchingClass">
-                                                    {!v.templateMetadata.labels.donationMatchingClassLabel}
+                                                    {!v.batchMetadata.labels.donationMatchingClassLabel}
                                                 </label>
                                                 <lightning:helptext content="{!$Label.c.bgeBatchTemplateDonationMatchingClassHelp}" />
                                                 <lightning:input aura:id="donationMatchingClass"
-                                                                label="{!v.templateMetadata.labels.donationMatchingClassLabel}"
-                                                                value="{!v.templateInfo.donationMatchingClass}" variant="label-hidden"/>
+                                                                label="{!v.batchMetadata.labels.donationMatchingClassLabel}"
+                                                                value="{!v.batchInfo.donationMatchingClass}" variant="label-hidden"/>
                                             </lightning:layoutItem>
 
                                             <lightning:layoutItem class="slds-p-horizontal_x-small" size="12">
@@ -389,42 +389,42 @@
                                             <lightning:layoutItem class="slds-p-around_x-small" size="12">
                                                 <label class="slds-form-element__label" for="batchProcessSize">
                                                     <abbr class="slds-required" title="required">*</abbr>
-                                                    {!v.templateMetadata.labels.batchProcessSizeLabel}
+                                                    {!v.batchMetadata.labels.batchProcessSizeLabel}
                                                 </label>
                                                 <lightning:helptext content="{!$Label.c.bgeBatchTemplateBatchProcessSizeHelp}" />
                                                 <lightning:input aura:id="batchProcessSize"
-                                                                label="{!v.templateMetadata.labels.batchProcessSizeLabel}"
+                                                                label="{!v.batchMetadata.labels.batchProcessSizeLabel}"
                                                                 type="number" step="0" required="true" variant="label-hidden"
-                                                                value="{!v.templateInfo.batchProcessSize}"/>
+                                                                value="{!v.batchInfo.batchProcessSize}"/>
                                             </lightning:layoutItem>
                                             <lightning:layoutItem class="slds-p-around_x-small" size="12">
                                                 <lightning:input aura:id="runOpportunityRollupsWhileProcessing"
-                                                                label="{!v.templateMetadata.labels.runOpportunityRollupsWhileProcessingLabel}"
+                                                                label="{!v.batchMetadata.labels.runOpportunityRollupsWhileProcessingLabel}"
                                                                 type="checkbox" variant="label-hidden" class="inputCheckbox"
-                                                                checked="{!v.templateInfo.runOpportunityRollupsWhileProcessing}"/>
+                                                                checked="{!v.batchInfo.runOpportunityRollupsWhileProcessing}"/>
                                                 <label class="slds-form-element__label" for="runOpportunityRollupsWhileProcessing">
-                                                    {!v.templateMetadata.labels.runOpportunityRollupsWhileProcessingLabel}
+                                                    {!v.batchMetadata.labels.runOpportunityRollupsWhileProcessingLabel}
                                                 </label>
                                                 <lightning:helptext content="{!$Label.c.bgeBatchTemplateRunOpportunityRollupsWhileProcessingHelp}" />
                                             </lightning:layoutItem>
                                             <lightning:layoutItem class="slds-p-around_x-small" size="12">
                                                 <lightning:input aura:id="processUsingScheduledJob"
-                                                                label="{!v.templateMetadata.labels.processUsingScheduledJobLabel}"
+                                                                label="{!v.batchMetadata.labels.processUsingScheduledJobLabel}"
                                                                 type="checkbox" variant="label-hidden" class="inputCheckbox"
-                                                                checked="{!v.templateInfo.processUsingScheduledJob}"/>
+                                                                checked="{!v.batchInfo.processUsingScheduledJob}"/>
                                                 <label class="slds-form-element__label" for="processUsingScheduledJob">
-                                                    {!v.templateMetadata.labels.processUsingScheduledJobLabel}
+                                                    {!v.batchMetadata.labels.processUsingScheduledJobLabel}
                                                 </label>
                                                 <lightning:helptext content="{!$Label.c.bgeBatchTemplateProcessUsingScheduledJobHelp}" />
                                             </lightning:layoutItem>
                                             <lightning:layoutItem class="slds-p-around_x-small" size="12">
                                                 <label class="slds-form-element__label" for="postProcessClass">
-                                                    {!v.templateMetadata.labels.postProcessClassLabel}
+                                                    {!v.batchMetadata.labels.postProcessClassLabel}
                                                 </label>
                                                 <lightning:helptext content="{!$Label.c.bgeBatchTemplatePostProcessClassHelp}" />
                                                 <lightning:input aura:id="postProcessClass"
-                                                                label="{!v.templateMetadata.labels.postProcessClassLabel}"
-                                                                value="{!v.templateInfo.postProcessClass}"
+                                                                label="{!v.batchMetadata.labels.postProcessClassLabel}"
+                                                                value="{!v.batchInfo.postProcessClass}"
                                                                 variant="label-hidden"/>
                                             </lightning:layoutItem>
                                         </lightning:layout>
