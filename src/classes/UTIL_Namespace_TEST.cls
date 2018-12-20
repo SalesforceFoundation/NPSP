@@ -35,9 +35,10 @@
 * such as detecting whether we are in a managed package, and some string helpers.
 */
 @isTest
-public with sharing class UTIL_Namespace_TEST {
+private with sharing class UTIL_Namespace_TEST {
 
-    static testmethod void TestNamespacePrefixFixups() {
+    @isTest 
+    private static void TestNamespacePrefixFixups() {
         if (UTIL_Namespace.getNamespace()!='') {
             system.assertNotEquals('',UTIL_Namespace.getNamespace());
             system.assertEquals(UTIL_Namespace.getNamespace()+'__foo', UTIL_Namespace.StrTokenNSPrefix('foo'));
@@ -58,9 +59,32 @@ public with sharing class UTIL_Namespace_TEST {
         system.assertEquals('npe5__foo__c', UTIL_Namespace.StrTokenRemoveNSPrefix('npe5__foo__c'));
         system.assertEquals('foo__c', UTIL_Namespace.StrTokenRemoveNSPrefix('npsp__foo__c'));
         system.assertEquals('foo_npsp__c', UTIL_Namespace.StrTokenRemoveNSPrefix('foo_npsp__c'));
-    }               
+    } 
+    
+    /*******************************************************************************************************************
+    * @description Verifies namespace is removed
+    */
+    @isTest 
+    private static void shouldRemoveClassNamespace() {
+        String className = 'foo.BarClassName';
+        String actualClassName = UTIL_Namespace.removeClassNamespace(className);
 
-    static testmethod void testSandboxEmailToRealEmail() {
+        System.assertEquals('BarClassName', actualClassName, 'Namespace should be removed from the class name');
+    }
+
+    /*******************************************************************************************************************
+    * @description Verifies class name is returned as is when namespace is not included in the class name
+    */
+    @isTest 
+    private static void shouldReturnClassNameWhenNoNamespacePresent() {
+        String className = 'BarClassName';
+        String actualClassName = UTIL_Namespace.removeClassNamespace(className);
+
+        System.assertEquals(className, actualClassName, 'The class name should be returned as is');
+    }              
+
+    @isTest 
+    private static void testSandboxEmailToRealEmail() {
         String fixedEmail = UTIL_Namespace.sandboxEmailToRealEmail('awheeler=universalcontainers.com@example.com');	
         System.assertEquals('awheeler@universalcontainers.com', fixedEmail);
     }
@@ -69,7 +93,8 @@ public with sharing class UTIL_Namespace_TEST {
     //unfortunately, this causes our local DE Orgs to not include them in our local package.
     //but these labels were already released in the managed package and cannot be deleted.
     //so we now refer to them here, just so our DE Orgs will keep the in our local package.
-    static testmethod void keepUnusedPackagedLabelsInPackage() {
+    @isTest 
+    private static void keepUnusedPackagedLabelsInPackage() {
         string str;
         str = Label.Addr_Settings_API_Body;
         str = Label.Addr_Settings_Intro_Body;

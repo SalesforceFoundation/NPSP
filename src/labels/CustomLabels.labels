@@ -2152,7 +2152,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Data Importer</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>status on a bdi object to specify it was matched from an ambiguous set in Dry Rn</shortDescription>
+        <shortDescription>Status on bdi object to specify it was matched from an ambiguous set in Dry Run</shortDescription>
         <value>Dry Run - Best Match Used</value>
     </labels>
     <labels>
@@ -2379,7 +2379,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Data Importer</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>status on a bdi object to specify it was matched from an ambiguous set</shortDescription>
+        <shortDescription>Status on a bdi object to specify it was matched from an ambiguous set</shortDescription>
         <value>Best Match Used</value>
     </labels>
     <labels>
@@ -2395,8 +2395,32 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Data Import</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>status on a bdi object when no matching record found</shortDescription>
+        <shortDescription>Status on a bdi object when no matching record found</shortDescription>
         <value>Matched None</value>
+    </labels>
+    <labels>
+        <fullName>bdiMatchedByUser</fullName>
+        <categories>Data Import</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Status on a BDI object when user has selected matching record in BGE interface</shortDescription>
+        <value>User-Selected Match</value>
+    </labels>
+    <labels>
+        <fullName>bdiMatchedByUserNewOpp</fullName>
+        <categories>Data Import</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Status on a BDI object when user chose to create a new Opportunity in BGE</shortDescription>
+        <value>User-Selected New Opportunity</value>
+    </labels>
+    <labels>
+        <fullName>bdiMatchedApplyNewPayment</fullName>
+        <categories>Data Import</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>status on BDI object when user selected opp in BGE interface for new payment</shortDescription>
+        <value>Apply New Payment</value>
     </labels>
     <labels>
         <fullName>bdiPositiveNumber</fullName>
@@ -2493,6 +2517,336 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>bdiTime</shortDescription>
         <value>Time:</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchSelectedFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bgeBatchActiveFields</shortDescription>
+        <value>Selected Fields</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchAvailableFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bgeBatchAvailableFields</shortDescription>
+        <value>Available Fields</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchBatchProcessSizeHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>The number of records to process at a time in each batch.</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchDonationDateRangeHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. NPSP will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchDonationMatchingBehaviorHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>Defines how NPSP should handle matching Donations.</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchDonationMatchingClassHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>The developer name of an Apex class that implements the BDI_IMatching interface for Donations. Leave blank to let NPSP handle matching.</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchDonationMatchingRuleHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>Specifies which fields to match by when trying to match Donations in batch records against existing Opportunties and Payments.</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchDonorLookupInfo</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Explanation text for hidden lookup fields.</shortDescription>
+        <value>Select the fields to use for entering gifts in this batch. Donor Type and an Account or Contact lookup will always appear. You will only see fields that you have access to.</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchErrorRequiredFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error shown when required fields are missing.</shortDescription>
+        <value>The following fields are required because other fields from their object are selected. Select them before proceeding:</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchOverviewWizard</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Info in Wizard</shortDescription>
+        <value>Enter Batch Info</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchPostProcessClassHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP batch records.
+        </value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchProcessUsingScheduledJobHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>When checked, the batch will be automatically processed based on the schedule for the associated job.</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchRunOpportunityRollupsWhileProcessingHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>When checked, NPSP calculates donor rollups when donations are processed. If unchecked, donor rollups are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchInfoWizard</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Info in Wizard prompting user entry</shortDescription>
+        <value>Enter Batch Info</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchOverview</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Info in View Mode</shortDescription>
+        <value>Batch Info</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchSelectFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header and text for Field Selection</shortDescription>
+        <value>Select Fields</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchSetBatchOptions</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Options</shortDescription>
+        <value>Set Batch Options</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchSetFieldOptions</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Field Options</shortDescription>
+        <value>Set Field Options</value>
+    </labels>
+    <labels>
+        <fullName>bgeEditBatchFieldOptionsWarning</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message for Field Options step of BGE Config Wizard</shortDescription>
+        <value>WARNING: There are records saved to this batch. Any changes you make won&apos;t affect existing records.</value>
+    </labels>
+    <labels>
+        <fullName>bgeEditBatchFieldSelectionWarning</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message for Select Fields step of BGE Config Wizard</shortDescription>
+        <value>WARNING: There are records saved to this batch. Any changes you make won&apos;t affect existing records. If you remove fields, those fields no longer appear on the gift entry screen, but data isn&apos;t deleted from those fields on existing records. Therefore, we recommend that you do not remove fields.</value>
+    </labels>
+    <labels>
+        <fullName>bgeEditBatchOptionsWarning</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message for Batch Options step of BGE Config Wizard</shortDescription>
+        <value>WARNING: There are records saved to this batch. Any changes you make won&apos;t affect existing records. We will not attempt to match existing records using updated donation matching rule settings, unless those records are edited.</value>
+    </labels>
+    <labels>
+        <fullName>bgeFormMatchingModalText</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header text to prompt user to select a donation to update</shortDescription>
+        <value>Select the record you want to update.</value>
+    </labels>
+    <labels>
+        <fullName>bgeFormNoneLink</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link to create a new opportunity</shortDescription>
+        <value>Alternatively, create a new Opportunity.</value>
+    </labels>
+    <labels>
+        <fullName>bgeFormSelectedOpportunity</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Denotes donation selected in the BGE UI entry form.</shortDescription>
+        <value>Selected Opportunity</value>
+    </labels>
+    <labels>
+        <fullName>bgeFormSelectedPayment</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Denotes donation selected in the BGE UI entry form.</shortDescription>
+        <value>Selected Payment</value>
+    </labels>
+    <labels>
+        <fullName>bgeFormUpdateOpportunity</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button text to select an opportunity to update in BGE</shortDescription>
+        <value>Update this Opportunity</value>
+    </labels>
+    <labels>
+        <fullName>bgeFLSError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label that appears when user does not pass FLS check in BGE</shortDescription>
+        <value>You don&apos;t have the required field permissions. Contact your system administrator to inquire about getting the necessary permissions.</value>
+    </labels>
+    <labels>
+        <fullName>bgeFormUpdatePayment</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button text to select a payment to update in BGE</shortDescription>
+        <value>Update this Payment</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridAllGifts</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gift Entry Grid</shortDescription>
+        <value>All Gifts</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridDonorType</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Donor Type picklist</shortDescription>
+        <value>Donor Type</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridErrorFromDryRun</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message preventing user from processing batch if there are errors.</shortDescription>
+        <value>There are errors on one or more entries. You must resolve all errors before you can process this batch.</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridErrorRequiredTotalsExpected</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message preventing user from processing batch if totals don&apos;t match expected</shortDescription>
+        <value>Either the count of gifts or the total gifts doesn&apos;t match the expected values for this batch. These values must match before you can process the batch.</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridGiftCountHeader</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to give context to the progress bar.</shortDescription>
+        <value>Gifts Entered</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridGiftDeleted</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Success message when gift is deleted.</shortDescription>
+        <value>Gift successfully deleted.</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridGiftSaved</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Success message when gift is saved.</shortDescription>
+        <value>New gift has been added to the batch.</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridGiftUpdated</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Success message when gift is updated.</shortDescription>
+        <value>Gifts successfully updated.</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridNoGiftsHeader</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header message when no gifts are associated with batch.</shortDescription>
+        <value>Looks like you haven't entered any gifts yet!</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridNoGiftsBody</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body message when no gifts are associated with batch.</shortDescription>
+        <value>Enter a new gift and it will appear here.</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridTotalAmount</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Total amount matching expected amount.</shortDescription>
+        <value>Total Amount:</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridTotalCount</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Total count versus expected count.</shortDescription>
+        <value>Total Count:</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridWarningRequiredTotalsExpected</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message warning user if totals don&apos;t match expected</shortDescription>
+        <value>Require Expected Totals Match is selected but the Expected Count of Gifts and Expected Total Batch Amount fields are blank. Edit the batch details and either uncheck Require Expected Totals Match or add values in the related fields.</value>
+    </labels>
+    <labels>
+        <fullName>bgeMatchingAlert</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alerts user that there are matched donations</shortDescription>
+        <value>This donor has pending donations.</value>
+    </labels>
+    <labels>
+        <fullName>bgeMatchingSelect</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Select Open Donation text and modal header</shortDescription>
+        <value>Review Donations</value>
+    </labels>
+    <labels>
+        <fullName>bgeNewBatch</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to create a new batch.</shortDescription>
+        <value>New Batch</value>
+    </labels>
+    <labels>
+        <fullName>bgeNewGift</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gift Entry Form</shortDescription>
+        <value>New Gift</value>
+    </labels>
+    <labels>
+        <fullName>bgeProcessBatch</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to process a batch.</shortDescription>
+        <value>Process Batch</value>
+    </labels>
+    <labels>
+        <fullName>bgeTabHeader</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header used for Batch Gift Entry tab</shortDescription>
+        <value>Batch Gift Entry</value>
     </labels>
     <labels>
         <fullName>btnRemove</fullName>
@@ -5032,12 +5386,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You must choose a verification service in order to enable automatic verification.</value>
     </labels>
     <labels>
+        <fullName>stgAddrPermissionDenied</fullName>
+        <categories>Settings, address</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Permission Denied on Address Verification Panel</shortDescription>
+        <value>You do not have permissions to manage Address settings. Please contact your system administrator for more information.</value>
+    </labels>
+    <labels>
         <fullName>stgAllocationLevel</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgAllocationLevel</shortDescription>
         <value>Allocation Type</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnBack</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to go back to a previous page</shortDescription>
+        <value>Back</value>
     </labels>
     <labels>
         <fullName>stgBtnCancel</fullName>
@@ -5248,6 +5618,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Not Selected</value>
     </labels>
     <labels>
+        <fullName>stgClearErrors</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error shown when errors must be removed before something else can occur.</shortDescription>
+        <value>Clear errors before proceeding.</value>
+    </labels>
+    <labels>
         <fullName>stgCountOf</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -5309,6 +5686,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>stgCRLPReset</shortDescription>
         <value>Reset Customizable Rollups</value>
+    </labels>
+    <labels>
+        <fullName>stgDefaultValue</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgDefaultValue</shortDescription>
+        <value>Default Value</value>
     </labels>
     <labels>
         <fullName>stgDocumentation</fullName>
@@ -6734,6 +7119,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Examples for Informal Greeting Format</value>
     </labels>
     <labels>
+        <fullName>stgLabelField</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelField</shortDescription>
+        <value>Field</value>
+    </labels>
+    <labels>
         <fullName>stgLabelHHGeneral</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -6780,6 +7173,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelHHSettings</shortDescription>
         <value>Household Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelHidden</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgLabelHidden</shortDescription>
+        <value>Hidden</value>
     </labels>
     <labels>
         <fullName>stgLabelHonoreeNotificationHelpText</fullName>
@@ -6884,6 +7285,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>stgLabelNone</shortDescription>
         <value>--None--</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelObject</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelObject</shortDescription>
+        <value>Object</value>
     </labels>
     <labels>
         <fullName>stgLabelONS</fullName>

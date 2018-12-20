@@ -139,6 +139,16 @@ private class CRLP_RollupAccount_TEST {
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
                         'npo02__FirstCloseDate__c', CRLP_Operation.RollupType.First, 'CloseDate') + ',' +
 
+                // Allow counting of all Opportunities regardless of the filter. This should have a different
+                // result than the normal expected count. It is meant to validate proper grouping of rollups.
+                CMT_UnitTestData_TEST.createRollupRecord('Total Count with NO filter', null,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        'npo02__OppAmountThisYear__c', CRLP_Operation.RollupType.Count, '') + ',' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('Total Count of Opps', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        'npo02__OppAmountLastYear__c', CRLP_Operation.RollupType.Count, '') + ',' +
+
                 /* Payment Rollups for Total Paid and Total Written Off - using a field that can hold the value */
                 CMT_UnitTestData_TEST.createRollupRecord('Total Payments', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.PmtToAcct,
@@ -152,6 +162,7 @@ private class CRLP_RollupAccount_TEST {
                 CMT_UnitTestData_TEST.createRollupRecord('Total Account Soft Credits', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.AccountSoftCreditToAccount, 'npo02__Best_Gift_Year_Total__c',
                         CRLP_Operation.RollupType.SUM, 'Amount__c') +
+
                 ']';
 
         // Deserialize the rollups to use for testing
@@ -310,20 +321,21 @@ private class CRLP_RollupAccount_TEST {
             }
             lastCloseDate = closeDate.addMonths(n);
         }
+        Integer hardCreditAcctOppCount = opps.size();
 
         // In a multi-currency org, create one Opportunity in the default (probably USD), but set the target Account
         // to a different currency so that the Opp amount will be converted. The mocking of the UTIL_CurrencyCache
         // is handled the the test_Rollups_MultiCurrencyBatch() method above.
         if (tt == TestType.TestMultiCurrBatch) {
-            Account mcAccount = [SELECT Id FROM Account WHERE Id != :hardCreditAccId LIMIT 1];
-            mcAccount.put('CurrencyIsoCode', otherCurrencyCode);
-            Database.update(mcAccount);
+            Account multiCurrAcct = [SELECT Id FROM Account WHERE Id != :hardCreditAccId LIMIT 1];
+            multiCurrAcct.put('CurrencyIsoCode', otherCurrencyCode);
+            Database.update(multiCurrAcct);
             Opportunity opp = new Opportunity(
                 Name = 'Test MultiCurrencyOpp',
                 Amount = 1000,
                 CloseDate = Date.today().addDays(-30),
                 StageName = closedStage,
-                AccountId = mcAccount.Id,
+                AccountId = multiCurrAcct.Id,
                 RecordTypeId = rtId
             );
             opp.put('CurrencyIsoCode', defaultCurrCode);
@@ -339,6 +351,7 @@ private class CRLP_RollupAccount_TEST {
                 Primary_Contact__c = c.Id,
                 RecordTypeId = rtId
         ));
+        hardCreditAcctOppCount++;
 
         // create one closed won opportunity from BEFORE the earliest date to ensure it's not included
         Date oldCloseDate = closeDate.addDays(-1);
@@ -351,16 +364,20 @@ private class CRLP_RollupAccount_TEST {
                 RecordTypeId = rtId,
                 npe01__Do_Not_Automatically_Create_Payment__c = true
         ));
+        hardCreditAcctOppCount++;
 
         insert opps;
 
         npe01__OppPayment__c pmt1 = [SELECT npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__c
-        WHERE npe01__Opportunity__r.IsWon = false LIMIT 1];
+                                        WHERE npe01__Opportunity__r.IsWon = false
+                                    LIMIT 1];
         pmt1.npe01__Written_Off__c = true;
         pmt1.npe01__Paid__c = false;    // technically this does not cause a DML change!?
 
         npe01__OppPayment__c pmt2 = [SELECT npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__c
-            WHERE npe01__Opportunity__r.IsWon = true AND npe01__Written_Off__c = false AND Id != :pmt1.Id LIMIT 1];
+                                        WHERE npe01__Opportunity__r.IsWon = true
+                                        AND npe01__Written_Off__c = false AND Id != :pmt1.Id
+                                    LIMIT 1];
         pmt2.npe01__Written_Off__c = true;
         pmt2.npe01__Paid__c = false;
 
@@ -390,6 +407,8 @@ private class CRLP_RollupAccount_TEST {
 
         // Make sure everything is null first!
         if (tt != TestType.TestTrigger && tt != TestType.TestReparentOpp) {
+            System.assertEquals(0, hardCreditAcc.npo02__OppAmountThisYear__c);
+            System.assertEquals(0, hardCreditAcc.npo02__OppAmountLastYear__c);
             System.assertEquals(0, hardCreditAcc.npo02__TotalOppAmount__c);
             System.assertEquals(0, hardCreditAcc.npo02__AverageAmount__c);
             System.assertEquals(0, hardCreditAcc.npo02__OppAmount2YearsAgo__c);
@@ -443,6 +462,9 @@ private class CRLP_RollupAccount_TEST {
         System.assertEquals(baseAmt, hardCreditAcc.npo02__LastMembershipAmount__c, 'The Amount written off does not match');
         System.assertEquals(donationYears.size(), hardCreditAcc.npo02__NumberOfMembershipOpps__c, 'The current streak should be all the years');
         System.assertEquals(donationYears.size(), hardCreditAcc.Description.split(';').size(), 'The list of donated years should match');
+
+        System.assertEquals(cnt, hardCreditAcc.npo02__OppAmountLastYear__c, 'Count should be all Won Opps');
+        System.assertEquals(hardCreditAcctOppCount, hardCreditAcc.npo02__OppAmountThisYear__c, 'Count should be ALL opps regardless of stage');
 
         if (tt == TestType.TestMultiCurrBatch) {
             // Query the MultiCurrency Account with all the target fields specified in the rollups
