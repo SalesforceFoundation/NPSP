@@ -11,7 +11,7 @@
     <actionOverrides>
         <actionName>Clone</actionName>
         <content>BDI_BatchOverride</content>
-        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <skipRecordTypeSelect>true</skipRecordTypeSelect>
         <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
@@ -21,7 +21,7 @@
     <actionOverrides>
         <actionName>Edit</actionName>
         <content>BDI_BatchOverride</content>
-        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <skipRecordTypeSelect>true</skipRecordTypeSelect>
         <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
@@ -31,7 +31,7 @@
     <actionOverrides>
         <actionName>New</actionName>
         <content>BDI_BatchOverride</content>
-        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <skipRecordTypeSelect>true</skipRecordTypeSelect>
         <type>Visualforce</type>
     </actionOverrides>
     <actionOverrides>
@@ -44,7 +44,11 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>View</actionName>
-        <type>Default</type>
+        <comment>Action override created by Lightning App Builder during activation.</comment>
+        <content>Data_Import_Batch_Record_Home</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
     </actionOverrides>
     <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
@@ -71,6 +75,17 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Active_Fields__c</fullName>
+        <description>Represents the data model of active fields for a NPSP_DataImportBatch__c record. Not intended for direct customer use and should not be edited directly.</description>
+        <externalId>false</externalId>
+        <label>Active Fields</label>
+        <length>32768</length>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
         <fullName>Batch_Description__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>An optional description about this batch.</inlineHelpText>
@@ -86,7 +101,7 @@
         <defaultValue>50</defaultValue>
         <description>The number of NPSP Data Import records to process at a time in each batch.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The number of NPSP Data Import records to process at a time in each batch.</inlineHelpText>
+        <inlineHelpText>The number of records to process at a time in each batch.</inlineHelpText>
         <label>Batch Process Size</label>
         <precision>3</precision>
         <required>true</required>
@@ -128,7 +143,7 @@
         <defaultValue>0</defaultValue>
         <description>Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</inlineHelpText>
+        <inlineHelpText>Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. NPSP will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</inlineHelpText>
         <label>Number of Days from Donation Date</label>
         <precision>2</precision>
         <required>true</required>
@@ -143,7 +158,7 @@
         <defaultValue>&quot;Do Not Match&quot;</defaultValue>
         <description>Defines how the Data Importer should handle matching Donations. You must choose a value.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Defines how the Data Importer should handle matching Donations. You must choose a value.</inlineHelpText>
+        <inlineHelpText>Defines how NPSP should handle matching Donations.</inlineHelpText>
         <label>Donation Matching Behavior</label>
         <required>true</required>
         <trackHistory>false</trackHistory>
@@ -201,10 +216,10 @@
     </fields>
     <fields>
         <fullName>Donation_Matching_Rule__c</fullName>
-        <defaultValue>&quot;npsp__Donation_Amount__c;npsp__Donation_Date&quot;</defaultValue>
+        <defaultValue>&quot;npsp__Donation_Amount__c;npsp__Donation_Date__c&quot;</defaultValue>
         <description>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field.</inlineHelpText>
+        <inlineHelpText>Specifies which fields to match by when trying to match Donations in batch records against existing Opportunities and Payments.</inlineHelpText>
         <label>Donation Matching Rule</label>
         <length>255</length>
         <required>true</required>
@@ -212,6 +227,46 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Expected_Count_of_Gifts__c</fullName>
+        <defaultValue>0</defaultValue>
+        <description>The number of gifts that are expected to be entered in this Batch.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The number of gifts that are expected to be entered in this Batch.</inlineHelpText>
+        <label>Expected Count of Gifts</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Expected_Total_Batch_Amount__c</fullName>
+        <defaultValue>0</defaultValue>
+        <description>The expected total amount of all gifts entered in this Batch.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The expected total amount of all gifts entered in this Batch.</inlineHelpText>
+        <label>Expected Total Batch Amount</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>2</scale>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Currency</type>
+    </fields>
+    <fields>
+        <fullName>GiftBatch__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>This flag is set during batch creation to use the gift entry batch feature.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This batch is intended for use with Batch Gift Entry. Batches are automatically marked as gift batches when they are set up through the Batch Gift Entry tab. Manually changing this field could have unintended consequences.</inlineHelpText>
+        <label>Gift Batch</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Last_Processed_On__c</fullName>
@@ -228,7 +283,7 @@
         <fullName>Post_Process_Implementing_Class__c</fullName>
         <description>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records.</inlineHelpText>
+        <inlineHelpText>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP batch records.</inlineHelpText>
         <label>Post Process Implementing Class</label>
         <length>255</length>
         <required>false</required>
@@ -242,7 +297,7 @@
         <defaultValue>false</defaultValue>
         <description>When checked, the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job.</description>
         <externalId>false</externalId>
-        <inlineHelpText>When checked, the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job.</inlineHelpText>
+        <inlineHelpText>When checked, the batch will be automatically processed based on the schedule for the associated job.</inlineHelpText>
         <label>Process Using Scheduled Job</label>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
@@ -277,11 +332,22 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>RequireTotalMatch__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When checked, the total number of gifts and total amount must match the expected totals entered for the batch.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, the total number of gifts and total amount must match the expected totals entered for the batch.</inlineHelpText>
+        <label>Require Expected Totals Match</label>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Run_Opportunity_Rollups_while_Processing__c</fullName>
         <defaultValue>false</defaultValue>
         <description>When checked, NPSP calculates donor statistics when donations are processed. If unchecked, donor statistics are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.</description>
         <externalId>false</externalId>
-        <inlineHelpText>When checked, NPSP calculates donor statistics when donations are processed. If unchecked, donor statistics are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.</inlineHelpText>
+        <inlineHelpText>When checked, NPSP calculates donor rollups when donations are processed. If unchecked, donor rollups are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.</inlineHelpText>
         <label>Calculate Donation Rollups with Batch</label>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
@@ -296,7 +362,20 @@
         <columns>Batch_Description__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
-        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Gift_Batches</fullName>
+        <columns>NAME</columns>
+        <columns>Batch_Description__c</columns>
+        <columns>CREATEDBY_USER</columns>
+        <columns>CREATED_DATE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>GiftBatch__c</field>
+            <operation>equals</operation>
+            <value>1</value>
+        </filters>
+        <label>Gift Batches</label>
     </listViews>
     <nameField>
         <label>Batch Name</label>
