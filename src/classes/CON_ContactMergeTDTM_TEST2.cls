@@ -34,15 +34,30 @@
 * @group ContactMerge
 */
 
-@isTest
+@isTest(IsParallel=true)
+
 public with sharing class CON_ContactMergeTDTM_TEST2 {
+    /*******************************************************************************************************************
+    * @description Counter for creating unique contacts
+    */
+    private static Integer uniqueCounter {
+        get {
+            if (uniqueCounter == null) {
+                uniqueCounter = 0;
+            }
+            uniqueCounter++;
+            return uniqueCounter;
+        }
+        set;
+    }
 
     /*******************************************************************************************************
     * @description merge three Contacts from different Household Accounts with many Relationships.  
     * verify: 
     *   No Duplicate Relationships
     */
-    static testMethod void mergeContactsDifferentHHAccountManyRel() {
+    @isTest
+    private static void mergeContactsDifferentHHAccountManyRel() {
         // this creates 3 Household Accounts, each with 2 Contacts, and a default Address for each HH
         ADDR_Addresses_TEST.createHHTestData(3, 2);
         
@@ -104,7 +119,8 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeHHToHH() {
+    @isTest
+    private static void testNamesAndOppsMergeHHToHH() {
         testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -112,7 +128,8 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeOne2OneToOne2One() {
+    @isTest
+    private static void testNamesAndOppsMergeOne2OneToOne2One() {
         testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -120,7 +137,8 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeOrgToHH() {
+    @isTest
+    private static void testNamesAndOppsMergeOrgToHH() {
         testNamesAndOppsMerge(null, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -128,7 +146,8 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeHHToOrg() {
+    @isTest
+    private static void testNamesAndOppsMergeHHToOrg() {
         testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, null);
     }
 
@@ -136,7 +155,8 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeOrgToOne2One() {
+    @isTest
+    private static void testNamesAndOppsMergeOrgToOne2One() {
         testNamesAndOppsMerge(null, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -144,7 +164,8 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeOne2OneToOrg() {
+    @isTest
+    private static void testNamesAndOppsMergeOne2OneToOrg() {
         testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, null);
     }
     
@@ -152,7 +173,8 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
     */ 
-    static testmethod void testNamesAndOppsMergeOrgToOrg() {
+    @isTest
+    private static void testNamesAndOppsMergeOrgToOrg() {
         testNamesAndOppsMerge(null, null);
     }
 
@@ -164,7 +186,7 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     *   Soft Credits the contact previously had are still there.
     *   Opp Rollups are recalculated for both accounts.
     */
-    static void testNamesAndOppsMerge(string accTypeLoser, string accTypeWinner) {
+    private static void testNamesAndOppsMerge(string accTypeLoser, string accTypeWinner) {
     
         // create our losing account and contacts
         UTIL_UnitTestData_TEST.createAccountContactTestData(accTypeLoser, 1, 2, 1);
@@ -288,6 +310,115 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
             system.assertEquals(1, cOCRCon2);
             system.assertEquals(2, accLoser.npo02__NumberOfClosedOpps__c);            
             system.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c);            
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies rollup is calculted on merge
+    */
+    @isTest
+    private static void contactMergeShouldRecalculateRollup() {
+        List<Contact> contactsToMerge = buildContactsWithOppsForAccount();
+
+        Test.startTest();
+        merge contactsToMerge[0] contactsToMerge[1];
+        Test.stopTest();
+
+        List<Contact> contacts = [SELECT npo02__NumberOfClosedOpps__c FROM Contact];
+        System.assertEquals(1, contacts.size(), 'There should only be one contact after merge');
+        System.assertEquals(2, contacts[0].npo02__NumberOfClosedOpps__c, 'The rollup should have been calculated');
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies legacy rollup is used when Customizable Rollups is not activated
+    */
+    @isTest
+    private static void contactMergeShouldUseLegacyRollupWhenCRLPNotEnabled() {
+        RLLP_OppRollupMock mock = setRollupMock();
+
+        List<Contact> contactsToMerge = buildContactsWithOppsForAccount();
+
+        Test.startTest();
+        merge contactsToMerge[0] contactsToMerge[1];
+        Test.stopTest();
+
+        System.assert(mock.rollupContactsCalled, 'Legacy rollup should have been called');
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies legacy rollup is NOT used when Customizable Rollups is activated
+    */
+    @isTest
+    private static void contactMergeShouldNotUseLegacyRollupWhenCRLPEnabled() {
+        UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Customizable_Rollups_Enabled__c = true;
+        RLLP_OppRollupMock mock = setRollupMock();
+
+        List<Contact> contactsToMerge = buildContactsWithOppsForAccount();
+
+        TDTM_ObjectDataGateway.ClearCachedTriggerHandlersForTest();
+
+        Test.startTest();
+        merge contactsToMerge[0] contactsToMerge[1];
+        Test.stopTest();
+
+        //CRLP rollup method is static, so we cannot mock it so just confirming that legacy is not called and rollup is still calculated
+        System.assert(!mock.rollupContactsCalled, 'Legacy rollup should not have been called');
+
+        List<Contact> contacts = [SELECT npo02__NumberOfClosedOpps__c FROM Contact];
+        System.assertEquals(2, contacts[0].npo02__NumberOfClosedOpps__c, 'The rollup should have been calculated');
+    }
+
+    /*******************************************************************************************************************
+    * @description Builds and inserts contacts with one opportunity each for a single account
+    */
+    private static List<Contact> buildContactsWithOppsForAccount() {
+        UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.HH_ACCOUNT_TYPE, 1, 2, uniqueCounter);
+        List<Contact> contacts = UTIL_UnitTestData_TEST.listConT;
+
+        List<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForContactWithAccountList(
+            contacts,
+            null,
+            UTIL_UnitTestData_TEST.getclosedWonStage(),
+            System.Today(),
+            100,
+            null,
+            null
+        );
+
+        insert listOpp;
+
+        return contacts;
+    }
+
+    /*******************************************************************************************************************
+    * @description Builds mock instance and stubs RLLP_OppRollupMock in CON_ContactMerge_TDTM
+    */
+    private static RLLP_OppRollupMock setRollupMock() {
+        RLLP_OppRollupMock rollupMock = new RLLP_OppRollupMock();
+        CON_ContactMerge_TDTM.opprollup =
+            (RLLP_OppRollup)Test.createStub(RLLP_OppRollup.class, rollupMock);
+        return rollupMock;
+    }
+
+    /*******************************************************************************************************************
+    * @description Stub for RLLP_OppRollupMock instance
+    */
+    private class RLLP_OppRollupMock implements System.StubProvider {
+        private Boolean rollupContactsCalled = false;
+        public Object handleMethodCall(
+            Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs
+        ) {
+            switch on stubbedMethodName {
+                when 'rollupContacts' {
+                    rollupContactsCalled = true;
+                }
+            }
+            return null;
         }
     }
 }
