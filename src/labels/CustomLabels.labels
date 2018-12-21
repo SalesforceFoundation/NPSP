@@ -2361,10 +2361,9 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Warning for Mass Delete Buttons</shortDescription>
-        <value>There were {0} record(s) found.
+        <value>You are about to delete {0} record(s).
         &lt;br/&gt;
-        &lt;br/&gt;&lt;b&gt;NOTE:&lt;/b&gt; We do not recommend using the mass delete button if you are using the new Batch Gift Entry feature.
-        &lt;br/&gt;Please see the documentation for instructions on deleting records via the data loader.</value>
+        &lt;br/&gt;&lt;b&gt;IMPORTANT:&lt;/b&gt; If you create gifts in your org using the Batch Gift Entry feature, we don&apos;&apos;t recommend using the Mass Delete button. Please see the NPSP documentation for instructions on deleting records using the data loader.</value>
     </labels>
     <labels>
         <fullName>bdiMatched</fullName>
@@ -3022,7 +3021,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>exceptionDeletePermission</shortDescription>
-        <value>You do not have permissions to delete {0}.</value>
+        <value>You don&apos;&apos;t have the permissions required to delete {0} records.</value>
     </labels>
     <labels>
         <fullName>exceptionRequiredField</fullName>
