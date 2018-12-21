@@ -40,6 +40,7 @@ ${contact_id}
     Confirm Value    Source Field    npo02__SmallestAmount__c    Y
 
 3 Validate Level Assignment in Batch Job
+    [tags]  unstable
     # --------------------------------
     # Modify the SmallestGift field to allow the level to be applied
     # --------------------------------
@@ -90,6 +91,7 @@ ${contact_id}
     Verify Field Value      Previous Level      ${level_name}    Y
 
 4 Delete Level and Validate Contact
+    [tags]  unstable
     # --------------------------------
     # Delete the Level and validate that it was removed from the Contact
     # --------------------------------
