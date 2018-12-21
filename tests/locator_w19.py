@@ -118,7 +118,8 @@ npsp_lex_locators={
         'multi_list':'//div[contains(@class,"slds-form_horizontal")]/div[@class="slds-form-element"][./label[text()="{}"]]/div//select',
         'list_val':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/span[text()="{}"]',
         'status':'//div[contains(@class,"slds-tile__title")][.//span[text()="{}"]]/div[contains(@class,"slds-col")]//span[text()="{}"]',
-        'button':'//form[.//h1[contains(text(),"{}")]]//input[contains(@value,"{}")]'
+        'button':'//form[.//h1[contains(text(),"{}")]]//input[contains(@value,"{}")]',
+        'completed':'//span[contains(@class, \'slds-theme_success\')]',
         },
     'data_imports':{
         'status':'//div[contains(@class,"slds-tile__title")][./p[text()="BDI_DataImport_BATCH"]]/div[contains(@class,"slds-col")]/span[text()="{}"]',
