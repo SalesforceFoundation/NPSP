@@ -33,7 +33,7 @@
 * @group Recurring Donations
 * @description Test class for the RecurringDonations class
 */
-@isTest(isParallel=true)
+@isTest
 public class RD_RecurringDonations_TEST {
 
     public static final Date DEFAULT_ESTABLISHED_DATE = Date.newInstance(1970,6,12);
