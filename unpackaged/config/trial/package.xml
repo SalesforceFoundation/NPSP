@@ -33,12 +33,22 @@
     <types>
         <members>Account-Household Lightning Layout</members>
         <members>Account-Organization Lightning Layout</members>
+        <members>Account-%%%NAMESPACE%%%Organization Layout</members>
+        <members>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</members>
+        <members>Contact-Contact Lightning Layout</members>
+        <members>Opportunity-%%%NAMESPACE%%%Donation Layout</members>
+        <members>Opportunity-%%%NAMESPACE%%%Grant Layout</members>
+        <members>Opportunity-%%%NAMESPACE%%%In-Kind Gift Layout</members>
+        <members>Opportunity-%%%NAMESPACE%%%Major Gift Layout</members>
+        <members>Opportunity-%%%NAMESPACE%%%Matching Gift Layout</members>
+        <members>Opportunity-%%%NAMESPACE%%%Membership Layout</members>
+        <members>npe03__Recurring_Donation__c-npe03__Recurring Donation Layout</members>
+        <members>npe4__Relationship__c-npe4__Relationship Layout</members>
+        <members>npe5__Affiliation__c-npe5__Affiliation Layout</members>
         <members>%%%NAMESPACE%%%Account_Soft_Credit__c-%%%NAMESPACE%%%Account Soft Credit Layout</members>
         <members>%%%NAMESPACE%%%Address__c-%%%NAMESPACE%%%Address Layout</members>
         <members>%%%NAMESPACE%%%Allocation__c-%%%NAMESPACE%%%Allocation Layout</members>
         <members>%%%NAMESPACE%%%Batch__c-%%%NAMESPACE%%%Batch Layout</members>
-        <members>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</members>
-        <members>Contact-Contact Lightning Layout</members>
         <members>%%%NAMESPACE%%%DataImportBatch__c-%%%NAMESPACE%%%NPSP Data Import Batch Layout</members>
         <members>%%%NAMESPACE%%%DataImport__c-%%%NAMESPACE%%%Data Import Layout</members>
         <members>%%%NAMESPACE%%%Engagement_Plan_Task__c-%%%NAMESPACE%%%Engagement Plan Task Layout</members>
@@ -51,12 +61,6 @@
         <members>%%%NAMESPACE%%%General_Accounting_Unit__c-%%%NAMESPACE%%%General Accounting Unit Layout</members>
         <members>%%%NAMESPACE%%%Grant_Deadline__c-Deliverable</members>
         <members>%%%NAMESPACE%%%Level__c-%%%NAMESPACE%%%Level Layout</members>
-        <members>Opportunity-%%%NAMESPACE%%%Donation Layout</members>
-        <members>Opportunity-%%%NAMESPACE%%%Grant Layout</members>
-        <members>Opportunity-%%%NAMESPACE%%%In-Kind Gift Layout</members>
-        <members>Opportunity-%%%NAMESPACE%%%Major Gift Layout</members>
-        <members>Opportunity-%%%NAMESPACE%%%Matching Gift Layout</members>
-        <members>Opportunity-%%%NAMESPACE%%%Membership Layout</members>
         <members>%%%NAMESPACE%%%Partial_Soft_Credit__c-%%%NAMESPACE%%%Partial Soft Credit Layout</members>
         <members>%%%NAMESPACE%%%Rollup__mdt-%%%NAMESPACE%%%Rollup Layout</members>
         <members>%%%NAMESPACE%%%Schedulable__c-%%%NAMESPACE%%%Schedulable Layout</members>

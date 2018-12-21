@@ -31,7 +31,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Related_Opportunity_Contact_Role__c</field>
+                <field>%%%NAMESPACE%%%Related_Opportunity_Contact_Role__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
