@@ -1141,9 +1141,10 @@ public class RD_RecurringDonations {
     */
     @TestVisible
     private static Date getStartDate(npe03__Recurring_Donation__c r) {
+        Date dateEstablished = r.npe03__Date_Established__c;
         Date startDate = r.npe03__Next_Payment_Date__c != null
             ? r.npe03__Next_Payment_Date__c
-            : r.npe03__Date_Established__c;
+            : dateEstablished;
 
         if (r.npe03__Installment_Period__c == System.Label.npe03.RecurringDonationInstallmentPeriodMonthly
             || r.npe03__Installment_Period__c == System.Label.npe03.RecurringDonationInstallmentPeriodQuarterly
@@ -1152,7 +1153,12 @@ public class RD_RecurringDonations {
             // to be the appropriate start date in the *current month*
             startDate = adjustDayOfMonth(startDate, r);
             
-            startDate = startDate >= r.npe03__Date_Established__c ? startDate : startDate.addMonths(1); 
+            // Ensure Next Donation Date is greater than Date Established
+            if (startDate < dateEstablished) {
+                startDate = adjustDayOfMonth(dateEstablished, r);
+
+                startDate = startDate >= dateEstablished ? startDate : startDate.addMonths(1); 
+            }
         }
 
         return startDate;
@@ -1225,6 +1231,7 @@ public class RD_RecurringDonations {
     * @param rd The Recurring Donation.
     * @return date 
     */ 
+    @TestVisible
     private static Date getNextDate(Date calcDate, npe03__Recurring_Donation__c rd) {
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         String InstallmentType = rd.npe03__Installment_Period__c;

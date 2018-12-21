@@ -992,9 +992,9 @@ private with sharing class RD_RecurringDonations_TEST2 {
     * is on the Day of Month date that is greater or equal to the Date Established.
     */
     @isTest
-    private static void nextDonationDateIsGreaterOrEqualDateEstablished() {
+    private static void nextDonationDateIsGreaterOrEqualToDateEstablished() {
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-            npe03__Date_Established__c = Date.newInstance(2000, 11, 16),
+            npe03__Date_Established__c = Date.newInstance(2000, 11, 19),//day is greater than Day of Month
             npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
             Always_Use_Last_Day_Of_Month__c = false,
             Day_Of_Month__c = '15'
@@ -1003,10 +1003,103 @@ private with sharing class RD_RecurringDonations_TEST2 {
         System.assertEquals(Date.newInstance(2000, 12, 15), RD_RecurringDonations.getStartDate(rd),
             'Expecting Day of Month date greater than Date Established');
 
-        rd.npe03__Date_Established__c = Date.newInstance(2000, 11, 14);
+        rd.npe03__Date_Established__c = Date.newInstance(2000, 11, 14);//day is less than Day of Month
 
         System.assertEquals(Date.newInstance(2000, 11, 15), RD_RecurringDonations.getStartDate(rd),
             'Expecting Day of Month date for the same month as Date Established');
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies calculated Next Donation Date based on the current
+    * Next Donation Date, Date Established and Day of Month values
+    */
+    @isTest
+    private static void nextDonationDateIsCalculatedBasedOnDayOfMonthAndCurrentNextDonationDate() {
+        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
+            npe03__Date_Established__c = Date.newInstance(2000, 11, 19),
+            npe03__Next_Payment_Date__c = Date.newInstance(2000, 11, 21),
+            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
+            Always_Use_Last_Day_Of_Month__c = false,
+            Day_Of_Month__c = '20'// Day of Month is in between Date Established and Next Donation Date
+        );
+
+        System.assertEquals(Date.newInstance(2000, 11, 20), RD_RecurringDonations.getStartDate(rd),
+            'Expecting Day of Month date in the same month as Next Donation Date');
+
+        rd.Day_Of_Month__c = '23';//day is greater than Date Established and Next Donation Date days
+        System.assertEquals(Date.newInstance(2000, 11, 23), RD_RecurringDonations.getStartDate(rd),
+            'Expecting Day of Month date for the same month as Next Donation Date');
+
+        rd.Day_Of_Month__c = '2';//day is less than Date Established and Next Donation Date days
+        System.assertEquals(Date.newInstance(2000, 12, 2), RD_RecurringDonations.getStartDate(rd),
+            'Expecting Day of Month date greater than Date Established');
+
+        rd.npe03__Next_Payment_Date__c = Date.newInstance(2000, 10, 30);//date is in a month before Date Established
+        System.assertEquals(Date.newInstance(2000, 12, 2), RD_RecurringDonations.getStartDate(rd),
+            'Expecting Day of Month date greater than Date Established');
+
+        rd.npe03__Date_Established__c = Date.newInstance(2000, 10, 19);
+        rd.npe03__Next_Payment_Date__c = Date.newInstance(2000, 9, 21);
+        rd.Day_Of_Month__c = '31';
+        System.assertEquals(Date.newInstance(2000, 10, 31), RD_RecurringDonations.getStartDate(rd),
+            'Expecting end of month based on Day of Month and Date Established');
+
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies Close Date values on recurring donation Opportunities based on Day of Month value
+    * that does not exist in the current Next Donation Date month
+    */
+    @isTest
+    private static void closeDateIsCalculatedBasedOnDayOfMonthStartDateEndOfMonth() {
+        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
+            npe03__Date_Established__c = Date.newInstance(2000, 9, 19),
+            npe03__Next_Payment_Date__c = Date.newInstance(2000, 9, 21),
+            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
+            Always_Use_Last_Day_Of_Month__c = false,
+            Day_Of_Month__c = '31'// Day of Month that does not exist in the current Next Donation Date
+        );
+
+        Date expectedStartDate = Date.newInstance(2000, 9, 30);
+        System.assertEquals(expectedStartDate, RD_RecurringDonations.getStartDate(rd),
+            'Start Date is end of the same month as Next Donation Date, greater than Date Established');
+
+        Date nextDate = RD_RecurringDonations.getNextDate(expectedStartDate, rd);
+        System.assertEquals(Date.newInstance(2000, 10, 31), nextDate, 'Expecting next month Day of Month date');
+
+        nextDate = RD_RecurringDonations.getNextDate(nextDate, rd);
+        System.assertEquals(Date.newInstance(2000, 11, 30), nextDate, 'Expecting next month end of month date');
+
+        nextDate = RD_RecurringDonations.getNextDate(nextDate, rd);
+        System.assertEquals(Date.newInstance(2000, 12, 31), nextDate, 'Expecting next month Day of Month date');
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies Close Date values on recurring donation Opportunities based on Day of Month value
+    * that exists in the current Next Donation Date month
+    */
+    @isTest
+    private static void closeDateIsCalculatedBasedOnDayOfMonth() {
+        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
+            npe03__Date_Established__c = Date.newInstance(2000, 7, 19),
+            npe03__Next_Payment_Date__c = Date.newInstance(2000, 7, 21),
+            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
+            Always_Use_Last_Day_Of_Month__c = false,
+            Day_Of_Month__c = '31'// Day of Month exists in the current Next Donation Date
+        );
+
+        Date expectedStartDate = Date.newInstance(2000, 7, 31);
+        System.assertEquals(expectedStartDate, RD_RecurringDonations.getStartDate(rd),
+            'Start Date is Day of Month date in the same month as Next Donation Date and greater than Date Established');
+
+        Date nextDate = RD_RecurringDonations.getNextDate(expectedStartDate, rd);
+        System.assertEquals(Date.newInstance(2000, 8, 31), nextDate, 'Expecting next month Day of Month date');
+
+        nextDate = RD_RecurringDonations.getNextDate(nextDate, rd);
+        System.assertEquals(Date.newInstance(2000, 9, 30), nextDate, 'Expecting next month end of month date');
+
+        nextDate = RD_RecurringDonations.getNextDate(nextDate, rd);
+        System.assertEquals(Date.newInstance(2000, 10, 31), nextDate, 'Expecting next month Day of Month date');
     }
 
     @isTest
