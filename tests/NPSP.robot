@@ -21,7 +21,17 @@ API Create Contact
     ...                  &{fields}  
     &{contact} =     Salesforce Get  Contact  ${contact_id}
     [return]         &{contact}
- 
+
+API Modify Contact
+    [Arguments]      ${contact_id}      &{fields}
+    Salesforce Update       Contact     ${contact_id}
+    ...                     &{fields}
+    @{records} =  Salesforce Query      Contact
+    ...              select=Id,FirstName,LastName,Email
+    ...              Id=${contact_id}
+    &{contact} =  Get From List  ${records}  0
+    [return]         &{contact}
+
 API Create Opportunity
     [Arguments]      ${account_id}    ${opp_type}      &{fields} 
     ${rt_id} =       Get Record Type Id  Opportunity  ${opp_type}   
@@ -309,5 +319,15 @@ Select Frame With Title
     
 Scroll Page To Location
     [Arguments]    ${x_location}    ${y_location}
-    Execute JavaScript    window.scrollTo(${x_location},${y_location}) 
-    
+    Execute JavaScript    window.scrollTo(${x_location},${y_location})
+
+Open NPSP Settings
+    [Arguments]    ${topmenu}    ${submenu}
+    Select App Launcher Tab      NPSP Settings
+    Wait For Locator    frame    Nonprofit Success Pack Settings
+    Select Frame With Title    Nonprofit Success Pack Settings
+    Wait for Locator    npsp_settings.side_panel
+    Click Link    link=${topmenu}
+    Sleep    1
+    Click Link    link=${submenu}
+    Sleep    1
