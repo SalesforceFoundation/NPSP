@@ -197,6 +197,13 @@ tasks:
                     - NewEvent
                     - NewCase
                     - SendEmail
+                # Unpackaged lightning record pages added by trial config
+                FlexiPage:
+                    - NPSP_Address_Record_Page
+                    - NPSP_Deliverable
+                    - NPSP_Engagement_Plan_Record_Page
+                    - NPSP_GAU_Allocation
+                    - NPSP_General_Accounting_Unit
 
 flows:
     config_dev:

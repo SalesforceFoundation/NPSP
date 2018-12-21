@@ -17,11 +17,6 @@
         <label>Deliverable Layout</label>
     </compactLayouts>
     <enableActivities>true</enableActivities>
-    <listViews>
-        <fullName>All</fullName>
-        <filterScope>Everything</filterScope>
-        <label>All</label>
-    </listViews>
 
     <label>Deliverable</label>
     <pluralLabel>Deliverables</pluralLabel>
