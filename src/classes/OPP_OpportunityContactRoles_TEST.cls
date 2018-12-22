@@ -1187,4 +1187,116 @@ public class OPP_OpportunityContactRoles_TEST {
         System.assertEquals(true, result[0].IsPrimary);
         System.assertNotEquals(null, result[0].Opportunity.AccountId);
     }
+
+    /*******************************************************************************************************
+    * @description Tests method to Populate OCR related Maps
+    */
+    @isTest
+    static void testPopulateOCRMapsMethod() {
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c(
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
+                Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
+                Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT
+            )
+        );
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(4);
+        insert testContacts;
+        testContacts = [SELECT  Id,
+                                AccountId,
+                                FirstName,
+                                LastName 
+                        FROM Contact];
+
+        List<Contact> testContactsForOpps = new List<Contact>();
+        for (Integer i=0; i < 3; i++) {
+            testContactsForOpps.add(testContacts[i]);
+        }
+
+        List<Opportunity> testOpptys = UTIL_UnitTestData_TEST.OppsForContactWithAccountList(testContactsForOpps, null, UTIL_UnitTestData_TEST.getClosedWonStage(),
+                                                                                            System.today(), 100, null, null);
+
+
+    insert testOpptys;
+
+        // Set Notification Recipient Contact on first Opportunity so it will have a non primary OCR
+        Opportunity opp1 = new Opportunity(
+            Id = testOpptys[0].Id,
+            Notification_Recipient_Contact__c = testContacts[3].Id
+        );
+        update opp1;
+
+        Map<Id, OpportunityContactRole> mapOppIdPrimaryOCR = new Map<Id, OpportunityContactRole>();
+        Map<Id, Map<Id, OpportunityContactRole>> mapOppIdMapConIdOCR = new Map<Id, Map<Id, OpportunityContactRole>>();
+        Set<String> uniqueOCRKeys = new Set<String>();
+
+        List<OpportunityContactRole> ocrs = [SELECT     Id,
+                                                        OpportunityId,
+                                                        ContactId,
+                                                        Role,
+                                                        IsPrimary
+                                            FROM OpportunityContactRole];
+
+        System.assertEquals (4, ocrs.size());
+
+        OPP_OpportunityContactRoles_TDTM.populateOCRMaps(testOpptys, mapOppIdPrimaryOCR, mapOppIdMapConIdOCR, uniqueOCRKeys);
+
+        System.assertEquals(3, mapOppIdPrimaryOCR.size());
+        System.assertEquals(3, mapOppIdMapConIdOCR.size());
+
+        System.assertEquals(2, mapOppIdMapConIdOCR.get(testOpptys[0].Id).size());
+        System.assertEquals(1, mapOppIdMapConIdOCR.get(testOpptys[1].Id).size());
+        System.assertEquals(1, mapOppIdMapConIdOCR.get(testOpptys[2].Id).size());
+        System.assertEquals(4, uniqueOCRKeys.size());
+
+        for (OpportunityContactRole ocr : ocrs) {
+            System.assertEquals(true, uniqueOCRKeys.contains(OPP_OpportunityContactRoles_TDTM.calcUniqueOCRKey(ocr)));
+            
+            if (ocr.IsPrimary) {
+                System.assertEquals(mapOppIdPrimaryOCR.get(ocr.OpportunityId).Id, ocr.Id);
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Tests method to Calculate Unique OCR Key for OpportunityContactRole
+    */
+    @isTest
+    static void testCalcUniqueOCRKeyMethod() {
+         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c(
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
+                Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
+                Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT
+            )
+        );
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(1);
+        insert testContacts;
+        testContacts = [SELECT  Id,
+                                AccountId,
+                                FirstName,
+                                LastName 
+                        FROM Contact];
+
+        List<Opportunity> testOpptys = UTIL_UnitTestData_TEST.OppsForContactWithAccountList(testContacts, null, UTIL_UnitTestData_TEST.getClosedWonStage(),
+                                                                                            System.today(), 100, null, null);
+
+        insert testOpptys;
+
+        List<OpportunityContactRole> ocrs = [SELECT     Id,
+                                                        OpportunityId,
+                                                        ContactId,
+                                                        Role,
+                                                        IsPrimary
+                                            FROM OpportunityContactRole];
+
+        System.assertEquals(1, ocrs.size());
+
+        System.assertEquals(ocrs[0].OpportunityId + '-' + ocrs[0].ContactId + '-' + ocrs[0].Role, OPP_OpportunityContactRoles_TDTM.calcUniqueOCRKey(ocrs[0]));
+    }
+
 }
