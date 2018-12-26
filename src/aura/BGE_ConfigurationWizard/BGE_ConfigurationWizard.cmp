@@ -381,16 +381,6 @@
                                     <lightning:helptext content="{!$Label.c.bgeBatchRunOpportunityRollupsWhileProcessingHelp}" />
                                 </lightning:layoutItem>
                                 <lightning:layoutItem class="slds-p-around_x-small" size="12">
-                                    <lightning:input aura:id="processUsingScheduledJob"
-                                                     label="{!v.batchMetadata.labels.processUsingScheduledJobLabel}"
-                                                     type="checkbox" variant="label-hidden" class="inputCheckbox"
-                                                     checked="{!v.batchInfo.processUsingScheduledJob}"/>
-                                    <label class="slds-form-element__label" for="processUsingScheduledJob">
-                                        {!v.batchMetadata.labels.processUsingScheduledJobLabel}
-                                    </label>
-                                    <lightning:helptext content="{!$Label.c.bgeBatchProcessUsingScheduledJobHelp}" />
-                                </lightning:layoutItem>
-                                <lightning:layoutItem class="slds-p-around_x-small" size="12">
                                     <label class="slds-form-element__label" for="postProcessClass">
                                         {!v.batchMetadata.labels.postProcessClassLabel}
                                     </label>
