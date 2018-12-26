@@ -316,6 +316,7 @@
                                     <lightning:helptext content="{!$Label.c.bgeBatchDonationMatchingBehaviorHelp}" />
                                     <lightning:select aura:id="donationMatchingBehavior"
                                                       label="{!v.batchMetadata.labels.donationMatchingBehaviorLabel}"
+                                                      onchange="{!c.handleUserInput}"
                                                       value="{!v.batchInfo.donationMatchingBehavior}"
                                                       class="hideLabel" variant="label-hidden">
                                         <option value="{!v.batchMetadata.labels.DoNotMatch}" text="{!$Label.c.bdiBehaviorDoNotMatch}"/>
@@ -341,6 +342,7 @@
                                                            options="{!v.batchInfo.donationMatchingOptions}"
                                                            value="{!v.batchInfo.donationMatchingRule}"
                                                            required="true" variant="label-hidden"
+                                                           disabled="{!v.batchInfo.noMatchSelected}"
                                                            disableReordering="true"
                                                            size="5"/>
                                 </lightning:layoutItem>
@@ -349,8 +351,8 @@
                                     <lightning:button aura:id="showAdvanced" 
                                                       label="{!if(v.batchMetadata.showAdvancedOptions, $Label.c.bgeWizardHideAdvancedOptions, $Label.c.bgeWizardShowAdvancedOptions)}"
                                                       variant="base" 
-                                                      onclick="{!c.handleUserInput}" />    
-                                    </lightning:layoutItem>
+                                                      onclick="{!c.handleUserInput}" />
+                                </lightning:layoutItem>
 
                                 <!-- BEGIN ADVANCED OPTIONS FOR STEP 5 -->
                                 <aura:if isTrue="{!v.batchMetadata.showAdvancedOptions}">
@@ -364,6 +366,7 @@
                                                 <lightning:helptext content="{!$Label.c.bgeBatchTemplateDonationDateRangeHelp}" />
                                                 <lightning:input aura:id="donationDateRange"
                                                                     label="{!v.batchMetadata.labels.donationDateRangeLabel}"
+                                                                    disabled="{!v.batchInfo.noMatchSelected}"
                                                                     type="number" required="true" variant="label-hidden"
                                                                     value="{!v.batchInfo.donationDateRange}"/>
                                             </lightning:layoutItem>
@@ -374,6 +377,7 @@
                                                 <lightning:helptext content="{!$Label.c.bgeBatchTemplateDonationMatchingClassHelp}" />
                                                 <lightning:input aura:id="donationMatchingClass"
                                                                 label="{!v.batchMetadata.labels.donationMatchingClassLabel}"
+                                                                disabled="{!v.batchInfo.noMatchSelected}"                                                                
                                                                 value="{!v.batchInfo.donationMatchingClass}" variant="label-hidden"/>
                                             </lightning:layoutItem>
 

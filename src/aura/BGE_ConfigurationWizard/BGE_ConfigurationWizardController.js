@@ -37,6 +37,7 @@
      * must be explicit about channel because other messages may be sent
      */
     handleUserInput: function(component, event, helper) {
+
         // check if user input came from ltng:sendMessage or an onclick handler
         var task;
         if (event.getSource().getLocalId()) {
@@ -103,6 +104,11 @@
                 model.getBatchMetadata().toggleShowAdvanced();
                 model.getBatchInfo().load(component.get('v.batchInfo'));
             }
+        } else if (task === 'donationMatchingBehavior') {
+            var step = component.get('v.batchMetadata.progressIndicatorStep');
+            if (step === '5') {
+                model.getBatchInfo().load(component.get('v.batchInfo'));
+            }            
         }
     },
 

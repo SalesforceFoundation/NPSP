@@ -32,6 +32,7 @@
                 batchInfoView.donationMatchingOptions = batchInfo.donationMatchingOptions;
                 batchInfoView.donationMatchingRule = batchInfo.donationMatchingRule;
                 batchInfoView.donationDateRange = batchInfo.donationDateRange;
+                batchInfoView.noMatchSelected = batchInfo.noMatchSelected;
                 batchInfoView.postProcessClass = batchInfo.postProcessClass;
                 batchInfoView.processUsingScheduledJob = batchInfo.processUsingScheduledJob;
 
@@ -56,6 +57,7 @@
                 donationMatchingOptions: [],
                 donationMatchingRule: [],
                 donationDateRange: '',
+                noMatchSelected: false,
                 postProcessClass: '',
                 processUsingScheduledJob: false
             };
@@ -424,6 +426,8 @@
                 this.donationDateRange = info.donationDateRange;
                 this.postProcessClass = info.postProcessClass;
                 this.processUsingScheduledJob = info.processUsingScheduledJob;
+                this.noMatchSelected = (info.donationMatchingBehavior === "Do Not Match");
+                //debugger;
                 this.onInfoUpdated.notify();
             }
 
@@ -456,9 +460,9 @@
                 donationDateRange: '',
                 postProcessClass: '',
                 processUsingScheduledJob: false,
-
                 load: load,
                 isValid: isValid,
+                noMatchSelected: true,
                 onInfoUpdated: _onInfoUpdated
             }
         })(this.Event());
