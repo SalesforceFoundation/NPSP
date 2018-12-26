@@ -118,7 +118,6 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
             '"donationMatchingBehavior":"'+ BDI_DataImport_API.RequireBestMatch + '",' +
             '"donationMatchingRule":["' + UTIL_Namespace.StrAllNSPrefix('Donation_Amount__c').toLowerCase() + '"],' +
             '"donationDateRange":1,' +
-            '"processUsingScheduledJob":false,' +
             '"availableFields":null,' +
             '"labels":null' +
         '}';
@@ -159,7 +158,6 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
             '"donationMatchingBehavior":"'+ BDI_DataImport_API.RequireBestMatch + '",' +
             '"donationMatchingRule":["' + UTIL_Namespace.StrAllNSPrefix('Donation_Amount__c').toLowerCase() + '"],' +
             '"donationDateRange":1,' +
-            '"processUsingScheduledJob":false,' +
             '"availableFields":null,' +
             '"activeFields":null,' +
             '"labels":null' +
