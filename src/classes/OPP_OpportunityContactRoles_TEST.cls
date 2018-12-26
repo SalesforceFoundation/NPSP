@@ -1298,5 +1298,4 @@ public class OPP_OpportunityContactRoles_TEST {
 
         System.assertEquals(ocrs[0].OpportunityId + '-' + ocrs[0].ContactId + '-' + ocrs[0].Role, OPP_OpportunityContactRoles_TDTM.calcUniqueOCRKey(ocrs[0]));
     }
-
 }
