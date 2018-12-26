@@ -190,6 +190,7 @@
     runDryRun: function(component, recordIds) {
         var action = component.get('c.runDryRun');
         var batchId = component.get('v.recordId');
+        this.showSpinner(component);
         action.setParams({dataImportIds: recordIds, batchId: batchId});
         action.setCallback(this, function (response) {
             var state = response.getState();
@@ -200,6 +201,7 @@
             } else {
                 this.handleApexErrors(component, response.getError());
             }
+            this.hideSpinner(component);
         });
         $A.enqueueAction(action);
     },
