@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <AuraDefinitionBundle xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>43.0</apiVersion>
-    <description>Component for use on the Data Import Batch fleixpage to enable quick gift entry and batch edit.</description>
+    <apiVersion>44.0</apiVersion>
+    <description>Component for use on the Data Import Batch flexipage to enable quick gift entry and batch edit.</description>
 </AuraDefinitionBundle>
