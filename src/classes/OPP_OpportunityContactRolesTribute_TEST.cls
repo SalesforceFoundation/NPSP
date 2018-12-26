@@ -524,12 +524,214 @@ public class OPP_OpportunityContactRolesTribute_TEST {
         // Honoree is null and has not changed, and not ignoring field changes, no Primary Contact present
         System.assertEquals(false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT, null));
         
-        // Setting Honoree Contact to null on both old and new records
+        // Setting Honoree Contact to same on both old and new records
         opp.Honoree_Contact__c = cons[1].Id;
         oldOpp.Honoree_Contact__c = cons[1].Id;
         // Honoree is not null and has not changed and is ignoring field changes, no Primary Contact present
-        System.assertEquals(false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT, null));
+        System.assertEquals(true, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, true, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT, null));
+
+        // Setting Honoree to same as Primary Contact
+        opp.Honoree_Contact__c = cons[2].Id;
+        System.assertEquals (false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT, cons[2].Id));
+
+        // Setting Notification Recipient Contact to Primary Contact
+        opp.Notification_Recipient_Contact__c = cons[2].Id;
+        System.assertEquals(false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, cons[2].Id));
+
+        // Setting Notification Recipient Contact to value in honoreeIdSet
+        opp.Notification_Recipient_Contact__c = cons[1].Id;
+        oldOpp.Notification_Recipient_Contact__c = cons[2].Id;
+        honoreeIdSet.add(cons[1].Id);
+
+        // Notification Recipient is not null and has changed and matches one of the honorees
+        System.assertEquals(false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, cons[2].Id));
+    }
+
+    /******************************************************************************************************
+    * @description Test Method for Is Equivalent OCR Method
+    ********************************************************************************************************/
+    @isTest
+    static void testIsEquivalentOCRMethod() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+                return;
+        }
+
+        npe01__Contacts_and_Orgs_Settings__c testSettings = createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MIXED_VAL);
+
+        String closedWonStageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+
+        //Create and Insert Opportunity
+        Account orgAcct = new Account(
+                Name = 'MultipleTributeAccount3',
+                npe01__SYSTEMIsIndividual__c = false
+        );
+        insert orgAcct;
+
+        //Insert four Contacts
+        List<Contact> cons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(4);
+        insert cons;
+
+        Opportunity opp = new Opportunity(
+                AccountId = orgAcct.Id,
+                StageName = closedWonStageName,
+                Name='Donation2',
+                Amount= 1000,
+                CloseDate = date.today(),
+                Honoree_Contact__c = cons[0].Id,
+                Notification_Recipient_Contact__c = cons[1].Id,
+                Primary_Contact__c = cons[2].Id
+        );
+
+        insert opp;
+
+        Test.startTest();
+
+        // Null values are not considered equivalent
+        System.assertEquals (false, OPP_OpportunityContactRoles_TDTM.isEquivalentOCR(null, null));
+
+        OpportunityContactRole ocr1 = new OpportunityContactRole(
+                OpportunityId = opp.Id,
+                ContactId = cons[0].Id,
+                Role = OPP_OpportunityContactRoles_TDTM.getRole(OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT)
+        );
+
+        OpportunityContactRole ocr2 = new OpportunityContactRole(
+                OpportunityId = opp.Id,
+                ContactId = cons[0].Id,
+                Role = OPP_OpportunityContactRoles_TDTM.getRole(OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT)
+        );
+
+        // OCR1 and OCR2 have the same OpportunityId, ContactId and Role, and thus are considered equivalent
+        System.assertEquals (true, OPP_OpportunityContactRoles_TDTM.isEquivalentOCR(ocr1, ocr2));
+    }
+
+    /******************************************************************************************************
+    * @description Test Method for Determine Opps Requiring Reevaluation Method
+    ********************************************************************************************************/
+    @isTest
+    static void testDetermineOppsRequiringOCREvaluationMethod() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+                return;
+        }
+
+        npe01__Contacts_and_Orgs_Settings__c testSettings = createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MIXED_VAL);
+
+        String closedWonStageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+
+        //Create and Insert Opportunity
+        Account orgAcct = new Account(
+                Name = 'MultipleTributeAccount2',
+                npe01__SYSTEMIsIndividual__c = false
+        );
+        insert orgAcct;
+
+        //Insert six Contacts
+        List<Contact> cons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(6);
+        insert cons;
+
+        List<Opportunity> oppsToInsert = new List<Opportunity>();
+
+        Opportunity opp1 = new Opportunity(
+                AccountId = orgAcct.Id,
+                StageName = closedWonStageName,
+                Name='Donation2',
+                Amount= 1000,
+                CloseDate = date.today(),
+                Primary_Contact__c = cons[0].Id,
+                Honoree_Contact__c = cons[1].Id,
+                Notification_Recipient_Contact__c = cons[2].Id
+        );
+        oppsToInsert.add(opp1);
+
+        Opportunity opp2 = new Opportunity(
+                AccountId = orgAcct.Id,
+                StageName = closedWonStageName,
+                Name='Donation3',
+                Amount= 1000,
+                CloseDate = date.today()
+        );
+        oppsToInsert.add(opp2);
+
+        Test.startTest();
+
+        insert oppsToInsert;
+
+        //Now insert a Tribute for opp2, should not have any issue
+        Tribute__c tri = new Tribute__c(
+                Opportunity__c = opp2.Id,
+                Honoree_Contact__c = cons[4].Id
+        );
+        insert tri;
+
+        List<Opportunity> opps = [SELECT       Id,
+                                        Primary_Contact__c,
+                                        Honoree_Contact__c,
+                                        Notification_Recipient_Contact__c,
+                                        AccountId
+                          FROM Opportunity];
+
+        Map<Id, Opportunity> oldOpps = new Map<Id, Opportunity>();
+
+        Map<Id, List<Tribute__c>> tributesByOpp = new Map<Id, List<Tribute__c>>();
         
+        tributesByOpp.put(tri.Opportunity__c, new List<Tribute__c> { tri});
+        Map<Id, List<Tribute__c>> oldTributesByOpp = new Map<Id, List<Tribute__c>>();
+
+        // Test 1, Inserted two Opps (simulated by having no old Opps records)
+        List<Opportunity> changedOpps = OPP_OpportunityContactRoles_TDTM.determineOppsRequiringOCREvaluation(opps, oldOpps, tributesByOpp, oldTributesByOpp);
+
+        System.assertEquals(2, changedOpps.size());
+
+        // Test 2, Updated no Opps, 1 flagged because simulated insertion of Tribute
+        for (Opportunity opp : opps) {
+                oldOpps.put (opp.Id, opp);
+        }
+
+        changedOpps = OPP_OpportunityContactRoles_TDTM.determineOppsRequiringOCREvaluation(opps, oldOpps, tributesByOpp, oldTributesByOpp);
+
+        System.assertEquals(1, changedOpps.size());
+        System.assertEquals(opp2.Id, changedOpps.get(0).Id);
+
+        Opportunity oldOpp = new Opportunity(
+                Id = opp1.Id,
+                AccountId = orgAcct.Id,
+                StageName = closedWonStageName,
+                Name='Donation2',
+                Amount= 1000,
+                CloseDate = date.today(),
+                Primary_Contact__c = cons[0].Id,
+                Honoree_Contact__c = cons[1].Id,
+                Notification_Recipient_Contact__c = cons[4].Id
+        );
+
+        oldOpps.put(oldOpp.Id, oldOpp);
+        oldTributesByOpp.put(tri.Opportunity__c, new List<Tribute__c> { tri });
+
+        // Simulating an updated Opportunity this time
+        changedOpps = OPP_OpportunityContactRoles_TDTM.determineOppsRequiringOCREvaluation(opps, oldOpps, tributesByOpp, oldTributesByOpp);
+
+        System.assertEquals(1, changedOpps.size());
+        System.assertEquals(opp1.Id, changedOpps.get(0).Id);
+
+        Tribute__c oldTri = new Tribute__c(
+                Id = tri.Id,
+                Honoree_Contact__c = cons[5].Id
+        );
         
+        // Reset old opportunity back to no changes
+        oldOpps.put(opp1.Id, opp1);
+        
+        // Setup "Old Tribute" for test
+        oldTributesByOpp.put(tri.Opportunity__c, new List<Tribute__c> { oldTri });
+        // Simulating an updated Tribute this time
+
+        changedOpps = OPP_OpportunityContactRoles_TDTM.determineOppsRequiringOCREvaluation(opps, oldOpps, tributesByOpp, oldTributesByOpp);
+
+        System.assertEquals(1, changedOpps.size());
+        System.assertEquals(opp2.Id, changedOpps.get(0).Id);
+
+
     }
 }

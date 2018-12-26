@@ -695,7 +695,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     * @param oldTributesByOpp Map of old Lists of Tributes By Opportunity, if available
     * @return List<Opportunity> List of Opportunities requiring evaluation/reevaluation
     ********************************************************************************************************/
-    private static List<Opportunity> determineOppsRequiringOCREvaluation(List<Opportunity> opps, Map<Id, Opportunity> oldOpps, Map<Id, List<Tribute__c>> tributesByOpp, Map<Id, List<Tribute__c>> oldTributesByOpp) {
+    @testVisible private static List<Opportunity> determineOppsRequiringOCREvaluation(List<Opportunity> opps, Map<Id, Opportunity> oldOpps, Map<Id, List<Tribute__c>> tributesByOpp, Map<Id, List<Tribute__c>> oldTributesByOpp) {
         List<Opportunity> changedOpps = new List<Opportunity>();
 
         // Will use passed map, or empty one if not populated
@@ -704,7 +704,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         Map<Id, List<Tribute__c>> lOldTributesByOpp = (oldTributesByOpp != null) ? oldTributesByOpp : new Map<Id, List<Tribute__c>>();
 
         for (Opportunity opp : opps) {
-            Opportunity oldOpp = oldOpps.get(opp.Id);
+            Opportunity oldOpp = (oldOpps != null) ? oldOpps.get(opp.Id) : null;
 
             if (oldOpp == null) { // New Record, should be processed
                 changedOpps.add(opp);
@@ -1081,7 +1081,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     * @param fieldName The name of the Opportunity field.
     * @return String The role value associated with the field.
     ********************************************************************************************************/
-    private static String getRole(String fieldName) {
+    @testVisible private static String getRole(String fieldName) {
         return getRole(fieldName, null);
     }
 
@@ -1092,7 +1092,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     * @param isIndividualAccount The classification (e.g., Individual) of an Opportunity's associated Account.
     * @return String The role value associated with the field.
     ********************************************************************************************************/
-    private static String getRole(String fieldName, Boolean isIndividualAccount) {
+    @testVisible private static String getRole(String fieldName, Boolean isIndividualAccount) {
         String result;
 
         if (fieldName.equals(FIELD_NAME_PRIMARY_CONTACT)) {
@@ -1283,7 +1283,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     * @param ocr2 2nd OpportunityContactRole record
     * @return Boolean true if equivalent, false otherwise
     **********************************************************************************************************/
-    private Boolean isEquivalentOCR(OpportunityContactRole ocr1, OpportunityContactRole ocr2) {
+    @testVisible private static Boolean isEquivalentOCR(OpportunityContactRole ocr1, OpportunityContactRole ocr2) {
         if ((ocr1 == null) || (ocr2 == null))
             return false;
         return ((ocr1.OpportunityId == ocr2.OpportunityId) && (ocr1.ContactId == ocr2.ContactId) && (ocr1.Role == ocr2.Role));
@@ -1400,30 +1400,6 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                         (tributes != null && !tributes.isEmpty())) {
                     // Removing this logic entirely for now.  Best course of action is not to do anything here, as the logic as proposed will not work correctly with
                     // Multiple Tributes and this flow will likely be redesigned anyways.  Nic Campbell suggested this, and after reviewing I agree.
-                    /* boolean found = false;
-                    for (Integer i=0; (i < tributes.size() && !found); i++) {
-                        Tribute__c tri= tributes.get(i);
-                        if ((eachOldOCR != null) && (eachOldOCR.Id != null)) {
-                            if (!eachOldOCR.isPrimary && 
-                                    (honoreeRole == null || !honoreeRole.equals(eachOldOCR.Role) || 
-                                        (honoreeRole.equals(eachOldOCR.Role) && 
-                                            (eachOppty.Primary_Contact__c == eachOldOCR.ContactId || tri.Honoree_Contact__c != eachOldOCR.ContactId)
-                                        )
-                                    ) && 
-                                    (notificationRole == null || !notificationRole.equals(eachOldOCR.Role) || 
-                                        (notificationRole.equals(eachOldOCR.Role) && 
-                                            (eachOppty.Primary_Contact__c == eachOldOCR.ContactId || eachOppty.Notification_Recipient_Contact__c != eachOldOCR.ContactId)
-                                        )
-                                    )
-                                ) {
-                                if (!ocrsToDelete.containsKey(eachOldOCR.Id)) {
-                                    ocrsToDelete.put(eachOldOCR.Id, eachOldOCR);
-                                    found = true;
-                                }
-                            }
-                        }
-                    }
-                    */
                 } else {
                     if ((eachOldOCR != null) && (eachOldOCR.Id != null)) {
                        if (!eachOldOCR.isPrimary
