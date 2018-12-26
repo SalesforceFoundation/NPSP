@@ -1415,9 +1415,12 @@
         <members>bgeEditBatchOptionsWarning</members>
         <members>bgeFLSError</members>
         <members>bgeFormMatchingModalText</members>
+        <members>bgeFormNewDonationHelptext</members>
         <members>bgeFormNoneLink</members>
         <members>bgeFormSelectedOpportunity</members>
         <members>bgeFormSelectedPayment</members>
+        <members>bgeFormUpdateDonation</members>
+        <members>bgeFormUpdateHelptext</members>
         <members>bgeFormUpdateOpportunity</members>
         <members>bgeFormUpdatePayment</members>
         <members>bgeGridAllGifts</members>
