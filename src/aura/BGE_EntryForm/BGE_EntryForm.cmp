@@ -83,11 +83,28 @@
                                             aria-hidden="true"/>
                         </div>
                         <div class="slds-media__body">
-                            <p>{!$Label.c.bgeMatchingAlert}
-                                <a class="slds-m-left_x-small" onclick="{!c.openMatchModal}" id="selectOpenDonation">
-                                    {!$Label.c.bgeMatchingSelect}
-                                </a>
-                            </p>
+                            <!--notification text depends on if donation is null, empty, or selected-->
+                            <aura:if isTrue="{!equals(v.selectedDonation, null)}">
+                                <p>{!$Label.c.bgeMatchingAlert}
+                                    <a class="slds-m-left_x-small" onclick="{!c.openMatchModal}" id="selectOpenDonation">{!$Label.c.bgeMatchingSelect}</a>
+                                </p>
+                                <aura:set attribute="else">
+                                    <aura:if isTrue="{!equals(v.selectedDonation, '')}">
+                                        <p>{!$Label.c.bgeFormNewDonationHelptext}</p>
+                                        <aura:set attribute="else">
+                                            <p class="slds-m-right_x-small">{!$Label.c.bgeFormUpdateHelptext}
+                                                <lightning:formattedUrl value="{! '/' + v.selectedDonation.Id}"
+                                                                        label="{!v.selectedDonation.Name}"
+                                                                        class="slds-m-left_x-small"
+                                                                        target="_blank"/>
+                                            </p>
+                                        </aura:set>
+                                    </aura:if>
+                                    <p>
+                                        <a onclick="{!c.openMatchModal}">{!$Label.c.bgeFormUpdateDonation}</a>
+                                    </p>
+                                </aura:set>
+                            </aura:if>
                         </div>
                     </div>
                 </lightning:layoutItem>
@@ -132,7 +149,7 @@
             <!--END DONOR FIELDS-->
 
             <!--Field iteration -->
-            <aura:iteration items="{!v.dataImportFields}" var="field" indexVar="index">
+            <aura:iteration items="{!v.dataImportFields}" var="field">
                 <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
                     <aura:if isTrue="{!greaterthan(field.options.length, 0)}">
                         <lightning:select aura:id="dynamicInputFields"
