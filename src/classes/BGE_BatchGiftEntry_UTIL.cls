@@ -93,7 +93,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
 
             DescribeFieldResult fieldResult = UTIL_Describe.getFieldDescribe(objectName, fieldName);
 
-            if (!fieldResults.contains(fieldResult)) {
+            if (fieldName != 'Id' && !fieldResults.contains(fieldResult)) {
                 fieldResults.add(fieldResult);
             }
         }
