@@ -232,14 +232,21 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         columns.addAll(getUserDefinedColumns(batchId));
 
         //add derived matched record column
-        Column col = new Column();
+        Column linkCol = new Column();
+        linkCol.label = Label.bdiDonation;
+        linkCol.fieldName = 'matchedRecordUrl';
+        linkCol.readOnly = true;
+        linkCol.type = 'url';
+        linkCol.typeAttributes = '{"label":{"fieldName":"matchedRecordLabel"},"target":"_blank"}';
+        columns.add(linkCol);
 
-        col.label = Label.bdiDonation;
-        col.fieldName = 'matchedRecordUrl';
-        col.readOnly = true;
-        col.type = 'url';
-        col.typeAttributes = '{"label":{"fieldName":"matchedRecordLabel"},"target":"_blank"}';
-        columns.add(col);
+        //status of the DI record
+        Column statusCol = new Column();
+        statusCol.label = Schema.SObjectType.DataImport__c.fields.Status__c.getLabel();
+        statusCol.fieldName = 'Status__c';
+        statusCol.readOnly = true;
+        statusCol.type = 'text';
+        columns.add(statusCol);
 
         return columns;
     }
