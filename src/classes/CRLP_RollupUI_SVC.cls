@@ -840,20 +840,12 @@ public with sharing class CRLP_RollupUI_SVC {
 
             if (objectName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')
                     && selectedField == UTIL_Namespace.StrAllNSPrefix('Role_Name__c')) {
-                picklistValues = UTIL_Describe.getSelectOptions('OpportunityContactRole', 'Role');
+                optionsList = UTIL_Describe.getLightningSelectOptions('OpportunityContactRole', 'Role');
             } else if (selectedField != 'RecordTypeId') {
-                picklistValues = UTIL_Describe.getSelectOptions(objectName, selectedField);
+                optionsList = UTIL_Describe.getLightningSelectOptions(objectName, selectedField);
             } else {
                 Schema.SObjectType sObjectType = UTIL_Describe.getSObjectType(objectName);
-                picklistValues = UTIL_RecordTypes.getRecordTypeDevNamesForSelectList(sObjectType);
-            }
-
-            for (SelectOption o : picklistValues) {
-                Map<String, String> labeledOption = new Map<String, String>();
-                labeledOption.put('value', o.getValue());
-                labeledOption.put('label', o.getLabel());
-
-                optionsList.add(labeledOption);
+                optionsList = UTIL_RecordTypes.getRecordTypeDevNamesForLightningSelectList(sObjectType);
             }
             return optionsList;
         } catch (Exception ex) {

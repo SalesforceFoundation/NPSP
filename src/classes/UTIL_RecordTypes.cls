@@ -213,6 +213,27 @@ public class UTIL_RecordTypes {
     }
 
     /**
+     * @description Return a list of Map<String, String> where one key is the label of the
+     * record type name and the other is the value of the record type id of a record type
+     * that belongs to the given object type.  The 'master' record type and
+     * all in-active record types are omitted from this list of options.
+     *
+     * @param objectType The type of the object
+     * @return List<Map<String, String>>
+     */
+    public static List<Map<String, String>> getRecordTypesForLightningSelect(sObjectType objectType) {
+        String objectName = objectType.getDescribe().getName();
+        List<Map<String, String>> options = new List<Map<String, String>>();
+        for (RecordType rt : [SELECT Id, Name FROM RecordType WHERE IsActive = True AND SObjectType = :objectName ORDER BY Name]) {
+            Map<String, String> labeledOption = new Map<String, String>();
+            labeledOption.put('value', rt.Id);
+            labeledOption.put('label', rt.Name);
+            options.add(labeledOption);
+        }
+        return options;
+    }
+
+    /**
      * @description Return a list of SelectOptions where the label is the
      * record type name and the value is the record type id of a record type
      * that belongs to the given object type.  The 'master' record type and
@@ -226,6 +247,27 @@ public class UTIL_RecordTypes {
         List<SelectOption> options = new List<SelectOption>();
         for (RecordType rt : [SELECT Id, Name FROM RecordType WHERE IsActive = True AND SObjectType = :objectName ORDER BY Name]) {
             options.add(new SelectOption(rt.Id, rt.Name));
+        }
+        return options;
+    }
+
+    /**
+     * @description Return a list of Map<String, String> where one key is the label of the
+     * record type name and the other is the value of the record type developer name of a record type
+     * that belongs to the given object type.  The 'master' record type and
+     * all in-active record types are omitted from this list of options.
+     *
+     * @param objectType The type of the object
+     * @return List<Map<String, String>>
+     */
+    public static List<Map<String, String>> getRecordTypeDevNamesForLightningSelectList(sObjectType objectType) {
+        String objectName = objectType.getDescribe().getName();
+        List<Map<String, String>> options = new List<Map<String, String>>();
+        for (RecordType rt : [SELECT Id, DeveloperName, Name FROM RecordType WHERE IsActive = True AND SObjectType = :objectName ORDER BY Name]) {
+            Map<String, String> labeledOption = new Map<String, String>();
+            labeledOption.put('value', rt.DeveloperName);
+            labeledOption.put('label', rt.Name);
+            options.add(labeledOption);
         }
         return options;
     }

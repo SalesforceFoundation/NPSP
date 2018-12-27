@@ -156,7 +156,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 field.formatter = 'currency';
             }
 
-            field.options = getPicklistOptions(field.name);
+            field.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(field.name);
 
             fields.add(field);
         }
@@ -247,40 +247,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Returns the source field's options formatted for lightning:select if the source field is a picklist
-    * or the target field's options formatted for lightning:select if the source field is a string and the target
-    * field is a picklist
-    * Returns an empty map if neither case applies
-    */
-    public static List<Map<String, String>> getPicklistOptions(String dataImportField){
-        List<Map<String, String>> options = new List<Map<String, String>>();
-
-        String dataImportObject = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
-
-        String rawSourceFieldType = UTIL_Describe.getFieldDisplaytype(dataImportObject, dataImportField.toLowerCase()).name().toLowerCase();
-
-        if (rawSourceFieldType == 'picklist') {
-            options = UTIL_Describe.getLightningSelectOptions(dataImportObject, dataImportField);
-
-        } else if (rawSourceFieldType == 'string') {
-
-            String targetObject = BDI_DataImportService.getTargetObject(dataImportField);
-            if (targetObject == 'Payment') {
-                targetObject = 'npe01__OppPayment__c';
-            }
-
-            String targetField = BDI_DataImportService.getTargetField(dataImportField);
-            Schema.DisplayType targetFieldType = UTIL_Describe.getFieldDisplaytype(targetObject, targetField);
-
-            if (targetFieldType == Schema.DisplayType.PICKLIST) {
-                options = UTIL_Describe.getLightningSelectOptions(targetObject, targetField);
-            }
-        }
-
-        return options;
-    }
-
-    /*******************************************************************************************************
     * @description Retrieves the default active fields for a new Batch or Template in a JSON String
     */
     public static String getDefaultActiveFields() {
@@ -317,8 +283,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         paymentMethod.required = false;
         paymentMethod.hide = false;
         paymentMethod.type = getLightningFieldType('string');
-        // TODO: figure out why this next line is breaking things and not matching to the existing payment method field in available fields.
-        paymentMethod.options = getPicklistOptions(UTIL_Namespace.StrTokenNSPrefix('Payment_Method__c'));
+        paymentMethod.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(UTIL_Namespace.StrTokenNSPrefix('Payment_Method__c'));
         paymentMethod.sortOrder = 2;
         fields.add(paymentMethod);
 
