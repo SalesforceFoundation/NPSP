@@ -1390,6 +1390,8 @@
         <members>bdiStatusProcessed</members>
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
+        <members>bgeActionDelete</members>
+        <members>bgeActionView</members>
         <members>bgeBatchAvailableFields</members>
         <members>bgeBatchBatchProcessSizeHelp</members>
         <members>bgeBatchDonationDateRangeHelp</members>
@@ -1413,9 +1415,12 @@
         <members>bgeEditBatchOptionsWarning</members>
         <members>bgeFLSError</members>
         <members>bgeFormMatchingModalText</members>
+        <members>bgeFormNewDonationHelptext</members>
         <members>bgeFormNoneLink</members>
         <members>bgeFormSelectedOpportunity</members>
         <members>bgeFormSelectedPayment</members>
+        <members>bgeFormUpdateDonation</members>
+        <members>bgeFormUpdateHelptext</members>
         <members>bgeFormUpdateOpportunity</members>
         <members>bgeFormUpdatePayment</members>
         <members>bgeGridAllGifts</members>

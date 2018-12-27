@@ -91,6 +91,10 @@
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
+        <tab>npsp__Batch_Gift_Entry</tab>
+        <visibility>DefaultOn</visibility>
+    </tabVisibilities>
+    <tabVisibilities>
         <tab>npsp__Contact_Merge</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
