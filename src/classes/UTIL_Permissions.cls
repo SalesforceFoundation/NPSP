@@ -37,16 +37,18 @@ public with sharing class UTIL_Permissions {
 
     private final static String INSUFFICIENT_PERMISSION_MESSAGE = System.Label.flsError;
 
+    /*** Object Level Security ***/
+
     public static Boolean canRead(String obj) {
         return canRead(obj, true);
     }
 
-    public static Boolean canWrite(String obj) {
-        return canWrite(obj, true);
-    }
-
     public static Boolean canCreate(String obj) {
         return canCreate(obj, true);
+    }
+
+    public static Boolean canUpdate(String obj) {
+        return canUpdate(obj, true);
     }
 
     public static Boolean canDelete(String obj) {
@@ -55,17 +57,6 @@ public with sharing class UTIL_Permissions {
 
     public static Boolean canRead(String obj, Boolean throwException) {
         if (!UTIL_Describe.getObjectDescribe(obj).isAccessible()) {
-            if (throwException) {
-                throw new InsufficientPermissionException(INSUFFICIENT_PERMISSION_MESSAGE);
-            } else {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static Boolean canWrite(String obj, Boolean throwException) {
-        if (!UTIL_Describe.getObjectDescribe(obj).isUpdateable()) {
             if (throwException) {
                 throw new InsufficientPermissionException(INSUFFICIENT_PERMISSION_MESSAGE);
             } else {
@@ -86,6 +77,17 @@ public with sharing class UTIL_Permissions {
         return true;
     }
 
+    public static Boolean canUpdate(String obj, Boolean throwException) {
+        if (!UTIL_Describe.getObjectDescribe(obj).isUpdateable()) {
+            if (throwException) {
+                throw new InsufficientPermissionException(INSUFFICIENT_PERMISSION_MESSAGE);
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static Boolean canDelete(String obj, Boolean throwException) {
         if (!UTIL_Describe.getObjectDescribe(obj).isDeletable()) {
             if (throwException) {
@@ -97,30 +99,59 @@ public with sharing class UTIL_Permissions {
         return true;
     }
 
-    public static Boolean canRead(String obj, String field, Boolean throwException) {
-        if (!UTIL_Describe.getFieldDescribe(obj, field).isAccessible()) {
-            if (throwException) {
-                throw new InsufficientPermissionException(INSUFFICIENT_PERMISSION_MESSAGE);
-            } else {
-                return false;
-            }
-        }
-        return true;
-    }
+    /*** Field Level Security ***/
 
-    public static Boolean canWrite(String obj, String field, Boolean throwException) {
-        if (!UTIL_Describe.getFieldDescribe(obj, field).isUpdateable()) {
-            if (throwException) {
-                throw new InsufficientPermissionException(INSUFFICIENT_PERMISSION_MESSAGE);
-            } else {
-                return false;
-            }
-        }
-        return true;
+    public static Boolean canRead(String obj, String field, Boolean throwException) {
+        DescribeFieldResult fieldResult = UTIL_Describe.getFieldDescribe(obj, field);
+        return canRead(fieldResult, throwException);
     }
 
     public static Boolean canCreate(String obj, String field, Boolean throwException) {
-        if (!UTIL_Describe.getFieldDescribe(obj, field).isCreateable()) {
+        DescribeFieldResult fieldResult = UTIL_Describe.getFieldDescribe(obj, field);
+        return canCreate(fieldResult, throwException);
+    }
+
+    public static Boolean canUpdate(String obj, String field, Boolean throwException) {
+        DescribeFieldResult fieldResult = UTIL_Describe.getFieldDescribe(obj, field);
+        return canUpdate(fieldResult, throwException);
+    }
+
+    public static Boolean canRead(DescribeFieldResult fieldResult) {
+        return canRead(fieldResult, true);
+    }
+
+    public static Boolean canCreate(DescribeFieldResult fieldResult) {
+        return canCreate(fieldResult, true);
+    }
+
+    public static Boolean canUpdate(DescribeFieldResult fieldResult) {
+        return canUpdate(fieldResult, true);
+    }
+
+    public static Boolean canRead(DescribeFieldResult fieldResult, Boolean throwException) {
+        if (!fieldResult.isAccessible()) {
+            if (throwException) {
+                throw new InsufficientPermissionException(INSUFFICIENT_PERMISSION_MESSAGE);
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static Boolean canCreate(DescribeFieldResult fieldResult, Boolean throwException) {
+        if (!fieldResult.isCreateable()) {
+            if (throwException) {
+                throw new InsufficientPermissionException(INSUFFICIENT_PERMISSION_MESSAGE);
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static Boolean canUpdate(DescribeFieldResult fieldResult, Boolean throwException) {
+        if (!fieldResult.isUpdateable()) {
             if (throwException) {
                 throw new InsufficientPermissionException(INSUFFICIENT_PERMISSION_MESSAGE);
             } else {
@@ -134,8 +165,8 @@ public with sharing class UTIL_Permissions {
         return canRead(obj, field, true);
     }
 
-    public static Boolean canWrite(String obj, String field) {
-        return canWrite(obj, field, true);
+    public static Boolean canUpdate(String obj, String field) {
+        return canUpdate(obj, field, true);
     }
 
     public static Boolean canCreate(String obj, String field) {
