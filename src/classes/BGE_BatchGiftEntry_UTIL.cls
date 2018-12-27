@@ -84,6 +84,22 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
 
     }
 
+    public static void checkFieldPermissions(String objectName, List<String> fieldNamesToCheck) {
+        List<DescribeFieldResult> fieldResults = new List<DescribeFieldResult>();
+        for (String fieldName : fieldNamesToCheck) {
+            if (fieldName.contains('__r')) {
+                fieldName = fieldName.substringBefore('__r') + '__c';
+            }
+
+            DescribeFieldResult fieldResult = UTIL_Describe.getFieldDescribe(objectName, fieldName);
+
+            if (!fieldResults.contains(fieldResult)) {
+                fieldResults.add(fieldResult);
+            }
+        }
+        checkFieldPermissions(fieldResults);
+    }
+
     /*******************************************************************************************************
     * @description Handles missing field permissions
     * @param missingPermissions list of DescribeFieldResult records for which permissions are lacking
@@ -118,16 +134,16 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     * @return String the truncated list of strings, separated by a comma
     * @example truncateList(new List<String>{ 'apple', 'orange', 'banana', 'pear' }, 2); // returns 'apple, orange ...'
     */
+    @TestVisible
     private static String truncateList(List<String> items, Integer maxItems) {
         Integer totalItems = items.size();
+        List<String> limitedItems = new List<String>();
 
-        if (totalItems >= maxItems) {
-            for (Integer i = maxItems; i < totalItems; i++) {
-                items.remove(i);
-            }
+        for (Integer i = 0; i < maxItems && i < items.size(); i++) {
+            limitedItems.add(items[i]);
         }
 
-        return String.join(items, ', ') + (totalItems > maxItems ? ' ...' : '');
+        return String.join(limitedItems, ', ') + (totalItems > maxItems ? ' ...' : '');
     }
 
     /*******************************************************************************************************

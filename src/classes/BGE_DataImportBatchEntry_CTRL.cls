@@ -78,6 +78,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         dataImportModel.labels = getBatchDataImportLabels();
         dataImportModel.isNamespaced = String.isNotBlank(UTIL_Namespace.getNamespace());
 
+        // check permissions on hard coded fields
+        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), getDataImportFields());
+
         return JSON.serialize(dataImportModel);
     }
 
@@ -254,7 +257,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
         String activeFieldsJSON = batch.Active_Fields__c;
         if (activeFieldsJSON != null) {
-            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields = (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
+            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields =
+                (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
 
             Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
 
@@ -382,14 +386,11 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
+    * @description returns the subset of DataImport__c fields that are part of every batch
     * @return List<String> list of DataImport__c field api names
     */
-    public static List<String> getDataImportFields(Id batchId) {
-
-        List<String> activeFieldNames = getActiveFieldNamesFromBatch(batchId);
-
-        List<String> fields = new List<String> {
+    private static List<String> getDataImportFields() {
+        return new List<String> {
             'Id',
             'Account1Imported__c',
             'Account1Imported__r.Name',
@@ -406,8 +407,16 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             'PaymentImportStatus__c',
             'Status__c'
         };
+    }
 
-        fields.addAll(activeFieldNames);
+    /*******************************************************************************************************
+    * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
+    * @return List<String> list of DataImport__c field api names
+    */
+    public static List<String> getDataImportFields(Id batchId) {
+
+        List<String> fields = getDataImportFields();
+        fields.addAll(getActiveFieldNamesFromBatch(batchId));
 
         return fields;
     }
