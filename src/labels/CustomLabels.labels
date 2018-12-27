@@ -2518,6 +2518,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Time:</value>
     </labels>
     <labels>
+        <fullName>bgeActionDelete</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Delete action for Batch Gift Entry</shortDescription>
+        <value>Delete</value>
+    </labels>
+    <labels>
+        <fullName>bgeActionView</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>View action for Batch Gift Entry</shortDescription>
+        <value>View</value>
+    </labels>
+    <labels>
         <fullName>bgeBatchSelectedFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
