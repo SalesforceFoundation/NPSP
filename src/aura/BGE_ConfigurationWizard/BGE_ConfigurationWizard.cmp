@@ -364,7 +364,7 @@
                                                     <abbr class="slds-required" title="required">*</abbr>
                                                     {!v.batchMetadata.labels.donationDateRangeLabel}
                                                 </label>
-                                                <lightning:helptext content="{!$Label.c.bgeBatchTemplateDonationDateRangeHelp}" />
+                                                <lightning:helptext content="{!$Label.c.bgeBatchDonationDateRangeHelp}" />
                                                 <lightning:input aura:id="donationDateRange"
                                                                     label="{!v.batchMetadata.labels.donationDateRangeLabel}"
                                                                     disabled="{!or(v.batchInfo.noMatchSelected, v.batchInfo.noMatchOnDate)}"
@@ -375,7 +375,7 @@
                                                 <label class="slds-form-element__label" for="donationMatchingClass">
                                                     {!v.batchMetadata.labels.donationMatchingClassLabel}
                                                 </label>
-                                                <lightning:helptext content="{!$Label.c.bgeBatchTemplateDonationMatchingClassHelp}" />
+                                                <lightning:helptext content="{!$Label.c.bgeBatchDonationMatchingClassHelp}" />
                                                 <lightning:input aura:id="donationMatchingClass"
                                                                 label="{!v.batchMetadata.labels.donationMatchingClassLabel}"
                                                                 disabled="{!v.batchInfo.noMatchSelected}"                                                                
@@ -396,7 +396,7 @@
                                                     <abbr class="slds-required" title="required">*</abbr>
                                                     {!v.batchMetadata.labels.batchProcessSizeLabel}
                                                 </label>
-                                                <lightning:helptext content="{!$Label.c.bgeBatchTemplateBatchProcessSizeHelp}" />
+                                                <lightning:helptext content="{!$Label.c.bgeBatchBatchProcessSizeHelp}" />
                                                 <lightning:input aura:id="batchProcessSize"
                                                                 label="{!v.batchMetadata.labels.batchProcessSizeLabel}"
                                                                 type="number" step="0" required="true" variant="label-hidden"
@@ -410,7 +410,7 @@
                                                 <label class="slds-form-element__label" for="runOpportunityRollupsWhileProcessing">
                                                     {!v.batchMetadata.labels.runOpportunityRollupsWhileProcessingLabel}
                                                 </label>
-                                                <lightning:helptext content="{!$Label.c.bgeBatchTemplateRunOpportunityRollupsWhileProcessingHelp}" />
+                                                <lightning:helptext content="{!$Label.c.bgeBatchRunOpportunityRollupsWhileProcessingHelp}" />
                                             </lightning:layoutItem>
                                             <lightning:layoutItem class="slds-p-around_x-small" size="12">
                                                 <lightning:input aura:id="processUsingScheduledJob"
@@ -420,13 +420,13 @@
                                                 <label class="slds-form-element__label" for="processUsingScheduledJob">
                                                     {!v.batchMetadata.labels.processUsingScheduledJobLabel}
                                                 </label>
-                                                <lightning:helptext content="{!$Label.c.bgeBatchTemplateProcessUsingScheduledJobHelp}" />
+                                                <lightning:helptext content="{!$Label.c.bgeBatchProcessUsingScheduledJobHelp}" />
                                             </lightning:layoutItem>
                                             <lightning:layoutItem class="slds-p-around_x-small" size="12">
                                                 <label class="slds-form-element__label" for="postProcessClass">
                                                     {!v.batchMetadata.labels.postProcessClassLabel}
                                                 </label>
-                                                <lightning:helptext content="{!$Label.c.bgeBatchTemplatePostProcessClassHelp}" />
+                                                <lightning:helptext content="{!$Label.c.bgeBatchPostProcessClassHelp}" />
                                                 <lightning:input aura:id="postProcessClass"
                                                                 label="{!v.batchMetadata.labels.postProcessClassLabel}"
                                                                 value="{!v.batchInfo.postProcessClass}"
