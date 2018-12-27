@@ -339,6 +339,7 @@
                                                            label="{!v.batchMetadata.labels.donationMatchingRuleLabel}"
                                                            sourceLabel="{!$Label.c.bgeBatchAvailableFields}"
                                                            selectedLabel="{!$Label.c.bgeBatchSelectedFields}"
+                                                           onchange="{!c.handleUserInput}"
                                                            options="{!v.batchInfo.donationMatchingOptions}"
                                                            value="{!v.batchInfo.donationMatchingRule}"
                                                            required="true" variant="label-hidden"
@@ -366,7 +367,7 @@
                                                 <lightning:helptext content="{!$Label.c.bgeBatchTemplateDonationDateRangeHelp}" />
                                                 <lightning:input aura:id="donationDateRange"
                                                                     label="{!v.batchMetadata.labels.donationDateRangeLabel}"
-                                                                    disabled="{!v.batchInfo.noMatchSelected}"
+                                                                    disabled="{!or(v.batchInfo.noMatchSelected, v.batchInfo.noMatchOnDate)}"
                                                                     type="number" required="true" variant="label-hidden"
                                                                     value="{!v.batchInfo.donationDateRange}"/>
                                             </lightning:layoutItem>
