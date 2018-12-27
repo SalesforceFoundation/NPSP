@@ -103,9 +103,31 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     * @return void Throws an exception if user lacks permissions on any field
     */
     private static void handleMissingPermissions(List<String> missingPermissions) {
+
         if (!missingPermissions.isEmpty()) {
-            throw new AuraHandledException(Label.bgeFLSError + ' - ' + String.join(missingPermissions, ', ') );
+            throw new AuraHandledException(
+                Label.bgeFLSError + ' [' + truncateList(missingPermissions, 3) + ']'
+            );
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Takes a list of strings and converts it to a string of a subset of the original list
+    * @param items list of Strings
+    * @param maxItems the maximum number of Strings from the list to retain
+    * @return String the truncated list of strings, separated by a comma
+    * @example truncateList(new List<String>{ 'apple', 'orange', 'banana', 'pear' }, 2); // returns 'apple, orange ...'
+    */
+    private static String truncateList(List<String> items, Integer maxItems) {
+        Integer totalItems = items.size();
+
+        if (totalItems >= maxItems) {
+            for (Integer i = maxItems; i < totalItems; i++) {
+                items.remove(i);
+            }
+        }
+
+        return String.join(items, ', ') + (totalItems > maxItems ? ' ...' : '');
     }
 
     /*******************************************************************************************************
