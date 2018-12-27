@@ -229,6 +229,11 @@
                             options: currentField.options
                         }
 
+                        if (currentField.sObjectName === 'Opportunity' &&
+                            (currentField.name == 'npsp__Donation_Amount__c' || currentField.name == 'Donation_Amount__c')) {
+                            fieldInfo.systemRequired = true;
+                        }
+
                         currentFieldGroup.fields.push(fieldInfo);
                         currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
 

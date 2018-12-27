@@ -292,7 +292,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         List<BGEField> fields = new List<BGEField>();
 
         String dataImportApiName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
-        String opportunityLabel = UTIL_Describe.getObjectLabel(UTIL_Namespace.StrTokenNSPrefix('Opportunity'));
+        String opportunityLabel = UTIL_Describe.getObjectLabel('Opportunity');
         String paymentLabel = UTIL_Describe.getObjectLabel('npe01__OppPayment__c');
 
         BGEField donationAmount = new BGEField();
