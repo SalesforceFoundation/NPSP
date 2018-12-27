@@ -35,7 +35,7 @@
   @description Component used to view, edit, or create a Batch record.
 -->
 <aura:component controller="BGE_ConfigurationWizard_CTRL"
-                implements="force:hasRecordId,force:hasSObjectName,lightning:actionOverride">
+                implements="force:hasRecordId,force:hasSObjectName">
 
     <!-- private attributes -->
     <aura:attribute name="model" type="Object" access="PRIVATE" />
