@@ -360,26 +360,18 @@ public with sharing class BDI_DataImport_TEST {
         Boolean usingAdv = ADV_PackageInfo_SVC.useAdv();
         // verify expected results
         List<Contact> listCon = getContacts();
-        Integer numCons = usingAdv ? 2 : 1;
-        System.assertEquals(numCons, listCon.size());
+        System.assertEquals(1, listCon.size());
         System.assertEquals('TestFirstname00 TestLastname00', listCon[0].Name);
 
         listDI = getDIs();
         System.assertEquals(1, listDI.size());
-        // the outcome will be different if Advancement is installed because 1x1 Contacts CAN be donors
-        if (usingAdv){
-            System.assertEquals(listCon[0].Id, listDI[0].Contact1Imported__c);
-            System.assertEquals(listCon[1].Id, listDI[0].Contact2Imported__c);
-            System.assertEquals(listCon[0].AccountId, listDI[0].HouseholdAccountImported__c);
-            System.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
-            System.assertEquals(label.bdiCreated, listDI[0].Contact2ImportStatus__c);   
-        } else {
-            System.assertEquals(null, listDI[0].Contact1Imported__c);
-            System.assertEquals(null, listDI[0].Contact2Imported__c);
-            System.assertEquals(null, listDI[0].HouseholdAccountImported__c);
-            System.assertEquals(label.bdiErrorNonHHAccountContact, listDI[0].Contact1ImportStatus__c);
-            System.assertEquals(null, listDI[0].Contact2ImportStatus__c);   
-        }
+        System.assertEquals(null, listDI[0].Contact1Imported__c);
+        System.assertEquals(null, listDI[0].Contact2Imported__c);
+        System.assertEquals(null, listDI[0].HouseholdAccountImported__c);
+        // With ADV installed, 1x1 Contacts can make Donations, but there cannot be a second Contact on the DI record
+        String importError = usingAdv ? label.bdiErrorOneToOneMultiContact : label.bdiErrorNonHHAccountContact;
+        System.assertEquals(importError, listDI[0].Contact1ImportStatus__c);
+        System.assertEquals(null, listDI[0].Contact2ImportStatus__c);
         List<Address__c> listAddr = getAddresses();   
         System.assertEquals(0, listAddr.size());
     }

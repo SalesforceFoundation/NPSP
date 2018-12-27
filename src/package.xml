@@ -1363,6 +1363,7 @@
         <members>bdiErrorInvalidOppRTName</members>
         <members>bdiErrorNonHHAccountContact</members>
         <members>bdiErrorNonHHAccountContactWithAdv</members>
+        <members>bdiErrorOneToOneMultiContact</members>
         <members>bdiErrorPaymentMultiMatch</members>
         <members>bdiFailed</members>
         <members>bdiHouseholdModelRequired</members>

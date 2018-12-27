@@ -1494,9 +1494,10 @@ private with sharing class BDI_DataImport_TEST2 {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
         System.assertEquals(false, CAO_Constants.isHHAccountModel());
+        System.assertEquals(true, CAO_Constants.isOneToOne());
         
         List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
+        listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1', 'c2', 'C2'));
         insert listDI;
 
         Boolean usingAdv = ADV_PackageInfo_SVC.useAdv();
@@ -1518,6 +1519,11 @@ private with sharing class BDI_DataImport_TEST2 {
             }
         }
         Test.stopTest();
+
+        listDI = getDIs();
+        // With ADV installed, the import still fails, but only because there would be 2 1x1 Contacts on the Donation
+        String importStatus = usingAdv ? label.bdiErrorOneToOneMultiContact : null;
+        System.assertEquals(importStatus, listDI[0].Contact1ImportStatus__c);
     }
 
 
