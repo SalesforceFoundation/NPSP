@@ -1392,6 +1392,8 @@
         <members>bdiStatusProcessed</members>
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
+        <members>bgeActionDelete</members>
+        <members>bgeActionView</members>
         <members>bgeBatchAvailableFields</members>
         <members>bgeBatchBatchProcessSizeHelp</members>
         <members>bgeBatchDonationDateRangeHelp</members>
