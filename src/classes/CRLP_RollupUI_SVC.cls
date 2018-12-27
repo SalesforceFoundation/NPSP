@@ -849,7 +849,6 @@ public with sharing class CRLP_RollupUI_SVC {
             }
             return optionsList;
         } catch (Exception ex) {
-            // error retrieving the filter rule constant picklist
             throw new AuraHandledException(ex.getMessage());
         }
     }

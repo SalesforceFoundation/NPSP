@@ -131,7 +131,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
             if (targetFieldType == Schema.DisplayType.PICKLIST) {
                 options = UTIL_Describe.getLightningSelectOptions(targetObject, targetField);
             } else if (targetField == 'RecordTypeId') {
-                options = UTIL_RecordTypes.getRecordTypesForLightningSelect(UTIL_Describe.getSObjectType(targetObject));
+                options = UTIL_RecordTypes.getStringRecordTypesForLightningSelect(UTIL_Describe.getSObjectType(targetObject));
             }
         }
 
