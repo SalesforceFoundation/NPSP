@@ -38,11 +38,22 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
 
     /*******************************************************************************************************
     * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
+    * @param batchId the batch for which to get all fields for soql
     * @return List<String> list of DataImport__c field api names
     */
     public static List<String> getDataImportFields(Id batchId) {
+        return getDataImportFields(batchId, true);
+    }
 
-        List<String> fields = getDataImportFields();
+    /*******************************************************************************************************
+    * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
+    * @param batchId the batch for which to get all fields for soql
+    * @param includeRelationshipFields whether to include relationship fields in the returned list
+    * @return List<String> list of DataImport__c field api names
+    */
+    public static List<String> getDataImportFields(Id batchId, Boolean includeRelationshipFields) {
+
+        List<String> fields = getDataImportFields(includeRelationshipFields);
         fields.addAll(getActiveFieldNamesFromBatch(batchId));
 
         return fields;
@@ -50,26 +61,34 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
 
     /*******************************************************************************************************
     * @description returns the subset of DataImport__c fields that are part of every batch
+    * @param includeRelationshipFields whether to include relationship fields in the returned list
     * @return List<String> list of DataImport__c field api names
     */
-    private static List<String> getDataImportFields() {
-        return new List<String> {
+    private static List<String> getDataImportFields(Boolean includeRelationshipFields) {
+        List<String> fields = new List<String> {
                 'Id',
                 'Account1Imported__c',
-                'Account1Imported__r.Name',
                 'Contact1Imported__c',
-                'Contact1Imported__r.Name',
                 'Donation_Donor__c',
                 'DonationImported__c',
-                'DonationImported__r.Name',
                 'DonationImportStatus__c',
                 'FailureInformation__c',
                 'NPSP_Data_Import_Batch__c',
                 'PaymentImported__c',
-                'PaymentImported__r.Name',
                 'PaymentImportStatus__c',
                 'Status__c'
         };
+
+        if (includeRelationshipFields) {
+            fields.addAll(new List<String>{
+                'Account1Imported__r.Name',
+                'Contact1Imported__r.Name',
+                'DonationImported__r.Name',
+                'PaymentImported__r.Name'
+            });
+        }
+
+        return fields;
     }
 
     /*******************************************************************************************************

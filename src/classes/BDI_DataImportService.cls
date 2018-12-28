@@ -83,7 +83,7 @@ global with sharing class BDI_DataImportService {
         if (dataImportBatches.size() == 1) {
             DataImportBatch__c batch = dataImportBatches[0];
             if (batch.Active_Fields__c != null) {
-                relevantDataImportFields = BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId);
+                relevantDataImportFields = BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId, false);
             }
             return batch;
         } else {
