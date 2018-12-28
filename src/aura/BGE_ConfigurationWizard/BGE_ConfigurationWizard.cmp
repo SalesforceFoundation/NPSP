@@ -349,9 +349,10 @@
                                 </lightning:layoutItem>
 
                                 <lightning:layoutItem class="slds-p-around_x-small" size="12">
-                                    <lightning:button aura:id="showAdvanced" 
+                                    <lightning:button aura:id="showAdvanced"
                                                       label="{!if(v.batchMetadata.showAdvancedOptions, $Label.c.bgeWizardHideAdvancedOptions, $Label.c.bgeWizardShowAdvancedOptions)}"
-                                                      variant="base" 
+                                                      variant="base"
+                                                      class="bgeLinkButton"
                                                       onclick="{!c.handleUserInput}" />
                                 </lightning:layoutItem>
 
