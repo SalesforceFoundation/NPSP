@@ -35,7 +35,6 @@
                 batchInfoView.noMatchSelected = batchInfo.noMatchSelected;
                 batchInfoView.noMatchOnDate = batchInfo.noMatchOnDate;
                 batchInfoView.postProcessClass = batchInfo.postProcessClass;
-                batchInfoView.processUsingScheduledJob = batchInfo.processUsingScheduledJob;
 
                 batchInfoView.labels = model.getBatchMetadata().labels;
 
@@ -63,8 +62,7 @@
                 labels: {},
                 noMatchSelected: false,
                 noMatchOnDate: false,
-                postProcessClass: '',
-                processUsingScheduledJob: false
+                postProcessClass: ''
             };
         })(component, model);
     },
@@ -324,8 +322,7 @@
                     donationMatchingClass: _batchInfo.donationMatchingClass,
                     donationMatchingRule: _batchInfo.donationMatchingRule,
                     donationDateRange: _batchInfo.donationDateRange,
-                    postProcessClass: _batchInfo.postProcessClass,
-                    processUsingScheduledJob: _batchInfo.processUsingScheduledJob
+                    postProcessClass: _batchInfo.postProcessClass
                 };
                 var activeFields = [];
 

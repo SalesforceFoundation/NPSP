@@ -2500,6 +2500,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Time:</value>
     </labels>
     <labels>
+        <fullName>bgeActionDelete</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Delete action for Batch Gift Entry</shortDescription>
+        <value>Delete</value>
+    </labels>
+    <labels>
+        <fullName>bgeActionView</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>View action for Batch Gift Entry</shortDescription>
+        <value>View</value>
+    </labels>
+    <labels>
         <fullName>bgeBatchSelectedFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2563,6 +2577,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The following fields are required because other fields from their object are selected. Select them before proceeding:</value>
     </labels>
     <labels>
+        <fullName>bgeBatchInfoWizard</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Info in Wizard prompting user entry</shortDescription>
+        <value>Enter Batch Info</value>
+    </labels>
+    <labels>
         <fullName>bgeBatchOverviewWizard</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2590,14 +2611,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
         <value>When checked, NPSP calculates donor rollups when donations are processed. If unchecked, donor rollups are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.</value>
-    </labels>
-    <labels>
-        <fullName>bgeBatchInfoWizard</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Header for Batch Info in Wizard prompting user entry</shortDescription>
-        <value>Enter Batch Info</value>
-    </labels>    
+    </labels>  
     <labels>
         <fullName>bgeBatchOverview</fullName>
         <language>en_US</language>
@@ -2648,11 +2662,25 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>WARNING: There are records saved to this batch. Any changes you make won&apos;t affect existing records. We will not attempt to match existing records using updated donation matching rule settings, unless those records are edited.</value>
     </labels>
     <labels>
+        <fullName>bgeFLSError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label that appears when user does not pass FLS check in BGE</shortDescription>
+        <value>You don&apos;t have the required field permissions. Contact your system administrator to inquire about getting the necessary permissions.</value>
+    </labels>
+    <labels>
         <fullName>bgeFormMatchingModalText</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header text to prompt user to select a donation to update</shortDescription>
         <value>Select the record you want to update.</value>
+    </labels>
+    <labels>
+        <fullName>bgeFormNewDonationHelptext</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text to indicate user is creating a new opportunity</shortDescription>
+        <value>You are currently creating a new Opportunity.</value>
     </labels>
     <labels>
         <fullName>bgeFormNoneLink</fullName>
@@ -2676,18 +2704,25 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Selected Payment</value>
     </labels>
     <labels>
+        <fullName>bgeFormUpdateDonation</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link text to change selected donation</shortDescription>
+        <value>Update your donation selection</value>
+    </labels>
+    <labels>
+        <fullName>bgeFormUpdateHelptext</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text to indicate that user has selected a donation</shortDescription>
+        <value>You are currently updating:</value>
+    </labels>
+    <labels>
         <fullName>bgeFormUpdateOpportunity</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Button text to select an opportunity to update in BGE</shortDescription>
         <value>Update this Opportunity</value>
-    </labels>
-    <labels>
-        <fullName>bgeFLSError</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Label that appears when user does not pass FLS check in BGE</shortDescription>
-        <value>You don&apos;t have the required field permissions. Contact your system administrator to inquire about getting the necessary permissions.</value>
     </labels>
     <labels>
         <fullName>bgeFormUpdatePayment</fullName>
