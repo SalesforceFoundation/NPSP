@@ -122,82 +122,78 @@ private with sharing class UTIL_Permissions_TEST {
         }
     }
 
-//    @isTest
-//    static void readOnlyUserCannotReadCustomFieldException() {
-//        Boolean exceptionCaught = false;
-//
-//        System.runAs(getReadOnlyUser()) {
-//            try {
-//                System.assert(!UTIL_Permissions.canRead(customObjectName));
-//            } catch (Exception ex) {
-//                exceptionCaught = true;
-//                System.assert(ex instanceof UTIL_Permissions.InsufficientPermissionException);
-//            }
-//        }
-//
-//        System.assert(exceptionCaught);
-//    }
+    @isTest
+    static void readOnlyUserCannotReadCustomFieldException() {
+        Boolean exceptionCaught = false;
 
-//    @isTest
-//    static void readOnlyUserCannotUpdateStandardFieldException() {
-//        Boolean exceptionCaught = false;
-//
-//        System.runAs(getReadOnlyUser()) {
-//            try {
-//                System.assert(!UTIL_Permissions.canUpdate(customObjectName));
-//            } catch (Exception ex) {
-//                exceptionCaught = true;
-//                System.assert(ex instanceof UTIL_Permissions.InsufficientPermissionException);
-//            }
-//        }
-//
-//        System.assert(exceptionCaught);
-//    }
-//
-//    @isTest
-//    static void readOnlyUserFieldCheckNoException() {
-//        System.runAs(getReadOnlyUser()) {
-//            System.assert(!UTIL_Permissions.canRead(customObjectName, false));
-//            System.assert(!UTIL_Permissions.canCreate(customObjectName, false));
-//            System.assert(!UTIL_Permissions.canUpdate(customObjectName, false));
-//            System.assert(!UTIL_Permissions.canDelete(customObjectName, false));
-//            System.assert(!UTIL_Permissions.canCreate(standardObjectName, false));
-//            System.assert(!UTIL_Permissions.canUpdate(standardObjectName, false));
-//            System.assert(!UTIL_Permissions.canDelete(standardObjectName, false));
-//            // this one is positive!
-//            System.assert(UTIL_Permissions.canRead(standardObjectName, false));
-//        }
-//    }
-//
-//    @isTest
-//    static void sysAdminCanDeleteCustomFieldException() {
-//        Boolean exceptionCaught = false;
-//
-//        System.runAs(getSysAdmin()) {
-//            try {
-//                System.assert(UTIL_Permissions.canDelete(customObjectName));
-//            } catch (Exception ex) {
-//                exceptionCaught = true;
-//                System.assert(ex instanceof UTIL_Permissions.InsufficientPermissionException);
-//            }
-//        }
-//
-//        System.assert(!exceptionCaught);
-//    }
-//
-//    @isTest
-//    static void sysAdminFieldCheckNoException() {
-//        System.runAs(getSysAdmin()) {
-//            System.assert(UTIL_Permissions.canRead(customObjectName, false));
-//            System.assert(UTIL_Permissions.canCreate(customObjectName, false));
-//            System.assert(UTIL_Permissions.canUpdate(customObjectName, false));
-//            System.assert(UTIL_Permissions.canDelete(customObjectName, false));
-//            System.assert(UTIL_Permissions.canRead(standardObjectName, false));
-//            System.assert(UTIL_Permissions.canCreate(standardObjectName, false));
-//            System.assert(UTIL_Permissions.canUpdate(standardObjectName, false));
-//            System.assert(UTIL_Permissions.canDelete(standardObjectName, false));
-//        }
-//    }
+        System.runAs(getReadOnlyUser()) {
+            try {
+                System.assert(!UTIL_Permissions.canRead(customObjectName, customFieldName));
+            } catch (Exception ex) {
+                exceptionCaught = true;
+                System.assert(ex instanceof UTIL_Permissions.InsufficientPermissionException);
+            }
+        }
+
+        System.assert(exceptionCaught);
+    }
+
+    @isTest
+    static void readOnlyUserCannotUpdateStandardFieldException() {
+        Boolean exceptionCaught = false;
+
+        System.runAs(getReadOnlyUser()) {
+            try {
+                System.assert(!UTIL_Permissions.canUpdate(customObjectName, customFieldName));
+            } catch (Exception ex) {
+                exceptionCaught = true;
+                System.assert(ex instanceof UTIL_Permissions.InsufficientPermissionException);
+            }
+        }
+
+        System.assert(exceptionCaught);
+    }
+
+    @isTest
+    static void readOnlyUserFieldCheckNoException() {
+        System.runAs(getReadOnlyUser()) {
+            System.assert(!UTIL_Permissions.canRead(customObjectName, customFieldName, false));
+            System.assert(!UTIL_Permissions.canCreate(customObjectName, customFieldName, false));
+            System.assert(!UTIL_Permissions.canUpdate(customObjectName, customFieldName, false));
+            System.assert(!UTIL_Permissions.canCreate(standardObjectName, standardFieldName, false));
+            System.assert(!UTIL_Permissions.canUpdate(standardObjectName, standardFieldName, false));
+            // this one is positive!
+            System.assert(UTIL_Permissions.canRead(standardObjectName, standardFieldName, false));
+        }
+    }
+
+    @isTest
+    static void sysAdminCanUpdateCustomFieldException() {
+        Boolean exceptionCaught = false;
+
+        System.runAs(getSysAdmin()) {
+            try {
+                System.assert(UTIL_Permissions.canUpdate(customObjectName, customFieldName));
+            } catch (Exception ex) {
+                exceptionCaught = true;
+                System.assert(ex instanceof UTIL_Permissions.InsufficientPermissionException);
+            }
+        }
+
+        System.assert(!exceptionCaught);
+    }
+
+    @isTest
+    static void sysAdminFieldCheckNoException() {
+        System.runAs(getSysAdmin()) {
+            System.assert(UTIL_Permissions.canRead(customObjectName, customFieldName, false));
+            System.assert(UTIL_Permissions.canCreate(customObjectName, customFieldName, false));
+            System.assert(UTIL_Permissions.canUpdate(customObjectName, customFieldName, false));
+            System.assert(UTIL_Permissions.canRead(standardObjectName, standardFieldName, false));
+            System.assert(UTIL_Permissions.canCreate(standardObjectName, standardFieldName, false));
+            System.assert(UTIL_Permissions.canUpdate(standardObjectName, standardFieldName, false));
+        }
+    }
 
 
 }
