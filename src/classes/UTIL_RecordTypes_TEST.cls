@@ -28,8 +28,8 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Evan Callahan
-* @date 2010 
+* @author Salesforce.org
+* @date 2018
 * @group Utilities
 * @description Tests for recordtype wrapper for easy access to record type information.
 */
@@ -37,45 +37,63 @@
 @isTest
 private class UTIL_RecordTypes_TEST {
 
-    // TEST
-    static testmethod void testRecTypes() {
+    @isTest
+    static void testRecTypes() {
         // try bogus values
         Id bogus = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, 'Bogus');
         bogus = UTIL_RecordTypes.GetRecordTypeId(Contact.sObjectType, 'Bogus');
         bogus = UTIL_RecordTypes_API.GetRecordTypeId('Campaign', 'Bogus');
         
         // try all the functions
-        set<Id> oppRtSet = UTIL_RecordTypes_API.GetRecordTypeIdSet('Opportunity', (new set<string>{'Bogus', 'Master', 'Grant'}));
+        Set<Id> oppRtSet = UTIL_RecordTypes_API.GetRecordTypeIdSet('Opportunity', (new Set<String>{'Bogus', 'Master', 'Grant'}));
         List<SelectOption> rtOptions = UTIL_RecordTypes.getRecordTypesForSelectList(Opportunity.sObjectType);
         
         // check against queried rectypes
-        list<recordtype> ort = [select id, name from recordtype where isactive=true and sobjecttype='Opportunity' limit 1];
+        List<RecordType> ort = [SELECT Id, Name FROM RecordType WHERE IsActive=true AND sObjectType='Opportunity' LIMIT 1];
         if (!ort.isEmpty()) {
             Id rtId = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, ort[0].name);
-            system.assertEquals(ort[0].id, rtId); 
+            System.assertEquals(ort[0].id, rtId);
             String rtName = UTIL_RecordTypes_API.GetRecordTypeName('Opportunity', ort[0].id);
-            system.assertEquals(ort[0].name, rtName); 
+            System.assertEquals(ort[0].name, rtName);
 
             // the sets above should contain something too
-            system.assert(oppRtSet.size() > 0);
-            system.assert(rtOptions.size() > 0);            
+            System.assert(oppRtSet.size() > 0);
+            System.assert(rtOptions.size() > 0);
         }       
     }
-    
-    static testMethod void TestRecordTypes() {
+
+    @isTest
+    static void testVFRecordTypes() {
 
         ID idGift = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType));
         
         Set<String> setStr = new Set<String>{UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType)};
         Set<Id> setId = UTIL_RecordTypes.GetRecordTypeIdSet(Opportunity.sObjectType, setStr);
-        if(idGift!=null){
-            system.Assert(setId.contains(idGift));
+
+        if (idGift!=null) {
+            System.assert(setId.contains(idGift));
         
-            system.AssertEquals(UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType), UTIL_RecordTypes.GetRecordTypeName(Opportunity.sObjectType, idGift));        
+            System.assertEquals(UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType), UTIL_RecordTypes.GetRecordTypeName(Opportunity.sObjectType, idGift));
                 
             List<SelectOption> listSO = UTIL_RecordTypes.getRecordTypesForSelectList(Opportunity.sObjectType);
-            system.Assert(listSO.IsEmpty() == false);       
+            System.assert(listSO.IsEmpty() == false);
         }
-    }       
+    }
+
+    @isTest
+    static void testLightningRecordTypes() {
+
+        List<RecordType> recordTypes = [SELECT Id, Name FROM RecordType WHERE IsActive=true AND sObjectType='Opportunity' LIMIT 1];
+        Integer recordTypeSize = recordTypes.size();
+
+        List<Map<String, String>> recordTypeIdAndName = UTIL_RecordTypes.getRecordTypeDevNamesForLightningSelectList(Opportunity.sObjectType);
+        List<Map<String, String>> recordTypeDevNameAndName = UTIL_RecordTypes.getRecordTypesForLightningSelect(Opportunity.sObjectType);
+        List<Map<String, String>> recordTypeNameAndName = UTIL_RecordTypes.getStringRecordTypesForLightningSelect(Opportunity.sObjectType);
+
+        System.assert(recordTypeIdAndName.size() == recordTypeSize);
+        System.assert(recordTypeDevNameAndName.size() == recordTypeSize);
+        System.assert(recordTypeNameAndName.size() == recordTypeSize);
+
+    }
 
 }
