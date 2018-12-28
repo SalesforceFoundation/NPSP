@@ -91,7 +91,8 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                 fieldName = fieldName.substringBefore('__r') + '__c';
             }
 
-            DescribeFieldResult fieldResult = UTIL_Describe.getFieldDescribe(objectName, fieldName);
+            DescribeFieldResult fieldResult =
+                UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrAllNSPrefix(objectName), UTIL_Namespace.StrAllNSPrefix(fieldName));
 
             if (fieldName != 'Id' && !fieldResults.contains(fieldResult)) {
                 fieldResults.add(fieldResult);

@@ -422,10 +422,10 @@
         <members>UTIL_OrgTelemetry_SVC</members>
         <members>UTIL_OrgTelemetry_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
-        <members>UTIL_Permissions</members>
-        <members>UTIL_Permissions_TEST</members>
         <members>UTIL_PerfLogger</members>
         <members>UTIL_PerfLogger_TEST</members>
+        <members>UTIL_Permissions</members>
+        <members>UTIL_Permissions_TEST</members>
         <members>UTIL_PlatformCache</members>
         <members>UTIL_Profile</members>
         <members>UTIL_Profile_TEST</members>
