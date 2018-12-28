@@ -72,7 +72,7 @@ public with sharing class BDI_ContactService {
     private Map<String, String> mapDIFieldToC1Field {
         get {
             if (mapDIFieldToC1Field == null) {
-                mapDIFieldToC1Field = BDI_DataImportService.mapFieldsForDIObject('Contact1', 'Contact', BDI_DataImportService.listStrDataImportFields);
+                mapDIFieldToC1Field = BDI_DataImportService.mapFieldsForDIObject('Contact1', 'Contact', BDI_DataImportService.relevantDataImportFields);
             }
             return mapDIFieldToC1Field;
         }
@@ -85,7 +85,7 @@ public with sharing class BDI_ContactService {
     private Map<String, String> mapDIFieldToC2Field {
         get {
             if (mapDIFieldToC2Field == null) {
-                mapDIFieldToC2Field = BDI_DataImportService.mapFieldsForDIObject('Contact2', 'Contact', BDI_DataImportService.listStrDataImportFields);
+                mapDIFieldToC2Field = BDI_DataImportService.mapFieldsForDIObject('Contact2', 'Contact', BDI_DataImportService.relevantDataImportFields);
             }
             return mapDIFieldToC2Field;
         }

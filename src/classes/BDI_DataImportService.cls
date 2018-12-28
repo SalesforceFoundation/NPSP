@@ -81,7 +81,11 @@ global with sharing class BDI_DataImportService {
 
         List<DataImportBatch__c> dataImportBatches = BDI_DataImportBatch_SEL.selectByIds(new Set<Id>{ batchId });
         if (dataImportBatches.size() == 1) {
-            return dataImportBatches[0];
+            DataImportBatch__c batch = dataImportBatches[0];
+            if (batch.Active_Fields__c != null) {
+                relevantDataImportFields = BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId);
+            }
+            return batch;
         } else {
             throw(new BDIException(String.format(Label.bdiInvalidBatchId, new List<String>{ batchId })));
         }
@@ -674,6 +678,22 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
+    * @description list of the fields in the Data Import object that we care about for FLS checks because they
+    * are present in the Batch we are processing
+    * This list gets set in the loadBatch method. If no batch is loaded, we use the full list of all DI fields.
+    */
+    global static List<String> relevantDataImportFields {
+        get {
+            if (relevantDataImportFields == null || relevantDataImportFields.isEmpty()) {
+                return listStrDataImportFields;
+            } else {
+                return relevantDataImportFields;
+            }
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
     * @description list of all the fields in the Data Import object
     */
     global static List<String> listStrDataImportFields {
@@ -740,12 +760,10 @@ global with sharing class BDI_DataImportService {
     * @return Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
     */
     global static Map<String, String> mapFieldsForDIObject(String dataImportObjectName, String targetObjectName, List<String> dataImportFields) {
-
         Map<String, String> dataImportFieldToTargetField = new Map<String, String>();
 
         for (String dataImportField : dataImportFields) {
 
-            // TODO: refactor to use new getTargetObject get getTargetField methods
             DescribeFieldResult fieldDescribe =
                 UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), dataImportField);
             String helpText = fieldDescribe.getInlineHelpText();
@@ -878,7 +896,7 @@ global with sharing class BDI_DataImportService {
         }
 
         // get our mapping of household custom fields
-        Map<String, String> mapDIFieldToHHField = mapFieldsForDIObject('Household', 'Account', listStrDataImportFields);
+        Map<String, String> mapDIFieldToHHField = mapFieldsForDIObject('Household', 'Account', relevantDataImportFields);
 
         // bail out if no custom fields
         if (mapDIFieldToHHField.size() == 0) {
@@ -1429,7 +1447,7 @@ global with sharing class BDI_DataImportService {
         get {
             if (mapDIFieldToA1Field == null) {
                 mapDIFieldToA1Field = BDI_DataImportService.mapFieldsForDIObject(
-                    'Account1', 'Account', BDI_DataImportService.listStrDataImportFields
+                    'Account1', 'Account', BDI_DataImportService.relevantDataImportFields
                 );
             }
             return mapDIFieldToA1Field;
@@ -1445,7 +1463,7 @@ global with sharing class BDI_DataImportService {
             if (mapDIFieldToA2Field == null) {
                 mapDIFieldToA2Field =
                     BDI_DataImportService.mapFieldsForDIObject(
-                        'Account2', 'Account', BDI_DataImportService.listStrDataImportFields
+                        'Account2', 'Account', BDI_DataImportService.relevantDataImportFields
                     );
             }
             return mapDIFieldToA2Field;
@@ -1501,7 +1519,8 @@ global with sharing class BDI_DataImportService {
         }
 
         Map<String, String> mapDIFieldToAddrField =
-            mapFieldsForDIObject('Address', UTIL_Namespace.StrTokenNSPrefix('Address__c'), listStrDataImportFields);
+            mapFieldsForDIObject('Address', UTIL_Namespace.StrTokenNSPrefix('Address__c'), relevantDataImportFields);
+
         List<Address__c> addressesToInsert = new List<Address__c>();
         List<DataImport__c> dataImportsToInsert = new List<DataImport__c>();
         Map<String, Address__c> mapHHAddrKeyToAddrNew = new Map<String, Address__c>();

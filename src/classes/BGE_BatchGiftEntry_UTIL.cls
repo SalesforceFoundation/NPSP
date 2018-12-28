@@ -37,6 +37,63 @@
 public with sharing class BGE_BatchGiftEntry_UTIL {
 
     /*******************************************************************************************************
+    * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
+    * @return List<String> list of DataImport__c field api names
+    */
+    public static List<String> getDataImportFields(Id batchId) {
+
+        List<String> fields = getDataImportFields();
+        fields.addAll(getActiveFieldNamesFromBatch(batchId));
+
+        return fields;
+    }
+
+    /*******************************************************************************************************
+    * @description returns the subset of DataImport__c fields that are part of every batch
+    * @return List<String> list of DataImport__c field api names
+    */
+    private static List<String> getDataImportFields() {
+        return new List<String> {
+                'Id',
+                'Account1Imported__c',
+                'Account1Imported__r.Name',
+                'Contact1Imported__c',
+                'Contact1Imported__r.Name',
+                'Donation_Donor__c',
+                'DonationImported__c',
+                'DonationImported__r.Name',
+                'DonationImportStatus__c',
+                'FailureInformation__c',
+                'NPSP_Data_Import_Batch__c',
+                'PaymentImported__c',
+                'PaymentImported__r.Name',
+                'PaymentImportStatus__c',
+                'Status__c'
+        };
+    }
+
+    /*******************************************************************************************************
+    * @description
+    * @param batchId: ID of the NPSP_Data_Import_Batch__c
+    * @return list of field api names
+    */
+    public static List<String> getActiveFieldNamesFromBatch(Id batchId) {
+
+        DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
+        String activeFieldsJSON = batch.Active_Fields__c;
+        List<String> activeFieldNames = new List<String>();
+
+        if (activeFieldsJSON != null) {
+            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields = (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
+            for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
+                activeFieldNames.add(field.name);
+            }
+        }
+
+        return activeFieldNames;
+    }
+
+    /*******************************************************************************************************
     * @description Checks for field permissions needed to create a new Batch
     * User must have fields on DataImportBatch__c that appear in the config wizard
     * as well as Donation_Amount__c on DataImport__c because it is locked as a required field in config wizard

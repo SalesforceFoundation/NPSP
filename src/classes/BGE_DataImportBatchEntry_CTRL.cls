@@ -89,27 +89,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description
-    * @param batchId: ID of the NPSP_Data_Import_Batch__c
-    * @return list of field api names
-    */
-    public static List<String> getActiveFieldNamesFromBatch(Id batchId) {
-
-        DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
-        String activeFieldsJSON = batch.Active_Fields__c;
-        List<String> activeFieldNames = new List<String>();
-
-        if (activeFieldsJSON != null) {
-            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields = (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
-            for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
-                activeFieldNames.add(field.name);
-            }
-        }
-
-        return activeFieldNames;
-    }
-
-    /*******************************************************************************************************
     * @description queries the DataImport__c records associated with the given batchId
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
     * @return list of custom DataImportRow objects for use in the lightning:datatable
@@ -350,7 +329,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     */
     public static List<DataImport__c> getDataImportRecordsByBatchId(Id batchId) {
 
-        List<String> dataImportFields = getDataImportFields(batchId);
+        List<String> dataImportFields = BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId);
 
         String query = 'SELECT ' + String.join(dataImportFields,', ') +
             ' FROM DataImport__c' +
@@ -367,7 +346,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     */
     public static List<DataImport__c> getDataImportRecordsByIds(Id batchId, Set<Id> dataImportIds) {
 
-        List<String> dataImportFields = getDataImportFields(batchId);
+        List<String> dataImportFields = BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId);
 
         String query = 'SELECT ' + String.join(dataImportFields,', ') +
             ' FROM DataImport__c' +
@@ -375,37 +354,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             ' ORDER BY Id ASC';
 
         return Database.query(query);
-    }
-
-    /*******************************************************************************************************
-    * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
-    * @return List<String> list of DataImport__c field api names
-    */
-    public static List<String> getDataImportFields(Id batchId) {
-
-        List<String> activeFieldNames = getActiveFieldNamesFromBatch(batchId);
-
-        List<String> fields = new List<String> {
-            'Id',
-            'Account1Imported__c',
-            'Account1Imported__r.Name',
-            'Contact1Imported__c',
-            'Contact1Imported__r.Name',
-            'Donation_Donor__c',
-            'DonationImported__c',
-            'DonationImported__r.Name',
-            'DonationImportStatus__c',
-            'FailureInformation__c',
-            'NPSP_Data_Import_Batch__c',
-            'PaymentImported__c',
-            'PaymentImported__r.Name',
-            'PaymentImportStatus__c',
-            'Status__c'
-        };
-
-        fields.addAll(activeFieldNames);
-
-        return fields;
     }
 
     /*******************************************************************************************************

@@ -108,7 +108,7 @@ public class BDI_Donations {
         get {
             if (mapDIFieldToOppField == null) {
                 mapDIFieldToOppField = BDI_DataImportService.mapFieldsForDIObject('Opportunity', 'Opportunity',
-                    BDI_DataImportService.listStrDataImportFields);
+                    BDI_DataImportService.relevantDataImportFields);
             }
             return mapDIFieldToOppField;
         }
@@ -122,7 +122,7 @@ public class BDI_Donations {
         get {
             if (mapDIFieldToPmtField == null) {
                 mapDIFieldToPmtField = BDI_DataImportService.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c',
-                    BDI_DataImportService.listStrDataImportFields);
+                    BDI_DataImportService.relevantDataImportFields);
             }
             return mapDIFieldToPmtField;
         }
