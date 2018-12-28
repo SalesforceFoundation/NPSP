@@ -157,13 +157,22 @@ private with sharing class UTIL_Permissions_TEST {
     @isTest
     static void readOnlyUserFieldCheckNoException() {
         System.runAs(getReadOnlyUser()) {
+            DescribeFieldResult customFieldResult = UTIL_Describe.getFieldDescribe(customObjectName, customFieldName);
+            DescribeFieldResult standardFieldResult = UTIL_Describe.getFieldDescribe(standardObjectName, standardFieldName);
+
             System.assert(!UTIL_Permissions.canRead(customObjectName, customFieldName, false));
             System.assert(!UTIL_Permissions.canCreate(customObjectName, customFieldName, false));
             System.assert(!UTIL_Permissions.canUpdate(customObjectName, customFieldName, false));
             System.assert(!UTIL_Permissions.canCreate(standardObjectName, standardFieldName, false));
             System.assert(!UTIL_Permissions.canUpdate(standardObjectName, standardFieldName, false));
-            // this one is positive!
+            System.assert(!UTIL_Permissions.canCreate(customFieldResult, false));
+            System.assert(!UTIL_Permissions.canUpdate(customFieldResult, false));
+            System.assert(!UTIL_Permissions.canCreate(standardFieldResult, false));
+            System.assert(!UTIL_Permissions.canUpdate(standardFieldResult, false));
+
+            // these two are positive!
             System.assert(UTIL_Permissions.canRead(standardObjectName, standardFieldName, false));
+            System.assert(UTIL_Permissions.canRead(standardFieldResult, false));
         }
     }
 
@@ -186,12 +195,21 @@ private with sharing class UTIL_Permissions_TEST {
     @isTest
     static void sysAdminFieldCheckNoException() {
         System.runAs(getSysAdmin()) {
+            DescribeFieldResult customFieldResult = UTIL_Describe.getFieldDescribe(customObjectName, customFieldName);
+            DescribeFieldResult standardFieldResult = UTIL_Describe.getFieldDescribe(standardObjectName, standardFieldName);
+
             System.assert(UTIL_Permissions.canRead(customObjectName, customFieldName, false));
             System.assert(UTIL_Permissions.canCreate(customObjectName, customFieldName, false));
             System.assert(UTIL_Permissions.canUpdate(customObjectName, customFieldName, false));
             System.assert(UTIL_Permissions.canRead(standardObjectName, standardFieldName, false));
             System.assert(UTIL_Permissions.canCreate(standardObjectName, standardFieldName, false));
             System.assert(UTIL_Permissions.canUpdate(standardObjectName, standardFieldName, false));
+            System.assert(UTIL_Permissions.canRead(customFieldResult, false));
+            System.assert(UTIL_Permissions.canCreate(customFieldResult, false));
+            System.assert(UTIL_Permissions.canUpdate(customFieldResult, false));
+            System.assert(UTIL_Permissions.canRead(standardFieldResult, false));
+            System.assert(UTIL_Permissions.canCreate(standardFieldResult, false));
+            System.assert(UTIL_Permissions.canUpdate(standardFieldResult, false));
         }
     }
 
