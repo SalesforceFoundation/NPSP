@@ -10,7 +10,9 @@
      * @description: checks that user has all necessary permissions and then launches modal or displays error
      */
     onNewBatchClick: function(component, event, helper) {
+        helper.toggleNewBatch(component, true);
         helper.checkFieldPermissions(component);
+        helper.toggleNewBatch(component, false);
     }
 
 })

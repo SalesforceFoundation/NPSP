@@ -55,7 +55,6 @@
             if (state === 'SUCCESS') {
                 this.openNewBatchWizard(component);
             } else if (state === 'ERROR') {
-                console.log(response.getError());
                 this.handleApexErrors(component, response.getError());
             }
         });
@@ -110,5 +109,13 @@
             'message': message
         });
     },
+
+    /**
+     * @description: toggles the new batch button to prevent it being clicked multiple times
+     * @param disabledValue: boolean value to set disabled flag on newBGEBatch button
+     */
+    toggleNewBatch: function(component, disabledValue) {
+        component.find('newBGEBatch').set('v.disabled', disabledValue);
+    }
 
 })
