@@ -109,7 +109,7 @@
             if (step === '5') {
                 model.getBatchInfo().load(component.get('v.batchInfo'));
             }            
-        } else if(task === 'donationMatchingRule') {
+        } else if (task === 'donationMatchingRule') {
             var step = component.get('v.batchMetadata.progressIndicatorStep');
             if (step === '5') {
                 model.getBatchInfo().load(component.get('v.batchInfo'));
