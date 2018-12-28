@@ -39,24 +39,50 @@ public with sharing class UTIL_Permissions {
 
     /*** Object Level Security ***/
 
-    public static Boolean canRead(String obj) {
-        return canRead(obj, true);
+    /**
+    * @description Determines whether the running user has read permissions on the given object
+    * @param objectName the name of the object
+    * @return returns true if the user has permission; throws an exception if they don't
+    */
+    public static Boolean canRead(String objectName) {
+        return canRead(objectName);
     }
 
-    public static Boolean canCreate(String obj) {
-        return canCreate(obj, true);
+    /**
+    * @description Determines whether the running user has create permissions on the given object
+    * @param objectName the name of the object
+    * @return returns true if the user has permission; throws an exception if they don't
+    */
+    public static Boolean canCreate(String objectName) {
+        return canCreate(objectName);
     }
 
-    public static Boolean canUpdate(String obj) {
-        return canUpdate(obj, true);
+    /**
+    * @description Determines whether the running user has update permissions on the given object
+    * @param objectName the name of the object
+    * @return returns true if the user has permission; throws an exception if they don't
+    */
+    public static Boolean canUpdate(String objectName) {
+        return canUpdate(objectName);
     }
 
-    public static Boolean canDelete(String obj) {
-        return canDelete(obj, true);
+    /**
+    * @description Determines whether the running user has delete permissions on the given object
+    * @param objectName the name of the object
+    * @return returns true if the user has permission; throws an exception if they don't
+    */
+    public static Boolean canDelete(String objectName) {
+        return canDelete(objectName);
     }
 
-    public static Boolean canRead(String obj, Boolean throwException) {
-        if (!UTIL_Describe.getObjectDescribe(obj).isAccessible()) {
+    /**
+    * @description Determines whether the running user has read permissions on the given object
+    * @param objectName the name of the object
+    * @param throwException indicates whether an exception should be thrown if the user doesn't have permission
+    * @return returns boolean to indicate whether the user has permission; conditionally throws an exception if they don't
+    */
+    public static Boolean canRead(String objectName, Boolean throwException) {
+        if (!UTIL_Describe.getObjectDescribe(objectName).isAccessible()) {
             if (throwException) {
                 throw new InsufficientPermissionException(INSUFFICIENT_PERMISSION_MESSAGE);
             } else {
@@ -66,8 +92,14 @@ public with sharing class UTIL_Permissions {
         return true;
     }
 
-    public static Boolean canCreate(String obj, Boolean throwException) {
-        if (!UTIL_Describe.getObjectDescribe(obj).isCreateable()) {
+    /**
+    * @description Determines whether the running user has create permissions on the given object
+    * @param objectName the name of the object
+    * @param throwException indicates whether an exception should be thrown if the user doesn't have permission
+    * @return returns boolean to indicate whether the user has permission; conditionally throws an exception if they don't
+    */
+    public static Boolean canCreate(String objectName, Boolean throwException) {
+        if (!UTIL_Describe.getObjectDescribe(objectName).isCreateable()) {
             if (throwException) {
                 throw new InsufficientPermissionException(INSUFFICIENT_PERMISSION_MESSAGE);
             } else {
@@ -77,8 +109,14 @@ public with sharing class UTIL_Permissions {
         return true;
     }
 
-    public static Boolean canUpdate(String obj, Boolean throwException) {
-        if (!UTIL_Describe.getObjectDescribe(obj).isUpdateable()) {
+    /**
+    * @description Determines whether the running user has update permissions on the given object
+    * @param objectName the name of the object
+    * @param throwException indicates whether an exception should be thrown if the user doesn't have permission
+    * @return returns boolean to indicate whether the user has permission; conditionally throws an exception if they don't
+    */
+    public static Boolean canUpdate(String objectName, Boolean throwException) {
+        if (!UTIL_Describe.getObjectDescribe(objectName).isUpdateable()) {
             if (throwException) {
                 throw new InsufficientPermissionException(INSUFFICIENT_PERMISSION_MESSAGE);
             } else {
@@ -88,8 +126,14 @@ public with sharing class UTIL_Permissions {
         return true;
     }
 
-    public static Boolean canDelete(String obj, Boolean throwException) {
-        if (!UTIL_Describe.getObjectDescribe(obj).isDeletable()) {
+    /**
+    * @description Determines whether the running user has delete permissions on the given object
+    * @param objectName the name of the object
+    * @param throwException indicates whether an exception should be thrown if the user doesn't have permission
+    * @return returns boolean to indicate whether the user has permission; conditionally throws an exception if they don't
+    */
+    public static Boolean canDelete(String objectName, Boolean throwException) {
+        if (!UTIL_Describe.getObjectDescribe(objectName).isDeletable()) {
             if (throwException) {
                 throw new InsufficientPermissionException(INSUFFICIENT_PERMISSION_MESSAGE);
             } else {
@@ -101,33 +145,105 @@ public with sharing class UTIL_Permissions {
 
     /*** Field Level Security ***/
 
-    public static Boolean canRead(String obj, String field, Boolean throwException) {
-        DescribeFieldResult fieldResult = UTIL_Describe.getFieldDescribe(obj, field);
+    /**
+    * @description Determines whether the running user has read permissions on the given object and field
+    * @param objectName the name of the object
+    * @param fieldName the name of the field
+    * @return returns true if the user has permission; throws an exception if they don't
+    */
+    public static Boolean canRead(String objectName, String fieldName) {
+        return canRead(objectName, fieldName, true);
+    }
+
+    /**
+    * @description Determines whether the running user has update permissions on the given object and field
+    * @param objectName the name of the object
+    * @param fieldName the name of the field
+    * @return returns true if the user has permission; throws an exception if they don't
+    */
+    public static Boolean canUpdate(String objectName, String fieldName) {
+        return canUpdate(objectName, fieldName, true);
+    }
+
+    /**
+    * @description Determines whether the running user has create permissions on the given object and field
+    * @param objectName the name of the object
+    * @param fieldName the name of the field
+    * @return returns true if the user has permission; throws an exception if they don't
+    */
+    public static Boolean canCreate(String objectName, String fieldName) {
+        return canCreate(objectName, fieldName, true);
+    }
+
+    /**
+    * @description Determines whether the running user has read permissions on the given object and field
+    * @param objectName the name of the object
+    * @param fieldName the name of the field
+    * @param throwException indicates whether an exception should be thrown if the user doesn't have permission
+    * @return returns boolean to indicate whether the user has permission; conditionally throws an exception if they don't
+    */
+    public static Boolean canRead(String objectName, String fieldName, Boolean throwException) {
+        DescribeFieldResult fieldResult = UTIL_Describe.getFieldDescribe(objectName, fieldName);
         return canRead(fieldResult, throwException);
     }
 
-    public static Boolean canCreate(String obj, String field, Boolean throwException) {
-        DescribeFieldResult fieldResult = UTIL_Describe.getFieldDescribe(obj, field);
+    /**
+    * @description Determines whether the running user has create permissions on the given object and field
+    * @param objectName the name of the object
+    * @param fieldName the name of the field
+    * @param throwException indicates whether an exception should be thrown if the user doesn't have permission
+    * @return returns boolean to indicate whether the user has permission; conditionally throws an exception if they don't
+    */
+    public static Boolean canCreate(String objectName, String fieldName, Boolean throwException) {
+        DescribeFieldResult fieldResult = UTIL_Describe.getFieldDescribe(objectName, fieldName);
         return canCreate(fieldResult, throwException);
     }
 
-    public static Boolean canUpdate(String obj, String field, Boolean throwException) {
-        DescribeFieldResult fieldResult = UTIL_Describe.getFieldDescribe(obj, field);
+    /**
+    * @description Determines whether the running user has update permissions on the given object and field
+    * @param objectName the name of the object
+    * @param fieldName the name of the field
+    * @param throwException indicates whether an exception should be thrown if the user doesn't have permission
+    * @return returns boolean to indicate whether the user has permission; conditionally throws an exception if they don't
+    */
+    public static Boolean canUpdate(String objectName, String fieldName, Boolean throwException) {
+        DescribeFieldResult fieldResult = UTIL_Describe.getFieldDescribe(objectName, fieldName);
         return canUpdate(fieldResult, throwException);
     }
 
+    /**
+    * @description Determines whether the running user has read permissions on the DescribeFieldResult
+    * @param fieldResult the DescribeFieldResult of the field to check
+    * @return returns true if the user has permission; throws an exception if they don't
+    */
     public static Boolean canRead(DescribeFieldResult fieldResult) {
         return canRead(fieldResult, true);
     }
 
+    /**
+    * @description Determines whether the running user has create permissions on the DescribeFieldResult
+    * @param fieldResult the DescribeFieldResult of the field to check
+    * @return returns true if the user has permission; throws an exception if they don't
+    */
     public static Boolean canCreate(DescribeFieldResult fieldResult) {
         return canCreate(fieldResult, true);
     }
 
+    /**
+    * @description Determines whether the running user has update permissions on the DescribeFieldResult
+    * @param fieldResult the DescribeFieldResult of the field to check
+    * @return returns true if the user has permission; throws an exception if they don't
+    */
     public static Boolean canUpdate(DescribeFieldResult fieldResult) {
         return canUpdate(fieldResult, true);
     }
 
+    /**
+    * @description Determines whether the running user has read permissions on the given field
+    * @param fieldResult the DescribeFieldResult of the field to check
+    * @param throwException indicates whether an exception should be thrown if the user doesn't have permission
+    * @return returns boolean to indicate whether the user has permission; conditionally throws an exception if they don't
+    */
     public static Boolean canRead(DescribeFieldResult fieldResult, Boolean throwException) {
         if (!fieldResult.isAccessible()) {
             if (throwException) {
@@ -139,6 +255,12 @@ public with sharing class UTIL_Permissions {
         return true;
     }
 
+    /**
+    * @description Determines whether the running user has create permissions on the given field
+    * @param fieldResult the DescribeFieldResult of the field to check
+    * @param throwException indicates whether an exception should be thrown if the user doesn't have permission
+    * @return returns boolean to indicate whether the user has permission; conditionally throws an exception if they don't
+    */
     public static Boolean canCreate(DescribeFieldResult fieldResult, Boolean throwException) {
         if (!fieldResult.isCreateable()) {
             if (throwException) {
@@ -150,6 +272,12 @@ public with sharing class UTIL_Permissions {
         return true;
     }
 
+    /**
+    * @description Determines whether the running user has update permissions on the given field
+    * @param fieldResult the DescribeFieldResult of the field to check
+    * @param throwException indicates whether an exception should be thrown if the user doesn't have permission
+    * @return returns boolean to indicate whether the user has permission; conditionally throws an exception if they don't
+    */
     public static Boolean canUpdate(DescribeFieldResult fieldResult, Boolean throwException) {
         if (!fieldResult.isUpdateable()) {
             if (throwException) {
@@ -159,18 +287,6 @@ public with sharing class UTIL_Permissions {
             }
         }
         return true;
-    }
-
-    public static Boolean canRead(String obj, String field) {
-        return canRead(obj, field, true);
-    }
-
-    public static Boolean canUpdate(String obj, String field) {
-        return canUpdate(obj, field, true);
-    }
-
-    public static Boolean canCreate(String obj, String field) {
-        return canCreate(obj, field, true);
     }
 
     public class InsufficientPermissionException extends Exception {}
