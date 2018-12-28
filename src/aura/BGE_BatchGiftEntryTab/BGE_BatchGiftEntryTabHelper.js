@@ -62,35 +62,42 @@
     },
 
     /**
-     * @description: opens New Batch Wizard in modal
+     * @description: opens New Batch Wizard in modal if not already open
      */
     openNewBatchWizard: function(component) {
-        var modalBody;
-        var modalHeader;
-        var modalFooter;
+        let modalBody;
+        let modalHeader;
+        let modalFooter;
 
         $A.createComponents([
                 ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c'}],
                 ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
                 ['c:modalFooter', {}]
             ],
-            function(components, status, errorMessage){
+            function (components, status, errorMessage) {
                 if (status === 'SUCCESS') {
-                    modalBody = components[0];
-                    modalHeader = components[1];
-                    modalFooter = components[2];
-                    component.find('overlayLib').showCustomModal({
-                        body: modalBody,
-                        header: modalHeader,
-                        footer: modalFooter,
-                        showCloseButton: true,
-                        cssClass: 'slds-modal_large'
-                    })
+                    if (!component.get('v.modalOpen')) {
+                        component.set('v.modalOpen', true);
+                        modalBody = components[0];
+                        modalHeader = components[1];
+                        modalFooter = components[2];
+                        component.find('overlayLib').showCustomModal({
+                            body: modalBody,
+                            header: modalHeader,
+                            footer: modalFooter,
+                            showCloseButton: true,
+                            cssClass: 'slds-modal_large',
+                            closeCallback: function () {
+                                component.set('v.modalOpen', false);
+                            }
+                        })
+                    }
                 } else {
                     this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
                 }
             }
         );
+
     },
 
     /**
@@ -108,14 +115,5 @@
             'title': title,
             'message': message
         });
-    },
-
-    /**
-     * @description: toggles the new batch button to prevent it being clicked multiple times
-     * @param disabledValue: boolean value to set disabled flag on newBGEBatch button
-     */
-    toggleNewBatch: function(component, disabledValue) {
-        component.find('newBGEBatch').set('v.disabled', disabledValue);
     }
-
 })

@@ -36,6 +36,9 @@
 
 <aura:component implements="force:appHostable" controller="BGE_ConfigurationWizard_CTRL" access="public">
 
+    <!-- attributes -->
+    <aura:attribute name="modalOpen" type="Boolean" description="Prevents multiple modals from opening"/>
+
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
