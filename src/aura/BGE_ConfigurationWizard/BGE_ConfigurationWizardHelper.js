@@ -423,8 +423,8 @@
                 this.donationDateRange = info.donationDateRange;
                 this.postProcessClass = info.postProcessClass;
                 this.processUsingScheduledJob = info.processUsingScheduledJob;
-                this.noMatchOnDate = (info.donationMatchingRule.indexOf("donation_date__c") < 0);
-
+                this.noMatchOnDate = (info.donationMatchingRule.indexOf("donation_date__c") < 0 && 
+                    info.donationMatchingRule.indexOf("npsp__donation_date__c") < 0);
                 this.onInfoUpdated.notify();
             }
 

@@ -37,7 +37,6 @@
      * must be explicit about channel because other messages may be sent
      */
     handleUserInput: function(component, event, helper) {
-
         // check if user input came from ltng:sendMessage or an onclick handler
         var task;
         if (event.getSource().getLocalId()) {
