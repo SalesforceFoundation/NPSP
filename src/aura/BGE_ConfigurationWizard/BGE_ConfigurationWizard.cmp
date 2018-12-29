@@ -316,7 +316,7 @@
                                     <lightning:helptext content="{!$Label.c.bgeBatchDonationMatchingBehaviorHelp}" />
                                     <lightning:select aura:id="donationMatchingBehavior"
                                                       label="{!v.batchMetadata.labels.donationMatchingBehaviorLabel}"
-                                                      onchange="{!c.handleUserInput}"
+                                                      onchange="{!c.handleProcessingSettingsChange}"
                                                       value="{!v.batchInfo.donationMatchingBehavior}"
                                                       class="hideLabel" variant="label-hidden">
                                         <option value="{!v.batchMetadata.labels.DoNotMatch}" text="{!$Label.c.bdiBehaviorDoNotMatch}"/>
@@ -339,7 +339,7 @@
                                                            label="{!v.batchMetadata.labels.donationMatchingRuleLabel}"
                                                            sourceLabel="{!$Label.c.bgeBatchAvailableFields}"
                                                            selectedLabel="{!$Label.c.bgeBatchSelectedFields}"
-                                                           onchange="{!c.handleUserInput}"
+                                                           onchange="{!c.handleProcessingSettingsChange}"
                                                            options="{!v.batchInfo.donationMatchingOptions}"
                                                            value="{!v.batchInfo.donationMatchingRule}"
                                                            required="true" variant="label-hidden"
@@ -353,7 +353,7 @@
                                                       label="{!if(v.batchMetadata.showAdvancedOptions, $Label.c.bgeWizardHideAdvancedOptions, $Label.c.bgeWizardShowAdvancedOptions)}"
                                                       variant="base"
                                                       class="bgeLinkButton"
-                                                      onclick="{!c.handleUserInput}" />
+                                                      onclick="{!c.handleProcessingSettingsChange}" />
                                 </lightning:layoutItem>
 
                                 <!-- BEGIN ADVANCED OPTIONS FOR STEP 5 -->
