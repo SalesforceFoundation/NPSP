@@ -32,11 +32,8 @@
                 batchInfoView.donationMatchingOptions = batchInfo.donationMatchingOptions;
                 batchInfoView.donationMatchingRule = batchInfo.donationMatchingRule;
                 batchInfoView.donationDateRange = batchInfo.donationDateRange;
-                batchInfoView.noMatchSelected = batchInfo.noMatchSelected;
                 batchInfoView.noMatchOnDate = batchInfo.noMatchOnDate;
                 batchInfoView.postProcessClass = batchInfo.postProcessClass;
-
-                batchInfoView.labels = model.getBatchMetadata().labels;
 
                 component.set('v.batchInfo', batchInfoView);
             });
@@ -59,8 +56,6 @@
                 donationMatchingOptions: [],
                 donationMatchingRule: [],
                 donationDateRange: '',
-                labels: {},
-                noMatchSelected: false,
                 noMatchOnDate: false,
                 postProcessClass: ''
             };
@@ -426,10 +421,8 @@
                 this.donationMatchingOptions = info.donationMatchingOptions;
                 this.donationMatchingRule = info.donationMatchingRule;
                 this.donationDateRange = info.donationDateRange;
-                this.labels = info.labels;
                 this.postProcessClass = info.postProcessClass;
                 this.processUsingScheduledJob = info.processUsingScheduledJob;
-                this.noMatchSelected = (info.donationMatchingBehavior === this.labels.DoNotMatch);
                 this.noMatchOnDate = (info.donationMatchingRule.indexOf("donation_date__c") < 0);
 
                 this.onInfoUpdated.notify();
@@ -464,10 +457,8 @@
                 donationDateRange: '',
                 postProcessClass: '',
                 processUsingScheduledJob: false,
-                labels: {},
                 load: load,
                 isValid: isValid,
-                noMatchSelected: false,
                 noMatchOnDate: false,
                 onInfoUpdated: _onInfoUpdated
             }

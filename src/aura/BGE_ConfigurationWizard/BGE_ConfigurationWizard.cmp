@@ -343,7 +343,7 @@
                                                            options="{!v.batchInfo.donationMatchingOptions}"
                                                            value="{!v.batchInfo.donationMatchingRule}"
                                                            required="true" variant="label-hidden"
-                                                           disabled="{!v.batchInfo.noMatchSelected}"
+                                                           disabled="{!v.batchInfo.donationMatchingBehavior == v.batchMetadata.labels.DoNotMatch}"
                                                            disableReordering="true"
                                                            size="5"/>
                                 </lightning:layoutItem>
@@ -368,7 +368,7 @@
                                                 <lightning:helptext content="{!$Label.c.bgeBatchDonationDateRangeHelp}" />
                                                 <lightning:input aura:id="donationDateRange"
                                                                     label="{!v.batchMetadata.labels.donationDateRangeLabel}"
-                                                                    disabled="{!or(v.batchInfo.noMatchSelected, v.batchInfo.noMatchOnDate)}"
+                                                                    disabled="{!or(v.batchInfo.donationMatchingBehavior == v.batchMetadata.labels.DoNotMatch, v.batchInfo.noMatchOnDate)}"
                                                                     type="number" required="true" variant="label-hidden"
                                                                     value="{!v.batchInfo.donationDateRange}"/>
                                             </lightning:layoutItem>
@@ -379,7 +379,7 @@
                                                 <lightning:helptext content="{!$Label.c.bgeBatchDonationMatchingClassHelp}" />
                                                 <lightning:input aura:id="donationMatchingClass"
                                                                 label="{!v.batchMetadata.labels.donationMatchingClassLabel}"
-                                                                disabled="{!v.batchInfo.noMatchSelected}"                                                                
+                                                                disabled="{!v.batchInfo.donationMatchingBehavior == v.batchMetadata.labels.DoNotMatch}"                                                                
                                                                 value="{!v.batchInfo.donationMatchingClass}" variant="label-hidden"/>
                                             </lightning:layoutItem>
 
