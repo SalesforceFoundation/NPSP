@@ -67,19 +67,24 @@ private class PMT_CascadeDeleteLookups_TEST {
         List<npe01__OppPayment__c> payments = [SELECT Id FROM npe01__OppPayment__c WHERE IsDeleted = false];
         System.assertEquals(maxRecords, payments.size(), 'A Payment should have been created for each Closed Won Opportunity');
 
-        List<Allocation__c> totalAllocations = CDL_CascadeDeleteLookups_TEST.getNonDeletedAllocations();
-        System.assertEquals(maxRecords*2, totalAllocations.size(), 'Each Payment should have the same Allocation ratio as its Opportunity');
+        List<Allocation__c> paymentAllocations = [SELECT Id FROM Allocation__c WHERE Payment__c != null AND IsDeleted = false];
+        System.assertEquals(maxRecords, paymentAllocations.size(), 'Each Payment should have the same Allocation ratio as its Opportunity');
+
+        Set<Id> allocationIds = new Set<Id>();
+        for(Allocation__c allo : paymentAllocations){
+          allocationIds.add(allo.Id);
+        }
 
         Test.startTest();
         delete payments;
         Test.stopTest();
 
-        List<Allocation__c> deletedAllocations = CDL_CascadeDeleteLookups_TEST.getDeletedAllocations();
-        System.assertEquals(maxRecords, deletedAllocations.size(), 'Allocations should be cascade deleted when the Payment is deleted.');
+        List<Allocation__c> deletedAllocations = [SELECT Id FROM Allocation__c WHERE Id in :allocationIds AND IsDeleted = true ALL ROWS];
+        System.assertEquals(paymentAllocations.size(), deletedAllocations.size(), 'Allocations should be cascade deleted when the Payment is deleted.');
 
         undelete payments;
 
         List<Allocation__c> undeletedAllocations = CDL_CascadeDeleteLookups_TEST.getNonDeletedAllocations();
-        System.assertEquals(maxRecords*2, undeletedAllocations.size(), 'Allocations should be cascade undeleted when the Payment is deleted.');
+        System.assertEquals(maxRecords*2, undeletedAllocations.size(), 'Allocations should be cascade undeleted when the Payment is undeleted.');
     }
 }
