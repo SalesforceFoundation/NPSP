@@ -47,6 +47,10 @@
     <aura:attribute name="unpaidPayments" type="List" description="List of unpaid Payments" access="public" />
     <aura:attribute name="selectedDonation" type="SObject" description="Stored selected open donation. Can also be null or empty." access="public" />
 
+    <!-- Private Attributes-->
+    <aura:attribute name="pendingSave" default="false" type="Boolean"
+                    description="Controls whether Save is disabled because form has uncommitted changes" access="private"/>
+
     <!--Modal Attributes-->
     <aura:attribute name="donationModalHeader" type="Aura.ComponentDefRef[]" description="Formatted header text used in donation modal.">
         <h2 class="title slds-text-heading_medium">{!$Label.c.bgeMatchingSelect}</h2>
@@ -176,7 +180,7 @@
             <div class="slds-grid slds-p-around_medium slds-grid_align-center slds-size_1-of-1">
                 <div class="slds-col slds-p-horizontal_small">
                     <lightning:button label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancelForm}" variant="neutral"/>
-                    <lightning:button variant="brand" type="submit" name="save" label="{!$Label.c.stgBtnSave}" />
+                    <lightning:button variant="brand" type="submit" name="save" label="{!$Label.c.stgBtnSave}" disabled="{!v.pendingSave}"/>
                 </div>
             </div>
 
