@@ -462,10 +462,8 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
     private DmlWrapper runAfflTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        npe5__Affiliations_Settings__c currentAffiliationsSettings = UTIL_CustomSettingsFacade.getAffiliationsSettings();
-
         DmlWrapper dmlWrapper = new DmlWrapper();
-        
+
         map<Id, Id> mapConIdAccIdPrimary = new map<Id, Id>();
         map<Id, Id> mapConIdAccIdUnprimary = new map<Id, Id>();
         
@@ -567,10 +565,8 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
             for (npe5__Affiliation__c affl : queryAffl) {
                 if (!currentPrimaryAffl.contains(affl.id)) {
                     affl.npe5__Primary__c = false;
-                    if (currentAffiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c) {
-                        affl.npe5__Status__c = DEFAULT_FORMER_STATUS;
-                        affl.npe5__EndDate__c = System.Today();
-                    }
+                    affl.npe5__Status__c = DEFAULT_FORMER_STATUS;
+                    affl.npe5__EndDate__c = System.Today();
 
                     afflForUpdate.add(affl);
                 }
