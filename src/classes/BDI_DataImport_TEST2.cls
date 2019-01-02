@@ -1552,6 +1552,8 @@ private with sharing class BDI_DataImport_TEST2 {
         System.assertEquals(label.bdiErrorOneToOneMultiContact, listDI[0].Contact1ImportStatus__c);
         // The second import succeeds because there is only one 1x1 Contact specified
         System.assertEquals(BDI_DataImport_API.bdiImported, listDI[1].Status__c);
+        System.assertEquals(label.bdiCreated, listDI[1].Contact2ImportStatus__c);
+        System.assertNotEquals(null, listDI[1].Contact2Imported__c);
         System.assertEquals('c3', listDI[1].Contact2_Firstname__c);
         System.assertEquals('C3', listDI[1].Contact2_Lastname__c);
     }
