@@ -82,7 +82,7 @@ global with sharing class BDI_DataImportService {
         List<DataImportBatch__c> dataImportBatches = BDI_DataImportBatch_SEL.selectByIds(new Set<Id>{ batchId });
         if (dataImportBatches.size() == 1) {
             DataImportBatch__c batch = dataImportBatches[0];
-            if (batch.Active_Fields__c != null) {
+            if (!String.isBlank(batch.Active_Fields__c)) {
                 relevantDataImportFields = BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId, false);
             }
             return batch;
@@ -682,7 +682,7 @@ global with sharing class BDI_DataImportService {
     * are present in the Batch we are processing
     * This list gets set in the loadBatch method. If no batch is loaded, we use the full list of all DI fields.
     */
-    global static List<String> relevantDataImportFields {
+    public static List<String> relevantDataImportFields {
         get {
             if (relevantDataImportFields == null || relevantDataImportFields.isEmpty()) {
                 return listStrDataImportFields;
