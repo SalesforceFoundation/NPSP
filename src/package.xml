@@ -271,6 +271,8 @@
         <members>OPP_PrimaryContact_TEST</members>
         <members>OPP_SendAcknowledgmentBTN_CTRL</members>
         <members>OPP_SendAcknowledgmentBTN_TEST</members>
+        <members>PMT_CascadeDeleteLookups_TDTM</members>
+        <members>PMT_CascadeDeleteLookups_TEST</members>
         <members>PMT_PaymentCreator</members>
         <members>PMT_PaymentCreator_BATCH</members>
         <members>PMT_PaymentCreator_TEST</members>
