@@ -157,8 +157,10 @@ private with sharing class UTIL_Permissions_TEST {
     @isTest
     static void readOnlyUserFieldCheckNoException() {
         System.runAs(getReadOnlyUser()) {
-            DescribeFieldResult customFieldResult = UTIL_Describe.getFieldDescribe(customObjectName, customFieldName);
-            DescribeFieldResult standardFieldResult = UTIL_Describe.getFieldDescribe(standardObjectName, standardFieldName);
+            DescribeFieldResult customFieldResult =
+                UTIL_Describe.getFieldDescribe(customObjectName, customFieldName);
+            DescribeFieldResult standardFieldResult =
+                UTIL_Describe.getFieldDescribe(standardObjectName, standardFieldName);
 
             System.assert(!UTIL_Permissions.canRead(customObjectName, customFieldName, false));
             System.assert(!UTIL_Permissions.canCreate(customObjectName, customFieldName, false));
@@ -195,8 +197,10 @@ private with sharing class UTIL_Permissions_TEST {
     @isTest
     static void sysAdminFieldCheckNoException() {
         System.runAs(getSysAdmin()) {
-            DescribeFieldResult customFieldResult = UTIL_Describe.getFieldDescribe(customObjectName, customFieldName);
-            DescribeFieldResult standardFieldResult = UTIL_Describe.getFieldDescribe(standardObjectName, standardFieldName);
+            DescribeFieldResult customFieldResult =
+                UTIL_Describe.getFieldDescribe(customObjectName, customFieldName);
+            DescribeFieldResult standardFieldResult =
+                UTIL_Describe.getFieldDescribe(standardObjectName, standardFieldName);
 
             System.assert(UTIL_Permissions.canRead(customObjectName, customFieldName, false));
             System.assert(UTIL_Permissions.canCreate(customObjectName, customFieldName, false));
