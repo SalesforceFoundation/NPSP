@@ -45,7 +45,7 @@ public with sharing class UTIL_Permissions {
     * @return returns true if the user has permission; throws an exception if they don't
     */
     public static Boolean canRead(String objectName) {
-        return canRead(objectName);
+        return canRead(objectName, true);
     }
 
     /**
@@ -54,7 +54,7 @@ public with sharing class UTIL_Permissions {
     * @return returns true if the user has permission; throws an exception if they don't
     */
     public static Boolean canCreate(String objectName) {
-        return canCreate(objectName);
+        return canCreate(objectName, true);
     }
 
     /**
@@ -63,7 +63,7 @@ public with sharing class UTIL_Permissions {
     * @return returns true if the user has permission; throws an exception if they don't
     */
     public static Boolean canUpdate(String objectName) {
-        return canUpdate(objectName);
+        return canUpdate(objectName, true);
     }
 
     /**
@@ -72,7 +72,7 @@ public with sharing class UTIL_Permissions {
     * @return returns true if the user has permission; throws an exception if they don't
     */
     public static Boolean canDelete(String objectName) {
-        return canDelete(objectName);
+        return canDelete(objectName, true);
     }
 
     /**
