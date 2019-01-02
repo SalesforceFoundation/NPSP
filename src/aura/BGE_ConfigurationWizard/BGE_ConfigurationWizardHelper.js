@@ -422,7 +422,6 @@
                 this.donationMatchingRule = info.donationMatchingRule;
                 this.donationDateRange = info.donationDateRange;
                 this.postProcessClass = info.postProcessClass;
-                this.processUsingScheduledJob = info.processUsingScheduledJob;
                 this.noMatchOnDate = info.donationMatchingRule.indexOf("donation_date__c") < 0;
                 this.onInfoUpdated.notify();
             }
@@ -455,7 +454,6 @@
                 donationMatchingRule: [],
                 donationDateRange: '',
                 postProcessClass: '',
-                processUsingScheduledJob: false,
                 load: load,
                 isValid: isValid,
                 noMatchOnDate: false,
