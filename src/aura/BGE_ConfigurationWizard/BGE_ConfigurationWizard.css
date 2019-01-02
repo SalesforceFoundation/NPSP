@@ -2,9 +2,15 @@
     background: white;
 }
 
-/*remove focus button formatting*/
+/*link-like behaviors*/
 .THIS .bgeLinkButton:focus {
-    box-shadow: 0 0 3px transparent;
+    outline: -webkit-focus-ring-color auto 5px;
+    border-width: 0px;
+    box-shadow: none;
+}
+.THIS .bgeLinkButton:hover, .THIS .bgeLinkButton:active {
+    outline: 0;
+    text-decoration: underline;
 }
 /*formatting for edit mode checkboxes*/
 .THIS .bgeInputCheckbox{
