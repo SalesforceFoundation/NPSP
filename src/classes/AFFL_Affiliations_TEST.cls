@@ -58,7 +58,7 @@ public class AFFL_Affiliations_TEST {
         Id firstAffiliationId = createdAffiliations[0].Id; //storing the id for later use
         
         System.assertEquals(1, createdAffiliations.size());
-        system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations[0].npe5__Status__c);
+        system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, createdAffiliations[0].npe5__Status__c);
         system.assertEquals(title, createdAffiliations[0].npe5__Role__c);
         system.assertEquals(System.Today(), createdAffiliations[0].npe5__StartDate__c);
         
@@ -75,7 +75,7 @@ public class AFFL_Affiliations_TEST {
             where npe5__Contact__c =:contact.id AND npe5__Organization__c = :acc2.id];        
         
         System.assertEquals(1, createdAffiliations2.size());
-        system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations2[0].npe5__Status__c);
+        system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, createdAffiliations2[0].npe5__Status__c);
         system.assertEquals(title, createdAffiliations2[0].npe5__Role__c);
         system.assertEquals(System.Today(), createdAffiliations2[0].npe5__StartDate__c);
         
@@ -83,7 +83,7 @@ public class AFFL_Affiliations_TEST {
             npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c where id=:firstAffiliationId];
         
         System.assertEquals(1, createdAffiliations.size());
-        system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations[0].npe5__Status__c);
+        system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_FORMER_STATUS, createdAffiliations[0].npe5__Status__c);
         system.assertEquals(System.Today(), createdAffiliations[0].npe5__EndDate__c);
     }
     
@@ -162,11 +162,11 @@ public class AFFL_Affiliations_TEST {
         
         createdAffiliations = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, 
             npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c=:con.id AND npe5__Organization__c = :acc.id];
-        system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations[0].npe5__Status__c);
+        system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_FORMER_STATUS, createdAffiliations[0].npe5__Status__c);
         
         createdAffiliations2 = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, 
             npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c=:con.id AND npe5__Organization__c = :acc2.id];
-        system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations2[0].npe5__Status__c);        
+        system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, createdAffiliations2[0].npe5__Status__c);
     }
 
     private static Contact getContact(Id accountId, String title) {
@@ -218,7 +218,7 @@ public class AFFL_Affiliations_TEST {
         
         System.assertEquals(9, listAffl.size());
         for (npe5__Affiliation__c affl : listAffl) {
-            system.assertEquals(system.label.npe5.DefaultCurrentStatus, affl.npe5__Status__c);
+            system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, affl.npe5__Status__c);
             system.assertEquals(System.Today(), affl.npe5__StartDate__c);
             if (affl.npe5__Organization__c == listAcc[5].Id) 
                 system.assertEquals(false, affl.npe5__Primary__c);
@@ -267,7 +267,7 @@ public class AFFL_Affiliations_TEST {
         
         System.assertEquals(9, listAffl.size());
         for (npe5__Affiliation__c affl : listAffl) {
-            system.assertEquals(system.label.npe5.DefaultCurrentStatus, affl.npe5__Status__c);
+            system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, affl.npe5__Status__c);
             system.assertEquals(System.Today(), affl.npe5__StartDate__c);
             if (affl.npe5__Organization__c == listAcc[5].Id) 
                 system.assertEquals(false, affl.npe5__Primary__c);
@@ -325,7 +325,7 @@ public class AFFL_Affiliations_TEST {
         
         System.assertEquals(9, listAffl.size());
         for (npe5__Affiliation__c affl : listAffl) {
-            system.assertEquals(system.label.npe5.DefaultCurrentStatus, affl.npe5__Status__c);
+            system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, affl.npe5__Status__c);
             system.assertEquals(System.Today(), affl.npe5__StartDate__c);
             if (affl.npe5__Organization__c == listAcc[5].Id) 
                 system.assertEquals(false, affl.npe5__Primary__c);
@@ -390,10 +390,10 @@ public class AFFL_Affiliations_TEST {
             if (affl.npe5__Organization__c == listAcc[5].Id) { 
                 system.assertEquals(false, affl.npe5__Primary__c);
                 system.assertEquals(System.Today(), affl.npe5__EndDate__c);
-                system.assertEquals(system.label.npe5.DefaultFormerStatus, affl.npe5__Status__c);
+                system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_FORMER_STATUS, affl.npe5__Status__c);
             } else {
                 system.assertEquals(true, affl.npe5__Primary__c);
-                system.assertEquals(system.label.npe5.DefaultCurrentStatus, affl.npe5__Status__c);
+                system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, affl.npe5__Status__c);
             }
         }
     }
@@ -457,12 +457,12 @@ public class AFFL_Affiliations_TEST {
         integer cOrg2 = 0;
         for (npe5__Affiliation__c affl : listAffl) {
             system.assertEquals(System.Today(), affl.npe5__StartDate__c);
-            if (affl.npe5__Status__c == system.label.npe5.DefaultFormerStatus) { 
+            if (affl.npe5__Status__c == AFFL_Affiliations_TDTM.DEFAULT_FORMER_STATUS) {
                 system.assertEquals(true, affl.npe5__Primary__c);
                 system.assertEquals(System.Today(), affl.npe5__EndDate__c);
-                system.assertEquals(system.label.npe5.DefaultFormerStatus, affl.npe5__Status__c);
+                system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_FORMER_STATUS, affl.npe5__Status__c);
             } else {
-                system.assertEquals(system.label.npe5.DefaultCurrentStatus, affl.npe5__Status__c);
+                system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, affl.npe5__Status__c);
             }
             if (affl.npe5__Organization__c == listAcc[4].id) cOrg1++;
             if (affl.npe5__Organization__c == listAcc[5].id) cOrg2++;            
@@ -576,7 +576,7 @@ public class AFFL_Affiliations_TEST {
         	affl.npe5__Organization__c = listAcc[4].Id;
         	affl.npe5__StartDate__c = System.Today();
         	affl.npe5__Primary__c = true;
-        	affl.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
+        	affl.npe5__Status__c = AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS;
         	listAffl.add(affl);
         }
         // must manually clear this, since our context is still active
@@ -649,7 +649,7 @@ public class AFFL_Affiliations_TEST {
             affl.npe5__Organization__c = listAcc[4].Id;
             affl.npe5__StartDate__c = System.Today();
             affl.npe5__Primary__c = true;
-            affl.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
+            affl.npe5__Status__c = AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS;
             originalPrimaryAffiliations.add(affl);
         }
         // must manually clear this, since our context is still active
@@ -667,7 +667,7 @@ public class AFFL_Affiliations_TEST {
             affl.npe5__Organization__c = listAcc[5].Id;
             affl.npe5__StartDate__c = System.Today();
             affl.npe5__Primary__c = true;
-            affl.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
+            affl.npe5__Status__c = AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS;
             newPrimaryAffiliations.add(affl);
         }
         // must manually clear this, since our context is still active
@@ -689,7 +689,7 @@ public class AFFL_Affiliations_TEST {
                 'The original primary affiliation should not be marked as primary');
             System.assertEquals(Date.today(), affl.npe5__EndDate__c,
                 'The original primary affiliation should have an End Date of today');
-            System.assertEquals(System.Label.npe5.DefaultFormerStatus, affl.npe5__Status__c,
+            System.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_FORMER_STATUS, affl.npe5__Status__c,
                 'The original primary affiliation should have the former status');
         }
 
@@ -705,10 +705,63 @@ public class AFFL_Affiliations_TEST {
                 'The new primary affiliation should be marked as primary');
             System.assertEquals(null, affl.npe5__EndDate__c,
                 'The new primary affiliation should have no End Date');
-            System.assertEquals(System.Label.npe5.DefaultCurrentStatus, affl.npe5__Status__c,
+            System.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, affl.npe5__Status__c,
                 'The new primary affiliation should have the current status');
         }
    }
+
+    /*******************************************************************************************************
+    * @description Verifies End Date and Status are not set when manually creating primary affiliations
+    * when Automatic Affiliation Management is off
+    */
+    @isTest
+    private static void shouldNotUpdateAffiliationDateAndStatusIfAutoManagementIsOff() {
+        npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
+            new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = false));
+
+        Account originalAffiliatedOrg = new Account(Name = 'Original Primary');
+        Account newAffiliatedOrg = new Account(Name = 'New Primary');
+        insert new List<Account>{ originalAffiliatedOrg, newAffiliatedOrg };
+
+        Contact aContact = getContact(originalAffiliatedOrg.Id, 'CEO');
+        insert aContact;
+
+        npe5__Affiliation__c originalPrimaryAffiliation = new npe5__Affiliation__c(
+            npe5__Contact__c = aContact.Id,
+            npe5__Organization__c = originalAffiliatedOrg.Id,
+            npe5__StartDate__c = System.Today(),
+            npe5__Primary__c = true,
+            npe5__Status__c = AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS
+        );
+
+        insert originalPrimaryAffiliation;
+
+        npe5__Affiliation__c newPrimaryAffiliation = new npe5__Affiliation__c(
+            npe5__Contact__c = aContact.Id,
+            npe5__Organization__c = newAffiliatedOrg.Id,
+            npe5__Primary__c = true
+        );
+
+        insert newPrimaryAffiliation;
+
+        originalPrimaryAffiliation = [
+            SELECT npe5__EndDate__c, npe5__Primary__c, npe5__Status__c
+            FROM npe5__Affiliation__c
+            WHERE Id = :originalPrimaryAffiliation.Id
+        ];
+
+        System.assertEquals(false, originalPrimaryAffiliation.npe5__Primary__c,
+            'The original affiliation should not be marked as primary anymore' );
+        System.assertEquals(null, originalPrimaryAffiliation.npe5__EndDate__c,
+            'The original affiliation should not have the end date updated' );
+        System.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, originalPrimaryAffiliation.npe5__Status__c,
+            'The original affiliation should not have the status updated' );
+
+        newPrimaryAffiliation = [ SELECT npe5__Primary__c FROM npe5__Affiliation__c WHERE Id = :newPrimaryAffiliation.Id];
+
+        System.assertEquals(true, newPrimaryAffiliation.npe5__Primary__c,
+            'The new affiliation should be marked as primary' );
+    }
 
     /*******************************************************************************************************
     * @description Adds a new account with primary affiliation to existing contact, then updates the 
@@ -735,7 +788,7 @@ public class AFFL_Affiliations_TEST {
         ];
         
         System.assertEquals(1, queryAffl.size(), 'An affiliation should be created.');
-        system.assertEquals(system.label.npe5.DefaultCurrentStatus, queryAffl[0].npe5__Status__c, 'The affiliation\'s status should be set to the default current status.');
+        system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, queryAffl[0].npe5__Status__c, 'The affiliation\'s status should be set to the default current status.');
         system.assertEquals(listcon[0].title, queryAffl[0].npe5__Role__c, 'The affiliation\'s role should match the first contact\'s title.');
         system.assertEquals(System.Today(), queryAffl[0].npe5__StartDate__c, 'The affiliation\'s start date should be today.');
         
@@ -748,8 +801,8 @@ public class AFFL_Affiliations_TEST {
             where npe5__Organization__c = :acc.id ORDER BY npe5__Contact__c];
         
         System.assertEquals(2, queryAffl.size(), 'Two affiliations should exist.');
-        system.assertEquals(system.label.npe5.DefaultCurrentStatus, queryAffl[0].npe5__Status__c, 'The existing affiliation\'s status should be unchanged.');
-        system.assertEquals(system.label.npe5.DefaultCurrentStatus, queryAffl[1].npe5__Status__c, 'The new affiliation\'s status should be set to the default current status.');
+        system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, queryAffl[0].npe5__Status__c, 'The existing affiliation\'s status should be unchanged.');
+        system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, queryAffl[1].npe5__Status__c, 'The new affiliation\'s status should be set to the default current status.');
         system.assertEquals(listcon[1].title, queryAffl[1].npe5__Role__c, 'The new affiliation\'s role should match the second contact\'s title.');
         system.assertEquals(System.Today(), queryAffl[0].npe5__StartDate__c, 'The affiliation\'s start date should be today.');
 
@@ -778,7 +831,7 @@ public class AFFL_Affiliations_TEST {
             npe5__Organization__c = acc.Id,
             npe5__StartDate__c = System.Today(),
             npe5__Primary__c = true,
-            npe5__Status__c = system.label.npe5.DefaultCurrentStatus
+            npe5__Status__c = AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS
         );
         Test.startTest();
         insert affl;
@@ -840,7 +893,7 @@ public class AFFL_Affiliations_TEST {
             npe5__Organization__c = newPrimary.Id,
             npe5__StartDate__c = System.Today(),
             npe5__Primary__c = true,
-            npe5__Status__c = system.label.npe5.DefaultCurrentStatus
+            npe5__Status__c = AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS
         );
 
         Test.startTest();

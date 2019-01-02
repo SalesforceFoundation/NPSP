@@ -35,6 +35,11 @@
 * @description  Trigger handler for Affiliations related operations on Contacts, Accounts, or Affiliations.
 */
 public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
+    @TestVisible
+    private static String DEFAULT_FORMER_STATUS = system.label.npe5.DefaultFormerStatus;
+
+    @TestVisible
+    private static String DEFAULT_CURRENT_STATUS = system.label.npe5.DefaultCurrentStatus;
 
     /*******************************************************************************************************
     * @description Trigger Handler on Contact, Account, or Affiliation, dispatches to the correct method
@@ -376,7 +381,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                     npe5__Affiliation__c existingAffl = mapStrComboKeyAffl.get(ao.strComboKey);
                     if (existingAffl != null) {
                         existingAffl.npe5__EndDate__c = null;
-                        existingAffl.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
+                        existingAffl.npe5__Status__c = DEFAULT_CURRENT_STATUS;
                         if (ao.fPrimary) {
                             existingAffl.npe5__Primary__c = ao.fPrimary;
                         }
@@ -385,7 +390,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                         npe5__Affiliation__c a = new npe5__Affiliation__c();
                         a.npe5__Contact__c = contactId;
                         a.npe5__Organization__c = accountId;
-                        a.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
+                        a.npe5__Status__c = DEFAULT_CURRENT_STATUS;
                         a.npe5__StartDate__c = System.Today();
                         a.npe5__Role__c = ao.strRole;
                         a.npe5__Primary__c = ao.fPrimary;
@@ -399,14 +404,14 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                npe5__Affiliation__c a = mapStrComboKeyAffl.get(ao.strComboKey);
                if (a != null) {
                    a.npe5__EndDate__c = null;
-                   a.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
+                   a.npe5__Status__c = DEFAULT_CURRENT_STATUS;
                    a.npe5__Primary__c = true;
                    listAfflIdAfflUpdate.add(a);
                } else {
                     a = new npe5__Affiliation__c();
                     a.npe5__Contact__c = contactId;
                     a.npe5__Organization__c = accountId;
-                    a.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
+                    a.npe5__Status__c = DEFAULT_CURRENT_STATUS;
                     a.npe5__StartDate__c = System.Today();
                     a.npe5__Role__c = ao.strRole;
                     a.npe5__Primary__c = true;
@@ -422,7 +427,7 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
                
                if (ao.fFormer) {
                     //flag it as former ending today
-                    a.npe5__Status__c = system.label.npe5.DefaultFormerStatus;
+                    a.npe5__Status__c = DEFAULT_FORMER_STATUS;
                     a.npe5__EndDate__c = System.Today();                
                }
                if (ao.fUnprimary) {
@@ -456,6 +461,8 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     private DmlWrapper runAfflTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+
+        npe5__Affiliations_Settings__c currentAffiliationsSettings = UTIL_CustomSettingsFacade.getAffiliationsSettings();
 
         DmlWrapper dmlWrapper = new DmlWrapper();
         
@@ -560,8 +567,10 @@ public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
             for (npe5__Affiliation__c affl : queryAffl) {
                 if (!currentPrimaryAffl.contains(affl.id)) {
                     affl.npe5__Primary__c = false;
-                    affl.npe5__Status__c = system.label.npe5.DefaultFormerStatus;
-                    affl.npe5__EndDate__c = System.Today();
+                    if (currentAffiliationsSettings.npe5__Automatic_Affiliation_Creation_Turned_On__c) {
+                        affl.npe5__Status__c = DEFAULT_FORMER_STATUS;
+                        affl.npe5__EndDate__c = System.Today();
+                    }
 
                     afflForUpdate.add(affl);
                 }
