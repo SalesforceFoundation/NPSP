@@ -2297,7 +2297,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiErrorOneToOneMultiContact</shortDescription>
-        <value>A Gift from a One-to-one or Administrative Contact cannot be associated with a second Contact.</value>
+        <value>A Data Import for a One-to-one or Administrative Contact cannot be associated with a second Contact.</value>
     </labels>
     <labels>
         <fullName>bdiErrorPaymentMultiMatch</fullName>

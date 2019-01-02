@@ -1490,6 +1490,39 @@ private with sharing class BDI_DataImport_TEST2 {
     *    importData fails
     **********************************************************************************************************/            
     static testMethod void testInvalidAccountModel() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
+        // set 1x1 account model
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        System.assertEquals(false, CAO_Constants.isHHAccountModel());
+        
+        List<DataImport__c> listDI = new List<DataImport__c>();
+        listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
+        insert listDI;
+
+        //run batch data import
+        Test.StartTest();
+        try {
+            BDI_DataImport_API.importData();
+            System.assert(false, 'importData should have thrown exception');
+        } catch (exception ex) {
+            System.assert(ex.getMessage().contains('Household Account model'));
+        }
+        Test.stopTest();
+    }
+
+    /*********************************************************************************************************
+    * @description operation: 
+    *    import contacts with the 1x1 account model and ADV installed
+    * verify: 
+    *    with one 1x1 Contact, importData passes, but with two it fails because both would be under the same Account
+    **********************************************************************************************************/            
+    static testMethod void testOneToOneAccountModelWithADV() {
+        //skip the test if Advancement is NOT installed
+        if(!ADV_PackageInfo_SVC.useAdv()) return;
+
         // set 1x1 account model
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -1498,32 +1531,29 @@ private with sharing class BDI_DataImport_TEST2 {
         
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1', 'c2', 'C2'));
+        listDI.add(BDI_DataImport_TEST.newDI(null, null, 'c3', 'C3'));
         insert listDI;
-
-        Boolean usingAdv = ADV_PackageInfo_SVC.useAdv();
 
         //run batch data import
         Test.StartTest();
         try {
             BDI_DataImport_API.importData();
-            if (usingAdv){
-                System.assert(true, 'importData should NOT have thrown exception');
-            } else {
-                System.assert(false, 'importData should have thrown exception');
-            }
+            System.assert(true, 'importData should NOT have thrown exception');
         } catch (exception ex) {
-            if (usingAdv){
-                System.assert(false, 'importData should NOT have thrown exception');
-            } else {
-                System.assert(ex.getMessage().contains('Household Account model'));
-            }
+            System.assert(false, 'importData should NOT have thrown exception');
         }
         Test.stopTest();
 
         listDI = getDIs();
-        // With ADV installed, the import still fails, but only because there would be 2 1x1 Contacts on the Donation
-        String importStatus = usingAdv ? label.bdiErrorOneToOneMultiContact : null;
-        System.assertEquals(importStatus, listDI[0].Contact1ImportStatus__c);
+        
+        System.debug(listDI); 
+
+        // The first import fails, because there would be two new 1x1 Contacts under the same Account
+        System.assertEquals(label.bdiErrorOneToOneMultiContact, listDI[0].Contact1ImportStatus__c);
+        // The second import succeeds because there is only one 1x1 Contact specified
+        System.assertEquals(BDI_DataImport_API.bdiImported, listDI[1].Status__c);
+        System.assertEquals('c3', listDI[1].Contact2_Firstname__c);
+        System.assertEquals('C3', listDI[1].Contact2_Lastname__c);
     }
 
 
