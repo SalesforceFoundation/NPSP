@@ -137,6 +137,10 @@
         <name>CustomApplication</name>
     </types>
     <types>
+        <members>Grant_Deadline__c</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
         <members>RGB_nspscolor_copy</members>
         <name>ContentAsset</name>
     </types>

@@ -2426,7 +2426,6 @@
         <members>DataImport__c</members>
         <members>Engagement_Plan_Template__c</members>
         <members>General_Accounting_Unit__c</members>
-        <members>Grant_Deadline__c</members>
         <members>Level__c</members>
         <members>NPSP_Resources</members>
         <members>NPSP_Settings</members>
