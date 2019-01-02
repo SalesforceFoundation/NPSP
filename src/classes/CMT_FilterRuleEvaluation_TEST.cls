@@ -88,11 +88,11 @@ private class CMT_FilterRuleEvaluation_TEST {
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule4', 'Opportunity', 'CreatedDate', 'Equals', 'TODAY') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule5', 'Opportunity', 'CreatedDate', 'Greater', 'YESTERDAY') + ',' +
 
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule1', 'Opportunity', 'CreatedDate', 'Equals', DateTime.Now().format('YYYY-MM-dd')) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule2', 'Opportunity', 'CreatedDate', 'Greater_Or_Equal', DateTime.Now().addDays(-1).format('YYYY-MM-dd')) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule3', 'Opportunity', 'CreatedDate', 'Less_Or_Equal', DateTime.Now().addDays(1).format('YYYY-MM-dd')) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule4', 'Opportunity', 'CreatedDate', 'Greater', DateTime.Now().addDays(-2).formatGmt('YYYY-MM-dd hh:mm:ss.SSS')) + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule5', 'Opportunity', 'CreatedDate', 'Less', DateTime.Now().addDays(2).format('YYYY-MM-dd')) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule1', 'Opportunity', 'CreatedDate', 'Equals', DateTime.Now().format('yyyy-MM-dd')) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule2', 'Opportunity', 'CreatedDate', 'Greater_Or_Equal', DateTime.Now().addDays(-1).format('yyyy-MM-dd')) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule3', 'Opportunity', 'CreatedDate', 'Less_Or_Equal', DateTime.Now().addDays(1).format('yyyy-MM-dd')) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule4', 'Opportunity', 'CreatedDate', 'Greater', DateTime.Now().addDays(-2).formatGmt('yyyy-MM-dd hh:mm:ss.SSS')) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId3, 'Group3.Rule5', 'Opportunity', 'CreatedDate', 'Less', DateTime.Now().addDays(2).format('yyyy-MM-dd')) + ',' +
 
                 /*  FILTER RULES FOR FILTER GROUP 4-7 -- Opportunity with RecordTypeId, RecordType.DeveloperName, StageName, OCR.Role, Amount */
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId4, 'Group4.Rule1', 'Opportunity', 'IsWon', 'Not_Equals', 'False') + ',' +
