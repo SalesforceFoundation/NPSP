@@ -36,10 +36,10 @@
 */
 public class AFFL_Affiliations_TDTM extends TDTM_Runnable {
     @TestVisible
-    private static String DEFAULT_FORMER_STATUS = system.label.npe5.DefaultFormerStatus;
+    private static String DEFAULT_FORMER_STATUS = 'Former';
 
     @TestVisible
-    private static String DEFAULT_CURRENT_STATUS = system.label.npe5.DefaultCurrentStatus;
+    private static String DEFAULT_CURRENT_STATUS = 'Current';
 
     /*******************************************************************************************************
     * @description Trigger Handler on Contact, Account, or Affiliation, dispatches to the correct method
