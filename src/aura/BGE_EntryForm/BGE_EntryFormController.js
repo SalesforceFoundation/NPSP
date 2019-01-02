@@ -63,6 +63,7 @@
      */
     onSubmit: function (component, event, helper) {
         event.preventDefault();
+        component.set('v.pendingSave',true);
         var completeRow = helper.getRowWithHiddenFields(component, event);
         var validity = helper.validateFields(component, completeRow);
 
@@ -70,6 +71,7 @@
             component.find('recordEditForm').submit(completeRow);
         } else if (validity.missingFields.length !== 0) {
             helper.sendErrorToast(component, validity.missingFields);
+            component.set('v.pendingSave',false);
         } else {
             //do nothing since data format errors display inline
         }
