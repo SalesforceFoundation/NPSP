@@ -104,21 +104,20 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
 
     /*******************************************************************************************************
     * @description Returns the source field's options formatted for lightning:select if the source field is a picklist
-    * or the target field's options formatted for lightning:select if the source field is a string and the target
-    * field is a picklist
-    * Returns an empty map if neither case applies
+    * or the target field's options if the source field is a string and the target field is a picklist.
+    * Returns an empty map if neither case applies.
     */
     public static List<Map<String, String>> getPicklistOptions(String dataImportField){
         List<Map<String, String>> options = new List<Map<String, String>>();
 
         String dataImportObject = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
 
-        String rawSourceFieldType = UTIL_Describe.getFieldDisplaytype(dataImportObject, dataImportField.toLowerCase()).name().toLowerCase();
+        Schema.DisplayType rawSourceFieldType = UTIL_Describe.getFieldDisplaytype(dataImportObject, dataImportField.toLowerCase());
 
-        if (rawSourceFieldType == 'picklist') {
+        if (rawSourceFieldType == Schema.DisplayType.Picklist) {
             options = UTIL_Describe.getLightningSelectOptions(dataImportObject, dataImportField);
 
-        } else if (rawSourceFieldType == 'string') {
+        } else if (rawSourceFieldType == Schema.DisplayType.String) {
 
             String targetObject = BDI_DataImportService.getTargetObject(dataImportField);
             if (targetObject == 'Payment') {
