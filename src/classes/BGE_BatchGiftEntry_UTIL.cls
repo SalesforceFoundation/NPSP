@@ -57,8 +57,9 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
             }
         }
 
-        // Donation Amount is also required
+        // Donation Amount and Donation Date are also required
         fieldsToCheck.add(UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c')));
+        fieldsToCheck.add(UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c')));
 
         for (DescribeFieldResult dfr : fieldsToCheck) {
             if (!canUpdateField(dfr)) {
