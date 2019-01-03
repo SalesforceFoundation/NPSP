@@ -74,11 +74,13 @@ global with sharing class REL_RelationshipsViewer_CTRL{
     private PageReference showNoAccess() {
         List<String> blockingSObjects = new List<String>();
 
-        if(!Contact.sObjectType.getDescribe().isAccessible()) { 
+        // Check whether the user has permission to read the Contact object without throwing an exception if not
+        if (!UTIL_Permissions.canRead('Contact', false)) {
             blockingSObjects.add(UTIL_Describe.getObjectLabel('Contact'));
         }
 
-        if(!npe4__Relationship__c.sObjectType.getDescribe().isAccessible()) {
+        // Check whether the user has permission to read the Relationship object without throwing an exception if not
+        if (!UTIL_Permissions.canRead('npe4__Relationship__c', false)) {
             blockingSObjects.add(UTIL_Describe.getObjectLabel('npe4__Relationship__c'));
         }
 
@@ -93,7 +95,8 @@ global with sharing class REL_RelationshipsViewer_CTRL{
             // check access on all the soql fields
             for(String objName: fieldNamesBySObjectNameForSOQL.keySet()) {
                 try {
-                    UTIL_Describe.checkFieldFLS(objName, fieldNamesBySObjectNameForSOQL.get(objName), false);
+                    // Thorws an exception if the user do not have permission for a given field.
+                    checkFieldPermissionsForAnObject(objName, fieldNamesBySObjectNameForSOQL);
                 } catch (Exception e) {
                     flsErrorMessage = e.getMessage();
                 }
@@ -106,6 +109,14 @@ global with sharing class REL_RelationshipsViewer_CTRL{
         }
 
         return null;
+    }
+
+    private void checkFieldPermissionsForAnObject(String objName, Map<String, List<String>> fieldNamesBySObjectNameForSOQL) {
+        List<String> fieldNames = fieldNamesBySObjectNameForSOQL.get(objName);
+                    
+        for (String currentFieldName : fieldNames) {
+            UTIL_Permissions.canUpdate(objName, currentFieldName, false);
+        }
     }
 
     /*******************************************************************************************************
