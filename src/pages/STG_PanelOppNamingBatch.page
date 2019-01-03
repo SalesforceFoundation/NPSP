@@ -1,7 +1,7 @@
 <apex:page controller="STG_PanelOppNamingBatch_CTRL" docType="html-5.0" standardStylesheets="false" >
     <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.stgLabelOppNamingRefreshTitle}" />
-        <div class="slds-text-body_small slds-m-around_medium"><apex:outputText value="{!$Label.stgHelpBtnOppNaming}" escape="false" /></div>
+        <div class="slds-text-body_small slds-m-around_medium"><c:UTIL_HtmlOutput html="{!$Label.stgHelpBtnOppNaming}" /></div>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
             <apex:commandButton id="runOppNamingBatch" value="{!$Label.stgBtnRefreshOpportunityNames}" status="statusLoad" action="{!runBatch}" disabled="{!isRunningBatch}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />

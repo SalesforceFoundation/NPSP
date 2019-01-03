@@ -83,6 +83,7 @@
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
         <members>BGE_BatchGiftEntry_UTIL</members>
+        <members>BGE_BatchGiftEntry_UTIL_TEST</members>
         <members>BGE_ConfigurationWizard_CTRL</members>
         <members>BGE_ConfigurationWizard_CTRL_TEST</members>
         <members>BGE_DataImportBatchEntry_CTRL</members>
@@ -406,6 +407,8 @@
         <members>UTIL_Describe_TEST</members>
         <members>UTIL_Finder</members>
         <members>UTIL_Finder_TEST</members>
+        <members>UTIL_HtmlOutput_CTRL</members>
+        <members>UTIL_HtmlOutput_TEST</members>
         <members>UTIL_IScheduled</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
@@ -425,6 +428,8 @@
         <members>UTIL_PageMessages_CTRL</members>
         <members>UTIL_PerfLogger</members>
         <members>UTIL_PerfLogger_TEST</members>
+        <members>UTIL_Permissions</members>
+        <members>UTIL_Permissions_TEST</members>
         <members>UTIL_PlatformCache</members>
         <members>UTIL_Profile</members>
         <members>UTIL_Profile_TEST</members>
@@ -455,6 +460,7 @@
         <members>STG_DataBoundMultiSelect</members>
         <members>STG_PageHeader</members>
         <members>UTIL_FormField</members>
+        <members>UTIL_HtmlOutput</members>
         <members>UTIL_InputField</members>
         <members>UTIL_JobProgressLightning</members>
         <members>UTIL_NavigateBack</members>
