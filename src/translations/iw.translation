@@ -77,9 +77,8 @@
         <name>Addr_Valid_Key_Pair</name>
     </customLabels>
     <customLabels>
-        <label>&lt;p&gt;לחץ על &apos;אימות כל הכתובות&apos; כדי לאמת ולהאחיד את כל הכתובות בארגון שלך.
-        התהליך של אימות הפריטים המרובים משתמש בהגדרות מהסעיפים לעיל.&lt;/p&gt;
- &lt;br/&gt;</label>
+        <label>לחץ על &apos;אימות כל הכתובות&apos; כדי לאמת ולהאחיד את כל הכתובות בארגון שלך.
+        התהליך של אימות הפריטים המרובים משתמש בהגדרות מהסעיפים לעיל.</label>
         <name>Addr_Verification_Batch_Body</name>
     </customLabels>
     <customLabels>
