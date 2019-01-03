@@ -552,6 +552,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             dataImportBatch.Expected_Total_Batch_Amount__c = recordDetails.expectedTotal;
             dataImportBatch.Active_Fields__c = recordDetails.activeFields;
             dataImportBatch.GiftBatch__c = true;
+            dataImportBatch.Process_Using_Scheduled_Job__c = false;
 
             upsert dataImportBatch;
 
