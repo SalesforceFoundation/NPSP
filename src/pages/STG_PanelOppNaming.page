@@ -45,7 +45,7 @@
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgLabelOppNamingSettings}" />
         <div class="slds-grid">
             <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
-                <p class="slds-text-body_small slds-m-top_x-small"><apex:outputText value="{!$Label.stgOppNamingDescription}" escape="false"/></p>
+                <p class="slds-text-body_small slds-m-top_x-small"><apex:outputText value="{!$Label.stgOppNamingDescription}" /></p>
             </div>        
         </div>
         <c:UTIL_PageMessages />
@@ -135,7 +135,7 @@
                                 rendered="{!isEditMode}" id="txtFormatOppName" style="display:none;"/>
                         </apex:outputPanel>
                         <apex:outputPanel id="slstrFormatOppNameHelp" layout="block">
-                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOppNamingFormat}" escape="false" />
+                            <c:UTIL_HtmlOutput html="{!$Label.stgHelpOppNamingFormat}" hasLink="true" styleClass="slds-form-element__help" />
                         </apex:outputPanel>
                     </div>
                 </div>
