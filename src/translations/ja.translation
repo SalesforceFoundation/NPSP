@@ -82,9 +82,8 @@
         <name>Addr_Valid_Key_Pair</name>
     </customLabels>
     <customLabels>
-        <label>&lt;p&gt;団体のすべての住所を検証および標準化するには、[すべての住所を検証] をクリックします。
-        一括検証プロセスには上記の設定が使用されます。&lt;/p&gt;
- &lt;br/&gt;</label>
+        <label>団体のすべての住所を検証および標準化するには、[すべての住所を検証] をクリックします。
+        一括検証プロセスには上記の設定が使用されます。</label>
         <name>Addr_Verification_Batch_Body</name>
     </customLabels>
     <customLabels>
