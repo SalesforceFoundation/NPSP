@@ -21,9 +21,9 @@ Create Open Recurring Donation With Monthly Installment
     Click Modal Button        Save
     Reload Page
     Select Tab  Related
-    NPSP Load Related List    Recurring Donations
+    Load Related List    Recurring Donations
     Check Related List Values    Recurring Donations    Robot Recurring Donation
-    NPSP Load Related List    Opportunities
+    Load Related List    Opportunities
     Click ViewAll Related List    Opportunities
     ${return_value}    Verify Payment Details
     Should be equal as strings    ${return_value}    12

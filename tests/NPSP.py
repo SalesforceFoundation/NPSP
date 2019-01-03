@@ -16,9 +16,6 @@ from selenium.webdriver import ActionChains
 from cumulusci.robotframework.utils import selenium_retry
 import sys
 from email.mime import text
-#sys.path.append(os.path.abspath(os.path.join('..',
-#sys.path.append("/Users/skristem/Documents/GitHub/CumulusCI/cumulusci/robotframework/tests")
-#import Salesforce
 
 
 @selenium_retry
@@ -63,29 +60,6 @@ class NPSP(object):
         objects = self.cumulusci._describe_result['sobjects']
         level_object = [o for o in objects if o['label'] == 'Level'][0]
         return self.get_namespace_prefix(level_object['name'])
-
-    def npsp_load_related_list(self, heading):
-        """Scrolls down until the specified related list loads.
-        """
-        locator = self.salesforce.get_locator('record.related.card', heading)
-        el = None
-        i = 0
-        while el is None:
-            i += 1
-            if i > 50:
-                raise AssertionError(
-                    "Timed out waiting for {} related list to load.".format(heading)
-                )
-            self.selenium.execute_javascript(
-                "window.scrollTo(0,Math.max(document.body.scrollHeight, document.documentElement.scrollHeight))"
-            )
-            self.salesforce.wait_for_aura()
-            try:
-                self.selenium.scroll_element_into_view(locator)
-                break
-            except ElementNotFound:
-                time.sleep(0.2)
-                continue
 
     def populate_address(self, loc, value):
         """ Populate address with Place Holder aka Mailing Street etc as a locator
