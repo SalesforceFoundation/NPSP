@@ -72,6 +72,7 @@
         <members>Account.Organization_Accounts</members>
         <members>Account.AllAccounts</members>
         <members>Opportunity.AllDonations</members>
+        <members>%%%NAMESPACE%%%Grant_Deadline__c.All</members>
         <name>ListView</name>
     </types>
     <types>
