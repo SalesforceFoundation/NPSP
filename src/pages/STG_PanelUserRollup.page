@@ -21,9 +21,9 @@
                         </div>
                         <div class="slds-media__body">
                             <h2 class="slds-text-heading_small slds-text-heading_small">
-                                <apex:outputText value="{!$Label.stgCRLPInfoOnUDRHeading}" escape="true"/>
+                                <apex:outputText value="{!$Label.stgCRLPInfoOnUDRHeading}"/>
                             </h2>
-                            <apex:outputText styleClass="slds-m-top_medium slds-m-top_medium" value="{!$Label.stgCRLPInfoOnUDRBody}" escape="false"/>
+                            <c:UTIL_HtmlOutput html="{!$Label.stgCRLPInfoOnUDRBody}" styleClass="slds-m-top_medium slds-m-top_medium" />
                         </div>
                     </div>
                 </div>
