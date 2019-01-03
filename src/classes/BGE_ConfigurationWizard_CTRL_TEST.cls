@@ -124,6 +124,14 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
         String activeFieldsJSON = BGE_ConfigurationWizard_CTRL.getDefaultActiveFields();
         Test.startTest();
         String jsonModel = BGE_ConfigurationWizard_CTRL.saveRecord(batchInfoJSON, activeFieldsJSON);
+        DataImportBatch__c batchRecord = [SELECT Id,
+                                                Name,
+                                                Batch_Description__c,
+                                                RequireTotalMatch__c,
+                                                GiftBatch__c,
+                                                Process_Using_Scheduled_Job__c
+                                        FROM DataImportBatch__c
+                                        LIMIT 1];
         BGE_ConfigurationWizard_CTRL.BGEDetailsModel batchDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
         Test.stopTest();
 
@@ -133,6 +141,12 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
         System.assertEquals(false, batchDetails.requireTotalMatch, 'Require total match should be false');
         System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), batchDetails.activeFields, 'Active Fields should match default');
         System.assertNotEquals(null, batchDetails.id, 'Batch details should not be null');
+
+        System.assertEquals('Test 4', batchRecord.Name, 'Batch record Name should be Test 4');
+        System.assertEquals('Test Record', batchRecord.Batch_Description__c, 'Batch record Description should be Test Record');
+        System.assertEquals(false, batchRecord.RequireTotalMatch__c, 'Require total match should be false');
+        System.assertEquals(true, batchRecord.GiftBatch__c, 'Batch should be flagged as Gift Batch');
+        System.assertEquals(false, batchRecord.Process_Using_Scheduled_Job__c, 'Process Using Scheduled Job flag should be false.');
 
     }
 
