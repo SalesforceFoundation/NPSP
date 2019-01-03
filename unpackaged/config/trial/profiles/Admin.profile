@@ -122,7 +122,7 @@
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
-        <tab>Grant_Deadline__c</tab>
+        <tab>%%%NAMESPACE%%%Grant_Deadline__c</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
