@@ -15,7 +15,7 @@ ${contact_id}
     Set Global Variable      ${level_name}
     Go To Record Home        ${level_id}
     Confirm Value    Minimum Amount (>=)    0.10    Y
-    Confirm Value    Maximum Amount (<)     0.90    Y
+    Confirm Value    Maximum Amount (<)     0.9    Y
 
 2 Edit Level and Verify Fields
     # --------------------------------

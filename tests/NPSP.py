@@ -368,7 +368,7 @@ class NPSP(object):
         return date 
         
     def get_main_header(self):
-        header = self.selenium.get_webelement("//h1/span").text
+        header = self.selenium.get_webelement("//h1/div/span").text
         return header
     
     def verify_contact_role(self,name,role):

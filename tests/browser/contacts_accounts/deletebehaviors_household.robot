@@ -19,16 +19,16 @@ Delete Contact with Closed Won Opportunity from Household
     ...                       Opportunity Name= Sravani $100 donation
     ...                       Amount=100 
     Click Dropdown    Stage
-    Click Link    link=Closed Won
+    Click Link    title=Closed Won
     Click Dropdown    Close Date
     Pick Date    10
     Click Modal Button        Save
     #Sleep    5
     Go To Object Home    Contact    
     Select Row    &{Contact}[FirstName] &{Contact}[LastName]
-    Click Link    link=Delete
+    Click Link    title=Delete
     #Sleep    5    
-    Select Frame With ID    vfFrameId
+    Select Frame With Name    vfFrameId
     Click Button With Value    Delete Account
     #Sleep    5
     Page Should Contain    Error

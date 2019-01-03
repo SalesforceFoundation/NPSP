@@ -58,7 +58,7 @@ npsp_lex_locators={
     'click_search':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/span/span/input[contains(@id,"inputX")]',
     'field': "//div[contains(@class, 'uiInput')][.//label[contains(@class, 'uiLabel')][.//span[text()='{}']]]//input",
     'field_lookup_value': "//a[@role='option'][.//div[@title='{}']]",
-    'header':'//h1[contains(@title,"{}")]',
+    'header':'//h1/div[contains(@title,"{}")]',
     'check_related_list_item':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")]//tbody//th//a[text()="{}"]',
     'detail_page': {
         'section_header':'//h3//span[text()="{}"]',

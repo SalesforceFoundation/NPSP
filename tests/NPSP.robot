@@ -311,10 +311,10 @@ Choose Frame
     [Arguments]    ${frame}
     Select Frame    //iframe[contains(@title,'${frame}')]
     
-Select Frame with ID
-    [Arguments]    ${id}
-    Select Frame    //iframe[contains(@id, '${id}')]    
-    
+Select Frame with Name
+    [Arguments]    ${name}
+    Select Frame    //iframe[contains(@name, '${name}')]
+
 Select Frame With Title
     [Arguments]    ${name}
     Select Frame    //iframe[@title= '${name}']    
