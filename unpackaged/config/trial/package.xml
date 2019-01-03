@@ -138,7 +138,7 @@
         <name>CustomApplication</name>
     </types>
     <types>
-        <members>Grant_Deadline__c</members>
+        <members>%%%NAMESPACE%%%Grant_Deadline__c</members>
         <name>CustomTab</name>
     </types>
     <types>
