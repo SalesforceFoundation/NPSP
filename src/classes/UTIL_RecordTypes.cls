@@ -227,7 +227,13 @@ public class UTIL_RecordTypes {
      * all in-active record types are omitted from this list of options.
      *
      * @param objectType The type of the object
-     * @return List<Map<String, String>>
+     * @return List<Map<String, String>> A list of key-value pairs of values and labels for lightning:select fields
+     * where the value is the record type ID
+     * @example
+     * [{value: ...,
+     *   label: ...},
+     *    {...},
+     * ]
      */
     public static List<Map<String, String>> getRecordTypesForLightningSelect(sObjectType objectType) {
         List<Map<String, String>> options = new List<Map<String, String>>();
@@ -267,7 +273,13 @@ public class UTIL_RecordTypes {
      * all in-active record types are omitted from this list of options.
      *
      * @param objectType The type of the object
-     * @return List<Map<String, String>>
+     * @return List<Map<String, String>> A list of key-value pairs of values and labels for lightning:select fields
+     * where the value is the developer name of the record type
+     * @example
+     * [{value: ...,
+     *   label: ...},
+     *    {...},
+     * ]
      */
     public static List<Map<String, String>> getRecordTypeDevNamesForLightningSelectList(sObjectType objectType) {
         Map<String, Schema.RecordTypeInfo> recordTypeInfos = getObjectRecordTypeInfo(objectType);
@@ -288,7 +300,12 @@ public class UTIL_RecordTypes {
      * are omitted from this list of options.
      *
      * @param objectType The type of the object
-     * @return List<Map<String, String>>
+     * @return List<Map<String, String>> A list of key-value pairs of values and labels where the name and value match
+     * @example
+     * [{value: ...,
+     *   label: ...},
+     *    {...},
+     * ]
      */
     public static List<Map<String, String>> getStringRecordTypesForLightningSelect(sObjectType objectType) {
         String objectName = objectType.getDescribe().getName();
