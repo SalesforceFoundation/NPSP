@@ -407,6 +407,8 @@
         <members>UTIL_Describe_TEST</members>
         <members>UTIL_Finder</members>
         <members>UTIL_Finder_TEST</members>
+        <members>UTIL_HtmlOutput_CTRL</members>
+        <members>UTIL_HtmlOutput_TEST</members>
         <members>UTIL_IScheduled</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
@@ -458,6 +460,7 @@
         <members>STG_DataBoundMultiSelect</members>
         <members>STG_PageHeader</members>
         <members>UTIL_FormField</members>
+        <members>UTIL_HtmlOutput</members>
         <members>UTIL_InputField</members>
         <members>UTIL_JobProgressLightning</members>
         <members>UTIL_NavigateBack</members>
