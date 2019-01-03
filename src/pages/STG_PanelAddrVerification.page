@@ -133,12 +133,8 @@
                 </div>
             </div>
             <div class="slds-text-body_small slds-m-around_large">
-                <p>
-                    <apex:outputText value="{!$Label.Addr_Settings_Intro_Body1}" escape="false" />
-                </p>
-                <p>
-                    <apex:outputText value="{!$Label.Addr_Settings_Intro_Body2}" escape="false" />
-                </p>
+                <p><apex:outputText value="{!$Label.Addr_Settings_Intro_Body1}" /></p>
+                <p><c:UTIL_HtmlOutput html="{!$Label.Addr_Settings_Intro_Body2}" hasLink="true" /></p>
             </div>
             <div class="slds-form_horizontal slds-m-around_large">
                 <div class="slds-form-element">
@@ -255,7 +251,7 @@
                     <h3 class="slds-text-heading_small">{!$Label.Addr_Verification_Batch_Title}</h3>
                 </div>
                 <div class="slds-card__body slds-text-body_small slds-p-around_medium">
-                    <apex:outputText escape="false" value="{!$Label.Addr_Verification_Batch_Body}" rendered="{!hasAccess}" />
+                    <p><apex:outputText value="{!$Label.Addr_Verification_Batch_Body}" rendered="{!hasAccess}" /></p>
                     <div class="slds-form_horizontal slds-m-around_large">
                         <div class="slds-form-element">
                             <apex:outputLabel value="{!$Label.Addr_Skip_Verified}" for="iAddr_Skip_Verified" styleClass="slds-form-element__label" />
@@ -263,8 +259,7 @@
                                 <apex:inputCheckbox value="{!skipPreviouslyVerifiedObjects}" id="iAddr_Skip_Verified" html-aria-describedby="{!$Component.iAddr_Skip_VerifiedHelp}"
                                     styleClass="slds-checkbox" />
                                 <apex:outputPanel id="iAddr_Skip_VerifiedHelp" layout="block">
-                                    <apex:outputText id="validatorBatchHelpText" escape="false" value="{!validatorBatchHelpText}" styleClass="slds-form-element__help"
-                                    />
+                                    <apex:outputText id="validatorBatchHelpText" value="{!validatorBatchHelpText}" styleClass="slds-form-element__help" />
                                 </apex:outputPanel>
                             </div>
                         </div>
