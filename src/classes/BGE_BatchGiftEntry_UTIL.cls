@@ -53,7 +53,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     */
     public static List<String> getDataImportFields(Id batchId, Boolean includeRelationshipFields) {
 
-        List<String> fields = getDataImportFields(includeRelationshipFields);
+        List<String> fields = getCoreDataImportFields(includeRelationshipFields);
         fields.addAll(getActiveFieldNamesFromBatch(batchId));
 
         return fields;
@@ -64,7 +64,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     * @param includeRelationshipFields whether to include relationship fields in the returned list
     * @return List<String> list of DataImport__c field api names
     */
-    private static List<String> getDataImportFields(Boolean includeRelationshipFields) {
+    private static List<String> getCoreDataImportFields(Boolean includeRelationshipFields) {
         List<String> fields = new List<String> {
                 'Id',
                 'Account1Imported__c',
@@ -92,7 +92,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     }
 
     /*******************************************************************************************************
-    * @description
+    * @description parses Active_Fields__c for the list of user-defined fields included in the batch config
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
     * @return list of field api names
     */
