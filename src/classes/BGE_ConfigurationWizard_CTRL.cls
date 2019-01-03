@@ -210,7 +210,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'PICKLIST'
         };
 
-        // looping through the fields on DataImport__c
+        // looping through the fields on DataImport__c and remove unsupported data types
         for (String fieldName : sortedFieldNames) {
             DescribeFieldResult dfr = fieldMap.get(fieldName);
             String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.getName());
@@ -219,13 +219,14 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             Boolean fieldAllowed = allowedObjects.contains(dataImportFieldMappedObject)
                 && allowedDataTypes.contains(dfr.getType().name())
                 && !bannedFields.contains(dataImportFieldApiName)
-                && dfr.getInlineHelpText() != null
-                && BGE_BatchGiftEntry_UTIL.canUpdateField(dfr);
+                && dfr.getInlineHelpText() != null;
 
             if (fieldAllowed) {
                 dfrs.add(dfr);
             }
         }
+
+        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(dfrs);
 
         return dfrs;
     }

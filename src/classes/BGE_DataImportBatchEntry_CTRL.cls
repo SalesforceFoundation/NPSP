@@ -78,6 +78,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         dataImportModel.labels = getBatchDataImportLabels();
         dataImportModel.isNamespaced = String.isNotBlank(UTIL_Namespace.getNamespace());
 
+        // check permissions on hard coded fields
+        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), getDataImportFields());
+
         return JSON.serialize(dataImportModel);
     }
 
@@ -261,46 +264,58 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
         String activeFieldsJSON = batch.Active_Fields__c;
         if (activeFieldsJSON != null) {
-            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields = (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
+            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields =
+                (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
 
             Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
+
+            List<DescribeFieldResult> unpermittedFields = new List<DescribeFieldResult>();
+
             for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
                 Schema.DescribeFieldResult dataImportDFR = fieldMap.get(field.name.toLowerCase());
                 if (dataImportDFR != null) {
 
-                    checkFLS(dataImportDFR);
+                    if (UTIL_Permissions.canUpdate(dataImportDFR, false)) {
+                        Column col = new Column();
+                        col.label = dataImportDFR.getLabel();
+                        col.fieldName = dataImportDFR.getName();
+                        col.readOnly = false;
+                        col.defaultValue = field.defaultValue;
+                        col.required = field.requiredInEntryForm;
+                        col.hide = field.hide;
+                        col.type = dataImportDFR.getType().name().toLowerCase();
+                        if (col.type == 'date') {
+                            col.type = 'date-local';
+                        }
+                        if (col.type == 'double') {
+                            col.type = 'number';
+                        }
+                        col.typeAttributes = '{}';
 
-                    Column col = new Column();
-                    col.label = dataImportDFR.getLabel();
-                    col.fieldName = dataImportDFR.getName();
-                    col.readOnly = false;
-                    col.defaultValue = field.defaultValue;
-                    col.required = field.requiredInEntryForm;
-                    col.hide = field.hide;
-                    col.type = dataImportDFR.getType().name().toLowerCase();
-                    if (col.type == 'date') {
-                        col.type = 'date-local';
+                        col.options = BGE_ConfigurationWizard_CTRL.getPicklistOptions(col.fieldName);
+
+                        columns.add(col);
+
+                        String targetObject = BDI_DataImportService.getTargetObject(col.fieldName);
+                        if (targetObject == 'Payment') {
+                            targetObject = 'npe01__OppPayment__c';
+                        }
+                        String targetField = BDI_DataImportService.getTargetField(col.fieldName);
+                        DescribeFieldResult targetDFR = UTIL_Describe.getFieldDescribe(targetObject,targetField);
+
+
+                        if (!UTIL_Permissions.canUpdate(targetDFR, false)) {
+                            unpermittedFields.add(targetDFR);
+                        }
+                    } else {
+                        unpermittedFields.add(dataImportDFR);
                     }
-                    if (col.type == 'double') {
-                        col.type = 'number';
-                    }
-                    col.typeAttributes = '{}';
-
-                    col.options = BGE_ConfigurationWizard_CTRL.getPicklistOptions(col.fieldName);
-
-                    columns.add(col);
-
-                    String targetObject = BDI_DataImportService.getTargetObject(col.fieldName);
-                    if (targetObject == 'Payment') {
-                        targetObject = 'npe01__OppPayment__c';
-                    }
-                    String targetField = BDI_DataImportService.getTargetField(col.fieldName);
-                    DescribeFieldResult targetDFR = UTIL_Describe.getFieldDescribe(targetObject,targetField);
-
-                    checkFLS(targetDFR);
 
                 }
             }
+
+            BGE_BatchGiftEntry_UTIL.handleMissingPermissions(unpermittedFields);
+
         }
 
         return columns;
@@ -378,14 +393,11 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
+    * @description returns the subset of DataImport__c fields that are part of every batch
     * @return List<String> list of DataImport__c field api names
     */
-    public static List<String> getDataImportFields(Id batchId) {
-
-        List<String> activeFieldNames = getActiveFieldNamesFromBatch(batchId);
-
-        List<String> fields = new List<String> {
+    private static List<String> getDataImportFields() {
+        return new List<String> {
             'Id',
             'Account1Imported__c',
             'Account1Imported__r.Name',
@@ -402,21 +414,18 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             'PaymentImportStatus__c',
             'Status__c'
         };
-
-        fields.addAll(activeFieldNames);
-
-        return fields;
     }
 
     /*******************************************************************************************************
-    * @description checks for read, create, and edit FLS for a given field
-    * @param dfr DescribeFieldResult of the field to check
-    * @return void, throws AuraHandledException to display UI error
+    * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
+    * @return List<String> list of DataImport__c field api names
     */
-    private static void checkFLS(DescribeFieldResult dfr) {
-        if (!dfr.isCreateable() || !dfr.isUpdateable()) {
-            throw new AuraHandledException(label.bgeFLSError);
-        }
+    public static List<String> getDataImportFields(Id batchId) {
+
+        List<String> fields = getDataImportFields();
+        fields.addAll(getActiveFieldNamesFromBatch(batchId));
+
+        return fields;
     }
 
     /*******************************************************************************************************
