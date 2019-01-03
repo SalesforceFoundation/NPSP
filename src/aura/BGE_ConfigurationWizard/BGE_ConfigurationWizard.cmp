@@ -197,7 +197,7 @@
                             <div class="slds-section slds-is-open">
                                 <h3 class="slds-section__title slds-theme_shade">
                                     <span class="slds-truncate slds-p-horizontal_small">
-                                        {!currentFieldGroup.sObjectName}
+                                        {!currentFieldGroup.sObjectLabel}
                                     </span>
                                 </h3>
                             </div>
