@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexComponent xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>43.0</apiVersion>
+    <label>UTIL_HtmlOutput</label>
+    <description>This controller has a list of whitelisted urls and tags, any additional approved items must be added to the controller.</description>
+</ApexComponent>
