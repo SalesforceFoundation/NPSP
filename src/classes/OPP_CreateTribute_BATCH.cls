@@ -31,6 +31,7 @@
 * @author Salesforce.org
 * @date 2018
 * @group Tribute
+* @group-content ../../ApexDocContent/Tribute.htm
 * @description Batch Class for creating Tribute from Opportunity.
 */
 public with sharing class OPP_CreateTribute_BATCH implements Database.Batchable<sObject> {
@@ -103,8 +104,8 @@ public with sharing class OPP_CreateTribute_BATCH implements Database.Batchable<
         }
         
         if (updOpportunities.size() > 0) {
-            //We do not want to run through Opportunity or Tribute triggers when clearing Tribute Fields
-            //on the Opportunity
+            // Moving Honoree from Opportunity to a related Tribute record, with no other changes means there is no point to running the triggers (as there will be no changes in
+            // OCRs, etc.), so we are disabling the triggers
             TDTM_TriggerHandler.disableTDTM = true;
             insert newTributes;
             update updOpportunities;
@@ -120,7 +121,7 @@ public with sharing class OPP_CreateTribute_BATCH implements Database.Batchable<
     * @return Boolean true if Tribute info is present, false otherwise
     ********************************************************************************************************/
     @testVisible private static Boolean hasTributeInfo(Opportunity opp) {
-        return ((opp.Honoree_Contact__c != null) || (String.isNotBlank(opp.Honoree_Name__c)) || (String.isNotBlank(opp.Tribute_Type__c)));
+        return (opp.Honoree_Contact__c != null || String.isNotBlank(opp.Honoree_Name__c) || String.isNotBlank(opp.Tribute_Type__c));
     }
 
     /******************************************************************************************************
