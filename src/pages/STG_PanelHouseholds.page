@@ -223,7 +223,7 @@
                         </ul>
                     </div>
                     <apex:outputPanel layout="block">
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpExampleHHNames}" escape="false" />
+                        <c:UTIL_HtmlOutput html="{!$Label.stgHelpExampleHHNames}" styleClass="slds-form-element__help" />
                     </apex:outputPanel>
                 </div>
             </apex:outputPanel>
@@ -269,7 +269,7 @@
                 {!$Label.stgLabelHHObject}
             </div>
         </div>
-        <p class="slds-text-body_small slds-m-around_large"><apex:outputText value="{!$Label.stgHelpHHObjectOverview}" escape="false" /></p>
+        <p class="slds-text-body_small slds-m-around_large"><c:UTIL_HtmlOutput html="{!$Label.stgHelpHHObjectOverview}" hasLink="true" /></p>
         <div class="slds-form_horizontal slds-p-bottom_large">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Household_Rules__c.Label}" for="slHR" styleClass="slds-form-element__label" />
