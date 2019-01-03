@@ -15,7 +15,7 @@
             <div class="slds-grid {!IF(showCRLPSettings, '', 'slds-hide')}">
                 <apex:outputPanel rendered="{! !isPolling }">
                     <div class="slds-m-vertical_medium">
-                        <apex:outputText escape="false" styleClass="slds-text-body_small" value="{!$Label.stgHelpCustomizableRollupsEnable1}" />
+                        <c:UTIL_HtmlOutput html="{!$Label.stgHelpCustomizableRollupsEnable1}" hasLink="true" styleClass="slds-text-body_small" />
                     </div>
 
                     <label class="slds-checkbox_toggle slds-grid slds-m-vertical_small">
@@ -36,7 +36,7 @@
             <!-- BEGIN HELP TEXT -->
             <div class="slds-grid {!IF(!isPolling, '', 'slds-hide')}">
                 <p class="slds-text-body_small slds-m-top_x-small">
-                    <apex:outputText escape="false" value="{!$Label.stgHelpCustomizableRollupsEnable2}" />
+                    <c:UTIL_HtmlOutput html="{!$Label.stgHelpCustomizableRollupsEnable2}" hasLink="true" />
                 </p>
             </div>
             <!-- END HELP TEXT -->
@@ -53,7 +53,7 @@
                 </div>
 
                 <div class="slds-m-vertical_medium">
-                    <apex:outputText escape="false" styleClass="slds-text-body_small" value="{!$Label.stgHelpCustomizableRollupsEnable3}" />
+                    <apex:outputText styleClass="slds-text-body_small" value="{!$Label.stgHelpCustomizableRollupsEnable3}" />
                 </div>
                 <button type="button" class="slds-button slds-button_destructive" data-toggle="modal" data-target="warning_modal" id="resetBTN">
                     Reset to Defaults

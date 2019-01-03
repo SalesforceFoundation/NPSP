@@ -3,7 +3,7 @@
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelAutoCreate}" />
         <div class="slds-grid">
             <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
-                <p class="slds-text-body_small slds-m-top_x-small"><apex:outputText value="{!$Label.npe4__relationshipsautodescription}" escape="false"/></p>
+                <p class="slds-text-body_small slds-m-top_x-small"><c:UTIL_HtmlOutput html="{!$Label.npe4__relationshipsautodescription}" hasLink="true" /></p>
             </div>        
         </div>
         <c:UTIL_PageMessages />
