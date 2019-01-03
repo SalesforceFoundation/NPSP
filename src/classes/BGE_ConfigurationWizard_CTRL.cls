@@ -351,8 +351,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         model.contactMatchingRule = 'Firstname,Lastname,Email';
         model.donationDateRange = 0;
         model.donationMatchingBehavior = BDI_DataImport_API.ExactMatchOrCreate;
-        model.donationMatchingClass = '';
-        model.postProcessClass = '';
+        model.donationMatchingClass = null;
+        model.postProcessClass = null;
         model.runOpportunityRollupsWhileProcessing = false;
         model.activeFields = getDefaultActiveFields();
 
