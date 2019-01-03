@@ -4,7 +4,7 @@
             <div class="slds-media__body">
                 <h3 class="slds-text-heading_large slds-m-bottom_large">{!$Label.stgNPSPSettings}</h3>
                 <p>{!$Label.stgHelpNPSPSettings}</p>
-                <p class="slds-text-body_small slds-m-top_x-small"><apex:outputText value="{!$Label.stgHelpSalesforceSetup}" escape="false"/></p>
+                <p class="slds-text-body_small slds-m-top_x-small"><c:UTIL_HtmlOutput html="{!$Label.stgHelpSalesforceSetup}" hasLink="true" /></p>
             </div>
             <div class="slds-media__figure slds-media__figure_reverse">
                 <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/RGB_npsp-stacked-color.png')}" style="height: 75px" alt="NPSP Logo"/>
@@ -17,8 +17,8 @@
                 {!$Label.stgTools}
             </div>
             <ul>
-                <li><apex:outputText value="{!$Label.stgHelpHealthCheck}" escape="false"/></li>
-                <li><apex:outputText value="{!$Label.stgHelpReviewErrorLog}" escape="false"/></li>
+                <li><c:UTIL_HtmlOutput html="{!$Label.stgHelpHealthCheck}" hasLink="true" /></li>
+                <li><c:UTIL_HtmlOutput html="{!$Label.stgHelpReviewErrorLog}" hasLink="true" /></li>
             </ul>
         </div>
         <div class="slds-col_padded slds-size_4-of-12">
@@ -37,7 +37,7 @@
             <div class="slds-text-heading_medium slds-m-bottom_medium">
                 {!$Label.stgPowerOfUsHub}
             </div>
-            <p><apex:outputText value="{!$Label.stgHelpPowerOfUsHub}" escape="false"/></p>
+            <p><c:UTIL_HtmlOutput html="{!$Label.stgHelpPowerOfUsHub}" hasLink="true" /></p>
         </div>
     </div>
 </apex:page>
