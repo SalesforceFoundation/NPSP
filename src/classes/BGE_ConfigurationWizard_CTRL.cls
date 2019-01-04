@@ -293,13 +293,16 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         List<BGEField> fields = new List<BGEField>();
 
         String dataImportApiName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
-        String opportunityLabel = UTIL_Describe.getObjectLabel('Opportunity');
+        String opportunityName = 'Opportunity';
+        String opportunityLabel = UTIL_Describe.getObjectLabel(opportunityName);
+        String paymentName = 'Payment'; // bdi object name, not api name
         String paymentLabel = UTIL_Describe.getObjectLabel('npe01__OppPayment__c');
 
         BGEField donationAmount = new BGEField();
         String donationAmountApiName = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c');
         donationAmount.name = donationAmountApiName;
         donationAmount.label = UTIL_Describe.getFieldLabel(dataImportApiName, donationAmountApiName.toLowerCase());
+        donationAmount.sObjectName = opportunityName;
         donationAmount.sObjectLabel = opportunityLabel;
         donationAmount.defaultValue = null;
         donationAmount.isActive = true;
@@ -315,6 +318,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         String donationDateApiName = UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
         donationDate.name = donationDateApiName;
         donationDate.label = UTIL_Describe.getFieldLabel(dataImportApiName, donationDateApiName.toLowerCase());
+        donationDate.sObjectName = opportunityName;
         donationDate.sObjectLabel = opportunityLabel;
         donationDate.defaultValue = null;
         donationDate.isActive = true;
@@ -329,6 +333,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         String paymentMethodApiName = UTIL_Namespace.StrTokenNSPrefix('Payment_Method__c');
         paymentMethod.name = paymentMethodApiName;
         paymentMethod.label = UTIL_Describe.getFieldLabel(dataImportApiName, paymentMethodApiName.toLowerCase());
+        paymentMethod.sObjectName = paymentName;
         paymentMethod.sObjectLabel = paymentLabel;
         paymentMethod.defaultValue = null;
         paymentMethod.isActive = true;
@@ -343,6 +348,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         String checkNumberApiName = UTIL_Namespace.StrTokenNSPrefix('Payment_Check_Reference_Number__c');
         checkNumber.name = checkNumberApiName;
         checkNumber.label = UTIL_Describe.getFieldLabel(dataImportApiName, checkNumberApiName.toLowerCase());
+        checkNumber.sObjectName = paymentName;
         checkNumber.sObjectLabel = paymentLabel;
         checkNumber.defaultValue = null;
         checkNumber.isActive = true;
