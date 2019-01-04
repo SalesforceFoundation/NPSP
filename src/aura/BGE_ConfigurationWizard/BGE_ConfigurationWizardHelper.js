@@ -169,8 +169,8 @@
                                 value: currentField.id
                             }
                         );
-                        //special case so Amount object is always visible
-                        if (currentField.id.includes('Donation_Amount__c')) {
+
+                        if (currentField.alwaysRequired) {
                             currentFieldGroup.requiredOptions.push(currentField.id);
                         }
                     });
@@ -224,17 +224,14 @@
                             sObjectName: currentField.sObjectName,
                             label: currentField.label,
                             defaultValue: currentField.defaultValue,
-                            required: currentField.required,
+                            requiredInEntryForm: currentField.requiredInEntryForm,
                             hide: currentField.hide,
                             type: currentField.type,
                             formatter: currentField.formatter,
-                            options: currentField.options
-                        }
-
-                        if (currentField.sObjectName === 'Opportunity' &&
-                            (currentField.name == 'npsp__Donation_Amount__c' || currentField.name == 'Donation_Amount__c')) {
-                            fieldInfo.systemRequired = true;
-                        }
+                            options: currentField.options,
+                            conditionallyRequired: currentField.conditionallyRequired,
+                            alwaysRequired: currentField.alwaysRequired
+                        };
 
                         currentFieldGroup.fields.push(fieldInfo);
 
@@ -323,7 +320,8 @@
                         name: currentField.name,
                         sObjectName: currentField.sObjectName,
                         defaultValue: currentField.defaultValue,
-                        required: currentField.required,
+                        alwaysRequired: currentField.alwaysRequired,
+                        requiredInEntryForm: currentField.requiredInEntryForm,
                         hide: currentField.hide,
                         sortOrder: currentField.sortOrder,
                         type: currentField.type,
@@ -494,11 +492,12 @@
                         currentField.isActive = true;
                         currentField.defaultValue = activeFieldMap.get(currentField.id).defaultValue;
                         currentField.hide = activeFieldMap.get(currentField.id).hide;
-                        currentField.required = activeFieldMap.get(currentField.id).required;
+                        currentField.requiredInEntryForm = activeFieldMap.get(currentField.id).requiredInEntryForm;
                         currentField.sortOrder = activeFieldMap.get(currentField.id).sortOrder;
                         currentField.type = activeFieldMap.get(currentField.id).type;
                         currentField.formatter = activeFieldMap.get(currentField.id).formatter;
                         currentField.options = activeFieldMap.get(currentField.id).options;
+                        currentField.alwaysRequired = activeFieldMap.get(currentField.id).alwaysRequired;
                     } else {
                         currentField.isActive = false;
                     }
@@ -578,26 +577,26 @@
             function getRequiredFieldErrors() {
                 var errors = [];
                 var activeFieldsBySObject = getActivesBySObject();
-                var systemRequiredFieldsBySObject = _getSystemRequiredFieldsBySObject();
+                var conditionallyRequiredFieldsBySObject = _getConditionallyRequiredFieldsBySObject();
 
-                Object.keys(systemRequiredFieldsBySObject).forEach(function(currentSObject) {
+                Object.keys(conditionallyRequiredFieldsBySObject).forEach(function(currentSObject) {
                     var activeFieldNames = [];
-                    var systemRequiredFieldNames = new Map();
+                    var conditionallyRequiredFieldNames = new Map();
 
                     //only check validity if sObject is included in activeFieldsBySObject
                     if (activeFieldsBySObject[currentSObject]) {
                         activeFieldsBySObject[currentSObject].forEach(function(currentField) {
                             activeFieldNames.push(currentField.name);
                         });
-                        systemRequiredFieldsBySObject[currentSObject].forEach(function(currentField) {
-                            systemRequiredFieldNames.set(currentField.name, currentField.label);
+                        conditionallyRequiredFieldsBySObject[currentSObject].forEach(function(currentField) {
+                            conditionallyRequiredFieldNames.set(currentField.name, currentField.label);
                         });
 
-                        var containsSystemRequiredField = Array.from(systemRequiredFieldNames.keys()).every(function(currentFieldName) {
+                        var containsConditionallyRequiredField = Array.from(conditionallyRequiredFieldNames.keys()).every(function(currentFieldName) {
                             return activeFieldNames.indexOf(currentFieldName) > -1;
                         });
-                        if (!containsSystemRequiredField) {
-                            errors.push(currentSObject + ' (' + Array.from(systemRequiredFieldNames.values()).join(', ') + ')');
+                        if (!containsConditionallyRequiredField) {
+                            errors.push(currentSObject + ' (' + Array.from(conditionallyRequiredFieldNames.values()).join(', ') + ')');
                         }
                     }
                 });
@@ -645,7 +644,7 @@
                 _allFields.forEach(function(currentField) {
                     batchFieldOptions.forEach(function(currentActiveField) {
                         if (currentField.name === currentActiveField.name) {
-                            currentField.required = currentActiveField.required;
+                            currentField.requiredInEntryForm = currentActiveField.requiredInEntryForm;
                             currentField.hide = currentActiveField.hide;
                             currentField.defaultValue = currentActiveField.defaultValue;
                         }
@@ -658,17 +657,19 @@
             /* ******************PRIVATE FUNCTIONS************************/
 
             /**
-             * @description Gets the system required fields grouped by SObject.
-             * @return Map of SObject group to List of system required fields.
+             * @description Gets the conditionally required fields grouped by SObject.
+             * @return Map of SObject group to List of conditionally required fields.
+             * These fields are required only if any other field from that target SObject is selected.
+             * e.g., Account Name is required if Account Type is selected.
              */
-            function _getSystemRequiredFieldsBySObject() {
-                var systemRequiredFields = [];
+            function _getConditionallyRequiredFieldsBySObject() {
+                var conditionallyRequiredFields = [];
                 _allFields.forEach(function(currentField) {
-                    if (currentField.systemRequired) {
-                        systemRequiredFields.push(currentField);
+                    if (currentField.conditionallyRequired) {
+                        conditionallyRequiredFields.push(currentField);
                     }
                 });
-                return _groupFieldsBySObject(systemRequiredFields);
+                return _groupFieldsBySObject(conditionallyRequiredFields);
             }
 
             /**
