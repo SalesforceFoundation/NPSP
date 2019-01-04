@@ -1,6 +1,17 @@
 .THIS.slds-tabs_card {
     background: white;
 }
+
+/*link-like behaviors*/
+.THIS .bgeLinkButton:focus {
+    outline: -webkit-focus-ring-color auto 5px;
+    border-width: 0px;
+    box-shadow: none;
+}
+.THIS .bgeLinkButton:hover, .THIS .bgeLinkButton:active {
+    outline: 0;
+    text-decoration: underline;
+}
 /*formatting for edit mode checkboxes*/
 .THIS .bgeInputCheckbox{
     display: inline-flex;
