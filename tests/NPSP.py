@@ -104,7 +104,8 @@ class NPSP(object):
     def click_dropdown(self, title):
         locator = npsp_lex_locators['record']['list'].format(title)
         self.selenium.set_focus_to_element(locator)
-        self.selenium.get_webelement(locator).click()     
+        self.selenium.get_webelement(locator).click()
+        self.wait_for_locator('popup')
     
     def pick_date(self, value):
         """To pick a date from the date picker"""
