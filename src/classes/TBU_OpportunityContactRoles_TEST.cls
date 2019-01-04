@@ -40,19 +40,19 @@ private class TBU_OpportunityContactRoles_TEST {
     /******************************************************************************************************
     * @description Test update Honoree/Notification Name when the look up changes
     ********************************************************************************************************/
-    static testMethod void testPopulateHonoreeNotificationNameField(){
-        npe01__Contacts_and_Orgs_Settings__c testSettings = OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL);
+    static testMethod void populateHonoreeNotificationNameField(){
+        OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL);
 
         //Insert three Contacts
         List<Contact> cons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
         insert cons;
 
         Opportunity opp = new Opportunity(
-                Primary_Contact__c = cons[0].id,
+                Primary_Contact__c = cons[0].Id,
                 StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-                Name='Donation3',
-                Amount= 1000,
-                CloseDate = date.today()
+                Name = 'Donation3',
+                Amount = 1000,
+                CloseDate = Date.today()
                 );
 
         insert opp;
@@ -67,47 +67,37 @@ private class TBU_OpportunityContactRoles_TEST {
         insert newTri;
 
 
-        cons = [SELECT  Id,
-                        Name
-                FROM Contact
-                WHERE   Id IN :cons];
+        cons = [SELECT Id, Name FROM Contact WHERE Id IN :cons];
 
-        newTri = [SELECT        Id,
-                                Honoree_Name__c
-                  FROM Tribute__c
-                  WHERE         Id = :newTri.id];
+        newTri = [SELECT Id, Honoree_Name__c FROM Tribute__c WHERE Id = :newTri.Id];
         System.assertEquals(cons[1].Name, newTri.Honoree_Name__c);
 
         //Now update the Tribute Honoree Contact and Notification Contact, system should update the corresponding Name field
         newTri.Honoree_Contact__c = cons[2].Id;
         update newTri;
 
-        newTri = [SELECT        Id,
-                                Honoree_Name__c
-                  FROM Tribute__c
-                  WHERE         Id = :newTri.id];
+        newTri = [SELECT Id, Honoree_Name__c FROM Tribute__c WHERE Id = :newTri.Id];
         System.assertEquals(cons[2].Name, newTri.Honoree_Name__c);
 
         Test.stopTest();
-
     }
 
     /******************************************************************************************************
     * @description Prevent user insert Tribute record if the current setting is Single Tribute only
     ********************************************************************************************************/
     static testMethod void preventHonoreeNotificationInsertSingleTribute(){
-        npe01__Contacts_and_Orgs_Settings__c testSettings = OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_Single_VAL);
+        OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_Single_VAL);
 
         //Insert three Contacts
         List<Contact> cons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
         insert cons;
 
         Opportunity opp = new Opportunity(
-                Primary_Contact__c = cons[0].id,
+                Primary_Contact__c = cons[0].Id,
                 StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-                Name='Donation3',
-                Amount= 1000,
-                CloseDate = date.today());
+                Name = 'Donation3',
+                Amount = 1000,
+                CloseDate = Date.today());
 
         insert opp;
 
@@ -131,19 +121,19 @@ private class TBU_OpportunityContactRoles_TEST {
     * @description Prevent user insert Tribute record if the current setting is Mix mode
     ********************************************************************************************************/
     static testMethod void preventHonoreeNotificationInsertMultipleTributeLose(){
-        npe01__Contacts_and_Orgs_Settings__c testSettings = OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MIXED_VAL);
+        OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MIXED_VAL);
 
         //Insert three Contacts
         List<Contact> cons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
         insert cons;
 
         Opportunity opp = new Opportunity(
-                Primary_Contact__c = cons[0].id,
-                Honoree_Contact__c = cons[1].id,
+                Primary_Contact__c = cons[0].Id,
+                Honoree_Contact__c = cons[1].Id,
                 StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-                Name='Donation3',
-                Amount= 1000,
-                CloseDate = date.today());
+                Name = 'Donation3',
+                Amount = 1000,
+                CloseDate = Date.today());
 
         insert opp;
 
@@ -167,7 +157,7 @@ private class TBU_OpportunityContactRoles_TEST {
     * @description Test creating OCR based on the Honoree/Notification when insert Tribute
     ********************************************************************************************************/
     static testMethod void honoreeNotificationInsert(){
-        npe01__Contacts_and_Orgs_Settings__c testSettings = OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL);
+        OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL);
 
         //Insert three Contacts
         List<Contact> cons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
@@ -175,9 +165,9 @@ private class TBU_OpportunityContactRoles_TEST {
 
         Opportunity opp = new Opportunity(
                 Name = 'Test',
-                Primary_Contact__c = cons[0].id,
+                Primary_Contact__c = cons[0].Id,
                 Notification_Recipient_Contact__c = cons[2].Id,
-                CloseDate = date.today(),
+                CloseDate = Date.today(),
                 StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
         );
 
@@ -193,14 +183,8 @@ private class TBU_OpportunityContactRoles_TEST {
         Test.stopTest();
 
         //System should create a Tribute Record and Populate the Honoree/Notification Name
-        List<Contact> queryCon = [SELECT        Id,
-                                                Name
-                                  FROM Contact
-                                  WHERE         Id IN :cons];
-        List<Tribute__c> queryTribute = [SELECT         Id,
-                                                        Honoree_Name__c
-                                         FROM Tribute__c
-                                         WHERE          Opportunity__c = :opp.id];
+        List<Contact> queryCon = [SELECT Id, Name FROM Contact WHERE Id IN :cons];
+        List<Tribute__c> queryTribute = [SELECT Id, Honoree_Name__c FROM Tribute__c WHERE Opportunity__c = :opp.Id];
         System.assertEquals(queryCon[1].Name, queryTribute[0].Honoree_Name__c);
 
         //System should create 3 OCR with different Role
@@ -210,20 +194,20 @@ private class TBU_OpportunityContactRoles_TEST {
                                                                 IsPrimary,
                                                                 Role
                                                  FROM OpportunityContactRole
-                                                 WHERE          OpportunityId =:opp.id 
+                                                 WHERE          OpportunityId =:opp.Id
                                                  ORDER BY       ContactId];
         System.assertEquals(3, queryOCR.size());
 
-        System.assertEquals(cons[0].id, queryOCR[0].ContactId);
-        System.assertEquals(true, queryOCR[0].isPrimary);
+        System.assertEquals(cons[0].Id, queryOCR[0].ContactId);
+        System.assertEquals(true, queryOCR[0].IsPrimary);
         System.assertEquals(OPP_OpportunityContactRoles_TEST.OPPORTUNITY_CONTACT_ROLE_DONOR, queryOCR[0].Role);
 
-        System.assertEquals(cons[1].id, queryOCR[1].ContactId);
-        System.assertEquals(false, queryOCR[1].isPrimary);
+        System.assertEquals(cons[1].Id, queryOCR[1].ContactId);
+        System.assertEquals(false, queryOCR[1].IsPrimary);
         System.assertEquals(OPP_OpportunityContactRoles_TEST.OPPORTUNITY_CONTACT_ROLE_HONOREE, queryOCR[1].Role);
 
-        System.assertEquals(cons[2].id, queryOCR[2].ContactId);
-        System.assertEquals(false, queryOCR[2].isPrimary);
+        System.assertEquals(cons[2].Id, queryOCR[2].ContactId);
+        System.assertEquals(false, queryOCR[2].IsPrimary);
         System.assertEquals(OPP_OpportunityContactRoles_TEST.OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT, queryOCR[2].Role);
     }
 
@@ -231,7 +215,7 @@ private class TBU_OpportunityContactRoles_TEST {
     * @description Test upserting OCR based on the Honoree/Notification when insert/update Tribute
     ********************************************************************************************************/
     static testMethod void honoreeNotificationUpdate(){
-        npe01__Contacts_and_Orgs_Settings__c testSettings = OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL);
+        OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL);
 
         //Insert three Contacts
         List<Contact> cons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
@@ -239,23 +223,17 @@ private class TBU_OpportunityContactRoles_TEST {
 
         Opportunity opp = new Opportunity(
                 Name = 'Test',
-                Primary_Contact__c = cons[0].id,
-                Honoree_Contact__c = cons[2].id,
-                CloseDate = date.today(),
+                Primary_Contact__c = cons[0].Id,
+                Honoree_Contact__c = cons[2].Id,
+                CloseDate = Date.today(),
                 StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
         );
 
         insert opp;
 
         //System should populate Honoree Name on Tribute
-        List<Contact> queryCon = [SELECT        Id,
-                                                Name
-                                  FROM Contact
-                                  WHERE         Id IN :cons];
-        List<Tribute__c> queryTribute = [SELECT         Id,
-                                                        Honoree_Name__c
-                                         FROM Tribute__c
-                                         WHERE          Opportunity__c = :opp.id];
+        List<Contact> queryCon = [SELECT Id, Name FROM Contact WHERE Id IN :cons];
+        List<Tribute__c> queryTribute = [SELECT Id, Honoree_Name__c FROM Tribute__c WHERE Opportunity__c = :opp.Id];
         System.assertEquals(queryCon[2].Name, queryTribute[0].Honoree_Name__c);
 
         //System should create 2 OCR
@@ -265,30 +243,27 @@ private class TBU_OpportunityContactRoles_TEST {
                                                                 IsPrimary,
                                                                 Role
                                                  FROM OpportunityContactRole
-                                                 WHERE          OpportunityId =:opp.id
+                                                 WHERE          OpportunityId =:opp.Id
                                                  ORDER BY       ContactId];
         System.assertEquals(2, queryOCR.size());
 
-        System.assertEquals(cons[0].id, queryOCR[0].ContactId);
-        System.assertEquals(true, queryOCR[0].isPrimary);
+        System.assertEquals(cons[0].Id, queryOCR[0].ContactId);
+        System.assertEquals(true, queryOCR[0].IsPrimary);
         System.assertEquals(OPP_OpportunityContactRoles_TEST.OPPORTUNITY_CONTACT_ROLE_DONOR, queryOCR[0].Role);
 
-        System.assertEquals(cons[2].id, queryOCR[1].ContactId);
-        System.assertEquals(false, queryOCR[1].isPrimary);
+        System.assertEquals(cons[2].Id, queryOCR[1].ContactId);
+        System.assertEquals(false, queryOCR[1].IsPrimary);
         System.assertEquals(OPP_OpportunityContactRoles_TEST.OPPORTUNITY_CONTACT_ROLE_HONOREE, queryOCR[1].Role);
 
         //Now Try to update the Honoree/Notification on tribute
-        queryTribute[0].Honoree_Contact__c = cons[1].id;
+        queryTribute[0].Honoree_Contact__c = cons[1].Id;
 
         Test.startTest();
         update queryTribute;
         Test.stopTest();
 
         //System should update the Honoree/Notification Name based on the changes
-        queryTribute = [SELECT  Id,
-                                Honoree_Name__c
-                        FROM Tribute__c
-                        WHERE   Opportunity__c = :opp.id];
+        queryTribute = [SELECT Id, Honoree_Name__c FROM Tribute__c WHERE Opportunity__c = :opp.Id];
         System.assertEquals(queryCon[1].Name, queryTribute[0].Honoree_Name__c);
 
         //System should update the OCR based on the changes. Since Notification Recipient is the same as Primary, it will not create additional OCR
@@ -299,25 +274,22 @@ private class TBU_OpportunityContactRoles_TEST {
                                 IsPrimary,
                                 Role
                     FROM OpportunityContactRole
-                    WHERE       OpportunityId =:opp.id
+                    WHERE       OpportunityId =:opp.Id
                     ORDER BY    ContactId];
         System.assertEquals(2, queryOCR.size());
 
-        System.assertEquals(cons[0].id, queryOCR[0].ContactId);
-        System.assertEquals(true, queryOCR[0].isPrimary);
+        System.assertEquals(cons[0].Id, queryOCR[0].ContactId);
+        System.assertEquals(true, queryOCR[0].IsPrimary);
         System.assertEquals(OPP_OpportunityContactRoles_TEST.OPPORTUNITY_CONTACT_ROLE_DONOR, queryOCR[0].Role);
 
-        System.assertEquals(cons[1].id, queryOCR[1].ContactId);
-        System.assertEquals(false, queryOCR[1].isPrimary);
+        System.assertEquals(cons[1].Id, queryOCR[1].ContactId);
+        System.assertEquals(false, queryOCR[1].IsPrimary);
         System.assertEquals(OPP_OpportunityContactRoles_TEST.OPPORTUNITY_CONTACT_ROLE_HONOREE, queryOCR[1].Role);
 
         queryTribute[0].Honoree_Contact__c = null;
         update queryTribute;
 
-        queryTribute = [SELECT  Id,
-                                Honoree_Name__c
-                        FROM Tribute__c
-                        WHERE   Opportunity__c = :opp.id];
+        queryTribute = [SELECT Id, Honoree_Name__c FROM Tribute__c WHERE Opportunity__c = :opp.Id];
         System.assert(String.isBlank(queryTribute[0].Honoree_Name__c));
     }
 }

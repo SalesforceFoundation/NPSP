@@ -59,32 +59,28 @@ public class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable {
 
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
             //Prevent insert tribute if the setting does not indicate that the system allow Multiple Tribute
-            if (UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c != Label.stgMultipleTributesFlexible &&
-                    UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c != Label.stgMultipleTributesLimited) {
+            if (TBU_MultipleSettingsFacade.isMultipleTributesSingle()) {
                 preventTributeRecordOperations((List<Tribute__c>) newList);
             }
 
             //Prevent insert Tribute if the setting allow Mix but the Opportunity has Tribute Info
-            if (UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesFlexible) {
+            if (TBU_MultipleSettingsFacade.isMultipleTributesFlexible()) {
                 preventInsertTributeForMixMode((List<Tribute__c>) newList);
             }
 
             //we will populate Name field if the setting allow Multiple Tribute
-            if (UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesFlexible ||
-                    UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesLimited) {
+            if (TBU_MultipleSettingsFacade.isMultipleTributesFlexible() || TBU_MultipleSettingsFacade.isMultipleTributesLimited()) {
                 OPP_OpportunityContactRoles_TDTM.updateHonoreeNotificationFields(newList, null, Tribute__c.SObjectType);
             }
 
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             //Prevent update tribute if the setting does not indicate that the system allow Multiple Tribute
-            if (UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c != Label.stgMultipleTributesFlexible &&
-                    UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c != Label.stgMultipleTributesLimited) {
+            if (TBU_MultipleSettingsFacade.isMultipleTributesSingle()) {
                 preventTributeRecordOperations((List<Tribute__c>) newList);
             }
 
             //we will populate Name field if the setting allow Multiple Tribute
-            if (UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesFlexible ||
-                    UTIL_CustomSettings_API.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributesLimited) {
+            if (TBU_MultipleSettingsFacade.isMultipleTributesFlexible() || TBU_MultipleSettingsFacade.isMultipleTributesLimited()) {
                 OPP_OpportunityContactRoles_TDTM.updateHonoreeNotificationFields(newList, oldList, Tribute__c.SObjectType);
             }
 

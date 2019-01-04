@@ -48,10 +48,10 @@ public class TBU_MultipleTributesSettingsFacade {
     ********************************************************************************************************/
     public static String getMultipleTributesSetting() {
         npe01__Contacts_And_Orgs_Settings__c mtSettings = getSettings();
-        
+
         String val = (mtSettings != null) ? mtSettings.Multiple_Tributes__c : null;
 
-        return ((val != null) && (val.trim().length() > 0)) ? val : TRIBUTE_SINGLE_VAL;
+        return (String.IsBlank(val) ? TRIBUTE_SINGLE_VAL : val);
     }
 
     /*******************************************************************************************************
@@ -65,7 +65,7 @@ public class TBU_MultipleTributesSettingsFacade {
     }
 
     /*******************************************************************************************************
-    * @description Returns the localized version of the display value of the requested tribute settings 
+    * @description Returns the localized version of the display value of the requested tribute settings
     * value, or null if not found.
     * @param tributeSettingVal Value
     * @return String Display value for Currentl Multiple Tributes Setting, in user's local language

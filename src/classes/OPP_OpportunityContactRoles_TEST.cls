@@ -14,16 +14,16 @@
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -59,7 +59,7 @@ public class OPP_OpportunityContactRoles_TEST {
         con.AccountId = acc.Id;
         insert con;
 
-        //Simulate user interface creation of opp from button on contact screen, 
+        //Simulate user interface creation of opp from button on contact screen,
         //i.e. Role field is blank in the new contact role.
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
@@ -70,11 +70,7 @@ public class OPP_OpportunityContactRoles_TEST {
         insert opp1;
 
         //Make sure that we haven't created a contact role yet.
-        OpportunityContactRole[] result = [SELECT   OpportunityId,
-                                                    ContactId,
-                                                    Role
-                                           FROM OpportunityContactRole
-                                           WHERE OpportunityId = :opp1.Id];
+        OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
         System.assertEquals(0, result.size());
 
         //Insert the contact role with a blank Role field.
@@ -126,7 +122,7 @@ public class OPP_OpportunityContactRoles_TEST {
         con.AccountId = acc.Id;
         insert con;
 
-        //Simulate user interface creation of opp from button on contact screen, 
+        //Simulate user interface creation of opp from button on contact screen,
         //i.e. Role field is blank in the new contact role.
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
@@ -137,11 +133,7 @@ public class OPP_OpportunityContactRoles_TEST {
         insert opp1;
 
         //Make sure that we haven't created a contact role yet.
-        OpportunityContactRole[] result = [SELECT   OpportunityId,
-                                                    ContactId,
-                                                    Role 
-                                           FROM OpportunityContactRole 
-                                           WHERE    OpportunityId = :opp1.Id];
+        OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
         System.assertEquals(0, result.size());
 
         //Insert the contact role with a blank Role field.
@@ -152,11 +144,7 @@ public class OPP_OpportunityContactRoles_TEST {
         );
         insert cr;
 
-        result = [SELECT    OpportunityId,
-                            ContactId,
-                            Role
-                  FROM OpportunityContactRole 
-                  WHERE     OpportunityId = :opp1.Id];
+        result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
         System.assertEquals(con.Id, result[0].ContactId);
 
         //Now simulate import of an opp record with a contact ID.
@@ -169,11 +157,7 @@ public class OPP_OpportunityContactRoles_TEST {
         );
         insert opp2;
 
-        result = [SELECT    OpportunityId,
-                            ContactId,
-                            Role
-                  FROM OpportunityContactRole
-                  WHERE     OpportunityId = :opp2.Id];
+        result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp2.Id];
         System.assertEquals(con.Id, result[0].ContactId);
         System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, result[0].Role);
     }
@@ -184,15 +168,13 @@ public class OPP_OpportunityContactRoles_TEST {
     @isTest
     static void oppCRTriggerTurnedOff() {
         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR, 
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
                 npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR));
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
 
-        Trigger_Handler__c triggerHandler = [SELECT     Active__c
-                                             FROM Trigger_Handler__c
-                                             WHERE      Class__c = 'OPP_OpportunityContactRoles_TDTM'];
+        Trigger_Handler__c triggerHandler = [SELECT Active__c FROM Trigger_Handler__c WHERE Class__c = 'OPP_OpportunityContactRoles_TDTM'];
         triggerHandler.Active__c = false;
         update triggerHandler;
         TDTM_ObjectDataGateway.ClearCachedTriggerHandlersForTest();
@@ -206,18 +188,11 @@ public class OPP_OpportunityContactRoles_TEST {
         Test.startTest();
         insert opp1;
         Test.stopTest();
-        OpportunityContactRole[] result = [SELECT   OpportunityId,
-                                                    ContactId,
-                                                    IsPrimary,
-                                                    Role 
-                                           FROM OpportunityContactRole 
-                                           WHERE    OpportunityId = :opp1.Id];
+        OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, IsPrimary, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
         //should be a contact role
         System.assertEquals(0, result.size());
 
-        Opportunity[] oppResult = [SELECT   AccountId
-                                   FROM Opportunity
-                                   WHERE    Id = :opp1.Id];
+        Opportunity[] oppResult = [SELECT AccountId FROM Opportunity WHERE Id = :opp1.Id];
         //should have the contact's one to one account
         System.assertEquals(null, oppResult[0].AccountId);
     }
@@ -235,14 +210,14 @@ public class OPP_OpportunityContactRoles_TEST {
         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
-                npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, 
+                npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
                 npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR
             )
         );
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
-        
+
         Contact[] createdContacts = [SELECT     AccountId
                                      FROM Contact
                                      WHERE      Id = :con.Id];
@@ -259,16 +234,16 @@ public class OPP_OpportunityContactRoles_TEST {
         OpportunityContactRole[] result = [SELECT   OpportunityId,
                                                     ContactId,
                                                     IsPrimary,
-                                                    Role 
-                                           FROM OpportunityContactRole 
+                                                    Role
+                                           FROM OpportunityContactRole
                                            WHERE    OpportunityId = :opp1.Id];
         //should be a contact role
         System.assertEquals(1, result.size());
         System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, result[0].Role);
         System.assertEquals(true, result[0].IsPrimary);
 
-       Opportunity[] oppResult = [SELECT    AccountId 
-                                  FROM Opportunity 
+       Opportunity[] oppResult = [SELECT    AccountId
+                                  FROM Opportunity
                                   WHERE     Id = :opp1.Id];
        //should have the contact's one to one account
        System.assertEquals(createdContacts[0].AccountId, oppResult[0].AccountId);
@@ -365,7 +340,7 @@ public class OPP_OpportunityContactRoles_TEST {
                                                     ContactId,
                                                     IsPrimary,
                                                     Role
-                                           FROM OpportunityContactRole 
+                                           FROM OpportunityContactRole
                                            WHERE    OpportunityId = :opp1.Id];
         //should be a contact role
         System.assertEquals(1, result.size());
@@ -412,7 +387,7 @@ public class OPP_OpportunityContactRoles_TEST {
                                                     ContactId,
                                                     IsPrimary,
                                                     Role
-                                           FROM OpportunityContactRole 
+                                           FROM OpportunityContactRole
                                            WHERE    OpportunityId = :opp1.Id];
         //should be one role
         System.assertEquals(1, result.size());
@@ -445,7 +420,7 @@ public class OPP_OpportunityContactRoles_TEST {
             OpportunityContactRole[] result = [SELECT   OpportunityId,
                                                         ContactId,
                                                         Role
-                                               FROM OpportunityContactRole 
+                                               FROM OpportunityContactRole
                                                WHERE    OpportunityId = :opp1.Id];
             //shouldn't be a contact role
             System.assertEquals(0, result.size());
@@ -462,7 +437,7 @@ public class OPP_OpportunityContactRoles_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Leaves Honoree and Notification Recipient contact role settings blank. Adds contacts for 
+    * @description Leaves Honoree and Notification Recipient contact role settings blank. Adds contacts for
     * Honoree and Notification recipient contacts. Verifies Name fields updated when blank, verifies no
     * contact roles are created.
     */
@@ -491,8 +466,8 @@ public class OPP_OpportunityContactRoles_TEST {
                                   WHERE     Id IN :testCons];
         List<Opportunity> queryOpp = [SELECT    Id,
                                                 Notification_Recipient_Name__c,
-                                                Honoree_Name__c 
-                                      FROM Opportunity 
+                                                Honoree_Name__c
+                                      FROM Opportunity
                                       WHERE     Id = :opp.Id];
         System.assertEquals(queryCon[1].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
         System.assertEquals('do not overwrite me', queryOpp[0].Notification_Recipient_Name__c, 'Notifcation Recipient Name should not be overwritten.');
@@ -510,7 +485,7 @@ public class OPP_OpportunityContactRoles_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Populates Honoree and Notification Recipient contact role settings. Adds contacts for 
+    * @description Populates Honoree and Notification Recipient contact role settings. Adds contacts for
     * Honoree and Notification recipient contacts. Verifies contact roles are created correctly.
     */
     @isTest
@@ -557,7 +532,7 @@ public class OPP_OpportunityContactRoles_TEST {
                                                             OpportunityId,
                                                             IsPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.Id ORDER BY ContactId];
         System.assertEquals(3,queryOCR.size(), 'Three Opportunity Contact Roles should be created.');
-        
+
         System.assertEquals(testCons[0].Id,queryOCR[0].ContactId, 'First OCR is for primary contact.');
         System.assertEquals(true,queryOCR[0].IsPrimary, 'Primary OCR is marked primary.');
         System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, queryOCR[0].Role, 'Primary OCR has the correct role.');
@@ -572,8 +547,8 @@ public class OPP_OpportunityContactRoles_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Updates an opportunity with Honoree and Notification Recipient contacts. Honoree is 
-    * updated from one contact to another. Notification recipient is the same as the donor. Verifies that 
+    * @description Updates an opportunity with Honoree and Notification Recipient contacts. Honoree is
+    * updated from one contact to another. Notification recipient is the same as the donor. Verifies that
     * contact role deleted for first honoree, and created for the second honoree, but that no duplicate role
     * is created for the donor/notification recipient.
     */
@@ -613,7 +588,7 @@ public class OPP_OpportunityContactRoles_TEST {
                                                             OpportunityId,
                                                             IsPrimary,
                                                             Role
-                                                 FROM OpportunityContactRole 
+                                                 FROM OpportunityContactRole
                                                  WHERE      OpportunityId =:opp.Id ORDER BY ContactId];
         System.assertEquals(2, queryOCR.size(), 'Two Opportunity Contact Roles should be created.');
 
@@ -644,9 +619,9 @@ public class OPP_OpportunityContactRoles_TEST {
                             ContactId,
                             OpportunityId,
                             IsPrimary,
-                            Role 
+                            Role
                     FROM OpportunityContactRole
-                    WHERE   OpportunityId =:opp.Id 
+                    WHERE   OpportunityId =:opp.Id
                     ORDER BY ContactId];
         System.assertEquals(2, queryOCR.size(), 'Two Opportunity Contact Roles should be created.');
 
@@ -1031,7 +1006,7 @@ public class OPP_OpportunityContactRoles_TEST {
         testContacts = [SELECT  Id,
                                 AccountId,
                                 FirstName,
-                                LastName 
+                                LastName
                         FROM Contact];
 
         List<Opportunity> testOpptys = UTIL_UnitTestData_TEST.OppsForContactWithAccountList(testContacts, null, UTIL_UnitTestData_TEST.getClosedWonStage(),
@@ -1042,8 +1017,8 @@ public class OPP_OpportunityContactRoles_TEST {
                                 AccountId,
                                 Primary_Contact__c
                       FROM Opportunity];
-        delete [SELECT  Id 
-                FROM OpportunityContactRole 
+        delete [SELECT  Id
+                FROM OpportunityContactRole
                 WHERE   OpportunityId IN :testOpptys];
         List<Opportunity> changedOpptys = new List<Opportunity>{ testOpptys[0], testOpptys[1] };
 
@@ -1112,7 +1087,7 @@ public class OPP_OpportunityContactRoles_TEST {
         }
 
         Account orgAcct = new Account(
-            Name = 'OrgTest567890', 
+            Name = 'OrgTest567890',
             npe01__SYSTEMIsIndividual__c = false
         );
         insert orgAcct;
@@ -1137,7 +1112,7 @@ public class OPP_OpportunityContactRoles_TEST {
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
 
-        Contact c = [SELECT     AccountId 
+        Contact c = [SELECT     AccountId
                      FROM Contact
                      WHERE      Id = :con.Id
                      LIMIT 1];
@@ -1178,7 +1153,7 @@ public class OPP_OpportunityContactRoles_TEST {
                             Opportunity.AccountId,
                             ContactId,
                             IsPrimary,
-                            Role 
+                            Role
                   FROM OpportunityContactRole
                   WHERE     OpportunityId = :opp1.Id];
         //should be a contact role
@@ -1207,7 +1182,7 @@ public class OPP_OpportunityContactRoles_TEST {
         testContacts = [SELECT  Id,
                                 AccountId,
                                 FirstName,
-                                LastName 
+                                LastName
                         FROM Contact];
 
         List<Contact> testContactsForOpps = new List<Contact>();
@@ -1253,7 +1228,7 @@ public class OPP_OpportunityContactRoles_TEST {
 
         for (OpportunityContactRole ocr : ocrs) {
             System.assertEquals(true, uniqueOCRKeys.contains(OPP_OpportunityContactRoles_TDTM.calcUniqueOCRKey(ocr)));
-            
+
             if (ocr.IsPrimary) {
                 System.assertEquals(mapOppIdPrimaryOCR.get(ocr.OpportunityId).Id, ocr.Id);
             }
@@ -1279,7 +1254,7 @@ public class OPP_OpportunityContactRoles_TEST {
         testContacts = [SELECT  Id,
                                 AccountId,
                                 FirstName,
-                                LastName 
+                                LastName
                         FROM Contact];
 
         List<Opportunity> testOpptys = UTIL_UnitTestData_TEST.OppsForContactWithAccountList(testContacts, null, UTIL_UnitTestData_TEST.getClosedWonStage(),
