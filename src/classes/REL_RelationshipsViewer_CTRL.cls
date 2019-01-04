@@ -88,15 +88,38 @@ global with sharing class REL_RelationshipsViewer_CTRL{
         if(!blockingSObjects.isEmpty()) {
             flsErrorMessage = String.format(Label.flsError, new List<String> {String.join(blockingSObjects, ', ')});
         } else {
+
+            // We should check object fields and not their relationships.
+            List<String> contactFieldsToCheck = new List<String> {
+                                                                    'LastName',
+                                                                    'FirstName',
+                                                                    'Id',
+                                                                    'Title'
+                                                                };
+
+            List<String> relationshipFieldsToCheck = new List<String> {
+                'Id',
+                'npe4__Contact__c',
+                'npe4__Type__c',
+                'npe4__Status__c',
+                'npe4__ReciprocalRelationship__c',
+                'npe4__RelatedContact__c'
+            };
+
+            List<String> accountFieldsToCheck = new List<String>{
+                'Name'
+            };
+
             Map<String, List<String>> fieldNamesBySObjectNameForSOQL = new Map<String, List<String>> {
-                'Contact' => contactFields,
-                'npe4__Relationship__c' => relationshipFields
+                'Contact' => contactFieldsToCheck,                
+                'npe4__Relationship__c' => relationshipFieldsToCheck,
+                'Account' => accountFieldsToCheck
             };
             // check access on all the soql fields
             for(String objName: fieldNamesBySObjectNameForSOQL.keySet()) {
                 try {
                     // Thorws an exception if the user do not have permission for a given field.
-                    checkFieldPermissionsForAnObject(objName, fieldNamesBySObjectNameForSOQL);
+                    checkFieldPermissionsForAnObject(objName, fieldNamesBySObjectNameForSOQL);                    
                 } catch (Exception e) {
                     flsErrorMessage = e.getMessage();
                 }
@@ -113,9 +136,8 @@ global with sharing class REL_RelationshipsViewer_CTRL{
 
     private void checkFieldPermissionsForAnObject(String objName, Map<String, List<String>> fieldNamesBySObjectNameForSOQL) {
         List<String> fieldNames = fieldNamesBySObjectNameForSOQL.get(objName);
-                    
         for (String currentFieldName : fieldNames) {
-            UTIL_Permissions.canUpdate(objName, currentFieldName, false);
+            UTIL_Permissions.canRead(objName, currentFieldName, true);
         }
     }
 
@@ -147,8 +169,6 @@ global with sharing class REL_RelationshipsViewer_CTRL{
             String contactQuery = 'SELECT '+String.join(contactFields, ', ')+
                 ' FROM Contact WHERE Id = \''+contactId+'\' LIMIT 1';
 
-            System.debug(' **** Contact Query: '+contactQuery);
-
             List<Contact> contacts = Database.query(contactQuery);
             Contact primaryContact = null;
             if(!contacts.isEmpty()) {
@@ -174,12 +194,10 @@ global with sharing class REL_RelationshipsViewer_CTRL{
             ' AND npe4__ReciprocalRelationship__r.Id NOT IN :renderedRelationships'; 
         }
 
-        System.debug(' **** Relationship Query: '+relationshipQuery);
-
         relationships = Database.query(relationshipQuery);
 
         for(npe4__Relationship__c currentRelationship : relationships) {
-            System.debug(' **** RELATIONSHIP ID: '+currentRelationship.Id);
+
             Node n = new Node();
             n.lastName = currentRelationship.npe4__RelatedContact__r.LastName;
             n.id = currentRelationship.npe4__RelatedContact__r.Id;
