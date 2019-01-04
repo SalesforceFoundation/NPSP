@@ -2290,6 +2290,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>This Contact matched an existing Contact that's associated with a non-Household, non-Administrative Account. The Gift Entry Tool can only update Contacts that are part of a Household or Administrative Account.</value>
     </labels>
     <labels>
+        <fullName>bdiErrorOneToOneMultiContact</fullName>
+        <categories>NPSP Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiErrorOneToOneMultiContact</shortDescription>
+        <value>A Data Import for a One-to-one or Administrative Contact cannot be associated with a second Contact.</value>
+    </labels>
+    <labels>
         <fullName>bdiErrorPaymentMultiMatch</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
