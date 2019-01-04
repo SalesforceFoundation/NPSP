@@ -51,7 +51,7 @@
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-    <aura:handler event="ltng:sendMessage" action="{!c.handleUserInput}"/>
+    <aura:handler event="ltng:sendMessage" action="{!c.handleSendMessage}"/>
 
     <!-- START MARKUP -->
     <lightning:notificationsLibrary aura:id="notifLib"/>
@@ -63,8 +63,8 @@
 
                 <!-- Container-->
 
-                <!-- Step 1: Overview -->
-                <aura:if isTrue="{!v.batchMetadata.progressIndicatorStep == '1' }">
+                <!-- Step 0: Overview -->
+                <aura:if isTrue="{!v.batchMetadata.progressIndicatorStep == '0' }">
                     <lightning:layout horizontalAlign="center">
                         <lightning:layoutItem size="10">
                             <lightning:input type="text" name="name" label="{!$Label.c.stgLabelName}"
@@ -109,15 +109,10 @@
                         </lightning:layoutItem>
                     </lightning:layout>
                 </aura:if>
-                <!--End Step 1-->
+                <!--End Step 0-->
 
-                <!-- Step 2: Template Selection (Only for Batch Gift Entry) -->
-                <aura:if isTrue="{!v.batchMetadata.progressIndicatorStep == '2'}">
-                </aura:if>
-                <!-- End Step 2 -->
-
-                <!-- Step 3: Select Fields -->
-                <div class="{!if(v.batchMetadata.progressIndicatorStep == '3', '', 'slds-hide')}">
+                <!-- Step 1: Select Fields -->
+                <div class="{!if(v.batchMetadata.progressIndicatorStep == '1', '', 'slds-hide')}">
 
                     <div class="slds-m-around_medium">
 
@@ -161,22 +156,10 @@
 
                     </div>
                 </div>
-                <!--End Step 3-->
+                <!--End Step 1-->
 
-                <!--Selected Fields Section Header (View Mode Only)-->
-                <aura:if isTrue="{!v.isReadOnly}">
-                    <div class="slds-section slds-is-open slds-p-top_medium">
-                        <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small" title="{!$Label.c.bgeBatchSelectedFields}">
-                                {!$Label.c.bgeBatchSelectedFields}
-                            </span>
-                        </h3>
-                    </div>
-                </aura:if>
-                <!--End Selected Fields Section-->
-
-                <!-- Step 4: Set Field Options -->
-                <aura:if isTrue="{!or(v.batchMetadata.progressIndicatorStep == '4', v.isReadOnly)}">
+                <!-- Step 2: Set Field Options -->
+                <aura:if isTrue="{!or(v.batchMetadata.progressIndicatorStep == '2', v.isReadOnly)}">
                     <div class="slds-m-around_medium">
 
                         <aura:if isTrue="{!greaterthan(v.batchInfo.recordCount,0)}">
@@ -277,11 +260,10 @@
                         </aura:iteration>
                     </div>
                 </aura:if>
+                <!--End Step 2 -->
 
-                <!--End Step 4 -->
-
-                <!-- Step 5: Edit Matching Rules -->
-                <aura:if isTrue="{!v.batchMetadata.progressIndicatorStep == '5'}">
+                <!-- Step 3: Edit Matching Rules -->
+                <aura:if isTrue="{!v.batchMetadata.progressIndicatorStep == '3'}">
 
                     <aura:if isTrue="{!greaterthan(v.batchInfo.recordCount,0)}">
                         <lightning:layout horizontalAlign="center">
@@ -431,7 +413,7 @@
                         </lightning:layoutItem>
                     </lightning:layout>
                 </aura:if>
-                <!-- End Step 5 -->
+                <!-- End Step 3 -->
 
                 <!--End Container-->
             </lightning:layoutItem>

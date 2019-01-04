@@ -33,19 +33,12 @@
     },
 
     /**
-     * @description handles User Input from ltng:sendMessage and onclick handlers
+     * @description handles ltng:sendMessage
      * must be explicit about channel because other messages may be sent
      */
-    handleUserInput: function(component, event, helper) {
-        // check if user input came from ltng:sendMessage or an onclick handler
-        var task;
-        if (event.getSource().getLocalId()) {
-            task = event.getSource().getLocalId();
-        } else if (event.getParam('channel')) {
-            task = event.getParam('channel');
-        }
-
-        var model = component.get('v.model');
+    handleSendMessage: function(component, event, helper) {
+        const task = event.getParam('channel');
+        let model = component.get('v.model');
 
         // handle cancel
         if (task === 'cancel') {
@@ -64,21 +57,19 @@
             var step = component.get('v.batchMetadata.progressIndicatorStep');
 
             // check validity and load values
-            if (step === '1') {
+            if (step === '0') {
                 model.getBatchInfo().load(component.get('v.batchInfo'));
                 isValid = model.getBatchInfo().isValid();
                 possibleError = component.get('v.batchMetadata.labels.missingNameDescriptionError');
-            } else if (step === '2') {
-                //handle template selection and copying here
-            } else if (step === '3') {
+            } else if (step === '1') {
                 model.getAvailableFields().updateToActive(component.get('v.availableFields').fieldGroups);
                 possibleError = model.getAvailableFields().getRequiredFieldErrors();
                 isValid = (possibleError.length === 0);
-            } else if (step === '4') {
+            } else if (step === '2') {
                 isValid = model.getAvailableFields().getDefaultFieldValidity(component);
                 var fieldOptions = component.get('v.batchFieldOptions.fieldGroups');
                 model.getAvailableFields().updateBatchFieldOptions(fieldOptions);
-            } else if (step === '5') {
+            } else if (step === '3') {
                 //todo: add validation for processing settings
                 model.getBatchInfo().load(component.get('v.batchInfo'));
             }
