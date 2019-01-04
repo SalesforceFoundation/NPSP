@@ -252,7 +252,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         //status of the DI record
         Column statusCol = new Column();
         statusCol.label = Schema.SObjectType.DataImport__c.fields.Status__c.getLabel();
-        statusCol.fieldName = 'Status__c';
+        statusCol.fieldName = Schema.SObjectType.DataImport__c.fields.Status__c.getName();
         statusCol.readOnly = true;
         statusCol.type = 'text';
         columns.add(statusCol);
