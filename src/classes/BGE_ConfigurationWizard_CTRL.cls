@@ -39,10 +39,9 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     /*******************************************************************************************************
     * @description These fields are required only if at least 1 field from its object group is selected
     */
-    private static Set<String> systemRequiredFields = new Set<String>{
+    private static Set<String> conditionallyRequiredFields = new Set<String>{
         'Account1_Name__c',
         'Account2_Name__c',
-        'Donation_Amount__c',
         'Contact1_LastName__c',
         'Contact2_LastName__c'
     };
@@ -146,8 +145,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             field.name = dfr.getName();
 
             String unnamespacedField = UTIL_Namespace.StrTokenRemoveNSPrefix(field.name);
-            if (systemRequiredFields.contains(unnamespacedField)) {
-                field.systemRequired = true;
+            if (conditionallyRequiredFields.contains(unnamespacedField)) {
+                field.conditionallyRequired = true;
             }
 
             String rawFieldType = dfr.getType().name().toLowerCase();
@@ -292,11 +291,12 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         donationAmount.label = 'Donation Amount';
         donationAmount.sObjectName = 'Opportunity';
         donationAmount.defaultValue = null;
-        donationAmount.required = true;
+        donationAmount.requiredInEntryForm = true;
         donationAmount.hide = false;
         donationAmount.type = getLightningFieldType('number');
         donationAmount.formatter = 'currency';
         donationAmount.sortOrder = 0;
+        donationAmount.alwaysRequired = true;
         fields.add(donationAmount);
 
         BGEField donationDate = new BGEField();
@@ -304,10 +304,11 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         donationDate.label = 'Donation Date';
         donationDate.sObjectName = 'Opportunity';
         donationDate.defaultValue = null;
-        donationDate.required = false;
+        donationDate.requiredInEntryForm = true;
         donationDate.hide = false;
         donationDate.type = getLightningFieldType('date');
         donationDate.sortOrder = 1;
+        donationDate.alwaysRequired = true;
         fields.add(donationDate);
 
         BGEField paymentMethod = new BGEField();
@@ -315,7 +316,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         paymentMethod.label = 'Method';
         paymentMethod.sObjectName = 'Payment';
         paymentMethod.defaultValue = null;
-        paymentMethod.required = false;
+        paymentMethod.requiredInEntryForm = false;
         paymentMethod.hide = false;
         paymentMethod.type = getLightningFieldType('string');
         // TODO: figure out why this next line is breaking things and not matching to the existing payment method field in available fields.
@@ -328,7 +329,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         checkNumber.label = 'Check/Reference Number';
         checkNumber.sObjectName = 'Payment';
         checkNumber.defaultValue = null;
-        checkNumber.required = false;
+        checkNumber.requiredInEntryForm = false;
         checkNumber.hide = false;
         checkNumber.type = getLightningFieldType('string');
         checkNumber.sortOrder = 3;
@@ -603,24 +604,26 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     * @description a class to retrieve and save information related to Active and Available fields.
     */
     public class BGEField {
+        @AuraEnabled public Boolean alwaysRequired; // always required in BGE (e.g., Donation Amount and Donation Date)
+        @AuraEnabled public Boolean conditionallyRequired; // required if any other field on its object is selected (e.g., Account Name and Contact Last Name)
+        @AuraEnabled public String defaultValue;
+        @AuraEnabled public String formatter;
+        @AuraEnabled public Boolean hide;
+        @AuraEnabled public Boolean isActive;
         @AuraEnabled public String label;
         @AuraEnabled public String name;
-        @AuraEnabled public String sObjectName;
-        @AuraEnabled public Boolean isActive;
-        @AuraEnabled public String defaultValue;
-        @AuraEnabled public Boolean required;
-        @AuraEnabled public Boolean systemRequired;
-        @AuraEnabled public Boolean hide;
-        @AuraEnabled public String type;
-        @AuraEnabled public String formatter;
         @AuraEnabled public List<Map<String, String>> options;
+        @AuraEnabled public String sObjectName;
         @AuraEnabled public Integer sortOrder;
+        @AuraEnabled public String type;
+        @AuraEnabled public Boolean requiredInEntryForm; // BGE user marked this field as "required" when setting up the batch
 
         public BGEField() {
             isActive = false;
-            required = false;
             hide = false;
-            systemRequired = false;
+            alwaysRequired = false;
+            requiredInEntryForm = false;
+            conditionallyRequired = false;
         }
     }
 }
