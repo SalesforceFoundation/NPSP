@@ -91,11 +91,11 @@ global with sharing class REL_RelationshipsViewer_CTRL{
 
             // We should check object fields and not their relationships.
             List<String> contactFieldsToCheck = new List<String> {
-                                                                    'LastName',
-                                                                    'FirstName',
-                                                                    'Id',
-                                                                    'Title'
-                                                                };
+                'LastName',
+                'FirstName',
+                'Id',
+                'Title'
+            };
 
             List<String> relationshipFieldsToCheck = new List<String> {
                 'Id',
@@ -121,7 +121,8 @@ global with sharing class REL_RelationshipsViewer_CTRL{
                     // Thorws an exception if the user do not have permission for a given field.
                     checkFieldPermissionsForAnObject(objName, fieldNamesBySObjectNameForSOQL);                    
                 } catch (Exception e) {
-                    flsErrorMessage = e.getMessage();
+                    flsErrorMessage = String.format(Label.flsError, 
+                        new List<String> {objName+': '+String.join(fieldNamesBySObjectNameForSOQL.get(objName), ', ')});
                 }
             }
         }

@@ -67,7 +67,7 @@
                                 ctx.lineTo (pt2.x, pt2.y);
                                 ctx.stroke ();
         
-                                if(edge.data.label) {
+                                if (edge.data.label) {
                                     // set font style
                                     ctx.font = 'italic 10px sans-serif';
         
@@ -86,7 +86,7 @@
                                 var label = node.data.label||"";
                                 var link = node.data.link||"";
                                 var w = ctx.measureText(""+label).width + 20;
-                                if(!(""+label).match(/^[ \t]*$/)) {
+                                if (!(""+label).match(/^[ \t]*$/)) {
                                     pt.x = Math.floor(pt.x)
                                     pt.y = Math.floor(pt.y)
                                 }else{
@@ -94,13 +94,13 @@
                                 }
                     
                                 // draw a circle centered at pt
-                                if(node.data.color) {
+                                if (node.data.color) {
                                     ctx.fillStyle = node.data.color
                                 }else{
                                     ctx.fillStyle = "rgba(0,0,0,.2)"
                                 }
                     
-                                if(node.data.color=='none') {
+                                if (node.data.color=='none') {
                                     ctx.fillStyle = "white"
                                 }
                     
@@ -112,11 +112,11 @@
                                 node.data.radius = w/2;
                                 
                                 // center the label inside the circle 
-                                if(label) {
+                                if (label) {
                                     ctx.font = "Bold 12px Helvetica";
                                     ctx.textAlign = "center";
                                     ctx.fillStyle = "white";
-                                    if(node.data.color=='none') {
+                                    if (node.data.color=='none') {
                                         ctx.fillStyle = '#333333';
                                     }
                                     ctx.fillText(label||"", pt.x, pt.y+4);
@@ -136,16 +136,16 @@
                                     var pos = j$(canvas).offset();
                                     _mouseP = arbor.Point(e.pageX-pos.left, e.pageY-pos.top)
                                     nearest = particleSystem.nearest(_mouseP);
-                                    if(nearest.distance < nearest.node.data.radius + 10 ) {
-                                        if(nearest.node.data.id != currentContact.id || mouseOutComplete) {
+                                    if (nearest.distance < nearest.node.data.radius + 10 ) {
+                                        if (nearest.node.data.id != currentContact.id || mouseOutComplete) {
                                             currentContact.id = nearest.node.data.id;
                                             currentContact.name = nearest.node.data.label;
-                                            if(nearest.node.data.accountName) {
+                                            if (nearest.node.data.accountName) {
                                                 currentContact.accountName = nearest.node.data.accountName;
                                             } else{
                                                 currentContact.accountName = '';
                                             }                            
-                                            if(nearest.node.data.title) {
+                                            if (nearest.node.data.title) {
                                                 currentContact.title = nearest.node.data.title;
                                             } else {
                                                 currentContact.title = '';
@@ -154,7 +154,7 @@
                                             mouseOutComplete = false;
                                             drawToolTip(e.pageX-pos.left, e.pageY-pos.top,infoBox);
                                         }                  
-                                    } else if(!mouseOutComplete && nearest.distance > 100) {
+                                    } else if (!mouseOutComplete && nearest.distance > 100) {
                                         // hide text box
                                         hideToolTip();
                                     }
@@ -180,11 +180,11 @@
                                     Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.REL_RelationshipsViewer_CTRL.getRelationships}',
                                         currNode.data.id, false, relIds,function(result, event) {
                                                                                   
-                                        if(event.status) {
+                                        if (event.status) {
                                             output = '';  
                                             var relatedNode = null;
                                             var childColorIndex = currNode.data.colorIndex;
-                                            if(childColorIndex < colors.length - 1) {
+                                            if (childColorIndex < colors.length - 1) {
                                                 childColorIndex++;
                                             }
                           
@@ -192,22 +192,22 @@
                                             for (var i = 0; i < result.length; i++) {
                                                 // if a node for result contact does not exist on the page, create it
                                                 relatedNode = particleSystem.getNode(result[i].id);
-                                                if(result[i].status == '{!$Label.REL_Former}') {
+                                                if (result[i].status == '{!$Label.REL_Former}') {
                                                     thisLabel = result[i].type + ' ({!$Label.REL_Former})';
                                                 } else {
                                                     thisLabel = result[i].type;
                                                 }                                               
                                 
-                                                if(!relatedNode) {
+                                                if (!relatedNode) {
                                                     relatedNode = particleSystem.addNode(result[i].id, {label:result[i].firstName + ' ' + result[i].lastName, color:colors[childColorIndex]})
                                                 }
                                                 // only add edge ifthe relationship is not already drawn
-                                                if(particleSystem.getEdges(currNode, relatedNode).length == 0 && particleSystem.getEdges(relatedNode, currNode).length == 0) {
+                                                if (particleSystem.getEdges(currNode, relatedNode).length == 0 && particleSystem.getEdges(relatedNode, currNode).length == 0) {
                                                     particleSystem.addEdge(currNode, relatedNode, {label:thisLabel, status:result[i].status, colorIndex:childColorIndex, link:result[i].link, id:result[i].id, title:result[i].title, accountName:result[i].accountName, relId:result[i].relId});
                                                 } else { 
                                                     //if edge is already drawn, and the type is not listed, append the additional type to the label for this edge
                                                     var thisEdge;                                                                                                     
-                                                    if(particleSystem.getEdges(currNode, relatedNode).length != 0) {
+                                                    if (particleSystem.getEdges(currNode, relatedNode).length != 0) {
                                                         thisEdge = particleSystem.getEdges(currNode, relatedNode);
                                                     } else {
                                                         thisEdge = particleSystem.getEdges(relatedNode, currNode);                                                    
@@ -215,7 +215,7 @@
                                                     var thisEdgeLabel = '';                                                 
                                                     thisEdgeLabel = thisEdge[0].data.label;
                                                     //if this edge doesn't yet have the appended label
-                                                    if(thisEdgeLabel.indexOf(thisLabel) == -1) {
+                                                    if (thisEdgeLabel.indexOf(thisLabel) == -1) {
                                                         thisEdge[0].data.label = thisEdgeLabel + ', ' + thisLabel;
                                                     }
                                                 }                               
@@ -223,7 +223,7 @@
                                         }   
                                     },{escape:true});
         
-                                    if(dragged && dragged.node !== null) {
+                                    if (dragged && dragged.node !== null) {
                                         // while we're dragging, don't let physics move the node
                                         dragged.node.fixed = true
                                     }       
@@ -236,7 +236,7 @@
                                     var pos = j$(canvas).offset();
                                     var s = arbor.Point(e.pageX-pos.left, e.pageY-pos.top)
         
-                                    if(dragged && dragged.node !== null) {
+                                    if (dragged && dragged.node !== null) {
                                         var p = particleSystem.fromScreen(s)
                                         dragged.node.p = p
                                     }
@@ -244,8 +244,8 @@
                                 },
         
                                 dropped:function(e) {
-                                    if(dragged===null || dragged.node===undefined) return;
-                                    if(dragged.node !== null) dragged.node.fixed = false;
+                                    if (dragged===null || dragged.node===undefined) return;
+                                    if (dragged.node !== null) dragged.node.fixed = false;
                                     
                                     dragged.node.tempMass = 1000;
                                     dragged = null;
@@ -265,10 +265,10 @@
  
             j$(document).ready(function() {
                 var showPermissionError = '{!showPermissionError}';
-                if(showPermissionError == "false") {
+                if (showPermissionError == "false") {
                     //The initial call to the controller
                     Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.REL_RelationshipsViewer_CTRL.getRelationships}', '{!JSENCODE(id)}', true, null, function(result, event) {
-                        if(event.status) {
+                        if (event.status) {
                             RelationshipInfo = getRelationshipInfo();
                             sys = arbor.ParticleSystem(1000, 200, 0.2) // create the system with sensible repulsion/stiffness/friction
                             //particleSystem = sys;
@@ -276,15 +276,15 @@
                             sys.renderer = Renderer("#viewport") // our newly created renderer will have its .init() method called shortly by sys...
 
                             var conFirstName;
-                            //if(result[0].firstName === "undefined" || result[0].firstName == null) {
-                            if(!result[0].firstName) {
+                            //if (result[0].firstName === "undefined" || result[0].firstName == null) {
+                            if (!result[0].firstName) {
                                 conFirstName = "";
                             } else {
                                 conFirstName = result[0].firstName;
                             }
 
                             // if there are no relationships, arbor kind of freaks out, so don't let it try to draw a standalone node
-                            if(result.length < 2) {
+                            if (result.length < 2) {
                                 var notice = '<p><strong>{!$Label.REL_No_Relationships}</strong></p>';
                                 notice += '<p><a href="/' + result[0].id + '" style="color: white; font-weight: bold;" >[ {!$Label.REL_Return_to_Contact} ] </a><br/>';
                                 
@@ -293,14 +293,14 @@
                                 basenode = sys.addNode(result[0].id, {label:conFirstName + ' ' + result[0].lastName, color:colors[0], colorIndex:0, link:result[0].link, id:result[0].id, title:result[0].title, accountName:result[0].accountName})
                                 for (var i = 1; i < result.length; i++) {
                                     var thisLabel = '';
-                                    if(result[i].status == '{!$Label.REL_Former}') {
+                                    if (result[i].status == '{!$Label.REL_Former}') {
                                         thisLabel = result[i].type + ' ({!$Label.REL_Former})';
                                     } else {
                                     	thisLabel = result[i].type;
                                     }
                                     var thisConFirstName = '';
-                                    // if(result[i].firstName === "undefined" || result[i].firstName == null) {
-                                    if(!result[i].firstName) {
+                                    // if (result[i].firstName === "undefined" || result[i].firstName == null) {
+                                    if (!result[i].firstName) {
                                         thisConFirstName = '';
                                     } else {
                                         thisConFirstName = result[i].firstName;
@@ -309,7 +309,7 @@
                                     relatednode = sys.addNode(result[i].id, {label:thisConFirstName + ' ' + result[i].lastName, color:colors[1], colorIndex:1, link:result[i].link, id:result[i].id, title:result[i].title, accountName:result[i].accountName})
 
                                     //if edge is already drawn, and the type is not listed, append the additional type to the label for this edge
-                                    if(sys.getEdges(basenode, relatednode).length != 0) {
+                                    if (sys.getEdges(basenode, relatednode).length != 0) {
                                         var thisEdge;
                                         thisEdge = sys.getEdges(basenode, relatednode);
                                         var thisEdgeLabel = '';
@@ -340,8 +340,8 @@
                 // cheating by adding nonlinked versions of the text, so no one accidentally clicks on an invisible link
                 var infoText ='<p><strong>';
                 infoText += currentContact.name + '<br />';
-                if(currentContact.title) infoText += currentContact.title + '<br />';
-                if(currentContact.accountName) infoText += currentContact.accountName + '<br />';
+                if (currentContact.title) infoText += currentContact.title + '<br />';
+                if (currentContact.accountName) infoText += currentContact.accountName + '<br />';
                 infoText += '<br />[ {!$Label.REL_View_Contact_Record} ]<br />';
                 infoText += '[ {!$Label.REL_Create_New_Relationship}  ]<br />';
                 infoText += '[ {!$Label.REL_RECenter} ]<br />';
@@ -353,9 +353,9 @@
     
         function getRelationshipInfo() {
             //retrieve metadata about the Relationship object in this org
-            if(RelationshipInfo.prefix == '') {
+            if (RelationshipInfo.prefix == '') {
                 Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.REL_RelationshipsViewer_CTRL.getRelationshipInfo}', function(result,event) {
-                    if(event.status)
+                    if (event.status)
                         RelationshipInfo = result;                      
                 });       
             }        
@@ -365,8 +365,8 @@
         function getContactInfoBox() {
             var infoText ='<p><strong>';
             infoText += currentContact.name + '<br />';
-            if(currentContact.title) infoText += currentContact.title + '<br />';
-            if(currentContact.accountName) infoText += currentContact.accountName + '<br />';
+            if (currentContact.title) infoText += currentContact.title + '<br />';
+            if (currentContact.accountName) infoText += currentContact.accountName + '<br />';
             infoText += '<br /><a href=/' + currentContact.id + ' target="_blank" style="color: white; font-weight: bold;">[ {!$Label.REL_View_Contact_Record} ]</a><br />';
         
             //retrieve metadata about the Relationship object in this org
@@ -375,14 +375,14 @@
             var RelPrefix = ri.prefix;
             
             var RelNameId = '';
-            if(ri.NameField != null)
+            if (ri.NameField != null)
             RelNameId = ri.NameField + '=';
             var RelNameIdId = '';
-            if(ri.NameIdField != null)
+            if (ri.NameIdField != null)
                RelNameIdId = ri.NameIdField + '=';
             
             var uriString = '/' + RelPrefix + '/e?';
-            if(RelNameId != '' && RelNameIdId != '')
+            if (RelNameId != '' && RelNameIdId != '')
                 uriString += RelNameId + currentContact.name + '&' + RelNameIdId + currentContact.id + '&';  
         
             uriString += 'retURL=' + currentContact.id;
@@ -395,10 +395,10 @@
 
         // From Juan Mendes here: http://js-bits.blogspot.com/2010/07/canvas-rounded-corner-rectangles.html
         function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
-            if(typeof stroke == "undefined" ) { 
+            if (typeof stroke == "undefined" ) { 
                stroke = true;
             }
-            if(typeof radius === "undefined") {
+            if (typeof radius === "undefined") {
                radius = 5;
             }
             ctx.beginPath();
@@ -412,10 +412,10 @@
             ctx.lineTo(x, y + radius);
             ctx.quadraticCurveTo(x, y, x + radius, y);
             ctx.closePath();
-            if(stroke) {
+            if (stroke) {
                ctx.stroke();
             }
-            if(fill) {
+            if (fill) {
                ctx.fill();
             }        
         }
