@@ -357,6 +357,7 @@ public with sharing class BDI_DataImport_TEST {
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
     
+        Boolean usingAdv = ADV_PackageInfo_SVC.useAdv();
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(1, listCon.size());
@@ -367,7 +368,9 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(null, listDI[0].Contact1Imported__c);
         System.assertEquals(null, listDI[0].Contact2Imported__c);
         System.assertEquals(null, listDI[0].HouseholdAccountImported__c);
-        System.assertEquals(label.bdiErrorNonHHAccountContact, listDI[0].Contact1ImportStatus__c);
+        // With ADV installed, 1x1 Contacts can make Donations, but there cannot be a second Contact on the DI record
+        String importError = usingAdv ? label.bdiErrorOneToOneMultiContact : label.bdiErrorNonHHAccountContact;
+        System.assertEquals(importError, listDI[0].Contact1ImportStatus__c);
         System.assertEquals(null, listDI[0].Contact2ImportStatus__c);
         List<Address__c> listAddr = getAddresses();   
         System.assertEquals(0, listAddr.size());
