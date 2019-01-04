@@ -77,9 +77,8 @@
         <name>Addr_Valid_Key_Pair</name>
     </customLabels>
     <customLabels>
-        <label>&lt;p&gt;Cliquez sur « Vérifier toutes les adresses » pour vérifier et standardiser toutes les adresses dans votre organisation.
-        Le processus de vérification d’ensemble utilise les paramètres plus haut.&lt;/p&gt;
- &lt;br/&gt;</label>
+        <label>Cliquez sur « Vérifier toutes les adresses » pour vérifier et standardiser toutes les adresses dans votre organisation.
+        Le processus de vérification d’ensemble utilise les paramètres plus haut.</label>
         <name>Addr_Verification_Batch_Body</name>
     </customLabels>
     <customLabels>
