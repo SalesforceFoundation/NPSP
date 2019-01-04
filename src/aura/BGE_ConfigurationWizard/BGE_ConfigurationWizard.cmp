@@ -265,9 +265,9 @@
                                         <lightning:layoutItem size="2" class="slds-text-align_center slds-p-around_x-small">
                                             <lightning:input label="{!field.label + ': ' + $Label.c.lblRequired}"
                                                              type="checkbox"
-                                                             checked="{!field.required}"
-                                                             disabled="{!or(field.systemRequired, v.isReadOnly)}"
-                                                             aria-disabled="{!or(field.systemRequired, v.isReadOnly)}"
+                                                             checked="{!field.requiredInEntryForm}"
+                                                             disabled="{!field.alwaysRequired}"
+                                                             aria-disabled="{!field.alwaysRequired}"
                                                              variant="label-hidden"/>
                                         </lightning:layoutItem>
 
