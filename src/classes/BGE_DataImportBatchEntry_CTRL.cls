@@ -287,7 +287,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                         col.fieldName = dataImportDFR.getName();
                         col.readOnly = false;
                         col.defaultValue = field.defaultValue;
-                        col.required = field.required;
+                        col.required = field.requiredInEntryForm;
                         col.hide = field.hide;
                         col.type = dataImportDFR.getType().name().toLowerCase();
                         if (col.type == 'date') {
