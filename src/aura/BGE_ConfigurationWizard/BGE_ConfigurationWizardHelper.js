@@ -170,6 +170,10 @@
                                 value: currentField.id
                             }
                         );
+
+                        if (currentField.alwaysRequired) {
+                            currentFieldGroup.requiredOptions.push(currentField.id);
+                        }
                     });
 
                     if (activeFieldsBySObject[sObjectName]) {
@@ -222,17 +226,14 @@
                             sObjectLabel: currentField.sObjectLabel,
                             label: currentField.label,
                             defaultValue: currentField.defaultValue,
-                            required: currentField.required,
+                            requiredInEntryForm: currentField.requiredInEntryForm,
                             hide: currentField.hide,
                             type: currentField.type,
                             formatter: currentField.formatter,
-                            options: currentField.options
-                        }
-
-                        if (currentField.sObjectName === 'Opportunity' &&
-                            (currentField.name == 'npsp__Donation_Amount__c' || currentField.name == 'Donation_Amount__c')) {
-                            fieldInfo.systemRequired = true;
-                        }
+                            options: currentField.options,
+                            conditionallyRequired: currentField.conditionallyRequired,
+                            alwaysRequired: currentField.alwaysRequired
+                        };
 
                         currentFieldGroup.fields.push(fieldInfo);
                         currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
@@ -285,7 +286,7 @@
                         _batchMetadata.load(response.labels, component);
                     },
                     error: function(error) {
-                        _batchMetadatas.showError(error);
+                        _batchMetadata.showError(error);
                         console.log(error);
                     }
                 });
@@ -323,7 +324,8 @@
                         sObjectLabel: currentField.sObjectLabel,
                         sObjectName: currentField.sObjectName,
                         defaultValue: currentField.defaultValue,
-                        required: currentField.required,
+                        alwaysRequired: currentField.alwaysRequired,
+                        requiredInEntryForm: currentField.requiredInEntryForm,
                         hide: currentField.hide,
                         sortOrder: currentField.sortOrder,
                         type: currentField.type,
@@ -494,11 +496,12 @@
                         currentField.isActive = true;
                         currentField.defaultValue = activeFieldMap.get(currentField.id).defaultValue;
                         currentField.hide = activeFieldMap.get(currentField.id).hide;
-                        currentField.required = activeFieldMap.get(currentField.id).required;
+                        currentField.requiredInEntryForm = activeFieldMap.get(currentField.id).requiredInEntryForm;
                         currentField.sortOrder = activeFieldMap.get(currentField.id).sortOrder;
                         currentField.type = activeFieldMap.get(currentField.id).type;
                         currentField.formatter = activeFieldMap.get(currentField.id).formatter;
                         currentField.options = activeFieldMap.get(currentField.id).options;
+                        currentField.alwaysRequired = activeFieldMap.get(currentField.id).alwaysRequired;
                     } else {
                         currentField.isActive = false;
                     }
@@ -578,26 +581,26 @@
             function getRequiredFieldErrors() {
                 var errors = [];
                 var activeFieldsBySObject = getActivesBySObject();
-                var systemRequiredFieldsBySObject = _getSystemRequiredFieldsBySObject();
+                var conditionallyRequiredFieldsBySObject = _getConditionallyRequiredFieldsBySObject();
 
-                Object.keys(systemRequiredFieldsBySObject).forEach(function(currentSObject) {
+                Object.keys(conditionallyRequiredFieldsBySObject).forEach(function(currentSObject) {
                     var activeFieldNames = [];
-                    var systemRequiredFieldNames = new Map();
+                    var conditionallyRequiredFieldNames = new Map();
 
                     //only check validity if sObject is included in activeFieldsBySObject
                     if (activeFieldsBySObject[currentSObject]) {
                         activeFieldsBySObject[currentSObject].forEach(function(currentField) {
                             activeFieldNames.push(currentField.name);
                         });
-                        systemRequiredFieldsBySObject[currentSObject].forEach(function(currentField) {
-                            systemRequiredFieldNames.set(currentField.name, currentField.label);
+                        conditionallyRequiredFieldsBySObject[currentSObject].forEach(function(currentField) {
+                            conditionallyRequiredFieldNames.set(currentField.name, currentField.label);
                         });
 
-                        var containsSystemRequiredField = Array.from(systemRequiredFieldNames.keys()).every(function(currentFieldName) {
+                        var containsConditionallyRequiredField = Array.from(conditionallyRequiredFieldNames.keys()).every(function(currentFieldName) {
                             return activeFieldNames.indexOf(currentFieldName) > -1;
                         });
-                        if (!containsSystemRequiredField) {
-                            errors.push(currentSObject + ' (' + Array.from(systemRequiredFieldNames.values()).join(', ') + ')');
+                        if (!containsConditionallyRequiredField) {
+                            errors.push(currentSObject + ' (' + Array.from(conditionallyRequiredFieldNames.values()).join(', ') + ')');
                         }
                     }
                 });
@@ -645,7 +648,7 @@
                 _allFields.forEach(function(currentField) {
                     batchFieldOptions.forEach(function(currentActiveField) {
                         if (currentField.name === currentActiveField.name) {
-                            currentField.required = currentActiveField.required;
+                            currentField.requiredInEntryForm = currentActiveField.requiredInEntryForm;
                             currentField.hide = currentActiveField.hide;
                             currentField.defaultValue = currentActiveField.defaultValue;
                         }
@@ -658,17 +661,19 @@
             /* ******************PRIVATE FUNCTIONS************************/
 
             /**
-             * @description Gets the system required fields grouped by SObject.
-             * @return Map of SObject group to List of system required fields.
+             * @description Gets the conditionally required fields grouped by SObject.
+             * @return Map of SObject group to List of conditionally required fields.
+             * These fields are required only if any other field from that target SObject is selected.
+             * e.g., Account Name is required if Account Type is selected.
              */
-            function _getSystemRequiredFieldsBySObject() {
-                var systemRequiredFields = [];
+            function _getConditionallyRequiredFieldsBySObject() {
+                var conditionallyRequiredFields = [];
                 _allFields.forEach(function(currentField) {
-                    if (currentField.systemRequired) {
-                        systemRequiredFields.push(currentField);
+                    if (currentField.conditionallyRequired) {
+                        conditionallyRequiredFields.push(currentField);
                     }
                 });
-                return _groupFieldsBySObject(systemRequiredFields);
+                return _groupFieldsBySObject(conditionallyRequiredFields);
             }
 
             /**
@@ -794,6 +799,7 @@
              */
             function cancel() {
                 var homeEvent = $A.get('e.force:navigateToObjectHome');
+                var objectName = this.labels.sObjectName;
                 homeEvent.setParams({
                     'scope': objectName
                 });
@@ -808,7 +814,7 @@
              */
             function setMode(mode) {
                 this.mode = mode;
-                this.progressIndicatorStep = '1';
+                this.progressIndicatorStep = '0';
                 this.onMetadataUpdated.notify();
             }
 
@@ -842,14 +848,13 @@
             function setPageHeader() {
                 var headers = [
                     this.labels.recordInfoLabel,
-                    'Select Template',
                     $A.get('$Label.c.bgeBatchSelectFields'),
                     $A.get('$Label.c.bgeBatchSetFieldOptions'),
                     $A.get('$Label.c.bgeBatchSetBatchOptions')
                 ];
 
-                var progressIndicatorStepBase1 = parseInt(this.progressIndicatorStep) - 1;
-                this.pageHeader = headers[progressIndicatorStepBase1];
+                var progressIndicatorStep = parseInt(this.progressIndicatorStep);
+                this.pageHeader = headers[progressIndicatorStep];
                 this.onMetadataUpdated.notify();
             }
 
@@ -867,25 +872,8 @@
              * @return void.
              */
             function stepUp() {
-                var stepNum = parseInt(this.progressIndicatorStep);
-                switch (stepNum) {
-                    case 1:
-                        // TODO: adjust this when we add in step 2
-                        stepNum = 3;
-                        break;
-                    case 2:
-                        stepNum = 3;
-                        break;
-                    case 3:
-                        stepNum = 4;
-                        break;
-                    case 4:
-                        stepNum = 5;
-                        break;
-                    default:
-                        stepNum = 1;
-                        break;
-                }
+                let stepNum = parseInt(this.progressIndicatorStep);
+                stepNum++;
                 this.progressIndicatorStep = stepNum.toString();
                 this.onMetadataUpdated.notify();
             }
@@ -895,25 +883,8 @@
              * @return void.
              */
             function stepDown() {
-                var stepNum = parseInt(this.progressIndicatorStep);
-                switch (stepNum) {
-                    case 2:
-                        stepNum = 1;
-                        break;
-                    case 3:
-                        // TODO: adjust this when we add in step 2
-                        stepNum = 1;
-                        break;
-                    case 4:
-                        stepNum = 3;
-                        break;
-                    case 5:
-                        stepNum = 4;
-                        break;
-                    default:
-                        stepNum = 1;
-                        break;
-                }
+                let stepNum = parseInt(this.progressIndicatorStep);
+                stepNum--;
                 this.progressIndicatorStep = stepNum.toString();
                 this.onMetadataUpdated.notify();
             }
