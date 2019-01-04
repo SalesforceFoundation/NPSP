@@ -1006,7 +1006,7 @@ public class RD_RecurringDonations_TEST {
     */
     public static npe03__Recurring_Donation__c getRecurringDonation(Id rdId) {
         return [
-            SELECT Name, npe03__Last_Payment_Date__c, npe03__Paid_Amount__c
+            SELECT Name, npe03__Next_Payment_Date__c, npe03__Last_Payment_Date__c, npe03__Paid_Amount__c
             FROM npe03__Recurring_Donation__c 
             WHERE Id = :rdId
         ];

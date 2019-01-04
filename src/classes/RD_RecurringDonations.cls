@@ -92,7 +92,7 @@ public class RD_RecurringDonations {
     /*******************************************************************************************************
     * @description holds the current custom field mappings used when creating opps for the RD.
     */
-    public static map<String, npe03__Custom_Field_Mapping__c> customFieldMappingSettings = UTIL_ListCustomSettingsFacade.getMapCustomFieldMappings();
+    public static Map<String, npe03__Custom_Field_Mapping__c> customFieldMappingSettings = UTIL_ListCustomSettingsFacade.getMapCustomFieldMappings();
     
     /*******************************************************************************************************
     * @description holds the RD's CurrencyIsoCode field that is enabled in multicurrency organizations.
@@ -188,7 +188,7 @@ public class RD_RecurringDonations {
             }
 
             String rdQuery = strQueryRDNoWhere();
-            rdQuery += ' where id IN :RDids';
+            rdQuery += ' WHERE id IN :RDids';
 
             //get all possible rd records that may need updating, exclude ones that are closed.
             Map<Id, npe03__Recurring_Donation__c> rdMap = new Map<Id, npe03__Recurring_Donation__c>();
@@ -203,15 +203,15 @@ public class RD_RecurringDonations {
             //and the paid ammounts and paid installments
             for (SObject obj : [
                 SELECT COUNT(Id) oppcount, MIN(CloseDate) MinDate, MAX(CloseDate) MaxDate, SUM(Amount) Total,
-                    isClosed, npe03__Recurring_Donation__c rdid, isWon
+                    IsClosed, npe03__Recurring_Donation__c rdid, IsWon
                 FROM Opportunity 
                 WHERE npe03__Recurring_Donation__c IN :rdMap.keySet()
-                GROUP BY rollup(npe03__Recurring_Donation__c, isClosed, isWon)
+                GROUP BY rollup(npe03__Recurring_Donation__c, IsClosed, IsWon)
             ]) {
                 Id rdid = (Id)obj.get('rdid');
 
-                Boolean isClosed = (Boolean)obj.get('isClosed');
-                Boolean isWon = (Boolean)obj.get('isWon');
+                Boolean isClosed = (Boolean)obj.get('IsClosed');
+                Boolean isWon = (Boolean)obj.get('IsWon');
             
                 if (rdid != null) {
                     npe03__Recurring_Donation__c rd;
@@ -273,7 +273,7 @@ public class RD_RecurringDonations {
     */
     public static List<npe03__Recurring_Donation__c> requeryListRD(Set<Id> setRDId) {    
         String queryRCD = strQueryRDNoWhere();
-        queryRCD += ' where Id in :setRDId';
+        queryRCD += ' WHERE Id in :setRDId';
         
         return Database.query(queryRCD);
     }
@@ -344,7 +344,7 @@ public class RD_RecurringDonations {
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         
         //grab the contact id for role to take advantage of NPSP C&O if it exists
-        SObjectField ConIDForRole = Schema.sObjectType.Opportunity.fields.getMap().get('npe01__Contact_Id_for_Role__c');
+        SObjectField contactIdForRole = Schema.sObjectType.Opportunity.fields.getMap().get('npe01__Contact_Id_for_Role__c');
         Set<Id> updateRecurringDonationSet = new Set<Id>();            
         
         //Create a list of ContactIds used in these RecurringDonations
@@ -413,7 +413,7 @@ public class RD_RecurringDonations {
                         Contact c = contactMap.get(r.npe03__Contact__c);
                         opp.AccountId = c.AccountId;
 
-                        if (ConIDForRole != null) {
+                        if (contactIdForRole != null) {
                             opp.put('npe01__Contact_Id_For_Role__c', (String)c.id);
                         }
                     } 
@@ -515,7 +515,7 @@ public class RD_RecurringDonations {
                             Contact c = contactMap.get(r.npe03__Contact__c);
                             o.AccountId = c.AccountId;
 
-                            if (ConIDForRole != null) {
+                            if (contactIdForRole != null) {
                                 o.put('npe01__Contact_Id_For_Role__c', (String)c.id);
                             }
                         }
@@ -594,7 +594,7 @@ public class RD_RecurringDonations {
                 i++;
             }
                     
-            if (ConIDForRole == null) { 
+            if (contactIdForRole == null) { 
                 if (createdOppIds.size() > 1 && !System.isFuture() && !System.isBatch() && !RD_RecurringDonations_BATCH.isBatchButton) {
                     oppContactRolesFuture(createdOppIds); 
                 } else {
@@ -932,7 +932,7 @@ public class RD_RecurringDonations {
         Integer forecast_months = (Integer)rds.npe03__Opportunity_Forecast_Months__c;
 
         //grab the contact id for role to take advantage of NPSP C&O if it exists
-        SObjectField ConIDForRole = Schema.sObjectType.Opportunity.fields.getMap().get('npe01__Contact_Id_for_Role__c');
+        SObjectField contactIdForRole = Schema.sObjectType.Opportunity.fields.getMap().get('npe01__Contact_Id_for_Role__c');
         
         // Add Open-Ended Recurring Donation Ids to set so we can use this in selective filter later.
         Set<Id> openRDSet = new Set<Id>();
@@ -1007,7 +1007,7 @@ public class RD_RecurringDonations {
                             Contact c = contactMap.get(rd.npe03__Contact__c);
                             o.AccountId = c.AccountId;
 
-                            if (ConIDForRole != null) {
+                            if (contactIdForRole != null) {
                                 o.put('npe01__Contact_Id_For_Role__c', (String)c.id);
                             }
                         }
@@ -1072,7 +1072,7 @@ public class RD_RecurringDonations {
                 i++;
             }
 
-            if (ConIDForRole == null /* || Test.isRunningTest() */) {
+            if (contactIdForRole == null /* || Test.isRunningTest() */) {
                 if (createdOppIds.size() > 1 && !System.isFuture() && !System.isBatch() && !RD_RecurringDonations_BATCH.isBatchButton) {
                     oppContactRolesFuture(createdOppIds);
                 } else {

@@ -137,6 +137,49 @@ private with sharing class RD_RecurringDonations_TEST2 {
         System.assertEquals(TODAY, rd.npe03__Last_Payment_Date__c);
     }
 
+    /*******************************************************************************************************
+     * Verifies open Opportunities Close Date is updated when the Recurring Donation
+     * Next Donation Date is changed.
+     */ 
+    @isTest
+    private static void shouldUpdateOpenOppCloseDatesWhenRecDonationNextDonationDateIsChanged() {
+        RD_RecurringDonations_TEST.createRdSettingsWithYearForecast();           
+        
+        Account a = RD_RecurringDonations_TEST.buildAccount();
+        insert a;
+        
+        Contact c = RD_RecurringDonations_TEST.buildContact(a.Id);
+        insert c;       
+        
+        Date nextDonationDate = TODAY.toStartOfMonth();
+        Integer expectedInstallments = 2;
+
+        npe03__Recurring_Donation__c rd = RD_RecurringDonations_TEST.buildRecurringDonationMonthlyInstallment(null);
+        rd.npe03__Organization__c = a.id;
+        rd.npe03__Date_Established__c = nextDonationDate.addDays(-1);
+        rd.npe03__Next_Payment_Date__c = nextDonationDate;
+        insert rd;
+        
+        List<Opportunity> actualOpps = RD_RecurringDonations_TEST.getOppsOrderByCloseDate(rd.Id);
+        System.assertEquals(expectedInstallments, actualOpps.size(), 'The installment on Monthly RD should match expected Opp size');  
+        System.assertEquals(nextDonationDate, actualOpps[0].CloseDate, 'The first Close Date should be Next Donation Date');                  
+        
+        nextDonationDate = nextDonationDate.addDays(1);
+        rd.npe03__Next_Payment_Date__c = nextDonationDate;
+        Test.startTest();
+        update rd;
+        Test.stopTest();
+        
+        rd = RD_RecurringDonations_TEST.getRecurringDonation(rd.id); 
+        System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 'The RD Next Donation Date should be updated'); 
+        
+        actualOpps = RD_RecurringDonations_TEST.getOppsOrderByCloseDate(rd.Id);
+        System.assertEquals(expectedInstallments, actualOpps.size(), 'The installment on Monthly RD should match expected Opp size');  
+        System.assertEquals(nextDonationDate, actualOpps[0].CloseDate, 'The first Close Date should be updated Next Donation Date');       
+
+        System.assertEquals(expectedInstallments, RD_RecurringDonations_TEST.getOpenOppCount(rd.Id));
+    }
+
     //test inserting a closed/won opportunity for an open recurring donation
     @isTest
     private static void insertClosedOppForOpenEndedRecurringDonation() {
