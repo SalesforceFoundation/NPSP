@@ -456,54 +456,54 @@ public class OPP_OpportunityContactRolesTribute_TEST {
 
         Test.startTest();
 
-        System.assertEquals (false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(null, null, honoreeIdSet, false, 'NO_FIELD', null), 'getRole will return a Null, which will cause it to decide this field/test is not in use, same as if role value was not set');
+        System.assertEquals (false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(null, null, honoreeIdSet, false, 'NO_FIELD', null), 'Expected false because we are passing a field not managed by this process.  Should never be true in this case, but also so never be invoked.');
 
-        System.assertEquals (false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, null, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT, cons[0].Id), 'Honoree Superceded by Primary Contact, no old record');
+        System.assertEquals (false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, null, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT, cons[0].Id), 'Expected false because Honoree Superceded by Primary Contact, no old record.');
 
-        System.assertEquals (true, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, null, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT, cons[1].Id), 'Honoree Not Superceded by Primary Contact, no old record');
+        System.assertEquals (true, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, null, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT, cons[1].Id), 'Expected true because Honoree Not Superceded by Primary Contact, no old record');
 
-        System.assertEquals (false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, null, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, cons[1].Id), 'Notification Recipient Superceded by Primary Contact, no old record, no honorees present');
+        System.assertEquals (false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, null, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, cons[1].Id), 'Expected false because Notification Recipient Superceded by Primary Contact, no old record, no honorees present');
 
-        System.assertEquals (true, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, null, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, cons[3].Id), 'Notification Recipient Not Superceded by Primary Contact or Honoree Id Set, no old record, no honorees present');
+        System.assertEquals (true, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, null, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, cons[3].Id), 'Expected true because Notification Recipient Not Superceded by Primary Contact or Honoree Id Set, no old record, no honorees present');
 
         honoreeIdSet.add(cons[2].Id);
 
-        System.assertEquals (true, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, null, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, cons[3].Id), 'Notification Recipient Not Superceded by Primary Contact or Honoree Id Set, 1 Honoree Present');
+        System.assertEquals (true, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, null, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, cons[3].Id), 'Expected true because Notification Recipient Not Superceded by Primary Contact or Honoree Id Set, 1 Honoree Present');
         honoreeIdSet.add(cons[1].Id);
 
-        System.assertEquals (false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, null, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, cons[3].Id), 'Notification Recipient Superceded by Honoree Id Set, 2 Honoree Present');
+        System.assertEquals (false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, null, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, cons[3].Id), 'Expected false because Notification Recipient Superceded by Honoree Id Set, 2 Honoree Present');
 
         honoreeIdSet.clear();
 
-        System.assertEquals (false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT, null), 'Honoree has not changed, and not ignoring field changes, no Primary Contact present');
+        System.assertEquals (false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT, null), 'Expected false because Honoree has not changed, and not ignoring field changes, no Primary Contact present');
 
         oldOpp.Honoree_Contact__c = cons[1].Id;
 
-        System.assertEquals (true, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT, null), 'Honoree has changed, and not ignoring field changes, no Primary Contact present');
+        System.assertEquals (true, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT, null), 'Expected true because Honoree has changed, and not ignoring field changes, no Primary Contact present');
         // Setting Honoree Contact to null on both old and new records
         opp.Honoree_Contact__c = null;
         oldOpp.Honoree_Contact__c = null;
 
-        System.assertEquals(false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT, null), 'Honoree is null and has not changed, and not ignoring field changes, no Primary Contact present');
+        System.assertEquals(false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT, null), 'Expected false because Honoree is null and has not changed, and not ignoring field changes, no Primary Contact present');
 
         // Setting Honoree Contact to same on both old and new records
         opp.Honoree_Contact__c = cons[1].Id;
         oldOpp.Honoree_Contact__c = cons[1].Id;
 
-        System.assertEquals(true, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, true, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT, null), 'Honoree is not null and has not changed and is ignoring field changes, no Primary Contact present');
+        System.assertEquals(true, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, true, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT, null), 'Expected true because Honoree is not null and has not changed and is ignoring field changes, no Primary Contact present');
 
         opp.Honoree_Contact__c = cons[2].Id;
-        System.assertEquals (false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT, cons[2].Id), 'Honoree same as Primary Contact so update should not be needed');
+        System.assertEquals (false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_HONOREE_CONTACT, cons[2].Id), 'Expected false because Honoree same as Primary Contact so update should not be needed');
 
         opp.Notification_Recipient_Contact__c = cons[2].Id;
-        System.assertEquals(false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, cons[2].Id), 'Notification Recipient Contact same as Primary Contact so update should not be needed');
+        System.assertEquals(false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, cons[2].Id), 'Expected false because Notification Recipient Contact same as Primary Contact so update should not be needed');
 
         // Setting Notification Recipient Contact to value in honoreeIdSet
         opp.Notification_Recipient_Contact__c = cons[1].Id;
         oldOpp.Notification_Recipient_Contact__c = cons[2].Id;
         honoreeIdSet.add(cons[1].Id);
 
-        System.assertEquals(false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, cons[2].Id), 'Notification Recipient is not null and has changed and matches one of the honorees');
+        System.assertEquals(false, OPP_OpportunityContactRoles_TDTM.needsManageOCR(opp, oldOpp, honoreeIdSet, false, OPP_OpportunityContactRoles_TDTM.FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, cons[2].Id), 'Expected false because Notification Recipient is not null and has changed and matches one of the honorees');
     }
 
     /******************************************************************************************************

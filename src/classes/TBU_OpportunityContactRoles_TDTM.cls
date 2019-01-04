@@ -255,8 +255,7 @@ public class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable {
     ******************************************************************************************************/
     private String buildOpportunitySOQL() {
 
-        // Get all of the fields on the object
-        Set<String> fieldNames = UTIL_Describe.getAllFieldsDescribe('Opportunity').keySet();
+        Set<String> fieldNames = getFilterableFieldNames('Opportunity');
 
         // Build a Dynamic Query String.
         return new UTIL_Query()
@@ -265,4 +264,28 @@ public class TBU_OpportunityContactRoles_TDTM extends TDTM_Runnable {
                 .withWhere('Id IN :oppIds')
                 .build();
     }
+
+    /******************************************************************************************************
+    * @description Get All fields from the Opportunity object that can be filtered.  This excludes long
+    * textareas, blobs, etc.
+    * @param objectName The name of the object you want the fields for
+    * @return Set<String> A set of field names (lower case)
+    ******************************************************************************************************/
+    @testVisible private static Set<String> getFilterableFieldNames(String objectName) {
+        // Get all of the fields on the object
+        Map<String, Schema.DescribeFieldResult> allFields = UTIL_Describe.getAllFieldsDescribe(objectName);
+
+        Set<String> filterableFieldNames = new Set<String>();
+
+        for (String fieldName :allFields.keySet()) {
+            Schema.DescribeFieldResult fieldDesc = allFields.get(fieldName);
+            if (fieldDesc.isFilterable()) { // Basically, we will only include fields that can be considered in the where clause, eliminating long textareas and blobs, which we do not need.
+                filterableFieldNames.add(fieldName);
+            }
+        }
+
+        return filterableFieldNames;
+    }
+
+
 }

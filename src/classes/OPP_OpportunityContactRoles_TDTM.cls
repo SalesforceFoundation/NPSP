@@ -191,7 +191,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
         Map<Id, Contact> mapConIdContact = new Map<Id, Contact>();
 
-        List<String> listFields = new List<String>{FIELD_NAME_HONOREE_CONTACT };
+        List<String> listFields = new List<String>{ FIELD_NAME_HONOREE_CONTACT };
 
         if (sObjType == Schema.Opportunity.getSObjectType()) {
             listFields.add (FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT);
@@ -199,13 +199,13 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
         for (Integer i=0; i<listSObjs.size(); i++) {
             Sobject newSObj = listSObjs[i];
-            Sobject oldSObj = listOldSObjs!=null && !listOldSObjs.IsEmpty() ? listOldSObjs[i] :  sObjType.newSObject();
+            Sobject oldSObj = listOldSObjs != null && !listOldSObjs.IsEmpty() ? listOldSObjs[i] :  sObjType.newSObject();
             for (String field : listFields) {
                 if (newSObj.get(field) != oldSObj.get(field)) {
-                    if (newSObj.get(field)!=null) {
+                    if (newSObj.get(field) != null) {
                         mapConIdContact.put((Id)newSObj.get(field), null);
                     }
-                    if (oldSObj.get(field)!=null) {
+                    if (oldSObj.get(field) != null) {
                         mapConIdContact.put((Id)oldSObj.get(field), null);
                     }
                 }
@@ -219,7 +219,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                                                     WHERE   Id IN :mapConIdContact.keySet()]);
             for (Integer i=0; i<listSObjs.size(); i++) {
                 Sobject newSObj = listSObjs[i];
-                Sobject oldSObj = listOldSObjs!=null && !listOldSObjs.IsEmpty() ? listOldSObjs[i] :  sObjType.newSObject();
+                Sobject oldSObj = listOldSObjs != null && !listOldSObjs.IsEmpty() ? listOldSObjs[i] :  sObjType.newSObject();
 
                 for (String field : listFields) {
                     if (newSObj.get(field) != oldSObj.get(field)) {
@@ -227,7 +227,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                         String nameField = field.replace('Contact', 'Name');
 
                         String oldName;
-                        if (oldSObj.get(field)!=null) {
+                        if (oldSObj.get(field) != null) {
                             oldName = mapConIdContact.get((Id)oldSObj.get(field)).Name;
                         }
 

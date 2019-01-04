@@ -40,7 +40,8 @@ private class TBU_OpportunityContactRoles_TEST {
     /******************************************************************************************************
     * @description Test update Honoree/Notification Name when the look up changes
     ********************************************************************************************************/
-    static testMethod void populateHonoreeNotificationNameField(){
+    @isTest
+    static void populateHonoreeNotificationNameField() {
         OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL);
 
         //Insert three Contacts
@@ -85,7 +86,7 @@ private class TBU_OpportunityContactRoles_TEST {
     /******************************************************************************************************
     * @description Prevent user insert Tribute record if the current setting is Single Tribute only
     ********************************************************************************************************/
-    static testMethod void preventHonoreeNotificationInsertSingleTribute(){
+    @isTest static void preventHonoreeNotificationInsertSingleTribute() {
         OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_Single_VAL);
 
         //Insert three Contacts
@@ -120,7 +121,8 @@ private class TBU_OpportunityContactRoles_TEST {
     /******************************************************************************************************
     * @description Prevent user insert Tribute record if the current setting is Mix mode
     ********************************************************************************************************/
-    static testMethod void preventHonoreeNotificationInsertMultipleTributeLose(){
+    @isTest
+    static void preventHonoreeNotificationInsertMultipleTributeLose() {
         OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MIXED_VAL);
 
         //Insert three Contacts
@@ -156,7 +158,8 @@ private class TBU_OpportunityContactRoles_TEST {
     /******************************************************************************************************
     * @description Test creating OCR based on the Honoree/Notification when insert Tribute
     ********************************************************************************************************/
-    static testMethod void honoreeNotificationInsert(){
+    @isTest
+    static void honoreeNotificationInsert() {
         OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL);
 
         //Insert three Contacts
@@ -214,7 +217,8 @@ private class TBU_OpportunityContactRoles_TEST {
     /******************************************************************************************************
     * @description Test upserting OCR based on the Honoree/Notification when insert/update Tribute
     ********************************************************************************************************/
-    static testMethod void honoreeNotificationUpdate(){
+    @isTest
+    static void honoreeNotificationUpdate() {
         OPP_OpportunityContactRolesTribute_TEST.createContactAndOrgSettingsForOCRTributeTests(TBU_MultipleTributesSettingsFacade.TRIBUTE_MULTIPLE_VAL);
 
         //Insert three Contacts
@@ -291,5 +295,17 @@ private class TBU_OpportunityContactRoles_TEST {
 
         queryTribute = [SELECT Id, Honoree_Name__c FROM Tribute__c WHERE Opportunity__c = :opp.Id];
         System.assert(String.isBlank(queryTribute[0].Honoree_Name__c));
+    }
+
+    /******************************************************************************************************
+    * @description Test Filterable Fieldnames method
+    ********************************************************************************************************/
+    @isTest
+    static void getFilterableFieldNamesMethod() {
+
+        Set<String> oppFieldNames = TBU_OpportunityContactRoles_TDTM.getFilterableFieldNames('Opportunity');
+        System.assertNotEquals(0, oppFieldNames.size(), 'Should be some fields present');
+        System.assert(oppFieldNames.contains('id'), 'Id should be present');
+        System.assert(oppFieldNames.contains('stagename'), 'StageName should be present');
     }
 }
