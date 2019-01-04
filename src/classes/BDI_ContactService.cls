@@ -309,6 +309,7 @@ public with sharing class BDI_ContactService {
     */
     private void associateDIsWithMatchedOrNewContacts(String strCx) {
         Integer iCx = strCx == 'Contact1' ? 1 : 2;
+        Boolean modelIsOneToOne = CAO_Constants.isOneToOne();
 
         for (DataImport__c di : bdi.listDI) {
             // skip di's that already have an error
@@ -316,6 +317,9 @@ public with sharing class BDI_ContactService {
                 continue;
             List<String> listDiKey = listDIKeyCx(di, strCx);
             Contact con = ContactFromDiKeys(listDiKey);
+            Boolean bothContactsSpecified = (strCx == 'Contact1' && isContactSpecified(di, 'Contact2')) || 
+                (strCx == 'Contact2' && isContactSpecified(di, 'Contact1'));
+
             if (con != null) {
                 Boolean usingAdv = ADV_PackageInfo_SVC.useAdv();
                 Boolean contactAndAccountExist = con.Id != null && con.AccountId != null;
@@ -332,12 +336,24 @@ public with sharing class BDI_ContactService {
                     bdi.LogBDIError(di, accountError, strCx + 'ImportStatus__c');
                     continue;
                 }
+                // Both Contacts are specified, and at least one of them is one-to-one
+                else if(usingAdvAccountOneToOne && bothContactsSpecified){
+                    bdi.LogBDIError(di, label.bdiErrorOneToOneMultiContact, strCx + 'ImportStatus__c');
+                    continue;
+                }
+
                 di.put(strCx + 'Imported__c', con.id);
                 di.put(strCx + 'ImportStatus__c', con.id != null ? bdi.statusMatchedExisting() : bdi.statusMatchedNew());
                 if (con.AccountId != null && di.HouseholdAccountImported__c == null) {
                         di.HouseholdAccountImported__c = con.AccountId;
                 }
             } else if (listDiKey.size() > 0) {
+                // The Account model is 1x1, both Contacts are specified, and at least one of the Contacts is new
+                if (modelIsOneToOne && bothContactsSpecified) {
+                    bdi.LogBDIError(di, label.bdiErrorOneToOneMultiContact, strCx + 'ImportStatus__c');
+                    continue;
+                }
+
                 con = new Contact();
                 di.put(strCx + 'ImportStatus__c', bdi.statusCreatedNew());
                 di.put(strCx + '_Preferred_Email__c', strPreferredEmail(di, iCx));
