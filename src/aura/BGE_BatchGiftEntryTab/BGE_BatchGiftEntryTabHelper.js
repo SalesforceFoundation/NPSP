@@ -66,14 +66,21 @@
      * @description: opens New Batch Wizard in modal
      */
     openNewBatchWizard: function(component) {
-        var modalBody;
-        var modalHeader;
-        var modalFooter;
+        let modalBody;
+        let modalHeader;
+        let modalFooter;
+
+        let progressStepLabels = [
+            $A.get('$Label.c.bgeBatchOverviewWizard'),
+            $A.get('$Label.c.bgeBatchSelectFields'),
+            $A.get('$Label.c.bgeBatchSetFieldOptions'),
+            $A.get('$Label.c.bgeBatchSetBatchOptions')
+        ];
 
         $A.createComponents([
                 ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c'}],
                 ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
-                ['c:modalFooter', {}]
+                ['c:modalFooter', {progressStepLabels: progressStepLabels}]
             ],
             function(components, status, errorMessage){
                 if (status === 'SUCCESS') {
