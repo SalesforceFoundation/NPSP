@@ -101,10 +101,12 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
      * @return PageReference Page specified in the 'retURL' parameter or Home page
      */
     private PageReference findDIRecords(Boolean isDeleteAll) {
+        final Integer maxRecords = Limits.getLimitDMLRows() - Limits.getDMLRows();
+
         if (isDeleteAll) {
-            dataImports = [SELECT Id FROM DataImport__c LIMIT 10000];
+            dataImports = [SELECT Id FROM DataImport__c LIMIT :maxRecords];
         } else {
-            dataImports = [SELECT Id FROM DataImport__c WHERE Status__c = :BDI_DataImport_API.bdiImported LIMIT 10000];
+            dataImports = [SELECT Id FROM DataImport__c WHERE Status__c = :BDI_DataImport_API.bdiImported LIMIT :maxRecords];
         }
 
         ApexPages.addMessage(
