@@ -106,13 +106,18 @@ class NPSP(object):
         self.selenium.set_focus_to_element(locator)
         self.selenium.get_webelement(locator).click()
         self.wait_for_locator('popup')
-    
+
+    def open_date_picker(self, title):
+        locator = npsp_lex_locators['record']['list'].format(title)
+        self.selenium.set_focus_to_element(locator)
+        self.selenium.get_webelement(locator).click()
+
     def pick_date(self, value):
         """To pick a date from the date picker"""
         locator = npsp_lex_locators['record']['datepicker'].format(value)
         self.selenium.set_focus_to_element(locator)
         self.selenium.get_webelement(locator).click() 
-       
+
     def change_month(self, value):    
         """To pick month in the date picker"""
         locator = npsp_lex_locators['record']['month_pick'].format(value)

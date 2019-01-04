@@ -223,7 +223,7 @@ Create Opportunities
     Click Dropdown    Stage
     Click Link    link=Closed Won
     Populate Lookup Field    Account Name    ${hh_name}
-    Click Dropdown    Close Date
+    Open Date Picker    Close Date
     Pick Date    10
     Select Lightning Checkbox    Do Not Automatically Create Payment
     Click Modal Button        Save
