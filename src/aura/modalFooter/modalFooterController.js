@@ -3,7 +3,6 @@
      * @description: handles ltng:sendMessage from child component
      */
     handleMessage: function(component, event) {
-        //todo: see if the entire set of progress steps can be dynamic (appears there might be a bug?) https://success.salesforce.com/ideaView?id=0873A000000TuFUQA0
         var channel = event.getParam('channel');
         var message = event.getParam('message');
 
@@ -41,6 +40,7 @@
      * @description: sends save event to modal
      */
     save: function(component, event, helper) {
+        component.set('v.pendingSave', true);
         helper.sendMessage(component, 'save');
     }
 
