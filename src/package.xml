@@ -1466,6 +1466,8 @@
         <members>bgeNewGift</members>
         <members>bgeProcessBatch</members>
         <members>bgeTabHeader</members>
+        <members>bgeWizardHideAdvancedOptions</members>
+        <members>bgeWizardShowAdvancedOptions</members>
         <members>btnRemove</members>
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
