@@ -305,7 +305,8 @@ private class TBU_OpportunityContactRoles_TEST {
 
         Set<String> oppFieldNames = TBU_OpportunityContactRoles_TDTM.getFilterableFieldNames('Opportunity');
         System.assertNotEquals(0, oppFieldNames.size(), 'Should be some fields present');
-        System.assert(oppFieldNames.contains('id'), 'Id should be present');
-        System.assert(oppFieldNames.contains('stagename'), 'StageName should be present');
+        System.assertEquals(true, oppFieldNames.contains('id'), 'Id should be present');
+        System.assertEquals(true, oppFieldNames.contains('stagename'), 'StageName should be present');
+        System.assertNotEquals(true, oppFieldNames.contains('description'), 'Description should not be present');
     }
 }
