@@ -32,6 +32,7 @@
                 batchInfoView.donationMatchingOptions = batchInfo.donationMatchingOptions;
                 batchInfoView.donationMatchingRule = batchInfo.donationMatchingRule;
                 batchInfoView.donationDateRange = batchInfo.donationDateRange;
+                batchInfoView.noMatchOnDate = batchInfo.noMatchOnDate;
                 batchInfoView.postProcessClass = batchInfo.postProcessClass;
 
                 component.set('v.batchInfo', batchInfoView);
@@ -55,6 +56,7 @@
                 donationMatchingOptions: [],
                 donationMatchingRule: [],
                 donationDateRange: '',
+                noMatchOnDate: false,
                 postProcessClass: ''
             };
         })(component, model);
@@ -81,6 +83,7 @@
                 batchMetadataView.errorMessage = batchMetadata.errorMessage;
                 batchMetadataView.pageHeader = batchMetadata.pageHeader;
                 batchMetadataView.pendingSave = batchMetadata.pendingSave;
+                batchMetadataView.showAdvancedOptions = batchMetadata.showAdvancedOptions;
 
                 if (!batchMetadataView.hasError) {
                     batchMetadataView.progressIndicatorStep = batchMetadata.progressIndicatorStep;
@@ -132,7 +135,8 @@
                 progressIndicatorStep: '',
                 hasError: false,
                 errorMessage: '',
-                pendingSave: false
+                pendingSave: false,
+                showAdvancedOptions: false
             };
         })(component, model);
     },
@@ -416,6 +420,7 @@
                 this.donationMatchingRule = info.donationMatchingRule;
                 this.donationDateRange = info.donationDateRange;
                 this.postProcessClass = info.postProcessClass;
+                this.noMatchOnDate = info.donationMatchingRule.indexOf("donation_date__c") < 0;
                 this.onInfoUpdated.notify();
             }
 
@@ -447,9 +452,9 @@
                 donationMatchingRule: [],
                 donationDateRange: '',
                 postProcessClass: '',
-
                 load: load,
                 isValid: isValid,
+                noMatchOnDate: false,
                 onInfoUpdated: _onInfoUpdated
             }
         })(this.Event());
@@ -736,7 +741,7 @@
         return (function (Event) {
             var _onMetadataUpdated = new Event(this);
 
-            /* **********************************************************
+            /************************************************************
              * @Description Loads the Info, and notify all the
              *      _onMetadataUpdated listeners.
              * @return void.
@@ -864,6 +869,15 @@
             }
 
             /**
+             * @description sets the showAdvancedOptions flag to hide/reveal the advanced options accordingly
+             * @return void.
+             */
+            function toggleShowAdvanced() {
+                this.showAdvancedOptions = !this.showAdvancedOptions;
+                this.onMetadataUpdated.notify();
+            }            
+
+            /**
              * @description Increments the step for the progressIndicator
              * @return void.
              */
@@ -894,6 +908,7 @@
                 errorMessage: '',
                 pageHeader: '',
                 pendingSave: false,
+                showAdvancedOptions: false,
                 load: load,
                 navigateToRecord: navigateToRecord,
                 nextStep: nextStep,
@@ -906,7 +921,8 @@
                 stepUp: stepUp,
                 stepDown: stepDown,
                 togglePendingSave: togglePendingSave,
-                onMetadataUpdated: _onMetadataUpdated
+                onMetadataUpdated: _onMetadataUpdated,
+                toggleShowAdvanced: toggleShowAdvanced
             }
         })(this.Event());
     },
