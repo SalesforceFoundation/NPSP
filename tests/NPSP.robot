@@ -100,6 +100,16 @@ API Create GAU
     ...               Name=${name}
     &{gau} =     Salesforce Get  ${ns}General_Accounting_Unit__c  ${gau_id}
     [return]         &{gau}  
+
+API Create DataImportBatch
+    [Arguments]      &{fields}
+    ${name} =   Generate Random String
+    ${batch_id} =  Salesforce Insert  DataImportBatch__c
+    ...                  Name=${name}
+    ...                  &{fields}
+    &{batch} =     Salesforce Get  DataImportBatch__c  ${batch_id}
+    [return]         &{batch}
+    
    
 Create Contact
     ${first_name} =           Generate Random String

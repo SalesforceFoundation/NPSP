@@ -72,6 +72,11 @@ class NPSP(object):
         field = self.selenium.get_webelement(xpath)
         field.send_keys(value)
         time.sleep(1)
+#         if loc == ("Search Contacts" or "Search Accounts"):
+        field.send_keys(Keys.ENTER)
+#             field.send_keys(Keys.ARROW_DOWN)
+#             field.send_keys(Keys.ENTER)
+        
         
         
     def click_record_button(self, title):
@@ -834,8 +839,30 @@ class NPSP(object):
         loc=self.get_npsp_locator(path, *args, **kwargs)
         self.selenium.execute_javascript("window.document.evaluate('{}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)".format(loc))
         
+    def get_bge_card_header(self,title):   
+        """Validates if the specified header field has specified value"""   
+        locator= npsp_lex_locators['bge']['card-header'].format(title)
+        id=self.selenium.get_webelement(locator).text   
+        return id    
         
+    def click_bge_edit_button(self, title):  
+        locator=npsp_lex_locators['bge']['edit_button'].format(title)
+        self.selenium.get_webelement(locator).click()
+            
+    def populate_bge_edit_field(self, title, value):
+        locator=npsp_lex_locators['bge']['edit_field'].format(title)
+        self.selenium.set_focus_to_element(locator)
+        field=self.selenium.get_webelement(locator)
+        field.send_keys(Keys.BACK_SPACE + Keys.BACK_SPACE) 
+#         field=self.salesforce._populate_field(locator, value)
+        time.sleep(2)  
+        field.send_keys(value)  
         
-        
-        
-                
+    def verify_row_count(self,value):
+        """verifies if actual row count matches with expected value"""
+        locator=npsp_lex_locators['bge']['count']
+        actual_value=self.selenium.get_webelements(locator)
+        count=len(actual_value)
+        assert value == actual_value, "Expected value to be {} but found {}".format(
+            value, actual_value
+        )             
