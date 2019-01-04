@@ -41,7 +41,6 @@ public class OPP_OpportunityContactRolesTribute_TEST {
     * to specify Multiple Tributes Type supported
     * @param tributeType Type of Tributes supported
     *******************************************************************************************************/
-    @isTest
     public static npe01__Contacts_and_Orgs_Settings__c createContactAndOrgSettingsForOCRTributeTests(String tributeType) {
         return UTIL_CustomSettingsFacade.getContactsSettingsForTests(
                 new npe01__Contacts_and_Orgs_Settings__c(
