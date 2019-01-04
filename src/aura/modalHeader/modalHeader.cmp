@@ -32,7 +32,7 @@
   @date 2018
   @group
   @group-content
-  @description Component used as header in modal
+  @description Dynamic component used in a modal with a changing header.
 -->
 <aura:component>
 
