@@ -136,15 +136,22 @@
      * @description: opens the batch wizard modal for edit mode of the component
      */
     openBatchWizard: function(component, event) {
-        var modalBody;
-        var modalHeader;
-        var modalFooter;
-        var batchId = component.get('v.recordId');
+        let modalBody;
+        let modalHeader;
+        let modalFooter;
+        const batchId = component.get('v.recordId');
+
+        let progressStepLabels = [
+            $A.get('$Label.c.bgeBatchOverviewWizard'),
+            $A.get('$Label.c.bgeBatchSelectFields'),
+            $A.get('$Label.c.bgeBatchSetFieldOptions'),
+            $A.get('$Label.c.bgeBatchSetBatchOptions')
+        ];
 
         $A.createComponents([
                 ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c', recordId: batchId, isReadOnly: false}],
                 ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
-                ['c:modalFooter', {}]
+                ['c:modalFooter', {progressStepLabels: progressStepLabels}]
             ],
             function(components, status, errorMessage){
                 if (status === 'SUCCESS') {
