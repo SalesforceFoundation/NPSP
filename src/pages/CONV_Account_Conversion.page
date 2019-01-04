@@ -277,11 +277,11 @@
                         function (result, event) {
                         if (event.status) {
                             if (!result) {
-                                alert("{!$Label.CONV_Selected_Field_Bad}");
+                                alert("{!JSENCODE($Label.CONV_Selected_Field_Bad)}");
                                 selectElement.value = '-None-';
                             }
                         } else {
-                            alert("{!$Label.CONV_Selected_Field_Verification_Failure}");
+                            alert("{!JSENCODE($Label.CONV_Selected_Field_Verification_Failure)}");
                         }
                     });
                 }
