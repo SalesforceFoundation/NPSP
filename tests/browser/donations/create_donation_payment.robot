@@ -20,7 +20,7 @@ Create Donation and Opportunity and Create Payment Manually
     Populate Field    Payment Amount    100
     Click Dropdown    Payment Method
     Click Link    link=Credit Card
-    Click Dropdown    Payment Date
+    Open Date Picker    Payment Date
     Pick Date    Today
     Click Modal Button        Save
     #Sleep    2
