@@ -30,7 +30,7 @@ Delete Contact with Closed Won Opportunity from Household
     Click Dropdown    Stage
     Click Link    link=Closed Won
     Populate Lookup Field    Account Name    &{Contact}[LastName] Household
-    Click Dropdown    Close Date
+    Open Date Picker    Close Date
     Pick Date    10
     Click Modal Button        Save
     #Sleep    5
