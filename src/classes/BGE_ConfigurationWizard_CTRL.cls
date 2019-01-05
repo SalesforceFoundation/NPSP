@@ -354,7 +354,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         model.donationMatchingBehavior = BDI_DataImport_API.ExactMatchOrCreate;
         model.donationMatchingClass = '';
         model.postProcessClass = '';
-        model.runOpportunityRollupsWhileProcessing = false;
+        model.runOpportunityRollupsWhileProcessing = true;
         model.activeFields = getDefaultActiveFields();
 
         List<String> donationMatchingRules = new List<String>();
