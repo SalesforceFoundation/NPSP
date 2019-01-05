@@ -22,6 +22,7 @@ npsp_lex_locators={
             'item':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//h3//a",
          },    
     },
+    'popup': "//div[contains(@class, 'uiPopupTarget')][contains(@class, 'visible')]",
     'test':'/html/body/div[6]/table/tbody/tr[23]/td[1]/a',
     'frame':'//iframe[@title= "{}"]',
     'id':'//*[contains(@id,"{}")]',
