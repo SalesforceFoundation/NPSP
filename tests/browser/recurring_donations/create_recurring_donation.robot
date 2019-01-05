@@ -25,7 +25,7 @@ Create Open Recurring Donation With Monthly Installment
     ...                       Recurring Donation Name= Robot Recurring Donation
     ...                       Amount=100 
     ...                       Installments=1 
-    Click Dropdown    Date Established
+    Open Date Picker    Date Established
     Change Month      Go to previous month
     Pick Date         10 
     Click Dropdown    Open Ended Status
