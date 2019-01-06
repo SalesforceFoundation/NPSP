@@ -20,15 +20,13 @@ Delete Contact with Closed Won Opportunity from Household
     ...                       Amount=100 
     Click Dropdown    Stage
     Click Link    link=Closed Won
-    Click Dropdown    Close Date
+    Populate Lookup Field    Account Name    &{Contact}[LastName] Household
+    Open Date Picker    Close Date
     Pick Date    10
     Click Modal Button        Save
-    #Sleep    5
     Go To Object Home    Contact    
     Select Row    &{Contact}[FirstName] &{Contact}[LastName]
     Click Link    link=Delete
-    #Sleep    5    
     Select Frame With ID    vfFrameId
     Click Button With Value    Delete Account
-    #Sleep    5
     Page Should Contain    Error

@@ -14,7 +14,7 @@ Create ASC for Affiliated Contact
     Click Related List Button   Organization Affiliations    New
     Populate Lookup Field    Organization    &{account}[Name]
     Click Dropdown            Related Opportunity Contact Role
-    Click link    link=Soft Credit
+    Click link    title:Soft Credit
     Click Modal Button        Save
     &{opportunity} =  API Create Opportunity    &{account}[Id]    Donation    Name=&{account}[Name] $500 donation    Amount=500    
     Go To Record Home    &{opportunity}[Id]
