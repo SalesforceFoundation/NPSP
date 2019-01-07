@@ -49,7 +49,11 @@ private class UTIL_RecordTypes_TEST {
         List<SelectOption> rtOptions = UTIL_RecordTypes.getRecordTypesForSelectList(Opportunity.sObjectType);
         
         // check against queried rectypes
-        List<RecordType> ort = [SELECT Id, Name FROM RecordType WHERE IsActive=true AND sObjectType='Opportunity' LIMIT 1];
+        List<RecordType> ort = [SELECT Id, Name
+                                FROM RecordType
+                                WHERE IsActive=true
+                                AND sObjectType='Opportunity'
+                                LIMIT 1];
         if (!ort.isEmpty()) {
             Id rtId = UTIL_RecordTypes.GetRecordTypeId(Opportunity.sObjectType, ort[0].name);
             System.assertEquals(ort[0].id, rtId);
@@ -84,16 +88,16 @@ private class UTIL_RecordTypes_TEST {
     static void testLightningRecordTypes() {
 
         List<RecordType> recordTypes = [SELECT Id, Name FROM RecordType WHERE IsActive=true AND sObjectType='Opportunity' LIMIT 1];
-        Integer recordTypeSize = recordTypes.size();
 
         List<Map<String, String>> recordTypeIdAndName = UTIL_RecordTypes.getRecordTypeDevNamesForLightningSelectList(Opportunity.sObjectType);
         List<Map<String, String>> recordTypeDevNameAndName = UTIL_RecordTypes.getRecordTypesForLightningSelect(Opportunity.sObjectType);
         List<Map<String, String>> recordTypeNameAndName = UTIL_RecordTypes.getStringRecordTypesForLightningSelect(Opportunity.sObjectType);
 
-        System.assert(recordTypeIdAndName.size() == recordTypeSize);
-        System.assert(recordTypeDevNameAndName.size() == recordTypeSize);
-        System.assert(recordTypeNameAndName.size() == recordTypeSize);
-
+        if (recordTypes.size() != null) {
+            System.assert(recordTypeIdAndName.size() != 0, 'No record types are assigned.');
+            System.assert(recordTypeDevNameAndName.size() != 0, 'No record types are assigned.');
+            System.assert(recordTypeNameAndName.size() != 0, 'No record types are assigned.');
+        }
     }
 
 }
