@@ -11,16 +11,12 @@ Delete Contact with Closed Won Opportunity from Household
     ${contact_id} =  Create Contact with Email
     &{contact} =  Salesforce Get  Contact  ${contact_id}
     Header Field Value    Account Name    &{contact}[LastName] Household
-    # &{Contact} =  API Create Contact    Email=skristem@robot.com
-    # Go To Record Home  &{Contact}[Id]
-    Select Tab  Related
     Click Object Button  New Donation
     Populate Form
     ...                       Opportunity Name= Sravani $100 donation
     ...                       Amount=100 
     Click Dropdown    Stage
     Click Link    link=Closed Won
-    Populate Lookup Field    Account Name    &{Contact}[LastName] Household
     Open Date Picker    Close Date
     Pick Date    10
     Click Modal Button        Save
