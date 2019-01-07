@@ -338,7 +338,7 @@
                                                       onclick="{!c.handleProcessingSettingsChange}" />
                                 </lightning:layoutItem>
 
-                                <!-- BEGIN ADVANCED OPTIONS FOR STEP 5 -->
+                                <!-- BEGIN ADVANCED OPTIONS -->
                                 <aura:if isTrue="{!v.batchMetadata.showAdvancedOptions}">
                                     <lightning:layoutItem size="12">
                                         <lightning:layout horizontalAlign="spread" multipleRows="true">
@@ -408,7 +408,7 @@
                                         </lightning:layout>
                                     </lightning:layoutItem>
                                 </aura:if>
-                                <!-- END ADVANCED OPTIONS FOR STEP 5 -->
+                                <!-- END ADVANCED OPTIONS -->
                             </lightning:layout>
                         </lightning:layoutItem>
                     </lightning:layout>
