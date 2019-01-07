@@ -43,7 +43,7 @@
         <componentInstances>
             <componentInstanceProperties>
                 <name>active</name>
-                <value>true</value>
+                <value>false</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>body</name>
@@ -56,6 +56,10 @@
             <componentName>flexipage:tab</componentName>
         </componentInstances>
         <componentInstances>
+            <componentInstanceProperties>
+                <name>active</name>
+                <value>true</value>
+            </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>body</name>
                 <value>Facet-ee42b0f8-5c43-44e0-b7f3-d306eb4c57de</value>
