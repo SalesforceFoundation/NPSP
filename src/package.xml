@@ -1764,6 +1764,7 @@
         <members>sendAcknowledgmentFailureReasons</members>
         <members>sendAcknowledgmentFireStatus</members>
         <members>sendAcknowledgmentNoneSelected</members>
+        <members>sendAcknowledgmentNumberAlreadySent</members>
         <members>sendAcknowledgmentNumberNoEmail</members>
         <members>sendAcknowledgmentNumberSent</members>
         <members>sendAcknowledgmentPageTitle</members>
