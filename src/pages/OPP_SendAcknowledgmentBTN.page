@@ -10,24 +10,25 @@
     
     <apex:form id="vfForm">
         <div class="slds-scope">
-            <!-- PAGE HEADER -->
+            
             <c:UTIL_PageHeader headerLabel="{!$ObjectType.Opportunity.Label}"
                                header="{!$Label.sendAcknowledgmentPageTitle}"
                                icon="opportunity" iconCategory="standard"
                                showSaveBtn="false" cancelLabel="{!$Label.bdiBtnClose}"
                                cancelAction="{!close}" cancelReRender="vfForm"/>
-
-            <!-- PAGE MESSAGE -->
+            
             <c:UTIL_PageMessages />
-            <!-- PAGE RETURN -->
+            
             <c:UTIL_NavigateBack recordId="{!recordId}" redirect="{!redirect}"/>
-            <!-- FAILED EMAILS -->
-            <apex:outputPanel rendered="{!cNotSent > 0}">
+            
+            <apex:outputPanel rendered="{!notSentCount > 0}">
                 <div class="slds-grid">
                     <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
-                        <p class="slds-m-top_x-small slds-p-bottom_small"><apex:outputText value="{!$Label.sendAcknowledgmentFailureReasons}" escape="false"/></p>
+                        <p class="slds-m-top_x-small slds-p-bottom_small">
+                            <apex:outputText value="{!$Label.sendAcknowledgmentFailureReasons}" escape="false"/>
+                        </p>
                         <ul class="slds-list_dotted">
-                            <apex:repeat value="{!listOppNotSent}" var="opp">
+                            <apex:repeat value="{!oppsNotSent}" var="opp">
                                 <li class="slds-item">
                                     <a href="/{!opp.Id}" target="_blank">{!opp.Name}</a>
                                 </li>
