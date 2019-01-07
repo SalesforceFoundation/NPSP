@@ -60,12 +60,17 @@ public with sharing class OPP_CascadeDeleteLookups_TDTM extends CDL_CascadeDelet
         * @description Retrieves the related Allocations of the deleted Opportunities.
         * @param Set<Id> The Ids of the deleted Opportunities.
         * @return List<Allocation__c> Deleted Opportunities' Allocations.
-        ********************************************************************************************************/
+        ********************************************************************************************************/        
         public List<Allocation__c> load(Set<Id> opportunityIds) {
+            List<npe01__OppPayment__c> relatedPayments = [
+                SELECT Id
+                FROM npe01__OppPayment__c
+                WHERE npe01__Opportunity__c IN :opportunityIds
+            ];
             return [
                 SELECT Opportunity__c
                 FROM Allocation__c
-                WHERE Opportunity__c IN :opportunityIds
+                WHERE Opportunity__c IN :opportunityIds OR Payment__c IN :relatedPayments
             ];
         }
     }
@@ -81,10 +86,15 @@ public with sharing class OPP_CascadeDeleteLookups_TDTM extends CDL_CascadeDelet
         * @return List<Allocation__c> Undeleted Opportunities' Allocations.
         ********************************************************************************************************/
         public List<Allocation__c> load(Set<Id> opportunityIds) {
+            List<npe01__OppPayment__c> relatedPayments = [
+                SELECT Id
+                FROM npe01__OppPayment__c
+                WHERE npe01__Opportunity__c IN :opportunityIds
+            ];
             return [
                 SELECT Opportunity__c
                 FROM Allocation__c
-                WHERE Opportunity__c IN :opportunityIds
+                WHERE (Opportunity__c IN :opportunityIds OR Payment__c IN :relatedPayments)
                 AND IsDeleted = TRUE
                 ALL ROWS
             ];
