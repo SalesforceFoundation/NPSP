@@ -98,7 +98,7 @@
         var model = component.get('v.model');
         let step = component.get('v.batchMetadata.progressIndicatorStep');
 
-        if (step === '5') {
+        if (step === '3') {
             // check if user input came from ltng:sendMessage or an onclick handler
             var task;
             if (event.getSource().getLocalId()) {
