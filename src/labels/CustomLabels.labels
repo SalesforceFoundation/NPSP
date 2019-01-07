@@ -5328,7 +5328,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>sendAcknowledgmentFailedStatus</shortDescription>
         <value>Email Acknowledgment Not Sent</value>
-    </labels>
+    </labels>  
     <labels>
         <fullName>sendAcknowledgmentFailureReasons</fullName>
         <categories>Send Acknowledgment Button</categories>
@@ -5369,6 +5369,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>sendAcknowledgmentNumberSent</shortDescription>
         <value>{0} acknowledgment(s) sent.</value>
     </labels>
+    <labels>
+        <fullName>sendAcknowledgmentNumberAlreadySent</fullName>
+        <categories>Send Acknowledgment Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>sendAcknowledgmentNumberAlreadySent</shortDescription>
+        <value>{0} acknowledgment(s) already sent.</value>
+    </labels>    
     <labels>
         <fullName>sendAcknowledgmentPageTitle</fullName>
         <categories>Send Acknowledgment Button</categories>
