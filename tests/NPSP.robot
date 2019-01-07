@@ -1,6 +1,7 @@
 *** Settings ***
 
 Resource       cumulusci/robotframework/Salesforce.robot
+Library        DateTime
 Library        tests/NPSP.py
 
 *** Variables ***
@@ -34,12 +35,13 @@ API Modify Contact
 
 API Create Opportunity
     [Arguments]      ${account_id}    ${opp_type}      &{fields} 
-    ${rt_id} =       Get Record Type Id  Opportunity  ${opp_type}   
+    ${rt_id} =       Get Record Type Id  Opportunity  ${opp_type}
+    ${close_date} =  Get Current Date  result_format=%Y-%m-%d
     ${opp_id} =  Salesforce Insert    Opportunity
     ...               AccountId=${account_id}
     ...               RecordTypeId=${rt_id}
     ...               StageName=Closed Won
-    ...               CloseDate=2018-09-10
+    ...               CloseDate=${close_date}
     ...               Amount=100
     ...               Name=Test Donation
     ...               npe01__Do_Not_Automatically_Create_Payment__c=true 
@@ -221,7 +223,7 @@ Create Opportunities
     Click Dropdown    Stage
     Click Link    link=Closed Won
     Populate Lookup Field    Account Name    ${hh_name}
-    Click Dropdown    Close Date
+    Open Date Picker    Close Date
     Pick Date    10
     Select Lightning Checkbox    Do Not Automatically Create Payment
     Click Modal Button        Save
@@ -287,12 +289,7 @@ Create GAU
     [Return]           ${gau_name}    
 
 Run Donations Batch Process
-    Select App Launcher Tab    NPSP Settings
-    Wait For Locator    frame    Nonprofit Success Pack Settings
-    Select Frame With Title    Nonprofit Success Pack Settings
-    Click Link    link=Bulk Data Processes
-    Wait For Locator    link-text    Rollup Donations Batch
-    Click Link    link=Rollup Donations Batch
+    Open NPSP Settings  Bulk Data Processes  Rollup Donations Batch
     Click Button With Value    Run Batch
     # Wait For Locator    npsp_settings.status    CRLP_Account_SoftCredit_BATCH    Completed
     # Wait For Locator    npsp_settings.status    CRLP_RD_BATCH    Completed
@@ -326,8 +323,9 @@ Open NPSP Settings
     Select App Launcher Tab      NPSP Settings
     Wait For Locator    frame    Nonprofit Success Pack Settings
     Select Frame With Title    Nonprofit Success Pack Settings
-    Wait for Locator    npsp_settings.side_panel
-    Click Link    link=${topmenu}
-    Sleep    1
-    Click Link    link=${submenu}
-    Sleep    1
+    Wait Until Element Is Visible  text:${topmenu}
+    Click Link    text:${topmenu}
+    Sleep  1
+    Wait Until Element Is Visible  text:${submenu}
+    Click Link    text:${submenu}
+    Sleep  1
