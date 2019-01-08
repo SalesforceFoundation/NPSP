@@ -71,7 +71,7 @@ public class UTIL_RecordTypes {
      * @return UTIL_RecordTypes.RecordTypeInfo
      */
     private static RecordTypeInfo getRecordTypeInfo(sObjectType objectType, String recordTypeName) {
-        Map<String, Schema.RecordTypeInfo> recordTypeInfos = getObjectRecordTypeInfo(objectType);
+        Map<String, Schema.RecordTypeInfo> recordTypeInfos = getObjectRecordTypeInfos(objectType, true, false);
         if (recordTypeInfos.containsKey(recordTypeName)) {
             return new RecordTypeInfoWrapper(recordTypeInfos.get(recordTypeName));
         } else {
@@ -84,8 +84,29 @@ public class UTIL_RecordTypes {
      * @param objectType The type of the object
      * @return Map<String, Schema.RecordTypeInfo>
      */
-    private static Map<String, Schema.RecordTypeInfo> getObjectRecordTypeInfo(sObjectType objectType) {
-        return objectType.getDescribe().getRecordTypeInfosByName();
+    private static Map<String, Schema.RecordTypeInfo> getObjectRecordTypeInfos(sObjectType objectType, Boolean activeOnly, Boolean assignedOnly) {
+        Map<String, Schema.RecordTypeInfo> objectRecordTypeInfoToFilter = objectType.getDescribe().getRecordTypeInfosByName();
+        Map<String, Schema.RecordTypeInfo> objectRecordTypeInfos = new Map<String, Schema.RecordTypeInfo>();
+        for (String rtName : objectRecordTypeInfoToFilter.keySet()) {
+            Schema.RecordTypeInfo rt = objectRecordTypeInfoToFilter.get(rtName);
+
+            if ((activeOnly && !assignedOnly && rt.isActive())
+                    || (!activeOnly && assignedOnly && rt.isAvailable())
+                    || (!activeOnly && !assignedOnly)
+                    || (activeOnly && assignedOnly && rt.isActive() && rt.isAvailable())) {
+                objectRecordTypeInfos.put(rtName, rt);
+            }
+        }
+        return objectRecordTypeInfos;
+    }
+
+    /**
+     * @description Return all active record types available to the running user
+     * @param objectType The type of the object
+     * @return Map<String, Schema.RecordTypeInfo>
+     */
+    private static Map<String, Schema.RecordTypeInfo> getAssignedRecordTypes(sObjectType objectType) {
+       return getObjectRecordTypeInfos(objectType, true, true);
     }
 
     /**
@@ -237,7 +258,7 @@ public class UTIL_RecordTypes {
      */
     public static List<Map<String, String>> getRecordTypesForLightningSelect(sObjectType objectType) {
         List<Map<String, String>> options = new List<Map<String, String>>();
-        Map<String, Schema.RecordTypeInfo> recordTypeInfos = getObjectRecordTypeInfo(objectType);
+        Map<String, Schema.RecordTypeInfo> recordTypeInfos = getAssignedRecordTypes(objectType);
 
         for (Schema.RecordTypeInfo rt: recordTypeInfos.values()) {
             Map<String, String> labeledOption = new Map<String, String>();
@@ -258,7 +279,7 @@ public class UTIL_RecordTypes {
      * @return List<SelectOption>
      */
     public static List<SelectOption> getRecordTypesForSelectList(sObjectType objectType) {
-        Map<String, Schema.RecordTypeInfo> recordTypeInfos = getObjectRecordTypeInfo(objectType);
+        Map<String, Schema.RecordTypeInfo> recordTypeInfos = getObjectRecordTypeInfos(objectType, true, false);
         List<SelectOption> options = new List<SelectOption>();
         for (Schema.RecordTypeInfo rt: recordTypeInfos.values()) {
             options.add(new SelectOption(rt.getRecordTypeId(), rt.getName()));
@@ -282,7 +303,7 @@ public class UTIL_RecordTypes {
      * ]
      */
     public static List<Map<String, String>> getRecordTypeDevNamesForLightningSelectList(sObjectType objectType) {
-        Map<String, Schema.RecordTypeInfo> recordTypeInfos = getObjectRecordTypeInfo(objectType);
+        Map<String, Schema.RecordTypeInfo> recordTypeInfos = getAssignedRecordTypes(objectType);
         List<Map<String, String>> options = new List<Map<String, String>>();
         for (Schema.RecordTypeInfo rt: recordTypeInfos.values()) {
             Map<String, String> labeledOption = new Map<String, String>();
@@ -296,7 +317,7 @@ public class UTIL_RecordTypes {
     /**
      * @description Return a list of <Map<String, String>> where both the value and the
      * label are the record type name of a record type that belongs to the
-     * given object type.  The 'master' record type and all in-active record types
+     * given object type. The 'master' record type and all in-active record types
      * are omitted from this list of options.
      *
      * @param objectType The type of the object
@@ -308,9 +329,9 @@ public class UTIL_RecordTypes {
      * ]
      */
     public static List<Map<String, String>> getStringRecordTypesForLightningSelect(sObjectType objectType) {
-        String objectName = objectType.getDescribe().getName();
+        Map<String, Schema.RecordTypeInfo> recordTypeInfos = getAssignedRecordTypes(objectType);
         List<Map<String, String>> options = new List<Map<String, String>>();
-        for (RecordType rt : [SELECT Id, Name FROM RecordType WHERE IsActive = True AND SObjectType = :objectName ORDER BY Name]) {
+        for (Schema.RecordTypeInfo rt: recordTypeInfos.values()) {
             Map<String, String> labeledOption = new Map<String, String>();
             labeledOption.put('value', rt.Name);
             labeledOption.put('label', rt.Name);
@@ -329,9 +350,9 @@ public class UTIL_RecordTypes {
      * @return List<SelectOption>
      */
     public static List<SelectOption> getStringRecordTypesForSelectList(sObjectType objectType) {
-        String objectName = objectType.getDescribe().getName();
+        Map<String, Schema.RecordTypeInfo> recordTypeInfos = getObjectRecordTypeInfos(objectType, true, false);
         List<SelectOption> options = new List<SelectOption>();
-        for (RecordType rt : [SELECT Id, Name FROM RecordType WHERE IsActive = True AND SObjectType = :objectName ORDER BY Name]) {
+        for (Schema.RecordTypeInfo rt : recordTypeInfos.values()){
             options.add(new SelectOption(rt.Name, rt.Name));
         }
         return options;
