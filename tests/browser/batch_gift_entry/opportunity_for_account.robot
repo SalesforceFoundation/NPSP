@@ -14,7 +14,7 @@ Select an opportunity for an account make grid changes and process it
     &{account} =     API Create Organization Account
     ${date} =     Get Current Date    result_format=%Y-%m-%d
     &{opportunity} =     API Create Opportunity   &{account}[Id]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}    
-    Select App Launcher Tab   NPSP Data Import Batches
+    Select App Launcher Tab   Batch Gift Entry
     Click Link  &{batch}[Name]
     Select Value From BGE DD    Donor Type    Account
     Populate Address    Search Accounts    &{account}[Name]
@@ -26,21 +26,22 @@ Select an opportunity for an account make grid changes and process it
     Select BGE Date Picker    Donation Date
     Click BGE Button    Today
     Click BGE Button       Save
+    Reload Page
     Verify Row Count    1
     Page Should Contain Link    &{opportunity}[Name]
     Wait For Locator    bge.edit_button    Donation Amount
     Click BGE Edit Button    Donation Amount    
     # Populate BGE Edit Field    Donation Amount    10
-    # Click BGE Button       Process Batch
-    # Select Frame With Title    NPSP Data Import
-    # Click Button With Value   Begin Data Import Process
-    # Wait For Locator    data_imports.status    Completed
-    # Click Button With Value   Close
-    # Go To Record Home    &{opportunity}[Id]
-    # Select Tab    Details
-    # Confirm Value    Amount    $10.00    Y 
-    # ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    # Confirm Value    Close Date    ${opp_date}    Y 
-    # Confirm Value    Stage    Closed Won    Y 
+    Click BGE Button       Process Batch
+    Select Frame With Title    NPSP Data Import
+    Click Button With Value   Begin Data Import Process
+    Wait For Locator    data_imports.status    Completed
+    Click Button With Value   Close
+    Go To Record Home    &{opportunity}[Id]
+    Select Tab    Details
+    Confirm Value    Amount    $20.00    Y 
+    ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
+    Confirm Value    Close Date    ${opp_date}    Y 
+    Confirm Value    Stage    Closed Won    Y 
     
     

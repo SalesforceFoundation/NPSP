@@ -30,6 +30,7 @@ BGE Batch With Custom Values
     Fill BGE Form
     ...                       Donation Amount: Default Value=10
     Click BGE Button        Next
+    Click BGE Button    Show Advanced Options
     Fill BGE Form
     ...                       Batch Process Size=100
     ...                       Number of Days from Donation Date=2

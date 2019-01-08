@@ -140,8 +140,9 @@ npsp_lex_locators={
         'date':"//div[contains(@class,'slds-datepicker')]/table[@class='slds-datepicker__month']//span[text()='{}']",
         'card-header':'//article[./div[@class="slds-card__body"]//lightning-formatted-text[text()="{}"]]/header',
         'edit_button':'//td[@data-label="{}"]//lightning-primitive-icon',
-        'edit_field':'//td[@data-label="{}" and @aria-selected="true"]//lightning-formatted-number',
-        'count':'//tbody/tr/td[1]'
+        'edit_field':'//td[@data-label="{}"]//lightning-formatted-number',
+        'count':'//tbody/tr/td[1]',
+        'value':'//td[@data-label="{}"]//a',
         },    
     'object_manager':{
         'button':'//input[@title="{}"]',

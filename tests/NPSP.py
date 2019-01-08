@@ -851,9 +851,12 @@ class NPSP(object):
             
     def populate_bge_edit_field(self, title, value):
         locator=npsp_lex_locators['bge']['edit_field'].format(title)
-        self.selenium.set_focus_to_element(locator)
+        #self.selenium.set_focus_to_element(locator)
         field=self.selenium.get_webelement(locator)
-        field.send_keys(Keys.BACK_SPACE + Keys.BACK_SPACE) 
+        field.send_keys(Keys.BACK_SPACE + Keys.BACK_SPACE)
+#         field.send_keys(Keys.CONTROL , "A")
+#         time.sleep(2)
+#         field.send_keys(Keys.BACK_SPACE) 
 #         field=self.salesforce._populate_field(locator, value)
         time.sleep(2)  
         field.send_keys(value)  
@@ -863,6 +866,11 @@ class NPSP(object):
         locator=npsp_lex_locators['bge']['count']
         actual_value=self.selenium.get_webelements(locator)
         count=len(actual_value)
-        assert value == actual_value, "Expected value to be {} but found {}".format(
-            value, actual_value
-        )             
+        assert int(value) == count, "Expected value to be {} but found {}".format(
+            value, count
+        )       
+        
+    def return_locator_value(self, path, *args, **kwargs): 
+        locator=self.get_npsp_locator(path, *args, **kwargs)
+        value=self.selenium.get_webelement(locator).text   
+        return value             
