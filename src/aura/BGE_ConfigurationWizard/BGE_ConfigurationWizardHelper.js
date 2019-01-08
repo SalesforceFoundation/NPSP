@@ -439,7 +439,7 @@
             function isStringMatchedInList(theList, theString) {
                 let stringMatches = false;
                 theList.forEach(function(currString) {
-                    if (currString.indexOf(theString) > 0) {
+                    if (currString.indexOf(theString) >= 0) {
                         stringMatches = true;
                     }
                 });
