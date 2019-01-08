@@ -392,16 +392,7 @@
             infoText += '<a href=/apex/REL_RelationshipsViewer?id=' + currentContact.id + ' target="_parent" style="color: white; font-weight: bold;">[ {!JSINHTMLENCODE($Label.REL_RECenter)} ]</a><br />';
             infoText +='</strong></p>';     
             return infoText;    
-        }   
-
-        // From Juan Mendes here: http://js-bits.blogspot.com/2010/07/canvas-rounded-corner-rectangles.html
-        function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
-            if (typeof stroke == "undefined" ) { 
-               stroke = true;
-            }
-            if (typeof radius === "undefined") {
-               radius = 5;
-            }
+        }
 
             //From Juan Mendes here: http://js-bits.blogspot.com/2010/07/canvas-rounded-corner-rectangles.html
             function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
