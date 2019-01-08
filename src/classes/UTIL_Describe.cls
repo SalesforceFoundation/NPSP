@@ -485,8 +485,8 @@ public class UTIL_Describe {
         return options;
     }
 
-    /** @description For a given object and field, verifies that the field is accessible and updateable,
-    * throwing an exception if it isn't.*/
+    /** @description For a given object and field, verifies that the field is accessible and updateable
+     * throwing an exception if it isn't.*/
     public static void checkFieldFLS(String objectName, String fieldName) {
         DescribeFieldResult dfr = getFieldDescribe(
             UTIL_Namespace.StrTokenNSPrefix(objectName), 
