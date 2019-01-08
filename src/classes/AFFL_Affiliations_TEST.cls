@@ -40,7 +40,8 @@ public class AFFL_Affiliations_TEST {
     /*******************************************************************************************************
     * @description Creates a new contact with an organizational account. Verifies an affiliation was created.
     */
-    static testMethod void newContactOnOrgAccount() {
+    @isTest
+    private static void newContactOnOrgAccount() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
         
@@ -57,7 +58,7 @@ public class AFFL_Affiliations_TEST {
         Id firstAffiliationId = createdAffiliations[0].Id; //storing the id for later use
         
         System.assertEquals(1, createdAffiliations.size());
-        system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations[0].npe5__Status__c);
+        system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, createdAffiliations[0].npe5__Status__c);
         system.assertEquals(title, createdAffiliations[0].npe5__Role__c);
         system.assertEquals(System.Today(), createdAffiliations[0].npe5__StartDate__c);
         
@@ -74,7 +75,7 @@ public class AFFL_Affiliations_TEST {
             where npe5__Contact__c =:contact.id AND npe5__Organization__c = :acc2.id];        
         
         System.assertEquals(1, createdAffiliations2.size());
-        system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations2[0].npe5__Status__c);
+        system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, createdAffiliations2[0].npe5__Status__c);
         system.assertEquals(title, createdAffiliations2[0].npe5__Role__c);
         system.assertEquals(System.Today(), createdAffiliations2[0].npe5__StartDate__c);
         
@@ -82,7 +83,7 @@ public class AFFL_Affiliations_TEST {
             npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c where id=:firstAffiliationId];
         
         System.assertEquals(1, createdAffiliations.size());
-        system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations[0].npe5__Status__c);
+        system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_FORMER_STATUS, createdAffiliations[0].npe5__Status__c);
         system.assertEquals(System.Today(), createdAffiliations[0].npe5__EndDate__c);
     }
     
@@ -91,7 +92,8 @@ public class AFFL_Affiliations_TEST {
     * affiliation was created.
     */
 
-    static testMethod void newContactOnOrgAccountAutoOff() {
+    @isTest
+    private static void newContactOnOrgAccountAutoOff() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = false));
         
@@ -113,7 +115,8 @@ public class AFFL_Affiliations_TEST {
     /*******************************************************************************************************
     * @description Creates a new contact with an individual account. Verifies an affiliation was created.
     */
-    static testMethod void newContactOnIndividualAccount() {
+    @isTest
+    private static void newContactOnIndividualAccount() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
         
@@ -133,7 +136,8 @@ public class AFFL_Affiliations_TEST {
     * @description Creates a contact with a primary affiliation. Updates primary affiliation to new account.
     * Verifies old affiliation marked as former, and new affiliation marked as current.
     */
-    static testMethod void contactWithMultipleAffiliations_v2() {
+    @isTest
+    private static void contactWithMultipleAffiliations_v2() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
         
@@ -158,11 +162,11 @@ public class AFFL_Affiliations_TEST {
         
         createdAffiliations = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, 
             npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c=:con.id AND npe5__Organization__c = :acc.id];
-        system.assertEquals(system.label.npe5.DefaultFormerStatus, createdAffiliations[0].npe5__Status__c);
+        system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_FORMER_STATUS, createdAffiliations[0].npe5__Status__c);
         
         createdAffiliations2 = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, 
             npe5__Contact__c from npe5__Affiliation__c where npe5__Contact__c=:con.id AND npe5__Organization__c = :acc2.id];
-        system.assertEquals(system.label.npe5.DefaultCurrentStatus, createdAffiliations2[0].npe5__Status__c);        
+        system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, createdAffiliations2[0].npe5__Status__c);
     }
 
     private static Contact getContact(Id accountId, String title) {
@@ -173,7 +177,8 @@ public class AFFL_Affiliations_TEST {
     /*******************************************************************************************************
     * @description Creates contacts with a primary affiliation. Verifies primary affiliations are created.
     */
-    static testMethod void newContactsWithPrimaryAffiliation() {
+    @isTest
+    private static void newContactsWithPrimaryAffiliation() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
             
@@ -213,7 +218,7 @@ public class AFFL_Affiliations_TEST {
         
         System.assertEquals(9, listAffl.size());
         for (npe5__Affiliation__c affl : listAffl) {
-            system.assertEquals(system.label.npe5.DefaultCurrentStatus, affl.npe5__Status__c);
+            system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, affl.npe5__Status__c);
             system.assertEquals(System.Today(), affl.npe5__StartDate__c);
             if (affl.npe5__Organization__c == listAcc[5].Id) 
                 system.assertEquals(false, affl.npe5__Primary__c);
@@ -225,7 +230,8 @@ public class AFFL_Affiliations_TEST {
     /*******************************************************************************************************
     * @description Creates a new contact with a one-to-one account. Verifies an affiliation was created.
     */
-    static testMethod void newContactsWithPrimaryAffiliationOnetoOne() {
+    @isTest
+    private static void newContactsWithPrimaryAffiliationOnetoOne() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
             
@@ -261,7 +267,7 @@ public class AFFL_Affiliations_TEST {
         
         System.assertEquals(9, listAffl.size());
         for (npe5__Affiliation__c affl : listAffl) {
-            system.assertEquals(system.label.npe5.DefaultCurrentStatus, affl.npe5__Status__c);
+            system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, affl.npe5__Status__c);
             system.assertEquals(System.Today(), affl.npe5__StartDate__c);
             if (affl.npe5__Organization__c == listAcc[5].Id) 
                 system.assertEquals(false, affl.npe5__Primary__c);
@@ -273,7 +279,8 @@ public class AFFL_Affiliations_TEST {
     * @description Updates contacts' primary affiliation, verifies new primary affiliations are created and
     * old affiliations are not marked primary.
     */
-    static testMethod void updateContactsWithPrimaryAffiliation() {
+    @isTest
+    private static void updateContactsWithPrimaryAffiliation() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
             
@@ -318,7 +325,7 @@ public class AFFL_Affiliations_TEST {
         
         System.assertEquals(9, listAffl.size());
         for (npe5__Affiliation__c affl : listAffl) {
-            system.assertEquals(system.label.npe5.DefaultCurrentStatus, affl.npe5__Status__c);
+            system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, affl.npe5__Status__c);
             system.assertEquals(System.Today(), affl.npe5__StartDate__c);
             if (affl.npe5__Organization__c == listAcc[5].Id) 
                 system.assertEquals(false, affl.npe5__Primary__c);
@@ -331,7 +338,8 @@ public class AFFL_Affiliations_TEST {
     * @description Updates contacts' primary affiliation and account, verifies new primary affiliations are created and
     * old affiliations are not marked primary.
     */
-    static testMethod void updateContactsWithPrimaryAffiliationAndAccount() {
+    @isTest
+    private static void updateContactsWithPrimaryAffiliationAndAccount() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
             
@@ -382,10 +390,10 @@ public class AFFL_Affiliations_TEST {
             if (affl.npe5__Organization__c == listAcc[5].Id) { 
                 system.assertEquals(false, affl.npe5__Primary__c);
                 system.assertEquals(System.Today(), affl.npe5__EndDate__c);
-                system.assertEquals(system.label.npe5.DefaultFormerStatus, affl.npe5__Status__c);
+                system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_FORMER_STATUS, affl.npe5__Status__c);
             } else {
                 system.assertEquals(true, affl.npe5__Primary__c);
-                system.assertEquals(system.label.npe5.DefaultCurrentStatus, affl.npe5__Status__c);
+                system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, affl.npe5__Status__c);
             }
         }
     }
@@ -394,7 +402,8 @@ public class AFFL_Affiliations_TEST {
     * @description Updates contacts' primary affiliation, verifies new primary affiliations are created and
     * old affiliations are not marked primary.
     */
-    static testMethod void updateContactsWithPrimaryAffiliationToDiffAccount() {
+    @isTest
+    private static void updateContactsWithPrimaryAffiliationToDiffAccount() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
             
@@ -448,12 +457,12 @@ public class AFFL_Affiliations_TEST {
         integer cOrg2 = 0;
         for (npe5__Affiliation__c affl : listAffl) {
             system.assertEquals(System.Today(), affl.npe5__StartDate__c);
-            if (affl.npe5__Status__c == system.label.npe5.DefaultFormerStatus) { 
+            if (affl.npe5__Status__c == AFFL_Affiliations_TDTM.DEFAULT_FORMER_STATUS) {
                 system.assertEquals(true, affl.npe5__Primary__c);
                 system.assertEquals(System.Today(), affl.npe5__EndDate__c);
-                system.assertEquals(system.label.npe5.DefaultFormerStatus, affl.npe5__Status__c);
+                system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_FORMER_STATUS, affl.npe5__Status__c);
             } else {
-                system.assertEquals(system.label.npe5.DefaultCurrentStatus, affl.npe5__Status__c);
+                system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, affl.npe5__Status__c);
             }
             if (affl.npe5__Organization__c == listAcc[4].id) cOrg1++;
             if (affl.npe5__Organization__c == listAcc[5].id) cOrg2++;            
@@ -466,7 +475,8 @@ public class AFFL_Affiliations_TEST {
     * @description Creates contacts with primary affiliations. Verifies primary affiliations are created. 
     * Removes primary affiliation lookup from contacts. Verifies affiliations no longer marked primary.
     */
-    static testMethod void updateContactsWithPrimaryAffiliationClearPrimary() {
+    @isTest
+    private static void updateContactsWithPrimaryAffiliationClearPrimary() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
             
@@ -526,7 +536,8 @@ public class AFFL_Affiliations_TEST {
     * Verifies that the contacts' Primary Affiliation field is updated. Unchecks primary for these
     * affiliations, then verifies that the Primary Affiliation field has been nulled out on the contacts.
     */
-    static testMethod void newPrimaryAffiliations() {
+    @isTest
+    private static void newPrimaryAffiliations() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
             
@@ -565,7 +576,7 @@ public class AFFL_Affiliations_TEST {
         	affl.npe5__Organization__c = listAcc[4].Id;
         	affl.npe5__StartDate__c = System.Today();
         	affl.npe5__Primary__c = true;
-        	affl.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
+        	affl.npe5__Status__c = AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS;
         	listAffl.add(affl);
         }
         // must manually clear this, since our context is still active
@@ -597,25 +608,26 @@ public class AFFL_Affiliations_TEST {
     /*******************************************************************************************************
     * @description Creates new primary affiliations for contacts with existing primary affiliations. 
     * Verifies that the contacts' Primary Affiliation field is updated, and the formerly primary 
-    * affiliations are no longer marked as primary.
+    * affiliations are no longer marked as primary, have an end date and have a status of Former
     */
-    static testMethod void newPrimaryAffiliationsFromAffl() {
+    @isTest
+    private static void newPrimaryAffiliationsFromAffl() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
-            
+
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
-    
+
         list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(8);
         system.assertEquals(null, listCon[0].AccountId); 
-        
+
         list<Account> listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.HH_ACCOUNT_TYPE);
         listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE));
         listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, null));
         listAcc.addAll(UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(1, CAO_Constants.BUCKET_ORGANIZATION_TYPE));
         insert listAcc;
-        
+
         listCon[0].AccountId = listAcc[0].Id;   // HH account
         listCon[1].AccountId = listAcc[1].Id;   // HH account
         listCon[2].AccountId = listAcc[2].Id;   // 1:1 account
@@ -623,67 +635,79 @@ public class AFFL_Affiliations_TEST {
         listCon[4].AccountId = listAcc[4].Id;   // Org1 account
         listCon[5].AccountId = listAcc[5].Id;   // Org2 account
         listCon[6].AccountId = listAcc[6].Id;   // Bucket account
-        listCon[7].AccountId = listAcc[6].Id;   // Bucket account        
+        listCon[7].AccountId = listAcc[6].Id;   // Bucket account
         insert listCon;
-        
+
         //Which ones cause an affiliation to be created? Is it listAcc[4] and listAcc[5]? 
-        npe5__Affiliation__c[] listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
-            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];
-        System.assertEquals(2, listAffl.size());
-        
+        System.assertEquals(2, [SELECT COUNT() FROM npe5__Affiliation__c]);
+
         // now create our affiliation records directly
-        listAffl = new list<npe5__Affiliation__c>();
+        List<npe5__Affiliation__c> originalPrimaryAffiliations = new list<npe5__Affiliation__c>();
         for (integer i = 0; i < 8; i++) {
             npe5__Affiliation__c affl = new npe5__Affiliation__c();
             affl.npe5__Contact__c = listCon[i].Id;
             affl.npe5__Organization__c = listAcc[4].Id;
             affl.npe5__StartDate__c = System.Today();
             affl.npe5__Primary__c = true;
-            affl.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
-            listAffl.add(affl);
+            affl.npe5__Status__c = AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS;
+            originalPrimaryAffiliations.add(affl);
         }
         // must manually clear this, since our context is still active
-        insert listAffl;
+        insert originalPrimaryAffiliations;
         
-        // make sure primary affiliation set on Contacts
-        listCon = [Select Id, Primary_Affiliation__c, AccountId from Contact];
-        system.assertEquals(8, listCon.size());        
-        for (Contact con : listCon) {
-            system.assertEquals(listAcc[4].Id, con.Primary_Affiliation__c);
-        }
+        System.assertEquals(8, [SELECT COUNT() FROM Contact WHERE Primary_Affiliation__c = :listAcc[4].Id],
+            'The primary affiliation on the contacts should be set to the correct account'
+        );
 
         // now set a new primary affiliations record for each
-        listAffl = new list<npe5__Affiliation__c>();
+        List<npe5__Affiliation__c> newPrimaryAffiliations = new list<npe5__Affiliation__c>();
         for (integer i = 0; i < 8; i++) {
             npe5__Affiliation__c affl = new npe5__Affiliation__c();
             affl.npe5__Contact__c = listCon[i].Id;
             affl.npe5__Organization__c = listAcc[5].Id;
             affl.npe5__StartDate__c = System.Today();
             affl.npe5__Primary__c = true;
-            affl.npe5__Status__c = system.label.npe5.DefaultCurrentStatus;
-            listAffl.add(affl);
+            affl.npe5__Status__c = AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS;
+            newPrimaryAffiliations.add(affl);
         }
         // must manually clear this, since our context is still active
-        insert listAffl;
-                
-        // make sure primary affiliation set on Contacts
-        listCon = [Select Id, Primary_Affiliation__c, AccountId from Contact];
-        system.assertEquals(8, listCon.size());        
-        for (Contact con : listCon) {
-            system.assertEquals(listAcc[5].Id, con.Primary_Affiliation__c);
+        insert newPrimaryAffiliations;
+
+        System.assertEquals(8, [SELECT COUNT() FROM Contact WHERE Primary_Affiliation__c = :listAcc[5].Id],
+            'The primary affiliation on the contacts should be updated to the correct account'
+        );
+
+        originalPrimaryAffiliations = [
+            SELECT npe5__Status__c, npe5__EndDate__c, npe5__Primary__c
+            FROM npe5__Affiliation__c
+            WHERE Id IN :originalPrimaryAffiliations
+        ];
+
+        System.assert(!originalPrimaryAffiliations.isEmpty(), 'The affiliations should exist');
+        for (npe5__Affiliation__c affl : originalPrimaryAffiliations) {
+            System.assertEquals(false, affl.npe5__Primary__c,
+                'The original primary affiliation should not be marked as primary');
+            System.assertEquals(Date.today(), affl.npe5__EndDate__c,
+                'The original primary affiliation should have an End Date of today');
+            System.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_FORMER_STATUS, affl.npe5__Status__c,
+                'The original primary affiliation should have the former status');
         }
-        
-        // make sure other affiliations are not primary
-        listAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
-            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c, npe5__Primary__c from npe5__Affiliation__c];
-        integer cPrimary = 0;
-        for (npe5__Affiliation__c affl : listAffl) {
-        	if (affl.npe5__Primary__c) {
-        	   system.assertEquals(listAcc[5].Id, affl.npe5__Organization__c);
-        	   cPrimary++; 
-        	}
+
+        newPrimaryAffiliations = [
+            SELECT npe5__Status__c, npe5__EndDate__c, npe5__Primary__c
+            FROM npe5__Affiliation__c
+            WHERE Id IN :newPrimaryAffiliations
+        ];
+
+        System.assert(!newPrimaryAffiliations.isEmpty(), 'The affiliations should exist');
+        for (npe5__Affiliation__c affl : newPrimaryAffiliations) {
+            System.assertEquals(true, affl.npe5__Primary__c,
+                'The new primary affiliation should be marked as primary');
+            System.assertEquals(null, affl.npe5__EndDate__c,
+                'The new primary affiliation should have no End Date');
+            System.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, affl.npe5__Status__c,
+                'The new primary affiliation should have the current status');
         }
-        system.assertEquals(8, cPrimary);
    }
 
     /*******************************************************************************************************
@@ -691,7 +715,8 @@ public class AFFL_Affiliations_TEST {
     * account's primary contact. Verifies that an affiliation was created between new account and existing
     * contact, and a primary affiliation created with the account's new primary contact.
     */
-    static testMethod void newAccountNewAffl() {
+    @isTest
+    private static void newAccountNewAffl() {
         UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true));
         
         list<contact> listCon = new list<Contact>();
@@ -710,7 +735,7 @@ public class AFFL_Affiliations_TEST {
         ];
         
         System.assertEquals(1, queryAffl.size(), 'An affiliation should be created.');
-        system.assertEquals(system.label.npe5.DefaultCurrentStatus, queryAffl[0].npe5__Status__c, 'The affiliation\'s status should be set to the default current status.');
+        system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, queryAffl[0].npe5__Status__c, 'The affiliation\'s status should be set to the default current status.');
         system.assertEquals(listcon[0].title, queryAffl[0].npe5__Role__c, 'The affiliation\'s role should match the first contact\'s title.');
         system.assertEquals(System.Today(), queryAffl[0].npe5__StartDate__c, 'The affiliation\'s start date should be today.');
         
@@ -723,8 +748,8 @@ public class AFFL_Affiliations_TEST {
             where npe5__Organization__c = :acc.id ORDER BY npe5__Contact__c];
         
         System.assertEquals(2, queryAffl.size(), 'Two affiliations should exist.');
-        system.assertEquals(system.label.npe5.DefaultCurrentStatus, queryAffl[0].npe5__Status__c, 'The existing affiliation\'s status should be unchanged.');
-        system.assertEquals(system.label.npe5.DefaultCurrentStatus, queryAffl[1].npe5__Status__c, 'The new affiliation\'s status should be set to the default current status.');
+        system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, queryAffl[0].npe5__Status__c, 'The existing affiliation\'s status should be unchanged.');
+        system.assertEquals(AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS, queryAffl[1].npe5__Status__c, 'The new affiliation\'s status should be set to the default current status.');
         system.assertEquals(listcon[1].title, queryAffl[1].npe5__Role__c, 'The new affiliation\'s role should match the second contact\'s title.');
         system.assertEquals(System.Today(), queryAffl[0].npe5__StartDate__c, 'The affiliation\'s start date should be today.');
 
@@ -734,7 +759,8 @@ public class AFFL_Affiliations_TEST {
     * @description Deletes a primary affiliation, verifies it's removed from the contact. Undeletes it,
     * verifies it's added back to the contact.
     */
-    static testMethod void deletePrimaryAffl() {
+    @isTest
+    private static void deletePrimaryAffl() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true)
         );
@@ -752,7 +778,7 @@ public class AFFL_Affiliations_TEST {
             npe5__Organization__c = acc.Id,
             npe5__StartDate__c = System.Today(),
             npe5__Primary__c = true,
-            npe5__Status__c = system.label.npe5.DefaultCurrentStatus
+            npe5__Status__c = AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS
         );
         Test.startTest();
         insert affl;
@@ -783,7 +809,8 @@ public class AFFL_Affiliations_TEST {
     * @description When undeleting a primary affiliation, if the contact has a new primary affiliation,
     * the undeleted record should have primary unchecked, and the contact shouldn't be updated.
     */
-    static testMethod void undeletePrimaryAfflNewAffl() {
+    @isTest
+    private static void undeletePrimaryAfflNewAffl() {
         npe5__Affiliations_Settings__c affiliationsSettingsForTests = UTIL_CustomSettingsFacade.getAffiliationsSettingsForTests(
             new npe5__Affiliations_Settings__c(npe5__Automatic_Affiliation_Creation_Turned_On__c = true)
         );
@@ -813,7 +840,7 @@ public class AFFL_Affiliations_TEST {
             npe5__Organization__c = newPrimary.Id,
             npe5__StartDate__c = System.Today(),
             npe5__Primary__c = true,
-            npe5__Status__c = system.label.npe5.DefaultCurrentStatus
+            npe5__Status__c = AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS
         );
 
         Test.startTest();
