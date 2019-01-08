@@ -1044,12 +1044,12 @@ private with sharing class RD_RecurringDonations_TEST2 {
         );
 
         System.assertEquals(Date.newInstance(2000, 12, 15), RD_RecurringDonations.getStartDate(rd),
-            'Expecting Day of Month date greater than Date Established');
+            'Expecting Next Donation Date to be greater than Date Established');
 
         rd.npe03__Date_Established__c = Date.newInstance(2000, 11, 14);//day is less than Day of Month
 
         System.assertEquals(Date.newInstance(2000, 11, 15), RD_RecurringDonations.getStartDate(rd),
-            'Expecting Day of Month date for the same month as Date Established');
+            'Expecting Next Donation Date for the same month as Date Established');
     }
 
     /*********************************************************************************************************
@@ -1067,19 +1067,19 @@ private with sharing class RD_RecurringDonations_TEST2 {
         );
 
         System.assertEquals(Date.newInstance(2000, 11, 20), RD_RecurringDonations.getStartDate(rd),
-            'Expecting Day of Month date in the same month as Next Donation Date');
+            'Expecting Next Donation Date in the same month as Next Donation Date');
 
         rd.Day_Of_Month__c = '23';//day is greater than Date Established and Next Donation Date days
         System.assertEquals(Date.newInstance(2000, 11, 23), RD_RecurringDonations.getStartDate(rd),
-            'Expecting Day of Month date for the same month as Next Donation Date');
+            'Expecting Next Donation Date for the same month as Next Donation Date');
 
         rd.Day_Of_Month__c = '2';//day is less than Date Established and Next Donation Date days
         System.assertEquals(Date.newInstance(2000, 12, 2), RD_RecurringDonations.getStartDate(rd),
-            'Expecting Day of Month date greater than Date Established');
+            'Expecting Next Donation Date greater than Date Established');
 
         rd.npe03__Next_Payment_Date__c = Date.newInstance(2000, 10, 30);//date is in a month before Date Established
         System.assertEquals(Date.newInstance(2000, 12, 2), RD_RecurringDonations.getStartDate(rd),
-            'Expecting Day of Month date greater than Date Established');
+            'Expecting Next Donation Date greater than Date Established');
 
         rd.npe03__Date_Established__c = Date.newInstance(2000, 10, 19);
         rd.npe03__Next_Payment_Date__c = Date.newInstance(2000, 9, 21);
