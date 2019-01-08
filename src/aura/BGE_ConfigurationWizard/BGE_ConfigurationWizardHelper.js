@@ -160,13 +160,14 @@
 
                 Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
                     var currentFieldGroup = {
-                        sObjectName : sObjectName,
+                        sObjectName: sObjectName,
                         options: [],
                         requiredOptions: [],
                         values: []
                     };
 
                     allFieldsBySObject[sObjectName].forEach(function(currentField) {
+                        currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
                         currentFieldGroup.options.push(
                             {
                                 label: currentField.label,
@@ -217,7 +218,7 @@
                 Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
 
                     var currentFieldGroup = {
-                        sObjectName : sObjectName,
+                        sObjectName: sObjectName,
                         fields: []
                     };
 
@@ -226,6 +227,7 @@
                         var fieldInfo = {
                             name: currentField.name,
                             sObjectName: currentField.sObjectName,
+                            sObjectLabel: currentField.sObjectLabel,
                             label: currentField.label,
                             defaultValue: currentField.defaultValue,
                             requiredInEntryForm: currentField.requiredInEntryForm,
@@ -238,6 +240,7 @@
                         };
 
                         currentFieldGroup.fields.push(fieldInfo);
+                        currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
 
                     });
 
@@ -322,6 +325,7 @@
                     activeFields.push({
                         label: currentField.label,
                         name: currentField.name,
+                        sObjectLabel: currentField.sObjectLabel,
                         sObjectName: currentField.sObjectName,
                         defaultValue: currentField.defaultValue,
                         alwaysRequired: currentField.alwaysRequired,
@@ -473,7 +477,7 @@
 
             /**
              * @description Load the fields and notify onFieldsUpdated listeners.
-             * @param allFields: list of allFields with sObjectName/Name.
+             * @param allFields: list of allFields with sObjectLabel/Name.
              * param activeFields: Map of activeFieldsBySObject with sObjectName, Name,
              * and Default Value, Hide and Required flags.
              * @return void.
