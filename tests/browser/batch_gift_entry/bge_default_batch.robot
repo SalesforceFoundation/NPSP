@@ -30,4 +30,4 @@ BGE Batch With Default Values
     Should Be Equal As Strings    &{bge_batch}[Expected_Total_Batch_Amount__c]    0.0
     Should Be Equal As Strings    &{bge_batch}[Post_Process_Implementing_Class__c]    None
     Should Be Equal As Strings    &{bge_batch}[RequireTotalMatch__c]    False
-    Should Be Equal As Strings    &{bge_batch}[Run_Opportunity_Rollups_while_Processing__c]    False
+    Should Be Equal As Strings    &{bge_batch}[Run_Opportunity_Rollups_while_Processing__c]    True
