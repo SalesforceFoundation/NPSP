@@ -153,13 +153,13 @@
                             <li>{!$Label.CONV_Master_Address_Set}</li>
                             <li>{!$Label.CONV_Address_Overrides_Set}</li>
                             <li>{!$Label.CONV_Primary_Contacts_Set}</li>
-                            <li><apex:outputText value="{!$Label.CONV_Triggers_Reenabled}" escape="false"/></li>
+                            <li><c:UTIL_HtmlOutput html="{!$Label.CONV_Triggers_Reenabled}"/></li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="slds-grid slds-m-bottom_large">
-                    <div class="slds-col slds-size_1-of-1 slds-m-horizontal_xx-large slds-col-rule_top">
+                    <div class="slds-col slds-col-rule_top slds-size_2-of-2 slds-p-left_x-large slds-p-right_xx-large">
                         <h3 class="slds-text-heading_small slds-m-vertical_medium">
                             {!$Label.CONV_Configuration_Options}
                         </h3>
@@ -215,7 +215,7 @@
                             <svg aria-hidden="true" class="slds-button__icon slds-button__icon_large" data-dismiss="modal" data-target="warning_modal" viewBox="0 0 24 24">
                                 <path  data-dismiss="modal" data-target="warning_modal" d="M14.6 11.9l6-6c.3-.3.3-.7 0-1l-.9-1c-.3-.3-.7-.3-1 0L12.6 10c-.1.2-.4.2-.6 0L6 3.9c-.3-.3-.7-.3-1 0l-1 .9c-.3.3-.3.7 0 1l6.1 6.1c.1.1.1.4 0 .6L4 18.6c-.3.3-.3.7 0 1l.9.9c.3.3.7.3 1 0l6.1-6c.2-.2.5-.2.6 0l6.1 6c.3.3.7.3 1 0l.9-.9c.3-.3.3-.7 0-1l-6-6c-.2-.2-.2-.5 0-.7z"/>
                             </svg>
-                            <span class="slds-assistive-text">Close</span>
+                            <span class="slds-assistive-text">{!$Label.bdiBtnClose}</span>
                         </button>
                     </div>
                     <div class="slds-modal__content slds-p-around_medium">
@@ -277,11 +277,11 @@
                         function (result, event) {
                         if (event.status) {
                             if (!result) {
-                                alert("{!$Label.CONV_Selected_Field_Bad}");
+                                alert("{!JSENCODE($Label.CONV_Selected_Field_Bad)}");
                                 selectElement.value = '-None-';
                             }
                         } else {
-                            alert("{!$Label.CONV_Selected_Field_Verification_Failure}");
+                            alert("{!JSENCODE($Label.CONV_Selected_Field_Verification_Failure)}");
                         }
                     });
                 }
