@@ -12,19 +12,26 @@
 
     <div class="slds-scope slds-p-bottom_x-large">
         <apex:form id="idForm" styleClass="slds-p-bottom_x-large">
-    
-        <c:UTIL_PageMessages />
 
-        <div class="slds-card__header slds-grid">
-            <div class="slds-no-flex">
-                <apex:commandButton value="{!$Label.bdiBtnClose}" 
-                    action="{!close}" 
-                    immediate="true" 
-                    styleClass="slds-button slds-button_neutral" />
+            <c:UTIL_PageHeader headerLabel="{!$ObjectType.DataImport__c.Label}"
+                header="NPSP Data Import Delete"
+                icon="custom67" iconCategory="custom"
+                showSaveBtn="false" cancelLabel="{!$Label.bdiBtnClose}"
+                cancelAction="{!close}" />
+
+            <!-- PAGE MESSAGE -->
+            <c:UTIL_PageMessages escMsg="false" allowClose="false" />
+
+            <div class="slds-p-around_small" id="btnDiv">
+                <apex:commandButton value="{!$Label.bdiMassDelete}"
+                    id="delBtn"
+                    action="{!deleteFoundRecords}"
+                    rendered="{!canDelete}"
+                    rerender="idForm"
+                    styleClass="slds-button slds-button_brand" />
             </div>
-        </div>
 
         </apex:form>
     </div>
-                                    
+
 </apex:page>

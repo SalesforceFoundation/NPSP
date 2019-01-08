@@ -57,6 +57,7 @@ public with sharing class UTIL_HtmlOutput_CTRL {
         '<a href="/setup/' => '|setupURL|',
         '<a href="#" onclick="ShowPanel(\'idPanelHealthCheck\');return false;"' => '|showPanelHealthCheck|',
         '<a href="#" onclick="ShowPanel(\'idPanelErrorLog\');return false;"' => '|showPanelErrorLog|',
+        '<a href="#" onclick="window.open(\'/' => '|openRelative|',
         '" target="_blank"' => '|blankTarget|',
         '" target="_new"' => '|newTarget|',
         '"' => '|quote|'
