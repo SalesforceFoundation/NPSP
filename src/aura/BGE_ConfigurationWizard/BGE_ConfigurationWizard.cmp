@@ -135,7 +135,7 @@
                         <aura:iteration items="{!v.availableFields.fieldGroups}" var="currentFieldGroup">
                             <div class="slds-section slds-p-bottom_medium">
                                 <h3 class="slds-section__title slds-theme_shade slds-m-bottom_small">
-                                    <span class="slds-truncate slds-p-around_x-small">{!currentFieldGroup.sObjectName}</span>
+                                    <span class="slds-truncate slds-p-around_x-small">{!currentFieldGroup.sObjectLabel}</span>
                                 </h3>
                                 <lightning:layout horizontalAlign="center">
                                     <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center">
@@ -180,7 +180,7 @@
                             <div class="slds-section slds-is-open">
                                 <h3 class="slds-section__title slds-theme_shade">
                                     <span class="slds-truncate slds-p-horizontal_small">
-                                        {!currentFieldGroup.sObjectName}
+                                        {!currentFieldGroup.sObjectLabel}
                                     </span>
                                 </h3>
                             </div>
