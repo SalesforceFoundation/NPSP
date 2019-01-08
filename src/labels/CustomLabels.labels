@@ -1947,7 +1947,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>bdiBtnClose</fullName>
-        <categories>Data Importer, Opportunity Send Acknowledgment</categories>
+        <categories>Data Importer, Opportunity Send Acknowledgment, Account Conversion</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiBtnClose</shortDescription>
