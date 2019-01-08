@@ -420,7 +420,7 @@
                 this.donationMatchingRule = info.donationMatchingRule;
                 this.donationDateRange = info.donationDateRange;
                 this.postProcessClass = info.postProcessClass;
-                this.noMatchOnDate = !isDonationDateInMatchRule(info.donationMatchingRule, "donation_date__c");
+                this.noMatchOnDate = !isStringMatchedInList(info.donationMatchingRule, "donation_date__c");
                 this.onInfoUpdated.notify();
             }
 
@@ -429,21 +429,21 @@
              * @return Boolean validity.
              */
             function isValid() {
-                return this.name && this.description
+                return this.name && this.description;
             }
 
             /**
-             * @description Checks if the donation date field is included in the list of matching fields
-             * @return Boolean included.
+             * @description Checks if the specified string is a matched substring of any strings in list.
+             * @return Boolean string matches.
              */
-            function isDonationDateInMatchRule(donationMatchingRuleFields, donationFieldAPIName) {
-                let fieldIncluded = false;
-                donationMatchingRuleFields.forEach(function(matchField) {
-                    if (matchField.indexOf(donationFieldAPIName) > 0) {
-                        fieldIncluded = true;
+            function isStringMatchedInList(theList, theString) {
+                let stringMatches = false;
+                theList.forEach(function(currString) {
+                    if (currString.indexOf(theString) > 0) {
+                        stringMatches = true;
                     }
                 });
-                return fieldIncluded;                
+                return stringMatches;
             }
 
             // BatchInfo module public functions and properties
