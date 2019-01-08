@@ -420,8 +420,7 @@
                 this.donationMatchingRule = info.donationMatchingRule;
                 this.donationDateRange = info.donationDateRange;
                 this.postProcessClass = info.postProcessClass;
-                this.noMatchOnDate = (info.donationMatchingRule.indexOf("donation_date__c") < 0 && 
-                    info.donationMatchingRule.indexOf("npsp__donation_date__c") < 0);
+                this.noMatchOnDate = !isDonationDateInMatchRule(info.donationMatchingRule, "donation_date__c");
                 this.onInfoUpdated.notify();
             }
 
@@ -431,6 +430,20 @@
              */
             function isValid() {
                 return this.name && this.description
+            }
+
+            /**
+             * @description Checks if the donation date field is included in the list of matching fields
+             * @return Boolean included.
+             */
+            function isDonationDateInMatchRule(donationMatchingRuleFields, donationFieldAPIName) {
+                let fieldIncluded = false;
+                donationMatchingRuleFields.forEach(function(matchField) {
+                    if (matchField.indexOf(donationFieldAPIName) > 0) {
+                        fieldIncluded = true;
+                    }
+                });
+                return fieldIncluded;                
             }
 
             // BatchInfo module public functions and properties
