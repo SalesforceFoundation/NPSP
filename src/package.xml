@@ -1379,6 +1379,8 @@
         <members>bdiImported</members>
         <members>bdiInvalidBatchId</members>
         <members>bdiInvalidDonationMatchingBehavior</members>
+        <members>bdiMassDelete</members>
+        <members>bdiMassDeleteWarning</members>
         <members>bdiMatched</members>
         <members>bdiMatchedApplyNewPayment</members>
         <members>bdiMatchedBest</members>
@@ -1758,6 +1760,7 @@
         <members>sendAcknowledgmentFailureReasons</members>
         <members>sendAcknowledgmentFireStatus</members>
         <members>sendAcknowledgmentNoneSelected</members>
+        <members>sendAcknowledgmentNumberAlreadySent</members>
         <members>sendAcknowledgmentNumberNoEmail</members>
         <members>sendAcknowledgmentNumberSent</members>
         <members>sendAcknowledgmentPageTitle</members>
