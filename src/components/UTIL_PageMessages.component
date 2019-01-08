@@ -68,9 +68,12 @@
                             <div class="slds-media__body">
                                 <h2 class="slds-text-heading_small">
                                     <apex:outputText value="{!m.severityLabel}: " rendered="{!'' != m.severityLabel}"/>
-                                    <apex:outputText value="{!m.summary}" escape="{!escMsg}"/>
+                                    <apex:outputPanel layout="none" rendered="{!escMsg == false}">
+                                        <c:UTIL_HtmlOutput html="{!m.summary}" hasLink="true" />
+                                    </apex:outputPanel>
+                                    <apex:outputText value="{!m.summary}" rendered="{!escMsg != false}"/>
                                 </h2>
-                                <apex:outputText styleClass="slds-m-top_medium" value="{!m.detail}" escape="{!escMsg}" rendered="{!AND(NOT(ISBLANK(m.detail)), NOT(m.summary == m.detail))}"/>
+                                <apex:outputText styleClass="slds-m-top_medium" value="{!m.detail}" rendered="{!AND(NOT(ISBLANK(m.detail)), NOT(m.summary == m.detail))}"/>
                             </div>
                         </div>
                     </div>
