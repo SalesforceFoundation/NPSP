@@ -89,7 +89,7 @@ private class TDTM_DMLgt200_TEST {
                     npe5__Organization__c = orgAcct.Id,
                     npe5__Contact__c = c.Id,
                     npe5__Primary__c = True,
-                    npe5__Status__c = system.label.npe5.DefaultCurrentStatus
+                    npe5__Status__c = AFFL_Affiliations_TDTM.DEFAULT_CURRENT_STATUS
             );
             affls.add(affl);
         }
