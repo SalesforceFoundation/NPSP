@@ -294,6 +294,8 @@ public with sharing class USER_UserService_TEST {
             Label = 'PermissionTest'
         );
 
+        // Dynamically adding permissions to avoid dependencies, previously our package failed to deploy
+        // to an org without translations enabled, due to the field not existing.
         permission.put('PermissionsManageCustomPermissions',true);
         permission.put('PermissionsViewRoles',true);
         permission.put('PermissionsViewSetup',true);
