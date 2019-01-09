@@ -73,7 +73,7 @@
         ];
         component.set('v.batchMetadata', batchMetadata);
 
-        //available fields
+        //set available fields for field selection in dueling picklists
         let activeFields = JSON.parse(response.activeFields);
         let allFields = response.availableFields;
         let availableFields = {
@@ -156,9 +156,52 @@
 
 
         //batchFieldOptions
-        /*
-        component.set('v.batchFieldOptions', batchFieldOptionsView);
-        * */
+        this.loadBatchFieldOptions(component, activeFieldsBySObject);
+
+    },
+
+    loadBatchFieldOptions: function(component, activeFieldsBySObject) {
+        debugger;
+
+        let batchFieldOptions = {
+            fieldGroups: []
+        };
+        // todo: wire up this error handling
+        // batchFieldOptions.errors = availableFields.errors;
+
+        Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
+
+            var currentFieldGroup = {
+                sObjectName: sObjectName,
+                fields: []
+            };
+
+            activeFieldsBySObject[sObjectName].forEach(function (currentField) {
+
+                var fieldInfo = {
+                    name: currentField.name,
+                    sObjectName: currentField.sObjectName,
+                    sObjectLabel: currentField.sObjectLabel,
+                    label: currentField.label,
+                    defaultValue: currentField.defaultValue,
+                    requiredInEntryForm: currentField.requiredInEntryForm,
+                    hide: currentField.hide,
+                    type: currentField.type,
+                    formatter: currentField.formatter,
+                    options: currentField.options,
+                    conditionallyRequired: currentField.conditionallyRequired,
+                    alwaysRequired: currentField.alwaysRequired
+                };
+
+                currentFieldGroup.fields.push(fieldInfo);
+                currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
+
+            });
+
+            batchFieldOptions.fieldGroups.push(currentFieldGroup);
+
+        });
+        component.set('v.batchFieldOptions', batchFieldOptions);
     },
 
     /******************************** Step Functions *****************************/
@@ -177,6 +220,14 @@
         this.sendMessage(component,'setStep', progressIndicatorStep);
     },
 
+    /**
+     * @description sets the pendingsave flag to disable Save button so duplicates can't be created
+     * @return void.
+     */
+    togglePendingSave: function(component) {
+        component.get('v.batchMetadata.pendingSave');
+        component.set('v.batchMetadata.pendingSave', !pendingSave);
+    },
 
     /******************************** Sort and Group Functions *****************************/
 
