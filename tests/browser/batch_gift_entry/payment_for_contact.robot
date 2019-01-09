@@ -19,8 +19,8 @@ Select a payment for a contact make grid changes and process it
     Populate Address    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
     Click Link    &{contact}[FirstName] &{contact}[LastName]
     Click Link    Review Donations
-    ${pay_id}    Get BGE Card Header    &{opportunity}[Name]
-    Log To Console    ${pay_id}
+    ${pay_no}    Get BGE Card Header    &{opportunity}[Name]
+    Log To Console    ${pay_no}
     Click BGE Button    Update this Payment
     Fill BGE Form
     ...                       Donation Amount=10
@@ -29,23 +29,29 @@ Select a payment for a contact make grid changes and process it
     Click BGE Button       Save
     Reload Page
     Verify Row Count    1
-    Page Should Contain Link    ${pay_id}
+    Page Should Contain Link    ${pay_no}
     Sleep    2
     Wait For Locator    bge.edit_button    Donation Amount
     Click BGE Edit Button    Donation Amount    
-    # Populate BGE Edit Field    Donation Amount    20
+    Populate BGE Edit Field    Donation Amount    20
     Click BGE Button       Process Batch
     Select Frame With Title    NPSP Data Import
     Click Button With Value   Begin Data Import Process
     Wait For Locator    data_imports.status    Completed
     Click Button With Value   Close
+    ${value}    Return Locator Value    bge.value    Donation
+    Click Link    ${value}
+    Select Window     New
+    ${pay_id}    Get Current Record ID
+    &{payment} =     Salesforce Get  npe01__OppPayment__c  ${pay_id}
+    Should Be Equal As Strings    &{payment}[npe01__Payment_Amount__c]    20.0
+    Should Be Equal As Strings    &{payment}[npe01__Payment_Date__c]    ${date}
+    Should Be Equal As Strings    &{payment}[npe01__Paid__c]    True
     Go To Record Home    &{opportunity}[Id]
     Select Tab    Details
     Confirm Value    Amount    $100.00    Y 
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Confirm Value    Close Date    ${opp_date}    Y 
     Confirm Value    Stage    Prospecting    Y 
-    Click Link    ${pay_id}
-    Confirm Value    Payment Amount    $10.00    Y 
-    Confirm Value    Payment Date    ${opp_date}    Y 
+     
     

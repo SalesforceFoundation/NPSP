@@ -747,7 +747,7 @@ class NPSP(object):
         
     def wait_for_locator(self, path, *args, **kwargs):
         main_loc = self.get_npsp_locator(path,*args, **kwargs)    
-        self.selenium.wait_until_element_is_visible(main_loc)
+        self.selenium.wait_until_element_is_visible(main_loc, timeout=60)
             
     def get_npsp_settings_value(self,field_name): 
         locator = npsp_lex_locators['npsp_settings']['field_value'].format(field_name)
@@ -857,15 +857,8 @@ class NPSP(object):
             
     def populate_bge_edit_field(self, title, value):
         locator=npsp_lex_locators['bge']['edit_field'].format(title)
-        #self.selenium.set_focus_to_element(locator)
-        field=self.selenium.get_webelement(locator)
-        field.send_keys(Keys.BACK_SPACE + Keys.BACK_SPACE)
-#         field.send_keys(Keys.CONTROL , "A")
-#         time.sleep(2)
-#         field.send_keys(Keys.BACK_SPACE) 
-#         field=self.salesforce._populate_field(locator, value)
-        time.sleep(2)  
-        field.send_keys(value)  
+        field=self.salesforce._populate_field(locator, value)
+ 
         
     def verify_row_count(self,value):
         """verifies if actual row count matches with expected value"""

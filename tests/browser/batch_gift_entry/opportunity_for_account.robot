@@ -31,7 +31,7 @@ Select an opportunity for an account make grid changes and process it
     Page Should Contain Link    &{opportunity}[Name]
     Wait For Locator    bge.edit_button    Donation Amount
     Click BGE Edit Button    Donation Amount    
-    # Populate BGE Edit Field    Donation Amount    10
+    Populate BGE Edit Field    Donation Amount    10
     Click BGE Button       Process Batch
     Select Frame With Title    NPSP Data Import
     Click Button With Value   Begin Data Import Process
@@ -39,7 +39,7 @@ Select an opportunity for an account make grid changes and process it
     Click Button With Value   Close
     Go To Record Home    &{opportunity}[Id]
     Select Tab    Details
-    Confirm Value    Amount    $20.00    Y 
+    Confirm Value    Amount    $10.00    Y 
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Confirm Value    Close Date    ${opp_date}    Y 
     Confirm Value    Stage    Closed Won    Y 
