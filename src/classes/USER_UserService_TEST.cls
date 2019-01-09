@@ -291,13 +291,15 @@ public with sharing class USER_UserService_TEST {
         // on which CustomizeApplication settings depends are set as well
         PermissionSet permission = new PermissionSet(
             Name = 'PermissionTest',
-            Label = 'PermissionTest',
-            PermissionsManageCustomPermissions = true,
-            PermissionsViewRoles = true, 
-            PermissionsViewSetup = true,
-            PermissionsManageTranslation = true,
-            PermissionsCustomizeApplication = true
+            Label = 'PermissionTest'
         );
+
+        permission.put('PermissionsManageCustomPermissions',true);
+        permission.put('PermissionsViewRoles',true);
+        permission.put('PermissionsViewSetup',true);
+        permission.put('PermissionsManageTranslation',true);
+        permission.put('PermissionsCustomizeApplication',true);
+
         insert permission;
 
         insert new PermissionSetAssignment(
