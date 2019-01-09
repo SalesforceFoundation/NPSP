@@ -573,6 +573,7 @@
     </types>
     <types>
         <members>BGE_BatchGiftEntryTab</members>
+        <members>BGE_BEEZ_ConfigurationWizard</members>
         <members>BGE_ConfigurationWizard</members>
         <members>BGE_DataImportBatchEntry</members>
         <members>BGE_DonationSelector</members>
