@@ -71,9 +71,7 @@
             $A.get('$Label.c.bgeBatchSetFieldOptions'),
             $A.get('$Label.c.bgeBatchSetBatchOptions')
         ];
-        this.setPageHeader(component, response);
         component.set('v.batchMetadata', batchMetadata);
-        debugger;
 
         //available fields
 
@@ -87,6 +85,26 @@
         * */
     },
 
+    /******************************** Step Functions *****************************/
+
+    nextStep: function(component) {
+        /*this.clearError();*/
+        this.stepUp(component);
+        this.setPageHeader(component);
+    },
+
+    stepUp: function(component) {
+        let stepNum = parseInt(component.get('v.batchMetadata.progressIndicatorStep'));
+        stepNum++;
+        let progressIndicatorStep = stepNum.toString();
+        component.set('v.batchMetadata.progressIndicatorStep', progressIndicatorStep);
+        this.sendMessage(component,'setStep', progressIndicatorStep);
+    },
+
+
+    /******************************** Save Functions *****************************/
+
+
     /*setMode: function(component, mode) {
         let batchMetadata = component.get('v.batchMetadata');
         batchMetadata.mode = mode;
@@ -94,16 +112,15 @@
         component.set('v.batchMetadata', batchMetadata);
     },*/
 
-    setPageHeader: function(component, response) {
-        /*let batchMetadata = component.get('v.batchMetadata');
-        var progressIndicatorStep = parseInt(this.progressIndicatorStep);
-        this.pageHeader = headers[progressIndicatorStep];
-        component.set('v.batchMetadata', batchMetadata);*/
-        //todo: send alert to footer
+    setPageHeader: function(component) {
+        const batchMetadata = component.get('v.batchMetadata');
+        const headers = batchMetadata.headers;
+        const progressIndicatorStep = parseInt(batchMetadata.progressIndicatorStep);
+        this.sendMessage(component,'setHeader', headers[progressIndicatorStep]);
     },
 
     sendMessage: function(component, channel, message) {
-        var sendMessage = $A.get('e.ltng:sendMessage');
+        let sendMessage = $A.get('e.ltng:sendMessage');
         sendMessage.setParams({
             'channel': channel,
             'message': message
