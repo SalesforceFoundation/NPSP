@@ -38,7 +38,6 @@
                 implements="force:hasRecordId,force:hasSObjectName">
 
     <!-- private attributes -->
-    <aura:attribute name="model" type="Object" access="PRIVATE" />
     <aura:attribute name="batchInfo" type="Object" access="PRIVATE" />
     <aura:attribute name="batchMetadata" type="Object" access="PRIVATE"/>
     <aura:attribute name="availableFields" type="Object" access="PRIVATE" />

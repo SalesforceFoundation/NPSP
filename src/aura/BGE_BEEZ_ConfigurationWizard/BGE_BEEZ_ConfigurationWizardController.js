@@ -1,6 +1,6 @@
 ({
     doInit: function(component, event, helper){
-
+        helper.init(component);
     },
 
     handleSendMessage: function(component, event, helper){
