@@ -1,11 +1,12 @@
 <apex:page extensions="REL_RelationshipsViewer_CTRL" standardController="Contact" sidebar="false">
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/src/graphics/colors.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/src/graphics/primitives.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/src/graphics/graphics.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-migrate-1.2.1.min.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/lib/arbor.js')}"/>
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/lib/arbor-tween.js')}"/> 
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/src/graphics/colors.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/src/graphics/primitives.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/src/graphics/graphics.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-1.10.2.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-migrate-1.2.1.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/lib/arbor.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/lib/arbor-tween.js')}" />
+
     <body>
         <canvas id="viewport" width="1000" height="600"></canvas>
         <script>
@@ -19,10 +20,10 @@
             yellow:"#f0bc4c"
             orange:"#f07c39"
             */
-            var colors = ["#7A3185", "#006EA5", "#009F79", "#f0bc4c", "#f07c39"]; 
+            var colors = ["#7A3185", "#006EA5", "#009F79", "#f0bc4c", "#f07c39"];
 
             // this is the object that stores the contact info that displays in the info box
-            var currentContact = new Object(); 
+            var currentContact = new Object();
             currentContact.name = '';
             currentContact.accountName = '';
             currentContact.title = '';
@@ -43,13 +44,13 @@
                 var Renderer = function(canvas) {
                     var canvas = j$(canvas).get(0)
                     var ctx = canvas.getContext("2d");
-                    
+
                     var that = {
                         init:function(system) {
                             particleSystem = system;
                             // resize canvas to window
                             ctx.canvas.width = window.innerWidth - 20;
-                            particleSystem.screenSize(canvas.width, canvas.height); 
+                            particleSystem.screenSize(canvas.width, canvas.height);
                             particleSystem.screenPadding(80);
                             that.initMouseHandling();
                         },
@@ -62,23 +63,23 @@
                             particleSystem.eachEdge(function(edge, pt1, pt2) {
                                 ctx.strokeStyle = "rgba(0,0,0, .333)";
                                 ctx.lineWidth = 1;
-                                ctx.beginPath ();
-                                ctx.moveTo (pt1.x, pt1.y);
-                                ctx.lineTo (pt2.x, pt2.y);
-                                ctx.stroke ();
-        
+                                ctx.beginPath();
+                                ctx.moveTo(pt1.x, pt1.y);
+                                ctx.lineTo(pt2.x, pt2.y);
+                                ctx.stroke();
+
                                 if (edge.data.label) {
                                     // set font style
                                     ctx.font = 'italic 10px sans-serif';
-        
+
                                     // add white box behind text to block line
                                     ctx.fillStyle = "white";
                                     var boxWidth = ctx.measureText(edge.data.label).width;
-                                    ctx.fillRect ((pt1.x + pt2.x  - boxWidth) / 2, (pt1.y + pt2.y) / 2 - 15, boxWidth, 20);
-                        
+                                    ctx.fillRect((pt1.x + pt2.x - boxWidth) / 2, (pt1.y + pt2.y) / 2 - 15, boxWidth, 20);
+
                                     // add label
                                     ctx.fillStyle = "black";
-                                    ctx.fillText (edge.data.label, (pt1.x + pt2.x - boxWidth) / 2 , (pt1.y + pt2.y) / 2);
+                                    ctx.fillText(edge.data.label, (pt1.x + pt2.x - boxWidth) / 2, (pt1.y + pt2.y) / 2);
                                 }
                             })
         
@@ -89,28 +90,28 @@
                                 if (!(""+label).match(/^[ \t]*$/)) {
                                     pt.x = Math.floor(pt.x)
                                     pt.y = Math.floor(pt.y)
-                                }else{
+                                } else {
                                     label = null;
                                 }
-                    
+
                                 // draw a circle centered at pt
                                 if (node.data.color) {
                                     ctx.fillStyle = node.data.color
-                                }else{
+                                } else {
                                     ctx.fillStyle = "rgba(0,0,0,.2)"
                                 }
-                    
-                                if (node.data.color=='none') {
+
+                                if (node.data.color == 'none') {
                                     ctx.fillStyle = "white"
                                 }
-                    
+
                                 ctx.beginPath();
-                                ctx.arc(pt.x, pt.y, w/2, 0, 2 * Math.PI, false);
+                                ctx.arc(pt.x, pt.y, w / 2, 0, 2 * Math.PI, false);
                                 ctx.fill();
-                    
+
                                 // save this to position info box later
-                                node.data.radius = w/2;
-                                
+                                node.data.radius = w / 2;
+
                                 // center the label inside the circle 
                                 if (label) {
                                     ctx.font = "Bold 12px Helvetica";
@@ -119,9 +120,9 @@
                                     if (node.data.color=='none') {
                                         ctx.fillStyle = '#333333';
                                     }
-                                    ctx.fillText(label||"", pt.x, pt.y+4);
-                                }                 
-                            })   
+                                    ctx.fillText(label || "", pt.x, pt.y + 4);
+                                }
+                            })
                             ctx.strokeStyle = "#cccccc"
                             ctx.lineWidth = 1
                             ctx.beginPath()
@@ -130,13 +131,13 @@
                         initMouseHandling:function() {
                             // no-nonsense drag and drop (thanks springy.js)
                             var dragged = null;
-        
+
                             var mouseoverHandler = {
-                                mouseover:function(e) {
+                                mouseover: function (e) {
                                     var pos = j$(canvas).offset();
-                                    _mouseP = arbor.Point(e.pageX-pos.left, e.pageY-pos.top)
+                                    _mouseP = arbor.Point(e.pageX - pos.left, e.pageY - pos.top)
                                     nearest = particleSystem.nearest(_mouseP);
-                                    if (nearest.distance < nearest.node.data.radius + 10 ) {
+                                    if (nearest.distance < nearest.node.data.radius + 10) {
                                         if (nearest.node.data.id != currentContact.id || mouseOutComplete) {
                                             currentContact.id = nearest.node.data.id;
                                             currentContact.name = nearest.node.data.label;
@@ -144,7 +145,7 @@
                                                 currentContact.accountName = nearest.node.data.accountName;
                                             } else{
                                                 currentContact.accountName = '';
-                                            }                            
+                                            }
                                             if (nearest.node.data.title) {
                                                 currentContact.title = nearest.node.data.title;
                                             } else {
@@ -160,7 +161,7 @@
                                     }
                                 }
                             }
-        
+
                             // set up a handler object that will initially listen for mousedowns then
                             // for moves and mouseups while dragging
                             var handler = {
@@ -187,13 +188,13 @@
                                             if (childColorIndex < colors.length - 1) {
                                                 childColorIndex++;
                                             }
-                          
+
                                             var thisLabel = '';
                                             for (var i = 0; i < result.length; i++) {
                                                 // if a node for result contact does not exist on the page, create it
                                                 relatedNode = particleSystem.getNode(result[i].id);
-                                                if (result[i].status == '{!$Label.REL_Former}') {
-                                                    thisLabel = result[i].type + ' ({!$Label.REL_Former})';
+                                                if (result[i].status == '{!JSINHTMLENCODE($Label.REL_Former)}') {
+                                                    thisLabel = result[i].type + ' ({!JSINHTMLENCODE($Label.REL_Former)})';
                                                 } else {
                                                     thisLabel = result[i].type;
                                                 }                                               
@@ -226,7 +227,7 @@
                                     if (dragged && dragged.node !== null) {
                                         // while we're dragging, don't let physics move the node
                                         dragged.node.fixed = true
-                                    }       
+                                    }
                                     j$(canvas).bind('mousemove', handler.dragged)
                                     j$(window).bind('mouseup', handler.dropped)
                                     return false
@@ -240,13 +241,13 @@
                                         var p = particleSystem.fromScreen(s)
                                         dragged.node.p = p
                                     }
-                                  return false;
+                                    return false;
                                 },
         
                                 dropped:function(e) {
                                     if (dragged===null || dragged.node===undefined) return;
                                     if (dragged.node !== null) dragged.node.fixed = false;
-                                    
+
                                     dragged.node.tempMass = 1000;
                                     dragged = null;
                                     j$(canvas).unbind('mousemove', handler.dragged);
@@ -285,16 +286,16 @@
 
                             // if there are no relationships, arbor kind of freaks out, so don't let it try to draw a standalone node
                             if (result.length < 2) {
-                                var notice = '<p><strong>{!$Label.REL_No_Relationships}</strong></p>';
-                                notice += '<p><a href="/' + result[0].id + '" style="color: white; font-weight: bold;" >[ {!$Label.REL_Return_to_Contact} ] </a><br/>';
+                                var notice = '<p><strong>{!JSINHTMLENCODE($Label.REL_No_Relationships)}</strong></p>';
+                                notice += '<p><a href="/' + result[0].id + '" style="color: white; font-weight: bold;" >[ {!JSINHTMLENCODE($Label.REL_Return_to_Contact)} ] </a><br/>';
                                 
                                 drawToolTip(20, 20, notice);
                             } else {
                                 basenode = sys.addNode(result[0].id, {label:conFirstName + ' ' + result[0].lastName, color:colors[0], colorIndex:0, link:result[0].link, id:result[0].id, title:result[0].title, accountName:result[0].accountName})
                                 for (var i = 1; i < result.length; i++) {
                                     var thisLabel = '';
-                                    if (result[i].status == '{!$Label.REL_Former}') {
-                                        thisLabel = result[i].type + ' ({!$Label.REL_Former})';
+                                    if (result[i].status == '{!JSINHTMLENCODE($Label.REL_Former)}') {
+                                        thisLabel = result[i].type + ' ({!JSINHTMLENCODE($Label.REL_Former)})';
                                     } else {
                                     	thisLabel = result[i].type;
                                     }
@@ -342,9 +343,9 @@
                 infoText += currentContact.name + '<br />';
                 if (currentContact.title) infoText += currentContact.title + '<br />';
                 if (currentContact.accountName) infoText += currentContact.accountName + '<br />';
-                infoText += '<br />[ {!$Label.REL_View_Contact_Record} ]<br />';
-                infoText += '[ {!$Label.REL_Create_New_Relationship}  ]<br />';
-                infoText += '[ {!$Label.REL_RECenter} ]<br />';
+                infoText += '<br />[ {!JSINHTMLENCODE($Label.REL_View_Contact_Record)} ]<br />';
+                infoText += '[ {!JSINHTMLENCODE($Label.REL_Create_New_Relationship)}  ]<br />';
+                infoText += '[ {!JSINHTMLENCODE($Label.REL_RECenter)} ]<br />';
                 infoText +='</strong></p>';  
                 j$("#tooltip").html(infoText);             
             });
@@ -367,7 +368,7 @@
             infoText += currentContact.name + '<br />';
             if (currentContact.title) infoText += currentContact.title + '<br />';
             if (currentContact.accountName) infoText += currentContact.accountName + '<br />';
-            infoText += '<br /><a href=/' + currentContact.id + ' target="_blank" style="color: white; font-weight: bold;">[ {!$Label.REL_View_Contact_Record} ]</a><br />';
+            infoText += '<br /><a href=/' + currentContact.id + ' target="_blank" style="color: white; font-weight: bold;">[ {!JSINHTMLENCODE($Label.REL_View_Contact_Record)} ]</a><br />';
         
             //retrieve metadata about the Relationship object in this org
             var ri = getRelationshipInfo();
@@ -387,43 +388,44 @@
         
             uriString += 'retURL=' + currentContact.id;
             var encodedNewRel = encodeURI(uriString);
-            infoText += '<a href=' + encodedNewRel + ' target="_blank" style="color: white; font-weight: bold;" >[ {!$Label.REL_Create_New_Relationship} ]</a><br />';
-            infoText += '<a href=/apex/REL_RelationshipsViewer?id=' + currentContact.id + ' target="_parent" style="color: white; font-weight: bold;">[ {!$Label.REL_RECenter} ]</a><br />';
+            infoText += '<a href=' + encodedNewRel + ' target="_blank" style="color: white; font-weight: bold;" >[ {!JSINHTMLENCODE($Label.REL_Create_New_Relationship)} ]</a><br />';
+            infoText += '<a href=/apex/REL_RelationshipsViewer?id=' + currentContact.id + ' target="_parent" style="color: white; font-weight: bold;">[ {!JSINHTMLENCODE($Label.REL_RECenter)} ]</a><br />';
             infoText +='</strong></p>';     
             return infoText;    
-        }   
-
-        // From Juan Mendes here: http://js-bits.blogspot.com/2010/07/canvas-rounded-corner-rectangles.html
-        function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
-            if (typeof stroke == "undefined" ) { 
-               stroke = true;
-            }
-            if (typeof radius === "undefined") {
-               radius = 5;
-            }
-            ctx.beginPath();
-            ctx.moveTo(x + radius, y);
-            ctx.lineTo(x + width - radius, y);
-            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-            ctx.lineTo(x + width, y + height - radius);
-            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-            ctx.lineTo(x + radius, y + height);
-            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-            ctx.lineTo(x, y + radius);
-            ctx.quadraticCurveTo(x, y, x + radius, y);
-            ctx.closePath();
-            if (stroke) {
-               ctx.stroke();
-            }
-            if (fill) {
-               ctx.fill();
-            }        
         }
-    </script>
-        
+
+            //From Juan Mendes here: http://js-bits.blogspot.com/2010/07/canvas-rounded-corner-rectangles.html
+            function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+                if (typeof stroke == "undefined") {
+                    stroke = true;
+                }
+                if (typeof radius === "undefined") {
+                    radius = 5;
+                }
+                ctx.beginPath();
+                ctx.moveTo(x + radius, y);
+                ctx.lineTo(x + width - radius, y);
+                ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+                ctx.lineTo(x + width, y + height - radius);
+                ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                ctx.lineTo(x + radius, y + height);
+                ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+                ctx.lineTo(x, y + radius);
+                ctx.quadraticCurveTo(x, y, x + radius, y);
+                ctx.closePath();
+                if (stroke) {
+                    ctx.stroke();
+                }
+                if (fill) {
+                    ctx.fill();
+                }
+            }
+        </script>
+
         <apex:pageMessages />
-        
-        <div style="/* box-shadow: 4px 3px 8px rgba(0, 0, 0, 0.80); -moz-box-shadow: 4px 3px 8px rgba(0, 0, 0, 0.80);-webkit-box-shadow: 4px 3px 8px rgba(0, 0, 0, 0.80);*/-moz-border-radius: 4px; border-radius: 4px; opacity: 0.0; padding:12px; position:absolute; top: 0px; left: 0px; color: white; background-color: #991111; font-face: Helvtica; font-size: 12px;" id="tooltip">
+
+        <div style="/* box-shadow: 4px 3px 8px rgba(0, 0, 0, 0.80); -moz-box-shadow: 4px 3px 8px rgba(0, 0, 0, 0.80);-webkit-box-shadow: 4px 3px 8px rgba(0, 0, 0, 0.80);*/-moz-border-radius: 4px; border-radius: 4px; opacity: 0.0; padding:12px; position:absolute; top: 0px; left: 0px; color: white; background-color: #991111; font-face: Helvtica; font-size: 12px;"
+            id="tooltip">
             <h1> </h1>
         </div>
     </body>
