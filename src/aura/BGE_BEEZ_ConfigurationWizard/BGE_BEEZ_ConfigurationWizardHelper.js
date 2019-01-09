@@ -74,13 +74,85 @@
         component.set('v.batchMetadata', batchMetadata);
 
         //available fields
+        let activeFields = JSON.parse(response.activeFields);
+        let allFields = response.availableFields;
+        let availableFields = [];
+        var activeFieldMap = new Map();
 
+        if (activeFields) {
+            activeFields.forEach(function(activeField) {
+                var fieldId = activeField.sObjectName + '.' + activeField.name;
+                activeFieldMap.set(fieldId, activeField);
+            });
+        }
 
-        //batchFieldOptions
+        var availableSortOrder = 1;
+        allFields.forEach(function(currentField) {
+            currentField.id = currentField.sObjectName + '.' + currentField.name;
+            //set Active fields with saved sort order
+            if (activeFieldMap.has(currentField.id)) {
+                currentField.isActive = true;
+                currentField.defaultValue = activeFieldMap.get(currentField.id).defaultValue;
+                currentField.hide = activeFieldMap.get(currentField.id).hide;
+                currentField.requiredInEntryForm = activeFieldMap.get(currentField.id).requiredInEntryForm;
+                currentField.sortOrder = activeFieldMap.get(currentField.id).sortOrder;
+                currentField.type = activeFieldMap.get(currentField.id).type;
+                currentField.formatter = activeFieldMap.get(currentField.id).formatter;
+                currentField.options = activeFieldMap.get(currentField.id).options;
+                currentField.alwaysRequired = activeFieldMap.get(currentField.id).alwaysRequired;
+            } else {
+                currentField.isActive = false;
+            }
+            currentField.availableSortOrder = availableSortOrder;
+            availableSortOrder++;
+            availableFields.push(currentField);
+        });
+
+        // sort into groups by object
+        availableFields.fieldGroups = [];
+
+        var activeFieldsBySObject = this.getActivesBySObject(allFields);
+        var allFieldsBySObject = this.groupFieldsBySObject(allFields);
+debugger;
+        Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
+            var currentFieldGroup = {
+                sObjectName: sObjectName,
+                options: [],
+                requiredOptions: [],
+                values: []
+            };
+
+            allFieldsBySObject[sObjectName].forEach(function(currentField) {
+                currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
+                currentFieldGroup.options.push(
+                    {
+                        label: currentField.label,
+                        value: currentField.id
+                    }
+                );
+
+                if (currentField.alwaysRequired) {
+                    currentFieldGroup.requiredOptions.push(currentField.id);
+                }
+            });
+
+            if (activeFieldsBySObject[sObjectName]) {
+                activeFieldsBySObject[sObjectName].forEach(function(currentField) {
+                    currentFieldGroup.values.push(currentField.id);
+                });
+            }
+            availableFields.fieldGroups.push(currentFieldGroup);
+        });
+        component.set('v.availableFields', availableFields);
 
 
         /*
         component.set('v.availableFields', batchFieldsView);
+        */
+
+
+        //batchFieldOptions
+        /*
         component.set('v.batchFieldOptions', batchFieldOptionsView);
         * */
     },
@@ -102,8 +174,63 @@
     },
 
 
-    /******************************** Save Functions *****************************/
+    /******************************** Sort and Group Functions *****************************/
 
+    /**
+     * @description Gets the active fields grouped by SObject.
+     * @return Map of SObject group to List of related active fields.
+     */
+    getActivesBySObject: function(allFields){
+        debugger;
+        var activeFields = [];
+        allFields.forEach(function(currentField) {
+            if (currentField.isActive) {
+                activeFields.push(currentField);
+            }
+        });
+        activeFields = this.sortFieldsByOrder(activeFields);
+        return this.groupFieldsBySObject(activeFields);
+    },
+
+    /**
+     * @description Sort the fields by order.
+     * @param fields. List of the fields to sort.
+     * @return sorted fields.
+     */
+    sortFieldsByOrder: function(fields) {
+        debugger;
+        fields.sort(function(currentField, nextField) {
+            if (currentField.sortOrder < nextField.sortOrder) {
+                return -1;
+            }
+            if (currentField.sortOrder > nextField.sortOrder) {
+                return 1;
+            }
+            // numbers must be equal
+            return 0;
+        });
+        return fields;
+    },
+
+    /**
+     * @description Groups the fields by SObject name.
+     * @param fields: list of fields.
+     * @return Map of SObject name to List of related fields.
+     */
+    groupFieldsBySObject: function(fields) {
+        debugger;
+        var result = {};
+        fields.forEach(function(currentField) {
+            if ((currentField.sObjectName in result) === false) {
+                result[currentField.sObjectName] = [];
+            }
+            result[currentField.sObjectName].push(currentField);
+        });
+
+        return result;
+    },
+
+    /******************************** Save Functions *****************************/
 
     /*setMode: function(component, mode) {
         let batchMetadata = component.get('v.batchMetadata');
@@ -111,6 +238,9 @@
         batchMetadata.progressIndicatorStep = '0';
         component.set('v.batchMetadata', batchMetadata);
     },*/
+
+
+    /******************************** Communication Functions *****************************/
 
     setPageHeader: function(component) {
         const batchMetadata = component.get('v.batchMetadata');
