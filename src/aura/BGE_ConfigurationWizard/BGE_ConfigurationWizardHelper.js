@@ -424,7 +424,7 @@
                 this.donationMatchingRule = info.donationMatchingRule;
                 this.donationDateRange = info.donationDateRange;
                 this.postProcessClass = info.postProcessClass;
-                this.noMatchOnDate = info.donationMatchingRule.indexOf("donation_date__c") < 0;
+                this.noMatchOnDate = !isStringMatchedInList(info.donationMatchingRule, "donation_date__c");
                 this.onInfoUpdated.notify();
             }
 
@@ -433,7 +433,21 @@
              * @return Boolean validity.
              */
             function isValid() {
-                return this.name && this.description
+                return this.name && this.description;
+            }
+
+            /**
+             * @description Checks if the specified string is a matched substring of any strings in list.
+             * @return Boolean string matches.
+             */
+            function isStringMatchedInList(theList, theString) {
+                let stringMatches = false;
+                theList.forEach(function(currString) {
+                    if (currString.indexOf(theString) >= 0) {
+                        stringMatches = true;
+                    }
+                });
+                return stringMatches;
             }
 
             // BatchInfo module public functions and properties
