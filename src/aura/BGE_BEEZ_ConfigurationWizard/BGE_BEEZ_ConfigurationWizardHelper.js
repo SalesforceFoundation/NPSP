@@ -76,7 +76,10 @@
         //available fields
         let activeFields = JSON.parse(response.activeFields);
         let allFields = response.availableFields;
-        let availableFields = [];
+        let availableFields = {
+            fieldGroups: []
+        };
+        let everyField = [];
         var activeFieldMap = new Map();
 
         if (activeFields) {
@@ -105,17 +108,18 @@
             }
             currentField.availableSortOrder = availableSortOrder;
             availableSortOrder++;
-            availableFields.push(currentField);
+            everyField.push(currentField);
         });
 
         // sort into groups by object
-        availableFields.fieldGroups = [];
+        // returns map of sobject name => list of fields 
+        var activeFieldsBySObject = this.getActivesBySObject(everyField);
+        // returns map of sobject name => list of fields 
+        var allFieldsBySObject = this.groupFieldsBySObject(everyField);
+        debugger;
 
-        var activeFieldsBySObject = this.getActivesBySObject(allFields);
-        var allFieldsBySObject = this.groupFieldsBySObject(allFields);
-debugger;
         Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
-            var currentFieldGroup = {
+            let currentFieldGroup = {
                 sObjectName: sObjectName,
                 options: [],
                 requiredOptions: [],
