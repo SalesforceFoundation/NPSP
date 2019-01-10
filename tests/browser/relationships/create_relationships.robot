@@ -14,6 +14,7 @@ Create Relationships for contacts
     ${contact_id2} =  New Contact for HouseHold
     &{contact2} =  Salesforce Get  Contact  ${contact_id2}
     Page Should Contain  &{contact1}[LastName] and &{contact2}[LastName] Household
+    Select Tab  Related
     Click Related List Button  Relationships    New
     Populate Lookup Field    Related Contact    &{contact1}[FirstName] &{contact1}[LastName]
     Click Dropdown            Type

@@ -33,15 +33,15 @@
     </layoutAssignments>
     <layoutAssignments>
         <layout>Opportunity-In-Kind Gift Layout</layout>
-        <recordType>Opportunity.In_Kind</recordType>
+        <recordType>Opportunity.InKindGift</recordType>
     </layoutAssignments>
     <layoutAssignments>
         <layout>Opportunity-Major Gift Layout</layout>
-        <recordType>Opportunity.Major_Gift</recordType>
+        <recordType>Opportunity.MajorGift</recordType>
     </layoutAssignments>
     <layoutAssignments>
         <layout>Opportunity-Matching Gift Layout</layout>
-        <recordType>Opportunity.Matching</recordType>
+        <recordType>Opportunity.MatchingGift</recordType>
     </layoutAssignments>
     <layoutAssignments>
         <layout>Opportunity-Membership Layout</layout>
@@ -59,17 +59,17 @@
     </recordTypeVisibilities>
     <recordTypeVisibilities>
         <default>false</default>
-        <recordType>Opportunity.In_Kind</recordType>
+        <recordType>Opportunity.InKindGift</recordType>
         <visible>true</visible>
     </recordTypeVisibilities>
     <recordTypeVisibilities>
         <default>false</default>
-        <recordType>Opportunity.Major_Gift</recordType>
+        <recordType>Opportunity.MajorGift</recordType>
         <visible>true</visible>
     </recordTypeVisibilities>
     <recordTypeVisibilities>
         <default>false</default>
-        <recordType>Opportunity.Matching</recordType>
+        <recordType>Opportunity.MatchingGift</recordType>
         <visible>true</visible>
     </recordTypeVisibilities>
     <recordTypeVisibilities>
