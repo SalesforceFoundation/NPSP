@@ -28,7 +28,6 @@ Create Household with Name and Address
     ${contact_id} =  Create Contact with Address
     &{contact} =  Salesforce Get  Contact  ${contact_id}
     Header Field Value    Account Name    &{contact}[LastName] Household
-    Select Tab    Details 
     Page Should Contain    50 Fremont Street  
     Go To Object Home         Contact
     Verify Record    &{contact}[FirstName] &{contact}[LastName]

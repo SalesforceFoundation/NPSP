@@ -12,7 +12,7 @@ Remove Primary Affiliation for Contact
     API Create Primary Affiliation    &{account}[Id]    &{contact}[Id]
     Go To Object Home          Contact
     Click Link    link=&{contact}[FirstName] &{contact}[LastName]
-    #Sleep    5
+    Select Tab  Related
     Click Related Item Popup Link  Organization Affiliations  &{account}[Name]  Delete
     Click Modal Button    Delete
     #Sleep    5
@@ -28,9 +28,11 @@ Remove Primary Affiliation for Contact2
     API Create Primary Affiliation    &{account}[Id]    &{contact}[Id]
     Go To Object Home          Contact
     Click Link    link=&{contact}[FirstName] &{contact}[LastName]
-    Select Tab    Details
-    #Scroll Page To Location    100    300
-    Click Edit Button    Edit Primary Affiliation
+    # To make sure the field we want to edit has rendered,
+    # scroll to the one below it
+    Scroll Element Into View  text:Do Not Contact
+    Click Button    title:Edit Primary Affiliation
+    Wait For Locator  record.edit_form
     #Sleep    5
     Scroll Page To Location    100    500
     Delete Icon    Primary Affiliation    &{account}[Name]
