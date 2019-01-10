@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>View</actionName>
+        <comment>Action override created by Lightning App Builder during activation.</comment>
+        <content>NPSP_GAU_Allocation</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+    </actionOverrides>
+    <compactLayoutAssignment>NPSP_GAU_Allocation</compactLayoutAssignment>
+    <compactLayouts>
+        <fullName>NPSP_GAU_Allocation</fullName>
+        <fields>Name</fields>
+        <fields>%%%NAMESPACE%%%General_Accounting_Unit__c</fields>
+        <fields>%%%NAMESPACE%%%Amount__c</fields>
+        <fields>%%%NAMESPACE%%%Campaign__c</fields>
+        <label>NPSP GAU Allocation</label>
+    </compactLayouts>
+
+    <label>GAU Allocation</label>
+    <pluralLabel>GAU Allocations</pluralLabel>
+    <nameField>
+        <displayFormat>ALL-{0}</displayFormat>
+        <label>GAU Allocation Name</label>
+        <type>AutoNumber</type>
+    </nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>ReadWrite</sharingModel>
+</CustomObject>

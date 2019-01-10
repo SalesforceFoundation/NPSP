@@ -12,27 +12,6 @@
         <trackTrending>false</trackTrending>
         <type>Currency</type>
     </fields>
-	<fields>
-        <fullName>Gender__c</fullName>
-        <label>Gender</label>
-        <valueSet>
-            <restricted>true</restricted>
-            <valueSetDefinition>
-                <sorted>false</sorted>
-                <value>
-                    <fullName>Male</fullName>
-                    <default>false</default>
-                    <label>Male</label>
-                </value>
-                <value>
-                    <fullName>Female</fullName>
-                    <default>false</default>
-                    <label>Female</label>
-                </value>
-            </valueSetDefinition>
-        </valueSet>
-        <type>Picklist</type>
-    </fields>
     <fields>
         <fullName>Current_Level__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
@@ -68,29 +47,4 @@
         <type>Text</type>
         <unique>true</unique>
     </fields>
-    <webLinks>
-        <fullName>DO_NOT_PACKAGE_Relationships_Viewer</fullName>
-        <description>Scratch Org override button to use instead of the button from the Relationships Package</description>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <encodingKey>UTF-8</encodingKey>
-        <linkType>url</linkType>
-        <masterLabel>Relationships Viewer</masterLabel>
-        <openType>replace</openType>
-        <protected>false</protected>
-        <url>{!URLFOR(&apos;/apex/REL_RelationshipsViewer?id=&apos; + Contact.Id)}</url>
-    </webLinks>
-    <webLinks>
-        <fullName>DO_NOT_PACKAGE_Copy_Address_to_Household</fullName>
-        <description>Scratch Org override button to use instead of the button from the Household Package</description>
-        <availability>online</availability>
-        <displayType>button</displayType>
-        <encodingKey>UTF-8</encodingKey>
-        <height>600</height>
-        <linkType>url</linkType>
-        <masterLabel>Copy Address to Household</masterLabel>
-        <openType>sidebar</openType>
-        <protected>false</protected>
-        <url>/apex/ADDR_CopyAddrHHObjBTN?id={!Contact.Id}</url>
-    </webLinks>
 </CustomObject>
