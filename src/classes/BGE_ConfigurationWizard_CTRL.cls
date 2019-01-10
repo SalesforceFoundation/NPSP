@@ -48,7 +48,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
     /*******************************************************************************************************
     * @description Checks for field permissions to create a new Batch/Template
-    * @param sObjectName string of the sObjectName retrieved with force:hasSObjectName
     * @return void; throws an AuraHandledException if any fields fail FLS check
     */
     @AuraEnabled
@@ -58,7 +57,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
     /*******************************************************************************************************
     * @description Retrieves the Template Details information, the related list of fields, and component labels.
-    * @param sObjectName string of the sObjectName retrieved with force:hasSObjectName
     * @param recordId Id of the record to be queried
     * @return JSON model of all template details data.
     */
@@ -110,14 +108,14 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         model.donationMatchingOptions = getDonationMatchingOptions();
         model.availableFields = getAvailableFields();
 
-        model.labels = getLabels('DataImportBatch__c');
+        model.labels = getBatchLabels();
 
         return JSON.serialize(model);
     }
 
     /*******************************************************************************************************
     * @description Retrieves the related list of fields.
-    * @return list of Template Fields with sObjectName and Name.
+    * @return list of BGE Fields.
     */
     public static List<BGEField> getAvailableFields() {
 
@@ -136,8 +134,16 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
             BGEField field = new BGEField();
 
-            // TODO: make these localized with schema describes
             field.sObjectName = dataImportFieldMappedObject;
+
+            // this will require iteration if/when we allow objects beyond Opp and Payment
+            String translatedObjectLabel;
+            if (dataImportFieldMappedObject == 'Opportunity') {
+                translatedObjectLabel = UTIL_Describe.getObjectLabel(dataImportFieldMappedObject);
+            } else if (dataImportFieldMappedObject == 'Payment') {
+                translatedObjectLabel = UTIL_Describe.getObjectLabel('npe01__OppPayment__c');
+            }
+            field.sObjectLabel = translatedObjectLabel;
 
             // TODO: pull these labels from target fields' schema based on help text mapping
             Boolean fieldHasSpacesAndObjName = dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == field.sObjectName;
@@ -252,11 +258,20 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     public static String getDefaultActiveFields() {
         List<BGEField> fields = new List<BGEField>();
 
+        String dataImportApiName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
+        String opportunityName = 'Opportunity';
+        String opportunityLabel = UTIL_Describe.getObjectLabel(opportunityName);
+        String paymentName = 'Payment'; // bdi object name, not api name
+        String paymentLabel = UTIL_Describe.getObjectLabel('npe01__OppPayment__c');
+
         BGEField donationAmount = new BGEField();
-        donationAmount.name = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c');
-        donationAmount.label = 'Donation Amount';
-        donationAmount.sObjectName = 'Opportunity';
+        String donationAmountApiName = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c');
+        donationAmount.name = donationAmountApiName;
+        donationAmount.label = UTIL_Describe.getFieldLabel(dataImportApiName, donationAmountApiName.toLowerCase());
+        donationAmount.sObjectName = opportunityName;
+        donationAmount.sObjectLabel = opportunityLabel;
         donationAmount.defaultValue = null;
+        donationAmount.isActive = true;
         donationAmount.requiredInEntryForm = true;
         donationAmount.hide = false;
         donationAmount.type = getLightningFieldType('number');
@@ -266,10 +281,13 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         fields.add(donationAmount);
 
         BGEField donationDate = new BGEField();
-        donationDate.name = UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
-        donationDate.label = 'Donation Date';
-        donationDate.sObjectName = 'Opportunity';
+        String donationDateApiName = UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        donationDate.name = donationDateApiName;
+        donationDate.label = UTIL_Describe.getFieldLabel(dataImportApiName, donationDateApiName.toLowerCase());
+        donationDate.sObjectName = opportunityName;
+        donationDate.sObjectLabel = opportunityLabel;
         donationDate.defaultValue = null;
+        donationDate.isActive = true;
         donationDate.requiredInEntryForm = true;
         donationDate.hide = false;
         donationDate.type = getLightningFieldType('date');
@@ -278,22 +296,28 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         fields.add(donationDate);
 
         BGEField paymentMethod = new BGEField();
-        paymentMethod.name = UTIL_Namespace.StrTokenNSPrefix('Payment_Method__c');
-        paymentMethod.label = 'Method';
-        paymentMethod.sObjectName = 'Payment';
+        String paymentMethodApiName = UTIL_Namespace.StrTokenNSPrefix('Payment_Method__c');
+        paymentMethod.name = paymentMethodApiName;
+        paymentMethod.label = UTIL_Describe.getFieldLabel(dataImportApiName, paymentMethodApiName.toLowerCase());
+        paymentMethod.sObjectName = paymentName;
+        paymentMethod.sObjectLabel = paymentLabel;
         paymentMethod.defaultValue = null;
+        paymentMethod.isActive = true;
         paymentMethod.requiredInEntryForm = false;
         paymentMethod.hide = false;
         paymentMethod.type = getLightningFieldType('string');
-        paymentMethod.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(UTIL_Namespace.StrTokenNSPrefix('Payment_Method__c'));
+        paymentMethod.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(paymentMethodApiName);
         paymentMethod.sortOrder = 2;
         fields.add(paymentMethod);
 
         BGEField checkNumber = new BGEField();
-        checkNumber.name = UTIL_Namespace.StrTokenNSPrefix('Payment_Check_Reference_Number__c');
-        checkNumber.label = 'Check/Reference Number';
-        checkNumber.sObjectName = 'Payment';
+        String checkNumberApiName = UTIL_Namespace.StrTokenNSPrefix('Payment_Check_Reference_Number__c');
+        checkNumber.name = checkNumberApiName;
+        checkNumber.label = UTIL_Describe.getFieldLabel(dataImportApiName, checkNumberApiName.toLowerCase());
+        checkNumber.sObjectName = paymentName;
+        checkNumber.sObjectLabel = paymentLabel;
         checkNumber.defaultValue = null;
+        checkNumber.isActive = true;
         checkNumber.requiredInEntryForm = false;
         checkNumber.hide = false;
         checkNumber.type = getLightningFieldType('string');
@@ -413,21 +437,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Retrieves the object and field labels for the component.
-    * @param sObjectName the object being used by the component (already stripped of the namespace prefix)
-    * @return Map of object and field name keys to their labels.
-    */
-    public static Map<String, String> getLabels(String sObjectName) {
-
-        if (sObjectName == 'DataImportBatch__c') {
-            Map<String, String> labels = getBatchLabels();
-            return labels;
-        } else {
-            throw new AuraHandledException('ERROR: ' + 'Only Batch_Template__c and DataImportBatch__c are supported objects.');
-        }
-    }
-
-    /*******************************************************************************************************
     * @description Retrieves the object and field labels for the batch object.
     * @return Map of object and field name keys to their labels.
     */
@@ -487,7 +496,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
     /*******************************************************************************************************
     * @description Deserializes information to the model and selects which record to save.
-    * @param sObjectName the non-namespaced sObjectName
     * @param recordInfo JSON string of the record information
     * @param activeFields JSON string of the active fields to be saved to the record
     * @return string of the record information with the Id
@@ -579,6 +587,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public String name;
         @AuraEnabled public List<Map<String, String>> options;
         @AuraEnabled public String sObjectName;
+        @AuraEnabled public String sObjectLabel;
         @AuraEnabled public Integer sortOrder;
         @AuraEnabled public String type;
         @AuraEnabled public Boolean requiredInEntryForm; // BGE user marked this field as "required" when setting up the batch
