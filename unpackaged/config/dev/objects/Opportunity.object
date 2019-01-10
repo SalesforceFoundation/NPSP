@@ -225,10 +225,10 @@
         </picklistValues>
     </recordTypes>
     <recordTypes>
-        <fullName>In_Kind</fullName>
+        <fullName>InKindGift</fullName>
         <active>true</active>
         <businessProcess>NPSP_Default</businessProcess>
-        <label>In Kind</label>
+        <label>In-Kind Gift</label>
         <picklistValues>
             <picklist>ForecastCategoryName</picklist>
             <values>
@@ -337,7 +337,7 @@
         </picklistValues>
     </recordTypes>
     <recordTypes>
-        <fullName>Major_Gift</fullName>
+        <fullName>MajorGift</fullName>
         <active>true</active>
         <businessProcess>NPSP_Default</businessProcess>
         <label>Major Gift</label>
@@ -449,10 +449,10 @@
         </picklistValues>
     </recordTypes>
     <recordTypes>
-        <fullName>Matching</fullName>
+        <fullName>MatchingGift</fullName>
         <active>true</active>
         <businessProcess>NPSP_Default</businessProcess>
-        <label>Matching</label>
+        <label>Matching Gift</label>
         <picklistValues>
             <picklist>ForecastCategoryName</picklist>
             <values>

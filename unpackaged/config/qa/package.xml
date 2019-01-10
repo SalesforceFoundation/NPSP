@@ -2,13 +2,10 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
         <members>Account.A_User_Defined_Rollup_Field__c</members>
-        <members>Account.Current_Level__c</members>
-        <members>Account.Previous_Level__c</members>
         <members>Account.UniqueId__c</members>
         <members>Contact.A_User_Defined_Rollup_Field__c</members>
         <members>Contact.Current_Level__c</members>
         <members>Contact.Previous_Level__c</members>
-        <members>Contact.Gender__c</members>
         <members>Contact.UniqueId__c</members>
         <members>Opportunity.UniqueId__c</members>
         <members>Opportunity.A_User_Defined_Rollup_Field__c</members>
@@ -19,25 +16,6 @@
         <members>Contact</members>
         <members>Opportunity</members>
         <name>CustomObject</name>
-    </types>
-    <types>
-        <members>Campaign-NPSP Campaign Layout</members>
-        <members>Contact-Contact Layout</members>
-        <members>npe03__Recurring_Donation__c-npe03__Recurring Donation Layout</members>
-        <members>npe4__Relationship__c-npe4__Relationship Layout</members>
-        <members>npe5__Affiliation__c-npe5__Affiliation Layout</members>
-        <members>Opportunity-Donation Layout</members>
-        <name>Layout</name>
-    </types>
-    <types>
-        <members>Contact.DO_NOT_PACKAGE_Relationships_Viewer</members>
-        <members>npe01__OppPayment__c.DO_NOT_PACKAGE_Schedule_Payments</members>
-        <members>npe01__OppPayment__c.DO_NOT_PACKAGE_Writeoff_Payments</members>
-        <members>npe03__Recurring_Donation__c.DO_NOT_PACKAGE_Refresh_Opportunities</members>
-        <members>Campaign.DO_NOT_PACKAGE_Household_Mailing_List</members>
-        <members>Contact.DO_NOT_PACKAGE_Copy_Address_to_Household</members>
-        <members>npo02__Household__c.DO_NOT_PACKAGE_Copy_Address_to_Contacts</members>
-        <name>WebLink</name>
     </types>
     <version>40.0</version>
 </Package>

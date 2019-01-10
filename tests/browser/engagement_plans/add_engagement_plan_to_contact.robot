@@ -10,6 +10,7 @@ Create a Contact and Add Engagement Plan
     ${plan_name}     ${task1_1}    ${sub_task1_1}     ${task2_1}     Create Engagement Plan
     &{contact} =  API Create Contact    MailingStreet=50 Fremont Street    MailingCity=San Francisco    MailingPostalCode=95320    MailingState=CA    MailingCountry=USA
     Go To Record Home  &{contact}[Id]
+    Select Tab  Related
     Click Related List Button  Engagement Plans    New
     Populate Lookup Field    Engagement Plan Template    ${plan_name}
     Click Modal Button        Save
