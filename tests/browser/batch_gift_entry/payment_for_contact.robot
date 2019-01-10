@@ -32,7 +32,8 @@ Select a payment for a contact make grid changes and process it
     Page Should Contain Link    ${pay_no}
     Sleep    2
     Wait For Locator    bge.edit_button    Donation Amount
-    Click BGE Edit Button    Donation Amount    
+    Click BGE Edit Button    Donation Amount  
+    Wait For Locator    bge.edit_field   
     Populate BGE Edit Field    Donation Amount    20
     Click BGE Button       Process Batch
     Select Frame With Title    NPSP Data Import
