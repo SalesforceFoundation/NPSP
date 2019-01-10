@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>View</actionName>
+        <comment>Action override created by Lightning App Builder during activation.</comment>
+        <content>NPSP_Account_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+    </actionOverrides>
+    <fields>
+        <fullName>Level__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Sample Level field for use with Level feature. May be deleted or edited as needed.</description>
+        <externalId>false</externalId>
+        <label>Level</label>
+        <referenceTo>%%%NAMESPACE%%%Level__c</referenceTo>
+        <relationshipLabel>Households</relationshipLabel>
+        <relationshipName>Accounts</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Previous_Level__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Sample Previous Level field for use with new Level feature. May be edited or deleted as needed.</description>
+        <externalId>false</externalId>
+        <label>Previous Level</label>
+        <referenceTo>%%%NAMESPACE%%%Level__c</referenceTo>
+        <relationshipLabel>Households (Previous Level)</relationshipLabel>
+        <relationshipName>Accounts1</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>Lookup</type>
+    </fields>
+    <listViews>
+        <fullName>Household_Accounts</fullName>
+        <columns>ACCOUNT.NAME</columns>
+        <columns>npo02__Formal_Greeting__c</columns>
+        <columns>npo02__Informal_Greeting__c</columns>
+        <columns>npo02__TotalOppAmount__c</columns>
+        <columns>npo02__AverageAmount__c</columns>
+        <columns>npo02__Best_Gift_Year__c</columns>
+        <columns>npo02__HouseholdPhone__c</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>ACCOUNT.RECORDTYPE</field>
+            <operation>equals</operation>
+            <value>Account.HH_Account</value>
+        </filters>
+        <label>Household Accounts</label>
+    </listViews>
+    <listViews>
+        <fullName>Organization_Accounts</fullName>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>ACCOUNT.RECORDTYPE</field>
+            <operation>equals</operation>
+            <value>Account.Organization</value>
+        </filters>
+        <label>Organization Accounts</label>
+    </listViews>
+    <listViews>
+        <fullName>AllAccounts</fullName>
+        <columns>ACCOUNT.NAME</columns>
+        <columns>ACCOUNT.ADDRESS1_STATE</columns>
+        <columns>ACCOUNT.PHONE1</columns>
+        <columns>npo02__TotalOppAmount__c</columns>
+        <columns>npo02__OppAmountLastNDays__c</columns>
+        <columns>npo02__AverageAmount__c</columns>
+        <columns>ACCOUNT.TYPE</columns>
+        <columns>ACCOUNT.RECORDTYPE</columns>
+        <filterScope>Everything</filterScope>
+        <label>All Accounts</label>
+    </listViews>
+</CustomObject>
