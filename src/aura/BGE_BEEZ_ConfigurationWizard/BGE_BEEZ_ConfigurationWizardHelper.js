@@ -307,8 +307,7 @@
             return 0;
         });
         return fields;
-    }
-    ,
+    },
 
     /**
      * @description Groups the fields by SObject name.
