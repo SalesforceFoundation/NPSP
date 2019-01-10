@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Contact</members>
+        <members>Lead</members>
+        <members>Opportunity</members>
+        <members>%%%NAMESPACE%%%Address__c</members>
+        <members>%%%NAMESPACE%%%Allocation__c</members>
+        <members>%%%NAMESPACE%%%DataImportBatch__c</members>
+        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c</members>
+        <members>%%%NAMESPACE%%%Engagement_Plan__c</members>
+        <members>%%%NAMESPACE%%%General_Accounting_Unit__c</members>
+        <members>%%%NAMESPACE%%%Grant_Deadline__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>Account.Level__c</members>
+        <members>Account.Previous_Level__c</members>
+        <members>Contact.Gender__c</members>
+        <members>npe01__OppPayment__c.Payment_Status__c</members>
+        <members>npe5__Affiliation__c.Contact_Link__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>%%%NAMESPACE%%%Address__c.%%%NAMESPACE%%%NPSP_Address_Compact_Layout</members>
+        <members>%%%NAMESPACE%%%Allocation__c.NPSP_GAU_Allocation</members>
+        <members>%%%NAMESPACE%%%Engagement_Plan__c.NPSP_Engagement_Plan</members>
+        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c.NPSP_Engagement_Plan_Template</members>
+        <members>%%%NAMESPACE%%%General_Accounting_Unit__c.NPSP_General_Accounting_Unit</members>
+        <members>%%%NAMESPACE%%%Grant_Deadline__c.Deliverable_Layout</members>
+        <name>CompactLayout</name>
+    </types>
+    <types>
+        <members>Account-Household Lightning Layout</members>
+        <members>Account-Organization Lightning Layout</members>
+        <members>Account-%%%NAMESPACE%%%Organization Layout</members>
+        <members>Campaign-%%%NAMESPACE%%%NPSP Campaign Layout</members>
+        <members>Contact-Contact Lightning Layout</members>
+        <members>Opportunity-%%%NAMESPACE%%%Donation Layout</members>
+        <members>Opportunity-%%%NAMESPACE%%%Grant Layout</members>
+        <members>Opportunity-%%%NAMESPACE%%%In-Kind Gift Layout</members>
+        <members>Opportunity-%%%NAMESPACE%%%Major Gift Layout</members>
+        <members>Opportunity-%%%NAMESPACE%%%Matching Gift Layout</members>
+        <members>Opportunity-%%%NAMESPACE%%%Membership Layout</members>
+        <members>npe03__Recurring_Donation__c-npe03__Recurring Donation Layout</members>
+        <members>npe4__Relationship__c-npe4__Relationship Layout</members>
+        <members>npe5__Affiliation__c-npe5__Affiliation Layout</members>
+        <members>%%%NAMESPACE%%%Account_Soft_Credit__c-%%%NAMESPACE%%%Account Soft Credit Layout</members>
+        <members>%%%NAMESPACE%%%Address__c-%%%NAMESPACE%%%Address Layout</members>
+        <members>%%%NAMESPACE%%%Allocation__c-%%%NAMESPACE%%%Allocation Layout</members>
+        <members>%%%NAMESPACE%%%Batch__c-%%%NAMESPACE%%%Batch Layout</members>
+        <members>%%%NAMESPACE%%%DataImportBatch__c-%%%NAMESPACE%%%NPSP Data Import Batch Layout</members>
+        <members>%%%NAMESPACE%%%DataImport__c-%%%NAMESPACE%%%Data Import Layout</members>
+        <members>%%%NAMESPACE%%%Engagement_Plan_Task__c-%%%NAMESPACE%%%Engagement Plan Task Layout</members>
+        <members>%%%NAMESPACE%%%Engagement_Plan_Template__c-%%%NAMESPACE%%%Engagement Plan Template Layout</members>
+        <members>%%%NAMESPACE%%%Engagement_Plan__c-%%%NAMESPACE%%%Engagement Plan Layout</members>
+        <members>%%%NAMESPACE%%%Error__c-%%%NAMESPACE%%%Error Layout</members>
+        <members>%%%NAMESPACE%%%Filter_Group__mdt-%%%NAMESPACE%%%Filter Group Layout</members>
+        <members>%%%NAMESPACE%%%Filter_Rule__mdt-%%%NAMESPACE%%%Filter Rule Layout</members>
+        <members>%%%NAMESPACE%%%Fund__c-%%%NAMESPACE%%%Fund Layout</members>
+        <members>%%%NAMESPACE%%%General_Accounting_Unit__c-%%%NAMESPACE%%%General Accounting Unit Layout</members>
+        <members>%%%NAMESPACE%%%Grant_Deadline__c-Deliverable</members>
+        <members>%%%NAMESPACE%%%Level__c-%%%NAMESPACE%%%Level Layout</members>
+        <members>%%%NAMESPACE%%%Partial_Soft_Credit__c-%%%NAMESPACE%%%Partial Soft Credit Layout</members>
+        <members>%%%NAMESPACE%%%Rollup__mdt-%%%NAMESPACE%%%Rollup Layout</members>
+        <members>%%%NAMESPACE%%%Schedulable__c-%%%NAMESPACE%%%Schedulable Layout</members>
+        <members>%%%NAMESPACE%%%Trigger_Handler__c-%%%NAMESPACE%%%Trigger Handler Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>Account.Household_Accounts</members>
+        <members>Account.Organization_Accounts</members>
+        <members>Account.AllAccounts</members>
+        <members>Opportunity.AllDonations</members>
+        <members>%%%NAMESPACE%%%Grant_Deadline__c.All</members>
+        <name>ListView</name>
+    </types>
+    <types>
+        <members>Nonprofit_Success_Pack_UtilityBar</members>
+        <members>NPSP_Account_Record_Page</members>
+        <members>NPSP_Address_Record_Page</members>
+        <members>NPSP_Affiliation_Record_Page</members>
+        <members>NPSP_Campaign_Record_Page</members>
+        <members>NPSP_Contact_Record_Page</members>
+        <members>NPSP_Data_Import</members>
+        <members>NPSP_Deliverable</members>
+        <members>NPSP_Engagement_Plan_Record_Page</members>
+        <members>NPSP_GAU_Allocation</members>
+        <members>NPSP_General_Accounting_Unit</members>
+        <members>NPSP_Lead_Record_Page</members>
+        <members>NPSP_Opportunity_Record_Page</members>
+        <members>NPSP_Payment</members>
+        <members>NPSP_Recurring_Donation</members>
+        <members>NPSP_Relationship_Record_Page</members>
+        <name>FlexiPage</name>
+    </types>
+    <types>
+        <members>Contact.New_Open_Recurring_Donation</members>
+        <members>Contact.NewDonation</members>
+        <members>Contact.NewInKind</members>
+        <members>Contact.NewMajorGift</members>
+        <members>Contact.NewMembership</members>
+        <name>QuickAction</name>
+    </types>
+    <types>
+        <members>Campaign.Household_Mailing_List</members>
+        <members>Contact.Copy_Address_to_Household</members>
+        <members>Contact.Relationships_Viewer</members>
+        <members>npe01__OppPayment__c.Schedule_Payments</members>
+        <members>npe01__OppPayment__c.Writeoff_Payments</members>
+        <members>npo02__Household__c.Copy_Address_to_Contacts</members>
+        <members>npe03__Recurring_Donation__c.Refresh_Opportunities</members>
+        <name>WebLink</name>
+    </types>
+    <types>
+        <members>Contact.npe01__Contact%2EEmailChanged_Alternate</members>
+        <members>Contact.npe01__Contact%2EEmailChanged_Personal</members>
+        <members>Contact.npe01__Contact%2EEmailChanged_Work</members>
+        <members>Contact.npe01__Contact%2EPhoneChanged_Home</members>
+        <members>Contact.npe01__Contact%2EPhoneChanged_Mobile</members>
+        <members>Contact.npe01__Contact%2EPhoneChanged_Other</members>
+        <members>Contact.npe01__Contact%2EPhoneChanged_Work</members>
+        <members>Contact.npe01__Contact%2EPreferred_Email%5F%5Fc</members>
+        <members>Contact.npe01__Contact%2EPreferred_Phone%5F%5Fc</members>
+        <members>Contact.npe01__Email only%3A Paste to Work</members>
+        <members>Contact.npe01__Phone only%3A Paste to Work</members>
+        <name>WorkflowRule</name>
+    </types>
+    <types>
+        <members>ContactRole</members>
+        <members>LeadSource</members>
+        <members>OpportunityStage</members>
+        <members>OpportunityType</members>
+        <name>StandardValueSet</name>
+    </types>
+    <types>
+        <members>Nonprofit_Success_Pack</members>
+        <name>CustomApplication</name>
+    </types>
+    <types>
+        <members>%%%NAMESPACE%%%Grant_Deadline__c</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>RGB_nspscolor_copy</members>
+        <name>ContentAsset</name>
+    </types>
+    <types>
+        <members>Admin</members>
+        <name>Profile</name>
+    </types>
+    <version>43.0</version>
+</Package>
