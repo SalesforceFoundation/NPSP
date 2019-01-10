@@ -6,6 +6,7 @@
     "enabled": [
       "ChatterEnabled",
       "DisableParallelApexTesting",
+      "NotesReservedPref01",
       "S1DesktopEnabled",
       "Translation"
     ],

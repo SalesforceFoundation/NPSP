@@ -12,7 +12,7 @@ Remove Secondary Affiliation for Contact
     API Create Secondary Affiliation    &{account}[Id]    &{contact}[Id]
     Go To Object Home          Contact
     Click Link    link=&{contact}[FirstName] &{contact}[LastName]
-    #Sleep    5
+    Select Tab  Related
     Click Related Item Popup Link  Organization Affiliations  &{account}[Name]  Delete
     Click Modal Button    Delete
     Go To Object Home    Account
