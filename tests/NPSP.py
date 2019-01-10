@@ -560,7 +560,7 @@ class NPSP(object):
     def enter_payment_schedule(self, *args):
         """Enter values into corresponding fields in Levels page"""                 
         #if name == "Payments":
-        id = ["paymentCount","intervals","intervalunits"]
+        id = ["paymentCount","vfForm:intervalnumber","intervalunits"]
         for i in range(len(args)):
             locator = npsp_lex_locators['id'].format(id[i])
             loc = self.selenium.get_webelement(locator)
