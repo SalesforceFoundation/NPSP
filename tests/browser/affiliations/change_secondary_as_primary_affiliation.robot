@@ -12,15 +12,16 @@ Create Secondary Affiliation for Contact
     API Create Secondary Affiliation    &{account}[Id]    &{contact}[Id]
     Go To Record Home  &{contact}[Id]
     Page Should Contain    &{contact}[LastName]
+    Select Tab  Related
     Click Related Item Link  Organization Affiliations  &{account}[Name]
-    # Scroll down so elements aren't hidden behind the footer
-    Scroll Page To Location    0    400
-    Click Edit Button    Edit Primary
+    # To make sure the field we want to edit has rendered,
+    # scroll to the one below it
+    Scroll Element Into View  text:Primary
+    Click Button  title:Edit Primary
     Wait For Locator  checkbox  Primary
     Select Lightning Checkbox    Primary
     Click Record Button    Save
     #Sleep    5
     Go To Object Home    Contact
     Click link    link=&{contact}[FirstName] &{contact}[LastName]
-    Select Tab    Details
     Verify Field Value    Primary Affiliation    &{account}[Name]    Y
