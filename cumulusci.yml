@@ -42,25 +42,26 @@ tasks:
             path: ldv_tests/src
         
     deploy_dev_config:
-        description: Deploys the post install configuration for an unmanaged DE org
+        description: Deploys the post-install configuration for an unmanaged DE org
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
             path: unpackaged/config/dev
 
-    deploy_dev_config_managed:
-        description: Deploys the post install configuration for a managed DE org
+    deploy_trial_config:
+        description: Deploys the post-install configuration for a trial/new org.
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
-            path: unpackaged/config/managed
+            path: unpackaged/config/trial
+            namespace_inject: $project_config.project__package__namespace
 
     deploy_qa_config:
-        description: Deploys additional fields used for qa purposes only
+        description: Deploys additional fields used for QA purposes only
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
             path: unpackaged/config/qa
 
     deploy_dev_config_delete:
-        description: Deploys the metadata deletions for the post install DE org config
+        description: Deploys the metadata deletions for the post-install DE org config
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
             path: unpackaged/config/delete
@@ -196,6 +197,13 @@ tasks:
                     - NewEvent
                     - NewCase
                     - SendEmail
+                # Unpackaged lightning record pages added by trial config
+                FlexiPage:
+                    - NPSP_Address_Record_Page
+                    - NPSP_Deliverable
+                    - NPSP_Engagement_Plan_Record_Page
+                    - NPSP_GAU_Allocation
+                    - NPSP_General_Accounting_Unit
 
 flows:
     config_dev:
@@ -214,7 +222,7 @@ flows:
             3:
                 task: deploy_dev_config_delete
             4:
-                task: deploy_dev_config
+                task: deploy_trial_config
             5:
                 task: npsp_default_settings
             6:
@@ -245,12 +253,16 @@ flows:
 
     config_managed:
         steps:
-            3:
+            2:
                 task: deploy_dev_config_delete
+            3:
+                task: deploy_trial_config
+                options:
+                    unmanaged: False
             4:
-                task: deploy_dev_config_managed
-            5:
-                task: test_data_relationships
+                task: update_admin_profile
+                options:
+                    managed: true
 
     config_offsetfiscal:
         description: 'Configure an offset fiscal year'
@@ -325,3 +337,4 @@ orgs:
             config_file: orgs/trial.json
         enterprise:
             config_file: orgs/enterprise.json
+
