@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>View</actionName>
+        <comment>Action override created by Lightning App Builder during activation.</comment>
+        <content>NPSP_Recurring_Donation</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+    </actionOverrides>
+    <webLinks>
+        <fullName>Refresh_Opportunities</fullName>
+        <availability>online</availability>
+        <description>Run the check opp routine for Recurring Donations.</description>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <linkType>url</linkType>
+        <masterLabel>Refresh Opportunities</masterLabel>
+        <openType>replace</openType>
+        <protected>false</protected>
+        <url>{!URLFOR(&apos;/apex/%%%NAMESPACE%%%RD_AddDonationsBTN?id=&apos; + npe03__Recurring_Donation__c.Id)}</url>
+    </webLinks>
+</CustomObject>
