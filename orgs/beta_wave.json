@@ -11,8 +11,7 @@
       "AnalyticsSharingEnable",
       "ChatterEnabled",
       "DisableParallelApexTesting",
-      "S1DesktopEnabled",
-      "Translation"
+      "S1DesktopEnabled"
     ]
   }
 }
