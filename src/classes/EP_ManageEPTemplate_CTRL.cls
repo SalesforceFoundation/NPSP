@@ -458,7 +458,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         Component.Apex.OutputText boxAndLabel = new Component.Apex.OutputText(value='<div aria-labelledby="task' + wrapper.level + 
             '", class="slds-m-left_medium slds-m-top_small"><fieldset class="slds-box slds-theme_default slds-container_fluid '+
             'slds-p-around_small", style="border-left: 6px solid ' + sidebarColors[colorNumber] + '"><legend id="task' + wrapper.level + '"' +
-            ' class="slds-text-heading_small">' + Schema.Sobjecttype.Task.getLabel() + ' ' + wrapper.level + 
+            ' class="slds-text-heading_small">' + Schema.SObjectType.Task.getLabel() + ' ' + wrapper.level + 
             '</legend>', escape=false);
 
         Component.Apex.OutputPanel firstRow = new Component.Apex.OutputPanel(styleClass='slds-grid', layout='block');
@@ -479,15 +479,15 @@ public with sharing class EP_ManageEPTemplate_CTRL {
 
         Component.Apex.OutputText addDependentTaskButton = new Component.Apex.OutputText(
             value='<button onclick="addDependentTaskJS(\''+ wrapper.level +'\');return false;" '+ 
-            'class="slds-button slds-button_brand" id="btnAddDepTask">' + Label.EPAddDependentTask + 
-            '<span class="slds-assistive-text"> ' + Label.EPTo + Schema.Sobjecttype.Task.getLabel() + ' ' + wrapper.level + 
+            'class="slds-button slds-button_brand" id="btnAddDepTask">' + System.Label.EPAddDependentTask.escapeHtml4() + 
+            '<span class="slds-assistive-text"> ' + System.Label.EPTo.escapeHtml4() + Schema.SObjectType.Task.getLabel() + ' ' + wrapper.level + 
             '</span></button>',
             escape=false
         );
          
         Component.Apex.OutputText deleteTaskButton = new Component.Apex.OutputText(
             value='<button onclick="deleteTaskJS(\''+ wrapper.level +'\');return false;" '+ 
-            'class="slds-button slds-button_destructive" id="btnDelTask">' + Label.EPDeleteTask +
+            'class="slds-button slds-button_destructive" id="btnDelTask">' + System.Label.EPDeleteTask.escapeHtml4() +
             '<span class="slds-assistive-text">' + wrapper.level + 
             '</span></button>',
             escape=false
