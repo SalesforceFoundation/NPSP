@@ -76,7 +76,7 @@
         //set available fields for field selection in dueling picklists
         let activeFields = JSON.parse(response.activeFields);
         let allFields = response.availableFields;
-        let availableFields = {
+        let availableFieldsBySObject = {
             fieldGroups: []
         };
         let everyField = [];
@@ -111,12 +111,13 @@
             everyField.push(currentField);
         });
 
+        // store everyField with its metadata
+        component.set('v.everyField',everyField);
         // sort into groups by object
         // returns map of sobject name => list of fields 
         var activeFieldsBySObject = this.getActivesBySObject(everyField);
         // returns map of sobject name => list of fields 
         var allFieldsBySObject = this.groupFieldsBySObject(everyField);
-        debugger;
 
         Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
             let currentFieldGroup = {
@@ -145,15 +146,9 @@
                     currentFieldGroup.values.push(currentField.id);
                 });
             }
-            availableFields.fieldGroups.push(currentFieldGroup);
+            availableFieldsBySObject.fieldGroups.push(currentFieldGroup);
         });
-        component.set('v.availableFields', availableFields);
-
-
-        /*
-        component.set('v.availableFields', batchFieldsView);
-        */
-
+        component.set('v.availableFieldsBySObject', availableFieldsBySObject);
 
         //batchFieldOptions
         this.loadBatchFieldOptions(component, activeFieldsBySObject);
@@ -161,7 +156,6 @@
     },
 
     loadBatchFieldOptions: function(component, activeFieldsBySObject) {
-        debugger;
 
         let batchFieldOptions = {
             fieldGroups: []
@@ -220,30 +214,52 @@
         this.sendMessage(component,'setStep', progressIndicatorStep);
     },
 
+    backStep: function(component) {
+        /*this.clearError();*/
+        this.stepDown(component);
+        this.setPageHeader(component);
+    },
+
+    stepDown: function(component) {
+        let stepNum = parseInt(component.get('v.batchMetadata.progressIndicatorStep'));
+        stepNum--;
+        let progressIndicatorStep = stepNum.toString();
+        component.set('v.batchMetadata.progressIndicatorStep', progressIndicatorStep);
+        this.sendMessage(component,'setStep', progressIndicatorStep);
+    },
+
     /**
      * @description sets the pendingsave flag to disable Save button so duplicates can't be created
      * @return void.
      */
     togglePendingSave: function(component) {
-        component.get('v.batchMetadata.pendingSave');
+        let pendingSave = component.get('v.batchMetadata.pendingSave');
         component.set('v.batchMetadata.pendingSave', !pendingSave);
+        this.sendMessage(component,'pendingSave', !pendingSave);
     },
 
     /******************************** Sort and Group Functions *****************************/
 
     /**
-     * @description Gets the active fields grouped by SObject.
-     * @return Map of SObject group to List of related active fields.
+     * @description Gets a flat list of the active fields sorted by order.
+     * @return List of active fields.
      */
-    getActivesBySObject: function(allFields){
-        debugger;
-        var activeFields = [];
+    getActives: function(allFields){
+        let activeFields = [];
         allFields.forEach(function(currentField) {
             if (currentField.isActive) {
                 activeFields.push(currentField);
             }
         });
-        activeFields = this.sortFieldsByOrder(activeFields);
+        return this.sortFieldsByOrder(activeFields);
+    },
+
+    /**
+     * @description Gets the active fields sorted and grouped by SObject.
+     * @return Map of SObject group to List of related active fields.
+     */
+    getActivesBySObject: function(allFields){
+        let activeFields = this.getActives(allFields);
         return this.groupFieldsBySObject(activeFields);
     },
 
@@ -253,7 +269,6 @@
      * @return sorted fields.
      */
     sortFieldsByOrder: function(fields) {
-        debugger;
         fields.sort(function(currentField, nextField) {
             if (currentField.sortOrder < nextField.sortOrder) {
                 return -1;
@@ -273,7 +288,6 @@
      * @return Map of SObject name to List of related fields.
      */
     groupFieldsBySObject: function(fields) {
-        debugger;
         var result = {};
         fields.forEach(function(currentField) {
             if ((currentField.sObjectName in result) === false) {
@@ -294,6 +308,36 @@
         component.set('v.batchMetadata', batchMetadata);
     },*/
 
+    saveRecord: function(component) {
+        var batchInfo = component.get('v.batchInfo');
+        // getActives grabs allFields, returns those isActive, sorted.
+        let activeFields = this.getActives(component.get('v.everyField'));
+
+        var action = component.get('c.saveRecord');
+        action.setParams({
+            'recordInfo': JSON.stringify(batchInfo),
+            'activeFields': JSON.stringify(activeFields)
+        });
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            var response = JSON.parse(response.getReturnValue());
+            if (state === 'SUCCESS') {
+                // this.navigateToRecord(response.id);
+                var navEvt = $A.get('e.force:navigateToSObject');
+                navEvt.setParams({
+                    'recordId': response.id
+                });
+                navEvt.fire();
+            } else if (state === 'ERROR') {
+                debugger;
+                console.log(response.getError());
+                this.togglePendingSave(component);
+                //todo: wire up error handling
+                //this.handleApexErrors(component, response.getError());
+            }
+        });
+        $A.enqueueAction(action);
+    },
 
     /******************************** Communication Functions *****************************/
 

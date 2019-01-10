@@ -11,17 +11,7 @@
         const task = event.getParam('channel');
         let model = component.get('v.model');
 
-        // handle cancel
-        if (task === 'cancel') {
-
-            //Set off init here to reset view
-            /*var mode = component.get('v.batchMetadata.mode');
-            if (mode === 'edit') {
-                model.init(component);
-            }
-            model.getBatchMetadata().cancel();*/
-
-        } else if (task === 'next' || task === 'back' || task === 'save') {
+        if (task === 'next' || task === 'back' || task === 'save') {
 
             var isValid = true;
             var possibleError = '';
@@ -49,16 +39,15 @@
             if (isValid) {
                 if (task === 'next') {
                     helper.nextStep(component);
-                }
-                /*} else if (task === 'back') {
-                    model.getBatchMetadata().backStep();
+                } else if (task === 'back') {
+                    helper.backStep(component);
                 } else if (task === 'save') {
-                    model.getBatchMetadata().togglePendingSave();
-                    model.getBatchInfo().load(component.get('v.batchInfo'));
-                    model.save();
-                }*/
+                    helper.togglePendingSave(component);
+                    //model.getBatchInfo().load(component.get('v.batchInfo'));
+                    helper.saveRecord(component);
+                }
             } else {
-                model.getBatchMetadata().showError(possibleError);
+                //model.getBatchMetadata().showError(possibleError);
             }
         }
     },

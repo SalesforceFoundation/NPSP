@@ -40,7 +40,8 @@
     <!-- private attributes -->
     <aura:attribute name="batchInfo" type="Object" access="PRIVATE" />
     <aura:attribute name="batchMetadata" type="Object" access="PRIVATE"/>
-    <aura:attribute name="availableFields" type="Object" access="PRIVATE" />
+    <aura:attribute name="availableFieldsBySObject" type="Object" access="PRIVATE" />
+    <aura:attribute name="everyField" type="Object" access="PRIVATE" />
     <aura:attribute name="batchFieldOptions" type="Object" access="PRIVATE" />
 
     <!-- public attributes -->
@@ -131,7 +132,7 @@
 
                         <p class="slds-p-bottom_small">{!$Label.c.bgeBatchDonorLookupInfo}</p>
 
-                        <aura:iteration items="{!v.availableFields.fieldGroups}" var="currentFieldGroup">
+                        <aura:iteration items="{!v.availableFieldsBySObject.fieldGroups}" var="currentFieldGroup">
                             <div class="slds-section slds-p-bottom_medium">
                                 <h3 class="slds-section__title slds-theme_shade slds-m-bottom_small">
                                     <span class="slds-truncate slds-p-around_x-small">{!currentFieldGroup.sObjectLabel}</span>
