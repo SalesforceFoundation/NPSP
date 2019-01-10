@@ -5,8 +5,8 @@
     "enabled": [
       "ChatterEnabled",
       "DisableParallelApexTesting",
-      "S1DesktopEnabled",
-      "Translation"
+      "NotesReservedPref01",
+      "S1DesktopEnabled"
     ]
   }
 }

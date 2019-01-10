@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>View</actionName>
+        <comment>Action override created by Lightning App Builder during activation.</comment>
+        <content>NPSP_Address_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+    </actionOverrides>
+    <compactLayouts>
+        <fullName>%%%NAMESPACE%%%NPSP_Address_Compact_Layout</fullName>
+        <fields>Name</fields>
+        <fields>%%%NAMESPACE%%%Household_Account__c</fields>
+        <fields>%%%NAMESPACE%%%Formula_MailingAddress__c</fields>
+        <label>NPSP Address Compact Layout</label>
+    </compactLayouts>
+    <searchLayouts>
+        <searchResultsAdditionalFields>%%%NAMESPACE%%%Household_Account__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>%%%NAMESPACE%%%Address_Type__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>%%%NAMESPACE%%%Formula_MailingAddress__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>%%%NAMESPACE%%%Default_Address__c</searchResultsAdditionalFields>
+    </searchLayouts>
+
+    <label>Address</label>
+    <pluralLabel>Addresses</pluralLabel>
+    <nameField>
+        <displayFormat>A-{00000}</displayFormat>
+        <label>Address ID</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>AutoNumber</type>
+    </nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>ControlledByParent</sharingModel>
+    <description>Custom object for storing additional addresses for Household Accounts in the Nonprofit Success Pack.</description>
+    <fields>
+        <fullName>%%%NAMESPACE%%%Household_Account__c</fullName>
+        <description>Lookup to the Account associated with this Address.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Lookup to the Account associated with this Address.</inlineHelpText>
+        <label>Account</label>
+        <referenceTo>Account</referenceTo>
+        <relationshipLabel>Addresses</relationshipLabel>
+        <relationshipName>Addresses</relationshipName>
+        <relationshipOrder>0</relationshipOrder>
+        <reparentableMasterDetail>true</reparentableMasterDetail>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>MasterDetail</type>
+        <writeRequiresMasterRead>true</writeRequiresMasterRead>
+    </fields>
+</CustomObject>
