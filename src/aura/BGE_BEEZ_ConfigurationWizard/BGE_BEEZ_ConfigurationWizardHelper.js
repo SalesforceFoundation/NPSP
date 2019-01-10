@@ -50,6 +50,8 @@
         //batch metadata
         let batchMetadata = {};
         batchMetadata.labels = response.labels;
+        batchMetadata.showAdvancedOptions = false;
+
         //todo: Randi will remove readOnly + mode
         //isReadOnly (View) is passed from record home with lightning app builder
         if (component.get('v.isReadOnly')) {
@@ -72,6 +74,7 @@
             $A.get('$Label.c.bgeBatchSetBatchOptions')
         ];
         component.set('v.batchMetadata', batchMetadata);
+        this.updateMatchOnDate(component);
 
         //set available fields for field selection in dueling picklists
         let activeFields = JSON.parse(response.activeFields);
@@ -228,6 +231,17 @@
         this.sendMessage(component,'setStep', progressIndicatorStep);
     },
 
+    /******************************** Dynamic Display Functions *****************************/
+
+    /**
+     * @description sets the showAdvancedOptions flag to hide/reveal the advanced options accordingly
+     * @return void.
+     */
+    toggleShowAdvanced: function (component) {
+        let showAdvancedOptions = component.get('v.batchMetadata.showAdvancedOptions');
+        component.set('v.batchMetadata.showAdvancedOptions', !showAdvancedOptions);
+    },         
+
     /**
      * @description sets the pendingsave flag to disable Save button so duplicates can't be created
      * @return void.
@@ -236,6 +250,16 @@
         let pendingSave = component.get('v.batchMetadata.pendingSave');
         component.set('v.batchMetadata.pendingSave', !pendingSave);
         this.sendMessage(component,'pendingSave', !pendingSave);
+    },
+
+    /**
+     * @description sets the pendingsave flag to disable Save button so duplicates can't be created
+     * @return void.
+     */
+    updateMatchOnDate: function (component) {
+        let donationMatchingRule = component.get('v.batchInfo.donationMatchingRule');
+        let matchOnDateSelected = this.isStringMatchedInList(donationMatchingRule, "donation_date__c");
+        component.set('v.batchMetadata.matchOnDateSelected', matchOnDateSelected);
     },
 
     /******************************** Sort and Group Functions *****************************/
@@ -311,7 +335,6 @@
      * @return void.
      */
     updateToActive: function (component) {
-        debugger;
         var fieldCountPreviousObjects = 0;
         var allFieldsBySObject = this.groupFieldsBySObject(component.get('v.everyField'));
         var everyFieldUpdated = [];
@@ -404,7 +427,6 @@
         });
 
         component.set('v.everyField',everyField);
-        debugger;
     },
 
     /*setMode: function(component, mode) {
@@ -444,7 +466,7 @@
         $A.enqueueAction(action);
     },
 
-    /******************************** Communication Functions *****************************/
+    /******************************** Utility Functions *****************************/
 
     setPageHeader: function(component) {
         const batchMetadata = component.get('v.batchMetadata');
@@ -460,6 +482,20 @@
             'message': message
         });
         sendMessage.fire();
-    }
+    },
+
+    /**
+     * @description Checks if the specified string is a matched substring of any strings in list.
+     * @return Boolean string matches.
+     */
+    isStringMatchedInList: function(theList, theString) {
+        let stringMatches = false;
+        theList.forEach(function(currString) {
+            if (currString.indexOf(theString) >= 0) {
+                stringMatches = true;
+            }
+        });
+        return stringMatches;
+    }    
 
 })

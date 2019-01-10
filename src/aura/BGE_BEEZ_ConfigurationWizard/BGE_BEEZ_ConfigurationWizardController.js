@@ -53,8 +53,18 @@
             }
         }
     },
-
-    handleProcessingSettingsChange: function(component, event, helper){
-
+    
+    /**
+     * @description hides or shows advanced options from user click on button
+     */
+    handleAdvancedOptionsToggle: function(component, event, helper) {
+        helper.toggleShowAdvanced(component);
     },
+
+    /**
+     * @description update properties when date is or is not included in match fields
+     */
+    handleDonationMatchingRuleChange: function(component, event, helper) {
+        helper.updateMatchOnDate(component);
+    } 
 })
