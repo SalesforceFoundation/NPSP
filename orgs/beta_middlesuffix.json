@@ -8,6 +8,7 @@
       "DisableParallelApexTesting",
       "IsMiddleNameEnabled",
       "IsNameSuffixEnabled",
+      "NotesReservedPref01",
       "S1DesktopEnabled"
     ]
   }

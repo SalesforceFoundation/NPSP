@@ -200,28 +200,29 @@ Create HouseHold
 Create Primary Affiliation
     [Arguments]      ${acc_name}      ${con_id}
     Go To Record Home  ${con_id}
-    Select Tab    Details
-    #Scroll Page To Location    0    300
-    Click Edit Button    Edit Primary Affiliation
+    # To make sure the field we want to edit has rendered
+    # and is not obscured by the footer, scroll to one further down
+    Scroll Element Into View  text:Description
+    Click Button  title:Edit Primary Affiliation
+    Wait For Locator  record.edit_form
     Populate Lookup Field    Primary Affiliation    ${acc_name}
     Click Record Button    Save 
-    
+
 Create Secondary Affiliation
     [Arguments]      ${acc_name}      ${con_id}
     Go To Record Home  ${con_id}
+    Select Tab  Related
     Click Related List Button   Organization Affiliations    New
     Populate Lookup Field    Organization    ${acc_name}
     Click Modal Button    Save
     
 Create Opportunities
-    [Arguments]    ${opp_name}    ${hh_name}  
-    Select Window
-    Sleep    2   
+    [Arguments]    ${opp_name}    ${hh_name}    ${stage}
     Populate Form
     ...                       Opportunity Name= ${opp_name}
     ...                       Amount=100 
     Click Dropdown    Stage
-    Click Link    link=Closed Won
+    Click Link    link=${stage}
     Populate Lookup Field    Account Name    ${hh_name}
     Open Date Picker    Close Date
     Pick Date    10
@@ -237,15 +238,16 @@ Create Engagement Plan
     Wait For Locator    id    idName
     Enter Eng Plan Values    idName    ${plan_name}
     Enter Eng Plan Values    idDesc    This plan is created via Automation  
-    Click Button With Value    Add Task
+    Click Button    Add Task
+    Wait Until Page Contains  Task 1
     Enter Task Id and Subject    Task 1    ${task1}
     Click Task Button    1    Add Dependent Task
     Enter Task Id and Subject    Task 1-1    ${sub_task}
-    Click Button With Value    Add Task
+    Click Button    Add Task
+    Wait Until Page Contains  Task 2
     Enter Task Id and Subject    Task 2    ${task2}
     Page Scroll To Locator    button    Save
-    Click Button With Value    Save
-    #Sleep    2
+    Click Button    Save
     [Return]    ${plan_name}    ${task1}    ${sub_task}     ${task2}
     
 Create Level
@@ -316,7 +318,7 @@ Select Frame With Title
     
 Scroll Page To Location
     [Arguments]    ${x_location}    ${y_location}
-    Execute JavaScript    window.scrollTo(${x_location},${y_location})
+    Execute JavaScript    window.scrollTo(${x_location},${y_location}) 
 
 Open NPSP Settings
     [Arguments]    ${topmenu}    ${submenu}
