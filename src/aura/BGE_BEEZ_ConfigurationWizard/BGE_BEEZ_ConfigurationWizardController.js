@@ -19,21 +19,23 @@
 
             // check validity and load values
             if (step === '0') {
-                //model.getBatchInfo().load(component.get('v.batchInfo'));
-                //isValid = model.getBatchInfo().isValid();
-                //possibleError = component.get('v.batchMetadata.labels.missingNameDescriptionError');
-            } /*else if (step === '1') {
-                model.getAvailableFields().updateToActive(component.get('v.availableFields').fieldGroups);
-                possibleError = model.getAvailableFields().getRequiredFieldErrors();
-                isValid = (possibleError.length === 0);
+                // model.getBatchInfo().load(component.get('v.batchInfo'));
+                // isValid = model.getBatchInfo().isValid();
+                // possibleError = component.get('v.batchMetadata.labels.missingNameDescriptionError');
+            } else if (step === '1') {
+                helper.updateToActive(component);
+                helper.updateBatchFieldOptions(component);
+                // possibleError = model.getAvailableFields().getRequiredFieldErrors();
+                // isValid = (possibleError.length === 0);
             } else if (step === '2') {
-                isValid = model.getAvailableFields().getDefaultFieldValidity(component);
-                var fieldOptions = component.get('v.batchFieldOptions.fieldGroups');
-                model.getAvailableFields().updateBatchFieldOptions(fieldOptions);
+                // isValid = model.getAvailableFields().getDefaultFieldValidity(component);
+                // var fieldOptions = component.get('v.batchFieldOptions.fieldGroups');
+                // ----> model.getAvailableFields().updateBatchFieldOptions(fieldOptions);
+                helper.commitBatchFieldOptionsToEveryField(component);
             } else if (step === '3') {
-                //todo: add validation for processing settings
-                model.getBatchInfo().load(component.get('v.batchInfo'));
-            }*/
+                // todo: add validation for processing settings
+                // model.getBatchInfo().load(component.get('v.batchInfo'));
+            }
 
             // proceed or display error
             if (isValid) {
