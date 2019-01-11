@@ -16,9 +16,6 @@ from selenium.webdriver import ActionChains
 from cumulusci.robotframework.utils import selenium_retry
 import sys
 from email.mime import text
-#sys.path.append(os.path.abspath(os.path.join('..',
-#sys.path.append("/Users/skristem/Documents/GitHub/CumulusCI/cumulusci/robotframework/tests")
-#import Salesforce
 
 
 @selenium_retry
@@ -76,9 +73,7 @@ class NPSP(object):
         field.send_keys(Keys.ENTER)
 #             field.send_keys(Keys.ARROW_DOWN)
 #             field.send_keys(Keys.ENTER)
-        
-        
-        
+
     def click_record_button(self, title):
         """ Pass title of the button to click the buttons on the records edit page. Usually save and cancel are the buttons seen.
         """
@@ -194,11 +189,6 @@ class NPSP(object):
         """To click on x """
         locator=npsp_lex_locators['delete_icon'].format(field_name,value)
         self.selenium.get_webelement(locator).click() 
-        
-    def click_edit_button(self, title):  
-        locator=npsp_lex_locators['record']['edit_button'].format(title)
-        self.selenium.get_webelement(locator).click()
-        self.wait_for_locator('record.edit_form')
 
     def click_id(self, title):  
         locator=npsp_lex_locators['aff_id'].format(title)
@@ -280,8 +270,9 @@ class NPSP(object):
         self.selenium.page_should_contain_element(locator)    
         
     def Verify_affiliated_contact(self,list_name,first_name,last_name, y):   
-        """Validates if the affiliated contacts have the added contact details enter Y for positive case and N for negative case"""   
-        locator= npsp_lex_locators['affiliated_contacts'].format(list_name,first_name,last_name)
+        """Validates if the affiliated contacts have the added contact details enter Y for positive case and N for negative case"""
+        name = first_name + ' ' + last_name
+        locator = self.salesforce.get_locator('record.related.link', list_name, name)
         if y.upper()=="Y":
             self.selenium.page_should_contain_element(locator)
         elif y.upper()=="N":
@@ -365,11 +356,6 @@ class NPSP(object):
         locator=npsp_lex_locators['detail_page']['verify_field_value'].format(title,value)
         self.selenium.page_should_contain_element(locator)
         
-    def click_managehh_add_button(self,title):  
-        """clicks on the + button next to contact on manage hh page"""      
-        locator=npsp_lex_locators['record']['edit_button'].format(title)
-        self.selenium.get_webelement(locator).click()    
-        
     def click_managehh_button(self,title):  
         """clicks on the new contact button on manage hh page"""      
         locator=npsp_lex_locators['manage_hh_page']['button'].format(title)
@@ -446,8 +432,8 @@ class NPSP(object):
     def verify_related_list_field_values(self, **kwargs):
         """verifies the values in the related list objects page""" 
         for name, value in kwargs.items():
-            locator= npsp_lex_locators['object']['field_value'].format(name,value)
-            self.selenium.page_should_contain_element(locator)   
+            locator= npsp_lex_locators['record']['related']['field_value'].format(name,value)
+            self.selenium.page_should_contain_element(locator)
             
     def page_contains_record(self,title):   
         """Validates if the specified record is present on the page"""   
@@ -774,9 +760,9 @@ class NPSP(object):
             self.selenium.get_webelement(locator).click()  
     
     def verify_payment_details(self):
-        locator = "//tbody/tr/td[3]"
+        locator = "//tbody/tr/td[2]/span/span"
         locs1 = self.selenium.get_webelements(locator)
-        locator2 = "//tbody/tr/td[4]"
+        locator2 = "//tbody/tr/td[3]/span/span"
         locs2 = self.selenium.get_webelements(locator2)
         for i, j in list(zip(locs1, locs2)):
             #loc1_vaue = self.selenium.get_webelemt(i).text
@@ -784,36 +770,35 @@ class NPSP(object):
             if i.text == "Pledged" and j.text == "$100.00":
                 pass
             else:
-                return "fail"    
-        return len(locs1)-1
-    
-    def verify_opportunities(self, len_value):
-        locator = "//tbody/tr[13]/th"
-        s = self.selenium.get_webelement(locator).text
-        #return s
-        strip_list = s.split(" ")
-        date = strip_list[-1]
-        date = date.split("/")
-        date = list(map(int, date))
-        mm, dd, yyyy = date
-        for _ in range(int(len_value)):
-            if mm == 12:
-                mm = 1
-                yyyy = yyyy + 1
-                date = [mm, dd, yyyy]
-                date = list(map(str, date))
-                date = "/".join(date)
-                loctor_contains = "//tbody//a[contains(@title , '{}')]".format(date)
-                time.sleep(1)
-                self.selenium.page_should_contain_element(loctor_contains)            
-            else:
-                mm = mm + 1
-                date = [mm, dd, yyyy]
-                date = list(map(str, date))
-                date = "/".join(date)
-                loctor_contains = "//tbody//a[contains(@title , '{}')]".format(date)
-                self.selenium.page_should_contain_element(loctor_contains)
-    
+                return "fail"
+        return len(locs1)
+
+    # def verify_opportunities(self, len_value):
+    #     locator = "//tbody/tr[12]/th"
+    #     s = self.selenium.get_webelement(locator).text
+    #     #return s
+    #     strip_list = s.split(" ")
+    #     date = strip_list[-1]
+    #     date = date.split("/")
+    #     date = list(map(int, date))
+    #     mm, dd, yyyy = date
+    #     for _ in range(int(len_value)):
+    #         if mm == 12:
+    #             mm = 1
+    #             yyyy = yyyy + 1
+    #             date = [mm, dd, yyyy]
+    #             date = list(map(str, date))
+    #             date = "/".join(date)
+    #             loctor_contains = "//tbody//a[contains(@title , '{}')]".format(date)
+    #             self.selenium.page_should_contain_element(loctor_contains)            
+    #         else:
+    #             mm = mm + 1
+    #             date = [mm, dd, yyyy]
+    #             date = list(map(str, date))
+    #             date = "/".join(date)
+    #             loctor_contains = "//tbody//a[contains(@title , '{}')]".format(date)
+    #             self.selenium.page_should_contain_element(loctor_contains)
+
     def click_object_manager_button(self,title):  
         """clicks on the buttons in object manager"""      
         locator=npsp_lex_locators['object_manager']['button'].format(title)
@@ -842,8 +827,8 @@ class NPSP(object):
         raise AssertionError("Could not parse record id from url: {}".format(url))            
     
     def page_scroll_to_locator(self, path, *args, **kwargs):
-        loc=self.get_npsp_locator(path, *args, **kwargs)
-        self.selenium.execute_javascript("window.document.evaluate('{}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)".format(loc))
+        locator = self.get_npsp_locator(path, *args, **kwargs)
+        self.selenium.scroll_element_into_view(locator)
         
     def get_bge_card_header(self,title):   
         """Validates if the specified header field has specified value"""   
@@ -872,4 +857,4 @@ class NPSP(object):
     def return_locator_value(self, path, *args, **kwargs): 
         locator=self.get_npsp_locator(path, *args, **kwargs)
         value=self.selenium.get_webelement(locator).text   
-        return value             
+        return value

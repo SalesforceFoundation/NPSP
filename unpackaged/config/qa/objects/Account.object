@@ -13,30 +13,6 @@
         <type>Currency</type>
     </fields>
     <fields>
-        <fullName>Current_Level__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
-        <externalId>false</externalId>
-        <label>Level</label>
-        <referenceTo>Level__c</referenceTo>
-        <relationshipLabel>Accounts</relationshipLabel>
-        <relationshipName>Accounts</relationshipName>
-        <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
-        <type>Lookup</type>
-    </fields>
-    <fields>
-        <fullName>Previous_Level__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
-        <externalId>false</externalId>
-        <label>Previous Level</label>
-        <referenceTo>Level__c</referenceTo>
-        <relationshipLabel>Accounts (Previous Level)</relationshipLabel>
-        <relationshipName>PreviousAccounts</relationshipName>
-        <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
-        <type>Lookup</type>
-    </fields>
-    <fields>
         <fullName>UniqueId__c</fullName>
         <description>The unique id used for matching external data.</description>
         <externalId>true</externalId>
