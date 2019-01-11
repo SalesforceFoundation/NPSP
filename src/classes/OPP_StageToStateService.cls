@@ -68,7 +68,7 @@ global class OPP_StageToStateService {
         }
 
         if (COMMITTED_STATE_SET != null && COMMITTED_STATE_SET.contains(oppStageToCheck)) {
-            return OPPORTUNITY_STATE.FINALIZED;
+            return OPPORTUNITY_STATE.COMMITTED;
         }
 
         return OPPORTUNITY_STATE.UNCOMMITTED;

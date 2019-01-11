@@ -160,7 +160,7 @@ private class OPP_StageToStateService_TEST {
                 Opportunity_Committed_Stages__c = COMMITTED_STAGES_VAL,
                 Opportunity_Finalized_Stages__c = FINALIZED_STAGES_VAL
             )
-        )
+        );
 
         for (Integer i = 0; i < TEST_OPP_STAGE_VALS.size(); i++) {
             String testVal = TEST_OPP_STAGE_VALS[i];
