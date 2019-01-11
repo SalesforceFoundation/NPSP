@@ -480,6 +480,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'sObjectName' => Schema.SObjectType.DataImportBatch__c.getName(),
             'sObjectNameNoNamespace' => UTIL_Namespace.StrTokenRemoveNSPrefix(Schema.SObjectType.DataImportBatch__c.getName()),
             'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.DataImportBatch__c.Name.getDescribe().getLabel() + ', ' + Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
+            'missingProcessingSettingsError' => Label.exceptionRequiredField + ' ' + Schema.DataImportBatch__c.Batch_Process_Size__c.getDescribe().getLabel() + ', ' + Schema.DataImportBatch__c.Donation_Date_Range__c.getDescribe().getLabel(),
             'description' => Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
             'totalMatchHelp' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
             'totalMatchLabel' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getLabel(),

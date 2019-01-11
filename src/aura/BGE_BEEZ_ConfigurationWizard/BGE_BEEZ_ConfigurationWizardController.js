@@ -4,7 +4,7 @@
     },
 
     /**
-     * @description handles ltng:sendMessage
+     * @description handles incoming ltng:sendMessage from footer
      * must be explicit about channel because other messages may be sent
      */
     handleSendMessage: function(component, event, helper) {
@@ -29,7 +29,7 @@
                 helper.commitBatchFieldOptionsToEveryField(component);
                 isValid = helper.checkBatchFieldOptionsValidity(component);
             } else if (step === '3') {
-                isValid = helper.checkBatchProcessingSettingsValidity(component); 
+                isValid = helper.checkBatchProcessingSettingsValidity(component);
             }
 
             // proceed or display error
@@ -39,15 +39,12 @@
                 } else if (task === 'back') {
                     helper.backStep(component);
                 } else if (task === 'save') {
-                    helper.togglePendingSave(component);
-                    //model.getBatchInfo().load(component.get('v.batchInfo'));
+                    // the footer disables the save button itself; don't need to set pendingSave here
                     helper.saveRecord(component);
                 }
-                // when in modal context, need to notify the modal footer component
-                _sendMessage('setError', false);
             } else {
                 helper.showError(component);
-                //model.getBatchMetadata().showError(possibleError);
+                helper.sendMessage(component, 'pendingSave', false);
             }
         }
     },

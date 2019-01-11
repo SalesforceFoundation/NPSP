@@ -245,14 +245,13 @@
      * @description sets the pendingsave flag to disable Save button so duplicates can't be created
      * @return void.
      */
-    togglePendingSave: function (component) {
-        let pendingSave = component.get('v.batchMetadata.pendingSave');
-        component.set('v.batchMetadata.pendingSave', !pendingSave);
-        this.sendMessage(component,'pendingSave', !pendingSave);
+    setPendingSave: function (component, status) {
+        component.set('v.batchMetadata.pendingSave', status);
+        this.sendMessage(component,'pendingSave', status);
     },
 
     /**
-     * @description sets the pendingsave flag to disable Save button so duplicates can't be created
+     * @description updates the attribute that tracks whether or not Donation Date is selected in the Donation Matching Rule
      * @return void.
      */
     updateMatchOnDate: function (component) {
@@ -347,7 +346,10 @@
      * @return Boolean.
      */
     checkBatchFieldOptionsValidity: function (component) {
-        return true;
+        var isValid = component.find("defaultValueField").reduce(function (validSoFar, defaultValueField) {
+            return validSoFar && defaultValueField.get("v.validity").valid;
+        }, true);
+        return isValid;
     },
 
     /**
@@ -355,7 +357,17 @@
      * @return Boolean.
      */
     checkBatchProcessingSettingsValidity: function (component) {
-        return true;
+        let batchInfo = component.get('v.batchInfo');
+        let isValid = batchInfo.donationDateRange != '' &&
+            batchInfo.donationDateRange > -1 &&
+            batchInfo.batchProcessSize != '' &&
+            batchInfo.batchProcessSize > 0;
+        if (isValid) {
+            this.clearError(component);
+        } else {
+            component.set('v.batchMetadata.errorMessage', component.get('v.batchMetadata.labels.missingProcessingSettingsError'));
+        }
+        return isValid;
     },
 
     /**
@@ -514,7 +526,7 @@
                 navEvt.fire();
             } else if (state === 'ERROR') {
                 console.log(response.getError());
-                this.togglePendingSave(component);
+                this.setPendingSave(component, false);
                 //todo: wire up error handling
                 //this.handleApexErrors(component, response.getError());
             }
