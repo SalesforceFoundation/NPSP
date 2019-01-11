@@ -51,6 +51,7 @@
         let batchMetadata = {};
         batchMetadata.labels = response.labels;
         batchMetadata.showAdvancedOptions = false;
+        batchMetadata.namespacePrefix = response.namespacePrefix ? response.namespacePrefix+'__' : '';
 
         //todo: Randi will remove readOnly + mode
         //isReadOnly (View) is passed from record home with lightning app builder
@@ -256,7 +257,7 @@
      */
     updateMatchOnDate: function (component) {
         let donationMatchingRule = component.get('v.batchInfo.donationMatchingRule');
-        let matchOnDateSelected = this.isStringMatchedInList(donationMatchingRule, "donation_date__c");
+        let matchOnDateSelected = donationMatchingRule.indexOf(component.get('v.batchMetadata.namespacePrefix') + "donation_date__c") >= 0;
         component.set('v.batchMetadata.matchOnDateSelected', matchOnDateSelected);
     },
 
@@ -551,19 +552,4 @@
         });
         sendMessage.fire();
     },
-
-    /**
-     * @description Checks if the specified string is a matched substring of any strings in list.
-     * @return Boolean string matches.
-     */
-    isStringMatchedInList: function (theList, theString) {
-        let stringMatches = false;
-        theList.forEach(function (currString) {
-            if (currString.indexOf(theString) >= 0) {
-                stringMatches = true;
-            }
-        });
-        return stringMatches;
-    }    
-
 })

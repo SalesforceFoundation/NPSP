@@ -105,6 +105,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         setDefaultValuesOnBGEDetailsModel(model);
 
+        model.namespacePrefix = UTIL_Namespace.getNamespace();
         model.donationMatchingOptions = getDonationMatchingOptions();
         model.availableFields = getAvailableFields();
 
@@ -378,6 +379,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         model.donationMatchingClass = null;
         model.postProcessClass = null;
         model.runOpportunityRollupsWhileProcessing = true;
+        model.namespacePrefix = UTIL_Namespace.getNamespace();
         model.activeFields = getDefaultActiveFields();
 
         List<String> donationMatchingRules = new List<String>();
@@ -596,6 +598,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public String donationMatchingClass;
         @AuraEnabled public List<String> donationMatchingRule;
         @AuraEnabled public List<Map<String,String>> donationMatchingOptions;
+        @AuraEnabled public String namespacePrefix;
         @AuraEnabled public String postProcessClass;
         @AuraEnabled public Boolean runOpportunityRollupsWhileProcessing;
         @AuraEnabled public Integer recordCount;
