@@ -324,8 +324,41 @@
         });
 
         return result;
-    }
-    ,
+    },
+
+    /******************************** Validity Functions *****************************/
+
+    /**
+     * @description  
+     * @return Boolean.
+     */
+    checkBatchInfoValidity: function(component) {
+        return true;
+    },
+
+    /**
+     * @description 
+     * @return Boolean.
+     */
+    checkBatchFieldOptionsValidity: function(component) {
+        return true;
+    },
+
+    /**
+     * @description 
+     * @return Boolean.
+     */
+    checkBatchProcessingSettingsValidity: function(component) {
+        return true;
+    },
+
+    /**
+     * @description 
+     * @return void.
+     */
+    showError: function(component) {
+
+    },
 
     /******************************** Save Functions *****************************/
 

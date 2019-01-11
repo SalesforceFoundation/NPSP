@@ -14,27 +14,22 @@
         if (task === 'next' || task === 'back' || task === 'save') {
 
             var isValid = true;
-            var possibleError = '';
+            // var possibleError = '';
             var step = component.get('v.batchMetadata.progressIndicatorStep');
 
             // check validity and load values
             if (step === '0') {
-                // model.getBatchInfo().load(component.get('v.batchInfo'));
-                // isValid = model.getBatchInfo().isValid();
-                // possibleError = component.get('v.batchMetadata.labels.missingNameDescriptionError');
+                isValid = helper.checkBatchInfoValidity(component); 
             } else if (step === '1') {
                 helper.updateToActive(component);
                 helper.updateBatchFieldOptions(component);
-                // possibleError = model.getAvailableFields().getRequiredFieldErrors();
-                // isValid = (possibleError.length === 0);
+                // note: all required fields are set by the model so checking validity is not needed. 
+                // This could change.
             } else if (step === '2') {
-                // isValid = model.getAvailableFields().getDefaultFieldValidity(component);
-                // var fieldOptions = component.get('v.batchFieldOptions.fieldGroups');
-                // ----> model.getAvailableFields().updateBatchFieldOptions(fieldOptions);
                 helper.commitBatchFieldOptionsToEveryField(component);
+                isValid = helper.checkBatchFieldOptionsValidity(component);
             } else if (step === '3') {
-                // todo: add validation for processing settings
-                // model.getBatchInfo().load(component.get('v.batchInfo'));
+                isValid = helper.checkBatchProcessingSettingsValidity(component); 
             }
 
             // proceed or display error
@@ -49,6 +44,7 @@
                     helper.saveRecord(component);
                 }
             } else {
+                helper.showError(component);
                 //model.getBatchMetadata().showError(possibleError);
             }
         }
@@ -67,4 +63,4 @@
     handleDonationMatchingRuleChange: function(component, event, helper) {
         helper.updateMatchOnDate(component);
     } 
-})
+}) 
