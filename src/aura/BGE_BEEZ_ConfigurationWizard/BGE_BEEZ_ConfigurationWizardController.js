@@ -43,6 +43,8 @@
                     //model.getBatchInfo().load(component.get('v.batchInfo'));
                     helper.saveRecord(component);
                 }
+                // when in modal context, need to notify the modal footer component
+                _sendMessage('setError', false);
             } else {
                 helper.showError(component);
                 //model.getBatchMetadata().showError(possibleError);

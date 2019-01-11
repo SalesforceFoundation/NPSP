@@ -1,6 +1,6 @@
 ({
     /******************************** Init Functions *****************************/
-    init: function(component) {
+    init: function (component) {
         var recordId = component.get('v.recordId');
         var action = component.get('c.getRecordDetails');
         action.setParams({
@@ -20,7 +20,7 @@
         $A.enqueueAction(action);
     },
     
-    loadModel: function(component, response) {
+    loadModel: function (component, response) {
 
         let batchInfo = {};
 
@@ -204,7 +204,6 @@
     /******************************** Step Functions *****************************/
 
     nextStep: function (component) {
-        /*this.clearError();*/
         this.stepUp(component);
         this.setPageHeader(component);
     },
@@ -332,7 +331,22 @@
      * @description  
      * @return Boolean.
      */
-    checkBatchInfoValidity: function(component) {
+    checkBatchInfoValidity: function (component) {
+        let batchInfo = component.get('v.batchInfo');
+        let isValid = batchInfo.name && batchInfo.description;
+        if (isValid) {
+            this.clearError(component);
+        } else {
+            component.set('v.batchMetadata.errorMessage', component.get('v.batchMetadata.labels.missingNameDescriptionError'));    
+        }
+        return isValid;
+    },
+
+    /**
+     * @description 
+     * @return Boolean.
+     */
+    checkBatchFieldOptionsValidity: function (component) {
         return true;
     },
 
@@ -340,25 +354,35 @@
      * @description 
      * @return Boolean.
      */
-    checkBatchFieldOptionsValidity: function(component) {
+    checkBatchProcessingSettingsValidity: function (component) {
         return true;
     },
 
     /**
-     * @description 
-     * @return Boolean.
-     */
-    checkBatchProcessingSettingsValidity: function(component) {
-        return true;
-    },
-
-    /**
-     * @description 
+     * @description Clears error message and notifies footer via message
      * @return void.
      */
-    showError: function(component) {
-
+    clearError: function (component) {
+        component.set('v.batchMetadata.errorMessage', null);
+        this.sendMessage(component, 'setError', false);
     },
+
+    /**
+     * @description Shows error message.
+     * @return void.
+     */
+    showError: function (component) {
+        let message = component.get('v.batchMetadata.errorMessage');
+        if (message) {
+            component.find('notifLib').showNotice({
+                'variant': 'error',
+                'header': $A.get('$Label.c.PageMessagesError'),
+                'message': message
+            });      
+        }
+        // when in modal context, need to notify the modal footer component
+        this.sendMessage(component, 'setError', true);              
+    },     
 
     /******************************** Save Functions *****************************/
 
@@ -392,7 +416,7 @@
      * @description Updates batchFieldOptions attribute based on selected fields
      * @return void.
      */
-    updateBatchFieldOptions: function(component) {
+    updateBatchFieldOptions: function (component) {
         let batchFieldOptions = {
             fieldGroups: []
         };
@@ -436,20 +460,20 @@
      * @description Updates the selected fields to Active, unselects fields
      * @return void.
      */
-    commitBatchFieldOptionsToEveryField: function(component) {
+    commitBatchFieldOptionsToEveryField: function (component) {
 
         var batchFieldGroups = component.get('v.batchFieldOptions.fieldGroups');
         var batchFieldOptions = [];
-        batchFieldGroups.forEach(function(currentFieldGroup) {
-            currentFieldGroup.fields.forEach(function(currentField) {
+        batchFieldGroups.forEach(function (currentFieldGroup) {
+            currentFieldGroup.fields.forEach(function (currentField) {
                 batchFieldOptions.push(currentField);
             });
         });
 
         let everyField = component.get('v.everyField');
 
-        everyField.forEach(function(currentField) {
-            batchFieldOptions.forEach(function(currentActiveField) {
+        everyField.forEach(function (currentField) {
+            batchFieldOptions.forEach(function (currentActiveField) {
                 if (currentField.name === currentActiveField.name) {
                     currentField.requiredInEntryForm = currentActiveField.requiredInEntryForm;
                     currentField.hide = currentActiveField.hide;
@@ -461,14 +485,14 @@
         component.set('v.everyField',everyField);
     },
 
-    /*setMode: function(component, mode) {
+    /*setMode: function (component, mode) {
         let batchMetadata = component.get('v.batchMetadata');
         batchMetadata.mode = mode;
         batchMetadata.progressIndicatorStep = '0';
         component.set('v.batchMetadata', batchMetadata);
     },*/
 
-    saveRecord: function(component) {
+    saveRecord: function (component) {
         var batchInfo = component.get('v.batchInfo');
         // getActives grabs allFields, returns those isActive, sorted.
         let activeFields = this.getActives(component);
@@ -500,14 +524,14 @@
 
     /******************************** Utility Functions *****************************/
 
-    setPageHeader: function(component) {
+    setPageHeader: function (component) {
         const batchMetadata = component.get('v.batchMetadata');
         const headers = batchMetadata.headers;
         const progressIndicatorStep = parseInt(batchMetadata.progressIndicatorStep);
         this.sendMessage(component,'setHeader', headers[progressIndicatorStep]);
     },
 
-    sendMessage: function(component, channel, message) {
+    sendMessage: function (component, channel, message) {
         let sendMessage = $A.get('e.ltng:sendMessage');
         sendMessage.setParams({
             'channel': channel,
@@ -520,9 +544,9 @@
      * @description Checks if the specified string is a matched substring of any strings in list.
      * @return Boolean string matches.
      */
-    isStringMatchedInList: function(theList, theString) {
+    isStringMatchedInList: function (theList, theString) {
         let stringMatches = false;
-        theList.forEach(function(currString) {
+        theList.forEach(function (currString) {
             if (currString.indexOf(theString) >= 0) {
                 stringMatches = true;
             }
