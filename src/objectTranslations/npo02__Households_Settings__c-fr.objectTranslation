@@ -18,6 +18,16 @@
         <label><!-- Use Dated Conversion Rates if available --></label>
         <name>Use_Dated_Conversion_Rates__c</name>
     </fields>
+    <fields>
+        <help><!-- The Opportunity Stage or Stage(s) that mean an Opportunity is &quot;Committed&quot;. Multiple values must be separated by a semicolon. --></help>
+        <label><!-- Opportunity Committed Stage(s) --></label>
+        <name>Opportunity_Committed_Stages__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Opportunity Stage or Stage(s) that mean an Opportunity is &quot;Committed&quot;. Multiple values must be separated by a semicolon. --></help>
+        <label><!-- Opportunity Finalized Stage(s) --></label>
+        <name>Opportunity_Finalized_Stages__c</name>
+    </fields>
     <gender><!-- Masculine --></gender>
     <startsWith><!-- Consonant --></startsWith>
 </CustomObjectTranslation>
