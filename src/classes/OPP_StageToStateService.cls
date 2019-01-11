@@ -54,6 +54,9 @@ global class OPP_StageToStateService {
     * if the settings are not configured.  It first checks the Opportunity Stage is a FINALIZED stage.  If
     * it is, it returns FINALIZED.  If it is not, it checks to see if the Opportunity Stage is a COMMITTED
     * stage.  If it is, it returns COMMITTED.  Otherwise, it returns UNCOMMITTED.
+    *
+    * NOTE: Opportunity Stage is treated as Case Insensitive, so Closed Won CLOSED WON and closed won are
+    * all the same for this purpose.
     * @param String opportunityStage The opportunity stage to check the state of
     * @return OPPORTUNITY_STATE enum value representing the current opportunity state
     ********************************************************************************************************/
