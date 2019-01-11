@@ -23,6 +23,7 @@ ${contact_id}
     # --------------------------------
     Click Link    link=Show more actions
     Click Link    link=Edit
+    Wait For Locator    frame    Levels
     Select Frame With Title    Levels
     Enter Level Dd Values    Source Field    Smallest Gift
     Enter Level Values
@@ -46,13 +47,13 @@ ${contact_id}
     &{contact} =  API Create Contact
     Set Global Variable     ${contact_id}       &{contact}[Id]
     Go To Record Home       ${contact_id}
-    Select Tab              Details
-    Scroll Element Into View    xpath: //span[text()='Donation Totals']
-    Click Edit Button       Edit Smallest Gift
+    Scroll Element Into View    text:Donation Totals
+    Click Button       title:Edit Smallest Gift
+    Wait For Locator  record.edit_form
     Populate Field          Smallest Gift     0.75
     Click Record Button     Save
     Wait Until Loading Is Complete
-    Scroll Element Into View    xpath: //span[text()='Donation Totals']
+    Scroll Element Into View    text:Donation Totals
     Confirm Value           Smallest Gift    $0.75    Y
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
@@ -64,17 +65,17 @@ ${contact_id}
     # Return to the Contact to validate the updated Level field
     # --------------------------------
     Go To Record Home       ${contact_id}
-    Select Tab              Details
     Verify Field Value      Level    ${level_name}    Y
     # --------------------------------
     # Modify the SmallestGift field to change the applied level
     # --------------------------------
-    Scroll Element Into View    xpath: //span[text()='Donation Totals']
-    Click Edit Button       Edit Smallest Gift
+    Scroll Element Into View    text:Donation Totals
+    Click Button       title:Edit Smallest Gift
+    Wait For Locator  record.edit_form
     Populate Field          Smallest Gift     2.0
     Click Record Button     Save
     Wait Until Loading Is Complete
-    Scroll Element Into View    xpath: //span[text()='Donation Totals']
+    Scroll Element Into View    text:Donation Totals
     Confirm Value           Smallest Gift    $2.00    Y
     # --------------------------------
     # Open NPSP Settings and run the Levels batch job
@@ -86,7 +87,6 @@ ${contact_id}
     # Return to the Contact to validate the updated Level field
     # --------------------------------
     Go To Record Home       ${contact_id}
-    Select Tab              Details
     Confirm Value           Level               ${level_name}    N
     Verify Field Value      Previous Level      ${level_name}    Y
 
@@ -100,5 +100,4 @@ ${contact_id}
     Click Link    link=Delete
     Click Modal Button    Delete
     Go To Record Home           ${contact_id}
-    Select Tab       Details
     Confirm Value    Level      ${level_name}    N

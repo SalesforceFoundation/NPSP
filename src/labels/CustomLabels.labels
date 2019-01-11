@@ -1947,7 +1947,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>bdiBtnClose</fullName>
-        <categories>Data Importer, Opportunity Send Acknowledgment</categories>
+        <categories>Data Importer, Opportunity Send Acknowledgment, Account Conversion</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiBtnClose</shortDescription>
@@ -2354,6 +2354,24 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>{0} is an invalid Donation Matching Behavior.</value>
     </labels>
     <labels>
+        <fullName>bdiMassDelete</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BDI Confirm Mass Delete Button</shortDescription>
+        <value>Mass Delete</value>
+    </labels>
+    <labels>
+        <fullName>bdiMassDeleteWarning</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning for Mass Delete Buttons</shortDescription>
+        <value>You are about to delete {0} record(s).
+        &lt;br/&gt;
+        &lt;br/&gt;&lt;b&gt;IMPORTANT:&lt;/b&gt; If you create gifts in your org using the Batch Gift Entry feature, we don&apos;&apos;t recommend using the Mass Delete button. Please see the NPSP documentation for instructions on deleting records using the data loader.</value>
+    </labels>
+    <labels>
         <fullName>bdiMatched</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -2617,7 +2635,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
         <value>When checked, NPSP calculates donor rollups when donations are processed. If unchecked, donor rollups are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.</value>
-    </labels>
+    </labels>  
     <labels>
         <fullName>bgeBatchOverview</fullName>
         <language>en_US</language>
@@ -2871,6 +2889,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batch Gift Entry</value>
     </labels>
     <labels>
+        <fullName>bgeWizardShowAdvancedOptions</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for link to show advanced options in the Wizard</shortDescription>
+        <value>Show Advanced Options</value>
+    </labels>
+    <labels>
+        <fullName>bgeWizardHideAdvancedOptions</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for link to hide advanced options in the Wizard</shortDescription>
+        <value>Hide Advanced Options</value>
+    </labels>    
+    <labels>
         <fullName>btnRemove</fullName>
         <categories>Manage Household UI</categories>
         <language>en_US</language>
@@ -3044,7 +3076,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>exceptionDeletePermission</shortDescription>
-        <value>You do not have permissions to delete {0}.</value>
+        <value>You don&apos;&apos;t have the permissions required to delete {0} records.</value>
     </labels>
     <labels>
         <fullName>exceptionRequiredField</fullName>
@@ -5286,7 +5318,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>sendAcknowledgmentFailedStatus</shortDescription>
         <value>Email Acknowledgment Not Sent</value>
-    </labels>
+    </labels>  
     <labels>
         <fullName>sendAcknowledgmentFailureReasons</fullName>
         <categories>Send Acknowledgment Button</categories>
@@ -5327,6 +5359,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>sendAcknowledgmentNumberSent</shortDescription>
         <value>{0} acknowledgment(s) sent.</value>
     </labels>
+    <labels>
+        <fullName>sendAcknowledgmentNumberAlreadySent</fullName>
+        <categories>Send Acknowledgment Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>sendAcknowledgmentNumberAlreadySent</shortDescription>
+        <value>{0} acknowledgment(s) already sent.</value>
+    </labels>    
     <labels>
         <fullName>sendAcknowledgmentPageTitle</fullName>
         <categories>Send Acknowledgment Button</categories>

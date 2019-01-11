@@ -32,6 +32,7 @@
                 batchInfoView.donationMatchingOptions = batchInfo.donationMatchingOptions;
                 batchInfoView.donationMatchingRule = batchInfo.donationMatchingRule;
                 batchInfoView.donationDateRange = batchInfo.donationDateRange;
+                batchInfoView.noMatchOnDate = batchInfo.noMatchOnDate;
                 batchInfoView.postProcessClass = batchInfo.postProcessClass;
 
                 component.set('v.batchInfo', batchInfoView);
@@ -55,6 +56,7 @@
                 donationMatchingOptions: [],
                 donationMatchingRule: [],
                 donationDateRange: '',
+                noMatchOnDate: false,
                 postProcessClass: ''
             };
         })(component, model);
@@ -81,6 +83,7 @@
                 batchMetadataView.errorMessage = batchMetadata.errorMessage;
                 batchMetadataView.pageHeader = batchMetadata.pageHeader;
                 batchMetadataView.pendingSave = batchMetadata.pendingSave;
+                batchMetadataView.showAdvancedOptions = batchMetadata.showAdvancedOptions;
 
                 if (!batchMetadataView.hasError) {
                     batchMetadataView.progressIndicatorStep = batchMetadata.progressIndicatorStep;
@@ -132,7 +135,8 @@
                 progressIndicatorStep: '',
                 hasError: false,
                 errorMessage: '',
-                pendingSave: false
+                pendingSave: false,
+                showAdvancedOptions: false
             };
         })(component, model);
     },
@@ -156,13 +160,14 @@
 
                 Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
                     var currentFieldGroup = {
-                        sObjectName : sObjectName,
+                        sObjectName: sObjectName,
                         options: [],
                         requiredOptions: [],
                         values: []
                     };
 
                     allFieldsBySObject[sObjectName].forEach(function(currentField) {
+                        currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
                         currentFieldGroup.options.push(
                             {
                                 label: currentField.label,
@@ -213,7 +218,7 @@
                 Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
 
                     var currentFieldGroup = {
-                        sObjectName : sObjectName,
+                        sObjectName: sObjectName,
                         fields: []
                     };
 
@@ -222,6 +227,7 @@
                         var fieldInfo = {
                             name: currentField.name,
                             sObjectName: currentField.sObjectName,
+                            sObjectLabel: currentField.sObjectLabel,
                             label: currentField.label,
                             defaultValue: currentField.defaultValue,
                             requiredInEntryForm: currentField.requiredInEntryForm,
@@ -234,6 +240,7 @@
                         };
 
                         currentFieldGroup.fields.push(fieldInfo);
+                        currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
 
                     });
 
@@ -318,6 +325,7 @@
                     activeFields.push({
                         label: currentField.label,
                         name: currentField.name,
+                        sObjectLabel: currentField.sObjectLabel,
                         sObjectName: currentField.sObjectName,
                         defaultValue: currentField.defaultValue,
                         alwaysRequired: currentField.alwaysRequired,
@@ -416,6 +424,7 @@
                 this.donationMatchingRule = info.donationMatchingRule;
                 this.donationDateRange = info.donationDateRange;
                 this.postProcessClass = info.postProcessClass;
+                this.noMatchOnDate = !isStringMatchedInList(info.donationMatchingRule, "donation_date__c");
                 this.onInfoUpdated.notify();
             }
 
@@ -424,7 +433,21 @@
              * @return Boolean validity.
              */
             function isValid() {
-                return this.name && this.description
+                return this.name && this.description;
+            }
+
+            /**
+             * @description Checks if the specified string is a matched substring of any strings in list.
+             * @return Boolean string matches.
+             */
+            function isStringMatchedInList(theList, theString) {
+                let stringMatches = false;
+                theList.forEach(function(currString) {
+                    if (currString.indexOf(theString) >= 0) {
+                        stringMatches = true;
+                    }
+                });
+                return stringMatches;
             }
 
             // BatchInfo module public functions and properties
@@ -447,9 +470,9 @@
                 donationMatchingRule: [],
                 donationDateRange: '',
                 postProcessClass: '',
-
                 load: load,
                 isValid: isValid,
+                noMatchOnDate: false,
                 onInfoUpdated: _onInfoUpdated
             }
         })(this.Event());
@@ -468,7 +491,7 @@
 
             /**
              * @description Load the fields and notify onFieldsUpdated listeners.
-             * @param allFields: list of allFields with sObjectName/Name.
+             * @param allFields: list of allFields with sObjectLabel/Name.
              * param activeFields: Map of activeFieldsBySObject with sObjectName, Name,
              * and Default Value, Hide and Required flags.
              * @return void.
@@ -736,7 +759,7 @@
         return (function (Event) {
             var _onMetadataUpdated = new Event(this);
 
-            /* **********************************************************
+            /************************************************************
              * @Description Loads the Info, and notify all the
              *      _onMetadataUpdated listeners.
              * @return void.
@@ -864,6 +887,15 @@
             }
 
             /**
+             * @description sets the showAdvancedOptions flag to hide/reveal the advanced options accordingly
+             * @return void.
+             */
+            function toggleShowAdvanced() {
+                this.showAdvancedOptions = !this.showAdvancedOptions;
+                this.onMetadataUpdated.notify();
+            }            
+
+            /**
              * @description Increments the step for the progressIndicator
              * @return void.
              */
@@ -894,6 +926,7 @@
                 errorMessage: '',
                 pageHeader: '',
                 pendingSave: false,
+                showAdvancedOptions: false,
                 load: load,
                 navigateToRecord: navigateToRecord,
                 nextStep: nextStep,
@@ -906,7 +939,8 @@
                 stepUp: stepUp,
                 stepDown: stepDown,
                 togglePendingSave: togglePendingSave,
-                onMetadataUpdated: _onMetadataUpdated
+                onMetadataUpdated: _onMetadataUpdated,
+                toggleShowAdvanced: toggleShowAdvanced
             }
         })(this.Event());
     },

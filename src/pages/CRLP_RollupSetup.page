@@ -34,8 +34,15 @@
   @group-content ../../ApexDocContent/Rollups2.htm
   @description Wrapper page for the Rollups UI Lightning Container.
 -->
-<apex:page standardStylesheets="false" applyBodyTag="false" id="CRLP_Setup" showHeader="true" sideBar="false"
-           controller="CRLP_RollupSetup_CTRL" docType="html-5.0">
+<apex:page 
+    applyBodyTag="false" 
+    controller="CRLP_RollupSetup_CTRL" 
+    docType="html-5.0" 
+    id="CRLP_Setup" 
+    showHeader="true" 
+    sideBar="false"
+    standardStylesheets="false" 
+    title="{!$Label.CRLP_RollupSummary}">
 
     <apex:slds />
     <apex:includeLightning/>

@@ -34,92 +34,226 @@
 * @description Controller for Relationships viewer VF page 
 */
 global with sharing class REL_RelationshipsViewer_CTRL{
-	
-    public REL_RelationshipsViewer_CTRL(ApexPages.StandardController controller) {}
-    
+
+    public Boolean showPermissionError {get; set;}
+
+    private static List<String> contactFields = new List<String> {
+        'LastName',
+        'FirstName',
+        'Id',
+        'Title',
+        'Account.Name'
+    };
+
+    private static List<String> relationshipFields = new List<String> {
+        'Id',
+        'npe4__Contact__c',
+        'toLabel(npe4__Type__c)',
+        'npe4__RelatedContact__r.FirstName',
+        'npe4__RelatedContact__r.LastName',
+        'npe4__Status__c',
+        'npe4__RelatedContact__r.Id',
+        'npe4__RelatedContact__r.Account.Name',
+        'npe4__RelatedContact__r.Title',
+        'npe4__ReciprocalRelationship__r.Id'
+    };
+
+    /*******************************************************************************************************
+    * @description constructor.
+    * @param isDryRun ApexPages Standard controller.
+    */
+    public REL_RelationshipsViewer_CTRL(ApexPages.StandardController controller) {
+        showNoAccess();
+    }
+
+    /*******************************************************************************************************
+    * @description Sets the flag and error message if the current user does not have permission on the
+    * objects (Contact, Relationship) or fields used by the viewer.
+    * @return PageReference to the current page.
+    */
+    private PageReference showNoAccess() {
+        List<String> blockingSObjects = new List<String>();
+
+        // Check whether the user has permission to read the Contact object without throwing an exception if not
+        if (!UTIL_Permissions.canRead('Contact', false)) {
+            blockingSObjects.add(UTIL_Describe.getObjectLabel('Contact'));
+        }
+
+        // Check whether the user has permission to read the Relationship object without throwing an exception if not
+        if (!UTIL_Permissions.canRead('npe4__Relationship__c', false)) {
+            blockingSObjects.add(UTIL_Describe.getObjectLabel('npe4__Relationship__c'));
+        }
+
+        String flsErrorMessage = null;
+        if(!blockingSObjects.isEmpty()) {
+            flsErrorMessage = String.format(Label.flsError, new List<String> {String.join(blockingSObjects, ', ')});
+        } else {
+
+            // We should check object fields and not their relationships.
+            List<String> contactFieldsToCheck = new List<String> {
+                'LastName',
+                'FirstName',
+                'Id',
+                'Title'
+            };
+
+            List<String> relationshipFieldsToCheck = new List<String> {
+                'Id',
+                'npe4__Contact__c',
+                'npe4__Type__c',
+                'npe4__Status__c',
+                'npe4__ReciprocalRelationship__c',
+                'npe4__RelatedContact__c'
+            };
+
+            List<String> accountFieldsToCheck = new List<String>{
+                'Name'
+            };
+
+            Map<String, List<String>> fieldNamesBySObjectNameForSOQL = new Map<String, List<String>> {
+                'Contact' => contactFieldsToCheck,                
+                'npe4__Relationship__c' => relationshipFieldsToCheck,
+                'Account' => accountFieldsToCheck
+            };
+            // check access on all the soql fields
+            for(String objName: fieldNamesBySObjectNameForSOQL.keySet()) {
+                try {
+                    // Thorws an exception if the user do not have permission for a given field.
+                    checkFieldPermissionsForAnObject(objName, fieldNamesBySObjectNameForSOQL);                    
+                } catch (Exception e) {
+                    flsErrorMessage = String.format(Label.flsError, 
+                        new List<String> {objName+': '+String.join(fieldNamesBySObjectNameForSOQL.get(objName), ', ')});
+                }
+            }
+        }
+
+        if(flsErrorMessage != null) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.FATAL,flsErrorMessage));
+            showPermissionError = true;
+        }
+
+        return null;
+    }
+
+    private void checkFieldPermissionsForAnObject(String objName, Map<String, List<String>> fieldNamesBySObjectNameForSOQL) {
+        List<String> fieldNames = fieldNamesBySObjectNameForSOQL.get(objName);
+        for (String currentFieldName : fieldNames) {
+            UTIL_Permissions.canRead(objName, currentFieldName, true);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description constructs the soql String to run a Data Import process with or without a Batch.
+    * @param contactId the Id of the Contact
+    * @param isInitialLoad Boolean stating if the base node info has been retrieved.
+    * @param relIds a List of Relationship Ids.
+    * @return List containing the Nodes.
+    */
     @RemoteAction
-    global static List<Node> getRelationships(id cid, boolean isInitialLoad, List<String> relIds) {
-        list<Node> returnList = new list<Node>();
-        list<npe4__Relationship__c> relationshipList = new list<npe4__Relationship__c>();
-        
+    global static List<Node> getRelationships(Id contactId, Boolean isInitialLoad, List<String> relIds) {
+        List<Node> nodes = new List<Node>();
+        List<npe4__Relationship__c> relationships = new List<npe4__Relationship__c>();
+
+        contactId = String.escapeSingleQuotes(contactId);
+
         List<Id> renderedRelationships;
-        if (relIds != null)
+        if (relIds != null) {
             renderedRelationships = (List<Id>)relIds;
-        else
+        } else {
             renderedRelationships = new List<Id>();
-        
-        if (isInitialLoad){         
+        }
+
+        if (isInitialLoad) {
             //base node
             Node basenode = new Node();
-      
-            Contact c = [select LastName, FirstName, id, Title, Account.Name from Contact where id = :cid];
-            basenode.LastName = c.LastName;
-            basenode.FirstName = c.FirstName;
-            basenode.Title = c.Title;
-            basenode.AccountName = c.Account.Name;
-            basenode.id = c.id;
-            returnList.add(basenode);
-        }        
-        else{
-            relationshipList.clear();
-            returnList.clear();
-        }        
-        
-        relationshipList = [select id, npe4__RelatedContact__r.LastName, toLabel(npe4__Type__c), npe4__Status__c, npe4__RelatedContact__r.FirstName, 
-                                    npe4__RelatedContact__r.id, npe4__RelatedContact__r.Account.Name, npe4__RelatedContact__r.Title,
-                                    npe4__ReciprocalRelationship__r.id 
-                                    from npe4__Relationship__c 
-                                    where npe4__Contact__c = :cid and id NOT IN :renderedRelationships 
-                                    and npe4__ReciprocalRelationship__r.id NOT IN :renderedRelationships];
 
-        for (npe4__Relationship__c r : relationshipList){
-            Node n = new Node();             
-            n.LastName = r.npe4__RelatedContact__r.LastName;
-            n.id = r.npe4__RelatedContact__r.id;
-            n.Type = r.npe4__Type__c;
-            n.Status = r.npe4__Status__c;
-            n.FirstName = r.npe4__RelatedContact__r.FirstName;
-            n.link =  URL.getSalesforceBaseUrl().toExternalForm() + '/' + r.npe4__RelatedContact__r.id;
-            n.AccountName = r.npe4__RelatedContact__r.Account.Name;
-            n.Title = r.npe4__RelatedContact__r.Title;
-            n.relId = r.id;            
-            returnList.add(n);
+            String contactQuery = 'SELECT '+String.join(contactFields, ', ')+
+                ' FROM Contact WHERE Id = \''+contactId+'\' LIMIT 1';
+
+            List<Contact> contacts = Database.query(contactQuery);
+            Contact primaryContact = null;
+            if(!contacts.isEmpty()) {
+                primaryContact = (Contact)Database.query(contactQuery).get(0);
+            }
+
+            basenode.lastName = primaryContact.LastName;
+            basenode.firstName = primaryContact.FirstName;
+            basenode.title = primaryContact.Title;
+            basenode.accountName = primaryContact.Account.Name;
+            basenode.id = primaryContact.Id;
+            nodes.add(basenode);
+        } else {
+            relationships.clear();
+            nodes.clear();
         }
-        return returnList;
-    }
+
+        String relationshipQuery = 'SELECT '+String.join(relationshipFields, ', ')+
+            ' FROM npe4__Relationship__c WHERE npe4__Contact__c = \''+contactId+'\'';
         
-    //get Relationship object prefix for links
+        if(!renderedRelationships.isEmpty()) {
+            relationshipQuery += ' AND Id NOT IN :renderedRelationships'+
+            ' AND npe4__ReciprocalRelationship__r.Id NOT IN :renderedRelationships'; 
+        }
+
+        relationships = Database.query(relationshipQuery);
+
+        for(npe4__Relationship__c currentRelationship : relationships) {
+
+            Node n = new Node();
+            n.lastName = currentRelationship.npe4__RelatedContact__r.LastName;
+            n.id = currentRelationship.npe4__RelatedContact__r.Id;
+            n.type = currentRelationship.npe4__Type__c;
+            n.status = currentRelationship.npe4__Status__c;
+            n.firstName = currentRelationship.npe4__RelatedContact__r.FirstName;
+            n.link =  URL.getSalesforceBaseUrl().toExternalForm() + '/' + currentRelationship.npe4__RelatedContact__r.Id;
+            n.accountName = currentRelationship.npe4__RelatedContact__r.Account.Name;
+            n.title = currentRelationship.npe4__RelatedContact__r.Title;
+            n.relId = currentRelationship.Id;
+            nodes.add(n);
+        }
+        return nodes;
+    }
+
+    /*******************************************************************************************************
+    * @description get Relationship object prefix for links
+    * @return a new RelationshipInfo object.
+    */
     @RemoteAction
-    global static RelationshipInfo getRelationshipInfo(){
+    global static RelationshipInfo getRelationshipInfo() {
         return new RelationshipInfo();
     }
-    
-    global class RelationshipInfo{
+
+
+    global class RelationshipInfo {
         String prefix;
-        String NameField;
-        String NameIdField;
+        String nameField;
+        String nameIdField;
+
+        /*******************************************************************************************************
+        * @description constructor.
+        */
         public RelationshipInfo() {
             npe4__Relationship_Settings__c rs = UTIL_CustomSettingsFacade.getRelationshipSettings();
-            
+
             this.prefix = npe4__Relationship__c.sObjectType.getDescribe().getKeyPrefix();
-            if (rs.npe4__Relationship_Name_Field_Id__c != null){
-                this.NameField = rs.npe4__Relationship_Name_Field_Id__c;
+            if (rs.npe4__Relationship_Name_Field_Id__c != null) {
+                this.nameField = rs.npe4__Relationship_Name_Field_Id__c;
             }
-            if (rs.npe4__Relationship_Name_Id_Field_Id__c != null){
-                this.NameIdField = rs.npe4__Relationship_Name_Id_Field_Id__c;
-            }           
-        }       
+            if (rs.npe4__Relationship_Name_Id_Field_Id__c != null) {
+                this.nameIdField = rs.npe4__Relationship_Name_Id_Field_Id__c;
+            }
+        }
     }
 
-    global class Node { 
-        public String FirstName;
-        public String LastName;
-        public String id;              
-        public String Status;
-        public String Type;
-        public String link;    
-        public String AccountName;
-        public String Title;
+    global class Node {
+        public String firstName;
+        public String lastName;
+        public String id;
+        public String status;
+        public String type;
+        public String link;
+        public String accountName;
+        public String title;
         public String relId;
     }  
     

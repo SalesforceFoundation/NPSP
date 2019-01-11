@@ -8,8 +8,8 @@
       "DisableParallelApexTesting",
       "IsMiddleNameEnabled",
       "IsNameSuffixEnabled",
-      "S1DesktopEnabled",
-      "Translation"
+      "NotesReservedPref01",
+      "S1DesktopEnabled"
     ]
   }
 }

@@ -11,10 +11,6 @@
         <name>CustomObject</name>
     </types>
     <types>
-        <members>Nonprofit_CRM</members>
-        <name>CustomApplication</name>
-    </types>
-    <types>
         <members>ContactRole</members>
         <members>OpportunityStage</members>
         <name>StandardValueSet</name>

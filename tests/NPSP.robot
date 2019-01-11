@@ -1,6 +1,7 @@
 *** Settings ***
 
 Resource       cumulusci/robotframework/Salesforce.robot
+Library        DateTime
 Library        tests/NPSP.py
 
 *** Variables ***
@@ -34,12 +35,13 @@ API Modify Contact
 
 API Create Opportunity
     [Arguments]      ${account_id}    ${opp_type}      &{fields} 
-    ${rt_id} =       Get Record Type Id  Opportunity  ${opp_type}   
+    ${rt_id} =       Get Record Type Id  Opportunity  ${opp_type}
+    ${close_date} =  Get Current Date  result_format=%Y-%m-%d
     ${opp_id} =  Salesforce Insert    Opportunity
     ...               AccountId=${account_id}
     ...               RecordTypeId=${rt_id}
     ...               StageName=Closed Won
-    ...               CloseDate=2018-09-10
+    ...               CloseDate=${close_date}
     ...               Amount=100
     ...               Name=Test Donation
     ...               npe01__Do_Not_Automatically_Create_Payment__c=true 
@@ -198,30 +200,31 @@ Create HouseHold
 Create Primary Affiliation
     [Arguments]      ${acc_name}      ${con_id}
     Go To Record Home  ${con_id}
-    Select Tab    Details
-    #Scroll Page To Location    0    300
-    Click Edit Button    Edit Primary Affiliation
+    # To make sure the field we want to edit has rendered
+    # and is not obscured by the footer, scroll to one further down
+    Scroll Element Into View  text:Description
+    Click Button  title:Edit Primary Affiliation
+    Wait For Locator  record.edit_form
     Populate Lookup Field    Primary Affiliation    ${acc_name}
     Click Record Button    Save 
-    
+
 Create Secondary Affiliation
     [Arguments]      ${acc_name}      ${con_id}
     Go To Record Home  ${con_id}
+    Select Tab  Related
     Click Related List Button   Organization Affiliations    New
     Populate Lookup Field    Organization    ${acc_name}
     Click Modal Button    Save
     
 Create Opportunities
-    [Arguments]    ${opp_name}    ${hh_name}  
-    Select Window
-    Sleep    2   
+    [Arguments]    ${opp_name}    ${hh_name}    ${stage}
     Populate Form
     ...                       Opportunity Name= ${opp_name}
     ...                       Amount=100 
     Click Dropdown    Stage
-    Click Link    link=Closed Won
+    Click Link    link=${stage}
     Populate Lookup Field    Account Name    ${hh_name}
-    Click Dropdown    Close Date
+    Open Date Picker    Close Date
     Pick Date    10
     Select Lightning Checkbox    Do Not Automatically Create Payment
     Click Modal Button        Save
@@ -235,15 +238,16 @@ Create Engagement Plan
     Wait For Locator    id    idName
     Enter Eng Plan Values    idName    ${plan_name}
     Enter Eng Plan Values    idDesc    This plan is created via Automation  
-    Click Button With Value    Add Task
+    Click Button    Add Task
+    Wait Until Page Contains  Task 1
     Enter Task Id and Subject    Task 1    ${task1}
     Click Task Button    1    Add Dependent Task
     Enter Task Id and Subject    Task 1-1    ${sub_task}
-    Click Button With Value    Add Task
+    Click Button    Add Task
+    Wait Until Page Contains  Task 2
     Enter Task Id and Subject    Task 2    ${task2}
     Page Scroll To Locator    button    Save
-    Click Button With Value    Save
-    #Sleep    2
+    Click Button    Save
     [Return]    ${plan_name}    ${task1}    ${sub_task}     ${task2}
     
 Create Level
@@ -287,12 +291,7 @@ Create GAU
     [Return]           ${gau_name}    
 
 Run Donations Batch Process
-    Select App Launcher Tab    NPSP Settings
-    Wait For Locator    frame    Nonprofit Success Pack Settings
-    Select Frame With Title    Nonprofit Success Pack Settings
-    Click Link    link=Bulk Data Processes
-    Wait For Locator    link-text    Rollup Donations Batch
-    Click Link    link=Rollup Donations Batch
+    Open NPSP Settings  Bulk Data Processes  Rollup Donations Batch
     Click Button With Value    Run Batch
     # Wait For Locator    npsp_settings.status    CRLP_Account_SoftCredit_BATCH    Completed
     # Wait For Locator    npsp_settings.status    CRLP_RD_BATCH    Completed
@@ -319,15 +318,16 @@ Select Frame With Title
     
 Scroll Page To Location
     [Arguments]    ${x_location}    ${y_location}
-    Execute JavaScript    window.scrollTo(${x_location},${y_location})
+    Execute JavaScript    window.scrollTo(${x_location},${y_location}) 
 
 Open NPSP Settings
     [Arguments]    ${topmenu}    ${submenu}
     Select App Launcher Tab      NPSP Settings
     Wait For Locator    frame    Nonprofit Success Pack Settings
     Select Frame With Title    Nonprofit Success Pack Settings
-    Wait for Locator    npsp_settings.side_panel
-    Click Link    link=${topmenu}
-    Sleep    1
-    Click Link    link=${submenu}
-    Sleep    1
+    Wait Until Element Is Visible  text:${topmenu}
+    Click Link    text:${topmenu}
+    Sleep  1
+    Wait Until Element Is Visible  text:${submenu}
+    Click Link    text:${submenu}
+    Sleep  1

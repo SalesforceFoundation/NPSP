@@ -90,5 +90,29 @@
             }
         }
     },
+    /**
+     * @description handles User interaction from ltng:sendMessage and onclick handlers
+     * for managing the process settings
+     */
+    handleProcessingSettingsChange: function(component, event) {
+        var model = component.get('v.model');
+        let step = component.get('v.batchMetadata.progressIndicatorStep');
 
+        if (step === '3') {
+            // check if user input came from ltng:sendMessage or an onclick handler
+            var task;
+            if (event.getSource().getLocalId()) {
+                task = event.getSource().getLocalId();
+            } else if (event.getParam('channel')) {
+                task = event.getParam('channel');
+            }
+
+            if (task === 'showAdvanced') {
+                model.getBatchMetadata().toggleShowAdvanced();
+                model.getBatchInfo().load(component.get('v.batchInfo'));
+            } else if (task === 'donationMatchingBehavior' || task === 'donationMatchingRule') {
+                model.getBatchInfo().load(component.get('v.batchInfo'));
+            }
+        }
+    }
 });

@@ -287,17 +287,25 @@ public with sharing class USER_UserService_TEST {
     * @description Creates and assigns the permission set with Customize Application flag set
     */
     private static void assignCustomizeApplicationPermissionSet(Id userId) {
+        final String translationPerm = 'PermissionsManageTranslation';
+
         // Create a permission set with CustomizeApplication set ensuring other flags
         // on which CustomizeApplication settings depends are set as well
         PermissionSet permission = new PermissionSet(
             Name = 'PermissionTest',
             Label = 'PermissionTest',
             PermissionsManageCustomPermissions = true,
-            PermissionsViewRoles = true, 
+            PermissionsViewRoles = true,
             PermissionsViewSetup = true,
-            PermissionsManageTranslation = true,
             PermissionsCustomizeApplication = true
         );
+
+        // Dynamically adding translation permission to avoid dependencies. Previously our package failed to deploy
+        // to an org without translations enabled, since the field did not exist.
+        if (PermissionSet.getSObjectType().getDescribe().fields.getMap().containsKey(translationPerm)) {
+            permission.put(translationPerm, true);
+        }
+
         insert permission;
 
         insert new PermissionSetAssignment(
