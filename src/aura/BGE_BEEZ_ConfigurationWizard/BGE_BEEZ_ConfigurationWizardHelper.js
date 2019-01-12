@@ -41,8 +41,6 @@
         batchInfo.donationMatchingOptions = response.donationMatchingOptions;
         batchInfo.donationMatchingRule = response.donationMatchingRule;
         batchInfo.donationDateRange = response.donationDateRange;
-        //todo: @Patrick will fix this - PR: #3973
-        //batchInfo.noMatchOnDate = response.donationMatchingRule.indexOf("donation_date__c") < 0;
         batchInfo.postProcessClass = response.postProcessClass;
 
         component.set('v.batchInfo', batchInfo);
@@ -359,9 +357,9 @@
      */
     checkBatchProcessingSettingsValidity: function (component) {
         let batchInfo = component.get('v.batchInfo');
-        let isValid = batchInfo.donationDateRange != '' &&
+        let isValid = batchInfo.donationDateRange !== '' &&
             batchInfo.donationDateRange > -1 &&
-            batchInfo.batchProcessSize != '' &&
+            batchInfo.batchProcessSize !== '' &&
             batchInfo.batchProcessSize > 0;
         if (isValid) {
             this.clearError(component);
