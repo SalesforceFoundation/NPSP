@@ -22,6 +22,22 @@
     
     loadModel: function (component, response) {
 
+        this.loadBatchInfo(component, response);
+        this.loadWizardMetadata(component, response);
+
+        let activeFields = JSON.parse(response.activeFields);
+        let allFields = response.availableFields;
+        this.loadAvailableFields(component, activeFields, allFields);
+
+        let availableFieldsBySObject = component.get('v.availableFieldsBySObject');
+        this.loadBatchFieldOptions(component, availableFieldsBySObject);
+
+    },
+
+    /**
+     * @description: sets basic batch info and processing settings
+     */
+    loadBatchInfo: function(component, response) {
         let batchInfo = {};
 
         //generic batch info
@@ -44,8 +60,12 @@
         batchInfo.postProcessClass = response.postProcessClass;
 
         component.set('v.batchInfo', batchInfo);
+    },
 
-        //batch metadata
+    /**
+     * @description: sets wizard metadata such as labels and current step
+     */
+    loadWizardMetadata: function(component, response) {
         let batchMetadata = {};
         batchMetadata.labels = response.labels;
         batchMetadata.showAdvancedOptions = false;
@@ -74,10 +94,12 @@
         ];
         component.set('v.batchMetadata', batchMetadata);
         this.updateMatchOnDate(component);
+    },
 
-        //set available fields for field selection in dueling picklists
-        let activeFields = JSON.parse(response.activeFields);
-        let allFields = response.availableFields;
+    /**
+     * @description: set available fields for field selection in dueling picklists
+     */
+    loadAvailableFields: function(component, activeFields, allFields) {
         let availableFieldsBySObject = {
             fieldGroups: []
         };
@@ -151,12 +173,12 @@
             availableFieldsBySObject.fieldGroups.push(currentFieldGroup);
         });
         component.set('v.availableFieldsBySObject', availableFieldsBySObject);
-
-        //batchFieldOptions
-        this.loadBatchFieldOptions(component, activeFieldsBySObject);
-
     },
 
+    /**
+     * @description: sets batch field options, which is the derived set of active fields with applicable defaults
+     * and requiredness
+     */
     loadBatchFieldOptions: function (component, activeFieldsBySObject) {
 
         let batchFieldOptions = {

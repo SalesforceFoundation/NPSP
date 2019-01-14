@@ -13,9 +13,8 @@
 
         if (task === 'next' || task === 'back' || task === 'save') {
 
-            var isValid = true;
-            // var possibleError = '';
-            var step = component.get('v.batchMetadata.progressIndicatorStep');
+            let isValid = true;
+            const step = component.get('v.batchMetadata.progressIndicatorStep');
 
             // check validity and load values
             if (step === '0') {
