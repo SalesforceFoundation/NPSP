@@ -52,6 +52,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Allocations_Settings__c allocationsSettings;
     static Data_Import_Settings__c dataImportSettings;
     static Customizable_Rollup_Settings__c customizableRollupSettings;
+    static Levels_Settings__c levelsSettings;
     
     //storing org-level custom settings in-memory to avoid slowing down the settings page
     static npe01__Contacts_And_Orgs_Settings__c orgContactsSettings;
@@ -66,6 +67,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Allocations_Settings__c orgAllocationsSettings;
     static Data_Import_Settings__c orgDataImportSettings;
     static Customizable_Rollup_Settings__c orgCustomizableRollupSettings;
+    static Levels_Settings__c orgLevelsSettings;
     
     /*******************************************************************************************************
     * @description Resets specific Custom Settings that are updated after 
@@ -878,7 +880,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         crs.Rollups_Skew_Dispatcher_Batch_Size__c = 300;
         crs.Rollups_Limit_on_Attached_Opps_for_Skew__c = 250;
         crs.Disable_Related_Records_Filter__c = false;
-    }
+    }    
 
     /*******************************************************************************************************
     * @description Creates instance of settings to use in tests. It does not insert it, but all other methods 
@@ -910,4 +912,42 @@ public without sharing class UTIL_CustomSettingsFacade {
         return customizableRollupSettings;
     }
 
+    /*******************************************************************************************************
+    * @description Returns the default Levels settings. 
+    * @return Levels_Settings__c 
+    */
+    public static Levels_Settings__c getLevelsSettings() {
+        if(Test.isRunningTest() && levelsSettings == null) {
+            levelsSettings = new Levels_Settings__c();
+            configLevelsSettings(levelsSettings);
+        } else if (levelsSettings == null) {
+            levelsSettings = Levels_Settings__c.getInstance();
+            if(levelsSettings.Id == null) {
+                levelsSettings = getOrgLevelsSettings();
+            }
+        }
+        return levelsSettings;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the Org Levels settings. 
+    * @return Levels_Settings__c
+    */
+    public static Levels_Settings__c getOrgLevelsSettings() {
+        if(orgLevelsSettings == null) {
+            orgLevelsSettings = Levels_Settings__c.getOrgDefaults();
+            if(orgLevelsSettings.Id == null) {
+                configLevelsSettings(orgLevelsSettings);
+                if(!Test.isRunningTest()) {
+                    upsert orgLevelsSettings;
+                }
+            }
+        }
+        return orgLevelsSettings;
+    }
+
+    private static void configLevelsSettings(Levels_settings__c ls) {
+        // New default settings for the Customizable Rollups engine
+        ls.Level_Assignment_Batch_Size__c = 200;
+    }
 }

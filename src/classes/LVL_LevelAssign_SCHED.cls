@@ -34,7 +34,10 @@
 * @description Schedulable class that creates the batch processes to compute Levels for each Target object
 */
 public without sharing class LVL_LevelAssign_SCHED implements Schedulable {
-    
+
+    /** @description Custom Settings record that defines specific Customizable Rollups settings */
+    private static final Levels_Settings__c levelsSettings = UTIL_CustomSettingsFacade.getLevelsSettings();
+
     /*******************************************************************************************************
     * @description Schedulable execute method executes this batch job.
     */
@@ -46,6 +49,13 @@ public without sharing class LVL_LevelAssign_SCHED implements Schedulable {
     * @description Starts one batch job per level object.
     */
     public void runBatch() {
+        Integer batchSize;
+        try {
+            batchSize = levelsSettings.Level_Assignment_Batch_Size__c.intValue();
+        } catch(Exception e) {
+            batchSize = 200;
+        }
+
         try {
             cLvlAssignBatch = 0;
 
@@ -57,7 +67,7 @@ public without sharing class LVL_LevelAssign_SCHED implements Schedulable {
                 
                 // get the fields needed for that object
                 set<String> setFlds = mapStrObjectToQueryFields.get(strObj);
-                
+
                 // construct our query
                 String strSoql = 'select Id';
                 for (String strFld : setFlds) {
@@ -67,7 +77,7 @@ public without sharing class LVL_LevelAssign_SCHED implements Schedulable {
                 
                 // kick off our batch
                 LVL_LevelAssign_BATCH batch = new LVL_LevelAssign_BATCH(strSoql, strObj);
-                Database.executeBatch(batch);
+                Database.executeBatch(batch, batchSize);
                 cLvlAssignBatch++;
             }
         } catch(Exception e) {

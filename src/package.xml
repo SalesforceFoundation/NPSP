@@ -965,6 +965,7 @@
         <members>Level__c.Previous_Level_Field__c</members>
         <members>Level__c.Source_Field__c</members>
         <members>Level__c.Target__c</members>
+        <members>Levels_Settings__c.Level_Assignment_Batch_Size__c</members>
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Ask_Date__c</members>
@@ -2116,6 +2117,7 @@
         <members>Grant_Deadline__c</members>
         <members>Household_Naming_Settings__c</members>
         <members>Level__c</members>
+        <members>Levels_Settings__c</members>
         <members>Opportunity_Naming_Settings__c</members>
         <members>Package_Settings__c</members>
         <members>Partial_Soft_Credit__c</members>

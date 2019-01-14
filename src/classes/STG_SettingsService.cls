@@ -160,6 +160,17 @@ public with sharing class STG_SettingsService {
     }
 
     /*********************************************************************************************************
+    * @description The Levels Settings object
+    */
+    public Levels_Settings__c stgLevels {
+        get {
+            if (stgLevels == null) stgLevels = UTIL_CustomSettingsFacade.getOrgLevelsSettings();
+            return stgLevels;
+        }
+        private set;
+    }    
+
+    /*********************************************************************************************************
     * @description The RD Custom Field Mapping settings object
     */
     public map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField {
@@ -231,6 +242,7 @@ public with sharing class STG_SettingsService {
 	        upsert stgErr;
 	        upsert stgAllo;
             upsert stgCRLP;
+            upsert stgLevels;
         }
     }
 }
