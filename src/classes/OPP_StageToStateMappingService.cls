@@ -38,16 +38,29 @@ global class OPP_StageToStateMappingService {
 
     /******************************************************************************************************
     * @description Represents the overall state of the Opportunity.
-    * UNCOMMITTED -- Donor has not yet agreed to make the donation.  Donation is unpaid.  This is useful for soliciting or staging gifts.
-    * COMMITTED --  Donor has agreed to make a donation.  Donation can be unpaid or partially paid.  More money is still expected from the donor.
-    * FINALIZED -- Donation is completely received.  Donation can be fully or partially paid.  No more money is expected for the donation.
+    * UNCOMMITTED -- Donor has not yet agreed to make the donation.  Donation is unpaid.  This is useful
+    * for soliciting or staging gifts.
+    * COMMITTED --  Donor has agreed to make a donation.  Donation can be unpaid or partially paid.
+    * More money is still expected from the donor.
+    * FINALIZED -- Donation is completely received.  Donation can be fully or partially paid.  No more
+    * money is expected for the donation.
     */
     global enum OPPORTUNITY_STATE { UNCOMMITTED, COMMITTED, FINALIZED }
 
+    /******************************************************************************************************
+    * @description Used to Cache Set of Opportunity Stages that mean Opportunity is in a Committed State.
+    */
     private static Set<String> COMMITTED_STATE_SET = null;
+
+    /******************************************************************************************************
+    * @description Used to Cache Set of Opportunity Stages that mean Opportunity is in a Finalized State.
+    */
     private static Set<String> FINALIZED_STATE_SET = null;
 
-    private static final String DEFAULT_SEPARATOR_VAL = ';';
+    /******************************************************************************************************
+    * @description Separator String used to parse Strings into multiple values
+    */
+private static final String DEFAULT_SEPARATOR_VAL = ';';
 
     /*******************************************************************************************************
     * @description Determines the Opportunity State (UNCOMMITTED, COMMITTED, or FINALIZED) from the

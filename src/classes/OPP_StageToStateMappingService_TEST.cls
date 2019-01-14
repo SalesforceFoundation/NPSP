@@ -37,11 +37,23 @@
 @isTest
 private class OPP_StageToStateMappingService_TEST {
 
+    /******************************************************************************************************
+    * @description Test value used to test "convertToSet" method with alternate separator
+    */
     private static final String TEST_CONVERT_1_VAL = '1~ 2 ~3~4 ~a~B';
+    /******************************************************************************************************
+    * @description Test value used to test "convertToSet" method
+    */
     private static final String TEST_CONVERT_2_VAL = '1; 2 ;3;4 ;a;B';
 
+    /******************************************************************************************************
+    * @description Expected values to be found in set after calling "convertToSet" method.
+    */
     private static final List<String> RESULT_CONVERT_VALS = new List<String> {'1', '2', '3', '4', 'a', 'b'};
 
+    /******************************************************************************************************
+    * @description Test values used to test determineStateFromOppStage
+    */
     private static final List<String> TEST_OPP_STAGE_VALS = new List<String> {
             'Prospecting',
             'Qualification',
@@ -59,9 +71,22 @@ private class OPP_StageToStateMappingService_TEST {
             null
     };
 
+    /******************************************************************************************************
+    * @description Test Setting for Committed Stages to be used when testing determineStateFromOppStage
+    * with settings present/populated
+    */
     private static final String COMMITTED_STAGES_VAL = 'Pledged; Closed Won; Proposal/Price Quote';
+
+    /******************************************************************************************************
+    * @description Test Setting for Finalized Stages to be used when testing determineStateFromOppStage
+    * with settings present/populated
+    */
     private static final String FINALIZED_STAGES_VAL = 'Closed Won; Closed Lost;';
 
+    /******************************************************************************************************
+    * @description Expected return values for tests of determineStateFromOppStage when Settings are not
+    * populated.
+    */
     private static final List<OPP_StageToStateMappingService.OPPORTUNITY_STATE> RESULT_NO_SETTINGS = new List<OPP_StageToStateMappingService.OPPORTUNITY_STATE> {
         OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
         OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
@@ -80,6 +105,10 @@ private class OPP_StageToStateMappingService_TEST {
 
     };
 
+    /******************************************************************************************************
+    * @description Expected return values for tests of determineStateFromOppStage when Settings are
+    * populated.
+    */
     private static final List<OPP_StageToStateMappingService.OPPORTUNITY_STATE> RESULT_WITH_SETTINGS = new List<OPP_StageToStateMappingService.OPPORTUNITY_STATE> {
         OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
         OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
@@ -106,8 +135,6 @@ private class OPP_StageToStateMappingService_TEST {
     private static void testConvertToSetMethod() {
         System.assertEquals (true, OPP_StageToStateMappingService.convertToSet(null, '~', true).isEmpty());
         System.assertEquals (true, OPP_StageToStateMappingService.convertToSet(' ', '~', true).isEmpty());
-
-
 
         Set<String> testVals = OPP_StageToStateMappingService.convertToSet(TEST_CONVERT_1_VAL, '~', true);
         System.assertEquals(6, testVals.size());
