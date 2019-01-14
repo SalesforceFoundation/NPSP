@@ -12,66 +12,70 @@
             if (state === 'SUCCESS') {
                 this.loadModel(component, model);
             } else if (state === 'ERROR') {
-                console.log(response.getError());
-                //todo: wire up error handling
-                //this.handleApexErrors(component, response.getError());
+                this.handleApexErrors(component, response.getError());
             }
         });
         $A.enqueueAction(action);
     },
-    
-    loadModel: function (component, response) {
 
-        this.loadBatchInfo(component, response);
-        this.loadWizardMetadata(component, response);
+    /**
+     * @description: sets basic batch info and processing settings
+     * @param model: parsed JSON response from the model
+     */
+    loadModel: function (component, model) {
+        this.loadBatchInfo(component, model);
+        this.loadWizardMetadata(component, model);
 
-        let activeFields = JSON.parse(response.activeFields);
-        let allFields = response.availableFields;
+        //parse active fields because it's another level JSON object
+        let activeFields = JSON.parse(model.activeFields);
+        let allFields = model.availableFields;
         this.loadAvailableFields(component, activeFields, allFields);
 
         let availableFieldsBySObject = component.get('v.availableFieldsBySObject');
         this.loadBatchFieldOptions(component, availableFieldsBySObject);
-
     },
 
     /**
      * @description: sets basic batch info and processing settings
+     * @param model: parsed JSON model from the model
      */
-    loadBatchInfo: function(component, response) {
+    loadBatchInfo: function(component, model) {
         let batchInfo = {};
 
         //generic batch info
-        batchInfo.name = response.name;
-        batchInfo.id = response.id;
-        batchInfo.description = response.description;
-        batchInfo.expectedCount = (response.expectedCount === null || response.expectedCount === '') ? 0 : response.expectedCount;
-        batchInfo.expectedTotal = (response.expectedTotal === null || response.expectedTotal === '') ? 0 : response.expectedTotal;
-        batchInfo.recordCount = response.recordCount;
+        batchInfo.name = model.name;
+        batchInfo.id = model.id;
+        batchInfo.description = model.description;
+        batchInfo.expectedCount = (model.expectedCount === null || model.expectedCount === '') ? 0 : model.expectedCount;
+        batchInfo.expectedTotal = (model.expectedTotal === null || model.expectedTotal === '') ? 0 : model.expectedTotal;
+        batchInfo.recordCount = model.recordCount;
 
         // batch processing settings
-        batchInfo.requireTotalMatch = response.requireTotalMatch;
-        batchInfo.batchProcessSize = response.batchProcessSize;
-        batchInfo.runOpportunityRollupsWhileProcessing = response.runOpportunityRollupsWhileProcessing;
-        batchInfo.donationMatchingBehavior = response.donationMatchingBehavior;
-        batchInfo.donationMatchingClass = response.donationMatchingClass;
-        batchInfo.donationMatchingOptions = response.donationMatchingOptions;
-        batchInfo.donationMatchingRule = response.donationMatchingRule;
-        batchInfo.donationDateRange = response.donationDateRange;
-        batchInfo.postProcessClass = response.postProcessClass;
+        batchInfo.requireTotalMatch = model.requireTotalMatch;
+        batchInfo.batchProcessSize = model.batchProcessSize;
+        batchInfo.runOpportunityRollupsWhileProcessing = model.runOpportunityRollupsWhileProcessing;
+        batchInfo.donationMatchingBehavior = model.donationMatchingBehavior;
+        batchInfo.donationMatchingClass = model.donationMatchingClass;
+        batchInfo.donationMatchingOptions = model.donationMatchingOptions;
+        batchInfo.donationMatchingRule = model.donationMatchingRule;
+        batchInfo.donationDateRange = model.donationDateRange;
+        batchInfo.postProcessClass = model.postProcessClass;
 
         component.set('v.batchInfo', batchInfo);
     },
 
     /**
      * @description: sets wizard metadata such as labels and current step
+     * @param model: parsed JSON response from the model
      */
-    loadWizardMetadata: function(component, response) {
+    loadWizardMetadata: function(component, model) {
         let batchMetadata = {};
-        batchMetadata.labels = response.labels;
+        batchMetadata.labels = model.labels;
         batchMetadata.showAdvancedOptions = false;
-        batchMetadata.namespacePrefix = response.namespacePrefix ? response.namespacePrefix+'__' : '';
+        batchMetadata.namespacePrefix = model.namespacePrefix ? model.namespacePrefix+'__' : '';
+        batchMetadata.errorMessage = null;
 
-        //todo: Randi will remove readOnly + mode
+        //todo: Beth! will remove readOnly + mode
         //isReadOnly (View) is passed from record home with lightning app builder
         if (component.get('v.isReadOnly')) {
             //this.setMode(component,'view');
@@ -87,7 +91,7 @@
         }
         batchMetadata.progressIndicatorStep = '0';
         batchMetadata.headers = [
-            response.labels.recordInfoLabel,
+            model.labels.recordInfoLabel,
             $A.get('$Label.c.bgeBatchSelectFields'),
             $A.get('$Label.c.bgeBatchSetFieldOptions'),
             $A.get('$Label.c.bgeBatchSetBatchOptions')
@@ -97,7 +101,9 @@
     },
 
     /**
-     * @description: set available fields for field selection in dueling picklists
+     * @description: set available fields for field selection in dueling picklist
+     * @param activeFields: parsed list of user-selected active fields
+     * @param allFields: parsed list of all possible fields for dueling picklist
      */
     loadAvailableFields: function(component, activeFields, allFields) {
         let availableFieldsBySObject = {
@@ -178,6 +184,7 @@
     /**
      * @description: sets batch field options, which is the derived set of active fields with applicable defaults
      * and requiredness
+     * @param activeFieldsBySObject: fields set in loadAvailableFields
      */
     loadBatchFieldOptions: function (component, activeFieldsBySObject) {
 
@@ -224,38 +231,49 @@
 
     /******************************** Step Functions *****************************/
 
+    /**
+     * @description: moves the modal to the next step in the wizard
+     */
     nextStep: function (component) {
         this.stepUp(component);
-        this.setPageHeader(component);
+        this.setModalFooter(component);
+        this.setModalHeader(component);
     },
 
+    /**
+     * @description: parses and increments the current step in the wizard
+     */
     stepUp: function (component) {
         let stepNum = parseInt(component.get('v.batchMetadata.progressIndicatorStep'));
         stepNum++;
         let progressIndicatorStep = stepNum.toString();
         component.set('v.batchMetadata.progressIndicatorStep', progressIndicatorStep);
-        this.sendMessage(component,'setStep', progressIndicatorStep);
     },
 
+    /**
+     * @description: moves the modal to the previous step in the wizard
+     */
     backStep: function (component) {
-        /*this.clearError();*/
+        this.clearError(component);
         this.stepDown(component);
-        this.setPageHeader(component);
+        this.setModalFooter(component);
+        this.setModalHeader(component);
     },
 
+    /**
+     * @description: parses and decrements the current step in the wizard
+     */
     stepDown: function (component) {
         let stepNum = parseInt(component.get('v.batchMetadata.progressIndicatorStep'));
         stepNum--;
         let progressIndicatorStep = stepNum.toString();
         component.set('v.batchMetadata.progressIndicatorStep', progressIndicatorStep);
-        this.sendMessage(component,'setStep', progressIndicatorStep);
     },
 
     /******************************** Dynamic Display Functions *****************************/
 
     /**
      * @description sets the showAdvancedOptions flag to hide/reveal the advanced options accordingly
-     * @return void.
      */
     toggleShowAdvanced: function (component) {
         let showAdvancedOptions = component.get('v.batchMetadata.showAdvancedOptions');
@@ -263,12 +281,11 @@
     },         
 
     /**
-     * @description sets the pendingsave flag to disable Save button so duplicates can't be created
-     * @return void.
+     * @description turns off pendingSave flag to enable Save button if an error is found on save
      */
-    setPendingSave: function (component, status) {
-        component.set('v.batchMetadata.pendingSave', status);
-        this.sendMessage(component,'pendingSave', status);
+    enableSaveButton: function (component) {
+        component.set('v.batchMetadata.pendingSave', false);
+        this.sendMessage(component,'pendingSave', false);
     },
 
     /**
@@ -539,17 +556,14 @@
             var state = response.getState();
             var response = JSON.parse(response.getReturnValue());
             if (state === 'SUCCESS') {
-                // this.navigateToRecord(response.id);
                 var navEvt = $A.get('e.force:navigateToSObject');
                 navEvt.setParams({
                     'recordId': response.id
                 });
                 navEvt.fire();
             } else if (state === 'ERROR') {
-                console.log(response.getError());
-                this.setPendingSave(component, false);
-                //todo: wire up error handling
-                //this.handleApexErrors(component, response.getError());
+                this.enableSaveButton(component, false);
+                this.handleApexErrors(component, response.getError());
             }
         });
         $A.enqueueAction(action);
@@ -557,7 +571,31 @@
 
     /******************************** Utility Functions *****************************/
 
-    setPageHeader: function (component) {
+    /**
+     * @description: handles the display of errors from an apex callout
+     * @param errors: list of potential errors passed back from apex
+     */
+    handleApexErrors: function(component, errors) {
+        let message;
+        if (errors && errors[0] && errors[0].message) {
+            message = errors[0].message;
+        } else {
+            message = 'Unknown error';
+        }
+        component.find('notifLib').showToast({
+            'variant': 'error',
+            'mode': 'sticky',
+            'title': $A.get('$Label.c.PageMessagesError'),
+            'message': message
+        });
+    },
+
+    setModalFooter: function (component) {
+        const progressIndicatorStep = component.get('v.batchMetadata.progressIndicatorStep');
+        this.sendMessage(component,'setStep', progressIndicatorStep);
+    },
+
+    setModalHeader: function (component) {
         const batchMetadata = component.get('v.batchMetadata');
         const headers = batchMetadata.headers;
         const progressIndicatorStep = parseInt(batchMetadata.progressIndicatorStep);
