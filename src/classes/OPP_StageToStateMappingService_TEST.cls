@@ -32,7 +32,7 @@
 * @date 2019
 * @group Opportunity
 * @group-content ../../ApexDocContent/Opportunity.htm
-* @description Class to determine Opportunity's State (Uncommitted, Committed. or Finalized) using the Opportunities Stage and Household Settings
+* @description Test Coverage for OPP_StageToStateMappingService class
 */
 @isTest
 private class OPP_StageToStateMappingService_TEST {
