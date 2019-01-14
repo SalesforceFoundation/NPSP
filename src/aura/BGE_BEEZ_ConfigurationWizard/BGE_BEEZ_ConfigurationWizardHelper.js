@@ -69,34 +69,34 @@
      * @param model: parsed JSON response from the model
      */
     loadWizardMetadata: function(component, model) {
-        let batchMetadata = {};
-        batchMetadata.labels = model.labels;
-        batchMetadata.showAdvancedOptions = false;
-        batchMetadata.namespacePrefix = model.namespacePrefix ? model.namespacePrefix+'__' : '';
-        batchMetadata.errorMessage = null;
+        let wizardMetadata = {};
+        wizardMetadata.labels = model.labels;
+        wizardMetadata.showAdvancedOptions = false;
+        wizardMetadata.namespacePrefix = model.namespacePrefix ? model.namespacePrefix+'__' : '';
+        wizardMetadata.errorMessage = null;
 
         //todo: Beth! will remove readOnly + mode
         //isReadOnly (View) is passed from record home with lightning app builder
         if (component.get('v.isReadOnly')) {
             //this.setMode(component,'view');
-            batchMetadata.mode = 'view';
+            wizardMetadata.mode = 'view';
         } else {
             if (component.get('v.recordId') !== null) {
                 //this.setMode(component, 'edit');
-                batchMetadata.mode = 'edit';
+                wizardMetadata.mode = 'edit';
             } else {
                 //this.setMode(component, 'create');
-                batchMetadata.mode = 'create';
+                wizardMetadata.mode = 'create';
             }
         }
-        batchMetadata.progressIndicatorStep = '0';
-        batchMetadata.headers = [
+        wizardMetadata.progressIndicatorStep = '0';
+        wizardMetadata.headers = [
             model.labels.recordInfoLabel,
             $A.get('$Label.c.bgeBatchSelectFields'),
             $A.get('$Label.c.bgeBatchSetFieldOptions'),
             $A.get('$Label.c.bgeBatchSetBatchOptions')
         ];
-        component.set('v.batchMetadata', batchMetadata);
+        component.set('v.wizardMetadata', wizardMetadata);
         this.updateMatchOnDate(component);
     },
 
@@ -244,10 +244,10 @@
      * @description: parses and increments the current step in the wizard
      */
     stepUp: function (component) {
-        let stepNum = parseInt(component.get('v.batchMetadata.progressIndicatorStep'));
+        let stepNum = parseInt(component.get('v.wizardMetadata.progressIndicatorStep'));
         stepNum++;
         let progressIndicatorStep = stepNum.toString();
-        component.set('v.batchMetadata.progressIndicatorStep', progressIndicatorStep);
+        component.set('v.wizardMetadata.progressIndicatorStep', progressIndicatorStep);
     },
 
     /**
@@ -264,10 +264,10 @@
      * @description: parses and decrements the current step in the wizard
      */
     stepDown: function (component) {
-        let stepNum = parseInt(component.get('v.batchMetadata.progressIndicatorStep'));
+        let stepNum = parseInt(component.get('v.wizardMetadata.progressIndicatorStep'));
         stepNum--;
         let progressIndicatorStep = stepNum.toString();
-        component.set('v.batchMetadata.progressIndicatorStep', progressIndicatorStep);
+        component.set('v.wizardMetadata.progressIndicatorStep', progressIndicatorStep);
     },
 
     /******************************** Dynamic Display Functions *****************************/
@@ -276,15 +276,15 @@
      * @description sets the showAdvancedOptions flag to hide/reveal the advanced options accordingly
      */
     toggleShowAdvanced: function (component) {
-        let showAdvancedOptions = component.get('v.batchMetadata.showAdvancedOptions');
-        component.set('v.batchMetadata.showAdvancedOptions', !showAdvancedOptions);
+        let showAdvancedOptions = component.get('v.wizardMetadata.showAdvancedOptions');
+        component.set('v.wizardMetadata.showAdvancedOptions', !showAdvancedOptions);
     },         
 
     /**
      * @description turns off pendingSave flag to enable Save button if an error is found on save
      */
     enableSaveButton: function (component) {
-        component.set('v.batchMetadata.pendingSave', false);
+        component.set('v.wizardMetadata.pendingSave', false);
         this.sendMessage(component,'pendingSave', false);
     },
 
@@ -294,8 +294,8 @@
      */
     updateMatchOnDate: function (component) {
         let donationMatchingRule = component.get('v.batchInfo.donationMatchingRule');
-        let matchOnDateSelected = donationMatchingRule.indexOf(component.get('v.batchMetadata.namespacePrefix') + "donation_date__c") >= 0;
-        component.set('v.batchMetadata.matchOnDateSelected', matchOnDateSelected);
+        let matchOnDateSelected = donationMatchingRule.indexOf(component.get('v.wizardMetadata.namespacePrefix') + "donation_date__c") >= 0;
+        component.set('v.wizardMetadata.matchOnDateSelected', matchOnDateSelected);
     },
 
     /******************************** Sort and Group Functions *****************************/
@@ -374,7 +374,7 @@
         if (isValid) {
             this.clearError(component);
         } else {
-            component.set('v.batchMetadata.errorMessage', component.get('v.batchMetadata.labels.missingNameDescriptionError'));    
+            component.set('v.wizardMetadata.errorMessage', component.get('v.wizardMetadata.labels.missingNameDescriptionError'));
         }
         return isValid;
     },
@@ -403,7 +403,7 @@
         if (isValid) {
             this.clearError(component);
         } else {
-            component.set('v.batchMetadata.errorMessage', component.get('v.batchMetadata.labels.missingProcessingSettingsError'));
+            component.set('v.wizardMetadata.errorMessage', component.get('v.wizardMetadata.labels.missingProcessingSettingsError'));
         }
         return isValid;
     },
@@ -413,7 +413,7 @@
      * @return void.
      */
     clearError: function (component) {
-        component.set('v.batchMetadata.errorMessage', null);
+        component.set('v.wizardMetadata.errorMessage', null);
         this.sendMessage(component, 'setError', false);
     },
 
@@ -422,7 +422,7 @@
      * @return void.
      */
     showError: function (component) {
-        let message = component.get('v.batchMetadata.errorMessage');
+        let message = component.get('v.wizardMetadata.errorMessage');
         if (message) {
             component.find('notifLib').showNotice({
                 'variant': 'error',
@@ -535,13 +535,6 @@
         component.set('v.everyField',everyField);
     },
 
-    /*setMode: function (component, mode) {
-        let batchMetadata = component.get('v.batchMetadata');
-        batchMetadata.mode = mode;
-        batchMetadata.progressIndicatorStep = '0';
-        component.set('v.batchMetadata', batchMetadata);
-    },*/
-
     saveRecord: function (component) {
         var batchInfo = component.get('v.batchInfo');
         // getActives grabs allFields, returns those isActive, sorted.
@@ -591,14 +584,14 @@
     },
 
     setModalFooter: function (component) {
-        const progressIndicatorStep = component.get('v.batchMetadata.progressIndicatorStep');
+        const progressIndicatorStep = component.get('v.wizardMetadata.progressIndicatorStep');
         this.sendMessage(component,'setStep', progressIndicatorStep);
     },
 
     setModalHeader: function (component) {
-        const batchMetadata = component.get('v.batchMetadata');
-        const headers = batchMetadata.headers;
-        const progressIndicatorStep = parseInt(batchMetadata.progressIndicatorStep);
+        const wizardMetadata = component.get('v.wizardMetadata');
+        const headers = wizardMetadata.headers;
+        const progressIndicatorStep = parseInt(wizardMetadata.progressIndicatorStep);
         this.sendMessage(component,'setHeader', headers[progressIndicatorStep]);
     },
 
