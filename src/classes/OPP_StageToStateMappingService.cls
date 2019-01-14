@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/Opportunity.htm
 * @description Service Class to determine Opportunity's State (Uncommitted, Committed. or Finalized) using the Opportunities Stage and Household Settings
 */
-global class OPP_StageToStateService {
+global class OPP_StageToStateMappingService {
 
     /******************************************************************************************************
     * @description Represents the overall state of the Opportunity.

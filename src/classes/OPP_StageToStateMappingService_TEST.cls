@@ -35,7 +35,7 @@
 * @description Class to determine Opportunity's State (Uncommitted, Committed. or Finalized) using the Opportunities Stage and Household Settings
 */
 @isTest
-private class OPP_StageToStateService_TEST {
+private class OPP_StageToStateMappingService_TEST {
 
     private static final String TEST_CONVERT_1_VAL = '1~ 2 ~3~4 ~a~B';
     private static final String TEST_CONVERT_2_VAL = '1; 2 ;3;4 ;a;B';
@@ -62,39 +62,39 @@ private class OPP_StageToStateService_TEST {
     private static final String COMMITTED_STAGES_VAL = 'Pledged; Closed Won; Proposal/Price Quote';
     private static final String FINALIZED_STAGES_VAL = 'Closed Won; Closed Lost;';
 
-    private static final List<OPP_StageToStateService.OPPORTUNITY_STATE> RESULT_NO_SETTINGS = new List<OPP_StageToStateService.OPPORTUNITY_STATE> {
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED
+    private static final List<OPP_StageToStateMappingService.OPPORTUNITY_STATE> RESULT_NO_SETTINGS = new List<OPP_StageToStateMappingService.OPPORTUNITY_STATE> {
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED
 
     };
 
-    private static final List<OPP_StageToStateService.OPPORTUNITY_STATE> RESULT_WITH_SETTINGS = new List<OPP_StageToStateService.OPPORTUNITY_STATE> {
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.COMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.FINALIZED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.FINALIZED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.COMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.COMMITTED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.FINALIZED,
-        OPP_StageToStateService.OPPORTUNITY_STATE.UNCOMMITTED
+    private static final List<OPP_StageToStateMappingService.OPPORTUNITY_STATE> RESULT_WITH_SETTINGS = new List<OPP_StageToStateMappingService.OPPORTUNITY_STATE> {
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.COMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.FINALIZED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.FINALIZED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.COMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.COMMITTED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.FINALIZED,
+        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED
     };
 
     /*********************************************************************************************************
@@ -104,26 +104,26 @@ private class OPP_StageToStateService_TEST {
     **********************************************************************************************************/
     @isTest
     private static void testConvertToSetMethod() {
-        System.assertEquals (true, OPP_StageToStateService.convertToSet(null, '~').isEmpty());
-        System.assertEquals (true, OPP_StageToStateService.convertToSet(' ', '~').isEmpty());
+        System.assertEquals (true, OPP_StageToStateMappingService.convertToSet(null, '~').isEmpty());
+        System.assertEquals (true, OPP_StageToStateMappingService.convertToSet(' ', '~').isEmpty());
 
 
 
-        Set<String> testVals = OPP_StageToStateService.convertToSet(TEST_CONVERT_1_VAL, '~');
+        Set<String> testVals = OPP_StageToStateMappingService.convertToSet(TEST_CONVERT_1_VAL, '~');
         System.assertEquals(6, testVals.size());
         for (String resultVal : RESULT_CONVERT_VALS) {
             System.assertEquals(true, testVals.contains(resultVal), 'Expected ' + resultVal + ' to be in testVals');
         }
 
         // Will use ; as the default because one was not supplied.
-        testVals = OPP_StageToStateService.convertToSet(TEST_CONVERT_2_VAL, null);
+        testVals = OPP_StageToStateMappingService.convertToSet(TEST_CONVERT_2_VAL, null);
         System.assertEquals(6, testVals.size());
         for (String resultVal : RESULT_CONVERT_VALS) {
             System.assertEquals(true, testVals.contains(resultVal), 'Expected ' + resultVal + ' to be in testVals');
         }
 
         // Will use ; as the default
-        testVals = OPP_StageToStateService.convertToSet(TEST_CONVERT_2_VAL);
+        testVals = OPP_StageToStateMappingService.convertToSet(TEST_CONVERT_2_VAL);
         System.assertEquals(6, testVals.size());
         for (String resultVal : RESULT_CONVERT_VALS) {
             System.assertEquals(true, testVals.contains(resultVal), 'Expected ' + resultVal + ' to be in testVals');
@@ -140,9 +140,9 @@ private class OPP_StageToStateService_TEST {
         // Check when Committed and Finalized Stage are not mapped in settings...
         for (Integer i = 0; i < TEST_OPP_STAGE_VALS.size(); i++) {
             String testVal = TEST_OPP_STAGE_VALS[i];
-            OPP_StageToStateService.OPPORTUNITY_STATE resultVal = RESULT_NO_SETTINGS[i];
+            OPP_StageToStateMappingService.OPPORTUNITY_STATE resultVal = RESULT_NO_SETTINGS[i];
 
-            System.assertEquals (resultVal, OPP_StageToStateService.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
+            System.assertEquals (resultVal, OPP_StageToStateMappingService.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
         }
     }
 
@@ -164,9 +164,9 @@ private class OPP_StageToStateService_TEST {
 
         for (Integer i = 0; i < TEST_OPP_STAGE_VALS.size(); i++) {
             String testVal = TEST_OPP_STAGE_VALS[i];
-            OPP_StageToStateService.OPPORTUNITY_STATE resultVal = RESULT_WITH_SETTINGS[i];
+            OPP_StageToStateMappingService.OPPORTUNITY_STATE resultVal = RESULT_WITH_SETTINGS[i];
 
-            System.assertEquals (resultVal, OPP_StageToStateService.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
+            System.assertEquals (resultVal, OPP_StageToStateMappingService.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
         }
 
 

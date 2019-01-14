@@ -269,8 +269,8 @@
         <members>OPP_PrimaryContact_TEST</members>
         <members>OPP_SendAcknowledgmentBTN_CTRL</members>
         <members>OPP_SendAcknowledgmentBTN_TEST</members>
-        <members>OPP_StageToStateService_TEST</members>
-        <members>OPP_StageToStateService</members>
+        <members>OPP_StageToStateMappingService_TEST</members>
+        <members>OPP_StageToStateMappingService</members>
         <members>PMT_CascadeDeleteLookups_TDTM</members>
         <members>PMT_CascadeDeleteLookups_TEST</members>
         <members>PMT_PaymentCreator</members>
