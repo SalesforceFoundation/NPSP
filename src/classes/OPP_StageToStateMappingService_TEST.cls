@@ -104,19 +104,19 @@ private class OPP_StageToStateMappingService_TEST {
     **********************************************************************************************************/
     @isTest
     private static void testConvertToSetMethod() {
-        System.assertEquals (true, OPP_StageToStateMappingService.convertToSet(null, '~').isEmpty());
-        System.assertEquals (true, OPP_StageToStateMappingService.convertToSet(' ', '~').isEmpty());
+        System.assertEquals (true, OPP_StageToStateMappingService.convertToSet(null, '~', true).isEmpty());
+        System.assertEquals (true, OPP_StageToStateMappingService.convertToSet(' ', '~', true).isEmpty());
 
 
 
-        Set<String> testVals = OPP_StageToStateMappingService.convertToSet(TEST_CONVERT_1_VAL, '~');
+        Set<String> testVals = OPP_StageToStateMappingService.convertToSet(TEST_CONVERT_1_VAL, '~', true);
         System.assertEquals(6, testVals.size());
         for (String resultVal : RESULT_CONVERT_VALS) {
             System.assertEquals(true, testVals.contains(resultVal), 'Expected ' + resultVal + ' to be in testVals');
         }
 
         // Will use ; as the default because one was not supplied.
-        testVals = OPP_StageToStateMappingService.convertToSet(TEST_CONVERT_2_VAL, null);
+        testVals = OPP_StageToStateMappingService.convertToSet(TEST_CONVERT_2_VAL, null, true);
         System.assertEquals(6, testVals.size());
         for (String resultVal : RESULT_CONVERT_VALS) {
             System.assertEquals(true, testVals.contains(resultVal), 'Expected ' + resultVal + ' to be in testVals');
@@ -131,7 +131,7 @@ private class OPP_StageToStateMappingService_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Tests the determineOppStateFromOppStageMethod with No Stages Defined in Settings
+    * @description Tests the determineOppStateFromOppStage Method with No Stages Defined in Settings
     * verifies that it only returns UNCOMMITTED as a value.
     * @return void
     **********************************************************************************************************/
@@ -148,7 +148,7 @@ private class OPP_StageToStateMappingService_TEST {
 
 
     /*********************************************************************************************************
-    * @description Tests the determineOppStateFromOppStageMethod with No Stages Defined in Settings
+    * @description Tests the determineOppStateFromOppStage Method with Stages Defined in Settings
     * verifies that it returns the appropriate values
     * @return void
     **********************************************************************************************************/
@@ -168,7 +168,53 @@ private class OPP_StageToStateMappingService_TEST {
 
             System.assertEquals (resultVal, OPP_StageToStateMappingService.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
         }
-
-
     }
+
+    /*********************************************************************************************************
+    * @description Tests the getCommittedStages Method
+    * verifies that it returns the appropriate values
+    * @return void
+    **********************************************************************************************************/
+    @isTest
+    private static void testGetCommittedStagesMethod() {
+        // Check when Committed and Finalized Stage are mapped in settings...
+        npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c(
+                Opportunity_Committed_Stages__c = COMMITTED_STAGES_VAL,
+                Opportunity_Finalized_Stages__c = FINALIZED_STAGES_VAL
+            )
+        );
+
+        Set<String> committedStages = OPP_StageToStateMappingService.getCommittedStages(false);
+
+        System.assertEquals (3, committedStages.size());
+
+        System.assert(true, committedStages.contains('Pledged'));
+        System.assert(true, committedStages.contains('Closed Won'));
+        System.assert(true, committedStages.contains('Proposal/Price Quote'));
+    }
+
+    /*********************************************************************************************************
+    * @description Tests the getFinalizedtages Method
+    * verifies that it returns the appropriate values
+    * @return void
+    **********************************************************************************************************/
+    @isTest
+    private static void testGetFinalizedStagesMethod() {
+        // Check when Committed and Finalized Stage are mapped in settings...
+        npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c(
+                Opportunity_Committed_Stages__c = COMMITTED_STAGES_VAL,
+                Opportunity_Finalized_Stages__c = FINALIZED_STAGES_VAL
+            )
+        );
+
+        Set<String> committedStages = OPP_StageToStateMappingService.getFinalizedStages(false);
+
+        System.assertEquals (2, committedStages.size());
+
+        System.assert(true, committedStages.contains('Closed Won'));
+        System.assert(true, committedStages.contains('Closed Lost'));
+    }
+
 }

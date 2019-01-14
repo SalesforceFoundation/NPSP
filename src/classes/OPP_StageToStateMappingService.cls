@@ -47,6 +47,8 @@ global class OPP_StageToStateMappingService {
     private static Set<String> COMMITTED_STATE_SET = null;
     private static Set<String> FINALIZED_STATE_SET = null;
 
+    private static final String DEFAULT_SEPARATOR_VAL = ';';
+
     /*******************************************************************************************************
     * @description Determines the Opportunity State (UNCOMMITTED, COMMITTED, or FINALIZED) from the
     * Opportunity Stage.  If the Opportunity Stage does not map to a FINALIZED or COMMITTED state,
@@ -79,6 +81,28 @@ global class OPP_StageToStateMappingService {
     }
 
     /*******************************************************************************************************
+    * @description Returns a set of Opportunity Stages identified as "Committed" States, or an empty set
+    * if none are defined.
+    * @param Boolean forceValuesToLowerCase if true, set values will be converted to lowercase
+    * @return Set<String> A set of String values representing Committed Opportunity Stages
+     ********************************************************************************************************/
+    global static Set<String> getCommittedStages(boolean forceToLowerCase) {
+        npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        return convertToSet(householdSettings.Opportunity_Committed_Stages__c, DEFAULT_SEPARATOR_VAL, forceToLowerCase);
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a set of Opportunity Stages identified as "Finalized" States, or an empty set
+    * if none are defined.
+    * @param Boolean forceValuesToLowerCase if true, set values will be converted to lowercase
+    * @return Set<String> A set of String values representing Committed Opportunity Stages
+     ********************************************************************************************************/
+    global static Set<String> getFinalizedStages(boolean forceToLowerCase) {
+        npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        return convertToSet(householdSettings.Opportunity_Finalized_Stages__c, DEFAULT_SEPARATOR_VAL, forceToLowerCase);
+    }
+
+    /*******************************************************************************************************
     * @description initializes the Opportunity State Sets, used by other parts of this class, if
     * necessary.  It retrieves them from fields on the NPSP Household Settings Custom Settings object.
     * If the Opportunity Committed Stages, and/or the Opportunity Finalized Stages are not blank, it will
@@ -105,7 +129,7 @@ global class OPP_StageToStateMappingService {
     * @return Set<String> A set of String values
     ********************************************************************************************************/
     @testVisible private static Set<String> convertToSet(String val) {
-        return convertToSet(val, ';');
+        return convertToSet(val, DEFAULT_SEPARATOR_VAL, true);
     }
 
     /*******************************************************************************************************
@@ -113,17 +137,19 @@ global class OPP_StageToStateMappingService {
     * value.  If not provided, it uses a ; by default.  Leading and Trailing Spaces are trimmed.
     * @param String val
     * @param String separatorVal a String value used to split the provided String into multiple values
+    * @param Boolean forceValuesToLowerCase if true, set values will be converted to lower case as part of process.
     * @return Set<String> A set of String values
     ********************************************************************************************************/
-    @testVisible private static Set<String> convertToSet(String val, String separatorVal) {
+    @testVisible private static Set<String> convertToSet(String val, String separatorVal, Boolean forceValuesToLowerCase) {
 
         Set<String> vals = new Set<String>();
 
-        String regexForSplit = (String.isNotBlank(separatorVal) ? '\\s*' + separatorVal + '\\s*' : '\\s*;\\s*');
+        String regexForSplit = (String.isNotBlank(separatorVal) ? '\\s*' + separatorVal + '\\s*' : '\\s*' + DEFAULT_SEPARATOR_VAL + '\\s*');
 
         if (String.isNotBlank(val)) {
+            String cvtVal = (forceValuesToLowerCase) ? val.toLowerCase() : val;
 
-            List<String> valStrs = val.toLowerCase().trim().split(regexForSplit);
+            List<String> valStrs = cvtVal.trim().split(regexForSplit);
             vals.addAll(valStrs);
         }
 
