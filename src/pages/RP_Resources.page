@@ -1,13 +1,13 @@
-<apex:page showHeader="true" sidebar="false" standardStylesheets="false" applyBodyTag="false">
+<apex:page showHeader="true" sidebar="false" standardStylesheets="false" applyBodyTag="false" lightningStyleSheets="true">
+
+    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, 'RP_GettingStarted/css/style.css' )}"/>
+    <apex:slds/>
 
 <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 
     <meta name="viewport" content="width=device-width" />
 
-    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, 'RP_GettingStarted/SLDSSCOPED/assets/styles/salesforce-lightning-design-system-vf.min.css')}"/>
-    <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, 'RP_GettingStarted/css/style.css' )}"/>
-
-    <body class="bodyDiv" >
+    <body class="bodyDiv slds-scope" >
 
         <div class="RP slds-p-horizontal_xx-large">
 
@@ -30,12 +30,12 @@
                 <c:RP_GettingStarted />
             </div>
 
-            <div class="demo-only demo-only--sizing slds-grid slds-wrap">
-                <div class="slds-m-vertical_large slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-2">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-m-vertical_large slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-2">
                     <c:RP_Youtube />
                 </div>
 
-                <div class="slds-m-vertical_large slds-size--1-of-1 slds-medium-size--1-of-1 slds-large-size--1-of-2">
+                <div class="slds-m-vertical_large slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-2">
                     <c:RP_GitHub />
                 </div>
             </div>

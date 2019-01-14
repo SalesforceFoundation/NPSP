@@ -8,7 +8,7 @@
 
     <div class="slds-m-vertical_medium slds-media slds-media_responsive">
 
-        <div class="slds-p-horizontal_xx-large slds-size--1-of-1 slds-large-size--1-of-3">
+        <div class="slds-p-horizontal_xx-large slds-size_1-of-1 slds-large-size_1-of-3">
 
             <img class="slds-p-vertical_medium slds-align_absolute-center" id="trailheadImage" src="{!URLFOR($Resource.CumulusStaticResources, '/RP_GettingStarted/images/Image_Trailhead.png' )}" width="150" height="60"/>
 
@@ -19,7 +19,7 @@
 
         </div>
 
-        <div id="bordersDiv" class="slds-p-horizontal_xx-large slds-border_right slds-border_left slds-size--1-of-1 slds-large-size--1-of-3">
+        <div id="bordersDiv" class="slds-p-horizontal_xx-large slds-border_right slds-border_left slds-size_1-of-1 slds-large-size_1-of-3">
 
             <img class="slds-col slds-p-vertical_medium slds-align_absolute-center" id="usImage" src="{!URLFOR($Resource.CumulusStaticResources, 'RP_GettingStarted/images/Image_US.png' )}" width="175" height="60"/>
 
@@ -32,7 +32,7 @@
 
         </div>
 
-        <div class="slds-p-horizontal_xx-large slds-size--1-of-1 slds-large-size--1-of-3">
+        <div class="slds-p-horizontal_xx-large slds-size_1-of-1 slds-large-size_1-of-3">
 
             <img class="slds-p-vertical_medium slds-align_absolute-center" id="diveDeeperImage" src="{!URLFOR($Resource.CumulusStaticResources, 'RP_GettingStarted/images/Image_DiveDeeper.png' )}" width="130" height="60"/>
 
