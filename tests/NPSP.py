@@ -293,17 +293,19 @@ class NPSP(object):
         """Validates if the affiliated contacts have the added contact details enter Y for positive case and N for negative case""" 
         for label, value in kwargs.items():
             if label=="Batch Description":
-                locator= npsp_lex_locators['bge']['field-text'].format(label,value)                
-                self.selenium.set_focus_to_element(locator)
-                field = self.selenium.get_webelement(locator)
-                field.clear()
-                field.send_keys(value)
+                locator= npsp_lex_locators['bge']['field-text'].format(label,value)  
+                self.salesforce._populate_field(locator, value)              
+#                 self.selenium.set_focus_to_element(locator)
+#                 field = self.selenium.get_webelement(locator)
+#                 field.clear()
+#                 field.send_keys(value)
             else:
                 locator= npsp_lex_locators['bge']['field-input'].format(label,value)
-                self.selenium.set_focus_to_element(locator)
-                field = self.selenium.get_webelement(locator)
-                field.clear()
-                field.send_keys(value)
+                self.salesforce._populate_field(locator, value)
+#                 self.selenium.set_focus_to_element(locator)
+#                 field = self.selenium.get_webelement(locator)
+#                 field.clear()
+#                 field.send_keys(value)
     
     def select_bge_date_picker(self,title): 
         locator= npsp_lex_locators['bge']['field-input'].format(title)
