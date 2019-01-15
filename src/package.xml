@@ -1283,6 +1283,8 @@
         <members>Zipcode_Verification_Limit</members>
         <members>adapterException</members>
         <members>addrCiceroMissingAPIKey</members>
+        <members>addrCopyConAddBtnConfirm</members>
+        <members>addrCopyConAddBtnFls</members>
         <members>addrCopyConAddBtnHHObjOnly</members>
         <members>addrGeneralSettings</members>
         <members>addrHHAccountOnly</members>

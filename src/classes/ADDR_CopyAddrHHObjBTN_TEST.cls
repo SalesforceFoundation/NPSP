@@ -33,14 +33,15 @@
 * @group Address Management
 * @description test class for the Copy Address button controller
 */
-@isTest
+@isTest(isParallel=true)
 private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
 
     /*******************************************************************************************************
     * @description tests the Copy Address button controller
     * @return void
     */
-    static testMethod void TEST_AddressUtility(){
+    @isTest
+    private static void TEST_AddressUtility(){
        
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
@@ -72,7 +73,8 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         Test.setCurrentPageReference(new PageReference('Page.ADDR_CopyAddrHHObjBTN'));
         system.currentPageReference().getParameters().put('id', cc.id);
         ADDR_CopyAddrHHObjBTN_CTRL cacbc = new ADDR_CopyAddrHHObjBTN_CTRL();
-        PageReference prc = cacbc.buttonClick();
+        cacbc.canCopyAddress = true;
+        PageReference prc = cacbc.copy();
         system.assertEquals(null, prc);
         npo02__Household__c h = [select id, npo02__MailingStreet__c, npo02__MailingState__c, npo02__MailingPostalCode__c, npo02__MailingCity__c, 
             npo02__MailingCountry__c from npo02__Household__c where id = :hh.id];
@@ -87,7 +89,8 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         Test.setCurrentPageReference(new PageReference('Page.ADDR_CopyAddrHHObjBTN'));
         system.currentPageReference().getParameters().put('id', hh.id);
         cacbc = new ADDR_CopyAddrHHObjBTN_CTRL();
-        prc = cacbc.buttonClick();
+        cacbc.canCopyAddress = true;
+        prc = cacbc.copy();
         system.assertEquals(null, prc);
         Contact c1 = [select id, MailingStreet from Contact where npo02__Household__c = :hh.id]; 
         system.assertEquals(hh.npo02__MailingStreet__c, c1.MailingStreet);
@@ -101,7 +104,7 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         Test.setCurrentPageReference(new PageReference('Page.ADDR_CopyAddrHHObjBTN'));
         system.currentPageReference().getParameters().put('id', a.id);
         cacbc = new ADDR_CopyAddrHHObjBTN_CTRL();
-        prc = cacbc.buttonClick();
+        prc = cacbc.copy();
         system.assert(prc == null);
         
         //contact w/o HH
@@ -110,7 +113,7 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         Test.setCurrentPageReference(new PageReference('Page.ADDR_CopyAddrHHObjBTN'));
         system.currentPageReference().getParameters().put('id', null);
         cacbc = new ADDR_CopyAddrHHObjBTN_CTRL();
-        prc = cacbc.buttonClick();
+        prc = cacbc.copy();
         system.assert(prc == null);
     }
 }

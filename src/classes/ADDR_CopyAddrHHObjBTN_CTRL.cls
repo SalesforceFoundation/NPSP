@@ -42,27 +42,53 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
     /*******************************************************************************************************
     * @description the source object to copy address fields from
     */
-    private sobject obj;
+    private SObject obj;
 
     /*******************************************************************************************************
     * @description the result message (success or errors)
     */
-    public string resulttext{get; set;}
+    public String resulttext{get; set;}
 
     /*******************************************************************************************************
     * @description the URL to return to after running.
     */
-    public string returnurl{get; set;}  
+    public String returnurl{get; set;}  
 
     /*******************************************************************************************************
     * @description the type of source object (Contact, npo02__Household__c)
     */
-    public string strSrcObject { get; set; }
+    public String strSrcObject { get; set; }
     
     /*******************************************************************************************************
     * @description whether to redirect on success, or stay on the page for errors.
     */
-    public boolean redirectPage { get; set; }
+    public Boolean redirectPage { get; set; }
+
+    /*******************************************************************************************************
+    * @description true when the user has permissions required to copy the address
+    */
+    @TestVisible
+    public Boolean canCopyAddress {
+        get {
+            if (canCopyAddress == null) {
+                canCopyAddress = hasPermissions();
+            }
+
+            return canCopyAddress;
+        }
+        private set;
+    }
+
+    /*******************************************************************************************************
+    * @description HH address fields by Contact Address fields
+    */
+    private static final Map<String, String> HH_BY_CONTACT_ADDR_FIELDS = new Map<String, String>{
+        String.valueOf(Contact.MailingStreet) => String.valueOf(npo02__Household__c.npo02__MailingStreet__c),
+        String.valueOf(Contact.MailingCity) => String.valueOf(npo02__Household__c.npo02__MailingCity__c),
+        String.valueOf(Contact.MailingState) => String.valueOf(npo02__Household__c.npo02__MailingState__c),
+        String.valueOf(Contact.MailingPostalCode) => String.valueOf(npo02__Household__c.npo02__MailingPostalCode__c),
+        String.valueOf(Contact.MailingCountry) => String.valueOf(npo02__Household__c.npo02__MailingCountry__c)
+    };
     
     /*******************************************************************************************************
     * @description Constructor for the class
@@ -73,17 +99,18 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
         strSrcObject = null;
         returnurl = null;
         resulttext = null;
-        redirectPage = true;
-        String id = ApexPages.currentPage().getParameters().get('id');
-        if (id != null && id != '') {        	
-        	if (UTIL_Describe.isObjectIdThisType(id, 'Contact')) {
-        		strSrcObject = 'Contact';
+        redirectPage = false;
+        Id id = ApexPages.currentPage().getParameters().get('id');
+
+        if (id != null) {
+            if (UTIL_Describe.isObjectIdThisType(id, 'Contact')) {
+                strSrcObject = 'Contact';
                 obj = [select id from Contact where id = :id];
-        	} else if (UTIL_Describe.isObjectIdThisType(id, 'npo02__Household__c')) {
-        		strSrcObject = 'npo02__Household__c';
+            } else if (UTIL_Describe.isObjectIdThisType(id, 'npo02__Household__c')) {
+                strSrcObject = 'npo02__Household__c';
                 obj = [select id from npo02__Household__c where id = :id];
-        	}        	
-            if (obj != null) {            	
+            }
+            if (obj != null) {
                 PageReference pageRef = new PageReference('/' + obj.id);
                 returnurl = pageref.getUrl();
             }
@@ -95,7 +122,22 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
     * @return PageReference - null
     */
     public PageReference buttonClick(){
-        
+        if (!String.isBlank(strSrcObject) && !canCopyAddress) {
+            showMsg(System.Label.addrCopyConAddBtnFls, ApexPages.Severity.ERROR);
+
+            return null;
+        }
+
+        showMsg(System.Label.addrCopyConAddBtnConfirm, ApexPages.Severity.INFO);
+
+        return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Action method called when the user clicks on the continue button.
+    * @return PageReference - null
+    */
+    public PageReference copy() {
         if (strSrcObject == 'Contact'){
             Contact c = (Contact)obj;
             npo02__Household__c h;
@@ -117,13 +159,13 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
                 //if there's a street already listed on the household
                 //save the old address as a note on the household object                
                 if (c.npo02__Household__r.npo02__MailingStreet__c != null){
-                    string notebody = '';
+                    String notebody = '';
                     notebody += c.npo02__Household__r.npo02__MailingStreet__c + '  ';
                     notebody += c.npo02__Household__r.npo02__MailingCity__c + '  '; 
                     notebody += c.npo02__Household__r.npo02__MailingState__c + '  ';
                     notebody += c.npo02__Household__r.npo02__MailingPostalCode__c + '  ';
                     notebody += c.npo02__Household__r.npo02__MailingCountry__c;
-                    string strTitle = 'ADDRESS UPDATE FROM CONTACT: ' + system.today() + ' BY: ' + UserInfo.getName();
+                    String strTitle = 'ADDRESS UPDATE FROM CONTACT: ' + system.today() + ' BY: ' + UserInfo.getName();
                     strTitle = strTitle.left(80);
                     n = new Note(Title = strTitle, ParentId = h.id, Body = notebody);
                 }
@@ -172,13 +214,13 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
                 
                 Note n;
                 if (con.MailingStreet != null){
-                    string notebody = '';
+                    String notebody = '';
                     notebody += con.MailingStreet + '  ';
                     notebody += con.MailingCity + '  '; 
                     notebody += con.MailingState + '  ';
                     notebody += con.MailingPostalCode + '  ';
                     notebody += con.MailingCountry;
-                    string strTitle = 'ADDRESS UPDATE FROM HOUSEHOLD: ' + system.today() + ' BY: ' + UserInfo.getName();
+                    String strTitle = 'ADDRESS UPDATE FROM HOUSEHOLD: ' + system.today() + ' BY: ' + UserInfo.getName();
                     strTitle = strTitle.left(80);
                     n = new Note(Title = strTitle, ParentId = con.id, Body = notebody);
                     notestoinsert.add(n);
@@ -213,7 +255,25 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
         
         return null;
     }
-    
+
+    /*******************************************************************************************************
+     * @description Navigate back to the calling page
+     * @return PageReference 
+     */
+    public PageReference close() {
+        PageReference pageRef;
+
+        if (!String.isBlank(returnurl)) {
+            pageRef = new PageReference(returnurl);
+
+        } else {
+            pageRef = USER_UserService.getHomePageReference();
+        }
+
+        pageRef.setRedirect(true);
+        return pageRef;
+    }
+
     /*******************************************************************************************************
     * @description adds a Message to the Page
     * @return void
@@ -221,6 +281,49 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
     private void showMsg(String arg, ApexPages.Severity severity){
         ApexPages.Message myMsg = new ApexPages.Message(severity,arg);
         ApexPages.addMessage(myMsg);
-    }    
+    }
+
+    /*******************************************************************************************************
+    * @description Determines if the user has read / update permissions on the source / destination fields
+    * @return Boolean - true when user has required permissions for all fields being copied to and from
+    */
+    private Boolean hasPermissions() {
+        List<String> readFields = new List<String>();
+        List<String> updateFields = new List<String>();
+        String destSObjType;
+
+        if (!UTIL_Permissions.canRead(strSrcObject)) {
+            return false;
+        }
+
+        if (strSrcObject == String.valueOf(Contact.SObjectType)) {
+            destSObjType = String.valueOf(npo02__Household__c.SObjectType);
+            readFields.addAll(HH_BY_CONTACT_ADDR_FIELDS.keySet());
+            updateFields.addAll(HH_BY_CONTACT_ADDR_FIELDS.values());
+
+        } else {
+            destSObjType = String.valueOf(Contact.SObjectType);
+            readFields.addAll(HH_BY_CONTACT_ADDR_FIELDS.values());
+            updateFields.addAll(HH_BY_CONTACT_ADDR_FIELDS.keySet());
+        }
+
+        if (!UTIL_Permissions.canUpdate(destSObjType, false)) {
+            return false;
+        }
+
+        for (String field : readFields) {
+            if (!UTIL_Permissions.canRead(strSrcObject, field, false)) {
+                return false;
+            }
+        }
+
+        for (String field : updateFields) {
+            if (!UTIL_Permissions.canUpdate(destSObjType, field, false)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
 }
