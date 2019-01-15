@@ -455,7 +455,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         Component.Apex.OutputPanel formPanel = new Component.Apex.OutputPanel();
     
         //creates a box around the form with a label for the hierarchy level, and a color bar to more easily grock which level we're at
-        // uses escape = false but the labels are escaped
+        // uses escape = false but the labels are escaped to prevent xss
         Component.Apex.OutputText boxAndLabel = new Component.Apex.OutputText(value='<div aria-labelledby="task' + wrapper.level + 
             '", class="slds-m-left_medium slds-m-top_small"><fieldset class="slds-box slds-theme_default slds-container_fluid '+
             'slds-p-around_small", style="border-left: 6px solid ' + sidebarColors[colorNumber] + '"><legend id="task' + wrapper.level + '"' +
@@ -479,7 +479,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         secondRow.childComponents.add(genericInputField(wrapper, accessString, 'Days_After__c', 'slds-col slds-size_1-of-4', false));
 
         // Creates an add dependent task button on the form
-        // Uses escape = false but the labels are escaped 
+        // Uses escape = false but the labels are escaped to prevent xss
         Component.Apex.OutputText addDependentTaskButton = new Component.Apex.OutputText(
             value='<button onclick="addDependentTaskJS(\''+ wrapper.level +'\');return false;" '+ 
             'class="slds-button slds-button_brand" id="btnAddDepTask">' + System.Label.EPAddDependentTask.escapeHtml4() + 
@@ -489,7 +489,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         );
          
         // Creates a delete task button on the form
-        // Uses escape = false but the labels are escaped 
+        // Uses escape = false but the labels are escaped to prevent xss
         Component.Apex.OutputText deleteTaskButton = new Component.Apex.OutputText(
             value='<button onclick="deleteTaskJS(\''+ wrapper.level +'\');return false;" '+ 
             'class="slds-button slds-button_destructive" id="btnDelTask">' + System.Label.EPDeleteTask.escapeHtml4() +
