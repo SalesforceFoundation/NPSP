@@ -46,7 +46,7 @@ public with sharing class STG_SettingsService {
     * @description The class's constructor 
     */
     public STG_SettingsService() {
-    	//UTIL_Debug.debug('***** STG_SettingsService constructor');
+
     }
     
     /*********************************************************************************************************
@@ -54,7 +54,9 @@ public with sharing class STG_SettingsService {
     */
     public npe01__Contacts_And_Orgs_Settings__c stgCon {
         get {
-            if (stgCon == null) stgCon = UTIL_CustomSettingsFacade.getOrgContactsSettings();
+            if (stgCon == null) {
+                stgCon = UTIL_CustomSettingsFacade.getOrgContactsSettings();
+            }
             return stgCon;
         }
         private set;
@@ -65,7 +67,9 @@ public with sharing class STG_SettingsService {
     */
     public npo02__Households_Settings__c stgHH {
         get {
-            if (stgHH == null) stgHH = UTIL_CustomSettingsFacade.getOrgHouseholdsSettings();
+            if (stgHH == null) {
+                stgHH = UTIL_CustomSettingsFacade.getOrgHouseholdsSettings();
+            }
             return stgHH;
         }
         private set;
@@ -76,7 +80,9 @@ public with sharing class STG_SettingsService {
     */
     public Household_Naming_Settings__c stgHN {
         get {
-            if (stgHN == null) stgHN = UTIL_CustomSettingsFacade.getOrgHouseholdNamingSettings();
+            if (stgHN == null) {
+                stgHN = UTIL_CustomSettingsFacade.getOrgHouseholdNamingSettings();
+            }
             return stgHN;
         }
         private set;
@@ -87,7 +93,9 @@ public with sharing class STG_SettingsService {
     */
     public npe03__Recurring_Donations_Settings__c stgRD {
         get {
-            if (stgRD == null) stgRD = UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings();
+            if (stgRD == null) {
+                stgRD = UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings();
+            }
             return stgRD;
         }
         private set;
@@ -98,7 +106,9 @@ public with sharing class STG_SettingsService {
     */
     public npe4__Relationship_Settings__c stgRel {
         get {
-            if (stgRel == null) stgRel = UTIL_CustomSettingsFacade.getOrgRelationshipSettings();
+            if (stgRel == null) {
+                stgRel = UTIL_CustomSettingsFacade.getOrgRelationshipSettings();
+            }
             return stgRel;
         }
         private set;
@@ -109,7 +119,9 @@ public with sharing class STG_SettingsService {
     */
     public npe5__Affiliations_Settings__c stgAffl {
         get {
-            if (stgAffl == null) stgAffl = UTIL_CustomSettingsFacade.getOrgAffiliationsSettings();
+            if (stgAffl == null) {
+                stgAffl = UTIL_CustomSettingsFacade.getOrgAffiliationsSettings();
+            }
             return stgAffl;
         }
         private set;
@@ -120,7 +132,9 @@ public with sharing class STG_SettingsService {
     */
     public Error_Settings__c stgErr {
         get {
-            if (stgErr == null) stgErr = UTIL_CustomSettingsFacade.getOrgErrorSettings();
+            if (stgErr == null) {
+                stgErr = UTIL_CustomSettingsFacade.getOrgErrorSettings();
+            }
             return stgErr;
         }
         private set;
@@ -131,7 +145,9 @@ public with sharing class STG_SettingsService {
     */
     public Batch_Data_Entry_Settings__c stgBDE {
         get {
-            if (stgBDE == null) stgBDE = UTIL_CustomSettingsFacade.getOrgBDESettings();
+            if (stgBDE == null) {
+                stgBDE = UTIL_CustomSettingsFacade.getOrgBDESettings();
+            }
             return stgBDE;
         }
         private set;
@@ -142,7 +158,9 @@ public with sharing class STG_SettingsService {
     */
     public Allocations_Settings__c stgAllo {
         get {
-            if (stgAllo == null) stgAllo = UTIL_CustomSettingsFacade.getOrgAllocationsSettings();
+            if (stgAllo == null) {
+                stgAllo = UTIL_CustomSettingsFacade.getOrgAllocationsSettings();
+            }
             return stgAllo;
         }
         private set;
@@ -153,7 +171,9 @@ public with sharing class STG_SettingsService {
     */
     public Customizable_Rollup_Settings__c stgCRLP {
         get {
-            if (stgCRLP == null) stgCRLP = UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings();
+            if (stgCRLP == null) {
+                stgCRLP = UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings();
+            }
             return stgCRLP;
         }
         private set;
@@ -164,7 +184,9 @@ public with sharing class STG_SettingsService {
     */
     public Levels_Settings__c stgLevels {
         get {
-            if (stgLevels == null) stgLevels = UTIL_CustomSettingsFacade.getOrgLevelsSettings();
+            if (stgLevels == null) {
+                stgLevels = UTIL_CustomSettingsFacade.getOrgLevelsSettings();
+            }
             return stgLevels;
         }
         private set;
