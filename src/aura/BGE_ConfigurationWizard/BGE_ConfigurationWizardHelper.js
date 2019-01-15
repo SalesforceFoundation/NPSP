@@ -1,12 +1,12 @@
 ({
     /******************************** Init Functions *****************************/
-    init: function (component) {
+    init: function(component) {
         var recordId = component.get('v.recordId');
         var action = component.get('c.getRecordDetails');
         action.setParams({
             'recordId': recordId
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             var model = JSON.parse(response.getReturnValue());
             if (state === 'SUCCESS') {
@@ -22,7 +22,7 @@
      * @description: sets basic batch info and processing settings
      * @param model: parsed JSON response from the model
      */
-    loadModel: function (component, model) {
+    loadModel: function(component, model) {
         this.loadBatchInfo(component, model);
         this.loadWizardMetadata(component, model);
 
@@ -96,14 +96,14 @@
         var activeFieldMap = new Map();
 
         if (activeFields) {
-            activeFields.forEach(function (activeField) {
+            activeFields.forEach(function(activeField) {
                 var fieldId = activeField.sObjectName + '.' + activeField.name;
                 activeFieldMap.set(fieldId, activeField);
             });
         }
 
         var availableSortOrder = 1;
-        allFields.forEach(function (currentField) {
+        allFields.forEach(function(currentField) {
             currentField.id = currentField.sObjectName + '.' + currentField.name;
             //set Active fields with saved sort order
             if (activeFieldMap.has(currentField.id)) {
@@ -132,7 +132,7 @@
         // returns map of sobject name => list of fields
         var allFieldsBySObject = this.groupFieldsBySObject(everyField);
 
-        Object.keys(allFieldsBySObject).forEach(function (sObjectName) {
+        Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
             let currentFieldGroup = {
                 sObjectName: sObjectName,
                 options: [],
@@ -140,7 +140,7 @@
                 values: []
             };
 
-            allFieldsBySObject[sObjectName].forEach(function (currentField) {
+            allFieldsBySObject[sObjectName].forEach(function(currentField) {
                 currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
                 currentFieldGroup.options.push(
                     {
@@ -155,7 +155,7 @@
             });
 
             if (activeFieldsBySObject[sObjectName]) {
-                activeFieldsBySObject[sObjectName].forEach(function (currentField) {
+                activeFieldsBySObject[sObjectName].forEach(function(currentField) {
                     currentFieldGroup.values.push(currentField.id);
                 });
             }
@@ -169,7 +169,7 @@
     /**
      * @description: moves the modal wizard to the next step
      */
-    nextStep: function (component) {
+    nextStep: function(component) {
         this.stepUp(component);
         this.setModalFooter(component);
         this.setModalHeader(component);
@@ -178,7 +178,7 @@
     /**
      * @description: parses and increments the stored step in the wizard
      */
-    stepUp: function (component) {
+    stepUp: function(component) {
         let stepNum = parseInt(component.get('v.wizardMetadata.progressIndicatorStep'));
         stepNum++;
         let progressIndicatorStep = stepNum.toString();
@@ -188,7 +188,7 @@
     /**
      * @description: moves the modal wizard to the previous step
      */
-    backStep: function (component) {
+    backStep: function(component) {
         this.stepDown(component);
         this.setModalFooter(component);
         this.setModalHeader(component);
@@ -197,7 +197,7 @@
     /**
      * @description: parses and decrements the stored step in the wizard
      */
-    stepDown: function (component) {
+    stepDown: function(component) {
         let stepNum = parseInt(component.get('v.wizardMetadata.progressIndicatorStep'));
         stepNum--;
         let progressIndicatorStep = stepNum.toString();
@@ -209,7 +209,7 @@
     /**
      * @description sets the showAdvancedOptions flag to hide/reveal the advanced options accordingly
      */
-    toggleShowAdvanced: function (component) {
+    toggleShowAdvanced: function(component) {
         let showAdvancedOptions = component.get('v.wizardMetadata.showAdvancedOptions');
         component.set('v.wizardMetadata.showAdvancedOptions', !showAdvancedOptions);
     },
@@ -217,7 +217,7 @@
     /**
      * @description turns off pendingSave flag to enable Save button if an error is found on save
      */
-    enableSaveButton: function (component) {
+    enableSaveButton: function(component) {
         component.set('v.wizardMetadata.pendingSave', false);
         this.sendMessage(component,'pendingSave', false);
     },
@@ -225,7 +225,7 @@
     /**
      * @description updates the attribute that tracks whether or not Donation Date is selected in the Donation Matching Rule
      */
-    updateMatchOnDate: function (component) {
+    updateMatchOnDate: function(component) {
         let donationMatchingRule = component.get('v.batchInfo.donationMatchingRule');
         let matchOnDateSelected = donationMatchingRule.indexOf(component.get('v.wizardMetadata.namespacePrefix') + 'donation_date__c') >= 0;
         component.set('v.wizardMetadata.matchOnDateSelected', matchOnDateSelected);
@@ -237,10 +237,10 @@
      * @description Gets a flat list of the active fields sorted by order.
      * @return List of active fields.
      */
-    getActives: function (component) {
+    getActives: function(component) {
         let allFields = component.get('v.everyField');
         let activeFields = [];
-        allFields.forEach(function (currentField) {
+        allFields.forEach(function(currentField) {
             if (currentField.isActive) {
                 activeFields.push(currentField);
             }
@@ -253,7 +253,7 @@
      * @description Gets the active fields sorted and grouped by SObject.
      * @return Map of SObject group to List of related active fields.
      */
-    getActivesBySObject: function (component) {
+    getActivesBySObject: function(component) {
         let activeFields = this.getActives(component);
         var activesBySObject = this.groupFieldsBySObject(activeFields);
         return activesBySObject;
@@ -264,8 +264,8 @@
      * @param fields. List of the fields to sort.
      * @return sorted fields.
      */
-    sortFieldsByOrder: function (fields) {
-        fields.sort(function (currentField, nextField) {
+    sortFieldsByOrder: function(fields) {
+        fields.sort(function(currentField, nextField) {
             if (currentField.sortOrder < nextField.sortOrder) {
                 return -1;
             }
@@ -283,9 +283,9 @@
      * @param fields: list of fields to be grouped.
      * @return Map of SObject name to List of related fields.
      */
-    groupFieldsBySObject: function (fields) {
+    groupFieldsBySObject: function(fields) {
         var result = {};
-        fields.forEach(function (currentField) {
+        fields.forEach(function(currentField) {
             if ((currentField.sObjectName in result) === false) {
                 result[currentField.sObjectName] = [];
             }
@@ -301,7 +301,7 @@
      * @description Checks for required fields name and description
      * @return Boolean if user can proceed to next step
      */
-    checkBatchInfoValidity: function (component) {
+    checkBatchInfoValidity: function(component) {
         let batchInfo = component.get('v.batchInfo');
         let isValid = batchInfo.name && batchInfo.description;
         if (isValid) {
@@ -316,8 +316,8 @@
      * @description Checks validity object on every lightning:input field
      * @return Boolean if user can proceed to next step
      */
-    checkBatchFieldOptionsValidity: function (component) {
-        var isValid = component.find('defaultValueField').reduce(function (validSoFar, defaultValueField) {
+    checkBatchFieldOptionsValidity: function(component) {
+        var isValid = component.find('defaultValueField').reduce(function(validSoFar, defaultValueField) {
             return validSoFar && defaultValueField.get('v.validity').valid;
         }, true);
         if (isValid) {
@@ -330,7 +330,7 @@
      * @description Checks for required fields Donation Date Range and Batch Process Size
      * @return Boolean if user can proceed to next step
      */
-    checkBatchProcessingSettingsValidity: function (component) {
+    checkBatchProcessingSettingsValidity: function(component) {
         const batchInfo = component.get('v.batchInfo');
         let isValid = true;
         let errormsg = component.get('v.wizardMetadata.labels.missingFieldsError');
@@ -355,7 +355,7 @@
     /**
      * @description Clears error message and notifies footer via message
      */
-    clearError: function (component) {
+    clearError: function(component) {
         component.set('v.wizardMetadata.errorMessage', null);
         this.sendMessage(component, 'setError', false);
     },
@@ -363,7 +363,7 @@
     /**
      * @description Shows error message.
      */
-    showError: function (component) {
+    showError: function(component) {
         let message = component.get('v.wizardMetadata.errorMessage');
         if (message) {
             component.find('notifLib').showNotice({
@@ -381,15 +381,15 @@
     /**
      * @description Updates isActive flag and sort Order of all fields
      */
-    updateToActive: function (component) {
+    updateToActive: function(component) {
         var fieldCountPreviousObjects = 0;
         var allFieldsBySObject = this.groupFieldsBySObject(component.get('v.everyField'));
         var everyFieldUpdated = [];
-        Object.keys(allFieldsBySObject).forEach(function (currentSObject) {
+        Object.keys(allFieldsBySObject).forEach(function(currentSObject) {
             var batchFieldGroups = component.get('v.availableFieldsBySObject').fieldGroups;
-            batchFieldGroups.forEach(function (currentFieldGroup) {
+            batchFieldGroups.forEach(function(currentFieldGroup) {
                 if (currentFieldGroup.sObjectName === currentSObject) {
-                    allFieldsBySObject[currentSObject].forEach(function (currentField) {
+                    allFieldsBySObject[currentSObject].forEach(function(currentField) {
                         currentField.isActive = currentFieldGroup.values.includes(currentField.id);
                         // the field's sort order is its index PLUS the total of all active fields from all previous object groups
                         currentField.sortOrder = currentField.isActive ? currentFieldGroup.values.indexOf(currentField.id) + fieldCountPreviousObjects : null;
@@ -406,19 +406,19 @@
     /**
      * @description Updates batchFieldOptions attribute based on selected fields
      */
-    updateBatchFieldOptions: function (component) {
+    updateBatchFieldOptions: function(component) {
         let batchFieldOptions = {
             fieldGroups: []
         };
         let activeFieldsBySObject = this.getActivesBySObject(component);
-        Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
+        Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
 
             var currentFieldGroup = {
                 sObjectName: sObjectName,
                 fields: []
             };
 
-            activeFieldsBySObject[sObjectName].forEach(function (currentField) {
+            activeFieldsBySObject[sObjectName].forEach(function(currentField) {
                 currentFieldGroup.fields.push(currentField);
                 currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
             });
@@ -432,20 +432,20 @@
     /**
      * @description Updates everyField with values from Set Field Options step
      */
-    commitBatchFieldOptionsToEveryField: function (component) {
+    commitBatchFieldOptionsToEveryField: function(component) {
 
         var batchFieldGroups = component.get('v.batchFieldOptions.fieldGroups');
         var batchFieldOptions = [];
-        batchFieldGroups.forEach(function (currentFieldGroup) {
-            currentFieldGroup.fields.forEach(function (currentField) {
+        batchFieldGroups.forEach(function(currentFieldGroup) {
+            currentFieldGroup.fields.forEach(function(currentField) {
                 batchFieldOptions.push(currentField);
             });
         });
 
         let everyField = component.get('v.everyField');
 
-        everyField.forEach(function (currentField) {
-            batchFieldOptions.forEach(function (currentActiveField) {
+        everyField.forEach(function(currentField) {
+            batchFieldOptions.forEach(function(currentActiveField) {
                 if (currentField.name === currentActiveField.name) {
                     currentField.requiredInEntryForm = currentActiveField.requiredInEntryForm;
                     currentField.hide = currentActiveField.hide;
@@ -460,7 +460,7 @@
     /**
      * @description Commits Batch record
      */
-    saveRecord: function (component) {
+    saveRecord: function(component) {
         var batchInfo = component.get('v.batchInfo');
         // getActives grabs allFields, returns those isActive, sorted.
         let activeFields = this.getActives(component);
@@ -470,7 +470,7 @@
             'recordInfo': JSON.stringify(batchInfo),
             'activeFields': JSON.stringify(activeFields)
         });
-        action.setCallback(this, function (response) {
+        action.setCallback(this, function(response) {
             var state = response.getState();
             var response = JSON.parse(response.getReturnValue());
             if (state === 'SUCCESS') {
@@ -514,7 +514,7 @@
     /**
      * @description Sets progress indicator step on modal footer
      */
-    setModalFooter: function (component) {
+    setModalFooter: function(component) {
         const progressIndicatorStep = component.get('v.wizardMetadata.progressIndicatorStep');
         this.sendMessage(component,'setStep', progressIndicatorStep);
     },
@@ -522,7 +522,7 @@
     /**
      * @description Sets header title on modal
      */
-    setModalHeader: function (component) {
+    setModalHeader: function(component) {
         const wizardMetadata = component.get('v.wizardMetadata');
         const headers = wizardMetadata.headers;
         const progressIndicatorStep = parseInt(wizardMetadata.progressIndicatorStep);
@@ -534,7 +534,7 @@
      * @param channel - Channel to use
      * @param message - Message to be sent
      */
-    sendMessage: function (component, channel, message) {
+    sendMessage: function(component, channel, message) {
         let sendMessage = $A.get('e.ltng:sendMessage');
         sendMessage.setParams({
             'channel': channel,
