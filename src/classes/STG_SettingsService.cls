@@ -43,13 +43,6 @@ public with sharing class STG_SettingsService {
     public static STG_SettingsService stgService = new STG_SettingsService();
     
     /*********************************************************************************************************
-    * @description The class's constructor 
-    */
-    public STG_SettingsService() {
-
-    }
-    
-    /*********************************************************************************************************
     * @description The Contact and Orgs Settings object
     */
     public npe01__Contacts_And_Orgs_Settings__c stgCon {
