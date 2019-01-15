@@ -50,9 +50,9 @@ public without sharing class LVL_LevelAssign_SCHED implements Schedulable {
     */
     public void runBatch() {
         Integer batchSize;
-        try {
+        if(levelsSettings != null && levelsSettings.Level_Assigment_Batch_Size__c) != null) {
             batchSize = levelsSettings.Level_Assignment_Batch_Size__c.intValue();
-        } catch(Exception e) {
+        } else {
             batchSize = 200;
         }
 
