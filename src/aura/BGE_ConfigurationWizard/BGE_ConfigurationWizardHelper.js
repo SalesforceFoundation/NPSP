@@ -30,9 +30,6 @@
         let activeFields = JSON.parse(model.activeFields);
         let allFields = model.availableFields;
         this.loadAvailableFields(component, activeFields, allFields);
-
-        let availableFieldsBySObject = component.get('v.availableFieldsBySObject');
-        this.loadBatchFieldOptions(component, availableFieldsBySObject);
     },
 
     /**
@@ -46,8 +43,8 @@
         batchInfo.name = model.name;
         batchInfo.id = model.id;
         batchInfo.description = model.description;
-        batchInfo.expectedCount = (model.expectedCount === null || model.expectedCount === '') ? 0 : model.expectedCount;
-        batchInfo.expectedTotal = (model.expectedTotal === null || model.expectedTotal === '') ? 0 : model.expectedTotal;
+        batchInfo.expectedCount = model.expectedCount || 0;
+        batchInfo.expectedTotal = model.expectedTotal || 0;
         batchInfo.recordCount = model.recordCount;
 
         // batch processing settings
@@ -166,53 +163,7 @@
         });
         component.set('v.availableFieldsBySObject', availableFieldsBySObject);
     },
-
-    /**
-     * @description: sets batch field options, which is the user-selected set of active fields with
-     * helpful defaults and fields to be flagged as required in BGE entry form
-     * @param activeFieldsBySObject: grouped fields set in loadAvailableFields
-     */
-    loadBatchFieldOptions: function (component, activeFieldsBySObject) {
-
-        let batchFieldOptions = {
-            fieldGroups: []
-        };
-
-        Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
-
-            var currentFieldGroup = {
-                sObjectName: sObjectName,
-                fields: []
-            };
-
-            activeFieldsBySObject[sObjectName].forEach(function (currentField) {
-
-                var fieldInfo = {
-                    name: currentField.name,
-                    sObjectName: currentField.sObjectName,
-                    sObjectLabel: currentField.sObjectLabel,
-                    label: currentField.label,
-                    defaultValue: currentField.defaultValue,
-                    requiredInEntryForm: currentField.requiredInEntryForm,
-                    hide: currentField.hide,
-                    type: currentField.type,
-                    formatter: currentField.formatter,
-                    options: currentField.options,
-                    conditionallyRequired: currentField.conditionallyRequired,
-                    alwaysRequired: currentField.alwaysRequired
-                };
-
-                currentFieldGroup.fields.push(fieldInfo);
-                currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
-
-            });
-
-            batchFieldOptions.fieldGroups.push(currentFieldGroup);
-
-        });
-        component.set('v.batchFieldOptions', batchFieldOptions);
-    },
-
+    
     /******************************** Step Functions *****************************/
 
     /**
@@ -468,25 +419,8 @@
             };
 
             activeFieldsBySObject[sObjectName].forEach(function (currentField) {
-
-                var fieldInfo = {
-                    name: currentField.name,
-                    sObjectName: currentField.sObjectName,
-                    sObjectLabel: currentField.sObjectLabel,
-                    label: currentField.label,
-                    defaultValue: currentField.defaultValue,
-                    requiredInEntryForm: currentField.requiredInEntryForm,
-                    hide: currentField.hide,
-                    type: currentField.type,
-                    formatter: currentField.formatter,
-                    options: currentField.options,
-                    conditionallyRequired: currentField.conditionallyRequired,
-                    alwaysRequired: currentField.alwaysRequired
-                };
-
-                currentFieldGroup.fields.push(fieldInfo);
+                currentFieldGroup.fields.push(currentField);
                 currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
-
             });
 
             batchFieldOptions.fieldGroups.push(currentFieldGroup);

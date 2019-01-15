@@ -40,9 +40,14 @@
     <!-- private attributes -->
     <aura:attribute name="batchInfo" type="Object" access="PRIVATE" />
     <aura:attribute name="wizardMetadata" type="Object" access="PRIVATE"/>
-    <aura:attribute name="availableFieldsBySObject" type="Object" access="PRIVATE" />
-    <aura:attribute name="everyField" type="Object" access="PRIVATE" />
-    <aura:attribute name="batchFieldOptions" type="Object" access="PRIVATE" />
+    <aura:attribute name="availableFieldsBySObject" type="Object" access="PRIVATE"
+                    description="Information required for dualListbox iteration, no field metadata."/>
+    <aura:attribute name="everyField" type="Object" access="PRIVATE"
+                    description="Every DataImport__c field that is available for inclusion in a Batch,
+                                with its metadata."/>
+    <aura:attribute name="batchFieldOptions" type="Object" access="PRIVATE"
+                    description="Actively selected fields with their metadata,
+                                structured for iteration on Set Field Options step."/>
 
     <!-- public attributes -->
     <aura:attribute name="recordId" type="Id" />
