@@ -276,7 +276,6 @@
 
     /**
      * @description updates the attribute that tracks whether or not Donation Date is selected in the Donation Matching Rule
-     * @return void.
      */
     updateMatchOnDate: function (component) {
         let donationMatchingRule = component.get('v.batchInfo.donationMatchingRule');
@@ -333,7 +332,7 @@
 
     /**
      * @description Groups the fields by SObject name.
-     * @param fields: list of fields.
+     * @param fields: list of fields to be grouped.
      * @return Map of SObject name to List of related fields.
      */
     groupFieldsBySObject: function (fields) {
@@ -351,8 +350,8 @@
     /******************************** Validity Functions *****************************/
 
     /**
-     * @description  
-     * @return Boolean.
+     * @description Checks validity on the Batch Info step
+     * @return Boolean
      */
     checkBatchInfoValidity: function (component) {
         let batchInfo = component.get('v.batchInfo');
@@ -366,8 +365,8 @@
     },
 
     /**
-     * @description 
-     * @return Boolean.
+     * @description Checks validity on the Set Field Options step
+     * @return Boolean
      */
     checkBatchFieldOptionsValidity: function (component) {
         var isValid = component.find("defaultValueField").reduce(function (validSoFar, defaultValueField) {
@@ -377,8 +376,8 @@
     },
 
     /**
-     * @description 
-     * @return Boolean.
+     * @description Checks validity on the Batch Processing Settings step
+     * @return Boolean
      */
     checkBatchProcessingSettingsValidity: function (component) {
         let batchInfo = component.get('v.batchInfo');
@@ -402,7 +401,6 @@
 
     /**
      * @description Clears error message and notifies footer via message
-     * @return void.
      */
     clearError: function (component) {
         component.set('v.wizardMetadata.errorMessage', null);
@@ -411,7 +409,6 @@
 
     /**
      * @description Shows error message.
-     * @return void.
      */
     showError: function (component) {
         let message = component.get('v.wizardMetadata.errorMessage');
@@ -430,7 +427,6 @@
 
     /**
      * @description Updates isActive flag and sort Order of all fields
-     * @return void.
      */
     updateToActive: function (component) {
         var fieldCountPreviousObjects = 0;
@@ -456,7 +452,6 @@
 
     /**
      * @description Updates batchFieldOptions attribute based on selected fields
-     * @return void.
      */
     updateBatchFieldOptions: function (component) {
         let batchFieldOptions = {
@@ -499,8 +494,7 @@
     },
 
     /**
-     * @description Updates the selected fields to Active, unselects fields
-     * @return void.
+     * @description Updates everyField with values from Set Field Options step
      */
     commitBatchFieldOptionsToEveryField: function (component) {
 
@@ -527,6 +521,9 @@
         component.set('v.everyField',everyField);
     },
 
+    /**
+     * @description Commits Batch record
+     */
     saveRecord: function (component) {
         var batchInfo = component.get('v.batchInfo');
         // getActives grabs allFields, returns those isActive, sorted.
@@ -575,11 +572,17 @@
         });
     },
 
+    /**
+     * @description Sets progress indicator step on modal footer
+     */
     setModalFooter: function (component) {
         const progressIndicatorStep = component.get('v.wizardMetadata.progressIndicatorStep');
         this.sendMessage(component,'setStep', progressIndicatorStep);
     },
 
+    /**
+     * @description Sets header title on modal
+     */
     setModalHeader: function (component) {
         const wizardMetadata = component.get('v.wizardMetadata');
         const headers = wizardMetadata.headers;
@@ -587,6 +590,11 @@
         this.sendMessage(component,'setHeader', headers[progressIndicatorStep]);
     },
 
+    /**
+     * @description Sends a generic ltng:sendMessage
+     * @param channel - Channel to use
+     * @param message - Message to be sent
+     */
     sendMessage: function (component, channel, message) {
         let sendMessage = $A.get('e.ltng:sendMessage');
         sendMessage.setParams({
