@@ -60,7 +60,7 @@ global class OPP_StageToStateMapping_API {
     /******************************************************************************************************
     * @description Separator String used to parse Strings into multiple values
     */
-private static final String DEFAULT_SEPARATOR_VAL = ';';
+    private static final String DEFAULT_SEPARATOR_VAL = ';';
 
     /*******************************************************************************************************
     * @description Determines the Opportunity State (UNCOMMITTED, COMMITTED, or FINALIZED) from the
