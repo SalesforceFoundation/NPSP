@@ -11,8 +11,8 @@
             var model = JSON.parse(response.getReturnValue());
             if (state === 'SUCCESS') {
                 this.loadModel(component, model);
-            } else if (state === 'ERROR') {
-                this.handleApexErrors(component, response.getError());
+            } else {
+                this.handleApexErrors(component, response);
             }
         });
         $A.enqueueAction(action);
@@ -384,8 +384,6 @@
         let isValid = true;
         let errormsg = component.get('v.wizardMetadata.labels.missingFieldsError');
 
-        debugger;
-
         if (batchInfo.donationDateRange === '') {
             errormsg = errormsg + ' ' + component.get('v.wizardMetadata.labels.donationDateRangeLabel');
             isValid = false;
@@ -547,9 +545,9 @@
                     'recordId': response.id
                 });
                 navEvt.fire();
-            } else if (state === 'ERROR') {
+            } else {
                 this.enableSaveButton(component, false);
-                this.handleApexErrors(component, response.getError());
+                this.handleApexErrors(component, response);
             }
         });
         $A.enqueueAction(action);
@@ -558,20 +556,23 @@
     /******************************** Utility Functions *****************************/
 
     /**
-     * @description: handles the display of errors from an apex callout
-     * @param errors: list of potential errors passed back from apex
+     * @description: handles the display of errors from an Apex callout
+     * @param response: the Apex response, which may contain errors or may be null
      */
-    handleApexErrors: function(component, errors) {
+    handleApexErrors: function(component, response) {
         let message;
+        let errors;
+        if (response) {
+            errors = response.getError();
+        }
         if (errors && errors[0] && errors[0].message) {
             message = errors[0].message;
         } else {
             message = 'Unknown error';
         }
-        component.find('notifLib').showToast({
+        component.find('notifLib').showNotice({
             'variant': 'error',
-            'mode': 'sticky',
-            'title': $A.get('$Label.c.PageMessagesError'),
+            'header': $A.get('$Label.c.PageMessagesError'),
             'message': message
         });
     },

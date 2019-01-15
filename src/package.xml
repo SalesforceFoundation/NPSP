@@ -572,7 +572,6 @@
         <name>ApexTrigger</name>
     </types>
     <types>
-        <members>BGE_BEEZ_ConfigurationWizard</members>
         <members>BGE_BatchGiftEntryTab</members>
         <members>BGE_ConfigurationWizard</members>
         <members>BGE_DataImportBatchEntry</members>

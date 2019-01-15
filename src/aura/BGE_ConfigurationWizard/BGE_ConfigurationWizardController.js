@@ -9,7 +9,6 @@
      */
     handleSendMessage: function(component, event, helper) {
         const task = event.getParam('channel');
-        let model = component.get('v.model');
 
         if (task === 'next' || task === 'back' || task === 'save') {
 
