@@ -168,17 +168,15 @@
     },
 
     /**
-     * @description: sets batch field options, which is the derived set of active fields with applicable defaults
-     * and requiredness
-     * @param activeFieldsBySObject: fields set in loadAvailableFields
+     * @description: sets batch field options, which is the user-selected set of active fields with
+     * helpful defaults and fields to be flagged as required in BGE entry form
+     * @param activeFieldsBySObject: grouped fields set in loadAvailableFields
      */
     loadBatchFieldOptions: function (component, activeFieldsBySObject) {
 
         let batchFieldOptions = {
             fieldGroups: []
         };
-        // todo: wire up this error handling
-        // batchFieldOptions.errors = availableFields.errors;
 
         Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
 
@@ -218,7 +216,7 @@
     /******************************** Step Functions *****************************/
 
     /**
-     * @description: moves the modal to the next step in the wizard
+     * @description: moves the modal wizard to the next step
      */
     nextStep: function (component) {
         this.stepUp(component);
@@ -227,7 +225,7 @@
     },
 
     /**
-     * @description: parses and increments the current step in the wizard
+     * @description: parses and increments the stored step in the wizard
      */
     stepUp: function (component) {
         let stepNum = parseInt(component.get('v.wizardMetadata.progressIndicatorStep'));
@@ -237,17 +235,16 @@
     },
 
     /**
-     * @description: moves the modal to the previous step in the wizard
+     * @description: moves the modal wizard to the previous step
      */
     backStep: function (component) {
-        this.clearError(component);
         this.stepDown(component);
         this.setModalFooter(component);
         this.setModalHeader(component);
     },
 
     /**
-     * @description: parses and decrements the current step in the wizard
+     * @description: parses and decrements the stored step in the wizard
      */
     stepDown: function (component) {
         let stepNum = parseInt(component.get('v.wizardMetadata.progressIndicatorStep'));
@@ -279,7 +276,7 @@
      */
     updateMatchOnDate: function (component) {
         let donationMatchingRule = component.get('v.batchInfo.donationMatchingRule');
-        let matchOnDateSelected = donationMatchingRule.indexOf(component.get('v.wizardMetadata.namespacePrefix') + "donation_date__c") >= 0;
+        let matchOnDateSelected = donationMatchingRule.indexOf(component.get('v.wizardMetadata.namespacePrefix') + 'donation_date__c') >= 0;
         component.set('v.wizardMetadata.matchOnDateSelected', matchOnDateSelected);
     },
 
@@ -350,8 +347,8 @@
     /******************************** Validity Functions *****************************/
 
     /**
-     * @description Checks validity on the Batch Info step
-     * @return Boolean
+     * @description Checks for required fields name and description
+     * @return Boolean if user can proceed to next step
      */
     checkBatchInfoValidity: function (component) {
         let batchInfo = component.get('v.batchInfo');
@@ -365,29 +362,32 @@
     },
 
     /**
-     * @description Checks validity on the Set Field Options step
-     * @return Boolean
+     * @description Checks validity object on every lightning:input field
+     * @return Boolean if user can proceed to next step
      */
     checkBatchFieldOptionsValidity: function (component) {
-        var isValid = component.find("defaultValueField").reduce(function (validSoFar, defaultValueField) {
-            return validSoFar && defaultValueField.get("v.validity").valid;
+        var isValid = component.find('defaultValueField').reduce(function (validSoFar, defaultValueField) {
+            return validSoFar && defaultValueField.get('v.validity').valid;
         }, true);
+        if (isValid) {
+            this.clearError(component);
+        }
         return isValid;
     },
 
     /**
-     * @description Checks validity on the Batch Processing Settings step
-     * @return Boolean
+     * @description Checks for required fields Donation Date Range and Batch Process Size
+     * @return Boolean if user can proceed to next step
      */
     checkBatchProcessingSettingsValidity: function (component) {
         let batchInfo = component.get('v.batchInfo');
         let isValid = true;
         let errormsg = component.get('v.wizardMetadata.labels.missingFieldsError');
-        if (batchInfo.donationDateRange == '') {
+        if (!component.find('donationDateRange').get('v.validity').valid){
             errormsg = errormsg + ' ' + component.get('v.wizardMetadata.labels.donationDateRangeLabel');
             isValid = false;
         }
-        if (batchInfo.batchProcessSize == '') {
+        if (!component.find('batchProcessSize').get('v.validity').valid) {
             errormsg = errormsg + (isValid ? ' ' : ', ') + component.get('v.wizardMetadata.labels.batchProcessSizeLabel');
             isValid = false;
         }

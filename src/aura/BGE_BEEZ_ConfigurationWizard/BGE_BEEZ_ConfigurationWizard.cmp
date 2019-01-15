@@ -331,6 +331,7 @@
                                                                  label="{!v.wizardMetadata.labels.donationDateRangeLabel}"
                                                                  disabled="{!or(v.batchInfo.donationMatchingBehavior == v.wizardMetadata.labels.DoNotMatch, !v.wizardMetadata.matchOnDateSelected)}"
                                                                  type="number" required="true" variant="label-hidden"
+                                                                 step="0" min="0"
                                                                  value="{!v.batchInfo.donationDateRange}"/>
                                             </lightning:layoutItem>
                                             <lightning:layoutItem class="slds-p-around_x-small" size="12">
@@ -361,7 +362,8 @@
                                                 <lightning:helptext content="{!$Label.c.bgeBatchBatchProcessSizeHelp}" />
                                                 <lightning:input aura:id="batchProcessSize"
                                                                  label="{!v.wizardMetadata.labels.batchProcessSizeLabel}"
-                                                                 type="number" step="0" required="true" variant="label-hidden"
+                                                                 type="number" required="true" variant="label-hidden"
+                                                                 step="0" min="0"
                                                                  value="{!v.batchInfo.batchProcessSize}"/>
                                             </lightning:layoutItem>
                                             <lightning:layoutItem class="slds-p-around_x-small" size="12">

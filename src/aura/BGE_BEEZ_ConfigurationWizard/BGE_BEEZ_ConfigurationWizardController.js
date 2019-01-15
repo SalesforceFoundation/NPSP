@@ -22,8 +22,7 @@
             } else if (step === '1') {
                 helper.updateToActive(component);
                 helper.updateBatchFieldOptions(component);
-                // note: all required fields are set by the model so checking validity is not needed. 
-                // This could change.
+                // note: all required fields are set by the model so checking validity is not currently necessary.
             } else if (step === '2') {
                 helper.commitBatchFieldOptionsToEveryField(component);
                 isValid = helper.checkBatchFieldOptionsValidity(component);
