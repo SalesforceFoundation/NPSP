@@ -41,17 +41,20 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
         Opportunity opportunity;
         Map<Id, npe01__OppPayment__c> payments;
 
-        //list of allocations per GAU
+        //list of allocations by GAU
         Map<Id, List<Allocation__c>> opportunityAllocationsByGAU = new Map<Id, List<Allocation__c>>();
         Map<Id, List<Allocation__c>> paymentAllocationsByGAU = new Map<Id, List<Allocation__c>>();
 
-        //sum of allocation amount per GAU
+        //sum of allocation amount by GAU
         Map<Id, Decimal> totalOpportunityAllocationsByGAU = new Map<Id, Decimal>();
         Map<Id, Decimal> totalPaymentAllocationsByGAU = new Map<Id, Decimal>();
 
         //the ratio of the sum of payment amounts (paid and unpaid, not written off) to the opportunity amount
         Decimal amountRatio = 0;
     }
+
+    private Map<Id, SynchronizationContext> contextByOpportunity = new Map<Id, SynchronizationContext>();
+    private Map<Id, Id> opportunityIdByPaymentId = new Map<Id, Id>();
 
     private DmlWrapper allocationsChanges = new DmlWrapper();
 
@@ -77,28 +80,81 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
             return null;
         }
 
-        List<Allocation__c> allocations = 
-            triggerAction == TDTM_Runnable.Action.AfterDelete ? 
-            (List<Allocation__c>) oldList :
-            (List<Allocation__c>) newList;
+        Map<Id, Allocation__c> opportunityAllocations = new Map<Id, Allocation__c>();
+        Map<Id, Allocation__c> paymentAllocations = new Map<Id, Allocation__c>();
 
-        //TODO: need to treat payment updates and opportunity updates separately
-        //can we add an error to the log if there are opportunity and payment updates in the same context?
-        List<SynchronizationContext> contexts = getSynchronizationContexts(allocations);
-        for (SynchronizationContext context : contexts) {
-            system.debug('njjc context: ' + context);
+        List<Allocation__c> triggerAllocations;
+        Map<Id, Allocation__c> oldMap;
+        
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+            triggerAllocations = (List<Allocation__c>) newList;
+        }
+        if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+            triggerAllocations = (List<Allocation__c>) newList;
+            oldMap = new Map<Id, Allocation__c>((List<Allocation__c>) oldList);
+        }
+        if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
+            triggerAllocations = (List<Allocation__c>) oldList;
+        }
+
+        //only validate and synchronize allocations with substantial updates
+        for (Allocation__c allocation : triggerAllocations) {
+            if (allocation.Opportunity__c != null) {
+                if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+                    if (isSubstantialUpdate(allocation, oldMap.get(allocation.id))) {
+                        opportunityAllocations.put(allocation.id, allocation);
+                    }
+                } else {
+                    opportunityAllocations.put(allocation.id, allocation);
+                }
+            }
+            if (allocation.Payment__c != null) {
+                if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+                    if (isSubstantialUpdate(allocation, oldMap.get(allocation.id))) {
+                        paymentAllocations.put(allocation.id, allocation);
+                    }
+                } else {
+                    paymentAllocations.put(allocation.id, allocation);
+                }
+            }
+        }
+
+        //validation: verify no updates to payment and opportunity allocations for the same opportunity
+        for (Allocation__c paymentAllocation : paymentAllocations.values()) {
+            Id opportunityId = opportunityIdByPaymentId.get(paymentAllocation.Payment__c);
+            for (Allocation__c opportunityAllocation : opportunityAllocations.values()) {
+                if (opportunityAllocation.Opportunity__c == opportunityId) {
+                    opportunityAllocation.addError('Opportunity and Payment Allocations for the same Opportunity record cannot be edited at the same time.');
+                }
+            }
+        }
+
+        makeSynchronizationContexts(triggerAllocations);
+
+        for (Allocation__c paymentAllocation : paymentAllocations.values()) {
+            Id opportunityId = opportunityIdByPaymentId.get(paymentAllocation.Payment__c);
+            SynchronizationContext context = contextByOpportunity.get(opportunityId);
             syncPaymentAllocationsToOpportunity(context);
         }
 
+        for (Allocation__c opportunityAllocation : opportunityAllocations.values()) {
+            SynchronizationContext context = contextByOpportunity.get(opportunityAllocation.Opportunity__c);
+            syncOpportunityAllocationsToPayments(context);
+        }
+
+        //TODO: 
+            //move services to SVC class
+            //move queries to SEL class
+
         system.debug('njjc: dml ' + allocationsChanges);
+        
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, true);
         TDTM_TriggerHandler.processDML(allocationsChanges);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
         return null;
     }
 
-    private List<SynchronizationContext> getSynchronizationContexts(List<Allocation__c> allocations) {
-        List<SynchronizationContext> allContexts = new List<SynchronizationContext>();
+    private void makeSynchronizationContexts(List<Allocation__c> allocations) {
         Set<Id> paymentIds = new Set<Id>();
         Set<Id> opportunityIds = new Set<Id>();
         Map<Id, List<npe01__OppPayment__c>> paymentsByOpportunityId = new Map<Id, List<npe01__OppPayment__c>>();
@@ -121,6 +177,8 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
         ]);
 
         for (npe01__OppPayment__c payment : paymentsWithAllocations.values()) {
+            opportunityIdByPaymentId.put(payment.Id, payment.npe01__Opportunity__c);
+
             if (paymentsByOpportunityId.containsKey(payment.npe01__Opportunity__c)) {
                 paymentsByOpportunityId.get(payment.npe01__Opportunity__c).add(payment);
             } else {
@@ -186,9 +244,18 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
                 context.amountRatio = totalPaymentsNotWrittenOff / opportunity.Amount;
             }
 
-            allContexts.add(context);
+            contextByOpportunity.put(context.opportunity.id, context);
         }
-        return allContexts;
+    }
+
+    //if user edits a custom allocation field or does an update without any changes, don't validate and sync
+    private Boolean isSubstantialUpdate(Allocation__c newAllocation, Allocation__c oldAllocation) {
+        return 
+            newAllocation.Amount__c != oldAllocation.Amount__c ||
+            newAllocation.Percent__c != oldAllocation.Percent__c ||
+            newAllocation.General_Accounting_Unit__c != oldAllocation.General_Accounting_Unit__c ||
+            newAllocation.Opportunity__c != oldAllocation.Opportunity__c ||
+            newAllocation.Payment__c != oldAllocation.Payment__c;
     }
 
     private void syncPaymentAllocationsToOpportunity(SynchronizationContext context) {
@@ -231,7 +298,9 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
     }
 
     private void syncOpportunityAllocationsToPayments(SynchronizationContext context) {
-        //TODO ;)
+        for (Id gau : context.opportunityAllocationsByGAU.keySet()) {
+
+        }
     }
 /*
 pmt to opportunity

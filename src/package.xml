@@ -48,6 +48,10 @@
         <members>ALLO_ManageAllocations_TEST</members>
         <members>ALLO_Multicurrency_TDTM</members>
         <members>ALLO_Multicurrency_TEST</members>
+        <members>ALLO_PaymentSync_SEL</members>
+        <members>ALLO_PaymentSync_SVC</members>
+        <members>ALLO_PaymentSync_TDTM</members>
+        <members>ALLO_PaymentSync_TEST</members>
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>
         <members>BDE_BatchDataEntry</members>
