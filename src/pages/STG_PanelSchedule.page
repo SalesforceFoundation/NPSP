@@ -84,6 +84,18 @@
                     </div>
                 </div>
             </div>
+
+            <div class="slds-grid slds-gutters_small">
+                <div class="slds-col slds-has-flexi-truncate slds-grid" role="listitem">
+                    <div class="slds-form-element">
+                        <apex:outputLabel value="{!$ObjectType.Levels_Settings__c.Fields.Level_Assignment_Batch_Size__c.Label}" for="tbxLA" styleClass="slds-form-element__label" />
+                        <div class="slds-form-element__control">
+                            <apex:outputField value="{!stgService.stgLevels.Level_Assignment_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                            <apex:inputField value="{!stgService.stgLevels.Level_Assignment_Batch_Size__c}" rendered="{!isEditMode}" id="tbxLA" html-aria-describedby="{!$Component.tbxLAHelp}" styleClass="slds-input" />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
