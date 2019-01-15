@@ -50,6 +50,8 @@ public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedul
     * @return database.Querylocator  
     ********************************************************************************************************/
     public Database.Querylocator start(Database.BatchableContext bc) {
+        final List<String> monthsList = new List<String>{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12' };
+
         // Find all Accounts who have any Seasonal Address that might need updating,
         // since it may need to now become current or inactive, and we don't want to assume the last time this ran.
         // Make sure to include all Billing Address fields, that we will need to look at
@@ -58,7 +60,7 @@ public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedul
             soql += ', BillingStateCode, BillingCountryCode';
         }
         soql += ' FROM Account WHERE Id IN (SELECT Household_Account__c FROM Address__c ' +
-            ' WHERE Seasonal_Start_Month__c IN (\'1\', \'2\', \'3\', \'4\', \'5\', \'6\', \'7\', \'8\', \'9\', \'10\', \'11\', \'12\'))';
+            ' WHERE Seasonal_Start_Month__c IN :monthsList)';
         return Database.getQueryLocator(soql);
     }
 
