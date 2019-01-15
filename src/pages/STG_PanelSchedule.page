@@ -19,7 +19,7 @@
                         <apex:outputLabel value="{!$ObjectType.Customizable_Rollup_Settings__c.Fields.Rollups_Contact_Batch_Size__c.Label}" for="tbxConHard" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
                             <apex:outputField value="{!stgService.stgCRLP.Rollups_Contact_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                            <apex:inputField value="{!stgService.stgCRLP.Rollups_Contact_Batch_Size__c}" rendered="{!isEditMode}" id="tbxConHard" html-aria-describedby="{!$Component.tbxConHardHelp}" styleClass="slds-input" />        
+                            <apex:inputField value="{!stgService.stgCRLP.Rollups_Contact_Batch_Size__c}" rendered="{!isEditMode}" id="tbxConHard" styleClass="slds-input" />        
                         </div>                    
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                         <apex:outputLabel value="{!$ObjectType.Customizable_Rollup_Settings__c.Fields.Rollups_Account_Batch_Size__c.Label}" for="tbxAccHard" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">                        
                             <apex:outputField value="{!stgService.stgCRLP.Rollups_Account_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />                           
-                            <apex:inputField value="{!stgService.stgCRLP.Rollups_Account_Batch_Size__c}" rendered="{!isEditMode}" id="tbxAccHard" html-aria-describedby="{!$Component.tbxAccHardHelp}" styleClass="slds-input" />
+                            <apex:inputField value="{!stgService.stgCRLP.Rollups_Account_Batch_Size__c}" rendered="{!isEditMode}" id="tbxAccHard" styleClass="slds-input" />
                         </div>                        
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                         <apex:outputLabel value="{!$ObjectType.Customizable_Rollup_Settings__c.Fields.Rollups_Contact_Soft_Credit_Batch_Size__c.Label}" for="tbxConSoft" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
                             <apex:outputField value="{!stgService.stgCRLP.Rollups_Contact_Soft_Credit_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                            <apex:inputField value="{!stgService.stgCRLP.Rollups_Contact_Soft_Credit_Batch_Size__c}" rendered="{!isEditMode}" id="tbxConSoft" html-aria-describedby="{!$Component.tbxConSoftHelp}" styleClass="slds-input" />
+                            <apex:inputField value="{!stgService.stgCRLP.Rollups_Contact_Soft_Credit_Batch_Size__c}" rendered="{!isEditMode}" id="tbxConSoft" styleClass="slds-input" />
                         </div>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                         <apex:outputLabel value="{!$ObjectType.Customizable_Rollup_Settings__c.Fields.Rollups_Account_Soft_Credit_Batch_Size__c.Label}" for="tbxAccSoft" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
                             <apex:outputField value="{!stgService.stgCRLP.Rollups_Account_Soft_Credit_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                            <apex:inputField value="{!stgService.stgCRLP.Rollups_Account_Soft_Credit_Batch_Size__c}" rendered="{!isEditMode}" id="tbxAccSoft" html-aria-describedby="{!$Component.tbxAccSoftHelp}" styleClass="slds-input" />
+                            <apex:inputField value="{!stgService.stgCRLP.Rollups_Account_Soft_Credit_Batch_Size__c}" rendered="{!isEditMode}" id="tbxAccSoft" styleClass="slds-input" />
                         </div>
                     </div>
                 </div>
@@ -67,7 +67,7 @@
                         <apex:outputLabel value="{!$ObjectType.Customizable_Rollup_Settings__c.Fields.Rollups_GAU_Batch_Size__c.Label}" for="tbxGAU" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
                             <apex:outputField value="{!stgService.stgCRLP.Rollups_GAU_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />                        
-                            <apex:inputField value="{!stgService.stgCRLP.Rollups_GAU_Batch_Size__c}" rendered="{!isEditMode}" id="tbxGAU" html-aria-describedby="{!$Component.tbxGAUHelp}" styleClass="slds-input" />
+                            <apex:inputField value="{!stgService.stgCRLP.Rollups_GAU_Batch_Size__c}" rendered="{!isEditMode}" id="tbxGAU" styleClass="slds-input" />
                         </div>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                         <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.Recurring_Donation_Batch_Size__c.Label}" for="tbxRD" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
                             <apex:outputField value="{!stgService.stgRD.Recurring_Donation_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                            <apex:inputField value="{!stgService.stgRD.Recurring_Donation_Batch_Size__c}" rendered="{!isEditMode}" id="tbxRD" html-aria-describedby="{!$Component.tbxRDHelp}" styleClass="slds-input" />
+                            <apex:inputField value="{!stgService.stgRD.Recurring_Donation_Batch_Size__c}" rendered="{!isEditMode}" id="tbxRD" styleClass="slds-input" />
                         </div>
                     </div>
                 </div>
@@ -88,10 +88,10 @@
             <div class="slds-grid slds-gutters_small">
                 <div class="slds-col slds-has-flexi-truncate slds-grid" role="listitem">
                     <div class="slds-form-element">
-                        <apex:outputLabel value="{!$ObjectType.Levels_Settings__c.Fields.Level_Assignment_Batch_Size__c.Label}" for="tbxLA" styleClass="slds-form-element__label" />
+                        <apex:outputLabel value="{!$ObjectType.Levels_Settings__c.Fields.Level_Assignment_Batch_Size__c.Label}" for="levelAssignmentBatchSize" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
                             <apex:outputField value="{!stgService.stgLevels.Level_Assignment_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                            <apex:inputField value="{!stgService.stgLevels.Level_Assignment_Batch_Size__c}" rendered="{!isEditMode}" id="tbxLA" html-aria-describedby="{!$Component.tbxLAHelp}" styleClass="slds-input" />
+                            <apex:inputField value="{!stgService.stgLevels.Level_Assignment_Batch_Size__c}" rendered="{!isEditMode}" id="levelAssignmentBatchSize" styleClass="slds-input" />
                         </div>
                     </div>
                 </div>
