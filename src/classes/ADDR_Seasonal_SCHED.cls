@@ -48,15 +48,16 @@ public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedul
     * @param bc the BatchableContext
     * @return database.Querylocator  
     ********************************************************************************************************/
-    public database.Querylocator start(Database.BatchableContext bc) {
+    public Database.Querylocator start(Database.BatchableContext bc) {
         // Find all Accounts who have any Seasonal Address that might need updating,
         // since it may need to now become current or inactive, and we don't want to assume the last time this ran.
         // Make sure to include all Billing Address fields, that we will need to look at
-        string strSoql = 'SELECT Id, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLongitude, BillingLatitude';
+        String strSoql = 'SELECT Id, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLongitude, BillingLatitude';
         if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
             strSoql += ', BillingStateCode, BillingCountryCode';
         }
-        strSoql += ' FROM Account WHERE Id IN (SELECT Household_Account__c FROM Address__c where Seasonal_Start_Month__c != null)';
+        strSoql += ' FROM Account WHERE Id IN (SELECT Household_Account__c FROM Address__c ' +
+            ' WHERE Seasonal_Start_Month__c IN (\'1\', \'2\', \'3\', \'4\', \'5\', \'6\', \'7\', \'8\', \'9\', \'10\', \'11\', \'12\'))';
         return Database.getQueryLocator(strSoql);      
     }
     
@@ -66,8 +67,8 @@ public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedul
     * @param listSobj the list of Account objects to process
     * @return void  
     ********************************************************************************************************/
-    public void execute(Database.BatchableContext bc, Sobject[] listSobj) {
-        ADDR_Addresses_TDTM.batchSeasonalUpdate((list<Account>) listSobj);        
+    public void execute(Database.BatchableContext bc, SObject[] listSobj) {
+        ADDR_Addresses_TDTM.batchSeasonalUpdate((List<Account>) listSobj);
     }
 
     /*******************************************************************************************************
