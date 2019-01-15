@@ -1456,6 +1456,7 @@
         <members>bgeTabHeader</members>
         <members>bgeWizardHideAdvancedOptions</members>
         <members>bgeWizardShowAdvancedOptions</members>
+        <members>btnContinue</members>
         <members>btnRemove</members>
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>

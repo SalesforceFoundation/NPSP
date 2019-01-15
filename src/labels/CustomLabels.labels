@@ -1585,7 +1585,7 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Message that appears to confirm the address copy action.</shortDescription>
-        <value>You must press the Save button to complete the copying of the address fields.</value>
+        <value>You are about to copy the Address. Do you want to continue?</value>
     </labels>
     <labels>
         <fullName>addrCopyConAddBtnFls</fullName>
@@ -2917,7 +2917,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Label for link to hide advanced options in the Wizard</shortDescription>
         <value>Hide Advanced Options</value>
-    </labels>    
+    </labels>
+    <labels>
+        <fullName>btnContinue</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>button label to Continue an action</shortDescription>
+        <value>Continue</value>
+    </labels>
     <labels>
         <fullName>btnRemove</fullName>
         <categories>Manage Household UI</categories>
