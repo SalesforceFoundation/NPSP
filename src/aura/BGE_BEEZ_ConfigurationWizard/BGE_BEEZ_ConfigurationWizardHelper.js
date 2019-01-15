@@ -382,14 +382,20 @@
      */
     checkBatchProcessingSettingsValidity: function (component) {
         let batchInfo = component.get('v.batchInfo');
-        let isValid = batchInfo.donationDateRange !== '' &&
-            batchInfo.donationDateRange > -1 &&
-            batchInfo.batchProcessSize !== '' &&
-            batchInfo.batchProcessSize > 0;
+        let isValid = true;
+        let errormsg = component.get('v.wizardMetadata.labels.missingFieldsError');
+        if (batchInfo.donationDateRange == '') {
+            errormsg = errormsg + ' ' + component.get('v.wizardMetadata.labels.donationDateRangeLabel');
+            isValid = false;
+        }
+        if (batchInfo.batchProcessSize == '') {
+            errormsg = errormsg + (isValid ? ' ' : ', ') + component.get('v.wizardMetadata.labels.batchProcessSizeLabel');
+            isValid = false;
+        }
         if (isValid) {
             this.clearError(component);
         } else {
-            component.set('v.wizardMetadata.errorMessage', component.get('v.wizardMetadata.labels.missingProcessingSettingsError'));
+            component.set('v.wizardMetadata.errorMessage', errormsg);
         }
         return isValid;
     },
