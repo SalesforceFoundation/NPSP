@@ -101,43 +101,6 @@
         );
     },
 
-    //todo delete me later!
-    openFreshBatchWizard: function(component) {
-        let modalBody;
-        let modalHeader;
-        let modalFooter;
-
-        let progressStepLabels = [
-            $A.get('$Label.c.bgeBatchOverviewWizard'),
-            $A.get('$Label.c.bgeBatchSelectFields'),
-            $A.get('$Label.c.bgeBatchSetFieldOptions'),
-            $A.get('$Label.c.bgeBatchSetBatchOptions')
-        ];
-
-        $A.createComponents([
-                ['c:BGE_BEEZ_ConfigurationWizard', {sObjectName: 'DataImportBatch__c'}],
-                ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
-                ['c:modalFooter', {progressStepLabels: progressStepLabels}]
-            ],
-            function(components, status, errorMessage){
-                if (status === 'SUCCESS') {
-                    modalBody = components[0];
-                    modalHeader = components[1];
-                    modalFooter = components[2];
-                    component.find('overlayLib').showCustomModal({
-                        body: modalBody,
-                        header: modalHeader,
-                        footer: modalFooter,
-                        showCloseButton: true,
-                        cssClass: 'slds-modal_large'
-                    })
-                } else {
-                    this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
-                }
-            }
-        );
-    },
-
     /**
      * @description: displays standard toast to user based on success or failure of their action
      * @param title: title displayed in toast

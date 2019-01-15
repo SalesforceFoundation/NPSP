@@ -1,1058 +1,610 @@
 ({
-    /********************************************* View Modules *********************************************/
-
-    /**
-     * @description Returns the Batch Info View module.
-     * @param component. Lightning Component reference.
-     * @param model. The Model.
-     * @return View of the Batch Info module.
-     */
-    BatchInfoView : function(component, model) {
-        return (function (component, model) {
-
-            // Subscribe to the model onInfoUpdated event.
-            model.getBatchInfo().onInfoUpdated.subscribe(function() {
-                var batchInfoView = component.get('v.batchInfo');
-                var batchInfo = model.getBatchInfo();
-
-                // record info
-                batchInfoView.name = batchInfo.name;
-                batchInfoView.id = batchInfo.id;
-                batchInfoView.description = batchInfo.description;
-                batchInfoView.expectedCount = batchInfo.expectedCount;
-                batchInfoView.expectedTotal = batchInfo.expectedTotal;
-                batchInfoView.recordCount = batchInfo.recordCount;
-
-                // batch processing settings
-                batchInfoView.requireTotalMatch = batchInfo.requireTotalMatch;
-                batchInfoView.batchProcessSize = batchInfo.batchProcessSize;
-                batchInfoView.runOpportunityRollupsWhileProcessing = batchInfo.runOpportunityRollupsWhileProcessing;
-                batchInfoView.donationMatchingBehavior = batchInfo.donationMatchingBehavior;
-                batchInfoView.donationMatchingClass = batchInfo.donationMatchingClass;
-                batchInfoView.donationMatchingOptions = batchInfo.donationMatchingOptions;
-                batchInfoView.donationMatchingRule = batchInfo.donationMatchingRule;
-                batchInfoView.donationDateRange = batchInfo.donationDateRange;
-                batchInfoView.noMatchOnDate = batchInfo.noMatchOnDate;
-                batchInfoView.postProcessClass = batchInfo.postProcessClass;
-
-                component.set('v.batchInfo', batchInfoView);
-            });
-
-            // BatchInfoView module public functions and properties
-            return {
-                name: '',
-                id: '',
-                description: '',
-                expectedCount: 0,
-                expectedTotal: 0,
-                recordCount: 0,
-
-                // batch processing settings
-                requireTotalMatch: false,
-                batchProcessSize: 0,
-                runOpportunityRollupsWhileProcessing: false,
-                donationMatchingBehavior: '',
-                donationMatchingClass: '',
-                donationMatchingOptions: [],
-                donationMatchingRule: [],
-                donationDateRange: '',
-                noMatchOnDate: false,
-                postProcessClass: ''
-            };
-        })(component, model);
-    },
-
-    /**
-     * @description Returns the Batch Metadata View module.
-     * @param component. Lightning Component reference.
-     * @param model. The Model.
-     * @return View of the Batch Metadata module.
-     */
-    BatchMetadataView : function(component, model) {
-        return (function (component, model) {
-
-            // Subscribe to the model onMetadataUpdated event.
-            model.getBatchMetadata().onMetadataUpdated.subscribe(function() {
-                var batchMetadataView = component.get('v.batchMetadata');
-                var batchMetadata = model.getBatchMetadata();
-                var headerChanged = Boolean(batchMetadataView.pageHeader !== batchMetadata.pageHeader);
-
-                batchMetadataView.labels = batchMetadata.labels;
-                batchMetadataView.mode = batchMetadata.mode;
-                batchMetadataView.hasError = batchMetadata.hasError;
-                batchMetadataView.errorMessage = batchMetadata.errorMessage;
-                batchMetadataView.pageHeader = batchMetadata.pageHeader;
-                batchMetadataView.pendingSave = batchMetadata.pendingSave;
-                batchMetadataView.showAdvancedOptions = batchMetadata.showAdvancedOptions;
-
-                if (!batchMetadataView.hasError) {
-                    batchMetadataView.progressIndicatorStep = batchMetadata.progressIndicatorStep;
-                    _sendMessage('setStep',batchMetadata.progressIndicatorStep);
-                } else {
-                    component.find('notifLib').showNotice({
-                        'variant': 'error',
-                        'header': $A.get('$Label.c.PageMessagesError'),
-                        'message': batchMetadataView.errorMessage,
-                        closeCallback: function() {
-                            //callback action here
-                        }
-                    });
-                }
-
-                if (batchMetadataView.mode === 'view') {
-                    component.set('v.isReadOnly', true);
-                } else if (batchMetadataView.mode === 'create' || batchMetadataView.mode === 'edit') {
-                    component.set('v.isReadOnly', false);
-                }
-
-                //update page header in modal if page header has changed and modal is used
-                if (headerChanged) {
-                    _sendMessage('setHeader', batchMetadataView.pageHeader);
-                }
-
-                //update footer in modal to keep save button appropriately enabled/disabled
-                _sendMessage('pendingSave', batchMetadataView.pendingSave);
-
-                // when in modal context, need to notify the modal footer component
-                _sendMessage('setError', batchMetadataView.hasError);
-
-                component.set('v.batchMetadata', batchMetadataView);
-            });
-
-            function _sendMessage(channel, message) {
-                var sendMessage = $A.get('e.ltng:sendMessage');
-                sendMessage.setParams({
-                    'channel': channel,
-                    'message': message
-                });
-                sendMessage.fire();
+    /******************************** Init Functions *****************************/
+    init: function (component) {
+        var recordId = component.get('v.recordId');
+        var action = component.get('c.getRecordDetails');
+        action.setParams({
+            'recordId': recordId
+        });
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            var model = JSON.parse(response.getReturnValue());
+            if (state === 'SUCCESS') {
+                this.loadModel(component, model);
+            } else if (state === 'ERROR') {
+                this.handleApexErrors(component, response.getError());
             }
-
-            // BatchMetadataView module public functions and properties
-            return {
-                labels: {},
-                mode: '',
-                progressIndicatorStep: '',
-                hasError: false,
-                errorMessage: '',
-                pendingSave: false,
-                showAdvancedOptions: false
-            };
-        })(component, model);
+        });
+        $A.enqueueAction(action);
     },
 
     /**
-     * @description Returns the Batch Fields View module.
-     * @param component. Lightning Component reference.
-     * @param model. The Batch Fields Model.
-     * @return View of the Batch Fields module.
+     * @description: sets basic batch info and processing settings
+     * @param model: parsed JSON response from the model
      */
-    BatchFieldsView : function(component, model) {
-        return (function (component, model) {
+    loadModel: function (component, model) {
+        this.loadBatchInfo(component, model);
+        this.loadWizardMetadata(component, model);
 
-            // Subscribe to the model onFieldsUpdated event.
-            model.getAvailableFields().onFieldsUpdated.subscribe(function() {
-                var availableFields = component.get('v.availableFields');
-                availableFields.fieldGroups = [];
+        //parse active fields because it's another level JSON object
+        let activeFields = JSON.parse(model.activeFields);
+        let allFields = model.availableFields;
+        this.loadAvailableFields(component, activeFields, allFields);
 
-                var activeFieldsBySObject = model.getAvailableFields().getActivesBySObject();
-                var allFieldsBySObject = model.getAvailableFields().getAllFieldsBySObject();
+        let availableFieldsBySObject = component.get('v.availableFieldsBySObject');
+        this.loadBatchFieldOptions(component, availableFieldsBySObject);
+    },
 
-                Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
-                    var currentFieldGroup = {
-                        sObjectName: sObjectName,
-                        options: [],
-                        requiredOptions: [],
-                        values: []
-                    };
+    /**
+     * @description: sets basic batch info and processing settings
+     * @param model: parsed JSON model from the model
+     */
+    loadBatchInfo: function(component, model) {
+        let batchInfo = {};
 
-                    allFieldsBySObject[sObjectName].forEach(function(currentField) {
-                        currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
-                        currentFieldGroup.options.push(
-                            {
-                                label: currentField.label,
-                                value: currentField.id
-                            }
-                        );
+        //generic batch info
+        batchInfo.name = model.name;
+        batchInfo.id = model.id;
+        batchInfo.description = model.description;
+        batchInfo.expectedCount = (model.expectedCount === null || model.expectedCount === '') ? 0 : model.expectedCount;
+        batchInfo.expectedTotal = (model.expectedTotal === null || model.expectedTotal === '') ? 0 : model.expectedTotal;
+        batchInfo.recordCount = model.recordCount;
 
-                        if (currentField.alwaysRequired) {
-                            currentFieldGroup.requiredOptions.push(currentField.id);
-                        }
-                    });
+        // batch processing settings
+        batchInfo.requireTotalMatch = model.requireTotalMatch;
+        batchInfo.batchProcessSize = model.batchProcessSize;
+        batchInfo.runOpportunityRollupsWhileProcessing = model.runOpportunityRollupsWhileProcessing;
+        batchInfo.donationMatchingBehavior = model.donationMatchingBehavior;
+        batchInfo.donationMatchingClass = model.donationMatchingClass;
+        batchInfo.donationMatchingOptions = model.donationMatchingOptions;
+        batchInfo.donationMatchingRule = model.donationMatchingRule;
+        batchInfo.donationDateRange = model.donationDateRange;
+        batchInfo.postProcessClass = model.postProcessClass;
 
-                    if (activeFieldsBySObject[sObjectName]) {
-                        activeFieldsBySObject[sObjectName].forEach(function(currentField) {
-                            currentFieldGroup.values.push(currentField.id);
-                        });
-                    }
-                    availableFields.fieldGroups.push(currentFieldGroup);
-                });
+        component.set('v.batchInfo', batchInfo);
+    },
 
-                component.set('v.availableFields', availableFields);
+    /**
+     * @description: sets wizard metadata such as labels and current step
+     * @param model: parsed JSON response from the model
+     */
+    loadWizardMetadata: function(component, model) {
+        let wizardMetadata = {};
+        wizardMetadata.labels = model.labels;
+        wizardMetadata.showAdvancedOptions = false;
+        wizardMetadata.namespacePrefix = model.namespacePrefix ? model.namespacePrefix+'__' : '';
+        wizardMetadata.errorMessage = null;
+
+        wizardMetadata.progressIndicatorStep = '0';
+        wizardMetadata.headers = [
+            model.labels.recordInfoLabel,
+            $A.get('$Label.c.bgeBatchSelectFields'),
+            $A.get('$Label.c.bgeBatchSetFieldOptions'),
+            $A.get('$Label.c.bgeBatchSetBatchOptions')
+        ];
+        component.set('v.wizardMetadata', wizardMetadata);
+        this.updateMatchOnDate(component);
+    },
+
+    /**
+     * @description: set available fields for field selection in dueling picklist
+     * @param activeFields: parsed list of user-selected active fields
+     * @param allFields: parsed list of all possible fields for dueling picklist
+     */
+    loadAvailableFields: function(component, activeFields, allFields) {
+        let availableFieldsBySObject = {
+            fieldGroups: []
+        };
+        let everyField = [];
+        var activeFieldMap = new Map();
+
+        if (activeFields) {
+            activeFields.forEach(function (activeField) {
+                var fieldId = activeField.sObjectName + '.' + activeField.name;
+                activeFieldMap.set(fieldId, activeField);
             });
+        }
 
-            // BatchFieldsView module public functions and properties
-            return {
-                fieldGroups: []
-            };
-        })(component, model);
-    },
-
-    /**
-     * @description Returns the Batch Field Options View module.
-     * @param component. Lightning Component reference.
-     * @param model. The Batch Fields Model.
-     * @return View of the Batch Field Options module.
-     */
-    BatchFieldOptionsView : function(component, model) {
-        return (function (component, model) {
-
-            // Subscribe to the model onFieldsUpdated event.
-            model.getAvailableFields().onFieldsUpdated.subscribe(function() {
-                var batchFieldOptions = component.get('v.batchFieldOptions');
-                batchFieldOptions.fieldGroups = [];
-                var activeFieldsBySObject = model.getAvailableFields().getActivesBySObject();
-                var availableFields = model.getAvailableFields();
-                batchFieldOptions.errors = availableFields.errors;
-
-                Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
-
-                    var currentFieldGroup = {
-                        sObjectName: sObjectName,
-                        fields: []
-                    };
-
-                    activeFieldsBySObject[sObjectName].forEach(function (currentField) {
-
-                        var fieldInfo = {
-                            name: currentField.name,
-                            sObjectName: currentField.sObjectName,
-                            sObjectLabel: currentField.sObjectLabel,
-                            label: currentField.label,
-                            defaultValue: currentField.defaultValue,
-                            requiredInEntryForm: currentField.requiredInEntryForm,
-                            hide: currentField.hide,
-                            type: currentField.type,
-                            formatter: currentField.formatter,
-                            options: currentField.options,
-                            conditionallyRequired: currentField.conditionallyRequired,
-                            alwaysRequired: currentField.alwaysRequired
-                        };
-
-                        currentFieldGroup.fields.push(fieldInfo);
-                        currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
-
-                    });
-
-                    batchFieldOptions.fieldGroups.push(currentFieldGroup);
-
-                });
-                component.set('v.batchFieldOptions', batchFieldOptions);
-
-            });
-
-            // BatchFieldOptionsView module public functions and properties
-            return {
-                fieldGroups: []
-            };
-
-        })(component, model);
-    },
-
-
-    /*********************************************** Model Modules *********************************************/
-
-    /**
-     * @description Gets the Model module of Batch Details.
-     * This is the main and only Model module for the Batch
-     * Details components. Contains references to BatchFields
-     * and BatchInfo sub-modules.
-     * @return Model module of Batch Details.
-     */
-    DetailsModel : function() {
-        return (function (availableFields, batchInfo, batchMetadata) {
-            var _availableFields = availableFields;
-            var _batchInfo = batchInfo;
-            var _batchMetadata = batchMetadata;
-            var _bgeBatchController;
-
-            /* **********************************************************
-             * @Description Gets the Batch Details and loads sub-modules.
-             * @param component. Lightning Component reference.
-             * @return void.
-             ************************************************************/
-            function init(component) {
-                var recordId = _batchInfo.id ? _batchInfo.id : component.get('v.recordId');
-                _bgeBatchController.getRecordDetails(recordId, {
-                    success: function(response) {
-                        _batchInfo.load(response);
-                        _availableFields.load(response.availableFields, JSON.parse(response.activeFields));
-                        _batchMetadata.load(response.labels, component);
-                    },
-                    error: function(error) {
-                        _batchMetadata.showError(error);
-                        console.log(error);
-                    }
-                });
+        var availableSortOrder = 1;
+        allFields.forEach(function (currentField) {
+            currentField.id = currentField.sObjectName + '.' + currentField.name;
+            //set Active fields with saved sort order
+            if (activeFieldMap.has(currentField.id)) {
+                currentField.isActive = true;
+                currentField.defaultValue = activeFieldMap.get(currentField.id).defaultValue;
+                currentField.hide = activeFieldMap.get(currentField.id).hide;
+                currentField.requiredInEntryForm = activeFieldMap.get(currentField.id).requiredInEntryForm;
+                currentField.sortOrder = activeFieldMap.get(currentField.id).sortOrder;
+                currentField.type = activeFieldMap.get(currentField.id).type;
+                currentField.formatter = activeFieldMap.get(currentField.id).formatter;
+                currentField.options = activeFieldMap.get(currentField.id).options;
+                currentField.alwaysRequired = activeFieldMap.get(currentField.id).alwaysRequired;
+            } else {
+                currentField.isActive = false;
             }
+            currentField.availableSortOrder = availableSortOrder;
+            availableSortOrder++;
+            everyField.push(currentField);
+        });
 
-            /**
-             * @description Saves the model information to the backend.
-             * @return void.
-             */
-            function save() {
-                var batchDetailsData = {
-                    //record info
-                    name: _batchInfo.name,
-                    id: _batchInfo.id,
-                    description: _batchInfo.description,
-                    expectedCount: _batchInfo.expectedCount,
-                    expectedTotal: _batchInfo.expectedTotal,
+        // store everyField with its metadata
+        component.set('v.everyField', everyField);
+        // sort into groups by object
+        // returns map of sobject name => list of fields
+        var activeFieldsBySObject = this.getActivesBySObject(component);
+        // returns map of sobject name => list of fields
+        var allFieldsBySObject = this.groupFieldsBySObject(everyField);
 
-                    // batch processing settings
-                    requireTotalMatch: _batchInfo.requireTotalMatch,
-                    batchProcessSize: _batchInfo.batchProcessSize,
-                    runOpportunityRollupsWhileProcessing: _batchInfo.runOpportunityRollupsWhileProcessing,
-                    donationMatchingBehavior: _batchInfo.donationMatchingBehavior,
-                    donationMatchingClass: _batchInfo.donationMatchingClass,
-                    donationMatchingRule: _batchInfo.donationMatchingRule,
-                    donationDateRange: _batchInfo.donationDateRange,
-                    postProcessClass: _batchInfo.postProcessClass
-                };
-                var activeFields = [];
+        Object.keys(allFieldsBySObject).forEach(function (sObjectName) {
+            let currentFieldGroup = {
+                sObjectName: sObjectName,
+                options: [],
+                requiredOptions: [],
+                values: []
+            };
 
-                _availableFields.getActives().forEach(function(currentField) {
-                    activeFields.push({
+            allFieldsBySObject[sObjectName].forEach(function (currentField) {
+                currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
+                currentFieldGroup.options.push(
+                    {
                         label: currentField.label,
-                        name: currentField.name,
-                        sObjectLabel: currentField.sObjectLabel,
-                        sObjectName: currentField.sObjectName,
-                        defaultValue: currentField.defaultValue,
-                        alwaysRequired: currentField.alwaysRequired,
-                        requiredInEntryForm: currentField.requiredInEntryForm,
-                        hide: currentField.hide,
-                        sortOrder: currentField.sortOrder,
-                        type: currentField.type,
-                        options: currentField.options
-                    });
-                });
-
-                _bgeBatchController.saveRecord(batchDetailsData, activeFields, {
-                    success: function(response) {
-                        _batchMetadata.navigateToRecord(response.id);
-                    },
-                    error: function(error) {
-                        console.log(error);
-                        _batchMetadata.togglePendingSave();
+                        value: currentField.id
                     }
-                });
-            }
+                );
 
-            /**
-             * @description Sets the Apex backend controller module.
-             * @return void.
-             */
-            function setBackendController(bgeBatchController) {
-                _bgeBatchController = bgeBatchController
-            }
-
-            /**
-             * @description Gets the Batch Fields module.
-             * @return Batch Fields module.
-             */
-            function getAvailableFields() {
-                return _availableFields;
-            }
-
-            /**
-             * @description Gets the Batch Info module.
-             * @return Batch Info module.
-             */
-            function getBatchInfo() {
-                return _batchInfo;
-            }
-
-            /**
-             * @description Gets the Batch Metadata module.
-             * @return Batch Metadata module.
-             */
-            function getBatchMetadata() {
-                return _batchMetadata;
-            }
-
-            // DetailsModel module public functions and properties
-            return {
-                init: init,
-                save: save,
-                setBackendController: setBackendController,
-                getAvailableFields: getAvailableFields,
-                getBatchInfo: getBatchInfo,
-                getBatchMetadata: getBatchMetadata
-            }
-        })(this.BatchFields(), this.BatchInfo(), this.BatchMetadata());
-    },
-
-    /**
-     * @description Gets the Model module of the Batch Info.
-     * @return Model module of the Batch Info.
-     */
-    BatchInfo : function() {
-        return (function (Event) {
-            var _onInfoUpdated = new Event(this);
-
-            /**
-             * @description Loads the Info, and notify all the
-             * _onInfoUpdated listeners.
-             * @return List of fields.
-             */
-            function load(info) {
-                //record info
-                this.name = info.name;
-                this.description = info.description;
-                this.id = info.id;
-                this.expectedCount = (info.expectedCount === null || info.expectedCount === '') ? 0 : info.expectedCount;
-                this.expectedTotal = (info.expectedTotal === null || info.expectedTotal === '') ? 0 : info.expectedTotal;
-                this.recordCount = info.recordCount;
-
-                //batch processing settings
-                this.requireTotalMatch = info.requireTotalMatch;
-                this.batchProcessSize = info.batchProcessSize;
-                this.runOpportunityRollupsWhileProcessing = info.runOpportunityRollupsWhileProcessing;
-                this.donationMatchingBehavior = info.donationMatchingBehavior;
-                this.donationMatchingClass = info.donationMatchingClass;
-                this.donationMatchingOptions = info.donationMatchingOptions;
-                this.donationMatchingRule = info.donationMatchingRule;
-                this.donationDateRange = info.donationDateRange;
-                this.postProcessClass = info.postProcessClass;
-                this.noMatchOnDate = !isStringMatchedInList(info.donationMatchingRule, "donation_date__c");
-                this.onInfoUpdated.notify();
-            }
-
-            /**
-             * @description Validates the required batchInfo.
-             * @return Boolean validity.
-             */
-            function isValid() {
-                return this.name && this.description;
-            }
-
-            /**
-             * @description Checks if the specified string is a matched substring of any strings in list.
-             * @return Boolean string matches.
-             */
-            function isStringMatchedInList(theList, theString) {
-                let stringMatches = false;
-                theList.forEach(function(currString) {
-                    if (currString.indexOf(theString) >= 0) {
-                        stringMatches = true;
-                    }
-                });
-                return stringMatches;
-            }
-
-            // BatchInfo module public functions and properties
-            return {
-                // record info
-                name: '',
-                id: '',
-                description: '',
-                expectedCount: 0,
-                expectedTotal: 0,
-                recordCount: 0,
-
-                // batch processing settings
-                requireTotalMatch: false,
-                batchProcessSize: 0,
-                runOpportunityRollupsWhileProcessing: false,
-                donationMatchingBehavior: '',
-                donationMatchingClass: '',
-                donationMatchingOptions: [],
-                donationMatchingRule: [],
-                donationDateRange: '',
-                postProcessClass: '',
-                load: load,
-                isValid: isValid,
-                noMatchOnDate: false,
-                onInfoUpdated: _onInfoUpdated
-            }
-        })(this.Event());
-    },
-
-    /**
-     * @description Gets the Batch Fields module.
-     * @return Model module of the Batch Fields.
-     */
-    BatchFields : function() {
-        return (function (Event) {
-            var _allFields = [];
-            var _onFieldsUpdated = new Event(this);
-
-            /* ******************PUBLIC FUNCTIONS*************************/
-
-            /**
-             * @description Load the fields and notify onFieldsUpdated listeners.
-             * @param allFields: list of allFields with sObjectLabel/Name.
-             * param activeFields: Map of activeFieldsBySObject with sObjectName, Name,
-             * and Default Value, Hide and Required flags.
-             * @return void.
-             */
-            function load(allFields, activeFields) {
-                _allFields = [];
-                var activeFieldMap = new Map();
-
-                if (activeFields) {
-                    activeFields.forEach(function(activeField) {
-                        var fieldId = activeField.sObjectName + '.' + activeField.name;
-                        activeFieldMap.set(fieldId, activeField);
-                    });
+                if (currentField.alwaysRequired) {
+                    currentFieldGroup.requiredOptions.push(currentField.id);
                 }
+            });
 
-                var availableSortOrder = 1;
-                allFields.forEach(function(currentField) {
-                    currentField.id = currentField.sObjectName + '.' + currentField.name;
-                    //set Active fields with saved sort order
-                    if (activeFieldMap.has(currentField.id)) {
-                        currentField.isActive = true;
-                        currentField.defaultValue = activeFieldMap.get(currentField.id).defaultValue;
-                        currentField.hide = activeFieldMap.get(currentField.id).hide;
-                        currentField.requiredInEntryForm = activeFieldMap.get(currentField.id).requiredInEntryForm;
-                        currentField.sortOrder = activeFieldMap.get(currentField.id).sortOrder;
-                        currentField.type = activeFieldMap.get(currentField.id).type;
-                        currentField.formatter = activeFieldMap.get(currentField.id).formatter;
-                        currentField.options = activeFieldMap.get(currentField.id).options;
-                        currentField.alwaysRequired = activeFieldMap.get(currentField.id).alwaysRequired;
-                    } else {
-                        currentField.isActive = false;
-                    }
-                    currentField.availableSortOrder = availableSortOrder;
-                    availableSortOrder++;
-                    _allFields.push(currentField);
+            if (activeFieldsBySObject[sObjectName]) {
+                activeFieldsBySObject[sObjectName].forEach(function (currentField) {
+                    currentFieldGroup.values.push(currentField.id);
                 });
-                this.onFieldsUpdated.notify();
             }
-
-            /**
-             * @description Gets all fields grouped by SObject.
-             * @return Map of SObject group to List of all fields.
-             */
-            function getAllFieldsBySObject() {
-                return _groupFieldsBySObject(_allFields);
-            }
-
-            /**
-             * @description Gets the available fields grouped by SObject.
-             * @return Map of SObject group to List of inactive fields.
-             */
-            function getAvailablesBySObject() {
-                var availableFields = [];
-                _allFields.forEach(function(currentField) {
-                    if (!currentField.isActive) {
-                        availableFields.push(currentField);
-                    }
-                });
-                return _groupFieldsBySObject(availableFields);
-            }
-
-            /**
-             * @description Gets the active fields.
-             * @return Sorted List of related active fields.
-             */
-            function getActives() {
-                var activeFields = [];
-                _allFields.forEach(function(currentField) {
-                    if (currentField.isActive) {
-                        activeFields.push(currentField);
-                    }
-                });
-                return _sortFieldsByOrder(activeFields);
-            }
-
-            /**
-             * @description Gets the active fields grouped by SObject.
-             * @return Map of SObject group to List of related active fields.
-             */
-            function getActivesBySObject() {
-                var activeFields = [];
-                _allFields.forEach(function(currentField) {
-                    if (currentField.isActive) {
-                        activeFields.push(currentField);
-                    }
-                });
-                activeFields = _sortFieldsByOrder(activeFields);
-                return _groupFieldsBySObject(activeFields);
-            }
-
-            /**
-             * @description Gets the aggregate validity of provided default values
-             * @return Boolean
-             */
-            function getDefaultFieldValidity(component) {
-                var isValid = component.find("defaultValueField").reduce(function (validSoFar, defaultValueField) {
-                    return validSoFar && defaultValueField.get("v.validity").valid;
-                }, true);
-                return isValid;
-            }
-
-            /**
-             * @description Validates the required batchInfo in Select Fields step.
-             * @return Boolean validity.
-             */
-            function getRequiredFieldErrors() {
-                var errors = [];
-                var activeFieldsBySObject = getActivesBySObject();
-                var conditionallyRequiredFieldsBySObject = _getConditionallyRequiredFieldsBySObject();
-
-                Object.keys(conditionallyRequiredFieldsBySObject).forEach(function(currentSObject) {
-                    var activeFieldNames = [];
-                    var conditionallyRequiredFieldNames = new Map();
-
-                    //only check validity if sObject is included in activeFieldsBySObject
-                    if (activeFieldsBySObject[currentSObject]) {
-                        activeFieldsBySObject[currentSObject].forEach(function(currentField) {
-                            activeFieldNames.push(currentField.name);
-                        });
-                        conditionallyRequiredFieldsBySObject[currentSObject].forEach(function(currentField) {
-                            conditionallyRequiredFieldNames.set(currentField.name, currentField.label);
-                        });
-
-                        var containsConditionallyRequiredField = Array.from(conditionallyRequiredFieldNames.keys()).every(function(currentFieldName) {
-                            return activeFieldNames.indexOf(currentFieldName) > -1;
-                        });
-                        if (!containsConditionallyRequiredField) {
-                            errors.push(currentSObject + ' (' + Array.from(conditionallyRequiredFieldNames.values()).join(', ') + ')');
-                        }
-                    }
-                });
-
-                return errors.length > 0 ? $A.get('$Label.c.bgeBatchErrorRequiredFields') + ' ' + errors.join(', ') + '.' : '';
-            }
-
-            /**
-             * @description Updates isActive flag and sort Order of all fields
-             * @return void.
-             */
-            function updateToActive(batchFieldGroups) {
-                var fieldCountPreviousObjects = 0;
-                var allFieldsBySObject = getAllFieldsBySObject();
-                Object.keys(allFieldsBySObject).forEach(function(currentSObject) {
-                    batchFieldGroups.forEach(function(currentFieldGroup) {
-                        if (currentFieldGroup.sObjectName === currentSObject) {
-                            allFieldsBySObject[currentSObject].forEach(function (currentField) {
-                                currentField.isActive = currentFieldGroup.values.includes(currentField.id);
-                                // the field's sort order is its index PLUS the total of all active fields from all previous object groups
-                                currentField.sortOrder = currentField.isActive ? currentFieldGroup.values.indexOf(currentField.id) + fieldCountPreviousObjects : null;
-                            });
-                            // increase the buffer by the number of active fields from this object
-                            fieldCountPreviousObjects += currentFieldGroup.values.length;
-                        }
-                    });
-                });
-
-                this.onFieldsUpdated.notify();
-            }
-
-            /**
-             * @description Updates the selected fields to Active, unselects fields
-             * @return void.
-             */
-            function updateBatchFieldOptions(batchFieldGroups) {
-
-                var batchFieldOptions = [];
-                batchFieldGroups.forEach(function(currentFieldGroup) {
-                    currentFieldGroup.fields.forEach(function(currentField) {
-                        batchFieldOptions.push(currentField);
-                    });
-                });
-
-                _allFields.forEach(function(currentField) {
-                    batchFieldOptions.forEach(function(currentActiveField) {
-                        if (currentField.name === currentActiveField.name) {
-                            currentField.requiredInEntryForm = currentActiveField.requiredInEntryForm;
-                            currentField.hide = currentActiveField.hide;
-                            currentField.defaultValue = currentActiveField.defaultValue;
-                        }
-                    });
-
-                });
-
-            }
-
-            /* ******************PRIVATE FUNCTIONS************************/
-
-            /**
-             * @description Gets the conditionally required fields grouped by SObject.
-             * @return Map of SObject group to List of conditionally required fields.
-             * These fields are required only if any other field from that target SObject is selected.
-             * e.g., Account Name is required if Account Type is selected.
-             */
-            function _getConditionallyRequiredFieldsBySObject() {
-                var conditionallyRequiredFields = [];
-                _allFields.forEach(function(currentField) {
-                    if (currentField.conditionallyRequired) {
-                        conditionallyRequiredFields.push(currentField);
-                    }
-                });
-                return _groupFieldsBySObject(conditionallyRequiredFields);
-            }
-
-            /**
-             * @description Groups the fields by SObject name.
-             * @param fields: list of fields.
-             * @return Map of SObject name to List of related fields.
-             */
-            function _groupFieldsBySObject(fields) {
-                var result = {};
-                fields.forEach(function(currentField) {
-                    if ((currentField.sObjectName in result) === false) {
-                        result[currentField.sObjectName] = [];
-                    }
-                    result[currentField.sObjectName].push(currentField);
-                });
-
-                return result;
-
-            }
-
-            /**
-             * @description Sort the fields by order.
-             * @param fields. List of the fields to sort.
-             * @return sorted fields.
-             */
-            function _sortFieldsByOrder(fields) {
-                fields.sort(function(currentField, nextField) {
-                    if (currentField.sortOrder < nextField.sortOrder) {
-                        return -1;
-                    }
-                    if (currentField.sortOrder > nextField.sortOrder) {
-                        return 1;
-                    }
-                    // numbers must be equal
-                    return 0;
-                });
-                return fields;
-            }
-
-            // BatchFieldsModel module public functions and properties
-            return {
-                errors: {},
-                load: load,
-                getRequiredFieldErrors: getRequiredFieldErrors,
-                getAllFieldsBySObject: getAllFieldsBySObject,
-                getAvailablesBySObject: getAvailablesBySObject,
-                getActives: getActives,
-                getActivesBySObject: getActivesBySObject,
-                getDefaultFieldValidity: getDefaultFieldValidity,
-                updateToActive: updateToActive,
-                updateBatchFieldOptions: updateBatchFieldOptions,
-                onFieldsUpdated: _onFieldsUpdated
-
-            }
-        })(this.Event());
+            availableFieldsBySObject.fieldGroups.push(currentFieldGroup);
+        });
+        component.set('v.availableFieldsBySObject', availableFieldsBySObject);
     },
 
     /**
-     * @description Gets the Model module of the Batch Metadata,
-     * such as page mode and labels.
-     * @return Model module of the Batch Metadata.
+     * @description: sets batch field options, which is the user-selected set of active fields with
+     * helpful defaults and fields to be flagged as required in BGE entry form
+     * @param activeFieldsBySObject: grouped fields set in loadAvailableFields
      */
-    BatchMetadata : function() {
-        return (function (Event) {
-            var _onMetadataUpdated = new Event(this);
+    loadBatchFieldOptions: function (component, activeFieldsBySObject) {
 
-            /************************************************************
-             * @Description Loads the Info, and notify all the
-             *      _onMetadataUpdated listeners.
-             * @return void.
-             ************************************************************/
-            function load(labels, component) {
-                this.labels = labels;
-                //isReadOnly (View) is passed from record home with lightning app builder
-                if (component.get('v.isReadOnly')) {
-                    this.setMode('view');
-                } else {
-                    if (component.get('v.recordId') !== null) {
-                        this.setMode('edit');
-                    } else {
-                        this.setMode('create');
-                    }
-                }
-                this.setPageHeader();
-                this.onMetadataUpdated.notify();
+        let batchFieldOptions = {
+            fieldGroups: []
+        };
+
+        Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
+
+            var currentFieldGroup = {
+                sObjectName: sObjectName,
+                fields: []
+            };
+
+            activeFieldsBySObject[sObjectName].forEach(function (currentField) {
+
+                var fieldInfo = {
+                    name: currentField.name,
+                    sObjectName: currentField.sObjectName,
+                    sObjectLabel: currentField.sObjectLabel,
+                    label: currentField.label,
+                    defaultValue: currentField.defaultValue,
+                    requiredInEntryForm: currentField.requiredInEntryForm,
+                    hide: currentField.hide,
+                    type: currentField.type,
+                    formatter: currentField.formatter,
+                    options: currentField.options,
+                    conditionallyRequired: currentField.conditionallyRequired,
+                    alwaysRequired: currentField.alwaysRequired
+                };
+
+                currentFieldGroup.fields.push(fieldInfo);
+                currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
+
+            });
+
+            batchFieldOptions.fieldGroups.push(currentFieldGroup);
+
+        });
+        component.set('v.batchFieldOptions', batchFieldOptions);
+    },
+
+    /******************************** Step Functions *****************************/
+
+    /**
+     * @description: moves the modal wizard to the next step
+     */
+    nextStep: function (component) {
+        this.stepUp(component);
+        this.setModalFooter(component);
+        this.setModalHeader(component);
+    },
+
+    /**
+     * @description: parses and increments the stored step in the wizard
+     */
+    stepUp: function (component) {
+        let stepNum = parseInt(component.get('v.wizardMetadata.progressIndicatorStep'));
+        stepNum++;
+        let progressIndicatorStep = stepNum.toString();
+        component.set('v.wizardMetadata.progressIndicatorStep', progressIndicatorStep);
+    },
+
+    /**
+     * @description: moves the modal wizard to the previous step
+     */
+    backStep: function (component) {
+        this.stepDown(component);
+        this.setModalFooter(component);
+        this.setModalHeader(component);
+    },
+
+    /**
+     * @description: parses and decrements the stored step in the wizard
+     */
+    stepDown: function (component) {
+        let stepNum = parseInt(component.get('v.wizardMetadata.progressIndicatorStep'));
+        stepNum--;
+        let progressIndicatorStep = stepNum.toString();
+        component.set('v.wizardMetadata.progressIndicatorStep', progressIndicatorStep);
+    },
+
+    /******************************** Dynamic Display Functions *****************************/
+
+    /**
+     * @description sets the showAdvancedOptions flag to hide/reveal the advanced options accordingly
+     */
+    toggleShowAdvanced: function (component) {
+        let showAdvancedOptions = component.get('v.wizardMetadata.showAdvancedOptions');
+        component.set('v.wizardMetadata.showAdvancedOptions', !showAdvancedOptions);
+    },
+
+    /**
+     * @description turns off pendingSave flag to enable Save button if an error is found on save
+     */
+    enableSaveButton: function (component) {
+        component.set('v.wizardMetadata.pendingSave', false);
+        this.sendMessage(component,'pendingSave', false);
+    },
+
+    /**
+     * @description updates the attribute that tracks whether or not Donation Date is selected in the Donation Matching Rule
+     */
+    updateMatchOnDate: function (component) {
+        let donationMatchingRule = component.get('v.batchInfo.donationMatchingRule');
+        let matchOnDateSelected = donationMatchingRule.indexOf(component.get('v.wizardMetadata.namespacePrefix') + 'donation_date__c') >= 0;
+        component.set('v.wizardMetadata.matchOnDateSelected', matchOnDateSelected);
+    },
+
+    /******************************** Sort and Group Functions *****************************/
+
+    /**
+     * @description Gets a flat list of the active fields sorted by order.
+     * @return List of active fields.
+     */
+    getActives: function (component) {
+        let allFields = component.get('v.everyField');
+        let activeFields = [];
+        allFields.forEach(function (currentField) {
+            if (currentField.isActive) {
+                activeFields.push(currentField);
             }
+        });
+        var sortedActiveFields = this.sortFieldsByOrder(activeFields);
+        return sortedActiveFields;
+    },
 
-            /**
-             * @description Navigates to the record's sObject Home
-             * @param recordId - the record we want to view
-             */
-            function navigateToRecord(recordId) {
+    /**
+     * @description Gets the active fields sorted and grouped by SObject.
+     * @return Map of SObject group to List of related active fields.
+     */
+    getActivesBySObject: function (component) {
+        let activeFields = this.getActives(component);
+        var activesBySObject = this.groupFieldsBySObject(activeFields);
+        return activesBySObject;
+    },
+
+    /**
+     * @description Sort the fields by order.
+     * @param fields. List of the fields to sort.
+     * @return sorted fields.
+     */
+    sortFieldsByOrder: function (fields) {
+        fields.sort(function (currentField, nextField) {
+            if (currentField.sortOrder < nextField.sortOrder) {
+                return -1;
+            }
+            if (currentField.sortOrder > nextField.sortOrder) {
+                return 1;
+            }
+            // numbers must be equal
+            return 0;
+        });
+        return fields;
+    },
+
+    /**
+     * @description Groups the fields by SObject name.
+     * @param fields: list of fields to be grouped.
+     * @return Map of SObject name to List of related fields.
+     */
+    groupFieldsBySObject: function (fields) {
+        var result = {};
+        fields.forEach(function (currentField) {
+            if ((currentField.sObjectName in result) === false) {
+                result[currentField.sObjectName] = [];
+            }
+            result[currentField.sObjectName].push(currentField);
+        });
+
+        return result;
+    },
+
+    /******************************** Validity Functions *****************************/
+
+    /**
+     * @description Checks for required fields name and description
+     * @return Boolean if user can proceed to next step
+     */
+    checkBatchInfoValidity: function (component) {
+        let batchInfo = component.get('v.batchInfo');
+        let isValid = batchInfo.name && batchInfo.description;
+        if (isValid) {
+            this.clearError(component);
+        } else {
+            component.set('v.wizardMetadata.errorMessage', component.get('v.wizardMetadata.labels.missingNameDescriptionError'));
+        }
+        return isValid;
+    },
+
+    /**
+     * @description Checks validity object on every lightning:input field
+     * @return Boolean if user can proceed to next step
+     */
+    checkBatchFieldOptionsValidity: function (component) {
+        var isValid = component.find('defaultValueField').reduce(function (validSoFar, defaultValueField) {
+            return validSoFar && defaultValueField.get('v.validity').valid;
+        }, true);
+        if (isValid) {
+            this.clearError(component);
+        }
+        return isValid;
+    },
+
+    /**
+     * @description Checks for required fields Donation Date Range and Batch Process Size
+     * @return Boolean if user can proceed to next step
+     */
+    checkBatchProcessingSettingsValidity: function (component) {
+        const batchInfo = component.get('v.batchInfo');
+        let isValid = true;
+        let errormsg = component.get('v.wizardMetadata.labels.missingFieldsError');
+
+        debugger;
+
+        if (batchInfo.donationDateRange === '') {
+            errormsg = errormsg + ' ' + component.get('v.wizardMetadata.labels.donationDateRangeLabel');
+            isValid = false;
+        }
+        if (batchInfo.batchProcessSize === '') {
+            errormsg = errormsg + (isValid ? ' ' : ', ') + component.get('v.wizardMetadata.labels.batchProcessSizeLabel');
+            isValid = false;
+        }
+
+        if (isValid) {
+            this.clearError(component);
+        } else {
+            component.set('v.wizardMetadata.errorMessage', errormsg);
+        }
+        return isValid;
+    },
+
+    /**
+     * @description Clears error message and notifies footer via message
+     */
+    clearError: function (component) {
+        component.set('v.wizardMetadata.errorMessage', null);
+        this.sendMessage(component, 'setError', false);
+    },
+
+    /**
+     * @description Shows error message.
+     */
+    showError: function (component) {
+        let message = component.get('v.wizardMetadata.errorMessage');
+        if (message) {
+            component.find('notifLib').showNotice({
+                'variant': 'error',
+                'header': $A.get('$Label.c.PageMessagesError'),
+                'message': message
+            });
+        }
+        // when in modal context, need to notify the modal footer component
+        this.sendMessage(component, 'setError', true);
+    },
+
+    /******************************** Save Functions *****************************/
+
+    /**
+     * @description Updates isActive flag and sort Order of all fields
+     */
+    updateToActive: function (component) {
+        var fieldCountPreviousObjects = 0;
+        var allFieldsBySObject = this.groupFieldsBySObject(component.get('v.everyField'));
+        var everyFieldUpdated = [];
+        Object.keys(allFieldsBySObject).forEach(function (currentSObject) {
+            var batchFieldGroups = component.get('v.availableFieldsBySObject').fieldGroups;
+            batchFieldGroups.forEach(function (currentFieldGroup) {
+                if (currentFieldGroup.sObjectName === currentSObject) {
+                    allFieldsBySObject[currentSObject].forEach(function (currentField) {
+                        currentField.isActive = currentFieldGroup.values.includes(currentField.id);
+                        // the field's sort order is its index PLUS the total of all active fields from all previous object groups
+                        currentField.sortOrder = currentField.isActive ? currentFieldGroup.values.indexOf(currentField.id) + fieldCountPreviousObjects : null;
+                        everyFieldUpdated.push(currentField);
+                    });
+                    // increase the buffer by the number of active fields from this object
+                    fieldCountPreviousObjects += currentFieldGroup.values.length;
+                }
+            });
+        });
+        component.set('v.everyField', everyFieldUpdated);
+    },
+
+    /**
+     * @description Updates batchFieldOptions attribute based on selected fields
+     */
+    updateBatchFieldOptions: function (component) {
+        let batchFieldOptions = {
+            fieldGroups: []
+        };
+        let activeFieldsBySObject = this.getActivesBySObject(component);
+        Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
+
+            var currentFieldGroup = {
+                sObjectName: sObjectName,
+                fields: []
+            };
+
+            activeFieldsBySObject[sObjectName].forEach(function (currentField) {
+
+                var fieldInfo = {
+                    name: currentField.name,
+                    sObjectName: currentField.sObjectName,
+                    sObjectLabel: currentField.sObjectLabel,
+                    label: currentField.label,
+                    defaultValue: currentField.defaultValue,
+                    requiredInEntryForm: currentField.requiredInEntryForm,
+                    hide: currentField.hide,
+                    type: currentField.type,
+                    formatter: currentField.formatter,
+                    options: currentField.options,
+                    conditionallyRequired: currentField.conditionallyRequired,
+                    alwaysRequired: currentField.alwaysRequired
+                };
+
+                currentFieldGroup.fields.push(fieldInfo);
+                currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
+
+            });
+
+            batchFieldOptions.fieldGroups.push(currentFieldGroup);
+
+        });
+        component.set('v.batchFieldOptions', batchFieldOptions);
+    },
+
+    /**
+     * @description Updates everyField with values from Set Field Options step
+     */
+    commitBatchFieldOptionsToEveryField: function (component) {
+
+        var batchFieldGroups = component.get('v.batchFieldOptions.fieldGroups');
+        var batchFieldOptions = [];
+        batchFieldGroups.forEach(function (currentFieldGroup) {
+            currentFieldGroup.fields.forEach(function (currentField) {
+                batchFieldOptions.push(currentField);
+            });
+        });
+
+        let everyField = component.get('v.everyField');
+
+        everyField.forEach(function (currentField) {
+            batchFieldOptions.forEach(function (currentActiveField) {
+                if (currentField.name === currentActiveField.name) {
+                    currentField.requiredInEntryForm = currentActiveField.requiredInEntryForm;
+                    currentField.hide = currentActiveField.hide;
+                    currentField.defaultValue = currentActiveField.defaultValue;
+                }
+            });
+        });
+
+        component.set('v.everyField',everyField);
+    },
+
+    /**
+     * @description Commits Batch record
+     */
+    saveRecord: function (component) {
+        var batchInfo = component.get('v.batchInfo');
+        // getActives grabs allFields, returns those isActive, sorted.
+        let activeFields = this.getActives(component);
+
+        var action = component.get('c.saveRecord');
+        action.setParams({
+            'recordInfo': JSON.stringify(batchInfo),
+            'activeFields': JSON.stringify(activeFields)
+        });
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            var response = JSON.parse(response.getReturnValue());
+            if (state === 'SUCCESS') {
                 var navEvt = $A.get('e.force:navigateToSObject');
                 navEvt.setParams({
-                    'recordId': recordId
+                    'recordId': response.id
                 });
                 navEvt.fire();
+            } else if (state === 'ERROR') {
+                this.enableSaveButton(component, false);
+                this.handleApexErrors(component, response.getError());
             }
+        });
+        $A.enqueueAction(action);
+    },
 
-            /**
-             * @description Increments Wizard to next step
-             * @return void.
-             */
-            function nextStep() {
-                this.clearError();
-                this.stepUp();
-                this.setPageHeader();
-            }
+    /******************************** Utility Functions *****************************/
 
-            /**
-             * @description Decrements Wizard to previous step regardless of errors
-             * @return void.
-             */
-            function backStep() {
-                this.clearError();
-                this.stepDown();
-                this.setPageHeader();
-            }
-
-            /**
-             * @description From Edit mode, sets back to View mode, otherwise returns user to dynamic Object home
-             * @return void.
-             */
-            function cancel() {
-                var homeEvent = $A.get('e.force:navigateToObjectHome');
-                var objectName = this.labels.sObjectName;
-                homeEvent.setParams({
-                    'scope': objectName
-                });
-                homeEvent.fire();
-            }
-
-            /**
-             * @description Sets the mode, and notify all the
-             *      _onMetadataUpdated listeners. Resets progressIndicator.
-             * @param mode - string that is the selected mode
-             * @return void.
-             */
-            function setMode(mode) {
-                this.mode = mode;
-                this.progressIndicatorStep = '0';
-                this.onMetadataUpdated.notify();
-            }
-
-            /**
-             * @description Shows error message.
-             * @param message - String for the error message
-             * @return void.
-             */
-            function showError(message) {
-                if (message) {
-                    this.hasError = true;
-                    this.errorMessage = message;
-                    this.onMetadataUpdated.notify();
-                }
-            }
-
-            /**
-             * @description Clears error message
-             * @return void.
-             */
-            function clearError() {
-                this.hasError = false;
-                this.errorMessage = '';
-                this.onMetadataUpdated.notify();
-            }
-
-            /**
-             * @description sets the page header based on the step in the wizard
-             * @return void.
-             */
-            function setPageHeader() {
-                var headers = [
-                    this.labels.recordInfoLabel,
-                    $A.get('$Label.c.bgeBatchSelectFields'),
-                    $A.get('$Label.c.bgeBatchSetFieldOptions'),
-                    $A.get('$Label.c.bgeBatchSetBatchOptions')
-                ];
-
-                var progressIndicatorStep = parseInt(this.progressIndicatorStep);
-                this.pageHeader = headers[progressIndicatorStep];
-                this.onMetadataUpdated.notify();
-            }
-
-            /**
-             * @description sets the pendingsave flag to disable Save button so duplicates can't be created
-             * @return void.
-             */
-            function togglePendingSave() {
-                this.pendingSave = !this.pendingSave;
-                this.onMetadataUpdated.notify();
-            }
-
-            /**
-             * @description sets the showAdvancedOptions flag to hide/reveal the advanced options accordingly
-             * @return void.
-             */
-            function toggleShowAdvanced() {
-                this.showAdvancedOptions = !this.showAdvancedOptions;
-                this.onMetadataUpdated.notify();
-            }            
-
-            /**
-             * @description Increments the step for the progressIndicator
-             * @return void.
-             */
-            function stepUp() {
-                let stepNum = parseInt(this.progressIndicatorStep);
-                stepNum++;
-                this.progressIndicatorStep = stepNum.toString();
-                this.onMetadataUpdated.notify();
-            }
-
-            /**
-             * @description Decrements the step for the progressIndicator
-             * @return void.
-             */
-            function stepDown() {
-                let stepNum = parseInt(this.progressIndicatorStep);
-                stepNum--;
-                this.progressIndicatorStep = stepNum.toString();
-                this.onMetadataUpdated.notify();
-            }
-
-            // BatchMetadata module public functions and properties
-            return {
-                labels: {},
-                mode: '',
-                progressIndicatorStep: '',
-                hasError: false,
-                errorMessage: '',
-                pageHeader: '',
-                pendingSave: false,
-                showAdvancedOptions: false,
-                load: load,
-                navigateToRecord: navigateToRecord,
-                nextStep: nextStep,
-                backStep: backStep,
-                cancel: cancel,
-                setMode: setMode,
-                showError: showError,
-                clearError: clearError,
-                setPageHeader: setPageHeader,
-                stepUp: stepUp,
-                stepDown: stepDown,
-                togglePendingSave: togglePendingSave,
-                onMetadataUpdated: _onMetadataUpdated,
-                toggleShowAdvanced: toggleShowAdvanced
-            }
-        })(this.Event());
+    /**
+     * @description: handles the display of errors from an apex callout
+     * @param errors: list of potential errors passed back from apex
+     */
+    handleApexErrors: function(component, errors) {
+        let message;
+        if (errors && errors[0] && errors[0].message) {
+            message = errors[0].message;
+        } else {
+            message = 'Unknown error';
+        }
+        component.find('notifLib').showToast({
+            'variant': 'error',
+            'mode': 'sticky',
+            'title': $A.get('$Label.c.PageMessagesError'),
+            'message': message
+        });
     },
 
     /**
-     * @description. Publisher/Subscribers used by the Model modules
-     *      to notify the View modules on a specific change.
-     * @return Event
+     * @description Sets progress indicator step on modal footer
      */
-    Event: function () {
-        return function(sender) {
-            var _sender = sender;
-            var _listeners = [];
-
-            /**
-             * @description Subscribes the listener to the current Event.
-             * @param listener. The event listener.
-             * @return void.
-             */
-            function subscribe(listener) {
-                _listeners.push(listener);
-            }
-
-            /**
-             * @description Notifies the listeners of the current Event.
-             * @param args. The parameters to provide to the listeners.
-             * @return void.
-             */
-            function notify(args) {
-                var index;
-                for (index = 0; index < _listeners.length; index += 1) {
-                    _listeners[index](_sender, args);
-                }
-            }
-
-            // Event module public functions.
-            return {
-                subscribe: subscribe,
-                notify: notify
-            };
-        };
+    setModalFooter: function (component) {
+        const progressIndicatorStep = component.get('v.wizardMetadata.progressIndicatorStep');
+        this.sendMessage(component,'setStep', progressIndicatorStep);
     },
 
-    /*********************************************** Batch Detail Controller *********************************************/
+    /**
+     * @description Sets header title on modal
+     */
+    setModalHeader: function (component) {
+        const wizardMetadata = component.get('v.wizardMetadata');
+        const headers = wizardMetadata.headers;
+        const progressIndicatorStep = parseInt(wizardMetadata.progressIndicatorStep);
+        this.sendMessage(component,'setHeader', headers[progressIndicatorStep]);
+    },
 
     /**
-     * @description Gets Batch Details Controller
-     * @return Batch Details Controller.
+     * @description Sends a generic ltng:sendMessage
+     * @param channel - Channel to use
+     * @param message - Message to be sent
      */
-    BGEBatchController : function(component) {
-        return (function (component) {
-            var _component = component;
-
-            /**
-             * @description Calls the getRecordDetails method.
-             * @param recordId. The Id of the Batch.
-             * @param callback. The callback function to execute.
-             * @return void.
-             */
-            function getRecordDetails(recordId, callback) {
-                var action = _component.get('c.getRecordDetails');
-                action.setParams({
-                    'recordId': recordId
-                });
-                action.setCallback(callback, _processResponse);
-                $A.enqueueAction(action);
-            }
-
-            /**
-             * @description Calls the saveRecord method.
-             * @param batchDetails. The Batch fields.
-             * @param activeFields. The active fields (JSON format)
-             * @param callback. The callback function to execute.
-             * @return void.
-             */
-            function saveRecord(recordDetails, activeFields, callback) {
-                var action = _component.get('c.saveRecord');
-                action.setParams({
-                    'recordInfo': JSON.stringify(recordDetails),
-                    'activeFields': JSON.stringify(activeFields)
-                });
-                action.setCallback(callback, _processResponse);
-                $A.enqueueAction(action);
-            }
-
-            /**
-             * @description Processes the response from any Apex method.
-             * @param response. The response from the backend.
-             * @return void.
-             */
-            function _processResponse(response) {
-                var state = response.getState();
-                if (state === 'SUCCESS') {
-                    this.success(JSON.parse(response.getReturnValue()));
-                }
-                else if (state === 'ERROR') {
-                    var errors = response.getError();
-                    if (errors && errors[0] && errors[0].message) {
-                        errors = errors[0].message;
-                    } else {
-                        errors = 'Unknown error';
-                    }
-                    this.error(errors);
-                }
-            }
-
-            // BGEBatchController module public functions.
-            return {
-                errors: '',
-                getRecordDetails: getRecordDetails,
-                saveRecord: saveRecord
-            }
-        })(component);
+    sendMessage: function (component, channel, message) {
+        let sendMessage = $A.get('e.ltng:sendMessage');
+        sendMessage.setParams({
+            'channel': channel,
+            'message': message
+        });
+        sendMessage.fire();
     },
 })

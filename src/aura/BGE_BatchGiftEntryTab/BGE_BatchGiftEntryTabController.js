@@ -11,10 +11,6 @@
      */
     onNewBatchClick: function(component, event, helper) {
         helper.checkFieldPermissions(component);
-    },
-
-    onFreshBatchClick: function(component, event, helper) {
-        helper.openFreshBatchWizard(component);
     }
 
 })
