@@ -75,20 +75,6 @@
         wizardMetadata.namespacePrefix = model.namespacePrefix ? model.namespacePrefix+'__' : '';
         wizardMetadata.errorMessage = null;
 
-        //todo: Beth! will remove readOnly + mode
-        //isReadOnly (View) is passed from record home with lightning app builder
-        if (component.get('v.isReadOnly')) {
-            //this.setMode(component,'view');
-            wizardMetadata.mode = 'view';
-        } else {
-            if (component.get('v.recordId') !== null) {
-                //this.setMode(component, 'edit');
-                wizardMetadata.mode = 'edit';
-            } else {
-                //this.setMode(component, 'create');
-                wizardMetadata.mode = 'create';
-            }
-        }
         wizardMetadata.progressIndicatorStep = '0';
         wizardMetadata.headers = [
             model.labels.recordInfoLabel,

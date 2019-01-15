@@ -45,7 +45,6 @@
     <aura:attribute name="batchFieldOptions" type="Object" access="PRIVATE" />
 
     <!-- public attributes -->
-    <aura:attribute name="isReadOnly" type="Boolean" description="Determines if fields are read-only, buttons are visible, and dual picklists are active."/>
     <aura:attribute name="recordId" type="Id" />
     <aura:attribute name="sObjectName" type="String" />
 
@@ -68,44 +67,36 @@
                     <lightning:layout horizontalAlign="center">
                         <lightning:layoutItem size="10">
                             <lightning:input type="text" name="name" label="{!$Label.c.stgLabelName}"
-                                             value="{!v.batchInfo.name}" readonly="{!v.isReadOnly}" required="true"/>
+                                             value="{!v.batchInfo.name}" required="true"/>
                             <lightning:textarea name="description" label="{!v.wizardMetadata.labels.description}"
-                                                value="{!v.batchInfo.description}" readonly="{!v.isReadOnly}"
+                                                value="{!v.batchInfo.description}"
                                                 required="true" class="slds-p-top_medium"/>
-                            <aura:if isTrue="{!v.isReadOnly}">
-                                <ui:outputCheckbox value="{!v.batchInfo.requireTotalMatch}"
-                                                   class="slds-form-element__control"/>
-                                <span class="slds-form-element__label">{!v.wizardMetadata.labels.totalMatchLabel}</span>
-
-                                <aura:set attribute="else">
-                                    <div>
-                                        <lightning:input aura:id="expectedCount" type="number"
-                                                         class="slds-p-top_small"
-                                                         min="0"
-                                                         label="{!v.wizardMetadata.labels.expectedCountLabel}"
-                                                         name="expectedCount"
-                                                         value="{!v.batchInfo.expectedCount}"/>
-                                        <lightning:input aura:id="expectedTotal" type="number"
-                                                         formatter="currency"
-                                                         class="slds-p-top_small"
-                                                         min="0"
-                                                         step="0.01"
-                                                         label="{!v.wizardMetadata.labels.expectedTotalLabel}"
-                                                         name="expectedTotal"
-                                                         value="{!v.batchInfo.expectedTotal}"/>
-                                        <lightning:input aura:id="totalMatchCheckbox" type="checkbox"
-                                                         class="bgeInputCheckbox slds-p-top_small"
-                                                         label="{!v.wizardMetadata.labels.totalMatchLabel}"
-                                                         name="requireTotalMatch"
-                                                         checked="{!v.batchInfo.requireTotalMatch}"
-                                                         variant="label-hidden"/>
-                                        <label class="slds-form-element__label" for="totalMatchCheckbox">
+                            <div>
+                                <lightning:input aura:id="expectedCount" type="number"
+                                                 class="slds-p-top_small"
+                                                 min="0"
+                                                 label="{!v.wizardMetadata.labels.expectedCountLabel}"
+                                                 name="expectedCount"
+                                                 value="{!v.batchInfo.expectedCount}"/>
+                                <lightning:input aura:id="expectedTotal" type="number"
+                                                 formatter="currency"
+                                                 class="slds-p-top_small"
+                                                 min="0"
+                                                 step="0.01"
+                                                 label="{!v.wizardMetadata.labels.expectedTotalLabel}"
+                                                 name="expectedTotal"
+                                                 value="{!v.batchInfo.expectedTotal}"/>
+                                <lightning:input aura:id="totalMatchCheckbox" type="checkbox"
+                                                 class="bgeInputCheckbox slds-p-top_small"
+                                                 label="{!v.wizardMetadata.labels.totalMatchLabel}"
+                                                 name="requireTotalMatch"
+                                                 checked="{!v.batchInfo.requireTotalMatch}"
+                                                 variant="label-hidden"/>
+                                <label class="slds-form-element__label" for="totalMatchCheckbox">
                                             {!v.wizardMetadata.labels.totalMatchLabel}
                                         </label>
-                                        <lightning:helptext content="{!v.wizardMetadata.labels.totalMatchHelp}" />
-                                    </div>
-                                </aura:set>
-                            </aura:if>
+                                <lightning:helptext content="{!v.wizardMetadata.labels.totalMatchHelp}" />
+                            </div>
                         </lightning:layoutItem>
                     </lightning:layout>
                 </aura:if>
@@ -159,7 +150,7 @@
                 <!--End Step 1-->
 
                 <!-- Step 2: Set Field Options -->
-                <aura:if isTrue="{!or(v.wizardMetadata.progressIndicatorStep == '2', v.isReadOnly)}">
+                <aura:if isTrue="{!v.wizardMetadata.progressIndicatorStep == '2'}">
                     <div class="slds-m-around_medium">
 
                         <aura:if isTrue="{!greaterthan(v.batchInfo.recordCount,0)}">
@@ -213,32 +204,21 @@
 
                                     <lightning:layoutItem size="4" class="slds-text-align_left slds-p-around_x-small">
                                         <aura:if isTrue="{!greaterthan(field.options.length, 0)}">
-                                            <aura:if isTrue="{!v.isReadOnly}">
-                                                <lightning:input label="{!field.label + ': ' + $Label.c.stgDefaultValue}"
-                                                                 name="{!v.fieldLabel}"
-                                                                 value="{!field.defaultValue}"
-                                                                 readonly="true"
-                                                                 variant="label-hidden" />
-                                                <aura:set attribute="else">
-                                                    <lightning:select label="{!$Label.c.stgDefaultValue}"
-                                                                      value="{!field.defaultValue}"
-                                                                      variant="label-hidden"
-                                                                      class="hideLabel">
-                                                        <option value=""></option>
-                                                        <aura:iteration items="{!field.options}" var="opt">
-                                                            <option value="{!opt.value}">{!opt.label}</option>
-                                                        </aura:iteration>
-                                                    </lightning:select>
-                                                </aura:set>
-                                            </aura:if>
-
+                                            <lightning:select label="{!$Label.c.stgDefaultValue}"
+                                                              value="{!field.defaultValue}"
+                                                              variant="label-hidden"
+                                                              class="hideLabel">
+                                                <option value=""></option>
+                                                <aura:iteration items="{!field.options}" var="opt">
+                                                    <option value="{!opt.value}">{!opt.label}</option>
+                                                </aura:iteration>
+                                            </lightning:select>
                                             <aura:set attribute="else">
                                                 <lightning:input aura:id="defaultValueField"
                                                                  label="{!field.label + ': ' + $Label.c.stgDefaultValue}"
                                                                  type="{!field.type}"
                                                                  value="{!field.defaultValue}"
                                                                  formatter="{!field.formatter}"
-                                                                 readonly="{!v.isReadOnly}"
                                                                  step="0.01"
                                                                  variant="label-hidden" />
                                             </aura:set>
