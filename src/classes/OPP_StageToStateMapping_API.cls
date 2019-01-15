@@ -90,7 +90,6 @@ global class OPP_StageToStateMapping_API {
         }
 
         return OPPORTUNITY_STATE.UNCOMMITTED;
-
     }
 
     /*******************************************************************************************************
