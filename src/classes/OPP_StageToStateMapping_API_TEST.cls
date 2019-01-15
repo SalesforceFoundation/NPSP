@@ -32,10 +32,10 @@
 * @date 2019
 * @group Opportunity
 * @group-content ../../ApexDocContent/Opportunity.htm
-* @description Test Coverage for OPP_StageToStateMappingService class
+* @description Test Coverage for OPP_StageToStateMapping_API class
 */
 @isTest
-private class OPP_StageToStateMappingService_TEST {
+private class OPP_StageToStateMapping_API_TEST {
 
     /******************************************************************************************************
     * @description Test value used to test "convertToSet" method with alternate separator
@@ -87,21 +87,21 @@ private class OPP_StageToStateMappingService_TEST {
     * @description Expected return values for tests of determineStateFromOppStage when Settings are not
     * populated.
     */
-    private static final List<OPP_StageToStateMappingService.OPPORTUNITY_STATE> RESULT_NO_SETTINGS = new List<OPP_StageToStateMappingService.OPPORTUNITY_STATE> {
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED
+    private static final List<OPP_StageToStateMapping_API.OPPORTUNITY_STATE> RESULT_NO_SETTINGS = new List<OPP_StageToStateMapping_API.OPPORTUNITY_STATE> {
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED
 
     };
 
@@ -109,21 +109,21 @@ private class OPP_StageToStateMappingService_TEST {
     * @description Expected return values for tests of determineStateFromOppStage when Settings are
     * populated.
     */
-    private static final List<OPP_StageToStateMappingService.OPPORTUNITY_STATE> RESULT_WITH_SETTINGS = new List<OPP_StageToStateMappingService.OPPORTUNITY_STATE> {
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.COMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.FINALIZED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.FINALIZED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.COMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.COMMITTED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.FINALIZED,
-        OPP_StageToStateMappingService.OPPORTUNITY_STATE.UNCOMMITTED
+    private static final List<OPP_StageToStateMapping_API.OPPORTUNITY_STATE> RESULT_WITH_SETTINGS = new List<OPP_StageToStateMapping_API.OPPORTUNITY_STATE> {
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.COMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.FINALIZED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.FINALIZED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.COMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.COMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.FINALIZED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED
     };
 
     /*********************************************************************************************************
@@ -133,24 +133,24 @@ private class OPP_StageToStateMappingService_TEST {
     **********************************************************************************************************/
     @isTest
     private static void testConvertToSetMethod() {
-        System.assertEquals (true, OPP_StageToStateMappingService.convertToSet(null, '~', true).isEmpty());
-        System.assertEquals (true, OPP_StageToStateMappingService.convertToSet(' ', '~', true).isEmpty());
+        System.assertEquals (true, OPP_StageToStateMapping_API.convertToSet(null, '~', true).isEmpty());
+        System.assertEquals (true, OPP_StageToStateMapping_API.convertToSet(' ', '~', true).isEmpty());
 
-        Set<String> testVals = OPP_StageToStateMappingService.convertToSet(TEST_CONVERT_1_VAL, '~', true);
+        Set<String> testVals = OPP_StageToStateMapping_API.convertToSet(TEST_CONVERT_1_VAL, '~', true);
         System.assertEquals(6, testVals.size());
         for (String resultVal : RESULT_CONVERT_VALS) {
             System.assertEquals(true, testVals.contains(resultVal), 'Expected ' + resultVal + ' to be in testVals');
         }
 
         // Will use ; as the default because one was not supplied.
-        testVals = OPP_StageToStateMappingService.convertToSet(TEST_CONVERT_2_VAL, null, true);
+        testVals = OPP_StageToStateMapping_API.convertToSet(TEST_CONVERT_2_VAL, null, true);
         System.assertEquals(6, testVals.size());
         for (String resultVal : RESULT_CONVERT_VALS) {
             System.assertEquals(true, testVals.contains(resultVal), 'Expected ' + resultVal + ' to be in testVals');
         }
 
         // Will use ; as the default
-        testVals = OPP_StageToStateMappingService.convertToSet(TEST_CONVERT_2_VAL);
+        testVals = OPP_StageToStateMapping_API.convertToSet(TEST_CONVERT_2_VAL);
         System.assertEquals(6, testVals.size());
         for (String resultVal : RESULT_CONVERT_VALS) {
             System.assertEquals(true, testVals.contains(resultVal), 'Expected ' + resultVal + ' to be in testVals');
@@ -167,9 +167,9 @@ private class OPP_StageToStateMappingService_TEST {
         // Check when Committed and Finalized Stage are not mapped in settings...
         for (Integer i = 0; i < TEST_OPP_STAGE_VALS.size(); i++) {
             String testVal = TEST_OPP_STAGE_VALS[i];
-            OPP_StageToStateMappingService.OPPORTUNITY_STATE resultVal = RESULT_NO_SETTINGS[i];
+            OPP_StageToStateMapping_API.OPPORTUNITY_STATE resultVal = RESULT_NO_SETTINGS[i];
 
-            System.assertEquals (resultVal, OPP_StageToStateMappingService.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
+            System.assertEquals (resultVal, OPP_StageToStateMapping_API.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
         }
     }
 
@@ -191,57 +191,10 @@ private class OPP_StageToStateMappingService_TEST {
 
         for (Integer i = 0; i < TEST_OPP_STAGE_VALS.size(); i++) {
             String testVal = TEST_OPP_STAGE_VALS[i];
-            OPP_StageToStateMappingService.OPPORTUNITY_STATE resultVal = RESULT_WITH_SETTINGS[i];
+            OPP_StageToStateMapping_API.OPPORTUNITY_STATE resultVal = RESULT_WITH_SETTINGS[i];
 
-            System.assertEquals (resultVal, OPP_StageToStateMappingService.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
+            System.assertEquals (resultVal, OPP_StageToStateMapping_API.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
         }
-    }
-
-    /*********************************************************************************************************
-    * @description Tests the getCommittedStages Method
-    * verifies that it returns the appropriate values
-    * @return void
-    **********************************************************************************************************/
-    @isTest
-    private static void testGetCommittedStagesMethod() {
-        // Check when Committed and Finalized Stage are mapped in settings...
-        npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-            new npo02__Households_Settings__c(
-                Opportunity_Committed_Stages__c = COMMITTED_STAGES_VAL,
-                Opportunity_Finalized_Stages__c = FINALIZED_STAGES_VAL
-            )
-        );
-
-        Set<String> committedStages = OPP_StageToStateMappingService.getCommittedStages(false);
-
-        System.assertEquals (3, committedStages.size());
-
-        System.assert(true, committedStages.contains('Pledged'));
-        System.assert(true, committedStages.contains('Closed Won'));
-        System.assert(true, committedStages.contains('Proposal/Price Quote'));
-    }
-
-    /*********************************************************************************************************
-    * @description Tests the getFinalizedtages Method
-    * verifies that it returns the appropriate values
-    * @return void
-    **********************************************************************************************************/
-    @isTest
-    private static void testGetFinalizedStagesMethod() {
-        // Check when Committed and Finalized Stage are mapped in settings...
-        npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-            new npo02__Households_Settings__c(
-                Opportunity_Committed_Stages__c = COMMITTED_STAGES_VAL,
-                Opportunity_Finalized_Stages__c = FINALIZED_STAGES_VAL
-            )
-        );
-
-        Set<String> committedStages = OPP_StageToStateMappingService.getFinalizedStages(false);
-
-        System.assertEquals (2, committedStages.size());
-
-        System.assert(true, committedStages.contains('Closed Won'));
-        System.assert(true, committedStages.contains('Closed Lost'));
     }
 
 }

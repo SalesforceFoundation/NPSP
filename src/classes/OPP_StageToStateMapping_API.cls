@@ -32,9 +32,9 @@
 * @date 2019
 * @group Opportunity
 * @group-content ../../ApexDocContent/Opportunity.htm
-* @description Service Class to determine Opportunity's State (Uncommitted, Committed. or Finalized) using the Opportunities Stage and Household Settings
+* @description API Class to allow caller to determine Opportunity's State (Uncommitted, Committed. or Finalized) using the Opportunities Stage and Household Settings
 */
-global class OPP_StageToStateMappingService {
+global class OPP_StageToStateMapping_API {
 
     /******************************************************************************************************
     * @description Represents the overall state of the Opportunity.
@@ -91,28 +91,6 @@ private static final String DEFAULT_SEPARATOR_VAL = ';';
 
         return OPPORTUNITY_STATE.UNCOMMITTED;
 
-    }
-
-    /*******************************************************************************************************
-    * @description Returns a set of Opportunity Stages identified as "Committed" States, or an empty set
-    * if none are defined.
-    * @param Boolean forceValuesToLowerCase if true, set values will be converted to lowercase
-    * @return Set<String> A set of String values representing Committed Opportunity Stages
-     ********************************************************************************************************/
-    global static Set<String> getCommittedStages(boolean forceToLowerCase) {
-        npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-        return convertToSet(householdSettings.Opportunity_Committed_Stages__c, DEFAULT_SEPARATOR_VAL, forceToLowerCase);
-    }
-
-    /*******************************************************************************************************
-    * @description Returns a set of Opportunity Stages identified as "Finalized" States, or an empty set
-    * if none are defined.
-    * @param Boolean forceValuesToLowerCase if true, set values will be converted to lowercase
-    * @return Set<String> A set of String values representing Committed Opportunity Stages
-     ********************************************************************************************************/
-    global static Set<String> getFinalizedStages(boolean forceToLowerCase) {
-        npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-        return convertToSet(householdSettings.Opportunity_Finalized_Stages__c, DEFAULT_SEPARATOR_VAL, forceToLowerCase);
     }
 
     /*******************************************************************************************************
