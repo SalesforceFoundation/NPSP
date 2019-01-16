@@ -34,7 +34,10 @@
 * @description Batch class processes all Levels against Target objects, and updates any changes.
 */
 public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable<sObject>, Database.Stateful {
-    
+    /** @description Custom Settings record that defines Levels settings */
+    @TestVisible
+    private static final Levels_Settings__c levelsSettings = UTIL_CustomSettingsFacade.getLevelsSettings();
+
     /** @description The query for the batch process to run on.*/
     private String strSoql;
 
@@ -43,6 +46,9 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
     
     /** @description The Ladder Levels to run on this object */
     private map<String, list<Level__c>> mapLadderToLevels;
+
+    /** @description The time that the batch started */
+    private DateTime batchStartTime;
     
     /*********************************************************************************************************
     * @description The batch process constructor; creates opportunity query for all opportunities.
@@ -59,6 +65,7 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
     * @description Batch process start method.
     */
     public Database.QueryLocator start(Database.BatchableContext BC) {
+        batchStartTime = DateTime.now();
         return Database.getQueryLocator(strSoql);
     }
 
@@ -232,7 +239,15 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
     /*********************************************************************************************************
     * @description Batch process finish method, does nothing.
     */
-    public void finish(Database.BatchableContext BC) {}
+    public void finish(Database.BatchableContext BC) {
+        if (strObject == String.valueOf(Account.SObjectType)) {
+            levelsSettings.LastJobStartTimeAccount__c = batchStartTime;
+            upsert levelsSettings;
+        } else if (strObject == String.valueOf(Contact.SObjectType)) {
+            levelsSettings.LastJobStartTimeContact__c = batchStartTime;
+            upsert levelsSettings;
+        }
+    }
     
     /*********************************************************************************************************
     * @description For the given object, return a map from it's different Ladders (Level_Field__c), to the
@@ -290,12 +305,18 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         return levelWrappers; 
     }
 
+    /*********************************************************************************************************
+    * @description Wrapper class for the Level__c object
+    */
     public class Level {
         public String target;
         public String sourceField;
         public String levelField;
         public string previousLevelField;
 
+        /*********************************************************************************************************
+        * @description Constructor
+        */
         public Level(Level__c aLevel) {
             target = aLevel.Target__c;
             sourceField = aLevel.Source_Field__c;
@@ -303,6 +324,10 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
             previousLevelField = aLevel.Previous_Level_Field__c;
         }
 
+        /*********************************************************************************************************
+        * @description Builds query to get object data need to calculate and assign levels
+        * @returns SOQL string for querying SObjects for level calculation
+        */
         public String buildQuery() {
             String soqlQuery = 'SELECT Id';
             for (String fieldName : getQueryFields()) {
@@ -312,6 +337,10 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
             return soqlQuery;
         }
         
+        /*********************************************************************************************************
+        * @description Builds set of fields needed for level query
+        * @returns Set of strings comprised of field names
+        */
         private Set<String> getQueryFields() {
             Set<String> queryFields = new Set<String>();
             queryFields.add(sourceField);

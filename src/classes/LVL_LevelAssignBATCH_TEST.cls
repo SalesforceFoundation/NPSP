@@ -223,6 +223,12 @@ private class LVL_LevelAssignBATCH_TEST {
         Test.stopTest();
         
         verifyContactLevels();
+
+        Levels_Settings__c levelSettings = Levels_Settings__c.getInstance();
+        System.assertEquals(null, levelSettings.LastJobStartTimeAccount__c,
+            'The LastJobStartTimeAccount__c should not be populated');
+        System.assertNotEquals(null, levelSettings.LastJobStartTimeContact__c,
+            'The LastJobStartTimeContact__c should be populated');
     }
 
     /*********************************************************************************************************
@@ -332,6 +338,12 @@ private class LVL_LevelAssignBATCH_TEST {
         Database.executeBatch(batch);
         Test.stopTest();
         
+        Levels_Settings__c levelSettings = Levels_Settings__c.getInstance();
+        System.assertNotEquals(null, levelSettings.LastJobStartTimeAccount__c,
+            'The LastJobStartTimeAccount__c should be populated');
+        System.assertEquals(null, levelSettings.LastJobStartTimeContact__c,
+            'The LastJobStartTimeContact__c should not be populated');
+
         listAcc = database.query(strSoql + ' ORDER BY npo02__TotalOppAmount__c');
         System.assertEquals(null, listAcc[0].npo02__LastMembershipLevel__c);
         System.assertEquals(null, listAcc[0].npo02__LastMembershipOrigin__c);
