@@ -79,7 +79,7 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Permissions classed used to determine if the running user has permissions
+    * @description Permissions class used to determine if the running user has permissions
     */
     @TestVisible
     private UTIL_Permissions perms {

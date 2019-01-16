@@ -114,7 +114,7 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
     */
     @isTest
     private static void shouldErrorWhenCopyAddressFromAccount() {
-        Account accountRecord = new Account(Name = 'Copy Address Org');
+        Account accountRecord = new Account(Name = 'Copy Address Error Org');
         insert accountRecord;
         createCopyAddressBtnCtrl(accountRecord.Id);
 
@@ -198,6 +198,31 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
         UTIL_UnitTestData_TEST.assertPageHasError(System.Label.addrCopyConAddBtnFls);
         System.assertEquals(npo02__Household__c.SObjectType, mockPerms.updateSObjType);
         System.assert(mockPerms.updateSObjFields.contains(npo02__Household__c.npo02__MailingStreet__c));
+    }
+
+    /*******************************************************************************************************************
+    * @description The page reference returned contains the record Id passed to the controller
+    * @return void
+    */
+    @isTest
+    private static void shouldReturnPageReferenceWithRecordId() {
+        getRecordData();
+        createCopyAddressBtnCtrl(contactRecord.Id);
+
+        System.assert(String.valueOf(copyAddressCtrl.close()).contains(contactRecord.Id), 'The page ref should contain the record Id.' );
+    }
+
+    /*******************************************************************************************************************
+    * @description The page reference returned should be the user home page when the id is not supported
+    * @return void
+    */
+    @isTest
+    private static void shouldReturnHomePageWhenUnsupportedRecordId() {
+        Account accountRecord = new Account(Name = 'Copy Address Unsupported Org');
+        insert accountRecord;
+        createCopyAddressBtnCtrl(accountRecord.Id);
+
+        System.assert(String.valueOf(copyAddressCtrl.close()).contains('home'), 'The page ref should be the user home page.' );
     }
 
     // Helpers
