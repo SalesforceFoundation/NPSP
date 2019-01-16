@@ -50,10 +50,11 @@ public class CRLP_Account_SoftCredit_BATCH extends CRLP_Batch_Base_NonSkew imple
     /*******************************************************************************************************
      * @description Constructs the class - Rollup is for a specific set of Account Id's
      * @param jobType Defines the type of rollup job
-     * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
+     * @param lastIdProcessedForChunking If this job is called by the SkewDispatcher, this contains the last Id queried
+     * by the SkewDispatcher Id chunking logic.
      */
-    public CRLP_Account_SoftCredit_BATCH(List<Id> recordIds) {
-        super(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit, recordIds);
+    public CRLP_Account_SoftCredit_BATCH(List<Id> recordIds, Id lastIdProcessedForChunking) {
+        super(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit, recordIds, lastIdProcessedForChunking);
     }
 
     /**

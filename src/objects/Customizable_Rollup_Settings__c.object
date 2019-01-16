@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <customSettingsType>Hierarchy</customSettingsType>
     <enableFeeds>false</enableFeeds>
@@ -151,6 +151,45 @@
         <inlineHelpText>Number of Account, Contact, or GAU records per batch to select for Skew Mode processing.</inlineHelpText>
         <label>Skew Mode Dispatcher Batch Size</label>
         <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Rollups_Contact_HardCredit_ChunkSize__c</fullName>
+        <description>Only used by the new Customizable Rollups engine in LDV Orgs and only when required for LDV orgs</description>
+        <externalId>false</externalId>
+        <inlineHelpText>LDV ORGS ONLY: If chunking is needed to avoid a Query Timeout in the batch job, this specifies the number of Contacts processed in each batch.</inlineHelpText>
+        <label>Contact Hard Credit Chunk Size</label>
+        <precision>7</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Rollups_Account_HardCredit_ChunkSize__c</fullName>
+        <description>Only used by the new Customizable Rollups engine in LDV Orgs and only when required for LDV orgs</description>
+        <externalId>false</externalId>
+        <inlineHelpText>LDV ORGS ONLY: If chunking is needed to avoid a Query Timeout in the batch job, this specifies the number of Accounts processed in each batch.</inlineHelpText>
+        <label>Account Hard Credit Chunk Size</label>
+        <precision>7</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Rollups_Contact_SoftCredit_ChunkSize__c</fullName>
+        <description>Only used by the new Customizable Rollups engine in LDV Orgs and only when required for LDV orgs</description>
+        <externalId>false</externalId>
+        <inlineHelpText>LDV ORGS ONLY: If chunking is needed to avoid a Query Timeout in the batch job, this specifies the number of Accounts processed in each batch.</inlineHelpText>
+        <label>Contact Soft Credit Chunk Size</label>
+        <precision>7</precision>
         <required>false</required>
         <scale>0</scale>
         <trackTrending>false</trackTrending>

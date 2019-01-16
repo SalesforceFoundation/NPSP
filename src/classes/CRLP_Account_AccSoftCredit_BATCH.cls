@@ -50,10 +50,11 @@ public class CRLP_Account_AccSoftCredit_BATCH extends CRLP_Batch_Base_NonSkew im
     /*******************************************************************************************************
      * @description Constructs the class - Rollup is for a specific set of Account Id's
      * @param jobType Defines the type of rollup job
-     * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
+     * @param lastIdProcessedForChunking When Chunking mode is used for an LDV org, this is the last Id retrieved
+     * in the previous batch. When the job is chained, it'll query for Id's greater than this id.
      */
-    public CRLP_Account_AccSoftCredit_BATCH(List<Id> recordIds) {
-        super(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit, recordIds);
+    public CRLP_Account_AccSoftCredit_BATCH(List<Id> recordIds, Id lastIdProcessedForChunking) {
+        super(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit, recordIds, lastIdProcessedForChunking);
     }
 
     /**

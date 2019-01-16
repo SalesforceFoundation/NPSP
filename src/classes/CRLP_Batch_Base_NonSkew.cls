@@ -38,6 +38,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
     protected CRLP_Batch_Base_NonSkew() { }
 
+    protected Id chunkModeStartingId;
+
     // These 2 fields are used to check for Contacts or Accounts (both objects have the same fields) that may have
     // non-zero values in these fields even though they have no attached opportunities. In that case, the parents
     // are included in the queries/processing to ensure the values are reset accordingly. Now, the assumption here
@@ -80,6 +82,16 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      * @param jobType Defines the type of rollup job
      * @param recordIds Specific set of parent record id's to roll up to
      */
+    public CRLP_Batch_Base_NonSkew(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds, Id lastIdProcessedForChunking) {
+        super(jobType, recordIds);
+        this.chunkModeStartingId = lastIdProcessedForChunking;
+    }
+
+    /*******************************************************************************************************
+     * @description Constructs the class - Rollup is for a specific set of Summary Object Id's
+     * @param jobType Defines the type of rollup job
+     * @param recordIds Specific set of parent record id's to roll up to
+     */
     public CRLP_Batch_Base_NonSkew(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds) {
         super(jobType, recordIds);
     }
@@ -92,6 +104,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     public database.Querylocator start(Database.BatchableContext bc) {
         try {
             initializeJobData();
+
+            Integer chunkingSize = getBatchChunkSizeLimit();
 
             // Build a query string of the target Summary object.
             String query = CRLP_Query_SEL.buildObjectQueryForRollup(this.summaryObjectType);
@@ -117,6 +131,10 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
                 Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
 
+                if (this.chunkModeStartingId != null) {
+                    whereClauses.add('Id > \'' + this.chunkModeStartingId + '\'');
+                }
+
                 // Only use the related records filter if not disabled in settings and not running unit tests
                 if (customizableRollupSettings.Disable_Related_Records_Filter__c == false && !Test.isRunningTest()) {
                     if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
@@ -136,8 +154,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 }
             }
 
-            // TODO DO we need to exclude Organization Donations??
-
             if (!whereClauses.isEmpty()) {
                 query += ' WHERE ' + String.join(whereClauses, ' AND ');
             }
@@ -146,6 +162,11 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             if (hasActiveRollupsForThisJob() == false) {
                 // This is needed because can't return null as a valid iterator.
                 query += ' LIMIT 0';
+            } else if (chunkingSize != null && this.recordIds == null) {
+                // In an LDV Org, there may be too many records to query in the main query. Core support has recommended
+                // a chunking approach where the main query is limited to under 1M records and the finish() method
+                // kicks off the job again starting with the last Id that was queried
+                query += ' ORDER BY Id LIMIT ' + chunkingSize;
             }
 
             UTIL_Debug.debug(LoggingLevel.WARN, '>> Batch Query =' + query);
@@ -166,6 +187,10 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         this.batchIteration++;
         try {
             initializeJobData();
+
+            // Remember the last Id in the scope as the Id to start in the next chunking mode operation
+            this.chunkModeStartingId = summaryRecords[summaryRecords.size()-1].Id;
+
 
             CRLP_RollupProcessingOptions.ProcessingOptions options = buildProcessingOptions();
 
@@ -300,6 +325,11 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         }
     }
 
+    /**
+     * @description Batch finish method. Logs the result if debugging is enabled. If chunking mode is enabled for
+     * LDV orgs, chain the batch
+     * @param bc
+     */
     public void finish(Database.BatchableContext bc) {
         // In debug mode, write a summary of the job to the error log
         if (CRLP_Debug_UTIL.isDebuggingEnabled) {
@@ -313,6 +343,15 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             );
             insert logEntry;
         }
+
+        // If chunking mode is required, restart the batch job
+        Integer chunkingSize = getBatchChunkSizeLimit();
+        if (this.recordIds == null && chunkingSize != null) {
+            // If this job had more than one child batch, then kick off the job again with the last Id processed
+            if (this.batchIteration > 1) {
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(this.jobType, this.jobMode, null, this.chunkModeStartingId);
+            }
+        }
     }
 
     /**
@@ -322,5 +361,22 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         CRLP_RollupProcessingOptions.ProcessingOptions options = super.initOptionsInstance();
         options.detailObjType = this.detailObjectType;
         return options;
+    }
+
+    /**
+     * @description If chunking mode is enabled for this type of rollup job, get the chunk size limit to use in the main query
+     * @return Limit value to use or Null if chunking is not enabled.
+     */
+    private Integer getBatchChunkSizeLimit() {
+        Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+        Decimal rtnValue;
+        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
+            rtnValue = customizableRollupSettings.Rollups_Account_HardCredit_ChunkSize__c;
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+            rtnValue = customizableRollupSettings.Rollups_Contact_HardCredit_ChunkSize__c;
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+            rtnValue = customizableRollupSettings.Rollups_Contact_SoftCredit_ChunkSize__c;
+        }
+        return (rtnValue > 0 ? rtnValue.intValue() : null);
     }
 }
