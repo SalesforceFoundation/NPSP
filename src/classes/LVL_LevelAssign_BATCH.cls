@@ -311,8 +311,8 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
     public class Level {
         public String target;
         public String sourceField;
-        public String levelField;
-        public string previousLevelField;
+        private String levelField;
+        private string previousLevelField;
 
         /*********************************************************************************************************
         * @description Constructor

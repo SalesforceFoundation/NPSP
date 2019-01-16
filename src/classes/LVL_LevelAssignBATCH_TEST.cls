@@ -774,6 +774,62 @@ private class LVL_LevelAssignBATCH_TEST {
         }
     }
 
+    /*********************************************************************************************************
+    * @description Confirms that Level wrapper constructor sets attributes correctly
+    */
+    @isTest
+    private static void shouldWrapLevelRecords() {
+        Level__c testLevel = new Level__c(
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c',
+            Level_Field__c = 'npo02__LastMembershipLevel__c',
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c'
+        );
+        LVL_LevelAssign_BATCH.Level level = new LVL_LevelAssign_BATCH.Level(testLevel);
+
+        System.assertEquals(testLevel.Target__c, level.target,
+            'The target attribute should be set correctly on the level wrapper');
+        System.assertEquals(testLevel.Source_Field__c, level.sourceField,
+            'The sourceField attribute should be set correctly on the level wrapper');
+    }
+
+    /*********************************************************************************************************
+    * @description Confirms that Level wrapper can build a SOQL query
+    */
+    @isTest
+    private static void shouldBuildQueryForLevel() {
+        Level__c testLevel = new Level__c(
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c',
+            Level_Field__c = 'npo02__LastMembershipLevel__c',
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c'
+        );
+        LVL_LevelAssign_BATCH.Level level = new LVL_LevelAssign_BATCH.Level(testLevel);
+
+        Test.startTest();
+        String soqlQuery = level.buildQuery();
+        Test.stopTest();
+
+        
+        System.assert(soqlQuery.contains('npo02__TotalOppAmount__c'),
+            'The query should contain the Source_Field__c value');
+        System.assert(soqlQuery.contains('npo02__LastMembershipLevel__c'),
+            'The query should contain the Level_Field__c value');
+        System.assert(soqlQuery.contains('npo02__LastMembershipOrigin__c'),
+            'The query should contain the Previous_Level_Field__c value');
+        System.assert(soqlQuery.contains('FROM Contact'),
+            'The query should query from the correct target SObject');
+
+        QueryException unexpectedException;
+        try {
+            List<Contact> queriedContacts = Database.query(soqlQuery);
+        } catch(QueryException ex) {
+            unexpectedException = ex;
+        }
+
+        System.assertEquals(null, unexpectedException, 'The SOQL query should be valid');
+    }
+
     // Helpers
     ////////////
 
