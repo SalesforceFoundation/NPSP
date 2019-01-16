@@ -82,19 +82,23 @@ public class UTIL_RecordTypes {
     /**
      * @description Return all record type info for a given object.
      * @param objectType The type of the object
+     * @param activeOnly if true, get active record types, and omit any inactive ones. Else, get inactive RTs too.
+     * @param assignedOnly return assigned record types, and omit any that this user does not have assigned to them.
      * @return Map<String, Schema.RecordTypeInfo>
      */
     private static Map<String, Schema.RecordTypeInfo> getObjectRecordTypeInfos(sObjectType objectType, Boolean activeOnly, Boolean assignedOnly) {
         Map<String, Schema.RecordTypeInfo> objectRecordTypeInfoToFilter = objectType.getDescribe().getRecordTypeInfosByName();
-        Map<String, Schema.RecordTypeInfo> objectRecordTypeInfos = new Map<String, Schema.RecordTypeInfo>();
+        Map<String, Schema.RecordTypeInfo> objectRecordTypeInfos = new Map<String, Schema.RecordTypeInfo>(objectRecordTypeInfoToFilter);
         for (String rtName : objectRecordTypeInfoToFilter.keySet()) {
             Schema.RecordTypeInfo rt = objectRecordTypeInfoToFilter.get(rtName);
 
-            if ((activeOnly && !assignedOnly && rt.isActive())
-                    || (!activeOnly && assignedOnly && rt.isAvailable())
-                    || (!activeOnly && !assignedOnly)
-                    || (activeOnly && assignedOnly && rt.isActive() && rt.isAvailable())) {
-                objectRecordTypeInfos.put(rtName, rt);
+            if (activeOnly && !rt.isActive()) {
+                objectRecordTypeInfos.remove(rtName);
+                continue;
+            }
+
+            if (assignedOnly && !rt.isAvailable()) {
+                objectRecordTypeInfos.remove(rtName);
             }
         }
         return objectRecordTypeInfos;

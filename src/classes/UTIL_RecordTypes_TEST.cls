@@ -83,16 +83,19 @@ private class UTIL_RecordTypes_TEST {
     @isTest
     static void testLightningRecordTypes() {
 
-        List<RecordType> recordTypes = [SELECT Id, Name FROM RecordType WHERE IsActive=true AND sObjectType='Opportunity' LIMIT 1];
+        User sysAdmin = UTIL_UnitTestData_TEST.createUserWithoutInsert('System Administrator');
+        System.runAs(sysAdmin) {
+            List<RecordType> recordTypes = [SELECT Id, Name FROM RecordType WHERE IsActive=true AND sObjectType='Opportunity'];
 
-        List<Map<String, String>> recordTypeIdAndName = UTIL_RecordTypes.getRecordTypeDevNamesForLightningSelectList(Opportunity.sObjectType);
-        List<Map<String, String>> recordTypeDevNameAndName = UTIL_RecordTypes.getRecordTypesForLightningSelect(Opportunity.sObjectType);
-        List<Map<String, String>> recordTypeNameAndName = UTIL_RecordTypes.getStringRecordTypesForLightningSelect(Opportunity.sObjectType);
+            List<Map<String, String>> recordTypeIdAndName = UTIL_RecordTypes.getRecordTypeDevNamesForLightningSelectList(Opportunity.sObjectType);
+            List<Map<String, String>> recordTypeDevNameAndName = UTIL_RecordTypes.getRecordTypesForLightningSelect(Opportunity.sObjectType);
+            List<Map<String, String>> recordTypeNameAndName = UTIL_RecordTypes.getStringRecordTypesForLightningSelect(Opportunity.sObjectType);
 
-        if (recordTypes.size() > 0) {
-            System.assert(recordTypeIdAndName.size() > 0, 'No record types are assigned.');
-            System.assert(recordTypeDevNameAndName.size() > 0, 'No record types are assigned.');
-            System.assert(recordTypeNameAndName.size() > 0, 'No record types are assigned.');
+            if (recordTypes.size() > 0) {
+                System.assert(recordTypeIdAndName.size() > 0, 'No record types are assigned.');
+                System.assert(recordTypeDevNameAndName.size() > 0, 'No record types are assigned.');
+                System.assert(recordTypeNameAndName.size() > 0, 'No record types are assigned.');
+            }
         }
     }
 
