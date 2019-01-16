@@ -458,12 +458,12 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         List<Map<String, String>> donationMatchingOptions = new List<Map<String, String>>();
 
         Set<String> donationObjects = new Set<String>{
-            'Opportunity',
-            'Payment'
+                'Opportunity',
+                'Payment'
         };
         List<DescribeFieldResult> dfrs = getRelevantFields(donationObjects);
 
-        for (DescribeFieldResult donationField: dfrs) {
+        for (DescribeFieldResult donationField : dfrs) {
             Map<String, String> option = new Map<String, String>();
             option.put('value', donationField.Name.toLowerCase());
             option.put('label', donationField.Label);
@@ -529,6 +529,80 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         listView.put('objectApiName', UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'));
         listView.put('listName', UTIL_Namespace.StrTokenNSPrefix('Gift_Batches'));
         return listView;
+    }
+
+    /*******************************************************************************************************
+    * @description Gets Data Import Batch data to populate datatable on BGE Batch Gift Entry Tab
+    * @return List<DataImportBatch__c> list of Data Import Batches
+    */
+    @AuraEnabled
+    public static String getTabModel() {
+        // TODO: design attribute controller must NOT offer Name, Id, or any relationship fields
+        String testColumns = 'Batch_Description__c,CreatedById,CreatedBy.Name,Batch_Process_Size__c,CreatedDate';
+        List<String> fields = testColumns.split(',');
+
+        TabModel model = new TabModel();
+        model.columns = getTabColumns(fields);
+        model.batches = getBatches(fields);
+        return JSON.serialize(model);
+    }
+
+    /*******************************************************************************************************
+    * @description Gets Data Import Batch data to populate datatable on BGE Batch Gift Entry Tab
+    * @return List<DataImportBatch__c> list of Data Import Batches
+    */
+    public static List<DataImportBatch__c> getBatches(List<String> fields) {
+
+        List<DataImportBatch__c> batches = new List<DataImportBatch__c>();
+
+        // ensure Name and Id are included but not duplicated from user input in design attribute
+        fields.add('Name');
+        fields.add('Id');
+        //fields.add('CreatedBy.Name');
+        //fields.add('CreatedById');
+        Set<String> deduplicatedFields = new Set<String>(fields);
+        List<String> finalFields = new List<String>(deduplicatedFields);
+
+        String query = 'SELECT ' +
+                String.join(finalFields, ', ') +
+                ' FROM ' + UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c');
+        return Database.query(query);
+    }
+
+    /*******************************************************************************************************
+    * @description Gets columns to create datatable on BGE Batch Gift Entry Tab
+    * @param List<String> list of field api names to turn into columns
+    * @return List<Column> list of columns for datatable
+    */
+    public static List<Column> getTabColumns(List<String> fields) {
+        List<Column> columns = new List<Column>();
+        for (String field : fields) {
+            if(!field.contains('.')) {
+                DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('DataImportBatch__c', field);
+                String dataType = dfr.getType().name().toLowerCase();
+                Column col = new Column();
+                col.fieldName = field;
+                col.label = dfr.label;
+                col.type = dfr.getType().name().toLowerCase();
+                // TODO: put this nonsense that we need every time in a utility
+                if (col.type == 'datetime') {
+                    col.type = 'date';
+                } else if (col.type == 'date') {
+                    col.type = 'date-local';
+                } else if (col.type == 'double') {
+                    col.type = 'number';
+                }
+                // special case for CreatedBy
+                if (col.fieldName == 'CreatedById') {
+                    col.fieldName = 'CreatedByName';
+                    // TODO: How do you actually get 'Created By' as a field label? UTIL_Describe is giving invalid field error
+                    col.label = 'Created By';
+                    col.type = 'string';
+                }
+                columns.add(col);
+            }
+        }
+        return columns;
     }
 
     /*******************************************************************************************************
@@ -638,4 +712,23 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             conditionallyRequired = false;
         }
     }
+
+    /*******************************************************************************************************
+    * @description a class to retrieve info for BGE_BatchGiftEntryTab component
+    */
+    public class TabModel {
+        @AuraEnabled public List<DataImportBatch__c> batches;
+        @AuraEnabled public List<Column> columns;
+    }
+
+    /*******************************************************************************************************
+    * @description a class to retrieve column info for datatable
+    */
+    public class Column {
+        @AuraEnabled public String label;
+        @AuraEnabled public String fieldName;
+        @AuraEnabled public Boolean readOnly;
+        @AuraEnabled public String type;
+    }
+
 }

@@ -1,5 +1,48 @@
 ({
     doInit: function(component) {
+        /*
+        let testColumns = 'Name,Batch_Description__c,CreatedById,CreatedDate';
+        var columns = [
+            {label: 'Name', fieldName: 'Name', type: 'text'},
+            {label: 'Description', fieldName: 'Batch_Description__c', type: 'text'},
+        ];
+
+        columns.push({label: 'Created By', fieldName: 'CreatedById', type: 'url', editable: false, typeAttributes: {label: {fieldName: 'CreatedBy.Name'}}});
+        columns.push({label: 'Created Date', fieldName: 'CreatedDate', type: 'date'});
+
+        component.set('v.batchListColumns',columns);
+        */
+
+        var action = component.get('c.getTabModel');
+        action.setCallback(this, function (response) {
+            const state = response.getState();
+            if (state === 'SUCCESS') {
+                let model = JSON.parse(response.getReturnValue());
+
+                // TODO: separate load columns function
+                var columns = [];
+                console.log(JSON.stringify(model.batches));
+                columns.push({
+                    // TODO: make this a real label
+                    label: 'Batch',
+                    fieldName: 'batchLink',
+                    type: 'url',
+                    typeAttributes: {label:{fieldName:"Name"},target:"_blank"}
+                });
+                model.columns.forEach(function(col){
+                    columns.push(col);
+                });
+                component.set('v.batchListColumns',columns);
+
+                this.loadBatchRows(component, model.batches);
+            } else {
+                this.handleApexErrors(component, response.getError());
+            }
+        });
+        $A.enqueueAction(action)
+
+
+        /*
         var action = component.get('c.getNamespacedListView');
         action.setCallback(this, function (response) {
             const state = response.getState();
@@ -28,7 +71,19 @@
                 this.handleApexErrors(component, response.getError());
             }
         });
-        $A.enqueueAction(action);
+        $A.enqueueAction(action);*/
+    },
+
+    /**
+     * @description: loads Batch Rows into datatable data
+     * @param batches: list of BatchRow wrappers
+     */
+    loadBatchRows: function(component, responseRows) {
+        responseRows.forEach(function(currentRow) {
+            currentRow.batchLink = '/' + currentRow.Id;
+            currentRow.CreatedByName = currentRow.CreatedBy.Name;
+        });
+        component.set('v.batchData', responseRows);
     },
 
     /**

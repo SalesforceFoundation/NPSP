@@ -39,6 +39,10 @@
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
+    <!-- Private Attributes -->
+    <aura:attribute name="batchData" type="Object[]" access="private" />
+    <aura:attribute name="batchListColumns" type="List" />
+
     <!-- Start Markup -->
     <lightning:overlayLibrary aura:id="overlayLib"/>
     <lightning:notificationsLibrary aura:id="notifLib"/>
@@ -61,8 +65,12 @@
         </div>
     </header>
 
-    <!--List View created dynamically-->
-    {!v.body}
+    <!--Data Table-->
+    <lightning:datatable keyField="id"
+                         data="{!v.batchData}"
+                         columns="{!v.batchListColumns}"
+                         hideCheckboxColumn="true"
+                         sortedBy="Name" />
 
     <!-- End Markup -->
 
