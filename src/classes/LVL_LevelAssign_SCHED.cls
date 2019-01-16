@@ -60,23 +60,11 @@ public without sharing class LVL_LevelAssign_SCHED implements Schedulable {
             cLvlAssignBatch = 0;
 
             // for a given Object (Contact, Account, etc), provides the set of fields from that object that need to be queried.
-            map<String, set<String>> mapStrObjectToQueryFields = LVL_LevelAssign_BATCH.getMapStrObjectToQueryFields();
+            List<LVL_LevelAssign_BATCH.Level> levels = LVL_LevelAssign_BATCH.getLevels();
             
             // create batch for each Object
-            for (String strObj : mapStrObjectToQueryFields.keySet()) {
-                
-                // get the fields needed for that object
-                set<String> setFlds = mapStrObjectToQueryFields.get(strObj);
-
-                // construct our query
-                String strSoql = 'select Id';
-                for (String strFld : setFlds) {
-                    strSoql += ', ' + strFld;
-                }
-                strSoql += ' from ' + strObj;
-                
-                // kick off our batch
-                LVL_LevelAssign_BATCH batch = new LVL_LevelAssign_BATCH(strSoql, strObj);
+            for (LVL_LevelAssign_BATCH.Level level : levels) {
+                LVL_LevelAssign_BATCH batch = new LVL_LevelAssign_BATCH(level.buildQuery(), level.target);
                 Database.executeBatch(batch, batchSize);
                 cLvlAssignBatch++;
             }

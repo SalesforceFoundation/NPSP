@@ -270,32 +270,57 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
     * @description query the Level object, and return a map of Object Name to a Set of Fields to query.
     * @return map<String, list<String>> The map of Object Name to its Set of Fields
     */
-    public static map<String, set<String>> getMapStrObjectToQueryFields() {
+    public static List<Level> getLevels() {
         
         // get all our levels
-        list<Level__c> listAllLvls = [select Id, Name, Target__c, Source_Field__c, Level_Field__c, 
+        list<Level__c> levels = [select Id, Name, Target__c, Source_Field__c, Level_Field__c, 
             Previous_Level_Field__c, Active__c
             from Level__c
             where Active__c = true
             order by Target__c, Level_Field__c];
             
         // create our map
+        List<Level> levelWrappers = new List<Level>();
         map<String, set<String>> mapStrObjectToQueryFields = new map<String, set<String>>();
         
-        for (Level__c lvl : listAllLvls) {
-            // for each object, we'll add all its source, level, and previous level fields
-            String strObj = lvl.Target__c;
-            Set<String> setFlds = mapStrObjectToQueryFields.get(strObj);
-            if (setFlds == null) {
-                setFlds = new Set<String>();
-                mapStrObjectToQueryFields.put(strObj, setFlds);
-            }
-            setFlds.add(lvl.Source_Field__c);
-            setFlds.add(lvl.Level_Field__c);
-            if (lvl.Previous_Level_Field__c != null)
-                setFlds.add(lvl.Previous_Level_Field__c);            
+        for (Level__c aLevel : levels) {
+            levelWrappers.add(new Level(aLevel));
         }
         
-        return mapStrObjectToQueryFields; 
+        return levelWrappers; 
+    }
+
+    public class Level {
+        public String target;
+        public String sourceField;
+        public String levelField;
+        public string previousLevelField;
+
+        public Level(Level__c aLevel) {
+            target = aLevel.Target__c;
+            sourceField = aLevel.Source_Field__c;
+            levelField = aLevel.Level_Field__c;
+            previousLevelField = aLevel.Previous_Level_Field__c;
+        }
+
+        public String buildQuery() {
+            String soqlQuery = 'SELECT Id';
+            for (String fieldName : getQueryFields()) {
+                soqlQuery += ', ' + fieldName;
+            }
+            soqlQuery += ' FROM ' + target;
+            return soqlQuery;
+        }
+        
+        private Set<String> getQueryFields() {
+            Set<String> queryFields = new Set<String>();
+            queryFields.add(sourceField);
+            queryFields.add(levelField);
+            if (!String.isEmpty(previousLevelField)) {
+                queryFields.add(previousLevelField);
+            }
+            return queryFields;
+        }
+
     }
 }
