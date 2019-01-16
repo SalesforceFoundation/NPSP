@@ -455,10 +455,11 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         Component.Apex.OutputPanel formPanel = new Component.Apex.OutputPanel();
     
         //creates a box around the form with a label for the hierarchy level, and a color bar to more easily grock which level we're at
+        // uses escape = false but the labels are escaped to prevent xss
         Component.Apex.OutputText boxAndLabel = new Component.Apex.OutputText(value='<div aria-labelledby="task' + wrapper.level + 
             '", class="slds-m-left_medium slds-m-top_small"><fieldset class="slds-box slds-theme_default slds-container_fluid '+
             'slds-p-around_small", style="border-left: 6px solid ' + sidebarColors[colorNumber] + '"><legend id="task' + wrapper.level + '"' +
-            ' class="slds-text-heading_small">' + Schema.Sobjecttype.Task.getLabel() + ' ' + wrapper.level + 
+            ' class="slds-text-heading_small">' + Schema.SObjectType.Task.getLabel().escapeHtml4() + ' ' + wrapper.level + 
             '</legend>', escape=false);
 
         Component.Apex.OutputPanel firstRow = new Component.Apex.OutputPanel(styleClass='slds-grid', layout='block');
@@ -477,17 +478,21 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         secondRow.childComponents.add(selectListInputPanel(wrapper, accessString, 'Reminder_Time__c', ' slds-col slds-size_1-of-4', 'slds-select','reminderTimeOptions', false));
         secondRow.childComponents.add(genericInputField(wrapper, accessString, 'Days_After__c', 'slds-col slds-size_1-of-4', false));
 
+        // Creates an add dependent task button on the form
+        // Uses escape = false but the labels are escaped to prevent xss
         Component.Apex.OutputText addDependentTaskButton = new Component.Apex.OutputText(
             value='<button onclick="addDependentTaskJS(\''+ wrapper.level +'\');return false;" '+ 
-            'class="slds-button slds-button_brand" id="btnAddDepTask">' + Label.EPAddDependentTask + 
-            '<span class="slds-assistive-text"> ' + Label.EPTo + Schema.Sobjecttype.Task.getLabel() + ' ' + wrapper.level + 
+            'class="slds-button slds-button_brand" id="btnAddDepTask">' + System.Label.EPAddDependentTask.escapeHtml4() + 
+            '<span class="slds-assistive-text"> ' + System.Label.EPTo.escapeHtml4() + Schema.SObjectType.Task.getLabel().escapeHtml4() + ' ' + wrapper.level + 
             '</span></button>',
             escape=false
         );
          
+        // Creates a delete task button on the form
+        // Uses escape = false but the labels are escaped to prevent xss
         Component.Apex.OutputText deleteTaskButton = new Component.Apex.OutputText(
             value='<button onclick="deleteTaskJS(\''+ wrapper.level +'\');return false;" '+ 
-            'class="slds-button slds-button_destructive" id="btnDelTask">' + Label.EPDeleteTask +
+            'class="slds-button slds-button_destructive" id="btnDelTask">' + System.Label.EPDeleteTask.escapeHtml4() +
             '<span class="slds-assistive-text">' + wrapper.level + 
             '</span></button>',
             escape=false
@@ -506,6 +511,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         formPanel.childComponents.add(cardFooter);
 
         //closes the box
+        // Uses escape = false but the html string is static
         formPanel.childComponents.add(new Component.Apex.OutputText(value='</fieldset></div>', escape=false));
 
         //recursively call this method to add children
@@ -523,13 +529,15 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     */
     private Component.Apex.OutputPanel fieldLabelPanel(TaskWrapper wrapper, String fieldName, String outterCss, Boolean required) {
         Component.Apex.OutputPanel result = new Component.Apex.OutputPanel(styleClass='slds-form-element ' + outterCss, layout='block');
+
+        String escapedFieldName = UTIL_Describe.getFieldLabel(
+            UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan_Task__c'),
+            //don't namespace prefix standard fields like Name
+            fieldName.endsWith('__c')?UTIL_Namespace.StrTokenNSPrefix(fieldName):fieldName).escapeHtml4();
+
+        // uses escape = false but the labels are escaped
         Component.Apex.OutputLabel fieldLabel = new Component.Apex.OutputLabel(
-            value=(required == true ? '<abbr class="slds-required" title="required">*</abbr> ' : '') +
-                UTIL_Describe.getFieldLabel(
-                    UTIL_Namespace.StrTokenNSPrefix('Engagement_Plan_Task__c'),
-                    //don't namespace prefix standard fields like Name
-                    fieldName.endsWith('__c')?UTIL_Namespace.StrTokenNSPrefix(fieldName):fieldName
-                ),
+            value=(required == true ? '<abbr class="slds-required" title="required">*</abbr> ' : '') + escapedFieldName,
             styleClass='slds-form-element__label',
             escape=false
         );
