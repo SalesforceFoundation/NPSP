@@ -947,7 +947,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     }
 
     private static void configLevelsSettings(Levels_settings__c ls) {
-        // New default settings for the Customizable Rollups engine
+        // New default settings for the Levels Assignment engine
         ls.Level_Assignment_Batch_Size__c = 200;
     }
 }

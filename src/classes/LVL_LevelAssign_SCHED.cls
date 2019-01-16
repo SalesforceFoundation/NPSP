@@ -49,7 +49,7 @@ public without sharing class LVL_LevelAssign_SCHED implements Schedulable {
     * @description Starts one batch job per level object.
     */
     public void runBatch() {
-        Integer batchSize;
+        Integer batchSize; 
         if(levelsSettings != null && levelsSettings.Level_Assignment_Batch_Size__c != null) {
             batchSize = levelsSettings.Level_Assignment_Batch_Size__c.intValue();
         } else {
