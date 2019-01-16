@@ -67,7 +67,6 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
     /*******************************************************************************************************
     * @description true when the user has permissions required to copy the address
     */
-    @TestVisible
     public Boolean canCopyAddress {
         get {
             if (canCopyAddress == null) {
@@ -80,15 +79,31 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description Permissions classed used to determine if the running user has permissions
+    */
+    @TestVisible
+    private UTIL_Permissions perms {
+        get {
+            if (perms == null) {
+                perms = new UTIL_Permissions();
+            }
+
+            return perms;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
     * @description HH address fields by Contact Address fields
     */
-    private static final Map<String, String> HH_BY_CONTACT_ADDR_FIELDS = new Map<String, String>{
-        String.valueOf(Contact.MailingStreet) => String.valueOf(npo02__Household__c.npo02__MailingStreet__c),
-        String.valueOf(Contact.MailingCity) => String.valueOf(npo02__Household__c.npo02__MailingCity__c),
-        String.valueOf(Contact.MailingState) => String.valueOf(npo02__Household__c.npo02__MailingState__c),
-        String.valueOf(Contact.MailingPostalCode) => String.valueOf(npo02__Household__c.npo02__MailingPostalCode__c),
-        String.valueOf(Contact.MailingCountry) => String.valueOf(npo02__Household__c.npo02__MailingCountry__c)
-    };
+    private static final Map<SObjectField, SObjectField> HH_BY_CONTACT_ADDR_FIELDS =
+        new Map<SObjectField, SObjectField>{
+            Contact.MailingStreet => npo02__Household__c.npo02__MailingStreet__c,
+            Contact.MailingCity => npo02__Household__c.npo02__MailingCity__c,
+            Contact.MailingState => npo02__Household__c.npo02__MailingState__c,
+            Contact.MailingPostalCode => npo02__Household__c.npo02__MailingPostalCode__c,
+            Contact.MailingCountry => npo02__Household__c.npo02__MailingCountry__c
+        };
     
     /*******************************************************************************************************
     * @description Constructor for the class
@@ -288,37 +303,19 @@ public with sharing class ADDR_CopyAddrHHObjBTN_CTRL {
     * @return Boolean - true when user has required permissions for all fields being copied to and from
     */
     private Boolean hasPermissions() {
-        List<String> readFields = new List<String>();
-        List<String> updateFields = new List<String>();
-        String destSObjType;
-
-        if (!UTIL_Permissions.canRead(strSrcObject)) {
-            return false;
-        }
-
         if (strSrcObject == String.valueOf(Contact.SObjectType)) {
-            destSObjType = String.valueOf(npo02__Household__c.SObjectType);
-            readFields.addAll(HH_BY_CONTACT_ADDR_FIELDS.keySet());
-            updateFields.addAll(HH_BY_CONTACT_ADDR_FIELDS.values());
-
-        } else {
-            destSObjType = String.valueOf(Contact.SObjectType);
-            readFields.addAll(HH_BY_CONTACT_ADDR_FIELDS.values());
-            updateFields.addAll(HH_BY_CONTACT_ADDR_FIELDS.keySet());
-        }
-
-        if (!UTIL_Permissions.canUpdate(destSObjType, false)) {
-            return false;
-        }
-
-        for (String field : readFields) {
-            if (!UTIL_Permissions.canRead(strSrcObject, field, false)) {
+            if (!perms.canRead(Contact.SObjectType, HH_BY_CONTACT_ADDR_FIELDS.keySet())) {
                 return false;
             }
-        }
+            if (!perms.canUpdate(npo02__Household__c.SObjectType, new Set<SObjectField>(HH_BY_CONTACT_ADDR_FIELDS.values()))) {
+                return false;
+            }
 
-        for (String field : updateFields) {
-            if (!UTIL_Permissions.canUpdate(destSObjType, field, false)) {
+        } else {
+            if (!perms.canRead(npo02__Household__c.SObjectType, new Set<SObjectField>(HH_BY_CONTACT_ADDR_FIELDS.values()))) {
+                return false;
+            }
+            if (!perms.canUpdate(Contact.SObjectType, HH_BY_CONTACT_ADDR_FIELDS.keySet())) {
                 return false;
             }
         }
