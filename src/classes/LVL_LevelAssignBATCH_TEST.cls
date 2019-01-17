@@ -802,9 +802,9 @@ private class LVL_LevelAssignBATCH_TEST {
         LVL_LevelAssign_BATCH.Level level = new LVL_LevelAssign_BATCH.Level(testLevel);
 
         System.assertEquals(testLevel.Target__c, level.target,
-            'The target attribute should be set correctly on the level wrapper');
+            'The target attribute should return the Target__c value');
         System.assertEquals(testLevel.Source_Field__c, level.sourceField,
-            'The sourceField attribute should be set correctly on the level wrapper');
+            'The sourceField attribute should return the Source_Field__c value');
     }
 
     /*********************************************************************************************************
@@ -921,7 +921,7 @@ private class LVL_LevelAssignBATCH_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Confirms that filter is not used when the filter is updated after the last run
+    * @description Confirms that filter is not used when the Level record is updated after the last run
     */
     @isTest
     private static void shouldExcludeFilterWhenLevelIsUpdatedAfterLastRun() {

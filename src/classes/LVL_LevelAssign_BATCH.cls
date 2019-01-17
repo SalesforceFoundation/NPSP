@@ -288,18 +288,15 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
     * @return map<String, list<String>> The map of Object Name to its Set of Fields
     */
     public static List<Level> getLevels() {
-        
-        // get all our levels
-        list<Level__c> levels = [select Id, Name, Target__c, Source_Field__c, Level_Field__c, 
-            Previous_Level_Field__c, Active__c, LastModifiedDate
-            from Level__c
-            where Active__c = true
-            order by Target__c, Level_Field__c];
-            
-        // create our map
+        List<Level__c> levels = [
+            SELECT Id, Target__c, Source_Field__c, Level_Field__c,
+                Previous_Level_Field__c, Active__c, LastModifiedDate
+            FROM Level__c
+            WHERE Active__c = true
+            ORDER BY Target__c, Level_Field__c];
+
         List<Level> levelWrappers = new List<Level>();
-        map<String, set<String>> mapStrObjectToQueryFields = new map<String, set<String>>();
-        
+
         for (Level__c aLevel : levels) {
             levelWrappers.add(new Level(aLevel));
         }
@@ -352,7 +349,11 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
             }
             return queryFields;
         }
-
+        
+        /*********************************************************************************************************
+        * @description Builds query to calulate level for the target object with filter if necessary
+        * @returns SOQL string
+        */
         private String buildFilter() {
             if (!shouldBuildFilter()) {
                 return '';
