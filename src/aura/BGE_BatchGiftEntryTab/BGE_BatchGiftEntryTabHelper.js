@@ -53,7 +53,11 @@
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
-                this.openNewBatchWizard(component);
+                if (!component.get('v.modalOpen')) {
+                    //necessary to put here to prevent nested modals from rapid button clicks
+                    component.set('v.modalOpen', true);
+                    this.openNewBatchWizard(component);
+                }
             } else if (state === 'ERROR') {
                 this.handleApexErrors(component, response.getError());
             }
@@ -83,23 +87,21 @@
             ],
             function (components, status, errorMessage) {
                 if (status === 'SUCCESS') {
-                    if (!component.get('v.modalOpen')) {
-                        component.set('v.modalOpen', true);
-                        modalBody = components[0];
-                        modalHeader = components[1];
-                        modalFooter = components[2];
-                        component.find('overlayLib').showCustomModal({
-                            body: modalBody,
-                            header: modalHeader,
-                            footer: modalFooter,
-                            showCloseButton: true,
-                            cssClass: 'slds-modal_large',
-                            closeCallback: function () {
-                                component.set('v.modalOpen', false);
-                            }
-                        })
-                    }
+                    modalBody = components[0];
+                    modalHeader = components[1];
+                    modalFooter = components[2];
+                    component.find('overlayLib').showCustomModal({
+                        body: modalBody,
+                        header: modalHeader,
+                        footer: modalFooter,
+                        showCloseButton: true,
+                        cssClass: 'slds-modal_large',
+                        closeCallback: function () {
+                            component.set('v.modalOpen', false);
+                        }
+                    })
                 } else {
+                    component.set('v.modalOpen', false);
                     this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
                 }
             }
