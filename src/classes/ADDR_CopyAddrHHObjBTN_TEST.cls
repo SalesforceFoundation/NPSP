@@ -286,7 +286,7 @@ private with sharing class ADDR_CopyAddrHHObjBTN_TEST {
     }
 
     /*******************************************************************************************************************
-    * @description Stub for SObjectDescribe instance
+    * @description Stub for UTIL_Permissions instance
     */
     private class PermissionsMock implements System.StubProvider {
         private Boolean hasRead = true;
