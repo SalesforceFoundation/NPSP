@@ -1,4 +1,4 @@
-<apex:page showHeader="true" sidebar="false" standardStylesheets="false" applyBodyTag="false" lightningStyleSheets="true">
+<apex:page showHeader="true" sidebar="false" standardStylesheets="false" applyBodyTag="false">
 
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, 'RP_GettingStarted/css/style.css' )}"/>
     <apex:slds/>
