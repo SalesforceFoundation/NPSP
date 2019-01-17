@@ -19,12 +19,12 @@
         <name>Use_Dated_Conversion_Rates__c</name>
     </fields>
     <fields>
-        <help><!-- The Opportunity Stage or Stage(s) that mean an Opportunity is &quot;Committed&quot;. Multiple values must be separated by a semicolon. --></help>
+        <help><!-- Specify which Opportunity Stage(s) are in a Committed state, with additional payments expected. When defining multiple stages, separate them with a semicolon. --></help>
         <label><!-- Opportunity Committed Stage(s) --></label>
         <name>Opportunity_Committed_Stages__c</name>
     </fields>
     <fields>
-        <help><!-- The Opportunity Stage or Stage(s) that mean an Opportunity is &quot;Committed&quot;. Multiple values must be separated by a semicolon. --></help>
+        <help><!-- Specify which Opportunity Stage(s) are in a Finalized state, with no additional payments  expected. When defining multiple stages, separate them with a semicolon. --></help>
         <label><!-- Opportunity Finalized Stage(s) --></label>
         <name>Opportunity_Finalized_Stages__c</name>
     </fields>

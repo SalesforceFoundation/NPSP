@@ -24,9 +24,9 @@
     </fields>
     <fields>
         <fullName>Opportunity_Committed_Stages__c</fullName>
-        <description>The Opportunity Stages that mean an Opportunity is &quot;Committed&quot;.</description>
+        <description>These Opportunity Stages are Committed; additional payments are expected.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The Opportunity Stage or Stage(s) that mean an Opportunity is &quot;Committed&quot;. Multiple values must be separated by a semicolon.</inlineHelpText>
+        <inlineHelpText>Specify which Opportunity Stage(s) are in a Committed state, with additional payments expected. When defining multiple stages, separate them with a semicolon.</inlineHelpText>
         <label>Opportunity Committed Stage(s)</label>
         <length>255</length>
         <required>false</required>
@@ -36,9 +36,9 @@
     </fields>
     <fields>
         <fullName>Opportunity_Finalized_Stages__c</fullName>
-        <description>The Opportunity Stages that mean an Opportunity is &quot;Finalized&quot;.</description>
+        <description>These Opportunity Stages are Finalized; no additional payments are expected. </description>
         <externalId>false</externalId>
-        <inlineHelpText>The Opportunity Stage or Stage(s) that mean an Opportunity is &quot;Finalized&quot;. Multiple values must be separated by a semicolon.</inlineHelpText>
+        <inlineHelpText>Specify which Opportunity Stage(s) are in a Finalized state, with no additional payments  expected. When defining multiple stages, separate them with a semicolon.</inlineHelpText>
         <label>Opportunity Finalized Stage(s)</label>
         <length>255</length>
         <required>false</required>
