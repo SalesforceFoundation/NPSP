@@ -3901,7 +3901,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>healthSolutionAccountDefaultRTInvalid</shortDescription>
-        <value>Go to &lt;strong&gt;People | Account Model&lt;/strong&gt; and select a valid record type.</value>
+        <value>Go to &lt;b&gt;People | Account Model&lt;/b&gt; and select a valid record type.</value>
     </labels>
     <labels>
         <fullName>healthSolutionAccountDefaultRTIssue</fullName>
