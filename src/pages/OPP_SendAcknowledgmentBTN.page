@@ -25,7 +25,7 @@
                 <div class="slds-grid">
                     <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
                         <p class="slds-m-top_x-small slds-p-bottom_small">
-                            <apex:outputText value="{!$Label.sendAcknowledgmentFailureReasons}" escape="false"/>
+                            <apex:outputText value="{!$Label.sendAcknowledgmentFailureReasons}"/>
                         </p>
                         <ul class="slds-list_dotted">
                             <apex:repeat value="{!oppsNotSent}" var="opp">
