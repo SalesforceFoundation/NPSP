@@ -291,7 +291,7 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         
         // get all our levels
         list<Level__c> levels = [select Id, Name, Target__c, Source_Field__c, Level_Field__c, 
-            Previous_Level_Field__c, Active__c
+            Previous_Level_Field__c, Active__c, LastModifiedDate
             from Level__c
             where Active__c = true
             order by Target__c, Level_Field__c];
@@ -311,21 +311,17 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
     * @description Wrapper class for the Level__c object
     */
     public class Level {
-        public String target;
-        public String sourceField;
-        private String levelField;
-        private String previousLevelField;
+        public String target { get { return levelRecord.Target__c; } }
+        public String sourceField { get { return levelRecord.Source_Field__c; } }
+        private Level__c levelRecord;
         private Boolean targetIsAccount;
         private Boolean targetIsContact;
 
         /*********************************************************************************************************
         * @description Constructor
         */
-        public Level(Level__c aLevel) {
-            target = aLevel.Target__c;
-            sourceField = aLevel.Source_Field__c;
-            levelField = aLevel.Level_Field__c;
-            previousLevelField = aLevel.Previous_Level_Field__c;
+        public Level(Level__c levelRecord) {
+            this.levelRecord = levelRecord;
             targetIsAccount = target == String.valueOf(Account.SObjectType);
             targetIsContact = target == String.valueOf(Contact.SObjectType);
         }
@@ -350,9 +346,9 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         private Set<String> getQueryFields() {
             Set<String> queryFields = new Set<String>();
             queryFields.add(sourceField);
-            queryFields.add(levelField);
-            if (!String.isEmpty(previousLevelField)) {
-                queryFields.add(previousLevelField);
+            queryFields.add(levelRecord.Level_Field__c);
+            if (!String.isEmpty(levelRecord.Previous_Level_Field__c)) {
+                queryFields.add(levelRecord.Previous_Level_Field__c);
             }
             return queryFields;
         }
@@ -381,9 +377,9 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         private Boolean shouldBuildFilter() {
             if (!targetIsAccount && !targetIsContact) {
                 return false;
-            } else if (targetIsAccount && levelsSettings.LastJobStartTimeAccount__c == null) {
+            } else if (targetIsAccount && (levelsSettings.LastJobStartTimeAccount__c == null || levelsSettings.LastJobStartTimeAccount__c < levelRecord.LastModifiedDate )) {
                 return false;
-            } else if (targetIsContact && levelsSettings.LastJobStartTimeContact__c == null) {
+            } else if (targetIsContact && (levelsSettings.LastJobStartTimeContact__c == null || levelsSettings.LastJobStartTimeContact__c < levelRecord.LastModifiedDate )) {
                 return false;
             } else if (UTIL_Describe.getFieldDescribe(target, sourceField).isCalculated()) {
                 return false;

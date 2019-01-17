@@ -886,7 +886,7 @@ private class LVL_LevelAssignBATCH_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Confirms that Level wrapper can build a SOQL query
+    * @description Confirms that filter is not used when source is a formula field
     */
     @isTest
     private static void shouldExcludeFilterWhenSourceIsFormula() {
@@ -896,6 +896,42 @@ private class LVL_LevelAssignBATCH_TEST {
             Level_Field__c = 'npo02__LastMembershipLevel__c',
             Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c'
         );
+        LVL_LevelAssign_BATCH.Level level = new LVL_LevelAssign_BATCH.Level(testLevel);
+
+        Test.startTest();
+        String soqlQuery = level.buildQuery();
+        Test.stopTest();
+
+        System.assert(!soqlQuery.contains('WHERE SystemModStamp > '),
+            'The query should not include a SystemModStamp filter when the source field is a formula');
+    }
+
+    /*********************************************************************************************************
+    * @description Confirms that filter is not used when the filter is updated after the last run
+    */
+    @isTest
+    private static void shouldExcludeFilterWhenLevelIsUpdatedAfterLastRun() {
+        LVL_LevelAssign_BATCH.levelsSettings = new Levels_Settings__c(
+            LastJobStartTimeContact__c = Datetime.now().addDays(-10)
+        );
+
+        Level__c testLevel = new Level__c(
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c',
+            Level_Field__c = 'npo02__LastMembershipLevel__c',
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c',
+            Minimum_Amount__c = 1000,
+            Maximum_Amount__c = 5000
+        );
+
+        insert testLevel;
+
+        testLevel = [
+            SELECT Target__c, Source_Field__c, Level_Field__c, Previous_Level_Field__c, LastModifiedDate
+            FROM Level__c
+            WHERE Id = :testLevel.Id
+        ];
+        
         LVL_LevelAssign_BATCH.Level level = new LVL_LevelAssign_BATCH.Level(testLevel);
 
         Test.startTest();
