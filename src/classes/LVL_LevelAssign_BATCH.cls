@@ -239,7 +239,7 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
     private class LevelException extends Exception {}
     
     /*********************************************************************************************************
-    * @description Batch process finish method, does nothing.
+    * @description Batch process finish method, stores last job start time for accounts and contacts
     */
     public void finish(Database.BatchableContext BC) {
         if (strObject == String.valueOf(Account.SObjectType)) {

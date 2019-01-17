@@ -47,7 +47,7 @@ private class LVL_LevelAssignBATCH_TEST {
     /*********************************************************************************************************
     * @description creates Bronze, Silver, and Gold Level records for test code to use.
     */
-    static void createTestLevels() {
+    private static void createTestLevels() {
         // create Levels
         lvlTin = new Level__c(
             Name = 'Tin',
@@ -115,7 +115,7 @@ private class LVL_LevelAssignBATCH_TEST {
     /*********************************************************************************************************
     * @description create and add an Engagement Plan Template to the provided Level
     */
-    static void createLevelEngagementPlan(Level__c lvl) {
+    private static void createLevelEngagementPlan(Level__c lvl) {
         Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
             Name = 'Template',
             Skip_Weekends__c = false,
@@ -159,7 +159,7 @@ private class LVL_LevelAssignBATCH_TEST {
     */
     private static list<Contact> listCon { get; set; }
     private static DateTime dtCon6Modified { get; set;  }
-    static void createTestContacts() {
+    private static void createTestContacts() {
         // create & insert contact
         listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(8);
         listCon[0].npo02__TotalOppAmount__c = null;
@@ -194,7 +194,7 @@ private class LVL_LevelAssignBATCH_TEST {
     * @description creates a list of Accounts with various donation totals for test code to use.
     */
     private static list<Account> listAcc { get; set; }
-    static void createTestAccounts() {
+    private static void createTestAccounts() {
         // create & insert contact
         listAcc = UTIL_UnitTestData_TEST.CreateMultipleTestAccounts(2, null);
         listAcc[0].npo02__TotalOppAmount__c = 10;
@@ -205,7 +205,8 @@ private class LVL_LevelAssignBATCH_TEST {
     /*********************************************************************************************************
     * @description test our batch process for assigning Levels to Contacts
     */
-    static testMethod void testContactLevels() {
+    @isTest
+    private static void testContactLevels() {
         // create Levels
         createTestLevels();
         
@@ -235,7 +236,8 @@ private class LVL_LevelAssignBATCH_TEST {
     * @description test our batch process for unassigning Levels on Contacts when Levels Change
     * and they no longer meet the criteria
     */
-    static testMethod void testContactLevelsChange() {
+    @isTest
+    private static void testContactLevelsChange() {
         // create Levels
         createTestLevels();
 
@@ -260,7 +262,8 @@ private class LVL_LevelAssignBATCH_TEST {
     /*********************************************************************************************************
     * @description tests our Level Assigning when invokved through our Schedulable class.
     */
-    static testMethod void testLevelAssignScheduling() {
+    @isTest
+    private static void testLevelAssignScheduling() {
         // create Levels
         createtestLevels();
 
@@ -281,7 +284,7 @@ private class LVL_LevelAssignBATCH_TEST {
     /*********************************************************************************************************
     * @description verify contact levels correctly set
     */
-    static void verifyContactLevels() {
+    private static void verifyContactLevels() {
         string strSoql = 'SELECT Id, Name, npo02__TotalOppAmount__c, npo02__LastMembershipLevel__c, npo02__LastMembershipOrigin__c, CreatedDate, LastModifiedDate FROM Contact';
         listCon = database.query(strSoql + ' ORDER BY npo02__TotalOppAmount__c');
         System.assertEquals(lvlTin.Id, listCon[0].npo02__LastMembershipLevel__c);
@@ -320,7 +323,8 @@ private class LVL_LevelAssignBATCH_TEST {
     /*********************************************************************************************************
     * @description test our batch process for assigning Levels to Accounts
     */
-    static testMethod void testAccountLevels() {
+    @isTest
+    private static void testAccountLevels() {
         // create Levels
         createTestLevels();
         
@@ -361,7 +365,8 @@ private class LVL_LevelAssignBATCH_TEST {
     /*********************************************************************************************************
     * @description tests our Level Validation to detect overlaps with existing levels
     */
-    static testMethod void testLevelValidationExistingMin() {
+    @isTest
+    private static void testLevelValidationExistingMin() {
         // create Levels
         createtestLevels();
         
@@ -398,7 +403,8 @@ private class LVL_LevelAssignBATCH_TEST {
     /*********************************************************************************************************
     * @description tests our Level Validation to detect overlaps with existing levels
     */
-    static testMethod void testLevelValidationExistingMax() {
+    @isTest
+    private static void testLevelValidationExistingMax() {
         // create Levels
         createtestLevels();
         
@@ -435,7 +441,8 @@ private class LVL_LevelAssignBATCH_TEST {
     /*********************************************************************************************************
     * @description tests our Level Validation to detect overlaps with new levels
     */
-    static testMethod void testLevelValidationNewMin() {
+    @isTest
+    private static void testLevelValidationNewMin() {
         
         Level__c lvl1 = new Level__c(
             Name = 'new',
@@ -480,7 +487,8 @@ private class LVL_LevelAssignBATCH_TEST {
     /*********************************************************************************************************
     * @description tests our Level Validation to detect overlaps with new levels
     */
-    static testMethod void testLevelValidationNewMax() {
+    @isTest
+    private static void testLevelValidationNewMax() {
         
         Level__c lvl1 = new Level__c(
             Name = 'new',
@@ -525,7 +533,8 @@ private class LVL_LevelAssignBATCH_TEST {
     /*********************************************************************************************************
     * @description tests our Level Validation to detect duplicate names with existing levels
     */
-    static testMethod void testLevelValidationExistingNames() {
+    @isTest
+    private static void testLevelValidationExistingNames() {
         // create Levels
         createtestLevels();
         
@@ -561,7 +570,8 @@ private class LVL_LevelAssignBATCH_TEST {
     /*********************************************************************************************************
     * @description tests our Level Validation to detect duplicate names with new levels
     */
-    static testMethod void testLevelValidationNewNames() {
+    @isTest
+    private static void testLevelValidationNewNames() {
         
         Level__c lvl1 = new Level__c(
             Name = 'new',
@@ -596,7 +606,8 @@ private class LVL_LevelAssignBATCH_TEST {
     /*********************************************************************************************************
     * @description tests our Level Validation to detect min/max overlap within a new level
     */
-    static testMethod void testLevelValidationMinMaxOverlap() {
+    @isTest
+    private static void testLevelValidationMinMaxOverlap() {
         
         Level__c lvl1 = new Level__c(
             Name = 'new',
@@ -621,7 +632,8 @@ private class LVL_LevelAssignBATCH_TEST {
     /*********************************************************************************************************
     * @description tests our Level Validation to detect no min & max specified
     */
-    static testMethod void testLevelValidationMinMaxMustExist() {
+    @isTest
+    private static void testLevelValidationMinMaxMustExist() {
         
         Level__c lvl1 = new Level__c(
             Name = 'new',
@@ -648,7 +660,8 @@ private class LVL_LevelAssignBATCH_TEST {
         The Level Field is changed to blank.
         The Previous Level Field is populated with the Level Field as it was before the batch has been run.
     **********************************************************************************************************/  
-    static testMethod void previousLevelShouldBePopulatedWhenCurrentLevelIsChangedToBlank() {
+    @isTest
+    private static void previousLevelShouldBePopulatedWhenCurrentLevelIsChangedToBlank() {
         Level__c[] levels = new Level__c[] {
             new Level__c(
                 Name = 'Tin',
@@ -712,7 +725,8 @@ private class LVL_LevelAssignBATCH_TEST {
     verify:
         Level Field and Previous Level Field values are not changed
     **********************************************************************************************************/  
-    static testMethod void previousLevelShouldNotChangeWhenCurrentLevelDoesNotChange() {
+    @isTest
+    private static void previousLevelShouldNotChangeWhenCurrentLevelDoesNotChange() {
         Level__c[] levels = new Level__c[] {
             new Level__c(
                 Name = 'Tin',
@@ -949,7 +963,7 @@ private class LVL_LevelAssignBATCH_TEST {
     * @description Executes Level Assign Batch for Contact Sobject
     * @return void
     **********************************************************************************************************/
-    static void executeLevelAssignBatchForContact() {
+    private static void executeLevelAssignBatchForContact() {
         String soql = 'SELECT Id, Name, npo02__TotalOppAmount__c, npo02__LastMembershipLevel__c, npo02__LastMembershipOrigin__c, CreatedDate, LastModifiedDate FROM Contact';
         
         executeLevelAssignBatch(soql, 'Contact');
@@ -961,7 +975,7 @@ private class LVL_LevelAssignBATCH_TEST {
     * @param sobjectType String representing the Sobject API Name
     * @return void
     **********************************************************************************************************/
-    static void executeLevelAssignBatch(String soql, String sobjectType) {
+    private static void executeLevelAssignBatch(String soql, String sobjectType) {
         LVL_LevelAssign_BATCH batch = new LVL_LevelAssign_BATCH(soql, sobjectType);
         
         Test.startTest();
@@ -973,7 +987,7 @@ private class LVL_LevelAssignBATCH_TEST {
     * @description Retrieves all Contacts from database
     * @return Contact[] List of all Contacts
     **********************************************************************************************************/
-    static Contact[] getContacts() {
+    private static Contact[] getContacts() {
         return [
             SELECT Id, Name, npo02__TotalOppAmount__c, npo02__LastMembershipLevel__c, npo02__LastMembershipOrigin__c
             FROM Contact
