@@ -810,7 +810,6 @@ private class LVL_LevelAssignBATCH_TEST {
         String soqlQuery = level.buildQuery();
         Test.stopTest();
 
-        
         System.assert(soqlQuery.contains('npo02__TotalOppAmount__c'),
             'The query should contain the Source_Field__c value');
         System.assert(soqlQuery.contains('npo02__LastMembershipLevel__c'),
@@ -819,6 +818,8 @@ private class LVL_LevelAssignBATCH_TEST {
             'The query should contain the Previous_Level_Field__c value');
         System.assert(soqlQuery.contains('FROM Contact'),
             'The query should query from the correct target SObject');
+        System.assert(!soqlQuery.contains('WHERE SystemModStamp > '),
+            'The query should not include a SystemModStamp filter when there is no last run time setting');
 
         QueryException unexpectedException;
         try {
@@ -828,6 +829,81 @@ private class LVL_LevelAssignBATCH_TEST {
         }
 
         System.assertEquals(null, unexpectedException, 'The SOQL query should be valid');
+    }
+
+    /*********************************************************************************************************
+    * @description Confirms that Level wrapper can build a SOQL query
+    */
+    @isTest
+    private static void shouldBuildQueryWithLastRunFilter() {
+        Datetime contactDatetime = Datetime.now();
+        Datetime accountDatetime = Datetime.now().addDays(-10);
+
+        LVL_LevelAssign_BATCH.levelsSettings = new Levels_Settings__c(
+            LastJobStartTimeContact__c = contactDatetime,
+            LastJobStartTimeAccount__c = accountDatetime
+        );
+
+        Level__c contactLevel = new Level__c(
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c',
+            Level_Field__c = 'npo02__LastMembershipLevel__c',
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c'
+        );
+
+        Level__c accountLevel = new Level__c(
+            Target__c = 'Account',
+            Source_Field__c = 'npo02__TotalOppAmount__c',
+            Level_Field__c = 'npo02__LastMembershipLevel__c',
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c'
+        );
+
+        LVL_LevelAssign_BATCH.Level contactLevelWrapper = new LVL_LevelAssign_BATCH.Level(contactLevel);
+        LVL_LevelAssign_BATCH.Level accountLevelWrapper = new LVL_LevelAssign_BATCH.Level(accountLevel);
+
+        Test.startTest();
+        String contactSoqlQuery = contactLevelWrapper.buildQuery();
+        String accountSoqlQuery = accountLevelWrapper.buildQuery();
+        Test.stopTest();
+
+        String formattedDatetime = contactDatetime.formatGMT(LVL_LevelAssign_BATCH.DATETIME_SOQL_FORMAT);
+        System.assert(contactSoqlQuery.endsWith('WHERE SystemModStamp > ' + formattedDatetime),
+            'The query should a filter on SystemModStamp with the correct datetime');
+
+        formattedDatetime = accountDatetime.formatGMT(LVL_LevelAssign_BATCH.DATETIME_SOQL_FORMAT);
+        System.assert(accountSoqlQuery.endsWith('WHERE SystemModStamp > ' + formattedDatetime),
+            'The query should a filter on SystemModStamp with the correct datetime');
+
+        QueryException unexpectedException;
+        try {
+            List<Contact> queriedContacts = Database.query(contactSoqlQuery);
+            List<Account> queriedAccounts = Database.query(accountSoqlQuery);
+        } catch(QueryException ex) {
+            unexpectedException = ex;
+        }
+
+        System.assertEquals(null, unexpectedException, 'The SOQL queries should be valid');
+    }
+
+    /*********************************************************************************************************
+    * @description Confirms that Level wrapper can build a SOQL query
+    */
+    @isTest
+    private static void shouldExcludeFilterWhenSourceIsFormula() {
+        Level__c testLevel = new Level__c(
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__LastCloseDateHH__c',
+            Level_Field__c = 'npo02__LastMembershipLevel__c',
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c'
+        );
+        LVL_LevelAssign_BATCH.Level level = new LVL_LevelAssign_BATCH.Level(testLevel);
+
+        Test.startTest();
+        String soqlQuery = level.buildQuery();
+        Test.stopTest();
+
+        System.assert(!soqlQuery.contains('WHERE SystemModStamp > '),
+            'The query should not include a SystemModStamp filter when the source field is a formula');
     }
 
     // Helpers

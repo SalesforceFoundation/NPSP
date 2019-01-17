@@ -36,8 +36,10 @@
 public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable<sObject>, Database.Stateful {
     /** @description Custom Settings record that defines Levels settings */
     @TestVisible
-    private static final Levels_Settings__c levelsSettings = UTIL_CustomSettingsFacade.getLevelsSettings();
+    private static Levels_Settings__c levelsSettings = UTIL_CustomSettingsFacade.getLevelsSettings();
 
+    @TestVisible
+    private static final String DATETIME_SOQL_FORMAT = 'yyyy-MM-dd\'T\'HH:mm:ss\'Z\'';
     /** @description The query for the batch process to run on.*/
     private String strSoql;
 
@@ -312,7 +314,9 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         public String target;
         public String sourceField;
         private String levelField;
-        private string previousLevelField;
+        private String previousLevelField;
+        private Boolean targetIsAccount;
+        private Boolean targetIsContact;
 
         /*********************************************************************************************************
         * @description Constructor
@@ -322,6 +326,8 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
             sourceField = aLevel.Source_Field__c;
             levelField = aLevel.Level_Field__c;
             previousLevelField = aLevel.Previous_Level_Field__c;
+            targetIsAccount = target == String.valueOf(Account.SObjectType);
+            targetIsContact = target == String.valueOf(Contact.SObjectType);
         }
 
         /*********************************************************************************************************
@@ -333,10 +339,10 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
             for (String fieldName : getQueryFields()) {
                 soqlQuery += ', ' + fieldName;
             }
-            soqlQuery += ' FROM ' + target;
+            soqlQuery += ' FROM ' + target + buildFilter();
             return soqlQuery;
         }
-        
+
         /*********************************************************************************************************
         * @description Builds set of fields needed for level query
         * @returns Set of strings comprised of field names
@@ -351,5 +357,39 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
             return queryFields;
         }
 
+        private String buildFilter() {
+            if (!shouldBuildFilter()) {
+                return '';
+            }
+
+            DateTime datetimeToFilter;
+            if (targetIsAccount) {
+                datetimeToFilter = levelsSettings.LastJobStartTimeAccount__c;
+            } else if (targetIsContact) {
+                datetimeToFilter = levelsSettings.LastJobStartTimeContact__c;
+            } else {
+                return '';
+            }
+
+            return ' WHERE SystemModStamp > ' + datetimeToFilter.formatGMT(DATETIME_SOQL_FORMAT);
+        }
+
+        /*********************************************************************************************************
+        * @description Determines is SystemModStamp filter should be built
+        * @returns boolean for whether filter should be built
+        */
+        private Boolean shouldBuildFilter() {
+            if (!targetIsAccount && !targetIsContact) {
+                return false;
+            } else if (targetIsAccount && levelsSettings.LastJobStartTimeAccount__c == null) {
+                return false;
+            } else if (targetIsContact && levelsSettings.LastJobStartTimeContact__c == null) {
+                return false;
+            } else if (UTIL_Describe.getFieldDescribe(target, sourceField).isCalculated()) {
+                return false;
+            } else {
+                return true;
+            }
+        }
     }
 }
