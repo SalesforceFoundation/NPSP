@@ -42,8 +42,8 @@ private with sharing class UTIL_Permissions_TEST {
 
     private static SObjectType customSObjType = Address__c.SObjectType;
     private static SObjectField customSObjField = Address__c.Address_Type__c;
-    private static String customObjectName = String.valueOf(customSObjType);
-    private static String customFieldName = String.valueOf(customSObjField);
+    private static String customObjectName = UTIL_Namespace.StrAllNSPrefix(String.valueOf(customSObjType));
+    private static String customFieldName = UTIL_Namespace.StrAllNSPrefix(String.valueOf(customSObjField));
     private static String standardObjectName = 'Contact';
     private static String standardFieldName = 'FirstName';
 
