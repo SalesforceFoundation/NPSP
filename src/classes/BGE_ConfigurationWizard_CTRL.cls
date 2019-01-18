@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2018, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2018
+* @date 2019
 * @group BGE
 * @group-content 
 * @description BGE Wizard Component Controller.
@@ -105,6 +105,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         setDefaultValuesOnBGEDetailsModel(model);
 
+        model.namespacePrefix = UTIL_Namespace.getNamespace();
         model.donationMatchingOptions = getDonationMatchingOptions();
         model.availableFields = getAvailableFields();
 
@@ -344,6 +345,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         model.donationMatchingClass = null;
         model.postProcessClass = null;
         model.runOpportunityRollupsWhileProcessing = true;
+        model.namespacePrefix = UTIL_Namespace.getNamespace();
         model.activeFields = getDefaultActiveFields();
 
         List<String> donationMatchingRules = new List<String>();
@@ -446,6 +448,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'sObjectName' => Schema.SObjectType.DataImportBatch__c.getName(),
             'sObjectNameNoNamespace' => UTIL_Namespace.StrTokenRemoveNSPrefix(Schema.SObjectType.DataImportBatch__c.getName()),
             'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.DataImportBatch__c.Name.getDescribe().getLabel() + ', ' + Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
+            'missingFieldsError' => Label.exceptionRequiredField,
             'description' => Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
             'totalMatchHelp' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
             'totalMatchLabel' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getLabel(),
@@ -561,6 +564,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public String donationMatchingClass;
         @AuraEnabled public List<String> donationMatchingRule;
         @AuraEnabled public List<Map<String,String>> donationMatchingOptions;
+        @AuraEnabled public String namespacePrefix;
         @AuraEnabled public String postProcessClass;
         @AuraEnabled public Boolean runOpportunityRollupsWhileProcessing;
         @AuraEnabled public Integer recordCount;
