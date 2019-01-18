@@ -368,28 +368,28 @@ public class UTIL_Describe {
 
     /*******************************************************************************************************
     * @description utility to return a list of strings from a field set.
-    * @param strObject the name of the object
-    * @param strFS the name of the object's field set
+    * @param obj the name of the object
+    * @param fieldSet the name of the object's field set
     * @return a list of strings of field names in the field set
     */
     // utility to return a list of strings from a field set.
-    public static list<string> listStrFromFieldSet(string strObject, string strFS) {
-        list<string> listStrFields = new list<string>();
+    public static List<String> listStrFromFieldSet(String obj, String fieldSetName) {
+        List<String> fieldNames = new List<String>();
         if (gd==null) gd = Schema.getGlobalDescribe();
-        Schema.SObjectType targetType = gd.get(strObject);
-        Schema.DescribeSObjectResult d = targetType.getDescribe(); 
-        Schema.FieldSet fs = d.fieldSets.getMap().get(strFS); 
-        if (fs == null) {
+        Schema.SObjectType targetType = gd.get(obj);
+        Schema.DescribeSObjectResult objectDescribe = targetType.getDescribe();
+        Schema.FieldSet fieldSetDescribe = objectDescribe.fieldSets.getMap().get(fieldSetName);
+        if (fieldSetDescribe == null) {
             return null;
         } else {
-            for(Schema.FieldSetMember f : fs.getFields()) {
-                if (f.getFieldPath().contains('.')) {
-                    throw (new SchemaDescribeException('Related field \'' + f.getFieldPath() + '\' not supported ' +
-                        'in field set \'' + strFS + '\'.  You can only include fields directly on object \'' + strObject + '\'.'));
+            for(Schema.FieldSetMember fieldSetMember : fieldSetDescribe.getFields()) {
+                if (fieldSetMember.getFieldPath().contains('.')) {
+                    throw (new SchemaDescribeException('Related field \'' + fieldSetMember.getFieldPath() + '\' not supported ' +
+                        'in field set \'' + fieldSetName + '\'.  You can only include fields directly on object \'' + obj + '\'.'));
                 }
-                listStrFields.add(f.getFieldPath());
+                fieldNames.add(fieldSetMember.getFieldPath());
             }
-            return listStrFields;
+            return fieldNames;
         }
     }
 

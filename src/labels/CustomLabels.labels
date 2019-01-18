@@ -5695,6 +5695,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Count of</value>
     </labels>
     <labels>
+        <fullName>stgCreatedBy</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgCreatedBy</shortDescription>
+        <value>Created By</value>
+    </labels>
+    <labels>
         <fullName>stgCRLPHouseholdAccountError</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
