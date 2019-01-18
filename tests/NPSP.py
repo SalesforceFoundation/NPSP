@@ -295,17 +295,11 @@ class NPSP(object):
             if label=="Batch Description":
                 locator= npsp_lex_locators['bge']['field-text'].format(label,value)  
                 self.salesforce._populate_field(locator, value)              
-#                 self.selenium.set_focus_to_element(locator)
-#                 field = self.selenium.get_webelement(locator)
-#                 field.clear()
-#                 field.send_keys(value)
+
             else:
                 locator= npsp_lex_locators['bge']['field-input'].format(label,value)
                 self.salesforce._populate_field(locator, value)
-#                 self.selenium.set_focus_to_element(locator)
-#                 field = self.selenium.get_webelement(locator)
-#                 field.clear()
-#                 field.send_keys(value)
+
     
     def select_bge_date_picker(self,title): 
         locator= npsp_lex_locators['bge']['field-input'].format(title)
@@ -807,7 +801,7 @@ class NPSP(object):
         self.selenium.get_webelement(locator).click()  
         
     def click_bge_button(self,text):  
-        """clicks on the + button next to contact on manage hh page"""      
+        """clicks on buttons for BGE"""      
         locator=npsp_lex_locators['bge']['button'].format(text)
         self.selenium.get_webelement(locator).click()     
     
@@ -860,3 +854,12 @@ class NPSP(object):
         locator=self.get_npsp_locator(path, *args, **kwargs)
         value=self.selenium.get_webelement(locator).text   
         return value
+
+    def select_bge_row(self, value):
+        """To select a row on object page based on name and open the dropdown"""
+        locator = npsp_lex_locators['bge']['name']
+        list_ele = self.selenium.get_webelement(locator)
+        if list_ele.text == value:
+            drop_down = npsp_lex_locators['bge']['locate_dropdown']
+            self.selenium.get_webelement(drop_down).click()
+            time.sleep(1)

@@ -141,6 +141,8 @@ npsp_lex_locators={
         'edit_field':'//lightning-primitive-datatable-iedit-panel//input',
         'count':'//tbody/tr/td[1]',
         'value':'//td[@data-label="{}"]//a',
+        'name':'//tbody/tr/th//a',
+        'locate_dropdown':'//tbody/tr/td//div//button[./span[text()="Show actions"]]/lightning-primitive-icon',
         },    
     'object_manager':{
         'button':'//input[@title="{}"]',

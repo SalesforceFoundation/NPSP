@@ -112,6 +112,14 @@ API Create DataImportBatch
     &{batch} =     Salesforce Get  DataImportBatch__c  ${batch_id}
     [return]         &{batch}
     
+API Create DataImport   
+    [Arguments]     ${batch}     &{fields}
+
+    ${dataimport_id} =  Salesforce Insert  DataImport__c
+    ...                  NPSP_Data_Import_Batch__c=${batch}
+    ...                  &{fields}
+    &{data_import} =     Salesforce Get  DataImport__c  ${dataimport_id}
+    [return]         &{data_import} 
    
 Create Contact
     ${first_name} =           Generate Random String
