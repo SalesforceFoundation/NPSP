@@ -250,6 +250,10 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         }
     }
 
+    /*********************************************************************************************************
+    * @description Checks completed status of job for given Id
+    * @returns Boolean true if job has a status of Completed
+    */
     private Boolean jobCompleted(Id jobId) {
         AsyncApexJob job = [SELECT Status FROM AsyncApexJob WHERE Id = :jobId];
         return job.Status == 'Completed';
