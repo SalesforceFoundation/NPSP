@@ -35,7 +35,7 @@
 <aura:component>
 
     <!--Public Attributes-->
-    <aura:attribute name="currentStep" default="1" type="String" description="Step in progress indicator. Note: is a STRING." />
+    <aura:attribute name="currentStep" default="0" type="String" description="Step in progress indicator. Note: is a STRING." />
     <aura:attribute name="hasError" default="false" type="Boolean"
                     description="Indicates if there is an error in the current step" />
     <aura:attribute name="pendingSave" default="false" type="Boolean"
