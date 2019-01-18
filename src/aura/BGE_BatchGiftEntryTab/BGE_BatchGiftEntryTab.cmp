@@ -78,6 +78,7 @@
                          hideCheckboxColumn="true"
                          sortedBy="Name"
                          enableInfiniteLoading="{!v.enableInfiniteLoading}"
+                         showRowNumberColumn="true"
                          onloadmore="{!c.loadMoreData}"
                          isLoading="{!v.isLoadingDataTable}"
                          aura:id="dataTable"

@@ -14,11 +14,12 @@
     },
 
     loadMoreData: function (component, event, helper) {
-        debugger;
+        event.getSource().set("v.isLoading", true);
         if (component.get('v.batchData').length >= component.get('v.totalNumberOfRows')) {
             component.set('v.enableInfiniteLoading', false);
+            event.getSource().set("v.isLoading", false);
         } else {
-            helper.getMoreBatchRows(component);
+            helper.getMoreBatchRows(component, event);
         }
     },
 

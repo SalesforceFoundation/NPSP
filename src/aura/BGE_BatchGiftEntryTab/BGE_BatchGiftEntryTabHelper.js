@@ -30,8 +30,7 @@
         component.set('v.batchListColumns',columns);
     },
 
-    getMoreBatchRows: function(component) {
-        debugger;
+    getMoreBatchRows: function(component, event) {
         let offset = component.get('v.batchData').length;
         let rowsToLoad = 50;
         let action = component.get('c.getBatches');
@@ -47,6 +46,7 @@
             } else {
                 this.handleApexErrors(component, response.getError());
             }
+            event.getSource().set("v.isLoading", false);
         });
         $A.enqueueAction(action);
     },
@@ -65,7 +65,6 @@
         if (!data) {
             data = [];
         }
-        debugger;
         data = data.concat(responseRows);
         component.set('v.batchData', data);
     },
