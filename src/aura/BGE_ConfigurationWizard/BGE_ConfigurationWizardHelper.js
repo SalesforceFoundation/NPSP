@@ -304,10 +304,11 @@
     checkBatchInfoValidity: function(component) {
         let batchInfo = component.get('v.batchInfo');
         let isValid = batchInfo.name && batchInfo.description;
-        if (!batchInfo.expectedTotal || !Number.isInteger(batchInfo.expectedTotal)) {
+
+        if (batchInfo.expectedTotal == '' || batchInfo.expectedTotal == null) {
             batchInfo.expectedTotal = 0;
         }
-        if (!batchInfo.expectedCount || !Number.isInteger(batchInfo.expectedCount)) {
+        if (batchInfo.expectedCount == '' || batchInfo.expectedCount == null) {
             batchInfo.expectedCount = 0;
         }
         if (isValid) {
