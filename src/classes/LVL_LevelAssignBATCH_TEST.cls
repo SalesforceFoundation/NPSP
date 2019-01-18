@@ -941,10 +941,10 @@ private class LVL_LevelAssignBATCH_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Confirms that filter is not used when the Level record is updated after the last run
+    * @description Confirms that filter is not used when any Level record is updated after the last run
     */
     @isTest
-    private static void shouldExcludeFilterWhenLevelIsUpdatedAfterLastRun() {
+    private static void shouldExcludeFilterWhenAnyLevelIsUpdatedAfterLastRun() {
         LVL_LevelAssign_BATCH.levelsSettings = new Levels_Settings__c(
             LastJobStartTimeContact__c = Datetime.now().addDays(-10)
         );
