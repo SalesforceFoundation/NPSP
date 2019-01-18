@@ -89,16 +89,16 @@ public class UTIL_RecordTypes {
     private static Map<String, Schema.RecordTypeInfo> getObjectRecordTypeInfos(sObjectType objectType, Boolean activeOnly, Boolean assignedOnly) {
         Map<String, Schema.RecordTypeInfo> objectRecordTypeInfoToFilter = objectType.getDescribe().getRecordTypeInfosByName();
         Map<String, Schema.RecordTypeInfo> objectRecordTypeInfos = new Map<String, Schema.RecordTypeInfo>(objectRecordTypeInfoToFilter);
-        for (String rtName : objectRecordTypeInfoToFilter.keySet()) {
-            Schema.RecordTypeInfo rt = objectRecordTypeInfoToFilter.get(rtName);
+        for (String recTypeName : objectRecordTypeInfoToFilter.keySet()) {
+            Schema.RecordTypeInfo rt = objectRecordTypeInfoToFilter.get(recTypeName);
 
             if (activeOnly && !rt.isActive()) {
-                objectRecordTypeInfos.remove(rtName);
+                objectRecordTypeInfos.remove(recTypeName);
                 continue;
             }
 
             if (assignedOnly && !rt.isAvailable()) {
-                objectRecordTypeInfos.remove(rtName);
+                objectRecordTypeInfos.remove(recTypeName);
             }
         }
         return objectRecordTypeInfos;
@@ -264,10 +264,10 @@ public class UTIL_RecordTypes {
         List<Map<String, String>> options = new List<Map<String, String>>();
         Map<String, Schema.RecordTypeInfo> recordTypeInfos = getAssignedRecordTypes(objectType);
 
-        for (Schema.RecordTypeInfo rt: recordTypeInfos.values()) {
+        for (Schema.RecordTypeInfo recTypeInfo: recordTypeInfos.values()) {
             Map<String, String> labeledOption = new Map<String, String>();
-            labeledOption.put('value', rt.getRecordTypeId());
-            labeledOption.put('label', rt.getName());
+            labeledOption.put('value', recTypeInfo.getRecordTypeId());
+            labeledOption.put('label', recTypeInfo.getName());
             options.add(labeledOption);
         }
         return options;
