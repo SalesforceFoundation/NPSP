@@ -284,10 +284,10 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
     }
     
     /*********************************************************************************************************
-    * @description query the Level object, and return a map of Object Name to a Set of Fields to query.
-    * @return map<String, list<String>> The map of Object Name to its Set of Fields
+    * @description Query the Level object and return a list of Ladder records for each SObject type with levels
+    * @return List<Ladder> ladders for each SObject type with levels
     */
-    public static List<Level> getLevels() {
+    public static List<Ladder> getLadders() {
         List<Level__c> levels = [
             SELECT Id, Target__c, Source_Field__c, Level_Field__c,
                 Previous_Level_Field__c, Active__c, LastModifiedDate
@@ -295,32 +295,60 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
             WHERE Active__c = true
             ORDER BY Target__c, Level_Field__c];
 
-        List<Level> levelWrappers = new List<Level>();
+        List<Ladder> ladders = new List<Ladder>();
 
-        for (Level__c aLevel : levels) {
-            levelWrappers.add(new Level(aLevel));
+        Map<String,Ladder> ladderByTarget = new Map<String,Ladder>();
+        for (Level__c level : levels) {
+            if (!ladderByTarget.containsKey(level.Target__c)) {
+                ladderByTarget.put(level.Target__c, new Ladder(level.Target__c));
+            }
+            ladderByTarget.get(level.Target__c).addLevel(level);
         }
         
-        return levelWrappers; 
+        return ladderByTarget.values();
     }
 
     /*********************************************************************************************************
-    * @description Wrapper class for the Level__c object
+    * @description Stores all the Level__c records for an SObject
     */
-    public class Level {
-        public String target { get { return levelRecord.Target__c; } }
-        public String sourceField { get { return levelRecord.Source_Field__c; } }
-        private Level__c levelRecord;
-        private Boolean targetIsAccount;
-        private Boolean targetIsContact;
+    public class Ladder {
+        public String target;
+        private Set<String> queryFields = new Set<String>();
+        private Set<String> sourceFields = new Set<String>();
+        private DateTime mostRecentLastModifiedDate;
+        private Boolean targetIsAccount {
+            get {
+                return target == String.valueOf(Account.SObjectType);
+            }
+        }
+
+        private Boolean targetIsContact {
+            get {
+                return target == String.valueOf(Contact.SObjectType);
+            }
+        }
 
         /*********************************************************************************************************
         * @description Constructor
         */
-        public Level(Level__c levelRecord) {
-            this.levelRecord = levelRecord;
-            targetIsAccount = target == String.valueOf(Account.SObjectType);
-            targetIsContact = target == String.valueOf(Contact.SObjectType);
+        public Ladder(String target) {
+            this.target = target;
+        }
+
+        /*********************************************************************************************************
+        * @description Add a level to the ladder, caching query fields, source fields and the most recent
+        * LastModifiedDate of all the levels in the ladder
+        */
+        public Ladder addLevel(Level__c level) {
+            addQueryFields(level);
+
+            sourceFields.add(level.Source_Field__c);
+
+            if (mostRecentLastModifiedDate == null || mostRecentLastModifiedDate < level.LastModifiedDate) {
+                mostRecentLastModifiedDate = level.LastModifiedDate;
+            }
+
+            return this;
         }
 
         /*********************************************************************************************************
@@ -329,7 +357,7 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         */
         public String buildQuery() {
             String soqlQuery = 'SELECT Id';
-            for (String fieldName : getQueryFields()) {
+            for (String fieldName : queryFields) {
                 soqlQuery += ', ' + fieldName;
             }
             soqlQuery += ' FROM ' + target + buildFilter();
@@ -337,17 +365,14 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         }
 
         /*********************************************************************************************************
-        * @description Builds set of fields needed for level query
-        * @returns Set of strings comprised of field names
+        * @description Adds fields from Level that need to be queried
         */
-        private Set<String> getQueryFields() {
-            Set<String> queryFields = new Set<String>();
-            queryFields.add(sourceField);
-            queryFields.add(levelRecord.Level_Field__c);
-            if (!String.isEmpty(levelRecord.Previous_Level_Field__c)) {
-                queryFields.add(levelRecord.Previous_Level_Field__c);
+        private void addQueryFields(Level__c level) {
+            queryFields.add(level.Source_Field__c);
+            queryFields.add(level.Level_Field__c);
+            if (!String.isEmpty(level.Previous_Level_Field__c)) {
+                queryFields.add(level.Previous_Level_Field__c);
             }
-            return queryFields;
         }
         
         /*********************************************************************************************************
@@ -372,21 +397,36 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
         }
 
         /*********************************************************************************************************
-        * @description Determines is SystemModStamp filter should be built
-        * @returns boolean for whether filter should be built
+        * @description Determines if SystemModStamp filter should be built. Filter is NOT added target is not
+        * an Account or Contact, if a level has been update since running the last job, or if
+        * a source field is a formula
+        * @returns Boolean for whether filter should be built
         */
         private Boolean shouldBuildFilter() {
             if (!targetIsAccount && !targetIsContact) {
                 return false;
-            } else if (targetIsAccount && (levelsSettings.LastJobStartTimeAccount__c == null || levelsSettings.LastJobStartTimeAccount__c < levelRecord.LastModifiedDate )) {
+            } else if (targetIsAccount && (levelsSettings.LastJobStartTimeAccount__c == null || levelsSettings.LastJobStartTimeAccount__c < mostRecentLastModifiedDate )) {
                 return false;
-            } else if (targetIsContact && (levelsSettings.LastJobStartTimeContact__c == null || levelsSettings.LastJobStartTimeContact__c < levelRecord.LastModifiedDate )) {
+            } else if (targetIsContact && (levelsSettings.LastJobStartTimeContact__c == null || levelsSettings.LastJobStartTimeContact__c < mostRecentLastModifiedDate )) {
                 return false;
-            } else if (UTIL_Describe.getFieldDescribe(target, sourceField).isCalculated()) {
+            } else if (aSourceFieldIsAFormula()) {
                 return false;
             } else {
                 return true;
             }
         }
+
+        /*********************************************************************************************************
+        * @description Determines if any source field is a formula field
+        * @returns Boolean true if any source field is a formula, otherwise false
+        */
+        private Boolean aSourceFieldIsAFormula() {
+            for (String field : sourceFields) {
+                if (UTIL_Describe.getFieldDescribe(target, field).isCalculated()) {
+                    return true;
+                }
+            }
+            return false;
+         }
     }
 }

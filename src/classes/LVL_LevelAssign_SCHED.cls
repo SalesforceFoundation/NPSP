@@ -60,11 +60,11 @@ public without sharing class LVL_LevelAssign_SCHED implements Schedulable {
             cLvlAssignBatch = 0;
 
             // for a given Object (Contact, Account, etc), provides the set of fields from that object that need to be queried.
-            List<LVL_LevelAssign_BATCH.Level> levels = LVL_LevelAssign_BATCH.getLevels();
+            List<LVL_LevelAssign_BATCH.Ladder> ladders = LVL_LevelAssign_BATCH.getLadders();
             
             // create batch for each Object
-            for (LVL_LevelAssign_BATCH.Level level : levels) {
-                LVL_LevelAssign_BATCH batch = new LVL_LevelAssign_BATCH(level.buildQuery(), level.target);
+            for (LVL_LevelAssign_BATCH.Ladder ladder : ladders) {
+                LVL_LevelAssign_BATCH batch = new LVL_LevelAssign_BATCH(ladder.buildQuery(), ladder.target);
                 Database.executeBatch(batch, batchSize);
                 cLvlAssignBatch++;
             }

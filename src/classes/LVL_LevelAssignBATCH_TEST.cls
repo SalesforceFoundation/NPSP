@@ -34,7 +34,7 @@
 * @description test the batchable class for Level Assignments
 */
 
-@isTest
+@isTest(IsParallel=true)
 private class LVL_LevelAssignBATCH_TEST {
 
     private static Level__c lvlTin { get; set; }
@@ -278,6 +278,10 @@ private class LVL_LevelAssignBATCH_TEST {
         sched.runBatch();
         Test.stopTest();
         
+        System.assertEquals(2, [SELECT COUNT() FROM AsyncApexJob WHERE JobType = 'BatchApex'],
+            'Two batches should run, one for Contact and one for Account'
+        );
+
         verifyContactLevels();
     }
 
@@ -789,39 +793,42 @@ private class LVL_LevelAssignBATCH_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Confirms that Level wrapper constructor sets attributes correctly
+    * @description Confirms that Ladder constructor sets target correctly
     */
     @isTest
-    private static void shouldWrapLevelRecords() {
-        Level__c testLevel = new Level__c(
-            Target__c = 'Contact',
-            Source_Field__c = 'npo02__TotalOppAmount__c',
-            Level_Field__c = 'npo02__LastMembershipLevel__c',
-            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c'
-        );
-        LVL_LevelAssign_BATCH.Level level = new LVL_LevelAssign_BATCH.Level(testLevel);
+    private static void ladderConstructorShouldSetTarget() {
+        LVL_LevelAssign_BATCH.Ladder ladder = new LVL_LevelAssign_BATCH.Ladder('Contact');
 
-        System.assertEquals(testLevel.Target__c, level.target,
-            'The target attribute should return the Target__c value');
-        System.assertEquals(testLevel.Source_Field__c, level.sourceField,
-            'The sourceField attribute should return the Source_Field__c value');
+        System.assertEquals('Contact', ladder.target, 'The target attribute should be set correctly');
     }
 
     /*********************************************************************************************************
-    * @description Confirms that Level wrapper can build a SOQL query
+    * @description Confirms that Ladder can build a SOQL query
     */
     @isTest
     private static void shouldBuildQueryForLevel() {
-        Level__c testLevel = new Level__c(
+        Level__c paperLevel = new Level__c(
+            Name = 'Paper',
             Target__c = 'Contact',
             Source_Field__c = 'npo02__TotalOppAmount__c',
             Level_Field__c = 'npo02__LastMembershipLevel__c',
             Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c'
         );
-        LVL_LevelAssign_BATCH.Level level = new LVL_LevelAssign_BATCH.Level(testLevel);
+
+        Level__c rockLevel = new Level__c(
+            Name = 'Rock',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c',
+            Level_Field__c = 'npo02__LastMembershipLevel__c',
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c'
+        );
+
+        LVL_LevelAssign_BATCH.Ladder ladder = new LVL_LevelAssign_BATCH.Ladder('Contact');
+        ladder.addLevel(paperLevel);
+        ladder.addLevel(rockLevel);
 
         Test.startTest();
-        String soqlQuery = level.buildQuery();
+        String soqlQuery = ladder.buildQuery();
         Test.stopTest();
 
         System.assert(soqlQuery.contains('npo02__TotalOppAmount__c'),
@@ -846,7 +853,7 @@ private class LVL_LevelAssignBATCH_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Confirms that Level wrapper can build a SOQL query
+    * @description Confirms that Ladder builds SOQL query with SystemModStamp filter
     */
     @isTest
     private static void shouldBuildQueryWithLastRunFilter() {
@@ -872,12 +879,15 @@ private class LVL_LevelAssignBATCH_TEST {
             Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c'
         );
 
-        LVL_LevelAssign_BATCH.Level contactLevelWrapper = new LVL_LevelAssign_BATCH.Level(contactLevel);
-        LVL_LevelAssign_BATCH.Level accountLevelWrapper = new LVL_LevelAssign_BATCH.Level(accountLevel);
+        LVL_LevelAssign_BATCH.Ladder contactLadder = new LVL_LevelAssign_BATCH.Ladder('Contact')
+            .addLevel(contactLevel);
+
+        LVL_LevelAssign_BATCH.Ladder accountLadder = new LVL_LevelAssign_BATCH.Ladder('Account')
+            .addLevel(accountLevel);
 
         Test.startTest();
-        String contactSoqlQuery = contactLevelWrapper.buildQuery();
-        String accountSoqlQuery = accountLevelWrapper.buildQuery();
+        String contactSoqlQuery = contactLadder.buildQuery();
+        String accountSoqlQuery = accountLadder.buildQuery();
         Test.stopTest();
 
         String formattedDatetime = contactDatetime.formatGMT(LVL_LevelAssign_BATCH.DATETIME_SOQL_FORMAT);
@@ -900,20 +910,30 @@ private class LVL_LevelAssignBATCH_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Confirms that filter is not used when source is a formula field
+    * @description Confirms that filter is not used when a source field is a formula field
     */
     @isTest
     private static void shouldExcludeFilterWhenSourceIsFormula() {
-        Level__c testLevel = new Level__c(
+        Level__c formulaLevel = new Level__c(
             Target__c = 'Contact',
             Source_Field__c = 'npo02__LastCloseDateHH__c',
             Level_Field__c = 'npo02__LastMembershipLevel__c',
             Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c'
         );
-        LVL_LevelAssign_BATCH.Level level = new LVL_LevelAssign_BATCH.Level(testLevel);
+
+        Level__c nonFormulaLevel = new Level__c(
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c',
+            Level_Field__c = 'npo02__LastMembershipLevel__c',
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c'
+        );
+
+        LVL_LevelAssign_BATCH.Ladder ladder = new LVL_LevelAssign_BATCH.Ladder('Contact')
+            .addLevel(formulaLevel)
+            .addLevel(nonFormulaLevel);
 
         Test.startTest();
-        String soqlQuery = level.buildQuery();
+        String soqlQuery = ladder.buildQuery();
         Test.stopTest();
 
         System.assert(!soqlQuery.contains('WHERE SystemModStamp > '),
@@ -929,7 +949,18 @@ private class LVL_LevelAssignBATCH_TEST {
             LastJobStartTimeContact__c = Datetime.now().addDays(-10)
         );
 
-        Level__c testLevel = new Level__c(
+        Level__c oldLevel = new Level__c(
+            Name = 'Paper',
+            Target__c = 'Contact',
+            Source_Field__c = 'npo02__TotalOppAmount__c',
+            Level_Field__c = 'npo02__LastMembershipLevel__c',
+            Previous_Level_Field__c = 'npo02__LastMembershipOrigin__c',
+            Minimum_Amount__c = null,
+            Maximum_Amount__c = 1000
+        );
+
+        Level__c updatedLevel = new Level__c(
+            Name = 'Rock',
             Target__c = 'Contact',
             Source_Field__c = 'npo02__TotalOppAmount__c',
             Level_Field__c = 'npo02__LastMembershipLevel__c',
@@ -938,22 +969,26 @@ private class LVL_LevelAssignBATCH_TEST {
             Maximum_Amount__c = 5000
         );
 
-        insert testLevel;
+        insert new List<Level__c>{ oldLevel, updatedLevel };
+        Test.setCreatedDate(oldLevel.Id, Datetime.now().addDays(-20));
 
-        testLevel = [
+        List<Level__c> requeriedLevels = [
             SELECT Target__c, Source_Field__c, Level_Field__c, Previous_Level_Field__c, LastModifiedDate
             FROM Level__c
-            WHERE Id = :testLevel.Id
         ];
         
-        LVL_LevelAssign_BATCH.Level level = new LVL_LevelAssign_BATCH.Level(testLevel);
+        LVL_LevelAssign_BATCH.Ladder ladder = new LVL_LevelAssign_BATCH.Ladder('Contact');
+
+        for (Level__c level : requeriedLevels) {
+            ladder.addLevel(level);
+        }
 
         Test.startTest();
-        String soqlQuery = level.buildQuery();
+        String soqlQuery = ladder.buildQuery();
         Test.stopTest();
 
         System.assert(!soqlQuery.contains('WHERE SystemModStamp > '),
-            'The query should not include a SystemModStamp filter when the source field is a formula');
+            'The query should not include a SystemModStamp filter when a level record is updated after last run date');
     }
 
     // Helpers
