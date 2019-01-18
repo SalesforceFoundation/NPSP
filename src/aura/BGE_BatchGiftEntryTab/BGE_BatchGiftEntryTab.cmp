@@ -40,8 +40,11 @@
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
     <!-- Private Attributes -->
-    <aura:attribute name="batchData" type="Object[]" access="private" />
+    <aura:attribute name="batchData" type="Object" access="private" />
     <aura:attribute name="batchListColumns" type="List" />
+    <aura:attribute name="totalNumberOfRows" type="Integer" />
+    <aura:attribute name="isLoadingDataTable" type="Boolean" default="false" />
+    <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true" />
 
     <!-- Start Markup -->
     <lightning:overlayLibrary aura:id="overlayLib"/>
@@ -65,12 +68,20 @@
         </div>
     </header>
 
+    data length: {!v.batchData.length}<br/>
+    num rows: {!v.totalNumberOfRows}<br/>
+
     <!--Data Table-->
     <lightning:datatable keyField="id"
                          data="{!v.batchData}"
                          columns="{!v.batchListColumns}"
                          hideCheckboxColumn="true"
-                         sortedBy="Name" />
+                         sortedBy="Name"
+                         enableInfiniteLoading="{!v.enableInfiniteLoading}"
+                         onloadmore="{!c.loadMoreData}"
+                         isLoading="{!v.isLoadingDataTable}"
+                         aura:id="dataTable"
+    />
 
     <!-- End Markup -->
 

@@ -1,89 +1,73 @@
 ({
     doInit: function(component) {
-        /*
-        let testColumns = 'Name,Batch_Description__c,CreatedById,CreatedDate';
-        var columns = [
-            {label: 'Name', fieldName: 'Name', type: 'text'},
-            {label: 'Description', fieldName: 'Batch_Description__c', type: 'text'},
-        ];
-
-        columns.push({label: 'Created By', fieldName: 'CreatedById', type: 'url', editable: false, typeAttributes: {label: {fieldName: 'CreatedBy.Name'}}});
-        columns.push({label: 'Created Date', fieldName: 'CreatedDate', type: 'date'});
-
-        component.set('v.batchListColumns',columns);
-        */
-
         var action = component.get('c.getTabModel');
         action.setCallback(this, function (response) {
             const state = response.getState();
             if (state === 'SUCCESS') {
                 let model = JSON.parse(response.getReturnValue());
-
-                // TODO: separate load columns function
-                var columns = [];
-                console.log(JSON.stringify(model.batches));
-                columns.push({
-                    // TODO: make this a real label
-                    label: 'Batch',
-                    fieldName: 'batchLink',
-                    type: 'url',
-                    typeAttributes: {label:{fieldName:"Name"},target:"_blank"}
-                });
-                model.columns.forEach(function(col){
-                    columns.push(col);
-                });
-                component.set('v.batchListColumns',columns);
-
-                this.loadBatchRows(component, model.batches);
+                this.setColumns(component, model.columns);
+                component.set('v.totalNumberOfRows', model.totalNumberOfRows);
+                this.setBatchRows(component, model.batches);
             } else {
                 this.handleApexErrors(component, response.getError());
             }
         });
-        $A.enqueueAction(action)
+        $A.enqueueAction(action);
+    },
 
+    setColumns: function(component, responseColumns) {
+        var columns = [];
+        columns.push({
+            // TODO: make this a real label
+            label: 'Batch',
+            fieldName: 'batchLink',
+            type: 'url',
+            typeAttributes: {label:{fieldName:"Name"},target:"_blank"}
+        });
+        responseColumns.forEach(function(col){
+            columns.push(col);
+        });
+        component.set('v.batchListColumns',columns);
+    },
 
-        /*
-        var action = component.get('c.getNamespacedListView');
+    getMoreBatchRows: function(component) {
+        debugger;
+        let offset = component.get('v.batchData').length;
+        let rowsToLoad = 50;
+        let action = component.get('c.getBatches');
+        action.setParams({
+            "queryAmount": rowsToLoad,
+            "offset": offset
+        });
         action.setCallback(this, function (response) {
             const state = response.getState();
             if (state === 'SUCCESS') {
-                let namespacedListView = response.getReturnValue();
-                $A.createComponent(
-                    "lightning:listView",
-                    {
-                        "objectApiName": namespacedListView.objectApiName,
-                        "listName": namespacedListView.listName,
-                        "showActionBar": false,
-                        "enableInlineEdit": false,
-                        "showRowLevelActions": false
-                    },
-                    function (listView, status, errorMessage) {
-                        if (status === "SUCCESS") {
-                            let body = component.get("v.body");
-                            body.push(listView);
-                            component.set("v.body", body);
-                        } else {
-                            this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
-                        }
-                    }
-                );
+                let batches = response.getReturnValue();
+                this.setBatchRows(component, batches);
             } else {
                 this.handleApexErrors(component, response.getError());
             }
         });
-        $A.enqueueAction(action);*/
+        $A.enqueueAction(action);
     },
 
     /**
      * @description: loads Batch Rows into datatable data
      * @param batches: list of BatchRow wrappers
      */
-    loadBatchRows: function(component, responseRows) {
+    setBatchRows: function(component, responseRows) {
         responseRows.forEach(function(currentRow) {
+            console.log(JSON.stringify(responseRows));
             currentRow.batchLink = '/' + currentRow.Id;
             currentRow.CreatedByName = currentRow.CreatedBy.Name;
         });
-        component.set('v.batchData', responseRows);
+        let data = component.get('v.batchData');
+        if (!data) {
+            data = [];
+        }
+        debugger;
+        data = data.concat(responseRows);
+        component.set('v.batchData', data);
     },
 
     /**

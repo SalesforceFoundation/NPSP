@@ -11,6 +11,15 @@
      */
     onNewBatchClick: function(component, event, helper) {
         helper.checkFieldPermissions(component);
-    }
+    },
+
+    loadMoreData: function (component, event, helper) {
+        debugger;
+        if (component.get('v.batchData').length >= component.get('v.totalNumberOfRows')) {
+            component.set('v.enableInfiniteLoading', false);
+        } else {
+            helper.getMoreBatchRows(component);
+        }
+    },
 
 })

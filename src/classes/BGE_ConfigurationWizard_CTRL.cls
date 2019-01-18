@@ -537,22 +537,45 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     */
     @AuraEnabled
     public static String getTabModel() {
-        // TODO: design attribute controller must NOT offer Name, Id, or any relationship fields
-        String testColumns = 'Batch_Description__c,CreatedById,CreatedBy.Name,Batch_Process_Size__c,CreatedDate';
-        List<String> fields = testColumns.split(',');
 
         TabModel model = new TabModel();
-        model.columns = getTabColumns(fields);
-        model.batches = getBatches(fields);
+        model.columns = getTabColumns();
+        model.batches = getInitialBatches();
+        model.totalNumberOfRows = [SELECT Count() FROM DataImportBatch__c];
+        System.debug(model.columns.size());
+        System.debug(model.batches.size());
+        System.debug(model.totalNumberOfRows);
         return JSON.serialize(model);
+    }
+
+    /*******************************************************************************************************
+    * @description Gets Data Import Batch fields for datatable columns on BGE Batch Gift Entry Tab
+    * @return List<String> list of Data Import Batch field api names
+    */
+    public static List<String> getDataTableColumnFields() {
+        // TODO: field set?
+        // TODO: remove disallowed fields - relationship, etc.?
+        String testColumns = 'Batch_Description__c,CreatedById,CreatedBy.Name,Batch_Process_Size__c,CreatedDate';
+        return testColumns.split(',');
+    }
+
+    /*******************************************************************************************************
+    * @description Gets initial set of Data Import Batch data to populate datatable on BGE Batch Gift Entry Tab
+    * @return List<DataImportBatch__c> list of Data Import Batches
+    */
+    public static List<DataImportBatch__c> getInitialBatches() {
+        // TODO: decide on initial batch size queryAmount
+        return getBatches(50, 0);
     }
 
     /*******************************************************************************************************
     * @description Gets Data Import Batch data to populate datatable on BGE Batch Gift Entry Tab
     * @return List<DataImportBatch__c> list of Data Import Batches
     */
-    public static List<DataImportBatch__c> getBatches(List<String> fields) {
+    @AuraEnabled
+    public static List<DataImportBatch__c> getBatches(Integer queryAmount, Integer offset) {
 
+        List<String> fields = getDataTableColumnFields();
         List<DataImportBatch__c> batches = new List<DataImportBatch__c>();
 
         // ensure Name and Id are included but not duplicated from user input in design attribute
@@ -565,7 +588,9 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         String query = 'SELECT ' +
                 String.join(finalFields, ', ') +
-                ' FROM ' + UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c');
+                ' FROM ' + UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c') +
+                ' LIMIT ' + queryAmount +
+                ' OFFSET ' + offset;
         return Database.query(query);
     }
 
@@ -574,7 +599,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     * @param List<String> list of field api names to turn into columns
     * @return List<Column> list of columns for datatable
     */
-    public static List<Column> getTabColumns(List<String> fields) {
+    public static List<Column> getTabColumns() {
+        List<String> fields = getDataTableColumnFields();
         List<Column> columns = new List<Column>();
         for (String field : fields) {
             if(!field.contains('.')) {
@@ -719,6 +745,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     public class TabModel {
         @AuraEnabled public List<DataImportBatch__c> batches;
         @AuraEnabled public List<Column> columns;
+        @AuraEnabled public Integer totalNumberOfRows;
     }
 
     /*******************************************************************************************************
