@@ -13,7 +13,7 @@
     </fields>
     <fields>
         <fullName>LastJobStartTimeContact__c</fullName>
-        <description>The last the time the Levels assignment batch job ran for the Contact object</description>
+        <description>The last time the Level assignment batch job ran successfully for the Contact object</description>
         <externalId>false</externalId>
         <label>Last Job Start Time : Contact</label>
         <required>false</required>
