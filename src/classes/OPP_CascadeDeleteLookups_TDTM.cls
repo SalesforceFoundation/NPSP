@@ -60,7 +60,7 @@ public with sharing class OPP_CascadeDeleteLookups_TDTM extends CDL_CascadeDelet
         * @description Retrieves the related Allocations of the deleted Opportunities.
         * @param Set<Id> The Ids of the deleted Opportunities.
         * @return List<Allocation__c> Deleted Opportunities' Allocations.
-        ********************************************************************************************************/        
+        ********************************************************************************************************/
         public List<Allocation__c> load(Set<Id> opportunityIds) {
             return [
                 SELECT Opportunity__c
