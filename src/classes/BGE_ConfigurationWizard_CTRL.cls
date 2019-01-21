@@ -47,15 +47,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     };
 
     /*******************************************************************************************************
-    * @description Checks for field permissions to create a new Batch/Template
-    * @return void; throws an AuraHandledException if any fields fail FLS check
-    */
-    @AuraEnabled
-    public static void checkFieldPermissions() {
-        BGE_BatchGiftEntry_UTIL.checkFieldPermissionsNeededForBatch();
-    }
-
-    /*******************************************************************************************************
     * @description Retrieves the Template Details information, the related list of fields, and component labels.
     * @param recordId Id of the record to be queried
     * @return JSON model of all template details data.
@@ -520,114 +511,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Gets list view to display on the BGE Batch Gift Entry Tab Controller
-    * @return Map<String, String> listView with namespaced attributes to use to create correctly namespaced list view
-    */
-    @AuraEnabled
-    public static Map<String, String> getNamespacedListView() {
-        Map<String, String> listView = new Map<String, String>();
-        listView.put('objectApiName', UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'));
-        listView.put('listName', UTIL_Namespace.StrTokenNSPrefix('Gift_Batches'));
-        return listView;
-    }
-
-    /*******************************************************************************************************
-    * @description Gets Data Import Batch data to populate datatable on BGE Batch Gift Entry Tab
-    * @return List<DataImportBatch__c> list of Data Import Batches
-    */
-    @AuraEnabled
-    public static String getTabModel() {
-        if (UTIL_Permissions.canRead(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), false)) {
-            TabModel model = new TabModel();
-            model.columns = getTabColumns();
-            model.batches = getInitialBatches();
-            model.totalNumberOfRows = [SELECT Count() FROM DataImportBatch__c];
-            return JSON.serialize(model);
-        } else {
-            throw new AuraHandledException(Label.bgeFLSError);
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description Gets Data Import Batch fields for datatable columns on BGE Batch Gift Entry Tab
-    * @return List<String> list of Data Import Batch field api names
-    */
-    public static List<String> getDataTableColumnFields() {
-        // TODO: remove disallowed fields - relationship, etc.?
-        List<String> fieldNames = UTIL_Describe.listStrFromFieldSet(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), UTIL_Namespace.StrTokenNSPrefix('BatchGiftEntryTabDataTableColumns'));
-        for (Integer i=0; i<fieldNames.size(); i++) {
-            if (!UTIL_Permissions.canRead(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), fieldNames[i], false)) {
-                fieldNames.remove(i);
-            }
-        }
-        return fieldNames;
-    }
-
-    /*******************************************************************************************************
-    * @description Gets initial set of Data Import Batch data to populate datatable on BGE Batch Gift Entry Tab
-    * @return List<DataImportBatch__c> list of Data Import Batches
-    */
-    public static List<DataImportBatch__c> getInitialBatches() {
-        return getBatches(50, 0);
-    }
-
-    /*******************************************************************************************************
-    * @description Gets Data Import Batch data to populate datatable on BGE Batch Gift Entry Tab
-    * @param queryAmount the number of new records to query
-    * @param offset the number of records to offset by
-    * @return List<DataImportBatch__c> list of Data Import Batches
-    */
-    @AuraEnabled
-    public static List<DataImportBatch__c> getBatches(Integer queryAmount, Integer offset) {
-
-        List<String> fields = getDataTableColumnFields();
-        List<DataImportBatch__c> batches = new List<DataImportBatch__c>();
-
-        // ensure Name and Id are included but not duplicated from user input in field set
-        fields.add('Name');
-        fields.add('Id');
-        fields.add('CreatedBy.Name');
-        Set<String> deduplicatedFields = new Set<String>(fields);
-        List<String> finalFields = new List<String>(deduplicatedFields);
-
-        String query = 'SELECT ' +
-                String.join(finalFields, ', ') +
-                ' FROM ' + UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c') +
-                ' WHERE GiftBatch__c = TRUE' +
-                ' LIMIT ' + queryAmount +
-                ' OFFSET ' + offset;
-        return Database.query(query);
-    }
-
-    /*******************************************************************************************************
-    * @description Gets columns to create datatable on BGE Batch Gift Entry Tab
-    * @return List<Column> list of columns for datatable
-    */
-    public static List<Column> getTabColumns() {
-        List<String> fields = getDataTableColumnFields();
-        List<Column> columns = new List<Column>();
-        for (String fieldName : fields) {
-            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), fieldName);
-            String dataType = dfr.getType().name().toLowerCase();
-            Column col = new Column();
-            col.fieldName = fieldName;
-            col.label = dfr.label;
-            col.type = UTIL_LightningComponentSupport.getLightningDataType(dfr.getType().name());
-            col.sortable = col.type == 'textarea' ? false : true;
-
-            // special case for CreatedBy
-            if (col.fieldName == 'CreatedById') {
-                col.fieldName = 'CreatedByName';
-                col.label = Label.stgCreatedBy;
-                col.type = UTIL_LightningComponentSupport.getLightningDataType('string');
-            }
-
-            columns.add(col);
-        }
-        return columns;
-    }
-
-    /*******************************************************************************************************
     * @description Deserializes information to the model and selects which record to save.
     * @param recordInfo JSON string of the record information
     * @param activeFields JSON string of the active fields to be saved to the record
@@ -733,26 +616,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             requiredInEntryForm = false;
             conditionallyRequired = false;
         }
-    }
-
-    /*******************************************************************************************************
-    * @description a class to retrieve info for BGE_BatchGiftEntryTab component
-    */
-    public class TabModel {
-        @AuraEnabled public List<DataImportBatch__c> batches;
-        @AuraEnabled public List<Column> columns;
-        @AuraEnabled public Integer totalNumberOfRows;
-    }
-
-    /*******************************************************************************************************
-    * @description a class to retrieve column info for datatable
-    */
-    public class Column {
-        @AuraEnabled public String label;
-        @AuraEnabled public String fieldName;
-        @AuraEnabled public Boolean readOnly;
-        @AuraEnabled public Boolean sortable;
-        @AuraEnabled public String type;
     }
 
 }

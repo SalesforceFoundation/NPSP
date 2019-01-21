@@ -451,6 +451,7 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
+        <members>BGE_BatchGiftEntryTab_CTRL</members>
         <name>ApexClass</name>
     </types>
     <types>

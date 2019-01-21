@@ -24,7 +24,7 @@
             fieldName: 'batchLink',
             sortable: true,
             type: 'url',
-            typeAttributes: {label:{fieldName:"Name"},target:"_blank"}
+            typeAttributes: {label:{fieldName:"Name"},target:"self"}
         });
         component.set('v.batchListColumns', responseColumns);
     },

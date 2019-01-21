@@ -34,7 +34,7 @@
   @description Tab component used to view all DataImportBatch records used for Batch Gift Entry.
 -->
 
-<aura:component implements="force:appHostable" controller="BGE_ConfigurationWizard_CTRL" access="public">
+<aura:component implements="force:appHostable" controller="BGE_BatchGiftEntryTab_CTRL" access="public">
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
