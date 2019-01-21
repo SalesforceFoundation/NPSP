@@ -449,8 +449,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         List<Map<String, String>> donationMatchingOptions = new List<Map<String, String>>();
 
         Set<String> donationObjects = new Set<String>{
-                'Opportunity',
-                'Payment'
+            'Opportunity',
+            'Payment'
         };
         List<DescribeFieldResult> dfrs = getRelevantFields(donationObjects);
 
@@ -617,5 +617,4 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             conditionallyRequired = false;
         }
     }
-
 }

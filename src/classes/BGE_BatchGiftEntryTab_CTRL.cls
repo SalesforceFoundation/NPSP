@@ -139,7 +139,6 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
     * @return List<String> list of Data Import Batch field api names
     */
     public static List<String> getDataTableColumnFieldNames() {
-        // TODO: remove disallowed fields - relationship, etc.?
         List<String> fieldNames = UTIL_Describe.listStrFromFieldSet(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), UTIL_Namespace.StrTokenNSPrefix('BatchGiftEntryTabDataTableColumns'));
         for (Integer i=0; i<fieldNames.size(); i++) {
             if (!UTIL_Permissions.canRead(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), fieldNames[i], false)) {
