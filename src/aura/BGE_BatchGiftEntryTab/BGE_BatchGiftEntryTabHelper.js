@@ -1,4 +1,6 @@
 ({
+    /******************************** Init Functions *****************************/
+
     doInit: function(component) {
         var action = component.get('c.getTabModel');
         action.setCallback(this, function (response) {
@@ -16,18 +18,15 @@
     },
 
     setColumns: function(component, responseColumns) {
-        var columns = [];
-        columns.push({
+        responseColumns.unshift({
             // TODO: make this a real label
             label: 'Batch',
             fieldName: 'batchLink',
+            sortable: true,
             type: 'url',
             typeAttributes: {label:{fieldName:"Name"},target:"_blank"}
         });
-        responseColumns.forEach(function(col){
-            columns.push(col);
-        });
-        component.set('v.batchListColumns',columns);
+        component.set('v.batchListColumns', responseColumns);
     },
 
     getMoreBatchRows: function(component, event) {
@@ -69,19 +68,7 @@
         component.set('v.batchData', data);
     },
 
-    /**
-     * @description: handles the display of errors from an apex callout
-     * @param errors: list of potential errors passed back from apex
-     */
-    handleApexErrors: function(component, errors) {
-        let message;
-        if (errors && errors[0] && errors[0].message) {
-            message = errors[0].message;
-        } else {
-            message = 'Unknown error';
-        }
-        this.showToast(component, $A.get('$Label.c.PageMessagesError'), message, 'error');
-    },
+    /******************************** User Interaction Functions *****************************/
 
     /**
      * @description: checks that user has all necessary permissions and then launches modal or displays error
@@ -137,6 +124,43 @@
                 }
             }
         );
+    },
+
+    sortBatchData: function(component, fieldName, sortDirection) {
+        const reverse = sortDirection !== 'asc';
+        let batchData = component.get('v.batchData');
+        batchData.sort(this.sortBy(fieldName, reverse));
+        component.set('v.batchData', batchData);
+    },
+
+    /**
+     * @description: called by sortData, sorts by provided key and direction. Provided by Salesforce lightning:datatable documentation.
+     */
+    sortBy: function (field, reverse, primer) {
+        var key = primer ?
+            function(x) {return primer(x[field])} :
+            function(x) {return x[field]};
+        //checks if the two rows should switch places
+        reverse = !reverse ? 1 : -1;
+        return function (a, b) {
+            return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
+        }
+    },
+
+    /******************************** Utility Functions *****************************/
+
+    /**
+     * @description: handles the display of errors from an apex callout
+     * @param errors: list of potential errors passed back from apex
+     */
+    handleApexErrors: function(component, errors) {
+        let message;
+        if (errors && errors[0] && errors[0].message) {
+            message = errors[0].message;
+        } else {
+            message = 'Unknown error';
+        }
+        this.showToast(component, $A.get('$Label.c.PageMessagesError'), message, 'error');
     },
 
     /**

@@ -542,9 +542,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             model.columns = getTabColumns();
             model.batches = getInitialBatches();
             model.totalNumberOfRows = [SELECT Count() FROM DataImportBatch__c];
-            System.debug(model.columns.size());
-            System.debug(model.batches.size());
-            System.debug(model.totalNumberOfRows);
             return JSON.serialize(model);
         } else {
             throw new AuraHandledException(Label.bgeFLSError);
@@ -557,7 +554,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     */
     public static List<String> getDataTableColumnFields() {
         // TODO: remove disallowed fields - relationship, etc.?
-        List<String> fieldNames = UTIL_Describe.listStrFromFieldSet('DataImportBatch__c','BatchGiftEntryTabDataTableColumns');
+        List<String> fieldNames = UTIL_Describe.listStrFromFieldSet(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), UTIL_Namespace.StrTokenNSPrefix('BatchGiftEntryTabDataTableColumns'));
         for (Integer i=0; i<fieldNames.size(); i++) {
             if (!UTIL_Permissions.canRead(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), fieldNames[i], false)) {
                 fieldNames.remove(i);
@@ -616,6 +613,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             col.fieldName = fieldName;
             col.label = dfr.label;
             col.type = UTIL_LightningComponentSupport.getLightningDataType(dfr.getType().name());
+            col.sortable = col.type == 'textarea' ? false : true;
 
             // special case for CreatedBy
             if (col.fieldName == 'CreatedById') {
@@ -753,6 +751,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public String label;
         @AuraEnabled public String fieldName;
         @AuraEnabled public Boolean readOnly;
+        @AuraEnabled public Boolean sortable;
         @AuraEnabled public String type;
     }
 

@@ -23,4 +23,18 @@
         }
     },
 
+    /**
+     * @description: sorts the data by the field name and current direction
+     */
+    sortByColumns: function(component, event, helper) {
+        const fieldName = event.getParam('fieldName');
+        const sortEventParam = event.getParam('sortDirection');
+        const sortDirection = sortEventParam ? sortEventParam : 'asc';
+
+        helper.sortBatchData(component, fieldName, sortDirection);
+
+        component.set("v.batchData.sortedBy", fieldName);
+        component.set("v.batchData.sortedDirection", sortDirection);
+    }
+
 })

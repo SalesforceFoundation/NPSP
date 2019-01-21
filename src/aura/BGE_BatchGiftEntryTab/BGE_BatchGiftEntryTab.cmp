@@ -41,10 +41,10 @@
 
     <!-- Private Attributes -->
     <aura:attribute name="batchData" type="Object" access="private" />
-    <aura:attribute name="batchListColumns" type="List" />
-    <aura:attribute name="totalNumberOfRows" type="Integer" />
-    <aura:attribute name="isLoadingDataTable" type="Boolean" default="false" />
-    <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true" />
+    <aura:attribute name="batchListColumns" type="List" access="private"/>
+    <aura:attribute name="totalNumberOfRows" type="Integer" access="private"/>
+    <aura:attribute name="isLoadingDataTable" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true" access="private"/>
 
     <!-- Start Markup -->
     <lightning:overlayLibrary aura:id="overlayLib"/>
@@ -68,20 +68,20 @@
         </div>
     </header>
 
-    data length: {!v.batchData.length}<br/>
-    num rows: {!v.totalNumberOfRows}<br/>
-
     <!--Data Table-->
-    <lightning:datatable keyField="id"
+    <lightning:datatable aura:id="dataTable"
+                         keyField="id"
                          data="{!v.batchData}"
                          columns="{!v.batchListColumns}"
                          hideCheckboxColumn="true"
-                         sortedBy="Name"
                          enableInfiniteLoading="{!v.enableInfiniteLoading}"
                          showRowNumberColumn="true"
                          onloadmore="{!c.loadMoreData}"
                          isLoading="{!v.isLoadingDataTable}"
-                         aura:id="dataTable"
+                         onsort="{!c.sortByColumns}"
+                         sortedBy="{!v.batchData.sortedBy}"
+                         sortedDirection="{!v.batchData.sortedDirection}"
+                         defaultSortDirection="asc"
     />
 
     <!-- End Markup -->

@@ -368,11 +368,10 @@ public class UTIL_Describe {
 
     /*******************************************************************************************************
     * @description utility to return a list of strings from a field set.
-    * @param obj the name of the object
-    * @param fieldSet the name of the object's field set
+    * @param obj the namespaced name of the object
+    * @param fieldSet the namespaced name of the object's field set
     * @return a list of strings of field names in the field set
     */
-    // utility to return a list of strings from a field set.
     public static List<String> listStrFromFieldSet(String obj, String fieldSetName) {
         List<String> fieldNames = new List<String>();
         if (gd==null) gd = Schema.getGlobalDescribe();
