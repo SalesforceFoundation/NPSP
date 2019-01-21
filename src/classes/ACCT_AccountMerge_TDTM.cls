@@ -35,6 +35,9 @@
 *
 * @description Trigger Handler on Accounts that handles detecting when an Account Merge 
 * has completed, in order to fixup an assortment of affected information.
+
+
+TEST COMMENT
 */
 public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
         
