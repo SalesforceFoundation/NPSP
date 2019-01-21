@@ -18,13 +18,12 @@
     },
 
     setColumns: function(component, responseColumns) {
-        responseColumns.unshift({
-            // TODO: make this a real label
-            label: 'Batch',
-            fieldName: 'batchLink',
-            sortable: true,
-            type: 'url',
-            typeAttributes: {label:{fieldName:"Name"},target:"self"}
+        responseColumns.forEach(function(col){
+           if (col.type === 'number') {
+               col.cellAttributes = {alignment: "left"};
+           } else if (col.fieldName === 'batchLink') {
+               col.typeAttributes = {label:{fieldName:"Name"},target:"self"};
+           }
         });
         component.set('v.batchListColumns', responseColumns);
     },
@@ -56,9 +55,10 @@
      */
     setBatchRows: function(component, responseRows) {
         responseRows.forEach(function(currentRow) {
-            console.log(JSON.stringify(responseRows));
             currentRow.batchLink = '/' + currentRow.Id;
-            currentRow.CreatedByName = currentRow.CreatedBy.Name;
+            currentRow.CreatedById = currentRow.CreatedBy.Name;
+            currentRow.LastModifiedById = currentRow.LastModifiedBy.Name;
+            currentRow.OwnerId = currentRow.Owner.Name;
         });
         let data = component.get('v.batchData');
         if (!data) {
@@ -80,7 +80,6 @@
             if (state === 'SUCCESS') {
                 this.openNewBatchWizard(component);
             } else if (state === 'ERROR') {
-                console.log(response.getError());
                 this.handleApexErrors(component, response.getError());
             }
         });

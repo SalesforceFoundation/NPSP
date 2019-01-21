@@ -82,6 +82,7 @@
         <members>BDI_PostProcess_TEST</members>
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
+        <members>BGE_BatchGiftEntryTab_CTRL</members>
         <members>BGE_BatchGiftEntry_UTIL</members>
         <members>BGE_BatchGiftEntry_UTIL_TEST</members>
         <members>BGE_ConfigurationWizard_CTRL</members>
@@ -451,7 +452,7 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>BGE_BatchGiftEntryTab_CTRL</members>
+        <members>BGE_BatchGiftEntryTab_CTRL_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -2041,6 +2042,7 @@
         <members>stgLabelYearPicklistLastYear</members>
         <members>stgLabelYearPicklistThisYear</members>
         <members>stgLabelYearPicklistYearsAgo</members>
+        <members>stgLastModifiedBy</members>
         <members>stgLinkDelete</members>
         <members>stgNPSPGuideImportData</members>
         <members>stgNPSPSettings</members>

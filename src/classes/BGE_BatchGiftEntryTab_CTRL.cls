@@ -58,25 +58,40 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
     * @return List<Column> list of columns for datatable
     */
     public static List<Column> getTabColumns() {
-        List<String> fields = getDataTableColumnFields();
+
+        Set<String> disallowedFields = new Set<String>{
+                'Name',
+                UTIL_Namespace.StrTokenNSPrefix('Active_Fields__c')
+        };
+
+        List<String> fieldNames = getDataTableColumnFieldNames();
         List<Column> columns = new List<Column>();
-        for (String fieldName : fields) {
-            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), fieldName);
-            String dataType = dfr.getType().name().toLowerCase();
-            Column col = new Column();
-            col.fieldName = fieldName;
-            col.label = dfr.label;
-            col.type = UTIL_LightningComponentSupport.getLightningDataType(dfr.getType().name());
-            col.sortable = col.type == 'textarea' ? false : true;
 
-            // special case for CreatedBy
-            if (col.fieldName == 'CreatedById') {
-                col.fieldName = 'CreatedByName';
-                col.label = Label.stgCreatedBy;
-                col.type = UTIL_LightningComponentSupport.getLightningDataType('string');
+        Column batchLinkCol = new Column();
+        batchLinkCol.label = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), 'Name');
+        batchLinkCol.fieldName = 'batchLink';
+        batchLinkCol.sortable = true;
+        batchLinkCol.type = 'url';
+        columns.add(batchLinkCol);
+
+        for (String fieldName : fieldNames) {
+            if (!disallowedFields.contains(fieldName)) {
+                DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), fieldName);
+                String dataType = dfr.getType().name().toLowerCase();
+                Column col = new Column();
+                col.fieldName = fieldName;
+                col.label = dfr.label;
+                col.type = UTIL_LightningComponentSupport.getLightningDataType(dfr.getType().name());
+                col.sortable = col.type == 'textarea' ? false : true;
+
+                // special case for known User lookups
+                if (dataType == 'reference') {
+                    col.type = UTIL_LightningComponentSupport.getLightningDataType('string');
+                    col.label = UTIL_Describe.getUserReferenceFieldLabel(dfr);
+                }
+
+                columns.add(col);
             }
-
-            columns.add(col);
         }
         return columns;
     }
@@ -98,13 +113,15 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
     @AuraEnabled
     public static List<DataImportBatch__c> getBatches(Integer queryAmount, Integer offset) {
 
-        List<String> fields = getDataTableColumnFields();
+        List<String> fields = getDataTableColumnFieldNames();
         List<DataImportBatch__c> batches = new List<DataImportBatch__c>();
 
         // ensure Name and Id are included but not duplicated from user input in field set
         fields.add('Name');
         fields.add('Id');
         fields.add('CreatedBy.Name');
+        fields.add('LastModifiedBy.Name');
+        fields.add('Owner.Name');
         Set<String> deduplicatedFields = new Set<String>(fields);
         List<String> finalFields = new List<String>(deduplicatedFields);
 
@@ -121,7 +138,7 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
     * @description Gets Data Import Batch fields for datatable columns on BGE Batch Gift Entry Tab
     * @return List<String> list of Data Import Batch field api names
     */
-    public static List<String> getDataTableColumnFields() {
+    public static List<String> getDataTableColumnFieldNames() {
         // TODO: remove disallowed fields - relationship, etc.?
         List<String> fieldNames = UTIL_Describe.listStrFromFieldSet(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), UTIL_Namespace.StrTokenNSPrefix('BatchGiftEntryTabDataTableColumns'));
         for (Integer i=0; i<fieldNames.size(); i++) {

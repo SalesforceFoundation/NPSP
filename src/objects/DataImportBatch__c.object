@@ -79,7 +79,7 @@
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
         </displayedFields>
-        <label>Bath Gift Entry Tab Data Table Columns</label>
+        <label>Batch Gift Entry Tab Data Table Columns</label>
     </fieldSets>
     <fields>
         <fullName>Account_Custom_Unique_ID__c</fullName>

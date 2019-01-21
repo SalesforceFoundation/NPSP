@@ -7685,6 +7685,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>{0} Years Ago</value>
     </labels>
     <labels>
+        <fullName>stgLastModifiedBy</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Last Modified By</shortDescription>
+        <value>Last Modified By</value>
+    </labels>
+    <labels>
         <fullName>stgLinkDelete</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

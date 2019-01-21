@@ -314,6 +314,23 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
+    * @description returns friendly label for standard User lookups when we need to display them in custom UI.
+    * This is necessary because these labels do not exist in any schema describe available.
+    * @return string, friendly label without 'Id'
+    */
+    public static String getUserReferenceFieldLabel(DescribeFieldResult dfr) {
+        if (dfr.name == 'CreatedById') {
+            return Label.stgCreatedBy;
+        } else if (dfr.name == 'OwnerId') {
+            return Label.leadConvertOwner;
+        } else if (dfr.name == 'LastModifiedById') {
+            return Label.stgLastModifiedBy;
+        } else {
+            return dfr.label;
+        }
+    }
+
+    /*******************************************************************************************************
     * @description checks whether the field exists
     * @param objectName the name of the object to look up
     * @param fieldName the name of the field to look up -- LOWERCASE
