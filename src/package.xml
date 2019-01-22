@@ -972,6 +972,8 @@
         <members>Level__c.Source_Field__c</members>
         <members>Level__c.Target__c</members>
         <members>Levels_Settings__c.Level_Assignment_Batch_Size__c</members>
+        <members>Levels_Settings__c.LastJobStartTimeAccount__c</members>
+        <members>Levels_Settings__c.LastJobStartTimeContact__c</members>
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Ask_Date__c</members>

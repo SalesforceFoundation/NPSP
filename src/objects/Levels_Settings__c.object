@@ -3,6 +3,24 @@
     <customSettingsType>Hierarchy</customSettingsType>
     <enableFeeds>false</enableFeeds>
     <fields>
+        <fullName>LastJobStartTimeAccount__c</fullName>
+        <description>The last time the Level assignment batch job ran successfully for the Account object</description>
+        <externalId>false</externalId>
+        <label>Last Job Start Time : Account</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
+        <fullName>LastJobStartTimeContact__c</fullName>
+        <description>The last time the Level assignment batch job ran successfully for the Contact object</description>
+        <externalId>false</externalId>
+        <label>Last Job Start Time : Contact</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>DateTime</type>
+    </fields>
+    <fields>
         <fullName>Level_Assignment_Batch_Size__c</fullName>
         <defaultValue>200</defaultValue>
         <description>Used by the Levels Assignment engine</description>
