@@ -35,6 +35,6 @@ Referenced Packages
 log.html
 output.xml
 report.html
-*.png
+/*.png
 testdata/dev_org/test_data.db
 *.db
