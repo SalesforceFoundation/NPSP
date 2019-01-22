@@ -289,6 +289,88 @@ public with sharing class UTIL_Permissions {
         return true;
     }
 
+    /*******************************************************************************************************************
+    * @description Determines whether the running user has read permissions on the sObject and fields provided
+    *
+    * @param sObjType the sObjectType to check read permissions
+    * @param sObjFields the list of SObjectFields to check read permissions
+    * @return Boolean true when the user has permissions for the SObjType and fields provided
+    */
+    public Boolean canRead(SObjectType sObjType, Set<SObjectField> sObjFields) {
+        if (!canRead(sObjType)) {
+            return false;
+        }
+
+        return canRead(SObjFields);
+    }
+
+    /*******************************************************************************************************************
+    * @description Determines whether the running user has read permissions on the sObject provided
+    *
+    * @param sObjType the sObjectType to check read permissions
+    * @return Boolean true when the user has permissions for the SObjType provided
+    */
+    private Boolean canRead(SObjectType sObjType) {
+        return canRead(String.valueOf(sObjType), false);
+    }
+
+    /*******************************************************************************************************************
+    * @description Determines whether the running user has read permissions for the fields provided
+    *
+    * @param sObjFields the list of SObjectFields to check read permissions
+    * @return Boolean true when the user has permissions for the SObjFields provided
+    */
+    private Boolean canRead(Set<SObjectField> sObjFields) {
+        for (SObjectField field : sObjFields) {
+            if (!canRead(field.getDescribe(), false)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /*******************************************************************************************************************
+    * @description Determines whether the running user has update permissions on the sObject and fields provided
+    *
+    * @param sObjType the sObjectType to check update permissions
+    * @param sObjFields the list of SObjectFields to check update permissions
+    * @return Boolean true when the user has permissions for the SObjType and fields provided
+    */
+    public Boolean canUpdate(SObjectType sObjType, Set<SObjectField> sObjFields) {
+        if (!canUpdate(sObjType)) {
+            return false;
+        }
+
+        return canUpdate(SObjFields);
+    }
+
+    /*******************************************************************************************************************
+    * @description Determines whether the running user has update permissions on the sObject provided
+    *
+    * @param sObjType the sObjectType to check update permissions
+    * @return Boolean true when the user has permissions for the SObjType provided
+    */
+    private Boolean canUpdate(SObjectType sObjType) {
+        return canUpdate(String.valueOf(sObjType), false);
+    }
+
+    /*******************************************************************************************************************
+    * @description Determines whether the running user has update permissions for the fields provided
+    *
+    * @param sObjFields the list of SObjectFields to check update permissions
+    * @return Boolean true when the user has permissions for the SObjFields provided
+    */
+    private Boolean canUpdate(Set<SObjectField> sObjFields) {
+        for (SObjectField field : sObjFields) {
+            if (!canUpdate(field.getDescribe(), false)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public class InsufficientPermissionException extends Exception {}
 
 }
