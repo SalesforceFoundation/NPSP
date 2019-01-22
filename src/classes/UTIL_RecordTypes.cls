@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 Salesforce.org
+    Copyright (c) 2019 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2016
+* @date 2019
 * @group Utilities
 *
 * @description Methods for obtaining information about record types
@@ -59,28 +59,6 @@ public class UTIL_RecordTypes {
     }
 
     /**
-     * @description Return the record type info for a record type with the
-     * given name for the given object.  This will return an instance
-     * conforming to the UTIL_RecordTypes.RecordTypeInfo interface, not an
-     * instance of Schema.RecordTypeInfo.  In the case where the record type
-     * does not exist, an UnavailableRecordTypeInfo "null object" will be
-     * returned.
-     *
-     * @param objectType The type of the object
-     * @param The name of the record type
-     * @return UTIL_RecordTypes.RecordTypeInfo
-     */
-    private static RecordTypeInfo getRecordTypeInfo(sObjectType objectType, String recordTypeName) {
-        Map<String, Schema.RecordTypeInfo> recordTypeInfos = objectType.getDescribe().getRecordTypeInfosByName();
-        if (recordTypeInfos.containsKey(recordTypeName)) {
-            return new RecordTypeInfoWrapper(recordTypeInfos.get(recordTypeName));
-        } else {
-            return new UnavailableRecordTypeInfo();
-        }
-    }
-
-
-    /**
      * @description Get the id of the given record type name for the given
      * object type, or null if the record type is not available or does not
      * exist.
@@ -92,7 +70,6 @@ public class UTIL_RecordTypes {
     public static Id getRecordTypeId(sObjectType objectType, String recordTypeName) {
         return getRecordTypeInfo(objectType, recordTypeName).getRecordTypeId();
     }
-
 
     /**
      * @description Get the name of the record type for the given record type
@@ -136,26 +113,194 @@ public class UTIL_RecordTypes {
         return getRecordTypeInfo(objectType, recordTypeName).isDefaultRecordTypeMapping();
     }
 
+    /********************************* VISUALFORCE SELECT METHODS ******************************/
+
     /**
-     * @description Return a record type info appropriate for using in tests,
-     * that belongs to the given object type.  This will return an instance
+     * @description Return a list of SelectOptions where the label is the
+     * record type name and the value is the record type id of a record type
+     * that belongs to the given object type.  The 'master' record type and
+     * all in-active record types are omitted from this list of options.
+     *
+     * @param objectType The type of the object
+     * @return List<SelectOption>
+     */
+    public static List<SelectOption> getRecordTypesForSelectList(sObjectType objectType) {
+        Map<String, Schema.RecordTypeInfo> recordTypeInfos = getObjectRecordTypeInfos(objectType, true, false);
+        List<SelectOption> options = new List<SelectOption>();
+        for (Schema.RecordTypeInfo rt: recordTypeInfos.values()) {
+            options.add(new SelectOption(rt.getRecordTypeId(), rt.getName()));
+        }
+        return options;
+    }
+
+    /**
+     * @description Return a list of SelectOptions where both the value and the
+     * label are the record type name of a record type that belongs to the
+     * given object type.  The 'master' record type and all in-active record types
+     * are omitted from this list of options.
+     *
+     * @param objectType The type of the object
+     * @return List<SelectOption>
+     */
+    public static List<SelectOption> getStringRecordTypesForSelectList(sObjectType objectType) {
+        Map<String, Schema.RecordTypeInfo> recordTypeInfos = getObjectRecordTypeInfos(objectType, true, false);
+        List<SelectOption> options = new List<SelectOption>();
+        for (Schema.RecordTypeInfo rt : recordTypeInfos.values()){
+            options.add(new SelectOption(rt.Name, rt.Name));
+        }
+        return options;
+    }
+
+    /********************************* LIGHTNING SELECT METHODS *******************************/
+
+    /**
+     * @description Return a list of Map<String, String> where one key is the label of the
+     * record type name and the other is the value of the record type id of a record type
+     * that belongs to the given object type.  The 'master' record type and
+     * all in-active record types are omitted from this list of options.
+     *
+     * @param objectType The type of the object
+     * @return List<Map<String, String>> A list of key-value pairs of values and labels for lightning:select fields
+     * where the value is the record type ID
+     * @example
+     * [{value: ...,
+     *   label: ...},
+     *    {...},
+     * ]
+     */
+    public static List<Map<String, String>> getRecordTypesForLightningSelect(sObjectType objectType) {
+        List<Map<String, String>> options = new List<Map<String, String>>();
+        Map<String, Schema.RecordTypeInfo> recordTypeInfos = getAssignedRecordTypes(objectType);
+
+        for (Schema.RecordTypeInfo recTypeInfo: recordTypeInfos.values()) {
+            Map<String, String> labeledOption = new Map<String, String>();
+            labeledOption.put('value', recTypeInfo.getRecordTypeId());
+            labeledOption.put('label', recTypeInfo.getName());
+            options.add(labeledOption);
+        }
+        return options;
+    }
+
+    /**
+     * @description Return a list of Map<String, String> where one key is the label of the
+     * record type name and the other is the value of the record type developer name of a record type
+     * that belongs to the given object type.  The 'master' record type and
+     * all in-active record types are omitted from this list of options.
+     *
+     * @param objectType The type of the object
+     * @return List<Map<String, String>> A list of key-value pairs of values and labels for lightning:select fields
+     * where the value is the developer name of the record type
+     * @example
+     * [{value: ...,
+     *   label: ...},
+     *    {...},
+     * ]
+     */
+    public static List<Map<String, String>> getRecordTypeDevNamesForLightningSelectList(sObjectType objectType) {
+        Map<String, Schema.RecordTypeInfo> recordTypeInfos = getAssignedRecordTypes(objectType);
+        List<Map<String, String>> options = new List<Map<String, String>>();
+        for (Schema.RecordTypeInfo rt: recordTypeInfos.values()) {
+            Map<String, String> labeledOption = new Map<String, String>();
+            labeledOption.put('value', rt.getDeveloperName());
+            labeledOption.put('label', rt.getName());
+            options.add(labeledOption);
+        }
+        return options;
+    }
+
+    /**
+     * @description Return a list of <Map<String, String>> where both the value and the
+     * label are the record type name of a record type that belongs to the
+     * given object type. The 'master' record type and all in-active record types
+     * are omitted from this list of options.
+     *
+     * @param objectType The type of the object
+     * @return List<Map<String, String>> A list of key-value pairs of values and labels where the name and value match
+     * @example
+     * [{value: ...,
+     *   label: ...},
+     *    {...},
+     * ]
+     */
+    public static List<Map<String, String>> getStringRecordTypesForLightningSelect(sObjectType objectType) {
+        Map<String, Schema.RecordTypeInfo> recordTypeInfos = getAssignedRecordTypes(objectType);
+        List<Map<String, String>> options = new List<Map<String, String>>();
+        for (Schema.RecordTypeInfo rt: recordTypeInfos.values()) {
+            Map<String, String> labeledOption = new Map<String, String>();
+            labeledOption.put('value', rt.Name);
+            labeledOption.put('label', rt.Name);
+            options.add(labeledOption);
+        }
+        return options;
+    }
+
+    /********************************* QUERY METHODS ******************************/
+
+    /**
+     * @description Return the record type info for a record type with the
+     * given name for the given object.  This will return an instance
      * conforming to the UTIL_RecordTypes.RecordTypeInfo interface, not an
      * instance of Schema.RecordTypeInfo.  In the case where the record type
      * does not exist, an UnavailableRecordTypeInfo "null object" will be
      * returned.
      *
      * @param objectType The type of the object
+     * @param The name of the record type
      * @return UTIL_RecordTypes.RecordTypeInfo
      */
-    private static RecordTypeInfo getRecordTypeInfoForTests(sObjectType objectType) {
-        List<Schema.RecordTypeInfo> recordTypeInfos = objectType.getDescribe().getRecordTypeInfos();
-        for (Schema.RecordTypeInfo rti : recordTypeInfos) {
-            if (!rti.isMaster() && rti.isAvailable()) {
-                return new RecordTypeInfoWrapper(rti);
+    private static RecordTypeInfo getRecordTypeInfo(sObjectType objectType, String recordTypeName) {
+        Map<String, Schema.RecordTypeInfo> recordTypeInfos = getActiveRecordTypes(objectType);
+        if (recordTypeInfos.containsKey(recordTypeName)) {
+            return new RecordTypeInfoWrapper(recordTypeInfos.get(recordTypeName));
+        } else {
+            return new UnavailableRecordTypeInfo();
+        }
+    }
+
+    /**
+     * @description Return all record type info for a given object.
+     * @param objectType The type of the object
+     * @param activeOnly if true, get active record types, and omit any inactive ones. Else, get inactive RTs too.
+     * @param assignedOnly return assigned record types, and omit any that this user does not have assigned to them.
+     * @return Map<String, Schema.RecordTypeInfo>
+     */
+    private static Map<String, Schema.RecordTypeInfo> getObjectRecordTypeInfos(sObjectType objectType, Boolean activeOnly, Boolean assignedOnly) {
+        Map<String, Schema.RecordTypeInfo> objectRecordTypeInfoToFilter = objectType.getDescribe().getRecordTypeInfosByName();
+        Map<String, Schema.RecordTypeInfo> objectRecordTypeInfos = new Map<String, Schema.RecordTypeInfo>(objectRecordTypeInfoToFilter);
+        for (String recTypeName : objectRecordTypeInfoToFilter.keySet()) {
+            Schema.RecordTypeInfo rt = objectRecordTypeInfoToFilter.get(recTypeName);
+
+            if (activeOnly && !rt.isActive()) {
+                objectRecordTypeInfos.remove(recTypeName);
+                continue;
+            }
+
+            if (assignedOnly && !rt.isAvailable()) {
+                objectRecordTypeInfos.remove(recTypeName);
             }
         }
-        return new UnavailableRecordTypeInfo();
+        return objectRecordTypeInfos;
     }
+
+    /**
+     * @description Return all active record types regardless of whether they're assigned to the running user
+     * @param objectType The type of the object
+     * @return Map<String, Schema.RecordTypeInfo>
+     */
+    private static Map<String, Schema.RecordTypeInfo> getActiveRecordTypes(sObjectType objectType) {
+        return getObjectRecordTypeInfos(objectType, true, false);
+    }
+
+    /**
+     * @description Return all active record types available to the running user
+     * @param objectType The type of the object
+     * @return Map<String, Schema.RecordTypeInfo>
+     */
+    private static Map<String, Schema.RecordTypeInfo> getAssignedRecordTypes(sObjectType objectType) {
+        return getObjectRecordTypeInfos(objectType, true, true);
+    }
+
+    /********************************* TEST METHODS ******************************/
 
     /**
      * @description Return the name of a record type that can be used for
@@ -212,59 +357,17 @@ public class UTIL_RecordTypes {
         return getRecordTypeInfoForTests(objectType).getRecordTypeId();
     }
 
-    /**
-     * @description Return a list of SelectOptions where the label is the
-     * record type name and the value is the record type id of a record type
-     * that belongs to the given object type.  The 'master' record type and
-     * all in-active record types are omitted from this list of options.
-     *
-     * @param objectType The type of the object
-     * @return List<SelectOption>
-     */
-    public static List<SelectOption> getRecordTypesForSelectList(sObjectType objectType) {
-        String objectName = objectType.getDescribe().getName();
-        List<SelectOption> options = new List<SelectOption>();
-        for (RecordType rt : [SELECT Id, Name FROM RecordType WHERE IsActive = True AND SObjectType = :objectName ORDER BY Name]) {
-            options.add(new SelectOption(rt.Id, rt.Name));
+    private static RecordTypeInfo getRecordTypeInfoForTests(sObjectType objectType) {
+        List<Schema.RecordTypeInfo> recordTypeInfos = objectType.getDescribe().getRecordTypeInfos();
+        for (Schema.RecordTypeInfo rti : recordTypeInfos) {
+            if (!rti.isMaster() && rti.isAvailable()) {
+                return new RecordTypeInfoWrapper(rti);
+            }
         }
-        return options;
+        return new UnavailableRecordTypeInfo();
     }
 
-    /**
-     * @description Return a list of SelectOptions where the label is the
-     * record type name and the value is the record type developer name of a record type
-     * that belongs to the given object type.  The 'master' record type and
-     * all in-active record types are omitted from this list of options.
-     *
-     * @param objectType The type of the object
-     * @return List<SelectOption>
-     */
-    public static List<SelectOption> getRecordTypeDevNamesForSelectList(sObjectType objectType) {
-        String objectName = objectType.getDescribe().getName();
-        List<SelectOption> options = new List<SelectOption>();
-        for (RecordType rt : [SELECT Id, DeveloperName, Name FROM RecordType WHERE IsActive = True AND SObjectType = :objectName ORDER BY Name]) {
-            options.add(new SelectOption(rt.DeveloperName, rt.Name));
-        }
-        return options;
-    }
-
-    /**
-     * @description Return a list of SelectOptions where both the value and the
-     * label are the record type name of a record type that belongs to the
-     * given object type.  The 'master' record type and all in-active record types
-     * are omitted from this list of options.
-     *
-     * @param objectType The type of the object
-     * @return List<SelectOption>
-     */
-    public static List<SelectOption> getStringRecordTypesForSelectList(sObjectType objectType) {
-        String objectName = objectType.getDescribe().getName();
-        List<SelectOption> options = new List<SelectOption>();
-        for (RecordType rt : [SELECT Id, Name FROM RecordType WHERE IsActive = True AND SObjectType = :objectName ORDER BY Name]) {
-            options.add(new SelectOption(rt.Name, rt.Name));
-        }
-        return options;
-    }
+    /********************************* WRAPPERS AND CLASSES ******************************/
 
     /**
      * @description This interface replicates all of the methods available from
