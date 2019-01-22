@@ -35,12 +35,13 @@
 */ 
 public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedulable {
 
+    private static final Integer BATCH_SIZE = 10;
+
     /*******************************************************************************************************
-    * @description Schedulable execute method executes this batch job.
+    * @description Schedulable execute method executes this batch job
     ********************************************************************************************************/
     public void execute(SchedulableContext context) {
-        //call the batch job, processing 10 at a time
-        Id batchInstanceId = Database.executeBatch(new ADDR_Seasonal_SCHED(), 10);
+        Database.executeBatch(new ADDR_Seasonal_SCHED(), BATCH_SIZE);
     }
 
     /*******************************************************************************************************
@@ -48,26 +49,29 @@ public class ADDR_Seasonal_SCHED implements Database.Batchable<SObject>, Schedul
     * @param bc the BatchableContext
     * @return database.Querylocator  
     ********************************************************************************************************/
-    public database.Querylocator start(Database.BatchableContext bc) {
+    public Database.Querylocator start(Database.BatchableContext bc) {
+        final List<String> monthsList = new List<String>{ '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12' };
+
         // Find all Accounts who have any Seasonal Address that might need updating,
         // since it may need to now become current or inactive, and we don't want to assume the last time this ran.
         // Make sure to include all Billing Address fields, that we will need to look at
-        string strSoql = 'SELECT Id, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLongitude, BillingLatitude';
+        String soql = 'SELECT Id, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLongitude, BillingLatitude';
         if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
-            strSoql += ', BillingStateCode, BillingCountryCode';
+            soql += ', BillingStateCode, BillingCountryCode';
         }
-        strSoql += ' FROM Account WHERE Id IN (SELECT Household_Account__c FROM Address__c where Seasonal_Start_Month__c != null)';
-        return Database.getQueryLocator(strSoql);      
+        soql += ' FROM Account WHERE Id IN (SELECT Household_Account__c FROM Address__c ' +
+            ' WHERE Seasonal_Start_Month__c IN :monthsList)';
+        return Database.getQueryLocator(soql);
     }
-    
+
     /*******************************************************************************************************
     * @description execute Method for the Database.Batchable interface
     * @param bc the BatchableContext
-    * @param listSobj the list of Account objects to process
+    * @param scope the list of Account objects to process
     * @return void  
     ********************************************************************************************************/
-    public void execute(Database.BatchableContext bc, Sobject[] listSobj) {
-        ADDR_Addresses_TDTM.batchSeasonalUpdate((list<Account>) listSobj);        
+    public void execute(Database.BatchableContext bc, List<Account> scope) {
+        ADDR_Addresses_TDTM.batchSeasonalUpdate(scope);
     }
 
     /*******************************************************************************************************
