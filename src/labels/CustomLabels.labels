@@ -1580,6 +1580,22 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <value>You must specify the Cicero API Key in the Auth Token field for Address Verification. Log into Salesforce and go to People | Addresses on the NPSP Settings page.</value>
     </labels>
     <labels>
+        <fullName>addrCopyConAddBtnConfirm</fullName>
+        <categories>ADDR_CopyConAddrHHObjBTN</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message that appears to confirm the address copy action.</shortDescription>
+        <value>You are about to copy the Address. Do you want to continue?</value>
+    </labels>
+    <labels>
+        <fullName>addrCopyConAddBtnFls</fullName>
+        <categories>ADDR_CopyConAddrHHObjBTN</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label that appears when user does not pass FLS check to copy the address</shortDescription>
+        <value>You don&apos;t have the required field permissions. Contact your system administrator to inquire about getting the necessary permissions.</value>
+    </labels>
+    <labels>
         <fullName>addrCopyConAddBtnHHObjOnly</fullName>
         <categories>ADDR_CopyConAddrHHObjBTN</categories>
         <language>en_US</language>
@@ -2901,7 +2917,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Label for link to hide advanced options in the Wizard</shortDescription>
         <value>Hide Advanced Options</value>
-    </labels>    
+    </labels>
+    <labels>
+        <fullName>btnContinue</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>button label to Continue an action</shortDescription>
+        <value>Continue</value>
+    </labels>
     <labels>
         <fullName>btnRemove</fullName>
         <categories>Manage Household UI</categories>
