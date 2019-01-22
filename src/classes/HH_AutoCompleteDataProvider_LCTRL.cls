@@ -91,11 +91,14 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
                 strSoql += ' Name LIKE :preparedQueryValue ';
             }
 
-            strSoql += ' AND Id not in :listCon LIMIT 100';
+            strSoql += ' LIMIT 100';
 
-            List<SObject> results = Database.query(strSoql);
+            Map<Id, SObject> resultsById = new Map<Id, SObject>(Database.query(strSoql));
+            for (Contact aContact : listCon) {
+                resultsById.remove(aContact.Id);
+            }
 
-            for (SObject so : results) {
+            for (SObject so : resultsById.values()) {
                 ProviderResult result = new ProviderResult();
                 result.value = so;
                 result.displayValue = (String) so.get('Name');
