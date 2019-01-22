@@ -169,11 +169,48 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         // Donation Amount and Donation Date are also required
         fieldsToCheck.add(UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c')));
         fieldsToCheck.add(UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c')));
-      
+
         // Lookup from Data Import row to Data Import Batch is also required
         fieldsToCheck.add(UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), UTIL_Namespace.StrTokenNSPrefix('NPSP_Data_Import_Batch__c')));
 
         checkFieldPermissions(fieldsToCheck);
+    }
+
+
+
+    /*******************************************************************************************************
+    * @description Returns the source field's options formatted for lightning:select if the source field is a picklist
+    * or the target field's options if the source field is a string and the target field is a picklist.
+    * Returns an empty map if neither case applies.
+    */
+    public static List<Map<String, String>> getPicklistOptions(String dataImportField){
+        List<Map<String, String>> options = new List<Map<String, String>>();
+
+        String dataImportObject = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
+
+        Schema.DisplayType rawSourceFieldType = UTIL_Describe.getFieldDisplaytype(dataImportObject, dataImportField.toLowerCase());
+
+        if (rawSourceFieldType == Schema.DisplayType.Picklist) {
+            options = UTIL_Describe.getLightningSelectOptions(dataImportObject, dataImportField);
+
+        } else if (rawSourceFieldType == Schema.DisplayType.String) {
+
+            String targetObject = BDI_DataImportService.getTargetObject(dataImportField);
+            if (targetObject == 'Payment') {
+                targetObject = 'npe01__OppPayment__c';
+            }
+
+            String targetField = BDI_DataImportService.getTargetField(dataImportField);
+            Schema.DisplayType targetFieldType = UTIL_Describe.getFieldDisplaytype(targetObject, targetField);
+
+            if (targetFieldType == Schema.DisplayType.PICKLIST) {
+                options = UTIL_Describe.getLightningSelectOptions(targetObject, targetField);
+            } else if (targetField == 'RecordTypeId') {
+                options = UTIL_RecordTypes.getStringRecordTypesForLightningSelect(UTIL_Describe.getSObjectType(targetObject));
+            }
+        }
+
+        return options;
     }
 
 }
