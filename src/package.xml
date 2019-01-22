@@ -1289,6 +1289,8 @@
         <members>Zipcode_Verification_Limit</members>
         <members>adapterException</members>
         <members>addrCiceroMissingAPIKey</members>
+        <members>addrCopyConAddBtnConfirm</members>
+        <members>addrCopyConAddBtnFls</members>
         <members>addrCopyConAddBtnHHObjOnly</members>
         <members>addrGeneralSettings</members>
         <members>addrHHAccountOnly</members>
@@ -1460,6 +1462,7 @@
         <members>bgeTabHeader</members>
         <members>bgeWizardHideAdvancedOptions</members>
         <members>bgeWizardShowAdvancedOptions</members>
+        <members>btnContinue</members>
         <members>btnRemove</members>
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
