@@ -325,7 +325,7 @@
         if (isValid) {
             this.clearError(component);
         } else {
-            component.set('v.wizardMetadata.errorMessage', component.get('v.wizardMetadata.labels.missingNameDescriptionError'));
+            component.set('v.wizardMetadata.errorMessage', component.get('v.wizardMetadata.labels.missingNameError'));
         }
         return isValid;
     },
