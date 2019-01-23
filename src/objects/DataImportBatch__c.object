@@ -380,6 +380,7 @@
         <columns>NAME</columns>
         <columns>LAST_UPDATE</columns>
         <columns>Batch_Description__c</columns>
+        <columns>GiftBatch__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>
