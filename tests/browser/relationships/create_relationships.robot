@@ -2,7 +2,7 @@
 
 Resource        tests/NPSP.robot
 Suite Setup     Open Test Browser
-Suite Teardown  Delete Records and Close Browser
+# Suite Teardown  Delete Records and Close Browser
 
 *** Test Cases ***
 
@@ -20,11 +20,17 @@ Create Relationships for contacts
     Click Dropdown            Type
     Click link    link=Parent
     Click Modal Button        Save
-    ${expected result}        Catenate    &{contact1}[FirstName] &{contact1}[LastName]    is    &{contact2}[FirstName] &{contact2}[LastName]'s    Parent
-    Log to Console    ${expected result}
-    ${id}    ${status}    Check Status    &{contact1}[FirstName] &{contact1}[LastName]
-    Should Be Equal As Strings    ${status}    ${expected result}
-    #Sleep    5
+    ${expected result1}        Catenate    &{contact1}[FirstName] &{contact1}[LastName]    is    &{contact2}[FirstName] &{contact2}[LastName]'s    Parent
+    Log to Console    ${expected result1}
+    ${id}    ${status1}    Check Status    &{contact1}[FirstName] &{contact1}[LastName]
+    Should Be Equal As Strings    ${status1}    ${expected result1}
     Click Link    link=Show more actions
     Click Link    link=Relationships Viewer
     Sleep    5 
+    Capture Page Screenshot
+    Go To Record Home    &{contact1}[Id]
+    Load Related List    Relationships
+    ${expected result2}        Catenate    &{contact2}[FirstName] &{contact2}[LastName]    is    &{contact1}[FirstName] &{contact1}[LastName]'s    Child
+    Log to Console    ${expected result2}
+    ${id}    ${status2}    Check Status    &{contact2}[FirstName] &{contact2}[LastName]
+    Should Be Equal As Strings    ${status2}    ${expected result2}
