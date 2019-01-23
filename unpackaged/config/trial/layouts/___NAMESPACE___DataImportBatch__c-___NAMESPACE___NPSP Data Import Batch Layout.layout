@@ -47,6 +47,14 @@
                 <behavior>Required</behavior>
                 <field>%%%NAMESPACE%%%Donation_Matching_Rule__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>%%%NAMESPACE%%%Expected_Count_of_Gifts__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>%%%NAMESPACE%%%Expected_Total_Batch_Amount__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
