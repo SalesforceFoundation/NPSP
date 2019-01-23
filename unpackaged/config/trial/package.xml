@@ -149,5 +149,9 @@
         <members>Admin</members>
         <name>Profile</name>
     </types>
+    <types>
+        <members>Batch_Gift_Entry</members>
+        <name>PermissionSet</name>
+    </types>
     <version>43.0</version>
 </Package>
