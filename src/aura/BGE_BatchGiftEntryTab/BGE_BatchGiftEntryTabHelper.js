@@ -25,6 +25,20 @@
                col.typeAttributes = {label:{fieldName:"Name"},target:"self"};
            }
         });
+
+        responseColumns.push({
+            type: 'action',
+            typeAttributes: {
+                rowActions: [
+                    {
+                        // TODO: make this  a real label using $A.get('$Label.c.STGBtnClone') but with a new label name
+                        label: 'Copy Batch Setup',
+                        name: 'clone'
+                    }
+                ]
+            }
+        });
+
         component.set('v.batchListColumns', responseColumns);
     },
 

@@ -13,6 +13,22 @@
         helper.checkFieldPermissions(component);
     },
 
+    /**
+     * @description: handles selected row action in the datatable. Current option list: delete.
+     */
+    handleRowAction: function (component, event, helper) {
+        let rowAction = event.getParam('action');
+        var row = event.getParam('row');
+        switch (rowAction.name) {
+            case 'clone':
+                //helper.cloneBatch(component, row);
+                break;
+        }
+    },
+
+    /**
+     * @description: loads more batch records into the grid with infinite scroll
+     */
     loadMoreData: function (component, event, helper) {
         event.getSource().set("v.isLoading", true);
         if (component.get('v.batchData').length >= component.get('v.totalNumberOfRows')) {

@@ -73,6 +73,7 @@
                          keyField="id"
                          data="{!v.batchData}"
                          columns="{!v.batchListColumns}"
+                         onrowaction="{!c.handleRowAction}"
                          hideCheckboxColumn="true"
                          enableInfiniteLoading="{!v.enableInfiniteLoading}"
                          showRowNumberColumn="true"
