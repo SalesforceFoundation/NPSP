@@ -2,7 +2,7 @@
 
 Resource        tests/NPSP.robot
 Suite Setup     Open Test Browser
-# Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Delete Records and Close Browser
 
 *** Test Cases ***
 
