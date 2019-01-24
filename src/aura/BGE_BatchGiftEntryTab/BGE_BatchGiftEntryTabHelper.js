@@ -31,8 +31,7 @@
             typeAttributes: {
                 rowActions: [
                     {
-                        // TODO: make this  a real label using $A.get('$Label.c.STGBtnClone') but with a new label name
-                        label: 'Copy Batch Setup',
+                        label: $A.get('$Label.c.bgeCopyBatchSetup'),
                         name: 'clone'
                     }
                 ]
