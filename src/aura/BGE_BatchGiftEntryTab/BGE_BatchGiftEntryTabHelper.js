@@ -86,13 +86,14 @@
 
     /**
      * @description: checks that user has all necessary permissions and then launches modal or displays error
+     * @param: sourceBatchId Id of Batch record to be copied - optional
      */
-    checkFieldPermissions: function(component) {
+    checkFieldPermissions: function(component, sourceBatchId) {
         var action = component.get('c.checkFieldPermissions');
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
-                this.openNewBatchWizard(component);
+                this.openNewBatchWizard(component, sourceBatchId);
             } else if (state === 'ERROR') {
                 this.handleApexErrors(component, response.getError());
             }
@@ -102,8 +103,9 @@
 
     /**
      * @description: opens New Batch Wizard in modal
+     * @param: sourceBatchId Id of Batch record to be copied - optional
      */
-    openNewBatchWizard: function(component) {
+    openNewBatchWizard: function(component, sourceBatchId) {
         let modalBody;
         let modalHeader;
         let modalFooter;
@@ -116,7 +118,7 @@
         ];
 
         $A.createComponents([
-                ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c'}],
+                ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c', sourceBatchId: sourceBatchId}],
                 ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
                 ['c:modalFooter', {progressStepLabels: progressStepLabels}]
             ],
@@ -137,6 +139,11 @@
                 }
             }
         );
+    },
+
+    copyBatchSetup: function(component, event) {
+        let sourceBatch = event.getParam('row');
+        this.checkFieldPermissions(component, sourceBatch.Id);
     },
 
     sortBatchData: function(component, fieldName, sortDirection) {

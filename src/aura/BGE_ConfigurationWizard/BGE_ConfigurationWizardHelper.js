@@ -2,9 +2,10 @@
     /******************************** Init Functions *****************************/
     init: function(component) {
         var recordId = component.get('v.recordId');
+        var sourceBatchId = component.get('v.sourceBatchId');
         var action = component.get('c.getRecordDetails');
         action.setParams({
-            'recordId': recordId
+            'recordId': (sourceBatchId || recordId)
         });
         action.setCallback(this, function(response) {
             var state = response.getState();
@@ -39,13 +40,17 @@
     loadBatchInfo: function(component, model) {
         let batchInfo = {};
 
-        //generic batch info
-        batchInfo.name = model.name;
-        batchInfo.id = model.id;
-        batchInfo.description = model.description;
-        batchInfo.expectedCount = model.expectedCount || 0;
-        batchInfo.expectedTotal = model.expectedTotal || 0;
-        batchInfo.recordCount = model.recordCount;
+        if (!component.get('v.sourceBatchId')) {
+            //generic batch info - not set when copying an existing Batch
+            batchInfo.name = model.name;
+            batchInfo.id = model.id;
+            batchInfo.description = model.description;
+            batchInfo.expectedCount = model.expectedCount || 0;
+            batchInfo.expectedTotal = model.expectedTotal || 0;
+            batchInfo.recordCount = model.recordCount;
+        } else {
+            batchInfo.name = model.name + ' - ' + $A.get('$Label.c.STGBtnClone');
+        }
 
         // batch processing settings
         batchInfo.requireTotalMatch = model.requireTotalMatch;

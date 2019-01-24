@@ -83,6 +83,7 @@
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
         <members>BGE_BatchGiftEntryTab_CTRL</members>
+        <members>BGE_BatchGiftEntryTab_CTRL_TEST</members>
         <members>BGE_BatchGiftEntry_UTIL</members>
         <members>BGE_BatchGiftEntry_UTIL_TEST</members>
         <members>BGE_ConfigurationWizard_CTRL</members>
@@ -452,7 +453,6 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>BGE_BatchGiftEntryTab_CTRL_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -968,9 +968,9 @@
         <members>Level__c.Previous_Level_Field__c</members>
         <members>Level__c.Source_Field__c</members>
         <members>Level__c.Target__c</members>
-        <members>Levels_Settings__c.Level_Assignment_Batch_Size__c</members>
         <members>Levels_Settings__c.LastJobStartTimeAccount__c</members>
         <members>Levels_Settings__c.LastJobStartTimeContact__c</members>
+        <members>Levels_Settings__c.Level_Assignment_Batch_Size__c</members>
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Ask_Date__c</members>

@@ -18,10 +18,9 @@
      */
     handleRowAction: function (component, event, helper) {
         let rowAction = event.getParam('action');
-        var row = event.getParam('row');
         switch (rowAction.name) {
             case 'clone':
-                //helper.cloneBatch(component, row);
+                helper.copyBatchSetup(component, event);
                 break;
         }
     },

@@ -51,6 +51,7 @@
 
     <!-- public attributes -->
     <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="sourceBatchId" type="Id" />
     <aura:attribute name="sObjectName" type="String" />
 
     <!-- events we handle -->
