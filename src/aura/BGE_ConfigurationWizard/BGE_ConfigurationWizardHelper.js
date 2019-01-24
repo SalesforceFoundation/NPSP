@@ -49,7 +49,7 @@
             batchInfo.expectedTotal = model.expectedTotal || 0;
             batchInfo.recordCount = model.recordCount;
         } else {
-            batchInfo.name = model.name + ' - ' + $A.get('$Label.c.STGBtnClone');
+            batchInfo.name = model.name + ' - ' + $A.get('$Label.c.STGBtnClone').toUpperCase();
             // when copying setup from existing Batch, explicitly initialize these properties
             batchInfo.id = null;
             batchInfo.description = null;
