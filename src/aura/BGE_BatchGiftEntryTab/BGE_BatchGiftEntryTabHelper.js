@@ -32,7 +32,7 @@
                 rowActions: [
                     {
                         label: $A.get('$Label.c.bgeCopyBatchSetup'),
-                        name: 'clone'
+                        name: 'copySetup'
                     }
                 ]
             }

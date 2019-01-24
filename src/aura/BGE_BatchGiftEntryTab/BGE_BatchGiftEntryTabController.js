@@ -19,7 +19,7 @@
     handleRowAction: function (component, event, helper) {
         let rowAction = event.getParam('action');
         switch (rowAction.name) {
-            case 'clone':
+            case 'copySetup':
                 helper.copyBatchSetup(component, event);
                 break;
         }
