@@ -53,9 +53,12 @@
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
-                this.openNewBatchWizard(component);
+                if (!component.get('v.modalOpen')) {
+                    //necessary to put here to prevent nested modals from rapid button clicks
+                    component.set('v.modalOpen', true);
+                    this.openNewBatchWizard(component);
+                }
             } else if (state === 'ERROR') {
-                console.log(response.getError());
                 this.handleApexErrors(component, response.getError());
             }
         });
@@ -63,7 +66,7 @@
     },
 
     /**
-     * @description: opens New Batch Wizard in modal
+     * @description: opens New Batch Wizard in modal if not already open
      */
     openNewBatchWizard: function(component) {
         let modalBody;
@@ -82,7 +85,7 @@
                 ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
                 ['c:modalFooter', {progressStepLabels: progressStepLabels}]
             ],
-            function(components, status, errorMessage){
+            function (components, status, errorMessage) {
                 if (status === 'SUCCESS') {
                     modalBody = components[0];
                     modalHeader = components[1];
@@ -92,13 +95,18 @@
                         header: modalHeader,
                         footer: modalFooter,
                         showCloseButton: true,
-                        cssClass: 'slds-modal_large'
+                        cssClass: 'slds-modal_large',
+                        closeCallback: function () {
+                            component.set('v.modalOpen', false);
+                        }
                     })
                 } else {
+                    component.set('v.modalOpen', false);
                     this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
                 }
             }
         );
+
     },
 
     /**
@@ -116,6 +124,5 @@
             'title': title,
             'message': message
         });
-    },
-
+    }
 })
