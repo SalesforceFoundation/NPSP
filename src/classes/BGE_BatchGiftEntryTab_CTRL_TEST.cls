@@ -47,7 +47,7 @@ private class BGE_BatchGiftEntryTab_CTRL_TEST {
         List<DataImportBatch__c> batches = new List<DataImportBatch__c>();
         for (Integer i=0; i<75; i++){
             DataImportBatch__c dataImportBatch = new DataImportBatch__c();
-            dataImportBatch.Name = 'Batch '+i;
+            dataImportBatch.Name = 'Batch ' + i;
             dataImportBatch.GiftBatch__c = true;
             batches.add(dataImportBatch);
         }

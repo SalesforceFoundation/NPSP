@@ -43,9 +43,13 @@
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
     <!-- Private Attributes -->
-    <aura:attribute name="batchData" type="Object" access="private" />
-    <aura:attribute name="batchListColumns" type="List" access="private"/>
-    <aura:attribute name="totalNumberOfRows" type="Integer" access="private"/>
+    <aura:attribute name="batchData" type="Object" access="private"
+                    description="List of Data Import Batch records and sorting info for the datatable."/>
+    <aura:attribute name="batchListColumns" type="List" access="private"
+                    description="Set of columns to display in the datatable"/>
+    <aura:attribute name="totalNumberOfRows" type="Integer" access="private"
+                    description="Count of all Data Import Batch records
+                    where GiftBatch__c = true that are accessible to the user."/>
     <aura:attribute name="isLoadingDataTable" type="Boolean" default="false" access="private"/>
     <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true" access="private"/>
 

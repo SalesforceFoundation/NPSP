@@ -316,7 +316,7 @@ public class UTIL_Describe {
     /*******************************************************************************************************
     * @description returns friendly label for standard User lookups when we need to display them in custom UI.
     * This is necessary because these labels do not exist in any schema describe available.
-    * @return string, friendly label without 'Id'
+    * @return string, translatable & friendly label without 'Id'
     */
     public static String getUserReferenceFieldLabel(DescribeFieldResult dfr) {
         if (dfr.name == 'CreatedById') {

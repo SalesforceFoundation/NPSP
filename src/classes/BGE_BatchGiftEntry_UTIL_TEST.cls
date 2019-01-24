@@ -84,10 +84,6 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
             hasError = true;
             System.assert(false, 'Unhandled exception thrown.');
         }
-
-        if (!hasError) {
-            System.assert(true);
-        }
     }
 
 }

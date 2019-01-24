@@ -13,11 +13,14 @@
         helper.checkFieldPermissions(component);
     },
 
+    /**
+     * @description: handles infinite scroll when user scrolls to the bottom of the datatable
+     */
     loadMoreData: function (component, event, helper) {
-        event.getSource().set("v.isLoading", true);
+        event.getSource().set('v.isLoading', true);
         if (component.get('v.batchData').length >= component.get('v.totalNumberOfRows')) {
             component.set('v.enableInfiniteLoading', false);
-            event.getSource().set("v.isLoading", false);
+            event.getSource().set('v.isLoading', false);
         } else {
             helper.getMoreBatchRows(component, event);
         }
@@ -33,8 +36,8 @@
 
         helper.sortBatchData(component, fieldName, sortDirection);
 
-        component.set("v.batchData.sortedBy", fieldName);
-        component.set("v.batchData.sortedDirection", sortDirection);
+        component.set('v.batchData.sortedBy', fieldName);
+        component.set('v.batchData.sortedDirection', sortDirection);
     }
 
 })

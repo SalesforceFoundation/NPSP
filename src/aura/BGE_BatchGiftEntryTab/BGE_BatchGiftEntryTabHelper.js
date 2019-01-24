@@ -17,6 +17,9 @@
         $A.enqueueAction(action);
     },
 
+    /**
+     * @description: loads the columns for the datatable
+     */
     setColumns: function(component, responseColumns) {
         responseColumns.forEach(function(col){
            if (col.type === 'number') {
@@ -28,12 +31,13 @@
         component.set('v.batchListColumns', responseColumns);
     },
 
+    /**
+     * @description: gets another set of Data Import Batch records from the server for loading into datatable
+     */
     getMoreBatchRows: function(component, event) {
         let offset = component.get('v.batchData').length;
-        let rowsToLoad = 50;
         let action = component.get('c.getBatches');
         action.setParams({
-            "queryAmount": rowsToLoad,
             "offset": offset
         });
         action.setCallback(this, function (response) {
@@ -44,14 +48,14 @@
             } else {
                 this.handleApexErrors(component, response.getError());
             }
-            event.getSource().set("v.isLoading", false);
+            event.getSource().set('v.isLoading', false);
         });
         $A.enqueueAction(action);
     },
 
     /**
-     * @description: loads Batch Rows into datatable data
-     * @param batches: list of BatchRow wrappers
+     * @description: loads Batch Rows into datatable data and creates field data for link and user fields
+     * @param responseRows: list of Data Import Batch records
      */
     setBatchRows: function(component, responseRows) {
         responseRows.forEach(function(currentRow) {
@@ -134,6 +138,11 @@
 
     },
 
+    /**
+     * @description: sorts batchData based on a given field and direction
+     * @param fieldName: field to sort by
+     * @param sortDirection: asc or desc
+     */
     sortBatchData: function(component, fieldName, sortDirection) {
         const reverse = sortDirection !== 'asc';
         let batchData = component.get('v.batchData');
@@ -142,7 +151,8 @@
     },
 
     /**
-     * @description: called by sortData, sorts by provided key and direction. Provided by Salesforce lightning:datatable documentation.
+     * @description: called by sortData, sorts by provided key and direction.
+     * Provided by Salesforce lightning:datatable documentation.
      */
     sortBy: function (field, reverse, primer) {
         var key = primer ?
