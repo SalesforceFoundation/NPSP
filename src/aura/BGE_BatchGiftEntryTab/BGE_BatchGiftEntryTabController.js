@@ -14,7 +14,7 @@
     },
 
     /**
-     * @description: handles selected row action in the datatable. Current option list: delete.
+     * @description: handles selected row action in the datatable
      */
     handleRowAction: function (component, event, helper) {
         let rowAction = event.getParam('action');
