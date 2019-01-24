@@ -40,8 +40,8 @@
     loadBatchInfo: function(component, model) {
         let batchInfo = {};
 
+        //generic batch info
         if (!component.get('v.sourceBatchId')) {
-            //generic batch info - not set when copying an existing Batch
             batchInfo.name = model.name;
             batchInfo.id = model.id;
             batchInfo.description = model.description;
@@ -50,6 +50,12 @@
             batchInfo.recordCount = model.recordCount;
         } else {
             batchInfo.name = model.name + ' - ' + $A.get('$Label.c.STGBtnClone');
+            // when copying setup from existing Batch, explicitly initialize these properties
+            batchInfo.id = null;
+            batchInfo.description = null;
+            batchInfo.expectedCount = 0;
+            batchInfo.expectedTotal = 0;
+            batchInfo.recordCount = null;
         }
 
         // batch processing settings
