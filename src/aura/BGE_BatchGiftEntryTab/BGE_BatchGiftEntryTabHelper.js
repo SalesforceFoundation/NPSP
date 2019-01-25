@@ -92,7 +92,11 @@
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
-                this.openNewBatchWizard(component, sourceBatchId);
+                if (!component.get('v.modalOpen')) {
+                    //necessary to put here to prevent nested modals from rapid button clicks
+                    component.set('v.modalOpen', true);
+                    this.openNewBatchWizard(component, sourceBatchId);
+                }
             } else if (state === 'ERROR') {
                 this.handleApexErrors(component, response.getError());
             }
@@ -121,7 +125,7 @@
                 ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
                 ['c:modalFooter', {progressStepLabels: progressStepLabels}]
             ],
-            function(components, status, errorMessage){
+            function (components, status, errorMessage) {
                 if (status === 'SUCCESS') {
                     modalBody = components[0];
                     modalHeader = components[1];
@@ -131,13 +135,18 @@
                         header: modalHeader,
                         footer: modalFooter,
                         showCloseButton: true,
-                        cssClass: 'slds-modal_large'
+                        cssClass: 'slds-modal_large',
+                        closeCallback: function () {
+                            component.set('v.modalOpen', false);
+                        }
                     })
                 } else {
+                    component.set('v.modalOpen', false);
                     this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
                 }
             }
         );
+
     },
 
     copyBatchSetup: function(component, event) {
@@ -197,6 +206,5 @@
             'title': title,
             'message': message
         });
-    },
-
+    }
 })
