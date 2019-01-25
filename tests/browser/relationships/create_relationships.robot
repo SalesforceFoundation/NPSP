@@ -29,6 +29,7 @@ Create Relationships for contacts
     Sleep    5 
     Capture Page Screenshot
     Go To Record Home    &{contact1}[Id]
+    Select Tab  Related
     Load Related List    Relationships
     ${expected result2}        Catenate    &{contact2}[FirstName] &{contact2}[LastName]    is    &{contact1}[FirstName] &{contact1}[LastName]'s    Child
     Log to Console    ${expected result2}
