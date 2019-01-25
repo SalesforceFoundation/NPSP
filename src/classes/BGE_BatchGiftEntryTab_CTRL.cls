@@ -46,10 +46,10 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
     * @return String JSON serialized TabModel
     */
     @AuraEnabled
-    public static String getTabModel() {
+    public static String getTableModel() {
         if (UTIL_Permissions.canRead(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), false)) {
-            TabModel model = new TabModel();
-            model.columns = getTabColumns();
+            TableModel model = new TableModel();
+            model.columns = getTableColumns();
             model.batches = getBatches(0, 'CreatedDate', 'DESC');
             model.totalNumberOfRows = getTotalNumberOfRows();
             return JSON.serialize(model);
@@ -63,9 +63,9 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
     * @return String JSON serialized TabModel
     */
     @AuraEnabled
-    public static String getSortedData(Integer offset, String sortBy, String sortDir) {
-        TabModel model = new TabModel();
-        model.batches = getBatches(offset, sortBy, sortDir);
+    public static String getSortedData(Integer offset, String sortBy, String sortDirection) {
+        TableModel model = new TableModel();
+        model.batches = getBatches(offset, sortBy, sortDirection);
         model.totalNumberOfRows = getTotalNumberOfRows();
         return JSON.serialize(model);
     }
@@ -74,7 +74,7 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
     * @description Gets columns to create datatable on BGE Batch Gift Entry Tab
     * @return List<Column> list of columns for datatable
     */
-    public static List<Column> getTabColumns() {
+    public static List<Column> getTableColumns() {
 
         Set<String> disallowedFields = new Set<String>{
                 'Name',
@@ -118,8 +118,7 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
     * @param offset the number of records to offset by
     * @return List<DataImportBatch__c> list of Data Import Batches
     */
-    public static List<DataImportBatch__c> getBatches(Integer offset, String sortBy, String sortDir) {
-
+    public static List<DataImportBatch__c> getBatches(Integer offset, String sortBy, String sortDirection) {
         List<String> fields = getDataTableColumnFieldNames();
         List<DataImportBatch__c> batches = new List<DataImportBatch__c>();
 
@@ -137,7 +136,7 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
                 String.join(finalFields, ', ') +
                 ' FROM ' + UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c') +
                 ' WHERE GiftBatch__c = TRUE' +
-                ' ORDER BY ' + sortBy + ' ' + sortDir +
+                ' ORDER BY ' + sortBy + ' ' + sortDirection +
                 ' LIMIT ' + loadSize +
                 ' OFFSET ' + offset;
         return Database.query(query);
@@ -156,7 +155,11 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
     * @return List<String> list of Data Import Batch field api names
     */
     public static List<String> getDataTableColumnFieldNames() {
-        List<String> fieldNames = UTIL_Describe.listStrFromFieldSet(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), UTIL_Namespace.StrTokenNSPrefix('BatchGiftEntryTabDataTableColumns'));
+        List<String> fieldNames =
+                UTIL_Describe.listStrFromFieldSet(
+                        UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'),
+                        UTIL_Namespace.StrTokenNSPrefix('BatchGiftEntryTabDataTableColumns')
+                );
         for (Integer i=0; i<fieldNames.size(); i++) {
             if (!UTIL_Permissions.canRead(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), fieldNames[i], false)) {
                 fieldNames.remove(i);
@@ -177,7 +180,7 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
     /*******************************************************************************************************
     * @description a class to retrieve info for BGE_BatchGiftEntryTab component
     */
-    public class TabModel {
+    public class TableModel {
         @AuraEnabled public List<DataImportBatch__c> batches;
         @AuraEnabled public List<Column> columns;
         @AuraEnabled public Integer totalNumberOfRows;

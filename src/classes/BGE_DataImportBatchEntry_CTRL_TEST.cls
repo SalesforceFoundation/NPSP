@@ -83,7 +83,8 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
     static void testUpdateDataImports() {
         Id batchId = createDataImportBatch();
         List<DataImport__c> dataImports = createDataImports(5, batchId);
-        List<BGE_DataImportBatchEntry_CTRL.DataImportRow> rows = BGE_DataImportBatchEntry_CTRL.updateDataImports(dataImports, batchId);
+        List<BGE_DataImportBatchEntry_CTRL.DataImportRow> rows =
+                BGE_DataImportBatchEntry_CTRL.updateDataImports(dataImports, batchId);
         for (Integer i=0; i<dataImports.size(); i++) {
             System.assertEquals(dataImports[i].Id, rows[i].record.Id);
         }

@@ -51,7 +51,7 @@
                     description="Count of all Data Import Batch records
                     where GiftBatch__c = true that are accessible to the user."/>
     <aura:attribute name="sortBy" type="String" default="CreatedDate" access="private"/>
-    <aura:attribute name="sortDir" type="String" default="desc" access="private"/>
+    <aura:attribute name="sortDirection" type="String" default="desc" access="private"/>
     <aura:attribute name="isLoadingDataTable" type="Boolean" default="false" access="private"/>
     <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true" access="private"/>
 
@@ -89,7 +89,7 @@
                          isLoading="{!v.isLoadingDataTable}"
                          onsort="{!c.sortByColumns}"
                          sortedBy="{!v.sortBy}"
-                         sortedDirection="{!v.sortDir}"
+                         sortedDirection="{!v.sortDirection}"
                          defaultSortDirection="asc"
     />
 

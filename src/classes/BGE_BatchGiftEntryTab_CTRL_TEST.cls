@@ -63,7 +63,11 @@ private class BGE_BatchGiftEntryTab_CTRL_TEST {
 
         List<DataImportBatch__c> batches = [SELECT Id FROM DataImportBatch__c];
         Test.startTest();
-        BGE_BatchGiftEntryTab_CTRL.TabModel model = (BGE_BatchGiftEntryTab_CTRL.TabModel) JSON.deserialize(BGE_BatchGiftEntryTab_CTRL.getTabModel(), BGE_BatchGiftEntryTab_CTRL.TabModel.class);
+        BGE_BatchGiftEntryTab_CTRL.TableModel model = (BGE_BatchGiftEntryTab_CTRL.TableModel)
+                JSON.deserialize(
+                        BGE_BatchGiftEntryTab_CTRL.getTableModel(),
+                        BGE_BatchGiftEntryTab_CTRL.TableModel.class
+                );
         Test.stopTest();
         System.assertEquals(75, model.totalNumberOfRows);
         System.assertEquals(50, model.batches.size());

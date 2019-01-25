@@ -38,7 +38,7 @@
         const sortDirection = sortEventParam ? sortEventParam : 'asc';
 
         component.set('v.sortBy', fieldName);
-        component.set('v.sortDir', sortDirection);
+        component.set('v.sortDirection', sortDirection);
 
         component.set('v.batchData',[]);
         helper.getBatchRows(component, event);

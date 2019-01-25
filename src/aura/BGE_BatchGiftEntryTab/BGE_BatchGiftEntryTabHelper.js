@@ -2,7 +2,7 @@
     /******************************** Init Functions *****************************/
 
     doInit: function(component) {
-        var action = component.get('c.getTabModel');
+        var action = component.get('c.getTableModel');
         action.setCallback(this, function (response) {
             const state = response.getState();
             if (state === 'SUCCESS') {
@@ -39,12 +39,12 @@
     getBatchRows: function(component, event) {
         let batchData = component.get('v.batchData');
         let sortBy = component.get('v.sortBy');
-        let sortDir = component.get('v.sortDir');
+        let sortDirection = component.get('v.sortDirection');
         let action = component.get('c.getSortedData');
         action.setParams({
             "offset": batchData.length,
             "sortBy": sortBy,
-            "sortDir": sortDir
+            "sortDirection": sortDirection
         });
         action.setCallback(this, function (response) {
             const state = response.getState();
