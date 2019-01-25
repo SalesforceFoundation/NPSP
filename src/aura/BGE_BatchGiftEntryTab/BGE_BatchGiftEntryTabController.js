@@ -30,14 +30,17 @@
      * @description: sorts the data by the field name and current direction
      */
     sortByColumns: function(component, event, helper) {
-        const fieldName = event.getParam('fieldName');
+        component.set('v.enableInfiniteLoading', true);
+
+        const fieldNameEventParam = event.getParam('fieldName');
+        const fieldName = fieldNameEventParam === 'batchLink' ? 'Name' : fieldNameEventParam;
         const sortEventParam = event.getParam('sortDirection');
         const sortDirection = sortEventParam ? sortEventParam : 'asc';
 
-        helper.sortBatchData(component, fieldName, sortDirection);
+        component.set('v.sortBy', fieldName);
+        component.set('v.sortDir', sortDirection);
 
-        component.set('v.batchData.sortedBy', fieldName);
-        component.set('v.batchData.sortedDirection', sortDirection);
+        helper.fetchSortedData(component, event);
     }
 
 })

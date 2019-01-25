@@ -65,6 +65,11 @@
         <fullName>BatchGiftEntryTabColumns</fullName>
         <description>The Batch fields to be displayed as columns in the table of Batches on the BGE tab.</description>
         <displayedFields>
+            <field>Name</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>true</isRequired>
+        </displayedFields>
+        <displayedFields>
             <field>Batch_Description__c</field>
             <isFieldManaged>false</isFieldManaged>
             <isRequired>false</isRequired>
@@ -77,7 +82,7 @@
         <displayedFields>
             <field>CreatedDate</field>
             <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
+            <isRequired>true</isRequired>
         </displayedFields>
         <label>Batch Gift Entry Tab Columns</label>
     </fieldSets>

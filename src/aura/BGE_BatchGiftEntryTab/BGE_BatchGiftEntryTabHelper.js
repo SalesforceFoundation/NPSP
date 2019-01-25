@@ -8,8 +8,8 @@
             if (state === 'SUCCESS') {
                 let model = JSON.parse(response.getReturnValue());
                 this.setColumns(component, model.columns);
-                component.set('v.totalNumberOfRows', model.totalNumberOfRows);
-                this.setBatchRows(component, model.batches);
+                this.concatBatchRows(component, this.processBatchRows(model.batches));
+                this.setTotalNumberOfRows(component, model.totalNumberOfRows);
             } else {
                 this.handleApexErrors(component, response.getError());
             }
@@ -31,20 +31,52 @@
         component.set('v.batchListColumns', responseColumns);
     },
 
+    /******************************** Data Loading Functions *****************************/
+
     /**
      * @description: gets another set of Data Import Batch records from the server for loading into datatable
      */
     getMoreBatchRows: function(component, event) {
-        let offset = component.get('v.batchData').length;
-        let action = component.get('c.getBatches');
+        let batchData = component.get('v.batchData');
+        let sortBy = component.get('v.sortBy');
+        let sortDir = component.get('v.sortDir');
+        let action = component.get('c.getIncrementalTabModel');
         action.setParams({
-            "offset": offset
+            "offset": batchData.length,
+            "sortBy": sortBy,
+            "sortDir": sortDir
         });
         action.setCallback(this, function (response) {
             const state = response.getState();
             if (state === 'SUCCESS') {
-                let batches = response.getReturnValue();
-                this.setBatchRows(component, batches);
+                let model = JSON.parse(response.getReturnValue());
+                this.concatBatchRows(component, this.processBatchRows(model.batches));
+                this.setTotalNumberOfRows(component, model.totalNumberOfRows);
+            } else {
+                this.handleApexErrors(component, response.getError());
+            }
+            event.getSource().set('v.isLoading', false);
+        });
+        $A.enqueueAction(action);
+    },
+
+    /**
+     * @description: when sort is changed, go back to initial load size, re-fetch new first batch, replace batchData
+     */
+    fetchSortedData: function(component, event) {
+        let sortBy = component.get('v.sortBy');
+        let sortDir = component.get('v.sortDir');
+        let action = component.get('c.getReSortedData');
+        action.setParams({
+            "sortBy": sortBy,
+            "sortDir": sortDir
+        });
+        action.setCallback(this, function (response) {
+            const state = response.getState();
+            if (state === 'SUCCESS') {
+                let model = JSON.parse(response.getReturnValue());
+                this.replaceBatchRows(component, this.processBatchRows(model.batches));
+                this.setTotalNumberOfRows(component, model.totalNumberOfRows);
             } else {
                 this.handleApexErrors(component, response.getError());
             }
@@ -57,19 +89,42 @@
      * @description: loads Batch Rows into datatable data and creates field data for link and user fields
      * @param responseRows: list of Data Import Batch records
      */
-    setBatchRows: function(component, responseRows) {
-        responseRows.forEach(function(currentRow) {
+    processBatchRows: function(responseRows) {
+        responseRows.forEach(function (currentRow) {
             currentRow.batchLink = '/' + currentRow.Id;
             currentRow.CreatedById = currentRow.CreatedBy.Name;
             currentRow.LastModifiedById = currentRow.LastModifiedBy.Name;
             currentRow.OwnerId = currentRow.Owner.Name;
         });
+        return responseRows;
+    },
+
+    /**
+     * @description: concatenates incremental rows from server onto batchData
+     * @param batchRows: list of Data Import Batch records
+     */
+    concatBatchRows: function(component, batchRows) {
         let data = component.get('v.batchData');
         if (!data) {
             data = [];
         }
-        data = data.concat(responseRows);
-        component.set('v.batchData', data);
+        data = data.concat(batchRows);
+        this.replaceBatchRows(component, data);
+    },
+
+    /**
+     * @description: replaces batchData with fresh rows from server
+     * @param batchRows: list of Data Import Batch records
+     */
+    replaceBatchRows: function(component, batchRows) {
+        component.set('v.batchData', batchRows);
+    },
+
+    /**
+     * @description: sets the total number of Data Import Batch rows for use in infinite scroll calculations
+     */
+    setTotalNumberOfRows: function(component, totalNumberOfRows) {
+        component.set('v.totalNumberOfRows', totalNumberOfRows);
     },
 
     /******************************** User Interaction Functions *****************************/
@@ -136,33 +191,6 @@
             }
         );
 
-    },
-
-    /**
-     * @description: sorts batchData based on a given field and direction
-     * @param fieldName: field to sort by
-     * @param sortDirection: asc or desc
-     */
-    sortBatchData: function(component, fieldName, sortDirection) {
-        const reverse = sortDirection !== 'asc';
-        let batchData = component.get('v.batchData');
-        batchData.sort(this.sortBy(fieldName, reverse));
-        component.set('v.batchData', batchData);
-    },
-
-    /**
-     * @description: called by sortData, sorts by provided key and direction.
-     * Provided by Salesforce lightning:datatable documentation.
-     */
-    sortBy: function (field, reverse, primer) {
-        var key = primer ?
-            function(x) {return primer(x[field])} :
-            function(x) {return x[field]};
-        //checks if the two rows should switch places
-        reverse = !reverse ? 1 : -1;
-        return function (a, b) {
-            return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
-        }
     },
 
     /******************************** Utility Functions *****************************/

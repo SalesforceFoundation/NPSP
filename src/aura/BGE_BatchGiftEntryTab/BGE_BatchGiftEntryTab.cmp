@@ -50,6 +50,8 @@
     <aura:attribute name="totalNumberOfRows" type="Integer" access="private"
                     description="Count of all Data Import Batch records
                     where GiftBatch__c = true that are accessible to the user."/>
+    <aura:attribute name="sortBy" type="String" default="CreatedDate" access="private"/>
+    <aura:attribute name="sortDir" type="String" default="desc" access="private"/>
     <aura:attribute name="isLoadingDataTable" type="Boolean" default="false" access="private"/>
     <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true" access="private"/>
 
@@ -65,6 +67,7 @@
                     <h1>
                         <span class="slds-page-header__title" title="{!$Label.c.bgeTabHeader}">{!$Label.c.bgeTabHeader}</span>
                     </h1>
+                    {!v.batchData.length}{!if(lessthan(v.batchData.length,v.totalNumberOfRows), '+','')} records, sorted by {!v.sortBy}&nbsp;{!v.sortDir}
                 </div>
                 <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
                     <lightning:buttonGroup>
@@ -86,8 +89,8 @@
                          onloadmore="{!c.loadMoreData}"
                          isLoading="{!v.isLoadingDataTable}"
                          onsort="{!c.sortByColumns}"
-                         sortedBy="{!v.batchData.sortedBy}"
-                         sortedDirection="{!v.batchData.sortedDirection}"
+                         sortedBy="{!v.sortBy}"
+                         sortedDirection="{!v.sortDir}"
                          defaultSortDirection="asc"
     />
 
