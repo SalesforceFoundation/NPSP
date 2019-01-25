@@ -63,19 +63,7 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
     * @return String JSON serialized TabModel
     */
     @AuraEnabled
-    public static String getReSortedData(String sortBy, String sortDir) {
-        TabModel model = new TabModel();
-        model.batches = getBatches(0, sortBy, sortDir);
-        model.totalNumberOfRows = getTotalNumberOfRows();
-        return JSON.serialize(model);
-    }
-
-    /*******************************************************************************************************
-    * @description Gets next set of Data Import Batch records populate datatable on infinite scroll
-    * @return String JSON serialized TabModel
-    */
-    @AuraEnabled
-    public static String getIncrementalTabModel(Integer offset, String sortBy, String sortDir) {
+    public static String getSortedData(Integer offset, String sortBy, String sortDir) {
         TabModel model = new TabModel();
         model.batches = getBatches(offset, sortBy, sortDir);
         model.totalNumberOfRows = getTotalNumberOfRows();

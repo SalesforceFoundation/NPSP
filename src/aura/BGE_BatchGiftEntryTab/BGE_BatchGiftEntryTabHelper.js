@@ -8,7 +8,7 @@
             if (state === 'SUCCESS') {
                 let model = JSON.parse(response.getReturnValue());
                 this.setColumns(component, model.columns);
-                this.concatBatchRows(component, this.processBatchRows(model.batches));
+                this.loadBatchRows(component, [], model.batches);
                 this.setTotalNumberOfRows(component, model.totalNumberOfRows);
             } else {
                 this.handleApexErrors(component, response.getError());
@@ -36,11 +36,11 @@
     /**
      * @description: gets another set of Data Import Batch records from the server for loading into datatable
      */
-    getMoreBatchRows: function(component, event) {
+    getBatchRows: function(component, event) {
         let batchData = component.get('v.batchData');
         let sortBy = component.get('v.sortBy');
         let sortDir = component.get('v.sortDir');
-        let action = component.get('c.getIncrementalTabModel');
+        let action = component.get('c.getSortedData');
         action.setParams({
             "offset": batchData.length,
             "sortBy": sortBy,
@@ -50,32 +50,7 @@
             const state = response.getState();
             if (state === 'SUCCESS') {
                 let model = JSON.parse(response.getReturnValue());
-                this.concatBatchRows(component, this.processBatchRows(model.batches));
-                this.setTotalNumberOfRows(component, model.totalNumberOfRows);
-            } else {
-                this.handleApexErrors(component, response.getError());
-            }
-            event.getSource().set('v.isLoading', false);
-        });
-        $A.enqueueAction(action);
-    },
-
-    /**
-     * @description: when sort is changed, go back to initial load size, re-fetch new first batch, replace batchData
-     */
-    fetchSortedData: function(component, event) {
-        let sortBy = component.get('v.sortBy');
-        let sortDir = component.get('v.sortDir');
-        let action = component.get('c.getReSortedData');
-        action.setParams({
-            "sortBy": sortBy,
-            "sortDir": sortDir
-        });
-        action.setCallback(this, function (response) {
-            const state = response.getState();
-            if (state === 'SUCCESS') {
-                let model = JSON.parse(response.getReturnValue());
-                this.replaceBatchRows(component, this.processBatchRows(model.batches));
+                this.loadBatchRows(component, batchData, model.batches);
                 this.setTotalNumberOfRows(component, model.totalNumberOfRows);
             } else {
                 this.handleApexErrors(component, response.getError());
@@ -89,35 +64,15 @@
      * @description: loads Batch Rows into datatable data and creates field data for link and user fields
      * @param responseRows: list of Data Import Batch records
      */
-    processBatchRows: function(responseRows) {
+    loadBatchRows: function(component, baseRows, responseRows) {
         responseRows.forEach(function (currentRow) {
             currentRow.batchLink = '/' + currentRow.Id;
             currentRow.CreatedById = currentRow.CreatedBy.Name;
             currentRow.LastModifiedById = currentRow.LastModifiedBy.Name;
             currentRow.OwnerId = currentRow.Owner.Name;
         });
-        return responseRows;
-    },
-
-    /**
-     * @description: concatenates incremental rows from server onto batchData
-     * @param batchRows: list of Data Import Batch records
-     */
-    concatBatchRows: function(component, batchRows) {
-        let data = component.get('v.batchData');
-        if (!data) {
-            data = [];
-        }
-        data = data.concat(batchRows);
-        this.replaceBatchRows(component, data);
-    },
-
-    /**
-     * @description: replaces batchData with fresh rows from server
-     * @param batchRows: list of Data Import Batch records
-     */
-    replaceBatchRows: function(component, batchRows) {
-        component.set('v.batchData', batchRows);
+        let data = baseRows.concat(responseRows);
+        component.set('v.batchData', data);
     },
 
     /**

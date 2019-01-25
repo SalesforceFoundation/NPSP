@@ -43,7 +43,7 @@
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
     <!-- Private Attributes -->
-    <aura:attribute name="batchData" type="Object" access="private"
+    <aura:attribute name="batchData" type="List" default="[]" access="private"
                     description="List of Data Import Batch records and sorting info for the datatable."/>
     <aura:attribute name="batchListColumns" type="List" access="private"
                     description="Set of columns to display in the datatable"/>
@@ -67,7 +67,6 @@
                     <h1>
                         <span class="slds-page-header__title" title="{!$Label.c.bgeTabHeader}">{!$Label.c.bgeTabHeader}</span>
                     </h1>
-                    {!v.batchData.length}{!if(lessthan(v.batchData.length,v.totalNumberOfRows), '+','')} records, sorted by {!v.sortBy}&nbsp;{!v.sortDir}
                 </div>
                 <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
                     <lightning:buttonGroup>

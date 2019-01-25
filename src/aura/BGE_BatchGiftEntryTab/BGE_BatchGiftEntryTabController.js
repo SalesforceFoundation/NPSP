@@ -22,7 +22,7 @@
             component.set('v.enableInfiniteLoading', false);
             event.getSource().set('v.isLoading', false);
         } else {
-            helper.getMoreBatchRows(component, event);
+            helper.getBatchRows(component, event);
         }
     },
 
@@ -40,7 +40,8 @@
         component.set('v.sortBy', fieldName);
         component.set('v.sortDir', sortDirection);
 
-        helper.fetchSortedData(component, event);
+        component.set('v.batchData',[]);
+        helper.getBatchRows(component, event);
     }
 
 })
