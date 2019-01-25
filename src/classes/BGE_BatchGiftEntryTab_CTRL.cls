@@ -43,7 +43,7 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
 
     /*******************************************************************************************************
     * @description Gets Data Import Batch data to populate datatable on BGE Batch Gift Entry Tab
-    * @return String JSON serialized TabModel
+    * @return String JSON serialized TableModel
     */
     @AuraEnabled
     public static String getTableModel() {
@@ -60,7 +60,7 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
 
     /*******************************************************************************************************
     * @description Starts over with initial load based on re-sorted data table
-    * @return String JSON serialized TabModel
+    * @return String JSON serialized TableModel
     */
     @AuraEnabled
     public static String getSortedData(Integer offset, String sortBy, String sortDirection) {
@@ -93,7 +93,10 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
 
         for (String fieldName : fieldNames) {
             if (!disallowedFields.contains(fieldName)) {
-                DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), fieldName);
+                DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(
+                        UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'),
+                        fieldName
+                );
                 String dataType = dfr.getType().name().toLowerCase();
                 Column col = new Column();
                 col.fieldName = fieldName;

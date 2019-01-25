@@ -65,12 +65,16 @@
             <div class="slds-grid">
                 <div class="slds-col slds-has-flexi-truncate slds-align-middle">
                     <h1>
-                        <span class="slds-page-header__title" title="{!$Label.c.bgeTabHeader}">{!$Label.c.bgeTabHeader}</span>
+                        <span class="slds-page-header__title" title="{!$Label.c.bgeTabHeader}">
+                            {!$Label.c.bgeTabHeader}
+                        </span>
                     </h1>
                 </div>
                 <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
                     <lightning:buttonGroup>
-                        <lightning:button aura:id="newBGEBatch" label="{!$Label.c.bgeNewBatch}" onclick="{!c.onNewBatchClick}"/>
+                        <lightning:button aura:id="newBGEBatch"
+                                          label="{!$Label.c.bgeNewBatch}"
+                                          onclick="{!c.onNewBatchClick}"/>
                     </lightning:buttonGroup>
                 </div>
             </div>

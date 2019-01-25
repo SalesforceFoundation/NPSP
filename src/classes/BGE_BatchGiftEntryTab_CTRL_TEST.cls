@@ -56,22 +56,29 @@ private class BGE_BatchGiftEntryTab_CTRL_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Tests getTabModel() for a new record
+    * @description Tests getTableModel() for a new record
     */
     @isTest
-    static void testGetTabModel() {
+    static void testGetTableModel() {
 
-        List<DataImportBatch__c> batches = [SELECT Id FROM DataImportBatch__c];
+        List<DataImportBatch__c> batches = [SELECT Id
+                                            FROM DataImportBatch__c
+                                            ORDER BY CreatedDate DESC
+                                            LIMIT 50
+                                            OFFSET 0];
         Test.startTest();
-        BGE_BatchGiftEntryTab_CTRL.TableModel model = (BGE_BatchGiftEntryTab_CTRL.TableModel)
-                JSON.deserialize(
+        BGE_BatchGiftEntryTab_CTRL.TableModel model =
+                (BGE_BatchGiftEntryTab_CTRL.TableModel) JSON.deserialize(
                         BGE_BatchGiftEntryTab_CTRL.getTableModel(),
                         BGE_BatchGiftEntryTab_CTRL.TableModel.class
                 );
         Test.stopTest();
         System.assertEquals(75, model.totalNumberOfRows);
         System.assertEquals(50, model.batches.size());
-        System.assertEquals(batches[0].Id, model.batches[0].Id);
+        for (Integer i=0; i<model.batches.size(); i++) {
+            System.debug(batches[i].Id + '--' + model.batches[i].Id);
+            System.assertEquals(batches[i].Id, model.batches[i].Id);
+        }
         System.assert(model.columns.size()>0);
     }
 
