@@ -76,7 +76,6 @@ private class BGE_BatchGiftEntryTab_CTRL_TEST {
         System.assertEquals(75, model.totalNumberOfRows);
         System.assertEquals(50, model.batches.size());
         for (Integer i=0; i<model.batches.size(); i++) {
-            System.debug(batches[i].Id + '--' + model.batches[i].Id);
             System.assertEquals(batches[i].Id, model.batches[i].Id);
         }
         System.assert(model.columns.size()>0);

@@ -62,6 +62,7 @@
 
     /**
      * @description: loads Batch Rows into datatable data and creates field data for link and user fields
+     * @param baseRows: list of existing Data Import Batch records to concatenate onto
      * @param responseRows: list of Data Import Batch records
      */
     loadBatchRows: function(component, baseRows, responseRows) {
