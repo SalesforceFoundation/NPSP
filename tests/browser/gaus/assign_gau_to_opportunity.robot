@@ -13,10 +13,12 @@ Assign GAU to Opportunity
     &{contact} =  API Create Contact    Email=skristem@robot.com
     &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Donation    Name=Test GAU donation
     Go To Record Home  &{opportunity}[Id]
-    Load Related List    GAU Allocations
-    Select Related Dropdown    GAU Allocations
-    Wait For Locator    link-title    Manage Allocations
-    Click Link    link=Manage Allocations
+    Select Tab    Related
+    Click Related List Button    GAU Allocations    Manage Allocations
+    # Load Related List    GAU Allocations
+    # Select Related Dropdown    GAU Allocations
+    # Wait For Locator    link-title    Manage Allocations
+    # Click Link    link=Manage Allocations
     Wait For Locator    frame    Manage Allocations
     #Sleep    2
     Select Frame With Title    Manage Allocations

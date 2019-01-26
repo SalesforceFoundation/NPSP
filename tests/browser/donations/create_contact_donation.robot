@@ -16,7 +16,9 @@ Create Donation from a Contact
     ...                       Amount=100
     Click Dropdown    Stage
     Click Link    link=Closed Won
-    Click Dropdown    Close Date
+    Open Date Picker    Close Date
     Pick Date    10
     Click Modal Button        Save
+    Select Tab    Related
+    Load Related List    Payments
     Verify Occurrence    Payments    0

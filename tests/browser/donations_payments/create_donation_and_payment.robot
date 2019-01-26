@@ -17,12 +17,14 @@ Create Donation from a Contact
     &{contact} =  API Create Contact    Email=skristem@robot.com
     &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Donation    Name=Sravani $100 donation
     Go To Record Home  &{opportunity}[Id]
+    Select Tab    Related
     ${opp_name}    Get Main Header 
     Set Global Variable      ${opp_name}
     Load Related List    Payments
-    Select Related Dropdown    Payments
-    Wait For Locator    link-title    Schedule Payments
-    Click Link    link=Schedule Payments
+    Click Related List Button  Payments    Schedule Payments
+    # Select Related Dropdown    Payments
+    # Wait For Locator    link-title    Schedule Payments
+    # Click Link    link=Schedule Payments
     Wait For Locator    frame    Create one or more Payments for this Opportunity
     Select Frame with Title    Create one or more Payments for this Opportunity
     Enter Payment Schedule    ${No_of_payments}    ${intervel}    ${frequency}
@@ -40,6 +42,7 @@ Verify Payments
     [tags]  unstable
     Go To Object Home         Opportunity
     Click Link    ${opp_name}  
+    Select Tab    Related
     Click ViewAll Related List    Payments
     Reload Page
     ${flag}     Verify payment    

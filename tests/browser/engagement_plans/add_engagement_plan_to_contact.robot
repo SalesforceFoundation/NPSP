@@ -18,16 +18,13 @@ Create a Contact and Add Engagement Plan
     
 Delete Engagement Plan
     [tags]  unstable
-    #Sleep    2
     ${plan_num}    Verify Eng Plan Exists    Engagement Plans    True
-    Wait For Locator    link-title    Delete
-    Click Link    link=Delete
+    Click Related Item Popup Link    Engagement Plans    ${plan_num}    Delete
     Click Modal Button        Delete
     Verify Occurrence    Engagement Plans    0    
     
 Verify Tasks Exist Under Activity
     [tags]  unstable
-    #Sleep    2
     Scroll Page To Location    0    0
     Click Span Button    More Steps
     Check Activity Tasks    ${task1}    ${sub_task}    ${task2}    
