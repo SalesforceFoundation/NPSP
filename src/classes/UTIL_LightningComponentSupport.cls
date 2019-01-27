@@ -54,4 +54,24 @@ public with sharing class UTIL_LightningComponentSupport {
         }
     }
 
+    /*******************************************************************************************************
+    * @description returns a Set of allowed types.
+    * @return Set containing the names of all the Allowed types
+    */
+    public static set<String> getAllowedDataTypes() {
+        return new Set<String>{
+            'CURRENCY',
+            'DATE',
+            'STRING',
+            'TEXTAREA',
+            'DOUBLE',
+            'PICKLIST',
+            'BOOLEAN',
+            'EMAIL',
+            'MULTIPICKLIST',
+            'PHONE',
+            'URL'
+        };
+    }
+
 }
