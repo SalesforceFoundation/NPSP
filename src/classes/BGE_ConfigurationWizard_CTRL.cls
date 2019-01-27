@@ -214,7 +214,12 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'STRING',
             'TEXTAREA',
             'DOUBLE',
-            'PICKLIST'
+            'PICKLIST',
+            'BOOLEAN',
+            'EMAIL',
+            'MULTIPICKLIST',
+            'PHONE',
+            'URL'
         };
 
         // looping through the fields on DataImport__c and remove unsupported data types
