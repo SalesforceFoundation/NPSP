@@ -199,19 +199,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         sortedFieldNames.sort();
 
         // these data types have been whitelisted since they already work with BGE
-        Set<String> allowedDataTypes = new Set<String>{
-            'CURRENCY',
-            'DATE',
-            'STRING',
-            'TEXTAREA',
-            'DOUBLE',
-            'PICKLIST',
-            'BOOLEAN',
-            'EMAIL',
-            'MULTIPICKLIST',
-            'PHONE',
-            'URL'
-        };
+        Set<String> allowedDataTypes = UTIL_LightningComponentSupport.getAllowedDataTypes();
 
         // looping through the fields on DataImport__c and remove unsupported data types
         for (String fieldName : sortedFieldNames) {
