@@ -65,6 +65,21 @@
     },
 
     /**
+     * @description: handles infinite scroll for the Data Import records datatable
+     */
+    onLoadMore: function(component, event, helper) {
+        event.getSource().set('v.isLoading', true);
+        let totals = component.get('v.totals');
+        let totalCountGifts = totals.countGifts ? totals.countGifts : 0;
+        if (component.get('v.data').length >= totalCountGifts) {
+            event.getSource().set('v.enableInfiniteLoading', false);
+            event.getSource().set('v.isLoading', false);
+        } else {
+            helper.getDataImportRows(component, event);
+        }
+    },
+
+    /**
      * @description: called when the 'Process Batch' button is clicked
      */
     processBatch: function(component, event, helper) {
