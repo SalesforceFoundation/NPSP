@@ -136,49 +136,60 @@ private class CMT_FilterRuleEvaluation_TEST {
     static testMethod void test_evaluateFilterRules() {
         mockFilterCMTValues();
 
-        Contact c = UTIL_UnitTestData_TEST.getContact();
-        insert c;
-        c = [SELECT Id, AccountId, FirstName, LastName FROM Contact LIMIT 1];
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
+        con = [SELECT Id, AccountId, FirstName, LastName FROM Contact LIMIT 1];
 
-        Opportunity o = new Opportunity (
-                Name = 'Test Opp ' + c.FirstName + c.LastName,
+        Opportunity opp = new Opportunity (
+                Name = 'Test Opp ' + con.FirstName + con.LastName,
                 Amount = 1000,
                 CloseDate = closeDate,
                 StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-                Primary_Contact__c = c.Id,
+                Primary_Contact__c = con.Id,
                 RecordTypeId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.sObjectType),
                 NextStep = 'Test Next Step'
         );
-        insert o;
+        insert opp;
         System.AssertEquals(1, [SELECT Count() FROM OpportunityContactRole]);
 
         Partial_Soft_Credit__c psc = new Partial_Soft_Credit__c(
-                Opportunity__c = o.Id,
-                Contact__c = c.Id,
+                Opportunity__c = opp.Id,
+                Contact__c = con.Id,
                 Role_Name__c = 'Donor',
-                Amount__c = o.Amount
+                Amount__c = opp.Amount
         );
         insert psc;
 
         // Query the Opportunity and the child OCR and Payment records to use in the evaluation
+        List<Id> contactIds = new List<Id>{con.Id};
         String soql = CRLP_Query_SEL.buildDetailObjectQueryForRollup(Opportunity.SObjectType,
                 new List<SObjectType>{OpportunityContactRole.SObjectType, npe01__OppPayment__c.SObjectType, Partial_Soft_Credit__c.SObjectType});
-        o = database.query(soql);
+        opp = database.query(soql);
 
         Test.startTest();
 
-         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{o}, filterGroupId1));
-         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{o}, filterGroupId2));
-         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{o}, filterGroupId3));
+         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{
+                 opp
+         }, filterGroupId1));
+         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{
+                 opp
+         }, filterGroupId2));
+         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{
+                 opp
+         }, filterGroupId3));
 
          System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
-                 new List<SObject>{o, o.OpportunityContactRoles[0]}, filterGroupId2));
+                 new List<SObject>{
+                         opp, opp.OpportunityContactRoles[0]}, filterGroupId2));
          System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
-                 new List<SObject>{o, o.OpportunityContactRoles[0]}, filterGroupId5));
+                 new List<SObject>{
+                         opp, opp.OpportunityContactRoles[0]}, filterGroupId5));
          System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
-                 new List<SObject>{o, o.OpportunityContactRoles[0]}, filterGroupId6));
+                 new List<SObject>{
+                         opp, opp.OpportunityContactRoles[0]}, filterGroupId6));
          System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
-                 new List<SObject>{o, o.OpportunityContactRoles[0]}, filterGroupId7));
+                 new List<SObject>{
+                         opp, opp.OpportunityContactRoles[0]}, filterGroupId7));
 
         // TODO Add more tests
     }
