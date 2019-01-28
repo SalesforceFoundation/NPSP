@@ -1,14 +1,3 @@
-/*used for datatable when it has less than 3 rows to fix dropdown overlay*/
-.THIS .datatableContainer {
-    height: 175px;
-}
-.THIS .datatableContainer .slds-scrollable_y {
-    height: 100%;
-}
-/*173px is the current size of a single-row form*/
-.THIS .bgeCard {
-    min-height: 173px;
-}
 /*removes the extra label and automatic tooltip for inputFields*/
 .THIS .hideLabel .slds-form-element__label {
     display: none;

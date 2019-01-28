@@ -69,6 +69,29 @@
     },
 
     /**
+     * @description: retrieves additional rows to support infinite loading in data import datatable
+     */
+    getDataImportRows: function(component, event) {
+        let data = component.get('v.data');
+        let action = component.get('c.getDataImportRows');
+        action.setParams({
+            batchId: component.get('v.recordId'),
+            offset: data.length
+        });
+        action.setCallback(this, function (response) {
+            const state = response.getState();
+            if (state === 'SUCCESS') {
+                let responseRows = response.getReturnValue();
+                this.setDataTableRows(component, data, responseRows);
+            } else {
+                this.handleApexErrors(component, response.getError());
+            }
+            event.getSource().set('v.isLoading', false);
+        });
+        $A.enqueueAction(action);
+    },
+
+    /**
      * @description: handles the display of errors from an apex callout
      * @param errors: list of potential errors passed back from apex
      */
@@ -276,7 +299,7 @@
      * @description: flattens the DataImportRow class data to include donor information at the same level as the rest of the DataImport__c record.
      * @param responseRows: custom DataImportRow class data passed from the Apex controller.
      */
-    setDataTableRows: function(component, responseRows) {
+    setDataTableRows: function(component, baseRows, responseRows) {
         var rows = [];
         var errors = [];
         responseRows.forEach(function(currentRow) {
@@ -303,7 +326,9 @@
             this.handleTableErrors(component, errors);
         }
 
-        component.set('v.data', rows);
+        let data = baseRows.concat(rows)
+
+        component.set('v.data', data);
     },
 
     /**
@@ -312,10 +337,10 @@
      */
     setModel: function (component, model) {
         component.set('v.labels', model.labels);
-        this.setDataServiceFields(component, model.labels);
-        this.setDataTableRows(component, model.dataImportRows);
-        this.setTotals(component, model.dataImportRows);
         this.setColumns(component, model.columns);
+        this.setDataServiceFields(component, model.labels);
+        this.setDataTableRows(component, [], model.dataImportRows);
+        this.setTotals(component, model);
         this.setDataImportFields(component, model.columns);
         component.set('v.isNamespaced', Boolean(model.isNamespaced));
         component.set('v.isLoaded', true);
@@ -335,23 +360,13 @@
     },
 
     /**
-     * @description: Calculates actual totals from queried Data Import rows
-     * @param rows: rows returned from the Apex controller
+     * @description: Sets the total number and amount of Data Import Batch rows
+     * @param model: Apex model for the batch entry component
      */
-    setTotals: function (component, rows) {
-        var countGifts = 0;
-        var totalGiftAmount = 0;
-        rows.forEach(function (currentRow) {
-            var row = currentRow.record;
-            countGifts += 1;
-            var amount = row[component.get('v.labels.donationAmountField')];
-            if (amount) {
-                totalGiftAmount += amount;
-            }
-        });
+    setTotals: function (component, model) {
         var totals = component.get('v.totals');
-        totals.countGifts = countGifts;
-        totals.totalGiftAmount = totalGiftAmount;
+        totals.countGifts = model.totalCountOfRows;
+        totals.totalGiftAmount = model.totalRowAmount;
         component.set('v.totals', totals);
     },
 
