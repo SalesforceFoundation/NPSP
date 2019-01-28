@@ -49,29 +49,15 @@ public with sharing class UTIL_LightningComponentSupport {
             return 'date-local';
         } else if (rawType == 'double') {
             return 'number';
+        } else if (rawType == 'currency') {
+            return 'number';
+        } else if (rawType == 'string') {
+            return 'text';
+        } else if (rawType == 'boolean') {
+            return 'checkbox';
         } else {
             return rawType;
         }
-    }
-
-    /*******************************************************************************************************
-    * @description returns a Set of allowed types.
-    * @return Set containing the names of all the Allowed types
-    */
-    public static set<String> getAllowedDataTypes() {
-        return new Set<String>{
-            'CURRENCY',
-            'DATE',
-            'STRING',
-            'TEXTAREA',
-            'DOUBLE',
-            'PICKLIST',
-            'BOOLEAN',
-            'EMAIL',
-            'MULTIPICKLIST',
-            'PHONE',
-            'URL'
-        };
     }
 
 }
