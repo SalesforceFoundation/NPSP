@@ -54,6 +54,7 @@ private class CRLP_Query_SEL_TEST {
         List<Account> accts = Database.query(soql);
         System.AssertEquals(0, accts.size(), 'There should be no results, but the query should work');
 
+        List<Id> contactIds = new List<Id>();
         soql = CRLP_Query_SEL.buildDetailObjectQueryForRollup(Opportunity.SObjectType, new List<SObjectType>{
                 npe01__OppPayment__c.SObjectType, Allocation__c.SObjectType, OpportunityContactRole.SObjectType});
         List<Opportunity> opps2 = Database.query(soql);
