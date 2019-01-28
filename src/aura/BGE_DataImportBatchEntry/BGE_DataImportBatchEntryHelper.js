@@ -264,7 +264,8 @@
                     name: field.fieldName,
                     options: field.options,
                     required: field.required,
-                    value: field.defaultValue
+                    value: field.defaultValue,    
+                    type: field.type                
                 });
             }
         });
