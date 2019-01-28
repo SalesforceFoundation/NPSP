@@ -21,7 +21,7 @@ ASC Reciprocal Relationship Test Case 1
     ...                     &{contact1}[FirstName] &{contact1}[LastName]=Household Member
     Run Donations Batch Process
     Go To Record Home    &{Contact1}[Id]
-    ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Totals
+    ${locator}    Get NPSP Locator    detail_page.section_header    Soft Credit Total
     Scroll Element Into View    ${locator}
     Confirm Value    Soft Credit This Year    $500.00    Y
     Confirm Value    Soft Credit Total    $500.00    Y
