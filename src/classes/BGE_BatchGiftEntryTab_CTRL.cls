@@ -161,7 +161,7 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
         List<String> fieldNames =
                 UTIL_Describe.listStrFromFieldSet(
                         UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'),
-                        UTIL_Namespace.StrTokenNSPrefix('BatchGiftEntryTabDataTableColumns')
+                        UTIL_Namespace.StrTokenNSPrefix('BatchGiftEntryTabColumns')
                 );
         for (Integer i=0; i<fieldNames.size(); i++) {
             if (!UTIL_Permissions.canRead(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), fieldNames[i], false)) {
