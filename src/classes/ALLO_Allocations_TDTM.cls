@@ -216,7 +216,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         List<npe01__OppPayment__c> pmtsWithNullOldAmount = new List<npe01__OppPayment__c>();
 
         //do not run if Payment allocations are disabled
-        if (!settings.Payment_Allocations_Enabled__c) {
+        if (settings.Payment_Allocations_Enabled__c != true) {
             return;
         }
 
@@ -294,7 +294,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             }
 
             //throw error if payment allocations are disabled and Payment__c is not null
-            if (!settings.Payment_Allocations_Enabled__c && allo.Payment__c != null) {
+            if (settings.Payment_Allocations_Enabled__c != true && allo.Payment__c != null) {
                 allo.addError(Label.alloPaymentNotEnabled);
                 parentErrorDetected = true;
             }

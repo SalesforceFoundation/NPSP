@@ -16,63 +16,16 @@
             line-height: normal;
             margin-right: -30px;
         }
-        .slds-form_horizontal {
-            margin-bottom: .5rem;
-        }
     </style>
     <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavAllocations}" />
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
             <apex:commandButton id="editAllo" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
-        <c:UTIL_PageMessages allowClose="false" id="msgs" />
-        <div class="slds-section">
-            <div class="slds-section-title_divider" >{!$Label.stgLabelAllocationsSettings}</div>
-        </div>
-        <div class="slds-form_horizontal">
-            <div class="slds-form-element">
-                <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default_Allocations_Enabled__c.Label}" for="cbxDAE" styleClass="slds-form-element__label" />
-                <div class="slds-form-element__control">
-                    <apex:inputCheckbox value="{!stgService.stgAllo.Default_Allocations_Enabled__c}" rendered="{!isEditMode}" id="cbxDAE" html-aria-describedby="{!$Component.cbxDAEHelp}" styleClass="slds-checkbox"/>
-                    <apex:inputCheckbox value="{!stgService.stgAllo.Default_Allocations_Enabled__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxDAEO" html-aria-describedby="{!$Component.cbxDAEHelp}" styleClass="slds-checkbox"/>
-                    <apex:outputPanel id="cbxDAEHelp" layout="block">
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpDefaultAllocationsEnabled}" />
-                    </apex:outputPanel>
-                </div>
-            </div>
-            <div class="slds-form-element">
-                <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default__c.Label}" for="inputDefaultGAU" styleClass="slds-form-element__label" />
-                <div class="slds-form-element__control">
-                    <apex:outputText value="{!strDefaultGAUName}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                    <apex:outputPanel id="inputDefaultGAU" layout="block" rendered="{!isEditMode}" html-aria-describedby="{!$Component.inputDefaultGAUHelp}">
-                        <c:UTIL_InputField sObj="{!allo}" sObjType="Allocation__c" required="false" field="General_Accounting_Unit__c"/>
-                    </apex:outputPanel>
-                    <apex:outputPanel id="inputDefaultGAUHelp" layout="block">
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpDefaultGAU}" />
-                    </apex:outputPanel>
-                </div>
-            </div>
-        </div>
-        <div class="slds-section">
-            <div class="slds-section-title_divider" >{!$Label.stgLabelAllocationBehaviorSettings}</div>
-        </div>
-        <div class="slds-form_horizontal">
-            <div class="slds-form-element">
-                <apex:outputLabel value="{!$Label.stgAllocationLevel}" for="idAL" styleClass="slds-form-element__label" />
-                <div class="slds-form-element__control">
-                    <apex:outputText value="{!strAllocationLevel}" rendered="{!NOT(isEditMode)}" styleClass="slds-form-element__static"/>
-                    <apex:selectList value="{!strAllocationLevel}" multiselect="false" size="1" rendered="{!isEditMode}" id="idAL" styleClass="slds-select">
-                        <apex:selectOptions value="{!listSOAllocationLevels}"/>
-                    </apex:selectList>
-                    <apex:outputPanel id="idALHelp" layout="block">
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpAllocationLevel}" escape="false" />
-                    </apex:outputPanel>
-                </div>
-            </div>
-        </div>
+        <c:UTIL_PageMessages />
         <div style="{!IF(!stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:block', 'display:none')}">
             <div class="slds-section">
-                <div class="slds-section-title_divider" style="margin-top:0;">{!$Label.stgLabelAllocationsRollupSettings}</div>
+                <div class="slds-section-title_divider">{!$Label.stgLabelAllocationsRollupSettings}</div>
             </div>
             <div class="slds-form_horizontal">
                 <div class="slds-form-element">
@@ -112,6 +65,33 @@
                             <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpAlloFiscalYearRollups}" />
                         </apex:outputPanel>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-section">
+            <div class="slds-section-title_divider" >{!$Label.stgLabelAllocationsSettings}</div>
+        </div>
+        <div class="slds-form_horizontal">
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default_Allocations_Enabled__c.Label}" for="cbxDAE" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:inputCheckbox value="{!stgService.stgAllo.Default_Allocations_Enabled__c}" rendered="{!isEditMode}" id="cbxDAE" html-aria-describedby="{!$Component.cbxDAEHelp}" styleClass="slds-checkbox"/>
+                    <apex:inputCheckbox value="{!stgService.stgAllo.Default_Allocations_Enabled__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxDAEO" html-aria-describedby="{!$Component.cbxDAEHelp}" styleClass="slds-checkbox"/>
+                    <apex:outputPanel id="cbxDAEHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpDefaultAllocationsEnabled}" />
+                    </apex:outputPanel>
+                </div>
+            </div>
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Default__c.Label}" for="inputDefaultGAU" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputText value="{!strDefaultGAUName}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:outputPanel id="inputDefaultGAU" layout="block" rendered="{!isEditMode}" html-aria-describedby="{!$Component.inputDefaultGAUHelp}">	
+                        <c:UTIL_InputField sObj="{!allo}" sObjType="Allocation__c" required="false" field="General_Accounting_Unit__c"/>	
+                    </apex:outputPanel>
+                    <apex:outputPanel id="inputDefaultGAUHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpDefaultGAU}" />
+                    </apex:outputPanel>
                 </div>
             </div>
         </div>

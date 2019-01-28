@@ -1,11 +1,11 @@
 <apex:page controller="STG_PanelLvlAssignBatch_CTRL" docType="html-5.0" standardStylesheets="false" >
     <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.stgLabelLvlAssignBatchTitle}" />
-        <div class="slds-text-body_small slds-m-around_medium"><apex:outputText value="{!$Label.stgHelpLvlAssignBatch}" escape="false" /></div>
+        <div class="slds-text-body_small slds-m-around_medium"><c:UTIL_HtmlOutput html="{!$Label.stgHelpLvlAssignBatch}" /></div>
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
             <apex:commandButton id="runLvlAssignBatch" value="{!$Label.stgBtnRunBatch}" status="statusLoad" action="{!runBatch}" 
-                disabled="{!isRunningBatch}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
+                disabled="{!isRunningBatch}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral stg-run-level-batch" />
         </div>
         <apex:outputPanel rendered="{!isRunningBatch}">
             <c:UTIL_JobProgressLightning id="jobProgress"

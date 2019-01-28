@@ -188,6 +188,7 @@ public class CRLP_Rollup {
      * @return True (group the Mdt record into this CRLP_Rollup instance) or False (create a new CRLP_Rollup instance for this record)
      */
     public Boolean isRollupInSameGroup(Rollup__mdt otherMdtRollup) {
+        final String NULL_FILTER_GROUP = 'NO-FILTER-GROUP';
         Set<String> matchingFields = new Set<String>{
                 'Filter_Group__c','Summary_Object__c','Detail_Field__c', 'Detail_Object__c',
                 'Date_Field__c', 'Amount_Field__c', 'Use_Fiscal_Year__c'
@@ -213,7 +214,7 @@ public class CRLP_Rollup {
                 this.daysBack != otherMdtRollup.Integer__c)) ||
                 (otherMdtTimeBoundOperationType == daysBackOperation && this.timeBoundOperation != daysBackOperation)
                 ) {
-            isSameRollupGroup = false;
+            return false;
         }
 
         // YearsAgo operations have to be grouped together by year for Single Result Operations,
@@ -229,7 +230,7 @@ public class CRLP_Rollup {
                 (this.isYearsAgoSingleResult != true
                 && otherMdtTimeBoundOperationType == yearsAgoOperation
                 && isSingleResult)) {
-            isSameRollupGroup = false;
+            return false;
         }
 
         // The Amount and Detail fields do not matter for Count operations, so remove them from the
@@ -245,7 +246,12 @@ public class CRLP_Rollup {
             Object val;
             Object otherVal = otherMdtRollup.get(fld);
             if (fld == 'Filter_Group__c') {
-                val = this.filterGroup;
+                // Because a null filter group is allowed, and the logic below this block only
+                // compares non-null values, it's necessary to replace a null for a FilterGroupId
+                // with another non-null value to support a valid comparison to ensure grouping
+                // works as expected.
+                val = (this.filterGroup == null ? NULL_FILTER_GROUP : this.filterGroup);
+                otherVal = (otherVal == null ? NULL_FILTER_GROUP : otherVal);
             } else if (fld == 'Use_Fiscal_Year__c') {
                 val = this.useFiscalYear;
             } else {
@@ -471,6 +477,15 @@ public class CRLP_Rollup {
             }
         }
 
+        // abbreviate strings that are too long for the target field
+        if (resultValue instanceof String) {
+            String stringValue = (String) resultValue;
+            Integer maxFieldLength = targetField.getLength();
+            if (stringValue.length() > maxFieldLength && maxFieldLength >= 4) {
+                resultValue = stringValue.abbreviate(maxFieldLength);
+            }
+        }
+        
 //        CRLP_Debug_UTIL.amendLastCurrentRollupState('==> ' + resultValue);
         return resultValue;
     }

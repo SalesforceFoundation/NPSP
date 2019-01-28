@@ -84,7 +84,7 @@
                                     <div class="slds-form-element">
                                         <div class="slds-form-element__control">
                                             <apex:commandButton value="{!$Label.bdiRunBtn}" action="{!importData}" immediate="false" styleClass="slds-button slds-button_brand" rerender="idForm"/>
-                                            <apex:commandButton value="{!$Label.bdiDryRunBeginButton}" action="{!startDryRun}" immediate="false" styleClass="slds-button slds-button_neutral" rendered="{!NOT(isBGERecord)}" rerender="idForm"/>
+                                            <apex:commandButton value="{!$Label.bdiDryRunBeginButton}" action="{!startDryRun}" immediate="false" styleClass="slds-button slds-button_neutral" rendered="{!NOT(isGiftBatch)}" rerender="idForm"/>
                                             <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!close}" immediate="true" styleClass="slds-button slds-button_neutral" />
                                         </div>
                                     </div>

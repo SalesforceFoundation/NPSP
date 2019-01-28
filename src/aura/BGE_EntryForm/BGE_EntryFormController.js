@@ -1,13 +1,17 @@
 ({
     /**
-     * @description: called during render to place the focus on SelectOpenDonation link if present
+     * @description: called during render to focus on open donation link if present and donation not selected
      */
     callFocus: function(component){
-        let openDonationsLink = document.getElementById('selectMatchLink');
-        if (openDonationsLink && !component.get('v.selectedDonationId')) {
+        let openDonationsLink = document.getElementById('selectOpenDonation');
+
+        if (openDonationsLink && component.get('v.selectedDonation') == null) {
             openDonationsLink.focus();
-        } else if (openDonationsLink) {
-            component.find('donorType').focus();
+        } else {
+            let donorType = component.find('donorType');
+            if (donorType) {
+                donorType.focus();
+            }
         }
     },
 
@@ -20,32 +24,15 @@
     },
 
     /**
-     * @description:
+     * @description: listens for event listeners from other components
      */
-    /* for next ticket:
-    handleApplyPaymentSelection: function(component, event, helper) {
-        const selectedDonation = event.getSource().get('v.value');
-        selectedDonation.applyPayment = true;
-        helper.processDonationSelection(component, selectedDonation);
+    handleMessage: function (component, event, helper) {
+        const message = event.getParam('message');
+        const channel = event.getParam('channel');
 
-    },*/
-
-    /**
-     * @description: handles none option to create a new opportunity and prevent dry run
-     */
-    handleNoneDonationSelection: function(component, event, helper) {
-        const selectedDonation = '';
-        helper.processDonationSelection(component, selectedDonation);
-
-    },
-
-    /**
-     * @description: handles selected donation option to select the payment or opportunity and prevent dry run
-     */
-    handleDonationSelection: function(component, event, helper) {
-        const selectedDonation = event.getSource().get('v.value');
-        helper.processDonationSelection(component, selectedDonation);
-
+        if (channel === 'selectedDonation') {
+            helper.setDonation(component, message);
+        }
     },
 
     /**
@@ -61,9 +48,9 @@
      */
     onDonorChange: function (component, event, helper) {
         helper.clearDonationSelectionOptions(component);
-        var lookupField = component.get('v.donorType') === 'Contact1' ? 'contactLookup' : 'accountLookup';
-        var lookupValue = component.find(lookupField).get('v.value');
-        var lookupValueIsValidId = lookupValue.length === 18;
+        const lookupField = component.get('v.donorType') === 'Contact1' ? 'contactLookup' : 'accountLookup';
+        const lookupValue = component.find(lookupField).get('v.value');
+        const lookupValueIsValidId = lookupValue.length === 18;
 
         if (lookupValueIsValidId) {
             helper.sendMessage('showFormSpinner', '');
@@ -77,6 +64,7 @@
     onSubmit: function (component, event, helper) {
         debugger;
         event.preventDefault();
+        component.set('v.pendingSave',true);
         var completeRow = helper.getRowWithHiddenFields(component, event);
         var validity = helper.validateFields(component, completeRow);
 
@@ -84,6 +72,7 @@
             component.find('recordEditForm').submit(completeRow);
         } else if (validity.missingFields.length !== 0) {
             helper.sendErrorToast(component, validity.missingFields);
+            component.set('v.pendingSave',false);
         } else {
             //do nothing since data format errors display inline
         }
@@ -102,12 +91,34 @@
      * @description: launches modal so user can select open donation
      */
     openMatchModal: function(component, event, helper) {
-        component.set('v.matchingModalPromise', component.find('overlayLib').showCustomModal({
-            header: component.get('v.matchingModalHeader'),
-            body: component.get('v.matchingModalBody'),
-            showCloseButton: true,
-            cssClass: 'slds-modal_large'
-        }));
+        $A.createComponent('c:BGE_DonationSelector', {
+                'aura:id': 'donationSelector',
+                'name': 'donationSelector',
+                'unpaidPayments': component.get('v.unpaidPayments'),
+                'openOpportunities': component.get('v.openOpportunities'),
+                'selectedDonation': component.get('v.selectedDonation'),
+                'labels': component.get('v.labels')
+            },
+            function (newcomponent, status, errorMessage) {
+                if (status === 'SUCCESS') {
+                    component.find('overlayLib').showCustomModal({
+                        header: component.get('v.donationModalHeader'),
+                        body: newcomponent,
+                        showCloseButton: true,
+                        cssClass: 'slds-modal_large'
+                    });
+                } else if (status === 'INCOMPLETE') {
+                    const message = {
+                        title: $A.get('$Label.c.PageMessagesError'),
+                        errorMessage: $A.get('$Label.c.stgUnknownError')
+                    };
+                    helper.sendMessage('onError', message);
+
+                } else if (status === 'ERROR') {
+                    const message = {title: $A.get('$Label.c.PageMessagesError'), errorMessage: errorMessage};
+                    helper.sendMessage('onError', message);
+                }
+            });
     },
 
     /**

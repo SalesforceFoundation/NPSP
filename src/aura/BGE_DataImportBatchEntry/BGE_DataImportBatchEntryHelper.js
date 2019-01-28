@@ -1,5 +1,22 @@
 ({
     /**
+     * @description: checks that user has all necessary permissions and then launches modal or displays error
+     */
+    checkFieldPermissions: function(component, event, helper) {
+        var action = component.get('c.checkFieldPermissions');
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === 'SUCCESS') {
+                this.openBatchWizard(component, event);
+            } else if (state === 'ERROR') {
+                console.log(response.getError());
+                this.handleApexErrors(component, response.getError());
+            }
+        });
+        $A.enqueueAction(action);
+    },
+
+    /**
      * @description: creates the form component
      */
     createEntryForm: function (component) {
@@ -43,11 +60,26 @@
                 this.createEntryForm(component, response);
                 component.find('forceRecordCmp').reloadRecord(true);
             } else {
-                this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
+                this.handleApexErrors(component, response.getError());
+                this.hideFormSpinner(component);
             }
             this.hideSpinner(component);
         });
         $A.enqueueAction(action);
+    },
+
+    /**
+     * @description: handles the display of errors from an apex callout
+     * @param errors: list of potential errors passed back from apex
+     */
+    handleApexErrors: function(component, errors) {
+        let message;
+        if (errors && errors[0] && errors[0].message) {
+            message = errors[0].message;
+        } else {
+            message = 'Unknown error';
+        }
+        this.showToast(component, $A.get('$Label.c.PageMessagesError'), message, 'error');
     },
 
     /**
@@ -72,7 +104,7 @@
 
     /**
      * @description: saves inline edits from dataTable.
-     * @param values: changed values in the table
+     * @param draftValues: changed values in the table
      */
     handleTableSave: function(component, draftValues) {
         this.showSpinner(component);
@@ -93,11 +125,51 @@
                 });
                 this.runDryRun(component, recordIds);
             } else {
-                this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
+                this.handleApexErrors(component, response.getError());
             }
             this.hideSpinner(component);
         });
         $A.enqueueAction(action);
+    },
+
+    /**
+     * @description: opens the batch wizard modal for edit mode of the component
+     */
+    openBatchWizard: function(component, event) {
+        let modalBody;
+        let modalHeader;
+        let modalFooter;
+        const batchId = component.get('v.recordId');
+
+        let progressStepLabels = [
+            $A.get('$Label.c.bgeBatchOverviewWizard'),
+            $A.get('$Label.c.bgeBatchSelectFields'),
+            $A.get('$Label.c.bgeBatchSetFieldOptions'),
+            $A.get('$Label.c.bgeBatchSetBatchOptions')
+        ];
+
+        $A.createComponents([
+                ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c', recordId: batchId}],
+                ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
+                ['c:modalFooter', {progressStepLabels: progressStepLabels}]
+            ],
+            function(components, status, errorMessage){
+                if (status === 'SUCCESS') {
+                    modalBody = components[0];
+                    modalHeader = components[1];
+                    modalFooter = components[2];
+                    component.find('overlayLib').showCustomModal({
+                        body: modalBody,
+                        header: modalHeader,
+                        footer: modalFooter,
+                        showCloseButton: true,
+                        cssClass: 'slds-modal_large'
+                    })
+                } else {
+                    this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
+                }
+            }
+        );
     },
 
     /**
@@ -125,6 +197,7 @@
     runDryRun: function(component, recordIds) {
         var action = component.get('c.runDryRun');
         var batchId = component.get('v.recordId');
+        this.showSpinner(component);
         action.setParams({dataImportIds: recordIds, batchId: batchId});
         action.setCallback(this, function (response) {
             var state = response.getState();
@@ -133,8 +206,9 @@
                 this.setDataTableRows(component, responseRows);
                 this.setTotals(component, responseRows);
             } else {
-                this.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
+                this.handleApexErrors(component, response.getError());
             }
+            this.hideSpinner(component);
         });
         $A.enqueueAction(action);
     },
@@ -158,11 +232,18 @@
         columns.push({
             type: 'action',
             typeAttributes: {
-                rowActions: [{
-                    label: 'Delete',
-                    name: 'delete',
-                    title: 'Delete'
-                }]
+                rowActions: [
+                    {
+                        label: $A.get('$Label.c.bgeActionView'),
+                        name: 'view',
+                        title: $A.get('$Label.c.bgeActionView')
+                    },
+                    {
+                        label: $A.get('$Label.c.bgeActionDelete'),
+                        name: 'delete',
+                        title: $A.get('$Label.c.bgeActionDelete')
+                    }
+                ]
             }
         });
 
@@ -317,13 +398,50 @@
     },
 
     /**
+     * @description: Navigates to the record view of the Data Import record
+     * @param row: Information about which row the action was called from
+     */
+    handleViewRowAction: function(component, row) {
+        let navEvt = $A.get("e.force:navigateToSObject");
+        navEvt.setParams({
+            recordId: row.Id,
+            slideDevName: 'detail'
+        });
+        navEvt.fire();
+    },
+
+    /**
+     * @description: Deletes the data import record displayed in a given row
+     * @param row: Information about which row the action was called from
+     */
+    handleDeleteRowAction: function(component, row) {
+        let self = this;
+        self.showSpinner(component);
+        let action = component.get('c.deleteDataImportRow');
+        action.setParams({batchId: component.get('v.recordId'), dataImportId: row.Id});
+        action.setCallback(this, function (response) {
+            const state = response.getState();
+            if (state === 'SUCCESS') {
+                const returnValue = JSON.parse(response.getReturnValue());
+                self.setDataTableRows(component, returnValue);
+                self.setTotals(component, returnValue);
+                self.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftDeleted'), 'success');
+            } else {
+                self.handleApexErrors(component, response.getError());
+            }
+            self.hideSpinner(component);
+        });
+        $A.enqueueAction(action);
+    },
+
+    /**
      * @description: displays standard toast to user based on success or failure of their action
-     * @param title: Title displayed in toast
+     * @param title: title displayed in toast
      * @param message: body of message to display
      * @param type: configures type of toast
      */
     showToast: function(component, title, message, type) {
-        var mode = (type === 'Error') ? 'sticky' : 'pester';
+        var mode = (type === 'error') ? 'sticky' : 'pester';
 
         component.find('notifLib').showToast({
             'variant': type,
@@ -334,7 +452,15 @@
     },
 
     /**
-     * @description: shows lightning:dataTable spinner
+     * @description: shows spinner over BGE_EntryForm component
+     */
+    showFormSpinner: function (component) {
+        var spinner = component.find('formSpinner');
+        $A.util.removeClass(spinner, 'slds-hide');
+    },
+
+    /**
+     * @description: shows spinner over lightning:dataTable component
      */
     showSpinner: function (component) {
         var spinner = component.find('dataTableSpinner');
@@ -342,7 +468,15 @@
     },
 
     /**
-     * @description: hides lightning:dataTable spinner
+     * @description: hides spinner over BGE_EntryForm component
+     */
+    hideFormSpinner: function (component) {
+        var spinner = component.find('formSpinner');
+        $A.util.addClass(spinner, 'slds-hide');
+    },
+
+    /**
+     * @description: hides spinner over lightning:dataTable component
      */
     hideSpinner: function (component) {
         var spinner = component.find('dataTableSpinner');

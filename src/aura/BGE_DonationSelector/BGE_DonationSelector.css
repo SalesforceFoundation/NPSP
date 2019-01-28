@@ -1,0 +1,30 @@
+/*enforce matching card height*/
+.THIS .sameCardHeight {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+/*for cards with a smaller body, float the footer to the bottom*/
+.THIS .slds-card__body {
+    margin-bottom: auto;
+}
+
+/*increase text and icon size to match button height of non-selected donations*/
+.THIS .selectedDonationBody {
+    line-height: 2rem;
+}
+
+/*color for selected card border*/
+.THIS .selectedDonationCard {
+    border: 2px solid rgb(21, 137, 238);
+}
+
+/*shade selected check icon*/
+.THIS .selectedCheckmark  > lightning-primitive-icon > svg {
+    fill: rgb(21, 137, 238);
+}
+
+/*prevent card header from truncating long opp or payment names*/
+.THIS .slds-media__body {
+    white-space: normal;
+}

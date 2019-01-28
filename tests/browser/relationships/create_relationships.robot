@@ -7,7 +7,6 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Relationships for contacts
-    [tags]  unstable
     &{contact1} =  API Create Contact    Email=skristem@robot.com
     Go To Record Home  &{contact1}[AccountId]
     
@@ -15,7 +14,7 @@ Create Relationships for contacts
     ${contact_id2} =  New Contact for HouseHold
     &{contact2} =  Salesforce Get  Contact  ${contact_id2}
     Page Should Contain  &{contact1}[LastName] and &{contact2}[LastName] Household
-    Scroll Page To Location    0    600
+    Select Tab  Related
     Click Related List Button  Relationships    New
     Populate Lookup Field    Related Contact    &{contact1}[FirstName] &{contact1}[LastName]
     Click Dropdown            Type
@@ -29,4 +28,3 @@ Create Relationships for contacts
     Click Link    link=Show more actions
     Click Link    link=Relationships Viewer
     Sleep    5 
-    

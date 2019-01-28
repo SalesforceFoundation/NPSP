@@ -30,7 +30,7 @@ Data Imports
     #Sleep    2
     #Click Link    link=Status
     Click Special Object Button       Start Data Import
-    #Sleep    3
+    Wait For Locator    frame    NPSP Data Import
     Select Frame With Title   NPSP Data Import
     Click Button With Value   Begin Data Import Process
     Wait For Locator    data_imports.status    Completed

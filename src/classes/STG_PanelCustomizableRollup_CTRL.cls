@@ -56,11 +56,15 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     }
 
     /*******************************************************************************************************
-    * @description is the org on the HH Account model
+    * @description Show CRLP settings if the org is on the HH Account model, 
+    * or if the org is on the One to One Account model and HEDA + Advancement is installed 
+    * @return Boolean
     */
-    public Boolean isHHAccount {
+    public Boolean showCRLPSettings {
         get {
-            return (STG_Panel.stgService.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR);
+            Boolean isHHAccountModel = STG_Panel.stgService.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR;
+            Boolean isOneToOneModel = STG_Panel.stgService.stgCon.npe01__Account_Processor__c == CAO_Constants.ONE_TO_ONE_PROCESSOR;
+            return isHHAccountModel || (ADV_PackageInfo_SVC.useAdv() && isOneToOneModel);
         }
         set;
     }

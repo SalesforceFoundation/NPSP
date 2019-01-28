@@ -1,1083 +1,552 @@
 ({
-    /********************************************* View Modules *********************************************/
-    
-    /**
-     * @description Returns the Template Info View module.
-     * @param component. Lightning Component reference.
-     * @param model. The Model.
-     * @return View of the Template Info module.
-     */
-    TemplateInfoView : function(component, model) {
-        return (function (component, model) {
-
-            // Subscribe to the model onInfoUpdated event.
-            model.getTemplateInfo().onInfoUpdated.subscribe(function() {
-                var templateInfoView = component.get('v.templateInfo');
-                var templateInfo = model.getTemplateInfo();
-
-                // record info
-                templateInfoView.name = templateInfo.name;
-                templateInfoView.id = templateInfo.id;
-                templateInfoView.description = templateInfo.description;
-                templateInfoView.expectedCount = templateInfo.expectedCount;
-                templateInfoView.expectedTotal = templateInfo.expectedTotal;
-                templateInfoView.recordCount = templateInfo.recordCount;
-
-                // batch processing settings
-                templateInfoView.requireTotalMatch = templateInfo.requireTotalMatch;
-                templateInfoView.batchProcessSize = templateInfo.batchProcessSize;
-                templateInfoView.runOpportunityRollupsWhileProcessing = templateInfo.runOpportunityRollupsWhileProcessing;
-                templateInfoView.donationMatchingBehavior = templateInfo.donationMatchingBehavior;
-                templateInfoView.donationMatchingClass = templateInfo.donationMatchingClass;
-                templateInfoView.donationMatchingOptions = templateInfo.donationMatchingOptions;
-                templateInfoView.donationMatchingRule = templateInfo.donationMatchingRule;
-                templateInfoView.donationDateRange = templateInfo.donationDateRange;
-                templateInfoView.postProcessClass = templateInfo.postProcessClass;
-                templateInfoView.processUsingScheduledJob = templateInfo.processUsingScheduledJob;
-
-                component.set('v.templateInfo', templateInfoView);
-            });
-
-            // TemplateInfoView module public functions and properties
-            return {
-                name: '',
-                id: '',
-                description: '',
-                expectedCount: 0,
-                expectedTotal: 0,
-                recordCount: 0,
-
-                // batch processing settings
-                requireTotalMatch: false,
-                batchProcessSize: 0,
-                runOpportunityRollupsWhileProcessing: false,
-                donationMatchingBehavior: '',
-                donationMatchingClass: '',
-                donationMatchingOptions: [],
-                donationMatchingRule: [],
-                donationDateRange: '',
-                postProcessClass: '',
-                processUsingScheduledJob: false
-            };
-        })(component, model);
-    },
-
-    /**
-     * @description Returns the Template Metadata View module.
-     * @param component. Lightning Component reference.
-     * @param model. The Model.
-     * @return View of the Template Metadata module.
-     */
-    TemplateMetadataView : function(component, model) {
-        return (function (component, model) {
-
-            // Subscribe to the model onMetadataUpdated event.
-            model.getTemplateMetadata().onMetadataUpdated.subscribe(function() {
-                var templateMetadataView = component.get('v.templateMetadata');
-                var templateMetadata = model.getTemplateMetadata();
-                var headerChanged = Boolean(templateMetadataView.pageHeader !== templateMetadata.pageHeader);
-
-                templateMetadataView.labels = templateMetadata.labels;
-                templateMetadataView.mode = templateMetadata.mode;
-                templateMetadataView.hasError = templateMetadata.hasError;
-                templateMetadataView.errorMessage = templateMetadata.errorMessage;
-                templateMetadataView.pageHeader = templateMetadata.pageHeader;
-
-                if (!templateMetadataView.hasError) {
-                    templateMetadataView.progressIndicatorStep = templateMetadata.progressIndicatorStep;
-                    _sendMessage('setStep',templateMetadata.progressIndicatorStep);
-                } else {
-                    component.find('notifLib').showNotice({
-                        'variant': 'error',
-                        'header': $A.get('$Label.c.PageMessagesError'),
-                        'message': templateMetadataView.errorMessage,
-                        closeCallback: function() {
-                            //callback action here
-                        }
-                    });
-                }
-
-                if (templateMetadataView.mode === 'view') {
-                    component.set('v.isReadOnly', true);
-                } else if (templateMetadataView.mode === 'create' || templateMetadataView.mode === 'edit') {
-                    component.set('v.isReadOnly', false);
-                    if (templateMetadata.mode === 'edit') {
-                        templateMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchTemplateEdit')
-                    } else if (templateMetadata.mode === 'create') {
-                        templateMetadata.labels.batchTemplateHeader = $A.get('$Label.c.bgeBatchTemplateNew');
-                    }
-                }
-
-                //update page header in modal if page header has changed and modal is used
-                if (headerChanged) {
-                    _sendMessage('setHeader', templateMetadataView.pageHeader);
-                }
-
-                // when in modal context, need to notify the modal footer component
-                _sendMessage('setError', templateMetadataView.hasError);
-
-                component.set('v.templateMetadata', templateMetadataView);
-            });
-
-            function _sendMessage(channel, message) {
-                var sendMessage = $A.get('e.ltng:sendMessage');
-                sendMessage.setParams({
-                    'channel': channel,
-                    'message': message
-                });
-                sendMessage.fire();
+    /******************************** Init Functions *****************************/
+    init: function(component) {
+        var recordId = component.get('v.recordId');
+        var action = component.get('c.getRecordDetails');
+        action.setParams({
+            'recordId': recordId
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            var model = JSON.parse(response.getReturnValue());
+            if (state === 'SUCCESS') {
+                this.loadModel(component, model);
+            } else {
+                this.handleApexErrors(component, response);
             }
-
-            // TemplateMetadataView module public functions and properties
-            return {
-                labels: {},
-                mode: '',
-                progressIndicatorStep: '',
-                hasError: false,
-                errorMessage: ''
-            };
-        })(component, model);
+        });
+        $A.enqueueAction(action);
     },
 
     /**
-     * @description Returns the Template Fields View module.
-     * @param component. Lightning Component reference.
-     * @param model. The Template Fields Model.
-     * @return View of the Template Fields module.
+     * @description: sets basic batch info and processing settings
+     * @param model: parsed JSON response from the model
      */
-    TemplateFieldsView : function(component, model) {
-        return (function (component, model) {
+    loadModel: function(component, model) {
+        this.loadBatchInfo(component, model);
+        this.loadWizardMetadata(component, model);
 
-            // Subscribe to the model onFieldsUpdated event.
-            model.getTemplateFields().onFieldsUpdated.subscribe(function() {
-                var templateFields = component.get('v.templateFields');
-                templateFields.fieldGroups = [];
+        //parse active fields because it's another level JSON object
+        let activeFields = JSON.parse(model.activeFields);
+        let allFields = model.availableFields;
+        this.loadAvailableFields(component, activeFields, allFields);
+    },
 
-                var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
-                var allFieldsBySObject = model.getTemplateFields().getAllFieldsBySObject();
+    /**
+     * @description: sets basic batch info and processing settings
+     * @param model: parsed JSON model from the model
+     */
+    loadBatchInfo: function(component, model) {
+        let batchInfo = {};
 
-                Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
-                    var currentFieldGroup = {
-                        sObjectName : sObjectName,
-                        options: [],
-                        requiredOptions: [],
-                        values: []
-                    };
+        //generic batch info
+        batchInfo.name = model.name;
+        batchInfo.id = model.id;
+        batchInfo.description = model.description;
+        batchInfo.expectedCount = model.expectedCount || 0;
+        batchInfo.expectedTotal = model.expectedTotal || 0;
+        batchInfo.recordCount = model.recordCount;
 
-                    allFieldsBySObject[sObjectName].forEach(function(currentField) {
-                        currentFieldGroup.options.push(
-                            {
-                                label: currentField.label,
-                                value: currentField.id
-                            }
-                        );
-                        //special case so Amount object is always visible
-                        if (currentField.id.includes('Donation_Amount__c')) {
-                            currentFieldGroup.requiredOptions.push(currentField.id);
-                        }
-                    });
+        // batch processing settings
+        batchInfo.requireTotalMatch = model.requireTotalMatch;
+        batchInfo.batchProcessSize = model.batchProcessSize;
+        batchInfo.runOpportunityRollupsWhileProcessing = model.runOpportunityRollupsWhileProcessing;
+        batchInfo.donationMatchingBehavior = model.donationMatchingBehavior;
+        batchInfo.donationMatchingClass = model.donationMatchingClass;
+        batchInfo.donationMatchingOptions = model.donationMatchingOptions;
+        batchInfo.donationMatchingRule = model.donationMatchingRule;
+        batchInfo.donationDateRange = model.donationDateRange;
+        batchInfo.postProcessClass = model.postProcessClass;
 
-                    if (activeFieldsBySObject[sObjectName]) {
-                        activeFieldsBySObject[sObjectName].forEach(function(currentField) {
-                            currentFieldGroup.values.push(currentField.id);
-                        });
-                    }
-                    templateFields.fieldGroups.push(currentFieldGroup);
-                });
+        component.set('v.batchInfo', batchInfo);
+    },
 
-                component.set('v.templateFields', templateFields);
+    /**
+     * @description: sets wizard metadata such as labels and current step
+     * @param model: parsed JSON response from the model
+     */
+    loadWizardMetadata: function(component, model) {
+        let wizardMetadata = {};
+        wizardMetadata.labels = model.labels;
+        wizardMetadata.showAdvancedOptions = false;
+        wizardMetadata.namespacePrefix = model.namespacePrefix ? model.namespacePrefix+'__' : '';
+        wizardMetadata.errorMessage = null;
+
+        wizardMetadata.progressIndicatorStep = '0';
+        wizardMetadata.headers = [
+            model.labels.recordInfoLabel,
+            $A.get('$Label.c.bgeBatchSelectFields'),
+            $A.get('$Label.c.bgeBatchSetFieldOptions'),
+            $A.get('$Label.c.bgeBatchSetBatchOptions')
+        ];
+        component.set('v.wizardMetadata', wizardMetadata);
+        this.updateMatchOnDate(component);
+    },
+
+    /**
+     * @description: set available fields for field selection in dueling picklist
+     * @param activeFields: parsed list of user-selected active fields
+     * @param allFields: parsed list of all possible fields for dueling picklist
+     */
+    loadAvailableFields: function(component, activeFields, allFields) {
+        let availableFieldsBySObject = {
+            fieldGroups: []
+        };
+        let everyField = [];
+        var activeFieldMap = new Map();
+
+        if (activeFields) {
+            activeFields.forEach(function(activeField) {
+                var fieldId = activeField.sObjectName + '.' + activeField.name;
+                activeFieldMap.set(fieldId, activeField);
             });
+        }
 
-            // TemplateFieldsView module public functions and properties
-            return {
-                fieldGroups: []
-            };
-        })(component, model);
-    },
-
-    /**
-     * @description Returns the Template Field Options View module.
-     * @param component. Lightning Component reference.
-     * @param model. The Template Fields Model.
-     * @return View of the Template Field Options module.
-     */
-    TemplateFieldOptionsView : function(component, model) {
-        return (function (component, model) {
-
-            // Subscribe to the model onFieldsUpdated event.
-            model.getTemplateFields().onFieldsUpdated.subscribe(function() {
-                var templateFieldOptions = component.get('v.templateFieldOptions');
-                templateFieldOptions.fieldGroups = [];
-                var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
-                var templateFields = model.getTemplateFields();
-                templateFieldOptions.errors = templateFields.errors;
-
-                Object.keys(activeFieldsBySObject).forEach(function (sObjectName) {
-
-                    var currentFieldGroup = {
-                        sObjectName : sObjectName,
-                        fields: []
-                    };
-
-                    activeFieldsBySObject[sObjectName].forEach(function (currentField) {
-
-                        var fieldInfo = {
-                            name: currentField.name,
-                            sObjectName: currentField.sObjectName,
-                            label: currentField.label,
-                            defaultValue: currentField.defaultValue,
-                            required: currentField.required,
-                            hide: currentField.hide,
-                            type: currentField.type,
-                            formatter: currentField.formatter,
-                            options: currentField.options
-                        }
-
-                        if (currentField.sObjectName === 'Opportunity' &&
-                            (currentField.name == 'npsp__Donation_Amount__c' || currentField.name == 'Donation_Amount__c')) {
-                            fieldInfo.systemRequired = true;
-                        }
-
-                        currentFieldGroup.fields.push(fieldInfo);
-
-                    });
-
-                    templateFieldOptions.fieldGroups.push(currentFieldGroup);
-
-                });
-                component.set('v.templateFieldOptions', templateFieldOptions);
-
-            });
-
-            // TemplateFieldOptionsView module public functions and properties
-            return {
-                fieldGroups: []
-            };
-
-        })(component, model);
-    },
-
-
-    /*********************************************** Model Modules *********************************************/
-
-    /**
-     * @description Gets the Model module of Template Details.
-     * This is the main and only Model module for the Template 
-     * Details components. Contains references to TemplateFields
-     * and TemplateInfo sub-modules.
-     * @return Model module of Template Details.
-     */
-    TemplateDetailsModel : function() {
-        return (function (templateFields, templateInfo, templateMetadata) {
-            var _templateFields = templateFields;
-            var _templateInfo = templateInfo;
-            var _templateMetadata = templateMetadata;
-            var _bgeTemplateController;
-            
-            /* **********************************************************
-             * @Description Gets the Template Details and loads sub-modules.
-             * @param component. Lightning Component reference.
-             * @return void.
-             ************************************************************/
-            function init(component) {
-                var recordId = _templateInfo.id ? _templateInfo.id : component.get('v.recordId');
-                var sObjectName = component.get('v.sObjectName');
-                _bgeTemplateController.getRecordDetails(sObjectName, recordId, {
-                    success: function(response) {
-                        _templateInfo.load(response);
-                        _templateFields.load(response.templateFields, JSON.parse(response.activeFields));
-                        _templateMetadata.load(response.labels, component);
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
+        var availableSortOrder = 1;
+        allFields.forEach(function(currentField) {
+            currentField.id = currentField.sObjectName + '.' + currentField.name;
+            //set Active fields with saved sort order
+            if (activeFieldMap.has(currentField.id)) {
+                currentField.isActive = true;
+                currentField.defaultValue = activeFieldMap.get(currentField.id).defaultValue;
+                currentField.hide = activeFieldMap.get(currentField.id).hide;
+                currentField.requiredInEntryForm = activeFieldMap.get(currentField.id).requiredInEntryForm;
+                currentField.sortOrder = activeFieldMap.get(currentField.id).sortOrder;
+                currentField.type = activeFieldMap.get(currentField.id).type;
+                currentField.formatter = activeFieldMap.get(currentField.id).formatter;
+                currentField.options = activeFieldMap.get(currentField.id).options;
+                currentField.alwaysRequired = activeFieldMap.get(currentField.id).alwaysRequired;
+            } else {
+                currentField.isActive = false;
             }
+            currentField.availableSortOrder = availableSortOrder;
+            availableSortOrder++;
+            everyField.push(currentField);
+        });
 
-            /**
-             * @description Saves the model information to the backend.
-             * @return void.
-             */
-            function save() {
-                var templateDetailsData = {
-                    //record info
-                    name: _templateInfo.name,
-                    id: _templateInfo.id,
-                    description: _templateInfo.description,
-                    expectedCount: _templateInfo.expectedCount,
-                    expectedTotal: _templateInfo.expectedTotal,
+        // store everyField with its metadata
+        component.set('v.everyField', everyField);
+        // sort into groups by object
+        // returns map of sobject name => list of fields
+        var activeFieldsBySObject = this.getActivesBySObject(component);
+        // returns map of sobject name => list of fields
+        var allFieldsBySObject = this.groupFieldsBySObject(everyField);
 
-                    // batch processing settings
-                    requireTotalMatch: _templateInfo.requireTotalMatch,
-                    batchProcessSize: _templateInfo.batchProcessSize,
-                    runOpportunityRollupsWhileProcessing: _templateInfo.runOpportunityRollupsWhileProcessing,
-                    donationMatchingBehavior: _templateInfo.donationMatchingBehavior,
-                    donationMatchingClass: _templateInfo.donationMatchingClass,
-                    donationMatchingRule: _templateInfo.donationMatchingRule,
-                    donationDateRange: _templateInfo.donationDateRange,
-                    postProcessClass: _templateInfo.postProcessClass,
-                    processUsingScheduledJob: _templateInfo.processUsingScheduledJob
-                };
-                var activeFields = [];
+        Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
+            let currentFieldGroup = {
+                sObjectName: sObjectName,
+                options: [],
+                requiredOptions: [],
+                values: []
+            };
 
-                _templateFields.getActives().forEach(function(currentField) {
-                    activeFields.push({
+            allFieldsBySObject[sObjectName].forEach(function(currentField) {
+                currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
+                currentFieldGroup.options.push(
+                    {
                         label: currentField.label,
-                        name: currentField.name,
-                        sObjectName: currentField.sObjectName,
-                        defaultValue: currentField.defaultValue,
-                        required: currentField.required,
-                        hide: currentField.hide,
-                        sortOrder: currentField.sortOrder,
-                        type: currentField.type,
-                        options: currentField.options
-                    });
-                });
-
-                var sObjectName = _templateMetadata.labels.sObjectNameNoNamespace;
-
-                _bgeTemplateController.saveRecord(sObjectName, templateDetailsData, activeFields, {
-                    success: function(response) {
-                        _templateMetadata.navigateToRecord(response.id);
-                    },
-                    error: function(error) {
-                        console.log(error);
+                        value: currentField.id
                     }
+                );
+
+                if (currentField.alwaysRequired) {
+                    currentFieldGroup.requiredOptions.push(currentField.id);
+                }
+            });
+
+            if (activeFieldsBySObject[sObjectName]) {
+                activeFieldsBySObject[sObjectName].forEach(function(currentField) {
+                    currentFieldGroup.values.push(currentField.id);
                 });
             }
+            availableFieldsBySObject.fieldGroups.push(currentFieldGroup);
+        });
+        component.set('v.availableFieldsBySObject', availableFieldsBySObject);
+    },
+    
+    /******************************** Step Functions *****************************/
 
-            /**
-             * @description Sets the Apex backend controller module.
-             * @return void.
-             */
-            function setBackendController(bgeTemplateController) {
-                _bgeTemplateController = bgeTemplateController
-            }
-
-            /**
-             * @description Gets the Template Fields module.
-             * @return Template Fields module.
-             */
-            function getTemplateFields() {
-                return _templateFields;
-            }
-
-            /**
-             * @description Gets the Template Info module.
-             * @return Template Info module.
-             */
-            function getTemplateInfo() {
-                return _templateInfo;
-            }
-
-            /**
-             * @description Gets the Template Metadata module.
-             * @return Template Metadata module.
-             */
-            function getTemplateMetadata() {
-                return _templateMetadata;
-            }
-
-            // TemplateDetailsModel module public functions and properties
-            return {
-                init: init,
-                save: save,
-                setBackendController: setBackendController,
-                getTemplateFields: getTemplateFields,
-                getTemplateInfo: getTemplateInfo,
-                getTemplateMetadata: getTemplateMetadata
-            }
-        })(this.TemplateFields(), this.TemplateInfo(), this.TemplateMetadata());
+    /**
+     * @description: moves the modal wizard to the next step
+     */
+    nextStep: function(component) {
+        this.stepUp(component);
+        this.setModalFooter(component);
+        this.setModalHeader(component);
     },
 
     /**
-     * @description Gets the Model module of the Template Info.
-     * @return Model module of the Template Info.
+     * @description: parses and increments the stored step in the wizard
      */
-    TemplateInfo : function() {
-        return (function (Event) {
-            var _onInfoUpdated = new Event(this);
-            
-            /**
-             * @description Loads the Info, and notify all the
-             * _onInfoUpdated listeners.
-             * @return List of fields.
-             */
-            function load(info) {
-                //record info
-                this.name = info.name;
-                this.description = info.description;
-                this.id = info.id;
-                this.expectedCount = info.expectedCount;
-                this.expectedTotal = info.expectedTotal;
-                this.recordCount = info.recordCount;
-
-                //batch processing settings
-                this.requireTotalMatch = info.requireTotalMatch;
-                this.batchProcessSize = info.batchProcessSize;
-                this.runOpportunityRollupsWhileProcessing = info.runOpportunityRollupsWhileProcessing;
-                this.donationMatchingBehavior = info.donationMatchingBehavior;
-                this.donationMatchingClass = info.donationMatchingClass;
-                this.donationMatchingOptions = info.donationMatchingOptions;
-                this.donationMatchingRule = info.donationMatchingRule;
-                this.donationDateRange = info.donationDateRange;
-                this.postProcessClass = info.postProcessClass;
-                this.processUsingScheduledJob = info.processUsingScheduledJob;
-                this.onInfoUpdated.notify();
-            }
-
-            /**
-             * @description Validates the required templateInfo.
-             * @return Boolean validity.
-             */
-            function isValid() {
-                return this.name && this.description
-            }
-            
-            // TemplateInfo module public functions and properties
-            return {
-                // record info
-                name: '',
-                id: '',
-                description: '',
-                expectedCount: 0,
-                expectedTotal: 0,
-                recordCount: 0,
-
-                // batch processing settings
-                requireTotalMatch: false,
-                batchProcessSize: 0,
-                runOpportunityRollupsWhileProcessing: false,
-                donationMatchingBehavior: '',
-                donationMatchingClass: '',
-                donationMatchingOptions: [],
-                donationMatchingRule: [],
-                donationDateRange: '',
-                postProcessClass: '',
-                processUsingScheduledJob: false,
-
-                load: load,
-                isValid: isValid,
-                onInfoUpdated: _onInfoUpdated
-            }
-        })(this.Event());
+    stepUp: function(component) {
+        let stepNum = parseInt(component.get('v.wizardMetadata.progressIndicatorStep'));
+        stepNum++;
+        let progressIndicatorStep = stepNum.toString();
+        component.set('v.wizardMetadata.progressIndicatorStep', progressIndicatorStep);
     },
 
     /**
-     * @description Gets the Template Fields module.
-     * @return Model module of the Template Fields.
+     * @description: moves the modal wizard to the previous step
      */
-    TemplateFields : function() {
-        return (function (Event) {
-            var _allFields = [];
-            var _onFieldsUpdated = new Event(this);
-
-            /* ******************PUBLIC FUNCTIONS*************************/
-
-            /**
-             * @description Load the fields and notify onFieldsUpdated listeners.
-             * @param allFields: list of allFields with sObjectName/Name.
-             * param activeFields: Map of activeFieldsBySObject with sObjectName, Name,
-             * and Default Value, Hide and Required flags.
-             * @return void.
-             */
-            function load(allFields, activeFields) {
-                _allFields = [];
-                var activeFieldMap = new Map();
-
-                if (activeFields) {
-                    activeFields.forEach(function(activeField) {
-                        var fieldId = activeField.sObjectName + '.' + activeField.name;
-                        activeFieldMap.set(fieldId, activeField);
-                    });
-                }
-
-                var availableSortOrder = 1;
-                allFields.forEach(function(currentField) {
-                    currentField.id = currentField.sObjectName + '.' + currentField.name;
-                    //set Active fields with saved sort order
-                    if (activeFieldMap.has(currentField.id)) {
-                        currentField.isActive = true;
-                        currentField.defaultValue = activeFieldMap.get(currentField.id).defaultValue;
-                        currentField.hide = activeFieldMap.get(currentField.id).hide;
-                        currentField.required = activeFieldMap.get(currentField.id).required;
-                        currentField.sortOrder = activeFieldMap.get(currentField.id).sortOrder;
-                        currentField.type = activeFieldMap.get(currentField.id).type;
-                        currentField.formatter = activeFieldMap.get(currentField.id).formatter;
-                        currentField.options = activeFieldMap.get(currentField.id).options;
-                    } else {
-                        currentField.isActive = false;
-                    }
-                    currentField.availableSortOrder = availableSortOrder;
-                    availableSortOrder++;
-                    _allFields.push(currentField);
-                });
-                this.onFieldsUpdated.notify();
-            }
-
-            /**
-            * @description Gets all fields grouped by SObject.
-            * @return Map of SObject group to List of all fields.
-            */
-            function getAllFieldsBySObject() {
-                return _groupFieldsBySObject(_allFields);
-            }
-
-            /**
-             * @description Gets the available fields grouped by SObject.
-             * @return Map of SObject group to List of inactive fields.
-             */
-            function getAvailablesBySObject() {
-                var availableFields = [];
-                _allFields.forEach(function(currentField) {
-                    if (!currentField.isActive) {
-                        availableFields.push(currentField);
-                    }
-                });
-                return _groupFieldsBySObject(availableFields);
-            }
-
-            /**
-             * @description Gets the active fields.
-             * @return Sorted List of related active fields.
-             */
-            function getActives() {
-                var activeFields = [];
-                _allFields.forEach(function(currentField) {
-                    if (currentField.isActive) {
-                        activeFields.push(currentField);
-                    }
-                });
-                return _sortFieldsByOrder(activeFields);
-            }
-
-            /**
-             * @description Gets the active fields grouped by SObject.
-             * @return Map of SObject group to List of related active fields.
-             */
-            function getActivesBySObject() {
-                var activeFields = [];
-                _allFields.forEach(function(currentField) {
-                    if (currentField.isActive) {
-                        activeFields.push(currentField);
-                    }
-                });
-                activeFields = _sortFieldsByOrder(activeFields);
-                return _groupFieldsBySObject(activeFields);
-            }
-
-            /**
-             * @description Gets the aggregate validity of provided default values
-             * @return Boolean
-             */
-            function getDefaultFieldValidity(component) {
-                var isValid = component.find("defaultValueField").reduce(function (validSoFar, defaultValueField) {
-                    return validSoFar && defaultValueField.get("v.validity").valid;
-                }, true);
-                return isValid;
-            }
-
-            /**
-             * @description Validates the required templateInfo in Select Fields step.
-             * @return Boolean validity.
-             */
-            function getRequiredFieldErrors() {
-                var errors = [];
-                var activeFieldsBySObject = getActivesBySObject();
-                var systemRequiredFieldsBySObject = _getSystemRequiredFieldsBySObject();
-
-                Object.keys(systemRequiredFieldsBySObject).forEach(function(currentSObject) {
-                    var activeFieldNames = [];
-                    var systemRequiredFieldNames = new Map();
-
-                    //only check validity if sObject is included in activeFieldsBySObject
-                    if (activeFieldsBySObject[currentSObject]) {
-                        activeFieldsBySObject[currentSObject].forEach(function(currentField) {
-                            activeFieldNames.push(currentField.name);
-                        });
-                        systemRequiredFieldsBySObject[currentSObject].forEach(function(currentField) {
-                            systemRequiredFieldNames.set(currentField.name, currentField.label);
-                        });
-
-                        var containsSystemRequiredField = Array.from(systemRequiredFieldNames.keys()).every(function(currentFieldName) {
-                            return activeFieldNames.indexOf(currentFieldName) > -1;
-                        });
-                        if (!containsSystemRequiredField) {
-                            errors.push(currentSObject + ' (' + Array.from(systemRequiredFieldNames.values()).join(', ') + ')');
-                        }
-                    }
-                });
-
-                return errors.length > 0 ? $A.get('$Label.c.bgeBatchTemplateErrorRequiredFields') + ' ' + errors.join(', ') + '.' : '';
-            }
-
-            /**
-             * @description Updates isActive flag and sort Order of all fields
-             * @return void.
-             */
-            function updateToActive(templateFieldGroups) {
-                var fieldCountPreviousObjects = 0;
-                var allFieldsBySObject = getAllFieldsBySObject();
-                Object.keys(allFieldsBySObject).forEach(function(currentSObject) {
-                    templateFieldGroups.forEach(function(currentFieldGroup) {
-                        if (currentFieldGroup.sObjectName === currentSObject) {
-                            allFieldsBySObject[currentSObject].forEach(function (currentField) {
-                                currentField.isActive = currentFieldGroup.values.includes(currentField.id);
-                                // the field's sort order is its index PLUS the total of all active fields from all previous object groups
-                                currentField.sortOrder = currentField.isActive ? currentFieldGroup.values.indexOf(currentField.id) + fieldCountPreviousObjects : null;
-                            });
-                            // increase the buffer by the number of active fields from this object
-                            fieldCountPreviousObjects += currentFieldGroup.values.length;
-                        }
-                    });
-                });
-
-                this.onFieldsUpdated.notify();
-            }
-
-            /**
-             * @description Updates the selected fields to Active, unselects fields
-             * @return void.
-             */
-            function updateTemplateFieldOptions(templateFieldGroups) {
-
-                var templateFieldOptions = [];
-                templateFieldGroups.forEach(function(currentFieldGroup) {
-                    currentFieldGroup.fields.forEach(function(currentField) {
-                        templateFieldOptions.push(currentField);
-                    });
-                });
-
-                _allFields.forEach(function(currentField) {
-                    templateFieldOptions.forEach(function(currentActiveField) {
-                        if (currentField.name === currentActiveField.name) {
-                            currentField.required = currentActiveField.required;
-                            currentField.hide = currentActiveField.hide;
-                            currentField.defaultValue = currentActiveField.defaultValue;
-                        }
-                    });
-
-                    /* todo: put this back when we decide to use hidden attribute
-                    // will need to figure out where/how to display errors
-                    // this error/allvalid handling is remnant from datatable display
-                    if (currentField.hide && !currentField.defaultValue) {
-
-                        allValid = false;
-                        var fieldName = currentField.name;
-                        var fieldNameGroup = {
-                            title: $A.get('$Label.c.PageMessagesError'),
-                            messages: [$A.get('$Label.c.bgeBatchTemplateErrorDefaultValue')],
-                            fieldNames: ['defaultValue']
-                        };
-                        errors.rows[fieldName] = fieldNameGroup;
-                        errors.size += 1;
-                    }*/
-
-                });
-
-            }
-
-            /* ******************PRIVATE FUNCTIONS************************/
-
-            /**
-             * @description Gets the system required fields grouped by SObject.
-             * @return Map of SObject group to List of system required fields.
-             */
-            function _getSystemRequiredFieldsBySObject() {
-                var systemRequiredFields = [];
-                _allFields.forEach(function(currentField) {
-                    if (currentField.systemRequired) {
-                        systemRequiredFields.push(currentField);
-                    }
-                });
-                return _groupFieldsBySObject(systemRequiredFields);
-            }
-
-            /**
-             * @description Groups the fields by SObject name.
-             * @param fields: list of fields.
-             * @return Map of SObject name to List of related fields.
-             */
-            function _groupFieldsBySObject(fields) {
-                var result = {};
-                fields.forEach(function(currentField) {
-                    if ((currentField.sObjectName in result) === false) {
-                        result[currentField.sObjectName] = [];
-                    }
-                    result[currentField.sObjectName].push(currentField);
-                });
-
-                return result;
-
-            }
-
-            /**
-             * @description Sort the fields by order.
-             * @param fields. List of the fields to sort.
-             * @return sorted fields.
-             */
-            function _sortFieldsByOrder(fields) {
-                fields.sort(function(currentField, nextField) {
-                    if (currentField.sortOrder < nextField.sortOrder) {
-                        return -1;
-                    }
-                    if (currentField.sortOrder > nextField.sortOrder) {
-                        return 1;
-                    }
-                    // numbers must be equal
-                    return 0;
-                });
-                return fields;
-            }
-
-            // TemplateFieldsModel module public functions and properties
-            return {
-                errors: {},
-                load: load,
-                getRequiredFieldErrors: getRequiredFieldErrors,
-                getAllFieldsBySObject: getAllFieldsBySObject,
-                getAvailablesBySObject: getAvailablesBySObject,
-                getActives: getActives,
-                getActivesBySObject: getActivesBySObject,
-                getDefaultFieldValidity: getDefaultFieldValidity,
-                updateToActive: updateToActive,
-                updateTemplateFieldOptions: updateTemplateFieldOptions,
-                onFieldsUpdated: _onFieldsUpdated
-
-            }
-        })(this.Event());
-	},
+    backStep: function(component) {
+        this.stepDown(component);
+        this.setModalFooter(component);
+        this.setModalHeader(component);
+    },
 
     /**
-     * @description Gets the Model module of the Template Metadata,
-     * such as page mode and labels.
-     * @return Model module of the Template Metadata.
+     * @description: parses and decrements the stored step in the wizard
      */
-    TemplateMetadata : function() {
-        return (function (Event) {
-            var _onMetadataUpdated = new Event(this);
+    stepDown: function(component) {
+        let stepNum = parseInt(component.get('v.wizardMetadata.progressIndicatorStep'));
+        stepNum--;
+        let progressIndicatorStep = stepNum.toString();
+        component.set('v.wizardMetadata.progressIndicatorStep', progressIndicatorStep);
+    },
 
-            /* **********************************************************
-             * @Description Loads the Info, and notify all the
-             *      _onMetadataUpdated listeners.
-             * @return void.
-             ************************************************************/
-            function load(labels, component) {
-                this.labels = labels;
-                //isReadOnly (View) is passed from record home with lightning app builder
-                if (component.get('v.isReadOnly')) {
-                    this.setMode('view');
-                } else {
-                    if (component.get('v.recordId') !== null) {
-                        this.setMode('edit');
-                    } else {
-                        this.setMode('create');
-                    }
-                }
-                this.setPageHeader();
-                this.onMetadataUpdated.notify();
+    /******************************** Dynamic Display Functions *****************************/
+
+    /**
+     * @description sets the showAdvancedOptions flag to hide/reveal the advanced options accordingly
+     */
+    toggleShowAdvanced: function(component) {
+        let showAdvancedOptions = component.get('v.wizardMetadata.showAdvancedOptions');
+        component.set('v.wizardMetadata.showAdvancedOptions', !showAdvancedOptions);
+    },
+
+    /**
+     * @description turns off pendingSave flag to enable Save button if an error is found on save
+     */
+    enableSaveButton: function(component) {
+        component.set('v.wizardMetadata.pendingSave', false);
+        this.sendMessage(component,'pendingSave', false);
+    },
+
+    /**
+     * @description updates the attribute that tracks whether or not Donation Date is selected in the Donation Matching Rule
+     */
+    updateMatchOnDate: function(component) {
+        let donationMatchingRule = component.get('v.batchInfo.donationMatchingRule');
+        let matchOnDateSelected = donationMatchingRule.indexOf(component.get('v.wizardMetadata.namespacePrefix') + 'donation_date__c') >= 0;
+        component.set('v.wizardMetadata.matchOnDateSelected', matchOnDateSelected);
+    },
+
+    /******************************** Sort and Group Functions *****************************/
+
+    /**
+     * @description Gets a flat list of the active fields sorted by order.
+     * @return List of active fields.
+     */
+    getActives: function(component) {
+        let allFields = component.get('v.everyField');
+        let activeFields = [];
+        allFields.forEach(function(currentField) {
+            if (currentField.isActive) {
+                activeFields.push(currentField);
             }
+        });
+        var sortedActiveFields = this.sortFieldsByOrder(activeFields);
+        return sortedActiveFields;
+    },
 
-            /**
-             * @description Navigates to the record's sObject Home
-             * @param recordId - the record we want to view
-             */
-            function navigateToRecord(recordId) {
+    /**
+     * @description Gets the active fields sorted and grouped by SObject.
+     * @return Map of SObject group to List of related active fields.
+     */
+    getActivesBySObject: function(component) {
+        let activeFields = this.getActives(component);
+        var activesBySObject = this.groupFieldsBySObject(activeFields);
+        return activesBySObject;
+    },
+
+    /**
+     * @description Sort the fields by order.
+     * @param fields. List of the fields to sort.
+     * @return sorted fields.
+     */
+    sortFieldsByOrder: function(fields) {
+        fields.sort(function(currentField, nextField) {
+            if (currentField.sortOrder < nextField.sortOrder) {
+                return -1;
+            }
+            if (currentField.sortOrder > nextField.sortOrder) {
+                return 1;
+            }
+            // numbers must be equal
+            return 0;
+        });
+        return fields;
+    },
+
+    /**
+     * @description Groups the fields by SObject name.
+     * @param fields: list of fields to be grouped.
+     * @return Map of SObject name to List of related fields.
+     */
+    groupFieldsBySObject: function(fields) {
+        var result = {};
+        fields.forEach(function(currentField) {
+            if ((currentField.sObjectName in result) === false) {
+                result[currentField.sObjectName] = [];
+            }
+            result[currentField.sObjectName].push(currentField);
+        });
+
+        return result;
+    },
+
+    /******************************** Validity Functions *****************************/
+
+    /**
+     * @description Checks for required fields name and description
+     * @return Boolean if user can proceed to next step
+     */
+    checkBatchInfoValidity: function(component) {
+        let batchInfo = component.get('v.batchInfo');
+        let isValid = batchInfo.name;
+
+        if (batchInfo.expectedTotal == '' || batchInfo.expectedTotal == null) {
+            batchInfo.expectedTotal = 0;
+        }
+        if (batchInfo.expectedCount == '' || batchInfo.expectedCount == null) {
+            batchInfo.expectedCount = 0;
+        }
+        if (isValid) {
+            this.clearError(component);
+        } else {
+            component.set('v.wizardMetadata.errorMessage', component.get('v.wizardMetadata.labels.missingNameDescriptionError'));
+        }
+        return isValid;
+    },
+
+    /**
+     * @description Checks validity object on every lightning:input field
+     * @return Boolean if user can proceed to next step
+     */
+    checkBatchFieldOptionsValidity: function(component) {
+        var isValid = component.find('defaultValueField').reduce(function(validSoFar, defaultValueField) {
+            return validSoFar && defaultValueField.get('v.validity').valid;
+        }, true);
+        if (isValid) {
+            this.clearError(component);
+        }
+        return isValid;
+    },
+
+    /**
+     * @description Checks for required fields Donation Date Range and Batch Process Size
+     * @return Boolean if user can proceed to next step
+     */
+    checkBatchProcessingSettingsValidity: function(component) {
+        const batchInfo = component.get('v.batchInfo');
+        let isValid = true;
+        let errormsg = component.get('v.wizardMetadata.labels.missingFieldsError');
+
+        if (batchInfo.donationDateRange === '') {
+            errormsg = errormsg + ' ' + component.get('v.wizardMetadata.labels.donationDateRangeLabel');
+            isValid = false;
+        }
+        if (batchInfo.batchProcessSize === '') {
+            errormsg = errormsg + (isValid ? ' ' : ', ') + component.get('v.wizardMetadata.labels.batchProcessSizeLabel');
+            isValid = false;
+        }
+
+        if (isValid) {
+            this.clearError(component);
+        } else {
+            component.set('v.wizardMetadata.errorMessage', errormsg);
+        }
+        return isValid;
+    },
+
+    /**
+     * @description Clears error message and notifies footer via message
+     */
+    clearError: function(component) {
+        component.set('v.wizardMetadata.errorMessage', null);
+        this.sendMessage(component, 'setError', false);
+    },
+
+    /**
+     * @description Shows error message.
+     */
+    showError: function(component) {
+        let message = component.get('v.wizardMetadata.errorMessage');
+        if (message) {
+            component.find('notifLib').showNotice({
+                'variant': 'error',
+                'header': $A.get('$Label.c.PageMessagesError'),
+                'message': message
+            });
+        }
+        // when in modal context, need to notify the modal footer component
+        this.sendMessage(component, 'setError', true);
+    },
+
+    /******************************** Save Functions *****************************/
+
+    /**
+     * @description Updates isActive flag and sort Order of all fields
+     */
+    updateToActive: function(component) {
+        var fieldCountPreviousObjects = 0;
+        var allFieldsBySObject = this.groupFieldsBySObject(component.get('v.everyField'));
+        var everyFieldUpdated = [];
+        Object.keys(allFieldsBySObject).forEach(function(currentSObject) {
+            var batchFieldGroups = component.get('v.availableFieldsBySObject').fieldGroups;
+            batchFieldGroups.forEach(function(currentFieldGroup) {
+                if (currentFieldGroup.sObjectName === currentSObject) {
+                    allFieldsBySObject[currentSObject].forEach(function(currentField) {
+                        currentField.isActive = currentFieldGroup.values.includes(currentField.id);
+                        // the field's sort order is its index PLUS the total of all active fields from all previous object groups
+                        currentField.sortOrder = currentField.isActive ? currentFieldGroup.values.indexOf(currentField.id) + fieldCountPreviousObjects : null;
+                        everyFieldUpdated.push(currentField);
+                    });
+                    // increase the buffer by the number of active fields from this object
+                    fieldCountPreviousObjects += currentFieldGroup.values.length;
+                }
+            });
+        });
+        component.set('v.everyField', everyFieldUpdated);
+    },
+
+    /**
+     * @description Updates batchFieldOptions attribute based on selected fields
+     */
+    updateBatchFieldOptions: function(component) {
+        let batchFieldOptions = {
+            fieldGroups: []
+        };
+        let activeFieldsBySObject = this.getActivesBySObject(component);
+        Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
+
+            var currentFieldGroup = {
+                sObjectName: sObjectName,
+                fields: []
+            };
+
+            activeFieldsBySObject[sObjectName].forEach(function(currentField) {
+                currentFieldGroup.fields.push(currentField);
+                currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
+            });
+
+            batchFieldOptions.fieldGroups.push(currentFieldGroup);
+
+        });
+        component.set('v.batchFieldOptions', batchFieldOptions);
+    },
+
+    /**
+     * @description Updates everyField with values from Set Field Options step
+     */
+    commitBatchFieldOptionsToEveryField: function(component) {
+
+        var batchFieldGroups = component.get('v.batchFieldOptions.fieldGroups');
+        var batchFieldOptions = [];
+        batchFieldGroups.forEach(function(currentFieldGroup) {
+            currentFieldGroup.fields.forEach(function(currentField) {
+                batchFieldOptions.push(currentField);
+            });
+        });
+
+        let everyField = component.get('v.everyField');
+
+        everyField.forEach(function(currentField) {
+            batchFieldOptions.forEach(function(currentActiveField) {
+                if (currentField.name === currentActiveField.name) {
+                    currentField.requiredInEntryForm = currentActiveField.requiredInEntryForm;
+                    currentField.hide = currentActiveField.hide;
+                    currentField.defaultValue = currentActiveField.defaultValue;
+                }
+            });
+        });
+
+        component.set('v.everyField',everyField);
+    },
+
+    /**
+     * @description Commits Batch record
+     */
+    saveRecord: function(component) {
+        var batchInfo = component.get('v.batchInfo');
+        // getActives grabs allFields, returns those isActive, sorted.
+        let activeFields = this.getActives(component);
+
+        var action = component.get('c.saveRecord');
+        action.setParams({
+            'recordInfo': JSON.stringify(batchInfo),
+            'activeFields': JSON.stringify(activeFields)
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            var response = JSON.parse(response.getReturnValue());
+            if (state === 'SUCCESS') {
                 var navEvt = $A.get('e.force:navigateToSObject');
                 navEvt.setParams({
-                    'recordId': recordId
+                    'recordId': response.id
                 });
                 navEvt.fire();
+            } else {
+                this.enableSaveButton(component, false);
+                this.handleApexErrors(component, response);
             }
+        });
+        $A.enqueueAction(action);
+    },
 
-            /**
-             * @description Increments Wizard to next step if no errors exist
-             * @param isValid - string that is the selected mode
-             * @param error - existing errors
-             * @return void.
-             */
-            function nextStep(isValid, error) {
+    /******************************** Utility Functions *****************************/
 
-                if (isValid) {
-                    this.clearError();
-                    this.stepUp();
-                    this.setPageHeader();
-                } else {
-                    this.showError(error);
-                }
-            }
-
-            /**
-             * @description Decrements Wizard to previous step regardless of errors
-             * @return void.
-             */
-            function backStep() {
-                this.clearError();
-                this.stepDown();
-                this.setPageHeader();
-            }
-
-            /**
-             * @description From Edit mode, sets back to View mode, otherwise returns user to dynamic Object home
-             * @return void.
-             */
-            function cancel() {
-                if (this.mode === 'edit' && this.labels.sObjectNameNoNamespace === 'Batch_Template__c') {
-                    this.clearError();
-                    this.setMode('view');
-                } else {
-                    //navigate to record home
-                    var homeEvent = $A.get('e.force:navigateToObjectHome');
-                    var objectName = this.labels.sObjectName;
-                    homeEvent.setParams({
-                        'scope': objectName
-                    });
-                    homeEvent.fire();
-                }
-            }
-
-            /**
-             * @description Sets the mode, and notify all the
-             *      _onMetadataUpdated listeners. Resets progressIndicator.
-             * @param mode - string that is the selected mode
-             * @return void.
-             */
-            function setMode(mode) {
-                this.mode = mode;
-                this.progressIndicatorStep = '1';
-                this.onMetadataUpdated.notify();
-            }
-
-            /**
-             * @description Shows error message.
-             * @param message - String for the error message
-             * @return void.
-             */
-            function showError(message) {
-                this.hasError = true;
-                this.errorMessage = message;
-                this.onMetadataUpdated.notify();
-            }
-
-            /**
-             * @description Clears error message
-             * @return void.
-             */
-            function clearError() {
-                this.hasError = false;
-                this.errorMessage = '';
-                this.onMetadataUpdated.notify();
-            }
-
-            /**
-             * @description sets the page header based on the step in the wizard
-             * @return void.
-             */
-            function setPageHeader() {
-                var headers = [
-                    this.labels.recordInfoLabel,
-                    'Select Template',
-                    $A.get('$Label.c.bgeBatchTemplateSelectFields'),
-                    $A.get('$Label.c.bgeBatchTemplateSetFieldOptions'),
-                    $A.get('$Label.c.bgeBatchTemplateSetBatchOptions')
-                ];
-
-                var progressIndicatorStepBase1 = parseInt(this.progressIndicatorStep) - 1;
-                this.pageHeader = headers[progressIndicatorStepBase1];
-                this.onMetadataUpdated.notify();
-            }
-
-            /**
-             * @description Increments the step for the progressIndicator
-             * @return void.
-             */
-            function stepUp() {
-                var stepNum = parseInt(this.progressIndicatorStep);
-                switch (stepNum) {
-                    case 1:
-                        // TODO: adjust this when we add in step 2
-                        stepNum = 3;
-                        break;
-                    case 2:
-                        stepNum = 3;
-                        break;
-                    case 3:
-                        stepNum = 4;
-                        break;
-                    case 4:
-                        stepNum = 5;
-                        break;
-                    default:
-                        stepNum = 1;
-                        break;
-                }
-                this.progressIndicatorStep = stepNum.toString();
-                this.onMetadataUpdated.notify();
-            }
-
-            /**
-             * @description Decrements the step for the progressIndicator
-             * @return void.
-             */
-            function stepDown() {
-                var stepNum = parseInt(this.progressIndicatorStep);
-                switch (stepNum) {
-                    case 2:
-                        stepNum = 1;
-                        break;
-                    case 3:
-                        // TODO: adjust this when we add in step 2
-                        stepNum = 1;
-                        break;
-                    case 4:
-                        stepNum = 3;
-                        break;
-                    case 5:
-                        stepNum = 4;
-                        break;
-                    default:
-                        stepNum = 1;
-                        break;
-                }
-                this.progressIndicatorStep = stepNum.toString();
-                this.onMetadataUpdated.notify();
-            }
-
-            // TemplateMetadata module public functions and properties
-            return {
-                labels: {},
-                mode: '',
-                progressIndicatorStep: '',
-                hasError: false,
-                errorMessage: '',
-                pageHeader: '',
-                load: load,
-                navigateToRecord: navigateToRecord,
-                nextStep: nextStep,
-                backStep: backStep,
-                cancel: cancel,
-                setMode: setMode,
-                showError: showError,
-                clearError: clearError,
-                setPageHeader: setPageHeader,
-                stepUp: stepUp,
-                stepDown: stepDown,
-                onMetadataUpdated: _onMetadataUpdated
-            }
-        })(this.Event());
+    /**
+     * @description: handles the display of errors from an Apex callout
+     * @param response: the Apex response, which may contain errors or may be null
+     */
+    handleApexErrors: function(component, response) {
+        let message;
+        let errors;
+        if (response) {
+            errors = response.getError();
+        }
+        if (errors && errors[0] && errors[0].message) {
+            message = errors[0].message;
+        } else {
+            message = 'Unknown error';
+        }
+        component.find('notifLib').showNotice({
+            'variant': 'error',
+            'header': $A.get('$Label.c.PageMessagesError'),
+            'message': message
+        });
     },
 
     /**
-     * @description. Publisher/Subscribers used by the Model modules
-     *      to notify the View modules on a specific change.
-     * @return Event
+     * @description Sets progress indicator step on modal footer
      */
-    Event: function () {
-        return function(sender) {
-            var _sender = sender;
-            var _listeners = [];
-            
-            /**
-             * @description Subscribes the listener to the current Event.
-             * @param listener. The event listener.
-             * @return void.
-             */
-            function subscribe(listener) {
-                _listeners.push(listener);
-            }
-            
-            /**
-             * @description Notifies the listeners of the current Event.
-             * @param args. The parameters to provide to the listeners.
-             * @return void.
-             */
-            function notify(args) {
-                var index;
-                for (index = 0; index < _listeners.length; index += 1) {
-                    _listeners[index](_sender, args);
-                }
-            }
-            
-            // Event module public functions.
-            return {
-                subscribe: subscribe,
-                notify: notify
-            };
-        };
+    setModalFooter: function(component) {
+        const progressIndicatorStep = component.get('v.wizardMetadata.progressIndicatorStep');
+        this.sendMessage(component,'setStep', progressIndicatorStep);
     },
-    
-    /*********************************************** Template Detail Controller *********************************************/
 
     /**
-     * @description Gets Template Details Controller
-     * @return Template Details Controller.
+     * @description Sets header title on modal
      */
-    BGETemplateController : function(component) {
-        return (function (component) {
-            var _component = component;
+    setModalHeader: function(component) {
+        const wizardMetadata = component.get('v.wizardMetadata');
+        const headers = wizardMetadata.headers;
+        const progressIndicatorStep = parseInt(wizardMetadata.progressIndicatorStep);
+        this.sendMessage(component,'setHeader', headers[progressIndicatorStep]);
+    },
 
-            /**
-             * @description Calls the getRecordDetails method.
-             * @param recordId. The Id of the Template.
-             * @param callback. The callback function to execute.
-             * @return void.
-             */
-            function getRecordDetails(sObjectName, recordId, callback) {
-                var action = _component.get('c.getRecordDetails');
-                action.setParams({
-                    'sObjectName': sObjectName,
-                    'recordId': recordId
-                });
-                action.setCallback(callback, _processResponse);
-                $A.enqueueAction(action);
-            }
-
-            /**
-             * @description Calls the saveRecord method.
-             * @param templateDetails. The Template fields.
-             * @param activeFields. The active fields (JSON format)
-             * @param callback. The callback function to execute.
-             * @return void.
-             */
-            function saveRecord(sObjectName, recordDetails, activeFields, callback) {
-                var action = _component.get('c.saveRecord');
-                action.setParams({
-                    'sObjectName' : sObjectName,
-                    'recordInfo': JSON.stringify(recordDetails),
-                    'activeFields': JSON.stringify(activeFields)
-                });
-                action.setCallback(callback, _processResponse);
-                $A.enqueueAction(action);
-            }
-
-            /**
-             * @description Processes the response from any Apex method.
-             * @param response. The response from the backend.
-             * @return void.
-             */
-            function _processResponse(response) {
-                var state = response.getState();
-                if (state === 'SUCCESS') {
-                    this.success(JSON.parse(response.getReturnValue()));
-                }
-                else if (state === 'ERROR') {
-                    var errors = response.getError();
-                    if (errors) {
-                        if (errors[0] && errors[0].message) {
-                            this.errors = errors[0].message;
-                        }
-                    } else {
-                        this.errors = 'Unknown error';
-                    }
-                }
-            }
-            
-            // BGETemplateController module public functions.
-            return {
-                errors: '',
-                getRecordDetails: getRecordDetails,
-                saveRecord: saveRecord
-            }
-        })(component);
+    /**
+     * @description Sends a generic ltng:sendMessage
+     * @param channel - Channel to use
+     * @param message - Message to be sent
+     */
+    sendMessage: function(component, channel, message) {
+        let sendMessage = $A.get('e.ltng:sendMessage');
+        sendMessage.setParams({
+            'channel': channel,
+            'message': message
+        });
+        sendMessage.fire();
     },
 })

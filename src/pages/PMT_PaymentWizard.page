@@ -12,6 +12,9 @@
         td:first-child {
             width: 8%;
         }
+        .slds-grid_vertical-align-end .slds-form_compound .slds-form-element__row {
+            margin-bottom: 0;
+        }
     </style>
 
     <script>
@@ -61,7 +64,7 @@
                 <!-- Opportunity Info -->
                 <apex:outputText rendered="{!AND(hasPaymentAccess, NOT(ISNULL(paymentsSettings)), paymentsSettings.npe01__Payments_Enabled__c == true, isScheduleWizard == true)}">
                     <div class="slds-section-title_divider" id="pmtWizardTitle">
-                        <apex:outputText value="{!$Label.pmtWizardSectionTitle}"/>
+                        <h2><apex:outputText value="{!$Label.pmtWizardSectionTitle}"/></h2>
                     </div>
                     <apex:outputText rendered="{!NOT(ISNULL(currentOpp))}">
                         <div class="slds-grid slds-wrap slds-form_horizontal">
@@ -70,7 +73,7 @@
                                     <label class="slds-form-element__label" for="oppLink">{!$ObjectType.Opportunity.label}</label>
                                     <div class="slds-form-element__control">
                                         <span class="slds-form-element__static">
-                                            <a href="{!URLFOR($Action.Opportunity.View, currentOpp.id)}">
+                                            <a href="{!URLFOR($Action.Opportunity.View, currentOpp.id)}" id="oppLink">
                                                 {!currentOpp.Name}
                                             </a>
                                         </span>
@@ -134,13 +137,13 @@
                     <!-- Create payment schedule -->
                     <apex:outputText rendered="{!AND(hasPaymentAccess, NOT(isClosedLost), OR(haveAmount, removePaidPayments))}" styleClass="slds-m-around_medium slds-p-top_medium">
                         <div class="slds-section-title_divider" id="pmtCreateTitle">
-                            <apex:outputText value="{!$Label.pmtWizardCreateSchedule}"/>
+                            <h2><apex:outputText value="{!$Label.pmtWizardCreateSchedule}"/></h2>
                         </div>
-                        <div class="slds-form slds-form_horizontal">
+                        <div class="slds-form slds-form_stacked">
                             <div class="slds-grid slds-gutters_small slds-p-top_x-small">
                                 <div class="slds-col slds-has-flexi-truncate slds-grid">
                                     <div class="slds-form-element">
-                                        <label class="slds-form-element__label"><apex:outputText value="{!$Label.pmtWizardNumberOfPayments}"/></label>
+                                        <apex:outputLabel value="{!$Label.pmtWizardNumberOfPayments}" for="paymentCount" styleClass="slds-form-element__label"/>
                                         <div class="slds-form-element__control slds-select_container">
                                             <apex:selectList value="{!numberofPayments}" id="paymentCount" multiselect="false" size="1" styleClass="slds-select">
                                                 <apex:selectOptions value="{!items}"/>
@@ -154,21 +157,35 @@
                                                       labelOverride="{!$Label.pmtWizardFirstPaymentDate}" />
                                 </div>
                             </div>
-                            <div class="slds-grid slds-gutters_small slds-p-top_x-small">
+                            <div class="slds-grid slds-gutters_small slds-p-top_x-small slds-grid_vertical-align-end">
                                 <div class="slds-col slds-has-flexi-truncate slds-grid">
-                                    <div class="slds-form-element">
-                                        <label class="slds-form-element__label"><apex:outputText value="{!$Label.pmtWizardInterval}"/></label>
-                                        <div class="slds-form-element__control slds-select_container">
-                                            <apex:selectList value="{!interval}" id="intervals" multiselect="false" size="1" styleClass="slds-select">
-                                                <apex:selectOptions value="{!intervals}"/>
-                                            </apex:selectList>
+                                    <fieldset class="slds-form-element slds-form_compound">
+                                        <legend class="slds-form-element__legend slds-form-element__label" id="intervals">
+                                            <apex:outputText value="{!$Label.pmtWizardInterval}"/>
+                                        </legend>
+                                        <div class="slds-form-element__control">
+                                            <div class="slds-form-element__group">
+                                                <div class="slds-form-element__row">
+                                                    <div class="slds-form-element slds-size_1-of-2">
+                                                        <label class="slds-form-element__label" id="intervalnumberlabel" for="{!$Component.intervalnumber}"><apex:outputText value="{!$Label.pmtWizardIntervalNumber}"/></label>
+                                                        <div class="slds-form-element__control slds-select_container">
+                                                            <apex:selectList value="{!interval}" html-aria-labelledby="intervals intervalnumberlabel" id="intervalnumber" multiselect="false" size="1" styleClass="slds-select">
+                                                                <apex:selectOptions value="{!intervals}"/>
+                                                            </apex:selectList>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-form-element slds-size_1-of-2">
+                                                        <label class="slds-form-element__label" id="intervalperiodlabel" for="{!$Component.intervalunits}"><apex:outputText value="{!$Label.pmtWizardIntervalPeriod}"/></label>
+                                                        <div class="slds-form-element__control slds-select_container">
+                                                            <apex:selectList value="{!intervalunit}" html-aria-labelledby="intervals intervalperiodlabel" id="intervalunits" multiselect="false" size="1" styleClass="slds-select">
+                                                                <apex:selectOptions value="{!intervalunits}"/>
+                                                            </apex:selectList>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="slds-form-element__control slds-select_container">
-                                            <apex:selectList value="{!intervalunit}" id="intervalunits" multiselect="false" size="1" styleClass="slds-select">
-                                                <apex:selectOptions value="{!intervalunits}"/>
-                                            </apex:selectList>
-                                        </div>
-                                    </div>
+                                    </fieldset>
                                 </div>
                                 <div class="slds-col slds-has-flexi-truncate slds-grid">
                                     <c:UTIL_FormField sObj="{!samplePayment}" sObjType="npe01__OppPayment__c" field="npe01__Payment_Method__c" />
@@ -186,7 +203,7 @@
                     <!-- Show Payments to be Created -->
                     <apex:outputText rendered="{!AND(NOT(isClosedLost), payments.size>0, OR(haveAmount, removePaidPayments))}" styleClass="slds-p-around_medium">
                         <div class="slds-section-title_divider" id="pmtsToCreateTitle">
-                            <apex:outputText value="{!$Label.pmtWizardToBeCreated}"/>
+                            <h2><apex:outputText value="{!$Label.pmtWizardToBeCreated}"/></h2>
                         </div>
                         <table class="slds-table" id="pmtTable">
                             <thead>
@@ -232,7 +249,7 @@
                 <!-- START PAYMENT WRITEOFF  -->
                 <apex:outputText rendered="{!AND(hasPaymentAccess, NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isWriteoffWizard == true)}">
                     <div class="slds-section-title_divider" id="pmtWizardTitle2">
-                        <apex:outputText value="{!$Label.pmtWizardSectionTitle}"/>
+                        <h2><apex:outputText value="{!$Label.pmtWizardSectionTitle}"/></h2>
                     </div>
                     <apex:outputText rendered="{!NOT(ISNULL(currentOpp))}">
                         <div class="slds-grid slds-wrap slds-form_horizontal">
@@ -304,7 +321,7 @@
 
                     <apex:outputText rendered="{!AND(NOT(ISNULL(CurrentOpp)), haveAmount, NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true)}" styleClass="slds-p-around_medium">
                         <div class="slds-section-title_divider" id="writeoffPmtsTitle">
-                            <apex:outputText value="{!$Label.pmtWizardSectionWriteoffPayments}"/>
+                            <h2><apex:outputText value="{!$Label.pmtWizardSectionWriteoffPayments}"/></h2>
                         </div>
                         <div class="slds-m-around_medium">
                             <div class="slds-notify_container slds-is-relative">

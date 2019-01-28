@@ -119,10 +119,17 @@
         boxData['{!searchBoxId}'] = { 
             setSelectedValue : 
                 function( ctrl, id, value ) {
-                    //console.log( id + ' => ' + value );
 
                     // put the id on the input tag
                     j$(ctrl).attr('data-id', id);
+
+                    // Set the decoded value in the input.
+                    j$({!searchBoxId}).val(value);
+
+                    // Make sure we don't automatically encode it.
+                    j$({!searchBoxId}).blur(function(){
+                        j$({!searchBoxId}).val(value);
+                    })
 
                     // if destinations are defined, set them too
                     j$('[id$={!destinationForSelectedId}]').val( id );
@@ -145,7 +152,6 @@
                         {!recordLimit},
                         function(result, event){
                             if (event.status) {
-                                // console.log(result);
                                 var dataList = [];
                                 j$.each(result, function(i, r) {
                                     dataList.push({
@@ -161,8 +167,7 @@
                                 alert('Callout error: ' + event.message);
                                 typeaheadCallback( [] );
                             }
-                        }, 
-                        {escape: false}
+                        },
                     );
                 }
             };
@@ -181,7 +186,7 @@
                 //displayKey: ,
                 /*templates: {
                     suggestion: function(c) { 
-                        return '<p><strong>' + c.name + '</strong><br />' + c.addr + '</p>'; 
+                        return '<p><strong>' + c.name + '</strong><br />' + c.addr + '</p>';
                     }
                     //, empty: '<p>No results found.</p>'
                     //, header: '' 
@@ -189,14 +194,11 @@
                 }
                 */
             }).on('typeahead:selected', function (object, datum) {
-                boxData['{!searchBoxId}'].setSelectedValue( this, datum.id, datum.value );
-                // console.log('typeahead:selected => ' + datum.id);
+                boxData['{!searchBoxId}'].setSelectedValue( this, datum.id, htmlDecode(datum.value) );
             }).on('typeahead:autocompleted', function (object, datum) {
-                boxData['{!searchBoxId}'].setSelectedValue( this, datum.id, datum.value );
-                // console.log('typeahead:autocompleted => ' + datum.id);
+                boxData['{!searchBoxId}'].setSelectedValue( this, datum.id, htmlDecode(datum.value) );
             //}).on('typeahead:cursorchanged', function (object, datum) {
                 //boxData['{!searchBoxId}'].setSelectedValue( this, datum.id, datum.value );
-                // console.log('typeahead:cursorchanged => ' + datum.id);
             //}).on('typeahead:closed', function (object, datum) {
             //     console.log('typeahead:closed');
             // });
@@ -213,6 +215,11 @@
         if ('{!secondaryField}'.length) 
             boxData['{!searchBoxId}'].fieldList.push('{!secondaryField}');
 
+        // Decodes a String already encoded by Salesforce.
+        function htmlDecode(input) {
+            var doc = new DOMParser().parseFromString(input, "text/html");
+            return doc.documentElement.textContent;
+        }
 
     </script>
 

@@ -368,6 +368,7 @@ private class CRLP_RollupSoftCredit_TEST {
             System.assertEquals(firstCloseDate, a.npo02__FirstCloseDate__c);
             System.assertEquals(baseAmt, a.npo02__LastOppAmount__c);
             System.assertEquals(maxAmt, a.npo02__LargestAmount__c);
+
         }
     }
 }

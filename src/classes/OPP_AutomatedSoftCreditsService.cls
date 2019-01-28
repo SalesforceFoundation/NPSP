@@ -177,22 +177,27 @@ public class OPP_AutomatedSoftCreditsService {
             return accountToAffiliations;
         }
 
+        List<String> relatedContactRoles = new List<String>();
+        Schema.DescribeFieldResult fieldResult = npe5__Affiliation__c.Related_Opportunity_Contact_Role__c.getDescribe();
+        List<Schema.PicklistEntry> picklistValues = fieldResult.getPicklistValues();
+        for (Schema.PicklistEntry picklistValue : picklistValues) {
+            relatedContactRoles.add(picklistValue.getValue());
+        }
+
         List<npe5__Affiliation__c> allAffiliations
             = new List<npe5__Affiliation__c>([SELECT Id, Name, npe5__Organization__c, npe5__Contact__c, Related_Opportunity_Contact_Role__c
                                                 FROM npe5__Affiliation__c
                                                 WHERE npe5__Organization__c IN :accountIds
+                                                    AND Related_Opportunity_Contact_Role__c IN :relatedContactRoles
                                                 ORDER BY CreatedDate DESC]);
 
         // Process the records that have a value in the Related_Opportunity_Contact_Role__c field
         for (npe5__Affiliation__c eachAffiliation : allAffiliations) {
-            if (eachAffiliation.Related_Opportunity_Contact_Role__c != null
-                && !eachAffiliation.Related_Opportunity_Contact_Role__c.containsIgnoreCase(RELATED_OPPORTUNITY_CONTACT_ROLE_NONE)) {
-                if (accountToAffiliations.containsKey(eachAffiliation.npe5__Organization__c)) {
-                    List<npe5__Affiliation__c> affiliations = accountToAffiliations.get(eachAffiliation.npe5__Organization__c);
-                    affiliations.add(eachAffiliation);
-                } else {
-                    accountToAffiliations.put(eachAffiliation.npe5__Organization__c, new List<npe5__Affiliation__c>{ eachAffiliation });
-                }
+            if (accountToAffiliations.containsKey(eachAffiliation.npe5__Organization__c)) {
+                List<npe5__Affiliation__c> affiliations = accountToAffiliations.get(eachAffiliation.npe5__Organization__c);
+                affiliations.add(eachAffiliation);
+            } else {
+                accountToAffiliations.put(eachAffiliation.npe5__Organization__c, new List<npe5__Affiliation__c>{ eachAffiliation });
             }
         }
 

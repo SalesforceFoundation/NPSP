@@ -56,7 +56,7 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
     * @description Update the UI picklist with the current Allocation Type setting
     */
     public void setAllocationPicklistFromSetting(){
-        if(STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c){
+        if(STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c == true){
             strAllocationLevel = paymentLabel;
         } else {
             strAllocationLevel = oppLabel;
@@ -149,7 +149,7 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
 
         setAllocationLevelFromSelection();
 
-        if (STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c && 
+        if (STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c == true && 
             !STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.alloDefaultNotEnabled));
                 return null;

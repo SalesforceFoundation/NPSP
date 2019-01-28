@@ -1,5 +1,5 @@
 <!--
-    Copyright (c) 2018, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 -->
 <!--
   @author Salesforce.org
-  @date 2018
+  @date 2019
   @group BGE
   @group-content ../../ApexDocContent/BatchDataImport.htm
   @description Component used to view, edit, and delete DataImport__c records on the related NPSP_Data_Import_Batch__c record home.
@@ -94,7 +94,7 @@
                 <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
                     <lightning:buttonGroup>
                         <lightning:button aura:id="processBatch" label="{!$Label.c.bgeProcessBatch}" onclick="{!c.processBatch}"/>
-                        <lightning:button aura:id="editBGEBatch" label="{!$Label.c.stgBtnEdit}" onclick="{!c.openBatchWizard}"/>
+                        <lightning:button aura:id="editBGEBatch" label="{!$Label.c.stgBtnEdit}" onclick="{!c.onEditClick}"/>
                     </lightning:buttonGroup>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 <!--
-    Copyright (c) 2018, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 -->
 <!--
   @author Salesforce.org
-  @date 2018
+  @date 2019
   @group BGE
   @group-content ../../ApexDocContent/BatchDataImport.htm
   @description Component used to create DataImport__c records on the related NPSP_Data_Import_Batch__c record home.
@@ -45,119 +45,20 @@
     <aura:attribute name="dataImportFields" type="Object[]" description="List of dynamic field objects to use in the field iteration" access="public"/>
     <aura:attribute name="openOpportunities" type="List" description="List of open Opportunities" access="public" />
     <aura:attribute name="unpaidPayments" type="List" description="List of unpaid Payments" access="public" />
-    <aura:attribute name="selectedDonation" type="SObject" description="Stored selected open donation" access="public" />
+    <aura:attribute name="selectedDonation" type="SObject" description="Stored selected open donation. Can also be null or empty." access="public" />
+
+    <!-- Private Attributes-->
+    <aura:attribute name="pendingSave" default="false" type="Boolean"
+                    description="Controls whether Save is disabled because form has uncommitted changes" access="private"/>
 
     <!--Modal Attributes-->
-    <aura:attribute name="matchingModalPromise" type="Object" />
-    <aura:attribute name="matchingModalHeader" type="Aura.ComponentDefRef[]">
+    <aura:attribute name="donationModalHeader" type="Aura.ComponentDefRef[]" description="Formatted header text used in donation modal.">
         <h2 class="title slds-text-heading_medium">{!$Label.c.bgeMatchingSelect}</h2>
-    </aura:attribute>
-    <aura:attribute name="matchingModalBody" type="Aura.ComponentDefRef[]">
-        <h3 class="slds-text-heading_small slds-p-around_medium">
-            {!$Label.c.bgeFormMatchingModalText}
-            <a class="slds-m-left_x-small" onclick="{!c.handleNoneDonationSelection}">{!$Label.c.bgeFormNoneLink}</a>
-        </h3>
-        <lightning:layout multipleRows="true">
-            <aura:iteration var="donation" items="{!v.unpaidPayments}">
-                <lightning:layoutItem largeDeviceSize="4" mediumDeviceSize="6" smallDeviceSize="12" size="12" padding="around-small">
-                    <lightning:card class="slds-card_boundary">
-                        <aura:set attribute="title">
-                            <lightning:icon iconName="standard:currency" size="small" class="slds-m-right_small" />
-                            <lightning:formattedText value="{!donation.Name}"/>
-                        </aura:set>
-                        <aura:set attribute="footer">
-                            <aura:if isTrue="{!equals(donation.Id, v.selectedDonation.Id)}">
-                                <lightning:icon iconName="utility:check" size="small" class="slds-p-right_small"
-                                                alternativeText="{!$Label.c.stgCheckboxTrue}" title="{!$Label.c.stgCheckboxTrue}"/>
-                                <lightning:formattedText value="{!$Label.c.bgeFormSelectedPayment}"/>
-                                <aura:set attribute="else">
-                                    <lightning:button
-                                            value="{!donation}"
-                                            label="{!$Label.c.bgeFormUpdatePayment}"
-                                            onclick="{!c.handleDonationSelection}"
-                                            variant="base"/>
-                                </aura:set>
-                            </aura:if>
-                        </aura:set>
-
-                        <lightning:layout class="slds-p-horizontal_medium" multipleRows="true">
-                            <lightning:layoutItem size="4" smallDeviceSize="6">
-                                <lightning:formattedText value="{!v.labels.opportunityName + ': '}"/>
-                            </lightning:layoutItem>
-                            <lightning:layoutItem size="8" smallDeviceSize="6">
-                                <lightning:formattedText value="{!donation.npe01__Opportunity__r.Name}"/>
-                            </lightning:layoutItem>
-                            <lightning:layoutItem size="4" smallDeviceSize="6">
-                                <lightning:formattedText value="{!v.labels.paymentAmount + ': '}"/>
-                            </lightning:layoutItem>
-                            <lightning:layoutItem size="8" smallDeviceSize="6">
-                                <ui:outputCurrency value="{!donation.npe01__Payment_Amount__c}"/>
-                            </lightning:layoutItem>
-                            <lightning:layoutItem size="4" smallDeviceSize="6">
-                                <lightning:formattedText value="{!v.labels.paymentScheduledDate + ': '}"/>
-                            </lightning:layoutItem>
-                            <lightning:layoutItem size="8" smallDeviceSize="6">
-                                <lightning:formattedText value="{!donation.npe01__Scheduled_Date__c}"/>
-                            </lightning:layoutItem>
-                        </lightning:layout>
-                    </lightning:card>
-                </lightning:layoutItem>
-            </aura:iteration>
-            <aura:iteration var="donation" items="{!v.openOpportunities}">
-                <lightning:layoutItem largeDeviceSize="4" mediumDeviceSize="6" smallDeviceSize="12" size="12" padding="around-small">
-                    <lightning:card title="{!donation.Name}" iconName="standard:opportunity"
-                                    class="slds-card_boundary">
-                        <aura:set attribute="footer">
-                            <aura:if isTrue="{!equals(donation.Id, v.selectedDonation.Id)}">
-                                <!--<aura:if isTrue="{!donation.applyPayment}">-->
-                                    <lightning:icon iconName="utility:check" size="small" class="slds-p-right_small"
-                                                    alternativeText="{!$Label.c.stgCheckboxTrue}" title="{!$Label.c.stgCheckboxTrue}"/>
-                                    <lightning:formattedText value="{!$Label.c.bgeFormSelectedOpportunity}"/>
-                                    <!--<aura:set attribute="else">
-                                        <lightning:icon iconName="utility:check" size="small" class="slds-p-right_small"
-                                                        alternativeText="Selected" title="Selected"/>
-                                        <lightning:formattedText value="Selected Payment"/>
-                                    </aura:set>
-                                </aura:if>-->
-                                <aura:set attribute="else">
-                                    <lightning:button
-                                            value="{!donation}"
-                                            label="{!$Label.c.bgeFormUpdateOpportunity}"
-                                            onclick="{!c.handleDonationSelection}"
-                                            variant="base"/>
-                                </aura:set>
-<!--
-                            <lightning:button
-                                    value="{!donation}"
-                                    label="{!$Label.c.bdiMatchingApplyNewPayment}"
-                                    onclick="{!c.handleApplyPaymentSelection}"
-                                    variant="base"/>
--->
-                            </aura:if>
-                        </aura:set>
-                        <lightning:layout class="slds-p-horizontal_medium slds-p-bottom_large" multipleRows="true">
-                            <lightning:layoutItem size="4">
-                                <lightning:formattedText value="{!v.labels.opportunityAmount + ': '}"/>
-                            </lightning:layoutItem>
-                            <lightning:layoutItem size="8">
-                                <ui:outputCurrency value="{!donation.Amount}"/>
-                            </lightning:layoutItem>
-                            <lightning:layoutItem size="4">
-                                <lightning:formattedText value="{!v.labels.opportunityStage + ': '}"/>
-                            </lightning:layoutItem>
-                            <lightning:layoutItem size="8">
-                                <lightning:formattedText value="{!donation.StageName}"/>
-                            </lightning:layoutItem>
-                        </lightning:layout>
-                    </lightning:card>
-                </lightning:layoutItem>
-            </aura:iteration>
-        </lightning:layout>
-
     </aura:attribute>
 
     <!--Events-->
     <aura:handler name="render" action="{!c.callFocus}" value="{!this}"/>
+    <aura:handler event="ltng:sendMessage" action="{!c.handleMessage}"/>
 
     <!--Markup-->
     <lightning:overlayLibrary aura:id="overlayLib"/>
@@ -175,25 +76,39 @@
             <!--BEGIN SCOPED MATCH NOTIFICATION-->
             <aura:if isTrue="{!or(not(empty(v.openOpportunities)), not(empty(v.unpaidPayments)))}">
                 <lightning:layoutItem size="12" smallDeviceSize="12" class="slds-p-horizontal_small">
-                    <lightning:layout class="slds-grid_align-center">
-                        <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="10">
-                            <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light slds-m-bottom_small" role="alert">
-                                <div class="slds-media__figure slds-text-align_center">
-                                    <lightning:icon iconName="utility:info"
-                                                    alternativeText="Information"
-                                                    size="x-small"
-                                                    aria-hidden="true"/>
-                                </div>
-                                <div class="slds-media__body">
-                                    <p>{!$Label.c.bgeMatchingAlert}
-                                        <a class="slds-m-left_x-small" onclick="{!c.openMatchModal}" id="selectMatchLink">
-                                            {!$Label.c.bgeMatchingSelect}
-                                        </a>
+                    <div class="slds-scoped-notification slds-media slds-media_center slds-scoped-notification_light slds-m-bottom_small"
+                         role="alert">
+                        <div class="slds-media__figure slds-text-align_center">
+                            <lightning:icon iconName="utility:info"
+                                            alternativeText="{!$Label.c.PageMessagesInfo}"
+                                            size="x-small"
+                                            aria-hidden="true"/>
+                        </div>
+                        <div class="slds-media__body">
+                            <!--notification text depends on if donation is null, empty, or selected-->
+                            <aura:if isTrue="{!equals(v.selectedDonation, null)}">
+                                <p>{!$Label.c.bgeMatchingAlert}
+                                    <a class="slds-m-left_x-small" onclick="{!c.openMatchModal}" id="selectOpenDonation">{!$Label.c.bgeMatchingSelect}</a>
+                                </p>
+                                <aura:set attribute="else">
+                                    <aura:if isTrue="{!equals(v.selectedDonation, '')}">
+                                        <p>{!$Label.c.bgeFormNewDonationHelptext}</p>
+                                        <aura:set attribute="else">
+                                            <p class="slds-m-right_x-small">{!$Label.c.bgeFormUpdateHelptext}
+                                                <lightning:formattedUrl value="{! '/' + v.selectedDonation.Id}"
+                                                                        label="{!v.selectedDonation.Name}"
+                                                                        class="slds-m-left_x-small"
+                                                                        target="_blank"/>
+                                            </p>
+                                        </aura:set>
+                                    </aura:if>
+                                    <p>
+                                        <a onclick="{!c.openMatchModal}">{!$Label.c.bgeFormUpdateDonation}</a>
                                     </p>
-                                </div>
-                            </div>
-                        </lightning:layoutItem>
-                    </lightning:layout>
+                                </aura:set>
+                            </aura:if>
+                        </div>
+                    </div>
                 </lightning:layoutItem>
             </aura:if>
             <!--END SCOPED MATCH NOTIFICATION-->
@@ -236,7 +151,7 @@
             <!--END DONOR FIELDS-->
 
             <!--Field iteration -->
-            <aura:iteration items="{!v.dataImportFields}" var="field" indexVar="index">
+            <aura:iteration items="{!v.dataImportFields}" var="field">
                 <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
                     <aura:if isTrue="{!greaterthan(field.options.length, 0)}">
                         <lightning:select aura:id="dynamicInputFields"
@@ -267,7 +182,7 @@
             <div class="slds-grid slds-p-around_medium slds-grid_align-center slds-size_1-of-1">
                 <div class="slds-col slds-p-horizontal_small">
                     <lightning:button label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancelForm}" variant="neutral"/>
-                    <lightning:button variant="brand" type="submit" name="save" label="{!$Label.c.stgBtnSave}" />
+                    <lightning:button variant="brand" type="submit" name="save" label="{!$Label.c.stgBtnSave}" disabled="{!v.pendingSave}"/>
                 </div>
             </div>
 

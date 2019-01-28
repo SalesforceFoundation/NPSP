@@ -142,9 +142,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Verification Batch Body</shortDescription>
-        <value>&lt;p&gt;Click Verify All Addresses to verify and standardize all addresses in your organization.
-        The mass verification process uses the settings from above.&lt;/p&gt;
- &lt;br/&gt;</value>
+        <value>Click Verify All Addresses to verify and standardize all addresses in your organization. The mass verification process uses the settings from above.</value>
     </labels>
     <labels>
         <fullName>Addr_Verification_Batch_Not_Supported</fullName>
@@ -1582,6 +1580,22 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <value>You must specify the Cicero API Key in the Auth Token field for Address Verification. Log into Salesforce and go to People | Addresses on the NPSP Settings page.</value>
     </labels>
     <labels>
+        <fullName>addrCopyConAddBtnConfirm</fullName>
+        <categories>ADDR_CopyConAddrHHObjBTN</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message that appears to confirm the address copy action.</shortDescription>
+        <value>You are about to copy the Address. Do you want to continue?</value>
+    </labels>
+    <labels>
+        <fullName>addrCopyConAddBtnFls</fullName>
+        <categories>ADDR_CopyConAddrHHObjBTN</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label that appears when user does not pass FLS check to copy the address</shortDescription>
+        <value>You don&apos;t have the required field permissions. Contact your system administrator to inquire about getting the necessary permissions.</value>
+    </labels>
+    <labels>
         <fullName>addrCopyConAddBtnHHObjOnly</fullName>
         <categories>ADDR_CopyConAddrHHObjBTN</categories>
         <language>en_US</language>
@@ -1949,7 +1963,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>bdiBtnClose</fullName>
-        <categories>Data Importer, Opportunity Send Acknowledgment</categories>
+        <categories>Data Importer, Opportunity Send Acknowledgment, Account Conversion</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiBtnClose</shortDescription>
@@ -2152,7 +2166,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Data Importer</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>status on a bdi object to specify it was matched from an ambiguous set in Dry Rn</shortDescription>
+        <shortDescription>Status on bdi object to specify it was matched from an ambiguous set in Dry Run</shortDescription>
         <value>Dry Run - Best Match Used</value>
     </labels>
     <labels>
@@ -2284,6 +2298,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>This Contact matched an existing Contact that's associated with a non-Household Account. The Data Import Tool can only update Contacts that are part of a Household Account.</value>
     </labels>
     <labels>
+        <fullName>bdiErrorNonHHAccountContactWithAdv</fullName>
+        <categories>NPSP Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiErrorNonHHAccountContactWithAdv</shortDescription>
+        <value>This Contact matched an existing Contact that's associated with a non-Household, non-Administrative Account. The Gift Entry Tool can only update Contacts that are part of a Household or Administrative Account.</value>
+    </labels>
+    <labels>
+        <fullName>bdiErrorOneToOneMultiContact</fullName>
+        <categories>NPSP Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiErrorOneToOneMultiContact</shortDescription>
+        <value>A Data Import for a One-to-one or Administrative Contact cannot be associated with a second Contact.</value>
+    </labels>
+    <labels>
         <fullName>bdiErrorPaymentMultiMatch</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -2340,6 +2370,24 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>{0} is an invalid Donation Matching Behavior.</value>
     </labels>
     <labels>
+        <fullName>bdiMassDelete</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BDI Confirm Mass Delete Button</shortDescription>
+        <value>Mass Delete</value>
+    </labels>
+    <labels>
+        <fullName>bdiMassDeleteWarning</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning for Mass Delete Buttons</shortDescription>
+        <value>You are about to delete {0} record(s).
+        &lt;br/&gt;
+        &lt;br/&gt;&lt;b&gt;IMPORTANT:&lt;/b&gt; If you create gifts in your org using the Batch Gift Entry feature, we don&apos;&apos;t recommend using the Mass Delete button. Please see the NPSP documentation for instructions on deleting records using the data loader.</value>
+    </labels>
+    <labels>
         <fullName>bdiMatched</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -2352,7 +2400,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Data Importer</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>status on a bdi object to specify it was matched from an ambiguous set</shortDescription>
+        <shortDescription>Status on a bdi object to specify it was matched from an ambiguous set</shortDescription>
         <value>Best Match Used</value>
     </labels>
     <labels>
@@ -2368,7 +2416,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Data Import</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>status on a bdi object when no matching record found</shortDescription>
+        <shortDescription>Status on a bdi object when no matching record found</shortDescription>
         <value>Matched None</value>
     </labels>
     <labels>
@@ -2376,8 +2424,16 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Data Import</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>status on a BDI object when user has selected matching record in BGE interface</shortDescription>
+        <shortDescription>Status on a BDI object when user has selected matching record in BGE interface</shortDescription>
         <value>User-Selected Match</value>
+    </labels>
+    <labels>
+        <fullName>bdiMatchedByUserNewOpp</fullName>
+        <categories>Data Import</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Status on a BDI object when user chose to create a new Opportunity in BGE</shortDescription>
+        <value>User-Selected New Opportunity</value>
     </labels>
     <labels>
         <fullName>bdiMatchedApplyNewPayment</fullName>
@@ -2484,124 +2540,81 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Time:</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateSelectedFields</fullName>
+        <fullName>bgeActionDelete</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>bgeBatchTemplateActiveFields</shortDescription>
+        <shortDescription>Delete action for Batch Gift Entry</shortDescription>
+        <value>Delete</value>
+    </labels>
+    <labels>
+        <fullName>bgeActionView</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>View action for Batch Gift Entry</shortDescription>
+        <value>View</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchSelectedFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bgeBatchActiveFields</shortDescription>
         <value>Selected Fields</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateAvailableFields</fullName>
+        <fullName>bgeBatchAvailableFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>bgeBatchTemplateAvailableFields</shortDescription>
+        <shortDescription>bgeBatchAvailableFields</shortDescription>
         <value>Available Fields</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateBatchProcessSizeHelp</fullName>
+        <fullName>bgeBatchBatchProcessSizeHelp</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
         <value>The number of records to process at a time in each batch.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateDonationDateRangeHelp</fullName>
+        <fullName>bgeBatchDonationDateRangeHelp</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
         <value>Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. NPSP will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateDonationMatchingBehaviorHelp</fullName>
+        <fullName>bgeBatchDonationMatchingBehaviorHelp</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
         <value>Defines how NPSP should handle matching Donations.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateDonationMatchingClassHelp</fullName>
+        <fullName>bgeBatchDonationMatchingClassHelp</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
         <value>The developer name of an Apex class that implements the BDI_IMatching interface for Donations. Leave blank to let NPSP handle matching.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateDonationMatchingRuleHelp</fullName>
+        <fullName>bgeBatchDonationMatchingRuleHelp</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
         <value>Specifies which fields to match by when trying to match Donations in batch records against existing Opportunties and Payments.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateDonorLookupInfo</fullName>
+        <fullName>bgeBatchDonorLookupInfo</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Explanation text for hidden lookup fields.</shortDescription>
-        <value>Select the fields to use for entering gifts in this batch. Donor Type and an Account or Contact lookup will always appear.</value>
+        <value>Select the fields to use for entering gifts in this batch. Donor Type and an Account or Contact lookup will always appear. You will only see fields that you have access to.</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateEdit</fullName>
+        <fullName>bgeBatchErrorRequiredFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for Batch Template in Edit mode</shortDescription>
-        <value>Edit Batch Template</value>
-    </labels>
-    <labels>
-        <fullName>bgeBatchTemplateErrorDefaultValue</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error shown when template field is hidden and missing the default value.</shortDescription>
-        <value>Hidden fields must have a default value.</value>
-    </labels>
-    <labels>
-        <fullName>bgeBatchTemplateErrorRequiredAmount</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error shown when opportunity amount is not required.</shortDescription>
-        <value>Amount field must be required.</value>
-    </labels>
-    <labels>
-        <fullName>bgeBatchTemplateErrorRequiredFields</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>bgeErrorBatchTemplateMissing</shortDescription>
+        <shortDescription>Error shown when required fields are missing.</shortDescription>
         <value>The following fields are required because other fields from their object are selected. Select them before proceeding:</value>
-    </labels>
-    <labels>
-        <fullName>bgeBatchTemplateNew</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Header for Batch Template in Create mode</shortDescription>
-        <value>New Batch Template</value>
-    </labels>
-    <labels>
-        <fullName>bgeBatchTemplateOverviewWizard</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Header for Batch Template Info in Wizard</shortDescription>
-        <value>Enter Template Info</value>
-    </labels>
-    <labels>
-        <fullName>bgeBatchTemplatePostProcessClassHelp</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
-        <value>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP batch records.
-        </value>
-    </labels>
-    <labels>
-        <fullName>bgeBatchTemplateProcessUsingScheduledJobHelp</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
-        <value>When checked, the batch will be automatically processed based on the schedule for the associated job.</value>
-    </labels>
-    <labels>
-        <fullName>bgeBatchTemplateRunOpportunityRollupsWhileProcessingHelp</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
-        <value>When checked, NPSP calculates donor rollups when donations are processed. If unchecked, donor rollups are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.</value>
     </labels>
     <labels>
         <fullName>bgeBatchInfoWizard</fullName>
@@ -2611,31 +2624,60 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Enter Batch Info</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateOverview</fullName>
+        <fullName>bgeBatchOverviewWizard</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for Batch Template Info in View Mode</shortDescription>
-        <value>Template Info</value>
+        <shortDescription>Header for Batch Info in Wizard</shortDescription>
+        <value>Enter Batch Info</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateSelectFields</fullName>
+        <fullName>bgeBatchPostProcessClassHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP batch records.
+        </value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchProcessUsingScheduledJobHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>When checked, the batch will be automatically processed based on the schedule for the associated job.</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchRunOpportunityRollupsWhileProcessingHelp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
+        <value>When checked, NPSP calculates donor rollups when donations are processed. If unchecked, donor rollups are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.</value>
+    </labels>  
+    <labels>
+        <fullName>bgeBatchOverview</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Info in View Mode</shortDescription>
+        <value>Batch Info</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchSelectFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header and text for Field Selection</shortDescription>
         <value>Select Fields</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateSetBatchOptions</fullName>
+        <fullName>bgeBatchSetBatchOptions</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for Batch Template Batch Options</shortDescription>
+        <shortDescription>Header for Batch Options</shortDescription>
         <value>Set Batch Options</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateSetFieldOptions</fullName>
+        <fullName>bgeBatchSetFieldOptions</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for Batch Template Field Options</shortDescription>
+        <shortDescription>Header for Batch Field Options</shortDescription>
         <value>Set Field Options</value>
     </labels>
     <labels>
@@ -2660,11 +2702,25 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>WARNING: There are records saved to this batch. Any changes you make won&apos;t affect existing records. We will not attempt to match existing records using updated donation matching rule settings, unless those records are edited.</value>
     </labels>
     <labels>
+        <fullName>bgeFLSError</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label that appears when user does not pass FLS check in BGE</shortDescription>
+        <value>You don&apos;t have the required field permissions. Contact your system administrator to inquire about getting the necessary permissions.</value>
+    </labels>
+    <labels>
         <fullName>bgeFormMatchingModalText</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header text to explain the options on the page</shortDescription>
+        <shortDescription>Header text to prompt user to select a donation to update</shortDescription>
         <value>Select the record you want to update.</value>
+    </labels>
+    <labels>
+        <fullName>bgeFormNewDonationHelptext</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text to indicate user is creating a new opportunity</shortDescription>
+        <value>You are currently creating a new Opportunity.</value>
     </labels>
     <labels>
         <fullName>bgeFormNoneLink</fullName>
@@ -2688,17 +2744,31 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Selected Payment</value>
     </labels>
     <labels>
+        <fullName>bgeFormUpdateDonation</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Link text to change selected donation</shortDescription>
+        <value>Update your donation selection</value>
+    </labels>
+    <labels>
+        <fullName>bgeFormUpdateHelptext</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text to indicate that user has selected a donation</shortDescription>
+        <value>You are currently updating:</value>
+    </labels>
+    <labels>
         <fullName>bgeFormUpdateOpportunity</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Button text to select a opportunity to update in BGE</shortDescription>
+        <shortDescription>Button text to select an opportunity to update in BGE</shortDescription>
         <value>Update this Opportunity</value>
     </labels>
     <labels>
         <fullName>bgeFormUpdatePayment</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Button text to select a opportunity to update in BGE</shortDescription>
+        <shortDescription>Button text to select a payment to update in BGE</shortDescription>
         <value>Update this Payment</value>
     </labels>
     <labels>
@@ -2756,13 +2826,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Success message when gift is updated.</shortDescription>
         <value>Gifts successfully updated.</value>
-    </labels>
-    <labels>
-        <fullName>bgeGridMatchedRecord</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Label for Matched Record URL</shortDescription>
-        <value>Matched Record</value>
     </labels>
     <labels>
         <fullName>bgeGridNoGiftsHeader</fullName>
@@ -2828,13 +2891,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>New Gift</value>
     </labels>
     <labels>
-        <fullName>bgeNoneOption</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Label for Gift Entry Donation Selection modal</shortDescription>
-        <value>None, create a new opportunity</value>
-    </labels>
-    <labels>
         <fullName>bgeProcessBatch</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2847,6 +2903,27 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Header used for Batch Gift Entry tab</shortDescription>
         <value>Batch Gift Entry</value>
+    </labels>
+    <labels>
+        <fullName>bgeWizardShowAdvancedOptions</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for link to show advanced options in the Wizard</shortDescription>
+        <value>Show Advanced Options</value>
+    </labels>
+    <labels>
+        <fullName>bgeWizardHideAdvancedOptions</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for link to hide advanced options in the Wizard</shortDescription>
+        <value>Hide Advanced Options</value>
+    </labels>
+    <labels>
+        <fullName>btnContinue</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>button label to Continue an action</shortDescription>
+        <value>Continue</value>
     </labels>
     <labels>
         <fullName>btnRemove</fullName>
@@ -3022,7 +3099,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>exceptionDeletePermission</shortDescription>
-        <value>You do not have permissions to delete {0}.</value>
+        <value>You don&apos;&apos;t have the permissions required to delete {0} records.</value>
     </labels>
     <labels>
         <fullName>exceptionRequiredField</fullName>
@@ -3819,7 +3896,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>healthSolutionAccountDefaultRTInvalid</shortDescription>
-        <value>Go to &lt;strong&gt;People | Account Model&lt;/strong&gt; and select a valid record type.</value>
+        <value>Go to &lt;b&gt;People | Account Model&lt;/b&gt; and select a valid record type.</value>
     </labels>
     <labels>
         <fullName>healthSolutionAccountDefaultRTIssue</fullName>
@@ -4442,6 +4519,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Street</value>
     </labels>
     <labels>
+        <fullName>lblToday</fullName>
+        <categories>UTIL_InputField</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>lblToday</shortDescription>
+        <value>Today</value>
+    </labels>
+    <labels>
         <fullName>lblYouAreHere</fullName>
         <categories>UTIL_PageHeader</categories>
         <language>en_US</language>
@@ -4898,6 +4983,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Interval</value>
     </labels>
     <labels>
+        <fullName>pmtWizardIntervalNumber</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWizardIntervalNumber</shortDescription>
+        <value>Number</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardIntervalPeriod</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWizardIntervalPeriod</shortDescription>
+        <value>Period</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardMonth</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
@@ -5240,7 +5341,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>sendAcknowledgmentFailedStatus</shortDescription>
         <value>Email Acknowledgment Not Sent</value>
-    </labels>
+    </labels>  
     <labels>
         <fullName>sendAcknowledgmentFailureReasons</fullName>
         <categories>Send Acknowledgment Button</categories>
@@ -5281,6 +5382,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>sendAcknowledgmentNumberSent</shortDescription>
         <value>{0} acknowledgment(s) sent.</value>
     </labels>
+    <labels>
+        <fullName>sendAcknowledgmentNumberAlreadySent</fullName>
+        <categories>Send Acknowledgment Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>sendAcknowledgmentNumberAlreadySent</shortDescription>
+        <value>{0} acknowledgment(s) already sent.</value>
+    </labels>    
     <labels>
         <fullName>sendAcknowledgmentPageTitle</fullName>
         <categories>Send Acknowledgment Button</categories>
@@ -5360,6 +5469,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>stgAddrMustChooseClass</shortDescription>
         <value>You must choose a verification service in order to enable automatic verification.</value>
+    </labels>
+    <labels>
+        <fullName>stgAddrPermissionDenied</fullName>
+        <categories>Settings, address</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Permission Denied on Address Verification Panel</shortDescription>
+        <value>You do not have permissions to manage Address settings. Please contact your system administrator for more information.</value>
     </labels>
     <labels>
         <fullName>stgAllocationLevel</fullName>

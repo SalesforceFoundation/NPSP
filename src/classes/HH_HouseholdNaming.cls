@@ -67,7 +67,7 @@ public without sharing class HH_HouseholdNaming {
     */
     public void UpdateNames(list<id> hhids){
 
-        // for Batch Data Import performance
+        // Skip automatic naming during Batch Data Import to improve performance
         if (isHouseholdNamingDisabled) {
             return;
         }

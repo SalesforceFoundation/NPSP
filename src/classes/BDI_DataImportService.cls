@@ -203,8 +203,12 @@ global with sharing class BDI_DataImportService {
         instantiateClassForInterface('BDI_IPostProcess', dataImportSettings.Post_Process_Implementing_Class__c);
 
         // ensure we are in the household account model!
-        if (!CAO_Constants.isHHAccountModel())
+        // if HEDA + Advancement is installed, one-to-one is also valid
+        Boolean validAccountModel = CAO_Constants.isHHAccountModel() 
+            || (ADV_PackageInfo_SVC.useAdv() && CAO_Constants.isOneToOne());
+        if (!validAccountModel){
             throw(new BDIException(Label.bdiHouseholdModelRequired));
+        }
 
         // validate settings
         if (dataImportSettings.Contact_Custom_Unique_ID__c != null) {
@@ -326,7 +330,7 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
-    * @description whether the Account Custom Uniue ID field is a String datatype
+    * @description whether the Account Custom Unique ID field is a String datatype
     */
     private Boolean isCustomIdInAccountDatatypeString {
         get {
@@ -733,7 +737,7 @@ global with sharing class BDI_DataImportService {
     * from the list of DataImport Fields, which have the form DIObject.developerfieldname in the field's help text property.
     * @param dataImportObjectName the bdi object we care about (Contact1, Contact2, Account1, etc)
     * @param targetObjectName the underlying object the bdi object is (ie, Contact, Account, etc)
-    * @param listStrDIFields the DataImport fields to consider
+    * @param dataImportFields the DataImport fields to consider
     * @return Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
     */
     global static Map<String, String> mapFieldsForDIObject(String dataImportObjectName, String targetObjectName, List<String> dataImportFields) {

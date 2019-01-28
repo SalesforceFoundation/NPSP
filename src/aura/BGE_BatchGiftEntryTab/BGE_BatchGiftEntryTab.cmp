@@ -1,5 +1,5 @@
 <!--
-    Copyright (c) 2018, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,23 +29,22 @@
 -->
 <!--
   @author Salesforce.org
-  @date 2018
+  @date 2019
   @group Batch Gift Entry
-  @group-content ../../ApexDocContent/BatchDataImport.htm
-  @description Component used to view, edit, or create a Batch Template record.
+  @description Tab component used to view all DataImportBatch records used for Batch Gift Entry.
 -->
 
-<aura:component implements="force:appHostable" controller="BGE_ConfigurationWizard_CTRL">
+<aura:component implements="force:appHostable" controller="BGE_ConfigurationWizard_CTRL" access="public">
 
-    <!-- public attributes -->
-    <aura:attribute name="listView" type="Map" description="Namespace correct objectApiName and listName" access="public"
-                    default="{'isLoaded':false}"/>
+    <!-- attributes -->
+    <aura:attribute name="modalOpen" type="Boolean" description="Prevents multiple modals from opening"/>
 
     <!-- events we handle -->
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
     <!-- Start Markup -->
     <lightning:overlayLibrary aura:id="overlayLib"/>
+    <lightning:notificationsLibrary aura:id="notifLib"/>
 
     <!-- Banner -->
     <header role="banner" class="header slds-p-bottom_medium">
@@ -58,21 +57,15 @@
                 </div>
                 <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
                     <lightning:buttonGroup>
-                        <lightning:button aura:id="newBGEBatch" label="{!$Label.c.bgeNewBatch}" onclick="{!c.openNewBatchWizard}"/>
+                        <lightning:button aura:id="newBGEBatch" label="{!$Label.c.bgeNewBatch}" onclick="{!c.onNewBatchClick}"/>
                     </lightning:buttonGroup>
                 </div>
             </div>
         </div>
     </header>
 
-    <!--listView does not rerender dynamically, so need aura:if to have it wait before loading-->
-    <aura:if isTrue="{!v.listView.isLoaded}">
-        <lightning:listView objectApiName="{!v.listView.objectApiName}"
-                            listName="{!v.listView.listName}"
-                            showActionBar="false"
-                            enableInlineEdit="false"
-                            showRowLevelActions="false"/>
-    </aura:if>
+    <!--List View created dynamically-->
+    {!v.body}
 
     <!-- End Markup -->
 

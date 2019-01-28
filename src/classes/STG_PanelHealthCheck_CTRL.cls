@@ -169,7 +169,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         verifyNoOrphanedOne2OneAccounts();
         verifyReports(); 
         verifyFields(); 
-        STG_PanelADDRVerification_CTRL.verifyAddressVerificationService(this);
+        new STG_PanelADDRVerification_CTRL().verifyAddressVerificationService(this);
         STG_PanelPaymentMapping_CTRL.verifyPaymentMappings(this);
         STG_PanelUserRollup_CTRL.verifyUserRollups(this);
         STG_PanelRDCustomFieldMapping_CTRL.verifyRDMappings(this);
@@ -240,9 +240,9 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
             if (isMixedAccs) {
                 strInfo = string.format(Label.healthDetailsAccountProcessor, new string[]{UTIL_CustomSettingsFacade.getContactsSettings().npe01__Account_Processor__c});
             }
-            strInfo += '<BR/>' + CAO_Constants.BUCKET_ORGANIZATION_TYPE + ': ' + cBucket + (cBucket == 9999 ? '+' : '');
-            strInfo += '<BR/>' + CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE + ': ' + cOne2One + (cOne2One == 9999 ? '+' : '');
-            strInfo += '<BR/>' + CAO_Constants.HH_ACCOUNT_TYPE + ': ' + cHH + (cHH == 9999 ? '+' : '');        
+            strInfo += '<br/>' + CAO_Constants.BUCKET_ORGANIZATION_TYPE + ': ' + cBucket + (cBucket == 9999 ? '+' : '');
+            strInfo += '<br/>' + CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE + ': ' + cOne2One + (cOne2One == 9999 ? '+' : '');
+            strInfo += '<br/>' + CAO_Constants.HH_ACCOUNT_TYPE + ': ' + cHH + (cHH == 9999 ? '+' : '');        
             
             createDR(Label.healthLabelAccountModelData, isMixedAccs ? statusError : statusSuccess,  isMixedAccs ? strInfo : null, 
                isMixedAccs ? label.healthSolutionAccountModel : strInfo);        

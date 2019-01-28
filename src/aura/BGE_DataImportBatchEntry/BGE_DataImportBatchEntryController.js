@@ -10,26 +10,14 @@
      * @description: handles selected row action in the datatable. Current option list: delete.
      */
     handleRowAction: function (component, event, helper) {
-        helper.showSpinner(component);
-        var action = event.getParam('action');
+        let rowAction = event.getParam('action');
         var row = event.getParam('row');
-        switch (action.name) {
+        switch (rowAction.name) {
             case 'delete':
-                var action = component.get('c.deleteDataImportRow');
-                action.setParams({batchId: component.get('v.recordId'), dataImportId: row.Id});
-                action.setCallback(this, function (response) {
-                    var state = response.getState();
-                    if (state === 'SUCCESS') {
-                        var response = JSON.parse(response.getReturnValue());
-                        helper.setDataTableRows(component, response);
-                        helper.setTotals(component, response);
-                        helper.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftDeleted'), 'success');
-                    } else {
-                        helper.showToast(component, $A.get('$Label.c.PageMessagesError'), response.getReturnValue(), 'error');
-                    }
-                    helper.hideSpinner(component);
-                });
-                $A.enqueueAction(action);
+                helper.handleDeleteRowAction(component, row);
+                break;
+            case 'view':
+                helper.handleViewRowAction(component, row);
                 break;
         }
     },
@@ -50,13 +38,11 @@
         } else if (channel === 'setDonorType') {
             component.set('v.donorType', message.donorType);
         } else if (channel === 'hideFormSpinner') {
-            var spinner = component.find('formSpinner');
-            $A.util.addClass(spinner, 'slds-hide');
+            helper.hideFormSpinner(component);
         } else if (channel === 'showFormSpinner') {
-            var spinner = component.find('formSpinner');
-            $A.util.removeClass(spinner, 'slds-hide');
+            helper.showFormSpinner(component);
         } else if (channel === 'onError') {
-            helper.showToast(component, message.title, message.errorMessage, 'Error');
+            helper.showToast(component, message.title, message.errorMessage, 'error');
         }
     },
 
@@ -72,36 +58,10 @@
     },
 
     /**
-     * @description: opens the batch wizard modal for edit mode of the component
+     * @description: checks that user has all necessary permissions and then launches modal or displays error
      */
-    openBatchWizard:function(component, event) {
-        var modalBody;
-        var modalHeader;
-        var modalFooter;
-        var batchId = component.get('v.recordId');
-
-        $A.createComponents([
-                ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c', recordId: batchId, isReadOnly: false}],
-                ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
-                ['c:modalFooter', {}]
-            ],
-            function(components, status, errorMessage){
-                if (status === 'SUCCESS') {
-                    modalBody = components[0];
-                    modalHeader = components[1];
-                    modalFooter = components[2];
-                    component.find('overlayLib').showCustomModal({
-                        body: modalBody,
-                        header: modalHeader,
-                        footer: modalFooter,
-                        showCloseButton: true,
-                        cssClass: 'slds-modal_large'
-                    })
-                } else {
-                    this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
-                }
-            }
-        );
+    onEditClick: function(component, event, helper) {
+        helper.checkFieldPermissions(component, event, helper);
     },
 
     /**
