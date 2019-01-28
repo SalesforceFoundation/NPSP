@@ -2504,7 +2504,7 @@
         <members>Contact.BDE_Entry_FS</members>
         <members>Contact.BDE_List_FS</members>
         <members>Contact.ContactMergeFoundFS</members>
-        <members>DataImportBatch__c.BatchGiftEntryTabDataTableColumns</members>
+        <members>DataImportBatch__c.BatchGiftEntryTabColumns</members>
         <members>Engagement_Plan_Template__c.ManageEPTemplateFS</members>
         <members>Lead.BDE_Entry_FS</members>
         <members>Lead.BDE_List_FS</members>

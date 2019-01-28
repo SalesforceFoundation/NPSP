@@ -62,8 +62,13 @@
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
     <fieldSets>
-        <fullName>BatchGiftEntryTabDataTableColumns</fullName>
+        <fullName>BatchGiftEntryTabColumns</fullName>
         <description>The Batch fields to be displayed as columns in the table of Batches on the BGE tab.</description>
+        <displayedFields>
+            <field>Name</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>true</isRequired>
+        </displayedFields>
         <displayedFields>
             <field>Batch_Description__c</field>
             <isFieldManaged>false</isFieldManaged>
@@ -77,9 +82,9 @@
         <displayedFields>
             <field>CreatedDate</field>
             <isFieldManaged>false</isFieldManaged>
-            <isRequired>false</isRequired>
+            <isRequired>true</isRequired>
         </displayedFields>
-        <label>Batch Gift Entry Tab Data Table Columns</label>
+        <label>Batch Gift Entry Tab Columns</label>
     </fieldSets>
     <fields>
         <fullName>Account_Custom_Unique_ID__c</fullName>

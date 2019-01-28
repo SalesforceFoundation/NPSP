@@ -26,15 +26,15 @@
     },
 
     /**
-     * @description: loads more batch records into the grid with infinite scroll
+     * @description: handles infinite scroll when user scrolls to the bottom of the datatable
      */
     loadMoreData: function (component, event, helper) {
-        event.getSource().set("v.isLoading", true);
+        event.getSource().set('v.isLoading', true);
         if (component.get('v.batchData').length >= component.get('v.totalNumberOfRows')) {
             component.set('v.enableInfiniteLoading', false);
-            event.getSource().set("v.isLoading", false);
+            event.getSource().set('v.isLoading', false);
         } else {
-            helper.getMoreBatchRows(component, event);
+            helper.getBatchRows(component, event);
         }
     },
 
@@ -42,14 +42,18 @@
      * @description: sorts the data by the field name and current direction
      */
     sortByColumns: function(component, event, helper) {
-        const fieldName = event.getParam('fieldName');
+        component.set('v.enableInfiniteLoading', true);
+
+        const fieldNameEventParam = event.getParam('fieldName');
+        const fieldName = fieldNameEventParam === 'batchLink' ? 'Name' : fieldNameEventParam;
         const sortEventParam = event.getParam('sortDirection');
         const sortDirection = sortEventParam ? sortEventParam : 'asc';
 
-        helper.sortBatchData(component, fieldName, sortDirection);
+        component.set('v.sortBy', fieldName);
+        component.set('v.sortDirection', sortDirection);
 
-        component.set("v.batchData.sortedBy", fieldName);
-        component.set("v.batchData.sortedDirection", sortDirection);
+        component.set('v.batchData',[]);
+        helper.getBatchRows(component, event);
     }
 
 })

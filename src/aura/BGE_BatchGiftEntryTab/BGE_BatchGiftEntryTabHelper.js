@@ -2,14 +2,14 @@
     /******************************** Init Functions *****************************/
 
     doInit: function(component) {
-        var action = component.get('c.getTabModel');
+        var action = component.get('c.getTableModel');
         action.setCallback(this, function (response) {
             const state = response.getState();
             if (state === 'SUCCESS') {
                 let model = JSON.parse(response.getReturnValue());
                 this.setColumns(component, model.columns);
-                component.set('v.totalNumberOfRows', model.totalNumberOfRows);
-                this.setBatchRows(component, model.batches);
+                this.loadBatchRows(component, [], model.batches);
+                this.setTotalNumberOfRows(component, model.totalNumberOfRows);
             } else {
                 this.handleApexErrors(component, response.getError());
             }
@@ -17,6 +17,9 @@
         $A.enqueueAction(action);
     },
 
+    /**
+     * @description: loads the columns for the datatable
+     */
     setColumns: function(component, responseColumns) {
         responseColumns.forEach(function(col){
            if (col.type === 'number') {
@@ -41,44 +44,56 @@
         component.set('v.batchListColumns', responseColumns);
     },
 
-    getMoreBatchRows: function(component, event) {
-        let offset = component.get('v.batchData').length;
-        let rowsToLoad = 50;
-        let action = component.get('c.getBatches');
+    /******************************** Data Loading Functions *****************************/
+
+    /**
+     * @description: gets another set of Data Import Batch records from the server for loading into datatable
+     */
+    getBatchRows: function(component, event) {
+        let batchData = component.get('v.batchData');
+        let sortBy = component.get('v.sortBy');
+        let sortDirection = component.get('v.sortDirection');
+        let action = component.get('c.getSortedData');
         action.setParams({
-            "queryAmount": rowsToLoad,
-            "offset": offset
+            "offset": batchData.length,
+            "sortBy": sortBy,
+            "sortDirection": sortDirection
         });
         action.setCallback(this, function (response) {
             const state = response.getState();
             if (state === 'SUCCESS') {
-                let batches = response.getReturnValue();
-                this.setBatchRows(component, batches);
+                let model = JSON.parse(response.getReturnValue());
+                this.loadBatchRows(component, batchData, model.batches);
+                this.setTotalNumberOfRows(component, model.totalNumberOfRows);
             } else {
                 this.handleApexErrors(component, response.getError());
             }
-            event.getSource().set("v.isLoading", false);
+            event.getSource().set('v.isLoading', false);
         });
         $A.enqueueAction(action);
     },
 
     /**
-     * @description: loads Batch Rows into datatable data
-     * @param batches: list of BatchRow wrappers
+     * @description: loads Batch Rows into datatable data and creates field data for link and user fields
+     * @param baseRows: list of existing Data Import Batch records to concatenate onto
+     * @param responseRows: list of Data Import Batch records
      */
-    setBatchRows: function(component, responseRows) {
-        responseRows.forEach(function(currentRow) {
+    loadBatchRows: function(component, baseRows, responseRows) {
+        responseRows.forEach(function (currentRow) {
             currentRow.batchLink = '/' + currentRow.Id;
             currentRow.CreatedById = currentRow.CreatedBy.Name;
             currentRow.LastModifiedById = currentRow.LastModifiedBy.Name;
             currentRow.OwnerId = currentRow.Owner.Name;
         });
-        let data = component.get('v.batchData');
-        if (!data) {
-            data = [];
-        }
-        data = data.concat(responseRows);
+        let data = baseRows.concat(responseRows);
         component.set('v.batchData', data);
+    },
+
+    /**
+     * @description: sets the total number of Data Import Batch rows for use in infinite scroll calculations
+     */
+    setTotalNumberOfRows: function(component, totalNumberOfRows) {
+        component.set('v.totalNumberOfRows', totalNumberOfRows);
     },
 
     /******************************** User Interaction Functions *****************************/
@@ -149,30 +164,12 @@
 
     },
 
+    /**
+     * @description initiates the process to copy Batch setup from an existing Batch
+     */
     copyBatchSetup: function(component, event) {
         let sourceBatch = event.getParam('row');
         this.checkFieldPermissions(component, sourceBatch.Id);
-    },
-
-    sortBatchData: function(component, fieldName, sortDirection) {
-        const reverse = sortDirection !== 'asc';
-        let batchData = component.get('v.batchData');
-        batchData.sort(this.sortBy(fieldName, reverse));
-        component.set('v.batchData', batchData);
-    },
-
-    /**
-     * @description: called by sortData, sorts by provided key and direction. Provided by Salesforce lightning:datatable documentation.
-     */
-    sortBy: function (field, reverse, primer) {
-        var key = primer ?
-            function(x) {return primer(x[field])} :
-            function(x) {return x[field]};
-        //checks if the two rows should switch places
-        reverse = !reverse ? 1 : -1;
-        return function (a, b) {
-            return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
-        }
     },
 
     /******************************** Utility Functions *****************************/

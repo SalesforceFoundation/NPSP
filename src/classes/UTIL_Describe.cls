@@ -316,7 +316,7 @@ public class UTIL_Describe {
     /*******************************************************************************************************
     * @description returns friendly label for standard User lookups when we need to display them in custom UI.
     * This is necessary because these labels do not exist in any schema describe available.
-    * @return string, friendly label without 'Id'
+    * @return string, translatable & friendly label without 'Id'
     */
     public static String getUserReferenceFieldLabel(DescribeFieldResult dfr) {
         if (dfr.name == 'CreatedById') {
@@ -400,8 +400,10 @@ public class UTIL_Describe {
         } else {
             for(Schema.FieldSetMember fieldSetMember : fieldSetDescribe.getFields()) {
                 if (fieldSetMember.getFieldPath().contains('.')) {
-                    throw (new SchemaDescribeException('Related field \'' + fieldSetMember.getFieldPath() + '\' not supported ' +
-                        'in field set \'' + fieldSetName + '\'.  You can only include fields directly on object \'' + obj + '\'.'));
+                    String errorMessage = 'Related field \'' + fieldSetMember.getFieldPath() +
+                            '\' not supported ' + 'in field set \'' + fieldSetName +
+                            '\'.  You can only include fields directly on object \'' + obj + '\'.';
+                    throw (new SchemaDescribeException(errorMessage));
                 }
                 fieldNames.add(fieldSetMember.getFieldPath());
             }

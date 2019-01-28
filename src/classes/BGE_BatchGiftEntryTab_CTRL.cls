@@ -37,16 +37,21 @@
 public with sharing class BGE_BatchGiftEntryTab_CTRL {
 
     /*******************************************************************************************************
+    * @description The number of additional Data Import Batches to load on each infinite scroll query
+    */
+    private static Integer loadSize = 50;
+
+    /*******************************************************************************************************
     * @description Gets Data Import Batch data to populate datatable on BGE Batch Gift Entry Tab
-    * @return List<DataImportBatch__c> list of Data Import Batches
+    * @return String JSON serialized TableModel
     */
     @AuraEnabled
-    public static String getTabModel() {
+    public static String getTableModel() {
         if (UTIL_Permissions.canRead(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), false)) {
-            TabModel model = new TabModel();
-            model.columns = getTabColumns();
-            model.batches = getInitialBatches();
-            model.totalNumberOfRows = [SELECT Count() FROM DataImportBatch__c WHERE GiftBatch__c = TRUE];
+            TableModel model = new TableModel();
+            model.columns = getTableColumns();
+            model.batches = getBatches(0, 'CreatedDate', 'DESC');
+            model.totalNumberOfRows = getTotalNumberOfRows();
             return JSON.serialize(model);
         } else {
             throw new AuraHandledException(Label.bgeFLSError);
@@ -54,10 +59,22 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description Starts over with initial load based on re-sorted data table
+    * @return String JSON serialized TableModel
+    */
+    @AuraEnabled
+    public static String getSortedData(Integer offset, String sortBy, String sortDirection) {
+        TableModel model = new TableModel();
+        model.batches = getBatches(offset, sortBy, sortDirection);
+        model.totalNumberOfRows = getTotalNumberOfRows();
+        return JSON.serialize(model);
+    }
+
+    /*******************************************************************************************************
     * @description Gets columns to create datatable on BGE Batch Gift Entry Tab
     * @return List<Column> list of columns for datatable
     */
-    public static List<Column> getTabColumns() {
+    public static List<Column> getTableColumns() {
 
         Set<String> disallowedFields = new Set<String>{
                 'Name',
@@ -76,7 +93,10 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
 
         for (String fieldName : fieldNames) {
             if (!disallowedFields.contains(fieldName)) {
-                DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), fieldName);
+                DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(
+                        UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'),
+                        fieldName
+                );
                 String dataType = dfr.getType().name().toLowerCase();
                 Column col = new Column();
                 col.fieldName = fieldName;
@@ -97,27 +117,17 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Gets initial set of Data Import Batch data to populate datatable on BGE Batch Gift Entry Tab
-    * @return List<DataImportBatch__c> list of Data Import Batches
-    */
-    public static List<DataImportBatch__c> getInitialBatches() {
-        return getBatches(50, 0);
-    }
-
-    /*******************************************************************************************************
     * @description Gets Data Import Batch data to populate datatable on BGE Batch Gift Entry Tab
-    * @param queryAmount the number of new records to query
     * @param offset the number of records to offset by
     * @return List<DataImportBatch__c> list of Data Import Batches
     */
-    @AuraEnabled
-    public static List<DataImportBatch__c> getBatches(Integer queryAmount, Integer offset) {
-
+    public static List<DataImportBatch__c> getBatches(Integer offset, String sortBy, String sortDirection) {
         List<String> fields = getDataTableColumnFieldNames();
         List<DataImportBatch__c> batches = new List<DataImportBatch__c>();
 
-        // ensure Name and Id are included but not duplicated from user input in field set
+        // ensure Name, CreatedDate, Id, and user lookups are included but not duplicated from user input in field set
         fields.add('Name');
+        fields.add('CreatedDate');
         fields.add('Id');
         fields.add('CreatedBy.Name');
         fields.add('LastModifiedBy.Name');
@@ -129,9 +139,18 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
                 String.join(finalFields, ', ') +
                 ' FROM ' + UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c') +
                 ' WHERE GiftBatch__c = TRUE' +
-                ' LIMIT ' + queryAmount +
+                ' ORDER BY ' + sortBy + ' ' + sortDirection +
+                ' LIMIT ' + loadSize +
                 ' OFFSET ' + offset;
         return Database.query(query);
+    }
+
+    /*******************************************************************************************************
+    * @description Gets the count of Data Import Batch records where GiftBatch=true and accessible to user
+    * @return Integer count of batch records
+    */
+    private static Integer getTotalNumberOfRows() {
+        return [SELECT Count() FROM DataImportBatch__c WHERE GiftBatch__c = TRUE];
     }
 
     /*******************************************************************************************************
@@ -139,7 +158,11 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
     * @return List<String> list of Data Import Batch field api names
     */
     public static List<String> getDataTableColumnFieldNames() {
-        List<String> fieldNames = UTIL_Describe.listStrFromFieldSet(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), UTIL_Namespace.StrTokenNSPrefix('BatchGiftEntryTabDataTableColumns'));
+        List<String> fieldNames =
+                UTIL_Describe.listStrFromFieldSet(
+                        UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'),
+                        UTIL_Namespace.StrTokenNSPrefix('BatchGiftEntryTabDataTableColumns')
+                );
         for (Integer i=0; i<fieldNames.size(); i++) {
             if (!UTIL_Permissions.canRead(UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'), fieldNames[i], false)) {
                 fieldNames.remove(i);
@@ -160,7 +183,7 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
     /*******************************************************************************************************
     * @description a class to retrieve info for BGE_BatchGiftEntryTab component
     */
-    public class TabModel {
+    public class TableModel {
         @AuraEnabled public List<DataImportBatch__c> batches;
         @AuraEnabled public List<Column> columns;
         @AuraEnabled public Integer totalNumberOfRows;
