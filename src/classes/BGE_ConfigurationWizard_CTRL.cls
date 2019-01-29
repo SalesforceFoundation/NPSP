@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2018, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2018
+* @date 2019
 * @group BGE
 * @group-content 
 * @description BGE Wizard Component Controller.
@@ -39,17 +39,15 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     /*******************************************************************************************************
     * @description These fields are required only if at least 1 field from its object group is selected
     */
-    private static Set<String> systemRequiredFields = new Set<String>{
+    private static Set<String> conditionallyRequiredFields = new Set<String>{
         'Account1_Name__c',
         'Account2_Name__c',
-        'Donation_Amount__c',
         'Contact1_LastName__c',
         'Contact2_LastName__c'
     };
 
     /*******************************************************************************************************
     * @description Checks for field permissions to create a new Batch/Template
-    * @param sObjectName string of the sObjectName retrieved with force:hasSObjectName
     * @return void; throws an AuraHandledException if any fields fail FLS check
     */
     @AuraEnabled
@@ -59,7 +57,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
     /*******************************************************************************************************
     * @description Retrieves the Template Details information, the related list of fields, and component labels.
-    * @param sObjectName string of the sObjectName retrieved with force:hasSObjectName
     * @param recordId Id of the record to be queried
     * @return JSON model of all template details data.
     */
@@ -108,17 +105,18 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         setDefaultValuesOnBGEDetailsModel(model);
 
+        model.namespacePrefix = UTIL_Namespace.getNamespace();
         model.donationMatchingOptions = getDonationMatchingOptions();
         model.availableFields = getAvailableFields();
 
-        model.labels = getLabels('DataImportBatch__c');
+        model.labels = getBatchLabels();
 
         return JSON.serialize(model);
     }
 
     /*******************************************************************************************************
     * @description Retrieves the related list of fields.
-    * @return list of Template Fields with sObjectName and Name.
+    * @return list of BGE Fields.
     */
     public static List<BGEField> getAvailableFields() {
 
@@ -137,8 +135,16 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
             BGEField field = new BGEField();
 
-            // TODO: make these localized with schema describes
             field.sObjectName = dataImportFieldMappedObject;
+
+            // this will require iteration if/when we allow objects beyond Opp and Payment
+            String translatedObjectLabel;
+            if (dataImportFieldMappedObject == 'Opportunity') {
+                translatedObjectLabel = UTIL_Describe.getObjectLabel(dataImportFieldMappedObject);
+            } else if (dataImportFieldMappedObject == 'Payment') {
+                translatedObjectLabel = UTIL_Describe.getObjectLabel('npe01__OppPayment__c');
+            }
+            field.sObjectLabel = translatedObjectLabel;
 
             // TODO: pull these labels from target fields' schema based on help text mapping
             Boolean fieldHasSpacesAndObjName = dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == field.sObjectName;
@@ -146,8 +152,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             field.name = dfr.getName();
 
             String unnamespacedField = UTIL_Namespace.StrTokenRemoveNSPrefix(field.name);
-            if (systemRequiredFields.contains(unnamespacedField)) {
-                field.systemRequired = true;
+            if (conditionallyRequiredFields.contains(unnamespacedField)) {
+                field.conditionallyRequired = true;
             }
 
             String rawFieldType = dfr.getType().name().toLowerCase();
@@ -156,7 +162,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 field.formatter = 'currency';
             }
 
-            field.options = getPicklistOptions(field.name);
+            field.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(field.name);
 
             fields.add(field);
         }
@@ -211,7 +217,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'PICKLIST'
         };
 
-        // looping through the fields on DataImport__c
+        // looping through the fields on DataImport__c and remove unsupported data types
         for (String fieldName : sortedFieldNames) {
             DescribeFieldResult dfr = fieldMap.get(fieldName);
             String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.getName());
@@ -220,13 +226,14 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             Boolean fieldAllowed = allowedObjects.contains(dataImportFieldMappedObject)
                 && allowedDataTypes.contains(dfr.getType().name())
                 && !bannedFields.contains(dataImportFieldApiName)
-                && dfr.getInlineHelpText() != null
-                && BGE_BatchGiftEntry_UTIL.canUpdateField(dfr);
+                && dfr.getInlineHelpText() != null;
 
             if (fieldAllowed) {
                 dfrs.add(dfr);
             }
         }
+
+        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(dfrs);
 
         return dfrs;
     }
@@ -247,87 +254,72 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Returns the source field's options formatted for lightning:select if the source field is a picklist
-    * or the target field's options formatted for lightning:select if the source field is a string and the target
-    * field is a picklist
-    * Returns an empty map if neither case applies
-    */
-    public static List<Map<String, String>> getPicklistOptions(String dataImportField){
-        List<Map<String, String>> options = new List<Map<String, String>>();
-
-        String dataImportObject = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
-
-        String rawSourceFieldType = UTIL_Describe.getFieldDisplaytype(dataImportObject, dataImportField.toLowerCase()).name().toLowerCase();
-
-        if (rawSourceFieldType == 'picklist') {
-            options = UTIL_Describe.getLightningSelectOptions(dataImportObject, dataImportField);
-
-        } else if (rawSourceFieldType == 'string') {
-
-            String targetObject = BDI_DataImportService.getTargetObject(dataImportField);
-            if (targetObject == 'Payment') {
-                targetObject = 'npe01__OppPayment__c';
-            }
-
-            String targetField = BDI_DataImportService.getTargetField(dataImportField);
-            Schema.DisplayType targetFieldType = UTIL_Describe.getFieldDisplaytype(targetObject, targetField);
-
-            if (targetFieldType == Schema.DisplayType.PICKLIST) {
-                options = UTIL_Describe.getLightningSelectOptions(targetObject, targetField);
-            }
-        }
-
-        return options;
-    }
-
-    /*******************************************************************************************************
     * @description Retrieves the default active fields for a new Batch or Template in a JSON String
     */
     public static String getDefaultActiveFields() {
         List<BGEField> fields = new List<BGEField>();
 
+        String dataImportApiName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
+        String opportunityName = 'Opportunity';
+        String opportunityLabel = UTIL_Describe.getObjectLabel(opportunityName);
+        String paymentName = 'Payment'; // bdi object name, not api name
+        String paymentLabel = UTIL_Describe.getObjectLabel('npe01__OppPayment__c');
+
         BGEField donationAmount = new BGEField();
-        donationAmount.name = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c');
-        donationAmount.label = 'Donation Amount';
-        donationAmount.sObjectName = 'Opportunity';
+        String donationAmountApiName = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c');
+        donationAmount.name = donationAmountApiName;
+        donationAmount.label = UTIL_Describe.getFieldLabel(dataImportApiName, donationAmountApiName.toLowerCase());
+        donationAmount.sObjectName = opportunityName;
+        donationAmount.sObjectLabel = opportunityLabel;
         donationAmount.defaultValue = null;
-        donationAmount.required = true;
+        donationAmount.isActive = true;
+        donationAmount.requiredInEntryForm = true;
         donationAmount.hide = false;
         donationAmount.type = getLightningFieldType('number');
         donationAmount.formatter = 'currency';
         donationAmount.sortOrder = 0;
+        donationAmount.alwaysRequired = true;
         fields.add(donationAmount);
 
         BGEField donationDate = new BGEField();
-        donationDate.name = UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
-        donationDate.label = 'Donation Date';
-        donationDate.sObjectName = 'Opportunity';
+        String donationDateApiName = UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        donationDate.name = donationDateApiName;
+        donationDate.label = UTIL_Describe.getFieldLabel(dataImportApiName, donationDateApiName.toLowerCase());
+        donationDate.sObjectName = opportunityName;
+        donationDate.sObjectLabel = opportunityLabel;
         donationDate.defaultValue = null;
-        donationDate.required = false;
+        donationDate.isActive = true;
+        donationDate.requiredInEntryForm = true;
         donationDate.hide = false;
         donationDate.type = getLightningFieldType('date');
         donationDate.sortOrder = 1;
+        donationDate.alwaysRequired = true;
         fields.add(donationDate);
 
         BGEField paymentMethod = new BGEField();
-        paymentMethod.name = UTIL_Namespace.StrTokenNSPrefix('Payment_Method__c');
-        paymentMethod.label = 'Method';
-        paymentMethod.sObjectName = 'Payment';
+        String paymentMethodApiName = UTIL_Namespace.StrTokenNSPrefix('Payment_Method__c');
+        paymentMethod.name = paymentMethodApiName;
+        paymentMethod.label = UTIL_Describe.getFieldLabel(dataImportApiName, paymentMethodApiName.toLowerCase());
+        paymentMethod.sObjectName = paymentName;
+        paymentMethod.sObjectLabel = paymentLabel;
         paymentMethod.defaultValue = null;
-        paymentMethod.required = false;
+        paymentMethod.isActive = true;
+        paymentMethod.requiredInEntryForm = false;
         paymentMethod.hide = false;
         paymentMethod.type = getLightningFieldType('string');
-        // TODO: figure out why this next line is breaking things and not matching to the existing payment method field in available fields.
-        paymentMethod.options = getPicklistOptions(UTIL_Namespace.StrTokenNSPrefix('Payment_Method__c'));
+        paymentMethod.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(paymentMethodApiName);
         paymentMethod.sortOrder = 2;
         fields.add(paymentMethod);
 
         BGEField checkNumber = new BGEField();
-        checkNumber.name = UTIL_Namespace.StrTokenNSPrefix('Payment_Check_Reference_Number__c');
-        checkNumber.label = 'Check/Reference Number';
-        checkNumber.sObjectName = 'Payment';
+        String checkNumberApiName = UTIL_Namespace.StrTokenNSPrefix('Payment_Check_Reference_Number__c');
+        checkNumber.name = checkNumberApiName;
+        checkNumber.label = UTIL_Describe.getFieldLabel(dataImportApiName, checkNumberApiName.toLowerCase());
+        checkNumber.sObjectName = paymentName;
+        checkNumber.sObjectLabel = paymentLabel;
         checkNumber.defaultValue = null;
-        checkNumber.required = false;
+        checkNumber.isActive = true;
+        checkNumber.requiredInEntryForm = false;
         checkNumber.hide = false;
         checkNumber.type = getLightningFieldType('string');
         checkNumber.sortOrder = 3;
@@ -350,9 +342,10 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         model.contactMatchingRule = 'Firstname,Lastname,Email';
         model.donationDateRange = 0;
         model.donationMatchingBehavior = BDI_DataImport_API.ExactMatchOrCreate;
-        model.donationMatchingClass = '';
-        model.postProcessClass = '';
-        model.runOpportunityRollupsWhileProcessing = false;
+        model.donationMatchingClass = null;
+        model.postProcessClass = null;
+        model.runOpportunityRollupsWhileProcessing = true;
+        model.namespacePrefix = UTIL_Namespace.getNamespace();
         model.activeFields = getDefaultActiveFields();
 
         List<String> donationMatchingRules = new List<String>();
@@ -446,21 +439,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Retrieves the object and field labels for the component.
-    * @param sObjectName the object being used by the component (already stripped of the namespace prefix)
-    * @return Map of object and field name keys to their labels.
-    */
-    public static Map<String, String> getLabels(String sObjectName) {
-
-        if (sObjectName == 'DataImportBatch__c') {
-            Map<String, String> labels = getBatchLabels();
-            return labels;
-        } else {
-            throw new AuraHandledException('ERROR: ' + 'Only Batch_Template__c and DataImportBatch__c are supported objects.');
-        }
-    }
-
-    /*******************************************************************************************************
     * @description Retrieves the object and field labels for the batch object.
     * @return Map of object and field name keys to their labels.
     */
@@ -470,6 +448,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'sObjectName' => Schema.SObjectType.DataImportBatch__c.getName(),
             'sObjectNameNoNamespace' => UTIL_Namespace.StrTokenRemoveNSPrefix(Schema.SObjectType.DataImportBatch__c.getName()),
             'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.DataImportBatch__c.Name.getDescribe().getLabel() + ', ' + Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
+            'missingFieldsError' => Label.exceptionRequiredField,
             'description' => Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
             'totalMatchHelp' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
             'totalMatchLabel' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getLabel(),
@@ -520,7 +499,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
     /*******************************************************************************************************
     * @description Deserializes information to the model and selects which record to save.
-    * @param sObjectName the non-namespaced sObjectName
     * @param recordInfo JSON string of the record information
     * @param activeFields JSON string of the active fields to be saved to the record
     * @return string of the record information with the Id
@@ -551,6 +529,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             dataImportBatch.Expected_Total_Batch_Amount__c = recordDetails.expectedTotal;
             dataImportBatch.Active_Fields__c = recordDetails.activeFields;
             dataImportBatch.GiftBatch__c = true;
+            dataImportBatch.Process_Using_Scheduled_Job__c = false;
 
             upsert dataImportBatch;
 
@@ -585,6 +564,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public String donationMatchingClass;
         @AuraEnabled public List<String> donationMatchingRule;
         @AuraEnabled public List<Map<String,String>> donationMatchingOptions;
+        @AuraEnabled public String namespacePrefix;
         @AuraEnabled public String postProcessClass;
         @AuraEnabled public Boolean runOpportunityRollupsWhileProcessing;
         @AuraEnabled public Integer recordCount;
@@ -601,24 +581,27 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     * @description a class to retrieve and save information related to Active and Available fields.
     */
     public class BGEField {
+        @AuraEnabled public Boolean alwaysRequired; // always required in BGE (e.g., Donation Amount and Donation Date)
+        @AuraEnabled public Boolean conditionallyRequired; // required if any other field on its object is selected (e.g., Account Name and Contact Last Name)
+        @AuraEnabled public String defaultValue;
+        @AuraEnabled public String formatter;
+        @AuraEnabled public Boolean hide;
+        @AuraEnabled public Boolean isActive;
         @AuraEnabled public String label;
         @AuraEnabled public String name;
-        @AuraEnabled public String sObjectName;
-        @AuraEnabled public Boolean isActive;
-        @AuraEnabled public String defaultValue;
-        @AuraEnabled public Boolean required;
-        @AuraEnabled public Boolean systemRequired;
-        @AuraEnabled public Boolean hide;
-        @AuraEnabled public String type;
-        @AuraEnabled public String formatter;
         @AuraEnabled public List<Map<String, String>> options;
+        @AuraEnabled public String sObjectName;
+        @AuraEnabled public String sObjectLabel;
         @AuraEnabled public Integer sortOrder;
+        @AuraEnabled public String type;
+        @AuraEnabled public Boolean requiredInEntryForm; // BGE user marked this field as "required" when setting up the batch
 
         public BGEField() {
             isActive = false;
-            required = false;
             hide = false;
-            systemRequired = false;
+            alwaysRequired = false;
+            requiredInEntryForm = false;
+            conditionallyRequired = false;
         }
     }
 }

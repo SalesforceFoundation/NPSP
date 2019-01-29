@@ -1,5 +1,5 @@
 <!--
-    Copyright (c) 2018, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,12 +29,15 @@
 -->
 <!--
   @author Salesforce.org
-  @date 2018
+  @date 2019
   @group Batch Gift Entry
   @description Tab component used to view all DataImportBatch records used for Batch Gift Entry.
 -->
 
 <aura:component implements="force:appHostable" controller="BGE_ConfigurationWizard_CTRL" access="public">
+
+    <!-- attributes -->
+    <aura:attribute name="modalOpen" type="Boolean" description="Prevents multiple modals from opening"/>
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>

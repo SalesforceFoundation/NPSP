@@ -77,9 +77,8 @@
         <name>Addr_Valid_Key_Pair</name>
     </customLabels>
     <customLabels>
-        <label>&lt;p&gt;Klik Verifieer Alle Adressen om alle adressen in de organisatie te verifiëren.
-        Dit proces gebruikt de instellingen hierboven.&lt;/p&gt;
- &lt;br/&gt;</label>
+        <label>Klik Verifieer Alle Adressen om alle adressen in de organisatie te verifiëren.
+        Dit proces gebruikt de instellingen hierboven.</label>
         <name>Addr_Verification_Batch_Body</name>
     </customLabels>
     <customLabels>

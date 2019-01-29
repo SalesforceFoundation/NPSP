@@ -1,13 +1,12 @@
 {
   "orgName": "NPSP - Trial Org",
-  "template": "0TT1I000006QaZI",
+  "template": "0TT1I000006WS53",
   "orgPreferences" : {
     "enabled": [
       "ChatterEnabled",
       "DisableParallelApexTesting",
       "NotesReservedPref01",
-      "S1DesktopEnabled",
-      "Translation"
+      "S1DesktopEnabled"
     ]
   }
 }

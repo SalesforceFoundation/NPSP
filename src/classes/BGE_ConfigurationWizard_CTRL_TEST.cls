@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2018, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2018
+* @date 2019
 * @group BGE
 * @group-content
 * @description Unit Tests for the Lightning Component Apex Controller for the BGE Wizard UI.
@@ -105,34 +105,56 @@ private class BGE_ConfigurationWizard_CTRL_TEST {
     */
 
     @isTest
-    private static void testSaveNewBatch() {
+    private static void testSaveNewBatchWithDefaults() {
 
-        String batchInfoJSON = '{' +
-            '"name":"Test 4",' +
-            '"id":null,' +
-            '"description":"Test Record",' +
-            '"requireTotalMatch":false,' +
-            '"batchProcessSize":5,' +
-            '"runOpportunityRollupsWhileProcessing":false,' +
-            '"contactMatchingRule":"Firstname,Lastname,Email",' +
-            '"donationMatchingBehavior":"'+ BDI_DataImport_API.RequireBestMatch + '",' +
-            '"donationMatchingRule":["' + UTIL_Namespace.StrAllNSPrefix('Donation_Amount__c').toLowerCase() + '"],' +
-            '"donationDateRange":1,' +
-            '"availableFields":null,' +
-            '"labels":null' +
-        '}';
+        BGE_ConfigurationWizard_CTRL.BGEDetailsModel defaultModel = BGE_ConfigurationWizard_CTRL.getDefaultBGEDetailsModel();
+        defaultModel.name = 'testModel';
+        String batchInfoJSON = JSON.serialize(defaultModel);
         String activeFieldsJSON = BGE_ConfigurationWizard_CTRL.getDefaultActiveFields();
+
         Test.startTest();
         String jsonModel = BGE_ConfigurationWizard_CTRL.saveRecord(batchInfoJSON, activeFieldsJSON);
+        DataImportBatch__c batchRecord = [SELECT Id,
+                                                Name,
+                                                Batch_Description__c,
+                                                RequireTotalMatch__c,
+                                                Active_Fields__c,
+                                                Expected_Total_Batch_Amount__c,
+                                                Expected_Count_of_Gifts__c,
+                                                Batch_Process_Size__c,
+                                                Contact_Matching_Rule__c,
+                                                Donation_Date_Range__c,
+                                                Donation_Matching_Behavior__c,
+                                                Donation_Matching_Implementing_Class__c,
+                                                Post_Process_Implementing_Class__c,
+                                                Run_Opportunity_Rollups_while_Processing__c,
+                                                Donation_Matching_Rule__c,
+                                                GiftBatch__c,
+                                                Process_Using_Scheduled_Job__c
+                                        FROM DataImportBatch__c
+                                        LIMIT 1];
         BGE_ConfigurationWizard_CTRL.BGEDetailsModel batchDetails = (BGE_ConfigurationWizard_CTRL.BGEDetailsModel) JSON.deserialize(jsonModel, BGE_ConfigurationWizard_CTRL.BGEDetailsModel.class);
         Test.stopTest();
 
+        System.assertNotEquals(null, batchDetails.id, 'Batch details id should not be null');
         System.assertNotEquals(null, jsonModel, 'JSON string of entire model should be returned.');
-        System.assertEquals('Test 4', batchDetails.name, 'Batch details name should be Test 4');
-        System.assertEquals('Test Record', batchDetails.description, 'Batch details description should be Test Record');
-        System.assertEquals(false, batchDetails.requireTotalMatch, 'Require total match should be false');
-        System.assertEquals(BGE_ConfigurationWizard_CTRL.getDefaultActiveFields(), batchDetails.activeFields, 'Active Fields should match default');
-        System.assertNotEquals(null, batchDetails.id, 'Batch details should not be null');
+        System.assertEquals(activeFieldsJSON, batchRecord.Active_Fields__c, 'Active Fields should match default');
+        System.assertEquals(defaultModel.name, batchRecord.Name, 'Batch record name should match default');
+        System.assertEquals(defaultModel.description, batchRecord.Batch_Description__c, 'Batch Description should match default');
+        System.assertEquals(defaultModel.requireTotalMatch, batchRecord.RequireTotalMatch__c, 'Require Total Match should match default');
+        System.assertEquals(defaultModel.expectedCount, batchRecord.Expected_Count_of_Gifts__c, 'Expected Count of Gifts should match default');
+        System.assertEquals(defaultModel.expectedTotal, batchRecord.Expected_Total_Batch_Amount__c, 'Expected Total Batch Amount should match default');
+        System.assertEquals(defaultModel.batchProcessSize, batchRecord.Batch_Process_Size__c, 'Batch Process Size should match default');
+        System.assertEquals(defaultModel.contactMatchingRule, batchRecord.Contact_Matching_Rule__c, 'Contact Matching Rule should match default');
+        System.assertEquals(defaultModel.donationDateRange, batchRecord.Donation_Date_Range__c, 'Donation Date Range should match default');
+        System.assertEquals(defaultModel.donationMatchingBehavior, batchRecord.Donation_Matching_Behavior__c, 'Donation Matching Behavior should match default');
+        System.assertEquals(defaultModel.donationMatchingClass, batchRecord.Donation_Matching_Implementing_Class__c, 'Donation Matching Class should match default');
+        System.assertEquals(defaultModel.postProcessClass, batchRecord.Post_Process_Implementing_Class__c, 'Post Processing Class should match default');
+        System.assertEquals(defaultModel.runOpportunityRollupsWhileProcessing, batchRecord.Run_Opportunity_Rollups_while_Processing__c, 'Run Opportunity Rollups should match default');
+        System.assertEquals(String.join(defaultModel.donationMatchingRule, ';'), batchRecord.Donation_Matching_Rule__c, 'Donation Matching Rule should match default');
+
+        System.assertEquals(true, batchRecord.GiftBatch__c, 'Batch should be flagged as Gift Batch');
+        System.assertEquals(false, batchRecord.Process_Using_Scheduled_Job__c, 'Process Using Scheduled Job flag should be false.');
 
     }
 

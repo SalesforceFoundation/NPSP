@@ -142,9 +142,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Verification Batch Body</shortDescription>
-        <value>&lt;p&gt;Click Verify All Addresses to verify and standardize all addresses in your organization.
-        The mass verification process uses the settings from above.&lt;/p&gt;
- &lt;br/&gt;</value>
+        <value>Click Verify All Addresses to verify and standardize all addresses in your organization. The mass verification process uses the settings from above.</value>
     </labels>
     <labels>
         <fullName>Addr_Verification_Batch_Not_Supported</fullName>
@@ -1582,6 +1580,22 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <value>You must specify the Cicero API Key in the Auth Token field for Address Verification. Log into Salesforce and go to People | Addresses on the NPSP Settings page.</value>
     </labels>
     <labels>
+        <fullName>addrCopyConAddBtnConfirm</fullName>
+        <categories>ADDR_CopyConAddrHHObjBTN</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message that appears to confirm the address copy action.</shortDescription>
+        <value>You are about to copy the Address. Do you want to continue?</value>
+    </labels>
+    <labels>
+        <fullName>addrCopyConAddBtnFls</fullName>
+        <categories>ADDR_CopyConAddrHHObjBTN</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label that appears when user does not pass FLS check to copy the address</shortDescription>
+        <value>You don&apos;t have the required field permissions. Contact your system administrator to inquire about getting the necessary permissions.</value>
+    </labels>
+    <labels>
         <fullName>addrCopyConAddBtnHHObjOnly</fullName>
         <categories>ADDR_CopyConAddrHHObjBTN</categories>
         <language>en_US</language>
@@ -1949,7 +1963,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
     </labels>
     <labels>
         <fullName>bdiBtnClose</fullName>
-        <categories>Data Importer, Opportunity Send Acknowledgment</categories>
+        <categories>Data Importer, Opportunity Send Acknowledgment, Account Conversion</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiBtnClose</shortDescription>
@@ -2292,6 +2306,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>This Contact matched an existing Contact that's associated with a non-Household, non-Administrative Account. The Gift Entry Tool can only update Contacts that are part of a Household or Administrative Account.</value>
     </labels>
     <labels>
+        <fullName>bdiErrorOneToOneMultiContact</fullName>
+        <categories>NPSP Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bdiErrorOneToOneMultiContact</shortDescription>
+        <value>A Data Import for a One-to-one or Administrative Contact cannot be associated with a second Contact.</value>
+    </labels>
+    <labels>
         <fullName>bdiErrorPaymentMultiMatch</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -2346,6 +2368,24 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>error message if the Donation Matching Behavior is invalid</shortDescription>
         <value>{0} is an invalid Donation Matching Behavior.</value>
+    </labels>
+    <labels>
+        <fullName>bdiMassDelete</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>BDI Confirm Mass Delete Button</shortDescription>
+        <value>Mass Delete</value>
+    </labels>
+    <labels>
+        <fullName>bdiMassDeleteWarning</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning for Mass Delete Buttons</shortDescription>
+        <value>You are about to delete {0} record(s).
+        &lt;br/&gt;
+        &lt;br/&gt;&lt;b&gt;IMPORTANT:&lt;/b&gt; If you create gifts in your org using the Batch Gift Entry feature, we don&apos;&apos;t recommend using the Mass Delete button. Please see the NPSP documentation for instructions on deleting records using the data loader.</value>
     </labels>
     <labels>
         <fullName>bdiMatched</fullName>
@@ -2611,7 +2651,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
         <value>When checked, NPSP calculates donor rollups when donations are processed. If unchecked, donor rollups are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.</value>
-    </labels>
+    </labels>  
     <labels>
         <fullName>bgeBatchOverview</fullName>
         <language>en_US</language>
@@ -2865,6 +2905,27 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batch Gift Entry</value>
     </labels>
     <labels>
+        <fullName>bgeWizardShowAdvancedOptions</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for link to show advanced options in the Wizard</shortDescription>
+        <value>Show Advanced Options</value>
+    </labels>
+    <labels>
+        <fullName>bgeWizardHideAdvancedOptions</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for link to hide advanced options in the Wizard</shortDescription>
+        <value>Hide Advanced Options</value>
+    </labels>
+    <labels>
+        <fullName>btnContinue</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>button label to Continue an action</shortDescription>
+        <value>Continue</value>
+    </labels>
+    <labels>
         <fullName>btnRemove</fullName>
         <categories>Manage Household UI</categories>
         <language>en_US</language>
@@ -3038,7 +3099,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>exceptionDeletePermission</shortDescription>
-        <value>You do not have permissions to delete {0}.</value>
+        <value>You don&apos;&apos;t have the permissions required to delete {0} records.</value>
     </labels>
     <labels>
         <fullName>exceptionRequiredField</fullName>
@@ -3835,7 +3896,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>healthSolutionAccountDefaultRTInvalid</shortDescription>
-        <value>Go to &lt;strong&gt;People | Account Model&lt;/strong&gt; and select a valid record type.</value>
+        <value>Go to &lt;b&gt;People | Account Model&lt;/b&gt; and select a valid record type.</value>
     </labels>
     <labels>
         <fullName>healthSolutionAccountDefaultRTIssue</fullName>
@@ -5280,7 +5341,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>sendAcknowledgmentFailedStatus</shortDescription>
         <value>Email Acknowledgment Not Sent</value>
-    </labels>
+    </labels>  
     <labels>
         <fullName>sendAcknowledgmentFailureReasons</fullName>
         <categories>Send Acknowledgment Button</categories>
@@ -5321,6 +5382,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>sendAcknowledgmentNumberSent</shortDescription>
         <value>{0} acknowledgment(s) sent.</value>
     </labels>
+    <labels>
+        <fullName>sendAcknowledgmentNumberAlreadySent</fullName>
+        <categories>Send Acknowledgment Button</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>sendAcknowledgmentNumberAlreadySent</shortDescription>
+        <value>{0} acknowledgment(s) already sent.</value>
+    </labels>    
     <labels>
         <fullName>sendAcknowledgmentPageTitle</fullName>
         <categories>Send Acknowledgment Button</categories>

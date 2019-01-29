@@ -45,7 +45,7 @@ Test Case 2
     Click Button    title=Edit Related Opportunity Contact Role
     Wait For Locator  record.edit_form
     Click Dropdown            Related Opportunity Contact Role
-    Click link    link=Soft Credit
+    Click link    title:Soft Credit
     Click Record Button    Save
     &{opportunity} =  API Create Opportunity    &{contact1}[AccountId]    Donation    Name=Reciprocal test $500 donation    Amount=500    ${ns}Primary_Contact__c=&{contact1}[Id]  
     Go To Record Home    &{opportunity}[Id]
