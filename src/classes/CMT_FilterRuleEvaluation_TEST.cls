@@ -161,10 +161,15 @@ private class CMT_FilterRuleEvaluation_TEST {
         insert psc;
 
         // Query the Opportunity and the child OCR and Payment records to use in the evaluation
-        List<Id> contactIds = new List<Id>{con.Id};
+        List<Id> contactIds = new List<Id>();
         String soql = CRLP_Query_SEL.buildDetailObjectQueryForRollup(Opportunity.SObjectType,
                 new List<SObjectType>{OpportunityContactRole.SObjectType, npe01__OppPayment__c.SObjectType, Partial_Soft_Credit__c.SObjectType});
         opp = database.query(soql);
+        System.assertEquals(0, opp.OpportunityContactRoles.size());
+
+        contactIds = new List<Id>{con.Id};
+        opp = database.query(soql);
+        System.assertEquals(1, opp.OpportunityContactRoles.size());
 
         Test.startTest();
 
