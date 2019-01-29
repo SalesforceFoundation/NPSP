@@ -16,6 +16,7 @@ from selenium.webdriver import ActionChains
 from cumulusci.robotframework.utils import selenium_retry
 import sys
 from email.mime import text
+from _socket import timeout
 
 
 @selenium_retry
@@ -668,7 +669,7 @@ class NPSP(object):
         
     def wait_for_locator(self, path, *args, **kwargs):
         main_loc = self.get_npsp_locator(path,*args, **kwargs)    
-        self.selenium.wait_until_element_is_visible(main_loc)
+        self.selenium.wait_until_element_is_visible(main_loc,timeout=60)
             
     def get_npsp_settings_value(self,field_name): 
         locator = npsp_lex_locators['npsp_settings']['field_value'].format(field_name)
