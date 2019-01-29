@@ -164,35 +164,35 @@ private class CMT_FilterRuleEvaluation_TEST {
         List<Id> contactIds = new List<Id>();
         String soql = CRLP_Query_SEL.buildDetailObjectQueryForRollup(Opportunity.SObjectType,
                 new List<SObjectType>{OpportunityContactRole.SObjectType, npe01__OppPayment__c.SObjectType, Partial_Soft_Credit__c.SObjectType});
-        opp = database.query(soql);
+        opp = Database.query(soql);
         System.assertEquals(0, opp.OpportunityContactRoles.size());
 
         contactIds = new List<Id>{con.Id};
-        opp = database.query(soql);
+        opp = Database.query(soql);
         System.assertEquals(1, opp.OpportunityContactRoles.size());
 
         Test.startTest();
 
-         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{
+         System.Assert(CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{
                  opp
          }, filterGroupId1));
-         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{
+         System.Assert(CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{
                  opp
          }, filterGroupId2));
-         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{
+         System.Assert(CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{
                  opp
          }, filterGroupId3));
 
-         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
+         System.Assert(CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
                  new List<SObject>{
                          opp, opp.OpportunityContactRoles[0]}, filterGroupId2));
-         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
+         System.Assert(CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
                  new List<SObject>{
                          opp, opp.OpportunityContactRoles[0]}, filterGroupId5));
-         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
+         System.Assert(CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
                  new List<SObject>{
                          opp, opp.OpportunityContactRoles[0]}, filterGroupId6));
-         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
+         System.Assert(CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
                  new List<SObject>{
                          opp, opp.OpportunityContactRoles[0]}, filterGroupId7));
 
