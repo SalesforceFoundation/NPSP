@@ -733,4 +733,8 @@ class NPSP(object):
     def page_scroll_to_locator(self, path, *args, **kwargs):
         locator = self.get_npsp_locator(path, *args, **kwargs)
         self.selenium.scroll_element_into_view(locator)
-        
+    
+    def return_locator_value(self, path, *args, **kwargs): 
+        locator=self.get_npsp_locator(path, *args, **kwargs)
+        value=self.selenium.get_webelement(locator).text   
+        return value    

@@ -12,13 +12,16 @@ Create Donation from a Contact
     Go To Record Home  &{contact}[Id]
     Click Object Button  New Donation
     Populate Form
-    ...                       Opportunity Name= Test $100 donation
     ...                       Amount=100
+    Select Lightning Checkbox    Do Not Automatically Create Payment
     Click Dropdown    Stage
     Click Link    link=Closed Won
     Open Date Picker    Close Date
     Pick Date    10
     Click Modal Button        Save
+    ${value}    Return Locator Value    alert
+    Go To Object Home         Opportunity
+    Click Link    ${value}
     Select Tab    Related
     Load Related List    Payments
     Verify Occurrence    Payments    0
