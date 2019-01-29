@@ -127,7 +127,7 @@
 
     /**
      * @description: saves inline edits from dataTable.
-     * @param draftValues: changed values in the table
+     * @param draftValues: changed values in the table with IDs and any changed values by API name
      */
     handleTableSave: function(component, draftValues) {
         this.showSpinner(component);
@@ -137,9 +137,8 @@
             var state = response.getState();
             if (state === 'SUCCESS') {
                 this.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftUpdated'), 'success');
-                var responseRows = response.getReturnValue();
-                this.setDataTableRows(component, responseRows);
-                this.setTotals(component, responseRows);
+                var model = JSON.parse(response.getReturnValue());
+                this.setTotals(component, model);
 
                 //call dry run in callback to speed up refresh of datatable rows
                 var recordIds = [];
@@ -226,8 +225,7 @@
             var state = response.getState();
             if (state === 'SUCCESS') {
                 var responseRows = response.getReturnValue();
-                this.setDataTableRows(component, responseRows);
-                this.setTotals(component, responseRows);
+                this.setDataTableRows(component, [], responseRows);
             } else {
                 this.handleApexErrors(component, response.getError());
             }
@@ -327,7 +325,7 @@
             this.handleTableErrors(component, errors);
         }
 
-        let data = baseRows.concat(rows)
+        let data = baseRows.concat(rows);
 
         component.set('v.data', data);
     },

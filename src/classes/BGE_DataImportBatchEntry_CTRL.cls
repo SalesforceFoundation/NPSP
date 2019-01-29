@@ -96,16 +96,27 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description updates data import records
+    * @description updates data import records and returns updated totals
     * @param dataImports: list of the NPSP_Data_Import__c record to update
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
-    * @return updated list of data import records
+    * @return updated model with total amount and number of rows
     */
     @AuraEnabled
-    public static List<DataImportRow> updateDataImports(List<DataImport__c> dataImports, Id batchId) {
-        Database.update(dataImports);
+    public static String updateDataImports(List<DataImport__c> dataImports, Id batchId) {
+        try {
+            Database.update(dataImports);
 
-        return getDataImportRows(batchId, 50);
+            DataImportModel dataImportModel = new DataImportModel();
+            dataImportModel.id = batchId;
+
+            dataImportModel.totalCountOfRows = getDataImportRowsTotalCount(batchId);
+            AggregateResult[] aggResult = getDataImportRowsTotalAmount(batchId);
+            dataImportModel.totalRowAmount = (Decimal)aggResult[0].get('amount');
+            return JSON.serialize(dataImportModel);
+
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
     }
 
     /*******************************************************************************************************
