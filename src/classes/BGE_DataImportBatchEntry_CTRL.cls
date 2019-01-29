@@ -38,6 +38,11 @@
 public with sharing class BGE_DataImportBatchEntry_CTRL {
 
     /*******************************************************************************************************
+    * @description The number of additional Data Import Records to load on each infinite scroll query
+    */
+    private static Integer loadSize = 50;
+
+    /*******************************************************************************************************
     * @description Checks for field permissions to create a new Batch
     * @return void; throws an AuraHandledException if any fields fail FLS check
     */
@@ -55,7 +60,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     @AuraEnabled
     public static String deleteDataImportRow(Id batchId, Id dataImportId) {
         delete new DataImport__c(Id = dataImportId);
-        return JSON.serialize(getDataImportRows(batchId));
+        return JSON.serialize(getDataImportRows(batchId, 50));
     }
 
     /*******************************************************************************************************
@@ -71,12 +76,18 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         }
 
         DataImportModel dataImportModel = new DataImportModel();
+        Integer rowOffset = 0;
 
         dataImportModel.id = batchId;
-        dataImportModel.dataImportRows = getDataImportRows(batchId);
+        dataImportModel.dataImportRows = getDataImportRows(batchId, rowOffset);
         dataImportModel.columns = getColumns(batchId);
         dataImportModel.labels = getBatchDataImportLabels();
         dataImportModel.isNamespaced = String.isNotBlank(UTIL_Namespace.getNamespace());
+        dataImportModel.totalCountOfRows = getDataImportRowsTotalCount(batchId);
+
+        AggregateResult[] aggResult = getDataImportRowsTotalAmount(batchId);
+        dataImportModel.totalRowAmount = (Decimal)aggResult[0].get('amount');
+
 
         // check permissions on hard coded fields
         BGE_BatchGiftEntry_UTIL.checkFieldPermissions(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), getDataImportFields());
@@ -85,16 +96,27 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description updates data import records
+    * @description updates data import records and returns updated totals
     * @param dataImports: list of the NPSP_Data_Import__c record to update
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
-    * @return updated list of data import records
+    * @return updated model with total amount and number of rows
     */
     @AuraEnabled
-    public static List<DataImportRow> updateDataImports(List<DataImport__c> dataImports, Id batchId) {
-        Database.update(dataImports);
+    public static String updateDataImports(List<DataImport__c> dataImports, Id batchId) {
+        try {
+            Database.update(dataImports);
 
-        return getDataImportRows(batchId);
+            DataImportModel dataImportModel = new DataImportModel();
+            dataImportModel.id = batchId;
+
+            dataImportModel.totalCountOfRows = getDataImportRowsTotalCount(batchId);
+            AggregateResult[] aggResult = getDataImportRowsTotalAmount(batchId);
+            dataImportModel.totalRowAmount = (Decimal)aggResult[0].get('amount');
+            return JSON.serialize(dataImportModel);
+
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
     }
 
     /*******************************************************************************************************
@@ -124,11 +146,11 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return list of custom DataImportRow objects for use in the lightning:datatable
     */
     @AuraEnabled
-    public static List<DataImportRow> getDataImportRows(Id batchId){
+    public static List<DataImportRow> getDataImportRows(Id batchId, Integer offset){
 
         try {
             List<DataImportRow> rows = new List<DataImportRow>();
-            List<DataImport__c> dataImports = getDataImportRecordsByBatchId(batchId);
+            List<DataImport__c> dataImports = getDataImportRecordsByBatchId(batchId, offset);
             for (DataImport__c dataImportRecord : dataImports) {
                 rows.add(new DataImportRow(dataImportRecord));
             }
@@ -261,6 +283,24 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description Gets the count of Data Import Batch records in a particular batch
+    * @param recordId the ID of the NPSP_Data_Import_Batch__c
+    * @return Integer count of batch records
+    */
+    private static Integer getDataImportRowsTotalCount(Id recordId) {
+        return [SELECT Count() FROM DataImport__c WHERE NPSP_Data_Import_Batch__c =: recordId];
+    }
+
+    /*******************************************************************************************************
+    * @description Gets the sum of the amount totals of all rows for that batch
+    * @param recordId the ID of the NPSP_Data_Import_Batch__c
+    * @return Decimal amount
+    */
+    private static AggregateResult[] getDataImportRowsTotalAmount(Id recordId) {
+        return [SELECT Sum(Donation_Amount__c)amount FROM DataImport__c WHERE NPSP_Data_Import_Batch__c =: recordId];
+    }
+
+    /*******************************************************************************************************
     * @description Retrieves the related list of columns defined by users in the Batch record Active_Fields__c
     * @return list of Columns to use in BGE_DataImportBatchEntry table
     */
@@ -289,13 +329,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                         col.defaultValue = field.defaultValue;
                         col.required = field.requiredInEntryForm;
                         col.hide = field.hide;
-                        col.type = dataImportDFR.getType().name().toLowerCase();
-                        if (col.type == 'date') {
-                            col.type = 'date-local';
-                        }
-                        if (col.type == 'double') {
-                            col.type = 'number';
-                        }
+                        col.type = UTIL_LightningComponentSupport.getLightningDataType(dataImportDFR.getType().name());
                         col.typeAttributes = '{}';
 
                         col.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(col.fieldName);
@@ -361,7 +395,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportRecords, true);
         }
 
-        return getDataImportRows(batchId);
+        return getDataImportRows(batchId, 50);
     }
 
     /*******************************************************************************************************
@@ -369,20 +403,21 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @param batchId a Data Import Batch Id
     * @return List<DataImport__c>
     */
-    public static List<DataImport__c> getDataImportRecordsByBatchId(Id batchId) {
+    public static List<DataImport__c> getDataImportRecordsByBatchId(Id batchId, Integer offset) {
 
         List<String> dataImportFields = getDataImportFields(batchId);
 
         String query = 'SELECT ' + String.join(dataImportFields,', ') +
             ' FROM DataImport__c' +
             ' WHERE NPSP_Data_Import_Batch__c = :batchId' +
-            ' ORDER BY CreatedDate ASC';
-
+            ' ORDER BY CreatedDate DESC' +
+            ' LIMIT ' + loadSize +
+            ' OFFSET ' + offset;
         return Database.query(query);
     }
 
     /*******************************************************************************************************
-    * @description returns a list of DataImport__c records from a set of Ids
+    * @description returns a full list of DataImport__c records from a set of Ids
     * @param dataImportIds set of DataImport__c Ids
     * @return List<DataImport__c>
     */
@@ -393,7 +428,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         String query = 'SELECT ' + String.join(dataImportFields,', ') +
             ' FROM DataImport__c' +
             ' WHERE Id IN :dataImportIds' +
-            ' ORDER BY CreatedDate ASC';
+            ' ORDER BY CreatedDate DESC';
 
         return Database.query(query);
     }
@@ -458,6 +493,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         @AuraEnabled public List<Column> columns;
         @AuraEnabled public Boolean isNamespaced;
         @AuraEnabled public Map<String, String> labels;
+        @AuraEnabled public Integer totalCountOfRows;
+        @AuraEnabled public Decimal totalRowAmount;
     }
 
     /*******************************************************************************************************

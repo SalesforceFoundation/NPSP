@@ -76,6 +76,33 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
     }
 
     /*********************************************************************************************************
+    * @description Tests that updateDataImports() updates records and returns updated totals
+    */
+
+    @isTest
+    static void testUpdateDataImports() {
+        Id batchId = createDataImportBatch();
+        String newName = 'New Name';
+        Integer totalRecords = 2;
+        Decimal totalAmount = 5.0;
+        List<DataImport__c> dataImports = createDataImports(totalRecords, batchId);
+
+        dataImports[0].Account1_Name__c = newName;
+        dataImports[0].Donation_Amount__c = totalAmount;
+
+        Test.startTest();
+        String jsonModel = BGE_DataImportBatchEntry_CTRL.updateDataImports(dataImports, batchId);
+        DataImport__c updatedDataImport = [SELECT Id, Account1_Name__c FROM DataImport__c WHERE Id =: dataImports[0].Id];
+        Test.stopTest();
+
+        BGE_DataImportBatchEntry_CTRL.DataImportModel model = (BGE_DataImportBatchEntry_CTRL.DataImportModel)JSON.deserialize(jsonModel,
+                BGE_DataImportBatchEntry_CTRL.DataImportModel.class);
+        System.assertEquals(newName, updatedDataImport.Account1_Name__c);
+        System.assertEquals(model.totalCountOfRows, totalRecords);
+        System.assertEquals(model.totalRowAmount, totalAmount);
+    }
+
+    /*********************************************************************************************************
     * @description Tests getDataImportModel() for a new record
     */
 

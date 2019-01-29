@@ -49,11 +49,12 @@
     <aura:attribute name="donorType" type="String" default="Contact1" description="Used to circumvent unhelpful labeling of Account1/Contact1" access="public"/>
     <aura:attribute name="record" type="Object" description="Batch record information used in the Data Service." access="public" />
     <aura:attribute name="totals" type="Map" default="{countGifts: 0, totalGiftAmount: 0}" description="Map to track data count and amount totals" access="public"/>
-    <aura:attribute name="batchFields" type="List" description="Fields that drive force:recordData"/>
-    <aura:attribute name="isLoaded" type="Boolean" default="false" description="Updated in setModel when data is loaded"/>
-    <aura:attribute name="isNamespaced" type="Boolean" default="true" description="Indicates if org has namespacing"/>
-    <aura:attribute name="entryFormBody" type="Aura.Component[]" description="Facet used to hold the BGE_EntryForm component"/>
-    <aura:attribute name="sObjectName" type="String" />
+    <aura:attribute name="batchFields" type="List" description="Fields that drive force:recordData" access="public"/>
+    <aura:attribute name="isLoaded" type="Boolean" default="false" description="Updated in setModel when data is loaded" access="public"/>
+    <aura:attribute name="isNamespaced" type="Boolean" default="true" description="Indicates if org has namespacing" access="public"/>
+    <aura:attribute name="entryFormBody" type="Aura.Component[]" description="Facet used to hold the BGE_EntryForm component" access="public"/>
+    <aura:attribute name="totalNumberOfRows" type="Integer" description="Total number of data import records in the datatable"/>
+    <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true" access="private"/>
 
     <!--Events-->
     <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
@@ -116,7 +117,7 @@
 
         <!--Start BGE Table-->
         <lightning:layoutItem size="12" class="slds-p-vertical_x-small">
-            <lightning:card title="{!$Label.c.bgeGridAllGifts}" class="bgeCard">
+            <lightning:card title="{!$Label.c.bgeGridAllGifts}">
 
                 <lightning:spinner aura:id="dataTableSpinner" alternativeText="{!$Label.c.labelMessageLoading}"/>
 
@@ -180,16 +181,18 @@
                 <!--End expected totals-->
 
                 <aura:if isTrue="{!notequals(v.data.length, 0)}">
-                    <div class="{!if(lessthan(v.data.length, 4), 'datatableContainer', '')+' slds-p-top_small'}">
+                    <div class="slds-p-top_small" style="height: 350px">
                         <lightning:datatable
                                 aura:id="dataImportRowsDataTable"
                                 columns="{!v.columns}"
                                 data="{!v.data}"
                                 errors="{!v.errors}"
+                                enableInfiniteLoading="{!v.enableInfiniteLoading}"
+                                hideCheckboxColumn="true"
                                 keyField="Id"
                                 oncellchange="{!c.onCellChange}"
+                                onloadmore="{!c.onLoadMore}"
                                 minColumnWidth="150"
-                                hideCheckboxColumn="true"
                                 onrowaction="{!c.handleRowAction}"
                                 showRowNumberColumn="true"
                         />
