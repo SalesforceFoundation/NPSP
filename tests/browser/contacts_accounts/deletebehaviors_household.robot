@@ -23,6 +23,6 @@ Delete Contact with Closed Won Opportunity from Household
     Go To Object Home    Contact    
     Select Row    &{Contact}[FirstName] &{Contact}[LastName]
     Click Link    title=Delete
-    Select Frame With ID    vfFrameId
+    Select Frame with Name    vfFrameId
     Click Button With Value    Delete Account
     Page Should Contain    Error
