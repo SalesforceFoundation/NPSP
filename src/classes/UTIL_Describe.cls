@@ -314,6 +314,23 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
+    * @description returns friendly label for standard User lookups when we need to display them in custom UI.
+    * This is necessary because these labels do not exist in any schema describe available.
+    * @return string, translatable & friendly label without 'Id'
+    */
+    public static String getUserReferenceFieldLabel(DescribeFieldResult dfr) {
+        if (dfr.name == 'CreatedById') {
+            return Label.stgCreatedBy;
+        } else if (dfr.name == 'OwnerId') {
+            return Label.leadConvertOwner;
+        } else if (dfr.name == 'LastModifiedById') {
+            return Label.stgLastModifiedBy;
+        } else {
+            return dfr.label;
+        }
+    }
+
+    /*******************************************************************************************************
     * @description checks whether the field exists
     * @param objectName the name of the object to look up
     * @param fieldName the name of the field to look up -- LOWERCASE
@@ -368,28 +385,29 @@ public class UTIL_Describe {
 
     /*******************************************************************************************************
     * @description utility to return a list of strings from a field set.
-    * @param strObject the name of the object
-    * @param strFS the name of the object's field set
+    * @param obj the namespaced name of the object
+    * @param fieldSet the namespaced name of the object's field set
     * @return a list of strings of field names in the field set
     */
-    // utility to return a list of strings from a field set.
-    public static list<string> listStrFromFieldSet(string strObject, string strFS) {
-        list<string> listStrFields = new list<string>();
+    public static List<String> listStrFromFieldSet(String obj, String fieldSetName) {
+        List<String> fieldNames = new List<String>();
         if (gd==null) gd = Schema.getGlobalDescribe();
-        Schema.SObjectType targetType = gd.get(strObject);
-        Schema.DescribeSObjectResult d = targetType.getDescribe(); 
-        Schema.FieldSet fs = d.fieldSets.getMap().get(strFS); 
-        if (fs == null) {
+        Schema.SObjectType targetType = gd.get(obj);
+        Schema.DescribeSObjectResult objectDescribe = targetType.getDescribe();
+        Schema.FieldSet fieldSetDescribe = objectDescribe.fieldSets.getMap().get(fieldSetName);
+        if (fieldSetDescribe == null) {
             return null;
         } else {
-            for(Schema.FieldSetMember f : fs.getFields()) {
-                if (f.getFieldPath().contains('.')) {
-                    throw (new SchemaDescribeException('Related field \'' + f.getFieldPath() + '\' not supported ' +
-                        'in field set \'' + strFS + '\'.  You can only include fields directly on object \'' + strObject + '\'.'));
+            for(Schema.FieldSetMember fieldSetMember : fieldSetDescribe.getFields()) {
+                if (fieldSetMember.getFieldPath().contains('.')) {
+                    String errorMessage = 'Related field \'' + fieldSetMember.getFieldPath() +
+                            '\' not supported ' + 'in field set \'' + fieldSetName +
+                            '\'.  You can only include fields directly on object \'' + obj + '\'.';
+                    throw (new SchemaDescribeException(errorMessage));
                 }
-                listStrFields.add(f.getFieldPath());
+                fieldNames.add(fieldSetMember.getFieldPath());
             }
-            return listStrFields;
+            return fieldNames;
         }
     }
 
