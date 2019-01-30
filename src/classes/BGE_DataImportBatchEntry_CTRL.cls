@@ -52,15 +52,21 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description deletes DataImport__c record
+    * @description deletes DataImport__c record and returns updated totals in the model
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
     * @param dataImportId: ID of the DataImport__c
-    * @return serialized string of DataImportRow for use in the lightning:datatable
+    * @return String serialized DataImportModel to update totals
     */
     @AuraEnabled
     public static String deleteDataImportRow(Id batchId, Id dataImportId) {
-        delete new DataImport__c(Id = dataImportId);
-        return JSON.serialize(getDataImportRows(batchId, 50));
+        try {
+            delete new DataImport__c(Id = dataImportId);
+
+            DataImportModel dataImportModel = getUpdatedTotals(batchId);
+            return JSON.serialize(dataImportModel);
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
     }
 
     /*******************************************************************************************************
@@ -121,9 +127,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     public static void updateDataImportRecord(DataImport__c dataImport) {
         try {
             Database.update(dataImport);
-        } catch (Exception e) {
+        } catch (Exception ex) {
             //todo: error message that says data hasn't actually been saved + error message
-            throw new AuraHandledException(e.getMessage());
+            throw new AuraHandledException(ex.getMessage());
         }
     }
 
@@ -165,8 +171,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
             return rows;
         }
-        catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
+        catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
         }
     }
 
@@ -598,8 +604,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 this.errors = errors;
 
             }
-            catch (Exception e) {
-                throw new AuraHandledException(e.getMessage());
+            catch (Exception ex) {
+                throw new AuraHandledException(ex.getMessage());
             }
         }
     }
