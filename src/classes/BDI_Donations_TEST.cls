@@ -287,9 +287,6 @@ public with sharing class BDI_Donations_TEST {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        // Disable auto payment creation for this test
-        //UTIL_CustomSettingsFacade.getContactsSettings().npe01__Payments_Enabled__c = false;
-
         createTestData();
 
         DataImportBatch__c batch = new DataImportBatch__c(name='testBatch');
@@ -298,17 +295,7 @@ public with sharing class BDI_Donations_TEST {
         batch.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
                 UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
         insert batch;
-        //System.assertEquals(0,[SELECT Count() FROM npe01__OppPayment__c]);
-
-        npe01__OppPayment__c pmt = new npe01__OppPayment__c(
-                npe01__Opportunity__c = listOppT[1].Id,
-                npe01__Payment_Amount__c = listOppT[1].Amount,
-                npe01__Scheduled_Date__c = System.today()
-        );
-        //insert pmt;
-
-        // turn payments back on so opps will auto-close
-        //UTIL_CustomSettingsFacade.getContactsSettings().npe01__Payments_Enabled__c = true;
+        System.assertEquals(2,[SELECT Count() FROM npe01__OppPayment__c]);
 
         List<npe01__OppPayment__c> payments = [SELECT Id,npe01__Opportunity__c,
                                                         npe01__Payment_Amount__c,
@@ -381,28 +368,30 @@ public with sharing class BDI_Donations_TEST {
         System.assertEquals(System.today(), opps[1].CloseDate);
 
         payments = [SELECT Id,
-                                                    npe01__Paid__c,
-                                                    npe01__Payment_Amount__c,
-                                                    npe01__Payment_Method__c,
-                                                    npe01__Check_Reference_Number__c,
-                                                    npe01__Payment_Date__c
-                                                    FROM npe01__OppPayment__c
-                                                    WHERE npe01__Opportunity__c IN :listOppT
-                                                    ORDER BY npe01__Opportunity__r.Id, CreatedDate];
-        System.assertEquals(3, payments.size());
+                            npe01__Paid__c,
+                            npe01__Payment_Amount__c,
+                            npe01__Payment_Method__c,
+                            npe01__Check_Reference_Number__c,
+                            npe01__Payment_Date__c
+                            FROM npe01__OppPayment__c
+                            WHERE npe01__Opportunity__c IN :listOppT
+                            ORDER BY npe01__Opportunity__r.Id, CreatedDate];
+        // there should be the two automatically created payments, plus the newly created payment
+        System.assertEquals(3, payments.size(), 'There should be three payment records.');
+
         // user-requested new payment is worth 50% of oppty and was paid today
         npe01__OppPayment__c newlyCreatedPayment = payments[1];
-        System.assertEquals(opps[0].Amount/2, newlyCreatedPayment.npe01__Payment_Amount__c);
-        System.assertEquals('Check', newlyCreatedPayment.npe01__Payment_Method__c);
-        System.assertEquals('abc', newlyCreatedPayment.npe01__Check_Reference_Number__c);
+        System.assertEquals(dataImports[0].Donation_Amount__c, newlyCreatedPayment.npe01__Payment_Amount__c);
+        System.assertEquals(dataImports[0].Payment_Method__c, newlyCreatedPayment.npe01__Payment_Method__c);
+        System.assertEquals(dataImports[0].Payment_Check_Reference_Number__c, newlyCreatedPayment.npe01__Check_Reference_Number__c);
         System.assertEquals(true, newlyCreatedPayment.npe01__Paid__c);
         System.assertEquals(System.today(), newlyCreatedPayment.npe01__Payment_Date__c);
 
         // updated payment paid off entire opp today
         npe01__OppPayment__c updatedPayment = payments[2];
-        System.assertEquals(opps[1].Amount, updatedPayment.npe01__Payment_Amount__c);
-        System.assertEquals('Visa', updatedPayment.npe01__Payment_Method__c);
-        System.assertEquals('1234', updatedPayment.npe01__Check_Reference_Number__c);
+        System.assertEquals(dataImports[1].Donation_Amount__c, updatedPayment.npe01__Payment_Amount__c);
+        System.assertEquals(dataImports[1].Payment_Method__c, updatedPayment.npe01__Payment_Method__c);
+        System.assertEquals(dataImports[1].Payment_Check_Reference_Number__c, updatedPayment.npe01__Check_Reference_Number__c);
         System.assertEquals(true, updatedPayment.npe01__Paid__c);
         System.assertEquals(System.today(), updatedPayment.npe01__Payment_Date__c);
 
@@ -415,11 +404,17 @@ public with sharing class BDI_Donations_TEST {
                         FROM DataImport__c
                         ORDER BY Id];
         System.assertEquals(2, dataImports.size());
+
         System.assertEquals(dataImports[0].DonationImported__c, opps[0].Id);
-        System.assertEquals(dataImports[1].DonationImported__c, opps[1].Id);
         System.assertEquals(Label.bdiMatchedApplyNewPayment, dataImports[0].DonationImportStatus__c);
+        System.assertEquals(payments[1].Id, dataImports[0].PaymentImported__c);
+        System.assertEquals(Label.bdiCreated, dataImports[0].PaymentImportStatus__c);
+
+        System.assertEquals(dataImports[1].DonationImported__c, opps[1].Id);
         System.assertEquals(Label.bdiMatchedByUser, dataImports[1].DonationImportStatus__c);
-        // todo : assert paymentimported and paymentimportstatus fields as well
+        System.assertEquals(payments[2].Id, dataImports[1].PaymentImported__c);
+        System.assertEquals(Label.bdiMatchedByUser, dataImports[1].PaymentImportStatus__c);
+
     }
 
     /*********************************************************************************************************

@@ -627,16 +627,16 @@ public class BDI_Donations {
 
     /*******************************************************************************************************
     * @description Updates any fields on payment objects created for the Data Import opportunities.
-    * @param listDIDonations The DI Records that have donations to import
+    * @param dataImports The DI Records that have donations to import
     * @return void
     */
-    public void updatePayments(list<DataImport__c> listDIDonations) {
+    public void updatePayments(List<DataImport__c> dataImports) {
 
         List<npe01__OppPayment__c> paymentsToUpdate = new List<npe01__OppPayment__c>();
-        List<DataImport__c> dataImportsToUpdate = new List<DataImport__c>();
+        List<DataImport__c> dataImportsForErrors = new List<DataImport__c>();
         
         // update payments
-        for (DataImport__c di : listDIDonations) {
+        for (DataImport__c di : dataImports) {
             // skip di's that already have an error
             if (di.Status__c == BDI_DataImport_API.bdiFailed) {
                 continue;
@@ -653,16 +653,23 @@ public class BDI_Donations {
                     // if it's marked paid, we know we need to update it regardless of any copied fields
                     if (cPropSet > 0 || pmt.npe01__Paid__c) {
                         paymentsToUpdate.add(pmt);
-                        dataImportsToUpdate.add(di);
+                        dataImportsForErrors.add(di);
                     }
                 }
             }
         }
+
         List<Database.UpsertResult> saveResults = UTIL_DMLService.upsertRecords(paymentsToUpdate, false);
         for (Integer i = 0; i < saveResults.size(); i++) {
             Database.UpsertResult sr = saveResults[i];
             if (!sr.isSuccess()) {
-                bdi.LogBDIError(dataImportsToUpdate[i], sr.getErrors()[i].getMessage(), null);
+                bdi.LogBDIError(dataImportsForErrors[i], sr.getErrors()[i].getMessage(), null);
+            }
+        }
+
+        for (DataImport__c di : dataImports) {
+            if (di.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
+                di.PaymentImported__c = mapDIIdToPmt.get(di.Id).Id;
             }
         }
     }
