@@ -462,23 +462,33 @@
      * @param row: Information about which row the action was called from
      */
     handleDeleteRowAction: function(component, row) {
-        let self = this;
-        self.showSpinner(component);
+        this.showSpinner(component);
         let action = component.get('c.deleteDataImportRow');
         action.setParams({batchId: component.get('v.recordId'), dataImportId: row.Id});
         action.setCallback(this, function (response) {
             const state = response.getState();
             if (state === 'SUCCESS') {
-                const returnValue = JSON.parse(response.getReturnValue());
-                self.setDataTableRows(component, returnValue);
-                self.setTotals(component, returnValue);
-                self.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftDeleted'), 'success');
+                const model = JSON.parse(response.getReturnValue());
+                this.removeDataImportRow(component, row);
+                this.setTotals(component, model);
+                this.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftDeleted'), 'success');
             } else {
-                self.handleApexErrors(component, response.getError());
+                this.handleApexErrors(component, response.getError());
             }
-            self.hideSpinner(component);
+            this.hideSpinner(component);
         });
         $A.enqueueAction(action);
+    },
+
+    /**
+     * @description: Removes the selected row from the datatable
+     * @param row: Selected row that has been deleted from the server
+     */
+    removeDataImportRow: function(component, row) {
+        var rows = component.get('v.data');
+        var rowIndex = rows.indexOf(row);
+        rows.splice(rowIndex, 1);
+        component.set('v.data', rows);
     },
 
     /**

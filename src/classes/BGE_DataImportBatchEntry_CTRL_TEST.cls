@@ -152,7 +152,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         List<DataImport__c> dataImports = createDataImports(2, batchId);
 
         Test.startTest();
-        String jsonModel = BGE_DataImportBatchEntry_CTRL.deleteDataImportRow(batchId, dataImports[0].id);
+        BGE_DataImportBatchEntry_CTRL.deleteDataImportRow(batchId, dataImports[0].Id);
         List<DataImport__c> updatedDataImports = [SELECT Name, Id FROM DataImport__c WHERE NPSP_Data_Import_Batch__c = :batchId];
         Test.stopTest();
 
