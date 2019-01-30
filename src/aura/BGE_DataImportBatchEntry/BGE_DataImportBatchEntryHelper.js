@@ -9,7 +9,6 @@
             if (state === 'SUCCESS') {
                 this.openBatchWizard(component, event);
             } else if (state === 'ERROR') {
-                console.log(response.getError());
                 this.handleApexErrors(component, response.getError());
             }
         });
@@ -129,23 +128,15 @@
      * @description: saves inline edits from dataTable.
      * @param draftValues: changed values in the table with IDs and any changed values by API name
      */
-    handleTableSave: function(component, draftValues) {
+    handleRowEdit: function(component, draftValue) {
         this.showSpinner(component);
-        var action = component.get('c.updateDataImports');
-        action.setParams({dataImports: draftValues, batchId: component.get('v.recordId')});
+        var action = component.get('c.updateDataImportRecord');
+        action.setParams({dataImport: draftValue, batchId: component.get('v.recordId')});
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
                 this.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftUpdated'), 'success');
-                var model = JSON.parse(response.getReturnValue());
-                this.setTotals(component, model);
-
-                //call dry run in callback to speed up refresh of datatable rows
-                var recordIds = [];
-                draftValues.forEach(function(draftVal){
-                    recordIds.push(draftVal.Id);
-                });
-                this.runDryRun(component, recordIds);
+                this.runDryRun(component, draftValue.Id, false);
             } else {
                 this.handleApexErrors(component, response.getError());
             }
@@ -216,22 +207,65 @@
      * @description: starts the BDI dry run to verify DataImport__c matches
      * @param recordIds: list of DataImport__c RecordIds to check for dry run
      */
-    runDryRun: function(component, recordIds) {
+    runDryRun: function(component, recordId, isNewRecord) {
         var action = component.get('c.runDryRun');
         var batchId = component.get('v.recordId');
         this.showSpinner(component);
-        action.setParams({dataImportIds: recordIds, batchId: batchId});
+        action.setParams({dataImportId: recordId, batchId: batchId});
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
-                var responseRows = response.getReturnValue();
-                this.setDataTableRows(component, [], responseRows);
+                let model = JSON.parse(response.getReturnValue());
+                this.setTotals(component, model);
+                if (model.dataImportRows.length > 0) {
+                    let updatedRecord = model.dataImportRows[0];
+                    this.updateTableRecord(component, updatedRecord, isNewRecord);
+                }
             } else {
                 this.handleApexErrors(component, response.getError());
             }
             this.hideSpinner(component);
         });
         $A.enqueueAction(action);
+    },
+
+    /**
+     * @description: //todo: desc or combine this
+     * @param updatedRecord: DataImport__c record that needs to be updated in the table
+     */
+    updateTableRecord: function(component, updatedRecord, isNewRecord) {
+        let rows = component.get('v.data');
+
+        var errors = [];
+        let tableRow = updatedRecord.record;
+        tableRow.donorName = updatedRecord.donorName;
+        tableRow.donorLink = updatedRecord.donorLink;
+        tableRow.matchedRecordUrl = updatedRecord.matchedRecordUrl;
+        tableRow.matchedRecordLabel = updatedRecord.matchedRecordLabel;
+        tableRow.errors = updatedRecord.errors;
+
+        //get payment and opportunity error information if import failed
+        if (tableRow.errors.length > 0) {
+            let rowError = {
+                id: tableRow.Id,
+                title: $A.get('$Label.c.PageMessagesError'),
+                messages: tableRow.errors
+            };
+            this.handleTableErrors(component, errors);
+        }
+
+        if (isNewRecord) {
+            rows.unshift(tableRow);
+        } else {
+            for (let i = 0; i < rows.length; i++) {
+                if (rows[i].Id === tableRow.Id) {
+                    rows[i] = tableRow;
+                    break;
+                }
+            }
+        }
+
+        component.set('v.data', rows);
     },
 
     /**
