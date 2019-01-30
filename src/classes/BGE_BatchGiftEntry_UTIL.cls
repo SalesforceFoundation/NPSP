@@ -207,9 +207,10 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     private static void handleMissingPermissions(List<String> missingPermissions) {
 
         if (!missingPermissions.isEmpty()) {
-            throw new AuraHandledException(
-                Label.bgeFLSError + ' [' + truncateList(missingPermissions, 3) + ']'
-            );
+            String errorMsg = Label.bgeFLSError + ' [' + truncateList(missingPermissions, 3) + ']';
+            AuraHandledException ex = new AuraHandledException(errorMsg);
+            ex.setMessage(errorMsg);
+            throw ex;
         }
     }
 

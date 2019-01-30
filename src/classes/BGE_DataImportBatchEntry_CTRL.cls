@@ -268,13 +268,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                         col.defaultValue = field.defaultValue;
                         col.required = field.requiredInEntryForm;
                         col.hide = field.hide;
-                        col.type = dataImportDFR.getType().name().toLowerCase();
-                        if (col.type == 'date') {
-                            col.type = 'date-local';
-                        }
-                        if (col.type == 'double') {
-                            col.type = 'number';
-                        }
+                        col.type = UTIL_LightningComponentSupport.getLightningDataType(dataImportDFR.getType().name());
                         col.typeAttributes = '{}';
 
                         col.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(col.fieldName);
