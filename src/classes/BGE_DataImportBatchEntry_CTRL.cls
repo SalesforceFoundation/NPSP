@@ -124,9 +124,10 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return void
     */
     @AuraEnabled
-    public static void updateDataImportRecord(DataImport__c dataImport) {
+    public static String updateAndDryRunRow(Id batchId, DataImport__c dataImport) {
         try {
             Database.update(dataImport);
+            return runDryRun(dataImport.Id, batchId);
         } catch (Exception ex) {
             //todo: error message that says data hasn't actually been saved + error message
             throw new AuraHandledException(ex.getMessage());
