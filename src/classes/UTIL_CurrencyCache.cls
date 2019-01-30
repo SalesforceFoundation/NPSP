@@ -77,6 +77,12 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
             // If a set of rates was retrieved, find the effective rate based on the date
             if (cachedMapOfRatesByCurrencyCode.containsKey(currCode)) {
                 UTIL_CurrencyCache.CurrencyData currData = cachedMapOfRatesByCurrencyCode.get(currCode);
+                
+                //In this case the currency was likely disabled and the rates are null e.g. {AUD=null} 
+                //Return 1, to align with existing logic.
+                if(currData == null){
+                    return 1;
+                }
 
                 if (dt == null || currData.rates.size() == 0) {
                     return currData.defaultRate;
