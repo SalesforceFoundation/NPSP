@@ -30,7 +30,7 @@
         var channel = event.getParam('channel');
 
         if (channel === 'onSuccess') {
-            helper.runDryRun(component, [message.recordId]);
+            helper.runDryRun(component, message.recordId, true);
             helper.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftSaved'), 'success');
             helper.createEntryForm(component);
         } else if (channel === 'onCancel') {
@@ -52,8 +52,10 @@
      */
     onCellChange: function (component, event, helper) {
         var values = event.getParam('draftValues');
+        //cells only change one at a time, so pop the value out of the array
+        let changedValue = values[0];
         // validation would happen here
-        helper.handleTableSave(component, values);
+        helper.handleRowEdit(component, changedValue);
         component.find('dataImportRowsDataTable').set('v.draftValues', null);
     },
 
