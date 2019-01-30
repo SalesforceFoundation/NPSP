@@ -85,9 +85,8 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     * @param paymentsById Map to fill in of DI Id's to matched Payments
     * @return void
     */
-    public void match(BDI_DataImportService bdi, list<DataImport__c> dataImports,
+    public void match(BDI_DataImportService bdi, List<DataImport__c> dataImports,
         Map<Id, Opportunity> opportunitiesById, Map<Id, npe01__OppPayment__c> paymentsById) {
-        System.debug('trying to match!');
 
         this.bdi = bdi;
 
@@ -103,9 +102,10 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         // now look for the matching Opp for each donation
         for (DataImport__c di : dataImports) {
             // User told us in BGE interface to not match this record and only create new Opportunity
-            //if (di.DonationImportStatus__c == label.bdiMatchedByUser
-            //        || di.DonationImportStatus__c == label.bdiMatchedApplyNewPayment) {
-            if (di.DonationImportStatus__c != label.bdiMatchedByUserNewOpp) {
+            // OR User told us in BGE interface to apply a new payment to a given Opportunity
+            // TODO: could this be summarized as "new opp OR donation already specified"?
+            if (di.DonationImportStatus__c != Label.bdiMatchedByUserNewOpp
+                    && di.DonationImportStatus__c != Label.bdiMatchedApplyNewPayment) {
                 ID id;
                 if (di.Donation_Donor__c == 'Account1') {
                     id = bdi.AccountFromDi(di, 1).Id;
@@ -202,13 +202,14 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                     // if unique, remove this opp from the list to avoid matching it again.
                     if (indexesOfDonationMatches.size() == 1) {
                         // User told us in BGE interface to not match this record and use specified record
-                        if (di.DonationImportStatus__c != label.bdiMatchedByUser) {
-                            di.DonationImportStatus__c = (isMatchedByOppId ? label.bdiMatchedId : label.bdiMatched);
+                        if (di.DonationImportStatus__c != Label.bdiMatchedByUser &&
+                                di.DonationImportStatus__c != Label.bdiMatchedApplyNewPayment) {
+                            di.DonationImportStatus__c = (isMatchedByOppId ? Label.bdiMatchedId : Label.bdiMatched);
                         }
                         contactAndAccountOpportunities.remove(bestOpportunityIndex);
                     } else {
                         // we have multiple matches, we want to record them all, and fixup our status
-                        di.DonationImportStatus__c = label.bdiMatchedBest;
+                        di.DonationImportStatus__c = Label.bdiMatchedBest;
                         for (Integer i = 0; i < indexesOfDonationMatches.size(); i++) {
                             Opportunity oppT = contactAndAccountOpportunities[indexesOfDonationMatches[i]];
                             if (di.Donation_Possible_Matches__c == null) {
@@ -262,7 +263,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 } else {
                     di.DonationImportStatus__c = label.bdiMatchedNone;
                 }
-            //}
+            }
         }
     }
 
