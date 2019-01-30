@@ -125,18 +125,23 @@
     },
 
     /**
-     * @description: saves inline edits from dataTable.
+     * @description: saves inline edits from dataTable and completes dry run for the record
      * @param draftValues: changed values in the table with IDs and any changed values by API name
      */
     handleRowEdit: function(component, draftValue) {
         this.showSpinner(component);
-        var action = component.get('c.updateDataImportRecord');
+        var action = component.get('c.updateAndDryRunRow');
         action.setParams({dataImport: draftValue, batchId: component.get('v.recordId')});
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
                 this.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftUpdated'), 'success');
-                this.runDryRun(component, draftValue.Id, false);
+                let model = JSON.parse(response.getReturnValue());
+                this.setTotals(component, model);
+                if (model.dataImportRows.length > 0) {
+                    let updatedRecord = model.dataImportRows[0];
+                    this.updateTableRecord(component, updatedRecord, false);
+                }
             } else {
                 this.handleApexErrors(component, response.getError());
             }

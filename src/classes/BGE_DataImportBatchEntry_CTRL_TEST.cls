@@ -91,7 +91,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         dataImports[0].Donation_Amount__c = totalAmount;
 
         Test.startTest();
-        BGE_DataImportBatchEntry_CTRL.updateDataImportRecord(dataImports[0]);
+        BGE_DataImportBatchEntry_CTRL.updateAndDryRunRow(batchId, dataImports[0]);
         DataImport__c updatedDataImport = [SELECT Id, Account1_Name__c FROM DataImport__c WHERE Id =: dataImports[0].Id];
         BGE_DataImportBatchEntry_CTRL.DataImportModel model = BGE_DataImportBatchEntry_CTRL.getUpdatedTotals(batchId);
         Test.stopTest();
