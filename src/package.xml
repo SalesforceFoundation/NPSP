@@ -82,6 +82,8 @@
         <members>BDI_PostProcess_TEST</members>
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
+        <members>BGE_BatchGiftEntryTab_CTRL</members>
+        <members>BGE_BatchGiftEntryTab_CTRL_TEST</members>
         <members>BGE_BatchGiftEntry_UTIL</members>
         <members>BGE_BatchGiftEntry_UTIL_TEST</members>
         <members>BGE_ConfigurationWizard_CTRL</members>
@@ -421,6 +423,7 @@
         <members>UTIL_IScheduled</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
+        <members>UTIL_LightningComponentSupport</members>
         <members>UTIL_ListCustomSettingsFacade</members>
         <members>UTIL_MasterSchedulable</members>
         <members>UTIL_MasterSchedulableHelper</members>
@@ -976,9 +979,9 @@
         <members>Level__c.Previous_Level_Field__c</members>
         <members>Level__c.Source_Field__c</members>
         <members>Level__c.Target__c</members>
-        <members>Levels_Settings__c.Level_Assignment_Batch_Size__c</members>
         <members>Levels_Settings__c.LastJobStartTimeAccount__c</members>
         <members>Levels_Settings__c.LastJobStartTimeContact__c</members>
+        <members>Levels_Settings__c.Level_Assignment_Batch_Size__c</members>
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Ask_Date__c</members>
@@ -1836,6 +1839,7 @@
         <members>stgCheckboxTrue</members>
         <members>stgClearErrors</members>
         <members>stgCountOf</members>
+        <members>stgCreatedBy</members>
         <members>stgDefaultValue</members>
         <members>stgDeploymentInProgress</members>
         <members>stgDeploymentTryAgain</members>
@@ -2064,6 +2068,7 @@
         <members>stgLabelYearPicklistLastYear</members>
         <members>stgLabelYearPicklistThisYear</members>
         <members>stgLabelYearPicklistYearsAgo</members>
+        <members>stgLastModifiedBy</members>
         <members>stgLinkDelete</members>
         <members>stgMultipleTributes</members>
         <members>stgMultipleTributesAdditionalWhere</members>
@@ -2537,6 +2542,7 @@
         <members>Contact.BDE_Entry_FS</members>
         <members>Contact.BDE_List_FS</members>
         <members>Contact.ContactMergeFoundFS</members>
+        <members>DataImportBatch__c.BatchGiftEntryTabColumns</members>
         <members>Engagement_Plan_Template__c.ManageEPTemplateFS</members>
         <members>Lead.BDE_Entry_FS</members>
         <members>Lead.BDE_List_FS</members>
