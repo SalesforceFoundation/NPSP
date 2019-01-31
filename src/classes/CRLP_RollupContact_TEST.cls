@@ -349,7 +349,8 @@ private class CRLP_RollupContact_TEST {
                 Type = 'New'
         ));
         if (tt == TestType.TestWithAlwaysRollupToPrimary) {
-            donationYears.add(orgDonationDate.year().format());
+            String donationYr = UTIL_String.removeNonNumericCharacters(orgDonationDate.year().format());
+            donationYears.add(donationYr);
         }
 
         // create 4 opps for con4 to test single result opp edge cases
