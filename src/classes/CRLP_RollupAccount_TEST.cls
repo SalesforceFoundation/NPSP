@@ -67,7 +67,9 @@ private class CRLP_RollupAccount_TEST {
         String filterGroupId1 = CMT_UnitTestData_TEST.getNewRecordId();
         String filterGroupId2 = CMT_UnitTestData_TEST.getNewRecordId();
 
-        String dtValue = DateTime.now().addMonths(-100).addDays(-1).format('yyyy-MM-dd');
+        DateTime dt = DateTime.now().addMonths(-100).addDays(-1);
+        String dtValue = dt.format('yyyy-MM-dd', UserInfo.getTimezone().toString());
+
         // Simple testing filters for IsWon, RecordType, and Paid/Written Off
         String filterGroupsJSON = '[' +
                 CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'TestFilterGroup1-IsWon+Paid') + ',' +
