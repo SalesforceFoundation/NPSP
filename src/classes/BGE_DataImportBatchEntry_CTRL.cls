@@ -89,9 +89,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         dataImportModel.columns = getColumns(batchId);
         dataImportModel.labels = getBatchDataImportLabels();
         dataImportModel.isNamespaced = String.isNotBlank(UTIL_Namespace.getNamespace());
-        dataImportModel.totalCountOfRows = getDataImportRowsTotalCount(batchId);
+        dataImportModel.totalCountOfRows = getDataImportBatchTotalCount(batchId);
 
-        AggregateResult[] aggResult = getDataImportRowsTotalAmount(batchId);
+        AggregateResult[] aggResult = getDataImportBatchTotalAmount(batchId);
         dataImportModel.totalRowAmount = (Decimal)aggResult[0].get('amount');
 
         // check permissions on hard coded fields
@@ -101,63 +101,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description gets updated amount total and row count for the batch
-    * @param batchId: ID of the NPSP_Data_Import_Batch__c
-    * @return updated model with total amount and number of rows
-    */
-    public static DataImportModel getUpdatedTotals(Id batchId) {
-        DataImportModel dataImportModel = new DataImportModel();
-
-        dataImportModel.id = batchId;
-        dataImportModel.totalCountOfRows = getDataImportRowsTotalCount(batchId);
-        AggregateResult[] aggResult = getDataImportRowsTotalAmount(batchId);
-        dataImportModel.totalRowAmount = (Decimal) aggResult[0].get('amount');
-
-        return dataImportModel;
-    }
-
-
-    /*******************************************************************************************************
-    * @description updates data import record
-    * @param dataImports: list of the NPSP_Data_Import__c record to update
-    * @param batchId: ID of the NPSP_Data_Import_Batch__c
-    * @return void
-    */
-    @AuraEnabled
-    public static String updateAndDryRunRow(Id batchId, DataImport__c dataImport) {
-        try {
-            Database.update(dataImport);
-            return runDryRun(dataImport.Id, batchId);
-        } catch (Exception ex) {
-            //todo: error message that says data hasn't actually been saved + error message
-            throw new AuraHandledException(ex.getMessage());
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description
-    * @param batchId: ID of the NPSP_Data_Import_Batch__c
-    * @return list of field api names
-    */
-    public static List<String> getActiveFieldNamesFromBatch(Id batchId) {
-
-        DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
-        String activeFieldsJSON = batch.Active_Fields__c;
-        List<String> activeFieldNames = new List<String>();
-
-        if (activeFieldsJSON != null) {
-            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields = (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
-            for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
-                activeFieldNames.add(field.name);
-            }
-        }
-
-        return activeFieldNames;
-    }
-
-    /*******************************************************************************************************
     * @description queries the DataImport__c records associated with the given batchId
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
+    * @param offset: next offset to query
     * @return list of custom DataImportRow objects for use in the lightning:datatable
     */
     @AuraEnabled
@@ -232,6 +178,50 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         }
     }
 
+
+    /*******************************************************************************************************
+    * @description runs BDI Dry Run against a given Id based on the processing settings of a given batch
+    * @param dataImportId: the NPSP_Data_Import__c record to update
+    * @param batchId: ID of the NPSP_Data_Import_Batch__c
+    * @return DataImportModel with updated data import record row and updated totals for the batch
+    */
+    @AuraEnabled
+    public static String runDryRun(Id dataImportId, Id batchId) {
+        try {
+            Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
+            List<DataImport__c> dataImportListToRun = prepareDataImportForDryRun(getDataImportRecordsById(batchId, dataImportId));
+            BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
+
+            DataImportModel dataImportModel = getUpdatedTotals(batchId);
+            DataImportRow processedDataImportRow = new DataImportRow(getDataImportRecordsById(batchId, dataImportId));
+            dataImportModel.dataImportRows = new List<DataImportRow>{
+                    processedDataImportRow
+            };
+
+            return JSON.serialize(dataImportModel);
+        } catch (Exception ex){
+            throw new AuraHandledException('ERROR: ' + ex.getMessage());
+        }
+    }
+
+
+    /*******************************************************************************************************
+    * @description updates data import record, dry runs the record, and returns updated totals with the new row.
+    * @param batchId: ID of the NPSP_Data_Import_Batch__c
+    * @param dataImport: the NPSP_Data_Import__c record to update
+    * @return String serialized DataImportModel to update totals
+    */
+    @AuraEnabled
+    public static String updateAndDryRunRow(Id batchId, DataImport__c dataImport) {
+        try {
+            Database.update(dataImport);
+            return runDryRun(dataImport.Id, batchId);
+        } catch (Exception ex) {
+            String saveErrorMessage = String.format(Label.CRLP_SaveError, new List<String>{Schema.SObjectType.DataImport__c.getName()});
+            throw new AuraHandledException(saveErrorMessage + '. ' + ex.getMessage());
+        }
+    }
+
     /*******************************************************************************************************
     * @description Retrieves required schema information for the component.
     * @return Map of DataImport__c object and field name keys to their labels.
@@ -298,12 +288,19 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Gets the count of Data Import Batch records in a particular batch
-    * @param recordId the ID of the NPSP_Data_Import_Batch__c
-    * @return Integer count of batch records
+    * @description gets updated amount total and row count for the batch
+    * @param batchId: ID of the NPSP_Data_Import_Batch__c
+    * @return DataImportModel updated model with total amount and number of rows
     */
-    private static Integer getDataImportRowsTotalCount(Id recordId) {
-        return [SELECT Count() FROM DataImport__c WHERE NPSP_Data_Import_Batch__c =: recordId];
+    private static DataImportModel getUpdatedTotals(Id batchId) {
+        DataImportModel dataImportModel = new DataImportModel();
+
+        dataImportModel.id = batchId;
+        dataImportModel.totalCountOfRows = getDataImportBatchTotalCount(batchId);
+        AggregateResult[] aggResult = getDataImportBatchTotalAmount(batchId);
+        dataImportModel.totalRowAmount = (Decimal) aggResult[0].get('amount');
+
+        return dataImportModel;
     }
 
     /*******************************************************************************************************
@@ -311,8 +308,17 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @param recordId the ID of the NPSP_Data_Import_Batch__c
     * @return Decimal amount
     */
-    private static AggregateResult[] getDataImportRowsTotalAmount(Id recordId) {
+    private static AggregateResult[] getDataImportBatchTotalAmount(Id recordId) {
         return [SELECT Sum(Donation_Amount__c)amount FROM DataImport__c WHERE NPSP_Data_Import_Batch__c =: recordId];
+    }
+
+    /*******************************************************************************************************
+    * @description Gets the count of Data Import Batch records in a particular batch
+    * @param recordId the ID of the NPSP_Data_Import_Batch__c
+    * @return Integer count of batch records
+    */
+    private static Integer getDataImportBatchTotalCount(Id recordId) {
+        return [SELECT Count() FROM DataImport__c WHERE NPSP_Data_Import_Batch__c =: recordId];
     }
 
     /*******************************************************************************************************
@@ -377,36 +383,12 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description runs BDI Dry Run against a given Id based on the processing settings of a given batch
-    * @return DataImportModel with updated data import record row and updated totals for the batche
-    */
-    @AuraEnabled
-    public static String runDryRun(Id dataImportId, Id batchId) {
-        try {
-            Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
-            List<DataImport__c> dataImportListToRun = prepareDataImportForDryRun(getDataImportRecordsById(batchId, dataImportId));
-            BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
-
-            DataImportModel dataImportModel = getUpdatedTotals(batchId);
-            DataImportRow processedDataImportRow = new DataImportRow(getDataImportRecordsById(batchId, dataImportId));
-            dataImportModel.dataImportRows = new List<DataImportRow>{
-                    processedDataImportRow
-            };
-
-            return JSON.serialize(dataImportModel);
-        } catch (Exception ex){
-            throw new AuraHandledException('ERROR: ' + ex.getMessage());
-        }
-    }
-
-    /*******************************************************************************************************
     * @description prepare the data import record for dry run by clearing certain fields or retaining them
     * based on if user has already selected a match, or if they want to let matching run. Either way, we want to use Dry Run
     * to check for potential errors.
     * @return List<DataImport__c> because BDI expects a list
     */
-    @AuraEnabled
-    public static List<DataImport__c> prepareDataImportForDryRun(DataImport__c dataImportRecord) {
+    private static List<DataImport__c> prepareDataImportForDryRun(DataImport__c dataImportRecord) {
         // Skip records where user has explicitly selected a matching record in BGE UI
         if (dataImportRecord.DonationImportStatus__c == Label.bdiMatchedByUser
                 || dataImportRecord.DonationImportStatus__c == Label.bdiMatchedByUserNewOpp
@@ -427,11 +409,11 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description returns a list of DataImport__c records from a batch Id
+    * @description returns an offset list of DataImport__c records from a batch Id
     * @param batchId a Data Import Batch Id
     * @return List<DataImport__c>
     */
-    public static List<DataImport__c> getDataImportRecordsByBatchId(Id batchId, Integer offset) {
+    private static List<DataImport__c> getDataImportRecordsByBatchId(Id batchId, Integer offset) {
 
         List<String> dataImportFields = getDataImportFields(batchId);
 
@@ -449,7 +431,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @param dataImportId the Id to query
     * @return DataImport__c
     */
-    public static DataImport__c getDataImportRecordsById(Id batchId, Id dataImportId) {
+    private static DataImport__c getDataImportRecordsById(Id batchId, Id dataImportId) {
 
         List<String> dataImportFields = getDataImportFields(batchId);
 
@@ -486,10 +468,31 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description reads the Active_Fields__c field to get active configured fields for the batch
+    * @param batchId: ID of the NPSP_Data_Import_Batch__c
+    * @return list of field API names
+    */
+    private static List<String> getActiveFieldNamesFromBatch(Id batchId) {
+
+        DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
+        String activeFieldsJSON = batch.Active_Fields__c;
+        List<String> activeFieldNames = new List<String>();
+
+        if (activeFieldsJSON != null) {
+            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields = (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
+            for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
+                activeFieldNames.add(field.name);
+            }
+        }
+
+        return activeFieldNames;
+    }
+
+    /*******************************************************************************************************
     * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
     * @return List<String> list of DataImport__c field api names
     */
-    public static List<String> getDataImportFields(Id batchId) {
+    private static List<String> getDataImportFields(Id batchId) {
 
         List<String> fields = getDataImportFields();
         fields.addAll(getActiveFieldNamesFromBatch(batchId));
