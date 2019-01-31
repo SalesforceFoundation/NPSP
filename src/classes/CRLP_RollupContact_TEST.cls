@@ -336,7 +336,7 @@ private class CRLP_RollupContact_TEST {
 
         // create one closed won Organization opportunity to ensure it's not included in the Contact Hard Credit rollups
         Decimal orgDonationAmt = 50000;
-        Date orgDonationDate = Date.Today().addDays(-30);
+        Date orgDonationDate = Date.today().addDays(-30);
         opps.add(new Opportunity (
                 Name = 'Test Org Opp ' + c.FirstName + ' ' + c.LastName,
                 AccountId = orgAcct.Id,
@@ -348,6 +348,10 @@ private class CRLP_RollupContact_TEST {
                 npe01__Do_Not_Automatically_Create_Payment__c = true,
                 Type = 'New'
         ));
+        if (tt == TestType.TestWithAlwaysRollupToPrimary) {
+            String donationYr = UTIL_String.removeNonNumericCharacters(orgDonationDate.year().format());
+            donationYears.add(donationYr);
+        }
 
         // create 4 opps for con4 to test single result opp edge cases
         Date earlyLastYear = Date.newInstance(Date.today().year()-1,1,1);
