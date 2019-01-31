@@ -30,7 +30,7 @@
         var channel = event.getParam('channel');
 
         if (channel === 'onSuccess') {
-            helper.runDryRun(component, message.recordId, true);
+            helper.runNewRecordDryRun(component, message.recordId);
             helper.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftSaved'), 'success');
             helper.createEntryForm(component);
         } else if (channel === 'onCancel') {

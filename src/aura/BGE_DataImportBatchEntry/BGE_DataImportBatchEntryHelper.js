@@ -106,22 +106,53 @@
 
     /**
      * @description: handles the display or clearing of errors from the results of dry run
-     * @param rowErrors: object with row Id, title, and list of associated messages
+     * @param rowErrors: list of objects with row Id, title, and list of associated messages
      */
-    handleTableErrors: function(component, rowErrors) {
-        var tableErrors = { rows: {}, table: {}, size: 0 };
+    handleNewTableErrors: function(component, newErrors) {
+        let tableErrors = component.get('v.errors');
+        if (!tableErrors) {
+            tableErrors = { rows: {}, table: {}, size: 0 };
+        }
 
-        rowErrors.forEach(function(error) {
-            var rowError = {
-                title: error.title,
-                messages: error.messages
-            };
-            tableErrors.rows[error.id] = rowError;
+        newErrors.forEach(function(error) {
+            //only insert new errors
+            if (!tableErrors.rows.hasOwnProperty(error.id)) {
+                const rowError = {
+                    title: error.title,
+                    messages: error.messages
+                };
+                tableErrors.rows[error.id] = rowError;
+            }
         });
 
-        tableErrors.size = rowErrors.length;
+        tableErrors.size = newErrors.length;
 
         component.set('v.errors', tableErrors);
+    },
+
+    /**
+     * @description: rebuilding error Object and removes any errors on the table if a row is updated or deleted
+     * @param rowId: Id of the row with the error that needs clearing
+     */
+    clearOldTableErrors: function(component, rowId) {
+        let tableErrors = component.get('v.errors');
+        if (!tableErrors) {
+            tableErrors = { rows: {}, table: {}, size: 0 };
+        }
+
+        if (tableErrors.rows.hasOwnProperty(rowId)) {
+            let updatedErrors = { rows: {}, table: {}, size: 0 };
+            let errorSize = 0;
+            let errorIds = Object.keys(tableErrors.rows);
+            errorIds.forEach(function(oldErrorId) {
+                if (oldErrorId !== rowId) {
+                    updatedErrors.rows[oldErrorId] = tableErrors.rows[oldErrorId];
+                    errorSize++;
+                }
+            });
+            updatedErrors.size = errorSize;
+            component.set('v.errors', updatedErrors);
+        }
     },
 
     /**
@@ -139,8 +170,9 @@
                 let model = JSON.parse(response.getReturnValue());
                 this.setTotals(component, model);
                 if (model.dataImportRows.length > 0) {
+                    //we only process one record at a time, but the model passes back a list
                     let updatedRecord = model.dataImportRows[0];
-                    this.updateTableRecord(component, updatedRecord, false);
+                    this.afterDryRun(component, updatedRecord, false);
                 }
             } else {
                 this.handleApexErrors(component, response.getError());
@@ -212,7 +244,7 @@
      * @description: starts the BDI dry run to verify DataImport__c matches
      * @param recordIds: list of DataImport__c RecordIds to check for dry run
      */
-    runDryRun: function(component, recordId, isNewRecord) {
+    runNewRecordDryRun: function(component, recordId) {
         var action = component.get('c.runDryRun');
         var batchId = component.get('v.recordId');
         this.showSpinner(component);
@@ -223,8 +255,9 @@
                 let model = JSON.parse(response.getReturnValue());
                 this.setTotals(component, model);
                 if (model.dataImportRows.length > 0) {
-                    let updatedRecord = model.dataImportRows[0];
-                    this.updateTableRecord(component, updatedRecord, isNewRecord);
+                    //we only process one record at a time, but the model passes back a list
+                    let newRecord = model.dataImportRows[0];
+                    this.afterDryRun(component, newRecord, true);
                 }
             } else {
                 this.handleApexErrors(component, response.getError());
@@ -235,41 +268,56 @@
     },
 
     /**
-     * @description: //todo: desc or combine this
+     * @description: insert or update record and possible error into the table data
      * @param updatedRecord: DataImport__c record that needs to be updated in the table
      */
-    updateTableRecord: function(component, updatedRecord, isNewRecord) {
-        let rows = component.get('v.data');
-
-        var errors = [];
-        let tableRow = updatedRecord.record;
-        tableRow.donorName = updatedRecord.donorName;
-        tableRow.donorLink = updatedRecord.donorLink;
-        tableRow.matchedRecordUrl = updatedRecord.matchedRecordUrl;
-        tableRow.matchedRecordLabel = updatedRecord.matchedRecordLabel;
-        tableRow.errors = updatedRecord.errors;
+    afterDryRun: function (component, updatedRecord, isNewRecord) {
+        let tableRow = this.flattenDataImportRow(updatedRecord);
+        let hasError = false;
 
         //get payment and opportunity error information if import failed
         if (tableRow.errors.length > 0) {
+            hasError = true;
             let rowError = {
                 id: tableRow.Id,
                 title: $A.get('$Label.c.PageMessagesError'),
                 messages: tableRow.errors
             };
-            this.handleTableErrors(component, errors);
+            this.handleNewTableErrors(component, [rowError]);
         }
 
         if (isNewRecord) {
-            rows.unshift(tableRow);
+            this.insertTableRow(component, tableRow);
         } else {
-            for (let i = 0; i < rows.length; i++) {
-                if (rows[i].Id === tableRow.Id) {
-                    rows[i] = tableRow;
-                    break;
-                }
+            this.replaceTableRow(component, tableRow);
+            if (!hasError) {
+                this.clearOldTableErrors(component, tableRow.Id);
             }
         }
+    },
 
+    /**
+     * @description: finds the index of the row and replaces it with the updated row
+     * @param tableRow: flattened row for insert into the table
+     */
+    replaceTableRow: function(component, tableRow) {
+        let rows = component.get('v.data');
+        for (let i = 0; i < rows.length; i++) {
+            if (rows[i].Id === tableRow.Id) {
+                rows[i] = tableRow;
+                break;
+            }
+        }
+        component.set('v.data', rows);
+    },
+
+    /**
+     * @description: inserts the new row into the first spot on the table
+     * @param tableRow: flattened row for insert into the table
+     */
+    insertTableRow: function(component, tableRow) {
+        let rows = component.get('v.data');
+        rows.unshift(tableRow);
         component.set('v.data', rows);
     },
 
@@ -334,19 +382,15 @@
     },
 
     /**
-     * @description: flattens the DataImportRow class data to include donor information at the same level as the rest of the DataImport__c record.
+     * @description: sets rows and row-level errors in the datatable
+     * @param baseRows: an empty array if table is fresh or a list of existing rows for infinite scroll
      * @param responseRows: custom DataImportRow class data passed from the Apex controller.
      */
     setDataTableRows: function(component, baseRows, responseRows) {
-        var rows = [];
-        var errors = [];
-        responseRows.forEach(function(currentRow) {
-            var row = currentRow.record;
-            row.donorName = currentRow.donorName;
-            row.donorLink = currentRow.donorLink;
-            row.matchedRecordUrl = currentRow.matchedRecordUrl;
-            row.matchedRecordLabel = currentRow.matchedRecordLabel;
-            row.errors = currentRow.errors;
+        let rows = [];
+        let errors = [];
+        for (let i=0; i<responseRows.length; i++) {
+            const row = this.flattenDataImportRow(responseRows[i]);
             rows.push(row);
 
             //get payment and opportunity error information if import failed
@@ -358,15 +402,30 @@
                 };
                 errors.push(rowError);
             }
-        });
+        }
 
         if (errors) {
-            this.handleTableErrors(component, errors);
+            this.handleNewTableErrors(component, errors);
         }
 
         let data = baseRows.concat(rows);
 
         component.set('v.data', data);
+    },
+
+    /**
+     * @description: flattens the DataImportRow class data to include donor information at the same level as the rest of the DataImport__c record.
+     * @param currentRow: custom DataImportRow class data passed from the Apex controller.
+     * @return Object row
+     */
+    flattenDataImportRow: function(currentRow) {
+        let row = currentRow.record;
+        row.donorName = currentRow.donorName;
+        row.donorLink = currentRow.donorLink;
+        row.matchedRecordUrl = currentRow.matchedRecordUrl;
+        row.matchedRecordLabel = currentRow.matchedRecordLabel;
+        row.errors = currentRow.errors;
+        return row;
     },
 
     /**
@@ -476,6 +535,7 @@
             if (state === 'SUCCESS') {
                 const model = JSON.parse(response.getReturnValue());
                 this.removeDataImportRow(component, row);
+                this.clearOldTableErrors(component, row.Id);
                 this.setTotals(component, model);
                 this.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftDeleted'), 'success');
             } else {
@@ -491,8 +551,8 @@
      * @param row: Selected row that has been deleted from the server
      */
     removeDataImportRow: function(component, row) {
-        var rows = component.get('v.data');
-        var rowIndex = rows.indexOf(row);
+        let rows = component.get('v.data');
+        const rowIndex = rows.indexOf(row);
         rows.splice(rowIndex, 1);
         component.set('v.data', rows);
     },
