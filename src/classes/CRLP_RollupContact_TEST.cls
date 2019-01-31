@@ -349,7 +349,8 @@ private class CRLP_RollupContact_TEST {
                 Type = 'New'
         ));
         if (tt == TestType.TestWithAlwaysRollupToPrimary) {
-            donationYears.add(orgDonationDate.year().format());
+            String donationYr = UTIL_String.removeNonNumericCharacters(orgDonationDate.year().format());
+            donationYears.add(donationYr);
         }
 
         // This opp will roll up to the Contact only in this test context. So only in this context, we need to ensure
