@@ -348,6 +348,9 @@ private class CRLP_RollupContact_TEST {
                 npe01__Do_Not_Automatically_Create_Payment__c = true,
                 Type = 'New'
         ));
+        if (tt == TestType.TestWithAlwaysRollupToPrimary) {
+            donationYears.add(orgDonationDate.year().format());
+        }
 
         // This opp will roll up to the Contact only in this test context. So only in this context, we need to ensure
         // its year is part of the donationYears set that we assert against the Contact's Donor Streak and Years Donated.
