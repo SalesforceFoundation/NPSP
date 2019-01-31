@@ -55,16 +55,16 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();    
 
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
-            list<string> listMergeKey = new list<string>();
+            List<String> mergeKeys = new List<String>();
         
             for (SObject so : listOld) {
                 Contact con = (Contact)so;
                 if (con != null && con.MasterRecordId != null)
-                    listMergeKey.add(mergeKey(con.Id, con.AccountId, con.MasterRecordId));
+                    mergeKeys.add(mergeKey(con.Id, con.AccountId, con.MasterRecordId));
             }
             
-            if (listMergeKey.size() > 0)
-                handleContactMergeFixupsFuture(listMergeKey);
+            if (mergeKeys.size() > 0)
+                handleContactMergeFixupsFuture(mergeKeys);
         }        
         
         return dmlWrapper; 
@@ -91,7 +91,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
     private static string idFromMergeKey(string mergeKey, integer index) {
         if (mergeKey == null || index < 0 || index > 2)
             return null;
-        list<string> listId = mergeKey.split(':');
+        List<String> listId = mergeKey.split(':');
         string strId = listId[index];
         if (strId == 'null') strId = null;
         return strId;
@@ -105,93 +105,95 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
     *   - recalculate Household Soft Credit OCRs 
     *   - recalculate Opportunity Rollups
     *
-    * @param listMergeKey The list of mergeKeys that provide contactIdLoser, accountIdLoser, and contactIdWinner
+    * @param mergeKeys The list of mergeKeys that provide contactIdLoser, accountIdLoser, and contactIdWinner
     * @return null
     ********************************************************************************************************/
-    @Future    
-    private static void handleContactMergeFixupsFuture(list<string> listMergeKey) {
-    
-        list<string> listContactIdLoser = new list<string>();
-        list<string> listAccountIdLoser = new list<string>();
-        list<string> listContactIdWinner = new list<string>();
+    @Future
+    private static void handleContactMergeFixupsFuture(List<String> mergeKeys) {
+
+        List<String> losingContactIds = new List<String>();
+        List<String> losersAccountIds = new List<String>();
+        List<String> winningContactIds = new List<String>();
 
         // extract out our Contact and Account Id's from the mergeKeys
-        for (string mergeKey : listMergeKey) {
-            listContactIdLoser.add(idFromMergeKey(mergeKey, 0));
-            listAccountIdLoser.add(idFromMergeKey(mergeKey, 1));
-            listContactIdWinner.add(idFromMergeKey(mergeKey, 2));
+        for (String mergeKey : mergeKeys) {
+            losingContactIds.add(idFromMergeKey(mergeKey, 0));
+            losersAccountIds.add(idFromMergeKey(mergeKey, 1));
+            winningContactIds.add(idFromMergeKey(mergeKey, 2));
         }
-    
+
         // get the winning Contacts (with the fields we need)
         RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL(); 
-        string strSoql = oppRollupUtil.buildContactQuery();
-        strSoql = strSoql.replace('from Contact', '');
-        strSoql += ', AccountId, Account.npe01__SYSTEM_AccountType__c, Primary_Affiliation__c from Contact where id IN :listContactIdWinner';
-        list<Contact> listContactWinner = Database.query(strSoql);
+        String query = oppRollupUtil.buildContactQuery();
+        query = query.replace('from Contact', '');
+        query += ', AccountId, Account.npe01__SYSTEM_AccountType__c, Primary_Affiliation__c FROM Contact WHERE Id IN :winningContactIds';
+        List<Contact> winningContacts = Database.query(query);
 
         // create maps of contactId's to AccountId's that some of our routines need.
-        map<Id,Id> mapContactIdAccountIdWinner = new map<Id,Id>();
-        map<Id,Id> mapContactIdAccountIdLoser = new map<Id,Id>();
-        list<Id> listAccIdHH= new list<Id>();
-        for (Contact con : listContactWinner) {
-        	if (con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE)
-        	   listAccIdHH.add(con.AccountId);
-            if (con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE ||
-                con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE ||
-                con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
-                mapContactIdAccountIdWinner.put(con.Id, con.AccountId);        
+        Map<Id,Id> winnersAccountIdByWinningContactId = new Map<Id,Id>();
+        Map<Id,Id> losersAccountIdByWinningContactId = new Map<Id,Id>();
+        List<Id> householdAccountIds = new List<Id>();
+
+        for (Contact winningContact : winningContacts) {
+            if (winningContact.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
+               householdAccountIds.add(winningContact.AccountId);
+            }
+            if (winningContact.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE ||
+                winningContact.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE ||
+                winningContact.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
+                winnersAccountIdByWinningContactId.put(winningContact.Id, winningContact.AccountId);
             }
         }
-        
+
         // we only want to move opps from non-org accounts, so we need to query for their type.
-        map<Id, Account> mapAccountIdAccountLoser = new map<Id, Account>([select Id, npe01__SYSTEM_AccountType__c 
-            from Account where Id in :listAccountIdLoser]);
-        for (integer i = 0; i < listContactIdLoser.size(); i++) {
-        	if (listAccountIdLoser[i] != null) {
-                Account accLoser = mapAccountIdAccountLoser.get(listAccountIdLoser[i]);
-                if (accLoser == null)
+        Map<Id, Account> losersAccountById = new Map<Id, Account>([select Id, npe01__SYSTEM_AccountType__c 
+            from Account where Id in :losersAccountIds]);
+        for (integer i = 0; i < losingContactIds.size(); i++) {
+            if (losersAccountIds[i] != null) {
+                Account losersAccount = losersAccountById.get(losersAccountIds[i]);
+                if (losersAccount == null)
                     continue;
-                if (accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE)
-                    listAccIdHH.add(accLoser.Id); 
-                if (accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE || 
-                    accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE ||
-                    accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
-                    mapContactIdAccountIdLoser.put(listContactIdWinner[i], listAccountIdLoser[i]);
+                if (losersAccount.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE)
+                    householdAccountIds.add(losersAccount.Id); 
+                if (losersAccount.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE || 
+                    losersAccount.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE ||
+                    losersAccount.npe01__SYSTEM_AccountType__c == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
+                    losersAccountIdByWinningContactId.put(winningContactIds[i], losersAccountIds[i]);
                 }
-        	}
+            }
         }
-    
+
         // create a list of both Winning and Losing Accounts
-        list<Id> listAccId = new list<Id>();
-        listAccId.addAll(mapContactIdAccountIdLoser.values());
-        listAccId.addAll(mapContactIdAccountIdWinner.values());
+        List<Id> accountIds = new List<Id>();
+        accountIds.addAll(losersAccountIdByWinningContactId.values());
+        accountIds.addAll(winnersAccountIdByWinningContactId.values());
 
         // if we have any winning Contacts in Household or 1:1 Accounts...
-        if (listAccId.size() > 0) {    
+        if (accountIds.size() > 0) {    
             // refresh account naming
-            ACCT_IndividualAccounts_TDTM.renameHHAccounts(listAccIdHH);
-            
+            ACCT_IndividualAccounts_TDTM.renameHHAccounts(householdAccountIds);
+
             // move any Contact Opps to winning Accounts
-            ACCT_IndividualAccounts_TDTM.moveOppsToContactAccount(mapContactIdAccountIdWinner, mapContactIdAccountIdLoser, null);
-            
+            ACCT_IndividualAccounts_TDTM.moveOppsToContactAccount(winnersAccountIdByWinningContactId, losersAccountIdByWinningContactId, null);
+
             // recreate Soft Credits 
-            HH_OppContactRoles_TDTM.recreateHouseholdSoftCredits(listAccId);
+            HH_OppContactRoles_TDTM.recreateHouseholdSoftCredits(accountIds);
 
             // recalc Account Rollups
-            ACCT_IndividualAccounts_TDTM.rollupAccounts(listAccId);            
+            ACCT_IndividualAccounts_TDTM.rollupAccounts(accountIds);
         }
 
         // recalc Contact Rollups
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
-            CRLP_RollupQueueable.runRollupsForIds(listContactIdWinner);
+            CRLP_RollupQueueable.runRollupsForIds(winningContactIds);
         } else {
-            oppRollup.rollupContacts(new map<Id, Contact>(listContactWinner));
+            oppRollup.rollupContacts(new Map<Id, Contact>(winningContacts));
         }
 
         // fixup duplicate Affiliations & Primary Affiliation
-        AFFL_Affiliations_TDTM.cleanupContactAffiliations(listContactWinner);
+        AFFL_Affiliations_TDTM.cleanupContactAffiliations(winningContacts);
         
         // remove duplicate Relationships
-        REL_Relationships_TDTM.cleanupContactRelationships(listContactWinner);
+        REL_Relationships_TDTM.cleanupContactRelationships(winningContacts);
     }
 }
