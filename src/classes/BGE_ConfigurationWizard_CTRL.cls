@@ -47,15 +47,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     };
 
     /*******************************************************************************************************
-    * @description Checks for field permissions to create a new Batch/Template
-    * @return void; throws an AuraHandledException if any fields fail FLS check
-    */
-    @AuraEnabled
-    public static void checkFieldPermissions() {
-        BGE_BatchGiftEntry_UTIL.checkFieldPermissionsNeededForBatch();
-    }
-
-    /*******************************************************************************************************
     * @description Retrieves the Template Details information, the related list of fields, and component labels.
     * @param recordId Id of the record to be queried
     * @return JSON model of all template details data.
@@ -420,7 +411,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         };
         List<DescribeFieldResult> dfrs = getRelevantFields(donationObjects);
 
-        for (DescribeFieldResult donationField: dfrs) {
+        for (DescribeFieldResult donationField : dfrs) {
             Map<String, String> option = new Map<String, String>();
             option.put('value', donationField.Name.toLowerCase());
             option.put('label', donationField.Label);
@@ -474,18 +465,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'BestMatchOrCreate' => BDI_DataImport_API.BestMatchOrCreate
         };
         return labels;
-    }
-
-    /*******************************************************************************************************
-    * @description Gets list view to display on the BGE Batch Gift Entry Tab Controller
-    * @return Map<String, String> listView with namespaced attributes to use to create correctly namespaced list view
-    */
-    @AuraEnabled
-    public static Map<String, String> getNamespacedListView() {
-        Map<String, String> listView = new Map<String, String>();
-        listView.put('objectApiName', UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'));
-        listView.put('listName', UTIL_Namespace.StrTokenNSPrefix('Gift_Batches'));
-        return listView;
     }
 
     /*******************************************************************************************************
