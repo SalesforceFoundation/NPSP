@@ -622,7 +622,7 @@ public class BDI_Donations {
                 npe01__OppPayment__c payment = paymentsByDataImportId.get(dataImport.Id);
                 if (payment != null) {
                     Integer numberOfCopiedFields = 0;
-                    for (String dataImportFieldf : dataImportFieldToPaymentField.keySet()) {
+                    for (String dataImportField : dataImportFieldToPaymentField.keySet()) {
                         if (BDI_DataImportService.isCopiedDIField(dataImport, dataImportField, payment, dataImportFieldToPaymentField)) {
                             numberOfCopiedFields++;
                         }
