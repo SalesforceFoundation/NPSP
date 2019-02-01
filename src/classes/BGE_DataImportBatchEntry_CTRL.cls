@@ -189,11 +189,11 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     public static String runDryRun(Id dataImportId, Id batchId) {
         try {
             Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
-            List<DataImport__c> dataImportListToRun = prepareDataImportForDryRun(getDataImportRecordsById(batchId, dataImportId));
+            List<DataImport__c> dataImportListToRun = prepareDataImportForDryRun(getDataImportRecordById(batchId, dataImportId));
             BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
 
             DataImportModel dataImportModel = getUpdatedTotals(batchId);
-            DataImportRow processedDataImportRow = new DataImportRow(getDataImportRecordsById(batchId, dataImportId));
+            DataImportRow processedDataImportRow = new DataImportRow(getDataImportRecordById(batchId, dataImportId));
             dataImportModel.dataImportRows = new List<DataImportRow>{
                     processedDataImportRow
             };
@@ -220,6 +220,22 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             String saveErrorMessage = String.format(Label.CRLP_SaveError, new List<String>{Schema.SObjectType.DataImport__c.getName()});
             throw new AuraHandledException(saveErrorMessage + '. ' + ex.getMessage());
         }
+    }
+
+    /*******************************************************************************************************
+    * @description gets updated amount total and row count for the batch
+    * @param batchId: ID of the NPSP_Data_Import_Batch__c
+    * @return DataImportModel updated model with total amount and number of rows
+    */
+    public static DataImportModel getUpdatedTotals(Id batchId) {
+        DataImportModel dataImportModel = new DataImportModel();
+
+        dataImportModel.id = batchId;
+        dataImportModel.totalCountOfRows = getDataImportBatchTotalCount(batchId);
+        AggregateResult[] aggResult = getDataImportBatchTotalAmount(batchId);
+        dataImportModel.totalRowAmount = (Decimal) aggResult[0].get('amount');
+
+        return dataImportModel;
     }
 
     /*******************************************************************************************************
@@ -288,22 +304,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description gets updated amount total and row count for the batch
-    * @param batchId: ID of the NPSP_Data_Import_Batch__c
-    * @return DataImportModel updated model with total amount and number of rows
-    */
-    private static DataImportModel getUpdatedTotals(Id batchId) {
-        DataImportModel dataImportModel = new DataImportModel();
-
-        dataImportModel.id = batchId;
-        dataImportModel.totalCountOfRows = getDataImportBatchTotalCount(batchId);
-        AggregateResult[] aggResult = getDataImportBatchTotalAmount(batchId);
-        dataImportModel.totalRowAmount = (Decimal) aggResult[0].get('amount');
-
-        return dataImportModel;
-    }
-
-    /*******************************************************************************************************
     * @description Gets the sum of the amount totals of all rows for that batch
     * @param recordId the ID of the NPSP_Data_Import_Batch__c
     * @return Decimal amount
@@ -332,9 +332,12 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         String activeFieldsJSON = batch.Active_Fields__c;
         if (activeFieldsJSON != null) {
             List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields =
-                (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
+                (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON,
+                        List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
 
-            Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
+            Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(
+                    UTIL_Namespace.StrTokenNSPrefix('DataImport__c')
+            );
 
             List<DescribeFieldResult> unpermittedFields = new List<DescribeFieldResult>();
 
@@ -431,7 +434,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @param dataImportId the Id to query
     * @return DataImport__c
     */
-    private static DataImport__c getDataImportRecordsById(Id batchId, Id dataImportId) {
+    private static DataImport__c getDataImportRecordById(Id batchId, Id dataImportId) {
 
         List<String> dataImportFields = getDataImportFields(batchId);
 
