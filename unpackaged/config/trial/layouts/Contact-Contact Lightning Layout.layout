@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
     <customButtons>%%%NAMESPACE%%%Recalculate_Rollups</customButtons>
-    <customButtons>npe4__Relationships_Viewer</customButtons>
+    <customButtons>Relationships_Viewer</customButtons>
     <excludeButtons>Clone</excludeButtons>
     <excludeButtons>DisableCustomerPortal</excludeButtons>
     <excludeButtons>DisablePartnerPortal</excludeButtons>
@@ -552,7 +552,7 @@
             <sortOrder>14</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>npe4__Relationships_Viewer</actionName>
+            <actionName>Relationships_Viewer</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>15</sortOrder>
         </platformActionListItems>
