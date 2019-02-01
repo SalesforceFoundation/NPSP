@@ -169,28 +169,28 @@
     	                            <aura:if isTrue="{!field.required}"><abbr class="slds-required" title="required">* </abbr></aura:if>
         	                        <span>{!field.label}</span>
                                 </label> 
-                                    <!-- This is the actual checkbox being shown -->
-                                    <lightning:input type="checkbox"
-                                                     checked="{!v.checkedValue}"
-                                    />
-                                    <!-- Hide the inpuField and use it to save the value in the correct field -->
-                                    <lightning:inputField aura:id="dynamicInputFields"
-                                                          class="hideTooltip equalHeight hideLabel slds-hide"
-                                                          fieldName="{!field.name}"
-                                                          value="{!v.checkedValue}"                                                  
-                            		/>
-                                                                                            
+                                <!-- This is the actual checkbox being shown -->
+                                <lightning:input type="checkbox"
+                                                 checked="{!v.checkedValue}"
+                                />
+                                <!-- Hide the inpuField and use it to save the value in the correct field -->
+                                <lightning:inputField aura:id="dynamicInputFields"
+                                                      class="hideTooltip equalHeight hideLabel slds-hide"
+                                                      fieldName="{!field.name}"
+                                                      value="{!v.checkedValue}"                                                  
+                            	/>                                                                                            
                                 <aura:set attribute="else">
                                     <!-- If the field is not a Boolean Show the inputField -->
                                     <label for="{!field.name}" class="slds-form-element__label">
-                                		<aura:if isTrue="{!field.required}"><abbr class="slds-required" title="required">* </abbr></aura:if>
+                                		<aura:if isTrue="{!field.required}">
+                                            <abbr class="slds-required" title="required">* </abbr>
+                                        </aura:if>
                                 		<span>{!field.label}</span>
                             		</label>                                   
                             		<lightning:inputField aura:id="dynamicInputFields"
-                                                  class="hideTooltip equalHeight hideLabel"
-                                                  fieldName="{!field.name}"
-                                                  value="{!field.value}"
-                                                  
+                                                          class="hideTooltip equalHeight hideLabel"
+                                                          fieldName="{!field.name}"
+                                                          value="{!field.value}"                                                  
                             		/>
                                 </aura:set>
                             </aura:if>                                                                                    
