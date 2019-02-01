@@ -663,7 +663,7 @@ public class BDI_Donations {
         for (Integer i = 0; i < saveResults.size(); i++) {
             Database.UpsertResult sr = saveResults[i];
             if (!sr.isSuccess()) {
-                bdi.LogBDIError(dataImportsForErrors[i], sr.getErrors()[i].getMessage(), null);
+                bdi.LogBDIError(dataImportsForErrors[i], sr.getErrors()[0].getMessage(), null);
             }
         }
 

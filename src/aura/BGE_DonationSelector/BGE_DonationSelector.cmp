@@ -128,6 +128,12 @@
                                         label="{!$Label.c.bgeFormUpdateOpportunity}"
                                         onclick="{!c.handleDonationSelection}"
                                         variant="base"/>
+                                <br />
+                                <lightning:button
+                                        value="{!donation}"
+                                        label="{!$Label.c.bdiMatchedApplyNewPayment}"
+                                        onclick="{!c.handleApplyPaymentSelection}"
+                                        variant="base"/>
                             </aura:set>
                         </aura:if>
                     </aura:set>

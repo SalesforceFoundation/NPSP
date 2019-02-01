@@ -60,6 +60,7 @@
         const selectedDonation = component.get('v.selectedDonation');
         const userSelectedMatch = $A.get('$Label.c.bdiMatchedByUser');
         const userSelectedNewOpp = $A.get('$Label.c.bdiMatchedByUserNewOpp');
+        const applyNewPayment = $A.get('$Label.c.bdiMatchedApplyNewPayment');
 
         //set status fields to prevent dry run overwrite of lookup fields
         //else status fields are left null to allow for dry run in grid
@@ -67,7 +68,11 @@
             if (selectedDonation.attributes.type === 'Opportunity') {
                 //selected opportunity; BDI will update the opportunity
                 rowFields[labels.opportunityImportedLookupField] = selectedDonation.Id;
-                rowFields[labels.opportunityImportedStatusField] = userSelectedMatch;
+                if (selectedDonation.applyPayment) {
+                    rowFields[labels.opportunityImportedStatusField] = applyNewPayment;
+                } else {
+                    rowFields[labels.opportunityImportedStatusField] = userSelectedMatch;
+                }
             } else {
                 //selected payment; BDI will update the payment
                 rowFields[labels.paymentImportedLookupField] = selectedDonation.Id;

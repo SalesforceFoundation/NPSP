@@ -521,7 +521,6 @@ global with sharing class BDI_DataImportService {
 
             pl = perfLogger.newPerfLog('importDonations');
             BDI_Donations bdiDonations = new BDI_Donations(this);
-            System.debug('heading into Donations!');
             bdiDonations.importDonations();
             pl.stop();
 
