@@ -1429,8 +1429,6 @@
         <members>bgeBatchSelectedFields</members>
         <members>bgeBatchSetBatchOptions</members>
         <members>bgeBatchSetFieldOptions</members>
-        <members>bgeCopyBatchSetupButton</members>
-        <members>bgeCopyBatchSetupBatchNameAppend</members>
         <members>bgeEditBatchFieldOptionsWarning</members>
         <members>bgeEditBatchFieldSelectionWarning</members>
         <members>bgeEditBatchOptionsWarning</members>
@@ -1646,7 +1644,6 @@
         <members>lblCountry</members>
         <members>lblDeleteContact</members>
         <members>lblDeleteContactPrompt</members>
-        <members>lblDeprecated</members>
         <members>lblExtendedStatus</members>
         <members>lblFindInContacts</members>
         <members>lblFindOrAddContact</members>

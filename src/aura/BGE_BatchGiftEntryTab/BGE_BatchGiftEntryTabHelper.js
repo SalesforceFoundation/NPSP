@@ -32,12 +32,10 @@
         responseColumns.push({
             type: 'action',
             typeAttributes: {
-                rowActions: [
-                    {
-                        label: $A.get('$Label.c.bgeCopyBatchSetup'),
-                        name: 'copySetup'
-                    }
-                ]
+                rowActions: [{
+                    label: $A.get('$Label.c.bgeCopyBatchSetup'),
+                    name: 'copySetup'
+                }]
             }
         });
 
