@@ -53,8 +53,6 @@ public with sharing class UTIL_LightningComponentSupport {
             return 'number';
         } else if (rawType == 'string') {
             return 'text';
-        } else if (rawType == 'boolean') {
-            return 'checkbox';
         } else {
             return rawType;
         }

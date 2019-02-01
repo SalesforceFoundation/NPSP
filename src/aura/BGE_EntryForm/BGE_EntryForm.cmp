@@ -46,7 +46,6 @@
     <aura:attribute name="openOpportunities" type="List" description="List of open Opportunities" access="public" />
     <aura:attribute name="unpaidPayments" type="List" description="List of unpaid Payments" access="public" />
     <aura:attribute name="selectedDonation" type="SObject" description="Stored selected open donation. Can also be null or empty." access="public" />
-    <aura:attribute name="checkedValue" type="Boolean" description="Stores the checkbox value to be saved by an inputFields" />
 
     <!-- Private Attributes-->
     <aura:attribute name="pendingSave" default="false" type="Boolean"
@@ -161,39 +160,19 @@
                             <aura:iteration items="{!field.options}" var="opt">
                                 <option value="{!opt.value}">{!opt.label}</option>
                             </aura:iteration>
-                        </lightning:select>
-                        <aura:set attribute="else">
-                            <!-- Workaround to deal with boolean values -->
-                            <aura:if isTrue="{!field.type == 'boolean'}">                                
-                                <label for="{!field.name}" class="slds-form-element__label">
-    	                            <aura:if isTrue="{!field.required}"><abbr class="slds-required" title="required">* </abbr></aura:if>
-        	                        <span>{!field.label}</span>
-                                </label> 
-                                <!-- This is the actual checkbox being shown -->
-                                <lightning:input type="checkbox"
-                                                 checked="{!v.checkedValue}"
-                                />
-                                <!-- Hide the inpuField and use it to save the value in the correct field -->
-                                <lightning:inputField aura:id="dynamicInputFields"
-                                                      class="hideTooltip equalHeight hideLabel slds-hide"
+                        </lightning:select>                        
+                        <aura:set attribute="else">                            
+                            <label for="{!field.name}" class="slds-form-element__label">
+                                <aura:if isTrue="{!field.required}">
+                                    <abbr class="slds-required" title="required">* </abbr>
+                                </aura:if>
+                                <span>{!field.label}</span>
+                            </label>                                   
+                            <lightning:inputField aura:id="dynamicInputFields"
+                                                      class="hideTooltip equalHeight hideLabel"
                                                       fieldName="{!field.name}"
-                                                      value="{!v.checkedValue}"                                                  
-                            	/>                                                                                            
-                                <aura:set attribute="else">
-                                    <!-- If the field is not a Boolean Show the inputField -->
-                                    <label for="{!field.name}" class="slds-form-element__label">
-                                		<aura:if isTrue="{!field.required}">
-                                            <abbr class="slds-required" title="required">* </abbr>
-                                        </aura:if>
-                                		<span>{!field.label}</span>
-                            		</label>                                   
-                            		<lightning:inputField aura:id="dynamicInputFields"
-                                                          class="hideTooltip equalHeight hideLabel"
-                                                          fieldName="{!field.name}"
-                                                          value="{!field.value}"                                                  
-                            		/>
-                                </aura:set>
-                            </aura:if>                                                                                    
+                                                      value="{!field.value}"                                                  
+                            />
                         </aura:set>
                     </aura:if>
                 </lightning:layoutItem>
