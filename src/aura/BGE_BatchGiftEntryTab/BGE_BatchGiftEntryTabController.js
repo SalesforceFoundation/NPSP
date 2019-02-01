@@ -9,20 +9,15 @@
     /**
      * @description: checks that user has all necessary permissions and then launches modal or displays error
      */
-    onNewBatchClick: function(component, event, helper) {
-        helper.checkFieldPermissions(component);
+    handleNewBatchClick: function(component, event, helper) {
+        helper.handleNewBatchClick(component, event);
     },
 
     /**
      * @description: handles selected row action in the datatable
      */
     handleRowAction: function (component, event, helper) {
-        let rowAction = event.getParam('action');
-        switch (rowAction.name) {
-            case 'copySetup':
-                helper.copyBatchSetup(component, event);
-                break;
-        }
+        helper.handleRowAction(component, event);
     },
 
     /**

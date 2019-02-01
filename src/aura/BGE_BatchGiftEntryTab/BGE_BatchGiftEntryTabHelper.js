@@ -98,20 +98,34 @@
 
     /******************************** User Interaction Functions *****************************/
 
+    handleNewBatchClick: function(component) {
+        this.checkFieldPermissions(component, function () {
+            return this.openNewBatchWizard(component);
+        }.bind(this));
+    },
+
+    handleRowAction: function(component, event) {
+        let rowAction = event.getParam('action');
+        switch (rowAction.name) {
+            case 'copySetup':
+                const sourceBatchId = event.getParam('row').Id;
+                this.checkFieldPermissions(component, function () {
+                    return this.openNewBatchWizard(component, sourceBatchId);
+                }.bind(this));
+                break;
+        }
+    },
+
     /**
-     * @description: checks that user has all necessary permissions and then launches modal or displays error
+     * @description: checks that user has all necessary permissions and then calls onSuccess function
      * @param: sourceBatchId Id of Batch record to be copied - optional
      */
-    checkFieldPermissions: function(component, sourceBatchId) {
+    checkFieldPermissions: function(component, onSuccess) {
         var action = component.get('c.checkFieldPermissions');
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
-                if (!component.get('v.modalOpen')) {
-                    //necessary to put here to prevent nested modals from rapid button clicks
-                    component.set('v.modalOpen', true);
-                    this.openNewBatchWizard(component, sourceBatchId);
-                }
+                onSuccess();
             } else if (state === 'ERROR') {
                 this.handleApexErrors(component, response.getError());
             }
@@ -124,6 +138,11 @@
      * @param: sourceBatchId Id of Batch record to be copied - optional
      */
     openNewBatchWizard: function(component, sourceBatchId) {
+        if (component.get('v.modalOpen')) {
+            return;
+        }
+        component.set('v.modalOpen', true);
+
         let modalBody;
         let modalHeader;
         let modalFooter;
@@ -162,14 +181,6 @@
             }
         );
 
-    },
-
-    /**
-     * @description initiates the process to copy Batch setup from an existing Batch
-     */
-    copyBatchSetup: function(component, event) {
-        let sourceBatch = event.getParam('row');
-        this.checkFieldPermissions(component, sourceBatch.Id);
     },
 
     /******************************** Utility Functions *****************************/
