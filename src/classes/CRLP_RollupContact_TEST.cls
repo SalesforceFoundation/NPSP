@@ -353,6 +353,13 @@ private class CRLP_RollupContact_TEST {
             donationYears.add(donationYr);
         }
 
+        // This opp will roll up to the Contact only in this test context. So only in this context, we need to ensure
+        // its year is part of the donationYears set that we assert against the Contact's Donor Streak and Years Donated.
+        if (tt == TestType.TestWithAlwaysRollupToPrimary) {
+            String donationYr = UTIL_String.removeNonNumericCharacters(orgDonationDate.year().format());
+            donationYears.add(donationYr);
+        }
+
         // create 4 opps for con4 to test single result opp edge cases
         Date earlyLastYear = Date.newInstance(Date.today().year()-1,1,1);
         Date lateLastYear = Date.newInstance(Date.today().year()-1,12,31);
