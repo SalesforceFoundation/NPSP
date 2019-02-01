@@ -98,12 +98,18 @@
 
     /******************************** User Interaction Functions *****************************/
 
+    /**
+     * @description: performs field permissions check and then opens New Batch Wizard
+     */
     handleNewBatchClick: function(component) {
         this.checkFieldPermissions(component, function () {
             return this.openNewBatchWizard(component);
         }.bind(this));
     },
 
+    /**
+     * @description: handler for row actions from Batch table
+     */
     handleRowAction: function(component, event) {
         let rowAction = event.getParam('action');
         switch (rowAction.name) {
