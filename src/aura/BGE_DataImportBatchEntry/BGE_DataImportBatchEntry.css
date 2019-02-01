@@ -1,3 +1,11 @@
+/*fix for action overlay issue*/
+.THIS .datatableContainer .slds-scrollable_y {
+    height: 100%;
+}
+/*fixed height is required for the infinite scroll to not load automatically*/
+.THIS .fixedHeightDatatable {
+    height: 350px;
+}
 /*removes the extra label and automatic tooltip for inputFields*/
 .THIS .hideLabel .slds-form-element__label {
     display: none;

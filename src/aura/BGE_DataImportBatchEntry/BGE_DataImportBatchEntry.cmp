@@ -181,7 +181,7 @@
                 <!--End expected totals-->
 
                 <aura:if isTrue="{!notequals(v.data.length, 0)}">
-                    <div class="slds-p-top_small" style="height: 350px">
+                    <div class="{!if(lessthan(v.data.length, 4), 'datatableContainer', '')+' slds-p-top_small fixedHeightDatatable'}">
                         <lightning:datatable
                                 aura:id="dataImportRowsDataTable"
                                 columns="{!v.columns}"
