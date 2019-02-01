@@ -206,7 +206,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'TEXTAREA',
             'DOUBLE',
             'PICKLIST',
-            'BOOLEAN',
             'EMAIL',
             'MULTIPICKLIST',
             'PHONE',
