@@ -40,7 +40,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     /*******************************************************************************************************
     * @description The number of additional Data Import Records to load on each infinite scroll query
     */
-    private static Integer loadSize = 50;
+    private static Integer loadSize = 100;
 
     /*******************************************************************************************************
     * @description Checks for field permissions to create a new Batch
