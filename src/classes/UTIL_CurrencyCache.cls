@@ -77,8 +77,7 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
             // If a set of rates was retrieved, find the effective rate based on the date
             if (cachedMapOfRatesByCurrencyCode.containsKey(currCode)) {
                 UTIL_CurrencyCache.CurrencyData currData = cachedMapOfRatesByCurrencyCode.get(currCode);
-                
-                //Currency data is null.  Return 1, to align with existing logic and avoid NPE.
+
                 if (currData == null) {
                     return 1;
                 }
@@ -105,17 +104,13 @@ public class UTIL_CurrencyCache implements UTIL_CurrencyCache.Interface_x {
      * initiate the appropriate retrieve and storage actions.
      * @returns nothing
      */
-    @TestVisible
     private static void retrieveAndCacheExchangeRates(String currCode) {
-        UTIL_CurrencyCache.CurrencyData currData;
         if (getInstance().isOrgCacheAvailable()) {
-            currData = (UTIL_CurrencyCache.CurrencyData) orgCache.get(CurrencyCache.class, currCode);
+            cachedMapOfRatesByCurrencyCode.put(currCode, (UTIL_CurrencyCache.CurrencyData) orgCache.get(CurrencyCache.class, currCode));
         } else {
-            currData = getInstance().getRateMapForCurrencies(new List<String>{currCode}).get(currCode);
-        }
-        //Only map the currency code if there is data for it.
-        if (currData != null) {
-            cachedMapOfRatesByCurrencyCode.put(currCode, currData);
+            cachedMapOfRatesByCurrencyCode.put(currCode, getInstance().getRateMapForCurrencies(new List<String>{
+                    currCode
+            }).get(currCode));
         }
     }
 

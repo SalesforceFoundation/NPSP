@@ -91,27 +91,6 @@ private class UTIL_CurrencyCache_TEST {
     }
 
     /**
-     * @description Validate that the retrieveAndCacheExchangeRates method doesn't map null CurrencyData values when queried.
-     */
-    static testMethod void test_NullCurrencyDataValues() {
-        UtilCurrencyCacheMock mockcurrCache = new UtilCurrencyCacheMock();
-        mockcurrCache.isOrgCacheAvailableReturn = false;
-        mockcurrCache.rateMapReturnsEmpty = true;
-        UTIL_CurrencyCache.instance = mockcurrCache;
-
-        //Expect rates map to NOT have our key, as data is null.
-        UTIL_CurrencyCache.retrieveAndCacheExchangeRates('AUD');
-        System.assert(!UTIL_CurrencyCache.cachedMapOfRatesByCurrencyCode.containsKey('AUD'));
-
-        //Return a value for the rate map.
-        mockcurrCache.rateMapReturnsEmpty = false;
-
-        //Expect rates map TO have our key, as data is null.
-        UTIL_CurrencyCache.retrieveAndCacheExchangeRates('AUD');
-        System.assert(UTIL_CurrencyCache.cachedMapOfRatesByCurrencyCode.containsKey('AUD'));
-    }
-
-    /**
      * @description Generate a set of effective dates and somewhat random exchange rates to
      * use for testing.
      * @param Start Date and Starting Value
@@ -148,7 +127,6 @@ private class UTIL_CurrencyCache_TEST {
         public List<Decimal> effectiveRatesReturn;
         public Decimal defaultRate;
         public String orgDefaultCurrencyReturn;
-        public Boolean rateMapReturnsEmpty = false;
 
         public boolean isOrgCacheAvailable() {
             return isOrgCacheAvailableReturn;
@@ -161,10 +139,6 @@ private class UTIL_CurrencyCache_TEST {
         public Map<String, UTIL_CurrencyCache.CurrencyData> getRateMapForCurrencies(List<String> currCodes) {
             Map<String, UTIL_CurrencyCache.CurrencyData> mapOfCurrencyDataByCurrencyCode
                     = new Map<String, UTIL_CurrencyCache.CurrencyData>();
-
-            if (rateMapReturnsEmpty) {
-                return mapOfCurrencyDataByCurrencyCode;
-            }
 
             UTIL_CurrencyCache.CurrencyData currData = new UTIL_CurrencyCache.CurrencyData();
             currData.effectiveDates = effectiveDatesReturn;
