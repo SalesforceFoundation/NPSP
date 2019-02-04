@@ -243,8 +243,8 @@
         <relatedList>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%Opportunity__c</relatedList>
     </relatedLists>
     <relatedLists>
-        <customButtons>npe01__Schedule_Payments</customButtons>
-        <customButtons>npe01__Writeoff_Payments</customButtons>
+        <customButtons>Schedule_Payments</customButtons>
+        <customButtons>Writeoff_Payments</customButtons>
         <fields>NAME</fields>
         <fields>npe01__Payment_Amount__c</fields>
         <fields>Payment_Status__c</fields>
