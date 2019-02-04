@@ -89,6 +89,10 @@
      * @param allFields: parsed list of all possible fields for dueling picklist
      */
     loadAvailableFields: function(component, activeFields, allFields) {
+        const FIELD_SOBJECT_TYPE_OPPORTUNITY = 'opportunity';
+        let opportunityFields = [];
+        let paymentFields = [];
+
         let availableFieldsBySObject = {
             fieldGroups: []
         };
@@ -121,8 +125,16 @@
             }
             currentField.availableSortOrder = availableSortOrder;
             availableSortOrder++;
-            everyField.push(currentField);
+
+            if (currentField.sObjectName.toLowerCase() === FIELD_SOBJECT_TYPE_OPPORTUNITY) {
+                opportunityFields.push(currentField);
+            } else {
+                paymentFields.push(currentField);
+            }
+
         });
+
+        everyField = opportunityFields.concat(paymentFields);
 
         // store everyField with its metadata
         component.set('v.everyField', everyField);
