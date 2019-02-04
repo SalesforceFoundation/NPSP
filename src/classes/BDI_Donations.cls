@@ -163,7 +163,7 @@ public class BDI_Donations {
         for (DataImport__c dataImport : dataImportDonations) {
 
             // don't process opps in the case of user-selected Apply New Payment
-            if (di.DonationImportStatus__c != Label.bdiMatchedApplyNewPayment) {
+            if (dataImport.DonationImportStatus__c != Label.bdiMatchedApplyNewPayment) {
 
                 // validate against our desired matching behavior (exact match, best match, new, etc.)
             if (!isValidMatchBehavior(dataImport, matchBehavior)) {
@@ -190,15 +190,15 @@ public class BDI_Donations {
             if (Test.isRunningTest() && opp.Name != null && opp.Name.startsWith('FailTest')) {
                 opp.Name = null;
             }
-            } else if (di.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
+            } else if (dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
                 // park a new empty payment in the map if the user specified Apply New Payment
-                mapDIIdToPmt.put(
-                        di.Id,
+                paymentsByDataImportId.put(
+                        dataImport.Id,
                         new npe01__OppPayment__c(
-                                npe01__Opportunity__c = di.DonationImported__c
+                                npe01__Opportunity__c = dataImport.DonationImported__c
                         )
                 );
-                di.PaymentImportStatus__c = Label.bdiCreated;
+                dataImport.PaymentImportStatus__c = Label.bdiCreated;
             }
         }
 
@@ -540,7 +540,7 @@ public class BDI_Donations {
             if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
                 continue;
             }
-            if (dataImport.PaymentImported__c != nul
+            if (dataImport.PaymentImported__c != null
                     || dataImport.DonationImportStatus__c == System.Label.bdiMatchedApplyNewPayment) {
                 npe01__OppPayment__c payment = paymentsByDataImportId.get(dataImport.Id);
                 payment.npe01__Paid__c = true;
@@ -659,17 +659,17 @@ public class BDI_Donations {
                 }
             }
         }
-        List<Database.SaveResult> results = UTIL_DMLService.upsertRecords(paymentsToUpdate, false);
+        List<Database.UpsertResult> results = UTIL_DMLService.upsertRecords(paymentsToUpdate, false);
         for (Integer i = 0; i < results.size(); i++) {
-            Database.SaveResult result = results[i];
+            Database.UpsertResult result = results[i];
             if (!result.isSuccess()) {
                 bdi.LogBDIError(dataImportsToUpdate[i], result.getErrors()[0].getMessage(), null);
             }
         }
 
-        for (DataImport__c di : dataImports) {
-            if (di.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
-                di.PaymentImported__c = mapDIIdToPmt.get(di.Id).Id;
+        for (DataImport__c dataImport : dataImportsWithDonations) {
+            if (dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
+                dataImport.PaymentImported__c = paymentsByDataImportId.get(dataImport.Id).Id;
             }
         }
     }
