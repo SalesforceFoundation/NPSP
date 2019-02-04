@@ -131,7 +131,7 @@
     },
 
     /**
-     * @description: rebuilding error Object and removes any errors on the table if a row is updated or deleted
+     * @description: deletes rowID property in the row Object on the table if a row is updated or deleted
      * @param rowId: Id of the row with the error that needs clearing
      */
     clearOldTableErrors: function(component, rowId) {
@@ -141,17 +141,10 @@
         }
 
         if (tableErrors.rows.hasOwnProperty(rowId)) {
-            let updatedErrors = { rows: {}, table: {}, size: 0 };
-            let errorSize = 0;
-            let errorIds = Object.keys(tableErrors.rows);
-            errorIds.forEach(function(oldErrorId) {
-                if (oldErrorId !== rowId) {
-                    updatedErrors.rows[oldErrorId] = tableErrors.rows[oldErrorId];
-                    errorSize++;
-                }
-            });
-            updatedErrors.size = errorSize;
-            component.set('v.errors', updatedErrors);
+            delete tableErrors[rowId];
+            let errorSize = tableErrors.size > 1 ? tableErrors.size - 1 : 0;
+            tableErrors.size = errorSize;
+            component.set('v.errors', tableErrors);
         }
     },
 
