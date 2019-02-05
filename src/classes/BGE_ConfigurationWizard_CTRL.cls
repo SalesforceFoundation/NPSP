@@ -438,7 +438,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'objectLabel' => Schema.SObjectType.DataImportBatch__c.getLabel(),
             'sObjectName' => Schema.SObjectType.DataImportBatch__c.getName(),
             'sObjectNameNoNamespace' => UTIL_Namespace.StrTokenRemoveNSPrefix(Schema.SObjectType.DataImportBatch__c.getName()),
-            'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.DataImportBatch__c.Name.getDescribe().getLabel() + ', ' + Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
+            'missingNameError' => Label.exceptionRequiredField + ' ' + Schema.DataImportBatch__c.Name.getDescribe().getLabel(),
             'missingFieldsError' => Label.exceptionRequiredField,
             'description' => Schema.DataImportBatch__c.Batch_Description__c.getDescribe().getLabel(),
             'totalMatchHelp' => Schema.DataImportBatch__c.RequireTotalMatch__c.getDescribe().getInlineHelpText(),
