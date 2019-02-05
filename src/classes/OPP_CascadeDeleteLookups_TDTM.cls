@@ -65,7 +65,7 @@ public with sharing class OPP_CascadeDeleteLookups_TDTM extends CDL_CascadeDelet
             return [
                 SELECT Opportunity__c
                 FROM Allocation__c
-                WHERE Opportunity__c IN :opportunityIds
+                WHERE Opportunity__c IN :opportunityIds OR Payment__r.npe01__Opportunity__c IN :opportunityIds
             ];
         }
     }
@@ -84,7 +84,7 @@ public with sharing class OPP_CascadeDeleteLookups_TDTM extends CDL_CascadeDelet
             return [
                 SELECT Opportunity__c
                 FROM Allocation__c
-                WHERE Opportunity__c IN :opportunityIds
+                WHERE (Opportunity__c IN :opportunityIds OR Payment__r.npe01__Opportunity__c IN :opportunityIds)
                 AND IsDeleted = TRUE
                 ALL ROWS
             ];
