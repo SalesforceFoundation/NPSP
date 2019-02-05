@@ -73,7 +73,8 @@
         event.getSource().set('v.isLoading', true);
         let totals = component.get('v.totals');
         let totalCountGifts = totals.countGifts ? totals.countGifts : 0;
-        if (component.get('v.data').length >= totalCountGifts) {
+        const countLoadedGifts = component.get('v.data').length;
+        if (countLoadedGifts >= totalCountGifts) {
             event.getSource().set('v.enableInfiniteLoading', false);
             event.getSource().set('v.isLoading', false);
         } else {
