@@ -1580,6 +1580,22 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <value>You must specify the Cicero API Key in the Auth Token field for Address Verification. Log into Salesforce and go to People | Addresses on the NPSP Settings page.</value>
     </labels>
     <labels>
+        <fullName>addrCopyConAddBtnConfirm</fullName>
+        <categories>ADDR_CopyConAddrHHObjBTN</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message that appears to confirm the address copy action.</shortDescription>
+        <value>You are about to copy the Address. Do you want to continue?</value>
+    </labels>
+    <labels>
+        <fullName>addrCopyConAddBtnFls</fullName>
+        <categories>ADDR_CopyConAddrHHObjBTN</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label that appears when user does not pass FLS check to copy the address</shortDescription>
+        <value>You don&apos;t have the required field permissions. Contact your system administrator to inquire about getting the necessary permissions.</value>
+    </labels>
+    <labels>
         <fullName>addrCopyConAddBtnHHObjOnly</fullName>
         <categories>ADDR_CopyConAddrHHObjBTN</categories>
         <language>en_US</language>
@@ -2901,7 +2917,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Label for link to hide advanced options in the Wizard</shortDescription>
         <value>Hide Advanced Options</value>
-    </labels>    
+    </labels>
+    <labels>
+        <fullName>btnContinue</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>button label to Continue an action</shortDescription>
+        <value>Continue</value>
+    </labels>
     <labels>
         <fullName>btnRemove</fullName>
         <categories>Manage Household UI</categories>
@@ -3873,7 +3896,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>healthSolutionAccountDefaultRTInvalid</shortDescription>
-        <value>Go to &lt;strong&gt;People | Account Model&lt;/strong&gt; and select a valid record type.</value>
+        <value>Go to &lt;b&gt;People | Account Model&lt;/b&gt; and select a valid record type.</value>
     </labels>
     <labels>
         <fullName>healthSolutionAccountDefaultRTIssue</fullName>
@@ -4334,6 +4357,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>prompt for the Remove Contact Popup</shortDescription>
         <value>Do you want to remove this Contact from this Household on Save?</value>
+    </labels>
+    <labels>
+        <fullName>lblDeprecated</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Notify user component has been deprecated.</shortDescription>
+        <value>This component has been deprecated.</value>
     </labels>
     <labels>
         <fullName>lblExtendedStatus</fullName>
@@ -5693,6 +5723,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>stgCountOf</shortDescription>
         <value>Count of</value>
+    </labels>
+    <labels>
+        <fullName>stgCreatedBy</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgCreatedBy</shortDescription>
+        <value>Created By</value>
     </labels>
     <labels>
         <fullName>stgCRLPHouseholdAccountError</fullName>
@@ -7675,6 +7713,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>Label for dynamic number of years ago</shortDescription>
         <value>{0} Years Ago</value>
+    </labels>
+    <labels>
+        <fullName>stgLastModifiedBy</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Last Modified By</shortDescription>
+        <value>Last Modified By</value>
     </labels>
     <labels>
         <fullName>stgLinkDelete</fullName>

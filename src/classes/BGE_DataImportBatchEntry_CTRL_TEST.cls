@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2018, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,9 +29,9 @@
 */
 /**
 * @author Salesforce.org
-* @date 2018
+* @date 2019
 * @group BGE
-* @group-content //todo
+* @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Unit Tests for the Data Import Batch Entry component.
 */
 
@@ -73,6 +73,21 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
 
         insert dataImports;
         return dataImports;
+    }
+
+    /*********************************************************************************************************
+    * @description Tests updateDataImports()
+    */
+
+    @isTest
+    static void testUpdateDataImports() {
+        Id batchId = createDataImportBatch();
+        List<DataImport__c> dataImports = createDataImports(5, batchId);
+        List<BGE_DataImportBatchEntry_CTRL.DataImportRow> rows =
+                BGE_DataImportBatchEntry_CTRL.updateDataImports(dataImports, batchId);
+        for (Integer i=0; i<dataImports.size(); i++) {
+            System.assertEquals(dataImports[i].Id, rows[i].record.Id);
+        }
     }
 
     /*********************************************************************************************************

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2018, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2018
+* @date 2019
 * @group BGE
 * @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Lightning Component Server Controller for the Data Import Batch Entry component.
@@ -84,6 +84,12 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         return JSON.serialize(dataImportModel);
     }
 
+    /*******************************************************************************************************
+    * @description updates data import records
+    * @param dataImports: list of the NPSP_Data_Import__c record to update
+    * @param batchId: ID of the NPSP_Data_Import_Batch__c
+    * @return updated list of data import records
+    */
     @AuraEnabled
     public static List<DataImportRow> updateDataImports(List<DataImport__c> dataImports, Id batchId) {
         Database.update(dataImports);
@@ -283,16 +289,10 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                         col.defaultValue = field.defaultValue;
                         col.required = field.requiredInEntryForm;
                         col.hide = field.hide;
-                        col.type = dataImportDFR.getType().name().toLowerCase();
-                        if (col.type == 'date') {
-                            col.type = 'date-local';
-                        }
-                        if (col.type == 'double') {
-                            col.type = 'number';
-                        }
+                        col.type = UTIL_LightningComponentSupport.getLightningDataType(dataImportDFR.getType().name());
                         col.typeAttributes = '{}';
 
-                        col.options = BGE_ConfigurationWizard_CTRL.getPicklistOptions(col.fieldName);
+                        col.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(col.fieldName);
 
                         columns.add(col);
 

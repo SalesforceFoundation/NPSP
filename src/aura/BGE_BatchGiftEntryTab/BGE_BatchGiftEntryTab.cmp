@@ -1,5 +1,5 @@
 <!--
-    Copyright (c) 2018, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,15 +29,31 @@
 -->
 <!--
   @author Salesforce.org
-  @date 2018
+  @date 2019
   @group Batch Gift Entry
   @description Tab component used to view all DataImportBatch records used for Batch Gift Entry.
 -->
 
-<aura:component implements="force:appHostable" controller="BGE_ConfigurationWizard_CTRL" access="public">
+<aura:component implements="force:appHostable" controller="BGE_BatchGiftEntryTab_CTRL" access="public">
+
+    <!-- attributes -->
+    <aura:attribute name="modalOpen" type="Boolean" description="Prevents multiple modals from opening"/>
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!-- Private Attributes -->
+    <aura:attribute name="batchData" type="List" default="[]" access="private"
+                    description="List of Data Import Batch records and sorting info for the datatable."/>
+    <aura:attribute name="batchListColumns" type="List" access="private"
+                    description="Set of columns to display in the datatable"/>
+    <aura:attribute name="totalNumberOfRows" type="Integer" access="private"
+                    description="Count of all Data Import Batch records
+                    where GiftBatch__c = true that are accessible to the user."/>
+    <aura:attribute name="sortBy" type="String" default="CreatedDate" access="private"/>
+    <aura:attribute name="sortDirection" type="String" default="desc" access="private"/>
+    <aura:attribute name="isLoadingDataTable" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true" access="private"/>
 
     <!-- Start Markup -->
     <lightning:overlayLibrary aura:id="overlayLib"/>
@@ -49,20 +65,37 @@
             <div class="slds-grid">
                 <div class="slds-col slds-has-flexi-truncate slds-align-middle">
                     <h1>
-                        <span class="slds-page-header__title" title="{!$Label.c.bgeTabHeader}">{!$Label.c.bgeTabHeader}</span>
+                        <span class="slds-page-header__title" title="{!$Label.c.bgeTabHeader}">
+                            {!$Label.c.bgeTabHeader}
+                        </span>
                     </h1>
                 </div>
                 <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
                     <lightning:buttonGroup>
-                        <lightning:button aura:id="newBGEBatch" label="{!$Label.c.bgeNewBatch}" onclick="{!c.onNewBatchClick}"/>
+                        <lightning:button aura:id="newBGEBatch"
+                                          label="{!$Label.c.bgeNewBatch}"
+                                          onclick="{!c.onNewBatchClick}"/>
                     </lightning:buttonGroup>
                 </div>
             </div>
         </div>
     </header>
 
-    <!--List View created dynamically-->
-    {!v.body}
+    <!--Data Table-->
+    <lightning:datatable aura:id="dataTable"
+                         keyField="id"
+                         data="{!v.batchData}"
+                         columns="{!v.batchListColumns}"
+                         hideCheckboxColumn="true"
+                         enableInfiniteLoading="{!v.enableInfiniteLoading}"
+                         showRowNumberColumn="true"
+                         onloadmore="{!c.loadMoreData}"
+                         isLoading="{!v.isLoadingDataTable}"
+                         onsort="{!c.sortByColumns}"
+                         sortedBy="{!v.sortBy}"
+                         sortedDirection="{!v.sortDirection}"
+                         defaultSortDirection="asc"
+    />
 
     <!-- End Markup -->
 
