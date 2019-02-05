@@ -16,7 +16,6 @@ from selenium.webdriver import ActionChains
 from cumulusci.robotframework.utils import selenium_retry
 import sys
 from email.mime import text
-from _socket import timeout
 
 
 @selenium_retry
