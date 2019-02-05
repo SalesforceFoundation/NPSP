@@ -3,6 +3,14 @@
     <customSettingsType>Hierarchy</customSettingsType>
     <enableFeeds>false</enableFeeds>
     <fields>
+        <fullName>AccountHardCreditNonSkew_Incremental__c</fullName>
+        <defaultValue>true</defaultValue>
+        <externalId>false</externalId>
+        <label>Incremental Account Hard Credit Non-Skew</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>CMT_API_Status__c</fullName>
         <description>Result of the last CustomMetadataType deployment</description>
         <externalId>false</externalId>
@@ -12,6 +20,14 @@
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>ContactHardCreditNonSkew_Incremental__c</fullName>
+        <defaultValue>true</defaultValue>
+        <externalId>false</externalId>
+        <label>Incremental Contact Hard Credit Non-Skew</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Customizable_Rollups_Enabled__c</fullName>
