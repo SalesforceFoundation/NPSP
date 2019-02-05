@@ -139,9 +139,8 @@
         if (!tableErrors) {
             tableErrors = { rows: {}, table: {}, size: 0 };
         }
-
         if (tableErrors.rows.hasOwnProperty(rowId)) {
-            delete tableErrors[rowId];
+            delete tableErrors.rows[rowId];
             let errorSize = tableErrors.size > 1 ? tableErrors.size - 1 : 0;
             tableErrors.size = errorSize;
             component.set('v.errors', tableErrors);
@@ -160,19 +159,28 @@
             var state = response.getState();
             if (state === 'SUCCESS') {
                 this.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftUpdated'), 'success');
-                let model = JSON.parse(response.getReturnValue());
-                this.setTotals(component, model);
-                if (model.dataImportRows.length > 0) {
-                    //we only process one record at a time, but the model passes back a list
-                    let updatedRecord = model.dataImportRows[0];
-                    this.afterDryRun(component, updatedRecord, false);
-                }
+                this.afterDryRun(component, JSON.parse(response.getReturnValue()), false);
             } else {
                 this.handleApexErrors(component, response.getError());
             }
             this.hideSpinner(component);
         });
         $A.enqueueAction(action);
+    },
+
+    /**
+     * @description: set new total amount and count variables and update data table after dry run completes
+     * @param updatedRecord: DataImport__c record that needs to be updated in the table
+     * @param isNewRecord: flag to indicate if record is new or existing
+     */
+
+    afterDryRun: function(component, model, isNewRecord) {
+        this.setTotals(component, model);
+        if (model.dataImportRows.length > 0) {
+            //we only process one record at a time, but the model passes back a list
+            let newRecord = model.dataImportRows[0];
+            this.updateDataTableAfterDryRun(component, newRecord, isNewRecord);
+        }
     },
 
     /**
@@ -245,13 +253,7 @@
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
-                let model = JSON.parse(response.getReturnValue());
-                this.setTotals(component, model);
-                if (model.dataImportRows.length > 0) {
-                    //we only process one record at a time, but the model passes back a list
-                    let newRecord = model.dataImportRows[0];
-                    this.afterDryRun(component, newRecord, true);
-                }
+                this.afterDryRun(component, JSON.parse(response.getReturnValue()), true);
             } else {
                 this.handleApexErrors(component, response.getError());
             }
@@ -263,8 +265,9 @@
     /**
      * @description: insert or update record and possible error into the table data
      * @param updatedRecord: DataImport__c record that needs to be updated in the table
+     * @param isNewRecord: flag to indicate if record needs to be inserted or replaced
      */
-    afterDryRun: function (component, updatedRecord, isNewRecord) {
+    updateDataTableAfterDryRun: function (component, updatedRecord, isNewRecord) {
         let tableRow = this.flattenDataImportRow(updatedRecord);
         let hasError = false;
 
