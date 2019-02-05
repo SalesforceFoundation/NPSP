@@ -4387,6 +4387,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Do you want to remove this Contact from this Household on Save?</value>
     </labels>
     <labels>
+        <fullName>lblDeprecated</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Notify user component has been deprecated.</shortDescription>
+        <value>This component has been deprecated.</value>
+    </labels>
+    <labels>
         <fullName>lblExtendedStatus</fullName>
         <categories>UTIL_JobProgressLightning</categories>
         <language>en_US</language>
