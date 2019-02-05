@@ -22,8 +22,8 @@ Assign GAU to Opportunity
     Click Button With Value    Add Row    
     Select Search    General Accounting Unit 1    &{gau2}[Name]  
     Add GAU Allocation    Amount 1    20
-    Click Button With Value    Save
-    Sleep    2
+    Click Button    Save
+    Wait Until Page Does Not Contain    Add Row
     Select Window
     Page Scroll To Locator    record.related.check_occurrence    GAU Allocations
     Verify Occurrence    GAU Allocations    2
