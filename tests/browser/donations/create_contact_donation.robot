@@ -13,7 +13,6 @@ Create Donation from a Contact
     Click Object Button  New Donation
     Populate Form
     ...                       Amount=100
-    Select Lightning Checkbox    Do Not Automatically Create Payment
     Click Dropdown    Stage
     Click Link    link=Closed Won
     Open Date Picker    Close Date
@@ -24,4 +23,4 @@ Create Donation from a Contact
     Click Link    ${value}
     Select Tab    Related
     Load Related List    Payments
-    Verify Occurrence    Payments    0
+    Verify Occurrence    Payments    1
