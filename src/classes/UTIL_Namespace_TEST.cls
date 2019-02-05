@@ -149,6 +149,9 @@ private with sharing class UTIL_Namespace_TEST {
         str = System.Label.stgHelpRespectDuplicateRuleSettings;
         str = Label.bdiFailed;
         str = Label.bdiImported;
+        // The following label should be kept even when not in use to allow
+        // the deprecation warning to be translated
+        str = System.Label.lblDeprecated;
 
         // The following labels are referenced because the spider was having
         // issues resolving references to them and they need to be directly
