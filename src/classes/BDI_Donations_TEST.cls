@@ -247,13 +247,13 @@ public with sharing class BDI_Donations_TEST {
         // BGE interface, user selects to Update an open Opportunity with no Payments and updates Amount
         dataImports.add(new DataImport__c(Contact1_Firstname__c=listConT[1].Firstname, Contact1_Lastname__c=listConT[1].Lastname,
                 Contact1_Work_Email__c=listConT[1].npe01__WorkEmail__c));
-        dataImports[1].Donation_Donor__c = 'Contact1';
-        dataImports[1].Donation_Amount__c = updatedAmount;
-        dataImports[1].DonationImported__c = newOpp.Id;
-        dataImports[1].DonationImportStatus__c = System.Label.bdiMatchedByUser;
-        dataImports[1].Payment_Check_Reference_Number__c = '1234';
-        dataImports[1].Payment_Method__c = 'Visa';
-        dataImports[1].NPSP_Data_Import_Batch__c = batch.Id;
+        dataImports[2].Donation_Donor__c = 'Contact1';
+        dataImports[2].Donation_Amount__c = updatedAmount;
+        dataImports[2].DonationImported__c = newOpp.Id;
+        dataImports[2].DonationImportStatus__c = System.Label.bdiMatchedByUser;
+        dataImports[2].Payment_Check_Reference_Number__c = '1234';
+        dataImports[2].Payment_Method__c = 'Visa';
+        dataImports[2].NPSP_Data_Import_Batch__c = batch.Id;
 
         insert dataImports;
 
@@ -263,7 +263,7 @@ public with sharing class BDI_Donations_TEST {
         Test.stopTest();
 
         // verify expected results
-        /*List<Contact> contacts = [
+        List<Contact> contacts = [
             SELECT Id,
                 Name,
                 AccountId,
@@ -271,31 +271,33 @@ public with sharing class BDI_Donations_TEST {
             FROM Contact
             ORDER BY Id
         ];
+
         System.assertEquals(2, contacts.size());
         System.assertEquals(0, contacts[0].npo02__TotalOppAmount__c);
         System.assertEquals(stableAmount + updatedAmount, contacts[1].npo02__TotalOppAmount__c);
 
         List<Account> accounts = [
-            SELECT Id,
-                Name,
-                npo02__TotalOppAmount__c
-            FROM Account
-            ORDER BY Id
+                SELECT Id,
+                        Name,
+                        npo02__TotalOppAmount__c
+                FROM Account
+                ORDER BY Id
         ];
+
         System.assertEquals(2, accounts.size());
         System.assertEquals(0, accounts[0].npo02__TotalOppAmount__c);
         System.assertEquals(stableAmount + updatedAmount, accounts[1].npo02__TotalOppAmount__c);
 
         List<Opportunity> opps = [
-            SELECT Id,
-                Name,
-                Amount,
-                StageName,
-                isWon,
-                isClosed,
-                AccountId
-            FROM Opportunity
-            ORDER BY Id
+                SELECT Id,
+                        Name,
+                        Amount,
+                        StageName,
+                        isWon,
+                        isClosed,
+                        AccountId
+                FROM Opportunity
+                ORDER BY Id
         ];
 
         System.assertEquals(3, opps.size());
@@ -332,7 +334,6 @@ public with sharing class BDI_Donations_TEST {
         System.assertEquals('1234', stablePayment.npe01__Check_Reference_Number__c);
         System.assertEquals(true, stablePayment.npe01__Paid__c);
 
-
         dataImports = [
             SELECT Id,
                 Status__c,
@@ -358,7 +359,7 @@ public with sharing class BDI_Donations_TEST {
         System.assertEquals(opps[2].Id, dataImports[2].DonationImported__c);
         System.assertEquals(System.Label.bdiMatchedByUser, dataImports[2].DonationImportStatus__c);
         System.assertEquals(null, dataImports[2].PaymentImported__c);
-        System.assertEquals(null, dataImports[2].PaymentImportStatus__c);*/
+        System.assertEquals(null, dataImports[2].PaymentImportStatus__c);
     }
 
     /*********************************************************************************************************
