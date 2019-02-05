@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customButtons>npe01__Matching_Donation</customButtons>
     <customButtons>%%%NAMESPACE%%%Refresh_Name</customButtons>
     <customButtons>%%%NAMESPACE%%%Email_Acknowledgment</customButtons>
     <excludeButtons>Submit</excludeButtons>
@@ -250,8 +249,8 @@
         <relatedList>%%%NAMESPACE%%%Account_Soft_Credit__c.%%%NAMESPACE%%%Opportunity__c</relatedList>
     </relatedLists>
     <relatedLists>
-        <customButtons>npe01__Schedule_Payments</customButtons>
-        <customButtons>npe01__Writeoff_Payments</customButtons>
+        <customButtons>Schedule_Payments</customButtons>
+        <customButtons>Writeoff_Payments</customButtons>
         <fields>NAME</fields>
         <fields>npe01__Payment_Amount__c</fields>
         <fields>Payment_Status__c</fields>

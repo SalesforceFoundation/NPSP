@@ -82,6 +82,8 @@
         <members>BDI_PostProcess_TEST</members>
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
+        <members>BGE_BatchGiftEntryTab_CTRL</members>
+        <members>BGE_BatchGiftEntryTab_CTRL_TEST</members>
         <members>BGE_BatchGiftEntry_UTIL</members>
         <members>BGE_BatchGiftEntry_UTIL_TEST</members>
         <members>BGE_ConfigurationWizard_CTRL</members>
@@ -412,6 +414,7 @@
         <members>UTIL_IScheduled</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
+        <members>UTIL_LightningComponentSupport</members>
         <members>UTIL_ListCustomSettingsFacade</members>
         <members>UTIL_MasterSchedulable</members>
         <members>UTIL_MasterSchedulableHelper</members>
@@ -965,6 +968,9 @@
         <members>Level__c.Previous_Level_Field__c</members>
         <members>Level__c.Source_Field__c</members>
         <members>Level__c.Target__c</members>
+        <members>Levels_Settings__c.LastJobStartTimeAccount__c</members>
+        <members>Levels_Settings__c.LastJobStartTimeContact__c</members>
+        <members>Levels_Settings__c.Level_Assignment_Batch_Size__c</members>
         <members>Opportunity.Acknowledgment_Date__c</members>
         <members>Opportunity.Acknowledgment_Status__c</members>
         <members>Opportunity.Ask_Date__c</members>
@@ -1283,6 +1289,8 @@
         <members>Zipcode_Verification_Limit</members>
         <members>adapterException</members>
         <members>addrCiceroMissingAPIKey</members>
+        <members>addrCopyConAddBtnConfirm</members>
+        <members>addrCopyConAddBtnFls</members>
         <members>addrCopyConAddBtnHHObjOnly</members>
         <members>addrGeneralSettings</members>
         <members>addrHHAccountOnly</members>
@@ -1454,6 +1462,7 @@
         <members>bgeTabHeader</members>
         <members>bgeWizardHideAdvancedOptions</members>
         <members>bgeWizardShowAdvancedOptions</members>
+        <members>btnContinue</members>
         <members>btnRemove</members>
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
@@ -1634,6 +1643,7 @@
         <members>lblCountry</members>
         <members>lblDeleteContact</members>
         <members>lblDeleteContactPrompt</members>
+        <members>lblDeprecated</members>
         <members>lblExtendedStatus</members>
         <members>lblFindInContacts</members>
         <members>lblFindOrAddContact</members>
@@ -1810,6 +1820,7 @@
         <members>stgCheckboxTrue</members>
         <members>stgClearErrors</members>
         <members>stgCountOf</members>
+        <members>stgCreatedBy</members>
         <members>stgDefaultValue</members>
         <members>stgDeploymentInProgress</members>
         <members>stgDeploymentTryAgain</members>
@@ -2038,6 +2049,7 @@
         <members>stgLabelYearPicklistLastYear</members>
         <members>stgLabelYearPicklistThisYear</members>
         <members>stgLabelYearPicklistYearsAgo</members>
+        <members>stgLastModifiedBy</members>
         <members>stgLinkDelete</members>
         <members>stgNPSPGuideImportData</members>
         <members>stgNPSPSettings</members>
@@ -2116,6 +2128,7 @@
         <members>Grant_Deadline__c</members>
         <members>Household_Naming_Settings__c</members>
         <members>Level__c</members>
+        <members>Levels_Settings__c</members>
         <members>Opportunity_Naming_Settings__c</members>
         <members>Package_Settings__c</members>
         <members>Partial_Soft_Credit__c</members>
@@ -2306,6 +2319,13 @@
         <members>Level__c-iw</members>
         <members>Level__c-ja</members>
         <members>Level__c-nl_NL</members>
+        <members>Levels_Settings__c-de</members>
+        <members>Levels_Settings__c-en_US</members>
+        <members>Levels_Settings__c-es</members>
+        <members>Levels_Settings__c-fr</members>
+        <members>Levels_Settings__c-iw</members>
+        <members>Levels_Settings__c-ja</members>
+        <members>Levels_Settings__c-nl_NL</members>
         <members>Opportunity-de</members>
         <members>Opportunity-es</members>
         <members>Opportunity-fr</members>
@@ -2485,6 +2505,7 @@
         <members>Contact.BDE_Entry_FS</members>
         <members>Contact.BDE_List_FS</members>
         <members>Contact.ContactMergeFoundFS</members>
+        <members>DataImportBatch__c.BatchGiftEntryTabColumns</members>
         <members>Engagement_Plan_Template__c.ManageEPTemplateFS</members>
         <members>Lead.BDE_Entry_FS</members>
         <members>Lead.BDE_List_FS</members>

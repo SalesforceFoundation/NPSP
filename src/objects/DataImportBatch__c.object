@@ -61,6 +61,31 @@
     <enableSearch>true</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
+    <fieldSets>
+        <fullName>BatchGiftEntryTabColumns</fullName>
+        <description>The Batch fields to be displayed as columns in the table of Batches on the BGE tab.</description>
+        <displayedFields>
+            <field>Name</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>true</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>Batch_Description__c</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>CreatedById</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>false</isRequired>
+        </displayedFields>
+        <displayedFields>
+            <field>CreatedDate</field>
+            <isFieldManaged>false</isFieldManaged>
+            <isRequired>true</isRequired>
+        </displayedFields>
+        <label>Batch Gift Entry Tab Columns</label>
+    </fieldSets>
     <fields>
         <fullName>Account_Custom_Unique_ID__c</fullName>
         <description>An optional Unique Id field to use for Organization Account matching</description>
@@ -360,6 +385,7 @@
         <columns>NAME</columns>
         <columns>LAST_UPDATE</columns>
         <columns>Batch_Description__c</columns>
+        <columns>GiftBatch__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
     </listViews>

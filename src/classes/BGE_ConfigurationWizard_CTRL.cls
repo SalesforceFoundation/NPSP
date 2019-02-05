@@ -47,15 +47,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     };
 
     /*******************************************************************************************************
-    * @description Checks for field permissions to create a new Batch/Template
-    * @return void; throws an AuraHandledException if any fields fail FLS check
-    */
-    @AuraEnabled
-    public static void checkFieldPermissions() {
-        BGE_BatchGiftEntry_UTIL.checkFieldPermissionsNeededForBatch();
-    }
-
-    /*******************************************************************************************************
     * @description Retrieves the Template Details information, the related list of fields, and component labels.
     * @param recordId Id of the record to be queried
     * @return JSON model of all template details data.
@@ -162,7 +153,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 field.formatter = 'currency';
             }
 
-            field.options = getPicklistOptions(field.name);
+            field.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(field.name);
 
             fields.add(field);
         }
@@ -254,40 +245,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Returns the source field's options formatted for lightning:select if the source field is a picklist
-    * or the target field's options formatted for lightning:select if the source field is a string and the target
-    * field is a picklist
-    * Returns an empty map if neither case applies
-    */
-    public static List<Map<String, String>> getPicklistOptions(String dataImportField){
-        List<Map<String, String>> options = new List<Map<String, String>>();
-
-        String dataImportObject = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
-
-        String rawSourceFieldType = UTIL_Describe.getFieldDisplaytype(dataImportObject, dataImportField.toLowerCase()).name().toLowerCase();
-
-        if (rawSourceFieldType == 'picklist') {
-            options = UTIL_Describe.getLightningSelectOptions(dataImportObject, dataImportField);
-
-        } else if (rawSourceFieldType == 'string') {
-
-            String targetObject = BDI_DataImportService.getTargetObject(dataImportField);
-            if (targetObject == 'Payment') {
-                targetObject = 'npe01__OppPayment__c';
-            }
-
-            String targetField = BDI_DataImportService.getTargetField(dataImportField);
-            Schema.DisplayType targetFieldType = UTIL_Describe.getFieldDisplaytype(targetObject, targetField);
-
-            if (targetFieldType == Schema.DisplayType.PICKLIST) {
-                options = UTIL_Describe.getLightningSelectOptions(targetObject, targetField);
-            }
-        }
-
-        return options;
-    }
-
-    /*******************************************************************************************************
     * @description Retrieves the default active fields for a new Batch or Template in a JSON String
     */
     public static String getDefaultActiveFields() {
@@ -341,7 +298,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         paymentMethod.requiredInEntryForm = false;
         paymentMethod.hide = false;
         paymentMethod.type = getLightningFieldType('string');
-        paymentMethod.options = getPicklistOptions(paymentMethodApiName);
+        paymentMethod.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(paymentMethodApiName);
         paymentMethod.sortOrder = 2;
         fields.add(paymentMethod);
 
@@ -463,7 +420,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         };
         List<DescribeFieldResult> dfrs = getRelevantFields(donationObjects);
 
-        for (DescribeFieldResult donationField: dfrs) {
+        for (DescribeFieldResult donationField : dfrs) {
             Map<String, String> option = new Map<String, String>();
             option.put('value', donationField.Name.toLowerCase());
             option.put('label', donationField.Label);
@@ -517,18 +474,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'BestMatchOrCreate' => BDI_DataImport_API.BestMatchOrCreate
         };
         return labels;
-    }
-
-    /*******************************************************************************************************
-    * @description Gets list view to display on the BGE Batch Gift Entry Tab Controller
-    * @return Map<String, String> listView with namespaced attributes to use to create correctly namespaced list view
-    */
-    @AuraEnabled
-    public static Map<String, String> getNamespacedListView() {
-        Map<String, String> listView = new Map<String, String>();
-        listView.put('objectApiName', UTIL_Namespace.StrTokenNSPrefix('DataImportBatch__c'));
-        listView.put('listName', UTIL_Namespace.StrTokenNSPrefix('Gift_Batches'));
-        return listView;
     }
 
     /*******************************************************************************************************
