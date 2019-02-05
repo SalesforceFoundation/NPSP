@@ -36,6 +36,8 @@
 */
 @isTest
 private with sharing  class ALLO_PaymentSync_TEST {
+//TODO null and zero amounts
+
     /*******************************************************************************************************
     * @description When changing the amount of a Payment with Allocations: 
     * Increasing the amount will adjust the percentage allocations.
@@ -45,6 +47,60 @@ private with sharing  class ALLO_PaymentSync_TEST {
     * error is thrown and the payment update is blocked.
     ********************************************************************************************************/
     static testMethod void syncPaymentsToOpportunities() {
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
+        insert defaultGau;
+
+        UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(
+            new Allocations_Settings__c(
+                Payment_Allocations_Enabled__c = true,
+                Default_Allocations_Enabled__c = true,
+                Default__c = defaultGau.Id
+            )
+        );
+
+        Account acc = new Account(Name='Account-syncPaymentsToOpportunities');
+        insert acc;
+        Opportunity opp = new Opportunity(
+            Name = 'Opp-syncPaymentsToOpportunities', 
+            Amount = 10, 
+            AccountID = acc.id, 
+            CloseDate = system.today(), 
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        );
+        insert opp;
+        npe01__OppPayment__c pmt = new npe01__OppPayment__c(
+            npe01__Payment_Amount__c = 8, 
+            npe01__Opportunity__c = opp.Id
+        );
+        insert pmt;
+
+        list<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
+        gaus.add(new General_Accounting_Unit__c(Name='GAU-syncPaymentsToOpportunities-1'));
+        gaus.add(new General_Accounting_Unit__c(Name='GAU-syncPaymentsToOpportunities-2'));
+        insert gaus;
+
+        //resetting these manually as a test is considered a single context for static variables
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        Allocation__c percentAllo = new Allocation__c(Payment__c=pmt.id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].id);
+        alloForInsert.add(percentAllo);
+        Allocation__c amountAllo = new Allocation__c(Payment__c=pmt.id, Amount__c = 4, General_Accounting_Unit__c = gaus[1].id);
+        alloForInsert.add(amountAllo);
+        insert alloForInsert;
+
+        List<Allocation__c> queryAllocations = getAllocationsOrderByAmount(opp.id);
+        System.assertEquals(2, queryAllocations.size(), 'Three opportunity allocations should exist.');
+    }
+
+    /*******************************************************************************************************
+    * @description When changing the amount of a Payment with Allocations: 
+    * Increasing the amount will adjust the percentage allocations.
+    * Decreasing the amount so that the total allocation amount is below the payment amount will adjust 
+    * the percentage allocations.
+    * Decreasing the amount so that the total allocation amount is greater than the payment amount, an 
+    * error is thrown and the payment update is blocked.
+    ********************************************************************************************************/
+    static testMethod void syncOpportunitiesToPayments() {
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
         insert defaultGau;
 

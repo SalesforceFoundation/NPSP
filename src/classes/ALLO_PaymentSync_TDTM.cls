@@ -48,9 +48,12 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
         //sum of allocation amount by GAU
         Map<Id, Decimal> totalOpportunityAllocationsByGAU = new Map<Id, Decimal>();
         Map<Id, Decimal> totalPaymentAllocationsByGAU = new Map<Id, Decimal>();
+        Map<Id, Decimal> totalPaidPaymentAllocationsByGAU = new Map<Id, Decimal>();
 
-        //the ratio of the sum of payment amounts (paid and unpaid, not written off) to the opportunity amount
-        Decimal amountRatio = 0;
+        //the ratio of the sum of payment amounts (paid or unpaid, not written off) to the opportunity amount
+        Decimal scheduleRatio = 0;
+
+        Integer unpaidPaymentsCount = 0;
     }
 
     private Map<Id, SynchronizationContext> contextByOpportunity = new Map<Id, SynchronizationContext>();
@@ -124,7 +127,7 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
             Id opportunityId = opportunityIdByPaymentId.get(paymentAllocation.Payment__c);
             for (Allocation__c opportunityAllocation : opportunityAllocations.values()) {
                 if (opportunityAllocation.Opportunity__c == opportunityId) {
-                    opportunityAllocation.addError('Opportunity and Payment Allocations for the same Opportunity record cannot be edited at the same time.');
+                    opportunityAllocation.addError('Opportunity and Payment Allocations for the same Opportunity record cannot be modified at the same time.');
                 }
             }
         }
@@ -141,10 +144,6 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
             SynchronizationContext context = contextByOpportunity.get(opportunityAllocation.Opportunity__c);
             syncOpportunityAllocationsToPayments(context);
         }
-
-        //TODO: 
-            //move services to SVC class
-            //move queries to SEL class
 
         system.debug('njjc: dml ' + allocationsChanges);
         
@@ -212,15 +211,19 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
                     context.totalOpportunityAllocationsByGAU.put(gau, oppAllocation.Amount__c);
                 }
             }
-            
-            Decimal totalPaymentsNotWrittenOff = 0;
-            
+
+            Decimal totalPaymentsPaidUnpaid = 0;
+
             for (npe01__OppPayment__c payment : paymentsByOpportunityId.get(opportunity.id)) {
                 //don't count payments that have been written off
+                //TODO: Also skip payments with 0 amount?
                 if (payment.npe01__Written_Off__c) {
                     continue;
                 }
-                totalPaymentsNotWrittenOff += payment.npe01__Payment_Amount__c;
+                if (!payment.npe01__Paid__c) {
+                    context.unpaidPaymentsCount += 1;
+                }
+                totalPaymentsPaidUnpaid += payment.npe01__Payment_Amount__c;
 
                 for (Allocation__c pmtAllocation : payment.Allocations__r) {
                     Id gau = pmtAllocation.General_Accounting_Unit__c;
@@ -237,11 +240,21 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
                     } else {
                         context.totalPaymentAllocationsByGAU.put(gau, pmtAllocation.Amount__c);
                     }
+
+                    if (payment.npe01__Paid__c) {
+                        if (context.totalPaidPaymentAllocationsByGAU.containsKey(gau)) {
+                            Decimal currentTotal = context.totalPaidPaymentAllocationsByGAU.get(gau);
+                            context.totalPaidPaymentAllocationsByGAU.put(gau, currentTotal + pmtAllocation.Amount__c);
+                        } else {
+                            context.totalPaidPaymentAllocationsByGAU.put(gau, pmtAllocation.Amount__c);
+                        }
+
+                    }
                 }
             }
 
             if (opportunity.Amount != null && opportunity.Amount != 0) {
-                context.amountRatio = totalPaymentsNotWrittenOff / opportunity.Amount;
+                context.scheduleRatio = totalPaymentsPaidUnpaid / opportunity.Amount;
             }
 
             contextByOpportunity.put(context.opportunity.id, context);
@@ -262,16 +275,16 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
         //loop through allocations totals by GAU
         for (Id gau : context.totalPaymentAllocationsByGAU.keySet()) {
             Decimal totalPaymentAllocations = context.totalPaymentAllocationsByGAU.get(gau);
-            //if we have corresponding opportunity allocations
+            //if we have opportunity allocations for this GAU
             if (context.opportunityAllocationsByGAU.containsKey(gau)) {
                 
                 Decimal totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
                 //check if they need updating
-                if (totalPaymentAllocations * context.amountRatio != totalOpportunityAllocations) {
+                if (totalPaymentAllocations * context.scheduleRatio != totalOpportunityAllocations) {
                     for (Allocation__c oppAllocation : context.opportunityAllocationsByGAU.get(gau)) {
                         //we want to keep the ratios amongst duplicate opportunity allocations
-                        Decimal duplicateAllocationAmountRatio = totalOpportunityAllocations / context.opportunity.Amount;
-                        oppAllocation.Amount__c = totalPaymentAllocations * duplicateAllocationAmountRatio;
+                        Decimal duplicateAllocationPaidUnpaidAmountRatio = totalOpportunityAllocations / context.opportunity.Amount;
+                        oppAllocation.Amount__c = totalPaymentAllocations * duplicateAllocationpaidUnpaidAmountRatio;
                         if (oppAllocation.Percent__c != null) {
                             oppAllocation.Percent__c = context.Opportunity.Amount / oppAllocation.Amount__c;
                         }
@@ -284,7 +297,7 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
                 Allocation__c newOppAllocation = new Allocation__c(
                     General_Accounting_Unit__c = gau,
                     Opportunity__c = context.opportunity.id,
-                    Amount__c = totalPaymentAllocations / context.amountRatio
+                    Amount__c = totalPaymentAllocations / context.scheduleRatio
                 );
                 allocationsChanges.objectsToInsert.add(newOppAllocation);
             }
@@ -299,7 +312,63 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
 
     private void syncOpportunityAllocationsToPayments(SynchronizationContext context) {
         for (Id gau : context.opportunityAllocationsByGAU.keySet()) {
+            Decimal totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
+            Decimal newTotalPaymentAllocations = totalOpportunityAllocations * context.scheduleRatio;
 
+            //if we have payment allocations for this GAU
+            if (context.paymentAllocationsByGAU.containsKey(gau)) {
+                Decimal currentTotalPaymentAllocations = context.totalPaymentAllocationsByGAU.get(gau);
+                Decimal totalPaidPaymentAllocations = context.totalPaidPaymentAllocationsByGAU.get(gau);
+
+                //validation: if the total of payment allocations already paid is greater than the opportunity allocations for that GAU, we can't sync and must throw an error
+                if (totalPaidPaymentAllocations > newTotalPaymentAllocations) {
+                    for (Allocation__c allocation : context.opportunityAllocationsByGAU.get(gau)) {
+                        allocation.addError('The total allocation of paid payments exceeds the opportunity allocation for this GAU.');
+                    }
+                    continue;
+                }
+
+                //if existing paid payment allocations are equal to the new total, delete any unpaid payment allocations
+                if (totalPaidPaymentAllocations == newTotalPaymentAllocations) {
+                    for (Allocation__c paymentAllocation : context.paymentAllocationsByGAU.get(gau)) {
+                        npe01__OppPayment__c payment = context.payments.get(paymentAllocation.Payment__c);
+                        if (!payment.npe01__Paid__c) {
+                            allocationsChanges.objectsToDelete.add(paymentAllocation);
+                        }
+                    }
+                }
+
+                //if desired end amounts are out of sync, update them
+                if (currentTotalPaymentAllocations != newTotalPaymentAllocations) {
+                    Decimal opportunityAllocationRatio = totalOpportunityAllocations / context.opportunity.Amount;
+
+                    for (Allocation__c paymentAllocation : context.paymentAllocationsByGAU.get(gau)) {
+                        npe01__OppPayment__c payment = context.payments.get(paymentAllocation.Payment__c);
+
+                        if (!payment.npe01__Paid__c && payment.npe01__Payment_Amount__c != 0) {
+                            Decimal unpaidAllocationAmount = context.totalPaymentAllocationsByGAU.get(gau) - newTotalPaymentAllocations;
+                            Decimal paymentRatio = totalPaidPaymentAllocations / payment.npe01__Payment_Amount__c;
+
+                            paymentAllocation.Amount__c = unpaidAllocationAmount * paymentRatio * context.scheduleRatio;
+                            paymentAllocation.Percent__c = paymentAllocation.Amount__c / payment.npe01__Payment_Amount__c;
+
+                            allocationsChanges.objectsToUpdate.add(paymentAllocation);
+                        }
+                        //TODO Delete allocations for unpaid payments of 0?
+                    }
+                }
+            //no payment allocations for this GAU; create them
+            } else {
+                for (npe01__OppPayment__c payment : context.payments.values()) {
+                    Allocation__c newAllocation = new Allocation__c(
+                        Payment__c = payment.Id,
+                        General_Accounting_Unit__c = gau,
+                        Amount__c = newTotalPaymentAllocations,
+                        Percent__c = newTotalPaymentAllocations / payment.npe01__Payment_Amount__c
+                    );
+                    allocationsChanges.objectsToInsert.add(newAllocation);
+                }
+            }
         }
     }
 /*
@@ -320,6 +389,44 @@ sync upwards: writeoffs: not included in scheduled amount
 
 sync down: writeoffs are considered paid, fixed: don't touch the allocations, just like a paid payment
 allocating the amounts: count writoff allocations as if they don't exist, but do count the payment amount in totals
+
+|     opportunity   | 100
+|     A      |   B  | 60/40 : opportunity allocation ratio for GAU A: .6, GAU B: .4
+->
+|    A    |    B    | 50/50 : opportunity allocation ratio for GAU A: .5, GAU B: .5
+
+    payments
+|----|    |    |    | 25
+|AA|B|aa|b|aa|b|aa|b|
+
+paid allocations: A:15, B:10 (total 25)
+unpaid allocations : A:35, B:40 (total 75) unpaid allocations to total unpaid allocations ratios: 35/75, 40/75
+
+unpaid / total paid&unpaid ratio = .75
+
+a: 25 * 75/100 * 35/75 = 8.75
+b: 25 * 75/100 * 40/75 = 10
+
+unpaid allocations per GAU / total unpaid allocations = 
+
+when syncing Opportunity Allocations changes to unpaid Payments
+each unpaid allocation = unpaid payment amount * 
+                        unpaid payment ratio (unpaid amount / total payment amount) * 
+                        unpaid allocation ratio (unpaid allocations to current GAU / total unpaid allocations) * 
+                        schedule ratio (total paid and unpaid / opportunity amount)
+
+total payment allocation = opportunity allocation * schedule ratio
+total unpaid allocation = total payment allocation - paid payment allocations
+
+100 opp
+110 payment
+ratio = 1.1
+
+
+
+unpaidPaymentRatio (total unpaid payments / total payment amount (paid+unpaid, not written off))
+
+
 
 */
 }
