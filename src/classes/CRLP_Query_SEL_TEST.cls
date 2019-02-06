@@ -54,10 +54,14 @@ private class CRLP_Query_SEL_TEST {
         List<Account> accts = Database.query(soql);
         System.AssertEquals(0, accts.size(), 'There should be no results, but the query should work');
 
+        // Need to instantiate a list of contact Ids to filter on. It usually comes from the calling method.
+        List<Id> contactIds = new List<Id>();
         soql = CRLP_Query_SEL.buildDetailObjectQueryForRollup(Opportunity.SObjectType, new List<SObjectType>{
                 npe01__OppPayment__c.SObjectType, Allocation__c.SObjectType, OpportunityContactRole.SObjectType});
         List<Opportunity> opps2 = Database.query(soql);
         System.AssertEquals(0, opps2.size(), 'There should be no results, but the query should work');
+        System.assert(soql.contains('WHERE'));
+        System.assert(soql.contains('ContactId IN :contactIds'));
 
         soql = CRLP_Query_SEL.buildDetailObjectQueryForRollup(Allocation__c.SObjectType, new List<SObjectType>());
         List<Allocation__c> allocs = Database.query(soql);
