@@ -30,7 +30,7 @@ Convert Lead To Account
     Click Link                link=${first_name} ${last_name}
     Click Link                link=Convert
     #Sleep    2
-    Select Frame with ID      vfFrameId
+    Select Frame with Name      vfFrameId
     Click Element             //input[@value="Convert"]
     #Sleep    2
     Go To Object Home         Contact
