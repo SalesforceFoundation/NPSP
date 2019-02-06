@@ -26,7 +26,7 @@ Find Matching Gifts
     Go To Record Home  &{opportunity3}[Id]
     Click Link    link=Show more actions
     Click Link    link=Find Matched Gifts
-    Select Frame with ID    vfFrameId
+    Select Frame with Name    vfFrameId
     Page Should Contain Link    &{Contact1}[FirstName] $50 donation    limit=1
     Select Lightning Table Checkbox     &{Contact1}[FirstName] $50 donation
     Click Link    link=Find More Gifts
