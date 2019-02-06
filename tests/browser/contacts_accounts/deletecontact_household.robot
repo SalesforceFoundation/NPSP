@@ -17,4 +17,5 @@ Delete Contact from Household
     Click Link    title=Delete
     #Sleep    5
     Go To Object Home    Account
+    Reload Page
     Page Should Contain Link   link=&{contact1}[LastName] Household
