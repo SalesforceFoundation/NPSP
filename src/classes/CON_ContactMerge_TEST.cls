@@ -34,7 +34,7 @@
 * @group ContactMerge
 * @group-content ../../ApexDocContent/ContactMerge.htm
 */
-@isTest
+@IsTest(isParallel=true)
 public class CON_ContactMerge_TEST {
     public static npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests;
     public static CON_ContactMerge_CTRL controller;
