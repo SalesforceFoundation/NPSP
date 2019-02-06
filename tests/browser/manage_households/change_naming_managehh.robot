@@ -30,5 +30,6 @@ Change Naming on Manage Household Page
     Go To Object Home          Account
     Click Link    link=&{contact1}[LastName] and &{contact2}[LastName] Household
     #Sleep    3
+    Select Tab     Details
     Check Field Value    Informal Greeting    &{contact2}[FirstName]
     Check Field Value    Formal Greeting    &{contact1}[FirstName] &{contact1}[LastName]
