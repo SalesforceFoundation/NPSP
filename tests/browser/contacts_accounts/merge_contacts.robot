@@ -28,7 +28,7 @@ Merge Contacts
     Page Should Contain  Robot One
     Page Should Contain  Robot Two
     Select App Launcher Tab  Contact Merge
-    Select Frame with ID  vfFrameId
+    Select Frame with Name  vfFrameId
     Wait Until Page Contains Element  //input[@placeholder='Search Contacts']
     Populate Address  Search Contacts  Robot
     Click Button  Search
