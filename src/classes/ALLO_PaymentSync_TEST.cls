@@ -36,7 +36,9 @@
 */
 @isTest
 private with sharing  class ALLO_PaymentSync_TEST {
-//TODO null and zero amounts
+//TODO null and zero amounts for both opps and payments
+//TODO negative amounts
+//TODO over and underscheduled
 
     /*******************************************************************************************************
     * @description When changing the amount of a Payment with Allocations: 
@@ -84,16 +86,16 @@ private with sharing  class ALLO_PaymentSync_TEST {
 
         Allocation__c percentAllo = new Allocation__c(Payment__c=pmt.id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].id);
         alloForInsert.add(percentAllo);
-        Allocation__c amountAllo = new Allocation__c(Payment__c=pmt.id, Amount__c = 4, General_Accounting_Unit__c = gaus[1].id);
+        Allocation__c amountAllo = new Allocation__c(Payment__c=pmt.id, Amount__c = 3, General_Accounting_Unit__c = gaus[1].id);
         alloForInsert.add(amountAllo);
         insert alloForInsert;
 
         List<Allocation__c> queryAllocations = getAllocationsOrderByAmount(opp.id);
-        System.assertEquals(2, queryAllocations.size(), 'Three opportunity allocations should exist.');
+        System.assertEquals(3, queryAllocations.size(), 'Three opportunity allocations should exist.');
     }
 
     /*******************************************************************************************************
-    * @description When changing the amount of a Payment with Allocations: 
+    * @description When changing the Allocation amount of an Opportunity with Payments:
     * Increasing the amount will adjust the percentage allocations.
     * Decreasing the amount so that the total allocation amount is below the payment amount will adjust 
     * the percentage allocations.
@@ -138,12 +140,12 @@ private with sharing  class ALLO_PaymentSync_TEST {
 
         Allocation__c percentAllo = new Allocation__c(Payment__c=pmt.id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].id);
         alloForInsert.add(percentAllo);
-        Allocation__c amountAllo = new Allocation__c(Payment__c=pmt.id, Amount__c = 4, General_Accounting_Unit__c = gaus[1].id);
+        Allocation__c amountAllo = new Allocation__c(Payment__c=pmt.id, Amount__c = 3, General_Accounting_Unit__c = gaus[1].id);
         alloForInsert.add(amountAllo);
         insert alloForInsert;
 
         List<Allocation__c> queryAllocations = getAllocationsOrderByAmount(opp.id);
-        System.assertEquals(2, queryAllocations.size(), 'Three opportunity allocations should exist.');
+        System.assertEquals(3, queryAllocations.size(), 'Three payment allocations should exist.');
     }
 
 
