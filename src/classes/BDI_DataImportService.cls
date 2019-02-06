@@ -289,7 +289,7 @@ global with sharing class BDI_DataImportService {
     public Map<String, Account> mapDIKeyToAccount = new Map<String, Account>();
     private Map<Id, Address__c> mapDIIdToAddr = new Map<Id, Address__c>();
     public Map<String, Id> mapStrNameToCampaignId = new Map<String, Id>();
-    public Map<String, Id> mapIdToCampaignStrName = new Map<Id, String>();
+    public Map<Id, String> mapIdToCampaignStrName = new Map<Id, String>();
 
     /*******************************************************************************************************
     * @description holds the list of DataImport records we are currently processing
@@ -1775,10 +1775,20 @@ global with sharing class BDI_DataImportService {
             String strName = dataImport.Donation_Campaign_Name__c;
             Id campaignId = dataImport.DonationCampaignImported__c;
             Campaign cmp;
-            //todo: why setStrCampaign.add(strName) -- I removed this
+
+            if (campaignId != null) {
+                if (mapIdToCampaignStrName.get(campaignId) != null) {
+                    //todo: do we need to consider this? used elsewhere. if (dataImport.DonationCampaignImportStatus__c != label.bdiMatchedByUser) {
+                    dataImport.DonationCampaignImportStatus__c = label.bdiMatchedId;
+                } else if (mapStrNameToCampaignId.get(strName) == null) {
+                    //todo: rework this matched none if str name matches
+                    dataImport.DonationCampaignImportStatus__c = label.bdiMatchedNone;
+                }
+            }
+
             if (strName != null) {
                 //todo: should this just be a DIkey?
-                //check for matches by Name or Id
+                //check if we have any matches by Name or Id
                 if (mapStrNameToCampaignId.get(strName) == null && mapIdToCampaignStrName.get(campaignId) == null) {
                     cmp = new Campaign(Name=strName, IsActive=true);
                     listCmpNew.add(cmp);

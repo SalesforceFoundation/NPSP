@@ -1244,7 +1244,6 @@ public with sharing class BDI_DataImport_TEST {
         listDI[0].Donation_Amount__c = 100;
         listDI[1].Donation_Amount__c = 200;
         listDI[0].DonationCampaignImported__c = listCampaigns[0].Id;
-        //todo: should we do any better weird ID testing? -- probably not, insert should prevent b/c of type
         listDI[1].DonationCampaignImported__c = null;
         listDI[1].Donation_Campaign_Name__c = 'AnotherCmpExisting';
         insert listDI;
@@ -1273,11 +1272,13 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(label.bdiCreated, listDI[0].DonationImportStatus__c);
         System.assertEquals(label.bdiCreated, listDI[1].DonationImportStatus__c);
 
-        System.assertEquals(listDI[0].DonationCampaignImported__c, listOpp[0].Id);
-        System.assertEquals(label.bdiMatched, listDI[0].DonationCampaignImportStatus__c);
-        //todo: what would we expect this to say? anything? what about the imported status??
+        System.assertEquals(listDI[0].DonationCampaignImported__c, listCampaigns[0].Id);
+        System.assertEquals(label.bdiMatchedId, listDI[0].DonationCampaignImportStatus__c);
+        //todo: do we want to change the existing name logic to update or are these assertions correct?
+        System.assertEquals(listDI[1].DonationCampaignImported__c, null);
+        System.assertEquals(null, listDI[1].DonationCampaignImportStatus__c);
         //System.assertEquals(label.bdiMatched, listDI[1].DonationCampaignImportStatus__c);
-        //System.assertEquals(listDI[1].DonationCampaignImported__c, listOpp[1].Id); //or would this be null?
+        //System.assertEquals(listDI[1].DonationCampaignImported__c, listOpp[1].Id);
 
     }
     /*********************************************************************************************************

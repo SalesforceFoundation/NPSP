@@ -399,12 +399,8 @@ public class BDI_Donations {
         }*/
 
         if (dataImport.DonationCampaignImported__c != null) {
-            Id campaignId = bdi.mapIdToCampaignStrName.get(dataImport.DonationCampaignImported__c);
-            if (campaignId == null) {
-                //todo: better matching here
-                bdi.LogBDIError(dataImport, System.Label.bdiErrorInvalidCampaignName, 'DonationCampaignImportStatus__c');
-                return null;
-            }
+            Id campaignId = dataImport.DonationCampaignImported__c;
+            //todo: need to log error here, or no?
             opp.CampaignId = campaignId;
         } else if (dataImport.Donation_Campaign_Name__c != null) {
             Id campaignId = bdi.mapStrNameToCampaignId.get(dataImport.Donation_Campaign_Name__c);
@@ -520,18 +516,12 @@ public class BDI_Donations {
                 dataImport.PaymentImportStatus__c = bdi.statusMatchedNone();
             }
 
-            // campaigns
-            /*if (dataImport.DonationCampaignImportStatus__c == BDI_DataImport_API.bdiFailed) {
-                dataImport.DonationCampaignImportStatus__c = bdi.statusDIFailed();
-            } else if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatched) {
-                dataImport.DonationCampaignImportStatus__c = bdi.statusMatchedExisting();
-            } else if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatchedBest) {
-                dataImport.DonationCampaignImportStatus__c = bdi.statusMatchedBest();
-            } else if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatchedId) {
+            // campaigns -- list is shorter since we're limiting matching behavior
+            if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatchedId) {
                 dataImport.DonationCampaignImportStatus__c = bdi.statusMatchedById();
             } else if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatchedNone) {
                 dataImport.DonationCampaignImportStatus__c = bdi.statusMatchedNone();
-            }*/
+            }
         }
     }
 
