@@ -49,7 +49,7 @@
             batchInfo.expectedTotal = model.expectedTotal || 0;
             batchInfo.recordCount = model.recordCount;
         } else {
-            batchInfo.name = model.name + ' - ' + $A.get('$Label.c.STGBtnClone').toUpperCase();
+            batchInfo.name = model.name + ' - ' + $A.get('$Label.c.bgeCopyBatchSetupBatchNameAppend');
             // when copying setup from existing Batch, explicitly initialize these properties
             batchInfo.id = null;
             batchInfo.description = null;
