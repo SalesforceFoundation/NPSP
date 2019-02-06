@@ -165,7 +165,9 @@
                         </lightning:select>
                         <aura:set attribute="else">
                             <label for="{!field.name}" class="slds-form-element__label">
-                                <aura:if isTrue="{!field.required}"><abbr class="slds-required" title="required">* </abbr></aura:if>
+                                <aura:if isTrue="{!field.required}">
+                                    <abbr class="slds-required" title="required">* </abbr>
+                                </aura:if>
                                 <span>{!field.label}</span>
                             </label>
                             <lightning:inputField aura:id="dynamicInputFields"
