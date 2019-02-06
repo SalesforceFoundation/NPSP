@@ -11,12 +11,19 @@ from selenium.webdriver.common.keys import Keys
 from SeleniumLibrary.errors import ElementNotFound
 from simple_salesforce import SalesforceMalformedRequest
 from simple_salesforce import SalesforceResourceNotFound
-from locator_w19 import npsp_lex_locators
 from selenium.webdriver import ActionChains
 from cumulusci.robotframework.utils import selenium_retry
 import sys
 from email.mime import text
 
+from locators_44 import npsp_lex_locators as locators_44
+from locators_45 import npsp_lex_locators as locators_45
+locators_by_api_version = {
+    44.0: locators_44,  # Winter '19
+    45.0: locators_45,  # Spring '19
+}
+# will get populated in _init_locators
+npsp_lex_locators = {}
 
 @selenium_retry
 class NPSP(object):
@@ -32,6 +39,15 @@ class NPSP(object):
         self.payment_list= []
         # Turn off info logging of all http requests 
         logging.getLogger('requests.packages.urllib3.connectionpool').setLevel(logging.WARN)
+        self._init_locators()
+
+    def _init_locators(self):
+        client = self.cumulusci.tooling
+        response = client._call_salesforce(
+            'GET', 'https://{}/services/data'.format(client.sf_instance))
+        latest_api_version = float(response.json()[-1]['version'])
+        locators = locators_by_api_version[latest_api_version]
+        npsp_lex_locators.update(locators)
 
     @property
     def builtin(self):
@@ -413,7 +429,8 @@ class NPSP(object):
         return date 
         
     def get_main_header(self):
-        header = self.selenium.get_webelement("//h1/span").text
+        locator = npsp_lex_locators['header_text']
+        header = self.selenium.get_webelement(locator).text
         return header
     
     def verify_contact_role(self,name,role):
