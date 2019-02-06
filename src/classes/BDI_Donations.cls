@@ -368,6 +368,7 @@ public class BDI_Donations {
                 Contact con = bdi.ContactFromDi(dataImport, 1);
                 opp.npe01__Contact_Id_for_Role__c = con.Id;
                 opp.Primary_Contact__c = con.Id;
+                //todo: do we need to add campaign info to the contact too?
                 opp.Primary_Contact_Campaign_Member_Status__c = dataImport.Campaign_Member_Status__c;
                 opp.AccountId = con.AccountId;
                 opportunityName =  (!String.isBlank(con.FirstName)
@@ -393,17 +394,29 @@ public class BDI_Donations {
         // in Dry Run, we don't save campaigns, nor do we try to validate that all of the
         // updates to the object would succeed, so we should bail out now. (we didn't just bail
         // out at the beginning, so we would do the record type validation).
-        if (bdi.isDryRun) {
+        /*if (bdi.isDryRun) {
             return opp;
-        }
+        }*/
 
-        if (dataImport.Donation_Campaign_Name__c != null) {
+        if (dataImport.DonationCampaignImported__c != null) {
+            Id campaignId = bdi.mapIdToCampaignStrName.get(dataImport.DonationCampaignImported__c);
+            if (campaignId == null) {
+                //todo: better matching here
+                bdi.LogBDIError(dataImport, System.Label.bdiErrorInvalidCampaignName, 'DonationCampaignImportStatus__c');
+                return null;
+            }
+            opp.CampaignId = campaignId;
+        } else if (dataImport.Donation_Campaign_Name__c != null) {
             Id campaignId = bdi.mapStrNameToCampaignId.get(dataImport.Donation_Campaign_Name__c);
             if (campaignId == null) {
                 bdi.LogBDIError(dataImport, System.Label.bdiErrorInvalidCampaignName, 'DonationImportStatus__c');
                 return null;
             }
             opp.CampaignId = campaignId;
+        }
+
+        if (bdi.isDryRun) {
+            return opp;
         }
 
         if (dataImport.Donation_Date__c == null) {
@@ -506,6 +519,19 @@ public class BDI_Donations {
             } else if (dataImport.PaymentImportStatus__c == System.Label.bdiMatchedNone) {
                 dataImport.PaymentImportStatus__c = bdi.statusMatchedNone();
             }
+
+            // campaigns
+            /*if (dataImport.DonationCampaignImportStatus__c == BDI_DataImport_API.bdiFailed) {
+                dataImport.DonationCampaignImportStatus__c = bdi.statusDIFailed();
+            } else if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatched) {
+                dataImport.DonationCampaignImportStatus__c = bdi.statusMatchedExisting();
+            } else if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatchedBest) {
+                dataImport.DonationCampaignImportStatus__c = bdi.statusMatchedBest();
+            } else if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatchedId) {
+                dataImport.DonationCampaignImportStatus__c = bdi.statusMatchedById();
+            } else if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatchedNone) {
+                dataImport.DonationCampaignImportStatus__c = bdi.statusMatchedNone();
+            }*/
         }
     }
 

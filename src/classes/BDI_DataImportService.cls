@@ -289,6 +289,7 @@ global with sharing class BDI_DataImportService {
     public Map<String, Account> mapDIKeyToAccount = new Map<String, Account>();
     private Map<Id, Address__c> mapDIIdToAddr = new Map<Id, Address__c>();
     public Map<String, Id> mapStrNameToCampaignId = new Map<String, Id>();
+    public Map<String, Id> mapIdToCampaignStrName = new Map<Id, String>();
 
     /*******************************************************************************************************
     * @description holds the list of DataImport records we are currently processing
@@ -1727,27 +1728,38 @@ global with sharing class BDI_DataImportService {
 
         // since we don't currently fill in a campaign lookup or status on the DI record,
         // there is no work to do in Dry Run.
-        if (isDryRun) {
+        /*if (isDryRun) {
             return;
-        }
+        }*/
 
         // need to find all the Campaigns that we might need
         Set<String> setStrCampaign = new Set<String>();
+        Set<Id> setCampaignId = new Set<Id>();
+
         for (DataImport__c dataImport : listDI) {
             // skip di's that already have an error
             if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
                 continue;
             }
 
-            if (dataImport.Donation_Campaign_Name__c != null) {
+            if (dataImport.DonationCampaignImported__c != null) {
+                setCampaignId.add(dataImport.DonationCampaignImported__c);
+            } else if (dataImport.Donation_Campaign_Name__c != null) {
                 setStrCampaign.add(dataImport.Donation_Campaign_Name__c);
             }
 
         }
 
         // add the existing campaigns to our map
-        for (Campaign cmp : [SELECT Id, Name FROM Campaign WHERE Name IN :setStrCampaign]) {
+        for (Campaign cmp : [SELECT Id, Name FROM Campaign WHERE Id IN :setCampaignId OR Name IN :setStrCampaign]) {
+            //todo: maybe this should be a diKey map instead?
             mapStrNameToCampaignId.put(cmp.Name, cmp.Id);
+            mapIdToCampaignStrName.put(cmp.Id, cmp.Name);
+        }
+
+        // done matching for Dry Run
+        if (isDryRun) {
+            return;
         }
 
         // create any new campaigns
@@ -1761,9 +1773,13 @@ global with sharing class BDI_DataImportService {
             }
 
             String strName = dataImport.Donation_Campaign_Name__c;
+            Id campaignId = dataImport.DonationCampaignImported__c;
             Campaign cmp;
-            if (strName != null && setStrCampaign.add(strName)) {
-                if (mapStrNameToCampaignId.get(strName) == null) {
+            //todo: why setStrCampaign.add(strName) -- I removed this
+            if (strName != null) {
+                //todo: should this just be a DIkey?
+                //check for matches by Name or Id
+                if (mapStrNameToCampaignId.get(strName) == null && mapIdToCampaignStrName.get(campaignId) == null) {
                     cmp = new Campaign(Name=strName, IsActive=true);
                     listCmpNew.add(cmp);
                     listDINew.add(dataImport);
@@ -1773,7 +1789,7 @@ global with sharing class BDI_DataImportService {
                 cmp.Name = null;
             }
         }
-        //insert listCmpNew;
+
         List<Database.UpsertResult> listUR = UTIL_DMLService.upsertRecords(listCmpNew, false);
         for (Integer i = 0; i < listUR.size(); i++) {
             Database.UpsertResult ur = listUR[i];
@@ -1785,6 +1801,7 @@ global with sharing class BDI_DataImportService {
         // add the new campaigns to our map
         for (Campaign cmp : listCmpNew) {
             mapStrNameToCampaignId.put(cmp.Name, cmp.Id);
+            mapIdToCampaignStrName.put(cmp.Id, cmp.Name);
         }
 
     }
@@ -1796,6 +1813,8 @@ global with sharing class BDI_DataImportService {
     * @return void
     */
     private void importCampaignMembers() {
+
+        //todo: there's something to do here, but I'm not sure what
 
         // there is no work to do in Dry Run.
         if (isDryRun) {

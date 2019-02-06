@@ -1244,7 +1244,7 @@ public with sharing class BDI_DataImport_TEST {
         listDI[0].Donation_Amount__c = 100;
         listDI[1].Donation_Amount__c = 200;
         listDI[0].DonationCampaignImported__c = listCampaigns[0].Id;
-        //todo: should we do any better weird ID testing? is this necessary?
+        //todo: should we do any better weird ID testing? -- probably not, insert should prevent b/c of type
         listDI[1].DonationCampaignImported__c = null;
         listDI[1].Donation_Campaign_Name__c = 'AnotherCmpExisting';
         insert listDI;
