@@ -95,11 +95,12 @@ class NPSP(object):
         
     def click_special_related_list_button(self, heading, button_title):
         """ To Click on a related list button which would open up a new lightning page rather than a modal.
-            Pass the list name and button name
-        """
-        locator = npsp_lex_locators['record']['related']['button'].format(heading, button_title)
-        self.selenium.set_focus_to_element(locator)
-        self.selenium.get_webelement(locator).click()
+            Pass the list name and button name"""
+        self.salesforce.load_related_list(heading)
+        locator = npsp_lex_locators["record"]["related"]["button"].format(
+            heading, button_title
+        )
+        self.selenium.click_link(locator)
         
     def click_dropdown(self, title):
         locator = npsp_lex_locators['record']['list'].format(title)
@@ -585,7 +586,8 @@ class NPSP(object):
     def enter_payment_schedule(self, *args):
         """Enter values into corresponding fields in Levels page"""                 
         #if name == "Payments":
-        id = ["paymentCount","intervals","intervalunits"]
+        #id = ["paymentCount","intervals","intervalunits"]
+        id = ["paymentCount","vfForm:intervalnumber","intervalunits"]
         for i in range(len(args)):
             locator = npsp_lex_locators['id'].format(id[i])
             loc = self.selenium.get_webelement(locator)
@@ -726,11 +728,11 @@ class NPSP(object):
             locator = locator[key]
         main_loc = locator.format(*args, **kwargs)
         return main_loc   
-        
+
     def wait_for_locator(self, path, *args, **kwargs):
         main_loc = self.get_npsp_locator(path,*args, **kwargs)    
         self.selenium.wait_until_element_is_visible(main_loc, timeout=60)
-            
+
     def get_npsp_settings_value(self,field_name): 
         locator = npsp_lex_locators['npsp_settings']['field_value'].format(field_name)
         loc = self.selenium.get_webelement(locator).text  
@@ -825,7 +827,12 @@ class NPSP(object):
     def page_scroll_to_locator(self, path, *args, **kwargs):
         locator = self.get_npsp_locator(path, *args, **kwargs)
         self.selenium.scroll_element_into_view(locator)
-        
+
+    def return_locator_value(self, path, *args, **kwargs): 
+        locator=self.get_npsp_locator(path, *args, **kwargs)
+        value=self.selenium.get_webelement(locator).text   
+        return value    
+
     def get_bge_card_header(self,title):   
         """Validates if the specified header field has specified value"""   
         locator= npsp_lex_locators['bge']['card-header'].format(title)
