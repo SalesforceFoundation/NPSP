@@ -45,7 +45,7 @@ public class CON_ContactMerge_TEST {
     @TestSetup
     static void createHouseholdContacts() {
         setContactSettings(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-        createContacts();
+        createContacts(4);
     }
 
     @IsTest
@@ -264,6 +264,16 @@ public class CON_ContactMerge_TEST {
     }
 
     @IsTest
+    private static void merge2OneToOneHHAccount(){
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
+        setupSearchPage();
+        setFixedSearchResults(2);
+        CON_ContactMerge_TEST2.merge2OneToOne();
+    }
+
+    @IsTest
     private static void mergeSucceedsWithNameWithAnApostrophe() {
         Contact con = UTIL_UnitTestData_TEST.getContact();
         con.LastName = 'O\'Sullivan';
@@ -317,31 +327,42 @@ public class CON_ContactMerge_TEST {
         );
     }
 
-    public static void createContacts() {
+    public static void createContacts(Integer size) {
+        List<Contact> results = new List<Contact>();
         //set up 4 contacts for the merge interface to work with
         Contact con = UTIL_UnitTestData_TEST.getContact();
         con.FirstName = 'Merge';
         con.MailingStreet = '123 45th St';
         con.MailingCity = 'Seattle';
+        results.add(con);
 
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.FirstName = 'Merge';
-        con2.LastName = 'Simpson ' + '2' + String.valueOf(Math.random());
-        con2.MailingStreet = '678 90th St';
-        con2.MailingCity = 'Bellevue';
-        con2.HomePhone = '867-5309';
+        if (size > 1) {
+            Contact con2 = UTIL_UnitTestData_TEST.getContact();
+            con2.FirstName = 'Merge';
+            con2.LastName = 'Simpson ' + '2' + String.valueOf(Math.random());
+            con2.MailingStreet = '678 90th St';
+            con2.MailingCity = 'Bellevue';
+            con2.HomePhone = '867-5309';
+            results.add(con2);
+        }
 
-        Contact con3 = UTIL_UnitTestData_TEST.getContact();
-        con3.FirstName = 'Merge';
-        con3.LastName = 'Simpson ' + '3' + String.valueOf(Math.random());
-        con3.MailingStreet = '999 88th St';
-        con3.MailingCity = 'Redmond';
+        if (size > 2) {
+            Contact con3 = UTIL_UnitTestData_TEST.getContact();
+            con3.FirstName = 'Merge';
+            con3.LastName = 'Simpson ' + '3' + String.valueOf(Math.random());
+            con3.MailingStreet = '999 88th St';
+            con3.MailingCity = 'Redmond';
+            results.add(con3);
+        }
 
-        Contact con4 = UTIL_UnitTestData_TEST.getContact();
-        con4.FirstName = 'Merge';
-        con4.LastName  = 'Simpson ' + '2' + String.valueOf(Math.random());
+        if (size > 3) {
+            Contact con4 = UTIL_UnitTestData_TEST.getContact();
+            con4.FirstName = 'Merge';
+            con4.LastName  = 'Simpson ' + '2' + String.valueOf(Math.random());
+            results.add(con4);
+        }
 
-        insert new Contact[]{ con, con2, con3, con4 };
+        insert results;
     }
 
     /*******************************************************************************************************************
@@ -366,7 +387,7 @@ public class CON_ContactMerge_TEST {
 
     public static void defaultSetup(String strProcessor) {
         setContactSettings(strProcessor);
-        createContacts();
+        createContacts(2);
         setupSearchPage();
         setFixedSearchResults(2);
     }

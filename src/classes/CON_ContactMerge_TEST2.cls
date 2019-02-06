@@ -35,7 +35,7 @@
 * @group-content ../../ApexDocContent/ContactMerge.htm
 */
 @isTest
-private class CON_ContactMerge_TEST2 {
+public class CON_ContactMerge_TEST2 {
 
     //merge two contacts in the Individual Account
     //the organization shouldn't be deleted
@@ -83,27 +83,20 @@ private class CON_ContactMerge_TEST2 {
         System.assertEquals(CON_ContactMerge_TEST.losingContact.npo02__Household__c, [SELECT npo02__Household__c FROM Contact WHERE Id = :CON_ContactMerge_TEST.winningContact.Id].npo02__Household__c);
     }
 
-    //Run Tests for One to One and HH Account Types
     @IsTest
-    private static void merge2OneToOneOne2One(){
+    public static void merge2OneToOneOne2One(){
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        merge2OneToOne(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+        CON_ContactMerge_TEST.defaultSetup(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+        merge2OneToOne();
     }
 
-    @IsTest
-    private static void merge2OneToOneHHAccount(){
-        //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        merge2OneToOne(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
-
-    //merge two contacts that are both in the one-to-one account model
-    //the second contact's org should be deleted
-    public static void merge2OneToOne(string strProcessor) {
-        CON_ContactMerge_TEST.defaultSetup(strProcessor);
+    /*******************************************************************************************************
+    * @description Merge two Contacts where the contact is the only member of the account.
+    * NOTE: The Household model is called from the CON_ContactMerge_TEST in order to use data from test setup
+    */
+    public static void merge2OneToOne() {
         CON_ContactMerge_TEST.controller.search();
         CON_ContactMerge_TEST.selectRecords(0, 1);
         CON_ContactMerge_TEST.controller.nextStep();
@@ -284,7 +277,8 @@ private class CON_ContactMerge_TEST2 {
 
     private static void merge3OneToOne(string strProcessor) {
         TDTM_DefaultConfig.startTestDataInit();
-        CON_ContactMerge_TEST.defaultSetup(strProcessor);
+        CON_ContactMerge_TEST.setContactSettings(strProcessor);
+        CON_ContactMerge_TEST.createContacts(3);
 
         System.assertEquals(false, CON_ContactMerge_TEST.contactSettingsForTests.Household_Account_Addresses_Disabled__c, 'The disable addresses contact settings should be false.');
 
@@ -293,6 +287,7 @@ private class CON_ContactMerge_TEST2 {
         if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
             System.assertEquals(3, [SELECT count() FROM Address__c], 'The addresses should have been created for the household account.');
         }
+        CON_ContactMerge_TEST.setupSearchPage();
         CON_ContactMerge_TEST.setFixedSearchResults(3);
         CON_ContactMerge_TEST.controller.search();
         CON_ContactMerge_TEST.controller.searchResults[0].selected = true;
@@ -414,7 +409,7 @@ private class CON_ContactMerge_TEST2 {
     /*******************************************************************************************************
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
-    */ 
+    */
     @IsTest
     private static void testNamesAndOppsMergeOne2OneToOrg() {
         //skip the test if Advancement is installed
@@ -426,7 +421,7 @@ private class CON_ContactMerge_TEST2 {
     /*******************************************************************************************************
     * @description Merge two Contacts in different Accounts and verifies Opps, OCRs, Rollups, and Names
     * are updated as appropriate for the account types.
-    */ 
+    */
     @isTest
     private static void testNamesAndOppsMergeOrgToOrg() {
         testNamesAndOppsMerge(null, null);
