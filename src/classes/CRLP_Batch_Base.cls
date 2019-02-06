@@ -283,6 +283,7 @@ public abstract class CRLP_Batch_Base {
      */
     protected List<Partial_Soft_Credit__c> buildPartialSoftCreditRecordsFromOCRs(List<OpportunityContactRole> detailRecords) {
         List<Id> oppIds = getParentIdsFromDetailRecords(detailRecords, 'OpportunityId');
+        List<Id> contactIds = getParentIdsFromDetailRecords(detailRecords, 'ContactId');
 
         String oppQuery = CRLP_Query_SEL.buildDetailObjectQueryForRollup(Opportunity.SObjectType,
                 new List<SObjectType>{ OpportunityContactRole.SObjectType, Partial_Soft_Credit__c.SObjectType }) +

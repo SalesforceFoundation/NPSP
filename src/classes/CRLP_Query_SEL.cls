@@ -220,7 +220,16 @@
      * @return part of a SOQL string
      */
     private static String buildChildQuery(SObjectType childObject, String relationshipName) {
-        String childQuery = ', (' + buildObjectQueryForRollup(childObject).split(' FROM ')[0] + + ' FROM ' + relationshipName + ')';
+        String childQuery = ', (' + buildObjectQueryForRollup(childObject).split(' FROM ')[0] + ' FROM ' + relationshipName;
+
+        if (childObject == OpportunityContactRole.SObjectType) {
+            childQuery += ' WHERE ContactId IN :contactIds';
+        } else if (childObject == Partial_Soft_Credit__c.SObjectType) {
+            childQuery += ' WHERE Contact__c IN :contactIds';
+        }
+
+        childQuery += ')';
+
         return childQuery;
     }
 
