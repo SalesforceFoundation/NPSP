@@ -9,11 +9,15 @@ Suite Teardown  Delete Records and Close Browser
 Merge Contacts
     # Manually creating contact records, sosl doesn't always return api generated contacts
     Go To Object Home  Contact
-    Click Link  title:New
+    Click Object Button  New
     Populate Form
     ...                       First Name=Robot
     ...                       Last Name=One
-    Click Modal Button        Save & New
+    Click Modal Button        Save
+    ${losing_id} =  Get Current Record Id
+    Store Session Record  Contact  ${losing_id}
+    Go To Object Home  Contact
+    Click Object Button  New
     Populate Form
     ...                       First Name=Robot
     ...                       Last Name=Two
@@ -23,17 +27,15 @@ Merge Contacts
     Go To Object Home  Contact
     Page Should Contain  Robot One
     Page Should Contain  Robot Two
-    Go To Setup Home
-    Open App Launcher
-    Input Text  //input[@placeholder='Search apps or items...']  Contact Merge
-    Click Link  Contact Merge
+    Select App Launcher Tab  Contact Merge
     Select Frame with ID  vfFrameId
-    Input Text  //input[@placeholder='Search Contacts']  Robot
-    Click Element  //input[@value='Search']
-    Click Element  (//span[@id='fauxCBSelect'])[1]
-    Click Element  (//span[@id='fauxCBSelect'])[2]
-    Click Element  //input[@value='Next']
-    Click Button  name:Merge
+    Wait Until Page Contains Element  //input[@placeholder='Search Contacts']
+    Populate Address  Search Contacts  Robot
+    Click Button  Search
+    Click Element  //tr[./td/a[contains(@href,'${losing_id}')]]/td//span[@id='fauxCBSelect']
+    Click Element  //tr[./td/a[contains(@href,'${winning_id}')]]/td//span[@id='fauxCBSelect']
+    Click Button  Next
+    Click Button  (//button[text()='Merge'])[1]
     Click Element  //input[@value='Merge']
     Unselect Frame
     # Validate Results
