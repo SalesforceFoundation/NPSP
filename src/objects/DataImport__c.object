@@ -719,6 +719,27 @@
         <type>Currency</type>
     </fields>
     <fields>
+        <fullName>DonationCampaignImported__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Donation Campaign Source</label>
+        <referenceTo>Campaign</referenceTo>
+        <relationshipName>Data_Imports</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>DonationCampaignImportStatus__c</fullName>
+        <externalId>false</externalId>
+        <label>Donation Campaign Import Status</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Donation_Campaign_Name__c</fullName>
         <externalId>false</externalId>
         <label>Campaign Name</label>

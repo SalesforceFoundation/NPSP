@@ -836,6 +836,8 @@
         <members>DataImport__c.DonationImportStatus__c</members>
         <members>DataImport__c.DonationImported__c</members>
         <members>DataImport__c.Donation_Amount__c</members>
+        <members>DataImport__c.DonationCampaignImported__c</members>
+        <members>DataImport__c.DonationCampaignImportStatus__c</members>
         <members>DataImport__c.Donation_Campaign_Name__c</members>
         <members>DataImport__c.Donation_Date__c</members>
         <members>DataImport__c.Donation_Description__c</members>

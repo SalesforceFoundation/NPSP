@@ -1223,6 +1223,65 @@ public with sharing class BDI_DataImport_TEST {
 
     /*********************************************************************************************************
     * @description operation
+    *        import contacts with donation & campaign IDs and Names
+    * verify:
+    *    opportunity objects created
+    *    opportunities added to campaigns
+    *    campaigns matched by ID if valid
+    **********************************************************************************************************/
+    static testMethod void TwoDIWithDonationsAndCampaignIds() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
+        List<Campaign> listCampaigns = new List<Campaign>();
+        listCampaigns.add(new Campaign(Name='CmpExisting'));
+        listCampaigns.add(new Campaign(Name='AnotherCmpExisting'));
+        insert listCampaigns;
+
+        List<DataImport__c> listDI = new List<DataImport__c>();
+        listDI.add(newDI('c1', 'C1'));
+        listDI.add(newDI('c2', 'C2'));
+        listDI[0].Donation_Amount__c = 100;
+        listDI[1].Donation_Amount__c = 200;
+        listDI[0].DonationCampaignImported__c = listCampaigns[0].Id;
+        //todo: should we do any better weird ID testing? is this necessary?
+        listDI[1].DonationCampaignImported__c = null;
+        listDI[1].Donation_Campaign_Name__c = 'AnotherCmpExisting';
+        insert listDI;
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        // verify expected results
+        List<Opportunity> listOpp = getOpps();
+        System.assertEquals(2, listOpp.size());
+        System.assertEquals(100, listOpp[0].Amount);
+        System.assertEquals(200, listOpp[1].Amount);
+
+        List<Campaign> listCmp = getCampaigns();
+        System.assertEquals(2, listCmp.size());
+        System.assertEquals(listOpp[0].CampaignId, listCmp[0].Id);
+        System.assertEquals(listOpp[1].CampaignId, listCmp[1].Id);
+
+        listDI = getDIs();
+        System.assertEquals(2, listDI.size());
+        System.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id);
+        System.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
+        System.assertEquals(label.bdiCreated, listDI[0].DonationImportStatus__c);
+        System.assertEquals(label.bdiCreated, listDI[1].DonationImportStatus__c);
+
+        System.assertEquals(listDI[0].DonationCampaignImported__c, listOpp[0].Id);
+        System.assertEquals(label.bdiMatched, listDI[0].DonationCampaignImportStatus__c);
+        //todo: what would we expect this to say? anything? what about the imported status??
+        //System.assertEquals(label.bdiMatched, listDI[1].DonationCampaignImportStatus__c);
+        //System.assertEquals(listDI[1].DonationCampaignImported__c, listOpp[1].Id); //or would this be null?
+
+    }
+    /*********************************************************************************************************
+    * @description operation
     *        import contacts with campaign information (no donation)  
     * verify: 
     *        opportunity objects created
@@ -1501,15 +1560,15 @@ public with sharing class BDI_DataImport_TEST {
     **********************************************************************************************************/
     private static List<DataImport__c> getDIs() {
         return [
-            SELECT Account1Imported__c, Account1ImportStatus__c, Account1_Name__c,
-                Account2Imported__c, Account2ImportStatus__c, Account2_Name__c, Contact1_Preferred_Email__c, Contact1_Preferred_Phone__c,
-                Contact1Imported__c, Contact1ImportStatus__c, Contact1_Firstname__c, Contact1_Lastname__c, Contact1_Title__c,
-                Contact2Imported__c, Contact2ImportStatus__c, Contact2_Firstname__c, Contact2_Lastname__c,
-                DonationImported__c, DonationImportStatus__c, Donation_Campaign_Name__c, FailureInformation__c, Status__c,
-                HomeAddressImported__c, HomeAddressImportStatus__c, HouseholdAccountImported__c, Home_Street__c, Home_City__c,
-                Home_State_Province__c, Home_Zip_Postal_Code__c, Home_Country__c
-            FROM DataImport__c
-            ORDER BY Id
+                SELECT Account1Imported__c, Account1ImportStatus__c, Account1_Name__c,
+                        Account2Imported__c, Account2ImportStatus__c, Account2_Name__c, Contact1_Preferred_Email__c, Contact1_Preferred_Phone__c,
+                        Contact1Imported__c, Contact1ImportStatus__c, Contact1_Firstname__c, Contact1_Lastname__c, Contact1_Title__c,
+                        Contact2Imported__c, Contact2ImportStatus__c, Contact2_Firstname__c, Contact2_Lastname__c,
+                        DonationImported__c, DonationImportStatus__c, Donation_Campaign_Name__c, DonationCampaignImported__c, DonationCampaignImportStatus__c,
+                        FailureInformation__c, Status__c, HomeAddressImported__c, HomeAddressImportStatus__c, HouseholdAccountImported__c,
+                        Home_Street__c, Home_City__c, Home_State_Province__c, Home_Zip_Postal_Code__c, Home_Country__c
+                FROM DataImport__c
+                ORDER BY Id
         ];
     }
 
