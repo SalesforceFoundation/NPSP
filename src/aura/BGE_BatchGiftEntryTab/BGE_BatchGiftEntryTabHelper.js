@@ -28,6 +28,17 @@
                col.typeAttributes = {label:{fieldName:"Name"},target:"self"};
            }
         });
+
+        responseColumns.push({
+            type: 'action',
+            typeAttributes: {
+                rowActions: [{
+                    label: $A.get('$Label.c.bgeCopyBatchSetupButton'),
+                    name: 'copySetup'
+                }]
+            }
+        });
+
         component.set('v.batchListColumns', responseColumns);
     },
 
@@ -86,18 +97,39 @@
     /******************************** User Interaction Functions *****************************/
 
     /**
-     * @description: checks that user has all necessary permissions and then launches modal or displays error
+     * @description: performs field permissions check and then opens New Batch Wizard
      */
-    checkFieldPermissions: function(component) {
+    handleNewBatchClick: function(component) {
+        this.checkFieldPermissions(component, function () {
+            return this.openNewBatchWizard(component);
+        }.bind(this));
+    },
+
+    /**
+     * @description: handler for row actions from Batch table
+     */
+    handleRowAction: function(component, event) {
+        let rowAction = event.getParam('action');
+        switch (rowAction.name) {
+            case 'copySetup':
+                const sourceBatchId = event.getParam('row').Id;
+                this.checkFieldPermissions(component, function () {
+                    return this.openNewBatchWizard(component, sourceBatchId);
+                }.bind(this));
+                break;
+        }
+    },
+
+    /**
+     * @description: checks that user has all necessary permissions and then calls onSuccess function
+     * @param: sourceBatchId Id of Batch record to be copied - optional
+     */
+    checkFieldPermissions: function(component, onSuccess) {
         var action = component.get('c.checkFieldPermissions');
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
-                if (!component.get('v.modalOpen')) {
-                    //necessary to put here to prevent nested modals from rapid button clicks
-                    component.set('v.modalOpen', true);
-                    this.openNewBatchWizard(component);
-                }
+                onSuccess();
             } else if (state === 'ERROR') {
                 this.handleApexErrors(component, response.getError());
             }
@@ -106,9 +138,15 @@
     },
 
     /**
-     * @description: opens New Batch Wizard in modal if not already open
+     * @description: opens New Batch Wizard in modal
+     * @param: sourceBatchId Id of Batch record to be copied - optional
      */
-    openNewBatchWizard: function(component) {
+    openNewBatchWizard: function(component, sourceBatchId) {
+        if (component.get('v.modalOpen')) {
+            return;
+        }
+        component.set('v.modalOpen', true);
+
         let modalBody;
         let modalHeader;
         let modalFooter;
@@ -121,7 +159,7 @@
         ];
 
         $A.createComponents([
-                ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c'}],
+                ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c', sourceBatchId: sourceBatchId}],
                 ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
                 ['c:modalFooter', {progressStepLabels: progressStepLabels}]
             ],
