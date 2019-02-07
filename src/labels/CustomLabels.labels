@@ -2723,6 +2723,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You are currently creating a new Opportunity.</value>
     </labels>
     <labels>
+        <fullName>bgeFormNewPaymentHelptext</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text to indicate user is applying a new payment to an opportunity</shortDescription>
+        <value>You are currently applying a new Payment to Opportunity:</value>
+    </labels>
+    <labels>
         <fullName>bgeFormNoneLink</fullName>
         <language>en_US</language>
         <protected>true</protected>

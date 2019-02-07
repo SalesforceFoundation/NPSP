@@ -166,30 +166,30 @@ public class BDI_Donations {
             if (dataImport.DonationImportStatus__c != Label.bdiMatchedApplyNewPayment) {
 
                 // validate against our desired matching behavior (exact match, best match, new, etc.)
-            if (!isValidMatchBehavior(dataImport, matchBehavior)) {
-                continue;
-            }
+                if (!isValidMatchBehavior(dataImport, matchBehavior)) {
+                    continue;
+                }
 
-            // update the new or existing Opp with the DI's field data
-            Opportunity opp = prepareOppForUpdateInsert(dataImport);
+                // update the new or existing Opp with the DI's field data
+                Opportunity opp = prepareOppForUpdateInsert(dataImport);
 
-            // handle any error from the prepare
-            if (opp == null) {
-                continue;
-            }
+                // handle any error from the prepare
+                if (opp == null) {
+                    continue;
+                }
 
-            if (opp.Id == null) {
-                opportunitiesToInsert.add(opp);
-                dataImportsToInsert.add(dataImport);
-            } else {
-                opportunitiesToUpdate.add(opp);
-                dataImportsToUpdate.add(dataImport);
-            }
+                if (opp.Id == null) {
+                    opportunitiesToInsert.add(opp);
+                    dataImportsToInsert.add(dataImport);
+                } else {
+                    opportunitiesToUpdate.add(opp);
+                    dataImportsToUpdate.add(dataImport);
+                }
 
-            // for some error handling detection tests
-            if (Test.isRunningTest() && opp.Name != null && opp.Name.startsWith('FailTest')) {
-                opp.Name = null;
-            }
+                // for some error handling detection tests
+                if (Test.isRunningTest() && opp.Name != null && opp.Name.startsWith('FailTest')) {
+                    opp.Name = null;
+                }
             } else if (dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
                 // park a new empty payment in the map if the user specified Apply New Payment
                 paymentsByDataImportId.put(
