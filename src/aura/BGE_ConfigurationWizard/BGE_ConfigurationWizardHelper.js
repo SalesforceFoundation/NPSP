@@ -126,15 +126,9 @@
             currentField.availableSortOrder = availableSortOrder;
             availableSortOrder++;
 
-            if (currentField.sObjectName.toLowerCase() === FIELD_SOBJECT_TYPE_OPPORTUNITY) {
-                opportunityFields.push(currentField);
-            } else {
-                paymentFields.push(currentField);
-            }
+            everyField.push(currentField);
 
         });
-
-        everyField = opportunityFields.concat(paymentFields);
 
         // store everyField with its metadata
         component.set('v.everyField', everyField);
@@ -144,7 +138,33 @@
         // returns map of sobject name => list of fields
         var allFieldsBySObject = this.groupFieldsBySObject(everyField);
 
-        Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
+        var fieldsBySObjectInOrder = {};
+
+        const OPPORTUNITY_SOBJECT_NAME = "Opportunity";
+        const PAYMENT_SOBJECT_NAME = "Payment";
+
+        if (OPPORTUNITY_SOBJECT_NAME in allFieldsBySObject) {
+            var items = allFieldsBySObject[OPPORTUNITY_SOBJECT_NAME];
+            fieldsBySObjectInOrder[OPPORTUNITY_SOBJECT_NAME] = items;
+        }
+
+        if (PAYMENT_SOBJECT_NAME in allFieldsBySObject) {
+            var items = allFieldsBySObject[PAYMENT_SOBJECT_NAME];
+            fieldsBySObjectInOrder[PAYMENT_SOBJECT_NAME] = items;
+        }
+                
+        var allFieldsBySObject = Object.keys(allFieldsBySObject);
+         
+        if (allFieldsBySObject.size > 2) {
+            allFieldsBySObject.forEach((item) => {
+                if (item.sObjectName != OPPORTUNITY_SOBJECT_NAME && item.sObjectName != PAYMENT_SOBJECT_NAME) {
+                    var items = allFieldsBySObject[item.sObjectName];
+                    fieldsBySObjectInOrder[item.sObjectName] = items;
+                }
+            }) 
+        }
+
+        Object.keys(fieldsBySObjectInOrder).forEach(function(sObjectName) {
             let currentFieldGroup = {
                 sObjectName: sObjectName,
                 options: [],
@@ -152,7 +172,7 @@
                 values: []
             };
 
-            allFieldsBySObject[sObjectName].forEach(function(currentField) {
+            fieldsBySObjectInOrder[sObjectName].forEach(function(currentField) {
                 currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
                 currentFieldGroup.options.push(
                     {
