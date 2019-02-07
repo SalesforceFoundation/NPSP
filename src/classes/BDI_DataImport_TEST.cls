@@ -1172,18 +1172,18 @@ public with sharing class BDI_DataImport_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        List<Campaign> listC = new List<Campaign>();
-        listC.add(new Campaign(Name='CmpExisting'));
-        insert listC;
+        List<Campaign> campaigns = new List<Campaign>();
+        campaigns.add(new Campaign(Name='CmpExisting'));
+        insert campaigns;
             
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(newDI('c1', 'C1'));
-        listDI.add(newDI('c2', 'C2'));
-        listDI[0].Donation_Amount__c = 100;
-        listDI[1].Donation_Amount__c = 200;
-        listDI[0].Donation_Campaign_Name__c = 'CmpExisting';
-        listDI[1].Donation_Campaign_Name__c = 'CmpNew';
-        insert listDI;
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(newDI('c1', 'C1'));
+        dataImports.add(newDI('c2', 'C2'));
+        dataImports[0].Donation_Amount__c = 100;
+        dataImports[1].Donation_Amount__c = 200;
+        dataImports[0].Donation_Campaign_Name__c = 'CmpExisting';
+        dataImports[1].Donation_Campaign_Name__c = 'CmpNew';
+        insert dataImports;
           
         //run batch data import
         Test.StartTest();
@@ -1192,33 +1192,39 @@ public with sharing class BDI_DataImport_TEST {
         Test.stopTest();
     
         // verify expected results
-        List<Contact> listCon = getContacts();
-        System.assertEquals(2, listCon.size());
+        List<Contact> contacts = getContacts();
+        System.assertEquals(2, contacts.size());
         
-        List<Account> listAcc = getAccounts();
-        System.assertEquals(2, listAcc.size());
+        List<Account> accounts = getAccounts();
+        System.assertEquals(2, accounts.size());
         // we no longer run rollups, unless the setting is specified
-        System.assertEquals(0, listAcc[0].npo02__TotalOppAmount__c);
-        System.assertEquals(0, listAcc[1].npo02__TotalOppAmount__c);
+        System.assertEquals(0, accounts[0].npo02__TotalOppAmount__c);
+        System.assertEquals(0, accounts[1].npo02__TotalOppAmount__c);
         
-        List<Opportunity> listOpp = getOpps();
-        System.assertEquals(2, listOpp.size());
-        System.assertEquals(100, listOpp[0].Amount);
-        System.assertEquals(200, listOpp[1].Amount);
-        System.assertEquals(listAcc[0].Id, listOpp[0].AccountId);
-        System.assertEquals(listAcc[1].Id, listOpp[1].AccountId);
-                
-        List<Campaign> listCmp = getCampaigns();
-        System.assertEquals(2, listCmp.size());
-        System.assertEquals(listOpp[0].CampaignId, listCmp[0].Id);
-        System.assertEquals(listOpp[1].CampaignId, listCmp[1].Id);
+        List<Opportunity> opps = getOpps();
+        System.assertEquals(2, opps.size());
+        System.assertEquals(100, opps[0].Amount);
+        System.assertEquals(200, opps[1].Amount);
+        System.assertEquals(accounts[0].Id, opps[0].AccountId);
+        System.assertEquals(accounts[1].Id, opps[1].AccountId);
+
+        campaigns = getCampaigns();
+        System.assertEquals(2, campaigns.size());
+        System.assertEquals(opps[0].CampaignId, campaigns[0].Id);
+        System.assertEquals(opps[1].CampaignId, campaigns[1].Id);
         
-        listDI = getDIs();
-        System.assertEquals(2, listDI.size());
-        System.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
-        System.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
-        System.assertEquals(label.bdiCreated, listDI[0].DonationImportStatus__c);
-        System.assertEquals(label.bdiCreated, listDI[1].DonationImportStatus__c);        
+        dataImports = getDIs();
+        System.assertEquals(2, dataImports.size());
+
+        System.assertEquals(dataImports[0].DonationImported__c, opps[0].Id);
+        System.assertEquals(System.Label.bdiCreated, dataImports[0].DonationImportStatus__c);
+        System.assertEquals(System.Label.bdiMatched, dataImports[0].DonationCampaignImportStatus__c);
+        System.assertEquals(campaigns[0].Id, dataImports[0].DonationCampaignImported__c);
+
+        System.assertEquals(dataImports[1].DonationImported__c, opps[1].Id);
+        System.assertEquals(System.Label.bdiCreated, dataImports[1].DonationImportStatus__c);
+        System.assertEquals(System.Label.bdiCreated, dataImports[1].DonationCampaignImportStatus__c);
+        System.assertEquals(campaigns[1].Id, dataImports[1].DonationCampaignImported__c);
     }
 
     /*********************************************************************************************************
@@ -1227,26 +1233,31 @@ public with sharing class BDI_DataImport_TEST {
     * verify:
     *    opportunity objects created
     *    opportunities added to campaigns
-    *    campaigns matched by ID if valid
+    *    campaigns matched by ID
     **********************************************************************************************************/
     static testMethod void TwoDIWithDonationsAndCampaignIds() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        List<Campaign> listCampaigns = new List<Campaign>();
-        listCampaigns.add(new Campaign(Name='CmpExisting'));
-        listCampaigns.add(new Campaign(Name='AnotherCmpExisting'));
-        insert listCampaigns;
+        List<Campaign> campaigns = new List<Campaign>();
+        campaigns.add(new Campaign(Name='CmpExisting'));
+        campaigns.add(new Campaign(Name='AnotherCmpExisting'));
+        insert campaigns;
 
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(newDI('c1', 'C1'));
-        listDI.add(newDI('c2', 'C2'));
-        listDI[0].Donation_Amount__c = 100;
-        listDI[1].Donation_Amount__c = 200;
-        listDI[0].DonationCampaignImported__c = listCampaigns[0].Id;
-        listDI[1].DonationCampaignImported__c = null;
-        listDI[1].Donation_Campaign_Name__c = 'AnotherCmpExisting';
-        insert listDI;
+        Id campaignId = campaigns[0].Id;
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+
+        dataImports.add(newDI('c1', 'C1'));
+        dataImports[0].Donation_Amount__c = 100;
+        dataImports[0].DonationCampaignImported__c = campaignId;
+
+        dataImports.add(newDI('c2', 'C2'));
+        dataImports[1].Donation_Amount__c = 200;
+        dataImports[1].DonationCampaignImported__c = null;
+        dataImports[1].Donation_Campaign_Name__c = 'AnotherCmpExisting';
+
+        insert dataImports;
 
         //run batch data import
         Test.StartTest();
@@ -1255,32 +1266,31 @@ public with sharing class BDI_DataImport_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Opportunity> listOpp = getOpps();
-        System.assertEquals(2, listOpp.size());
-        System.assertEquals(100, listOpp[0].Amount);
-        System.assertEquals(200, listOpp[1].Amount);
+        List<Opportunity> opps = getOpps();
+        System.assertEquals(2, opps.size());
+        System.assertEquals(100, opps[0].Amount);
+        System.assertEquals(200, opps[1].Amount);
 
-        List<Campaign> listCmp = getCampaigns();
-        System.assertEquals(2, listCmp.size());
-        System.assertEquals(listOpp[0].CampaignId, listCmp[0].Id);
-        System.assertEquals(listOpp[1].CampaignId, listCmp[1].Id);
+        campaigns = getCampaigns();
+        System.assertEquals(2, campaigns.size());
+        System.assertEquals(campaigns[0].Id, opps[0].CampaignId);
+        System.assertEquals(campaigns[1].Id, opps[1].CampaignId);
 
-        listDI = getDIs();
-        System.assertEquals(2, listDI.size());
-        System.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id);
-        System.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
-        System.assertEquals(label.bdiCreated, listDI[0].DonationImportStatus__c);
-        System.assertEquals(label.bdiCreated, listDI[1].DonationImportStatus__c);
+        dataImports = getDIs();
+        System.assertEquals(2, dataImports.size());
 
-        System.assertEquals(listDI[0].DonationCampaignImported__c, listCampaigns[0].Id);
-        System.assertEquals(label.bdiMatchedId, listDI[0].DonationCampaignImportStatus__c);
-        //todo: do we want to change the existing name logic to update or are these assertions correct?
-        System.assertEquals(listDI[1].DonationCampaignImported__c, null);
-        System.assertEquals(null, listDI[1].DonationCampaignImportStatus__c);
-        //System.assertEquals(label.bdiMatched, listDI[1].DonationCampaignImportStatus__c);
-        //System.assertEquals(listDI[1].DonationCampaignImported__c, listOpp[1].Id);
+        System.assertEquals(opps[0].Id, dataImports[0].DonationImported__c);
+        System.assertEquals(System.Label.bdiCreated, dataImports[0].DonationImportStatus__c);
+        System.assertEquals(campaigns[0].Id, dataImports[0].DonationCampaignImported__c);
+        System.assertEquals(System.Label.bdiMatchedId, dataImports[0].DonationCampaignImportStatus__c);
+
+        System.assertEquals(opps[1].Id, dataImports[1].DonationImported__c);
+        System.assertEquals(System.Label.bdiCreated, dataImports[1].DonationImportStatus__c);
+        System.assertEquals(campaigns[1].Id, dataImports[1].DonationCampaignImported__c);
+        System.assertEquals(System.Label.bdiMatched, dataImports[1].DonationCampaignImportStatus__c);
 
     }
+
     /*********************************************************************************************************
     * @description operation
     *        import contacts with campaign information (no donation)  

@@ -1726,12 +1726,6 @@ global with sharing class BDI_DataImportService {
     */
     private void importCampaigns() {
 
-        // since we don't currently fill in a campaign lookup or status on the DI record,
-        // there is no work to do in Dry Run.
-        /*if (isDryRun) {
-            return;
-        }*/
-
         // need to find all the Campaigns that we might need
         Set<String> setStrCampaign = new Set<String>();
         Set<Id> setCampaignId = new Set<Id>();
@@ -1742,29 +1736,20 @@ global with sharing class BDI_DataImportService {
                 continue;
             }
 
-            if (dataImport.DonationCampaignImported__c != null) {
-                setCampaignId.add(dataImport.DonationCampaignImported__c);
-            } else if (dataImport.Donation_Campaign_Name__c != null) {
+            if (dataImport.Donation_Campaign_Name__c != null) {
                 setStrCampaign.add(dataImport.Donation_Campaign_Name__c);
             }
 
         }
 
         // add the existing campaigns to our map
-        for (Campaign cmp : [SELECT Id, Name FROM Campaign WHERE Id IN :setCampaignId OR Name IN :setStrCampaign]) {
-            //todo: maybe this should be a diKey map instead?
+        for (Campaign cmp : [SELECT Id, Name FROM Campaign WHERE Name IN :setStrCampaign]) {
             mapStrNameToCampaignId.put(cmp.Name, cmp.Id);
-            mapIdToCampaignStrName.put(cmp.Id, cmp.Name);
-        }
-
-        // done matching for Dry Run
-        if (isDryRun) {
-            return;
         }
 
         // create any new campaigns
-        List<Campaign> listCmpNew = new List<Campaign>();
-        List<DataImport__c> listDINew = new List<DataImport__c>();
+        List<Campaign> campaignsToInsert = new List<Campaign>();
+        List<DataImport__c> dataImportsWithNewCampaigns = new List<DataImport__c>();
         setStrCampaign.clear();
         for (DataImport__c dataImport : listDI) {
             // skip di's that already have an error
@@ -1772,46 +1757,49 @@ global with sharing class BDI_DataImportService {
                 continue;
             }
 
-            String strName = dataImport.Donation_Campaign_Name__c;
+            String campaignName = dataImport.Donation_Campaign_Name__c;
             Id campaignId = dataImport.DonationCampaignImported__c;
             Campaign cmp;
 
             if (campaignId != null) {
-                if (mapIdToCampaignStrName.get(campaignId) != null) {
-                    //todo: do we need to consider this? used elsewhere. if (dataImport.DonationCampaignImportStatus__c != label.bdiMatchedByUser) {
-                    dataImport.DonationCampaignImportStatus__c = label.bdiMatchedId;
-                } else if (mapStrNameToCampaignId.get(strName) == null) {
-                    //todo: rework this matched none if str name matches
-                    dataImport.DonationCampaignImportStatus__c = label.bdiMatchedNone;
+                // User specified a Campaign lookup in BGE lookup or with an ID on import
+                dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedId;
+            } else if (campaignName != null) {
+                if (mapStrNameToCampaignId.get(campaignName) == null) {
+                    if (isDryRun) {
+                        dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedNone;
+                    } else {
+                        dataImport.DonationCampaignImportStatus__c = System.Label.bdiCreated;
+                        // Create a new Campaign if no match on Name
+                        cmp = new Campaign(Name = campaignName, IsActive = true);
+                        campaignsToInsert.add(cmp);
+                        dataImportsWithNewCampaigns.add(dataImport);
+                    }
+                } else {
+                    // Park the matched Campaign ID in the lookup
+                    dataImport.DonationCampaignImported__c = mapStrNameToCampaignId.get(campaignName);
+                    dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatched;
                 }
             }
-
-            if (strName != null) {
-                //todo: should this just be a DIkey?
-                //check if we have any matches by Name or Id
-                if (mapStrNameToCampaignId.get(strName) == null && mapIdToCampaignStrName.get(campaignId) == null) {
-                    cmp = new Campaign(Name=strName, IsActive=true);
-                    listCmpNew.add(cmp);
-                    listDINew.add(dataImport);
-                }
-            }
-            if (Test.isRunningTest() && strName != null && strName.startsWith('FailTest')) {
+            if (Test.isRunningTest() && campaignName != null && campaignName.startsWith('FailTest')) {
                 cmp.Name = null;
             }
         }
 
-        List<Database.UpsertResult> listUR = UTIL_DMLService.upsertRecords(listCmpNew, false);
-        for (Integer i = 0; i < listUR.size(); i++) {
-            Database.UpsertResult ur = listUR[i];
+        List<Database.UpsertResult> upsertResults = UTIL_DMLService.upsertRecords(campaignsToInsert, false);
+        for (Integer i = 0; i < upsertResults.size(); i++) {
+            Database.UpsertResult ur = upsertResults[i];
             if (!ur.isSuccess()) {
-                LogBDIError(listDINew[i], ur.getErrors()[0].getMessage(), 'DonationImportStatus__c');
+                LogBDIError(dataImportsWithNewCampaigns[i], ur.getErrors()[0].getMessage(), 'DonationImportStatus__c');
             }
         }
 
         // add the new campaigns to our map
-        for (Campaign cmp : listCmpNew) {
+        for (Integer i=0; i< campaignsToInsert.size(); i++) {
+            // for (Campaign cmp : campaignsToInsert) {
+            Campaign cmp = campaignsToInsert[i];
             mapStrNameToCampaignId.put(cmp.Name, cmp.Id);
-            mapIdToCampaignStrName.put(cmp.Id, cmp.Name);
+            dataImportsWithNewCampaigns[i].DonationCampaignImported__c = cmp.Id;
         }
 
     }

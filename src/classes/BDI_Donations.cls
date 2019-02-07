@@ -368,7 +368,6 @@ public class BDI_Donations {
                 Contact con = bdi.ContactFromDi(dataImport, 1);
                 opp.npe01__Contact_Id_for_Role__c = con.Id;
                 opp.Primary_Contact__c = con.Id;
-                //todo: do we need to add campaign info to the contact too?
                 opp.Primary_Contact_Campaign_Member_Status__c = dataImport.Campaign_Member_Status__c;
                 opp.AccountId = con.AccountId;
                 opportunityName =  (!String.isBlank(con.FirstName)
@@ -391,20 +390,15 @@ public class BDI_Donations {
             opportunityName += ' ' + System.Label.bdiDonation;
         }
 
-        // in Dry Run, we don't save campaigns, nor do we try to validate that all of the
-        // updates to the object would succeed, so we should bail out now. (we didn't just bail
-        // out at the beginning, so we would do the record type validation).
-        /*if (bdi.isDryRun) {
-            return opp;
-        }*/
-
         if (dataImport.DonationCampaignImported__c != null) {
-            Id campaignId = dataImport.DonationCampaignImported__c;
-            //todo: need to log error here, or no?
-            opp.CampaignId = campaignId;
+            // User specified the Campaign using BGE lookup field or an ID on import
+            opp.CampaignId = dataImport.DonationCampaignImported__c;
         } else if (dataImport.Donation_Campaign_Name__c != null) {
+            // OR User specified a Campaign name on import -- this was the legacy option
+            // Either we matched based on name or created a new one if no name match
             Id campaignId = bdi.mapStrNameToCampaignId.get(dataImport.Donation_Campaign_Name__c);
-            if (campaignId == null) {
+            if (campaignId == null && !bdi.isDryRun) {
+                // In Dry Run mode, we haven't yet inserted any new Campaigns, so they won't be found.
                 bdi.LogBDIError(dataImport, System.Label.bdiErrorInvalidCampaignName, 'DonationImportStatus__c');
                 return null;
             }
@@ -519,8 +513,8 @@ public class BDI_Donations {
             // campaigns -- list is shorter since we're limiting matching behavior
             if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatchedId) {
                 dataImport.DonationCampaignImportStatus__c = bdi.statusMatchedById();
-            } else if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatchedNone) {
-                dataImport.DonationCampaignImportStatus__c = bdi.statusMatchedNone();
+            } else if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatched) {
+                dataImport.DonationCampaignImportStatus__c = bdi.statusMatchedExisting();
             }
         }
     }
