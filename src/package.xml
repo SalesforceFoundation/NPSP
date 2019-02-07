@@ -453,6 +453,7 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
+        <members>UTIL_LightningComponentSupport</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -1644,6 +1645,7 @@
         <members>lblCountry</members>
         <members>lblDeleteContact</members>
         <members>lblDeleteContactPrompt</members>
+        <members>lblDeprecated</members>
         <members>lblExtendedStatus</members>
         <members>lblFindInContacts</members>
         <members>lblFindOrAddContact</members>

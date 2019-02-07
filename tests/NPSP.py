@@ -11,12 +11,19 @@ from selenium.webdriver.common.keys import Keys
 from SeleniumLibrary.errors import ElementNotFound
 from simple_salesforce import SalesforceMalformedRequest
 from simple_salesforce import SalesforceResourceNotFound
-from locator_w19 import npsp_lex_locators
 from selenium.webdriver import ActionChains
 from cumulusci.robotframework.utils import selenium_retry
 import sys
 from email.mime import text
 
+from locators_44 import npsp_lex_locators as locators_44
+from locators_45 import npsp_lex_locators as locators_45
+locators_by_api_version = {
+    44.0: locators_44,  # Winter '19
+    45.0: locators_45,  # Spring '19
+}
+# will get populated in _init_locators
+npsp_lex_locators = {}
 
 @selenium_retry
 class NPSP(object):
@@ -32,6 +39,15 @@ class NPSP(object):
         self.payment_list= []
         # Turn off info logging of all http requests 
         logging.getLogger('requests.packages.urllib3.connectionpool').setLevel(logging.WARN)
+        self._init_locators()
+
+    def _init_locators(self):
+        client = self.cumulusci.tooling
+        response = client._call_salesforce(
+            'GET', 'https://{}/services/data'.format(client.sf_instance))
+        latest_api_version = float(response.json()[-1]['version'])
+        locators = locators_by_api_version[latest_api_version]
+        npsp_lex_locators.update(locators)
 
     @property
     def builtin(self):
@@ -91,11 +107,12 @@ class NPSP(object):
         
     def click_special_related_list_button(self, heading, button_title):
         """ To Click on a related list button which would open up a new lightning page rather than a modal.
-            Pass the list name and button name
-        """
-        locator = npsp_lex_locators['record']['related']['button'].format(heading, button_title)
-        self.selenium.set_focus_to_element(locator)
-        self.selenium.get_webelement(locator).click()
+            Pass the list name and button name"""
+        self.salesforce.load_related_list(heading)
+        locator = npsp_lex_locators["record"]["related"]["button"].format(
+            heading, button_title
+        )
+        self.selenium.click_link(locator)
         
     def click_dropdown(self, title):
         locator = npsp_lex_locators['record']['list'].format(title)
@@ -374,7 +391,8 @@ class NPSP(object):
         return date 
         
     def get_main_header(self):
-        header = self.selenium.get_webelement("//h1/span").text
+        locator = npsp_lex_locators['header_text']
+        header = self.selenium.get_webelement(locator).text
         return header
     
     def verify_contact_role(self,name,role):
@@ -547,7 +565,8 @@ class NPSP(object):
     def enter_payment_schedule(self, *args):
         """Enter values into corresponding fields in Levels page"""                 
         #if name == "Payments":
-        id = ["paymentCount","intervals","intervalunits"]
+        #id = ["paymentCount","intervals","intervalunits"]
+        id = ["paymentCount","vfForm:intervalnumber","intervalunits"]
         for i in range(len(args)):
             locator = npsp_lex_locators['id'].format(id[i])
             loc = self.selenium.get_webelement(locator)
@@ -666,7 +685,7 @@ class NPSP(object):
         
     def wait_for_locator(self, path, *args, **kwargs):
         main_loc = self.get_npsp_locator(path,*args, **kwargs)    
-        self.selenium.wait_until_element_is_visible(main_loc)
+        self.selenium.wait_until_element_is_visible(main_loc,timeout=60)
             
     def get_npsp_settings_value(self,field_name): 
         locator = npsp_lex_locators['npsp_settings']['field_value'].format(field_name)
@@ -731,3 +750,8 @@ class NPSP(object):
     def page_scroll_to_locator(self, path, *args, **kwargs):
         locator = self.get_npsp_locator(path, *args, **kwargs)
         self.selenium.scroll_element_into_view(locator)
+    
+    def return_locator_value(self, path, *args, **kwargs): 
+        locator=self.get_npsp_locator(path, *args, **kwargs)
+        value=self.selenium.get_webelement(locator).text   
+        return value    
