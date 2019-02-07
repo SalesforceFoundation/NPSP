@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017 Salesforce.org
+    Copyright (c) 2019 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2019
 * @group Batch Data Import
 * @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Helper class for the Batch Data Importer, dealing with Donations, ie, Opps and Payments
@@ -394,9 +394,8 @@ public class BDI_Donations {
             // User specified the Campaign using BGE lookup field or an ID on import
             opp.CampaignId = dataImport.DonationCampaignImported__c;
         } else if (dataImport.Donation_Campaign_Name__c != null) {
-            // OR User specified a Campaign name on import -- this was the legacy option
-            // Either we matched based on name or created a new one if no name match
-            Id campaignId = bdi.mapStrNameToCampaignId.get(dataImport.Donation_Campaign_Name__c);
+            // OR User specified a Campaign name on import -- Either we matched on name or created a new one
+            Id campaignId = bdi.campaignNameToCampaignId.get(dataImport.Donation_Campaign_Name__c);
             if (campaignId == null && !bdi.isDryRun) {
                 // In Dry Run mode, we haven't yet inserted any new Campaigns, so they won't be found.
                 bdi.LogBDIError(dataImport, System.Label.bdiErrorInvalidCampaignName, 'DonationImportStatus__c');
@@ -511,10 +510,12 @@ public class BDI_Donations {
             }
 
             // campaigns -- list is shorter since we're limiting matching behavior
-            if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatchedId) {
-                dataImport.DonationCampaignImportStatus__c = bdi.statusMatchedById();
-            } else if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatched) {
+            if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatched) {
                 dataImport.DonationCampaignImportStatus__c = bdi.statusMatchedExisting();
+            } else if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatchedId) {
+                dataImport.DonationCampaignImportStatus__c = bdi.statusMatchedById();
+            } else if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatchedNone) {
+                dataImport.DonationCampaignImportStatus__c = bdi.statusMatchedNone();
             }
         }
     }

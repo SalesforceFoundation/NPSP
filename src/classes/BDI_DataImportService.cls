@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Salesforce.org
+    Copyright (c) 2019 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2014
+* @date 2019
 * @group Batch Data Import
 * @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Batch class for the Batch Data Importer.
@@ -288,8 +288,7 @@ global with sharing class BDI_DataImportService {
     //public Map<String, Contact> mapDIKeyToContact = new Map<String, Contact>();
     public Map<String, Account> mapDIKeyToAccount = new Map<String, Account>();
     private Map<Id, Address__c> mapDIIdToAddr = new Map<Id, Address__c>();
-    public Map<String, Id> mapStrNameToCampaignId = new Map<String, Id>();
-    public Map<Id, String> mapIdToCampaignStrName = new Map<Id, String>();
+    public Map<String, Id> campaignNameToCampaignId = new Map<String, Id>();
 
     /*******************************************************************************************************
     * @description holds the list of DataImport records we are currently processing
@@ -1727,7 +1726,7 @@ global with sharing class BDI_DataImportService {
     private void importCampaigns() {
 
         // need to find all the Campaigns that we might need
-        Set<String> setStrCampaign = new Set<String>();
+        Set<String> uniqueCampaignNames = new Set<String>();
         Set<Id> setCampaignId = new Set<Id>();
 
         for (DataImport__c dataImport : listDI) {
@@ -1737,20 +1736,20 @@ global with sharing class BDI_DataImportService {
             }
 
             if (dataImport.Donation_Campaign_Name__c != null) {
-                setStrCampaign.add(dataImport.Donation_Campaign_Name__c);
+                uniqueCampaignNames.add(dataImport.Donation_Campaign_Name__c);
             }
 
         }
 
         // add the existing campaigns to our map
-        for (Campaign cmp : [SELECT Id, Name FROM Campaign WHERE Name IN :setStrCampaign]) {
-            mapStrNameToCampaignId.put(cmp.Name, cmp.Id);
+        for (Campaign cmp : [SELECT Id, Name FROM Campaign WHERE Name IN :uniqueCampaignNames]) {
+            campaignNameToCampaignId.put(cmp.Name, cmp.Id);
         }
 
         // create any new campaigns
         List<Campaign> campaignsToInsert = new List<Campaign>();
         List<DataImport__c> dataImportsWithNewCampaigns = new List<DataImport__c>();
-        setStrCampaign.clear();
+        uniqueCampaignNames.clear();
         for (DataImport__c dataImport : listDI) {
             // skip di's that already have an error
             if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
@@ -1764,8 +1763,8 @@ global with sharing class BDI_DataImportService {
             if (campaignId != null) {
                 // User specified a Campaign lookup in BGE lookup or with an ID on import
                 dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedId;
-            } else if (campaignName != null) {
-                if (mapStrNameToCampaignId.get(campaignName) == null) {
+            } else if (campaignName != null && uniqueCampaignNames.add(campaignName)) {
+                if (campaignNameToCampaignId.get(campaignName) == null) {
                     if (isDryRun) {
                         dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedNone;
                     } else {
@@ -1777,7 +1776,7 @@ global with sharing class BDI_DataImportService {
                     }
                 } else {
                     // Park the matched Campaign ID in the lookup
-                    dataImport.DonationCampaignImported__c = mapStrNameToCampaignId.get(campaignName);
+                    dataImport.DonationCampaignImported__c = campaignNameToCampaignId.get(campaignName);
                     dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatched;
                 }
             }
@@ -1790,7 +1789,7 @@ global with sharing class BDI_DataImportService {
         for (Integer i = 0; i < upsertResults.size(); i++) {
             Database.UpsertResult ur = upsertResults[i];
             if (!ur.isSuccess()) {
-                LogBDIError(dataImportsWithNewCampaigns[i], ur.getErrors()[0].getMessage(), 'DonationImportStatus__c');
+                LogBDIError(dataImportsWithNewCampaigns[i], ur.getErrors()[0].getMessage(), 'DonationCampaignImportStatus__c');
             }
         }
 
@@ -1798,7 +1797,7 @@ global with sharing class BDI_DataImportService {
         for (Integer i=0; i< campaignsToInsert.size(); i++) {
             // for (Campaign cmp : campaignsToInsert) {
             Campaign cmp = campaignsToInsert[i];
-            mapStrNameToCampaignId.put(cmp.Name, cmp.Id);
+            campaignNameToCampaignId.put(cmp.Name, cmp.Id);
             dataImportsWithNewCampaigns[i].DonationCampaignImported__c = cmp.Id;
         }
 
@@ -1811,8 +1810,6 @@ global with sharing class BDI_DataImportService {
     * @return void
     */
     private void importCampaignMembers() {
-
-        //todo: there's something to do here, but I'm not sure what
 
         // there is no work to do in Dry Run.
         if (isDryRun) {
@@ -1833,7 +1830,7 @@ global with sharing class BDI_DataImportService {
             // only create CMs here for rows that don't have an opportunity
             if (dataImport.Donation_Campaign_Name__c != null && dataImport.DonationImported__c == null) {
                 // assume errors would have already been thrown
-                Id idCmp = mapStrNameToCampaignId.get(dataImport.Donation_Campaign_Name__c);
+                Id idCmp = campaignNameToCampaignId.get(dataImport.Donation_Campaign_Name__c);
                 String diStatus =
                     String.isBlank(dataImport.Campaign_Member_Status__c) ?
                         Label.campaignMemberStatusDefault : dataImport.Campaign_Member_Status__c;
