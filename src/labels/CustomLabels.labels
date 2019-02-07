@@ -2681,6 +2681,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Set Field Options</value>
     </labels>
     <labels>
+        <fullName>bgeCopyBatchSetupButton</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button text for copying existing Batch setup to a new Batch.</shortDescription>
+        <value>Copy Batch Setup</value>
+    </labels>
+    <labels>
+        <fullName>bgeCopyBatchSetupBatchNameAppend</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button text for copying existing Batch setup to a new Batch.</shortDescription>
+        <value>COPY</value>
+    </labels>
+    <labels>
         <fullName>bgeEditBatchFieldOptionsWarning</fullName>
         <language>en_US</language>
         <protected>true</protected>
