@@ -33,7 +33,7 @@
             type: 'action',
             typeAttributes: {
                 rowActions: [{
-                    label: $A.get('$Label.c.bgeCopyBatchSetup'),
+                    label: $A.get('$Label.c.bgeCopyBatchSetupButton'),
                     name: 'copySetup'
                 }]
             }
