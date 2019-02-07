@@ -74,7 +74,7 @@
                     <lightning:buttonGroup>
                         <lightning:button aura:id="newBGEBatch"
                                           label="{!$Label.c.bgeNewBatch}"
-                                          onclick="{!c.onNewBatchClick}"/>
+                                          onclick="{!c.handleNewBatchClick}"/>
                     </lightning:buttonGroup>
                 </div>
             </div>
@@ -86,6 +86,7 @@
                          keyField="id"
                          data="{!v.batchData}"
                          columns="{!v.batchListColumns}"
+                         onrowaction="{!c.handleRowAction}"
                          hideCheckboxColumn="true"
                          enableInfiniteLoading="{!v.enableInfiniteLoading}"
                          showRowNumberColumn="true"
