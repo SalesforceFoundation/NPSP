@@ -49,7 +49,7 @@
         <members>ALLO_Multicurrency_TDTM</members>
         <members>ALLO_Multicurrency_TEST</members>
         <members>ALLO_Rollup_SCHED</members>
-        <members>ALLO_Rollup_TEST</members>
+        <members>ALLO_Rollup_TEST</members>        
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
@@ -90,6 +90,8 @@
         <members>BGE_ConfigurationWizard_CTRL_TEST</members>
         <members>BGE_DataImportBatchEntry_CTRL</members>
         <members>BGE_DataImportBatchEntry_CTRL_TEST</members>
+        <members>CallableApi</members>
+        <members>CallableApi_TEST</members>
         <members>CAM_CascadeDeleteLookups_TDTM</members>
         <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
