@@ -361,4 +361,37 @@ public abstract class CRLP_Batch_Base {
 
     }
 
+    private Integer maxDaysAgo = null;
+    protected Integer getMaxDaysAgo(){
+        if (maxDaysAgo == null) {
+            for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
+                if (rollup.Integer__c != null) {
+                    if (String.isNotBlank(rollup.Time_Bound_Operation_Type__c)
+                            && rollup.Time_Bound_Operation_Type__c.equals('Days_Back')) {
+                        if (maxDaysAgo == null || rollup.Integer__c > maxDaysAgo) {
+                            maxDaysAgo = (Integer) rollup.Integer__c;
+                        }
+                    }
+                }
+            }
+        }
+        return maxDaysAgo;
+    }
+
+    private Integer maxYearsAgo = null; //null will be returned, instead of 0, if there are no years-ago rollups active
+    protected Integer getMaxYearsAgo() {
+        if (maxYearsAgo == null) {
+            for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
+                if (rollup.Integer__c != null) {
+                    if (String.isNotBlank(rollup.Time_Bound_Operation_Type__c)
+                            && rollup.Time_Bound_Operation_Type__c.equals('Years_Ago')) {
+                        if (maxYearsAgo == null || rollup.Integer__c > maxYearsAgo) {
+                            maxYearsAgo = (Integer) rollup.Integer__c;
+                        }
+                    }
+                }
+            }
+        }
+        return maxYearsAgo;
+    }
 }

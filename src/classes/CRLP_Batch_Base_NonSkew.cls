@@ -134,20 +134,21 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                             }
                         }
                         System.debug(loggingLevel.Error, '*** ##### END rollups loop ######');
-//                        if (CRLP_Account_BATCH.isScheduledJob && customSettingIsIncremental) {
-//
-//                        }
                         //If incremental mode is set to true
                         // loop through all the rollups, find the oldes N-days, and
                         // have the where include (SELECT AccountId FROM Opps Where SysMod > last-N_days 900
 
-                        if (this.isScheduledJob && customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c == true) {
-                            whereClauses.add('Id IN (SELECT AccountId FROM Opportunity ALLROWS WHERE CloseDate > LAST_N_DAYS:30)');
+                        if (isIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+                                && (this.getMaxDaysAgo() != null ||  this.getMaxYearsAgo() != null)) {
+                            whereClauses.add(getIncrementalModeWhereClause());
                         } else {
                             whereClauses.add('Id IN (SELECT AccountId FROM Opportunity ALLROWS)');
                         }
 
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+
+                        //todo: where clause for contact hard credit incremental mode ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
                         String contactField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
                         whereClauses.add('Id IN (SELECT ' + contactField + ' FROM Opportunity ALLROWS)');
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
@@ -349,5 +350,43 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         CRLP_RollupProcessingOptions.ProcessingOptions options = super.initOptionsInstance();
         options.detailObjType = this.detailObjectType;
         return options;
+    }
+
+    private Boolean isIncrementalMode(CRLP_RollupProcessingOptions.RollupType jobType){
+        //0. If it is the first day of the fiscal or annual year, return false (future)(same for all types?)
+        
+        //Verify that the jobType is supported and that the custom setting is configured
+        Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+        if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
+                && customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c == true) {
+            return true;
+        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit
+                && customizableRollupSettings.ContactHardCreditNonSkew_Incremental__c == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private String getIncrementalModeWhereClause(){
+        String dateFieldNameForTesting = 'CloseDate';
+        Integer mDays = this.getMaxDaysAgo();
+        Integer mYears = this.getMaxYearsAgo();
+
+        String whereClause = 'Id IN (' +
+                'SELECT AccountId ' +
+                'FROM Opportunity ALLROWS ' +
+                'WHERE ';
+
+        if (mDays != null) {
+            whereClause += dateFieldNameForTesting + ' >= LAST_N_DAYS:' + mDays;
+        }
+        if (mYears != null) {
+            if (mDays != null) {
+                whereClause += ' OR ';
+            }
+            whereClause += dateFieldNameForTesting + ' >= LAST_N_YEARS:' + mYears;
+        }
+        return whereClause += ')';
     }
 }
