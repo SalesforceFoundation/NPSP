@@ -68,7 +68,10 @@ private class OPP_StageToStateMapping_API_TEST {
             'Pledged',
             'PLEDGED',
             'CLOSED WON',
-            null
+            null,
+            'CLOSED WON  ',
+            ' CLOSED WON',
+            '  CLOSED WON  '
     };
 
     /******************************************************************************************************
@@ -101,8 +104,10 @@ private class OPP_StageToStateMapping_API_TEST {
         OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
         OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
         OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
         OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED
-
     };
 
     /******************************************************************************************************
@@ -123,7 +128,10 @@ private class OPP_StageToStateMapping_API_TEST {
         OPP_StageToStateMapping_API.OPPORTUNITY_STATE.COMMITTED,
         OPP_StageToStateMapping_API.OPPORTUNITY_STATE.COMMITTED,
         OPP_StageToStateMapping_API.OPPORTUNITY_STATE.FINALIZED,
-        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.UNCOMMITTED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.FINALIZED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.FINALIZED,
+        OPP_StageToStateMapping_API.OPPORTUNITY_STATE.FINALIZED
     };
 
     /*********************************************************************************************************
