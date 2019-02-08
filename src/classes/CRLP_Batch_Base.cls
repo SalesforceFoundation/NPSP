@@ -82,6 +82,8 @@ public abstract class CRLP_Batch_Base {
     /** @description The Summary Object Type this batch job will process */
     protected String keyField;
 
+    protected Boolean isScheduledJob = false;
+
     /*******************************************************************************************************
      * @description Constructs the class, inits the class instance vars used across all CRLP batch jobs
      */
@@ -106,6 +108,21 @@ public abstract class CRLP_Batch_Base {
         this();
         this.jobType = jobType;
         this.recordIds = recordIds;
+
+        System.debug(loggingLevel.Error, '*** ##### CRLP_Batch_Base jobType, recordIds constructor ######');
+        System.debug(loggingLevel.Error, '*** variable value: ' + recordIds);
+    }
+
+    public CRLP_Batch_Base(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds, Boolean isScheduledJob) {
+        this();
+        this.jobType = jobType;
+        this.recordIds = recordIds;
+        this.isScheduledJob = isScheduledJob;
+
+        System.debug(loggingLevel.Error, '*** ##### CRLP_Batch_Base NEW constructor ######');
+        System.debug(loggingLevel.Error, '*** recordIds value: ' + recordIds);
+        System.debug(loggingLevel.Error, '*** CRLP_Account_BATCH.isInitializedFromScheduledJob value: ' + CRLP_Account_BATCH.isInitializedFromScheduledJob);
+        System.debug(loggingLevel.Error, '*** this.isScheduledJob value: ' + this.isScheduledJob);
     }
 
     /********************************************************************************************************

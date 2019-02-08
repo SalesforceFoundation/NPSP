@@ -84,6 +84,11 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         super(jobType, recordIds);
     }
 
+    public CRLP_Batch_Base_NonSkew(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds, Boolean isScheduledJob) {
+        super(jobType, recordIds, isScheduledJob);
+        System.debug(loggingLevel.Error, '*** ##### in NEW CRLP_Batch_Base_NonSkew constructor, calling parent class constructor (Base Class) -- isScheduledJob value: '+ isScheduledJob+' ######');
+    }
+
     /*******************************************************************************************************
     * @description Query all Summary records for the current type of Rollups based on the defined 'jobType'. Called by
     * the start() method of the individual batch jobs that extend this class.
@@ -91,6 +96,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     */
     public database.Querylocator start(Database.BatchableContext bc) {
         try {
+            System.debug(loggingLevel.Error, '*** ##### initializing job data in Start method of CRLP_Batch_Base_NonSkew.cls ######');
             initializeJobData();
 
             // Build a query string of the target Summary object.
@@ -105,7 +111,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
             List<String> whereClauses = new List<String>();
 
-            // Add additional query filters as needed
+            // Add additional query filters as needed®
             if (this.recordIds != null && this.recordIds.size() > 0) {
                 whereClauses.add('Id IN :recordIds');
             } else {
@@ -120,7 +126,27 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 // Only use the related records filter if not disabled in settings and not running unit tests
                 if (customizableRollupSettings.Disable_Related_Records_Filter__c == false && !Test.isRunningTest()) {
                     if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-                        whereClauses.add('Id IN (SELECT AccountId FROM Opportunity ALLROWS)');
+                        System.debug(loggingLevel.Error, '*** this.isScheduledJob: ' + this.isScheduledJob);
+                        for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
+                            if (String.isNotBlank(rollup.Time_Bound_Operation_Type__c) && rollup.Time_Bound_Operation_Type__c != 'All_Time') {
+                                System.debug(loggingLevel.Error, '*** variable value: ' + rollup.Time_Bound_Operation_Type__c);
+                                System.debug(loggingLevel.Error, '*** variable value: ' + rollup.Integer__c);
+                            }
+                        }
+                        System.debug(loggingLevel.Error, '*** ##### END rollups loop ######');
+//                        if (CRLP_Account_BATCH.isScheduledJob && customSettingIsIncremental) {
+//
+//                        }
+                        //If incremental mode is set to true
+                        // loop through all the rollups, find the oldes N-days, and
+                        // have the where include (SELECT AccountId FROM Opps Where SysMod > last-N_days 900
+
+                        if (this.isScheduledJob && customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c == true) {
+                            whereClauses.add('Id IN (SELECT AccountId FROM Opportunity ALLROWS WHERE CloseDate > LAST_N_DAYS:30)');
+                        } else {
+                            whereClauses.add('Id IN (SELECT AccountId FROM Opportunity ALLROWS)');
+                        }
+
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
                         String contactField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
                         whereClauses.add('Id IN (SELECT ' + contactField + ' FROM Opportunity ALLROWS)');
@@ -149,6 +175,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             }
 
             UTIL_Debug.debug(LoggingLevel.WARN, '>> Batch Query =' + query);
+            System.debug(loggingLevel.Error, '*** query: ' + query);
             return Database.getQueryLocator(query);
 
         } catch (Exception ex) {

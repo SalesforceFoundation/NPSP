@@ -36,6 +36,12 @@
 */
 public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 
+    //This variable is only usable during the schedulable execution context.
+    // The schedule of all execution context submits batch job, Which changes the context, And renders this variable Unusable from the batch job context.
+    // So we set the value from the executed context in this class, And then pass it As an argument To the CRLP Batch Base constructors, so that we can pass
+    // it to the Batch Job that is submitted as a constructor param there, so the Batch Job is aware that the job started from schedulable context
+    public static Boolean isInitializedFromScheduledJob = false;
+
     public CRLP_Account_BATCH() { }
 
     /*******************************************************************************************************
@@ -56,13 +62,21 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
         super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, recordIds);
     }
 
+    public CRLP_Account_BATCH(List<Id> recordIds, Boolean isScheduledJob) {
+        super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, recordIds, isScheduledJob);
+        System.debug(loggingLevel.Error, '*** ##### from CRLP_Account_BATCH, calling super (new constructor on parent class) ######');
+//        this.isScheduledJob = isScheduledJob; //Should set the value at the Base class level, THIS DOES NOT SET THE VALUE of the Base Class variable, so have to pass via constructor param
+    }
+
     /**
      * @description Scheduler execute method to support scheduling this job directly from the UI
      */
     public void execute(SchedulableContext context) {
+        isInitializedFromScheduledJob = true; //Set the static variable here so that we don't have to change the signature of the service method below
         String className = CRLP_Account_BATCH.class.getName();
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
             if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
+                System.debug(loggingLevel.Error, '*** ##### In schedulable execute method, calling SVC ######');
                 CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                         CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
             } else {
