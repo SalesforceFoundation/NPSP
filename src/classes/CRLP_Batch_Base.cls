@@ -353,11 +353,11 @@ public abstract class CRLP_Batch_Base {
 
     }
 
-    private Integer maxDaysAgo = null;
+    private Integer maxDaysAgo = null; //null will be returned, instead of 0, if there are no days-back rollups active
     protected Integer getMaxDaysAgo(){
         if (maxDaysAgo == null) {
             for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
-                if (rollup.Integer__c != null) {
+                if (rollup.Active__c == true && rollup.Integer__c != null) {
                     if (String.isNotBlank(rollup.Time_Bound_Operation_Type__c)
                             && rollup.Time_Bound_Operation_Type__c.equals('Days_Back')) {
                         if (maxDaysAgo == null || rollup.Integer__c > maxDaysAgo) {
@@ -374,7 +374,7 @@ public abstract class CRLP_Batch_Base {
     protected Integer getMaxYearsAgo() {
         if (maxYearsAgo == null) {
             for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
-                if (rollup.Integer__c != null) {
+                if (rollup.Active__c == true && rollup.Integer__c != null) {
                     if (String.isNotBlank(rollup.Time_Bound_Operation_Type__c)
                             && rollup.Time_Bound_Operation_Type__c.equals('Years_Ago')) {
                         if (maxYearsAgo == null || rollup.Integer__c > maxYearsAgo) {

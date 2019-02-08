@@ -126,24 +126,9 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 // Only use the related records filter if not disabled in settings and not running unit tests
                 if (customizableRollupSettings.Disable_Related_Records_Filter__c == false && !Test.isRunningTest()) {
                     if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-                        for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
-                            if (String.isNotBlank(rollup.Time_Bound_Operation_Type__c) && rollup.Time_Bound_Operation_Type__c != 'All_Time') {
-                            }
-                        }
-                        if (isIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
-                                && (this.getMaxDaysAgo() != null ||  this.getMaxYearsAgo() != null)) {
-                            whereClauses.add(getIncrementalModeWhereClause(this.keyField));
-                        } else {
-                            whereClauses.add('Id IN (SELECT AccountId FROM Opportunity ALLROWS)');
-                        }
+                        whereClauses.add(getWhereClause());
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                        String contactField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-                        if (isIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit)
-                                && (this.getMaxDaysAgo() != null || this.getMaxYearsAgo() != null)) {
-                            whereClauses.add(getIncrementalModeWhereClause(this.keyField));
-                        } else {
-                            whereClauses.add('Id IN (SELECT ' + contactField + ' FROM Opportunity ALLROWS)');
-                        }
+                        whereClauses.add(getWhereClause());
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
                         whereClauses.add('Id IN (SELECT ContactId FROM OpportunityContactRole ALLROWS)');
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
@@ -346,18 +331,12 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     }
 
     private Boolean isIncrementalMode(CRLP_RollupProcessingOptions.RollupType jobType){
-        //0. If it is the first day of the fiscal or annual year, return false (future)(same for all types?)
-
-        System.debug(loggingLevel.Error, '*** ##### isIncrementalMode ######');
-        System.debug(loggingLevel.Error, '*** this.isScheduledJob: ' + this.isScheduledJob);
-        System.debug(loggingLevel.Error, '*** System.isScheduled(): ' + System.isScheduled());
-
         //1. Only run incremental mode when initiated by the scheduled job
-        if (this.isScheduledJob == false) {
+        if (this.isScheduledJob == null || this.isScheduledJob == false) {
             return false;
         }
         
-        //2. Only run incremental mode when the custom settings are set to enable incremental mode
+        //2. Only run incremental mode when the custom settings are configured to enable incremental mode
         Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
         if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
                 && customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c == true) {
@@ -370,14 +349,14 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         }
     }
 
-    private String getIncrementalModeWhereClause(String idField){
-        String dateFieldNameForTesting = 'CloseDate';
+    private String getIncrementalModeWhereClause(){
+        String dateFieldNameForTesting = 'CloseDate'; //Set to CloseDate for dev, will be set to SystemModstamp for testing/prod
         Integer mDays = this.getMaxDaysAgo();
         Integer mYears = this.getMaxYearsAgo();
 
         String whereClause = 'Id IN (' +
-                'SELECT '+ idField +' ' +
-                'FROM Opportunity ALLROWS ' +
+                'SELECT ' + this.keyField + ' ' +
+                'FROM ' + this.detailObjectType + ' ALLROWS ' +
                 'WHERE ';
 
         if (mDays != null) {
@@ -390,5 +369,25 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             whereClause += dateFieldNameForTesting + ' >= LAST_N_YEARS:' + mYears;
         }
         return whereClause += ')';
+    }
+
+    private String getStandardWhereClause(){
+        String standardWhereClause = null; //will return null if this method is called from an unsupported rollup type
+        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
+            standardWhereClause = 'Id IN (SELECT '+ this.keyField +' FROM Opportunity ALLROWS)';
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+            standardWhereClause = 'Id IN (SELECT ' + this.keyField + ' FROM Opportunity ALLROWS)';
+        }
+        return standardWhereClause;
+    }
+
+    private String getWhereClause() {
+        Boolean incrementalModeActivatedForThisJobType = isIncrementalMode(this.jobType);
+        Boolean hasActiveIncrementalModeRollups = (this.getMaxDaysAgo() != null || this.getMaxYearsAgo() != null);
+        if (incrementalModeActivatedForThisJobType && hasActiveIncrementalModeRollups) {
+            return getIncrementalModeWhereClause();
+        } else {
+            return getStandardWhereClause();
+        }
     }
 }
