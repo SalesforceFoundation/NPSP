@@ -121,8 +121,10 @@ public abstract class CRLP_Batch_Base {
 
         System.debug(loggingLevel.Error, '*** ##### CRLP_Batch_Base NEW constructor ######');
         System.debug(loggingLevel.Error, '*** recordIds value: ' + recordIds);
-        System.debug(loggingLevel.Error, '*** CRLP_Account_BATCH.isInitializedFromScheduledJob value: ' + CRLP_Account_BATCH.isInitializedFromScheduledJob);
         System.debug(loggingLevel.Error, '*** this.isScheduledJob value: ' + this.isScheduledJob);
+        System.debug(loggingLevel.Error, '*** this.jobType: ' + this.jobType);
+        System.debug(loggingLevel.Error, '*** CRLP_Account_BATCH.isInitializedFromScheduledJob value: ' + CRLP_Account_BATCH.isInitializedFromScheduledJob != null ? CRLP_Account_BATCH.isInitializedFromScheduledJob : null);
+        System.debug(loggingLevel.Error, '*** CRLP_Contact_BATCH.isInitializedFromScheduledJob value: ' + CRLP_Contact_BATCH.isInitializedFromScheduledJob != null ? CRLP_Contact_BATCH.isInitializedFromScheduledJob : null);
     }
 
     /********************************************************************************************************
@@ -216,6 +218,13 @@ public abstract class CRLP_Batch_Base {
      * object, key field, and if there are payment rollups that need to be included for the given summary object
      */
     protected void initializeJobData() {
+        System.debug(loggingLevel.Error, '*** ##### initialize ######');
+        System.debug(loggingLevel.Error, '*** this.jobType: ' + this.jobType);
+        System.debug(loggingLevel.Error, '*** this.jobFilter: ' + this.jobFilter);
+        System.debug(loggingLevel.Error, '*** this.detailObjectType: ' + this.detailObjectType);
+        System.debug(loggingLevel.Error, '*** this.keyField: ' + this.keyField);
+        System.debug(loggingLevel.Error, '*** CRLP_Rollup_SEL.getRollupDefinitionsToUse(this.jobType, this.jobFilter): ' + CRLP_Rollup_SEL.getRollupDefinitionsToUse(this.jobType, this.jobFilter));
+        System.debug(loggingLevel.Error, '*** CRLP_RollupBatch_SVC.getSummaryObjectType(this.jobType): ' + CRLP_RollupBatch_SVC.getSummaryObjectType(this.jobType));
         this.summaryObjectType = CRLP_RollupBatch_SVC.getSummaryObjectType(this.jobType);
         this.statefulCacheOfRollupsToBeProcessed = CRLP_Rollup_SEL.getRollupDefinitionsToUse(this.jobType, this.jobFilter);
 
@@ -247,6 +256,11 @@ public abstract class CRLP_Batch_Base {
             this.detailObjectType = Opportunity.SObjectType;
             this.keyField = SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getName();
         }
+
+        System.debug(loggingLevel.Error, '*** this.jobType: ' + this.jobType);
+        System.debug(loggingLevel.Error, '*** this.jobFilter: ' + this.jobFilter);
+        System.debug(loggingLevel.Error, '*** this.detailObjectType: ' + this.detailObjectType);
+        System.debug(loggingLevel.Error, '*** this.keyField: ' + this.keyField);
     }
 
     /**

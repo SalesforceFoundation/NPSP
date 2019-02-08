@@ -76,7 +76,6 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
         String className = CRLP_Account_BATCH.class.getName();
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
             if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
-                System.debug(loggingLevel.Error, '*** ##### In schedulable execute method, calling SVC ######');
                 CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                         CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
             } else {

@@ -36,6 +36,8 @@
 */
 public class CRLP_Contact_BATCH extends CRLP_Batch_Base_NonSkew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 
+    public static Boolean isInitializedFromScheduledJob = false;
+
     public CRLP_Contact_BATCH() { }
 
     /*******************************************************************************************************
@@ -56,10 +58,16 @@ public class CRLP_Contact_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
         super(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, recordIds);
     }
 
+    public CRLP_Contact_BATCH(List<Id> recordIds, Boolean isScheduledJob) {
+        super(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, recordIds, isScheduledJob);
+        System.debug(loggingLevel.Error, '*** ##### from CRLP_Contact_BATCH, calling super (new constructor on parent class) ######');
+    }
+
     /**
      * @description Scheduler execute method to support scheduling this job directly from the UI
      */
     public void execute(SchedulableContext context) {
+        isInitializedFromScheduledJob = true; //Set the static variable here so that we don't have to change the signature of the service method below
         String className = CRLP_Contact_BATCH.class.getName();
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
             if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {

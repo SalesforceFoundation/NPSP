@@ -198,15 +198,11 @@ public class CRLP_RollupBatch_SVC {
             }
         } else {
             if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-//                database.executeBatch(new CRLP_Account_BATCH(recordIds), batchSize);
-                System.debug(loggingLevel.Error, '*** ##### Submitting the batch job, CRLP_Account_BATCH.isInitializedFromScheduledJob: '+CRLP_Account_BATCH.isInitializedFromScheduledJob+' ######');
                 database.executeBatch(new CRLP_Account_BATCH(recordIds, CRLP_Account_BATCH.isInitializedFromScheduledJob), batchSize);
-
-
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
                 database.executeBatch(new CRLP_Account_AccSoftCredit_BATCH(recordIds), batchSize);
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                database.executeBatch(new CRLP_Contact_BATCH(recordIds), batchSize);
+                database.executeBatch(new CRLP_Contact_BATCH(recordIds, CRLP_Contact_BATCH.isInitializedFromScheduledJob), batchSize);
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                 database.executeBatch(new CRLP_Account_SoftCredit_BATCH(recordIds), batchSize);
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
