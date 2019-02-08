@@ -49,7 +49,7 @@
         <members>ALLO_Multicurrency_TDTM</members>
         <members>ALLO_Multicurrency_TEST</members>
         <members>ALLO_Rollup_SCHED</members>
-        <members>ALLO_Rollup_TEST</members>        
+        <members>ALLO_Rollup_TEST</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
