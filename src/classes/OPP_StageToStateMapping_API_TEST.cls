@@ -181,6 +181,28 @@ private class OPP_StageToStateMapping_API_TEST {
         }
     }
 
+    /*********************************************************************************************************
+    * @description Tests the determineOppStateFromOppStage Method with No Stages Defined in Settings,
+    * but with settings present/initialized
+    * verifies that it only returns UNCOMMITTED as a value.
+    * @return void
+    **********************************************************************************************************/
+    @isTest
+    private static void testdetermineOppStateFromOppStageSettingsNoValuesMethod() {
+    // Check when Committed and Finalized Stage are mapped in settings...
+        npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c(
+             )
+        );
+
+        // Check when Committed and Finalized Stage are not mapped in settings...
+        for (Integer i = 0; i < TEST_OPP_STAGE_VALS.size(); i++) {
+            String testVal = TEST_OPP_STAGE_VALS[i];
+            OPP_StageToStateMapping_API.OPPORTUNITY_STATE resultVal = RESULT_NO_SETTINGS[i];
+
+            System.assertEquals (resultVal, OPP_StageToStateMapping_API.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
+        }
+    }
 
     /*********************************************************************************************************
     * @description Tests the determineOppStateFromOppStage Method with Stages Defined in Settings
