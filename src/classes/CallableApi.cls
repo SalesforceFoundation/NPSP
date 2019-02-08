@@ -42,8 +42,16 @@ global class CallableApi implements System.Callable {
     global class MalformedMethodInvocationException extends Exception {}
 
     /*******************************************************************************************************
-    * @description required call function of the callable Interface
-    * @param action string of the target function text
+    * @description Map of valid actions used to action text
+    ********************************************************************************************************/
+    private static Map<String, String> validActionsMap = new Map<String, String> {
+        'tdtm.disablealltriggers' => 'TDTM.disableAllTriggers'
+    };
+
+    /*******************************************************************************************************
+    * @description call function implementation of the callable Interface will dispatch to the appropriate
+    * action handler based on the action text
+    * @param action string of the target action
     * @param args name value map of arguments
     * @return Object returned will depend on the results of the target function
     ********************************************************************************************************/
@@ -52,7 +60,7 @@ global class CallableApi implements System.Callable {
         CallableApiInfo actionInfo = validateAction(action, args);
         
         if (actionInfo == null) {
-            throw new MalformedMethodInvocationException(action + ' is invalid');
+            throw new MalformedMethodInvocationException(action + ' is not valid');
         }
 
        return dispatchAction(actionInfo); 
@@ -69,6 +77,9 @@ global class CallableApi implements System.Callable {
         public String message; 
         public String module;
 
+        /*******************************************************************************************************
+        * @description Constructor for helper class
+        ********************************************************************************************************/
         public CallableApiInfo(String action, String module, String function, Map<String, Object> args) {
             this.action = action;
             this.module = module;
@@ -78,7 +89,7 @@ global class CallableApi implements System.Callable {
     }
 
     /*******************************************************************************************************
-    * @description Validate that the action string is in the valid format
+    * @description Validate that the action string is the correct format
     * @param action string of the target action
     * @param args name value map of the arguments
     * @return CallableApiInfo object with parameters of the target action
@@ -88,8 +99,12 @@ global class CallableApi implements System.Callable {
             return null;
         }
 
-        List<String> actionParams = action.split('\\.');
+        String validAction = validActionsMap.get(action.toLowerCase());
+        if (String.isBlank(validAction)) {
+            return null;
+        }
 
+        List<String> actionParams = validAction.split('\\.');
         if (actionParams.size() == 2) {
             return new CallableApiInfo(action, actionParams[0], actionParams[1], args);
         }
@@ -98,22 +113,17 @@ global class CallableApi implements System.Callable {
     }
 
     /*******************************************************************************************************
-    * @description Generate a generic response to the call for actions that do not have an explicit response
+    * @description Dispatch the action to the appropriate action handlers
     * @param actionInfo contains the information needed to execute the action
-    * @return Object that can vary depending on the target action
+    * @return Object that can vary depending on the action handler
     ********************************************************************************************************/
     private Object dispatchAction(CallableApiInfo actionInfo) {
-        
         switch on actionInfo.action {
             when 'TDTM.disableAllTriggers' {
-                TDTM_TriggerHandler.disableTDTM = true;
-                
-                for (Trigger_Handler__c handler: TDTM_ObjectDataGateway.listTH) {
-                    handler.Active__c = false;
-                }
+                TDTM_Config_API.disableAllTriggers();
             }
             when else {
-                throw new MalformedMethodInvocationException(actionInfo.action + ' not implemented');
+                throw new MalformedMethodInvocationException(actionInfo.action + ' is not implemented');
             }
         }
 

@@ -92,5 +92,46 @@ private class TDTM_Config_API_Test {
         con = [SELECT AccountId FROM Contact WHERE Id = :con.Id LIMIT 1];
         system.assertEquals(null, con.AccountId, 'there should not be an account id associated with this new contact');
     }
-    
+
+
+/*******************************************************************************************************
+    * @description verify the TDTM Callable Action does not modify the TDTM Triggers globally
+    ********************************************************************************************************/
+    @IsTest
+    public static void triggersAreDisabledForCurrentContext() {
+        // skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
+        List<Trigger_Handler__c> handlers = TDTM_Config_API.getCachedRecords();
+        System.assert(handlers.size() > 0, ' No Triggers are configured ');
+
+        // Get list of TDTM modified dates
+        List<AggregateResult> handlerResults = [SELECT MAX(LastModifiedDate) maxDate FROM Trigger_Handler__c];
+        Datetime maxDate = (Datetime)handlerResults[0].get('maxDate');        
+        Integer accountCountBefore = Database.countQuery('SELECT COUNT() FROM Account');
+
+        TDTM_Config_Api.disableAllTriggers();
+        
+        Contact contact1 = new Contact(LastName = 'TDTM_Config_Api_Test');
+        insert contact1;
+
+        Integer accountCountAfter = Database.countQuery('SELECT COUNT() FROM Account');
+
+        System.assertEquals(accountCountBefore, accountCountAfter, 'Account record was created');
+        System.assertEquals(null, contact1.AccountId, 'Contact Triggers were not turned off');
+
+        handlerResults = [SELECT MAX(LastModifiedDate) maxDate FROM Trigger_Handler__c];
+        Datetime maxDate2 = (Datetime)handlerResults[0].get('maxDate');
+        System.assertEquals(maxDate2, maxDate, 'TDTM records were modified');
+
+        handlers = TDTM_Config_API.getCachedRecords();
+
+        for (Trigger_Handler__c handler : handlers) {
+            System.assertEquals(false, handler.Active__c, handler.Class__c + ' is not turned off');
+        }
+
+    }
+
 }

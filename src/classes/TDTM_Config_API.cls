@@ -96,4 +96,17 @@ global class TDTM_Config_API {
         TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'CRLP_Rollup_TDTM', false);
     }
 
+
+    /*******************************************************************************************************
+    * @description Method to disable all TDTM triggers for the current code execution context
+    * @return void
+    ********************************************************************************************************/
+    global static void disableAllTriggers() {
+
+        TDTM_TriggerHandler.disableTDTM = true;
+        
+        for (Trigger_Handler__c handler: TDTM_ObjectDataGateway.listTH) {
+            handler.Active__c = false;
+        }
+    }
 }

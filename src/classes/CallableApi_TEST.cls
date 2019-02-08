@@ -42,7 +42,7 @@ public with sharing class CallableApi_TEST {
     
     /*******************************************************************************************************
     * @description verify the TDTM Callable action returns an Object
-    */
+    ********************************************************************************************************/
     @IsTest
     public static void verifyCallableReturnsAnObject() {
        
@@ -60,47 +60,10 @@ public with sharing class CallableApi_TEST {
         System.assertEquals(TDTM_TRIGGER_ACTION, String.valueOf(triggerResult.get('action')), 'Action was not returned');
     }    
 
-    /*******************************************************************************************************
-    * @description verify the TDTM Callable Action does not modify the TDTM Triggers globally
-    */
-    @IsTest
-    public static void callableApiDoesNotChangeTdtmTriggers() {
-       
-        Test.startTest();
-        // Get list of TDTM modified dates
-        List<AggregateResult> handlerResults = [SELECT MAX(LastModifiedDate) maxDate FROM Trigger_Handler__c];
-        Datetime maxDate = (Datetime)handlerResults[0].get('maxDate');
-
-        // Get count of Accounts in the system
-        Integer accountCountBefore = Database.countQuery('SELECT COUNT() FROM Account');
-
-        // Call the API to disable All TDTM Triggers
-        Callable npspApi = (Callable) Type.forName('CallableApi').newInstance();
-        Map<String, Object> triggerArgs = new Map<String, Object>();
-        Object result = npspApi.call(TDTM_TRIGGER_ACTION, triggerArgs);
-
-        Contact contact1 = createContact();
-        Test.stopTest();
-
-        Integer accountCountAfter = Database.countQuery('SELECT COUNT() FROM Account');
-
-        System.assertEquals(accountCountBefore, accountCountAfter, 'Account record was created');
-        System.assertEquals(null, contact1.AccountId, 'Contact Triggers were not turned off');
-
-        handlerResults = [SELECT MAX(LastModifiedDate) maxDate FROM Trigger_Handler__c];
-        Datetime maxDate2 = (Datetime)handlerResults[0].get('maxDate');
-        System.assertEquals(maxDate2, maxDate, 'TDTM records were modified');
-
-        List<Trigger_Handler__c> handlers = TDTM_Config_API.getCachedRecords();
-        for (Trigger_Handler__c handler: handlers) {
-            System.assertEquals(false, handler.Active__c, handler.Class__c + ' is not turned off');
-        }
-
-    }
 
     /*******************************************************************************************************
     * @description Call the API with an invalid method format and make sure an exception is thrown
-    */
+    ********************************************************************************************************/
     @IsTest
     public static void callableApiThrowsExceptionWhenMethodFormatIsInvalid() {
        
@@ -115,7 +78,7 @@ public with sharing class CallableApi_TEST {
 
         } catch (CallableApi.MalformedMethodInvocationException apiException) {
             methodExceptionThrown = true;
-            System.assert(apiException.getMessage().contains(' is invalid'));
+            System.assert(apiException.getMessage().contains(' is not valid'));
         }
 
         System.assert(methodExceptionThrown, 'Method Exception Was Not Thrown');
@@ -125,10 +88,9 @@ public with sharing class CallableApi_TEST {
 
     /*******************************************************************************************************
     * @description Call the API with an invalid method name and make sure an exception is thrown
-    */
+    ********************************************************************************************************/
     @IsTest
     public static void callableApiThrowsExceptionWhenMethodIsMissing() {
-       
         Test.startTest();
 
         Callable npspApi = (Callable) Type.forName('CallableApi').newInstance();
@@ -140,7 +102,7 @@ public with sharing class CallableApi_TEST {
 
         } catch (CallableApi.MalformedMethodInvocationException apiException) {
             methodExceptionThrown = true;
-            System.assert(apiException.getMessage().contains(' not implemented'));
+            System.assert(apiException.getMessage().contains(' is not valid'));
         }
 
         System.assert(methodExceptionThrown, 'Method Exception Was Not Thrown');
@@ -148,32 +110,6 @@ public with sharing class CallableApi_TEST {
         Test.stopTest();
     }
 
-    /*******************************************************************************************************
-    * @description Populate the TDTM table so that we can test that the triggers are not modified
-    */
-    @TestSetup
-    private static void populateTriggerTable(){
-        // Create a contact and let the tdtm code populate the TDTM table
-
-        Contact contact2 = createContact();
-        System.assertNotEquals(null, contact2.AccountId, 'Contact Triggers Are not Populated');
-    }
-
-    /*******************************************************************************************************
-    * HELPER FUNCTIONS
-    */
-
-
-    /*******************************************************************************************************
-    * @description Create a contact and return the information
-    * @return A newly created Contact
-    */
-    private static Contact createContact() {
-        Contact contact1 = new Contact(LastName='CallableApiTest');
-        insert contact1;
-
-        Contact contact2 = [SELECT AccountId FROM Contact WHERE Id = :contact1.Id LIMIT 1];
-        return contact2; 
-    }
+  
 
 }
