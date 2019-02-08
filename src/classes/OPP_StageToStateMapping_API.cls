@@ -79,7 +79,7 @@ global class OPP_StageToStateMapping_API {
 
         initializeStates();
 
-        String oppStageToCheck = String.isNotBlank(opportunityStage) ? opportunityStage.toLowerCase() : null;
+        String oppStageToCheck = String.isNotBlank(opportunityStage) ? opportunityStage.trim().toLowerCase() : null;
 
         if (FINALIZED_STATE_SET != null && FINALIZED_STATE_SET.contains(oppStageToCheck)) {
             return OPPORTUNITY_STATE.FINALIZED;
