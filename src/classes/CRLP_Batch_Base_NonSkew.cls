@@ -86,7 +86,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
     public CRLP_Batch_Base_NonSkew(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds, Boolean isScheduledJob) {
         super(jobType, recordIds, isScheduledJob);
-        System.debug(loggingLevel.Error, '*** ##### in NEW CRLP_Batch_Base_NonSkew constructor, jobType is: '+jobType+' calling parent class constructor (Base Class) -- isScheduledJob value: '+ isScheduledJob+' ######');
     }
 
     /*******************************************************************************************************
@@ -96,14 +95,11 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     */
     public database.Querylocator start(Database.BatchableContext bc) {
         try {
-            System.debug(loggingLevel.Error, '*** ##### initializing job data in Start method of CRLP_Batch_Base_NonSkew.cls ######');
             initializeJobData();
-            System.debug(loggingLevel.Error, '*** ##### After Initialize() ######');
 
             // Build a query string of the target Summary object.
             String query = CRLP_Query_SEL.buildObjectQueryForRollup(this.summaryObjectType);
-            System.debug(loggingLevel.Error, '*** ##### After buildObjectQuery ######');
-            
+
 
             // Fields in the fieldsToCheckForNonZero[] list must always be in the Contact query
             for (String f : fieldsToCheckForNonZero) {
@@ -125,19 +121,14 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 }
 
                 Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-                System.debug(loggingLevel.Error, '*** variable value: ' + customizableRollupSettings);
 
                 // Only use the related records filter if not disabled in settings and not running unit tests
                 if (customizableRollupSettings.Disable_Related_Records_Filter__c == false && !Test.isRunningTest()) {
                     if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-                        System.debug(loggingLevel.Error, '*** this.isScheduledJob: ' + this.isScheduledJob);
                         for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
                             if (String.isNotBlank(rollup.Time_Bound_Operation_Type__c) && rollup.Time_Bound_Operation_Type__c != 'All_Time') {
-                                System.debug(loggingLevel.Error, '*** variable value: ' + rollup.Time_Bound_Operation_Type__c);
-                                System.debug(loggingLevel.Error, '*** variable value: ' + rollup.Integer__c);
                             }
                         }
-                        System.debug(loggingLevel.Error, '*** ##### END rollups loop ######');
                         //If incremental mode is set to true
                         // loop through all the rollups, find the oldes N-days, and
                         // have the where include (SELECT AccountId FROM Opps Where SysMod > last-N_days 900
@@ -150,14 +141,9 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                         }
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
                         String contactField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-                        System.debug(loggingLevel.Error, '*** contactField value: ' + contactField);
-                        System.debug(loggingLevel.Error, '*** variable value: ' + this.getMaxDaysAgo());
-                        System.debug(loggingLevel.Error, '*** variable value: ' + this.getMaxYearsAgo());
                         if (isIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit)
                                 && (this.getMaxDaysAgo() != null || this.getMaxYearsAgo() != null)) {
-                            System.debug(loggingLevel.Error, '*** ##### calling getincrementalmode ######');
                             whereClauses.add(getIncrementalModeWhereClause(this.keyField));
-                            System.debug(loggingLevel.Error, '*** getIncrementalModeWhereClause(contactField): ' + getIncrementalModeWhereClause(contactField));
                         } else {
                             whereClauses.add('Id IN (SELECT ' + contactField + ' FROM Opportunity ALLROWS)');
                         }
@@ -186,11 +172,9 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             }
 
             UTIL_Debug.debug(LoggingLevel.WARN, '>> Batch Query =' + query);
-            System.debug(loggingLevel.Error, '*** query: ' + query);
             return Database.getQueryLocator(query);
 
         } catch (Exception ex) {
-            System.debug(loggingLevel.Error, '*** ex.getMessage(): ' + ex.getMessage());
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP + '.' + this.jobType.name());
             return Database.getQueryLocator([SELECT Id FROM Account LIMIT 0]);
         }
@@ -364,12 +348,10 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     }
 
     private Boolean isIncrementalMode(CRLP_RollupProcessingOptions.RollupType jobType){
-        System.debug(loggingLevel.Error, '*** ##### inIsIncrementalMode ######');
         //0. If it is the first day of the fiscal or annual year, return false (future)(same for all types?)
         
         //Verify that the jobType is supported and that the custom setting is configured
         Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-        System.debug(loggingLevel.Error, '*** customizableRollupSettings: ' + customizableRollupSettings);
         if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
                 && customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c == true) {
             return true;
@@ -382,7 +364,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     }
 
     private String getIncrementalModeWhereClause(String idField){
-        System.debug(loggingLevel.Error, '*** ##### in getIncrementalModeWhereClause ######');
         String dateFieldNameForTesting = 'CloseDate';
         Integer mDays = this.getMaxDaysAgo();
         Integer mYears = this.getMaxYearsAgo();

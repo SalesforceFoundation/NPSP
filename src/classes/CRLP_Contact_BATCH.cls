@@ -60,7 +60,6 @@ public class CRLP_Contact_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
 
     public CRLP_Contact_BATCH(List<Id> recordIds, Boolean isScheduledJob) {
         super(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, recordIds, isScheduledJob);
-        System.debug(loggingLevel.Error, '*** ##### from CRLP_Contact_BATCH, calling super (new constructor on parent class) ######');
     }
 
     /**
