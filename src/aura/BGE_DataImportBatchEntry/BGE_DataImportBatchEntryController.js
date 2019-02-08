@@ -30,7 +30,7 @@
         var channel = event.getParam('channel');
 
         if (channel === 'onSuccess') {
-            helper.runDryRun(component, [message.recordId]);
+            helper.runNewRecordDryRun(component, message.recordId);
             helper.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftSaved'), 'success');
             helper.createEntryForm(component);
         } else if (channel === 'onCancel') {
@@ -52,8 +52,10 @@
      */
     onCellChange: function (component, event, helper) {
         var values = event.getParam('draftValues');
+        //cells only change one at a time, so pop the value out of the array
+        let changedValue = values[0];
         // validation would happen here
-        helper.handleTableSave(component, values);
+        helper.handleRowEdit(component, changedValue);
         component.find('dataImportRowsDataTable').set('v.draftValues', null);
     },
 
@@ -62,6 +64,22 @@
      */
     onEditClick: function(component, event, helper) {
         helper.checkFieldPermissions(component, event, helper);
+    },
+
+    /**
+     * @description: handles infinite scroll for the Data Import records datatable
+     */
+    onLoadMore: function(component, event, helper) {
+        event.getSource().set('v.isLoading', true);
+        let totals = component.get('v.totals');
+        let totalCountGifts = totals.countGifts ? totals.countGifts : 0;
+        const countLoadedGifts = component.get('v.data').length;
+        if (countLoadedGifts >= totalCountGifts) {
+            event.getSource().set('v.enableInfiniteLoading', false);
+            event.getSource().set('v.isLoading', false);
+        } else {
+            helper.getDataImportRows(component, event);
+        }
     },
 
     /**

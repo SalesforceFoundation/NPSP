@@ -1,3 +1,5 @@
+"""Locators for Spring '19"""
+
 npsp_lex_locators={
     'breadcrumb': "//li[contains(@class, 'slds-breadcrumb__item')]/span[text()='{}']",
     'mailing_address': "//*[contains(@placeholder,'{}')]",
@@ -5,6 +7,7 @@ npsp_lex_locators={
         'select-option':'//span/mark[text()="{}"]',
     },
     'object_dd':'//h1[contains(@class,"slds-page-header__title")]//a',
+    "header_text": "//h1/div/span",
     "record": {
         'button': "//div[@class='actionsContainer']/button[@title='{}']",
         'datepicker':"//div[contains(@class,'uiDatePickerGrid')]/table[@class='calGrid']//span[text()='{}']",
@@ -22,9 +25,11 @@ npsp_lex_locators={
             'field_value': '//a[text()="{}"]/ancestor::li//div[contains(@class, "slds-item--detail")]//*[text()="{}"]',
          },
     },
+    "alert": "//span[contains(@class,'toastMessage')]/a",
     'popup': "//div[contains(@class, 'uiPopupTarget')][contains(@class, 'visible')]",
     'test':'/html/body/div[6]/table/tbody/tr[23]/td[1]/a',
     'frame':'//iframe[@title= "{}"]',
+    'frame_by_name': "//iframe[contains(@name, '${}')]",
     'id':'//*[contains(@id,"{}")]',
     'button':'//input[contains(@value,"{}")]',
     'link-text':'//a[text()="{}"]',
@@ -59,7 +64,7 @@ npsp_lex_locators={
     'click_search':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/span/span/input[contains(@id,"inputX")]',
     'field': "//div[contains(@class, 'uiInput')][.//label[contains(@class, 'uiLabel')][.//span[text()='{}']]]//input",
     'field_lookup_value': "//a[@role='option'][.//div[@title='{}']]",
-    'header':'//h1[contains(@title,"{}")]',
+    'header':'//h1/div[contains(@title,"{}")]',
     'check_related_list_item':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")]//tbody//th//a[text()="{}"]',
     'detail_page': {
         'section_header':'//h3//span[text()="{}"]',
