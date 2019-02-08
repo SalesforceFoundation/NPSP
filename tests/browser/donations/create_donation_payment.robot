@@ -10,13 +10,14 @@ Suite Teardown  Delete Records and Close Browser
 Create Donation and Opportunity and Create Payment Manually
     [tags]  unstable
     &{contact} =  API Create Contact    Email=skristem@robot.com
-    &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Donation    Name=Sravani $100 donation
-    Go To Record Home  &{opportunity}[Id]
+    Go To Object Home         Opportunity
+    Click Object Button       New
+    Select Record Type        Donation
+    Create Opportunities    Sravani $100 donation    &{Contact}[LastName] Household    Closed Won
+    Select Tab    Related
     Load Related List    Payments
-    Select Related Dropdown    Payments
-    Wait For Locator    link-title    New
-    Click Link    link=New
-    #Sleep    2
+    Verify Occurrence    Payments    0
+    Click Related List Button    Payments    New
     Select Window
     Populate Field    Payment Amount    100
     Click Dropdown    Payment Method
@@ -24,5 +25,4 @@ Create Donation and Opportunity and Create Payment Manually
     Open Date Picker    Payment Date
     Pick Date    Today
     Click Modal Button        Save
-    #Sleep    2
     Verify Occurrence    Payments    1
