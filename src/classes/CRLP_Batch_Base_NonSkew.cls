@@ -94,6 +94,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     * @return database.Querylocator
     */
     public database.Querylocator start(Database.BatchableContext bc) {
+        System.debug(loggingLevel.Error, '*** ##### in start method, System.isScheduled(): '+System.isScheduled()+' ######');  //FALSE, because the Schedulable class submits a Batchable job, and isScheduled is false in the batch job context
         try {
             initializeJobData();
 
@@ -129,10 +130,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                             if (String.isNotBlank(rollup.Time_Bound_Operation_Type__c) && rollup.Time_Bound_Operation_Type__c != 'All_Time') {
                             }
                         }
-                        //If incremental mode is set to true
-                        // loop through all the rollups, find the oldes N-days, and
-                        // have the where include (SELECT AccountId FROM Opps Where SysMod > last-N_days 900
-
                         if (isIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
                                 && (this.getMaxDaysAgo() != null ||  this.getMaxYearsAgo() != null)) {
                             whereClauses.add(getIncrementalModeWhereClause(this.keyField));
@@ -172,6 +169,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             }
 
             UTIL_Debug.debug(LoggingLevel.WARN, '>> Batch Query =' + query);
+            System.debug(loggingLevel.Error, '*** query: ' + query);
             return Database.getQueryLocator(query);
 
         } catch (Exception ex) {
@@ -349,8 +347,17 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
     private Boolean isIncrementalMode(CRLP_RollupProcessingOptions.RollupType jobType){
         //0. If it is the first day of the fiscal or annual year, return false (future)(same for all types?)
+
+        System.debug(loggingLevel.Error, '*** ##### isIncrementalMode ######');
+        System.debug(loggingLevel.Error, '*** this.isScheduledJob: ' + this.isScheduledJob);
+        System.debug(loggingLevel.Error, '*** System.isScheduled(): ' + System.isScheduled());
+
+        //1. Only run incremental mode when initiated by the scheduled job
+        if (this.isScheduledJob == false) {
+            return false;
+        }
         
-        //Verify that the jobType is supported and that the custom setting is configured
+        //2. Only run incremental mode when the custom settings are set to enable incremental mode
         Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
         if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
                 && customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c == true) {
