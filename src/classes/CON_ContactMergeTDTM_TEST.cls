@@ -259,7 +259,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         insert organizationAccount;
     }
 
-    private static List<Account> getHouseholdAccounts() {
+    public static List<Account> getHouseholdAccounts() {
         Map<Id, Account> accountById = new Map<Id, Account>([
             SELECT Id, Name, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, npo02__NumberOfClosedOpps__c,
                 BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry 
@@ -274,7 +274,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         return accountById.values();
     }
 
-    private static List<Contact> getContacts() {
+    public static List<Contact> getContacts() {
         return [
             SELECT Id, Firstname, AccountId, npo02__NumberOfClosedOpps__c,
                 is_Address_Override__c, Current_Address__c, Current_Address__r.Household_Account__c,
@@ -288,7 +288,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         System.assertEquals(totalPrimary, [SELECT count() FROM npe5__Affiliation__c WHERE npe5__Primary__c = true], 'There should be only one primary affiliation total.');
     }
 
-    private static void verifyAccountsContactCount(Id winningAccountId, Id losingAccountId, Integer winnersCount, Integer losersCount) {
+    public static void verifyAccountsContactCount(Id winningAccountId, Id losingAccountId, Integer winnersCount, Integer losersCount) {
         verifyWinningAccountsContactCount(winningAccountId, winnersCount);
         verifyLosingAccountsContactCount(losingAccountId, losersCount);
     }
@@ -297,7 +297,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         System.assertEquals(winnersCount, [SELECT count() FROM Contact WHERE AccountId = :winningAccountId], 'The number of contacts related to the winning account is not as expected.');
     }
 
-    private static void verifyLosingAccountsContactCount(Id losingAccountId, Integer losersCount) {
+    public static void verifyLosingAccountsContactCount(Id losingAccountId, Integer losersCount) {
         System.assertEquals(losersCount, [SELECT count() FROM Contact WHERE AccountId = :losingAccountId], 'The number of contacts related to the losing account is not as expected.');
     }
 
