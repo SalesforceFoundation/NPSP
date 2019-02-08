@@ -748,7 +748,9 @@
         <members>Contact.Primary_Contact__c</members>
         <members>Contact.Soft_Credit_Last_N_Days__c</members>
         <members>Contact.is_Address_Override__c</members>
+        <members>Customizable_Rollup_Settings__c.AccountHardCreditNonSkew_Incremental__c</members>
         <members>Customizable_Rollup_Settings__c.CMT_API_Status__c</members>
+        <members>Customizable_Rollup_Settings__c.ContactHardCreditNonSkew_Incremental__c</members>
         <members>Customizable_Rollup_Settings__c.Customizable_Rollups_Enabled__c</members>
         <members>Customizable_Rollup_Settings__c.Disable_Related_Records_Filter__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_Batch_Size__c</members>
