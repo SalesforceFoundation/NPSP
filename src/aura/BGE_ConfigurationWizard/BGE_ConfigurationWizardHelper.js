@@ -153,11 +153,12 @@
             fieldsBySObjectInOrder[PAYMENT_SOBJECT_NAME] = items;
         }
                 
-        var allFieldsBySObject = Object.keys(allFieldsBySObject);
+        var sObjectKeys = Object.keys(allFieldsBySObject);
          
-        if (allFieldsBySObject.size > 2) {
-            allFieldsBySObject.forEach((item) => {
-                if (item.sObjectName != OPPORTUNITY_SOBJECT_NAME && item.sObjectName != PAYMENT_SOBJECT_NAME) {
+        if (sObjectKeys.size > 2) {
+            sObjectKeys.forEach((item) => {
+                if (item.sObjectName != OPPORTUNITY_SOBJECT_NAME && 
+                    item.sObjectName != PAYMENT_SOBJECT_NAME) {
                     var items = allFieldsBySObject[item.sObjectName];
                     fieldsBySObjectInOrder[item.sObjectName] = items;
                 }
