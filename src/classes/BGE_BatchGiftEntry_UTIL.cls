@@ -37,6 +37,28 @@
 public with sharing class BGE_BatchGiftEntry_UTIL {
 
     /*******************************************************************************************************
+    * @description Permissions class used to determine if the running user has permissions
+    */
+    @TestVisible
+    private UTIL_Permissions perms {
+        get {
+            if (perms == null) {
+                perms = new UTIL_Permissions();
+            }
+
+            return perms;   
+        }
+        set;
+    }
+
+    private static final BGE_BatchGiftEntry_UTIL instance = new BGE_BatchGiftEntry_UTIL();
+
+    public static BGE_BatchGiftEntry_UTIL getInstance() {
+        return instance;
+    }
+
+
+    /*******************************************************************************************************
     * @description Returns the relevant Batch fields for soql
     * @return list of field API names
     */
@@ -67,21 +89,30 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     * @param fieldsToCheck list of DescribeFieldResult records to check
     * @return void Throws an exception if user lacks edit permissions on any field
     */
-    public static void checkFieldPermissions(List<DescribeFieldResult> fieldsToCheck) {
+    public void checkFieldPermissionsInstance(List<DescribeFieldResult> fieldsToCheck) {
         Boolean hasPermission = true;
         List<String> fieldsWithoutPermission = new List<String>();
 
         for (DescribeFieldResult dfr : fieldsToCheck) {
-            if (!UTIL_Permissions.canUpdate(dfr, false)) {
+            if (!perms.canUpdateInstance(dfr, false)) {
                 hasPermission = false;
                 fieldsWithoutPermission.add(dfr.getLabel());
             }
         }
 
         if (!hasPermission) {
-            handleMissingPermissions(fieldsWithoutPermission);
+            BGE_BatchGiftEntry_UTIL.handleMissingPermissions(fieldsWithoutPermission);
         }
 
+    }
+
+    /*******************************************************************************************************
+    * @description Checks to see whether the running user has permission to edit a given list of fields
+    * @param fieldsToCheck list of DescribeFieldResult records to check
+    * @return void Throws an exception if user lacks edit permissions on any field
+    */
+    public static void checkFieldPermissions(List<DescribeFieldResult> fieldsToCheck) {
+        BGE_BatchGiftEntry_UTIL.getInstance().checkFieldPermissionsInstance(fieldsToCheck);
     }
 
     public static void checkFieldPermissions(String objectName, List<String> fieldNamesToCheck) {

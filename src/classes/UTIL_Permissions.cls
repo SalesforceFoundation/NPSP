@@ -35,6 +35,13 @@
 */
 public with sharing class UTIL_Permissions {
 
+
+    private static final UTIL_Permissions instance = new UTIL_Permissions();
+
+    public static UTIL_Permissions getInstance() {
+        return instance;
+    }
+
     private final static String INSUFFICIENT_PERMISSION_MESSAGE = System.Label.flsError;
 
     /*** Object Level Security ***/
@@ -244,7 +251,7 @@ public with sharing class UTIL_Permissions {
     * @param throwException indicates whether an exception should be thrown if the user doesn't have permission
     * @return returns boolean to indicate whether the user has permission; conditionally throws an exception not
     */
-    public static Boolean canRead(DescribeFieldResult fieldResult, Boolean throwException) {
+    public Boolean canReadInstance(DescribeFieldResult fieldResult, Boolean throwException) {
         if (!fieldResult.isAccessible()) {
             if (throwException) {
                 throw new InsufficientPermissionException(INSUFFICIENT_PERMISSION_MESSAGE);
@@ -253,6 +260,16 @@ public with sharing class UTIL_Permissions {
             }
         }
         return true;
+    }
+
+    /**
+    * @description Determines whether the running user has read permissions on the given field
+    * @param fieldResult the DescribeFieldResult of the field to check
+    * @param throwException indicates whether an exception should be thrown if the user doesn't have permission
+    * @return returns boolean to indicate whether the user has permission; conditionally throws an exception not
+    */
+    public static Boolean canRead(DescribeFieldResult fieldResult, Boolean throwException) {
+        return UTIL_Permissions.getInstance().canReadInstance(fieldResult, throwException);
     }
 
     /**
@@ -278,7 +295,7 @@ public with sharing class UTIL_Permissions {
     * @param throwException indicates whether an exception should be thrown if the user doesn't have permission
     * @return returns boolean to indicate whether the user has permission; conditionally throws an exception not
     */
-    public static Boolean canUpdate(DescribeFieldResult fieldResult, Boolean throwException) {
+    public Boolean canUpdateInstance(DescribeFieldResult fieldResult, Boolean throwException) {
         if (!fieldResult.isUpdateable()) {
             if (throwException) {
                 throw new InsufficientPermissionException(INSUFFICIENT_PERMISSION_MESSAGE);
@@ -287,6 +304,16 @@ public with sharing class UTIL_Permissions {
             }
         }
         return true;
+    }
+
+    /**
+    * @description Determines whether the running user has update permissions on the given field
+    * @param fieldResult the DescribeFieldResult of the field to check
+    * @param throwException indicates whether an exception should be thrown if the user doesn't have permission
+    * @return returns boolean to indicate whether the user has permission; conditionally throws an exception not
+    */
+    public static Boolean canUpdate(DescribeFieldResult fieldResult, Boolean throwException) {
+        return UTIL_Permissions.getInstance().canUpdateInstance(fieldResult, throwException);
     }
 
     /*******************************************************************************************************************
