@@ -183,17 +183,16 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     *   Opp Rollups are recalculated for both accounts.
     */
     private static void testNamesAndOppsMerge(string accTypeLoser, string accTypeWinner) {
-    
         // create our losing account and contacts
         UTIL_UnitTestData_TEST.createAccountContactTestData(accTypeLoser, 1, 2, 1);
         Account accLoser = UTIL_UnitTestData_TEST.listAccT[0];
         List<Contact> listConAll = UTIL_UnitTestData_TEST.listConT; 
-        
+
         // create our winning account and contacts
         UTIL_UnitTestData_TEST.createAccountContactTestData(accTypeWinner, 1, 2, 3);
         Account accWinner = UTIL_UnitTestData_TEST.listAccT[0];
-        listConAll.addAll(UTIL_UnitTestData_TEST.listConT);        
-        
+        listConAll.addAll(UTIL_UnitTestData_TEST.listConT);
+
         // create an opp for each contact
         // note that for Org accounts, these Opps won't generate Soft Credits.
         List<Opportunity> listOpp = UTIL_UnitTestData_TEST.OppsForContactWithAccountList(listConAll, null, 
@@ -210,13 +209,13 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
         // reload our contacts and accounts
         List<Account> listAcc = CON_ContactMergeTDTM_TEST.getHouseholdAccounts();
         List<Contact> listCon = CON_ContactMergeTDTM_TEST.getContacts();
-            
+
         // verify the contacts belong to correct account.
         System.assertEquals(accLoser.Id, listAcc[0].Id, 'Expected the first account in the list to be the losing contact\'s account.');
         accLoser = listAcc[0];
         System.assertEquals(accWinner.Id, listAcc[1].Id, 'Expected the second account in the list to be the winning contact\'s account.');
         accWinner = listAcc[1];
-        System.assertEquals(3, listCon.size());
+        System.assertEquals(3, listCon.size(), 'Expected three contacts to remain after the merge.');
         System.assertEquals(conWinner.Id, listCon[1].Id, 'Expected the first contact in the list to be the winning contact\'s record.');
         conWinner = listCon[1];
         System.assertEquals(listCon[0].AccountId, accLoser.Id, 'Expected the first contact in the list to be the losing contact\'s record.');
@@ -225,13 +224,13 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
 
         // verify the account's names and greetings are updated
         if (accTypeLoser == CAO_Constants.HH_ACCOUNT_TYPE){
-            System.assertEquals(false, accLoser.npo02__Formal_Greeting__c.contains(conLoser.Firstname), 'When the losing contact\'s account is a household, expect the name to no longer contain the losing contact\'s name.');
+            System.assertEquals(false, accLoser.npo02__Formal_Greeting__c.contains(conLoser.Firstname), 'When the losing contact\'s account is a household, expected the name to no longer contain the losing contact\'s name.');
         }
         if (accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE) {
-            System.assertEquals(false, accWinner.npo02__Formal_Greeting__c.contains(conLoser.Firstname), 'When the winning contacts\'s account is a household, expect the household to not contain the losing contact\'s name.');
-            System.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(conWinner.Firstname), 'When the winning contacts\'s account is a household, expect the household to contain the winning contact\'s name.');
+            System.assertEquals(false, accWinner.npo02__Formal_Greeting__c.contains(conLoser.Firstname), 'When the winning contacts\'s account is a household, expected the household to not contain the losing contact\'s name.');
+            System.assertEquals(true, accWinner.npo02__Formal_Greeting__c.contains(conWinner.Firstname), 'When the winning contacts\'s account is a household, expected the household to contain the winning contact\'s name.');
         }
-        System.assertEquals(false, accWinner.Name.contains('Anonymous'), 'The winning account name should not be Anonymous.');
+        System.assertEquals(false, accWinner.Name.contains('Anonymous'), 'The winning account name should not contain Anonymous.');
 
         Integer cAccLoserOpps = [SELECT count() FROM Opportunity WHERE AccountId = :accLoser.Id];
         Integer cAccWinnerOpps = [SELECT count() FROM Opportunity WHERE AccountId = :accWinner.Id];
@@ -239,64 +238,28 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
         Integer cOCRConWinner = [SELECT count() FROM OpportunityContactRole WHERE ContactId = :conWinner.Id];
         Integer cOCRCon2 = [SELECT count() FROM OpportunityContactRole WHERE ContactId = :listCon[2].Id];
 
-        // verify Opps, OCR's, and Rollups are what we expect!
-        if (accTypeLoser == CAO_Constants.HH_ACCOUNT_TYPE && accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE) {
-            System.assertEquals(1, cAccLoserOpps, 'The number of opps on the losing account is not as expected.');
-            System.assertEquals(3, cAccWinnerOpps, 'The number of opps on the winning account is not as expected.');
-            System.assertEquals(1, cOCRCon0, 'The number of ocrs for the losing account\'s remaining contact is not as expected.');
-            System.assertEquals(3, cOCRConWinner, 'The number of ocrs for the winning is not as expected.');
-            System.assertEquals(3, cOCRCon2, 'The number of ocrs on the winng account\'s other contact is not as expected.');
-            System.assertEquals(1, accLoser.npo02__NumberOfClosedOpps__c, 'The number of rolled up opps on the losing account is not as expected.');
-            System.assertEquals(3, accWinner.npo02__NumberOfClosedOpps__c, 'The number of rolled up opps on the winning account is not as expected.');
-        } else if (accTypeLoser == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeWinner == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
-            System.assertEquals(1, cAccLoserOpps, 'The number of opps on the losing account is not as expected.');
-            System.assertEquals(3, cAccWinnerOpps, 'The number of opps on the winning account is not as expected.');
-            System.assertEquals(1, cOCRCon0, 'The number of ocrs for the losing account\'s remaining contact is not as expected.');
-            System.assertEquals(2, cOCRConWinner, 'The number of ocrs for the winning is not as expected.');
-            System.assertEquals(1, cOCRCon2, 'The number of ocrs on the winng account\'s other contact is not as expected.');
-            System.assertEquals(1, accLoser.npo02__NumberOfClosedOpps__c, 'The number of rolled up opps on the losing account is not as expected.');
-            System.assertEquals(3, accWinner.npo02__NumberOfClosedOpps__c, 'The number of rolled up opps on the winning account is not as expected.');
-        } else if (accTypeLoser == null && accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE) {
-            System.assertEquals(2, cAccLoserOpps, 'The number of opps on the losing account is not as expected.');
-            System.assertEquals(2, cAccWinnerOpps, 'The number of opps on the winning account is not as expected.');
-            System.assertEquals(1, cOCRCon0, 'The number of ocrs for the losing account\'s remaining contact is not as expected.');
-            System.assertEquals(3, cOCRConWinner, 'The number of ocrs for the winning is not as expected.');
-            System.assertEquals(2, cOCRCon2, 'The number of ocrs on the winng account\'s other contact is not as expected.');
-            System.assertEquals(2, accLoser.npo02__NumberOfClosedOpps__c, 'The number of rolled up opps on the losing account is not as expected.');
-            System.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c, 'The number of rolled up opps on the winning account is not as expected.');
-        } else if (accTypeLoser == CAO_Constants.HH_ACCOUNT_TYPE && accTypeWinner == null) {
-            System.assertEquals(2, cAccLoserOpps, 'The number of opps on the losing account is not as expected.');
-            System.assertEquals(2, cAccWinnerOpps, 'The number of opps on the winning account is not as expected.');
-            System.assertEquals(1, cOCRCon0, 'The number of ocrs for the losing account\'s remaining contact is not as expected.');
-            System.assertEquals(2, cOCRConWinner, 'The number of ocrs for the winning is not as expected.');
-            System.assertEquals(1, cOCRCon2, 'The number of ocrs on the winng account\'s other contact is not as expected.');
-            System.assertEquals(2, accLoser.npo02__NumberOfClosedOpps__c, 'The number of rolled up opps on the losing account is not as expected.');
-            System.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c, 'The number of rolled up opps on the winning account is not as expected.');
-        } else if (accTypeLoser == null && accTypeWinner == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
-            System.assertEquals(2, cAccLoserOpps, 'The number of opps on the losing account is not as expected.');
-            System.assertEquals(2, cAccWinnerOpps, 'The number of opps on the winning account is not as expected.');
-            System.assertEquals(1, cOCRCon0, 'The number of ocrs for the losing account\'s remaining contact is not as expected.');
-            System.assertEquals(2, cOCRConWinner, 'The number of ocrs for the winning is not as expected.');
-            System.assertEquals(1, cOCRCon2, 'The number of ocrs on the winng account\'s other contact is not as expected.');
-            System.assertEquals(2, accLoser.npo02__NumberOfClosedOpps__c, 'The number of rolled up opps on the losing account is not as expected.');
-            System.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c, 'The number of rolled up opps on the winning account is not as expected.');
-        } else if (accTypeLoser == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeWinner == null) {
-            System.assertEquals(2, cAccLoserOpps, 'The number of opps on the losing account is not as expected.');
-            System.assertEquals(2, cAccWinnerOpps, 'The number of opps on the winning account is not as expected.');
-            System.assertEquals(1, cOCRCon0, 'The number of ocrs for the losing account\'s remaining contact is not as expected.');
-            System.assertEquals(2, cOCRConWinner, 'The number of ocrs for the winning is not as expected.');
-            System.assertEquals(1, cOCRCon2, 'The number of ocrs on the winng account\'s other contact is not as expected.');
-            System.assertEquals(2, accLoser.npo02__NumberOfClosedOpps__c, 'The number of rolled up opps on the losing account is not as expected.');
-            System.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c, 'The number of rolled up opps on the winning account is not as expected.');
-        } else if (accTypeLoser == null && accTypeWinner == null) {
-            System.assertEquals(2, cAccLoserOpps, 'The number of opps on the losing account is not as expected.');
-            System.assertEquals(2, cAccWinnerOpps, 'The number of opps on the winning account is not as expected.');
-            System.assertEquals(1, cOCRCon0, 'The number of ocrs for the losing account\'s remaining contact is not as expected.');
-            System.assertEquals(2, cOCRConWinner, 'The number of ocrs for the winning is not as expected.');
-            System.assertEquals(1, cOCRCon2, 'The number of ocrs on the winng account\'s other contact is not as expected.');
-            System.assertEquals(2, accLoser.npo02__NumberOfClosedOpps__c, 'The number of rolled up opps on the losing account is not as expected.');
-            System.assertEquals(2, accWinner.npo02__NumberOfClosedOpps__c, 'The number of rolled up opps on the winning account is not as expected.');
-        }
+        Boolean isHH2HH = accTypeLoser == CAO_Constants.HH_ACCOUNT_TYPE && accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE;
+        Boolean isIndividual2Individual = accTypeLoser == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeWinner == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+        Boolean isNone2HH = accTypeLoser == null && accTypeWinner == CAO_Constants.HH_ACCOUNT_TYPE;
+        Boolean isHH2None = accTypeLoser == CAO_Constants.HH_ACCOUNT_TYPE && accTypeWinner == null;
+        Boolean isNone2Individual = accTypeLoser == null && accTypeWinner == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+        Boolean isIndividual2None = accTypeLoser == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeWinner == null;
+        Boolean isNone2None = accTypeLoser == null && accTypeWinner == null;
+
+        Integer expAccLoserOpps = isHH2HH || isIndividual2Individual ? 1 : 2;
+        Integer expAccWinnerOpps = isHH2HH || isIndividual2Individual ? 3 : 2;
+        Integer expOcrAccLoserCon = 1;
+        Integer expOcrConWinner = isHH2HH || isNone2HH ? 3 : 2;
+        Integer expOcrAccWinnerCon = isHH2HH ? 3 : (isNone2HH ? 2 : 1);
+
+        System.assertEquals(expAccLoserOpps, cAccLoserOpps, 'The number of opps on the losing account is not as expected.');
+        System.assertEquals(expAccWinnerOpps, cAccWinnerOpps, 'The number of opps on the winning account is not as expected.');
+        System.assertEquals(expOcrAccLoserCon, cOCRCon0, 'The number of ocrs for the losing account\'s remaining contact is not as expected.');
+        System.assertEquals(expOcrConWinner, cOCRConWinner, 'The number of ocrs for the winning is not as expected.');
+        System.assertEquals(expOcrAccWinnerCon, cOCRCon2, 'The number of ocrs on the winng account\'s other contact is not as expected.');
+        System.assertEquals(expAccLoserOpps, accLoser.npo02__NumberOfClosedOpps__c, 'The number of rolled up opps on the losing account is not as expected.');
+        System.assertEquals(expAccWinnerOpps, accWinner.npo02__NumberOfClosedOpps__c, 'The number of rolled up opps on the winning account is not as expected.');
+
     }
 
     /*******************************************************************************************************
