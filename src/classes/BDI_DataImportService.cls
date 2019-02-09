@@ -714,6 +714,11 @@ global with sharing class BDI_DataImportService {
         DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(dataImportObjectName, sourceFieldName);
         String targetObject = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[0] : null;
 
+        // Donation Campaign is a special case because its mapping is hard-coded, not in help text
+        if (sourceFieldName == 'DonationCampaignImported__c') {
+             targetObject = 'Opportunity';
+        }
+
         return targetObject;
     }
 
@@ -728,7 +733,26 @@ global with sharing class BDI_DataImportService {
         DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(dataImportObjectName, sourceFieldName);
         String targetField = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[1] : null;
 
+        // Donation Campaign is a special case because its mapping is hard-coded, not in help text
+        if (sourceFieldName == 'DonationCampaignImported__c') {
+            targetField = 'CampaignId';
+        }
+
         return targetField;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the translated SObject Label for a given BDI object name
+    */
+    public static String getTranslatedSObjectLabel(String bdiObjectName) {
+        // this will require iteration if/when we allow objects beyond Opp and Payment
+        String translatedObjectLabel;
+        if (bdiObjectName == 'Opportunity') {
+            translatedObjectLabel = UTIL_Describe.getObjectLabel(bdiObjectName);
+        } else if (bdiObjectName == 'Payment') {
+            translatedObjectLabel = UTIL_Describe.getObjectLabel('npe01__OppPayment__c');
+        }
+        return translatedObjectLabel;
     }
 
     /*******************************************************************************************************

@@ -349,12 +349,12 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                         Column col = new Column();
                         col.label = dataImportDFR.getLabel();
                         col.fieldName = dataImportDFR.getName();
-                        col.readOnly = false;
                         col.defaultValue = field.defaultValue;
                         col.required = field.requiredInEntryForm;
                         col.hide = field.hide;
                         col.type = UTIL_LightningComponentSupport.getLightningDataType(dataImportDFR.getType().name());
-                        col.typeAttributes = '{}';
+                        col.readOnly = col.type == 'reference' ? true : false; // we don't allow lookups to be edited in the grid
+                        col.typeAttributes = getTypeAttributes(dataImportDFR);
 
                         col.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(col.fieldName);
 
@@ -482,9 +482,14 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         List<String> activeFieldNames = new List<String>();
 
         if (activeFieldsJSON != null) {
-            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields = (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
+            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields =
+                    (List<BGE_ConfigurationWizard_CTRL.BGEField>)
+                            JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
             for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
                 activeFieldNames.add(field.name);
+                if (field.type == 'reference') {
+                    activeFieldNames.add(field.name.substringBefore('__c') + '__r.Name');
+                }
             }
         }
 
@@ -495,12 +500,29 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
     * @return List<String> list of DataImport__c field api names
     */
-    private static List<String> getDataImportFields(Id batchId) {
+    public static List<String> getDataImportFields(Id batchId) {
 
         List<String> fields = getDataImportFields();
         fields.addAll(getActiveFieldNamesFromBatch(batchId));
-
+        for (string s : fields) {
+            System.debug(s);
+        }
         return fields;
+    }
+
+
+    /*******************************************************************************************************
+    * @description returns a JSON String for typeAttributes that is empty, or a link in the case of a lookup
+    * @return String JSON string for typeAttributes
+    */
+    public static String getTypeAttributes(Schema.DescribeFieldResult dfr) {
+
+        String typeAttributes = '{}';
+        if (dfr.getType().name().toLowerCase() == 'reference') {
+            typeAttributes = '{"label":{"fieldName":"' + dfr.name.substringBefore('__c') + '__r.Name' + '"},"target":"_blank"}';
+
+        }
+        return typeAttributes;
     }
 
     /*******************************************************************************************************

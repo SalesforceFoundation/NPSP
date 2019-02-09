@@ -122,33 +122,24 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         for (DescribeFieldResult dfr : dfrs) {
 
-            String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(dfr.getName());
-
             BGEField field = new BGEField();
-
-            field.sObjectName = dataImportFieldMappedObject;
-
-            // this will require iteration if/when we allow objects beyond Opp and Payment
-            String translatedObjectLabel;
-            if (dataImportFieldMappedObject == 'Opportunity') {
-                translatedObjectLabel = UTIL_Describe.getObjectLabel(dataImportFieldMappedObject);
-            } else if (dataImportFieldMappedObject == 'Payment') {
-                translatedObjectLabel = UTIL_Describe.getObjectLabel('npe01__OppPayment__c');
-            }
-            field.sObjectLabel = translatedObjectLabel;
-
+            field.name = dfr.getName();
             // TODO: pull these labels from target fields' schema based on help text mapping
             Boolean fieldHasSpacesAndObjName = dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == field.sObjectName;
             field.label = (fieldHasSpacesAndObjName) ? dfr.getLabel().split(' ',2)[1] : dfr.getLabel();
-            field.name = dfr.getName();
 
-            String unnamespacedField = UTIL_Namespace.StrTokenRemoveNSPrefix(field.name);
-            if (conditionallyRequiredFields.contains(unnamespacedField)) {
+            field.sObjectName = BDI_DataImportService.getTargetObject(dfr.getName());
+            field.sObjectLabel = BDI_DataImportService.getTranslatedSObjectLabel(field.sObjectName);
+
+            if (conditionallyRequiredFields.contains(field.name)) {
                 field.conditionallyRequired = true;
             }
 
             String rawFieldType = dfr.getType().name().toLowerCase();
-            field.type = UTIL_LightningComponentSupport.getLightningDataType(rawFieldType);
+            System.debug(dfr.getName());
+            System.debug(rawFieldType);
+            //field.type = UTIL_LightningComponentSupport.getLightningDataType(rawFieldType);
+            field.type = rawFieldType;
             if (rawFieldType == 'currency') {
                 field.formatter = 'currency';
             }
@@ -195,6 +186,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'Account2ImportStatus__c'
         };
 
+        // TODO: move this sort to later in the process, after BGEFields have been created and we can sort by label
         List<String> sortedFieldNames = new List<String>(fieldMap.keySet());
         sortedFieldNames.sort();
 
@@ -212,16 +204,22 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'URL'
         };
 
+        // these fields have been whitelisted since they have special handling in BDI
+        Set<String> allowedFields = new Set<String>{
+            'DonationCampaignImported__c'
+        };
+
         // looping through the fields on DataImport__c and remove unsupported data types
         for (String fieldName : sortedFieldNames) {
             DescribeFieldResult dfr = fieldMap.get(fieldName);
             String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.getName());
 
             String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(dfr.getName());
-            Boolean fieldAllowed = allowedObjects.contains(dataImportFieldMappedObject)
+            Boolean fieldAllowed = (allowedObjects.contains(dataImportFieldMappedObject)
                 && allowedDataTypes.contains(dfr.getType().name())
                 && !bannedFields.contains(dataImportFieldApiName)
-                && dfr.getInlineHelpText() != null;
+                && dfr.getInlineHelpText() != null)
+                || allowedFields.contains(dataImportFieldApiName);
 
             if (fieldAllowed) {
                 dfrs.add(dfr);
@@ -232,7 +230,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         return dfrs;
     }
-
 
     /*******************************************************************************************************
     * @description Retrieves the default active fields for a new Batch or Template in a JSON String

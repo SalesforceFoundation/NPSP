@@ -44,14 +44,26 @@
      */
     setColumns: function(component, dataColumns) {
         var columns = [];
-        columns.push({label: 'Donor', fieldName: 'donorLink', type: 'url', editable: false, typeAttributes: {label: {fieldName: 'donorName'}}});
+        columns.push({
+            label: 'Donor',
+            fieldName: 'donorLink',
+            type: 'url',
+            editable: false,
+            typeAttributes: {label: {fieldName: 'donorName'}}});
 
         dataColumns.forEach(function(col){
-            columns.push({label: col.label,
-                fieldName: col.fieldName,
-                type: col.type,
-                editable: !col.readOnly,
-                typeAttributes: JSON.parse(col.typeAttributes)});
+            console.log(col);
+            if (col.type == 'reference') {
+                // TODO: how to handle? or is it in setting the data?
+            } else {
+                columns.push({
+                    label: col.label,
+                    fieldName: col.fieldName,
+                    type: col.type,
+                    editable: !col.readOnly,
+                    typeAttributes: JSON.parse(col.typeAttributes)
+                });
+            }
         });
 
         columns.push({

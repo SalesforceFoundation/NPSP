@@ -227,13 +227,19 @@
                                                 </aura:iteration>
                                             </lightning:select>
                                             <aura:set attribute="else">
-                                                <lightning:input aura:id="defaultValueField"
-                                                                 label="{!field.label + ': ' + $Label.c.stgDefaultValue}"
-                                                                 type="{!field.type}"
-                                                                 value="{!field.defaultValue}"
-                                                                 formatter="{!field.formatter}"
-                                                                 step="0.01"
-                                                                 variant="label-hidden" />
+                                                <!--<aura:if isTrue="{!equals(field.type,'reference')}">
+                                                    it's a reference! what can we put here?
+                                                    <aura:set attribute="else">-->
+                                                {!field.type} + {!field.formatter}
+                                                        <lightning:input aura:id="defaultValueField"
+                                                                         label="{!field.label + ': ' + $Label.c.stgDefaultValue}"
+                                                                         type="{!field.type}"
+                                                                         value="{!field.defaultValue}"
+                                                                         formatter="{!field.formatter}"
+                                                                         step="0.01"
+                                                                         variant="label-hidden" />
+                                                    <!--</aura:set>
+                                                </aura:if>-->
                                             </aura:set>
                                         </aura:if>
                                     </lightning:layoutItem>
