@@ -95,6 +95,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     */
     public database.Querylocator start(Database.BatchableContext bc) {
         System.debug(loggingLevel.Error, '*** ##### in start method, System.isScheduled(): '+System.isScheduled()+' ######');  //FALSE, because the Schedulable class submits a Batchable job, and isScheduled is false in the batch job context
+        System.debug(loggingLevel.Error, '*** ##### in start method, this.isScheduledJob: '+this.isScheduledJob+' ######');  //FALSE, because the Schedulable class submits a Batchable job, and isScheduled is false in the batch job context
         try {
             initializeJobData();
 
@@ -124,7 +125,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
 
                 // Only use the related records filter if not disabled in settings and not running unit tests
-                if (customizableRollupSettings.Disable_Related_Records_Filter__c == false && !Test.isRunningTest()) {
+//                if (customizableRollupSettings.Disable_Related_Records_Filter__c == false && !Test.isRunningTest()) {
+                if (customizableRollupSettings.Disable_Related_Records_Filter__c == false) {
                     if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
                         whereClauses.add(getWhereClause());
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
@@ -382,8 +384,11 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     }
 
     private String getWhereClause() {
+        System.debug(loggingLevel.Error, '*** ##### getWhereClause ######');
         Boolean incrementalModeActivatedForThisJobType = isIncrementalMode(this.jobType);
+        System.debug(loggingLevel.Error, '*** incrementalModeActivatedForThisJobType: ' + incrementalModeActivatedForThisJobType);
         Boolean hasActiveIncrementalModeRollups = (this.getMaxDaysAgo() != null || this.getMaxYearsAgo() != null);
+        System.debug(loggingLevel.Error, '*** hasActiveIncrementalModeRollups: ' + hasActiveIncrementalModeRollups);
         if (incrementalModeActivatedForThisJobType && hasActiveIncrementalModeRollups) {
             return getIncrementalModeWhereClause();
         } else {

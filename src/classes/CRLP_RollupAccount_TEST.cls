@@ -38,7 +38,7 @@ private class CRLP_RollupAccount_TEST {
 
     /** @description The 6 testing types supported by the test engine */
     private Enum TestType {
-        TestTrigger, TestQueueuable, TestBatch, TestSkewBatch, TestMultiCurrBatch, TestReparentOpp
+        TestTrigger, TestQueueuable, TestBatch, TestSkewBatch, TestMultiCurrBatch, TestReparentOpp, TestBatchIncremental
     }
 
     /**
@@ -179,6 +179,10 @@ private class CRLP_RollupAccount_TEST {
     static testMethod void test_Rollups_Batch() {
         testRollupsServices(TestType.TestBatch);
     }
+    /** @description Test the incremental non-skew batch job method of rolling up */
+    static testMethod void test_Rollups_Batch_Incremental() {
+        testRollupsServices(TestType.TestBatchIncremental);
+    }
     /** @description Test the full skew mode batch job method of rolling up */
     static testMethod void test_Rollups_SkewBatch() {
         testRollupsServices(TestType.TestSkewBatch);
@@ -260,7 +264,8 @@ private class CRLP_RollupAccount_TEST {
                 Rollups_Contact_SkewMode_Batch_Size__c = 200,
                 Rollups_Contact_Soft_Credit_Batch_Size__c = 200,
                 Rollups_Account_Batch_Size__c = 20,
-                Rollups_Contact_Batch_Size__c = 20
+                Rollups_Contact_Batch_Size__c = 20,
+                AccountHardCreditNonSkew_Incremental__c = (tt == TestType.TestBatchIncremental ? true : false)
         ));
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor',
@@ -430,6 +435,12 @@ private class CRLP_RollupAccount_TEST {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
 
+        } else if (tt == TestType.TestBatchIncremental) {
+            // Construct the CRLP_Account_BATCH job by passing in the isScheduledJob flag, mocking what the
+            // CRLP_RollupBatch_SVC.executeBatchRollupJob method will do when the CRLP_Account_BATCH is
+            // initiated as a scheduled job
+            Boolean isScheduledJob = true;
+            Database.executeBatch(new CRLP_Account_BATCH(null, isScheduledJob));
         } else if (tt == TestType.TestSkewBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{
@@ -526,5 +537,21 @@ private class CRLP_RollupAccount_TEST {
             return 2;
         }
 
+    }
+
+    @isTest
+    private static void testIsInitializedFromScheduledJob(){
+        //Schedule for 1 minute from now
+        Test.startTest();
+        String hour = String.valueOf(Datetime.now().hour());
+        String min = String.valueOf(Datetime.now().minute() + 1);
+        String ss = String.valueOf(Datetime.now().second());
+        String nextFireTime = ss + ' ' + min + ' ' + hour + ' * * ?';
+
+        CRLP_Account_BATCH aJob = new CRLP_Account_BATCH();
+        System.schedule('Account Job Started At ' + String.valueOf(Datetime.now()), nextFireTime, aJob);
+        Test.stopTest();
+
+        System.assertEquals(true, CRLP_Account_BATCH.isInitializedFromScheduledJob);
     }
 }

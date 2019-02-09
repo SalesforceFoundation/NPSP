@@ -64,8 +64,6 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
 
     public CRLP_Account_BATCH(List<Id> recordIds, Boolean isScheduledJob) {
         super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, recordIds, isScheduledJob);
-        System.debug(loggingLevel.Error, '*** ##### from CRLP_Account_BATCH, calling super (new constructor on parent class) ######');
-//        this.isScheduledJob = isScheduledJob; //Should set the value at the Base class level, THIS DOES NOT SET THE VALUE of the Base Class variable, so have to pass via constructor param
     }
 
     /**

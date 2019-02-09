@@ -37,7 +37,7 @@
 private class CRLP_RollupContact_TEST {
 
     private Enum TestType {
-        TestTrigger, TestQueueuable, TestBatch, testSkewBatch, TestWithAlwaysRollupToPrimary
+        TestTrigger, TestQueueuable, TestBatch, testSkewBatch, TestWithAlwaysRollupToPrimary, TestBatchIncremental
     }
 
     /**
@@ -210,6 +210,9 @@ private class CRLP_RollupContact_TEST {
     static testMethod void test_Rollups_Batch() {
         testRollupsServices(TestType.TestBatch);
     }
+    static testMethod void test_Rollups_Batch_Incremental() {
+        testRollupsServices(TestType.TestBatchIncremental);
+    }
     static testMethod void test_Rollups_SkewBatch() {
         testRollupsServices(TestType.testSkewBatch);
     }
@@ -238,7 +241,8 @@ private class CRLP_RollupContact_TEST {
                 Rollups_Contact_SkewMode_Batch_Size__c = 200,
                 Rollups_Contact_Soft_Credit_Batch_Size__c = 200,
                 Rollups_Account_Batch_Size__c = 20,
-                Rollups_Contact_Batch_Size__c = 20
+                Rollups_Contact_Batch_Size__c = 20,
+                ContactHardCreditNonSkew_Incremental__c = (tt == TestType.TestBatchIncremental ? true : false)
             ));
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor',
@@ -274,7 +278,8 @@ private class CRLP_RollupContact_TEST {
         Id con4Id = c4.Id;
 
         // Insert a single test Contact that will have no Opportunities, but should end up getting
-        // processed and this field cleared.
+        // processed and this field cleared. NOTE: This field will NOT get cleared for this Contact
+        // when run in incremental mode.
         Contact c2 = UTIL_UnitTestData_TEST.getContact();
         c2.npo02__NumberOfClosedOpps__c = 100;  // force to a value that should be cleared to 0 since there are no opps for it
 
@@ -443,6 +448,12 @@ private class CRLP_RollupContact_TEST {
         } else if (tt == TestType.TestBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
+        } else if (tt == TestType.TestBatchIncremental) {
+            // Construct the CRLP_Account_BATCH job by passing in the isScheduledJob flag, mocking what the
+            // CRLP_RollupBatch_SVC.executeBatchRollupJob method will do when the CRLP_Account_BATCH is
+            // initiated as a scheduled job
+            Boolean isScheduledJob = true;
+            Database.executeBatch(new CRLP_Contact_BATCH(null, isScheduledJob));
         } else if (tt == TestType.testSkewBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{conId, con4Id}, null);
@@ -496,6 +507,7 @@ private class CRLP_RollupContact_TEST {
 
         // THe batch process will query all Contacts, but these 2 are special circumstances to validate
         if (tt == TestType.TestBatch) {
+            System.debug(loggingLevel.Error, '*** in special case check at bottom, test type: ' + tt);
             // Contact2.npo02__NumberOfClosedOpps__c was set to 100, but has attached opps, so it should be reset to 0.
             Id c2Id = c2.Id;
             conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c2Id LIMIT 1';
@@ -509,5 +521,21 @@ private class CRLP_RollupContact_TEST {
             c3 = database.query(conQuery);
             System.assertEquals(null, c3.npo02__NumberOfClosedOpps__c);
         }
+    }
+
+    @isTest
+    private static void testIsInitializedFromScheduledJob(){
+        //Schedule for 1 minute from now
+        Test.startTest();
+        String hour = String.valueOf(Datetime.now().hour());
+        String min = String.valueOf(Datetime.now().minute() + 1);
+        String ss = String.valueOf(Datetime.now().second());
+        String nextFireTime = ss + ' ' + min + ' ' + hour + ' * * ?';
+
+        CRLP_Contact_BATCH aJob = new CRLP_Contact_BATCH();
+        System.schedule('Contact Job Started At ' + String.valueOf(Datetime.now()), nextFireTime, aJob);
+        Test.stopTest();
+
+        System.assertEquals(true, CRLP_Contact_BATCH.isInitializedFromScheduledJob);
     }
 }
