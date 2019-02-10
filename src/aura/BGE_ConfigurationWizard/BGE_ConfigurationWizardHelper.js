@@ -149,34 +149,24 @@
         // returns map of sobject name => list of fields
         var allFieldsBySObject = this.groupFieldsBySObject(everyField);
 
-        var fieldsBySObjectInOrder = {};
-
         const opportunitySObjectName = "Opportunity";
         const paymentSObjectName = "Payment";
-        // Make sure Opportunity is always the first sObject to be shown
-        if (opportunitySObjectName in allFieldsBySObject) {
-            var items = allFieldsBySObject[opportunitySObjectName];
-            fieldsBySObjectInOrder[opportunitySObjectName] = items;
-        }
-        // Make sure Payment is always the secnd sObject to be shown
-        if (paymentSObjectName in allFieldsBySObject) {
-            var items = allFieldsBySObject[paymentSObjectName];
-            fieldsBySObjectInOrder[paymentSObjectName] = items;
+
+        var sObjectKeys = Object.keys(allFieldsBySObject);
+
+        // Make sure Opportunity is always the first sObject to be shown and Payment the second.
+        var orderedKeys = [opportunitySObjectName, paymentSObjectName];
+
+        // If there happens to be other objects appart from Opportunity and Payment
+        // Add them to the list behind them.
+        for(var i=0; i<sObjectKeys.length; i++) {
+            var key = sObjectKeys[i];
+            if(key !== opportunitySObjectName && key !== paymentSObjectName) {
+               orderedKeys.push(key);
+            }
         }
                 
-        var sObjectKeys = Object.keys(allFieldsBySObject);
-        // Check if there is any other object appart from Opportunity and Payment
-        if (sObjectKeys) {
-            sObjectKeys.forEach((item) => {
-                if (item.sObjectName !== opportunitySObjectName && 
-                    item.sObjectName !== paymentSObjectName) {
-                    var items = allFieldsBySObject[item.sObjectName];
-                    fieldsBySObjectInOrder[item.sObjectName] = items;
-                }
-            }) 
-        }
-
-        Object.keys(fieldsBySObjectInOrder).forEach(function(sObjectName) {
+        orderedKeys.forEach(function(sObjectName) {
             let currentFieldGroup = {
                 sObjectName: sObjectName,
                 options: [],
@@ -184,7 +174,7 @@
                 values: []
             };
 
-            fieldsBySObjectInOrder[sObjectName].forEach(function(currentField) {
+            allFieldsBySObject[sObjectName].forEach(function(currentField) {
                 currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
                 currentFieldGroup.options.push(
                     {
