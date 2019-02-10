@@ -151,25 +151,25 @@
 
         var fieldsBySObjectInOrder = {};
 
-        const OPPORTUNITY_SOBJECT_NAME = "Opportunity";
-        const PAYMENT_SOBJECT_NAME = "Payment";
+        const opportunitySObjectName = "Opportunity";
+        const paymentSObjectName = "Payment";
         // Make sure Opportunity is always the first sObject to be shown
-        if (OPPORTUNITY_SOBJECT_NAME in allFieldsBySObject) {
-            var items = allFieldsBySObject[OPPORTUNITY_SOBJECT_NAME];
-            fieldsBySObjectInOrder[OPPORTUNITY_SOBJECT_NAME] = items;
+        if (opportunitySObjectName in allFieldsBySObject) {
+            var items = allFieldsBySObject[opportunitySObjectName];
+            fieldsBySObjectInOrder[opportunitySObjectName] = items;
         }
         // Make sure Payment is always the secnd sObject to be shown
-        if (PAYMENT_SOBJECT_NAME in allFieldsBySObject) {
-            var items = allFieldsBySObject[PAYMENT_SOBJECT_NAME];
-            fieldsBySObjectInOrder[PAYMENT_SOBJECT_NAME] = items;
+        if (paymentSObjectName in allFieldsBySObject) {
+            var items = allFieldsBySObject[paymentSObjectName];
+            fieldsBySObjectInOrder[paymentSObjectName] = items;
         }
                 
         var sObjectKeys = Object.keys(allFieldsBySObject);
         // Check if there is any other object appart from Opportunity and Payment
         if (sObjectKeys) {
             sObjectKeys.forEach((item) => {
-                if (item.sObjectName != OPPORTUNITY_SOBJECT_NAME && 
-                    item.sObjectName != PAYMENT_SOBJECT_NAME) {
+                if (item.sObjectName != opportunitySObjectName && 
+                    item.sObjectName != paymentSObjectName) {
                     var items = allFieldsBySObject[item.sObjectName];
                     fieldsBySObjectInOrder[item.sObjectName] = items;
                 }
