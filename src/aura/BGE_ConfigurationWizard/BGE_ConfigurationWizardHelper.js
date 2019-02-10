@@ -168,8 +168,8 @@
         // Check if there is any other object appart from Opportunity and Payment
         if (sObjectKeys) {
             sObjectKeys.forEach((item) => {
-                if (item.sObjectName != opportunitySObjectName && 
-                    item.sObjectName != paymentSObjectName) {
+                if (item.sObjectName !== opportunitySObjectName && 
+                    item.sObjectName !== paymentSObjectName) {
                     var items = allFieldsBySObject[item.sObjectName];
                     fieldsBySObjectInOrder[item.sObjectName] = items;
                 }
