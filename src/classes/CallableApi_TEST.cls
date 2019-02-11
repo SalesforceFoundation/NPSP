@@ -35,8 +35,7 @@
 * @description Tests specific to Callable API. 
 */
 @IsTest
-
-public with sharing class CallableApi_TEST {
+private with sharing class CallableApi_TEST {
 
     private static final String TDTM_TRIGGER_ACTION = 'TDTM.disableAllTriggers';
     
@@ -44,7 +43,7 @@ public with sharing class CallableApi_TEST {
     * @description verify the TDTM Callable action returns an Object
     ********************************************************************************************************/
     @IsTest
-    public static void verifyCallableReturnsAnObject() {
+    private static void verifyCallableReturnsAnObject() {
        
         Test.startTest();
 
@@ -55,33 +54,28 @@ public with sharing class CallableApi_TEST {
 
         Test.stopTest();
 
-        Map<String, Object> triggerResult = (Map<String, Object>)result;
-        System.assertNotEquals(null, triggerResult, 'No result was returned from call');
-        System.assertEquals(TDTM_TRIGGER_ACTION, String.valueOf(triggerResult.get('action')), 'Action was not returned');
-    }    
+        Object callResult = result;
+        System.assertNotEquals(null, callResult, 'No result was returned from call');
+    }
 
 
     /*******************************************************************************************************
     * @description Call the API with an invalid method format and make sure an exception is thrown
     ********************************************************************************************************/
     @IsTest
-    public static void callableApiThrowsExceptionWhenMethodFormatIsInvalid() {
+    private static void callableApiThrowsExceptionWhenMethodFormatIsInvalid() {
        
         Test.startTest();
 
         Callable npspApi = (Callable) Type.forName('CallableApi').newInstance();
         Map<String, Object> triggerArgs = new Map<String, Object>();
-        Boolean methodExceptionThrown = false;
 
         try {
             Object result = npspApi.call('InvalidFormat', triggerArgs);
-
+            System.assert(false, 'The exception was not thrown');
         } catch (CallableApi.MalformedMethodInvocationException apiException) {
-            methodExceptionThrown = true;
-            System.assert(apiException.getMessage().contains(' is not valid'));
+            System.assert(apiException.getMessage().contains(' is not implemented'));
         }
-
-        System.assert(methodExceptionThrown, 'Method Exception Was Not Thrown');
 
         Test.stopTest();
     }
@@ -90,26 +84,20 @@ public with sharing class CallableApi_TEST {
     * @description Call the API with an invalid method name and make sure an exception is thrown
     ********************************************************************************************************/
     @IsTest
-    public static void callableApiThrowsExceptionWhenMethodIsMissing() {
+    private static void callableApiThrowsExceptionWhenMethodIsMissing() {
         Test.startTest();
 
         Callable npspApi = (Callable) Type.forName('CallableApi').newInstance();
         Map<String, Object> triggerArgs = new Map<String, Object>();
-        Boolean methodExceptionThrown = false;
 
         try {
             Object result = npspApi.call('Some.invalidCall', triggerArgs);
-
+            System.assert(false, 'The exception was not thrown');
         } catch (CallableApi.MalformedMethodInvocationException apiException) {
-            methodExceptionThrown = true;
-            System.assert(apiException.getMessage().contains(' is not valid'));
+            System.assert(apiException.getMessage().contains(' is not implemented'));
         }
-
-        System.assert(methodExceptionThrown, 'Method Exception Was Not Thrown');
 
         Test.stopTest();
     }
-
-  
 
 }

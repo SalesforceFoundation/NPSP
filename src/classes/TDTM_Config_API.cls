@@ -101,12 +101,14 @@ global class TDTM_Config_API {
     * @description Method to disable all TDTM triggers for the current code execution context
     * @return void
     ********************************************************************************************************/
-    global static void disableAllTriggers() {
+    public static Boolean disableAllTriggers() {
 
         TDTM_TriggerHandler.disableTDTM = true;
         
         for (Trigger_Handler__c handler: TDTM_ObjectDataGateway.listTH) {
             handler.Active__c = false;
         }
+
+        return true;
     }
 }
