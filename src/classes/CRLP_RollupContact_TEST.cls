@@ -274,8 +274,7 @@ private class CRLP_RollupContact_TEST {
         Id con4Id = c4.Id;
 
         // Insert a single test Contact that will have no Opportunities, but should end up getting
-        // processed and this field cleared. NOTE: This field will NOT get cleared for this Contact
-        // when run in incremental mode.
+        // processed and this field cleared.
         Contact c2 = UTIL_UnitTestData_TEST.getContact();
         c2.npo02__NumberOfClosedOpps__c = 100;  // force to a value that should be cleared to 0 since there are no opps for it
 
@@ -444,6 +443,7 @@ private class CRLP_RollupContact_TEST {
         } else if (tt == TestType.TestBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
+
         } else if (tt == TestType.testSkewBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{conId, con4Id}, null);
@@ -497,7 +497,6 @@ private class CRLP_RollupContact_TEST {
 
         // THe batch process will query all Contacts, but these 2 are special circumstances to validate
         if (tt == TestType.TestBatch) {
-            System.debug(loggingLevel.Error, '*** in special case check at bottom, test type: ' + tt);
             // Contact2.npo02__NumberOfClosedOpps__c was set to 100, but has attached opps, so it should be reset to 0.
             Id c2Id = c2.Id;
             conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c2Id LIMIT 1';

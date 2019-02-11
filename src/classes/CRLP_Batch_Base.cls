@@ -123,13 +123,6 @@ public abstract class CRLP_Batch_Base {
         this.recordIds = recordIds;
     }
 
-    public CRLP_Batch_Base(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds, Boolean isScheduledJob) {
-        this();
-        this.jobType = jobType;
-        this.recordIds = recordIds;
-        this.isScheduledJob = isScheduledJob;
-    }
-
     /********************************************************************************************************
      * @description Create an instance of the CRLP_RollupProcessingOptions.ProcessingOptions class to use with the
      * CRLP_RollupProcessor_SVC.startRollupProcess() calls.

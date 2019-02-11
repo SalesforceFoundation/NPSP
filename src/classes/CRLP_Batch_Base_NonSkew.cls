@@ -106,7 +106,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
             List<String> whereClauses = new List<String>();
 
-            // Add additional query filters as needed®
+            // Add additional query filters as needed
             if (this.recordIds != null && this.recordIds.size() > 0) {
                 whereClauses.add('Id IN :recordIds');
             } else {
