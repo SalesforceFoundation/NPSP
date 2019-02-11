@@ -35,7 +35,7 @@
 * @description Global API class that exposes a System.Callable interface for external
 * applications and customers to leverage for future NPSP api's
 */
-global inherited sharing class CallableApi implements System.Callable {
+global with sharing class CallableApi implements System.Callable {
 
     /*******************************************************************************************************
     * @description Exception class for Malformed Method Invocations
