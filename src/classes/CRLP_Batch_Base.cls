@@ -82,6 +82,8 @@ public abstract class CRLP_Batch_Base {
     /** @description The Summary Object Type this batch job will process */
     protected String keyField;
 
+    /** @description Whether this class was initiated from a scheduled job.  Initially set by the constructor that
+    * includeds the isScheduledJob arg.*/
     protected Boolean isScheduledJob = false;
 
     /*******************************************************************************************************
@@ -209,8 +211,6 @@ public abstract class CRLP_Batch_Base {
      * object, key field, and if there are payment rollups that need to be included for the given summary object
      */
     @TestVisible protected void initializeJobData() {
-        System.debug(loggingLevel.Error, '*** ##### in initializeJobData ######');
-        System.debug(loggingLevel.Error, '*** variable value: ' + this.jobType);
         this.summaryObjectType = CRLP_RollupBatch_SVC.getSummaryObjectType(this.jobType);
         this.statefulCacheOfRollupsToBeProcessed = CRLP_Rollup_SEL.getRollupDefinitionsToUse(this.jobType, this.jobFilter);
 
@@ -356,7 +356,11 @@ public abstract class CRLP_Batch_Base {
 
     }
 
-    private Integer maxDaysAgo = null; //null will be returned, instead of 0, if there are no days-back rollups active
+    /**
+     * @description returns the max Integer for all active time-bound Days_Back rollups,
+     * or null if there are no active time-bound Days_Back rollups for this summary object
+     */
+    private Integer maxDaysAgo = null;
     protected Integer getMaxDaysAgo(){
         if (maxDaysAgo == null) {
             for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
@@ -373,7 +377,11 @@ public abstract class CRLP_Batch_Base {
         return maxDaysAgo;
     }
 
-    private Integer maxYearsAgo = null; //null will be returned, instead of 0, if there are no years-ago rollups active
+    /**
+     * @description returns the max Integer for all active time-bound Years_Ago rollups,
+     * or null if there are no active time-bound Years_Ago rollups for this summary object
+     */
+    private Integer maxYearsAgo = null;
     protected Integer getMaxYearsAgo() {
         if (maxYearsAgo == null) {
             for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
