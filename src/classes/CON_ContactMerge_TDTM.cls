@@ -55,16 +55,16 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();    
 
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
-            list<string> listMergeKey = new list<string>();
+            List<String> mergeKeys = new List<String>();
         
             for (SObject so : listOld) {
                 Contact con = (Contact)so;
                 if (con != null && con.MasterRecordId != null)
-                    listMergeKey.add(mergeKey(con.Id, con.AccountId, con.MasterRecordId));
+                    mergeKeys.add(mergeKey(con.Id, con.AccountId, con.MasterRecordId));
             }
             
-            if (listMergeKey.size() > 0)
-                handleContactMergeFixupsFuture(listMergeKey);
+            if (mergeKeys.size() > 0)
+                handleContactMergeFixupsFuture(mergeKeys);
         }        
         
         return dmlWrapper; 
@@ -91,7 +91,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
     private static string idFromMergeKey(string mergeKey, integer index) {
         if (mergeKey == null || index < 0 || index > 2)
             return null;
-        list<string> listId = mergeKey.split(':');
+        List<String> listId = mergeKey.split(':');
         string strId = listId[index];
         if (strId == 'null') strId = null;
         return strId;
@@ -105,93 +105,196 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
     *   - recalculate Household Soft Credit OCRs 
     *   - recalculate Opportunity Rollups
     *
-    * @param listMergeKey The list of mergeKeys that provide contactIdLoser, accountIdLoser, and contactIdWinner
+    * @param mergeKeys The list of mergeKeys that provide contactIdLoser, accountIdLoser, and contactIdWinner
     * @return null
     ********************************************************************************************************/
-    @Future    
-    private static void handleContactMergeFixupsFuture(list<string> listMergeKey) {
-    
-        list<string> listContactIdLoser = new list<string>();
-        list<string> listAccountIdLoser = new list<string>();
-        list<string> listContactIdWinner = new list<string>();
+    @Future
+    private static void handleContactMergeFixupsFuture(List<String> mergeKeys) {
+        List<String> losingContactIds = new List<String>();
+        List<String> losersAccountIds = new List<String>();
+        List<String> winningContactIds = new List<String>();
+        extractIds(losingContactIds, losersAccountIds, winningContactIds, mergeKeys);
 
-        // extract out our Contact and Account Id's from the mergeKeys
-        for (string mergeKey : listMergeKey) {
-            listContactIdLoser.add(idFromMergeKey(mergeKey, 0));
-            listAccountIdLoser.add(idFromMergeKey(mergeKey, 1));
-            listContactIdWinner.add(idFromMergeKey(mergeKey, 2));
-        }
-    
-        // get the winning Contacts (with the fields we need)
-        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL(); 
-        string strSoql = oppRollupUtil.buildContactQuery();
-        strSoql = strSoql.replace('from Contact', '');
-        strSoql += ', AccountId, Account.npe01__SYSTEM_AccountType__c, Primary_Affiliation__c from Contact where id IN :listContactIdWinner';
-        list<Contact> listContactWinner = Database.query(strSoql);
+        List<Contact> winningContacts = getContacts(winningContactIds);
+        Map<Id,Id> winnersAcctIdByConId = new Map<Id,Id>();
+        Map<Id,Id> losersAcctIdByConId = new Map<Id,Id>();
+        List<Id> hhAcctIds = new List<Id>();
+        extractIds(hhAcctIds, winnersAcctIdByConId, winningContacts);
+        extractIds(hhAcctIds, losersAcctIdByConId, losersAccountIds, winningContactIds);
 
-        // create maps of contactId's to AccountId's that some of our routines need.
-        map<Id,Id> mapContactIdAccountIdWinner = new map<Id,Id>();
-        map<Id,Id> mapContactIdAccountIdLoser = new map<Id,Id>();
-        list<Id> listAccIdHH= new list<Id>();
-        for (Contact con : listContactWinner) {
-        	if (con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE)
-        	   listAccIdHH.add(con.AccountId);
-            if (con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE ||
-                con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE ||
-                con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
-                mapContactIdAccountIdWinner.put(con.Id, con.AccountId);        
+        cleanupAccounts(hhAcctIds, winnersAcctIdByConId, losersAcctIdByConId);
+        cleanupContacts(winningContactIds, winningContacts);
+    }
+
+    /*******************************************************************************************************
+    * @description Extract the ids from the winning contacts relevant to the collections provied
+    *
+    * @param hhAcctIds The collection of account Ids from the winning contact if they belong to a household
+    * @param winnersAcctIdByConId The collection of winning contact's account Ids by the contact's Id
+    * if they belong to any type of individual account
+    * @param winningContacts the collection of contacts to extract the ids from
+    ********************************************************************************************************/
+    private static void extractIds(List<Id> hhAcctIds, Map<Id, Id> winnersAcctIdByConId, List<Contact> winningContacts) {
+        String winnersAcctType;
+
+        for (Contact winningContact : winningContacts) {
+            winnersAcctType = winningContact.Account.npe01__SYSTEM_AccountType__c;
+
+            if (isHousehold(winnersAcctType)) {
+               hhAcctIds.add(winningContact.AccountId);
+            }
+
+            if (isAnyIndividual(winnersAcctType)) {
+                winnersAcctIdByConId.put(winningContact.Id, winningContact.AccountId);
             }
         }
-        
-        // we only want to move opps from non-org accounts, so we need to query for their type.
-        map<Id, Account> mapAccountIdAccountLoser = new map<Id, Account>([select Id, npe01__SYSTEM_AccountType__c 
-            from Account where Id in :listAccountIdLoser]);
-        for (integer i = 0; i < listContactIdLoser.size(); i++) {
-        	if (listAccountIdLoser[i] != null) {
-                Account accLoser = mapAccountIdAccountLoser.get(listAccountIdLoser[i]);
-                if (accLoser == null)
+    }
+
+    /*******************************************************************************************************
+    * @description Extract the ids from the losers accounts and their new winning contactIds relevant
+    * to the collections provied
+    *
+    * @param hhAcctIds The collection of account Ids from the losing contacts account if they belonged
+    * to a household
+    * @param losersAcctIdByConId The collection of loser's contact's account Ids by the winning contact's Id
+    * if the losing contact belonged to any type of individual account
+    * @param losersAccountIds the colleciton of the losing contacts account ids
+    * @param winningContactIds the collection of winning contact ids
+    ********************************************************************************************************/
+    private static void extractIds(List<Id> hhAcctIds, Map<Id, Id> losersAcctIdByConId, List<Id> losersAccountIds, List<Id> winningContactIds) {
+        Map<Id, Account> losersAccountById = new Map<Id, Account>(getAccounts(losersAccountIds));
+        String losersAcctType;
+
+        for (integer i = 0; i < losersAccountIds.size(); i++) {
+            if (losersAccountIds[i] != null) {
+                Account losersAccount = losersAccountById.get(losersAccountIds[i]);
+                losersAcctType = losersAccount.npe01__SYSTEM_AccountType__c;
+
+                if (losersAccount == null) {
                     continue;
-                if (accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE)
-                    listAccIdHH.add(accLoser.Id); 
-                if (accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE || 
-                    accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE ||
-                    accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
-                    mapContactIdAccountIdLoser.put(listContactIdWinner[i], listAccountIdLoser[i]);
                 }
-        	}
+
+                if (isHousehold(losersAcctType)) {
+                    hhAcctIds.add(losersAccount.Id);
+                }
+
+                if (isAnyIndividual(losersAcctType)) {
+                    losersAcctIdByConId.put(winningContactIds[i], losersAccountIds[i]);
+                }
+            }
         }
-    
-        // create a list of both Winning and Losing Accounts
-        list<Id> listAccId = new list<Id>();
-        listAccId.addAll(mapContactIdAccountIdLoser.values());
-        listAccId.addAll(mapContactIdAccountIdWinner.values());
+    }
 
-        // if we have any winning Contacts in Household or 1:1 Accounts...
-        if (listAccId.size() > 0) {    
-            // refresh account naming
-            ACCT_IndividualAccounts_TDTM.renameHHAccounts(listAccIdHH);
-            
-            // move any Contact Opps to winning Accounts
-            ACCT_IndividualAccounts_TDTM.moveOppsToContactAccount(mapContactIdAccountIdWinner, mapContactIdAccountIdLoser, null);
-            
-            // recreate Soft Credits 
-            HH_OppContactRoles_TDTM.recreateHouseholdSoftCredits(listAccId);
-
-            // recalc Account Rollups
-            ACCT_IndividualAccounts_TDTM.rollupAccounts(listAccId);            
+    /*******************************************************************************************************
+    * @description Extract the ids from the list of merge keys provided.
+    *
+    * @param losingContactIds The collection of Ids from the losing contacts
+    * @param losersAccountIds The collection of account ids the losing contacts belonged to
+    * @param winningContactIds the collection of winning contact ids
+    * @param mergeKeys A list of merged Ids, each merge key is expected to have an id for each collection
+    ********************************************************************************************************/
+    private static void extractIds(List<Id> losingContactIds, List<Id> losersAccountIds, List<Id> winningContactIds, List<String> mergeKeys) {
+        // extract out our Contact and Account Id's from the mergeKeys
+        for (String mergeKey : mergeKeys) {
+            losingContactIds.add(idFromMergeKey(mergeKey, 0));
+            losersAccountIds.add(idFromMergeKey(mergeKey, 1));
+            winningContactIds.add(idFromMergeKey(mergeKey, 2));
         }
+    }
 
+    /*******************************************************************************************************
+    * @description Determines if the account type provided matches the Household Account Type
+    *
+    * @param acctType The account type to compare
+    * @return Boolean true if the string passed in matches the Household Account Type
+    ********************************************************************************************************/
+    private static Boolean isHousehold(String acctType) {
+        return acctType == CAO_Constants.HH_ACCOUNT_TYPE;
+    }
+
+    /*******************************************************************************************************
+    * @description Determines if the account type provided matches any of the Individual Account Types
+    *
+    * @param acctType The account type to compare
+    * @return Boolean true if the string passed in matches any of the Individual Account Types
+    ********************************************************************************************************/
+    private static Boolean isAnyIndividual(String acctType) {
+        return isHousehold(acctType)
+            || acctType == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE
+            || acctType == CAO_Constants.BUCKET_ORGANIZATION_TYPE;
+    }
+
+    /*******************************************************************************************************
+    * @description Performs rollups, affiliation and relationship cleanup on the winning contacts
+    *
+    * @param winningContactIds the collection of winning contact ids
+    * @param winningContacts the collection of winning contacts
+    ********************************************************************************************************/
+    private static void cleanupContacts(List<Id> winningContactIds, List<Contact> winningContacts) {
         // recalc Contact Rollups
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
-            CRLP_RollupQueueable.runRollupsForIds(listContactIdWinner);
+            CRLP_RollupQueueable.runRollupsForIds(winningContactIds);
         } else {
-            oppRollup.rollupContacts(new map<Id, Contact>(listContactWinner));
+            oppRollup.rollupContacts(new Map<Id, Contact>(winningContacts));
         }
 
         // fixup duplicate Affiliations & Primary Affiliation
-        AFFL_Affiliations_TDTM.cleanupContactAffiliations(listContactWinner);
-        
+        AFFL_Affiliations_TDTM.cleanupContactAffiliations(winningContacts);
         // remove duplicate Relationships
-        REL_Relationships_TDTM.cleanupContactRelationships(listContactWinner);
+        REL_Relationships_TDTM.cleanupContactRelationships(winningContacts);
+    }
+
+    /*******************************************************************************************************
+    * @description Performs household naming, moves opportunities from the losers accounts to the winners
+    * accounts, recreates Household Soft Credits and performs rollups on all Accounts
+    *
+    * @param hhAcctIds the collection of account ids that are the household type
+    * @param winnersAcctIdByConId the collection of winning contact ids to their account ids
+    * @param losersAcctIdByConId the collection of winning contact ids to the losing contacts account id
+    ********************************************************************************************************/
+    private static void cleanupAccounts(List<Id> hhAcctIds, Map<Id, Id> winnersAcctIdByConId, Map<Id, Id> losersAcctIdByConId) {
+        // create a list of both Winning and Losing Accounts
+        List<Id> accountIds = new List<Id>();
+        accountIds.addAll(losersAcctIdByConId.values());
+        accountIds.addAll(winnersAcctIdByConId.values());
+
+        // if we have any winning Contacts in Household or 1:1 Accounts...
+        if (accountIds.size() > 0) {    
+            // refresh account naming
+            ACCT_IndividualAccounts_TDTM.renameHHAccounts(hhAcctIds);
+
+            // move any Contact Opps to winning Accounts
+            ACCT_IndividualAccounts_TDTM.moveOppsToContactAccount(winnersAcctIdByConId, losersAcctIdByConId, null);
+
+            // recreate Soft Credits 
+            HH_OppContactRoles_TDTM.recreateHouseholdSoftCredits(accountIds);
+
+            // recalc Account Rollups
+            ACCT_IndividualAccounts_TDTM.rollupAccounts(accountIds);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Uses the opp rollup util to build the query then modifies the query to include additional
+    * fields necessary for processing merged contacts
+    *
+    * @return List<Contact> the list of contacts that match the ids provided
+    ********************************************************************************************************/
+    private static List<Contact> getContacts(List<Id> contactIds) {
+        // get the winning Contacts (with the fields we need)
+        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL(); 
+        String query = oppRollupUtil.buildContactQuery();
+        query = query.replace('from Contact', '');
+        query += ', AccountId, Account.npe01__SYSTEM_AccountType__c, Primary_Affiliation__c FROM Contact WHERE Id IN :contactIds';
+        return Database.query(query);
+    }
+
+    /*******************************************************************************************************
+    * @description Queries for the accounts and fields needed for processing
+    *
+    * @return List<Account> the list of accounts that match the ids provided
+    ********************************************************************************************************/
+    private static List<Account> getAccounts(List<Id> accountIds) {
+        return [SELECT Id, npe01__SYSTEM_AccountType__c FROM Account WHERE Id IN :accountIds];
     }
 }
