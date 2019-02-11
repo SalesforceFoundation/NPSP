@@ -49,6 +49,10 @@ public with sharing class UTIL_LightningComponentSupport {
             return 'date-local';
         } else if (rawType == 'double') {
             return 'number';
+        } else if (rawType == 'currency') {
+            return 'number';
+        } else if (rawType == 'string') {
+            return 'text';
         } else {
             return rawType;
         }
