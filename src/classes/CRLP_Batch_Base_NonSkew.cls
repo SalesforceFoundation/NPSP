@@ -84,6 +84,12 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         super(jobType, recordIds);
     }
 
+    /*******************************************************************************************************
+     * @description Constructs the class
+     * @param jobType Defines the type of rollup job
+     * @param recordIds Specific set of parent record id's to roll up to
+     * @param isScheduledJob whether the class was constructed from within a scheduled job
+     */
     public CRLP_Batch_Base_NonSkew(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds, Boolean isScheduledJob) {
         super(jobType, recordIds, isScheduledJob);
     }
@@ -94,13 +100,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     * @return database.Querylocator
     */
     public database.Querylocator start(Database.BatchableContext bc) {
-        System.debug(loggingLevel.Error, '*** ##### in start method, System.isScheduled(): '+System.isScheduled()+' ######');  //FALSE, because the Schedulable class submits a Batchable job, and isScheduled is false in the batch job context
-        System.debug(loggingLevel.Error, '*** ##### in start method, this.isScheduledJob: '+this.isScheduledJob+' ######');  //FALSE, because the Schedulable class submits a Batchable job, and isScheduled is false in the batch job context
         try {
             initializeJobData();
-            System.debug(loggingLevel.Error, '*** ##### after initialize ######');
-            System.debug(loggingLevel.Error, '*** variable value: ' + this.keyField);
-            System.debug(loggingLevel.Error, '*** variable value: ' + this.detailObjectType);
 
             // Build a query string of the target Summary object.
             String query = CRLP_Query_SEL.buildObjectQueryForRollup(this.summaryObjectType);
@@ -129,7 +130,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
                 // Only use the related records filter if not disabled in settings and not running unit tests
                 if (customizableRollupSettings.Disable_Related_Records_Filter__c == false && !Test.isRunningTest()) {
-//                if (customizableRollupSettings.Disable_Related_Records_Filter__c == false) {
                     if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
                         whereClauses.add(getWhereClause());
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
@@ -159,7 +159,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             }
 
             UTIL_Debug.debug(LoggingLevel.WARN, '>> Batch Query =' + query);
-            System.debug(loggingLevel.Error, '*** query: ' + query);
             return Database.getQueryLocator(query);
 
         } catch (Exception ex) {
@@ -335,9 +334,13 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         return options;
     }
 
+    /**
+     * @description Determines whether the rollup should be run in incremental mode
+     * @param jobType the type of rollup job
+     * @return true if the rollup should be run in incremental mode, otherwise false
+     */
     @TestVisible private Boolean isIncrementalMode(CRLP_RollupProcessingOptions.RollupType jobType) {
         //1. Only run incremental mode when initiated by the scheduled job
-        System.debug(loggingLevel.Error, '*** in isIncMode this.isScheduledJob: ' + this.isScheduledJob);
         if (this.isScheduledJob == null || this.isScheduledJob == false) {
             return false;
         }
@@ -355,8 +358,11 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         }
     }
 
+    /**
+     * @description Produces the where clause that should be used for the inner join when in incremental mode
+     * @return The WHERE clause, as a string, that should be used to filter the detail records
+     */
     private String getIncrementalModeWhereClause() {
-        System.debug(loggingLevel.Error, '*** in getIncWC: ' + this.keyField);
         String dateFieldNameForTesting = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp'; //Set to CloseDate for dev, will be set to SystemModstamp for testing/prod
         Integer mDays = this.getMaxDaysAgo();
         Integer mYears = this.getMaxYearsAgo();
@@ -378,6 +384,10 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         return whereClause += ')';
     }
 
+    /**
+     * @description Produces the where clause that should be used for the inner join when NOT in incremental mode
+     * @return The WHERE clause, as a string, that should be used to filter the detail records
+     */
     private String getStandardWhereClause() {
         String standardWhereClause = null; //will return null if this method is called from an unsupported rollup type
         if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
@@ -390,12 +400,13 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         return standardWhereClause;
     }
 
+    /**
+     * @description Produces the where clause that should be used for the inner join
+     * @return The WHERE clause, as a string, that should be used to filter the detail records
+     */
     @TestVisible private String getWhereClause() {
-        System.debug(loggingLevel.Error, '*** ##### getWhereClause ######');
         Boolean incrementalModeActivatedForThisJobType = isIncrementalMode(this.jobType);
-        System.debug(loggingLevel.Error, '*** incrementalModeActivatedForThisJobType: ' + incrementalModeActivatedForThisJobType);
         Boolean hasActiveIncrementalModeRollups = (this.getMaxDaysAgo() != null || this.getMaxYearsAgo() != null);
-        System.debug(loggingLevel.Error, '*** hasActiveIncrementalModeRollups: ' + hasActiveIncrementalModeRollups);
         if (incrementalModeActivatedForThisJobType && hasActiveIncrementalModeRollups) {
             return getIncrementalModeWhereClause();
         } else {
