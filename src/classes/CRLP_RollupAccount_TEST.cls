@@ -429,6 +429,7 @@ private class CRLP_RollupAccount_TEST {
         } else if (tt == TestType.TestBatch || tt == TestType.TestMultiCurrBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
+
         } else if (tt == TestType.TestSkewBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{
