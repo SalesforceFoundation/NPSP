@@ -49,7 +49,7 @@ global inherited sharing class CallableApi implements System.Callable {
     * @param args name value map of arguments
     * @return Object returned will depend on the results of the target function
     ********************************************************************************************************/
-    global Object call(String action, Map<String, Object> args) {
+    global Object call(String action, Map<String, Object> params) {
        
         switch on (action) {
             when 'TDTM.disableAllTriggers' {

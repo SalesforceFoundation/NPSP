@@ -30,8 +30,8 @@
 /**
 * @author Salesforce.org
 * @date 2019
-* @group Callable API 
-* @group-content ../../ApexDocContent/CallableAPI.htm
+* @group API 
+* @group-content ../../ApexDocContent/API.htm
 * @description Tests specific to Callable API. 
 */
 @IsTest
