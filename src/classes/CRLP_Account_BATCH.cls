@@ -36,10 +36,10 @@
 */
 public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 
-    //This variable is only usable during the schedulable execution context.
-    // The schedule of all execution context submits batch job, Which changes the context, And renders this variable Unusable from the batch job context.
-    // So we set the value from the executed context in this class, And then pass it As an argument To the CRLP Batch Base constructors, so that we can pass
-    // it to the Batch Job that is submitted as a constructor param there, so the Batch Job is aware that the job started from schedulable context
+    // This static variable is only usable during the schedulable execution context.
+    // The schedulable execution context submits a batch job, which then runs in a new execution context and renders this variable unusable from the within the batch job.
+    // So we set the value from the schedulable execute method in this class, and then reference it from the CRLP_RollupBatch_SVC.executeBatchRollupJob method,
+    // so that we can pass it to the batch job that is submitted as a constructor param, informing the batch job that it was submitted from within a scheduled job.
     public static Boolean isInitializedFromScheduledJob = false;
 
     public CRLP_Account_BATCH() { }
