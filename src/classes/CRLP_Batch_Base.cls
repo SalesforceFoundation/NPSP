@@ -82,8 +82,7 @@ public abstract class CRLP_Batch_Base {
     /** @description The Summary Object Type this batch job will process */
     protected String keyField;
 
-    /** @description Whether this class was initiated from a scheduled job.  Initially set by the constructor that
-    * includeds the isScheduledJob arg.*/
+    /** @description Whether this class was constructed from within a scheduled job */
     protected Boolean isScheduledJob = false;
 
     /*******************************************************************************************************
@@ -92,6 +91,7 @@ public abstract class CRLP_Batch_Base {
     public CRLP_Batch_Base() {
         this.statefulMapOfOppIdsByParentId = new Map<Id, Set<Id>>();
         this.summaryObjectType = CRLP_RollupBatch_SVC.getSummaryObjectType(this.jobType);
+        this.isScheduledJob = System.isScheduled();
     }
 
     /*******************************************************************************************************

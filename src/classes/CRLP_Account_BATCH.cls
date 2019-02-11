@@ -56,10 +56,6 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
         super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, recordIds);
     }
 
-    public CRLP_Account_BATCH(List<Id> recordIds, Boolean isScheduledJob) {
-        super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, recordIds, isScheduledJob);
-    }
-
     /**
      * @description Scheduler execute method to support scheduling this job directly from the UI
      */

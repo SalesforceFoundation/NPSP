@@ -85,16 +85,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     }
 
     /*******************************************************************************************************
-     * @description Constructs the class
-     * @param jobType Defines the type of rollup job
-     * @param recordIds Specific set of parent record id's to roll up to
-     * @param isScheduledJob whether the class was constructed from within a scheduled job
-     */
-    public CRLP_Batch_Base_NonSkew(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds, Boolean isScheduledJob) {
-        super(jobType, recordIds, isScheduledJob);
-    }
-
-    /*******************************************************************************************************
     * @description Query all Summary records for the current type of Rollups based on the defined 'jobType'. Called by
     * the start() method of the individual batch jobs that extend this class.
     * @return database.Querylocator
