@@ -178,6 +178,17 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
             }
         }
 
+        //unfortunately, we need to first gather the opportunity IDs of all payment allocations changes in order to query for all child payments
+        List<npe01__OppPayment__c> paymentsWithOppIds = [
+            SELECT Id, npe01__Opportunity__c
+            FROM npe01__OppPayment__c 
+            WHERE Id IN :paymentIds OR npe01__Opportunity__c IN :paymentsByOpportunityId.keySet()
+        ];
+
+        for (npe01__OppPayment__c payment : paymentsWithOppIds) {
+            paymentsByOpportunityId.put(payment.npe01__Opportunity__c, new List<npe01__OppPayment__c>());
+        }
+
         Map<Id, npe01__OppPayment__c> paymentsWithAllocations = new Map<Id, npe01__OppPayment__c>([
             SELECT Id, npe01__Opportunity__c, npe01__Payment_Amount__c, npe01__Paid__c, npe01__Written_Off__c,
                 (SELECT Id, Amount__c, Percent__c, Opportunity__c, Payment__c, General_Accounting_Unit__c FROM Allocations__r)
@@ -276,6 +287,7 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
             }
 
             contextByOpportunity.put(context.opportunity.id, context);
+            System.debug('context' + json.serializePretty(context));
         }
     }
 
@@ -297,14 +309,20 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
             if (context.opportunityAllocationsByGAU.containsKey(gau)) {
                 
                 Decimal totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
+                Decimal adjustedTotalPaymentAllocations = totalPaymentAllocations * context.scheduleRatio;
+                
+                System.debug('njjc totalOpportunityAllocations ' + totalOpportunityAllocations + ' adjustedTotalPaymentAllocations ' + adjustedTotalPaymentAllocations);
+
                 //check if they need updating
-                if (totalPaymentAllocations * context.scheduleRatio != totalOpportunityAllocations) {
+                if (adjustedTotalPaymentAllocations != totalOpportunityAllocations) {
                     for (Allocation__c oppAllocation : context.opportunityAllocationsByGAU.get(gau)) {
                         //we want to keep the ratios amongst duplicate opportunity allocations
-                        Decimal duplicateAllocationPaidUnpaidAmountRatio = totalOpportunityAllocations / context.opportunity.Amount;
+                        Decimal duplicateAllocationPaidUnpaidAmountRatio = oppAllocation.Amount__c / totalOpportunityAllocations;
+                        System.debug('njjc duplicateAllocationPaidUnpaidAmountRatio ' + duplicateAllocationPaidUnpaidAmountRatio + ' calculatedAmount ' + totalPaymentAllocations * duplicateAllocationpaidUnpaidAmountRatio);
+
                         oppAllocation.Amount__c = totalPaymentAllocations * duplicateAllocationpaidUnpaidAmountRatio;
                         if (oppAllocation.Percent__c != null) {
-                            oppAllocation.Percent__c = context.Opportunity.Amount / oppAllocation.Amount__c;
+                            oppAllocation.Percent__c = oppAllocation.Amount__c / context.Opportunity.Amount * 100;
                         }
                         //add to update
                         allocationsChanges.objectsToUpdate.add(oppAllocation);
@@ -388,7 +406,7 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
                     Allocation__c newAllocation = new Allocation__c(
                         Payment__c = payment.Id,
                         General_Accounting_Unit__c = gau,
-                        Amount__c = newTotalPaymentAllocations * paymentRatio;// * context.scheduleRatio  <- is that needed, since it's already included in the newTotalPaymentAllocations?
+                        Amount__c = newTotalPaymentAllocations * paymentRatio // * context.scheduleRatio  <- is that needed, since it's already included in the newTotalPaymentAllocations?
                     );
 
                     //only add the percent for non-default
