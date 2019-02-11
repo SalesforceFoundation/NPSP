@@ -98,6 +98,9 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         System.debug(loggingLevel.Error, '*** ##### in start method, this.isScheduledJob: '+this.isScheduledJob+' ######');  //FALSE, because the Schedulable class submits a Batchable job, and isScheduled is false in the batch job context
         try {
             initializeJobData();
+            System.debug(loggingLevel.Error, '*** ##### after initialize ######');
+            System.debug(loggingLevel.Error, '*** variable value: ' + this.keyField);
+            System.debug(loggingLevel.Error, '*** variable value: ' + this.detailObjectType);
 
             // Build a query string of the target Summary object.
             String query = CRLP_Query_SEL.buildObjectQueryForRollup(this.summaryObjectType);
@@ -125,8 +128,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
 
                 // Only use the related records filter if not disabled in settings and not running unit tests
-//                if (customizableRollupSettings.Disable_Related_Records_Filter__c == false && !Test.isRunningTest()) {
-                if (customizableRollupSettings.Disable_Related_Records_Filter__c == false) {
+                if (customizableRollupSettings.Disable_Related_Records_Filter__c == false && !Test.isRunningTest()) {
+//                if (customizableRollupSettings.Disable_Related_Records_Filter__c == false) {
                     if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
                         whereClauses.add(getWhereClause());
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
@@ -332,12 +335,13 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         return options;
     }
 
-    private Boolean isIncrementalMode(CRLP_RollupProcessingOptions.RollupType jobType){
+    @TestVisible private Boolean isIncrementalMode(CRLP_RollupProcessingOptions.RollupType jobType) {
         //1. Only run incremental mode when initiated by the scheduled job
+        System.debug(loggingLevel.Error, '*** in isIncMode this.isScheduledJob: ' + this.isScheduledJob);
         if (this.isScheduledJob == null || this.isScheduledJob == false) {
             return false;
         }
-        
+
         //2. Only run incremental mode when the custom settings are configured to enable incremental mode
         Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
         if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
@@ -351,8 +355,9 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         }
     }
 
-    private String getIncrementalModeWhereClause(){
-        String dateFieldNameForTesting = 'CloseDate'; //Set to CloseDate for dev, will be set to SystemModstamp for testing/prod
+    private String getIncrementalModeWhereClause() {
+        System.debug(loggingLevel.Error, '*** in getIncWC: ' + this.keyField);
+        String dateFieldNameForTesting = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp'; //Set to CloseDate for dev, will be set to SystemModstamp for testing/prod
         Integer mDays = this.getMaxDaysAgo();
         Integer mYears = this.getMaxYearsAgo();
 
@@ -373,17 +378,19 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         return whereClause += ')';
     }
 
-    private String getStandardWhereClause(){
+    private String getStandardWhereClause() {
         String standardWhereClause = null; //will return null if this method is called from an unsupported rollup type
-        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-            standardWhereClause = 'Id IN (SELECT '+ this.keyField +' FROM Opportunity ALLROWS)';
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-            standardWhereClause = 'Id IN (SELECT ' + this.keyField + ' FROM Opportunity ALLROWS)';
+        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
+                || this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+            standardWhereClause = 'Id IN (' +
+                    'SELECT ' + this.keyField + ' ' +
+                    'FROM ' + this.detailObjectType + ' ALLROWS' +
+                    ')';
         }
         return standardWhereClause;
     }
 
-    private String getWhereClause() {
+    @TestVisible private String getWhereClause() {
         System.debug(loggingLevel.Error, '*** ##### getWhereClause ######');
         Boolean incrementalModeActivatedForThisJobType = isIncrementalMode(this.jobType);
         System.debug(loggingLevel.Error, '*** incrementalModeActivatedForThisJobType: ' + incrementalModeActivatedForThisJobType);

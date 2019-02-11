@@ -112,6 +112,7 @@ public abstract class CRLP_Batch_Base {
 
     public CRLP_Batch_Base(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds, Boolean isScheduledJob) {
         this();
+        System.debug(loggingLevel.Error, '*** ##### in CRLP_Batch_Base constructor - just constructed ######');
         this.jobType = jobType;
         this.recordIds = recordIds;
         this.isScheduledJob = isScheduledJob;
@@ -207,7 +208,9 @@ public abstract class CRLP_Batch_Base {
      * @description Called during the start() method for the actual batch job to initialize the summary object, detail
      * object, key field, and if there are payment rollups that need to be included for the given summary object
      */
-    protected void initializeJobData() {
+    @TestVisible protected void initializeJobData() {
+        System.debug(loggingLevel.Error, '*** ##### in initializeJobData ######');
+        System.debug(loggingLevel.Error, '*** variable value: ' + this.jobType);
         this.summaryObjectType = CRLP_RollupBatch_SVC.getSummaryObjectType(this.jobType);
         this.statefulCacheOfRollupsToBeProcessed = CRLP_Rollup_SEL.getRollupDefinitionsToUse(this.jobType, this.jobFilter);
 
