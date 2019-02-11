@@ -524,22 +524,6 @@ private class CRLP_RollupContact_TEST {
     }
 
     @isTest
-    private static void testIsInitializedFromScheduledJob(){
-        //Schedule for 1 minute from now
-        Test.startTest();
-        String hour = String.valueOf(Datetime.now().hour());
-        String min = String.valueOf(Datetime.now().minute() + 1);
-        String ss = String.valueOf(Datetime.now().second());
-        String nextFireTime = ss + ' ' + min + ' ' + hour + ' * * ?';
-
-        CRLP_Contact_BATCH aJob = new CRLP_Contact_BATCH();
-        System.schedule('Contact Job Started At ' + String.valueOf(Datetime.now()), nextFireTime, aJob);
-        Test.stopTest();
-
-        System.assertEquals(true, CRLP_Contact_BATCH.isInitializedFromScheduledJob);
-    }
-
-    @isTest
     private static void testContactHardCreditIsIncrementalMode(){
         // Start by enabling Customizable Rollups and setting the incremental mode
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (

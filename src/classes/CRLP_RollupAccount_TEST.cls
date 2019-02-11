@@ -540,22 +540,6 @@ private class CRLP_RollupAccount_TEST {
     }
 
     @isTest
-    private static void testIsInitializedFromScheduledJob(){
-        //Schedule for 1 minute from now
-        Test.startTest();
-        String hour = String.valueOf(Datetime.now().hour());
-        String min = String.valueOf(Datetime.now().minute() + 1);
-        String ss = String.valueOf(Datetime.now().second());
-        String nextFireTime = ss + ' ' + min + ' ' + hour + ' * * ?';
-
-        CRLP_Account_BATCH aJob = new CRLP_Account_BATCH();
-        System.schedule('Account Job Started At ' + String.valueOf(Datetime.now()), nextFireTime, aJob);
-        Test.stopTest();
-
-        System.assertEquals(true, CRLP_Account_BATCH.isInitializedFromScheduledJob);
-    }
-
-    @isTest
     private static void testAccountHardCreditIsIncrementalMode(){
         // Start by enabling Customizable Rollups and setting the incremental mode
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
