@@ -227,19 +227,22 @@
                                                 </aura:iteration>
                                             </lightning:select>
                                             <aura:set attribute="else">
-                                                <!--<aura:if isTrue="{!equals(field.type,'reference')}">
-                                                    it's a reference! what can we put here?
-                                                    <aura:set attribute="else">-->
-                                                {!field.type} + {!field.formatter}
+                                                <aura:if isTrue="{!not(equals(field.type,'reference'))}">
+                                                    <lightning:input aura:id="defaultValueField"
+                                                                     label="{!field.label + ': ' + $Label.c.stgDefaultValue}"
+                                                                     type="{!field.type}"
+                                                                     value="{!field.defaultValue}"
+                                                                     formatter="{!field.formatter}"
+                                                                     step="0.01"
+                                                                     variant="label-hidden" />
+                                                    <aura:set attribute="else">
+                                                        <!-- TODO: some sort of clever, likely custom, lookup component will go here -->
                                                         <lightning:input aura:id="defaultValueField"
                                                                          label="{!field.label + ': ' + $Label.c.stgDefaultValue}"
                                                                          type="{!field.type}"
                                                                          value="{!field.defaultValue}"
-                                                                         formatter="{!field.formatter}"
-                                                                         step="0.01"
-                                                                         variant="label-hidden" />
-                                                    <!--</aura:set>
-                                                </aura:if>-->
+                                                                         variant="label-hidden" />                                                    </aura:set>
+                                                </aura:if>
                                             </aura:set>
                                         </aura:if>
                                     </lightning:layoutItem>

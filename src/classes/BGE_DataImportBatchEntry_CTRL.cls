@@ -346,27 +346,38 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 if (dataImportDFR != null) {
 
                     if (UTIL_Permissions.canUpdate(dataImportDFR, false)) {
+
                         Column col = new Column();
+
                         col.label = dataImportDFR.getLabel();
                         col.fieldName = dataImportDFR.getName();
                         col.defaultValue = field.defaultValue;
                         col.required = field.requiredInEntryForm;
                         col.hide = field.hide;
-                        col.type = UTIL_LightningComponentSupport.getLightningDataType(dataImportDFR.getType().name());
-                        col.readOnly = col.type == 'reference' ? true : false; // we don't allow lookups to be edited in the grid
-                        col.typeAttributes = getTypeAttributes(dataImportDFR);
-
+                        col.type = UTIL_LightningComponentSupport.getLightningDataTableDataType(dataImportDFR.getType().name());
+                        col.readOnly = col.type == 'reference' ? true : false; // only lookups are not editable in grid
+                        col.typeAttributes = '{}';
                         col.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(col.fieldName);
 
                         columns.add(col);
 
-                        String targetObject = BDI_DataImportService.getTargetObject(col.fieldName);
-                        if (targetObject == 'Payment') {
-                            targetObject = 'npe01__OppPayment__c';
+                        if (dataImportDFR.getType().name() == 'reference') {
+                            // manually construct EXTRA column for campaign link
+                            Column linkCol = new Column();
+                            linkCol.label = dataImportDFR.getLabel();
+                            String fieldLabel = dataImportDFR.name + 'label';
+                            String fieldName = dataImportDFR.name + 'link';
+                            linkCol.fieldName = fieldName;
+                            linkCol.readOnly = true;
+                            linkCol.required = field.requiredInEntryForm;
+                            linkCol.type = 'url';
+                            linkCol.typeAttributes = '{"label":{"fieldName":"'+fieldLabel+'"},"target":"_blank"}';
+                            columns.add(linkCol);
                         }
+
+                        String targetObject = BDI_DataImportService.getTargetObject(col.fieldName);
                         String targetField = BDI_DataImportService.getTargetField(col.fieldName);
                         DescribeFieldResult targetDFR = UTIL_Describe.getFieldDescribe(targetObject,targetField);
-
 
                         if (!UTIL_Permissions.canUpdate(targetDFR, false)) {
                             unpermittedFields.add(targetDFR);
@@ -504,25 +515,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
         List<String> fields = getDataImportFields();
         fields.addAll(getActiveFieldNamesFromBatch(batchId));
-        for (string s : fields) {
-            System.debug(s);
-        }
         return fields;
-    }
-
-
-    /*******************************************************************************************************
-    * @description returns a JSON String for typeAttributes that is empty, or a link in the case of a lookup
-    * @return String JSON string for typeAttributes
-    */
-    public static String getTypeAttributes(Schema.DescribeFieldResult dfr) {
-
-        String typeAttributes = '{}';
-        if (dfr.getType().name().toLowerCase() == 'reference') {
-            typeAttributes = '{"label":{"fieldName":"' + dfr.name.substringBefore('__c') + '__r.Name' + '"},"target":"_blank"}';
-
-        }
-        return typeAttributes;
     }
 
     /*******************************************************************************************************

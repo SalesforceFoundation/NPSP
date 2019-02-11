@@ -704,9 +704,9 @@ global with sharing class BDI_DataImportService {
     public static Boolean failFieldLevelSecurity = false;
 
     /*******************************************************************************************************
-    * @description returns the target object (bdi name) for a given Data Import field
+    * @description returns the target object (api name) for a given Data Import field
     * @param sourceFieldName the api name of the Data Import field
-    * @return String the BDI name of the target object for that field, derived from the help text
+    * @return String the api name of the target object for that field, derived from the help text
     */
     public static String getTargetObject(String sourceFieldName) {
         sourceFieldName = sourceFieldName.toLowerCase();
@@ -717,6 +717,10 @@ global with sharing class BDI_DataImportService {
         // Donation Campaign is a special case because its mapping is hard-coded, not in help text
         if (sourceFieldName == 'DonationCampaignImported__c') {
              targetObject = 'Opportunity';
+        }
+
+        if (targetObject == 'Payment') {
+            targetObject = 'npe01__OppPayment__c';
         }
 
         return targetObject;
@@ -739,20 +743,6 @@ global with sharing class BDI_DataImportService {
         }
 
         return targetField;
-    }
-
-    /*******************************************************************************************************
-    * @description Returns the translated SObject Label for a given BDI object name
-    */
-    public static String getTranslatedSObjectLabel(String bdiObjectName) {
-        // this will require iteration if/when we allow objects beyond Opp and Payment
-        String translatedObjectLabel;
-        if (bdiObjectName == 'Opportunity') {
-            translatedObjectLabel = UTIL_Describe.getObjectLabel(bdiObjectName);
-        } else if (bdiObjectName == 'Payment') {
-            translatedObjectLabel = UTIL_Describe.getObjectLabel('npe01__OppPayment__c');
-        }
-        return translatedObjectLabel;
     }
 
     /*******************************************************************************************************

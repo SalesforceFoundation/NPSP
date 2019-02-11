@@ -52,10 +52,7 @@
             typeAttributes: {label: {fieldName: 'donorName'}}});
 
         dataColumns.forEach(function(col){
-            console.log(col);
-            if (col.type == 'reference') {
-                // TODO: how to handle? or is it in setting the data?
-            } else {
+            if (col.type !== 'reference') {
                 columns.push({
                     label: col.label,
                     fieldName: col.fieldName,
@@ -95,14 +92,14 @@
         var dataImportFields = [];
 
         dataColumns.forEach(function(field){
-            if (!field.readOnly) {
+            if (!field.readOnly || field.type == 'reference') {
                 dataImportFields.push({
                     label: field.label,
                     name: field.fieldName,
                     options: field.options,
                     required: field.required,
-                    value: field.defaultValue,    
-                    type: field.type                
+                    value: field.defaultValue,
+                    type: field.type
                 });
             }
         });
@@ -551,6 +548,10 @@
         row.matchedRecordUrl = currentRow.matchedRecordUrl;
         row.matchedRecordLabel = currentRow.matchedRecordLabel;
         row.errors = currentRow.errors;
+        let campaignLinkFieldLabel = 'DonationCampaignImported__clabel';
+        let campaignLinkFieldName = 'DonationCampaignImported__clink';
+        row[campaignLinkFieldLabel] = row.DonationCampaignImported__r.Name;
+        row[campaignLinkFieldName] = '/'+row.DonationCampaignImported__c;
         return row;
     },
 

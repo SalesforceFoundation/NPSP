@@ -37,19 +37,17 @@
 public with sharing class UTIL_LightningComponentSupport {
 
     /*******************************************************************************************************
-    * @description Converts Apex field data type to type expected by lightning:datatable and other components
+    * @description Converts Apex field data type to type expected by lightning:datatable
     * @param rawType: the data type from DescribeFieldResult
-    * @return the datatype string expected by lightning components
+    * @return the datatype string expected by lightning:datatable
     */
-    public static String getLightningDataType(String rawType) {
+    public static String getLightningDataTableDataType(String rawType) {
         rawType = rawType.toLowerCase();
         if (rawType == 'datetime') {
             return 'date';
         } else if (rawType == 'date') {
             return 'date-local';
         } else if (rawType == 'double') {
-            return 'number';
-        } else if (rawType == 'currency') {
             return 'number';
         } else if (rawType == 'string') {
             return 'text';

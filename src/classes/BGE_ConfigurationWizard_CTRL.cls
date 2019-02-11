@@ -115,7 +115,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         Set<String> allowedObjects = new Set<String>{
             'Opportunity',
-            'Payment'
+            'npe01__OppPayment__c'
         };
 
         List<DescribeFieldResult> dfrs = getRelevantFields(allowedObjects);
@@ -129,18 +129,14 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             field.label = (fieldHasSpacesAndObjName) ? dfr.getLabel().split(' ',2)[1] : dfr.getLabel();
 
             field.sObjectName = BDI_DataImportService.getTargetObject(dfr.getName());
-            field.sObjectLabel = BDI_DataImportService.getTranslatedSObjectLabel(field.sObjectName);
+            field.sObjectLabel = UTIL_Describe.getObjectLabel(field.sObjectName);
 
             if (conditionallyRequiredFields.contains(field.name)) {
                 field.conditionallyRequired = true;
             }
 
-            String rawFieldType = dfr.getType().name().toLowerCase();
-            System.debug(dfr.getName());
-            System.debug(rawFieldType);
-            //field.type = UTIL_LightningComponentSupport.getLightningDataType(rawFieldType);
-            field.type = rawFieldType;
-            if (rawFieldType == 'currency') {
+            field.type = dfr.getType().name().toLowerCase();
+            if (field.type == 'currency') {
                 field.formatter = 'currency';
             }
 
@@ -240,8 +236,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         String dataImportApiName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
         String opportunityName = 'Opportunity';
         String opportunityLabel = UTIL_Describe.getObjectLabel(opportunityName);
-        String paymentName = 'Payment'; // bdi object name, not api name
-        String paymentLabel = UTIL_Describe.getObjectLabel('npe01__OppPayment__c');
+        String paymentName = 'npe01__OppPayment__c';
+        String paymentLabel = UTIL_Describe.getObjectLabel(paymentName);
 
         BGEField donationAmount = new BGEField();
         String donationAmountApiName = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c');
@@ -253,7 +249,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         donationAmount.isActive = true;
         donationAmount.requiredInEntryForm = true;
         donationAmount.hide = false;
-        donationAmount.type = UTIL_LightningComponentSupport.getLightningDataType('number');
+        donationAmount.type = 'number';
         donationAmount.formatter = 'currency';
         donationAmount.sortOrder = 0;
         donationAmount.alwaysRequired = true;
@@ -269,7 +265,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         donationDate.isActive = true;
         donationDate.requiredInEntryForm = true;
         donationDate.hide = false;
-        donationDate.type = UTIL_LightningComponentSupport.getLightningDataType('date');
+        donationDate.type = 'date';
         donationDate.sortOrder = 1;
         donationDate.alwaysRequired = true;
         fields.add(donationDate);
@@ -284,7 +280,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         paymentMethod.isActive = true;
         paymentMethod.requiredInEntryForm = false;
         paymentMethod.hide = false;
-        paymentMethod.type = UTIL_LightningComponentSupport.getLightningDataType('string');
+        paymentMethod.type = 'string';
         paymentMethod.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(paymentMethodApiName);
         paymentMethod.sortOrder = 2;
         fields.add(paymentMethod);
@@ -299,7 +295,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         checkNumber.isActive = true;
         checkNumber.requiredInEntryForm = false;
         checkNumber.hide = false;
-        checkNumber.type = UTIL_LightningComponentSupport.getLightningDataType('string');
+        checkNumber.type = 'string';
         checkNumber.sortOrder = 3;
         fields.add(checkNumber);
 
@@ -403,7 +399,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         Set<String> donationObjects = new Set<String>{
             'Opportunity',
-            'Payment'
+            'npe01__OppPayment__c'
         };
         List<DescribeFieldResult> dfrs = getRelevantFields(donationObjects);
 
