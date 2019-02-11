@@ -36,12 +36,6 @@
 */
 public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 
-    // This static variable is only usable during the schedulable execution context.
-    // The schedulable execution context submits a batch job, which then runs in a new execution context and renders this variable unusable from the within the batch job.
-    // So we set the value from the schedulable execute method in this class, and then reference it from the CRLP_RollupBatch_SVC.executeBatchRollupJob method,
-    // so that we can pass it to the batch job that is submitted as a constructor param, informing the batch job that it was submitted from within a scheduled job.
-    public static Boolean isInitializedFromScheduledJob = false;
-
     public CRLP_Account_BATCH() { }
 
     /*******************************************************************************************************
@@ -70,7 +64,6 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
      * @description Scheduler execute method to support scheduling this job directly from the UI
      */
     public void execute(SchedulableContext context) {
-        isInitializedFromScheduledJob = true; //Set the static variable here so that we don't have to change the signature of the service method below
         String className = CRLP_Account_BATCH.class.getName();
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
             if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
