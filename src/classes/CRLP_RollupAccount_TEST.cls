@@ -38,7 +38,7 @@ private class CRLP_RollupAccount_TEST {
 
     /** @description The 6 testing types supported by the test engine */
     private Enum TestType {
-        TestTrigger, TestQueueuable, TestBatch, TestSkewBatch, TestMultiCurrBatch, TestReparentOpp, TestBatchIncremental
+        TestTrigger, TestQueueuable, TestBatch, TestSkewBatch, TestMultiCurrBatch, TestReparentOpp
     }
 
     /**
@@ -179,10 +179,6 @@ private class CRLP_RollupAccount_TEST {
     static testMethod void test_Rollups_Batch() {
         testRollupsServices(TestType.TestBatch);
     }
-    /** @description Test the incremental non-skew batch job method of rolling up */
-    static testMethod void test_Rollups_Batch_Incremental() {
-        testRollupsServices(TestType.TestBatchIncremental);
-    }
     /** @description Test the full skew mode batch job method of rolling up */
     static testMethod void test_Rollups_SkewBatch() {
         testRollupsServices(TestType.TestSkewBatch);
@@ -264,8 +260,7 @@ private class CRLP_RollupAccount_TEST {
                 Rollups_Contact_SkewMode_Batch_Size__c = 200,
                 Rollups_Contact_Soft_Credit_Batch_Size__c = 200,
                 Rollups_Account_Batch_Size__c = 20,
-                Rollups_Contact_Batch_Size__c = 20,
-                AccountHardCreditNonSkew_Incremental__c = (tt == TestType.TestBatchIncremental ? true : false)
+                Rollups_Contact_Batch_Size__c = 20
         ));
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor',
@@ -434,13 +429,6 @@ private class CRLP_RollupAccount_TEST {
         } else if (tt == TestType.TestBatch || tt == TestType.TestMultiCurrBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
-
-        } else if (tt == TestType.TestBatchIncremental) {
-            // Construct the CRLP_Account_BATCH job by passing in the isScheduledJob flag, mocking what the
-            // CRLP_RollupBatch_SVC.executeBatchRollupJob method will do when the CRLP_Account_BATCH is
-            // initiated as a scheduled job
-            Boolean isScheduledJob = true;
-            Database.executeBatch(new CRLP_Account_BATCH(null, isScheduledJob));
         } else if (tt == TestType.TestSkewBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{
@@ -540,40 +528,6 @@ private class CRLP_RollupAccount_TEST {
     }
 
     @isTest
-    private static void testAccountHardCreditIsIncrementalMode(){
-        // Start by enabling Customizable Rollups and setting the incremental mode
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true,
-                AccountHardCreditNonSkew_Incremental__c = true
-        ));
-
-        CRLP_Account_BATCH batchAccountHCNonSkew = new CRLP_Account_BATCH(null, true);
-
-        System.assertEquals(true, batchAccountHCNonSkew.isIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit));
-    }
-
-    @isTest
-    private static void testAccountHardCreditGetWhereClause_IncrementalMode(){
-        // Start by enabling Customizable Rollups and setting the incremental mode
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true,
-                AccountHardCreditNonSkew_Incremental__c = true
-        ));
-
-        // Create the test data
-        mockRollupCMTValues();
-
-        // Initialize an instance of the CRLP_Account_BATCH, passing the isScheduledJob argument as true
-        // since incremental mode only runs if the job is initiated from scheduled job
-        CRLP_Account_BATCH batchAccountHCNonSkew = new CRLP_Account_BATCH(null, true);
-        batchAccountHCNonSkew.initializeJobData();
-
-        String whereClause = batchAccountHCNonSkew.getWhereClause();
-        System.assert(whereClause.contains('WHERE') == true, 'The incremental mode where clause should contain a WHERE filter on the Opportunities.');
-        System.debug(loggingLevel.Error, '*** batchAccountHCNonSkew.getWhereClause()(): ' + batchAccountHCNonSkew.getWhereClause());
-    }
-
-    @isTest
     private static void testAccountHardCreditGetWhereClause_Standard(){
         // Start by enabling Customizable Rollups and setting the incremental mode
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
@@ -584,13 +538,51 @@ private class CRLP_RollupAccount_TEST {
         // Create the test data
         mockRollupCMTValues();
 
-        // Initialize an instance of the CRLP_Account_BATCH, passing the isScheduledJob argument as false
-        // so the job will run in standard (non-incremental) mode
-        CRLP_Account_BATCH batchAccountHCNonSkew = new CRLP_Account_BATCH(null, false);
-        batchAccountHCNonSkew.initializeJobData();
+        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
+        accountBatchJob.initializeJobData();
 
-        String whereClause = batchAccountHCNonSkew.getWhereClause();
+        String whereClause = accountBatchJob.getWhereClause();
         System.assert(whereClause.contains('WHERE') == false, 'The standard where clause for the inner join should NOT contain a where filter on the Opportunities.');
-        System.debug(loggingLevel.Error, '*** batchAccountHCNonSkew.getWhereClause()(): ' + batchAccountHCNonSkew.getWhereClause());
+    }
+
+    @isTest
+    private static void testAccountHardCreditGetWhereClause_IncrementalMode(){
+        // Start by enabling Customizable Rollups and setting the incremental mode
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+                Customizable_Rollups_Enabled__c = true,
+                AccountHardCreditNonSkew_Incremental__c = true // Set the custom setting value to true
+        ));
+
+        // Create the test data
+        mockRollupCMTValues();
+
+        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
+        accountBatchJob.initializeJobData();
+        accountBatchJob.setIsScheduledJob(true); // Set the Batch Base isScheduledJob flag to true.
+        // This is necessary because the Schedulable Job constructs and submits a separate instance of the
+        // CRLP_Account_BATCH class.  So we "mock" the isScheduledJob value here, to test the correct
+        // response from the getWhereClause() method below.
+
+        String whereClause = accountBatchJob.getWhereClause();
+        System.assert(whereClause.contains('WHERE') == true, 'The incremental mode where clause for the inner join should contain a where filter on the Opportunities.');
+    }
+
+    @isTest
+    private static void testAccountHardCreditGetWhereClause_IncrementalMode_CustomSetting() {
+        // Start by enabling Customizable Rollups and setting the incremental mode
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+                Customizable_Rollups_Enabled__c = true,
+                AccountHardCreditNonSkew_Incremental__c = false // Set the custom setting to false
+        ));
+
+        // Create the test data
+        mockRollupCMTValues();
+
+        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
+        accountBatchJob.initializeJobData();
+        accountBatchJob.setIsScheduledJob(true);
+
+        String whereClause = accountBatchJob.getWhereClause();
+        System.assert(whereClause.contains('WHERE') == false, 'The standard where clause should be used for the inner join when the custom setting is set to false.');
     }
 }

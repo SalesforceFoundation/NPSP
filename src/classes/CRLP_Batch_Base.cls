@@ -85,6 +85,17 @@ public abstract class CRLP_Batch_Base {
     /** @description Whether this class was constructed from within a scheduled job */
     protected Boolean isScheduledJob = false;
 
+    /**
+     * @description Testing API to mock isScheduledJob value when running tests
+     * @param isScheduledJob Boolean value to which isScheduledJob will be set if called
+     * from within a running test
+     */
+    @TestVisible protected void setIsScheduledJob(Boolean isScheduledJob){
+        if (Test.isRunningTest()) {
+            this.isScheduledJob = isScheduledJob;
+        }
+    }
+
     /*******************************************************************************************************
      * @description Constructs the class, inits the class instance vars used across all CRLP batch jobs
      */
@@ -114,7 +125,6 @@ public abstract class CRLP_Batch_Base {
 
     public CRLP_Batch_Base(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds, Boolean isScheduledJob) {
         this();
-        System.debug(loggingLevel.Error, '*** ##### in CRLP_Batch_Base constructor - just constructed ######');
         this.jobType = jobType;
         this.recordIds = recordIds;
         this.isScheduledJob = isScheduledJob;
