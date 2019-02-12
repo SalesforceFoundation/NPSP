@@ -139,7 +139,9 @@
                         <aura:iteration items="{!v.availableFieldsBySObject.fieldGroups}" var="currentFieldGroup">
                             <div class="slds-section slds-p-bottom_medium">
                                 <h3 class="slds-section__title slds-theme_shade slds-m-bottom_small">
-                                    <span class="slds-truncate slds-p-around_x-small">{!currentFieldGroup.sObjectLabel}</span>
+                                    <span class="slds-truncate slds-p-around_x-small">
+                                        {!currentFieldGroup.sObjectLabel}
+                                    </span>
                                 </h3>
                                 <lightning:layout horizontalAlign="center">
                                     <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center">
@@ -181,22 +183,14 @@
                         </aura:if>
 
                         <lightning:recordEditForm aura:id="recordEditForm"
-                                                  objectApiName="{!v.labels.sObjectName}"
-                        >
-                            <!--
-                            onsuccess="{!c.onSuccess}"
-                            onsubmit="{!c.onSubmit}"
-                            onload="{!c.onFormLoad}"
-                            -->
-
-                            <lightning:messages />
+                                                  objectApiName="{!v.wizardMetadata.labels.dataImportSObjectName}">
 
                             <aura:iteration items="{!v.batchFieldOptions.fieldGroups}" var="currentFieldGroup">
                                 <div class="slds-section slds-is-open">
                                     <h3 class="slds-section__title slds-theme_shade">
-                                    <span class="slds-truncate slds-p-horizontal_small">
-                                        {!currentFieldGroup.sObjectLabel}
-                                    </span>
+                                        <span class="slds-truncate slds-p-horizontal_small">
+                                            {!currentFieldGroup.sObjectLabel}
+                                        </span>
                                     </h3>
                                 </div>
 
@@ -207,20 +201,16 @@
                                     </lightning:layoutItem>
 
                                     <lightning:layoutItem size="4" class="slds-text-align_left slds-p-horizontal_x-small slds-form-element__legend">
-                                    {!$Label.c.stgDefaultValue}
-                                </lightning:layoutItem>
+                                        {!$Label.c.stgDefaultValue}
+                                    </lightning:layoutItem>
 
                                     <lightning:layoutItem size="2" class="slds-text-align_center slds-p-horizontal_x-small slds-form-element__legend">
-                                    {!$Label.c.lblRequired}
-                                </lightning:layoutItem>
+                                        {!$Label.c.lblRequired}
+                                    </lightning:layoutItem>
 
                                 </lightning:layout>
 
                                 <aura:iteration items="{!currentFieldGroup.fields}" var="field">
-                                    {!field.name} - {!field.defaultValue}<br/>
-                                    <lightning:inputField fieldName="{!field.name}"
-                                                          value="{!field.defaultValue}"
-                                    />
 
                                     <lightning:layout horizontalAlign="center" multipleRows="true" verticalAlign="center">
 
@@ -232,8 +222,6 @@
 
                                         <lightning:layoutItem size="4" class="slds-text-align_left slds-p-around_x-small">
 
-                                            <!-- begin experiment -->
-
                                             <aura:if isTrue="{!greaterthan(field.options.length, 0)}">
                                                 <lightning:select label="{!$Label.c.stgDefaultValue}"
                                                                   value="{!field.defaultValue}"
@@ -245,47 +233,14 @@
                                                     </aura:iteration>
                                                 </lightning:select>
                                                 <aura:set attribute="else">
-                                                    <!--<lightning:inputField fieldName="{!field.name}"
+                                                    <!-- TODO: ensure these are accessible -->
+                                                    <lightning:inputField aura-id="defaultValueField"
+                                                                          fieldName="{!field.name}"
                                                                           value="{!field.defaultValue}"
-                                                    />-->
+                                                                          class="hideTooltip equalHeight hideLabel"
+                                                    />
                                                 </aura:set>
                                             </aura:if>
-
-                                            <!-- end experiment
-                                            class="hideTooltip equalHeight hideLabel"
-                                            -->
-
-                                           <!--
-                                            <aura:if isTrue="{!greaterthan(field.options.length, 0)}">
-                                                <lightning:select label="{!$Label.c.stgDefaultValue}"
-                                                                  value="{!field.defaultValue}"
-                                                                  variant="label-hidden"
-                                                                  class="hideLabel">
-                                                    <option value=""></option>
-                                                    <aura:iteration items="{!field.options}" var="opt">
-                                                        <option value="{!opt.value}">{!opt.label}</option>
-                                                    </aura:iteration>
-                                                </lightning:select>
-                                                <aura:set attribute="else">
-                                                    <aura:if isTrue="{!not(equals(field.type,'reference'))}">
-                                                        <lightning:input aura:id="defaultValueField"
-                                                                         label="{!field.label + ': ' + $Label.c.stgDefaultValue}"
-                                                                         type="{!field.type}"
-                                                                         value="{!field.defaultValue}"
-                                                                         formatter="{!field.formatter}"
-                                                                         step="0.01"
-                                                                         variant="label-hidden" />
-                                                        <aura:set attribute="else">
-                                                            &lt;!&ndash; TODO: some sort of clever, likely custom, lookup component will go here &ndash;&gt;
-                                                            <lightning:input aura:id="defaultValueField"
-                                                                             label="{!field.label + ': ' + $Label.c.stgDefaultValue}"
-                                                                             type="{!field.type}"
-                                                                             value="{!field.defaultValue}"
-                                                                             variant="label-hidden" />                                                    </aura:set>
-                                                    </aura:if>
-                                                </aura:set>
-                                            </aura:if>
-                                            -->
                                         </lightning:layoutItem>
 
                                         <lightning:layoutItem size="2" class="slds-text-align_center slds-p-around_x-small">
@@ -329,9 +284,9 @@
                                 <lightning:layoutItem class="slds-p-horizontal_x-small" size="12">
                                     <div class="slds-section">
                                         <h3 class="slds-section__title slds-theme_shade">
-                                                <span class="slds-p-left_small slds-truncate">
-                                                    {!$Label.c.bdiSettingsSectionDonationMatching}
-                                                </span>
+                                            <span class="slds-p-left_small slds-truncate">
+                                                {!$Label.c.bdiSettingsSectionDonationMatching}
+                                            </span>
                                         </h3>
                                     </div>
                                 </lightning:layoutItem>
