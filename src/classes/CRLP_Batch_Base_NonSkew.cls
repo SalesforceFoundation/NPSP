@@ -330,7 +330,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      */
     private Boolean isIncrementalMode(CRLP_RollupProcessingOptions.RollupType jobType) {
         //1. Only run incremental mode when initiated by the scheduled job
-        if (this.isScheduledJob == null || this.isScheduledJob == false) {
+        if (isScheduledJob == null || isScheduledJob == false) {
             return false;
         }
 
