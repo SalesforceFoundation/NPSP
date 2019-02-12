@@ -127,6 +127,9 @@
                 currentField.formatter = activeFieldMap.get(currentField.id).formatter;
                 currentField.options = activeFieldMap.get(currentField.id).options;
                 currentField.alwaysRequired = activeFieldMap.get(currentField.id).alwaysRequired;
+                if (currentField.defaultValue && currentField.type == 'reference') {
+                    currentField.defaultValue = [currentField.defaultValue];
+                }
             } else {
                 currentField.isActive = false;
             }
@@ -334,30 +337,32 @@
      * @description Checks validity object on every lightning:input field
      * @return Boolean if user can proceed to next step
      */
-    checkBatchFieldOptionsValidity: function(component) {
+    checkDefaultsValidity: function(component) {
         var isValid = true;
         let previousObjectsBuffer = 0;
         var batchFieldGroups = component.get('v.batchFieldOptions.fieldGroups');
         let defaultValues = component.find('defaultValueField');
-        batchFieldGroups.forEach(function(currentFieldGroup) {
-            debugger;
-            currentFieldGroup.fields.forEach(function(currentField) {
-                debugger;
+        for (let i=0; i<batchFieldGroups.length; i++) {
+            let currentFieldGroup = batchFieldGroups[i];
+            for (let j=0; j<currentFieldGroup.fields.length; j++) {
+                let currentField = currentFieldGroup.fields[j];
                 let fieldName = currentField.name;
-                console.log(fieldName);
                 let value = defaultValues[currentFieldGroup.fields.indexOf(currentField) + previousObjectsBuffer].get('v.value');
-                console.log(JSON.stringify(value));
-            });
+                if (value && currentField.type == 'date') {
+                    var re = new RegExp("([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))$");
+                    if (!re.test(value)) {
+                        isValid = false;
+                        return;
+                    }
+                }
+            };
+            if (!isValid) {
+                // return from outer loop if already invalid
+                return;
+            }
             previousObjectsBuffer += currentFieldGroup.fields.length;
-        });
+        };
 
-        //todo: wire up custom field validity
-        /*var isValid = component.find('defaultValueField').reduce(function(validSoFar, defaultValueField) {
-            return validSoFar && defaultValueField.get('v.validity').valid;
-        }, true);
-        if (isValid) {
-            this.clearError(component);
-        }*/
         return isValid;
     },
 
@@ -465,41 +470,19 @@
     },
 
     /**
-     * @description Updates everyField with values from Set Field Options step
-     */
-    commitBatchFieldOptionsToEveryField: function(component) {
-
-        //todo: does this need to do something different?
-        var batchFieldGroups = component.get('v.batchFieldOptions.fieldGroups');
-        var batchFieldOptions = [];
-        batchFieldGroups.forEach(function(currentFieldGroup) {
-            currentFieldGroup.fields.forEach(function(currentField) {
-                batchFieldOptions.push(currentField);
-            });
-        });
-
-        let everyField = component.get('v.everyField');
-
-        everyField.forEach(function(currentField) {
-            batchFieldOptions.forEach(function(currentActiveField) {
-                if (currentField.name === currentActiveField.name) {
-                    currentField.requiredInEntryForm = currentActiveField.requiredInEntryForm;
-                    currentField.hide = currentActiveField.hide;
-                    currentField.defaultValue = currentActiveField.defaultValue;
-                }
-            });
-        });
-
-        component.set('v.everyField',everyField);
-    },
-
-    /**
      * @description Commits Batch record
      */
     saveRecord: function(component) {
         var batchInfo = component.get('v.batchInfo');
         // getActives grabs allFields, returns those isActive, sorted.
         let activeFields = this.getActives(component);
+
+        activeFields.forEach(function(currentField) {
+            if (currentField.defaultValue && currentField.type == 'reference') {
+                // lookups in recordeditform store as an array of IDs; need to flatten
+                currentField.defaultValue = currentField.defaultValue[0];
+            }
+        });
 
         var action = component.get('c.saveRecord');
         action.setParams({

@@ -738,7 +738,7 @@ global with sharing class BDI_DataImportService {
         String targetField = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[1] : null;
 
         // Donation Campaign is a special case because its mapping is hard-coded, not in help text
-        if (sourceFieldName == 'DonationCampaignImported__c') {
+        if (sourceFieldName == UTIL_Namespace.StrTokenNSPrefix('DonationCampaignImported__c')) {
             targetField = 'CampaignId';
         }
 

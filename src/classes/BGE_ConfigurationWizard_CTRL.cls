@@ -152,11 +152,13 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     * @description Returns the Data Import DFRs for a set of target objects
     * @return list of DescribeFieldResults
     */
-    public static List<DescribeFieldResult> getRelevantFields(Set<String> allowedObjects) {
+    public static List<Schema.DescribeFieldResult> getRelevantFields(Set<String> allowedObjects) {
 
-        List<DescribeFieldResult> dfrs = new List<DescribeFieldResult>();
+        Map<String, Schema.DescribeFieldResult> dfrMap = new Map<String, Schema.DescribeFieldResult>();
 
-        Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
+        Map<String, Schema.DescribeFieldResult> fieldMap =
+                UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
+
         Set<String> bannedFields = new Set<String>{
             'Account1Imported__c',
             'Account1ImportStatus__c',
@@ -183,10 +185,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'Account2ImportStatus__c'
         };
 
-        // TODO: move this sort to later in the process, after BGEFields have been created and we can sort by label
-        List<String> sortedFieldNames = new List<String>(fieldMap.keySet());
-        sortedFieldNames.sort();
-
         // these data types have been whitelisted since they already work with BGE
         Set<String> allowedDataTypes = new Set<String>{
             'CURRENCY',
@@ -207,8 +205,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         };
 
         // looping through the fields on DataImport__c and remove unsupported data types
-        for (String fieldName : sortedFieldNames) {
-            DescribeFieldResult dfr = fieldMap.get(fieldName);
+        for (Schema.DescribeFieldResult dfr : fieldMap.values()) {
             String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.getName());
 
             String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(dfr.getName());
@@ -219,13 +216,21 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
                 || allowedFields.contains(dataImportFieldApiName);
 
             if (fieldAllowed) {
-                dfrs.add(dfr);
+                dfrMap.put(dfr.label, dfr);
             }
         }
 
-        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(dfrs);
+        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(dfrMap.values());
 
-        return dfrs;
+        List<String> sortedFieldLabels = new List<String>(dfrMap.keySet());
+        sortedFieldLabels.sort();
+
+        List<Schema.DescribeFieldResult> sortedDFRs = new List<Schema.DescribeFieldResult>();
+        for (String fieldLabel : sortedFieldLabels) {
+            sortedDFRs.add(dfrMap.get(fieldLabel));
+        }
+
+        return sortedDFRs;
     }
 
     /*******************************************************************************************************

@@ -28,13 +28,13 @@
      * @param model: full DataImportModel from the Apex controller
      */
     setModel: function (component, model) {
+        component.set('v.isNamespaced', Boolean(model.isNamespaced));
         component.set('v.labels', model.labels);
         this.setColumns(component, model.columns);
         this.setDataServiceFields(component, model.labels);
         this.setDataTableRows(component, [], model.dataImportRows);
         this.setTotals(component, model);
         this.setDataImportFields(component, model.columns);
-        component.set('v.isNamespaced', Boolean(model.isNamespaced));
         component.set('v.isLoaded', true);
     },
 
@@ -85,7 +85,10 @@
     },
 
     /**
-     * @description: sets data import fields for dynamic use in the recordEditForm. Excludes read-only and reference fields.
+     * @description: sets data import fields for dynamic use in the recordEditForm.
+     * Excludes read-only fields, except reference fields which are read-only in grid but editable in form.
+     * This logic may need to be revisited as requirements get more complex. (Grid-only, Form-only, etc)
+     * For now, it works and minimizes Column attributes.
      * @param dataColumns: custom Column class data passed from the Apex controller.
      */
     setDataImportFields: function (component, dataColumns) {
@@ -183,8 +186,10 @@
     setDataTableRows: function(component, baseRows, responseRows) {
         let rows = [];
         let errors = [];
+        let namespace = component.get('v.labels.namespacePrefix');
+
         for (let i=0; i<responseRows.length; i++) {
-            const row = this.flattenDataImportRow(responseRows[i]);
+            const row = this.flattenDataImportRow(namespace, responseRows[i]);
             rows.push(row);
 
             //get payment and opportunity error information if import failed
@@ -270,7 +275,8 @@
      * @param isNewRecord: flag to indicate if record needs to be inserted or replaced
      */
     updateDataTableAfterDryRun: function (component, updatedRecord, isNewRecord) {
-        let tableRow = this.flattenDataImportRow(updatedRecord);
+        let namespace = component.get('v.labels.namespacePrefix');
+        let tableRow = this.flattenDataImportRow(namespace, updatedRecord);
         let hasError = false;
 
         //get payment and opportunity error information if import failed
@@ -541,17 +547,20 @@
      * @param currentRow: custom DataImportRow class data passed from the Apex controller.
      * @return Object row
      */
-    flattenDataImportRow: function(currentRow) {
+    flattenDataImportRow: function(namespace, currentRow) {
         let row = currentRow.record;
         row.donorName = currentRow.donorName;
         row.donorLink = currentRow.donorLink;
         row.matchedRecordUrl = currentRow.matchedRecordUrl;
         row.matchedRecordLabel = currentRow.matchedRecordLabel;
         row.errors = currentRow.errors;
-        let campaignLinkFieldLabel = 'DonationCampaignImported__clabel';
-        let campaignLinkFieldName = 'DonationCampaignImported__clink';
-        row[campaignLinkFieldLabel] = row.DonationCampaignImported__r.Name;
-        row[campaignLinkFieldName] = '/'+row.DonationCampaignImported__c;
+        // reformat lookup info to display as a url in datatable
+        if (row[namespace + 'DonationCampaignImported__c']) {
+            let campaignLinkFieldLabel = namespace + 'DonationCampaignImported__clabel';
+            let campaignLinkFieldName = namespace + 'DonationCampaignImported__clink';
+            row[campaignLinkFieldLabel] = row[namespace + 'DonationCampaignImported__r'].Name;
+            row[campaignLinkFieldName] = '/' + row[namespace + 'DonationCampaignImported__c'];
+        }
         return row;
     },
 
