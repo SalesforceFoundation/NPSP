@@ -36,6 +36,10 @@
 */
 public with sharing class BGE_ConfigurationWizard_CTRL {
 
+    private static String LIGHTNING_FIELD_TYPE_NUMBER = 'number';
+    private static String LIGHTNING_FIELD_TYPE_TEXT = 'text';
+    private static String LIGHTNING_FIELD_TYPE_CHECKBOX = 'checkbox';
+
     /*******************************************************************************************************
     * @description These fields are required only if at least 1 field from its object group is selected
     */
@@ -238,11 +242,11 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     */
     public static String getLightningFieldType(String apexFieldType) {
         if (apexFieldType == Schema.DisplayType.Currency) {
-            return 'number';
+            return LIGHTNING_FIELD_TYPE_NUMBER;
         } else if (apexFieldType == Schema.DisplayType.String) {
-            return 'text';
+            return LIGHTNING_FIELD_TYPE_TEXT;
         } else if (apexFieldType == Schema.DisplayType.Boolean) {
-            return 'checkbox';
+            return LIGHTNING_FIELD_TYPE_CHECKBOX;
         } else {
             return apexFieldType;
         }
