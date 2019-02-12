@@ -39,7 +39,8 @@ public class RD_RecurringDonations_TEST {
     /*******************************************************************************************************
     * @description test method for insertOpportunities function 
     */ 
-    static testMethod void insertOpportunities()
+    @isTest
+    private static void insertOpportunities()
     {
         UTIL_Debug.debug('multiply: ' + system.label.npe03.RecurringDonationMultiplyValue);
         UTIL_Debug.debug('divide: ' + system.label.npe03.RecurringDonationDivideValue);
@@ -101,7 +102,8 @@ public class RD_RecurringDonations_TEST {
         UTIL_Debug.debug('****' + installments1);        
     }
     
-    static testMethod void insertWeeklyOpportunities()
+    @isTest
+    private static void insertWeeklyOpportunities()
     {
          Account a = new Account();
         a.Name = 'test Individual';
@@ -134,7 +136,8 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(a.id,installments1[1].AccountId);
     }
     
-    static testMethod void insertQuarterlyOpportunities()
+    @isTest
+    private static void insertQuarterlyOpportunities()
     {
          Account a = new Account();
         a.Name = 'test Individual';
@@ -167,7 +170,8 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(a.id,installments1[1].AccountId);
     }
     
-    static testMethod void insertCampaignOpportunities() {
+    @isTest
+    private static void insertCampaignOpportunities() {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c());
         Account a = new Account();
         a.Name = 'test Individual';
@@ -209,7 +213,8 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(a.id,installments1[1].AccountId);
     }
     
-    static testMethod void deleteRecurringDonation()
+    @isTest
+    private static void deleteRecurringDonation()
     {
         Account a = new Account();
         a.Name = 'test Individual';
@@ -250,16 +255,19 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(false,installments3[0].IsDeleted, 'Record should be undeleted.');
     }
     
-    static testMethod void contactRolesOnOppsBucket() {
+    @isTest
+    private static void contactRolesOnOppsBucket() {
         //skip the test if Advancement is installed - Bucket Account not supported in ADV
         if(ADV_PackageInfo_SVC.useAdv()) return;
         
         contactRolesOnOppsProcessor(CAO_Constants.BUCKET_PROCESSOR);
     }
-    static testMethod void contactRolesOnOppsOne2One() {
+    @isTest
+    private static void contactRolesOnOppsOne2One() {
         contactRolesOnOppsProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
-    static testMethod void contactRolesOnOppsHHAccount() {
+    @isTest
+    private static void contactRolesOnOppsHHAccount() {
         contactRolesOnOppsProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
     static void contactRolesOnOppsProcessor(string strProcessor) {
@@ -299,14 +307,15 @@ public class RD_RecurringDonations_TEST {
 
     /*********************************************************************************************************
     @description 
-        Test Primary Opportunity Contact Roles (OCRs) creation using oppContactRoles().
+        Verify Primary Opportunity Contact Roles (OCRs) creation using oppContactRoles().
         NOTE: Test the method even though it has not been used since NPSP3 which always 
         leverages npe01__Contact_Id_for_Role__c field on Opportunity instead of calling this method. 
     verify:
         - New Primary OCRs are created for provided Opportunities having Recurring Donations 
         with a specified Contact. 
     **********************************************************************************************************/ 
-    private static testMethod void testOppContactRoleMethod() {
+    @isTest
+    private static void shouldCreatePrimaryOcrsForRecurringDonationOpps() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
             npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR, 
             npe01__Opportunity_Contact_Role_Default_role__c = System.Label.npe03.RecurringDonationContactRole
@@ -314,11 +323,7 @@ public class RD_RecurringDonations_TEST {
             
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
 
-        Integer size = 3;
-        List<Contact> contacts = new List<Contact>();
-        for (Integer i = 0; i < size; i++) {
-            contacts.add(new Contact(LastName = 'foo' + i));
-        }
+        List<Contact> contacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(3);
         insert contacts;
         contacts = new List<Contact>([SELECT LastName, AccountId FROM Contact]);
 
@@ -361,18 +366,90 @@ public class RD_RecurringDonations_TEST {
         Set<Id> rdIds = new Map<Id, npe03__Recurring_Donation__c>(rds).keySet();
 
         delete getPrimaryOppContactRoles(rdIds);
-        System.assertEquals(0, getPrimaryOppContactRoles(rdIds).size(), 'Opportunity Contact Roles should be deleted if created');
+        System.assertEquals(0, getPrimaryOppContactRoles(rdIds).size(), 'OCRs should be deleted if created');
 
         RD_RecurringDonations.oppContactRoles(oppIds);
 
-        System.assertEquals(opps.size(), getPrimaryOppContactRoles(rdIds).size(), 'Opportunity Contact Role should be created for each Opportunity');
+        System.assertEquals(opps.size(), getPrimaryOppContactRoles(rdIds).size(), 'OCR should be created for each Opportunity');
 
         // Execute the method again and ensure no duplicate OCR is created
         RD_RecurringDonations.oppContactRoles(oppIds);
-        System.assertEquals(opps.size(), getPrimaryOppContactRoles(rdIds).size(), 'No new Opportunity Contact Role should be created when oppContactRoles() is called once more');
+        System.assertEquals(opps.size(), getPrimaryOppContactRoles(rdIds).size(), 'No new OCR should be created when oppContactRoles() is called once more');
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Verify Primary Opportunity Contact Roles (OCRs) are not created by oppContactRoles() 
+        for Opportunities having "Disable Contact Role Automation" checked.
+        NOTE: Test the method even though it has not been used since NPSP3 which always 
+        leverages npe01__Contact_Id_for_Role__c field on Opportunity instead of calling this method. 
+    **********************************************************************************************************/ 
+    @isTest
+    private static void shouldNotCreatePrimaryOcrsForRecurringDonationOppsWithDisableContactRoleAutomation() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
+            npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR, 
+            npe01__Opportunity_Contact_Role_Default_role__c = System.Label.npe03.RecurringDonationContactRole
+        ));
+            
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+
+        List<Contact> contacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(2);
+        insert contacts;
+        contacts = [SELECT LastName, AccountId FROM Contact WHERE Id IN :contacts];
+
+        List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
+        for (Contact c : contacts) {
+            rds.add(new npe03__Recurring_Donation__c(
+                Name = 'Test' + c.LastName,
+                npe03__Amount__c = 100,
+                npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
+                npe03__Date_Established__c = Date.newInstance(1970, 6, 12),
+                npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
+                npe03__Contact__c = c.Id
+            ));
+        }
+
+        // Execute the insert of Recurring Donations in start/stop Test to create Primary OCRs 
+        // by utilizing npe01__Contact_Id_for_Role__c field on Opportunity if it exists. 
+        // Otherwise, the Recurring Donations code should execute oppContactRoles() instead.
+        Test.startTest();
+        insert rds;
+        Test.stopTest();
+
+        List<Opportunity> opps = new List<Opportunity>([
+            SELECT Id, Name
+            FROM Opportunity
+            WHERE npe03__Recurring_Donation__c IN :rds
+        ]);
+
+        opps.add(new Opportunity(
+            Amount = 200,
+            AccountId = contacts[0].AccountId,
+            Name = 'Test Opp',
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            CloseDate = System.today(),
+            npe03__Recurring_Donation__c = rds[0].Id,
+            DisableContactRoleAutomation__c = true
+        ));
+        upsert opps;
+
+        Set<Id> oppIds = new Map<Id, Opportunity>(opps).keySet();
+        Set<Id> rdIds = new Map<Id, npe03__Recurring_Donation__c>(rds).keySet();
+
+        delete getPrimaryOppContactRoles(rdIds);
+        System.assertEquals(0, getPrimaryOppContactRoles(rdIds).size(), 'OCRs should be deleted if created');
+
+        RD_RecurringDonations.oppContactRoles(oppIds);
+
+        System.assertEquals(opps.size() - 1, getPrimaryOppContactRoles(rdIds).size(), 'OCRs should not be created for Opp with Disable Contact Role Automation');
+
+        // Execute the method again and ensure no duplicate OCR is created
+        RD_RecurringDonations.oppContactRoles(oppIds);
+        System.assertEquals(opps.size() - 1, getPrimaryOppContactRoles(rdIds).size(), 'OCRs should not be created for Opp with Disable Contact Role Automation');
     }
     
-    static testMethod void testSettingsCreation() {
+    @isTest
+    private static void testSettingsCreation() {
         delete [select id from npe03__Recurring_Donations_Settings__c];
         //Using the API class just to give it test coverage.
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettings_API.getRecurringDonationsSettings();
@@ -383,7 +460,8 @@ public class RD_RecurringDonations_TEST {
     
     
     //tests inserts of various types of open ended donations
-    static testMethod void insertOpenEndedRecurringDonations(){
+    @isTest
+    private static void insertOpenEndedRecurringDonations(){
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -451,7 +529,8 @@ public class RD_RecurringDonations_TEST {
         system.assert(cOpp == 52 || cOpp == 53);        
     }
     
-    static testMethod void updateOpenEndedRecurringDonationMonthly(){
+    @isTest
+    private static void updateOpenEndedRecurringDonationMonthly(){
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -493,7 +572,8 @@ public class RD_RecurringDonations_TEST {
         
         system.assertEquals(12, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id]);        
     }
-    static testMethod void updateOpenEndedRecurringDonation1an15(){
+    @isTest
+    private static void updateOpenEndedRecurringDonation1an15(){
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -532,7 +612,8 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(100, originalOpps[0].Amount);        
     }
     
-    static testMethod void updateOpenEndedRecurringDonationYearly(){
+    @isTest
+    private static void updateOpenEndedRecurringDonationYearly(){
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -574,7 +655,8 @@ public class RD_RecurringDonations_TEST {
         
         system.assertEquals(1, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
     }
-    static testMethod void updateOpenEndedRecurringDonationWeekly(){
+    @isTest
+    private static void updateOpenEndedRecurringDonationWeekly(){
             UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -616,7 +698,8 @@ public class RD_RecurringDonations_TEST {
         system.assert(cOpp == 52 || cOpp == 53);        
     }
     
-    static testMethod void updateOpenEndedRecurringDonationQuarterly(){
+    @isTest
+    private static void updateOpenEndedRecurringDonationQuarterly(){
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -660,7 +743,8 @@ public class RD_RecurringDonations_TEST {
     }    
         
     //test closing an opportunity for an open recurring donation
-    static testMethod void closeOppForOpenEndedRecurringDonationWeekly(){
+    @isTest
+    private static void closeOppForOpenEndedRecurringDonationWeekly(){
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -712,7 +796,8 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
     }
     //test closing an opportunity for an open recurring donation
-    static testMethod void closeOppForOpenEndedRecurringDonationMonthly(){
+    @isTest
+    private static void closeOppForOpenEndedRecurringDonationMonthly(){
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 6,
@@ -767,7 +852,8 @@ public class RD_RecurringDonations_TEST {
     }
     
     //test closing an opportunity for an open recurring donation
-    static testMethod void closeOppForOpenEndedRecurringDonationQuarterly(){
+    @isTest
+    private static void closeOppForOpenEndedRecurringDonationQuarterly(){
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -820,7 +906,8 @@ public class RD_RecurringDonations_TEST {
     }
     
     //test closing an opportunity for an open recurring donation
-    static testMethod void closeOppForOpenEndedRecurringDonationCustomWeeks(){
+    @isTest
+    private static void closeOppForOpenEndedRecurringDonationCustomWeeks(){
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -880,7 +967,8 @@ public class RD_RecurringDonations_TEST {
     }
     
     //test closing an opportunity for an open recurring donation
-    static testMethod void closeOppForOpenEndedRecurringDonationCustomDays(){
+    @isTest
+    private static void closeOppForOpenEndedRecurringDonationCustomDays(){
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 1,
@@ -938,7 +1026,8 @@ public class RD_RecurringDonations_TEST {
     }
     
     //test closing an opportunity for an open recurring donation
-    static testMethod void closeOppForOpenEndedRecurringDonationCustomMonths(){
+    @isTest
+    private static void closeOppForOpenEndedRecurringDonationCustomMonths(){
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,
@@ -998,7 +1087,8 @@ public class RD_RecurringDonations_TEST {
     }
 
     //test closing an opportunity for an open recurring donation
-    static testMethod void closeOppForOpenEndedRecurringDonationCustomYears(){
+    @isTest
+    private static void closeOppForOpenEndedRecurringDonationCustomYears(){
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
         new npe03__Recurring_Donations_Settings__c(
         npe03__Opportunity_Forecast_Months__c = 12,

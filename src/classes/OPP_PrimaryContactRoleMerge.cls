@@ -60,8 +60,8 @@ public with sharing class OPP_PrimaryContactRoleMerge {
 
             if (opportunityPrimaryOCRs.containsRole(settingsRole) == false) {
                 errors.add(createError(opportunityRecord));
-            }
-            else {
+
+            } else {
                 List<OpportunityContactRole> ocrsWithSettingsRole = opportunityPrimaryOCRs.getRolesEqual(settingsRole);
                 duplicatePrimaryOCRs.makePrimary(ocrsWithSettingsRole[0]);
             }
@@ -82,6 +82,7 @@ public with sharing class OPP_PrimaryContactRoleMerge {
             FROM OpportunityContactRole 
             WHERE IsPrimary = true 
             AND OpportunityId IN :opportunities
+            AND Opportunity.DisableContactRoleAutomation__c = false
             GROUP BY OpportunityId 
             HAVING COUNT(Id) > 1
         ];
@@ -93,9 +94,9 @@ public with sharing class OPP_PrimaryContactRoleMerge {
     * @return String. The NPSP Settings Role based on the Account Type.
     ********************************************************************************************************/
     private String getSettingsRole(Account inputAccount) {
-        return inputAccount.npe01__SYSTEMIsIndividual__c ? 
-                UTIL_CustomSettingsFacade.getContactsSettings().npe01__Opportunity_Contact_Role_Default_role__c :
-                UTIL_CustomSettingsFacade.getContactsSettings().Contact_Role_for_Organizational_Opps__c;
+        return inputAccount.npe01__SYSTEMIsIndividual__c
+            ? UTIL_CustomSettingsFacade.getContactsSettings().npe01__Opportunity_Contact_Role_Default_role__c
+            : UTIL_CustomSettingsFacade.getContactsSettings().Contact_Role_for_Organizational_Opps__c;
     }
 
     /*******************************************************************************************************

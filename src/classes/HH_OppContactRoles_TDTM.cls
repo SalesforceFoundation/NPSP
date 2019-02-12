@@ -55,8 +55,19 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
         if (!currentHouseholdsSettings.npo02__Household_Contact_Roles_On__c)
             return null;
 
-        list<Opportunity> opportunities = newlist;
-        list<Opportunity> oldOpportunities = oldlist;
+        list<Opportunity> opportunities = new list<Opportunity>();
+        list<Opportunity> oldOpportunities = new list<Opportunity>();
+        for (Integer i = 0, size = newList.size(); i < size; i++) {
+            Opportunity opp = (Opportunity) newList[i];
+            
+            if (opp.DisableContactRoleAutomation__c == false)   {
+                opportunities.add(opp);
+                
+                if (oldList != null && !oldList.isEmpty()) {
+                    oldOpportunities.add((Opportunity) oldList[i]);
+                }
+            }
+        }
 
         // for AfterInserts, we can just go ahead and do our work to create the household soft credits.
         // but for AfterUpdates, we only do work if the Opp's HH account has changed.

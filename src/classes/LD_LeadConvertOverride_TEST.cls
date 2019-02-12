@@ -785,6 +785,57 @@ private class LD_LeadConvertOverride_TEST {
     }
 
     /*******************************************************************************************************
+    * @description Verifies primary OCR is not created when Opportunity "Disable Contact Role Automation" is checked.
+    */
+    public static void shouldNotCreatePrimaryOcrsWhenOppDisableContactRoleAutomationIsChecked() {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        
+        Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
+        Lead l = new Lead(
+            FirstName = 'Leady',
+            LastName = 'lead for tests_9871',
+            Company = SPECIAL_ACCOUNT_NAME
+        );
+        insert l;
+
+        System.currentPageReference().getParameters().put('id', l.id);
+        ApexPages.StandardController sc = new ApexPages.standardController(l);
+        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
+
+        ext.getConList();
+
+        assertNoContactIsRetrieved(ext);
+        assertNoAccountIsRetrieved(ext);
+
+        // this selects the "New" option in the Contact box
+        ext.strConId = 'NEW_CONTACT';
+        ext.strAccountId = 'AUTO';
+        ext.OppName = 'Test Opp';
+        ext.doNotCreateOpp = false;
+        Test.startTest();
+        for (SelectOption lcStatus : ext.lcStatuses) {
+            ext.l.Status = lcStatus.getValue();
+            if (ext.convertLeadNow() != null) {
+                break;
+            }
+        }
+        Test.stopTest();
+
+        List<Opportunity> opps = [SELECT Id, Primary_Contact__c FROM Opportunity];
+        System.assertEquals(1, opps.size());
+        System.assertEquals(ext.OppName, opps[0].Name);        
+
+        List<OpportunityContactRole> ocrs = [SELECT Id FROM OpportunityContactRole WHERE OpportunityId IN :opps];
+        System.assertEquals(0, ocrs.size(), 'No OCR should be created for Opportunity with Disable Contact Role Automation');            
+
+        Contact[] convertedContacts = getContacts();
+        System.assertEquals(1, convertedContacts.size());
+        System.assertEquals(convertedContacts[0].Id, opps[0].Primary_Contact__c);
+    }
+
+    /*******************************************************************************************************
     * @description Runs mergeLeadConversion_TestOppOCR with the 1x1 account model and verify Opp OCRs and Primary Contact are correct.
     */
     static testMethod void mergeLeadConversion_TestOne2OneOppOCR(){

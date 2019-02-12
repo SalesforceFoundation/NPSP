@@ -490,21 +490,25 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             // npsp devs have not been able to reproduce it, but feel this is a safe fix for all.
             if (!lc.isDoNotCreateOpportunity() && !CAO_Constants.isBucketModel()){
 
-                //get the new OCRs
-                list<OpportunityContactRole> ocrList = [select id, isPrimary, Role from OpportunityContactRole where 
-                    isPrimary = true and
-                    OpportunityID = :lcr.getOpportunityId() and ContactID = :lcr.getContactId()];
+                List<OpportunityContactRole> ocrList = [
+                    SELECT Id, isPrimary, Role
+                    FROM OpportunityContactRole 
+                    WHERE isPrimary = true 
+                    AND OpportunityId = :lcr.getOpportunityId() 
+                    AND ContactId = :lcr.getContactId()
+                    AND DisableContactRoleAutomation__c = false
+                ];
 
                 //if there are more than one delete the extraneous ones
                 if (ocrList != null && ocrList.size() > 1){
-                    list<OpportunityContactRole> dlist = new list<OpportunityContactRole>();
-                    for (integer i = 1; i < ocrList.size(); i++){
-                            dlist.add(ocrList[i]);
+                    List<OpportunityContactRole> dlist = new List<OpportunityContactRole>();
+                    for (Integer i = 1; i < ocrList.size(); i++){
+                        dlist.add(ocrList[i]);
                     }
                     delete dlist;
 
                     //on delete of one ocr, the other 'isPrimary' is set to false
-                    //so we need to issue an udpate to correct it.
+                    //so we need to issue an update to correct it.
                     //also make sure it has the correct role
                     OpportunityContactRole ocr = ocrList[0];
                     ocr.IsPrimary = true;
