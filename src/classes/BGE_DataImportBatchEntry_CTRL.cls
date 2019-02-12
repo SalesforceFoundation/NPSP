@@ -353,7 +353,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                         col.defaultValue = field.defaultValue;
                         col.required = field.requiredInEntryForm;
                         col.hide = field.hide;
-                        col.type = UTIL_LightningComponentSupport.getLightningDataType(dataImportDFR.getType().name());
+                        col.type = UTIL_LightningComponentSupport.getLightningDataType(dataImportDFR.getType());
                         col.typeAttributes = '{}';
 
                         col.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(col.fieldName);

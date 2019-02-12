@@ -39,39 +39,40 @@ public with sharing class UTIL_LightningComponentSupport {
     public static final String LIGHTNING_FIELD_TYPE_NUMBER = 'number';
     public static final String LIGHTNING_FIELD_TYPE_TEXT = 'text';
     public static final String LIGHTNING_FIELD_TYPE_CHECKBOX = 'checkbox';
+    public static final String LIGHTNING_FIELD_TYPE_DATE = 'date';
+    public static final String LIGHTNING_FIELD_TYPE_DATE_LOCAL = 'date-local';
 
     /*******************************************************************************************************
     * @description Converts Apex field data type to type expected by lightning:datatable and other components
     * @param rawType: the data type from DescribeFieldResult
     * @return the datatype string expected by lightning components
     */
-    public static String getLightningDataType(String rawType) {
-        rawType = rawType.toLowerCase();
-        if (rawType == 'datetime') {
-            return 'date';
-        } else if (rawType == 'date') {
-            return 'date-local';
-        } else if (rawType == 'double') {
-            return 'number';
-        } else if (rawType == 'string') {
-            return 'text';
+    public static String getLightningDataType(Schema.DisplayType fieldDisplayType) {
+        if (fieldDisplayType == Schema.DisplayType.DATETIME) {
+            return LIGHTNING_FIELD_TYPE_DATE;
+        } else if (fieldDisplayType == Schema.DisplayType.DATE) {
+            return LIGHTNING_FIELD_TYPE_DATE_LOCAL;
+        } else if (fieldDisplayType == Schema.DisplayType.DOUBLE) {
+            return LIGHTNING_FIELD_TYPE_NUMBER;
+        } else if (fieldDisplayType == Schema.DisplayType.STRING) {
+            return LIGHTNING_FIELD_TYPE_TEXT;
         } else {
-            return rawType;
+            return fieldDisplayType.name().toLowerCase();
         }
     }
 
     /*******************************************************************************************************
     * @description Returns the corresponding Lightning field type from an Apex field type
     */
-    public static String getLightningFieldType(String apexFieldType) {
-        if (apexFieldType == String.valueOf(Schema.DisplayType.Currency)) {
+    public static String getLightningFieldType(Schema.DisplayType fieldDisplayType) {
+        if (fieldDisplayType == Schema.DisplayType.CURRENCY) {
             return LIGHTNING_FIELD_TYPE_NUMBER;
-        } else if (apexFieldType == String.valueOf(Schema.DisplayType.String)) {
+        } else if (fieldDisplayType == Schema.DisplayType.STRING) {
             return LIGHTNING_FIELD_TYPE_TEXT;
-        } else if (apexFieldType == String.valueOf(Schema.DisplayType.Boolean)) {
+        } else if (fieldDisplayType == Schema.DisplayType.BOOLEAN) {
             return LIGHTNING_FIELD_TYPE_CHECKBOX;
         } else {
-            return apexFieldType;
+            return fieldDisplayType.name().toLowerCase();
         }
     }
 
