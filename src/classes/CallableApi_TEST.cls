@@ -60,10 +60,10 @@ private with sharing class CallableApi_TEST {
 
 
     /*******************************************************************************************************
-    * @description Call the API with an invalid method format and make sure an exception is thrown
+    * @description Call the API with an invalid action text and make sure an exception is thrown
     ********************************************************************************************************/
     @IsTest
-    private static void callableApiThrowsExceptionWhenMethodFormatIsInvalid() {
+    private static void callableApiThrowsExceptionWhenActionIsInvalid() {
        
         Test.startTest();
 
@@ -71,7 +71,7 @@ private with sharing class CallableApi_TEST {
         Map<String, Object> triggerArgs = new Map<String, Object>();
 
         try {
-            Object result = npspApi.call('InvalidFormat', triggerArgs);
+            Object result = npspApi.call('InvalidAction', triggerArgs);
             System.assert(false, 'The exception was not thrown');
         } catch (CallableApi.MalformedMethodInvocationException apiException) {
             System.assert(apiException.getMessage().contains(' is not implemented'));
