@@ -51,8 +51,8 @@ global with sharing class CallableApi implements System.Callable {
     ********************************************************************************************************/
     global Object call(String action, Map<String, Object> params) {
        
-        switch on (action) {
-            when 'TDTM.disableAllTriggers' {
+        switch on (action.toLowerCase()) {
+            when 'tdtm.disablealltriggers' {
                 return TDTM_Config_API.disableAllTriggers();
             }
             when else {

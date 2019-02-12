@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/API.htm
 * @description Tests specific to Callable API. 
 */
-@IsTest
+@IsTest(isParallel=true)
 private with sharing class CallableApi_TEST {
 
     private static final String TDTM_TRIGGER_ACTION = 'TDTM.disableAllTriggers';
@@ -72,26 +72,6 @@ private with sharing class CallableApi_TEST {
 
         try {
             Object result = npspApi.call('InvalidFormat', triggerArgs);
-            System.assert(false, 'The exception was not thrown');
-        } catch (CallableApi.MalformedMethodInvocationException apiException) {
-            System.assert(apiException.getMessage().contains(' is not implemented'));
-        }
-
-        Test.stopTest();
-    }
-
-    /*******************************************************************************************************
-    * @description Call the API with an invalid method name and make sure an exception is thrown
-    ********************************************************************************************************/
-    @IsTest
-    private static void callableApiThrowsExceptionWhenMethodIsMissing() {
-        Test.startTest();
-
-        Callable npspApi = (Callable) Type.forName('CallableApi').newInstance();
-        Map<String, Object> triggerArgs = new Map<String, Object>();
-
-        try {
-            Object result = npspApi.call('Some.invalidCall', triggerArgs);
             System.assert(false, 'The exception was not thrown');
         } catch (CallableApi.MalformedMethodInvocationException apiException) {
             System.assert(apiException.getMessage().contains(' is not implemented'));
