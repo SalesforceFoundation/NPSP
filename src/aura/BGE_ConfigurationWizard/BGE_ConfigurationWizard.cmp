@@ -219,11 +219,12 @@
                                             </span>
                                         </lightning:layoutItem>
 
-                                        <!-- Field Value -->
+                                        <!-- Field Default Value -->
                                         <lightning:layoutItem size="4" class="slds-text-align_left slds-p-around_x-small">
 
                                             <aura:if isTrue="{!greaterthan(field.options.length, 0)}">
-                                                <lightning:select label="{!$Label.c.stgDefaultValue}"
+                                                <lightning:select aura:id="defaultValueField"
+                                                                  label="{!$Label.c.stgDefaultValue}"
                                                                   value="{!field.defaultValue}"
                                                                   variant="label-hidden"
                                                                   class="hideLabel">

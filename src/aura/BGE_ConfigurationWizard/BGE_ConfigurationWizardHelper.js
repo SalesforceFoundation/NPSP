@@ -336,6 +336,21 @@
      */
     checkBatchFieldOptionsValidity: function(component) {
         var isValid = true;
+        let previousObjectsBuffer = 0;
+        var batchFieldGroups = component.get('v.batchFieldOptions.fieldGroups');
+        let defaultValues = component.find('defaultValueField');
+        batchFieldGroups.forEach(function(currentFieldGroup) {
+            debugger;
+            currentFieldGroup.fields.forEach(function(currentField) {
+                debugger;
+                let fieldName = currentField.name;
+                console.log(fieldName);
+                let value = defaultValues[currentFieldGroup.fields.indexOf(currentField) + previousObjectsBuffer].get('v.value');
+                console.log(JSON.stringify(value));
+            });
+            previousObjectsBuffer += currentFieldGroup.fields.length;
+        });
+
         //todo: wire up custom field validity
         /*var isValid = component.find('defaultValueField').reduce(function(validSoFar, defaultValueField) {
             return validSoFar && defaultValueField.get('v.validity').valid;
