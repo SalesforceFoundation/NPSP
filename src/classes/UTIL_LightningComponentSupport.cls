@@ -56,4 +56,18 @@ public with sharing class UTIL_LightningComponentSupport {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Converts Apex field data type to type expected by lightning:input
+    * @param rawType: the data type from DescribeFieldResult
+    * @return the datatype string expected by lightning:input
+    */
+    public static String getLightningInputDataType(String rawType) {
+        rawType = rawType.toLowerCase();
+        if (rawType == 'currency') {
+            return 'number';
+        } else {
+            return rawType;
+        }
+    }
+
 }

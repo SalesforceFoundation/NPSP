@@ -118,6 +118,7 @@
             currentField.id = currentField.sObjectName + '.' + currentField.name;
             //set Active fields with saved sort order
             if (activeFieldMap.has(currentField.id)) {
+                console.log(currentField);
                 currentField.isActive = true;
                 currentField.defaultValue = activeFieldMap.get(currentField.id).defaultValue;
                 currentField.hide = activeFieldMap.get(currentField.id).hide;
