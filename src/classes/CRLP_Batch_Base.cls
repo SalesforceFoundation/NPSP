@@ -76,10 +76,10 @@ public abstract class CRLP_Batch_Base {
     /** @description The Summary Object Type this batch job will process */
     protected SObjectType summaryObjectType;
 
-    /** @description The Summary Object Type this batch job will process */
+    /** @description The Detail Object Type this batch job will process */
     protected SObjectType detailObjectType;
 
-    /** @description The Summary Object Type this batch job will process */
+    /** @description The Detail Object field that will be used in the inner join */
     protected String keyField;
 
     /** @description Whether this class was constructed from within a scheduled job */
