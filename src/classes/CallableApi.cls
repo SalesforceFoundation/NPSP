@@ -50,13 +50,14 @@ global with sharing class CallableApi implements System.Callable {
     * @return Object returned will depend on the results of the target function otherwise it returns true
     ********************************************************************************************************/
     global Object call(String action, Map<String, Object> params) {
-       
-        switch on (action.toLowerCase()) {
+        String cleanActionText = (String.isBlank(action) ? '' : action.toLowerCase());
+
+        switch on (cleanActionText) {
             when 'tdtm.disablealltriggers' {
                 TDTM_Config_API.disableAllTriggers();
             }
             when else {
-                throw new MalformedMethodInvocationException(action + ' is not implemented');
+                throw new MalformedMethodInvocationException('(' + action + ') is not implemented');
             }
         }
 
