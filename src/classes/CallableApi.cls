@@ -57,7 +57,7 @@ global with sharing class CallableApi implements System.Callable {
                 TDTM_Config_API.disableAllTriggers();
             }
             when else {
-                throw new MalformedMethodInvocationException('(' + action + ') is not implemented');
+                throw new MalformedMethodInvocationException('\'' + action + '\' is not implemented');
             }
         }
 
