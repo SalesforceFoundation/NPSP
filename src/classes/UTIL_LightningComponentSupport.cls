@@ -64,11 +64,11 @@ public with sharing class UTIL_LightningComponentSupport {
     * @description Returns the corresponding Lightning field type from an Apex field type
     */
     public static String getLightningFieldType(String apexFieldType) {
-        if (apexFieldType == Schema.DisplayType.Currency) {
+        if (apexFieldType == String.valueOf(Schema.DisplayType.Currency)) {
             return LIGHTNING_FIELD_TYPE_NUMBER;
-        } else if (apexFieldType == Schema.DisplayType.String) {
+        } else if (apexFieldType == String.valueOf(Schema.DisplayType.String)) {
             return LIGHTNING_FIELD_TYPE_TEXT;
-        } else if (apexFieldType == Schema.DisplayType.Boolean) {
+        } else if (apexFieldType == String.valueOf(Schema.DisplayType.Boolean)) {
             return LIGHTNING_FIELD_TYPE_CHECKBOX;
         } else {
             return apexFieldType;
