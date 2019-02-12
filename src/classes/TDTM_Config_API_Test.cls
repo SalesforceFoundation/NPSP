@@ -104,7 +104,6 @@ private class TDTM_Config_API_Test {
             return;
         }
 
-        // Get list of TDTM modified dates
         Integer accountCountBefore = Database.countQuery('SELECT COUNT() FROM Account');
 
         TDTM_Config_Api.disableAllTriggers();

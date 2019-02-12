@@ -37,25 +37,36 @@
 @IsTest(isParallel=true)
 private with sharing class CallableApi_TEST {
 
-    private static final String TDTM_TRIGGER_ACTION = 'TDTM.disableAllTriggers';
+    private static final String TDTM_TRIGGER_ACTION = 'TDTM.DisableAllTriggers';
     
     /*******************************************************************************************************
     * @description verify the TDTM Callable action returns an Object
     ********************************************************************************************************/
     @IsTest
     private static void verifyCallableReturnsAnObject() {
-       
+        // skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
         Test.startTest();
 
-        // Call the API to disable All TDTM Triggers
+        Integer accountCountBefore = Database.countQuery('SELECT COUNT() FROM Account');
+
         Callable npspApi = (Callable) Type.forName('CallableApi').newInstance();
         Map<String, Object> triggerArgs = new Map<String, Object>();
         Object result = npspApi.call(TDTM_TRIGGER_ACTION, triggerArgs);
+
+        Contact contact1 = new Contact(LastName = 'CallableApi_Test');
+        insert contact1;
 
         Test.stopTest();
 
         Object callResult = result;
         System.assertNotEquals(null, callResult, 'No result was returned from call');
+
+        Integer accountCountAfter = Database.countQuery('SELECT COUNT() FROM Account');
+        System.assertEquals(accountCountBefore, accountCountAfter, 'Account record was created');
     }
 
 
