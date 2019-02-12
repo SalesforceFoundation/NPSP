@@ -85,7 +85,7 @@
     },
 
     /**
-     * @description: sets data import fields for dynamic use in the recordEditForm.
+     * @description: sets data import fields for dynamic use in the recordEditForm. Excludes read-only and reference fields.
      * @param dataColumns: custom Column class data passed from the Apex controller.
      */
     setDataImportFields: function (component, dataColumns) {

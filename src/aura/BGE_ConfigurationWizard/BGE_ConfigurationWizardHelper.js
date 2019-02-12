@@ -118,7 +118,6 @@
             currentField.id = currentField.sObjectName + '.' + currentField.name;
             //set Active fields with saved sort order
             if (activeFieldMap.has(currentField.id)) {
-                console.log(currentField);
                 currentField.isActive = true;
                 currentField.defaultValue = activeFieldMap.get(currentField.id).defaultValue;
                 currentField.hide = activeFieldMap.get(currentField.id).hide;
@@ -336,12 +335,14 @@
      * @return Boolean if user can proceed to next step
      */
     checkBatchFieldOptionsValidity: function(component) {
-        var isValid = component.find('defaultValueField').reduce(function(validSoFar, defaultValueField) {
+        var isValid = true;
+        //todo: wire up custom field validity
+        /*var isValid = component.find('defaultValueField').reduce(function(validSoFar, defaultValueField) {
             return validSoFar && defaultValueField.get('v.validity').valid;
         }, true);
         if (isValid) {
             this.clearError(component);
-        }
+        }*/
         return isValid;
     },
 
@@ -453,6 +454,7 @@
      */
     commitBatchFieldOptionsToEveryField: function(component) {
 
+        //todo: does this need to do something different?
         var batchFieldGroups = component.get('v.batchFieldOptions.fieldGroups');
         var batchFieldOptions = [];
         batchFieldGroups.forEach(function(currentFieldGroup) {

@@ -355,7 +355,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                         col.required = field.requiredInEntryForm;
                         col.hide = field.hide;
                         col.type = UTIL_LightningComponentSupport.getLightningDataTableDataType(dataImportDFR.getType().name());
-                        col.readOnly = col.type == 'reference' ? true : false; // only lookups are not editable in grid
+                        // lookups aren't editable in the grid since we don't have lookup support there
+                        col.readOnly = col.type == 'reference' ? true : false;
                         col.typeAttributes = '{}';
                         col.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(col.fieldName);
 

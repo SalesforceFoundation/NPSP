@@ -194,8 +194,8 @@
                                     </h3>
                                 </div>
 
+                                <!-- Columns -->
                                 <lightning:layout horizontalAlign="center" multipleRows="true">
-
                                     <lightning:layoutItem size="4" class="slds-text-align_left slds-p-horizontal_x-small slds-form-element__legend">
                                         <!--intentionally left empty-->
                                     </lightning:layoutItem>
@@ -207,19 +207,19 @@
                                     <lightning:layoutItem size="2" class="slds-text-align_center slds-p-horizontal_x-small slds-form-element__legend">
                                         {!$Label.c.lblRequired}
                                     </lightning:layoutItem>
-
                                 </lightning:layout>
 
                                 <aura:iteration items="{!currentFieldGroup.fields}" var="field">
 
                                     <lightning:layout horizontalAlign="center" multipleRows="true" verticalAlign="center">
-
+                                        <!-- Field Label-->
                                         <lightning:layoutItem size="4" class="slds-text-align_left slds-p-around_x-small">
                                             <span aria-hidden="true">
                                                 {!field.label}
                                             </span>
                                         </lightning:layoutItem>
 
+                                        <!-- Field Value -->
                                         <lightning:layoutItem size="4" class="slds-text-align_left slds-p-around_x-small">
 
                                             <aura:if isTrue="{!greaterthan(field.options.length, 0)}">
@@ -234,7 +234,7 @@
                                                 </lightning:select>
                                                 <aura:set attribute="else">
                                                     <!-- TODO: ensure these are accessible -->
-                                                    <lightning:inputField aura-id="defaultValueField"
+                                                    <lightning:inputField aura:id="defaultValueField"
                                                                           fieldName="{!field.name}"
                                                                           value="{!field.defaultValue}"
                                                                           class="hideTooltip equalHeight hideLabel"
@@ -243,6 +243,7 @@
                                             </aura:if>
                                         </lightning:layoutItem>
 
+                                        <!-- Field Required Checkbox -->
                                         <lightning:layoutItem size="2" class="slds-text-align_center slds-p-around_x-small">
                                             <lightning:input label="{!field.label + ': ' + $Label.c.lblRequired}"
                                                              type="checkbox"
@@ -251,7 +252,6 @@
                                                              aria-disabled="{!field.alwaysRequired}"
                                                              variant="label-hidden"/>
                                         </lightning:layoutItem>
-
                                     </lightning:layout>
 
                                 </aura:iteration>
