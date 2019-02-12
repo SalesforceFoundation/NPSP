@@ -39,6 +39,17 @@
 public class CON_ContactMerge_TDTM extends TDTM_Runnable {
     @TestVisible
     private static RLLP_OppRollup oppRollup = new RLLP_OppRollup();
+    @TestVisible
+    private static ContactMergeProcessor mergeProcessor {
+        get {
+            if (mergeProcessor == null) {
+                mergeProcessor = new ContactMergeProcessor();
+            }
+
+            return mergeProcessor;
+        }
+        set;
+    }
 
     /*******************************************************************************************************
     * @description Trigger Handler on Contact that handles detecting when an Contact Merge 
@@ -109,87 +120,127 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         if (mergeKeys == null || mergeKeys.isEmpty()) {
             return;
         }
-        ContactMergeProcessor mergeProcessor = new ContactMergeProcessor(mergeKeys);
-        mergeProcessor.fixup();
+
+        mergeProcessor.fixup(mergeKeys);
     }
 
     /*******************************************************************************************************
     * @description Fixes records related to merged contacts
     ********************************************************************************************************/
+    @TestVisible
     private class ContactMergeProcessor {
-        private List<String> losingContactIds = new List<String>();
-        private List<String> losersAccountIds = new List<String>();
-        private List<String> winningContactIds = new List<String>();
-        private Map<Id, Id> newAcctIdForOppsByWinningContactId = new Map<Id, Id>();
-        private Map<Id, Id> oldAcctIdForOppsByWinningContactId = new Map<Id, Id>();
-        private List<Id> householdAcctIds = new List<Id>();
+        @TestVisible
+        private List<String> losingContactIds;
+        @TestVisible
+        private List<String> losersAccountIds;
+        @TestVisible
+        private List<String> winningContactIds;
 
-        /*******************************************************************************************************************
-        * @description Constructor
-        * @param mergeKeys - the ids releveant to the merge process
-        */
-        private ContactMergeProcessor(List<String> mergeKeys) {
-            splitMergeKeys(mergeKeys);
-        }
+        private List<Id> householdAcctIds;
+        private Map<Id, Id> oldAcctIdForOppsByWinningContactId;
+        private Map<Id, Id> newAcctIdForOppsByWinningContactId;
 
-        /*******************************************************************************************************************
-        * @description Fixes records involved in the merge process
-        */
-        private void fixup() {
+        /***************************************************************************************************************
+         * @description Fixes records involved in the merge process
+         * @param mergeKeys - the ids releveant to the merge process
+         */
+        private void fixup(List<String> mergeKeys) {
+            setMergeKeyIds(mergeKeys);
+
+            List<Account> losersAccounts = getAccounts(losersAccountIds);
             List<Contact> winningContacts = getContacts(winningContactIds);
 
-            setIds();
-            setIds(winningContacts);
+            householdAcctIds = getHouseholdAcctIds(losersAccounts);
+            householdAcctIds.addAll(getHouseholdAcctIds(winningContacts));
+
+            oldAcctIdForOppsByWinningContactId = getOldAcctIdForOppsByWinningContactId(losersAccounts);
+            newAcctIdForOppsByWinningContactId = getNewAcctIdForOppsByWinningContactId(winningContacts);
+
             fixupAccountData();
             fixupContactData(winningContacts);
         }
 
         /*******************************************************************************************************
-        * @description Set the ids from the losing contacts accounts
+        * @description Returns the account Id of accounts with household account types
         ********************************************************************************************************/
-        private void setIds() {
-            Map<Id, Account> losersAccountById = new Map<Id, Account>(getAccounts(losersAccountIds));
-            String losersAcctType;
+        @TestVisible
+        private List<Id> getHouseholdAcctIds(List<Account> accounts) {
+            List<Id> accountIds = new List<Id>();
 
-            for (integer i = 0; i < losersAccountIds.size(); i++) {
-                if (losersAccountIds[i] != null) {
-                    Account losersAccount = losersAccountById.get(losersAccountIds[i]);
-                    losersAcctType = losersAccount.npe01__SYSTEM_AccountType__c;
-
-                    if (losersAccount == null) {
-                        continue;
-                    }
-
-                    if (isHousehold(losersAcctType)) {
-                        householdAcctIds.add(losersAccount.Id);
-                    }
-
-                    if (isAnyIndividualType(losersAcctType)) {
-                        oldAcctIdForOppsByWinningContactId.put(winningContactIds[i], losersAccountIds[i]);
-                    }
+            for (Account record : accounts) {
+                if (isHousehold(record.npe01__SYSTEM_AccountType__c)) {
+                    accountIds.add(record.Id);
                 }
             }
+
+            return accountIds;
         }
 
         /*******************************************************************************************************
-        * @description Set the ids from the winning contacts provided
+        * @description Returns the account Id of the winning contacts accounts with household account types
+        ********************************************************************************************************/
+        @TestVisible
+        private List<Id> getHouseholdAcctIds(List<Contact> contacts) {
+            List<Id> accountIds = new List<Id>();
+
+            for (Contact record: contacts) {
+                if (isHousehold(record.Account.npe01__SYSTEM_AccountType__c)) {
+                    accountIds.add(record.AccountId);
+                }
+            }
+
+            return accountIds;
+        }
+
+        /*******************************************************************************************************
+        * @description Adds the account Id of the losing contacts account when it
+        * is any type of individual account
+        ********************************************************************************************************/
+        @TestVisible
+        private Map<Id, Id> getOldAcctIdForOppsByWinningContactId(List<Account> losersAccounts) {
+            Map<Id, Id> accountIdByContactId = new Map<Id, Id>();
+
+            Map<Id, Account> losersAccountById = new Map<Id, Account>(losersAccounts);
+
+            for (integer i = 0; i < losersAccountIds.size(); i++) {
+                if (losersAccountIds[i] == null) {
+                    continue;
+                }
+
+                Account losersAccount = losersAccountById.get(losersAccountIds[i]);
+                if (losersAccount == null) {
+                    continue;
+                }
+
+                if (isAnyIndividualType(losersAccount.npe01__SYSTEM_AccountType__c)) {
+                    accountIdByContactId.put(winningContactIds[i], losersAccountIds[i]);
+                }
+            }
+
+            return accountIdByContactId;
+        }
+
+        /*******************************************************************************************************
+        * @description Adds the account Id of the winning contacts account when it
+        * is any type of individual account
         *
         * @param winningContacts the collection of contacts to extract the ids from
         ********************************************************************************************************/
-        private void setIds(List<Contact> winningContacts) {
-            String winnersAcctType;
+        @TestVisible
+        private Map<Id, Id> getNewAcctIdForOppsByWinningContactId(List<Contact> winningContacts) {
+            Map<Id, Id> accountIdByContactId = new Map<Id, Id>();
 
             for (Contact winningContact : winningContacts) {
-                winnersAcctType = winningContact.Account.npe01__SYSTEM_AccountType__c;
-
-                if (isHousehold(winnersAcctType)) {
-                householdAcctIds.add(winningContact.AccountId);
+                if (winningContact.AccountId == null) {
+                    continue;
                 }
 
-                if (isAnyIndividualType(winnersAcctType)) {
-                    newAcctIdForOppsByWinningContactId.put(winningContact.Id, winningContact.AccountId);
+                if (isAnyIndividualType(winningContact.Account.npe01__SYSTEM_AccountType__c)) {
+                    accountIdByContactId.put(winningContact.Id, winningContact.AccountId);
                 }
             }
+
+            return accountIdByContactId;
         }
 
         /*******************************************************************************************************
@@ -279,17 +330,34 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         *
         * @param mergeKeys A list of merged Ids, each merge key is expected to have an id for each collection
         ********************************************************************************************************/
-        private void splitMergeKeys(List<String> mergeKeys) {
+        @TestVisible
+        private void setMergeKeyIds(List<String> mergeKeys) {
+            losersAccountIds = new List<String>();
+            losingContactIds = new List<String>();
+            winningContactIds = new List<String>();
+
             for (String mergeKey : mergeKeys) {
                 List<String> ids = mergeKey.split(':');
                 if (ids == null || ids.size() < 3) {
                     continue;
                 }
 
-                losingContactIds.add(ids[0]);
-                losersAccountIds.add(ids[1]);
-                winningContactIds.add(ids[2]);
+                losingContactIds.add(getValue(ids[0]));
+                losersAccountIds.add(getValue(ids[1]));
+                winningContactIds.add(getValue(ids[2]));
             }
+        }
+
+        /*******************************************************************************************************
+        * @description Checks for the string value of null
+        *
+        * @param val The value to compare
+        * @return String null when val passed in is the String value of null
+        ********************************************************************************************************/
+        private String getValue(String val) {
+            final String nullVal = 'null';
+
+            return val == nullVal ? null : val;
         }
     }
 
