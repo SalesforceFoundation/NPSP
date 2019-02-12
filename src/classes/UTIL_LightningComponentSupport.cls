@@ -36,9 +36,9 @@
 
 public with sharing class UTIL_LightningComponentSupport {
 
-    private static String LIGHTNING_FIELD_TYPE_NUMBER = 'number';
-    private static String LIGHTNING_FIELD_TYPE_TEXT = 'text';
-    private static String LIGHTNING_FIELD_TYPE_CHECKBOX = 'checkbox';
+    public static final String LIGHTNING_FIELD_TYPE_NUMBER = 'number';
+    public static final String LIGHTNING_FIELD_TYPE_TEXT = 'text';
+    public static final String LIGHTNING_FIELD_TYPE_CHECKBOX = 'checkbox';
 
     /*******************************************************************************************************
     * @description Converts Apex field data type to type expected by lightning:datatable and other components
