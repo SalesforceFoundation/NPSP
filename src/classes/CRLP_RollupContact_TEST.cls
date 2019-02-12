@@ -542,7 +542,7 @@ private class CRLP_RollupContact_TEST {
 
         CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
         contactBatchJob.initializeJobData();
-        contactBatchJob.setIsScheduledJob(true); // Set the Batch Base isScheduledJob flag to true.
+        contactBatchJob.isScheduledJob = true; // Set the Batch Base isScheduledJob flag to true.
         // This is necessary because the Schedulable Job constructs and submits a separate instance of the
         // CRLP_Contact_BATCH class.  So we "mock" the isScheduledJob value here, to test the correct
         // response from the getWhereClause() method below.
@@ -564,7 +564,7 @@ private class CRLP_RollupContact_TEST {
 
         CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
         contactBatchJob.initializeJobData();
-        contactBatchJob.setIsScheduledJob(true);
+        contactBatchJob.isScheduledJob = true;
 
         String whereClause = contactBatchJob.getWhereClause();
         System.assert(whereClause.contains('WHERE') == false, 'The standard where clause should be used for the inner join when the custom setting is set to false.');
