@@ -89,7 +89,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     * the start() method of the individual batch jobs that extend this class.
     * @return database.Querylocator
     */
-    public database.Querylocator start(Database.BatchableContext bc) {
+    public Database.Querylocator start(Database.BatchableContext bc) {
         try {
             initializeJobData();
 
