@@ -36,10 +36,6 @@
 */
 public with sharing class BGE_ConfigurationWizard_CTRL {
 
-    private static String LIGHTNING_FIELD_TYPE_NUMBER = 'number';
-    private static String LIGHTNING_FIELD_TYPE_TEXT = 'text';
-    private static String LIGHTNING_FIELD_TYPE_CHECKBOX = 'checkbox';
-
     /*******************************************************************************************************
     * @description These fields are required only if at least 1 field from its object group is selected
     */
@@ -152,7 +148,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             }
 
             String rawFieldType = dfr.getType().name().toLowerCase();
-            field.type = getLightningFieldType(rawFieldType);
+            field.type = UTIL_LightningComponentSupport.getLightningFieldType(rawFieldType);
             if (rawFieldType == 'currency') {
                 field.formatter = 'currency';
             }
@@ -237,20 +233,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         return dfrs;
     }
 
-/*******************************************************************************************************
-    * @description Returns the corresponding Lightning field type from an Apex field type
-    */
-    public static String getLightningFieldType(String apexFieldType) {
-        if (apexFieldType == Schema.DisplayType.Currency) {
-            return LIGHTNING_FIELD_TYPE_NUMBER;
-        } else if (apexFieldType == Schema.DisplayType.String) {
-            return LIGHTNING_FIELD_TYPE_TEXT;
-        } else if (apexFieldType == Schema.DisplayType.Boolean) {
-            return LIGHTNING_FIELD_TYPE_CHECKBOX;
-        } else {
-            return apexFieldType;
-        }
-    }
 
     /*******************************************************************************************************
     * @description Retrieves the default active fields for a new Batch or Template in a JSON String
@@ -274,7 +256,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         donationAmount.isActive = true;
         donationAmount.requiredInEntryForm = true;
         donationAmount.hide = false;
-        donationAmount.type = getLightningFieldType('number');
+        donationAmount.type = UTIL_LightningComponentSupport.getLightningFieldType('number');
         donationAmount.formatter = 'currency';
         donationAmount.sortOrder = 0;
         donationAmount.alwaysRequired = true;
@@ -290,7 +272,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         donationDate.isActive = true;
         donationDate.requiredInEntryForm = true;
         donationDate.hide = false;
-        donationDate.type = getLightningFieldType('date');
+        donationDate.type = UTIL_LightningComponentSupport.getLightningFieldType('date');
         donationDate.sortOrder = 1;
         donationDate.alwaysRequired = true;
         fields.add(donationDate);
@@ -305,7 +287,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         paymentMethod.isActive = true;
         paymentMethod.requiredInEntryForm = false;
         paymentMethod.hide = false;
-        paymentMethod.type = getLightningFieldType('string');
+        paymentMethod.type = UTIL_LightningComponentSupport.getLightningFieldType('string');
         paymentMethod.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(paymentMethodApiName);
         paymentMethod.sortOrder = 2;
         fields.add(paymentMethod);
@@ -320,7 +302,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         checkNumber.isActive = true;
         checkNumber.requiredInEntryForm = false;
         checkNumber.hide = false;
-        checkNumber.type = getLightningFieldType('string');
+        checkNumber.type = UTIL_LightningComponentSupport.getLightningFieldType('string');
         checkNumber.sortOrder = 3;
         fields.add(checkNumber);
 

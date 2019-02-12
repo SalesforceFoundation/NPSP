@@ -36,6 +36,10 @@
 
 public with sharing class UTIL_LightningComponentSupport {
 
+    private static String LIGHTNING_FIELD_TYPE_NUMBER = 'number';
+    private static String LIGHTNING_FIELD_TYPE_TEXT = 'text';
+    private static String LIGHTNING_FIELD_TYPE_CHECKBOX = 'checkbox';
+
     /*******************************************************************************************************
     * @description Converts Apex field data type to type expected by lightning:datatable and other components
     * @param rawType: the data type from DescribeFieldResult
@@ -53,6 +57,21 @@ public with sharing class UTIL_LightningComponentSupport {
             return 'text';
         } else {
             return rawType;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the corresponding Lightning field type from an Apex field type
+    */
+    public static String getLightningFieldType(String apexFieldType) {
+        if (apexFieldType == Schema.DisplayType.Currency) {
+            return LIGHTNING_FIELD_TYPE_NUMBER;
+        } else if (apexFieldType == Schema.DisplayType.String) {
+            return LIGHTNING_FIELD_TYPE_TEXT;
+        } else if (apexFieldType == Schema.DisplayType.Boolean) {
+            return LIGHTNING_FIELD_TYPE_CHECKBOX;
+        } else {
+            return apexFieldType;
         }
     }
 
