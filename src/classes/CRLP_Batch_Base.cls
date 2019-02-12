@@ -83,17 +83,12 @@ public abstract class CRLP_Batch_Base {
     protected String keyField;
 
     /** @description Whether this class was constructed from within a scheduled job */
-    protected Boolean isScheduledJob = false;
-
-    /**
-     * @description Testing API to mock isScheduledJob value when running tests
-     * @param isScheduledJob Boolean value to which isScheduledJob will be set if called
-     * from within a running test
-     */
-    @TestVisible protected void setIsScheduledJob(Boolean isScheduledJob){
-        if (Test.isRunningTest()) {
-            this.isScheduledJob = isScheduledJob;
+    @TestVisible
+    protected Boolean isScheduledJob {
+        get {
+            return isScheduledJob;
         }
+        private set;
     }
 
     /*******************************************************************************************************
