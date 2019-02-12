@@ -100,10 +100,6 @@
      * @param allFields: parsed list of all possible fields for dueling picklist
      */
     loadAvailableFields: function(component, activeFields, allFields) {
-        const FIELD_SOBJECT_TYPE_OPPORTUNITY = 'opportunity';
-        let opportunityFields = [];
-        let paymentFields = [];
-
         let availableFieldsBySObject = {
             fieldGroups: []
         };
