@@ -237,11 +237,11 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     * @description Returns the corresponding Lightning field type from an Apex field type
     */
     public static String getLightningFieldType(String apexFieldType) {
-        if (apexFieldType == 'currency') {
+        if (apexFieldType == Schema.DisplayType.Currency) {
             return 'number';
-        } else if (apexFieldType == 'string') {
+        } else if (apexFieldType == Schema.DisplayType.String) {
             return 'text';
-        } else if (apexFieldType == 'boolean') {
+        } else if (apexFieldType == Schema.DisplayType.Boolean) {
             return 'checkbox';
         } else {
             return apexFieldType;
