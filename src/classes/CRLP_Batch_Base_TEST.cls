@@ -74,10 +74,10 @@ private class CRLP_Batch_Base_TEST {
                     rollup.Detail_Object__c != 'Opportunity') {
                 continue;
             }
-            if (rollup.Time_Bound_Operation_Type__c == 'Years_Ago'
+            if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()
                     && rollup.Integer__c > maxYearsAgoInteger) {
                 maxYearsAgoInteger = (Integer) rollup.Integer__c;
-            } else if (rollup.Time_Bound_Operation_Type__c == 'Days_Back'
+            } else if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Days_Back.name()
                     && rollup.Integer__c > maxDaysBackInteger) {
                 maxDaysBackInteger = (Integer) rollup.Integer__c;
             }
@@ -114,9 +114,9 @@ private class CRLP_Batch_Base_TEST {
         // and get the max Days_Ago to use in assertions below.
         Integer maxDaysBackInteger = 0;
         for (Rollup__mdt rollup : CRLP_Rollup_SEL.cachedRollups) {
-            if (rollup.Time_Bound_Operation_Type__c == 'Years_Ago') {
+            if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()) {
                 rollup.Active__c = false;
-            } else if (rollup.Time_Bound_Operation_Type__c == 'Days_Back'
+            } else if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Days_Back.name()
                     && rollup.Integer__c > maxDaysBackInteger) {
                 maxDaysBackInteger = (Integer) rollup.Integer__c;
             }
@@ -151,9 +151,9 @@ private class CRLP_Batch_Base_TEST {
         // and get the max Years_Ago to use in assertions below.
         Integer maxYearsBackInteger = 0;
         for (Rollup__mdt rollup : CRLP_Rollup_SEL.cachedRollups) {
-            if (rollup.Time_Bound_Operation_Type__c == 'Days_Back') {
+            if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Days_Back.name()) {
                 rollup.Active__c = false;
-            } else if (rollup.Time_Bound_Operation_Type__c == 'Years_Ago'
+            } else if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()
                     && rollup.Integer__c > maxYearsBackInteger) {
                 maxYearsBackInteger = (Integer) rollup.Integer__c;
             }
@@ -213,10 +213,10 @@ private class CRLP_Batch_Base_TEST {
                     rollup.Detail_Object__c != 'Opportunity') {
                 continue;
             }
-            if (rollup.Time_Bound_Operation_Type__c == 'Years_Ago'
+            if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()
                     && rollup.Integer__c > maxYearsAgoInteger) {
                 maxYearsAgoInteger = (Integer) rollup.Integer__c;
-            } else if (rollup.Time_Bound_Operation_Type__c == 'Days_Back'
+            } else if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Days_Back.name()
                     && rollup.Integer__c > maxDaysBackInteger) {
                 maxDaysBackInteger = (Integer) rollup.Integer__c;
             }
@@ -253,9 +253,9 @@ private class CRLP_Batch_Base_TEST {
         // and get the max Days_Ago to use in assertions below.
         Integer maxDaysBackInteger = 0;
         for (Rollup__mdt rollup : CRLP_Rollup_SEL.cachedRollups) {
-            if (rollup.Time_Bound_Operation_Type__c == 'Years_Ago') {
+            if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()) {
                 rollup.Active__c = false;
-            } else if (rollup.Time_Bound_Operation_Type__c == 'Days_Back'
+            } else if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Days_Back.name()
                     && rollup.Integer__c > maxDaysBackInteger) {
                 maxDaysBackInteger = (Integer) rollup.Integer__c;
             }
@@ -290,9 +290,9 @@ private class CRLP_Batch_Base_TEST {
         // and get the max Years_Ago to use in assertions below.
         Integer maxYearsBackInteger = 0;
         for (Rollup__mdt rollup : CRLP_Rollup_SEL.cachedRollups) {
-            if (rollup.Time_Bound_Operation_Type__c == 'Days_Back') {
+            if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Days_Back.name()) {
                 rollup.Active__c = false;
-            } else if (rollup.Time_Bound_Operation_Type__c == 'Years_Ago'
+            } else if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()
                     && rollup.Integer__c > maxYearsBackInteger) {
                 maxYearsBackInteger = (Integer) rollup.Integer__c;
             }

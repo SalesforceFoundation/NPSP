@@ -364,7 +364,7 @@ public abstract class CRLP_Batch_Base {
                 for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
                     if (rollup.Active__c == true
                             && String.isNotBlank(rollup.Time_Bound_Operation_Type__c)
-                            && rollup.Time_Bound_Operation_Type__c == 'Days_Back'
+                            && rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Days_Back.name()
                             && rollup.Integer__c != null) {
                         if (maxDaysAgo == null || rollup.Integer__c > maxDaysAgo) {
                             maxDaysAgo = (Integer) rollup.Integer__c;
@@ -387,7 +387,7 @@ public abstract class CRLP_Batch_Base {
                 for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
                     if (rollup.Active__c == true
                             && String.isNotBlank(rollup.Time_Bound_Operation_Type__c)
-                            && rollup.Time_Bound_Operation_Type__c == 'Years_Ago'
+                            && rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()
                             && rollup.Integer__c != null) {
                         if (maxYearsAgo == null || rollup.Integer__c > maxYearsAgo) {
                             maxYearsAgo = (Integer) rollup.Integer__c;
@@ -398,5 +398,85 @@ public abstract class CRLP_Batch_Base {
             return maxYearsAgo;
         }
         private set;
+    }
+
+    /**
+     * @description Determines whether the rollup should be run in incremental mode
+     * @param jobType the type of rollup job
+     * @return true if the rollup should be run in incremental mode, otherwise false
+     */
+    private Boolean isIncrementalMode(CRLP_RollupProcessingOptions.RollupType jobType) {
+        //1. Only run incremental mode when initiated by the scheduled job
+        if (isScheduledJob == null || isScheduledJob == false) {
+            return false;
+        }
+
+        //2. Only run incremental mode when the custom settings are configured to enable incremental mode
+        Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+        if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
+                && customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c == true) {
+            return true;
+        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit
+                && customizableRollupSettings.ContactHardCreditNonSkew_Incremental__c == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @description Produces the where clause that should be used for the inner join when in incremental mode
+     * @return The WHERE clause, as a string, that should be used to filter the detail records
+     */
+    protected String getIncrementalModeWhereClause() {
+        String whereClauseDateField = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp'; // Set to CloseDate
+        // or another Date field for testing.
+        // Will be set to SystemModstamp for prod.
+
+        String whereClause = 'Id IN (' +
+                'SELECT ' + keyField + ' ' +
+                'FROM ' + detailObjectType + ' ALLROWS ' +
+                'WHERE ';
+
+        if (maxDaysAgo != null) {
+            whereClause += whereClauseDateField + ' >= LAST_N_DAYS:' + maxDaysAgo;
+        }
+        if (maxYearsAgo != null) {
+            if (maxDaysAgo != null) {
+                whereClause += ' OR ';
+            }
+            whereClause += whereClauseDateField + ' >= LAST_N_YEARS:' + maxYearsAgo;
+        }
+        return whereClause += ')';
+    }
+
+    /**
+     * @description Produces the where clause that should be used for the inner join when NOT in incremental mode
+     * @return The WHERE clause, as a string, that should be used to filter the detail records
+     */
+    protected String getStandardWhereClause() {
+        String standardWhereClause = null; //will return null if this method is called from an unsupported rollup type
+        if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
+                || jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+            standardWhereClause = 'Id IN (' +
+                    'SELECT ' + keyField + ' ' +
+                    'FROM ' + detailObjectType + ' ALLROWS' +
+                    ')';
+        }
+        return standardWhereClause;
+    }
+
+    /**
+     * @description Produces the where clause that should be used for the inner join
+     * @return The WHERE clause, as a string, that should be used to filter the detail records
+     */
+    @TestVisible protected String getWhereClause() {
+        Boolean incrementalModeActivatedForThisJobType = isIncrementalMode(jobType);
+        Boolean hasActiveIncrementalModeRollups = (maxDaysAgo != null || maxYearsAgo != null);
+        if (incrementalModeActivatedForThisJobType && hasActiveIncrementalModeRollups) {
+            return getIncrementalModeWhereClause();
+        } else {
+            return getStandardWhereClause();
+        }
     }
 }
