@@ -481,41 +481,28 @@ public class BDI_Donations {
     */
     private void setDryRunDonationStatuses(List<DataImport__c> dataImportDonations) {
 
+        Map<String, String> importStatusToDryRunStatus = new Map<String, String>{
+            BDI_DataImport_API.bdiFailed => bdi.statusDIFailed(),
+            System.Label.bdiMatched => bdi.statusMatchedExisting(),
+            System.Label.bdiMatchedBest => bdi.statusMatchedBest(),
+            System.Label.bdiMatchedNone => bdi.statusMatchedNone(),
+            System.Label.bdiMatchedId => bdi.statusMatchedById()
+        };
+
         for (DataImport__c dataImport : dataImportDonations) {
-
-            // opps
-            if (dataImport.DonationImportStatus__c == BDI_DataImport_API.bdiFailed) {
-                dataImport.DonationImportStatus__c = bdi.statusDIFailed();
-            } else if (dataImport.DonationImportStatus__c == System.Label.bdiMatched) {
-                dataImport.DonationImportStatus__c = bdi.statusMatchedExisting();
-            } else if (dataImport.DonationImportStatus__c == System.Label.bdiMatchedBest) {
-                dataImport.DonationImportStatus__c = bdi.statusMatchedBest();
-            } else if (dataImport.DonationImportStatus__c == System.Label.bdiMatchedId) {
-                dataImport.DonationImportStatus__c = bdi.statusMatchedById();
-            } else if (dataImport.DonationImportStatus__c == System.Label.bdiMatchedNone) {
-                dataImport.DonationImportStatus__c = bdi.statusMatchedNone();
+            String donationImportStatus = importStatusToDryRunStatus.get(dataImport.DonationImportStatus__c);
+            if (donationImportStatus != null) {
+                dataImport.DonationImportStatus__c = donationImportStatus;
             }
 
-            // payments
-            if (dataImport.PaymentImportStatus__c == BDI_DataImport_API.bdiFailed) {
-                dataImport.PaymentImportStatus__c = bdi.statusDIFailed();
-            } else if (dataImport.PaymentImportStatus__c == System.Label.bdiMatched) {
-                dataImport.PaymentImportStatus__c = bdi.statusMatchedExisting();
-            } else if (dataImport.PaymentImportStatus__c == System.Label.bdiMatchedBest) {
-                dataImport.PaymentImportStatus__c = bdi.statusMatchedBest();
-            } else if (dataImport.PaymentImportStatus__c == System.Label.bdiMatchedId) {
-                dataImport.PaymentImportStatus__c = bdi.statusMatchedById();
-            } else if (dataImport.PaymentImportStatus__c == System.Label.bdiMatchedNone) {
-                dataImport.PaymentImportStatus__c = bdi.statusMatchedNone();
+            String paymentImportStatus = importStatusToDryRunStatus.get(dataImport.PaymentImportStatus__c);
+            if (paymentImportStatus != null) {
+                dataImport.PaymentImportStatus__c = paymentImportStatus;
             }
 
-            // campaigns -- list is shorter since we're limiting matching behavior
-            if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatched) {
-                dataImport.DonationCampaignImportStatus__c = bdi.statusMatchedExisting();
-            } else if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatchedId) {
-                dataImport.DonationCampaignImportStatus__c = bdi.statusMatchedById();
-            } else if (dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatchedNone) {
-                dataImport.DonationCampaignImportStatus__c = bdi.statusMatchedNone();
+            String donationCampaignImportStatus = importStatusToDryRunStatus.get(dataImport.DonationCampaignImportStatus__c);
+            if (donationCampaignImportStatus != null) {
+                dataImport.DonationCampaignImportStatus__c = donationCampaignImportStatus;
             }
         }
     }
