@@ -513,7 +513,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
     * @return List<String> list of DataImport__c field api names
     */
-    public static List<String> getDataImportFields(Id batchId) {
+    private static List<String> getDataImportFields(Id batchId) {
 
         List<String> fields = getDataImportFields();
         fields.addAll(getActiveFieldNamesFromBatch(batchId));

@@ -137,9 +137,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
             String rawDataType = dfr.getType().name();
             field.type = UTIL_LightningComponentSupport.getLightningInputDataType(rawDataType);
-            if (rawDataType == 'currency') {
-                field.formatter = 'currency';
-            }
 
             field.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(field.name);
 
@@ -256,7 +253,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         donationAmount.requiredInEntryForm = true;
         donationAmount.hide = false;
         donationAmount.type = UTIL_LightningComponentSupport.getLightningInputDataType('currency');
-        donationAmount.formatter = 'currency';
         donationAmount.sortOrder = 0;
         donationAmount.alwaysRequired = true;
         fields.add(donationAmount);
@@ -553,7 +549,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public Boolean alwaysRequired; // always required in BGE (e.g., Donation Amount and Donation Date)
         @AuraEnabled public Boolean conditionallyRequired; // required if any other field on its object is selected (e.g., Account Name and Contact Last Name)
         @AuraEnabled public String defaultValue;
-        @AuraEnabled public String formatter;
         @AuraEnabled public Boolean hide;
         @AuraEnabled public Boolean isActive;
         @AuraEnabled public String label;

@@ -124,7 +124,6 @@
                 currentField.requiredInEntryForm = activeFieldMap.get(currentField.id).requiredInEntryForm;
                 currentField.sortOrder = activeFieldMap.get(currentField.id).sortOrder;
                 currentField.type = activeFieldMap.get(currentField.id).type;
-                currentField.formatter = activeFieldMap.get(currentField.id).formatter;
                 currentField.options = activeFieldMap.get(currentField.id).options;
                 currentField.alwaysRequired = activeFieldMap.get(currentField.id).alwaysRequired;
                 if (currentField.defaultValue && currentField.type == 'reference') {
