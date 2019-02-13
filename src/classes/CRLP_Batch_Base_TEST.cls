@@ -90,7 +90,7 @@ private class CRLP_Batch_Base_TEST {
         // CRLP_Account_BATCH class.  So we "mock" the isScheduledJob value here, to test the correct
         // response from the getWhereClause() method below.
 
-        String partialDetailObjectWhereClause = 'FROM Opportunity ALLROWS ' +
+        String partialDetailObjectWhereClause = 'FROM Opportunity ' +
                 'WHERE CloseDate >= LAST_N_YEARS:' + maxYearsAgoInteger + ')';
 
         String generatedWhereClause = accountBatchJob.getWhereClause();
@@ -128,7 +128,7 @@ private class CRLP_Batch_Base_TEST {
         // CRLP_Account_Batch class.  So we "mock" the isScheduledJob value here, to test the correct
         // response from the getWhereClause() method below.
 
-        String partialDetailObjectWhereClause = 'FROM Opportunity ALLROWS ' +
+        String partialDetailObjectWhereClause = 'FROM Opportunity ' +
                 'WHERE CloseDate >= LAST_N_DAYS:' + maxDaysBackInteger + ')';
         String generatedWhereClause = accountBatchJob.getWhereClause();
         System.assert(generatedWhereClause.contains(partialDetailObjectWhereClause) == true, 'The incremental mode ' +
@@ -165,7 +165,7 @@ private class CRLP_Batch_Base_TEST {
         // CRLP_Account_Batch class.  So we "mock" the isScheduledJob value here, to test the correct
         // response from the getWhereClause() method below.
 
-        String partialDetailObjectWhereClause = 'FROM Opportunity ALLROWS ' +
+        String partialDetailObjectWhereClause = 'FROM Opportunity ' +
                 'WHERE CloseDate >= LAST_N_YEARS:' + maxYearsBackInteger + ')';
         String generatedWhereClause = accountBatchJob.getWhereClause();
         System.assert(generatedWhereClause.contains(partialDetailObjectWhereClause) == true, 'The incremental mode ' +
@@ -228,7 +228,7 @@ private class CRLP_Batch_Base_TEST {
         // CRLP_Contact_BATCH class.  So we "mock" the isScheduledJob value here, to test the correct
         // response from the getWhereClause() method below.
 
-        String partialDetailObjectWhereClause = 'FROM Opportunity ALLROWS ' +
+        String partialDetailObjectWhereClause = 'FROM Opportunity ' +
                 'WHERE CloseDate >= LAST_N_YEARS:' + maxYearsAgoInteger + ')';
 
         String generatedWhereClause = contactBatchJob.getWhereClause();
@@ -266,7 +266,7 @@ private class CRLP_Batch_Base_TEST {
         // CRLP_Contact_BATCH class.  So we "mock" the isScheduledJob value here, to test the correct
         // response from the getWhereClause() method below.
 
-        String partialDetailObjectWhereClause = 'FROM Opportunity ALLROWS ' +
+        String partialDetailObjectWhereClause = 'FROM Opportunity ' +
                 'WHERE CloseDate >= LAST_N_DAYS:' + maxDaysBackInteger + ')';
         String generatedWhereClause = contactBatchJob.getWhereClause();
         System.assert(generatedWhereClause.contains(partialDetailObjectWhereClause) == true, 'The incremental mode ' +
@@ -304,7 +304,7 @@ private class CRLP_Batch_Base_TEST {
         // response from the getWhereClause() method below.
 
         String partialDetailObjectWhereClause = 'FROM Opportunity ' +
-                'WHERE CloseDate >= LAST_N_YEARS:' + maxYearsBackInteger + ' ALL ROWS)';
+                'WHERE CloseDate >= LAST_N_YEARS:' + maxYearsBackInteger + ')';
         String generatedWhereClause = contactBatchJob.getWhereClause();
         System.assert(generatedWhereClause.contains(partialDetailObjectWhereClause) == true, 'The incremental mode ' +
                 'where clause for the inner join should contain a LAST_N_YEARS where filter on the Opportunities.');

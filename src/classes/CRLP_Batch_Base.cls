@@ -434,7 +434,7 @@ public abstract class CRLP_Batch_Base {
 
         String whereClause = 'Id IN (' +
                 'SELECT ' + keyField + ' ' +
-                'FROM ' + detailObjectType + ' ALLROWS ' +
+                'FROM ' + detailObjectType + ' ' +
                 'WHERE ';
 
         if (maxDaysAgo != null
@@ -462,16 +462,15 @@ public abstract class CRLP_Batch_Base {
                 || jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
             standardWhereClause = 'Id IN (' +
                     'SELECT ' + keyField + ' ' +
-                    'FROM ' + detailObjectType + ' ALLROWS' +
-                    ')';
+                    'FROM ' + detailObjectType + ')';
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-            standardWhereClause = 'Id IN (SELECT ContactId FROM OpportunityContactRole ALLROWS)';
+            standardWhereClause = 'Id IN (SELECT ContactId FROM OpportunityContactRole)';
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
                 jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
             // It's not possible to do an inner query on this due to the following Salesforce error:
             // "The inner select field 'Contact.AccountId' cannot have more than one level of relationships"
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-            standardWhereClause = 'Id IN (SELECT npe03__Recurring_Donation__c FROM Opportunity ALLROWS)';
+            standardWhereClause = 'Id IN (SELECT npe03__Recurring_Donation__c FROM Opportunity)';
         }
         return standardWhereClause;
     }
