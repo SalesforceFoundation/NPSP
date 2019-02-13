@@ -1742,7 +1742,14 @@ global with sharing class BDI_DataImportService {
         }
 
         // add the existing campaigns to our map
-        for (Campaign cmp : [SELECT Id, Name FROM Campaign WHERE Name IN :uniqueCampaignNames]) {
+        List<Campaign> uniqueCampaigns = [
+                SELECT Id, Name
+                FROM Campaign
+                WHERE Name IN :uniqueCampaignNames
+                ORDER BY CreatedDate DESC
+        ];
+
+        for (Campaign cmp : uniqueCampaigns) {
             campaignNameToCampaignId.put(cmp.Name, cmp.Id);
         }
 
@@ -1831,19 +1838,19 @@ global with sharing class BDI_DataImportService {
             // only create CMs here for rows that don't have an opportunity
             if (dataImport.Donation_Campaign_Name__c != null && dataImport.DonationImported__c == null) {
                 // assume errors would have already been thrown
-                Id idCmp = campaignNameToCampaignId.get(dataImport.Donation_Campaign_Name__c);
+                Id campaignId = campaignNameToCampaignId.get(dataImport.Donation_Campaign_Name__c);
                 String diStatus =
                     String.isBlank(dataImport.Campaign_Member_Status__c) ?
                         Label.campaignMemberStatusDefault : dataImport.Campaign_Member_Status__c;
 
                 if (dataImport.Contact1Imported__c != null) {
                     newCmContactIds.add(dataImport.Contact1Imported__c);
-                    listCampaignIds.add(idCmp); // current campaign for row
+                    listCampaignIds.add(campaignId); // current campaign for row
                     listCmStatues.add(diStatus);
                 }
                 if (dataImport.Contact2Imported__c != null) {
                     newCmContactIds.add(dataImport.Contact2Imported__c);
-                    listCampaignIds.add(idCmp); // current campaign for row
+                    listCampaignIds.add(campaignId); // current campaign for row
                     listCmStatues.add(diStatus);
                 }
             }
