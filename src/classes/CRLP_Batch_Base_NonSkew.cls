@@ -357,8 +357,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         // Will be set to SystemModstamp for prod.
 
         String whereClause = 'Id IN (' +
-                'SELECT ' + this.keyField + ' ' +
-                'FROM ' + this.detailObjectType + ' ALLROWS ' +
+                'SELECT ' + keyField + ' ' +
+                'FROM ' + detailObjectType + ' ALLROWS ' +
                 'WHERE ';
 
         if (maxDaysAgo != null) {
@@ -379,11 +379,11 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      */
     private String getStandardWhereClause() {
         String standardWhereClause = null; //will return null if this method is called from an unsupported rollup type
-        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
-                || this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+        if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
+                || jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
             standardWhereClause = 'Id IN (' +
-                    'SELECT ' + this.keyField + ' ' +
-                    'FROM ' + this.detailObjectType + ' ALLROWS' +
+                    'SELECT ' + keyField + ' ' +
+                    'FROM ' + detailObjectType + ' ALLROWS' +
                     ')';
         }
         return standardWhereClause;
@@ -394,7 +394,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      * @return The WHERE clause, as a string, that should be used to filter the detail records
      */
     @TestVisible private String getWhereClause() {
-        Boolean incrementalModeActivatedForThisJobType = isIncrementalMode(this.jobType);
+        Boolean incrementalModeActivatedForThisJobType = isIncrementalMode(jobType);
         Boolean hasActiveIncrementalModeRollups = (maxDaysAgo != null || maxYearsAgo != null);
         if (incrementalModeActivatedForThisJobType && hasActiveIncrementalModeRollups) {
             return getIncrementalModeWhereClause();
