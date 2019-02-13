@@ -334,39 +334,6 @@
     },
 
     /**
-     * @description Checks validity object on every lightning:input field
-     * @return Boolean if user can proceed to next step
-     */
-    checkDefaultsValidity: function(component) {
-        var isValid = true;
-        let previousObjectsBuffer = 0;
-        var batchFieldGroups = component.get('v.batchFieldOptions.fieldGroups');
-        let defaultValues = component.find('defaultValueField');
-        for (let i=0; i<batchFieldGroups.length; i++) {
-            let currentFieldGroup = batchFieldGroups[i];
-            for (let j=0; j<currentFieldGroup.fields.length; j++) {
-                let currentField = currentFieldGroup.fields[j];
-                let fieldName = currentField.name;
-                let value = defaultValues[currentFieldGroup.fields.indexOf(currentField) + previousObjectsBuffer].get('v.value');
-                if (value && currentField.type == 'date') {
-                    var re = new RegExp("([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))$");
-                    if (!re.test(value)) {
-                        isValid = false;
-                        return;
-                    }
-                }
-            };
-            if (!isValid) {
-                // return from outer loop if already invalid
-                return;
-            }
-            previousObjectsBuffer += currentFieldGroup.fields.length;
-        };
-
-        return isValid;
-    },
-
-    /**
      * @description Checks for required fields Donation Date Range and Batch Process Size
      * @return Boolean if user can proceed to next step
      */
