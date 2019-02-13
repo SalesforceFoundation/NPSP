@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2018, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -303,8 +303,8 @@ private class CRLP_Batch_Base_TEST {
         // CRLP_Contact_BATCH class.  So we "mock" the isScheduledJob value here, to test the correct
         // response from the getWhereClause() method below.
 
-        String partialDetailObjectWhereClause = 'FROM Opportunity ALLROWS ' +
-                'WHERE CloseDate >= LAST_N_YEARS:' + maxYearsBackInteger + ')';
+        String partialDetailObjectWhereClause = 'FROM Opportunity ' +
+                'WHERE CloseDate >= LAST_N_YEARS:' + maxYearsBackInteger + ' ALL ROWS)';
         String generatedWhereClause = contactBatchJob.getWhereClause();
         System.assert(generatedWhereClause.contains(partialDetailObjectWhereClause) == true, 'The incremental mode ' +
                 'where clause for the inner join should contain a LAST_N_YEARS where filter on the Opportunities.');
