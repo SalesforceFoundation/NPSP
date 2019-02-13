@@ -135,7 +135,9 @@
             }
             currentField.availableSortOrder = availableSortOrder;
             availableSortOrder++;
+
             everyField.push(currentField);
+
         });
 
         // store everyField with its metadata
@@ -146,7 +148,24 @@
         // returns map of sobject name => list of fields
         var allFieldsBySObject = this.groupFieldsBySObject(everyField);
 
-        Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
+        const opportunitySObjectName = "Opportunity";
+        const paymentSObjectName = "Payment";
+
+        var sObjectKeys = Object.keys(allFieldsBySObject);
+
+        // Make sure Opportunity is always the first sObject to be shown and Payment the second.
+        var orderedKeys = [opportunitySObjectName, paymentSObjectName];
+
+        // If there happens to be other objects appart from Opportunity and Payment
+        // Add them to the list behind them.
+        for(var i=0; i<sObjectKeys.length; i++) {
+            var key = sObjectKeys[i];
+            if(key !== opportunitySObjectName && key !== paymentSObjectName) {
+               orderedKeys.push(key);
+            }
+        }
+                
+        orderedKeys.forEach(function(sObjectName) {
             let currentFieldGroup = {
                 sObjectName: sObjectName,
                 options: [],
