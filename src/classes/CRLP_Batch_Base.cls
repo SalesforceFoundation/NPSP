@@ -358,41 +358,45 @@ public abstract class CRLP_Batch_Base {
      * @description returns the max Integer for all active time-bound Days_Back rollups,
      * or null if there are no active time-bound Days_Back rollups for this summary object
      */
-    private Integer maxDaysAgo = null;
-    protected Integer getMaxDaysAgo(){
-        if (maxDaysAgo == null) {
-            for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
-                if (rollup.Active__c == true && rollup.Integer__c != null) {
-                    if (String.isNotBlank(rollup.Time_Bound_Operation_Type__c)
-                            && rollup.Time_Bound_Operation_Type__c.equals('Days_Back')) {
+    protected Integer maxDaysAgo {
+        get {
+            if (maxDaysAgo == null) {
+                for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
+                    if (rollup.Active__c == true
+                            && String.isNotBlank(rollup.Time_Bound_Operation_Type__c)
+                            && rollup.Time_Bound_Operation_Type__c.equals('Days_Back')
+                            && rollup.Integer__c != null) {
                         if (maxDaysAgo == null || rollup.Integer__c > maxDaysAgo) {
                             maxDaysAgo = (Integer) rollup.Integer__c;
                         }
                     }
                 }
             }
+            return maxDaysAgo;
         }
-        return maxDaysAgo;
+        private set;
     }
 
     /**
      * @description returns the max Integer for all active time-bound Years_Ago rollups,
      * or null if there are no active time-bound Years_Ago rollups for this summary object
      */
-    private Integer maxYearsAgo = null;
-    protected Integer getMaxYearsAgo() {
-        if (maxYearsAgo == null) {
-            for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
-                if (rollup.Active__c == true && rollup.Integer__c != null) {
-                    if (String.isNotBlank(rollup.Time_Bound_Operation_Type__c)
-                            && rollup.Time_Bound_Operation_Type__c.equals('Years_Ago')) {
+    protected Integer maxYearsAgo {
+        get {
+            if (maxYearsAgo == null) {
+                for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
+                    if (rollup.Active__c == true
+                            && String.isNotBlank(rollup.Time_Bound_Operation_Type__c)
+                            && rollup.Time_Bound_Operation_Type__c.equals('Years_Ago')
+                            && rollup.Integer__c != null) {
                         if (maxYearsAgo == null || rollup.Integer__c > maxYearsAgo) {
                             maxYearsAgo = (Integer) rollup.Integer__c;
                         }
                     }
                 }
             }
+            return maxYearsAgo;
         }
-        return maxYearsAgo;
+        private set;
     }
 }
