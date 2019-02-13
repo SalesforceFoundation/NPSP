@@ -101,12 +101,12 @@ public with sharing class BGE_BatchGiftEntryTab_CTRL {
                 Column col = new Column();
                 col.fieldName = fieldName;
                 col.label = dfr.label;
-                col.type = UTIL_LightningComponentSupport.getLightningDataType(dfr.getType());
+                col.type = UTIL_LightningComponentSupport.getLightningDataTableDataType(dfr.getType());
                 col.sortable = col.type == 'textarea' ? false : true;
 
                 // special case for known User lookups
                 if (dataType == 'reference') {
-                    col.type = UTIL_LightningComponentSupport.getLightningDataType(Schema.DisplayType.STRING);
+                    col.type = UTIL_LightningComponentSupport.getLightningDataTableDataType(Schema.DisplayType.STRING);
                     col.label = UTIL_Describe.getUserReferenceFieldLabel(dfr);
                 }
 

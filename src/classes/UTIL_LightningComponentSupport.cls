@@ -63,8 +63,10 @@ public with sharing class UTIL_LightningComponentSupport {
 
     /*******************************************************************************************************
     * @description Returns the corresponding Lightning field type from an Apex field type
+    * @param rawType: the Schema.DisplayType from DescribeFieldResult
+    * @return the datatype string expected by lightning components
     */
-    public static String getLightningFieldType(Schema.DisplayType fieldDisplayType) {
+    public static String getLightningInputDataType(Schema.DisplayType fieldDisplayType) {
         if (fieldDisplayType == Schema.DisplayType.CURRENCY) {
             return LIGHTNING_DATA_TYPE_NUMBER;
         } else if (fieldDisplayType == Schema.DisplayType.STRING) {
