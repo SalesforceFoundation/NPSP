@@ -38,6 +38,8 @@
 @isTest
 private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
 
+    private static UTIL_Mocks.PermissionsMock mockPerms = new UTIL_Mocks.PermissionsMock();
+
     /*********************************************************************************************************
     * @description Tests truncateList()
     */
@@ -74,8 +76,16 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
     @isTest
     static void testCheckFieldPermissionsNeededForBatch() {
         Boolean hasError = false;
+
+
+        mockPerms.hasUpdate = false;
+        BGE_BatchGiftEntry_UTIL bgeUtil = new BGE_BatchGiftEntry_UTIL();
+        bgeUtil.perms = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, mockPerms);
         try {
-            BGE_BatchGiftEntry_UTIL.checkFieldPermissionsNeededForBatch();
+            bgeUtil.checkFieldPermissionsNeededForBatchInstance();
+
+            System.assertEquals(UTIL_Describe.getSObjectType(UTIL_Namespace.StrTokenNSPrefix('DataImport__c')), 
+                mockPerms.updateSObjType);
         } catch (AuraHandledException ex) {
             hasError = true;
             String errorMsg = ex.getMessage();

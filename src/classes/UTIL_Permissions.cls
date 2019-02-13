@@ -296,6 +296,7 @@ public with sharing class UTIL_Permissions {
     * @return returns boolean to indicate whether the user has permission; conditionally throws an exception not
     */
     public Boolean canUpdateInstance(DescribeFieldResult fieldResult, Boolean throwException) {
+        System.debug(' **** NOT STUB UTIL_Permissions.canUpdateInstance');
         if (!fieldResult.isUpdateable()) {
             if (throwException) {
                 throw new InsufficientPermissionException(INSUFFICIENT_PERMISSION_MESSAGE);

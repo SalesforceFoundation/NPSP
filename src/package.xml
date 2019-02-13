@@ -418,6 +418,7 @@
         <members>UTIL_ListCustomSettingsFacade</members>
         <members>UTIL_MasterSchedulable</members>
         <members>UTIL_MasterSchedulableHelper</members>
+        <members>UTIL_Mocks</members>
         <members>UTIL_Namespace</members>
         <members>UTIL_Namespace_TEST</members>
         <members>UTIL_OrderBy</members>
@@ -453,7 +454,6 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>UTIL_LightningComponentSupport</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -1429,8 +1429,8 @@
         <members>bgeBatchSelectedFields</members>
         <members>bgeBatchSetBatchOptions</members>
         <members>bgeBatchSetFieldOptions</members>
-        <members>bgeCopyBatchSetupButton</members>
         <members>bgeCopyBatchSetupBatchNameAppend</members>
+        <members>bgeCopyBatchSetupButton</members>
         <members>bgeEditBatchFieldOptionsWarning</members>
         <members>bgeEditBatchFieldSelectionWarning</members>
         <members>bgeEditBatchOptionsWarning</members>

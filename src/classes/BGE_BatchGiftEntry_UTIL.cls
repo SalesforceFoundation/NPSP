@@ -40,7 +40,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     * @description Permissions class used to determine if the running user has permissions
     */
     @TestVisible
-    private UTIL_Permissions perms {
+    public UTIL_Permissions perms {
         get {
             if (perms == null) {
                 perms = new UTIL_Permissions();
@@ -90,6 +90,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     * @return void Throws an exception if user lacks edit permissions on any field
     */
     public void checkFieldPermissionsInstance(List<DescribeFieldResult> fieldsToCheck) {
+        System.debug(' **** checkFieldPermissionsInstance');
         Boolean hasPermission = true;
         List<String> fieldsWithoutPermission = new List<String>();
 
@@ -186,7 +187,11 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     * @return void; throws an AuraHandledException if any fields fail FLS check
     */
     public static void checkFieldPermissionsNeededForBatch() {
+        BGE_BatchGiftEntry_UTIL.getInstance().checkFieldPermissionsNeededForBatchInstance();
+    }
 
+    public void checkFieldPermissionsNeededForBatchInstance() {
+        System.debug(' **** checkFieldPermissionsNeededForBatchInstance');
         List<DescribeFieldResult> fieldsToCheck = new List<DescribeFieldResult>();
 
         List<String> batchFieldNames = getBatchFieldNames();
@@ -205,7 +210,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         // Lookup from Data Import row to Data Import Batch is also required
         fieldsToCheck.add(UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), UTIL_Namespace.StrTokenNSPrefix('NPSP_Data_Import_Batch__c')));
 
-        checkFieldPermissions(fieldsToCheck);
+        checkFieldPermissionsInstance(fieldsToCheck);
     }
 
 
