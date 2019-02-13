@@ -352,23 +352,23 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      * @return The WHERE clause, as a string, that should be used to filter the detail records
      */
     private String getIncrementalModeWhereClause() {
-        String whereClauseDateField = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp'; //Set to CloseDate for dev, will be set to SystemModstamp for testing/prod
-        Integer maxDays = this.getMaxDaysAgo();
-        Integer maxYears = this.getMaxYearsAgo();
+        String whereClauseDateField = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp'; // Set to CloseDate
+        // or another Date field for testing.
+        // Will be set to SystemModstamp for prod.
 
         String whereClause = 'Id IN (' +
                 'SELECT ' + this.keyField + ' ' +
                 'FROM ' + this.detailObjectType + ' ALLROWS ' +
                 'WHERE ';
 
-        if (maxDays != null) {
-            whereClause += whereClauseDateField + ' >= LAST_N_DAYS:' + maxDays;
+        if (maxDaysAgo != null) {
+            whereClause += whereClauseDateField + ' >= LAST_N_DAYS:' + maxDaysAgo;
         }
-        if (maxYears != null) {
-            if (maxDays != null) {
+        if (maxYearsAgo != null) {
+            if (maxDaysAgo != null) {
                 whereClause += ' OR ';
             }
-            whereClause += whereClauseDateField + ' >= LAST_N_YEARS:' + maxYears;
+            whereClause += whereClauseDateField + ' >= LAST_N_YEARS:' + maxYearsAgo;
         }
         return whereClause += ')';
     }
@@ -395,7 +395,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      */
     @TestVisible private String getWhereClause() {
         Boolean incrementalModeActivatedForThisJobType = isIncrementalMode(this.jobType);
-        Boolean hasActiveIncrementalModeRollups = (this.getMaxDaysAgo() != null || this.getMaxYearsAgo() != null);
+        Boolean hasActiveIncrementalModeRollups = (maxDaysAgo != null || maxYearsAgo != null);
         if (incrementalModeActivatedForThisJobType && hasActiveIncrementalModeRollups) {
             return getIncrementalModeWhereClause();
         } else {
