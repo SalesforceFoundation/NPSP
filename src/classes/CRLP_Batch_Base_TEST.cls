@@ -91,8 +91,7 @@ private class CRLP_Batch_Base_TEST {
         // response from the getWhereClause() method below.
 
         String partialDetailObjectWhereClause = 'FROM Opportunity ALLROWS ' +
-                'WHERE CloseDate >= LAST_N_DAYS:' + maxDaysBackInteger + ' ' +
-                'OR CloseDate >= LAST_N_YEARS:' + maxYearsAgoInteger + ')';
+                'WHERE CloseDate >= LAST_N_YEARS:' + maxYearsAgoInteger + ')';
 
         String generatedWhereClause = accountBatchJob.getWhereClause();
         System.assert(generatedWhereClause.contains(partialDetailObjectWhereClause) == true, 'The incremental mode ' +
@@ -230,8 +229,7 @@ private class CRLP_Batch_Base_TEST {
         // response from the getWhereClause() method below.
 
         String partialDetailObjectWhereClause = 'FROM Opportunity ALLROWS ' +
-                'WHERE CloseDate >= LAST_N_DAYS:' + maxDaysBackInteger + ' ' +
-                'OR CloseDate >= LAST_N_YEARS:' + maxYearsAgoInteger + ')';
+                'WHERE CloseDate >= LAST_N_YEARS:' + maxYearsAgoInteger + ')';
 
         String generatedWhereClause = contactBatchJob.getWhereClause();
         System.assert(generatedWhereClause.contains(partialDetailObjectWhereClause) == true, 'The incremental mode ' +

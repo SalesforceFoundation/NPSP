@@ -437,13 +437,16 @@ public abstract class CRLP_Batch_Base {
                 'FROM ' + detailObjectType + ' ALLROWS ' +
                 'WHERE ';
 
-        if (maxDaysAgo != null) {
-            whereClause += whereClauseDateField + ' >= LAST_N_DAYS:' + maxDaysAgo;
-        }
-        if (maxYearsAgo != null) {
-            if (maxDaysAgo != null) {
-                whereClause += ' OR ';
+        if (maxDaysAgo != null
+                && maxYearsAgo != null) {
+            if ((maxDaysAgo / 365) > maxYearsAgo) {
+                whereClause += whereClauseDateField + ' >= LAST_N_DAYS:' + maxDaysAgo;
+            } else {
+                whereClause += whereClauseDateField + ' >= LAST_N_YEARS:' + maxYearsAgo;
             }
+        } else if (maxDaysAgo != null) {
+            whereClause += whereClauseDateField + ' >= LAST_N_DAYS:' + maxDaysAgo;
+        } else if (maxYearsAgo != null) {
             whereClause += whereClauseDateField + ' >= LAST_N_YEARS:' + maxYearsAgo;
         }
         return whereClause += ')';
