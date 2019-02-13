@@ -364,7 +364,7 @@ public abstract class CRLP_Batch_Base {
                 for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
                     if (rollup.Active__c == true
                             && String.isNotBlank(rollup.Time_Bound_Operation_Type__c)
-                            && rollup.Time_Bound_Operation_Type__c.equals('Days_Back')
+                            && rollup.Time_Bound_Operation_Type__c == 'Days_Back'
                             && rollup.Integer__c != null) {
                         if (maxDaysAgo == null || rollup.Integer__c > maxDaysAgo) {
                             maxDaysAgo = (Integer) rollup.Integer__c;
@@ -387,7 +387,7 @@ public abstract class CRLP_Batch_Base {
                 for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
                     if (rollup.Active__c == true
                             && String.isNotBlank(rollup.Time_Bound_Operation_Type__c)
-                            && rollup.Time_Bound_Operation_Type__c.equals('Years_Ago')
+                            && rollup.Time_Bound_Operation_Type__c == 'Years_Ago'
                             && rollup.Integer__c != null) {
                         if (maxYearsAgo == null || rollup.Integer__c > maxYearsAgo) {
                             maxYearsAgo = (Integer) rollup.Integer__c;
