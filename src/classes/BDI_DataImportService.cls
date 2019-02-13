@@ -1770,7 +1770,8 @@ global with sharing class BDI_DataImportService {
             if (campaignId != null) {
                 // User specified a Campaign lookup in BGE lookup or with an ID on import
                 dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedId;
-            } else if (campaignName != null && uniqueCampaignNames.add(campaignName)) {
+            } else if (campaignName != null && !uniqueCampaignNames.contains(campaignName)) {
+                uniqueCampaignNames.add(campaignName);
                 if (campaignNameToCampaignId.get(campaignName) == null) {
                     if (isDryRun) {
                         dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedNone;
