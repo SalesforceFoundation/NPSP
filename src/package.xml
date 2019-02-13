@@ -90,8 +90,6 @@
         <members>BGE_ConfigurationWizard_CTRL_TEST</members>
         <members>BGE_DataImportBatchEntry_CTRL</members>
         <members>BGE_DataImportBatchEntry_CTRL_TEST</members>
-        <members>CallableApi</members>
-        <members>CallableApi_TEST</members>
         <members>CAM_CascadeDeleteLookups_TDTM</members>
         <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
@@ -188,6 +186,8 @@
         <members>CRLP_Rollup_TDTM</members>
         <members>CRLP_SkewDispatcher_BATCH</members>
         <members>CRLP_VRollupHandler</members>
+        <members>CallableApi</members>
+        <members>CallableApi_TEST</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
@@ -273,6 +273,8 @@
         <members>OPP_PrimaryContact_TEST</members>
         <members>OPP_SendAcknowledgmentBTN_CTRL</members>
         <members>OPP_SendAcknowledgmentBTN_TEST</members>
+        <members>OPP_StageToStateMapping_API</members>
+        <members>OPP_StageToStateMapping_API_TEST</members>
         <members>PMT_CascadeDeleteLookups_TDTM</members>
         <members>PMT_CascadeDeleteLookups_TEST</members>
         <members>PMT_PaymentCreator</members>
@@ -455,7 +457,6 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>UTIL_LightningComponentSupport</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -1082,6 +1083,8 @@
         <members>npe5__Affiliation__c.Related_Opportunity_Contact_Role__c</members>
         <members>npo02__Household__c.Number_of_Household_Members__c</members>
         <members>npo02__Households_Settings__c.Matched_Donor_Role__c</members>
+        <members>npo02__Households_Settings__c.Opportunity_Committed_Stages__c</members>
+        <members>npo02__Households_Settings__c.Opportunity_Finalized_Stages__c</members>
         <members>npo02__Households_Settings__c.Use_Dated_Conversion_Rates__c</members>
         <name>CustomField</name>
     </types>
@@ -1431,8 +1434,8 @@
         <members>bgeBatchSelectedFields</members>
         <members>bgeBatchSetBatchOptions</members>
         <members>bgeBatchSetFieldOptions</members>
-        <members>bgeCopyBatchSetupButton</members>
         <members>bgeCopyBatchSetupBatchNameAppend</members>
+        <members>bgeCopyBatchSetupButton</members>
         <members>bgeEditBatchFieldOptionsWarning</members>
         <members>bgeEditBatchFieldSelectionWarning</members>
         <members>bgeEditBatchOptionsWarning</members>
