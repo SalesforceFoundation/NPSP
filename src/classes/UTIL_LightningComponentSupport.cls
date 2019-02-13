@@ -43,11 +43,11 @@ public with sharing class UTIL_LightningComponentSupport {
     public static final String LIGHTNING_DATA_TYPE_DATE_LOCAL = 'date-local';
 
     /*******************************************************************************************************
-    * @description Converts Apex field data type to type expected by lightning:datatable and other components
-    * @param rawType: the data type from DescribeFieldResult
+    * @description Converts Apex field data type to type expected by lightning:datatable.
+    * @param rawType: the Schema.DisplayType from DescribeFieldResult
     * @return the datatype string expected by lightning components
     */
-    public static String getLightningDataType(Schema.DisplayType fieldDisplayType) {
+    public static String getLightningDataTableDataType(Schema.DisplayType fieldDisplayType) {
         if (fieldDisplayType == Schema.DisplayType.DATETIME) {
             return LIGHTNING_DATA_TYPE_DATE;
         } else if (fieldDisplayType == Schema.DisplayType.DATE) {
