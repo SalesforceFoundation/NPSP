@@ -353,22 +353,22 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      */
     private String getIncrementalModeWhereClause() {
         String dateFieldNameForTesting = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp'; //Set to CloseDate for dev, will be set to SystemModstamp for testing/prod
-        Integer mDays = this.getMaxDaysAgo();
-        Integer mYears = this.getMaxYearsAgo();
+        Integer maxDays = this.getMaxDaysAgo();
+        Integer maxYears = this.getMaxYearsAgo();
 
         String whereClause = 'Id IN (' +
                 'SELECT ' + this.keyField + ' ' +
                 'FROM ' + this.detailObjectType + ' ALLROWS ' +
                 'WHERE ';
 
-        if (mDays != null) {
-            whereClause += dateFieldNameForTesting + ' >= LAST_N_DAYS:' + mDays;
+        if (maxDays != null) {
+            whereClause += dateFieldNameForTesting + ' >= LAST_N_DAYS:' + maxDays;
         }
-        if (mYears != null) {
-            if (mDays != null) {
+        if (maxYears != null) {
+            if (maxDays != null) {
                 whereClause += ' OR ';
             }
-            whereClause += dateFieldNameForTesting + ' >= LAST_N_YEARS:' + mYears;
+            whereClause += dateFieldNameForTesting + ' >= LAST_N_YEARS:' + maxYears;
         }
         return whereClause += ')';
     }
