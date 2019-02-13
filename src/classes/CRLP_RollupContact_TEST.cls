@@ -570,7 +570,6 @@ private class CRLP_RollupContact_TEST {
                 'OR CloseDate >= LAST_N_YEARS:' + maxYearsAgoInteger + ')';
 
         String generatedWhereClause = contactBatchJob.getWhereClause();
-        System.debug(loggingLevel.Error, '*** generatedWhereClause: ' + generatedWhereClause);
         System.assert(generatedWhereClause.contains(partialDetailObjectWhereClause) == true, 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
     }
