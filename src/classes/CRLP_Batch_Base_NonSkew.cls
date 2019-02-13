@@ -352,7 +352,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      * @return The WHERE clause, as a string, that should be used to filter the detail records
      */
     private String getIncrementalModeWhereClause() {
-        String dateFieldNameForTesting = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp'; //Set to CloseDate for dev, will be set to SystemModstamp for testing/prod
+        String whereClauseDateField = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp'; //Set to CloseDate for dev, will be set to SystemModstamp for testing/prod
         Integer maxDays = this.getMaxDaysAgo();
         Integer maxYears = this.getMaxYearsAgo();
 
@@ -362,13 +362,13 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 'WHERE ';
 
         if (maxDays != null) {
-            whereClause += dateFieldNameForTesting + ' >= LAST_N_DAYS:' + maxDays;
+            whereClause += whereClauseDateField + ' >= LAST_N_DAYS:' + maxDays;
         }
         if (maxYears != null) {
             if (maxDays != null) {
                 whereClause += ' OR ';
             }
-            whereClause += dateFieldNameForTesting + ' >= LAST_N_YEARS:' + maxYears;
+            whereClause += whereClauseDateField + ' >= LAST_N_YEARS:' + maxYears;
         }
         return whereClause += ')';
     }
