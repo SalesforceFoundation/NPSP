@@ -148,7 +148,7 @@
         var allFieldsBySObject = this.groupFieldsBySObject(everyField);
 
         const opportunitySObjectName = "Opportunity";
-        const paymentSObjectName = "Payment";
+        const paymentSObjectName = "npe01__OppPayment__c";
 
         var sObjectKeys = Object.keys(allFieldsBySObject);
 
