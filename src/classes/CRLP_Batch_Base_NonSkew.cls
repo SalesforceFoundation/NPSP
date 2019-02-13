@@ -115,23 +115,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                     whereClauses.add(skewClause);
                 }
 
-                Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-
-                // Only use the related records filter if not disabled in settings and not running unit tests
-                if (customizableRollupSettings.Disable_Related_Records_Filter__c == false && !Test.isRunningTest()) {
-                    if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-                        whereClauses.add(getWhereClause());
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                        whereClauses.add(getWhereClause());
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                        whereClauses.add('Id IN (SELECT ContactId FROM OpportunityContactRole ALLROWS)');
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                            this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit ) {
-                        // It's not possible to do an inner query on this due to the following Salesforce error:
-                        // "The inner select field 'Contact.AccountId' cannot have more than one level of relationships"
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-                        whereClauses.add('Id IN (SELECT npe03__Recurring_Donation__c FROM Opportunity ALLROWS)');
-                    }
+                if (getWhereClause() != null) {
+                    whereClauses.add(getWhereClause());
                 }
             }
 

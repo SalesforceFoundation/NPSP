@@ -238,7 +238,8 @@ public class CRLP_RollupContact_TEST {
                 Rollups_Contact_SkewMode_Batch_Size__c = 200,
                 Rollups_Contact_Soft_Credit_Batch_Size__c = 200,
                 Rollups_Account_Batch_Size__c = 20,
-                Rollups_Contact_Batch_Size__c = 20
+                Rollups_Contact_Batch_Size__c = 20,
+                Disable_Related_Records_Filter__c = tt == TestType.TestBatch ? true : false
             ));
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor',

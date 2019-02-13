@@ -405,13 +405,13 @@ public abstract class CRLP_Batch_Base {
      * @param jobType the type of rollup job
      * @return true if the rollup should be run in incremental mode, otherwise false
      */
-    private Boolean isIncrementalMode(CRLP_RollupProcessingOptions.RollupType jobType) {
-        //1. Only run incremental mode when initiated by the scheduled job
+    private Boolean isIncrementalMode() {
         if (isScheduledJob == null || isScheduledJob == false) {
             return false;
         }
 
-        //2. Only run incremental mode when the custom settings are configured to enable incremental mode
+        // Only run incremental mode when the custom settings are configured
+        // to enable incremental mode for this job type
         Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
         if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
                 && customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c == true) {
@@ -429,9 +429,8 @@ public abstract class CRLP_Batch_Base {
      * @return The WHERE clause, as a string, that should be used to filter the detail records
      */
     protected String getIncrementalModeWhereClause() {
-        String whereClauseDateField = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp'; // Set to CloseDate
-        // or another Date field for testing.
-        // Will be set to SystemModstamp for prod.
+        // Set to CloseDate for testing, SystemModstamp for prod.
+        String whereClauseDateField = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp';
 
         String whereClause = 'Id IN (' +
                 'SELECT ' + keyField + ' ' +
@@ -462,6 +461,14 @@ public abstract class CRLP_Batch_Base {
                     'SELECT ' + keyField + ' ' +
                     'FROM ' + detailObjectType + ' ALLROWS' +
                     ')';
+        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+            standardWhereClause = 'Id IN (SELECT ContactId FROM OpportunityContactRole ALLROWS)';
+        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+                jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            // It's not possible to do an inner query on this due to the following Salesforce error:
+            // "The inner select field 'Contact.AccountId' cannot have more than one level of relationships"
+        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+            standardWhereClause = 'Id IN (SELECT npe03__Recurring_Donation__c FROM Opportunity ALLROWS)';
         }
         return standardWhereClause;
     }
@@ -471,12 +478,17 @@ public abstract class CRLP_Batch_Base {
      * @return The WHERE clause, as a string, that should be used to filter the detail records
      */
     @TestVisible protected String getWhereClause() {
-        Boolean incrementalModeActivatedForThisJobType = isIncrementalMode(jobType);
+        String whereClause = null;
+        Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
         Boolean hasActiveIncrementalModeRollups = (maxDaysAgo != null || maxYearsAgo != null);
-        if (incrementalModeActivatedForThisJobType && hasActiveIncrementalModeRollups) {
-            return getIncrementalModeWhereClause();
+
+        if (isIncrementalMode() && hasActiveIncrementalModeRollups) {
+            whereClause = getIncrementalModeWhereClause();
         } else {
-            return getStandardWhereClause();
+            if (customizableRollupSettings.Disable_Related_Records_Filter__c == false) {
+                whereClause = getStandardWhereClause();
+            }
         }
+        return whereClause;
     }
 }
