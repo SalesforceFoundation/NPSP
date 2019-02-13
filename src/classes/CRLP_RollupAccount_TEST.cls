@@ -108,6 +108,11 @@ private class CRLP_RollupAccount_TEST {
                         'npo02__OppAmount2YearsAgo__c', CRLP_Operation.RollupType.SUM, 'Amount',
                         CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 2) + ',' +
 
+                CMT_UnitTestData_TEST.createRollupRecord('Total Donations Last 365 Days', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        'npo02__OppAmountLastNDays__c', CRLP_Operation.RollupType.SUM, 'Amount',
+                        CRLP_Operation.TimeBoundOperationType.DAYS_BACK, 365) + ',' +
+
                 CMT_UnitTestData_TEST.createRollupRecord('Largest Donation All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
                         'npo02__LargestAmount__c', CRLP_Operation.RollupType.LARGEST, 'Amount') + ',' +
