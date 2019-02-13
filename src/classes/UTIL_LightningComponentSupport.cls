@@ -44,7 +44,7 @@ public with sharing class UTIL_LightningComponentSupport {
 
     /*******************************************************************************************************
     * @description Converts Apex field data type to type expected by lightning:datatable.
-    * @param rawType: the Schema.DisplayType from DescribeFieldResult
+    * @param fieldDisplayType: the Schema.DisplayType from DescribeFieldResult
     * @return the datatype string expected by lightning components
     */
     public static String getLightningDataTableDataType(Schema.DisplayType fieldDisplayType) {
@@ -63,7 +63,7 @@ public with sharing class UTIL_LightningComponentSupport {
 
     /*******************************************************************************************************
     * @description Returns the corresponding Lightning field type from an Apex field type
-    * @param rawType: the Schema.DisplayType from DescribeFieldResult
+    * @param fieldDisplayType: the Schema.DisplayType from DescribeFieldResult
     * @return the datatype string expected by lightning components
     */
     public static String getLightningInputDataType(Schema.DisplayType fieldDisplayType) {
