@@ -496,7 +496,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                     WHERE isPrimary = true 
                     AND OpportunityId = :lcr.getOpportunityId() 
                     AND ContactId = :lcr.getContactId()
-                    AND DisableContactRoleAutomation__c = false
+                    AND Opportunity.DisableContactRoleAutomation__c = false
                 ];
 
                 //if there are more than one delete the extraneous ones
