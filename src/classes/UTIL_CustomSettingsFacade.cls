@@ -882,10 +882,6 @@ public without sharing class UTIL_CustomSettingsFacade {
         crs.Disable_Related_Records_Filter__c = false;
         crs.AccountHardCreditNonSkew_Incremental__c = true;
         crs.ContactHardCreditNonSkew_Incremental__c = true;
-        crs.AccountHardCredit_LastNDays__c = 365;
-        crs.AccountHardCredit_LastNDaysField__c = 'CloseDate';
-        crs.ContactHardCredit_LastNDays__c = 365;
-        crs.ContactHardCredit_LastNDaysField__c = 'CloseDate';
     }
 
     /*******************************************************************************************************
