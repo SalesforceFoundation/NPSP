@@ -223,6 +223,52 @@ private class CRLP_Batch_Base_TEST {
                 'for the inner join when the custom setting is set to false.');
     }
 
+    @isTest
+    private static void accountHardCreditRollupWithUserDefinedJoinGeneratesProperJoinQuery() {
+        String userDefinedLastNDaysFieldOverride = 'LastModifiedDate';
+        Integer userDefinedLastNDaysValueOverride = 44;
+        configureUserDefinedInnerJoin(
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                userDefinedLastNDaysFieldOverride,
+                userDefinedLastNDaysValueOverride);
+
+        // Create the test data
+        CRLP_RollupAccount_TEST.mockRollupCMTValues();
+
+        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
+        accountBatchJob.initializeJobData();
+        accountBatchJob.isScheduledJob = true;
+
+        String generatedWhereClause = accountBatchJob.getWhereClause();
+        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
+                'where clause for the inner join should contain a where filter on the Opportunities.');
+        System.assert(generatedWhereClause.contains(userDefinedLastNDaysFieldOverride));
+        System.assert(generatedWhereClause.contains(String.valueOf(userDefinedLastNDaysValueOverride)));
+    }
+
+    @isTest
+    private static void contactHardCreditRollupWithUserDefinedJoinGeneratesProperJoinQuery() {
+        String userDefinedLastNDaysFieldOverride = 'LastModifiedDate';
+        Integer userDefinedLastNDaysValueOverride = 555;
+        configureUserDefinedInnerJoin(
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                userDefinedLastNDaysFieldOverride,
+                userDefinedLastNDaysValueOverride);
+
+        // Create the test data
+        CRLP_RollupContact_TEST.mockRollupCMTValues();
+
+        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
+        contactBatchJob.initializeJobData();
+        contactBatchJob.isScheduledJob = true;
+
+        String generatedWhereClause = contactBatchJob.getWhereClause();
+        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
+                'where clause for the inner join should contain a where filter on the Opportunities.');
+        System.assert(generatedWhereClause.contains(userDefinedLastNDaysFieldOverride));
+        System.assert(generatedWhereClause.contains(String.valueOf(userDefinedLastNDaysValueOverride)));
+    }
+
     private static void deactivateTimeBoundRollups(
             CRLP_RollupProcessingOptions.RollupType jobType,
             CRLP_Operation.TimeBoundOperationType timeBoundOperationType) {
@@ -239,18 +285,32 @@ private class CRLP_Batch_Base_TEST {
         }
     }
 
-    private static void configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType jobType, Boolean isIncrementalMode) {
+    private static Customizable_Rollup_Settings__c configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType jobType, Boolean isIncrementalMode) {
+        Customizable_Rollup_Settings__c settings;
         if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-            UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            settings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                     Customizable_Rollups_Enabled__c = true,
                     AccountHardCreditNonSkew_Incremental__c = isIncrementalMode
             ));
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-            UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            settings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                     Customizable_Rollups_Enabled__c = true,
                     ContactHardCreditNonSkew_Incremental__c = isIncrementalMode
             ));
         }
+        return settings;
+    }
+
+    private static void configureUserDefinedInnerJoin(
+            CRLP_RollupProcessingOptions.RollupType jobType,
+            String userDefinedField,
+            Integer userDefinedValue) {
+
+        Customizable_Rollup_Settings__c settings = configureIncrementalMode(jobType, true);
+
+        settings.Rollups_IncrementalLastNDays_FldOverride__c = userDefinedField;
+        settings.Rollups_IncrementalLastNDays_ValOverride__c = userDefinedValue;
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(settings);
     }
 
     private class RollupInfo {

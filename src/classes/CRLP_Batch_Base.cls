@@ -433,22 +433,62 @@ public abstract class CRLP_Batch_Base {
                 'FROM ' + detailObjectType + ' ' +
                 'WHERE ';
 
-        // Set to CloseDate for testing, SystemModstamp for prod.
-        String whereClauseDateField = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp';
-        whereClause += whereClauseDateField + ' ';
+        if (hasUserDefinedInnerJoin) {
+            whereClause += userDefinedLastNDaysField + ' >= LAST_N_DAYS:' + userDefinedLastNDays;
+        } else {
+            // Set to CloseDate for testing, SystemModstamp for prod.
+            String whereClauseDateField = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp';
+            whereClause += whereClauseDateField + ' ';
 
-        if (maxDaysAgo != null && maxYearsAgo != null) {
-            if ((maxDaysAgo / 365) > maxYearsAgo) {
+            if (maxDaysAgo != null && maxYearsAgo != null) {
+                if ((maxDaysAgo / 365) > maxYearsAgo) {
+                    whereClause += '>= LAST_N_DAYS:' + maxDaysAgo;
+                } else {
+                    whereClause += '>= LAST_N_YEARS:' + maxYearsAgo;
+                }
+            } else if (maxDaysAgo != null) {
                 whereClause += '>= LAST_N_DAYS:' + maxDaysAgo;
-            } else {
+            } else if (maxYearsAgo != null) {
                 whereClause += '>= LAST_N_YEARS:' + maxYearsAgo;
             }
-        } else if (maxDaysAgo != null) {
-            whereClause += '>= LAST_N_DAYS:' + maxDaysAgo;
-        } else if (maxYearsAgo != null) {
-            whereClause += '>= LAST_N_YEARS:' + maxYearsAgo;
         }
         return whereClause += ')';
+    }
+
+    private Boolean hasUserDefinedInnerJoin {
+        get {
+            return userDefinedLastNDaysField != null && userDefinedLastNDays != null;
+        }
+    }
+
+    private Integer userDefinedLastNDays {
+        get {
+            if (userDefinedLastNDays == null) {
+                Customizable_Rollup_Settings__c customizableRollupSettings =
+                        UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+
+                if (customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c != null) {
+                    userDefinedLastNDays = (Integer) customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c;
+                }
+            }
+            return userDefinedLastNDays;
+        }
+        set;
+    }
+
+    private String userDefinedLastNDaysField {
+        get {
+            if (userDefinedLastNDaysField == null) {
+                Customizable_Rollup_Settings__c customizableRollupSettings =
+                        UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+
+                if (String.isNotBlank(customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c)) {
+                    userDefinedLastNDaysField = customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c;
+                }
+            }
+            return userDefinedLastNDaysField;
+        }
+        set;
     }
 
     /**

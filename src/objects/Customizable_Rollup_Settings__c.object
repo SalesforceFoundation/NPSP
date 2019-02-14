@@ -23,6 +23,17 @@
         <type>TextArea</type>
     </fields>
     <fields>
+        <fullName>Rollups_IncrementalLastNDays_FldOverride__c</fullName>
+        <description></description>
+        <externalId>false</externalId>
+        <inlineHelpText>For Incremental Rollups Override Use Only. This value overrides the field used to filter related Opportunities to determine which Accounts, Contacts, GAUs or RDs are recalculated during a nightly scheduled job. Defaults to SystemModStamp.</inlineHelpText>
+        <label>Incremental: Last N Days Field Override</label>
+        <length>43</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+    </fields>
+    <fields>
         <fullName>ContactHardCreditNonSkew_Incremental__c</fullName>
         <defaultValue>true</defaultValue>
         <externalId>false</externalId>
@@ -56,6 +67,19 @@
         <externalId>false</externalId>
         <inlineHelpText>Number of records per batch to process when recalculating donor rollups to the Account object.</inlineHelpText>
         <label>Account Hard Credit Batch Size</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Rollups_IncrementalLastNDays_ValOverride__c</fullName>
+        <description></description>
+        <externalId>false</externalId>
+        <inlineHelpText>For Incremental Rollups Override Use Only. This value overrides the calculated number of days used to filter related Opportunities to determine which Accounts, Contacts, GAUs or RDs are recalculated during a nightly scheduled job.</inlineHelpText>
+        <label>Incremental: Last N Days Value Override</label>
         <precision>6</precision>
         <required>false</required>
         <scale>0</scale>
