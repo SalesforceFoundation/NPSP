@@ -18,9 +18,9 @@ Delete a Data Import
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.locate_dropdown    1
     Reload Page
-    Sleep    2
+    Sleep    3
     Select BGE Row     &{account}[Name]
-    Click Element    //span[text()='Delete']   
+    Click Span Button    Delete  
     Page Should Contain    Total Count: 0
     ${status} =     Run Keyword And Return Status     Salesforce Get      DataImport__c  &{data_import}[Id]
     Should Be Equal As Strings    ${status}    False
