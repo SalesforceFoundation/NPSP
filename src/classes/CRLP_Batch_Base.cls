@@ -467,12 +467,8 @@ public abstract class CRLP_Batch_Base {
                 Customizable_Rollup_Settings__c customizableRollupSettings =
                         UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
 
-                if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
-                        && customizableRollupSettings.AccountHardCredit_LastNDays__c != null) {
-                    userDefinedLastNDays = (Integer) customizableRollupSettings.AccountHardCredit_LastNDays__c;
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit
-                        && customizableRollupSettings.ContactHardCredit_LastNDays__c != null) {
-                    userDefinedLastNDays = (Integer) customizableRollupSettings.ContactHardCredit_LastNDays__c;
+                if (customizableRollupSettings.Incremental_Last_N_Days_Field_Override__c != null) {
+                    userDefinedLastNDays = (Integer) customizableRollupSettings.Incremental_Last_N_Days_Field_Override__c;
                 }
             }
             return userDefinedLastNDays;
@@ -486,12 +482,8 @@ public abstract class CRLP_Batch_Base {
                 Customizable_Rollup_Settings__c customizableRollupSettings =
                         UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
 
-                if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
-                        && String.isNotBlank(customizableRollupSettings.AccountHardCredit_LastNDaysField__c)) {
-                    userDefinedLastNDaysField = customizableRollupSettings.AccountHardCredit_LastNDaysField__c;
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit
-                        && String.isNotBlank(customizableRollupSettings.ContactHardCredit_LastNDaysField__c)) {
-                    userDefinedLastNDaysField = customizableRollupSettings.ContactHardCredit_LastNDaysField__c;
+                if (String.isNotBlank(customizableRollupSettings.Incremental_Last_N_Days_Field_Override__c)) {
+                    userDefinedLastNDaysField = customizableRollupSettings.Incremental_Last_N_Days_Field_Override__c;
                 }
             }
             return userDefinedLastNDaysField;
