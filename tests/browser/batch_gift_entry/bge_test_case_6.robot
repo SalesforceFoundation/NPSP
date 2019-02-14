@@ -15,7 +15,8 @@ Select an opportunity for an account make grid changes and process it
     ${date} =     Get Current Date    result_format=%Y-%m-%d
     &{opportunity} =     API Create Opportunity   &{account}[Id]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}    npe01__Do_Not_Automatically_Create_Payment__c=false    Name=&{account}[Name] Test Donation        
     Select App Launcher Tab   Batch Gift Entry
-    Click Link  &{batch}[Name]
+    # Click Link  &{batch}[Name]
+    Click Link With Text    &{batch}[Name]
     Select Value From BGE DD    Donor Type    Account
     Populate Address    Search Accounts    &{account}[Name]
     Click Link    &{account}[Name]
@@ -23,7 +24,7 @@ Select an opportunity for an account make grid changes and process it
     ${pay_no}    Get BGE Card Header    &{opportunity}[Name]
     Log To Console    ${pay_no}
     Page Should Contain    &{opportunity}[Name]
-    Click Managehh Add Button    Close this window
+    Click Button    title:Close this window
     Fill BGE Form
     ...                       Donation Amount=100
     Select BGE Date Picker    Donation Date
@@ -40,15 +41,14 @@ Select an opportunity for an account make grid changes and process it
     Wait For Locator    data_imports.status    Completed
     Click Button With Value   Close
     ${value}    Return Locator Value    bge.value    Donation
-    Click Link    ${value}
-    Select Window     New
+    #Click Link    ${value}
+    Click Link With Text    ${value}
     ${pay_id}    Get Current Record ID
     &{payment} =     Salesforce Get  npe01__OppPayment__c  ${pay_id}
     Should Be Equal As Strings    &{payment}[npe01__Payment_Amount__c]    100.0
     Should Be Equal As Strings    &{payment}[npe01__Payment_Date__c]    ${date}
     Should Be Equal As Strings    &{payment}[npe01__Paid__c]    True
     Go To Record Home    &{opportunity}[Id]
-    Select Tab    Details
     Confirm Value    Amount    $100.00    Y 
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Confirm Value    Close Date    ${opp_date}    Y 

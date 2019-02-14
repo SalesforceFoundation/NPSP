@@ -17,7 +17,8 @@ Select an opportunity for an account make grid changes and process it
     &{opportunity1} =     API Create Opportunity   &{account}[Id]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}  
     &{opportunity2} =     API Create Opportunity   &{contact}[AccountId]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}      
     Select App Launcher Tab   Batch Gift Entry
-    Click Link  &{batch}[Name]
+    #Click Link  &{batch}[Name]
+    Click Link With Text    &{batch}[Name]
     Select Value From BGE DD    Donor Type    Account
     Populate Address    Search Accounts    &{account}[Name]
     Click Link    &{account}[Name]
@@ -41,7 +42,7 @@ Select an opportunity for an account make grid changes and process it
     Click BGE Edit Button    Donation Amount  
     Wait For Locator    bge.edit_field   
     Populate BGE Edit Field    Donation Amount    100
-    Click Managehh Add Button    Donation Date
+    Click Managehh Button    Donation Date
     Page Should Not Contain Link    &{opportunity2}[Name]
     Click BGE Button       Process Batch
     Select Frame With Title    NPSP Data Import
@@ -53,21 +54,23 @@ Select an opportunity for an account make grid changes and process it
     Should Be Equal As Strings    &{existing_opp}[CloseDate]    ${date}
     Should Be Equal As Strings    &{existing_opp}[StageName]    Prospecting 
     ${value}    Return Locator Value    bge.value    Donation
-    Click Link    ${value}
-    Select Window     New
+    #Click Link    text:${value}
+    Click Link With Text    ${value}
+    #Select Window     New
     ${opp_name}    Return Locator Value    check_field    Opportunity
     Click Link    ${opp_name}
-    ${newopp_id}    Get Current Record ID
-    &{new_opp} =  Salesforce Get    Opportunity    ${newopp_id}
-    Should Be Equal As Strings    &{new_opp}[Amount]    100.0
-    Should Be Equal As Strings    &{new_opp}[CloseDate]    ${date}
-    Should Be Equal As Strings    &{new_opp}[StageName]    Closed Won
+    # ${newopp_id}    Get Current Record ID
+    # &{new_opp} =  Salesforce Get    Opportunity    ${newopp_id}
+    # Should Be Equal As Strings    &{new_opp}[Amount]    100.0
+    # Should Be Equal As Strings    &{new_opp}[CloseDate]    ${date}
+    # Should Be Equal As Strings    &{new_opp}[StageName]    Closed Won
     # Select Tab    Details
-    # Confirm Value    Amount    $100.00    Y 
-    # ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
-    # Confirm Value    Close Date    ${opp_date}    Y 
-    # Confirm Value    Stage    Closed Won    Y 
+    Confirm Value    Amount    $100.00    Y 
+    ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
+    Confirm Value    Close Date    ${opp_date}    Y 
+    Confirm Value    Stage    Closed Won    Y 
     Go To Record Home    &{contact}[Id]
+    Select Tab     Related
     Load Related List    Opportunities
     Verify Occurrence    Opportunities    2
       

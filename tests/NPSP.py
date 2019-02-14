@@ -822,7 +822,8 @@ class NPSP(object):
     def click_bge_button(self,text):  
         """clicks on buttons for BGE"""      
         locator=npsp_lex_locators['bge']['button'].format(text)
-        self.selenium.get_webelement(locator).click()     
+        #self.selenium.get_webelement(locator).click()
+        self.selenium.click_button(locator)     
     
     def verify_title(self,title,value):
         """"""
@@ -858,7 +859,8 @@ class NPSP(object):
         
     def click_bge_edit_button(self, title):  
         locator=npsp_lex_locators['bge']['edit_button'].format(title)
-        self.selenium.get_webelement(locator).click()
+        #self.selenium.get_webelement(locator).click()
+        self.selenium.click_button(locator)
             
     def populate_bge_edit_field(self, title, value):
         locator=npsp_lex_locators['bge']['edit_field'].format(title)
@@ -881,9 +883,16 @@ class NPSP(object):
 
     def select_bge_row(self, value):
         """To select a row on object page based on name and open the dropdown"""
-        locator = npsp_lex_locators['bge']['name']
-        list_ele = self.selenium.get_webelement(locator)
-        if list_ele.text == value:
-            drop_down = npsp_lex_locators['bge']['locate_dropdown']
-            self.selenium.get_webelement(drop_down).click()
-            time.sleep(1)
+        locators = npsp_lex_locators['bge']['name']
+        list_ele = self.selenium.get_webelements(locators)
+        for index, element in enumerate(list_ele):
+            if element.text == value:
+                drop_down = npsp_lex_locators['bge']['locate_dropdown'].format(index+1)
+        #             self.selenium.get_webelement(drop_down).click()
+                self.selenium.click_element(drop_down)
+                time.sleep(1)
+
+    def click_link_with_text(self, text):
+        self.builtin.log("This test is using the 'Click link with text' workaround", "WARN")
+        element = self.selenium.driver.find_element_by_link_text(text)
+        self.selenium.driver.execute_script('arguments[0].click()', element)

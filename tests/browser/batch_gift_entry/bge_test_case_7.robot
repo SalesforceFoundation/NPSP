@@ -15,7 +15,8 @@ Select an opportunity for an account make grid changes and process it
     ${date} =     Get Current Date    result_format=%Y-%m-%d
     &{opportunity} =     API Create Opportunity   &{contact}[AccountId]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}      
     Select App Launcher Tab   Batch Gift Entry
-    Click Link  &{batch}[Name]
+    # Click Link  &{batch}[Name]
+    Click Link With Text    &{batch}[Name]
     Select Value From BGE DD    Donor Type    Contact
     Populate Address    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
     Click Link    &{contact}[FirstName] &{contact}[LastName]
@@ -26,13 +27,15 @@ Select an opportunity for an account make grid changes and process it
     Click BGE Button    Today
     Click BGE Button       Save
     Reload Page
+    Sleep    2
     Verify Row Count    1
     Page Should Contain Link    &{opportunity}[Name]
     Wait For Locator    bge.edit_button    Donation Amount
-    Click BGE Edit Button    Donation Amount  
+    Click BGE Edit Button    Donation Amount 
     Wait For Locator    bge.edit_field  
     Populate BGE Edit Field    Donation Amount    20
-    Click Managehh Add Button    Donation Date
+    Click Managehh Button    Donation Date
+    Wait Until Element Is Not Visible    //span[contains(@class,'toastMessage')]
     Page Should Not Contain Link    &{opportunity}[Name]
     Click BGE Button       Process Batch
     Select Frame With Title    NPSP Data Import
@@ -44,8 +47,8 @@ Select an opportunity for an account make grid changes and process it
     Should Be Equal As Strings    &{existing_opp}[CloseDate]    ${date}
     Should Be Equal As Strings    &{existing_opp}[StageName]    Prospecting 
     ${value}    Return Locator Value    bge.value    Donation
-    Click Link    ${value}
-    Select Window     New
+    # Click Link    ${value}
+    Click Link With Text    ${value}
     ${opp_name}    Return Locator Value    check_field    Opportunity
     Click Link    ${opp_name}
     ${newopp_id}    Get Current Record ID
@@ -54,6 +57,7 @@ Select an opportunity for an account make grid changes and process it
     Should Be Equal As Strings    &{new_opp}[CloseDate]    ${date}
     Should Be Equal As Strings    &{new_opp}[StageName]    Closed Won
     Go To Record Home    &{contact}[Id]
+    Select Tab    Related
     Load Related List    Opportunities
     Verify Occurrence    Opportunities    2
       

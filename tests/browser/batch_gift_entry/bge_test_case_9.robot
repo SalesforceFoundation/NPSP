@@ -3,7 +3,7 @@
 Resource        tests/NPSP.robot
 Library           DateTime
 Suite Setup     Open Test Browser
-#Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Delete Records and Close Browser
 
 *** Test Cases ***
 
@@ -14,19 +14,16 @@ Delete a Data Import
     &{account} =     API Create Organization Account
     &{data_import} =  API Create DataImport    &{batch}[Id]    Account1Imported__c=&{account}[Id]    Donation_Donor__c=Account1
     Select App Launcher Tab   Batch Gift Entry
-    Click Link  &{batch}[Name]
-    # Click Element    //tbody/tr/td//div//lightning-button-menu
-    # Set Focus To Element    //span[text()='Delete']
-    # # Sleep    2
-    # Click Link    Delete
-    Select BGE Row     &{account}[Name]
+    # Click Link      link=&{batch}[Name]
+    Click Link With Text    &{batch}[Name]
+    Wait For Locator    bge.locate_dropdown    1
+    Reload Page
     Sleep    2
+    Select BGE Row     &{account}[Name]
     Click Element    //span[text()='Delete']   
     Page Should Contain    Total Count: 0
-    
-    
-    # &{verify_data_import} =     Salesforce Get  DataImport__c  &{data_import}[Id]
-    # Should Be Equal As Strings    &{verify_data_import}[Id]    ${Empty}
+    ${status} =     Run Keyword And Return Status     Salesforce Get      DataImport__c  &{data_import}[Id]
+    Should Be Equal As Strings    ${status}    False
     
      
       

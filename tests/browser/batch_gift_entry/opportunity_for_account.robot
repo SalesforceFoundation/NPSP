@@ -15,7 +15,8 @@ Select an opportunity for an account make grid changes and process it
     ${date} =     Get Current Date    result_format=%Y-%m-%d
     &{opportunity} =     API Create Opportunity   &{account}[Id]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}    
     Select App Launcher Tab   Batch Gift Entry
-    Click Link  &{batch}[Name]
+    # Click Link  &{batch}[Name]
+    Click Link With Text    &{batch}[Name]
     Select Value From BGE DD    Donor Type    Account
     Populate Address    Search Accounts    &{account}[Name]
     Click Link    &{account}[Name]
@@ -27,6 +28,7 @@ Select an opportunity for an account make grid changes and process it
     Click BGE Button    Today
     Click BGE Button       Save
     Reload Page
+    Sleep    2
     Verify Row Count    1
     Page Should Contain Link    &{opportunity}[Name]
     Wait For Locator    bge.edit_button    Donation Amount
@@ -39,7 +41,6 @@ Select an opportunity for an account make grid changes and process it
     Wait For Locator    data_imports.status    Completed
     Click Button With Value   Close
     Go To Record Home    &{opportunity}[Id]
-    Select Tab    Details
     Confirm Value    Amount    $10.00    Y 
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Confirm Value    Close Date    ${opp_date}    Y 
