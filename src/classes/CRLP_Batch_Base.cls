@@ -354,10 +354,10 @@ public abstract class CRLP_Batch_Base {
     }
 
     /**
-     * @description returns the max Integer for all active time-bound Days_Back rollups,
+     * @description The max Integer for all active time-bound Days_Back rollups,
      * or null if there are no active time-bound Days_Back rollups for this summary object
      */
-    protected Integer maxDaysAgo {
+    private Integer maxDaysAgo {
         get {
             if (maxDaysAgo == null) {
                 for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
@@ -377,10 +377,10 @@ public abstract class CRLP_Batch_Base {
     }
 
     /**
-     * @description returns the max Integer for all active time-bound Years_Ago rollups,
+     * @description The max Integer for all active time-bound Years_Ago rollups,
      * or null if there are no active time-bound Years_Ago rollups for this summary object
      */
-    protected Integer maxYearsAgo {
+    private Integer maxYearsAgo {
         get {
             if (maxYearsAgo == null) {
                 for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
