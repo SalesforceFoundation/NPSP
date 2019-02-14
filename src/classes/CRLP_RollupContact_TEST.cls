@@ -511,23 +511,4 @@ public class CRLP_RollupContact_TEST {
             System.assertEquals(null, c3.npo02__NumberOfClosedOpps__c);
         }
     }
-
-    @isTest
-    private static void testContactHardCreditGetWhereClause_Standard() {
-        // Start by enabling Customizable Rollups and setting the incremental mode
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true,
-                ContactHardCreditNonSkew_Incremental__c = true
-        ));
-
-        // Create the test data
-        mockRollupCMTValues();
-
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
-        contactBatchJob.initializeJobData();
-
-        String whereClause = contactBatchJob.getWhereClause();
-        System.assert(whereClause.contains('WHERE') == false, 'The standard where clause for the inner join ' +
-                'should NOT contain a where filter on the Opportunities.');
-    }
 }
