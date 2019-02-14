@@ -722,6 +722,7 @@
         <fullName>DonationCampaignImported__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
+        <inlineHelpText>Opportunity.CampaignId</inlineHelpText>
         <label>Donation Campaign Source</label>
         <referenceTo>Campaign</referenceTo>
         <relationshipName>Data_Imports</relationshipName>
