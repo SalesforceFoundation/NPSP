@@ -148,8 +148,8 @@
         // returns map of sobject name => list of fields
         var allFieldsBySObject = this.groupFieldsBySObject(everyField);
 
-        const opportunitySObjectName = component.get('v.labels.opportunitySObjectName');
-        const paymentSObjectName = component.get('v.labels.paymentSObjectName');
+        const opportunitySObjectName = component.get('v.wizardMetadata.labels.opportunitySObjectName');
+        const paymentSObjectName = component.get('v.wizardMetadata.labels.paymentSObjectName');
 
         var sObjectKeys = Object.keys(allFieldsBySObject);
 

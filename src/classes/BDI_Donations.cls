@@ -389,8 +389,8 @@ public class BDI_Donations {
         } else {
             opportunityName += ' ' + System.Label.bdiDonation;
         }
-
-        /*if (dataImport.DonationCampaignImported__c != null) {
+/*
+        if (dataImport.DonationCampaignImported__c != null) {
             // User specified the Campaign using BGE lookup field or an ID on import
             opp.CampaignId = dataImport.DonationCampaignImported__c;
         } else if (dataImport.Donation_Campaign_Name__c != null) {
