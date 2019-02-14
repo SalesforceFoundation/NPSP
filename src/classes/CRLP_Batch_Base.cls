@@ -428,9 +428,6 @@ public abstract class CRLP_Batch_Base {
      * @return The WHERE clause, as a string, that should be used to filter the detail records
      */
     protected String getIncrementalModeWhereClause() {
-        // Set to CloseDate for testing, SystemModstamp for prod.
-        String whereClauseDateField = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp';
-
         String whereClause = 'Id IN (' +
                 'SELECT ' + keyField + ' ' +
                 'FROM ' + detailObjectType + ' ' +
