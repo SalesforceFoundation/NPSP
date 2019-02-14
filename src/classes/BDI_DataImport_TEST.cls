@@ -1232,7 +1232,7 @@ public with sharing class BDI_DataImport_TEST {
     *        import contacts with donation & campaign IDs and Names
     * verify:
     *    opportunity objects created
-    *    opportunities added to campaigns
+    *    campaigns added to opportunities
     *    campaigns matched by ID
     **********************************************************************************************************/
     static testMethod void TwoDIWithDonationsAndCampaignIds() {
@@ -1288,6 +1288,111 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(System.Label.bdiCreated, dataImports[1].DonationImportStatus__c);
         System.assertEquals(campaigns[1].Id, dataImports[1].DonationCampaignImported__c);
         System.assertEquals(System.Label.bdiMatched, dataImports[1].DonationCampaignImportStatus__c);
+
+    }
+
+    /*********************************************************************************************************
+    * @description operation
+    *        import contacts with donation & campaign names -- Only Dry Run
+    * verify:
+    *    no opportunity objects created
+    *    no campaign objects created
+    *    correct campaign status for dry run matching
+    **********************************************************************************************************/
+    static testMethod void TwoDIWithDonationsAndDuplicateCampaignNameInDryRun() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        String duplicateCampaignName = 'Matching Campaign Name';
+
+        dataImports.add(newDI('c1', 'C1'));
+        dataImports[0].Donation_Amount__c = 100;
+        dataImports[0].Donation_Campaign_Name__c = duplicateCampaignName;
+
+        dataImports.add(newDI('c2', 'C2'));
+        dataImports[1].Donation_Amount__c = 200;
+        dataImports[1].Donation_Campaign_Name__c = duplicateCampaignName;
+
+        insert dataImports;
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        bdi.isDryRun = true;
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        // verify expected results
+        List<Opportunity> opps = getOpps();
+        System.assertEquals(0, opps.size());
+
+        List<Campaign> campaigns = getCampaigns();
+        System.assertEquals(0, campaigns.size());
+
+        dataImports = getDataImports();
+        System.assertEquals(2, dataImports.size());
+
+        System.assertEquals(null, dataImports[0].DonationCampaignImported__c);
+        System.assertEquals(System.Label.bdiDryRunNoMatch, dataImports[0].DonationCampaignImportStatus__c);
+        System.assertEquals(null, dataImports[1].DonationCampaignImported__c);
+        System.assertEquals(System.Label.bdiDryRunNoMatch, dataImports[1].DonationCampaignImportStatus__c);
+    }
+
+    /*********************************************************************************************************
+    * @description operation
+    *        import contacts with donation & campaign names
+    * verify:
+    *    opportunity objects created
+    *    singular campaign object created
+    *    campaign ID added to all opportunities
+    **********************************************************************************************************/
+    static testMethod void TwoDIWithDonationsAndDuplicateCampaignNames() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        String duplicateCampaignName = 'Matching Campaign Name';
+
+        dataImports.add(newDI('c1', 'C1'));
+        dataImports[0].Donation_Amount__c = 100;
+        dataImports[0].Donation_Campaign_Name__c = duplicateCampaignName;
+
+        dataImports.add(newDI('c2', 'C2'));
+        dataImports[1].Donation_Amount__c = 200;
+        dataImports[1].Donation_Campaign_Name__c = duplicateCampaignName;
+
+        insert dataImports;
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        // verify expected results
+        List<Opportunity> opps = getOpps();
+        System.assertEquals(2, opps.size());
+        System.assertEquals(100, opps[0].Amount);
+        System.assertEquals(200, opps[1].Amount);
+
+        List<Campaign> campaigns = getCampaigns();
+        System.assertEquals(1, campaigns.size());
+        System.assertEquals(campaigns[0].Id, opps[0].CampaignId);
+        System.assertEquals(campaigns[0].Id, opps[1].CampaignId);
+
+        dataImports = getDataImports();
+        System.assertEquals(2, dataImports.size());
+
+        System.assertEquals(opps[0].Id, dataImports[0].DonationImported__c);
+        System.assertEquals(System.Label.bdiCreated, dataImports[0].DonationImportStatus__c);
+        System.assertEquals(campaigns[0].Id, dataImports[0].DonationCampaignImported__c);
+        System.assertEquals(System.Label.bdiCreated, dataImports[0].DonationCampaignImportStatus__c);
+
+        System.assertEquals(opps[1].Id, dataImports[1].DonationImported__c);
+        System.assertEquals(System.Label.bdiCreated, dataImports[1].DonationImportStatus__c);
+        System.assertEquals(campaigns[0].Id, dataImports[1].DonationCampaignImported__c);
+        System.assertEquals(System.Label.bdiCreated, dataImports[1].DonationCampaignImportStatus__c);
 
     }
 
