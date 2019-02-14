@@ -281,7 +281,6 @@ public abstract class CRLP_Batch_Base {
         return hasPaymentRollups;
     }
 
-
     /********************************************************************************************************
      * @description Soft Credit roll-ups work by querying the OCR object as the main object, but sending
      * PartialSoftCredit records as the detail records for the rollups. This is because PSC has a custom field
@@ -429,25 +428,25 @@ public abstract class CRLP_Batch_Base {
      * @return The WHERE clause, as a string, that should be used to filter the detail records
      */
     protected String getIncrementalModeWhereClause() {
-        // Set to CloseDate for testing, SystemModstamp for prod.
-        String whereClauseDateField = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp';
-
         String whereClause = 'Id IN (' +
                 'SELECT ' + keyField + ' ' +
                 'FROM ' + detailObjectType + ' ' +
                 'WHERE ';
 
-        if (maxDaysAgo != null
-                && maxYearsAgo != null) {
+        // Set to CloseDate for testing, SystemModstamp for prod.
+        String whereClauseDateField = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp';
+        whereClause += whereClauseDateField + ' ';
+
+        if (maxDaysAgo != null && maxYearsAgo != null) {
             if ((maxDaysAgo / 365) > maxYearsAgo) {
-                whereClause += whereClauseDateField + ' >= LAST_N_DAYS:' + maxDaysAgo;
+                whereClause += '>= LAST_N_DAYS:' + maxDaysAgo;
             } else {
-                whereClause += whereClauseDateField + ' >= LAST_N_YEARS:' + maxYearsAgo;
+                whereClause += '>= LAST_N_YEARS:' + maxYearsAgo;
             }
         } else if (maxDaysAgo != null) {
-            whereClause += whereClauseDateField + ' >= LAST_N_DAYS:' + maxDaysAgo;
+            whereClause += '>= LAST_N_DAYS:' + maxDaysAgo;
         } else if (maxYearsAgo != null) {
-            whereClause += whereClauseDateField + ' >= LAST_N_YEARS:' + maxYearsAgo;
+            whereClause += '>= LAST_N_YEARS:' + maxYearsAgo;
         }
         return whereClause += ')';
     }
