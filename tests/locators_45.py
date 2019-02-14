@@ -149,6 +149,7 @@ npsp_lex_locators={
         'value':'//td[@data-label="{}"]//a',
         'name':'//tbody/tr/th//a',
         'locate_dropdown':'//tbody/tr[{}]/td[6]//div//button[./span[text()="Show actions"]]/lightning-primitive-icon',
+        'gift-amount':'//div[./label[text()="{}"]]',
         },    
     'object_manager':{
         'button':'//input[@title="{}"]',

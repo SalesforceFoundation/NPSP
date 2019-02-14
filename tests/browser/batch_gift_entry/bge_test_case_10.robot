@@ -26,7 +26,8 @@ Edit Batch Created Via API
     Verify Title    Batch Gift Entry    ${batch}[Name]
     Wait For Locator    bge.button    Process Batch
     Page Should Contain    Total Count: 0 / 2
-    #Page Should Contain    Total Amount: / $20.00
+    ${value}    Return Locator Value    bge.gift-amount    Total Amount:
+    Should Be Equal As Strings    ${value}    Total Amount: / $20.00
     Click BGE Button       Process Batch
     Page Should Contain    Error
     Verify Title    Batch Gift Entry    ${batch}[Name]

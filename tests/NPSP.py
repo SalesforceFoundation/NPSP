@@ -78,7 +78,7 @@ class NPSP(object):
         return self.get_namespace_prefix(level_object['name'])
 
     def populate_address(self, loc, value):
-        """ Populate address with Place Holder aka Mailing Street etc as a locator
+        """ Populate address with Place Holder as a locator
             and actual value of the place holder.
         """
         xpath = npsp_lex_locators["mailing_address"].format(loc)
@@ -888,7 +888,6 @@ class NPSP(object):
         for index, element in enumerate(list_ele):
             if element.text == value:
                 drop_down = npsp_lex_locators['bge']['locate_dropdown'].format(index+1)
-        #             self.selenium.get_webelement(drop_down).click()
                 self.selenium.click_element(drop_down)
                 time.sleep(1)
 
