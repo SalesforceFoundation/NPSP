@@ -22,24 +22,15 @@
         <type>TextArea</type>
     </fields>
     <fields>
-        <fullName>AccountHardCredit_LastNDaysField__c</fullName>
+        <fullName>Incremental_Last_N_Days_Field_Override__c</fullName>
         <description></description>
         <externalId>false</externalId>
         <inlineHelpText></inlineHelpText>
-        <label>Account Hard Credit Last N Days Field</label>
+        <label>Incremental: Last N Days Field Override</label>
+        <length>43</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
-        <type>TextArea</type>
-    </fields>
-    <fields>
-        <fullName>ContactHardCredit_LastNDaysField__c</fullName>
-        <description></description>
-        <externalId>false</externalId>
-        <inlineHelpText></inlineHelpText>
-        <label>Contact Hard Credit Last N Days Field</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>TextArea</type>
+        <type>Text</type>
     </fields>
     <fields>
         <fullName>ContactHardCreditNonSkew_Incremental__c</fullName>
@@ -82,26 +73,11 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>AccountHardCredit_LastNDays__c</fullName>
-        <defaultValue>365</defaultValue>
+        <fullName>Incremental_Last_N_Days_Value_Override__c</fullName>
         <description></description>
         <externalId>false</externalId>
         <inlineHelpText></inlineHelpText>
-        <label>Account Hard Credit Last N Days</label>
-        <precision>6</precision>
-        <required>false</required>
-        <scale>0</scale>
-        <trackTrending>false</trackTrending>
-        <type>Number</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>ContactHardCredit_LastNDays__c</fullName>
-        <defaultValue>365</defaultValue>
-        <description></description>
-        <externalId>false</externalId>
-        <inlineHelpText></inlineHelpText>
-        <label>Contact Hard Credit Last N Days</label>
+        <label>Incremental: Last N Days Value Override</label>
         <precision>6</precision>
         <required>false</required>
         <scale>0</scale>
