@@ -2977,7 +2977,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>CallableApi Method Not Implemented</shortDescription>
-        <value>''{0}'' is not implemented</value>
+        <value>{0} is not implemented</value>
     </labels>
     <labels>
         <fullName>conFailedAccountCreate</fullName>
