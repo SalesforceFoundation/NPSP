@@ -1770,23 +1770,32 @@ global with sharing class BDI_DataImportService {
             if (campaignId != null) {
                 // User specified a Campaign lookup in BGE lookup or with an ID on import
                 dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedId;
-            } else if (campaignName != null && !uniqueCampaignNames.contains(campaignName)) {
-                uniqueCampaignNames.add(campaignName);
-                if (campaignNameToCampaignId.get(campaignName) == null) {
-                    if (isDryRun) {
-                        dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedNone;
-                    } else {
-                        dataImport.DonationCampaignImportStatus__c = System.Label.bdiCreated;
-                        // Create a new Campaign if no match on Name
+
+            } else if (campaignName != null && campaignId == null) {
+                // User specified a Campaign Name!
+
+                if (!uniqueCampaignNames.contains(campaignName)) {
+                    // We haven't already logged this name; add it to the set
+                    uniqueCampaignNames.add(campaignName);
+
+                    // Create a new Campaign if no match on Name
+                    if (!isDryRun && campaignNameToCampaignId.get(campaignName) == null) {
                         cmp = new Campaign(Name = campaignName, IsActive = true);
                         campaignsToInsert.add(cmp);
                         dataImportsWithNewCampaigns.add(dataImport);
                     }
-                } else {
-                    // Park the matched Campaign ID in the lookup only after dry run to get the correct match status
-                    if (!isDryRun) {
-                        dataImport.DonationCampaignImported__c = campaignNameToCampaignId.get(campaignName);
+                }
+
+                // Set Campaign Import status
+                if (campaignNameToCampaignId.get(campaignName) == null) {
+                    // The Campaign doesn't actually exist yet
+                    if (isDryRun) {
+                        dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedNone;
+                    } else {
+                        dataImport.DonationCampaignImportStatus__c = System.Label.bdiCreated;
                     }
+                } else {
+                    // The campaign exists!
                     dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatched;
                 }
             }
@@ -1804,12 +1813,19 @@ global with sharing class BDI_DataImportService {
         }
 
         // add the new campaigns to our map
-        for (Integer i=0; i < campaignsToInsert.size(); i++) {
-            Campaign cmp = campaignsToInsert[i];
-            campaignNameToCampaignId.put(cmp.Name, cmp.Id);
-            dataImportsWithNewCampaigns[i].DonationCampaignImported__c = cmp.Id;
+        for (Campaign campaign : campaignsToInsert) {
+            campaignNameToCampaignId.put(campaign.Name, campaign.Id);
         }
 
+        for (DataImport__c dataImport : listDI) {
+            if (!isDryRun
+                    && dataImport.DonationCampaignImported__c == null
+                    && dataImport.Donation_Campaign_Name__c != null) {
+                // user specified Campaign Name only and we should have all new *and* existing Campaigns in our map now
+                dataImport.DonationCampaignImported__c =
+                        campaignNameToCampaignId.get(dataImport.Donation_Campaign_Name__c);
+            }
+        }
     }
 
     //********************************************* CAMPAIGN MEMBERS ************************************************
