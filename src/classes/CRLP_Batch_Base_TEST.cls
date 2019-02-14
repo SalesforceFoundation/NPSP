@@ -223,6 +223,58 @@ private class CRLP_Batch_Base_TEST {
                 'for the inner join when the custom setting is set to false.');
     }
 
+    @isTest
+    private static void accountHardCreditRollupWithUserDefinedJoinGeneratesProperJoinQuery() {
+        String userDefinedLastNDaysFieldOverride = 'LastModifiedDate';
+        Integer userDefinedLastNDaysValueOverride = 44;
+
+        Customizable_Rollup_Settings__c settings = new Customizable_Rollup_Settings__c();
+        settings.Customizable_Rollups_Enabled__c = true;
+        settings.AccountHardCreditNonSkew_Incremental__c = true;
+        settings.Rollups_IncrementalLastNDays_FldOverride__c = userDefinedLastNDaysFieldOverride;
+        settings.Rollups_IncrementalLastNDays_ValOverride__c = userDefinedLastNDaysValueOverride;
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(settings);
+
+        // Create the test data
+        CRLP_RollupAccount_TEST.mockRollupCMTValues();
+
+        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
+        accountBatchJob.initializeJobData();
+        accountBatchJob.isScheduledJob = true;
+
+        String generatedWhereClause = accountBatchJob.getWhereClause();
+        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
+                'where clause for the inner join should contain a where filter on the Opportunities.');
+        System.assert(generatedWhereClause.contains(userDefinedLastNDaysFieldOverride));
+        System.assert(generatedWhereClause.contains(String.valueOf(userDefinedLastNDaysValueOverride)));
+    }
+
+    @isTest
+    private static void contactHardCreditRollupWithUserDefinedJoinGeneratesProperJoinQuery() {
+        String userDefinedLastNDaysFieldOverride = 'LastModifiedDate';
+        Integer userDefinedLastNDaysValueOverride = 555;
+
+        Customizable_Rollup_Settings__c settings = new Customizable_Rollup_Settings__c();
+        settings.Customizable_Rollups_Enabled__c = true;
+        settings.ContactHardCreditNonSkew_Incremental__c = true;
+        settings.Rollups_IncrementalLastNDays_FldOverride__c = userDefinedLastNDaysFieldOverride;
+        settings.Rollups_IncrementalLastNDays_ValOverride__c = userDefinedLastNDaysValueOverride;
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(settings);
+
+        // Create the test data
+        CRLP_RollupContact_TEST.mockRollupCMTValues();
+
+        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
+        contactBatchJob.initializeJobData();
+        contactBatchJob.isScheduledJob = true;
+
+        String generatedWhereClause = contactBatchJob.getWhereClause();
+        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
+                'where clause for the inner join should contain a where filter on the Opportunities.');
+        System.assert(generatedWhereClause.contains(userDefinedLastNDaysFieldOverride));
+        System.assert(generatedWhereClause.contains(String.valueOf(userDefinedLastNDaysValueOverride)));
+    }
+
     private static void deactivateTimeBoundRollups(
             CRLP_RollupProcessingOptions.RollupType jobType,
             CRLP_Operation.TimeBoundOperationType timeBoundOperationType) {
