@@ -38,11 +38,7 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void testAccountHardCreditGetWhereClause_Standard(){
-        // Start by enabling Customizable Rollups and setting the incremental mode
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true,
-                AccountHardCreditNonSkew_Incremental__c = true
-        ));
+        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
 
         // Create the test data
         CRLP_RollupAccount_TEST.mockRollupCMTValues();
@@ -57,11 +53,7 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void testAccountHardCreditGetWhereClause_IncrementalMode(){
-        // Start by enabling Customizable Rollups and setting the incremental mode
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true,
-                AccountHardCreditNonSkew_Incremental__c = true // Set the custom setting value to true
-        ));
+        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
 
         // Create the test data
         CRLP_RollupAccount_TEST.mockRollupCMTValues();
@@ -100,11 +92,7 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void testAccountHardCreditGetWhereClause_IncrementalMode_DaysOnly() {
-        // Start by enabling Customizable Rollups and setting the incremental mode
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true,
-                AccountHardCreditNonSkew_Incremental__c = true // Set the custom setting value to true
-        ));
+        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
 
         // Create the test data
         CRLP_RollupAccount_TEST.mockRollupCMTValues();
@@ -137,11 +125,7 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void testAccountHardCreditGetWhereClause_IncrementalMode_YearsOnly() {
-        // Start by enabling Customizable Rollups and setting the incremental mode
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true,
-                AccountHardCreditNonSkew_Incremental__c = true // Set the custom setting value to true
-        ));
+        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
 
         // Create the test data
         CRLP_RollupAccount_TEST.mockRollupCMTValues();
@@ -174,11 +158,7 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void testAccountHardCreditGetWhereClause_IncrementalMode_CustomSettingFalse() {
-        // Start by enabling Customizable Rollups and setting the incremental mode
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true,
-                AccountHardCreditNonSkew_Incremental__c = false // Set the custom setting to false
-        ));
+        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, false);
 
         // Create the test data
         CRLP_RollupAccount_TEST.mockRollupCMTValues();
@@ -195,11 +175,7 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void testContactHardCreditGetWhereClause_IncrementalMode() {
-        // Start by enabling Customizable Rollups and setting the incremental mode
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true,
-                ContactHardCreditNonSkew_Incremental__c = true // Set the custom setting value to true
-        ));
+        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
 
         // Create the test data
         CRLP_RollupContact_TEST.mockRollupCMTValues();
@@ -238,11 +214,7 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void testContactHardCreditGetWhereClause_IncrementalMode_DaysOnly() {
-        // Start by enabling Customizable Rollups and setting the incremental mode
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true,
-                ContactHardCreditNonSkew_Incremental__c = true // Set the custom setting value to true
-        ));
+        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
 
         // Create the test data
         CRLP_RollupContact_TEST.mockRollupCMTValues();
@@ -275,11 +247,7 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void testContactHardCreditGetWhereClause_IncrementalMode_YearsOnly() {
-        // Start by enabling Customizable Rollups and setting the incremental mode
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true,
-                ContactHardCreditNonSkew_Incremental__c = true // Set the custom setting value to true
-        ));
+        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
 
         // Create the test data
         CRLP_RollupContact_TEST.mockRollupCMTValues();
@@ -312,11 +280,7 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void testContactHardCreditGetWhereClause_IncrementalMode_CustomSettingFalse() {
-        // Start by enabling Customizable Rollups and setting the incremental mode
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true,
-                ContactHardCreditNonSkew_Incremental__c = false // Set the custom setting to false
-        ));
+        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, false);
 
         // Create the test data
         CRLP_RollupContact_TEST.mockRollupCMTValues();
@@ -328,5 +292,19 @@ private class CRLP_Batch_Base_TEST {
         String whereClause = contactBatchJob.getWhereClause();
         System.assert(whereClause.contains('WHERE') == false, 'The standard where clause should be used ' +
                 'for the inner join when the custom setting is set to false.');
+    }
+
+    private static void configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType jobType, Boolean isIncrementalMode) {
+        if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
+            UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+                    Customizable_Rollups_Enabled__c = true,
+                    AccountHardCreditNonSkew_Incremental__c = isIncrementalMode
+            ));
+        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+            UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+                    Customizable_Rollups_Enabled__c = true,
+                    ContactHardCreditNonSkew_Incremental__c = isIncrementalMode
+            ));
+        }
     }
 }
