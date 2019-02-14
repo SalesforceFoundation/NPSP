@@ -55,12 +55,12 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
     * @description Trigger Handler on Contact that handles detecting when an Contact Merge 
     * has completed, in order to fixup an assortment of affected information.
     * @param listNew the list of Contacts from trigger new. 
-    * @param listOld the list of Contacts from trigger old. 
+    * @param oldContacts the list of Contacts from trigger old. 
     * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
     * @param objResult the describe for Contacts 
     * @return dmlWrapper.  always null.
     ********************************************************************************************************/
-    public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld,
+    public override DmlWrapper run(List<SObject> newContacts, List<SObject> oldContacts,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
@@ -68,13 +68,13 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
             List<String> mergeKeys = new List<String>();
 
-            for (SObject sObj : listOld) {
-                Contact deletedContact = (Contact)sObj;
-                if (skipContactMergeFixup(deletedContact)) {
+            for (SObject sObj : oldContacts) {
+                Contact oldContact = (Contact)sObj;
+                if (skipContactMergeFixup(oldContact)) {
                     continue;
                 }
 
-                mergeKeys.add(mergeKey(deletedContact.Id, deletedContact.AccountId, deletedContact.MasterRecordId));
+                mergeKeys.add(buildMergeKey(oldContact.Id, oldContact.AccountId, oldContact.MasterRecordId));
             }
 
             handleContactMergeFixupsFuture(mergeKeys);
@@ -94,25 +94,26 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description returns a unique key for a tracking a losing Contact, their account, and the winning Contact.
-    * @param contactIdLoser The losing Contact's Id
-    * @param accountIdLoser The losing Contact's Account Id
-    * @param contactIdWinner The winning Contact's Id
-    * @return string
+    * @description returns a unique key for a tracking a merged Contact, their account, and the master
+    * Contact Record Id.
+    * @param oldContactId The merged Contact's Id
+    * @param oldAccountId The merged Contact's Account Id
+    * @param masterContactId The master Contact Record Id
+    * @return String
     ********************************************************************************************************/
-    private String mergeKey(string contactIdLoser, string accountIdLoser, string contactIdWinner) {
-        return (contactIdLoser + ':' + accountIdLoser + ':' + contactIdWinner);
+    private String buildMergeKey(String oldContactId, String oldAccountId, String masterContactId) {
+        return (oldContactId + ':' + oldAccountId + ':' + masterContactId);
     }
 
     /*******************************************************************************************************
     * @description After a Contact Merge, call this Future routine to perform assorted fixups that need to
     * occur which include:
     *   - update the Account name and greetings 
-    *   - move Opps to the Winner's Account 
+    *   - move Opps to the Master Contact's Account 
     *   - recalculate Household Soft Credit OCRs 
     *   - recalculate Opportunity Rollups
     *
-    * @param mergeKeys The list of mergeKeys that provide contactIdLoser, accountIdLoser, and contactIdWinner
+    * @param mergeKeys The list of mergeKeys that provide oldContactId, oldAccountId, and masterContactId
     * @return null
     ********************************************************************************************************/
     @Future
@@ -130,15 +131,15 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
     @TestVisible
     private class ContactMergeProcessor {
         @TestVisible
-        private List<String> losingContactIds;
+        private List<String> oldContactIds = new List<String>();
         @TestVisible
-        private List<String> losersAccountIds;
+        private List<String> oldAccountIds = new List<String>();
         @TestVisible
-        private List<String> winningContactIds;
+        private List<String> masterContactIds = new List<String>();
 
-        private List<Id> householdAcctIds;
-        private Map<Id, Id> oldAcctIdForOppsByWinningContactId;
-        private Map<Id, Id> newAcctIdForOppsByWinningContactId;
+        private List<Id> householdIds = new List<Id>();
+        private Map<Id, Id> oldIndividualAcctIdByMasterId = new Map<Id, Id>();
+        private Map<Id, Id> newIndividualAcctIdByMasterId = new Map<Id, Id>();
 
         /***************************************************************************************************************
          * @description Fixes records involved in the merge process
@@ -147,24 +148,26 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         private void fixup(List<String> mergeKeys) {
             setMergeKeyIds(mergeKeys);
 
-            List<Account> losersAccounts = getAccounts(losersAccountIds);
-            List<Contact> winningContacts = getContacts(winningContactIds);
+            List<Account> oldAccounts = getAccounts(oldAccountIds);
+            List<Contact> masterContacts = getContacts(masterContactIds);
 
-            householdAcctIds = getHouseholdAcctIds(losersAccounts);
-            householdAcctIds.addAll(getHouseholdAcctIds(winningContacts));
+            householdIds = buildHouseholdIds(oldAccounts);
+            householdIds.addAll(buildHouseholdIds(masterContacts));
 
-            oldAcctIdForOppsByWinningContactId = getOldAcctIdForOppsByWinningContactId(losersAccounts);
-            newAcctIdForOppsByWinningContactId = getNewAcctIdForOppsByWinningContactId(winningContacts);
+            oldIndividualAcctIdByMasterId = buildAcctIdByMasterId(oldAccounts);
+            newIndividualAcctIdByMasterId = buildAcctIdByMasterId(masterContacts);
 
             fixupAccountData();
-            fixupContactData(winningContacts);
+            fixupContactData(masterContacts);
         }
 
         /*******************************************************************************************************
         * @description Returns the account Id of accounts with household account types
+        * @param accounts - The accounts to return the Id for when they are a household account
+        * @return List<Id> - The list of household account Ids
         ********************************************************************************************************/
         @TestVisible
-        private List<Id> getHouseholdAcctIds(List<Account> accounts) {
+        private List<Id> buildHouseholdIds(List<Account> accounts) {
             List<Id> accountIds = new List<Id>();
 
             for (Account record : accounts) {
@@ -177,10 +180,10 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         }
 
         /*******************************************************************************************************
-        * @description Returns the account Id of the winning contacts accounts with household account types
+        * @description Returns the account Id of the master contacts accounts with household account types
         ********************************************************************************************************/
         @TestVisible
-        private List<Id> getHouseholdAcctIds(List<Contact> contacts) {
+        private List<Id> buildHouseholdIds(List<Contact> contacts) {
             List<Id> accountIds = new List<Id>();
 
             for (Contact record: contacts) {
@@ -197,23 +200,23 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         * is any type of individual account
         ********************************************************************************************************/
         @TestVisible
-        private Map<Id, Id> getOldAcctIdForOppsByWinningContactId(List<Account> losersAccounts) {
+        private Map<Id, Id> buildAcctIdByMasterId(List<Account> oldAccounts) {
             Map<Id, Id> accountIdByContactId = new Map<Id, Id>();
 
-            Map<Id, Account> losersAccountById = new Map<Id, Account>(losersAccounts);
+            Map<Id, Account> oldAccountById = new Map<Id, Account>(oldAccounts);
 
-            for (integer i = 0; i < losersAccountIds.size(); i++) {
-                if (losersAccountIds[i] == null) {
+            for (integer i = 0; i < oldAccountIds.size(); i++) {
+                if (oldAccountIds[i] == null) {
                     continue;
                 }
 
-                Account losersAccount = losersAccountById.get(losersAccountIds[i]);
-                if (losersAccount == null) {
+                Account oldAccount = oldAccountById.get(oldAccountIds[i]);
+                if (oldAccount == null) {
                     continue;
                 }
 
-                if (isAnyIndividualType(losersAccount.npe01__SYSTEM_AccountType__c)) {
-                    accountIdByContactId.put(winningContactIds[i], losersAccountIds[i]);
+                if (isIndividual(oldAccount.npe01__SYSTEM_AccountType__c)) {
+                    accountIdByContactId.put(masterContactIds[i], oldAccountIds[i]);
                 }
             }
 
@@ -221,22 +224,22 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         }
 
         /*******************************************************************************************************
-        * @description Adds the account Id of the winning contacts account when it
+        * @description Adds the account Id of the master contacts account when it
         * is any type of individual account
         *
-        * @param winningContacts the collection of contacts to extract the ids from
+        * @param masterContacts the collection of contacts to extract the ids from
         ********************************************************************************************************/
         @TestVisible
-        private Map<Id, Id> getNewAcctIdForOppsByWinningContactId(List<Contact> winningContacts) {
+        private Map<Id, Id> buildAcctIdByMasterId(List<Contact> masterContacts) {
             Map<Id, Id> accountIdByContactId = new Map<Id, Id>();
 
-            for (Contact winningContact : winningContacts) {
-                if (winningContact.AccountId == null) {
+            for (Contact masterContact : masterContacts) {
+                if (masterContact.AccountId == null) {
                     continue;
                 }
 
-                if (isAnyIndividualType(winningContact.Account.npe01__SYSTEM_AccountType__c)) {
-                    accountIdByContactId.put(winningContact.Id, winningContact.AccountId);
+                if (isIndividual(masterContact.Account.npe01__SYSTEM_AccountType__c)) {
+                    accountIdByContactId.put(masterContact.Id, masterContact.AccountId);
                 }
             }
 
@@ -259,46 +262,50 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         * @param acctType The account type to compare
         * @return Boolean true if the string passed in matches any of the Individual Account Types
         ********************************************************************************************************/
-        private Boolean isAnyIndividualType(String acctType) {
+        private Boolean isIndividual(String acctType) {
             return isHousehold(acctType)
                 || acctType == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE
                 || acctType == CAO_Constants.BUCKET_ORGANIZATION_TYPE;
         }
 
         /*******************************************************************************************************
-        * @description Performs household naming, moves opportunities from the losers accounts to the winners
-        * accounts, recreates Household Soft Credits and performs rollups on all Accounts
+        * @description Performs household naming, moves opportunities from the old accounts to the master contacts
+        * account, recreates Household Soft Credits and performs rollups on all Accounts
         *
         ********************************************************************************************************/
         private void fixupAccountData() {
             List<Id> accountIds = new List<Id>();
-            accountIds.addAll(oldAcctIdForOppsByWinningContactId.values());
-            accountIds.addAll(newAcctIdForOppsByWinningContactId.values());
+            accountIds.addAll(oldIndividualAcctIdByMasterId.values());
+            accountIds.addAll(newIndividualAcctIdByMasterId.values());
             if (accountIds.isEmpty()) {
                 return;
             }
 
-            ACCT_IndividualAccounts_TDTM.renameHHAccounts(householdAcctIds);
-            ACCT_IndividualAccounts_TDTM.moveOppsToContactAccount(newAcctIdForOppsByWinningContactId, oldAcctIdForOppsByWinningContactId, null);
+            ACCT_IndividualAccounts_TDTM.renameHHAccounts(householdIds);
+            ACCT_IndividualAccounts_TDTM.moveOppsToContactAccount(
+                newIndividualAcctIdByMasterId,
+                oldIndividualAcctIdByMasterId,
+                null
+            );
             HH_OppContactRoles_TDTM.recreateHouseholdSoftCredits(accountIds);
             ACCT_IndividualAccounts_TDTM.rollupAccounts(accountIds);
         }
 
         /*******************************************************************************************************
-        * @description Performs rollups, affiliation and relationship cleanup on the winning contacts
+        * @description Performs rollups, affiliation and relationship cleanup on the master contacts
         *
-        * @param winningContacts the collection of winning contacts
+        * @param masterContacts the collection of master contacts
         ********************************************************************************************************/
-        private void fixupContactData(List<Contact> winningContacts) {
+        private void fixupContactData(List<Contact> masterContacts) {
             if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
-                CRLP_RollupQueueable.runRollupsForIds(winningContactIds);
+                CRLP_RollupQueueable.runRollupsForIds(masterContactIds);
 
             } else {
-                oppRollup.rollupContacts(new Map<Id, Contact>(winningContacts));
+                oppRollup.rollupContacts(new Map<Id, Contact>(masterContacts));
             }
 
-            AFFL_Affiliations_TDTM.cleanupContactAffiliations(winningContacts);
-            REL_Relationships_TDTM.cleanupContactRelationships(winningContacts);
+            AFFL_Affiliations_TDTM.cleanupContactAffiliations(masterContacts);
+            REL_Relationships_TDTM.cleanupContactRelationships(masterContacts);
         }
 
         /*******************************************************************************************************
@@ -332,9 +339,9 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         ********************************************************************************************************/
         @TestVisible
         private void setMergeKeyIds(List<String> mergeKeys) {
-            losersAccountIds = new List<String>();
-            losingContactIds = new List<String>();
-            winningContactIds = new List<String>();
+            oldAccountIds = new List<String>();
+            oldContactIds = new List<String>();
+            masterContactIds = new List<String>();
 
             for (String mergeKey : mergeKeys) {
                 List<String> ids = mergeKey.split(':');
@@ -342,9 +349,9 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
                     continue;
                 }
 
-                losingContactIds.add(getValue(ids[0]));
-                losersAccountIds.add(getValue(ids[1]));
-                winningContactIds.add(getValue(ids[2]));
+                oldContactIds.add(convertNull(ids[0]));
+                oldAccountIds.add(convertNull(ids[1]));
+                masterContactIds.add(convertNull(ids[2]));
             }
         }
 
@@ -354,7 +361,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         * @param val The value to compare
         * @return String null when val passed in is the String value of null
         ********************************************************************************************************/
-        private String getValue(String val) {
+        private String convertNull(String val) {
             final String nullVal = 'null';
 
             return val == nullVal ? null : val;
