@@ -455,12 +455,20 @@ public abstract class CRLP_Batch_Base {
         return whereClause += ')';
     }
 
+    /**
+     * @description Returns true if the org has configured a
+     * user-defined inner join for incremental rollups
+     */
     private Boolean hasUserDefinedInnerJoin {
         get {
             return userDefinedLastNDaysField != null && userDefinedLastNDays != null;
         }
     }
 
+    /**
+     * @description Value to use with LAST_N_DAYS: in the inner join query
+     * when the org has the user-defined inner join for incremental rollups
+     */
     private Integer userDefinedLastNDays {
         get {
             if (userDefinedLastNDays == null) {
@@ -476,6 +484,10 @@ public abstract class CRLP_Batch_Base {
         set;
     }
 
+    /**
+     * @description API name of the date field to use as in the inner join query
+     * when the org has the user-defined inner join for incremental rollups
+     */
     private String userDefinedLastNDaysField {
         get {
             if (userDefinedLastNDaysField == null) {

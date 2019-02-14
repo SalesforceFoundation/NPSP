@@ -269,6 +269,12 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains(String.valueOf(userDefinedLastNDaysValueOverride)));
     }
 
+    /**
+     * @description Deactivates (in memory) rollups by rollup type and time-bound operation type.
+     * Used to test customized rollup configurations.
+     * @param jobType The RollupType whose time-bound rollups should be deactivated
+     * @param timeBoundOperationType The TimeBoundOperationType to deactivate
+     */
     private static void deactivateTimeBoundRollups(
             CRLP_RollupProcessingOptions.RollupType jobType,
             CRLP_Operation.TimeBoundOperationType timeBoundOperationType) {
@@ -285,6 +291,14 @@ private class CRLP_Batch_Base_TEST {
         }
     }
 
+    /**
+     * @description Activates or deactivates incremental mode for a RollupType.
+     * Used to test customized rollup configurations.
+     * @param jobType The RollupType whose incremental mode custom setting should be configured
+     * @param isIncrementalMode Whether the incremental mode settings should be activated (true)
+     * or deactivated (false)
+     * @return The configured Customizable_Rollup_Settings__c record
+     */
     private static Customizable_Rollup_Settings__c configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType jobType, Boolean isIncrementalMode) {
         Customizable_Rollup_Settings__c settings;
         if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
@@ -301,6 +315,14 @@ private class CRLP_Batch_Base_TEST {
         return settings;
     }
 
+    /**
+     * @description
+     * @param jobType The RollupType whose user defined inner join override should be configured
+     * @param userDefinedField API name of the custom field that should be used in the user-defined
+     * inner join override
+     * @param userDefinedValue Value that should be used with LAST_N_DAYS: in the user-defined
+     * inner join override
+     */
     private static void configureUserDefinedInnerJoin(
             CRLP_RollupProcessingOptions.RollupType jobType,
             String userDefinedField,
@@ -313,6 +335,10 @@ private class CRLP_Batch_Base_TEST {
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(settings);
     }
 
+    /**
+     * @description Inner class used to calculate the maxDaysBack and maxYearsAgo values
+     * for the test-configured rollups stored in memory.  Used for assertions in test methods.
+     */
     private class RollupInfo {
         Integer maxDaysBackInteger = null;
         Integer maxYearsAgoInteger = null;
@@ -332,10 +358,20 @@ private class CRLP_Batch_Base_TEST {
         }
     }
 
+    /**
+     * @description Checks if the rollup is an Account Hard Credit operation
+     * @param rollup The Rollup custom metadata record to evaluate
+     * @return True if the rollup is an Account Hard Credit operation, else false
+     */
     private static Boolean isAccountHardCreditRollup(Rollup__mdt rollup) {
         return rollup.Summary_Object__c == 'Account' && rollup.Detail_Object__c == 'Opportunity';
     }
 
+    /**
+     * @description Checks if the rollup is a Contact Hard Credit operation
+     * @param rollup The Rollup custom metadata record to evaluate
+     * @return True if the rollup is a Contact Hard Credit operation, else false
+     */
     private static Boolean isContactHardCreditRollup(Rollup__mdt rollup) {
         return rollup.Summary_Object__c == 'Contact' && rollup.Detail_Object__c == 'Opportunity';
     }
