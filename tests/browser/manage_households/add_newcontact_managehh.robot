@@ -17,12 +17,10 @@ Add New Contact to Existing Household
     ${last_name} =            Generate Random String
     Populate Address    Find a Contact or add a new Contact to the Household    ${first_name} ${last_name}
     Wait For Locator    manage_hh_page.button    New Contact
-    #Sleep    2
     Click Managehh Button    New Contact
-    #Sleep  5  Input-textbox-notloaded-properly
     Click Span Button    New Contact
-    #Sleep    2
     Click Managehh Button       Save
+    Unselect Frame
     Wait For Locator    header    &{contact}[LastName] and ${last_name} Household
     Verify Header    &{contact}[LastName] and ${last_name} Household
     Verify Related List Items    Contacts    ${first_name} ${last_name}

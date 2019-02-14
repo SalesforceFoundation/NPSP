@@ -2,10 +2,16 @@
 
     <apex:slds />
 
-    <c:UTIL_PageMessages />
+    <div class="slds-scope slds-p-bottom_x-large">
+        <apex:form id="idForm" styleClass="slds-p-bottom_x-large">
+            <c:UTIL_PageHeader headerLabel="{!IF(strSrcObject == 'Contact', $ObjectType.Contact.Label, $ObjectType.npo02__Household__c.Label)}"
+                icon="{!IF(strSrcObject == 'Contact', 'contact', 'custom61')}" iconCategory="{!IF(strSrcObject == 'Contact', 'standard', 'custom')}"
+                saveLabel="{!$Label.btnContinue}" saveAction="{!copy}" saveReRender="idForm" showSaveBtn="{!canCopyAddress}"
+                cancelAction="{!close}"/>
 
-    <div class="slds-scope">
-        <apex:outputLink target="_self" title="Return"  value="{!returnurl}" styleClass="slds-button slds-button_brand">Return</apex:outputLink>
-        <c:UTIL_NavigateBack recordId="{!$CurrentPage.parameters.id}" redirect="{!redirectPage}"/>
+            <c:UTIL_PageMessages />
+
+            <c:UTIL_NavigateBack recordId="{!JSENCODE($CurrentPage.parameters.id)}" redirect="{!redirectPage}"/>
+        </apex:form>
     </div>
 </apex:page>

@@ -50,7 +50,8 @@
                                 structured for iteration on Set Field Options step."/>
 
     <!-- public attributes -->
-    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="recordId" type="Id" description="The Id of the Batch used when editing a Batch."/>
+    <aura:attribute name="sourceBatchId" type="Id" description="The Id of the source Batch used when copying Batch setup."/>
     <aura:attribute name="sObjectName" type="String" />
 
     <!-- events we handle -->
@@ -71,19 +72,25 @@
                 <aura:if isTrue="{!v.wizardMetadata.progressIndicatorStep == '0' }">
                     <lightning:layout horizontalAlign="center">
                         <lightning:layoutItem size="10">
-                            <lightning:input type="text" name="name" label="{!$Label.c.stgLabelName}"
-                                             value="{!v.batchInfo.name}" required="true"/>
-                            <lightning:textarea name="description" label="{!v.wizardMetadata.labels.description}"
+                            <lightning:input type="text"
+                                             name="name"
+                                             label="{!$Label.c.stgLabelName}"
+                                             value="{!v.batchInfo.name}"
+                                             required="true"/>
+                            <lightning:textarea name="description"
+                                                label="{!v.wizardMetadata.labels.description}"
                                                 value="{!v.batchInfo.description}"
-                                                required="true" class="slds-p-top_medium"/>
+                                                class="slds-p-top_medium"/>
                             <div>
-                                <lightning:input aura:id="expectedCount" type="number"
+                                <lightning:input aura:id="expectedCount"
+                                                 type="number"
                                                  class="slds-p-top_small"
                                                  min="0"
                                                  label="{!v.wizardMetadata.labels.expectedCountLabel}"
                                                  name="expectedCount"
                                                  value="{!v.batchInfo.expectedCount}"/>
-                                <lightning:input aura:id="expectedTotal" type="number"
+                                <lightning:input aura:id="expectedTotal"
+                                                 type="number"
                                                  formatter="currency"
                                                  class="slds-p-top_small"
                                                  min="0"
@@ -91,7 +98,8 @@
                                                  label="{!v.wizardMetadata.labels.expectedTotalLabel}"
                                                  name="expectedTotal"
                                                  value="{!v.batchInfo.expectedTotal}"/>
-                                <lightning:input aura:id="totalMatchCheckbox" type="checkbox"
+                                <lightning:input aura:id="totalMatchCheckbox"
+                                                 type="checkbox"
                                                  class="bgeInputCheckbox slds-p-top_small"
                                                  label="{!v.wizardMetadata.labels.totalMatchLabel}"
                                                  name="requireTotalMatch"

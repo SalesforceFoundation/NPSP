@@ -14,7 +14,8 @@ Delete Contact from Household
     Header Field Value    Account Name    &{contact1}[LastName] and &{contact2}[LastName] Household
     Go To Object Home    Contact
     Select Row    &{Contact2}[FirstName] &{Contact2}[LastName]
-    Click Link    link=Delete
+    Click Link    title=Delete
     #Sleep    5
     Go To Object Home    Account
+    Reload Page
     Page Should Contain Link   link=&{contact1}[LastName] Household

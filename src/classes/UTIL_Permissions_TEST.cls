@@ -40,8 +40,10 @@ private with sharing class UTIL_Permissions_TEST {
         return UTIL_UnitTestData_TEST.createUserWithoutInsert('System Administrator');
     }
 
-    private static String customObjectName = UTIL_Namespace.StrAllNSPrefix('Address__c');
-    private static String customFieldName = UTIL_Namespace.StrAllNSPrefix('Address_Type__c');
+    private static SObjectType customSObjType = Address__c.SObjectType;
+    private static SObjectField customSObjField = Address__c.Address_Type__c;
+    private static String customObjectName = UTIL_Namespace.StrAllNSPrefix(String.valueOf(customSObjType));
+    private static String customFieldName = UTIL_Namespace.StrAllNSPrefix(String.valueOf(customSObjField));
     private static String standardObjectName = 'Contact';
     private static String standardFieldName = 'FirstName';
 
@@ -214,6 +216,26 @@ private with sharing class UTIL_Permissions_TEST {
             System.assert(UTIL_Permissions.canRead(standardFieldResult, false));
             System.assert(UTIL_Permissions.canCreate(standardFieldResult, false));
             System.assert(UTIL_Permissions.canUpdate(standardFieldResult, false));
+        }
+    }
+
+    @isTest
+    private static void shouldReturnFalseForReadOnlyUserOnCustomObjectAndFields() {
+        UTIL_Permissions perms = new UTIL_Permissions();
+
+        System.runAs(getReadOnlyUser()) {
+            System.assert(!perms.canRead(customSObjType, new Set<SObjectField>{ customSObjField }), 'Read user should not have read access to the custom object/field.');
+            System.assert(!perms.canUpdate(customSObjType, new Set<SObjectField>{ customSObjField }), 'Read user should not have update access to the custom object/field.');
+        }
+    }
+
+    @isTest
+    private static void shouldReturnTrueForAdminUserOnCustomObjectAndFields() {
+        UTIL_Permissions perms = new UTIL_Permissions();
+
+        System.runAs(getSysAdmin()) {
+            System.assert(perms.canRead(customSObjType, new Set<SObjectField>{ customSObjField }), 'Admin user should have read access to the custom object/field.');
+            System.assert(perms.canUpdate(customSObjType, new Set<SObjectField>{ customSObjField }), 'Admin user should have read access to the custom object/field.');
         }
     }
 

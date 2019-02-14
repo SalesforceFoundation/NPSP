@@ -69,4 +69,46 @@ private class OPP_CascadeDeleteLookups_TEST {
         List<Allocation__c> undeletedAllocations = CDL_CascadeDeleteLookups_TEST.getNonDeletedAllocations();
         System.assertEquals(deletedAllocations.size(), undeletedAllocations.size(), 'Allocations should be cascade undeleted when the Opportunity is deleted.');
     }
+
+    static testMethod void testOppCascadeWithPaymentAllocations() {
+        General_Accounting_Unit__c defaultAccountingUnit = 
+          new General_Accounting_Unit__c(Name = 'DEFAULT_GAU');
+        insert defaultAccountingUnit;
+        
+        // Setup Default GAU and Payment allocations
+        Allocations_Settings__c alloSettings = UTIL_CustomSettingsFacade.getOrgAllocationsSettings();
+        alloSettings.Default__c = defaultAccountingUnit.Id;
+        alloSettings.Default_Allocations_Enabled__c = true;
+        alloSettings.Payment_Allocations_Enabled__c = true;
+        UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(alloSettings);
+
+        Integer maxRecords = 2;
+
+        List<Account> accounts = CDL_CascadeDeleteLookups_TEST.buildAccounts(maxRecords);
+        insert accounts;
+
+        List<Opportunity> opportunities = CDL_CascadeDeleteLookups_TEST.buildOpportunities(accounts);
+        opportunities[0].StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        opportunities[1].StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        insert opportunities;
+
+        List<npe01__OppPayment__c> payments = [SELECT Id FROM npe01__OppPayment__c WHERE IsDeleted = false];
+        System.assertEquals(maxRecords, payments.size(), 'A Payment should have been created for each Closed Won Opportunity');
+
+        List<Allocation__c> allocations = [SELECT Id FROM Allocation__c WHERE IsDeleted = false];
+        System.assertEquals(maxRecords*2, allocations.size(), 'Each Payment should have the same Allocation ratio as its Opportunity');
+
+        Test.startTest();
+        delete opportunities;
+        Test.stopTest();
+
+        List<Allocation__c> deletedAllocations = [SELECT Id FROM Allocation__c WHERE IsDeleted = true ALL ROWS];
+        System.assertEquals(allocations.size(), deletedAllocations.size(), 'Allocations should be cascade deleted when the Opportunity is deleted.');
+
+        undelete opportunities;
+
+        List<Allocation__c> undeletedAllocations = CDL_CascadeDeleteLookups_TEST.getNonDeletedAllocations();
+        System.assertEquals(allocations.size(), undeletedAllocations.size(), 'Allocations should be cascade undeleted when the Opportunity is undeleted.');
+    }
+
 }

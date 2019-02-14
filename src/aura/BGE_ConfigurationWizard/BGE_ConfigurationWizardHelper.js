@@ -2,9 +2,10 @@
     /******************************** Init Functions *****************************/
     init: function(component) {
         var recordId = component.get('v.recordId');
+        var sourceBatchId = component.get('v.sourceBatchId');
         var action = component.get('c.getRecordDetails');
         action.setParams({
-            'recordId': recordId
+            'recordId': (sourceBatchId || recordId)
         });
         action.setCallback(this, function(response) {
             var state = response.getState();
@@ -40,12 +41,22 @@
         let batchInfo = {};
 
         //generic batch info
-        batchInfo.name = model.name;
-        batchInfo.id = model.id;
-        batchInfo.description = model.description;
-        batchInfo.expectedCount = model.expectedCount || 0;
-        batchInfo.expectedTotal = model.expectedTotal || 0;
-        batchInfo.recordCount = model.recordCount;
+        if (!component.get('v.sourceBatchId')) {
+            batchInfo.name = model.name;
+            batchInfo.id = model.id;
+            batchInfo.description = model.description;
+            batchInfo.expectedCount = model.expectedCount || 0;
+            batchInfo.expectedTotal = model.expectedTotal || 0;
+            batchInfo.recordCount = model.recordCount;
+        } else {
+            batchInfo.name = model.name + ' - ' + $A.get('$Label.c.bgeCopyBatchSetupBatchNameAppend');
+            // when copying setup from existing Batch, explicitly initialize these properties
+            batchInfo.id = null;
+            batchInfo.description = null;
+            batchInfo.expectedCount = 0;
+            batchInfo.expectedTotal = 0;
+            batchInfo.recordCount = null;
+        }
 
         // batch processing settings
         batchInfo.requireTotalMatch = model.requireTotalMatch;
@@ -121,7 +132,9 @@
             }
             currentField.availableSortOrder = availableSortOrder;
             availableSortOrder++;
+
             everyField.push(currentField);
+
         });
 
         // store everyField with its metadata
@@ -132,7 +145,24 @@
         // returns map of sobject name => list of fields
         var allFieldsBySObject = this.groupFieldsBySObject(everyField);
 
-        Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
+        const opportunitySObjectName = "Opportunity";
+        const paymentSObjectName = "Payment";
+
+        var sObjectKeys = Object.keys(allFieldsBySObject);
+
+        // Make sure Opportunity is always the first sObject to be shown and Payment the second.
+        var orderedKeys = [opportunitySObjectName, paymentSObjectName];
+
+        // If there happens to be other objects appart from Opportunity and Payment
+        // Add them to the list behind them.
+        for(var i=0; i<sObjectKeys.length; i++) {
+            var key = sObjectKeys[i];
+            if(key !== opportunitySObjectName && key !== paymentSObjectName) {
+               orderedKeys.push(key);
+            }
+        }
+                
+        orderedKeys.forEach(function(sObjectName) {
             let currentFieldGroup = {
                 sObjectName: sObjectName,
                 options: [],
@@ -303,7 +333,7 @@
      */
     checkBatchInfoValidity: function(component) {
         let batchInfo = component.get('v.batchInfo');
-        let isValid = batchInfo.name && batchInfo.description;
+        let isValid = batchInfo.name;
 
         if (batchInfo.expectedTotal == '' || batchInfo.expectedTotal == null) {
             batchInfo.expectedTotal = 0;
@@ -314,7 +344,7 @@
         if (isValid) {
             this.clearError(component);
         } else {
-            component.set('v.wizardMetadata.errorMessage', component.get('v.wizardMetadata.labels.missingNameDescriptionError'));
+            component.set('v.wizardMetadata.errorMessage', component.get('v.wizardMetadata.labels.missingNameError'));
         }
         return isValid;
     },

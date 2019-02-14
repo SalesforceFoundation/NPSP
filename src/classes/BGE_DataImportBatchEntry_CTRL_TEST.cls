@@ -76,6 +76,32 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
     }
 
     /*********************************************************************************************************
+    * @description Tests that updateDataImports() updates records and returns updated totals
+    */
+
+    @isTest
+    static void testUpdateDataImports() {
+        Id batchId = createDataImportBatch();
+        String newName = 'New Name';
+        Integer totalRecords = 2;
+        Decimal totalAmount = 5.0;
+        List<DataImport__c> dataImports = createDataImports(totalRecords, batchId);
+
+        dataImports[0].Account1_Name__c = newName;
+        dataImports[0].Donation_Amount__c = totalAmount;
+
+        Test.startTest();
+        BGE_DataImportBatchEntry_CTRL.updateAndDryRunRow(batchId, dataImports[0]);
+        DataImport__c updatedDataImport = [SELECT Id, Account1_Name__c FROM DataImport__c WHERE Id =: dataImports[0].Id];
+        BGE_DataImportBatchEntry_CTRL.DataImportModel model = BGE_DataImportBatchEntry_CTRL.getUpdatedTotals(batchId);
+        Test.stopTest();
+
+        System.assertEquals(newName, updatedDataImport.Account1_Name__c);
+        System.assertEquals(model.totalCountOfRows, totalRecords);
+        System.assertEquals(model.totalRowAmount, totalAmount);
+    }
+
+    /*********************************************************************************************************
     * @description Tests getDataImportModel() for a new record
     */
 
@@ -126,7 +152,7 @@ private class BGE_DataImportBatchEntry_CTRL_TEST {
         List<DataImport__c> dataImports = createDataImports(2, batchId);
 
         Test.startTest();
-        String jsonModel = BGE_DataImportBatchEntry_CTRL.deleteDataImportRow(batchId, dataImports[0].id);
+        BGE_DataImportBatchEntry_CTRL.deleteDataImportRow(batchId, dataImports[0].Id);
         List<DataImport__c> updatedDataImports = [SELECT Name, Id FROM DataImport__c WHERE NPSP_Data_Import_Batch__c = :batchId];
         Test.stopTest();
 
