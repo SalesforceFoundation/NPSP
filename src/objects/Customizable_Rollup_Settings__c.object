@@ -22,6 +22,26 @@
         <type>TextArea</type>
     </fields>
     <fields>
+        <fullName>AccountHardCredit_LastNDaysField__c</fullName>
+        <description></description>
+        <externalId>false</externalId>
+        <inlineHelpText></inlineHelpText>
+        <label>Account Hard Credit Last N Days Field</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>ContactHardCredit_LastNDaysField__c</fullName>
+        <description></description>
+        <externalId>false</externalId>
+        <inlineHelpText></inlineHelpText>
+        <label>Contact Hard Credit Last N Days Field</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
         <fullName>ContactHardCreditNonSkew_Incremental__c</fullName>
         <defaultValue>true</defaultValue>
         <externalId>false</externalId>
@@ -54,6 +74,34 @@
         <externalId>false</externalId>
         <inlineHelpText>Number of records per batch to process when recalculating donor rollups to the Account object.</inlineHelpText>
         <label>Account Hard Credit Batch Size</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>AccountHardCredit_LastNDays__c</fullName>
+        <defaultValue>365</defaultValue>
+        <description></description>
+        <externalId>false</externalId>
+        <inlineHelpText></inlineHelpText>
+        <label>Account Hard Credit Last N Days</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>ContactHardCredit_LastNDays__c</fullName>
+        <defaultValue>365</defaultValue>
+        <description></description>
+        <externalId>false</externalId>
+        <inlineHelpText></inlineHelpText>
+        <label>Contact Hard Credit Last N Days</label>
         <precision>6</precision>
         <required>false</required>
         <scale>0</scale>

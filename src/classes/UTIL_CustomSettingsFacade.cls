@@ -882,6 +882,10 @@ public without sharing class UTIL_CustomSettingsFacade {
         crs.Disable_Related_Records_Filter__c = false;
         crs.AccountHardCreditNonSkew_Incremental__c = true;
         crs.ContactHardCreditNonSkew_Incremental__c = true;
+        crs.AccountHardCredit_LastNDays__c = 365;
+        crs.AccountHardCredit_LastNDaysField__c = 'CloseDate';
+        crs.ContactHardCredit_LastNDays__c = 365;
+        crs.ContactHardCredit_LastNDaysField__c = 'CloseDate';
     }
 
     /*******************************************************************************************************
@@ -910,6 +914,10 @@ public without sharing class UTIL_CustomSettingsFacade {
         customizableRollupSettings.CMT_API_Status__c = mySettings.CMT_API_Status__c;
         customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c = mySettings.AccountHardCreditNonSkew_Incremental__c;
         customizableRollupSettings.ContactHardCreditNonSkew_Incremental__c = mySettings.ContactHardCreditNonSkew_Incremental__c;
+        customizableRollupSettings.AccountHardCredit_LastNDays__c = mySettings.AccountHardCredit_LastNDays__c;
+        customizableRollupSettings.AccountHardCredit_LastNDaysField__c = mySettings.AccountHardCredit_LastNDaysField__c;
+        customizableRollupSettings.ContactHardCredit_LastNDays__c = mySettings.ContactHardCredit_LastNDays__c;
+        customizableRollupSettings.ContactHardCredit_LastNDaysField__c = mySettings.ContactHardCredit_LastNDaysField__c;
 
         orgCustomizableRollupSettings = customizableRollupSettings;
 
