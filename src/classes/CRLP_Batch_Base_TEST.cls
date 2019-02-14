@@ -80,27 +80,19 @@ private class CRLP_Batch_Base_TEST {
         // Create the test data
         CRLP_RollupAccount_TEST.mockRollupCMTValues();
 
-        // Deactivate the Years_Ago rollups, to simulate having only Days_Back time-bound rollups active
-        // and get the max Days_Ago to use in assertions below.
-        Integer maxDaysBackInteger = 0;
-        for (Rollup__mdt rollup : CRLP_Rollup_SEL.cachedRollups) {
-            if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()) {
-                rollup.Active__c = false;
-            } else if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Days_Back.name()
-                    && rollup.Integer__c > maxDaysBackInteger) {
-                maxDaysBackInteger = (Integer) rollup.Integer__c;
-            }
-        }
+        deactivateTimeBoundRollups(
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                CRLP_Operation.TimeBoundOperationType.Years_Ago);
 
         CRLP_Account_Batch accountBatchJob = new CRLP_Account_Batch(new List<Id>());
         accountBatchJob.initializeJobData();
         accountBatchJob.isScheduledJob = true;
 
-        String partialDetailObjectWhereClause = 'FROM Opportunity ' +
-                'WHERE CloseDate >= LAST_N_DAYS:' + maxDaysBackInteger + ')';
         String generatedWhereClause = accountBatchJob.getWhereClause();
-        System.assert(generatedWhereClause.contains(partialDetailObjectWhereClause) == true, 'The incremental mode ' +
-                'where clause for the inner join should contain a LAST_N_DAYS where filter on the Opportunities.');
+        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
+                'where clause for the inner join should contain a where filter on the Opportunities.');
+        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' +
+                new RollupInfo(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit).maxDaysBackInteger));
     }
 
     @isTest
@@ -110,27 +102,20 @@ private class CRLP_Batch_Base_TEST {
         // Create the test data
         CRLP_RollupAccount_TEST.mockRollupCMTValues();
 
-        // Deactivate the Days_Back rollups, to simulate having only Days_Back time-bound rollups active
-        // and get the max Years_Ago to use in assertions below.
-        Integer maxYearsBackInteger = 0;
-        for (Rollup__mdt rollup : CRLP_Rollup_SEL.cachedRollups) {
-            if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Days_Back.name()) {
-                rollup.Active__c = false;
-            } else if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()
-                    && rollup.Integer__c > maxYearsBackInteger) {
-                maxYearsBackInteger = (Integer) rollup.Integer__c;
-            }
-        }
+        deactivateTimeBoundRollups(
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                CRLP_Operation.TimeBoundOperationType.Days_Back);
 
         CRLP_Account_Batch accountBatchJob = new CRLP_Account_Batch(new List<Id>());
         accountBatchJob.initializeJobData();
         accountBatchJob.isScheduledJob = true;
 
-        String partialDetailObjectWhereClause = 'FROM Opportunity ' +
-                'WHERE CloseDate >= LAST_N_YEARS:' + maxYearsBackInteger + ')';
         String generatedWhereClause = accountBatchJob.getWhereClause();
-        System.assert(generatedWhereClause.contains(partialDetailObjectWhereClause) == true, 'The incremental mode ' +
-                'where clause for the inner join should contain a LAST_N_YEARS where filter on the Opportunities.');
+        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
+                'where clause for the inner join should contain a where filter on the Opportunities.');
+        Integer lastNYears =
+                new RollupInfo(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit).maxYearsAgoInteger;
+        System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + lastNYears));
     }
 
     @isTest
@@ -157,36 +142,15 @@ private class CRLP_Batch_Base_TEST {
         // Create the test data
         CRLP_RollupContact_TEST.mockRollupCMTValues();
 
-        // Get the max Days_Ago and Years_Back to use in assertions below.
-        Integer maxDaysBackInteger = 0;
-        Integer maxYearsAgoInteger = 0;
-        for (Rollup__mdt rollup : CRLP_Rollup_SEL.cachedRollups) {
-            if (rollup.Summary_Object__c != 'Contact' ||
-                    rollup.Detail_Object__c != 'Opportunity') {
-                continue;
-            }
-            if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()
-                    && rollup.Integer__c > maxYearsAgoInteger) {
-                maxYearsAgoInteger = (Integer) rollup.Integer__c;
-            } else if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Days_Back.name()
-                    && rollup.Integer__c > maxDaysBackInteger) {
-                maxDaysBackInteger = (Integer) rollup.Integer__c;
-            }
-        }
-
         CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
         contactBatchJob.initializeJobData();
-        contactBatchJob.isScheduledJob = true; // Set the Batch Base isScheduledJob flag to true.
-        // This is necessary because the Schedulable Job constructs and submits a separate instance of the
-        // CRLP_Contact_BATCH class.  So we "mock" the isScheduledJob value here, to test the correct
-        // response from the getWhereClause() method below.
-
-        String partialDetailObjectWhereClause = 'FROM Opportunity ' +
-                'WHERE CloseDate >= LAST_N_YEARS:' + maxYearsAgoInteger + ')';
+        contactBatchJob.isScheduledJob = true;
 
         String generatedWhereClause = contactBatchJob.getWhereClause();
-        System.assert(generatedWhereClause.contains(partialDetailObjectWhereClause) == true, 'The incremental mode ' +
+        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
+        System.assert(generatedWhereClause.contains('LAST_N_YEARS:' +
+                new RollupInfo(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit).maxYearsAgoInteger));
     }
 
     @isTest
@@ -196,30 +160,19 @@ private class CRLP_Batch_Base_TEST {
         // Create the test data
         CRLP_RollupContact_TEST.mockRollupCMTValues();
 
-        // Deactivate the Years_Ago rollups, to simulate having only Days_Back time-bound rollups active
-        // and get the max Days_Ago to use in assertions below.
-        Integer maxDaysBackInteger = 0;
-        for (Rollup__mdt rollup : CRLP_Rollup_SEL.cachedRollups) {
-            if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()) {
-                rollup.Active__c = false;
-            } else if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Days_Back.name()
-                    && rollup.Integer__c > maxDaysBackInteger) {
-                maxDaysBackInteger = (Integer) rollup.Integer__c;
-            }
-        }
+        deactivateTimeBoundRollups(
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                CRLP_Operation.TimeBoundOperationType.Years_Ago);
 
         CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
         contactBatchJob.initializeJobData();
-        contactBatchJob.isScheduledJob = true; // Set the Batch Base isScheduledJob flag to true.
-        // This is necessary because the Schedulable Job constructs and submits a separate instance of the
-        // CRLP_Contact_BATCH class.  So we "mock" the isScheduledJob value here, to test the correct
-        // response from the getWhereClause() method below.
+        contactBatchJob.isScheduledJob = true;
 
-        String partialDetailObjectWhereClause = 'FROM Opportunity ' +
-                'WHERE CloseDate >= LAST_N_DAYS:' + maxDaysBackInteger + ')';
         String generatedWhereClause = contactBatchJob.getWhereClause();
-        System.assert(generatedWhereClause.contains(partialDetailObjectWhereClause) == true, 'The incremental mode ' +
-                'where clause for the inner join should contain a LAST_N_DAYS where filter on the Opportunities.');
+        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
+                'where clause for the inner join should contain a where filter on the Opportunities.');
+        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' +
+                new RollupInfo(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit).maxDaysBackInteger));
     }
 
     @isTest
@@ -229,30 +182,20 @@ private class CRLP_Batch_Base_TEST {
         // Create the test data
         CRLP_RollupContact_TEST.mockRollupCMTValues();
 
-        // Deactivate the Days_Back rollups, to simulate having only Days_Back time-bound rollups active
-        // and get the max Years_Ago to use in assertions below.
-        Integer maxYearsBackInteger = 0;
-        for (Rollup__mdt rollup : CRLP_Rollup_SEL.cachedRollups) {
-            if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Days_Back.name()) {
-                rollup.Active__c = false;
-            } else if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()
-                    && rollup.Integer__c > maxYearsBackInteger) {
-                maxYearsBackInteger = (Integer) rollup.Integer__c;
-            }
-        }
+        deactivateTimeBoundRollups(
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                CRLP_Operation.TimeBoundOperationType.Days_Back);
 
         CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
         contactBatchJob.initializeJobData();
-        contactBatchJob.isScheduledJob = true; // Set the Batch Base isScheduledJob flag to true.
-        // This is necessary because the Schedulable Job constructs and submits a separate instance of the
-        // CRLP_Contact_BATCH class.  So we "mock" the isScheduledJob value here, to test the correct
-        // response from the getWhereClause() method below.
+        contactBatchJob.isScheduledJob = true;
 
-        String partialDetailObjectWhereClause = 'FROM Opportunity ' +
-                'WHERE CloseDate >= LAST_N_YEARS:' + maxYearsBackInteger + ')';
         String generatedWhereClause = contactBatchJob.getWhereClause();
-        System.assert(generatedWhereClause.contains(partialDetailObjectWhereClause) == true, 'The incremental mode ' +
-                'where clause for the inner join should contain a LAST_N_YEARS where filter on the Opportunities.');
+        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
+        'where clause for the inner join should contain a where filter on the Opportunities.');
+        Integer lastNYears =
+                new RollupInfo(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit).maxYearsAgoInteger;
+        System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + lastNYears));
     }
 
     @isTest
@@ -269,6 +212,22 @@ private class CRLP_Batch_Base_TEST {
         String whereClause = contactBatchJob.getWhereClause();
         System.assert(whereClause.contains('WHERE') == false, 'The standard where clause should be used ' +
                 'for the inner join when the custom setting is set to false.');
+    }
+
+    private static void deactivateTimeBoundRollups(
+            CRLP_RollupProcessingOptions.RollupType jobType,
+            CRLP_Operation.TimeBoundOperationType timeBoundOperationType) {
+
+        for (Rollup__mdt rollup : CRLP_Rollup_SEL.cachedRollups) {
+            if ((jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
+                    && isAccountHardCreditRollup(rollup))
+                    || (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit
+                    && isContactHardCreditRollup(rollup))) {
+                if (rollup.Time_Bound_Operation_Type__c == timeBoundOperationType.name()) {
+                    rollup.Active__c = false;
+                }
+            }
+        }
     }
 
     private static void configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType jobType, Boolean isIncrementalMode) {
@@ -291,14 +250,8 @@ private class CRLP_Batch_Base_TEST {
 
         RollupInfo(CRLP_RollupProcessingOptions.RollupType jobType) {
             for (Rollup__mdt rollup : CRLP_Rollup_SEL.cachedRollups) {
-                Boolean isAccountHardCreditRollup = (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
-                        && rollup.Summary_Object__c == 'Account'
-                        && rollup.Detail_Object__c == 'Opportunity');
-                Boolean isContactHardCreditRollup = (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit
-                        && rollup.Summary_Object__c == 'Contact'
-                        && rollup.Detail_Object__c == 'Opportunity');
 
-                if (isAccountHardCreditRollup || isContactHardCreditRollup) {
+                if (isAccountHardCreditRollup(rollup) || isContactHardCreditRollup(rollup)) {
                     if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()
                             && (maxYearsAgoInteger == null || rollup.Integer__c > maxYearsAgoInteger)) {
                         maxYearsAgoInteger = (Integer) rollup.Integer__c;
@@ -309,5 +262,13 @@ private class CRLP_Batch_Base_TEST {
                 }
             }
         }
+    }
+
+    private static Boolean isAccountHardCreditRollup(Rollup__mdt rollup) {
+        return rollup.Summary_Object__c == 'Account' && rollup.Detail_Object__c == 'Opportunity';
+    }
+
+    private static Boolean isContactHardCreditRollup(Rollup__mdt rollup) {
+        return rollup.Summary_Object__c == 'Contact' && rollup.Detail_Object__c == 'Opportunity';
     }
 }
