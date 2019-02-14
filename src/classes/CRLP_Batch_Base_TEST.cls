@@ -33,11 +33,11 @@
 * @group Customizable Rollups Operations Services
 * @description Unit Tests for the Opportunity to Account and Contact Rollups
 */
-@IsTest (isParallel=true)
+@IsTest(isParallel=true)
 private class CRLP_Batch_Base_TEST {
 
     @isTest
-    private static void testAccountHardCreditGetWhereClause_Standard(){
+    private static void accountHardCreditRollupGeneratesStandardJoinQueryWhenNotScheduledJob() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
 
         // Create the test data
@@ -47,12 +47,12 @@ private class CRLP_Batch_Base_TEST {
         accountBatchJob.initializeJobData();
 
         String whereClause = accountBatchJob.getWhereClause();
-        System.assert(whereClause.contains('WHERE') == false, 'The standard where clause for the inner join ' +
-                'should NOT contain a where filter on the Opportunities.');
+        System.assert(whereClause.contains('WHERE') == false, 'The standard query for the inner join ' +
+                'should NOT contain a where filter on the Opportunities when not a scheduled job.');
     }
 
     @isTest
-    private static void testAccountHardCreditGetWhereClause_IncrementalMode(){
+    private static void accountHardCreditRollupGeneratesIncrementalModeJoinQuery() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
 
         // Create the test data
@@ -69,12 +69,11 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains('FROM'));
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
-        System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + 
-                new RollupInfo(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit).maxYearsAgoInteger));
+        System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + new RollupInfo().maxYearsAgoInteger));
     }
 
     @isTest
-    private static void testAccountHardCreditGetWhereClause_IncrementalMode_DaysOnly() {
+    private static void accountHardCreditRollupGeneratesLastNDaysJoinQuery() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
 
         // Create the test data
@@ -91,12 +90,11 @@ private class CRLP_Batch_Base_TEST {
         String generatedWhereClause = accountBatchJob.getWhereClause();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
-        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' +
-                new RollupInfo(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit).maxDaysBackInteger));
+        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + new RollupInfo().maxDaysBackInteger));
     }
 
     @isTest
-    private static void testAccountHardCreditGetWhereClause_IncrementalMode_YearsOnly() {
+    private static void accountHardCreditRollupGeneratesLastNYearsJoinQuery() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
 
         // Create the test data
@@ -113,13 +111,12 @@ private class CRLP_Batch_Base_TEST {
         String generatedWhereClause = accountBatchJob.getWhereClause();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
-        Integer lastNYears =
-                new RollupInfo(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit).maxYearsAgoInteger;
+        Integer lastNYears = new RollupInfo().maxYearsAgoInteger;
         System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + lastNYears));
     }
 
     @isTest
-    private static void testAccountHardCreditGetWhereClause_IncrementalMode_CustomSettingFalse() {
+    private static void accountHardCreditRollupGeneratesLastNDaysJoinQueryWithCustomSettingFalse() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, false);
 
         // Create the test data
@@ -134,9 +131,23 @@ private class CRLP_Batch_Base_TEST {
                 'for the inner join when the custom setting is set to false.');
     }
 
+    @isTest
+    private static void contactHardCreditRollupGeneratesStandardJoinQueryWhenNotScheduledJob() {
+        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
+
+        // Create the test data
+        CRLP_RollupContact_TEST.mockRollupCMTValues();
+
+        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
+        contactBatchJob.initializeJobData();
+
+        String whereClause = contactBatchJob.getWhereClause();
+        System.assert(whereClause.contains('WHERE') == false, 'The standard query for the inner join ' +
+                'should NOT contain a where filter on the Opportunities when not a scheduled job.');
+    }
 
     @isTest
-    private static void testContactHardCreditGetWhereClause_IncrementalMode() {
+    private static void contactHardCreditRollupGeneratesIncrementalModeJoinQuery() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
 
         // Create the test data
@@ -147,14 +158,14 @@ private class CRLP_Batch_Base_TEST {
         contactBatchJob.isScheduledJob = true;
 
         String generatedWhereClause = contactBatchJob.getWhereClause();
+        System.assert(generatedWhereClause.contains('FROM'));
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
-        System.assert(generatedWhereClause.contains('LAST_N_YEARS:' +
-                new RollupInfo(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit).maxYearsAgoInteger));
+        System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + new RollupInfo().maxYearsAgoInteger));
     }
 
     @isTest
-    private static void testContactHardCreditGetWhereClause_IncrementalMode_DaysOnly() {
+    private static void contactHardCreditRollupGeneratesLastNDaysJoinQuery() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
 
         // Create the test data
@@ -171,12 +182,11 @@ private class CRLP_Batch_Base_TEST {
         String generatedWhereClause = contactBatchJob.getWhereClause();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
-        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' +
-                new RollupInfo(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit).maxDaysBackInteger));
+        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + new RollupInfo().maxDaysBackInteger));
     }
 
     @isTest
-    private static void testContactHardCreditGetWhereClause_IncrementalMode_YearsOnly() {
+    private static void contactHardCreditRollupGeneratesLastNYearsJoinQuery() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
 
         // Create the test data
@@ -192,14 +202,13 @@ private class CRLP_Batch_Base_TEST {
 
         String generatedWhereClause = contactBatchJob.getWhereClause();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
-        'where clause for the inner join should contain a where filter on the Opportunities.');
-        Integer lastNYears =
-                new RollupInfo(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit).maxYearsAgoInteger;
+                'where clause for the inner join should contain a where filter on the Opportunities.');
+        Integer lastNYears = new RollupInfo().maxYearsAgoInteger;
         System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + lastNYears));
     }
 
     @isTest
-    private static void testContactHardCreditGetWhereClause_IncrementalMode_CustomSettingFalse() {
+    private static void contactHardCreditRollupGeneratesLastNDaysJoinQueryWithCustomSettingFalse() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, false);
 
         // Create the test data
@@ -248,9 +257,8 @@ private class CRLP_Batch_Base_TEST {
         Integer maxDaysBackInteger = null;
         Integer maxYearsAgoInteger = null;
 
-        RollupInfo(CRLP_RollupProcessingOptions.RollupType jobType) {
+        RollupInfo() {
             for (Rollup__mdt rollup : CRLP_Rollup_SEL.cachedRollups) {
-
                 if (isAccountHardCreditRollup(rollup) || isContactHardCreditRollup(rollup)) {
                     if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()
                             && (maxYearsAgoInteger == null || rollup.Integer__c > maxYearsAgoInteger)) {
