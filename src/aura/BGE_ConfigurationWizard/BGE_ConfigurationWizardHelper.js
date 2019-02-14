@@ -127,6 +127,7 @@
                 currentField.options = activeFieldMap.get(currentField.id).options;
                 currentField.alwaysRequired = activeFieldMap.get(currentField.id).alwaysRequired;
                 if (currentField.defaultValue && currentField.type == 'reference') {
+                    // recordeditform expects an array for a reference field
                     currentField.defaultValue = [currentField.defaultValue];
                 }
             } else {
@@ -147,8 +148,8 @@
         // returns map of sobject name => list of fields
         var allFieldsBySObject = this.groupFieldsBySObject(everyField);
 
-        const opportunitySObjectName = "Opportunity";
-        const paymentSObjectName = "npe01__OppPayment__c";
+        const opportunitySObjectName = component.get('v.labels.opportunitySObjectName');
+        const paymentSObjectName = component.get('v.labels.paymentSObjectName');
 
         var sObjectKeys = Object.keys(allFieldsBySObject);
 

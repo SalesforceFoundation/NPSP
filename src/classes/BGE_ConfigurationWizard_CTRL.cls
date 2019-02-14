@@ -422,6 +422,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         Map<String, String> labels = new Map<String, String> {
             'objectLabel' => Schema.SObjectType.DataImportBatch__c.getLabel(),
             'sObjectName' => Schema.SObjectType.DataImportBatch__c.getName(),
+            'opportunitySObjectName' => Schema.SObjectType.Opportunity.getName(),
+            'paymentSObjectName' => Schema.SObjectType.npe01__OppPayment__c.getName(),
             'dataImportSObjectName' => Schema.SObjectType.DataImport__c.getName(),
             'sObjectNameNoNamespace' => UTIL_Namespace.StrTokenRemoveNSPrefix(Schema.SObjectType.DataImportBatch__c.getName()),
             'missingNameError' => Label.exceptionRequiredField + ' ' + Schema.DataImportBatch__c.Name.getDescribe().getLabel(),
