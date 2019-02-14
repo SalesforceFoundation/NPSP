@@ -467,8 +467,8 @@ public abstract class CRLP_Batch_Base {
                 Customizable_Rollup_Settings__c customizableRollupSettings =
                         UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
 
-                if (customizableRollupSettings.Incremental_Last_N_Days_Field_Override__c != null) {
-                    userDefinedLastNDays = (Integer) customizableRollupSettings.Incremental_Last_N_Days_Field_Override__c;
+                if (customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c != null) {
+                    userDefinedLastNDays = (Integer) customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c;
                 }
             }
             return userDefinedLastNDays;
@@ -482,8 +482,8 @@ public abstract class CRLP_Batch_Base {
                 Customizable_Rollup_Settings__c customizableRollupSettings =
                         UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
 
-                if (String.isNotBlank(customizableRollupSettings.Incremental_Last_N_Days_Field_Override__c)) {
-                    userDefinedLastNDaysField = customizableRollupSettings.Incremental_Last_N_Days_Field_Override__c;
+                if (String.isNotBlank(customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c)) {
+                    userDefinedLastNDaysField = customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c;
                 }
             }
             return userDefinedLastNDaysField;

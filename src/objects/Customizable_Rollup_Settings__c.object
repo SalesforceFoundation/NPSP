@@ -22,10 +22,10 @@
         <type>TextArea</type>
     </fields>
     <fields>
-        <fullName>Incremental_Last_N_Days_Field_Override__c</fullName>
+        <fullName>Rollups_IncrementalLastNDays_FldOverride__c</fullName>
         <description></description>
         <externalId>false</externalId>
-        <inlineHelpText></inlineHelpText>
+        <inlineHelpText>For Incremental Rollups Override Use Only. This value overrides the field used to filter related Opportunities to determine which Accounts, Contacts, GAUs or RDs are recalculated during a nightly scheduled job. Defaults to SystemModStamp.</inlineHelpText>
         <label>Incremental: Last N Days Field Override</label>
         <length>43</length>
         <required>false</required>
@@ -73,10 +73,10 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Incremental_Last_N_Days_Value_Override__c</fullName>
+        <fullName>Rollups_IncrementalLastNDays_ValOverride__c</fullName>
         <description></description>
         <externalId>false</externalId>
-        <inlineHelpText></inlineHelpText>
+        <inlineHelpText>For Incremental Rollups Override Use Only. This value overrides the calculated number of days used to filter related Opportunities to determine which Accounts, Contacts, GAUs or RDs are recalculated during a nightly scheduled job.</inlineHelpText>
         <label>Incremental: Last N Days Value Override</label>
         <precision>6</precision>
         <required>false</required>
