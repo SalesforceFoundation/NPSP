@@ -36,23 +36,45 @@
 
 public with sharing class UTIL_LightningComponentSupport {
 
+    public static final String LIGHTNING_DATA_TYPE_NUMBER = 'number';
+    public static final String LIGHTNING_DATA_TYPE_TEXT = 'text';
+    public static final String LIGHTNING_DATA_TYPE_CHECKBOX = 'checkbox';
+    public static final String LIGHTNING_DATA_TYPE_DATE = 'date';
+    public static final String LIGHTNING_DATA_TYPE_DATE_LOCAL = 'date-local';
+
     /*******************************************************************************************************
-    * @description Converts Apex field data type to type expected by lightning:datatable and other components
-    * @param rawType: the data type from DescribeFieldResult
+    * @description Converts Apex field data type to type expected by lightning:datatable.
+    * @param fieldDisplayType: the Schema.DisplayType from DescribeFieldResult
     * @return the datatype string expected by lightning components
     */
-    public static String getLightningDataType(String rawType) {
-        rawType = rawType.toLowerCase();
-        if (rawType == 'datetime') {
-            return 'date';
-        } else if (rawType == 'date') {
-            return 'date-local';
-        } else if (rawType == 'double') {
-            return 'number';
-        } else if (rawType == 'string') {
-            return 'text';
+    public static String getLightningDataTableDataType(Schema.DisplayType fieldDisplayType) {
+        if (fieldDisplayType == Schema.DisplayType.DATETIME) {
+            return LIGHTNING_DATA_TYPE_DATE;
+        } else if (fieldDisplayType == Schema.DisplayType.DATE) {
+            return LIGHTNING_DATA_TYPE_DATE_LOCAL;
+        } else if (fieldDisplayType == Schema.DisplayType.DOUBLE) {
+            return LIGHTNING_DATA_TYPE_NUMBER;
+        } else if (fieldDisplayType == Schema.DisplayType.STRING) {
+            return LIGHTNING_DATA_TYPE_TEXT;
         } else {
-            return rawType;
+            return fieldDisplayType.name().toLowerCase();
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the corresponding Lightning field type from an Apex field type
+    * @param fieldDisplayType: the Schema.DisplayType from DescribeFieldResult
+    * @return the datatype string expected by lightning components
+    */
+    public static String getLightningInputDataType(Schema.DisplayType fieldDisplayType) {
+        if (fieldDisplayType == Schema.DisplayType.CURRENCY) {
+            return LIGHTNING_DATA_TYPE_NUMBER;
+        } else if (fieldDisplayType == Schema.DisplayType.STRING) {
+            return LIGHTNING_DATA_TYPE_TEXT;
+        } else if (fieldDisplayType == Schema.DisplayType.BOOLEAN) {
+            return LIGHTNING_DATA_TYPE_CHECKBOX;
+        } else {
+            return fieldDisplayType.name().toLowerCase();
         }
     }
 
