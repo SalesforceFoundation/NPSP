@@ -227,13 +227,10 @@ private class CRLP_Batch_Base_TEST {
     private static void accountHardCreditRollupWithUserDefinedJoinGeneratesProperJoinQuery() {
         String userDefinedLastNDaysFieldOverride = 'LastModifiedDate';
         Integer userDefinedLastNDaysValueOverride = 44;
-
-        Customizable_Rollup_Settings__c settings = new Customizable_Rollup_Settings__c();
-        settings.Customizable_Rollups_Enabled__c = true;
-        settings.AccountHardCreditNonSkew_Incremental__c = true;
-        settings.Rollups_IncrementalLastNDays_FldOverride__c = userDefinedLastNDaysFieldOverride;
-        settings.Rollups_IncrementalLastNDays_ValOverride__c = userDefinedLastNDaysValueOverride;
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(settings);
+        configureUserDefinedInnerJoin(
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                userDefinedLastNDaysFieldOverride,
+                userDefinedLastNDaysValueOverride);
 
         // Create the test data
         CRLP_RollupAccount_TEST.mockRollupCMTValues();
@@ -253,13 +250,10 @@ private class CRLP_Batch_Base_TEST {
     private static void contactHardCreditRollupWithUserDefinedJoinGeneratesProperJoinQuery() {
         String userDefinedLastNDaysFieldOverride = 'LastModifiedDate';
         Integer userDefinedLastNDaysValueOverride = 555;
-
-        Customizable_Rollup_Settings__c settings = new Customizable_Rollup_Settings__c();
-        settings.Customizable_Rollups_Enabled__c = true;
-        settings.ContactHardCreditNonSkew_Incremental__c = true;
-        settings.Rollups_IncrementalLastNDays_FldOverride__c = userDefinedLastNDaysFieldOverride;
-        settings.Rollups_IncrementalLastNDays_ValOverride__c = userDefinedLastNDaysValueOverride;
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(settings);
+        configureUserDefinedInnerJoin(
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                userDefinedLastNDaysFieldOverride,
+                userDefinedLastNDaysValueOverride);
 
         // Create the test data
         CRLP_RollupContact_TEST.mockRollupCMTValues();
@@ -291,18 +285,32 @@ private class CRLP_Batch_Base_TEST {
         }
     }
 
-    private static void configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType jobType, Boolean isIncrementalMode) {
+    private static Customizable_Rollup_Settings__c configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType jobType, Boolean isIncrementalMode) {
+        Customizable_Rollup_Settings__c settings;
         if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-            UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            settings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                     Customizable_Rollups_Enabled__c = true,
                     AccountHardCreditNonSkew_Incremental__c = isIncrementalMode
             ));
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-            UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            settings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                     Customizable_Rollups_Enabled__c = true,
                     ContactHardCreditNonSkew_Incremental__c = isIncrementalMode
             ));
         }
+        return settings;
+    }
+
+    private static void configureUserDefinedInnerJoin(
+            CRLP_RollupProcessingOptions.RollupType jobType,
+            String userDefinedField,
+            Integer userDefinedValue) {
+
+        Customizable_Rollup_Settings__c settings = configureIncrementalMode(jobType, true);
+
+        settings.Rollups_IncrementalLastNDays_FldOverride__c = userDefinedField;
+        settings.Rollups_IncrementalLastNDays_ValOverride__c = userDefinedValue;
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(settings);
     }
 
     private class RollupInfo {
