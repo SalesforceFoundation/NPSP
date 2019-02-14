@@ -910,10 +910,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         customizableRollupSettings.CMT_API_Status__c = mySettings.CMT_API_Status__c;
         customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c = mySettings.AccountHardCreditNonSkew_Incremental__c;
         customizableRollupSettings.ContactHardCreditNonSkew_Incremental__c = mySettings.ContactHardCreditNonSkew_Incremental__c;
-        customizableRollupSettings.AccountHardCredit_LastNDays__c = mySettings.AccountHardCredit_LastNDays__c;
-        customizableRollupSettings.AccountHardCredit_LastNDaysField__c = mySettings.AccountHardCredit_LastNDaysField__c;
-        customizableRollupSettings.ContactHardCredit_LastNDays__c = mySettings.ContactHardCredit_LastNDays__c;
-        customizableRollupSettings.ContactHardCredit_LastNDaysField__c = mySettings.ContactHardCredit_LastNDaysField__c;
+        customizableRollupSettings.Incremental_Last_N_Days_Value_Override__c = mySettings.Incremental_Last_N_Days_Value_Override__c;
+        customizableRollupSettings.Incremental_Last_N_Days_Field_Override__c = mySettings.Incremental_Last_N_Days_Field_Override__c;
 
         orgCustomizableRollupSettings = customizableRollupSettings;
 
