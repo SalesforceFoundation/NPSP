@@ -478,23 +478,32 @@ public abstract class CRLP_Batch_Base {
             return false;
         }
 
-        if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
+        switch on (jobMode) {
 
-            Customizable_Rollup_Settings__c customizableRollupSettings =
-                    UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+            when NonSkewMode {
 
-            if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
-                    && customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c == true) {
-                return true;
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit
-                    && customizableRollupSettings.ContactHardCreditNonSkew_Incremental__c == true) {
-                return true;
-            } else {
-                return false;
+                Customizable_Rollup_Settings__c customizableRollupSettings =
+                        UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+
+                switch on (jobType) {
+
+                    when AccountHardCredit {
+                        return customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c;
+                    }
+
+                    when ContactHardCredit {
+                        return customizableRollupSettings.ContactHardCreditNonSkew_Incremental__c;
+                    }
+
+                    when else {
+                        return false;
+                    }
+                }
             }
 
-        } else {
-            return false;
+            when else {
+                return false;
+            }
         }
     }
 
