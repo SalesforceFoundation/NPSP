@@ -497,7 +497,7 @@ public abstract class CRLP_Batch_Base {
      * @description Produces the where clause that should be used for the inner join when NOT in incremental mode
      * @return The WHERE clause, as a string, that should be used to filter the detail records
      */
-    protected String getStandardWhereClause() {
+    private String buildNonIncrementalModeWhereClause() {
         String standardWhereClause = null; //will return null if this method is called from an unsupported rollup type
         if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
                 || jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
@@ -529,7 +529,7 @@ public abstract class CRLP_Batch_Base {
             whereClause = buildIncrementalModeWhereClause();
         } else {
             if (customizableRollupSettings.Disable_Related_Records_Filter__c == false) {
-                whereClause = getStandardWhereClause();
+                whereClause = buildNonIncrementalModeWhereClause();
             }
         }
         return whereClause;
