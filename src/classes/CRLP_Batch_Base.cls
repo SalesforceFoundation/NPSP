@@ -532,9 +532,9 @@ public abstract class CRLP_Batch_Base {
     @TestVisible protected String getWhereClause() {
         String whereClause = null;
         Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-        Boolean hasActiveIncrementalModeRollups = (maxDaysAgo != null || maxYearsAgo != null);
+        Boolean hasMaxValuesForIncrementalMode = (maxDaysAgo != null || maxYearsAgo != null);
 
-        if (isIncrementalMode && hasActiveIncrementalModeRollups) {
+        if (isIncrementalMode && hasMaxValuesForIncrementalMode) {
             whereClause = buildIncrementalModeWhereClause();
         } else {
             if (customizableRollupSettings.Disable_Related_Records_Filter__c == false) {
