@@ -417,7 +417,7 @@ public abstract class CRLP_Batch_Base {
      * @description Produces the where clause that should be used for the inner join when in incremental mode
      * @return The WHERE clause, as a string, that should be used to filter the detail records
      */
-    protected String getIncrementalModeWhereClause() {
+    private String buildIncrementalModeWhereClause() {
         String whereClause = 'Id IN (' +
                 'SELECT ' + keyField + ' ' +
                 'FROM ' + detailObjectType + ' ' +
@@ -526,7 +526,7 @@ public abstract class CRLP_Batch_Base {
         Boolean hasActiveIncrementalModeRollups = (maxDaysAgo != null || maxYearsAgo != null);
 
         if (isIncrementalMode && hasActiveIncrementalModeRollups) {
-            whereClause = getIncrementalModeWhereClause();
+            whereClause = buildIncrementalModeWhereClause();
         } else {
             if (customizableRollupSettings.Disable_Related_Records_Filter__c == false) {
                 whereClause = getStandardWhereClause();
