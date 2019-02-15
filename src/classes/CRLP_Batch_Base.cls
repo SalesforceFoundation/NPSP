@@ -354,6 +354,8 @@ public abstract class CRLP_Batch_Base {
         return whereClause;
     }
 
+    /******************************** Helper Methods *****************************/
+
     /**
      * @description Produces the where clause that should be used for the inner join when NOT in incremental mode
      * @return The WHERE clause, as a string, that should be used to filter the detail records
