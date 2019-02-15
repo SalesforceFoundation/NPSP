@@ -342,16 +342,7 @@ public abstract class CRLP_Batch_Base {
     private Integer maxDaysAgo {
         get {
             if (maxDaysAgo == null) {
-                for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
-                    if (rollup.Active__c == true
-                            && String.isNotBlank(rollup.Time_Bound_Operation_Type__c)
-                            && rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Days_Back.name()
-                            && rollup.Integer__c != null) {
-                        if (maxDaysAgo == null || rollup.Integer__c > maxDaysAgo) {
-                            maxDaysAgo = (Integer) rollup.Integer__c;
-                        }
-                    }
-                }
+                maxDaysAgo = getMaxInteger(CRLP_Operation.TimeBoundOperationType.Days_Back);
             }
             return maxDaysAgo;
         }
@@ -365,20 +356,27 @@ public abstract class CRLP_Batch_Base {
     private Integer maxYearsAgo {
         get {
             if (maxYearsAgo == null) {
-                for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
-                    if (rollup.Active__c == true
-                            && String.isNotBlank(rollup.Time_Bound_Operation_Type__c)
-                            && rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()
-                            && rollup.Integer__c != null) {
-                        if (maxYearsAgo == null || rollup.Integer__c > maxYearsAgo) {
-                            maxYearsAgo = (Integer) rollup.Integer__c;
-                        }
-                    }
-                }
+                maxYearsAgo = getMaxInteger(CRLP_Operation.TimeBoundOperationType.Years_Ago);
             }
             return maxYearsAgo;
         }
         private set;
+    }
+
+    private Integer getMaxInteger(CRLP_Operation.TimeBoundOperationType timeBoundType) {
+        Integer maxInteger = null;
+        for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
+            // todo: combine dupes
+            if (rollup.Active__c == true
+                    && String.isNotBlank(rollup.Time_Bound_Operation_Type__c)
+                    && rollup.Time_Bound_Operation_Type__c == timeBoundType.name()
+                    && rollup.Integer__c != null) {
+                if (maxInteger == null || rollup.Integer__c > maxInteger) {
+                    maxInteger = (Integer) rollup.Integer__c;
+                }
+            }
+        }
+        return maxInteger;
     }
 
     private Boolean isIncrementalMode {
