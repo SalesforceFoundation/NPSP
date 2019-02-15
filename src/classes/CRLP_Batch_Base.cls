@@ -464,7 +464,7 @@ public abstract class CRLP_Batch_Base {
     private Boolean isIncrementalMode {
         get {
             if (isIncrementalMode == null) {
-                isIncrementalMode = getIncrementalModeEnabled();
+                isIncrementalMode = getIsIncrementalModeEnabled();
             }
             return isIncrementalMode;
         }
@@ -476,7 +476,7 @@ public abstract class CRLP_Batch_Base {
      * @param jobType the type of rollup job
      * @return true if the rollup should be run in incremental mode, otherwise false
      */
-    private Boolean getIncrementalModeEnabled() {
+    private Boolean getIsIncrementalModeEnabled() {
         if (isScheduledJob == null || isScheduledJob == false) {
             return false;
         }
