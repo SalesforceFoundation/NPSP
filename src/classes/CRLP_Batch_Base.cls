@@ -336,6 +336,89 @@ public abstract class CRLP_Batch_Base {
     }
 
     /**
+     * @description Produces the where clause that should be used for the inner join
+     * @return The WHERE clause, as a string, that should be used to filter the detail records
+     */
+    @TestVisible protected String getWhereClause() {
+        String whereClause = null;
+        Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+        Boolean hasMaxValuesForIncrementalMode = (maxDaysAgo != null || maxYearsAgo != null);
+
+        if (isIncrementalMode && hasMaxValuesForIncrementalMode) {
+            whereClause = buildIncrementalModeWhereClause();
+        } else {
+            if (customizableRollupSettings.Disable_Related_Records_Filter__c == false) {
+                whereClause = buildNonIncrementalModeWhereClause();
+            }
+        }
+        return whereClause;
+    }
+
+    /**
+     * @description Produces the where clause that should be used for the inner join when NOT in incremental mode
+     * @return The WHERE clause, as a string, that should be used to filter the detail records
+     */
+    private String buildNonIncrementalModeWhereClause() {
+        String whereClause = null; //will return null if this method is called from an unsupported rollup type
+
+        if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
+                || jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+
+            whereClause = 'Id IN (' +
+                    'SELECT ' + keyField + ' ' +
+                    'FROM ' + detailObjectType + ')';
+
+        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+
+            whereClause = 'Id IN (SELECT ContactId FROM OpportunityContactRole)';
+
+        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+                jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+
+            // It's not possible to do an inner query on this due to the following Salesforce error:
+            // "The inner select field 'Contact.AccountId' cannot have more than one level of relationships"
+
+        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+
+            whereClause = 'Id IN (SELECT npe03__Recurring_Donation__c FROM Opportunity)';
+
+        }
+        return whereClause;
+    }
+
+    /**
+     * @description Produces the where clause that should be used for the inner join when in incremental mode
+     * @return The WHERE clause, as a string, that should be used to filter the detail records
+     */
+    private String buildIncrementalModeWhereClause() {
+        String whereClause = 'Id IN (' +
+                'SELECT ' + keyField + ' ' +
+                'FROM ' + detailObjectType + ' ' +
+                'WHERE ';
+
+        if (hasIncrementalFieldOverrides) {
+            whereClause += overrideForLastNDaysField + ' >= LAST_N_DAYS:' + overrideForLastNDaysValue;
+        } else {
+            // Set to CloseDate for testing, SystemModstamp for prod.
+            String whereClauseDateField = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp';
+            whereClause += whereClauseDateField + ' ';
+
+            if (maxDaysAgo != null && maxYearsAgo != null) {
+                if ((maxDaysAgo / 365) > maxYearsAgo) {
+                    whereClause += '>= LAST_N_DAYS:' + maxDaysAgo;
+                } else {
+                    whereClause += '>= LAST_N_YEARS:' + maxYearsAgo;
+                }
+            } else if (maxDaysAgo != null) {
+                whereClause += '>= LAST_N_DAYS:' + maxDaysAgo;
+            } else if (maxYearsAgo != null) {
+                whereClause += '>= LAST_N_YEARS:' + maxYearsAgo;
+            }
+        }
+        return whereClause += ')';
+    }
+
+    /**
      * @description The max Integer for all active time-bound Days_Back rollups,
      * or null if there are no active time-bound Days_Back rollups for this summary object
      */
@@ -414,38 +497,6 @@ public abstract class CRLP_Batch_Base {
     }
 
     /**
-     * @description Produces the where clause that should be used for the inner join when in incremental mode
-     * @return The WHERE clause, as a string, that should be used to filter the detail records
-     */
-    private String buildIncrementalModeWhereClause() {
-        String whereClause = 'Id IN (' +
-                'SELECT ' + keyField + ' ' +
-                'FROM ' + detailObjectType + ' ' +
-                'WHERE ';
-
-        if (hasIncrementalFieldOverrides) {
-            whereClause += overrideForLastNDaysField + ' >= LAST_N_DAYS:' + overrideForLastNDaysValue;
-        } else {
-            // Set to CloseDate for testing, SystemModstamp for prod.
-            String whereClauseDateField = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp';
-            whereClause += whereClauseDateField + ' ';
-
-            if (maxDaysAgo != null && maxYearsAgo != null) {
-                if ((maxDaysAgo / 365) > maxYearsAgo) {
-                    whereClause += '>= LAST_N_DAYS:' + maxDaysAgo;
-                } else {
-                    whereClause += '>= LAST_N_YEARS:' + maxYearsAgo;
-                }
-            } else if (maxDaysAgo != null) {
-                whereClause += '>= LAST_N_DAYS:' + maxDaysAgo;
-            } else if (maxYearsAgo != null) {
-                whereClause += '>= LAST_N_YEARS:' + maxYearsAgo;
-            }
-        }
-        return whereClause += ')';
-    }
-
-    /**
      * @description Returns true if the org has configured a
      * user-defined inner join for incremental rollups
      */
@@ -491,57 +542,6 @@ public abstract class CRLP_Batch_Base {
             return overrideForLastNDaysField;
         }
         set;
-    }
-
-    /**
-     * @description Produces the where clause that should be used for the inner join when NOT in incremental mode
-     * @return The WHERE clause, as a string, that should be used to filter the detail records
-     */
-    private String buildNonIncrementalModeWhereClause() {
-        String whereClause = null; //will return null if this method is called from an unsupported rollup type
-
-        if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
-                || jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-
-            whereClause = 'Id IN (' +
-                    'SELECT ' + keyField + ' ' +
-                    'FROM ' + detailObjectType + ')';
-
-        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-
-            whereClause = 'Id IN (SELECT ContactId FROM OpportunityContactRole)';
-
-        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-
-            // It's not possible to do an inner query on this due to the following Salesforce error:
-            // "The inner select field 'Contact.AccountId' cannot have more than one level of relationships"
-
-        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-
-            whereClause = 'Id IN (SELECT npe03__Recurring_Donation__c FROM Opportunity)';
-
-        }
-        return whereClause;
-    }
-
-    /**
-     * @description Produces the where clause that should be used for the inner join
-     * @return The WHERE clause, as a string, that should be used to filter the detail records
-     */
-    @TestVisible protected String getWhereClause() {
-        String whereClause = null;
-        Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-        Boolean hasMaxValuesForIncrementalMode = (maxDaysAgo != null || maxYearsAgo != null);
-
-        if (isIncrementalMode && hasMaxValuesForIncrementalMode) {
-            whereClause = buildIncrementalModeWhereClause();
-        } else {
-            if (customizableRollupSettings.Disable_Related_Records_Filter__c == false) {
-                whereClause = buildNonIncrementalModeWhereClause();
-            }
-        }
-        return whereClause;
     }
 
     /*******************************************************************************************************
