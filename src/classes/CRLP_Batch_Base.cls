@@ -339,7 +339,7 @@ public abstract class CRLP_Batch_Base {
      * @description Produces the where clause that should be used for the inner join
      * @return The WHERE clause, as a string, that should be used to filter the detail records
      */
-    @TestVisible protected String getWhereClause() {
+    @TestVisible protected String getMainQueryInnerJoinFilter() {
         String whereClause = null;
         Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
         Boolean hasMaxValuesForIncrementalMode = (maxDaysAgo != null || maxYearsAgo != null);

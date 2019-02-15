@@ -115,7 +115,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                     whereClauses.add(skewClause);
                 }
 
-                String whereClause = getWhereClause();
+                String whereClause = getMainQueryInnerJoinFilter();
                 if (whereClause != null) {
                     whereClauses.add(whereClause);
                 }

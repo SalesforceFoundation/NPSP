@@ -46,7 +46,7 @@ private class CRLP_Batch_Base_TEST {
         CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
         accountBatchJob.initializeJobData();
 
-        String whereClause = accountBatchJob.getWhereClause();
+        String whereClause = accountBatchJob.getMainQueryInnerJoinFilter();
         System.assert(whereClause.contains('WHERE') == false, 'The standard query for the inner join ' +
                 'should NOT contain a where filter on the Opportunities when not a scheduled job.');
     }
@@ -65,7 +65,7 @@ private class CRLP_Batch_Base_TEST {
         // CRLP_Account_BATCH class.  So we "mock" the isScheduledJob value here, to test the correct
         // response from the getWhereClause() method below.
 
-        String generatedWhereClause = accountBatchJob.getWhereClause();
+        String generatedWhereClause = accountBatchJob.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('FROM'));
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
@@ -87,7 +87,7 @@ private class CRLP_Batch_Base_TEST {
         accountBatchJob.initializeJobData();
         accountBatchJob.isScheduledJob = true;
 
-        String generatedWhereClause = accountBatchJob.getWhereClause();
+        String generatedWhereClause = accountBatchJob.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + new RollupInfo().maxDaysBackInteger));
@@ -108,7 +108,7 @@ private class CRLP_Batch_Base_TEST {
         accountBatchJob.initializeJobData();
         accountBatchJob.isScheduledJob = true;
 
-        String generatedWhereClause = accountBatchJob.getWhereClause();
+        String generatedWhereClause = accountBatchJob.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         Integer lastNYears = new RollupInfo().maxYearsAgoInteger;
@@ -126,7 +126,7 @@ private class CRLP_Batch_Base_TEST {
         accountBatchJob.initializeJobData();
         accountBatchJob.isScheduledJob = true;
 
-        String whereClause = accountBatchJob.getWhereClause();
+        String whereClause = accountBatchJob.getMainQueryInnerJoinFilter();
         System.assert(whereClause.contains('WHERE') == false, 'The standard where clause should be used ' +
                 'for the inner join when the custom setting is set to false.');
     }
@@ -141,7 +141,7 @@ private class CRLP_Batch_Base_TEST {
         CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
         contactBatchJob.initializeJobData();
 
-        String whereClause = contactBatchJob.getWhereClause();
+        String whereClause = contactBatchJob.getMainQueryInnerJoinFilter();
         System.assert(whereClause.contains('WHERE') == false, 'The standard query for the inner join ' +
                 'should NOT contain a where filter on the Opportunities when not a scheduled job.');
     }
@@ -157,7 +157,7 @@ private class CRLP_Batch_Base_TEST {
         contactBatchJob.initializeJobData();
         contactBatchJob.isScheduledJob = true;
 
-        String generatedWhereClause = contactBatchJob.getWhereClause();
+        String generatedWhereClause = contactBatchJob.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('FROM'));
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
@@ -179,7 +179,7 @@ private class CRLP_Batch_Base_TEST {
         contactBatchJob.initializeJobData();
         contactBatchJob.isScheduledJob = true;
 
-        String generatedWhereClause = contactBatchJob.getWhereClause();
+        String generatedWhereClause = contactBatchJob.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + new RollupInfo().maxDaysBackInteger));
@@ -200,7 +200,7 @@ private class CRLP_Batch_Base_TEST {
         contactBatchJob.initializeJobData();
         contactBatchJob.isScheduledJob = true;
 
-        String generatedWhereClause = contactBatchJob.getWhereClause();
+        String generatedWhereClause = contactBatchJob.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         Integer lastNYears = new RollupInfo().maxYearsAgoInteger;
@@ -218,7 +218,7 @@ private class CRLP_Batch_Base_TEST {
         contactBatchJob.initializeJobData();
         contactBatchJob.isScheduledJob = true;
 
-        String whereClause = contactBatchJob.getWhereClause();
+        String whereClause = contactBatchJob.getMainQueryInnerJoinFilter();
         System.assert(whereClause.contains('WHERE') == false, 'The standard where clause should be used ' +
                 'for the inner join when the custom setting is set to false.');
     }
@@ -239,7 +239,7 @@ private class CRLP_Batch_Base_TEST {
         accountBatchJob.initializeJobData();
         accountBatchJob.isScheduledJob = true;
 
-        String generatedWhereClause = accountBatchJob.getWhereClause();
+        String generatedWhereClause = accountBatchJob.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains(userDefinedLastNDaysFieldOverride));
@@ -262,7 +262,7 @@ private class CRLP_Batch_Base_TEST {
         contactBatchJob.initializeJobData();
         contactBatchJob.isScheduledJob = true;
 
-        String generatedWhereClause = contactBatchJob.getWhereClause();
+        String generatedWhereClause = contactBatchJob.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains(userDefinedLastNDaysFieldOverride));
