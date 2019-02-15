@@ -449,7 +449,6 @@ public abstract class CRLP_Batch_Base {
     private Integer getMaxInteger(CRLP_Operation.TimeBoundOperationType timeBoundType) {
         Integer maxInteger = null;
         for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
-            // todo: combine dupes
             if (rollup.Active__c == true
                     && String.isNotBlank(rollup.Time_Bound_Operation_Type__c)
                     && rollup.Time_Bound_Operation_Type__c == timeBoundType.name()
