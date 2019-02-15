@@ -234,8 +234,11 @@
                                                     </aura:iteration>
                                                 </lightning:select>
                                                 <aura:set attribute="else">
-                                                    <!-- TODO: ensure these are accessible -->
+                                                    <label for="defaultValueField" class="slds-assistive-text">
+                                                        {!field.label + ': ' + $Label.c.stgDefaultValue}
+                                                    </label>
                                                     <lightning:inputField aura:id="defaultValueField"
+                                                                          id="defaultValueField"
                                                                           fieldName="{!field.name}"
                                                                           value="{!field.defaultValue}"
                                                                           class="hideTooltip equalHeight hideLabel"

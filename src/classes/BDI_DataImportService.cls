@@ -714,11 +714,6 @@ global with sharing class BDI_DataImportService {
         DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(dataImportObjectName, sourceFieldName);
         String targetObject = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[0] : null;
 
-        // Donation Campaign is a special case because its mapping is hard-coded, not in help text
-        if (sourceFieldName == UTIL_Namespace.StrTokenNSPrefix('DonationCampaignImported__c')) {
-             targetObject = 'Opportunity';
-        }
-
         switch on targetObject {
             when 'Account', 'Contact', 'Opportunity' {
                 return targetObject;
@@ -750,11 +745,6 @@ global with sharing class BDI_DataImportService {
         String dataImportObjectName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
         DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(dataImportObjectName, sourceFieldName);
         String targetField = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[1] : null;
-
-        // Donation Campaign is a special case because its mapping is hard-coded, not in help text
-        if (sourceFieldName == UTIL_Namespace.StrTokenNSPrefix('DonationCampaignImported__c')) {
-            targetField = 'CampaignId';
-        }
 
         return targetField;
     }
