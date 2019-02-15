@@ -422,19 +422,23 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description for the list of AccountId's, recalc their rollups 
-    * @param listAccountId the list of Account (Id's) that need updating.
+    * @param accountIds the list of Account (Id's) that need updating.
     * @return void
     */ 
-    public static void rollupAccounts(list<Id> listAccountId) {
-        if (listAccountId.size() == 1 || system.isFuture() || system.isBatch()) {
-            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL(); 
-            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(oppRollupUtil.buildAccountQuery() + 
-                                                           ' where id IN :listAccountId')); 
-            RLLP_OppRollup rg = new RLLP_OppRollup();
-            rg.rollupAccounts(amap);                    
+    public static void rollupAccounts(List<Id> accountIds) {
+        Boolean isImmediate = accountIds.size() == 1 || System.isFuture() || System.isBatch() || System.isQueueable();
+
+        if (isImmediate) {
+            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+            String query = new RLLP_OppRollup_UTIL().buildAccountQuery() + ' WHERE Id IN :accountIds';
+            Map<Id, Account> accountsById = new Map<Id, Account>((List<Account>)Database.query(query));
+            RLLP_OppRollup oppRollup = new RLLP_OppRollup();
+
+            oppRollup.rollupAccounts(accountsById);
+
         } else {
-            RLLP_OppRollup.rollupAccountsFuture(new set<Id>(listAccountId));
-        } 
+            RLLP_OppRollup.rollupAccountsFuture(new set<Id>(accountIds));
+        }
     }
     
     /*******************************************************************************************************

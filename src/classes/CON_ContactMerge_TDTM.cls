@@ -77,7 +77,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
                 mergeKeys.add(buildMergeKey(oldContact.Id, oldContact.AccountId, oldContact.MasterRecordId));
             }
 
-            handleContactMergeFixupsFuture(mergeKeys);
+            System.enqueueJob(new AsyncContactMergeFixup(mergeKeys));
         }
 
         return dmlWrapper;
@@ -106,23 +106,32 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description After a Contact Merge, call this Future routine to perform assorted fixups that need to
+    * @description After a Contact Merge, call this async routine to perform assorted fixups that need to
     * occur which include:
     *   - update the Account name and greetings 
     *   - move Opps to the Master Contact's Account 
     *   - recalculate Household Soft Credit OCRs 
     *   - recalculate Opportunity Rollups
     *
-    * @param mergeKeys The list of mergeKeys that provide oldContactId, oldAccountId, and masterContactId
-    * @return null
     ********************************************************************************************************/
-    @Future
-    private static void handleContactMergeFixupsFuture(List<String> mergeKeys) {
-        if (mergeKeys == null || mergeKeys.isEmpty()) {
-            return;
+    private class AsyncContactMergeFixup implements Queueable {
+        List<String> mergeKeys;
+
+        /***************************************************************************************************************
+         * @description Constructor
+         * @param mergeKeys - the ids relevant to the merge process
+         */
+        private AsyncContactMergeFixup(List<String> mergeKeys) {
+            this.mergeKeys = mergeKeys;
         }
 
-        mergeProcessor.fixup(mergeKeys);
+        public void execute(QueueableContext qc) {
+            if (mergeKeys == null || mergeKeys.isEmpty()) {
+                return;
+            }
+
+            mergeProcessor.fixup(mergeKeys);
+        }
     }
 
     /*******************************************************************************************************
@@ -143,7 +152,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
 
         /***************************************************************************************************************
          * @description Fixes records involved in the merge process
-         * @param mergeKeys - the ids releveant to the merge process
+         * @param mergeKeys - the ids relevant to the merge process
          */
         private void fixup(List<String> mergeKeys) {
             setMergeKeyIds(mergeKeys);
