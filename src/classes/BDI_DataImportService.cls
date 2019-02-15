@@ -1713,9 +1713,7 @@ global with sharing class BDI_DataImportService {
                 LogBDIError(listAccDi[i], ur.getErrors()[0].getMessage(), 'HomeAddressImportStatus__c');
             }
         }
-
     }
-
 
     //********************************************* CAMPAIGNS ************************************************
 
@@ -1772,7 +1770,7 @@ global with sharing class BDI_DataImportService {
             }
 
             // Create a new Campaign during processing if no match on Name
-            //todo: maybe can remove isDryRun?
+            // todo: maybe can remove isDryRun?
             if (!isDryRun && dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatchedNone) {
                 //if we haven't created a campaign for this DI yet, create a new list in the newCampaignNameToDataImports for it
                 if (!newCampaignNameToDataImports.containsKey(campaignName)) {
@@ -1811,18 +1809,6 @@ global with sharing class BDI_DataImportService {
                 }
             }
         }
-
-        // add the new campaigns to our map
-        /*for (Campaign campaign : campaignsToInsert) {
-            campaignNameToCampaignId.put(campaign.Name, campaign.Id);
-        } 
-        for (DataImport__c dataImport : listDI) {
-            if (dataImport.Donation_Campaign_Name__c != null) {
-                // user specified Campaign Name only and we should have all new *and* existing Campaigns in our map now
-                dataImport.DonationCampaignImported__c =
-                        campaignNameToCampaignId.get(dataImport.Donation_Campaign_Name__c);
-            }
-        }*/
     }
 
     /*******************************************************************************************************
