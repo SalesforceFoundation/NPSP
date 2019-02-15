@@ -1437,7 +1437,6 @@ public with sharing class BDI_DataImport_TEST {
 
         //verify dry run statuses and import fields
         dataImports = getDataImports();
-        system.debug(dataImports);
         System.assertEquals(System.Label.bdiDryRunMatchedId, dataImports[0].DonationCampaignImportStatus__c);
         System.assertEquals(campaigns[0].Id, dataImports[0].DonationCampaignImported__c);
         System.assertEquals(System.Label.bdiDryRunMatched, dataImports[1].DonationCampaignImportStatus__c);

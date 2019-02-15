@@ -1771,15 +1771,17 @@ global with sharing class BDI_DataImportService {
                 // User specified a Campaign lookup in BGE lookup or with an ID on import
                 dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedId;
 
-            } else if (campaignName != null && campaignId == null) {
+            } else if (campaignName != null) {
                 // User specified a Campaign Name!
+
+                Boolean campaignNotFoundByName = (campaignNameToCampaignId.get(campaignName) == null);
 
                 if (!uniqueCampaignNames.contains(campaignName)) {
                     // We haven't already logged this name; add it to the set
                     uniqueCampaignNames.add(campaignName);
 
-                    // Create a new Campaign if no match on Name
-                    if (!isDryRun && campaignNameToCampaignId.get(campaignName) == null) {
+                    // Create a new Campaign during processing if no match on Name
+                    if (!isDryRun && campaignNotFoundByName) {
                         cmp = new Campaign(Name = campaignName, IsActive = true);
                         campaignsToInsert.add(cmp);
                         dataImportsWithNewCampaigns.add(dataImport);
@@ -1787,7 +1789,7 @@ global with sharing class BDI_DataImportService {
                 }
 
                 // Set Campaign Import status
-                if (campaignNameToCampaignId.get(campaignName) == null) {
+                if (campaignNotFoundByName) {
                     // The Campaign doesn't actually exist yet
                     if (isDryRun) {
                         dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedNone;
