@@ -72,7 +72,8 @@ public class CRLP_Rollup_SEL_TEST {
      * @description Test the Rollup selector methods. Relies on hardcoded JSON deserialized
      * MDT data for these tests.
      */
-    static testMethod void test_Rollup_Selectors() {
+    @IsTest
+    static void test_Rollup_Selectors() {
 
         mockRollupCMTValues();
 
