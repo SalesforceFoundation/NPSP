@@ -423,8 +423,8 @@ public abstract class CRLP_Batch_Base {
                 'FROM ' + detailObjectType + ' ' +
                 'WHERE ';
 
-        if (hasUserDefinedInnerJoin) {
-            whereClause += userDefinedLastNDaysField + ' >= LAST_N_DAYS:' + userDefinedLastNDays;
+        if (hasIncrementalFieldOverrides) {
+            whereClause += overrideForLastNDaysField + ' >= LAST_N_DAYS:' + overrideForLastNDaysValue;
         } else {
             // Set to CloseDate for testing, SystemModstamp for prod.
             String whereClauseDateField = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp';
@@ -449,9 +449,9 @@ public abstract class CRLP_Batch_Base {
      * @description Returns true if the org has configured a
      * user-defined inner join for incremental rollups
      */
-    private Boolean hasUserDefinedInnerJoin {
+    private Boolean hasIncrementalFieldOverrides {
         get {
-            return userDefinedLastNDaysField != null && userDefinedLastNDays != null;
+            return overrideForLastNDaysField != null && overrideForLastNDaysValue != null;
         }
     }
 
@@ -459,17 +459,17 @@ public abstract class CRLP_Batch_Base {
      * @description Value to use with LAST_N_DAYS: in the inner join query
      * when the org has the user-defined inner join for incremental rollups
      */
-    private Integer userDefinedLastNDays {
+    private Integer overrideForLastNDaysValue {
         get {
-            if (userDefinedLastNDays == null) {
+            if (overrideForLastNDaysValue == null) {
                 Customizable_Rollup_Settings__c customizableRollupSettings =
                         UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
 
                 if (customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c != null) {
-                    userDefinedLastNDays = (Integer) customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c;
+                    overrideForLastNDaysValue = (Integer) customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c;
                 }
             }
-            return userDefinedLastNDays;
+            return overrideForLastNDaysValue;
         }
         set;
     }
@@ -478,17 +478,17 @@ public abstract class CRLP_Batch_Base {
      * @description API name of the date field to use as in the inner join query
      * when the org has the user-defined inner join for incremental rollups
      */
-    private String userDefinedLastNDaysField {
+    private String overrideForLastNDaysField {
         get {
-            if (userDefinedLastNDaysField == null) {
+            if (overrideForLastNDaysField == null) {
                 Customizable_Rollup_Settings__c customizableRollupSettings =
                         UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
 
                 if (String.isNotBlank(customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c)) {
-                    userDefinedLastNDaysField = customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c;
+                    overrideForLastNDaysField = customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c;
                 }
             }
-            return userDefinedLastNDaysField;
+            return overrideForLastNDaysField;
         }
         set;
     }
