@@ -381,6 +381,16 @@ public abstract class CRLP_Batch_Base {
         private set;
     }
 
+    private Boolean isIncrementalMode {
+        get {
+            if (isIncrementalMode == null) {
+                isIncrementalMode = getIncrementalModeEnabled();
+            }
+            return isIncrementalMode;
+        }
+        private set;
+    }
+
     /**
      * @description Determines whether the rollup should be run in incremental mode
      * @param jobType the type of rollup job
@@ -517,7 +527,7 @@ public abstract class CRLP_Batch_Base {
         Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
         Boolean hasActiveIncrementalModeRollups = (maxDaysAgo != null || maxYearsAgo != null);
 
-        if (getIncrementalModeEnabled() && hasActiveIncrementalModeRollups) {
+        if (isIncrementalMode && hasActiveIncrementalModeRollups) {
             whereClause = getIncrementalModeWhereClause();
         } else {
             if (customizableRollupSettings.Disable_Related_Records_Filter__c == false) {
