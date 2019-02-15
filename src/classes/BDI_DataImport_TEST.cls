@@ -1400,9 +1400,8 @@ public with sharing class BDI_DataImport_TEST {
     * @description operation
     *        run dry run contacts with donation & campaign IDs and Names
     * verify:
-    *    DonationCampaignImported__c is set on ID match
-    *    DonationCampaignImported__c is not set on Name match
-    *    statuses reflect dry run values
+    *    DonationCampaignImported__c is set on ID and name match
+    *    Campaign Status is still matched instead of Matched by ID
     **********************************************************************************************************/
     static testMethod void TwoDIWithDonationsAndCampaignIdsInDryRun() {
         //skip the test if Advancement is installed
@@ -1440,7 +1439,7 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(System.Label.bdiDryRunMatchedId, dataImports[0].DonationCampaignImportStatus__c);
         System.assertEquals(campaigns[0].Id, dataImports[0].DonationCampaignImported__c);
         System.assertEquals(System.Label.bdiDryRunMatched, dataImports[1].DonationCampaignImportStatus__c);
-        System.assertEquals(null, dataImports[1].DonationCampaignImported__c);
+        System.assertEquals(campaigns[1].Id, dataImports[1].DonationCampaignImported__c);
     }
 
     /*********************************************************************************************************

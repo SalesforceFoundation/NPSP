@@ -1799,6 +1799,7 @@ global with sharing class BDI_DataImportService {
                 } else {
                     // The campaign exists!
                     dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatched;
+                    dataImport.DonationCampaignImported__c = campaignNameToCampaignId.get(campaignName);
                 }
             }
             if (Test.isRunningTest() && campaignName != null && campaignName.startsWith('FailTest')) {
