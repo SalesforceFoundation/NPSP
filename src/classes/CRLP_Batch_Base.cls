@@ -425,7 +425,7 @@ public abstract class CRLP_Batch_Base {
     private Integer maxDaysAgo {
         get {
             if (maxDaysAgo == null) {
-                maxDaysAgo = getMaxInteger(CRLP_Operation.TimeBoundOperationType.Days_Back);
+                maxDaysAgo = getMaxIntegerValueFromRollupsForType(CRLP_Operation.TimeBoundOperationType.Days_Back);
             }
             return maxDaysAgo;
         }
@@ -439,14 +439,19 @@ public abstract class CRLP_Batch_Base {
     private Integer maxYearsAgo {
         get {
             if (maxYearsAgo == null) {
-                maxYearsAgo = getMaxInteger(CRLP_Operation.TimeBoundOperationType.Years_Ago);
+                maxYearsAgo = getMaxIntegerValueFromRollupsForType(CRLP_Operation.TimeBoundOperationType.Years_Ago);
             }
             return maxYearsAgo;
         }
         private set;
     }
 
-    private Integer getMaxInteger(CRLP_Operation.TimeBoundOperationType timeBoundType) {
+    /**
+     * @description Returns the maximum integer for time-bound rollups by time-bound type
+     * @param timeBoundType Time-bound type for which the max integer should be calculated
+     * @return max integer for the specified time bound type
+     */
+    private Integer getMaxIntegerValueFromRollupsForType(CRLP_Operation.TimeBoundOperationType timeBoundType) {
         Integer maxInteger = null;
         for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
             if (rollup.Active__c == true
