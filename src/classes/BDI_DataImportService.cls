@@ -1831,11 +1831,11 @@ global with sharing class BDI_DataImportService {
             }
         }
 
-        List<Database.UpsertResult> upsertResults = UTIL_DMLService.upsertRecords(campaignsToInsert, false);
-        for (Integer i = 0; i < upsertResults.size(); i++) {
-            Database.UpsertResult ur = upsertResults[i];
-            if (!ur.isSuccess()) {
-                LogBDIError(dataImportsWithNewCampaigns[i], ur.getErrors()[0].getMessage(), 'DonationCampaignImportStatus__c');
+        List<Database.SaveResult> saveResults = UTIL_DMLService.insertRecords(campaignsToInsert, false);
+        for (Integer i = 0; i < saveResults.size(); i++) {
+            Database.SaveResult sr = saveResults[i];
+            if (!sr.isSuccess()) {
+                LogBDIError(dataImportsWithNewCampaigns[i], sr.getErrors()[0].getMessage(), 'DonationCampaignImportStatus__c');
             }
         }
 
