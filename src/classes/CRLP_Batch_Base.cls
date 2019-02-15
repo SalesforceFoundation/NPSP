@@ -344,7 +344,7 @@ public abstract class CRLP_Batch_Base {
         Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
         Boolean hasMaxValuesForIncrementalMode = (maxDaysAgo != null || maxYearsAgo != null);
 
-        if (isIncrementalMode && hasMaxValuesForIncrementalMode) {
+        if (getIsIncrementalModeEnabled() && hasMaxValuesForIncrementalMode) {
             whereClause = buildIncrementalModeWhereClause();
         } else {
             if (customizableRollupSettings.Disable_Related_Records_Filter__c == false) {
@@ -459,16 +459,6 @@ public abstract class CRLP_Batch_Base {
             }
         }
         return maxInteger;
-    }
-
-    private Boolean isIncrementalMode {
-        get {
-            if (isIncrementalMode == null) {
-                isIncrementalMode = getIsIncrementalModeEnabled();
-            }
-            return isIncrementalMode;
-        }
-        private set;
     }
 
     /**
