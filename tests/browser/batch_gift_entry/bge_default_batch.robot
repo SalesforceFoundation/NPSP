@@ -7,6 +7,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 BGE Batch With Default Values
+    #Create a BGE batch with default values
     [tags]  unstable
     ${batch} =           Generate Random String
     Select App Launcher Tab   Batch Gift Entry
