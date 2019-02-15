@@ -297,29 +297,6 @@ private class CRLP_Batch_Base_TEST {
     }
 
     /**
-     * @description Inner class used to calculate the maxDaysBack and maxYearsAgo values
-     * for the test-configured rollups stored in memory.  Used for assertions in test methods.
-     */
-    private class RollupInfo {
-        Integer maxDaysBackInteger = null;
-        Integer maxYearsAgoInteger = null;
-
-        RollupInfo() {
-            for (Rollup__mdt rollup : CRLP_Rollup_SEL.cachedRollups) {
-                if (isAccountHardCreditRollup(rollup) || isContactHardCreditRollup(rollup)) {
-                    if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()
-                            && (maxYearsAgoInteger == null || rollup.Integer__c > maxYearsAgoInteger)) {
-                        maxYearsAgoInteger = (Integer) rollup.Integer__c;
-                    } else if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Days_Back.name()
-                            && (maxDaysBackInteger == null || rollup.Integer__c > maxDaysBackInteger)) {
-                        maxDaysBackInteger = (Integer) rollup.Integer__c;
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * @description Deactivates (in memory) rollups by rollup type and time-bound operation type.
      * Used to test customized rollup configurations.
      * @param jobType The RollupType whose time-bound rollups should be deactivated
@@ -359,5 +336,26 @@ private class CRLP_Batch_Base_TEST {
         return rollup.Summary_Object__c == 'Contact' && rollup.Detail_Object__c == 'Opportunity';
     }
 
+    /**
+     * @description Inner class used to calculate the maxDaysBack and maxYearsAgo values
+     * for the test-configured rollups stored in memory.  Used for assertions in test methods.
+     */
+    private class RollupInfo {
+        Integer maxDaysBackInteger = null;
+        Integer maxYearsAgoInteger = null;
 
+        RollupInfo() {
+            for (Rollup__mdt rollup : CRLP_Rollup_SEL.cachedRollups) {
+                if (isAccountHardCreditRollup(rollup) || isContactHardCreditRollup(rollup)) {
+                    if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()
+                            && (maxYearsAgoInteger == null || rollup.Integer__c > maxYearsAgoInteger)) {
+                        maxYearsAgoInteger = (Integer) rollup.Integer__c;
+                    } else if (rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Days_Back.name()
+                            && (maxDaysBackInteger == null || rollup.Integer__c > maxDaysBackInteger)) {
+                        maxDaysBackInteger = (Integer) rollup.Integer__c;
+                    }
+                }
+            }
+        }
+    }
 }
