@@ -8,6 +8,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 BGE Batch With Custom Values
+    #Create a BGE batch with custom values (count/amount, new fields, new defaults, different settings)
     [tags]  unstable
     ${batch} =           Generate Random String
     Select App Launcher Tab   Batch Gift Entry
@@ -20,12 +21,13 @@ BGE Batch With Custom Values
     Click BGE Button        Next
     Select Duellist Values    Opportunity    Available Fields    Donation Name
     Click Duellist Button    Opportunity    Move selection to Selected Fields
+    Page Scroll To Locator    bge.duellist    Payment    Selected Fields    Check/Reference Number
     Select Duellist Values    Payment    Selected Fields    Check/Reference Number
     Click Duellist Button    Payment    Move selection to Available Fields
     Click BGE Button        Next
-    Select BGE Date Picker    Donation Date: Default Value
-    Change BGE month    Next Month
-    Pick BGE Date    20
+    # Select BGE Date Picker    Donation Date: Default Value
+    # Change BGE month    Next Month
+    # Pick BGE Date    20
     Select Value From BGE DD    Method    Cash
     Fill BGE Form
     ...                       Donation Amount: Default Value=10
