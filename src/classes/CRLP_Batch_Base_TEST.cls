@@ -299,19 +299,31 @@ private class CRLP_Batch_Base_TEST {
      * or deactivated (false)
      * @return The configured Customizable_Rollup_Settings__c record
      */
-    private static Customizable_Rollup_Settings__c configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType jobType, Boolean isIncrementalMode) {
+    private static Customizable_Rollup_Settings__c configureIncrementalMode(
+            CRLP_RollupProcessingOptions.RollupType jobType,
+            Boolean isIncrementalMode) {
+
         Customizable_Rollup_Settings__c settings;
-        if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-            settings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                    Customizable_Rollups_Enabled__c = true,
-                    AccountHardCreditNonSkew_Incremental__c = isIncrementalMode
-            ));
-        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-            settings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                    Customizable_Rollups_Enabled__c = true,
-                    ContactHardCreditNonSkew_Incremental__c = isIncrementalMode
-            ));
+
+        switch on (jobType) {
+
+            when AccountHardCredit {
+                settings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(
+                        new Customizable_Rollup_Settings__c (
+                                Customizable_Rollups_Enabled__c = true,
+                                AccountHardCreditNonSkew_Incremental__c = isIncrementalMode
+                        ));
+            }
+
+            when ContactHardCredit {
+                settings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(
+                        new Customizable_Rollup_Settings__c (
+                                Customizable_Rollups_Enabled__c = true,
+                                ContactHardCreditNonSkew_Incremental__c = isIncrementalMode
+                        ));
+            }
         }
+
         return settings;
     }
 
