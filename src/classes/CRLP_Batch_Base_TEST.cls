@@ -236,28 +236,6 @@ private class CRLP_Batch_Base_TEST {
     /******************************** Helper Methods *****************************/
 
     /**
-     * @description Deactivates (in memory) rollups by rollup type and time-bound operation type.
-     * Used to test customized rollup configurations.
-     * @param jobType The RollupType whose time-bound rollups should be deactivated
-     * @param timeBoundOperationType The TimeBoundOperationType to deactivate
-     */
-    private static void deactivateTimeBoundRollups(
-            CRLP_RollupProcessingOptions.RollupType jobType,
-            CRLP_Operation.TimeBoundOperationType timeBoundOperationType) {
-
-        for (Rollup__mdt rollup : CRLP_Rollup_SEL.cachedRollups) {
-            if ((jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
-                    && isAccountHardCreditRollup(rollup))
-                    || (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit
-                    && isContactHardCreditRollup(rollup))) {
-                if (rollup.Time_Bound_Operation_Type__c == timeBoundOperationType.name()) {
-                    rollup.Active__c = false;
-                }
-            }
-        }
-    }
-
-    /**
      * @description Activates or deactivates incremental mode for a RollupType.
      * Used to test customized rollup configurations.
      * @param jobType The RollupType whose incremental mode custom setting should be configured
@@ -342,6 +320,28 @@ private class CRLP_Batch_Base_TEST {
     }
 
     /**
+     * @description Deactivates (in memory) rollups by rollup type and time-bound operation type.
+     * Used to test customized rollup configurations.
+     * @param jobType The RollupType whose time-bound rollups should be deactivated
+     * @param timeBoundOperationType The TimeBoundOperationType to deactivate
+     */
+    private static void deactivateTimeBoundRollups(
+            CRLP_RollupProcessingOptions.RollupType jobType,
+            CRLP_Operation.TimeBoundOperationType timeBoundOperationType) {
+
+        for (Rollup__mdt rollup : CRLP_Rollup_SEL.cachedRollups) {
+            if ((jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
+                    && isAccountHardCreditRollup(rollup))
+                    || (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit
+                    && isContactHardCreditRollup(rollup))) {
+                if (rollup.Time_Bound_Operation_Type__c == timeBoundOperationType.name()) {
+                    rollup.Active__c = false;
+                }
+            }
+        }
+    }
+
+    /**
      * @description Checks if the rollup is an Account Hard Credit operation
      * @param rollup The Rollup custom metadata record to evaluate
      * @return True if the rollup is an Account Hard Credit operation, else false
@@ -358,4 +358,6 @@ private class CRLP_Batch_Base_TEST {
     private static Boolean isContactHardCreditRollup(Rollup__mdt rollup) {
         return rollup.Summary_Object__c == 'Contact' && rollup.Detail_Object__c == 'Opportunity';
     }
+
+
 }
