@@ -40,9 +40,6 @@ private class CRLP_Batch_Base_TEST {
     private static void accountHardCreditRollupGeneratesStandardJoinQueryWhenNotScheduledJob() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
 
-        // Create the test data
-        CRLP_RollupAccount_TEST.mockRollupCMTValues();
-
         CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
         accountBatchJob.initializeJobData();
 
@@ -54,9 +51,6 @@ private class CRLP_Batch_Base_TEST {
     @isTest
     private static void accountHardCreditRollupGeneratesIncrementalModeJoinQuery() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
-
-        // Create the test data
-        CRLP_RollupAccount_TEST.mockRollupCMTValues();
 
         CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
         accountBatchJob.initializeJobData();
@@ -76,9 +70,6 @@ private class CRLP_Batch_Base_TEST {
     private static void accountHardCreditRollupGeneratesLastNDaysJoinQuery() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
 
-        // Create the test data
-        CRLP_RollupAccount_TEST.mockRollupCMTValues();
-
         deactivateTimeBoundRollups(
                 CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                 CRLP_Operation.TimeBoundOperationType.Years_Ago);
@@ -96,9 +87,6 @@ private class CRLP_Batch_Base_TEST {
     @isTest
     private static void accountHardCreditRollupGeneratesLastNYearsJoinQuery() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
-
-        // Create the test data
-        CRLP_RollupAccount_TEST.mockRollupCMTValues();
 
         deactivateTimeBoundRollups(
                 CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
@@ -119,9 +107,6 @@ private class CRLP_Batch_Base_TEST {
     private static void accountHardCreditRollupGeneratesLastNDaysJoinQueryWithCustomSettingFalse() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, false);
 
-        // Create the test data
-        CRLP_RollupAccount_TEST.mockRollupCMTValues();
-
         CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
         accountBatchJob.initializeJobData();
         accountBatchJob.isScheduledJob = true;
@@ -135,9 +120,6 @@ private class CRLP_Batch_Base_TEST {
     private static void contactHardCreditRollupGeneratesStandardJoinQueryWhenNotScheduledJob() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
 
-        // Create the test data
-        CRLP_RollupContact_TEST.mockRollupCMTValues();
-
         CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
         contactBatchJob.initializeJobData();
 
@@ -149,9 +131,6 @@ private class CRLP_Batch_Base_TEST {
     @isTest
     private static void contactHardCreditRollupGeneratesIncrementalModeJoinQuery() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
-
-        // Create the test data
-        CRLP_RollupContact_TEST.mockRollupCMTValues();
 
         CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
         contactBatchJob.initializeJobData();
@@ -167,9 +146,6 @@ private class CRLP_Batch_Base_TEST {
     @isTest
     private static void contactHardCreditRollupGeneratesLastNDaysJoinQuery() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
-
-        // Create the test data
-        CRLP_RollupContact_TEST.mockRollupCMTValues();
 
         deactivateTimeBoundRollups(
                 CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
@@ -188,9 +164,6 @@ private class CRLP_Batch_Base_TEST {
     @isTest
     private static void contactHardCreditRollupGeneratesLastNYearsJoinQuery() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
-
-        // Create the test data
-        CRLP_RollupContact_TEST.mockRollupCMTValues();
 
         deactivateTimeBoundRollups(
                 CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
@@ -211,9 +184,6 @@ private class CRLP_Batch_Base_TEST {
     private static void contactHardCreditRollupGeneratesLastNDaysJoinQueryWithCustomSettingFalse() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, false);
 
-        // Create the test data
-        CRLP_RollupContact_TEST.mockRollupCMTValues();
-
         CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
         contactBatchJob.initializeJobData();
         contactBatchJob.isScheduledJob = true;
@@ -231,9 +201,6 @@ private class CRLP_Batch_Base_TEST {
                 CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                 userDefinedLastNDaysFieldOverride,
                 userDefinedLastNDaysValueOverride);
-
-        // Create the test data
-        CRLP_RollupAccount_TEST.mockRollupCMTValues();
 
         CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
         accountBatchJob.initializeJobData();
@@ -255,9 +222,6 @@ private class CRLP_Batch_Base_TEST {
                 userDefinedLastNDaysFieldOverride,
                 userDefinedLastNDaysValueOverride);
 
-        // Create the test data
-        CRLP_RollupContact_TEST.mockRollupCMTValues();
-
         CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
         contactBatchJob.initializeJobData();
         contactBatchJob.isScheduledJob = true;
@@ -268,6 +232,8 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains(userDefinedLastNDaysFieldOverride));
         System.assert(generatedWhereClause.contains(String.valueOf(userDefinedLastNDaysValueOverride)));
     }
+
+    /******************************** Helper Methods *****************************/
 
     /**
      * @description Deactivates (in memory) rollups by rollup type and time-bound operation type.
@@ -313,6 +279,9 @@ private class CRLP_Batch_Base_TEST {
                                 Customizable_Rollups_Enabled__c = true,
                                 AccountHardCreditNonSkew_Incremental__c = isIncrementalMode
                         ));
+
+                // Create the test data
+                CRLP_RollupAccount_TEST.mockRollupCMTValues();
             }
 
             when ContactHardCredit {
@@ -321,6 +290,8 @@ private class CRLP_Batch_Base_TEST {
                                 Customizable_Rollups_Enabled__c = true,
                                 ContactHardCreditNonSkew_Incremental__c = isIncrementalMode
                         ));
+
+                CRLP_RollupContact_TEST.mockRollupCMTValues();
             }
         }
 
