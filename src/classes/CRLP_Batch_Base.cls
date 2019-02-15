@@ -478,15 +478,21 @@ public abstract class CRLP_Batch_Base {
             return false;
         }
 
-        // Only run incremental mode when the custom settings are configured
-        // to enable incremental mode for this job type
-        Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-        if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
-                && customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c == true) {
-            return true;
-        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit
-                && customizableRollupSettings.ContactHardCreditNonSkew_Incremental__c == true) {
-            return true;
+        if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
+
+            Customizable_Rollup_Settings__c customizableRollupSettings =
+                    UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+
+            if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
+                    && customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c == true) {
+                return true;
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit
+                    && customizableRollupSettings.ContactHardCreditNonSkew_Incremental__c == true) {
+                return true;
+            } else {
+                return false;
+            }
+
         } else {
             return false;
         }
