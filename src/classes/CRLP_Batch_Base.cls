@@ -498,22 +498,31 @@ public abstract class CRLP_Batch_Base {
      * @return The WHERE clause, as a string, that should be used to filter the detail records
      */
     private String buildNonIncrementalModeWhereClause() {
-        String standardWhereClause = null; //will return null if this method is called from an unsupported rollup type
+        String whereClause = null; //will return null if this method is called from an unsupported rollup type
+
         if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
                 || jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-            standardWhereClause = 'Id IN (' +
+
+            whereClause = 'Id IN (' +
                     'SELECT ' + keyField + ' ' +
                     'FROM ' + detailObjectType + ')';
+
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-            standardWhereClause = 'Id IN (SELECT ContactId FROM OpportunityContactRole)';
+
+            whereClause = 'Id IN (SELECT ContactId FROM OpportunityContactRole)';
+
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
                 jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+
             // It's not possible to do an inner query on this due to the following Salesforce error:
             // "The inner select field 'Contact.AccountId' cannot have more than one level of relationships"
+
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-            standardWhereClause = 'Id IN (SELECT npe03__Recurring_Donation__c FROM Opportunity)';
+
+            whereClause = 'Id IN (SELECT npe03__Recurring_Donation__c FROM Opportunity)';
+
         }
-        return standardWhereClause;
+        return whereClause;
     }
 
     /**
