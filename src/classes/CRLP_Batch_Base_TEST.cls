@@ -197,7 +197,7 @@ private class CRLP_Batch_Base_TEST {
     private static void accountHardCreditRollupWithUserDefinedJoinGeneratesProperJoinQuery() {
         String userDefinedLastNDaysFieldOverride = 'LastModifiedDate';
         Integer userDefinedLastNDaysValueOverride = 44;
-        configureUserDefinedInnerJoin(
+        configureIncrementalFieldOverrides(
                 CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                 userDefinedLastNDaysFieldOverride,
                 userDefinedLastNDaysValueOverride);
@@ -217,7 +217,7 @@ private class CRLP_Batch_Base_TEST {
     private static void contactHardCreditRollupWithUserDefinedJoinGeneratesProperJoinQuery() {
         String userDefinedLastNDaysFieldOverride = 'LastModifiedDate';
         Integer userDefinedLastNDaysValueOverride = 555;
-        configureUserDefinedInnerJoin(
+        configureIncrementalFieldOverrides(
                 CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
                 userDefinedLastNDaysFieldOverride,
                 userDefinedLastNDaysValueOverride);
@@ -279,20 +279,20 @@ private class CRLP_Batch_Base_TEST {
     /**
      * @description
      * @param jobType The RollupType whose user defined inner join override should be configured
-     * @param userDefinedField API name of the custom field that should be used in the user-defined
+     * @param overrideForLastNDaysField API name of the custom field that should be used in the user-defined
      * inner join override
-     * @param userDefinedValue Value that should be used with LAST_N_DAYS: in the user-defined
+     * @param overrideForLastNDaysValue Value that should be used with LAST_N_DAYS: in the user-defined
      * inner join override
      */
-    private static void configureUserDefinedInnerJoin(
+    private static void configureIncrementalFieldOverrides(
             CRLP_RollupProcessingOptions.RollupType jobType,
-            String userDefinedField,
-            Integer userDefinedValue) {
+            String overrideForLastNDaysField,
+            Integer overrideForLastNDaysValue) {
 
         Customizable_Rollup_Settings__c settings = configureIncrementalMode(jobType, true);
 
-        settings.Rollups_IncrementalLastNDays_FldOverride__c = userDefinedField;
-        settings.Rollups_IncrementalLastNDays_ValOverride__c = userDefinedValue;
+        settings.Rollups_IncrementalLastNDays_FldOverride__c = overrideForLastNDaysField;
+        settings.Rollups_IncrementalLastNDays_ValOverride__c = overrideForLastNDaysValue;
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(settings);
     }
 
