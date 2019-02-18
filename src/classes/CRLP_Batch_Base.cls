@@ -478,12 +478,12 @@ public abstract class CRLP_Batch_Base {
             return false;
         }
 
+        Customizable_Rollup_Settings__c customizableRollupSettings =
+                UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+
         switch on (jobMode) {
 
             when NonSkewMode {
-
-                Customizable_Rollup_Settings__c customizableRollupSettings =
-                        UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
 
                 switch on (jobType) {
 
