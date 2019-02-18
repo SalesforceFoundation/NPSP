@@ -247,27 +247,24 @@ private class CRLP_Batch_Base_TEST {
             CRLP_RollupProcessingOptions.RollupType jobType,
             Boolean isIncrementalMode) {
 
-        Customizable_Rollup_Settings__c settings;
+        Customizable_Rollup_Settings__c settings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(
+                new Customizable_Rollup_Settings__c (
+                        Customizable_Rollups_Enabled__c = true
+                ));
 
         switch on (jobType) {
 
             when AccountHardCredit {
-                settings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(
-                        new Customizable_Rollup_Settings__c (
-                                Customizable_Rollups_Enabled__c = true,
-                                AccountHardCreditNonSkew_Incremental__c = isIncrementalMode
-                        ));
+
+                settings.AccountHardCreditNonSkew_Incremental__c = isIncrementalMode;
 
                 // Create the test data
                 CRLP_RollupAccount_TEST.mockRollupCMTValues();
             }
 
             when ContactHardCredit {
-                settings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(
-                        new Customizable_Rollup_Settings__c (
-                                Customizable_Rollups_Enabled__c = true,
-                                ContactHardCreditNonSkew_Incremental__c = isIncrementalMode
-                        ));
+
+                settings.ContactHardCreditNonSkew_Incremental__c = isIncrementalMode;
 
                 CRLP_RollupContact_TEST.mockRollupCMTValues();
             }
