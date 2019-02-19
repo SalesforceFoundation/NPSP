@@ -285,10 +285,11 @@ global with sharing class BDI_DataImportService {
     * @description maps to keep track of the objects we will create.
     * all are indexed by the object's matching key or the dataImport.Id
     */
-    //public Map<String, Contact> mapDIKeyToContact = new Map<String, Contact>();
     public Map<String, Account> mapDIKeyToAccount = new Map<String, Account>();
     private Map<Id, Address__c> mapDIIdToAddr = new Map<Id, Address__c>();
     public Map<String, Id> campaignNameToCampaignId = new Map<String, Id>();
+    private Map<String, Campaign> campaignNameToNewCampaign = new Map<String, Campaign>();
+    private Map<String, List<DataImport__c>> newCampaignNameToDataImports = new Map<String, List<DataImport__c>>();
 
     /*******************************************************************************************************
     * @description holds the list of DataImport records we are currently processing
@@ -1749,9 +1750,6 @@ global with sharing class BDI_DataImportService {
             campaignNameToCampaignId.put(cmp.Name, cmp.Id);
         }
 
-        Map<String, Campaign> campaignNameToNewCampaign = new Map<String, Campaign>();
-        Map<String, List<DataImport__c>> newCampaignNameToDataImports = new Map<String, List<DataImport__c>>();
-
         // create any new campaigns and set status fields
         for (DataImport__c dataImport : listDI) {
             // skip di's that already have an error
@@ -1767,8 +1765,8 @@ global with sharing class BDI_DataImportService {
             // Create a new Campaign during processing if no match on Name
             if (!isDryRun && dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatchedNone) {
 
-                createNewCampaignIfUnique(campaignName, campaignNameToNewCampaign);
-                associateCampaignWithDataImport(dataImport, campaignName, newCampaignNameToDataImports);
+                createNewCampaignIfUnique(campaignName);
+                associateCampaignWithDataImport(dataImport, campaignName);
 
             }
         }
@@ -1836,10 +1834,9 @@ global with sharing class BDI_DataImportService {
      * that campaign with all the DIs that reference it
      * @param dataImport the Data Import object to check
      * @param campaignName name of the Campaign in the Donation_Campaign_Name__c field on the Data Import
-     * @param newCampaignNameToDataImports reference to the running list of campaign names and the Data Imports that reference them
      * @return void
      */
-    private void associateCampaignWithDataImport(DataImport__c dataImport, String campaignName, Map<String, List<DataImport__c>> newCampaignNameToDataImports) {
+    private void associateCampaignWithDataImport(DataImport__c dataImport, String campaignName) {
         //if we haven't created a list for this campaign name yet, create a new list in the newCampaignNameToDataImports for it
         if (!newCampaignNameToDataImports.containsKey(campaignName)) {
             newCampaignNameToDataImports.put(campaignName, new List<DataImport__c>());
@@ -1850,10 +1847,9 @@ global with sharing class BDI_DataImportService {
     /*******************************************************************************************************
      * @description Create new campaign to be inserted if we don't have one queued up with the same name already
      * @param campaignName the name of the Campaign in the Donation_Campaign_Name__c field on the Data Import
-     * @param campaignNameToNewCampaign reference to the running list of unique campaign names and their new objects
      * @return void
      */
-    private void createNewCampaignIfUnique(String campaignName, Map<String, Campaign> campaignNameToNewCampaign) {
+    private void createNewCampaignIfUnique(String campaignName) {
         if (!campaignNameToNewCampaign.containsKey(campaignName)) {
             Campaign cmp = new Campaign(Name = campaignName, IsActive = true);
             campaignNameToNewCampaign.put(campaignName, cmp);
