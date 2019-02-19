@@ -1730,9 +1730,7 @@ global with sharing class BDI_DataImportService {
                 LogBDIError(listAccDi[i], ur.getErrors()[0].getMessage(), 'HomeAddressImportStatus__c');
             }
         }
-
     }
-
 
     //********************************************* CAMPAIGNS ************************************************
 
@@ -1744,7 +1742,6 @@ global with sharing class BDI_DataImportService {
 
         // need to find all the Campaigns that we might need
         Set<String> uniqueCampaignNames = new Set<String>();
-        Set<Id> setCampaignId = new Set<Id>();
 
         for (DataImport__c dataImport : listDI) {
             // skip di's that already have an error
@@ -1755,7 +1752,6 @@ global with sharing class BDI_DataImportService {
             if (dataImport.Donation_Campaign_Name__c != null) {
                 uniqueCampaignNames.add(dataImport.Donation_Campaign_Name__c);
             }
-
         }
 
         // add the existing campaigns to our map
@@ -1770,10 +1766,10 @@ global with sharing class BDI_DataImportService {
             campaignNameToCampaignId.put(cmp.Name, cmp.Id);
         }
 
-        // create any new campaigns
-        List<Campaign> campaignsToInsert = new List<Campaign>();
-        List<DataImport__c> dataImportsWithNewCampaigns = new List<DataImport__c>();
-        uniqueCampaignNames.clear();
+        Map<String, Campaign> campaignNameToNewCampaign = new Map<String, Campaign>();
+        Map<String, List<DataImport__c>> newCampaignNameToDataImports = new Map<String, List<DataImport__c>>();
+
+        // create any new campaigns and set status fields
         for (DataImport__c dataImport : listDI) {
             // skip di's that already have an error
             if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
@@ -1781,67 +1777,103 @@ global with sharing class BDI_DataImportService {
             }
 
             String campaignName = dataImport.Donation_Campaign_Name__c;
-            Id campaignId = dataImport.DonationCampaignImported__c;
-            Campaign cmp;
 
-            if (campaignId != null) {
-                // User specified a Campaign lookup in BGE lookup or with an ID on import
-                dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedId;
+            setCampaignImportStatusField(dataImport);
+            setCampaignIdIfMatchedByName(dataImport, campaignName);
 
-            } else if (campaignName != null && campaignId == null) {
-                // User specified a Campaign Name!
+            // Create a new Campaign during processing if no match on Name
+            if (!isDryRun && dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatchedNone) {
 
-                if (!uniqueCampaignNames.contains(campaignName)) {
-                    // We haven't already logged this name; add it to the set
-                    uniqueCampaignNames.add(campaignName);
+                createNewCampaignIfUnique(campaignName, campaignNameToNewCampaign);
+                associateCampaignWithDataImport(dataImport, campaignName, newCampaignNameToDataImports);
 
-                    // Create a new Campaign if no match on Name
-                    if (!isDryRun && campaignNameToCampaignId.get(campaignName) == null) {
-                        cmp = new Campaign(Name = campaignName, IsActive = true);
-                        campaignsToInsert.add(cmp);
-                        dataImportsWithNewCampaigns.add(dataImport);
-                    }
-                }
-
-                // Set Campaign Import status
-                if (campaignNameToCampaignId.get(campaignName) == null) {
-                    // The Campaign doesn't actually exist yet
-                    if (isDryRun) {
-                        dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedNone;
-                    } else {
-                        dataImport.DonationCampaignImportStatus__c = System.Label.bdiCreated;
-                    }
-                } else {
-                    // The campaign exists!
-                    dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatched;
-                }
-            }
-            if (Test.isRunningTest() && campaignName != null && campaignName.startsWith('FailTest')) {
-                cmp.Name = null;
             }
         }
+
+        List<Campaign> campaignsToInsert = campaignNameToNewCampaign.values();
 
         List<Database.SaveResult> saveResults = UTIL_DMLService.insertRecords(campaignsToInsert, false);
         for (Integer i = 0; i < saveResults.size(); i++) {
             Database.SaveResult sr = saveResults[i];
-            if (!sr.isSuccess()) {
-                LogBDIError(dataImportsWithNewCampaigns[i], sr.getErrors()[0].getMessage(), 'DonationCampaignImportStatus__c');
+            String campaignName = campaignsToInsert[i].Name;
+            campaignNameToCampaignId.put(campaignName, sr.getId()); //necessary for importing Campaign Members
+            List<DataImport__c> dataImportsToUpdateForSavedCampaign = newCampaignNameToDataImports.get(campaignName);
+
+            for (DataImport__c dataImport : dataImportsToUpdateForSavedCampaign) {
+                if (!sr.isSuccess()) {
+                    LogBDIError(dataImport, sr.getErrors()[0].getMessage(), 'DonationCampaignImportStatus__c');
+                } else {
+                    dataImport.DonationCampaignImported__c = sr.getId();
+                    dataImport.DonationCampaignImportStatus__c = System.Label.bdiCreated;
+                }
             }
         }
+    }
 
-        // add the new campaigns to our map
-        for (Campaign campaign : campaignsToInsert) {
-            campaignNameToCampaignId.put(campaign.Name, campaign.Id);
-        }
+    /*******************************************************************************************************
+    * @description determine matching status based on campaign ID and/or name
+    * @param dataImport reference to the Data Import object to check and update
+    * @return void
+    */
+    private void setCampaignImportStatusField(DataImport__c dataImport) {
 
-        for (DataImport__c dataImport : listDI) {
-            if (!isDryRun
-                    && dataImport.DonationCampaignImported__c == null
-                    && dataImport.Donation_Campaign_Name__c != null) {
-                // user specified Campaign Name only and we should have all new *and* existing Campaigns in our map now
-                dataImport.DonationCampaignImported__c =
-                        campaignNameToCampaignId.get(dataImport.Donation_Campaign_Name__c);
+        String campaignName = dataImport.Donation_Campaign_Name__c;
+        String currentImportStatus = dataImport.DonationCampaignImportStatus__c; 
+        Id campaignId = dataImport.DonationCampaignImported__c;
+
+        // if we have a campaign Id, and it isn't populated from previous dry-run match, set the status
+        if (campaignId != null && currentImportStatus != System.Label.bdiDryRunMatched) {
+            dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedId;
+        } else if (campaignName != null) {
+            Boolean campaignNameFound = campaignNameToCampaignId.containsKey(campaignName);
+            if (campaignNameFound) {
+                // The campaign exists!
+                dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatched;
+            } else {
+                dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedNone;                
             }
+        }
+    }
+
+    /*******************************************************************************************************
+     * @description If the data import needs a match and the name matches a current campaign, populate the lookup
+     * with the matched campaign id
+     * @param dataImport reference to the Data Import object to check and update
+     * @param campaignName the name of the Campaign in the Donation_Campaign_Name__c field on the Data Import
+     * @return void
+     */
+    private void setCampaignIdIfMatchedByName(DataImport__c dataImport, String campaignName) {
+        if (dataImport.DonationCampaignImported__c == null && campaignNameToCampaignId.containsKey(campaignName)) {
+            dataImport.DonationCampaignImported__c = campaignNameToCampaignId.get(campaignName);
+        }
+    }
+
+    /*******************************************************************************************************
+     * @description Track duplicate campaign names so we only insert 1 campaign of the same name, but we associate
+     * that campaign with all the DIs that reference it
+     * @param dataImport the Data Import object to check
+     * @param campaignName name of the Campaign in the Donation_Campaign_Name__c field on the Data Import
+     * @param newCampaignNameToDataImports reference to the running list of campaign names and the Data Imports that reference them
+     * @return void
+     */
+    private void associateCampaignWithDataImport(DataImport__c dataImport, String campaignName, Map<String, List<DataImport__c>> newCampaignNameToDataImports) {
+        //if we haven't created a list for this campaign name yet, create a new list in the newCampaignNameToDataImports for it
+        if (!newCampaignNameToDataImports.containsKey(campaignName)) {
+            newCampaignNameToDataImports.put(campaignName, new List<DataImport__c>());
+        }
+        newCampaignNameToDataImports.get(campaignName).add(dataImport);
+    }
+
+    /*******************************************************************************************************
+     * @description Create new campaign to be inserted if we don't have one queued up with the same name already
+     * @param campaignName the name of the Campaign in the Donation_Campaign_Name__c field on the Data Import
+     * @param campaignNameToNewCampaign reference to the running list of unique campaign names and their new objects
+     * @return void
+     */
+    private void createNewCampaignIfUnique(String campaignName, Map<String, Campaign> campaignNameToNewCampaign) {
+        if (!campaignNameToNewCampaign.containsKey(campaignName)) {
+            Campaign cmp = new Campaign(Name = campaignName, IsActive = true);
+            campaignNameToNewCampaign.put(campaignName, cmp);
         }
     }
 

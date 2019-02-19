@@ -389,20 +389,6 @@ public class BDI_Donations {
         } else {
             opportunityName += ' ' + System.Label.bdiDonation;
         }
-/*
-        if (dataImport.DonationCampaignImported__c != null) {
-            // User specified the Campaign using BGE lookup field or an ID on import
-            opp.CampaignId = dataImport.DonationCampaignImported__c;
-        } else if (dataImport.Donation_Campaign_Name__c != null) {
-            // OR User specified a Campaign name on import -- Either we matched on name or created a new one
-            Id campaignId = bdi.campaignNameToCampaignId.get(dataImport.Donation_Campaign_Name__c);
-            if (campaignId == null && !bdi.isDryRun) {
-                // In Dry Run mode, we haven't yet inserted any new Campaigns, so they won't be found.
-                bdi.LogBDIError(dataImport, System.Label.bdiErrorInvalidCampaignName, 'DonationImportStatus__c');
-                return null;
-            }
-            opp.CampaignId = campaignId;
-        }*/
 
         if (bdi.isDryRun) {
             return opp;

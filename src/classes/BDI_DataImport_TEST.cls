@@ -1400,9 +1400,8 @@ public with sharing class BDI_DataImport_TEST {
     * @description operation
     *        run dry run contacts with donation & campaign IDs and Names
     * verify:
-    *    DonationCampaignImported__c is set on ID match
-    *    DonationCampaignImported__c is not set on Name match
-    *    statuses reflect dry run values
+    *    DonationCampaignImported__c is set on ID and name match
+    *    Campaign Status is still matched instead of Matched by ID
     **********************************************************************************************************/
     static testMethod void TwoDIWithDonationsAndCampaignIdsInDryRun() {
         //skip the test if Advancement is installed
@@ -1437,11 +1436,58 @@ public with sharing class BDI_DataImport_TEST {
 
         //verify dry run statuses and import fields
         dataImports = getDataImports();
-        system.debug(dataImports);
         System.assertEquals(System.Label.bdiDryRunMatchedId, dataImports[0].DonationCampaignImportStatus__c);
         System.assertEquals(campaigns[0].Id, dataImports[0].DonationCampaignImported__c);
         System.assertEquals(System.Label.bdiDryRunMatched, dataImports[1].DonationCampaignImportStatus__c);
-        System.assertEquals(null, dataImports[1].DonationCampaignImported__c);
+        System.assertEquals(campaigns[1].Id, dataImports[1].DonationCampaignImported__c);
+    }
+
+    /*********************************************************************************************************
+    * @description operation
+    *        run dry run contacts with donation & campaign IDs and Names and THEN process the batch
+    * verify:
+    *    DonationCampaignImported__c is set on ID and name match
+    *    Campaign Status is still matched instead of Matched by ID
+    **********************************************************************************************************/
+    static testMethod void TwoDIWithDonationsAndCampaignIdsAfterDryRun() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
+        List<Campaign> campaigns = new List<Campaign>();
+        campaigns.add(new Campaign(Name = 'CmpExisting'));
+        campaigns.add(new Campaign(Name = 'AnotherCmpExisting'));
+        insert campaigns;
+
+        Id campaignId = campaigns[0].Id;
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+
+        dataImports.add(newDI('c1', 'C1'));
+        dataImports[0].Donation_Amount__c = 100;
+        dataImports[0].DonationCampaignImported__c = campaignId;
+
+        dataImports.add(newDI('c2', 'C2'));
+        dataImports[1].Donation_Amount__c = 200;
+        dataImports[1].DonationCampaignImported__c = null;
+        dataImports[1].Donation_Campaign_Name__c = 'AnotherCmpExisting';
+
+        insert dataImports;
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        bdi.isDryRun = true;
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        bdi.isDryRun = false;
+        ID ApexJobId2 = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        //verify dry run statuses and import fields
+        dataImports = getDataImports();
+        System.assertEquals(System.Label.bdiMatchedId, dataImports[0].DonationCampaignImportStatus__c);
+        System.assertEquals(campaigns[0].Id, dataImports[0].DonationCampaignImported__c);
+        System.assertEquals(System.Label.bdiMatched, dataImports[1].DonationCampaignImportStatus__c);
+        System.assertEquals(campaigns[1].Id, dataImports[1].DonationCampaignImported__c);
     }
 
     /*********************************************************************************************************
