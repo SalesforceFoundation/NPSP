@@ -1765,19 +1765,11 @@ global with sharing class BDI_DataImportService {
             setCampaignIdIfMatchedByName(dataImport, campaignName);
 
             // Create a new Campaign during processing if no match on Name
-            // todo: maybe can remove isDryRun?
             if (!isDryRun && dataImport.DonationCampaignImportStatus__c == System.Label.bdiMatchedNone) {
-                //if we haven't created a campaign for this DI yet, create a new list in the newCampaignNameToDataImports for it
-                if (!newCampaignNameToDataImports.containsKey(campaignName)) {
-                    newCampaignNameToDataImports.put(campaignName, new List<DataImport__c>());
-                }
-                //keep track of duplicate campaign names so we only insert 1 campaign of the same name
-                //but we associate that campaign with all DIs
-                newCampaignNameToDataImports.get(campaignName).add(dataImport);
-                if (!campaignNameToNewCampaign.containsKey(campaignName)) {
-                    Campaign cmp = new Campaign(Name = campaignName, IsActive = true);
-                    campaignNameToNewCampaign.put(campaignName, cmp);
-                }
+
+                createNewCampaignIfUnique(campaignName, campaignNameToNewCampaign);
+                associateCampaignWithDataImport(dataImport, campaignName, newCampaignNameToDataImports);
+
             }
         }
 
@@ -1787,10 +1779,10 @@ global with sharing class BDI_DataImportService {
         for (Integer i = 0; i < saveResults.size(); i++) {
             Database.SaveResult sr = saveResults[i];
             String campaignName = campaignsToInsert[i].Name;
-            campaignNameToCampaignId.put(campaignName, sr.getId());
-            List<DataImport__c> dataImportsForCampaign = newCampaignNameToDataImports.get(campaignName);
+            campaignNameToCampaignId.put(campaignName, sr.getId()); //necessary for importing Campaign Members
+            List<DataImport__c> dataImportsToUpdateForSavedCampaign = newCampaignNameToDataImports.get(campaignName);
 
-            for (DataImport__c dataImport : dataImportsForCampaign) {
+            for (DataImport__c dataImport : dataImportsToUpdateForSavedCampaign) {
                 if (!sr.isSuccess()) {
                     LogBDIError(dataImport, sr.getErrors()[0].getMessage(), 'DonationCampaignImportStatus__c');
                 } else {
@@ -1826,7 +1818,7 @@ global with sharing class BDI_DataImportService {
         }
     }
 
-    /**
+    /*******************************************************************************************************
      * @description If the data import needs a match and the name matches a current campaign, populate the lookup
      * with the matched campaign id
      * @param dataImport reference to the Data Import object to check and update
@@ -1836,6 +1828,35 @@ global with sharing class BDI_DataImportService {
     private void setCampaignIdIfMatchedByName(DataImport__c dataImport, String campaignName) {
         if (dataImport.DonationCampaignImported__c == null && campaignNameToCampaignId.containsKey(campaignName)) {
             dataImport.DonationCampaignImported__c = campaignNameToCampaignId.get(campaignName);
+        }
+    }
+
+    /*******************************************************************************************************
+     * @description Track duplicate campaign names so we only insert 1 campaign of the same name, but we associate
+     * that campaign with all the DIs that reference it
+     * @param dataImport the Data Import object to check
+     * @param campaignName name of the Campaign in the Donation_Campaign_Name__c field on the Data Import
+     * @param newCampaignNameToDataImports reference to the running list of campaign names and the Data Imports that reference them
+     * @return void
+     */
+    private void associateCampaignWithDataImport(DataImport__c dataImport, String campaignName, Map<String, List<DataImport__c>> newCampaignNameToDataImports) {
+        //if we haven't created a list for this campaign name yet, create a new list in the newCampaignNameToDataImports for it
+        if (!newCampaignNameToDataImports.containsKey(campaignName)) {
+            newCampaignNameToDataImports.put(campaignName, new List<DataImport__c>());
+        }
+        newCampaignNameToDataImports.get(campaignName).add(dataImport);
+    }
+
+    /*******************************************************************************************************
+     * @description Create new campaign to be inserted if we don't have one queued up with the same name already
+     * @param campaignName the name of the Campaign in the Donation_Campaign_Name__c field on the Data Import
+     * @param campaignNameToNewCampaign reference to the running list of unique campaign names and their new objects
+     * @return void
+     */
+    private void createNewCampaignIfUnique(String campaignName, Map<String, Campaign> campaignNameToNewCampaign) {
+        if (!campaignNameToNewCampaign.containsKey(campaignName)) {
+            Campaign cmp = new Campaign(Name = campaignName, IsActive = true);
+            campaignNameToNewCampaign.put(campaignName, cmp);
         }
     }
 
