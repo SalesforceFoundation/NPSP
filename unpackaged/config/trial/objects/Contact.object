@@ -37,9 +37,9 @@
                     <label>Female</label>
                 </value>
                 <value>
-                    <fullName>Other</fullName>
+                    <fullName>Prefer Not To Say</fullName>
                     <default>false</default>
-                    <label>Other</label>
+                    <label>Prefer Not To Say</label>
                 </value>
             </valueSetDefinition>
         </valueSet>
