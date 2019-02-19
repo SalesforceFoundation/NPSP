@@ -37,6 +37,11 @@
                     <label>Female</label>
                 </value>
                 <value>
+                    <fullName>Non-Binary</fullName>
+                    <default>false</default>
+                    <label>Non-Binary</label>
+                </value>
+                <value>
                     <fullName>Prefer Not To Say</fullName>
                     <default>false</default>
                     <label>Prefer Not To Say</label>
