@@ -3,6 +3,15 @@
     <customSettingsType>Hierarchy</customSettingsType>
     <enableFeeds>false</enableFeeds>
     <fields>
+        <fullName>AccountHardCreditNonSkew_Incremental__c</fullName>
+        <defaultValue>true</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, the Account Hard Credit (Non-Skew) nightly job limits the number of Accounts selected for recalculation by looking for recently updated Opportunities on those Accounts. This helps to improve Customizable Rollup nightly job performance.</inlineHelpText>
+        <label>Incremental Account Hard Credit Non-Skew</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>CMT_API_Status__c</fullName>
         <description>Result of the last CustomMetadataType deployment</description>
         <externalId>false</externalId>
@@ -12,6 +21,26 @@
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Rollups_IncrementalLastNDays_FldOverride__c</fullName>
+        <description></description>
+        <externalId>false</externalId>
+        <inlineHelpText>For Incremental Rollups Override Use Only. This value overrides the field used to filter related Opportunities to determine which Accounts, Contacts, GAUs or RDs are recalculated during a nightly scheduled job. Defaults to SystemModStamp.</inlineHelpText>
+        <label>Incremental: Last N Days Field Override</label>
+        <length>43</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+    </fields>
+    <fields>
+        <fullName>ContactHardCreditNonSkew_Incremental__c</fullName>
+        <defaultValue>true</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, the Contact Hard Credit (Non-Skew) nightly job limits the number of Contacts selected for recalculation by looking for those Contacts recently updated Opportunities. This helps to improve Customizable Rollup nightly job performance.</inlineHelpText>
+        <label>Incremental Contact Hard Credit Non-Skew</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Customizable_Rollups_Enabled__c</fullName>
@@ -38,6 +67,19 @@
         <externalId>false</externalId>
         <inlineHelpText>Number of records per batch to process when recalculating donor rollups to the Account object.</inlineHelpText>
         <label>Account Hard Credit Batch Size</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Rollups_IncrementalLastNDays_ValOverride__c</fullName>
+        <description></description>
+        <externalId>false</externalId>
+        <inlineHelpText>For Incremental Rollups Override Use Only. This value overrides the calculated number of days used to filter related Opportunities to determine which Accounts, Contacts, GAUs or RDs are recalculated during a nightly scheduled job.</inlineHelpText>
+        <label>Incremental: Last N Days Value Override</label>
         <precision>6</precision>
         <required>false</required>
         <scale>0</scale>
