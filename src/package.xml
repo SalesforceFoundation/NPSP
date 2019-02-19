@@ -135,6 +135,7 @@
         <members>CRLP_Batch_Base</members>
         <members>CRLP_Batch_Base_NonSkew</members>
         <members>CRLP_Batch_Base_Skew</members>
+        <members>CRLP_Batch_Base_TEST</members>
         <members>CRLP_ConfigBuilder_SVC</members>
         <members>CRLP_ConfigBuilder_TEST</members>
         <members>CRLP_ContactSkew_BATCH</members>
@@ -748,7 +749,9 @@
         <members>Contact.Primary_Contact__c</members>
         <members>Contact.Soft_Credit_Last_N_Days__c</members>
         <members>Contact.is_Address_Override__c</members>
+        <members>Customizable_Rollup_Settings__c.AccountHardCreditNonSkew_Incremental__c</members>
         <members>Customizable_Rollup_Settings__c.CMT_API_Status__c</members>
+        <members>Customizable_Rollup_Settings__c.ContactHardCreditNonSkew_Incremental__c</members>
         <members>Customizable_Rollup_Settings__c.Customizable_Rollups_Enabled__c</members>
         <members>Customizable_Rollup_Settings__c.Disable_Related_Records_Filter__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_Batch_Size__c</members>
@@ -758,6 +761,8 @@
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_SkewMode_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_Soft_Credit_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_GAU_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_IncrementalLastNDays_FldOverride__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_IncrementalLastNDays_ValOverride__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Limit_on_Attached_Opps_for_Skew__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Skew_Dispatcher_Batch_Size__c</members>
         <members>DataImportBatch__c.Account_Custom_Unique_ID__c</members>
