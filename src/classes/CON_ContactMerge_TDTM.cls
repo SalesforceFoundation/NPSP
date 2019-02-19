@@ -54,7 +54,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************
     * @description Trigger Handler on Contact that handles detecting when an Contact Merge 
     * has completed, in order to fixup an assortment of affected information.
-    * @param listNew the list of Contacts from trigger new. 
+    * @param newContacts the list of Contacts from trigger new. 
     * @param oldContacts the list of Contacts from trigger old. 
     * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
     * @param objResult the describe for Contacts 
@@ -74,7 +74,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
                     continue;
                 }
 
-                mergeKeys.add(buildMergeKey(oldContact.Id, oldContact.AccountId, oldContact.MasterRecordId));
+                mergeKeys.add(generateMergeKey(oldContact.Id, oldContact.AccountId, oldContact.MasterRecordId));
             }
 
             System.enqueueJob(new AsyncContactMergeFixup(mergeKeys));
@@ -101,7 +101,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
     * @param masterContactId The master Contact Record Id
     * @return String
     ********************************************************************************************************/
-    private String buildMergeKey(String oldContactId, String oldAccountId, String masterContactId) {
+    private String generateMergeKey(String oldContactId, String oldAccountId, String masterContactId) {
         return (oldContactId + ':' + oldAccountId + ':' + masterContactId);
     }
 
@@ -160,11 +160,11 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
             List<Account> oldAccounts = getAccounts(oldAccountIds);
             List<Contact> masterContacts = getContacts(masterContactIds);
 
-            householdIds = buildHouseholdIds(oldAccounts);
-            householdIds.addAll(buildHouseholdIds(masterContacts));
+            householdIds = extractHouseholdIds(oldAccounts);
+            householdIds.addAll(extractHouseholdIds(masterContacts));
 
-            oldIndividualAcctIdByMasterId = buildAcctIdByMasterId(oldAccounts);
-            newIndividualAcctIdByMasterId = buildAcctIdByMasterId(masterContacts);
+            oldIndividualAcctIdByMasterId = extractAcctIdByMasterId(oldAccounts);
+            newIndividualAcctIdByMasterId = extractAcctIdByMasterId(masterContacts);
 
             fixupAccountData();
             fixupContactData(masterContacts);
@@ -176,7 +176,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         * @return List<Id> - The list of household account Ids
         ********************************************************************************************************/
         @TestVisible
-        private List<Id> buildHouseholdIds(List<Account> accounts) {
+        private List<Id> extractHouseholdIds(List<Account> accounts) {
             List<Id> accountIds = new List<Id>();
 
             for (Account record : accounts) {
@@ -192,7 +192,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         * @description Returns the account Id of the master contacts accounts with household account types
         ********************************************************************************************************/
         @TestVisible
-        private List<Id> buildHouseholdIds(List<Contact> contacts) {
+        private List<Id> extractHouseholdIds(List<Contact> contacts) {
             List<Id> accountIds = new List<Id>();
 
             for (Contact record: contacts) {
@@ -209,7 +209,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         * is any type of individual account
         ********************************************************************************************************/
         @TestVisible
-        private Map<Id, Id> buildAcctIdByMasterId(List<Account> oldAccounts) {
+        private Map<Id, Id> extractAcctIdByMasterId(List<Account> oldAccounts) {
             Map<Id, Id> accountIdByContactId = new Map<Id, Id>();
 
             Map<Id, Account> oldAccountById = new Map<Id, Account>(oldAccounts);
@@ -239,7 +239,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         * @param masterContacts the collection of contacts to extract the ids from
         ********************************************************************************************************/
         @TestVisible
-        private Map<Id, Id> buildAcctIdByMasterId(List<Contact> masterContacts) {
+        private Map<Id, Id> extractAcctIdByMasterId(List<Contact> masterContacts) {
             Map<Id, Id> accountIdByContactId = new Map<Id, Id>();
 
             for (Contact masterContact : masterContacts) {

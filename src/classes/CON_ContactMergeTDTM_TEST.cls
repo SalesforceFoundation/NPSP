@@ -37,6 +37,7 @@
 @IsTest(IsParallel=true)
 private with sharing class CON_ContactMergeTDTM_TEST {
     private static final Integer MOCK_IDS_SIZE = 5;
+    private static final Integer ADDR_OVERRIDE_INDEX = 3;
     private static final String DEFAULT_ACCT_TYPE = CAO_Constants.HH_ACCOUNT_PROCESSOR;
     private static List<Account> existingAccounts;
     private static List<Contact> existingContacts;
@@ -45,11 +46,19 @@ private with sharing class CON_ContactMergeTDTM_TEST {
 
     /***************************************************************************************************************
      * @description Create household account records with 2 contacts per account and 1 opp per contact as well
-     * as one organization type account
+     * as one organization type account. Also, sets a contact record with an override.
      */
     @TestSetup
     private static void createRecordData() {
         ADDR_Addresses_TEST.createHHTestData(3, 2);
+        Contact overrideContact = ADDR_Addresses_TEST.listConT[ADDR_OVERRIDE_INDEX];
+
+        overrideContact.MailingStreet = '1007 Mountain Drive';
+        overrideContact.MailingCity = 'Gotham';
+        overrideContact.MailingState = 'New York';
+        overrideContact.is_Address_Override__c = true;
+        update overrideContact;
+
         createOpps(getContacts());
 
         insert new Account(Name = 'TDTM Merge TEST Account');
@@ -124,7 +133,7 @@ private with sharing class CON_ContactMergeTDTM_TEST {
 
         List<Account> households = new List<Account>{ existingAccounts[0], existingAccounts[1] };
         Contact masterContact = existingContacts[1];
-        Contact oldContact = existingContacts[3];
+        Contact oldContact = existingContacts[ADDR_OVERRIDE_INDEX];
         List<Contact> contacts = new List<Contact>{ masterContact, oldContact };
         System.assertEquals(households[0].Id, masterContact.AccountId, 'Expected the master contact to belong to the first household.');
         System.assertEquals(households[1].Id, oldContact.AccountId, 'Expected the old contact to belong to the second household.');
@@ -247,17 +256,12 @@ private with sharing class CON_ContactMergeTDTM_TEST {
         setRecordData();
 
         List<Account> households = new List<Account>{ existingAccounts[0], existingAccounts[1] };
-        Contact masterContact = existingContacts[3];
+        Contact masterContact = existingContacts[ADDR_OVERRIDE_INDEX];
         Contact oldContact = existingContacts[0];
         List<Contact> contacts = new List<Contact>{ masterContact, oldContact };
         System.assertEquals(households[0].Id, oldContact.AccountId, 'Expected the old contact to belong to the first household.');
         System.assertEquals(households[1].Id, masterContact.AccountId, 'Expected the master contact to belong to the second household.');
-
-        masterContact.MailingStreet = 'street override';
-        masterContact.MailingCity = 'city override';
-        masterContact.is_Address_Override__c = true;
-        update masterContact;
-        Address__c overrideAddress = [SELECT Default_Address__c FROM Address__c WHERE MailingCity__c = :masterContact.MailingCity];
+        Address__c overrideAddress = [SELECT Default_Address__c FROM Address__c WHERE Id = :masterContact.Current_Address__c];
         System.assert(!overrideAddress.Default_Address__c, 'The override address should not be the default address on the account.');
 
         Test.startTest();
@@ -284,10 +288,7 @@ private with sharing class CON_ContactMergeTDTM_TEST {
             WHERE Household_Account__c IN :households
             ORDER BY Id
         ];
-        // This query causes the asserts to fail, the current address on the contact is being changed to the default account address during merge
-        // cannot replicate in the UI
-        // overrideAddress = [SELECT Id, Household_Account__c, MailingStreet__c, MailingCity__c FROM Address__c WHERE Id = :overrideAddress.Id];
-        overrideAddress = [SELECT Id, Household_Account__c, MailingStreet__c, MailingCity__c FROM Address__c WHERE Id = :masterContact.Current_Address__c];
+        overrideAddress = [SELECT Id, Household_Account__c, MailingStreet__c, MailingCity__c FROM Address__c WHERE Id = :overrideAddress.Id];
 
         System.assertEquals(3, addresses.size(), 'Expected both accounts to have an address each with an additional address for the master contacts address override.');
         System.assert(masterContact.is_Address_Override__c, 'The master contact should still be set to override the address.');
@@ -295,14 +296,14 @@ private with sharing class CON_ContactMergeTDTM_TEST {
         System.assertEquals(masterContact.AccountId, overrideAddress.Household_Account__c, 'The second address should belong to the master contacts account.');
         System.assertEquals(masterContact.MailingStreet, overrideAddress.MailingStreet__c, 'The second address should match the contacts street address override.');
         System.assertEquals(masterContact.MailingCity, overrideAddress.MailingCity__c, 'The second address should match the contacts city address override.');
-        /** for (Address__c record : addresses) {
+        for (Address__c record : addresses) {
             if (overrideAddress.Id == record.Id) {
                 System.assert(!record.Default_Address__c, 'The override address should not be the default address on the account.');
 
             } else {
                 System.assert(record.Default_Address__c, 'The other addresses should be the default address for each account.');
             }
-        } */
+        }
     }
 
     /***************************************************************************************************************
@@ -332,7 +333,7 @@ private with sharing class CON_ContactMergeTDTM_TEST {
     private static void shouldReturnAccountIdsWhenAccountsAreHouseholds() {
         List<Account> accounts = createMockAccounts(DEFAULT_ACCT_TYPE);
 
-        List<Id> actualIds = CON_ContactMerge_TDTM.mergeProcessor.buildHouseholdIds(accounts);
+        List<Id> actualIds = CON_ContactMerge_TDTM.mergeProcessor.extractHouseholdIds(accounts);
         System.assert(UTIL_UnitTestData_TEST.extractIds(accounts).equals(new Set<Id>(actualIds)), 'Expected the returned Ids to match the account Ids passed in.');
     }
 
@@ -344,7 +345,7 @@ private with sharing class CON_ContactMergeTDTM_TEST {
         List<Account> accounts = createMockAccounts(DEFAULT_ACCT_TYPE);
         List<Contact> contacts = createMockContacts(accounts);
 
-        List<Id> actualIds = CON_ContactMerge_TDTM.mergeProcessor.buildHouseholdIds(contacts);
+        List<Id> actualIds = CON_ContactMerge_TDTM.mergeProcessor.extractHouseholdIds(contacts);
         System.assert(UTIL_UnitTestData_TEST.extractIds(accounts).equals(new Set<Id>(actualIds)), 'Expected the returned Ids to match the account Ids of the contacts passed in.');
     }
 
@@ -355,7 +356,7 @@ private with sharing class CON_ContactMergeTDTM_TEST {
     private static void shouldReturnEmptyListWhenAccountsAreNotHouseholds() {
         List<Account> accounts = createMockAccounts(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
 
-        List<Id> actualIds = CON_ContactMerge_TDTM.mergeProcessor.buildHouseholdIds(accounts);
+        List<Id> actualIds = CON_ContactMerge_TDTM.mergeProcessor.extractHouseholdIds(accounts);
         System.assert(actualIds.isEmpty(), 'Expected an empty list to be returned.');
     }
 
@@ -367,7 +368,7 @@ private with sharing class CON_ContactMergeTDTM_TEST {
         List<Account> accounts = createMockAccounts(CAO_Constants.BUCKET_ORGANIZATION_TYPE);
         List<Contact> contacts = createMockContacts(accounts);
 
-        List<Id> actualIds = CON_ContactMerge_TDTM.mergeProcessor.buildHouseholdIds(contacts);
+        List<Id> actualIds = CON_ContactMerge_TDTM.mergeProcessor.extractHouseholdIds(contacts);
         System.assert(actualIds.isEmpty(), 'Expected an empty list to be returned.');
     }
 
@@ -382,7 +383,7 @@ private with sharing class CON_ContactMergeTDTM_TEST {
         CON_ContactMerge_TDTM.mergeProcessor.oldAccountIds = new List<Id>(accountIds);
         CON_ContactMerge_TDTM.mergeProcessor.masterContactIds = new List<Id>(contactIds);
 
-        Map<Id, Id> accountIdsByContactId = CON_ContactMerge_TDTM.mergeProcessor.buildAcctIdByMasterId(accounts);
+        Map<Id, Id> accountIdsByContactId = CON_ContactMerge_TDTM.mergeProcessor.extractAcctIdByMasterId(accounts);
         System.assert(accountIds.equals(new Set<Id>(accountIdsByContactId.values())), 'Expected the returned Ids to match the account Ids of the accounts passed in.');
         System.assert(contactIds.equals(new Set<Id>(accountIdsByContactId.keySet())), 'Expected the returned Ids to match the master contact Ids.');
     }
@@ -397,7 +398,7 @@ private with sharing class CON_ContactMergeTDTM_TEST {
         Set<Id> accountIds = UTIL_UnitTestData_TEST.extractIds(accounts);
         Set<Id> contactIds = UTIL_UnitTestData_TEST.extractIds(contacts);
 
-        Map<Id, Id> accountIdsByContactId = CON_ContactMerge_TDTM.mergeProcessor.buildAcctIdByMasterId(contacts);
+        Map<Id, Id> accountIdsByContactId = CON_ContactMerge_TDTM.mergeProcessor.extractAcctIdByMasterId(contacts);
         System.assert(contactIds.equals(accountIdsByContactId.keySet()), 'Expected the returned Ids to match the master contact Ids.');
         System.assert(accountIds.equals(new Set<Id>(accountIdsByContactId.values())), 'Expected the returned Ids to match the account Ids of the contacts passed in.');
     }
@@ -413,7 +414,7 @@ private with sharing class CON_ContactMergeTDTM_TEST {
         CON_ContactMerge_TDTM.mergeProcessor.oldAccountIds = new List<Id>(accountIds);
         CON_ContactMerge_TDTM.mergeProcessor.masterContactIds = new List<Id>(contactIds);
 
-        Map<Id, Id> accountIdsByContactId = CON_ContactMerge_TDTM.mergeProcessor.buildAcctIdByMasterId(accounts);
+        Map<Id, Id> accountIdsByContactId = CON_ContactMerge_TDTM.mergeProcessor.extractAcctIdByMasterId(accounts);
         System.assert(accountIdsByContactId.isEmpty(), 'Expected an empty map to be returned.');
     }
 
@@ -428,7 +429,7 @@ private with sharing class CON_ContactMergeTDTM_TEST {
         Set<Id> accountIds = UTIL_UnitTestData_TEST.extractIds(accounts);
         Set<Id> contactIds = UTIL_UnitTestData_TEST.extractIds(contacts);
 
-        Map<Id, Id> accountIdsByContactId = CON_ContactMerge_TDTM.mergeProcessor.buildAcctIdByMasterId(contacts);
+        Map<Id, Id> accountIdsByContactId = CON_ContactMerge_TDTM.mergeProcessor.extractAcctIdByMasterId(contacts);
         System.assert(accountIdsByContactId.isEmpty(), 'Expected an empty map to be returned.');
     }
 
