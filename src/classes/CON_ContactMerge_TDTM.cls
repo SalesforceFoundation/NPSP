@@ -77,7 +77,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
                 mergeKeys.add(generateMergeKey(oldContact.Id, oldContact.AccountId, oldContact.MasterRecordId));
             }
 
-            System.enqueueJob(new AsyncContactMergeFixup(mergeKeys));
+            System.enqueueJob(new ContactMergeFixupQueueable(mergeKeys));
         }
 
         return dmlWrapper;
@@ -114,14 +114,14 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
     *   - recalculate Opportunity Rollups
     *
     ********************************************************************************************************/
-    private class AsyncContactMergeFixup implements Queueable {
+    private class ContactMergeFixupQueueable implements Queueable {
         List<String> mergeKeys;
 
         /***************************************************************************************************************
          * @description Constructor
          * @param mergeKeys - the ids relevant to the merge process
          */
-        private AsyncContactMergeFixup(List<String> mergeKeys) {
+        private ContactMergeFixupQueueable(List<String> mergeKeys) {
             this.mergeKeys = mergeKeys;
         }
 
