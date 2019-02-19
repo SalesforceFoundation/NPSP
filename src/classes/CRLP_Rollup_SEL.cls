@@ -171,6 +171,150 @@ public class CRLP_Rollup_SEL {
     }
 
     /**
+     * 
+     */
+    @TestVisible
+    private static Map<SObjectField, Map<String, Set<String>>> operationsByFieldByTimeBoundOperationType;
+
+    /**
+     * @description        Not all Rollup Fields needed to be included when calling getReferencedFieldsByObject(SObjectType objType). Returns true iff operationsByFieldByTimeBoundOperationType for rollupField and for rollup's Time_Bound_Operation_Type__c contains rollup's Operation__c (converted into CRLP_Operation.RollupType).
+     * @param  rollup      
+     * @param  rollupField Only supports Rollup_mdt's Date_Field__c, Amount_Field__c, Detail_Field__c
+     * @return             If rollup for rollupField is included when calling getReferencedFieldsByObject(SObjectType objType)
+     */
+    @TestVisible
+    private static Boolean isFieldReferenced(Rollup__mdt rollup, SObjectField rollupField) {
+        // rollupField is initially considered referenced if rollup's Operation__c is contained in map by Time_Bound_Operation_Type__c
+        if(operationsByFieldByTimeBoundOperationType == null) {
+            operationsByFieldByTimeBoundOperationType = new Map<SObjectField, Map<String, Set<String>>> {
+                Schema.Rollup__mdt.Date_Field__c => new Map<String, Set<String>> {
+                    'All_Time' => new Set<String> {
+                        'First', 
+                        'Last', 
+                        'Years_Donated', 
+                        'Donor_Streak', 
+                        'Best_Year', 
+                        'Best_Year_Total'
+                    }, 
+                    'Days_Back' => new Set<String> {
+                        'Sum', 
+                        'Count', 
+                        'Average', 
+                        'Smallest', 
+                        'Largest', 
+                        'First', 
+                        'Last', 
+                        'Years_Donated', 
+                        'Donor_Streak', 
+                        'Best_Year', 
+                        'Best_Year_Total'
+                    }, 
+                    'Years_Ago' => new Set<String> {
+                        'Sum', 
+                        'Count', 
+                        'Average', 
+                        'Smallest', 
+                        'Largest', 
+                        'First', 
+                        'Last', 
+                        'Years_Donated', 
+                        'Donor_Streak', 
+                        'Best_Year', 
+                        'Best_Year_Total'
+                    }
+                }, 
+                Schema.Rollup__mdt.Amount_Field__c => new Map<String, Set<String>> {
+                    'All_Time' => new Set<String> {
+                        'Sum', 
+                        'Average', 
+                        'Smallest', 
+                        'Largest', 
+                        'Years_Donated', 
+                        'Donor_Streak', 
+                        'Best_Year', 
+                        'Best_Year_Total'
+                    }, 
+                    'Days_Back' => new Set<String> {
+                        'Sum', 
+                        'Average', 
+                        'Smallest', 
+                        'Largest', 
+                        'Years_Donated', 
+                        'Donor_Streak', 
+                        'Best_Year', 
+                        'Best_Year_Total'
+                    }, 
+                    'Years_Ago' => new Set<String> {
+                        'Sum', 
+                        'Average', 
+                        'Smallest', 
+                        'Largest', 
+                        'Years_Donated', 
+                        'Donor_Streak', 
+                        'Best_Year', 
+                        'Best_Year_Total'
+                    }
+                }, 
+                Schema.Rollup__mdt.Detail_Field__c => new Map<String, Set<String>> {
+                    'All_Time' => new Set<String> {
+                        'Smallest', 
+                        'Largest', 
+                        'First', 
+                        'Last'
+                    }, 
+                    'Days_Back' => new Set<String> {
+                        'Smallest', 
+                        'Largest', 
+                        'First', 
+                        'Last'
+                    }, 
+                    'Years_Ago' => new Set<String> {
+                        'Smallest', 
+                        'Largest', 
+                        'First', 
+                        'Last'
+                    }
+                }
+            };
+        }
+
+        return rollup != null 
+            && operationsByFieldByTimeBoundOperationType.get(rollupField) != null
+            && operationsByFieldByTimeBoundOperationType.get(rollupField).get(rollup.Time_Bound_Operation_Type__c) != null
+            && operationsByFieldByTimeBoundOperationType
+                .get(rollupField)
+                .get(rollup.Time_Bound_Operation_Type__c)
+                .contains(rollup.Operation__c);
+    }
+
+    /**
+     * @description isFieldReferenced(...) only supports Rollup_mdt's Date_Field__c, Amount_Field__c, Detail_Field__c.  Public exposure for Date_Field__c
+     * @param  rollup 
+     * @return        If rollup's Date_Field__c is included when calling getReferencedFieldsByObject(SObjectType objType) description
+     */
+    public static Boolean isDateFieldReferenced(Rollup__mdt rollup) {
+        return isFieldReferenced(rollup, Schema.Rollup__mdt.Date_Field__c);
+    }
+
+    /**
+     * @description isFieldReferenced(...) only supports Rollup_mdt's Date_Field__c, Amount_Field__c, Detail_Field__c.  Public exposure for Amount_Field__c
+     * @param  rollup 
+     * @return        If rollup's Amount_Field__c is included when calling getReferencedFieldsByObject(SObjectType objType) description
+     */
+    public static Boolean isAmountFieldReferenced(Rollup__mdt rollup) {
+        return isFieldReferenced(rollup, Schema.Rollup__mdt.Amount_Field__c);
+    }
+
+    /**
+     * @description isFieldReferenced(...) only supports Rollup_mdt's Date_Field__c, Amount_Field__c, Detail_Field__c.  Public exposure for Detail_Field__c
+     * @param  rollup 
+     * @return        If rollup's Detail_Field__c is included when calling getReferencedFieldsByObject(SObjectType objType) description
+     */
+    public static Boolean isDetailFieldReferenced(Rollup__mdt rollup) {
+        return isFieldReferenced(rollup, Schema.Rollup__mdt.Detail_Field__c);
+    }
+
+    /**
      * @description Creates a list of all fields for a given object that are referenced in any way on an
      *  existing Rollup. This list can be used when building a query of the needed fields to retrieve
      *  for an object.
@@ -179,34 +323,57 @@ public class CRLP_Rollup_SEL {
      */
     public static List<Schema.DescribeFieldResult> getReferencedFieldsByObject(SObjectType objType) {
         String objName = UTIL_Describe.getObjectDescribe(objType).getName();
+
         Map<String, Schema.DescribeFieldResult> allFields = UTIL_Describe.getAllFieldsDescribe(objName);
         Map<String, Schema.DescribeFieldResult> referencedFields = new Map<String, Schema.DescribeFieldResult>();
+
         for (Rollup__mdt rollup : cachedRollups) {
             if (rollup.Active__c == true) {
+                // Summary Field
                 if (rollup.Summary_Object__r.QualifiedApiName == objName) {
                     String fldName = rollup.Summary_Field__r.QualifiedApiName;
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
                 }
-                if (rollup.Detail_Object__r.QualifiedApiName == objName && rollup.Detail_Field__c != null) {
+
+                // Detail Field
+                if (
+                    rollup.Detail_Object__r.QualifiedApiName == objName 
+                    && rollup.Detail_Field__c != null
+                    && isDetailFieldReferenced(rollup)
+                ) {
                     String fldName = rollup.Detail_Field__r.QualifiedApiName;
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
                 }
-                if (rollup.Amount_Object__r.QualifiedApiName == objName && rollup.Amount_Field__r != null) {
+
+                // Amount Field
+                if (
+                    rollup.Amount_Object__r.QualifiedApiName == objName 
+                    && rollup.Amount_Field__r != null
+                    && isAmountFieldReferenced(rollup)
+                ) {
                     String fldName = rollup.Amount_Field__r.QualifiedApiName;
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
                 }
-                if (rollup.Date_Object__r.QualifiedApiName == objName && rollup.Date_Field__r != null) {
+
+                // Date Field
+                if (
+                    rollup.Date_Object__r.QualifiedApiName == objName 
+                    && rollup.Date_Field__r != null
+                    && isDateFieldReferenced(rollup)
+                ) {
                     String fldName = rollup.Date_Field__r.QualifiedApiName;
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
                 }
             }
         }
+
         // Always include the CurrencyIsoCode field if it's available for the object
         if (UserInfo.isMultiCurrencyOrganization() && allFields.containsKey('currencyisocode')) {
             referencedFields.put('CurrencyIsoCode', allFields.get('currencyisocode'));
         }
+
         // Always add the AccountId and PrimaryContactId for the Opportunity object
-        if (objType == Opportunity.SObjectType) {
+        if (objType == Schema.Opportunity.SObjectType) {
             String fldName = SObjectType.Opportunity.fields.AccountId.getName();
             referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
             fldName = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
