@@ -34,7 +34,7 @@
 * @description Unit Test for the Opportunity/Payment to Account Rollups (Hard Credit Only)
 */
 @IsTest
-private class CRLP_RollupAccount_TEST {
+public class CRLP_RollupAccount_TEST {
 
     /** @description The 6 testing types supported by the test engine */
     private Enum TestType {
@@ -56,7 +56,7 @@ private class CRLP_RollupAccount_TEST {
     /**
      * @description Create Rollup__mdt records to test rolling up from the Opp and Payment objects to the Account
      */
-    private static void mockRollupCMTValues() {
+    public static void mockRollupCMTValues() {
 
         String donationRTId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
         String membershipRTId = UTIL_RecordTypes.getRecordTypeIdForMembershipTests(Opportunity.SObjectType);
@@ -107,6 +107,11 @@ private class CRLP_RollupAccount_TEST {
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
                         'npo02__OppAmount2YearsAgo__c', CRLP_Operation.RollupType.SUM, 'Amount',
                         CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 2) + ',' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('Total Donations Last 365 Days', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        'npo02__OppAmountLastNDays__c', CRLP_Operation.RollupType.SUM, 'Amount',
+                        CRLP_Operation.TimeBoundOperationType.DAYS_BACK, 365) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Largest Donation All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
