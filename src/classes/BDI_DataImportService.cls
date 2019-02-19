@@ -1749,10 +1749,10 @@ global with sharing class BDI_DataImportService {
             campaignNameToCampaignId.put(cmp.Name, cmp.Id);
         }
 
-        // create any new campaigns and set status fields
         Map<String, Campaign> campaignNameToNewCampaign = new Map<String, Campaign>();
         Map<String, List<DataImport__c>> newCampaignNameToDataImports = new Map<String, List<DataImport__c>>();
 
+        // create any new campaigns and set status fields
         for (DataImport__c dataImport : listDI) {
             // skip di's that already have an error
             if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
@@ -1762,12 +1762,7 @@ global with sharing class BDI_DataImportService {
             String campaignName = dataImport.Donation_Campaign_Name__c;
 
             setCampaignImportStatusField(dataImport);
-
-            // If the data import needs a match and the name matches a current campaign, populate the 
-            // lookup with the matched campaign id
-            if (dataImport.DonationCampaignImported__c == null && campaignNameToCampaignId.containsKey(campaignName)) {
-                dataImport.DonationCampaignImported__c = campaignNameToCampaignId.get(campaignName);
-            }
+            setCampaignIdIfMatchedByName(dataImport, campaignName);
 
             // Create a new Campaign during processing if no match on Name
             // todo: maybe can remove isDryRun?
@@ -1782,11 +1777,6 @@ global with sharing class BDI_DataImportService {
                 if (!campaignNameToNewCampaign.containsKey(campaignName)) {
                     Campaign cmp = new Campaign(Name = campaignName, IsActive = true);
                     campaignNameToNewCampaign.put(campaignName, cmp);
-
-                    // Todo: this is cleary supporting tests, but how and why?
-                    if (Test.isRunningTest() && campaignName != null && campaignName.startsWith('FailTest')) {
-                        cmp.Name = null;
-                    }
                 }
             }
         }
@@ -1813,6 +1803,7 @@ global with sharing class BDI_DataImportService {
 
     /*******************************************************************************************************
     * @description determine matching status based on campaign ID and/or name
+    * @param dataImport reference to the Data Import object to check and update
     * @return void
     */
     private void setCampaignImportStatusField(DataImport__c dataImport) {
@@ -1821,18 +1812,30 @@ global with sharing class BDI_DataImportService {
         String currentImportStatus = dataImport.DonationCampaignImportStatus__c; 
         Id campaignId = dataImport.DonationCampaignImported__c;
 
-
         // if we have a campaign Id, and it isn't populated from previous dry-run match, set the status
-        if (campaignId != null && currentImportStatus != System.Label.bdiMatched) {
+        if (campaignId != null && currentImportStatus != System.Label.bdiDryRunMatched) {
             dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedId;
         } else if (campaignName != null) {
             Boolean campaignNameFound = campaignNameToCampaignId.containsKey(campaignName);
-            if(campaignNameFound) {
+            if (campaignNameFound) {
                 // The campaign exists!
                 dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatched;
             } else {
                 dataImport.DonationCampaignImportStatus__c = System.Label.bdiMatchedNone;                
             }
+        }
+    }
+
+    /**
+     * @description If the data import needs a match and the name matches a current campaign, populate the lookup
+     * with the matched campaign id
+     * @param dataImport reference to the Data Import object to check and update
+     * @param campaignName the name of the Campaign in the Donation_Campaign_Name__c field on the Data Import
+     * @return void
+     */
+    private void setCampaignIdIfMatchedByName(DataImport__c dataImport, String campaignName) {
+        if (dataImport.DonationCampaignImported__c == null && campaignNameToCampaignId.containsKey(campaignName)) {
+            dataImport.DonationCampaignImported__c = campaignNameToCampaignId.get(campaignName);
         }
     }
 
