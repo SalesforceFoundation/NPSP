@@ -880,7 +880,9 @@ public without sharing class UTIL_CustomSettingsFacade {
         crs.Rollups_Skew_Dispatcher_Batch_Size__c = 300;
         crs.Rollups_Limit_on_Attached_Opps_for_Skew__c = 250;
         crs.Disable_Related_Records_Filter__c = false;
-    }    
+        crs.AccountHardCreditNonSkew_Incremental__c = true;
+        crs.ContactHardCreditNonSkew_Incremental__c = true;
+    }
 
     /*******************************************************************************************************
     * @description Creates instance of settings to use in tests. It does not insert it, but all other methods 
@@ -906,6 +908,10 @@ public without sharing class UTIL_CustomSettingsFacade {
         customizableRollupSettings.Rollups_Limit_on_Attached_Opps_for_Skew__c = mySettings.Rollups_Limit_on_Attached_Opps_for_Skew__c;
         customizableRollupSettings.Disable_Related_Records_Filter__c = mySettings.Disable_Related_Records_Filter__c;
         customizableRollupSettings.CMT_API_Status__c = mySettings.CMT_API_Status__c;
+        customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c = mySettings.AccountHardCreditNonSkew_Incremental__c;
+        customizableRollupSettings.ContactHardCreditNonSkew_Incremental__c = mySettings.ContactHardCreditNonSkew_Incremental__c;
+        customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c = mySettings.Rollups_IncrementalLastNDays_FldOverride__c;
+        customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c = mySettings.Rollups_IncrementalLastNDays_ValOverride__c;
 
         orgCustomizableRollupSettings = customizableRollupSettings;
 
