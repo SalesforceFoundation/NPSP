@@ -182,8 +182,7 @@ public class CRLP_Rollup_SEL {
      * @param  rollupField Only supports Rollup_mdt's Date_Field__c, Amount_Field__c, Detail_Field__c
      * @return             If rollup for rollupField is included when calling getReferencedFieldsByObject(SObjectType objType)
      */
-    @TestVisible
-    private static Boolean isFieldReferenced(Rollup__mdt rollup, SObjectField rollupField) {
+    public static Boolean isFieldReferenced(Rollup__mdt rollup, SObjectField rollupField) {
         // rollupField is initially considered referenced if rollup's Operation__c is contained in map by Time_Bound_Operation_Type__c
         if(operationsByFieldByTimeBoundOperationType == null) {
             operationsByFieldByTimeBoundOperationType = new Map<SObjectField, Map<String, Set<String>>> {
