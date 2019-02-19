@@ -288,33 +288,6 @@ public class CRLP_Rollup_SEL {
     }
 
     /**
-     * @description isFieldReferenced(...) only supports Rollup_mdt's Date_Field__c, Amount_Field__c, Detail_Field__c.  Public exposure for Date_Field__c
-     * @param  rollup 
-     * @return        If rollup's Date_Field__c is included when calling getReferencedFieldsByObject(SObjectType objType) description
-     */
-    public static Boolean isDateFieldReferenced(Rollup__mdt rollup) {
-        return isFieldReferenced(rollup, Schema.Rollup__mdt.Date_Field__c);
-    }
-
-    /**
-     * @description isFieldReferenced(...) only supports Rollup_mdt's Date_Field__c, Amount_Field__c, Detail_Field__c.  Public exposure for Amount_Field__c
-     * @param  rollup 
-     * @return        If rollup's Amount_Field__c is included when calling getReferencedFieldsByObject(SObjectType objType) description
-     */
-    public static Boolean isAmountFieldReferenced(Rollup__mdt rollup) {
-        return isFieldReferenced(rollup, Schema.Rollup__mdt.Amount_Field__c);
-    }
-
-    /**
-     * @description isFieldReferenced(...) only supports Rollup_mdt's Date_Field__c, Amount_Field__c, Detail_Field__c.  Public exposure for Detail_Field__c
-     * @param  rollup 
-     * @return        If rollup's Detail_Field__c is included when calling getReferencedFieldsByObject(SObjectType objType) description
-     */
-    public static Boolean isDetailFieldReferenced(Rollup__mdt rollup) {
-        return isFieldReferenced(rollup, Schema.Rollup__mdt.Detail_Field__c);
-    }
-
-    /**
      * @description Creates a list of all fields for a given object that are referenced in any way on an
      *  existing Rollup. This list can be used when building a query of the needed fields to retrieve
      *  for an object.
@@ -339,7 +312,7 @@ public class CRLP_Rollup_SEL {
                 if (
                     rollup.Detail_Object__r.QualifiedApiName == objName 
                     && rollup.Detail_Field__c != null
-                    && isDetailFieldReferenced(rollup)
+                    && isFieldReferenced(rollup, Schema.Rollup__mdt.Detail_Fields__c)
                 ) {
                     String fldName = rollup.Detail_Field__r.QualifiedApiName;
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
@@ -349,7 +322,7 @@ public class CRLP_Rollup_SEL {
                 if (
                     rollup.Amount_Object__r.QualifiedApiName == objName 
                     && rollup.Amount_Field__r != null
-                    && isAmountFieldReferenced(rollup)
+                    && isFieldReferenced(rollup, Schema.Rollup__mdt.Amount_Fields__c)
                 ) {
                     String fldName = rollup.Amount_Field__r.QualifiedApiName;
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
@@ -359,7 +332,7 @@ public class CRLP_Rollup_SEL {
                 if (
                     rollup.Date_Object__r.QualifiedApiName == objName 
                     && rollup.Date_Field__r != null
-                    && isDateFieldReferenced(rollup)
+                    && isFieldReferenced(rollup, Schema.Rollup__mdt.Date_Fields__c)
                 ) {
                     String fldName = rollup.Date_Field__r.QualifiedApiName;
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
