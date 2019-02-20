@@ -348,8 +348,8 @@ private class HH_OppContactRoles_TEST {
             Primary_Contact__c = (String)con2.id);
         Test.stopTest();
         
-        System.assertEquals(2, (Integer)[SELECT count() FROM Opportunity]);
-        System.assertEquals(2, (Integer)[SELECT count() FROM OpportunityContactRole]);
+        System.assertEquals(2, [SELECT count() FROM Opportunity]);
+        System.assertEquals(2, [SELECT count() FROM OpportunityContactRole]);
     }  
     
     @isTest
