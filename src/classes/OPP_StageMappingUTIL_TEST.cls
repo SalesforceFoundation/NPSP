@@ -29,10 +29,10 @@
 * @date 2019
 * @group Opportunity
 * @group-content ../../ApexDocContent/Opportunity.htm
-* @description Test Coverage for OPP_StageMapping_UTIL class
+* @description Test Coverage for OPP_StageMappingUTIL class
 */
 @isTest(isParallel=true)
-private class OPP_StageMapping_UTIL_TEST {
+private class OPP_StageMappingUTIL_TEST {
 
     private static final String OPP_MAPPING_STAGETOSTATE_ACTION = 'OPP.MapStageToState';
 
@@ -90,23 +90,23 @@ private class OPP_StageMapping_UTIL_TEST {
     * populated.
     */
     private static final List<String> RESULT_NO_SETTINGS = new List<String> {
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL
     };
 
     /******************************************************************************************************
@@ -114,23 +114,23 @@ private class OPP_StageMapping_UTIL_TEST {
     * populated.
     */
     private static final List<String> RESULT_WITH_SETTINGS = new List<String> {
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.COMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.FINALIZED_STATE_VAL,
-        OPP_StageMapping_UTIL.FINALIZED_STATE_VAL,
-        OPP_StageMapping_UTIL.COMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.COMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.FINALIZED_STATE_VAL,
-        OPP_StageMapping_UTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMapping_UTIL.FINALIZED_STATE_VAL,
-        OPP_StageMapping_UTIL.FINALIZED_STATE_VAL,
-        OPP_StageMapping_UTIL.FINALIZED_STATE_VAL
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.COMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.FINALIZED_STATE_VAL,
+        OPP_StageMappingUTIL.FINALIZED_STATE_VAL,
+        OPP_StageMappingUTIL.COMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.COMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.FINALIZED_STATE_VAL,
+        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUTIL.FINALIZED_STATE_VAL,
+        OPP_StageMappingUTIL.FINALIZED_STATE_VAL,
+        OPP_StageMappingUTIL.FINALIZED_STATE_VAL
     };
 
     /*********************************************************************************************************
@@ -140,24 +140,24 @@ private class OPP_StageMapping_UTIL_TEST {
     **********************************************************************************************************/
     @isTest
     private static void testConvertToSetMethod() {
-        System.assertEquals (true, OPP_StageMapping_UTIL.convertToSet(null, '~', true).isEmpty());
-        System.assertEquals (true, OPP_StageMapping_UTIL.convertToSet(' ', '~', true).isEmpty());
+        System.assertEquals (true, OPP_StageMappingUTIL.convertToSet(null, '~', true).isEmpty());
+        System.assertEquals (true, OPP_StageMappingUTIL.convertToSet(' ', '~', true).isEmpty());
 
-        Set<String> testVals = OPP_StageMapping_UTIL.convertToSet(TEST_CONVERT_1_VAL, '~', true);
+        Set<String> testVals = OPP_StageMappingUTIL.convertToSet(TEST_CONVERT_1_VAL, '~', true);
         System.assertEquals(6, testVals.size());
         for (String resultVal : RESULT_CONVERT_VALS) {
             System.assertEquals(true, testVals.contains(resultVal), 'Expected ' + resultVal + ' to be in testVals');
         }
 
         // Will use ; as the default because one was not supplied.
-        testVals = OPP_StageMapping_UTIL.convertToSet(TEST_CONVERT_2_VAL, null, true);
+        testVals = OPP_StageMappingUTIL.convertToSet(TEST_CONVERT_2_VAL, null, true);
         System.assertEquals(6, testVals.size());
         for (String resultVal : RESULT_CONVERT_VALS) {
             System.assertEquals(true, testVals.contains(resultVal), 'Expected ' + resultVal + ' to be in testVals');
         }
 
         // Will use ; as the default
-        testVals = OPP_StageMapping_UTIL.convertToSet(TEST_CONVERT_2_VAL);
+        testVals = OPP_StageMappingUTIL.convertToSet(TEST_CONVERT_2_VAL);
         System.assertEquals(6, testVals.size());
         for (String resultVal : RESULT_CONVERT_VALS) {
             System.assertEquals(true, testVals.contains(resultVal), 'Expected ' + resultVal + ' to be in testVals');
@@ -176,7 +176,7 @@ private class OPP_StageMapping_UTIL_TEST {
             String testVal = TEST_OPP_STAGE_VALS[i];
             String resultVal = RESULT_NO_SETTINGS[i];
 
-            System.assertEquals (resultVal, OPP_StageMapping_UTIL.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
+            System.assertEquals (resultVal, OPP_StageMappingUTIL.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
         }
     }
 
@@ -199,7 +199,7 @@ private class OPP_StageMapping_UTIL_TEST {
             String testVal = TEST_OPP_STAGE_VALS[i];
             String resultVal = RESULT_NO_SETTINGS[i];
 
-            System.assertEquals (resultVal, OPP_StageMapping_UTIL.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
+            System.assertEquals (resultVal, OPP_StageMappingUTIL.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
         }
     }
 
@@ -222,7 +222,7 @@ private class OPP_StageMapping_UTIL_TEST {
             String testVal = TEST_OPP_STAGE_VALS[i];
             String resultVal = RESULT_WITH_SETTINGS[i];
 
-            System.assertEquals (resultVal, OPP_StageMapping_UTIL.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
+            System.assertEquals (resultVal, OPP_StageMappingUTIL.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
         }
     }
    /*******************************************************************************************************
