@@ -108,9 +108,11 @@
                                     </aura:if>
                                 </aura:set>
                             </aura:if>
-                            <p>
-                                <a onclick="{!c.openMatchModal}">{!$Label.c.bgeFormUpdateDonation}</a>
-                            </p>
+                            <aura:if isTrue="{!v.selectedDonation}">
+                                <p>
+                                    <a onclick="{!c.openMatchModal}">{!$Label.c.bgeFormUpdateDonation}</a>
+                                </p>
+                            </aura:if>
                         </div>
                     </div>
                 </lightning:layoutItem>
