@@ -124,7 +124,7 @@
                             <lightning:layout horizontalAlign="center">
                                 <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center slds-p-bottom_medium">
                                     <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
-                                        <span class="slds-assistive-text">warning</span>
+                                        <span class="slds-assistive-text">{!$Label.c.PageMessagesWarning}</span>
                                         <lightning:icon iconName="utility:warning" alternativeText="warning" class="iconContainer"/>
                                         <h2>
                                             {!$Label.c.bgeEditBatchFieldSelectionWarning}
@@ -169,7 +169,7 @@
                             <lightning:layout horizontalAlign="center">
                                 <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center slds-p-bottom_medium">
                                     <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
-                                        <span class="slds-assistive-text">warning</span>
+                                        <span class="slds-assistive-text">{!$Label.c.PageMessagesWarning}</span>
                                         <lightning:icon iconName="utility:warning" alternativeText="warning" class="iconContainer"/>
                                         <h2>
                                             {!$Label.c.bgeEditBatchFieldOptionsWarning}
@@ -256,29 +256,14 @@
 
                 <!-- Step 3: Edit Matching Rules -->
                 <div class="{!if(v.wizardMetadata.progressIndicatorStep == '3', '', 'slds-hide')}">
-                <!--<aura:if isTrue="{!v.wizardMetadata.progressIndicatorStep == '3'}">-->
-
+                    <!--will break scrolling if removed. above div also can't be aura:if for same reason-->
                     <div class="slds-m-around_medium">
-
-                        <!--<lightning:dualListbox aura:id="donationMatchingRule"
-                                               name="{!v.wizardMetadata.labels.donationMatchingRuleLabel}"
-                                               class="donationMatchingRuleListbox hideLabel"
-                                               label="{!v.wizardMetadata.labels.donationMatchingRuleLabel}"
-                                               sourceLabel="{!$Label.c.bgeBatchAvailableFields}"
-                                               selectedLabel="{!$Label.c.bgeBatchSelectedFields}"
-                                               onchange="{!c.handleDonationMatchingRuleChange}"
-                                               options="{!v.batchInfo.donationMatchingOptions}"
-                                               value="{!v.batchInfo.donationMatchingRule}"
-                                               required="true" variant="label-hidden"
-                                               disabled="{!v.batchInfo.donationMatchingBehavior == v.wizardMetadata.labels.DoNotMatch}"
-                                               disableReordering="true"
-                                               size="5"/>-->
 
                         <aura:if isTrue="{!greaterthan(v.batchInfo.recordCount,0)}">
                             <lightning:layout horizontalAlign="center">
                                 <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center slds-p-bottom_medium">
                                     <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
-                                        <span class="slds-assistive-text">warning</span>
+                                        <span class="slds-assistive-text">{!$Label.c.PageMessagesWarning}</span>
                                         <lightning:icon iconName="utility:warning" alternativeText="warning" class="iconContainer"/>
                                         <h2>
                                             {!$Label.c.bgeEditBatchOptionsWarning}
@@ -422,8 +407,7 @@
                                 </lightning:layout>
                             </lightning:layoutItem>
                         </lightning:layout>
-                        </div>
-                    <!--</aura:if>-->
+                    </div>
                 </div>
                 <!-- End Step 3 -->
 
