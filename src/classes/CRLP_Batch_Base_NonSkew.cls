@@ -101,7 +101,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     * the start() method of the individual batch jobs that extend this class.
     * @return database.Querylocator
     */
-    public database.Querylocator start(Database.BatchableContext bc) {
+    public Database.Querylocator start(Database.BatchableContext bc) {
         try {
             initializeJobData();
 
@@ -129,28 +129,13 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                     whereClauses.add(skewClause);
                 }
 
-                Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-
                 if (this.chunkModeStartingId != null) {
                     whereClauses.add('Id > \'' + this.chunkModeStartingId + '\'');
                 }
 
-                // Only use the related records filter if not disabled in settings and not running unit tests
-                if (customizableRollupSettings.Disable_Related_Records_Filter__c == false && !Test.isRunningTest()) {
-                    if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-                        whereClauses.add('Id IN (SELECT AccountId FROM Opportunity ALLROWS)');
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                        String contactField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-                        whereClauses.add('Id IN (SELECT ' + contactField + ' FROM Opportunity ALLROWS)');
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                        whereClauses.add('Id IN (SELECT ContactId FROM OpportunityContactRole ALLROWS)');
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                            this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit ) {
-                        // It's not possible to do an inner query on this due to the following Salesforce error:
-                        // "The inner select field 'Contact.AccountId' cannot have more than one level of relationships"
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-                        whereClauses.add('Id IN (SELECT npe03__Recurring_Donation__c FROM Opportunity ALLROWS)');
-                    }
+                String whereClause = getMainQueryInnerJoinFilter();
+                if (whereClause != null) {
+                    whereClauses.add(whereClause);
                 }
             }
 
