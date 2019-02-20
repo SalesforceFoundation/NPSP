@@ -2751,6 +2751,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Alternatively, create a new Opportunity.</value>
     </labels>
     <labels>
+        <fullName>bgeFormSelectedOpportunityApplyNewPayment</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Denotes donation selected in the BGE UI entry form will receive a new payment.</shortDescription>
+        <value>Applying New Payment</value>
+    </labels>
+    <labels>
         <fullName>bgeFormSelectedOpportunity</fullName>
         <language>en_US</language>
         <protected>true</protected>
