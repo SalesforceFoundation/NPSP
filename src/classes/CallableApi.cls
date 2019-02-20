@@ -57,7 +57,7 @@ global with sharing class CallableApi implements System.Callable {
                 TDTM_Config_API.disableAllTriggers();
 
             } when 'opp.mapstagetostate' {
-                return OPP_StageMappingUTIL.determineOppStateFromOppStage((String) params.get('OpportunityStage'));
+                return OPP_StageMappingUtil.determineOppStateFromOppStage((String) params.get('OpportunityStage'));
 
             } when else {
                 throw new MalformedMethodInvocationException(

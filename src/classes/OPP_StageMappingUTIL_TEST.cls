@@ -29,10 +29,10 @@
 * @date 2019
 * @group Opportunity
 * @group-content ../../ApexDocContent/Opportunity.htm
-* @description Test Coverage for OPP_StageMappingUTIL class
+* @description Test Coverage for OPP_StageMappingUtil class
 */
 @isTest(isParallel=true)
-private class OPP_StageMappingUTIL_TEST {
+private class OPP_StageMappingUtil_TEST {
 
     private static final String OPP_MAPPING_STAGETOSTATE_ACTION = 'OPP.MapStageToState';
 
@@ -90,23 +90,23 @@ private class OPP_StageMappingUTIL_TEST {
     * populated.
     */
     private static final List<String> RESULT_NO_SETTINGS = new List<String> {
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL
     };
 
     /******************************************************************************************************
@@ -114,23 +114,23 @@ private class OPP_StageMappingUTIL_TEST {
     * populated.
     */
     private static final List<String> RESULT_WITH_SETTINGS = new List<String> {
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.COMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.FINALIZED_STATE_VAL,
-        OPP_StageMappingUTIL.FINALIZED_STATE_VAL,
-        OPP_StageMappingUTIL.COMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.COMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.FINALIZED_STATE_VAL,
-        OPP_StageMappingUTIL.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUTIL.FINALIZED_STATE_VAL,
-        OPP_StageMappingUTIL.FINALIZED_STATE_VAL,
-        OPP_StageMappingUTIL.FINALIZED_STATE_VAL
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.COMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.FINALIZED_STATE_VAL,
+        OPP_StageMappingUtil.FINALIZED_STATE_VAL,
+        OPP_StageMappingUtil.COMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.COMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.FINALIZED_STATE_VAL,
+        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+        OPP_StageMappingUtil.FINALIZED_STATE_VAL,
+        OPP_StageMappingUtil.FINALIZED_STATE_VAL,
+        OPP_StageMappingUtil.FINALIZED_STATE_VAL
     };
 
     /*********************************************************************************************************
@@ -140,24 +140,24 @@ private class OPP_StageMappingUTIL_TEST {
     **********************************************************************************************************/
     @isTest
     private static void testConvertToSetMethod() {
-        System.assertEquals (true, OPP_StageMappingUTIL.convertToSet(null, '~', true).isEmpty());
-        System.assertEquals (true, OPP_StageMappingUTIL.convertToSet(' ', '~', true).isEmpty());
+        System.assertEquals (true, OPP_StageMappingUtil.convertToSet(null, '~', true).isEmpty());
+        System.assertEquals (true, OPP_StageMappingUtil.convertToSet(' ', '~', true).isEmpty());
 
-        Set<String> testVals = OPP_StageMappingUTIL.convertToSet(TEST_CONVERT_1_VAL, '~', true);
+        Set<String> testVals = OPP_StageMappingUtil.convertToSet(TEST_CONVERT_1_VAL, '~', true);
         System.assertEquals(6, testVals.size());
         for (String resultVal : RESULT_CONVERT_VALS) {
             System.assertEquals(true, testVals.contains(resultVal), 'Expected ' + resultVal + ' to be in testVals');
         }
 
         // Will use ; as the default because one was not supplied.
-        testVals = OPP_StageMappingUTIL.convertToSet(TEST_CONVERT_2_VAL, null, true);
+        testVals = OPP_StageMappingUtil.convertToSet(TEST_CONVERT_2_VAL, null, true);
         System.assertEquals(6, testVals.size());
         for (String resultVal : RESULT_CONVERT_VALS) {
             System.assertEquals(true, testVals.contains(resultVal), 'Expected ' + resultVal + ' to be in testVals');
         }
 
         // Will use ; as the default
-        testVals = OPP_StageMappingUTIL.convertToSet(TEST_CONVERT_2_VAL);
+        testVals = OPP_StageMappingUtil.convertToSet(TEST_CONVERT_2_VAL);
         System.assertEquals(6, testVals.size());
         for (String resultVal : RESULT_CONVERT_VALS) {
             System.assertEquals(true, testVals.contains(resultVal), 'Expected ' + resultVal + ' to be in testVals');
@@ -176,7 +176,7 @@ private class OPP_StageMappingUTIL_TEST {
             String testVal = TEST_OPP_STAGE_VALS[i];
             String resultVal = RESULT_NO_SETTINGS[i];
 
-            System.assertEquals (resultVal, OPP_StageMappingUTIL.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
+            System.assertEquals (resultVal, OPP_StageMappingUtil.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
         }
     }
 
@@ -189,7 +189,7 @@ private class OPP_StageMappingUTIL_TEST {
     @isTest
     private static void testdetermineOppStateFromOppStageSettingsNoValuesMethod() {
     // Check when Committed and Finalized Stage are mapped in settings...
-        npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+        npo02__Households_Settings__c householdSettings = Util_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c(
              )
         );
@@ -199,7 +199,7 @@ private class OPP_StageMappingUTIL_TEST {
             String testVal = TEST_OPP_STAGE_VALS[i];
             String resultVal = RESULT_NO_SETTINGS[i];
 
-            System.assertEquals (resultVal, OPP_StageMappingUTIL.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
+            System.assertEquals (resultVal, OPP_StageMappingUtil.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
         }
     }
 
@@ -211,7 +211,7 @@ private class OPP_StageMappingUTIL_TEST {
     @isTest
     private static void testdetermineOppStateFromOppStageWithSettingsMethod() {
         // Check when Committed and Finalized Stage are mapped in settings...
-        npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+        npo02__Households_Settings__c householdSettings = Util_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c(
                 Opportunity_Committed_Stages__c = COMMITTED_STAGES_VAL,
                 Opportunity_Finalized_Stages__c = FINALIZED_STAGES_VAL
@@ -222,7 +222,7 @@ private class OPP_StageMappingUTIL_TEST {
             String testVal = TEST_OPP_STAGE_VALS[i];
             String resultVal = RESULT_WITH_SETTINGS[i];
 
-            System.assertEquals (resultVal, OPP_StageMappingUTIL.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
+            System.assertEquals (resultVal, OPP_StageMappingUtil.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
         }
     }
    /*******************************************************************************************************
@@ -233,7 +233,7 @@ private class OPP_StageMappingUTIL_TEST {
         Test.startTest();
 
         // Check when Committed and Finalized Stage are mapped in settings...
-        npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+        npo02__Households_Settings__c householdSettings = Util_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c(
                 Opportunity_Committed_Stages__c = COMMITTED_STAGES_VAL,
                 Opportunity_Finalized_Stages__c = FINALIZED_STAGES_VAL
