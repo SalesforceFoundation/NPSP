@@ -55,12 +55,15 @@ global with sharing class CallableApi implements System.Callable {
         switch on (cleanActionText) {
             when 'tdtm.disablealltriggers' {
                 TDTM_Config_API.disableAllTriggers();
+
             } when 'opp.mapstagetostate' {
-                return OPP_StageToStateMapping_API.determineOppStateFromOppStage((String) params.get('OpportunityStage'));
+                return OPP_StageMapping_UTIL.determineOppStateFromOppStage((String) params.get('OpportunityStage'));
+
             } when else {
                 throw new MalformedMethodInvocationException(
                     String.format(System.Label.CallableApiMethodNotImplemented, new List<String> { action })
                 );
+
             }
         }
 

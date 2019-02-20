@@ -273,8 +273,8 @@
         <members>OPP_PrimaryContact_TEST</members>
         <members>OPP_SendAcknowledgmentBTN_CTRL</members>
         <members>OPP_SendAcknowledgmentBTN_TEST</members>
-        <members>OPP_StageToStateMapping_API</members>
-        <members>OPP_StageToStateMapping_API_TEST</members>
+        <members>OPP_StageMapping_UTIL</members>
+        <members>OPP_StageMapping_UTIL_TEST</members>
         <members>PMT_CascadeDeleteLookups_TDTM</members>
         <members>PMT_CascadeDeleteLookups_TEST</members>
         <members>PMT_PaymentCreator</members>
@@ -1227,6 +1227,7 @@
         <members>CRLP_SaveSuccess</members>
         <members>CRLP_SaveTimeout</members>
         <members>CRLP_SoftCredit</members>
+        <members>CallableApiMethodNotImplemented</members>
         <members>CampaignMemberStatusOmit</members>
         <members>CascadeDeletionError</members>
         <members>CascadeDeletionErrorLightning</members>
@@ -1472,7 +1473,6 @@
         <members>bgeWizardShowAdvancedOptions</members>
         <members>btnContinue</members>
         <members>btnRemove</members>
-        <members>CallableApiMethodNotImplemented</members>
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
         <members>campaignMemberStatusResponded</members>

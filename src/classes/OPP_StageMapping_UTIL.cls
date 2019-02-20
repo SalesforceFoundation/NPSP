@@ -31,7 +31,7 @@
 * @group-content ../../ApexDocContent/Opportunity.htm
 * @description API Class to allow caller to determine Opportunity's State (Uncommitted, Committed. or Finalized) using the Opportunities Stage and Household Settings
 */
-public class OPP_StageToStateMapping_API {
+public class OPP_StageMapping_UTIL {
 
     /******************************************************************************************************
     * @description Represents the overall state of the Opportunity.
@@ -42,9 +42,9 @@ public class OPP_StageToStateMapping_API {
     * FINALIZED -- Donation is completely received.  Donation can be fully or partially paid.  No more
     * money is expected for the donation.
     */
-    public static final String UNCOMMITTED_STATE_VAL = 'UNCOMMITTED';
-    public static final String COMMITTED_STATE_VAL = 'COMMITTED';
-    public static final String FINALIZED_STATE_VAL = 'FINALIZED';
+    @testVisible private static final String UNCOMMITTED_STATE_VAL = 'UNCOMMITTED';
+    @testVisible private static final String COMMITTED_STATE_VAL = 'COMMITTED';
+    @testVisible private static final String FINALIZED_STATE_VAL = 'FINALIZED';
 
     /******************************************************************************************************
     * @description Used to Cache Set of Opportunity Stages that mean Opportunity is in a Committed State.
