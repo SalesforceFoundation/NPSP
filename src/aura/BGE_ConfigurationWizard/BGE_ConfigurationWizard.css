@@ -45,6 +45,16 @@
     display: none;
     visibility: hidden;
 }
+/*removes the extra label and automatic tooltip for inputFields*/
+.THIS .hideLabel .slds-form-element__label {
+    display: none;
+    visibility: hidden;
+}
+/*removes the automatic tooltip for inputFields*/
+.THIS .hideTooltip lightning-helptext {
+    display: none;
+    visibility: hidden;
+}
 /*formatting for checkboxes with help text */
 .THIS .inputCheckbox{
     display: inline-flex;
