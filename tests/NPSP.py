@@ -2,7 +2,7 @@ import logging
 import re
 import time
 
-from robot.libraries.BuiltIn import BuiltIn
+from robot.libraries.BuiltIn import BuiltIn, RobotNotRunningError
 from selenium.common.exceptions import ElementNotInteractableException
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import NoSuchElementException
@@ -42,10 +42,16 @@ class NPSP(object):
         self._init_locators()
 
     def _init_locators(self):
-        client = self.cumulusci.tooling
-        response = client._call_salesforce(
-            'GET', 'https://{}/services/data'.format(client.sf_instance))
-        latest_api_version = float(response.json()[-1]['version'])
+        try:
+            client = self.cumulusci.tooling
+            response = client._call_salesforce(
+                'GET', 'https://{}/services/data'.format(client.sf_instance))
+            latest_api_version = float(response.json()[-1]['version'])
+        except RobotNotRunningError:
+            # We aren't part of a running test, likely because we are
+            # generating keyword documentation. If that's the case, assume
+            # the latest supported version
+            latest_api_version = max(locators_by_api_version.keys())
         locators = locators_by_api_version[latest_api_version]
         npsp_lex_locators.update(locators)
 
@@ -749,6 +755,8 @@ class NPSP(object):
 
     def page_scroll_to_locator(self, path, *args, **kwargs):
         locator = self.get_npsp_locator(path, *args, **kwargs)
+        import sys; sys.stdout=sys.__stdout__
+        import pdb; pdb.set_trace()
         self.selenium.scroll_element_into_view(locator)
     
     def return_locator_value(self, path, *args, **kwargs): 
