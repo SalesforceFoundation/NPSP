@@ -66,12 +66,6 @@ tasks:
         options:
             path: unpackaged/config/delete
 
-    robot_documentation:
-        options:
-            files:
-              - tests/NPSP.py
-              - tests/NPSP.robot
-
     robot_libdoc:
         class_path: cumulusci.tasks.robotframework.RobotLibDoc
         options:
