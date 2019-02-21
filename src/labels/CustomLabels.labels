@@ -2762,7 +2762,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Denotes donation selected in the BGE UI entry form.</shortDescription>
-        <value>Selected Opportunity</value>
+        <value>Updating this Opportunity</value>
     </labels>
     <labels>
         <fullName>bgeFormSelectedPayment</fullName>
