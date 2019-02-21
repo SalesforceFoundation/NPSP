@@ -240,7 +240,7 @@ private class OPP_StageMappingUtil_TEST {
             )
         );
 
-        Callable npspApi = (Callable) Type.forName('CallableApi').newInstance();
+        Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
 
         for (Integer i = 0; i < TEST_OPP_STAGE_VALS.size(); i++) {
             String testVal = TEST_OPP_STAGE_VALS[i];
