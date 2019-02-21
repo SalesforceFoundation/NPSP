@@ -108,7 +108,7 @@
                                     </aura:if>
                                 </aura:set>
                             </aura:if>
-                            <aura:if isTrue="{!v.selectedDonation}">
+                            <aura:if isTrue="{!or(v.selectedDonation, equals(v.selectedDonation, ''))}">
                                 <p>
                                     <a onclick="{!c.openMatchModal}">{!$Label.c.bgeFormUpdateDonation}</a>
                                 </p>
