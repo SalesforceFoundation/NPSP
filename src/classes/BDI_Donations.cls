@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017 Salesforce.org
+    Copyright (c) 2019 Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2019
 * @group Batch Data Import
 * @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Helper class for the Batch Data Importer, dealing with Donations, ie, Opps and Payments
@@ -390,20 +390,8 @@ public class BDI_Donations {
             opportunityName += ' ' + System.Label.bdiDonation;
         }
 
-        // in Dry Run, we don't save campaigns, nor do we try to validate that all of the
-        // updates to the object would succeed, so we should bail out now. (we didn't just bail
-        // out at the beginning, so we would do the record type validation).
         if (bdi.isDryRun) {
             return opp;
-        }
-
-        if (dataImport.Donation_Campaign_Name__c != null) {
-            Id campaignId = bdi.mapStrNameToCampaignId.get(dataImport.Donation_Campaign_Name__c);
-            if (campaignId == null) {
-                bdi.LogBDIError(dataImport, System.Label.bdiErrorInvalidCampaignName, 'DonationImportStatus__c');
-                return null;
-            }
-            opp.CampaignId = campaignId;
         }
 
         if (dataImport.Donation_Date__c == null) {
@@ -479,32 +467,28 @@ public class BDI_Donations {
     */
     private void setDryRunDonationStatuses(List<DataImport__c> dataImportDonations) {
 
-        for (DataImport__c dataImport : dataImportDonations) {
+        Map<String, String> importStatusToDryRunStatus = new Map<String, String>{
+            BDI_DataImport_API.bdiFailed => bdi.statusDIFailed(),
+            System.Label.bdiMatched => bdi.statusMatchedExisting(),
+            System.Label.bdiMatchedBest => bdi.statusMatchedBest(),
+            System.Label.bdiMatchedNone => bdi.statusMatchedNone(),
+            System.Label.bdiMatchedId => bdi.statusMatchedById()
+        };
 
-            // opps
-            if (dataImport.DonationImportStatus__c == BDI_DataImport_API.bdiFailed) {
-                dataImport.DonationImportStatus__c = bdi.statusDIFailed();
-            } else if (dataImport.DonationImportStatus__c == System.Label.bdiMatched) {
-                dataImport.DonationImportStatus__c = bdi.statusMatchedExisting();
-            } else if (dataImport.DonationImportStatus__c == System.Label.bdiMatchedBest) {
-                dataImport.DonationImportStatus__c = bdi.statusMatchedBest();
-            } else if (dataImport.DonationImportStatus__c == System.Label.bdiMatchedId) {
-                dataImport.DonationImportStatus__c = bdi.statusMatchedById();
-            } else if (dataImport.DonationImportStatus__c == System.Label.bdiMatchedNone) {
-                dataImport.DonationImportStatus__c = bdi.statusMatchedNone();
+        for (DataImport__c dataImport : dataImportDonations) {
+            String donationImportStatus = importStatusToDryRunStatus.get(dataImport.DonationImportStatus__c);
+            if (donationImportStatus != null) {
+                dataImport.DonationImportStatus__c = donationImportStatus;
             }
 
-            // payments
-            if (dataImport.PaymentImportStatus__c == BDI_DataImport_API.bdiFailed) {
-                dataImport.PaymentImportStatus__c = bdi.statusDIFailed();
-            } else if (dataImport.PaymentImportStatus__c == System.Label.bdiMatched) {
-                dataImport.PaymentImportStatus__c = bdi.statusMatchedExisting();
-            } else if (dataImport.PaymentImportStatus__c == System.Label.bdiMatchedBest) {
-                dataImport.PaymentImportStatus__c = bdi.statusMatchedBest();
-            } else if (dataImport.PaymentImportStatus__c == System.Label.bdiMatchedId) {
-                dataImport.PaymentImportStatus__c = bdi.statusMatchedById();
-            } else if (dataImport.PaymentImportStatus__c == System.Label.bdiMatchedNone) {
-                dataImport.PaymentImportStatus__c = bdi.statusMatchedNone();
+            String paymentImportStatus = importStatusToDryRunStatus.get(dataImport.PaymentImportStatus__c);
+            if (paymentImportStatus != null) {
+                dataImport.PaymentImportStatus__c = paymentImportStatus;
+            }
+
+            String donationCampaignImportStatus = importStatusToDryRunStatus.get(dataImport.DonationCampaignImportStatus__c);
+            if (donationCampaignImportStatus != null) {
+                dataImport.DonationCampaignImportStatus__c = donationCampaignImportStatus;
             }
         }
     }
