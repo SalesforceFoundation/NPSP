@@ -90,8 +90,6 @@
         <members>BGE_ConfigurationWizard_CTRL_TEST</members>
         <members>BGE_DataImportBatchEntry_CTRL</members>
         <members>BGE_DataImportBatchEntry_CTRL_TEST</members>
-        <members>CallableApi</members>
-        <members>CallableApi_TEST</members>
         <members>CAM_CascadeDeleteLookups_TDTM</members>
         <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
@@ -189,6 +187,8 @@
         <members>CRLP_Rollup_TDTM</members>
         <members>CRLP_SkewDispatcher_BATCH</members>
         <members>CRLP_VRollupHandler</members>
+        <members>Callable_API</members>
+        <members>Callable_API_TEST</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>

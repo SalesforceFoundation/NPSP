@@ -30,42 +30,65 @@
 /**
 * @author Salesforce.org
 * @date 2019
-* @group API
+* @group API 
 * @group-content ../../ApexDocContent/API.htm
-* @description Global API class that exposes a System.Callable interface for external
-* applications and customers to leverage for future NPSP api's
+* @description Tests specific to Callable API. 
 */
-global with sharing class CallableApi implements System.Callable {
+@IsTest(isParallel=true)
+private with sharing class Callable_API_TEST {
 
+    private static final String TDTM_TRIGGER_ACTION = 'TDTM.DisableAllTriggers';
+    
     /*******************************************************************************************************
-    * @description Exception class for Malformed Method Invocations
+    * @description verify the TDTM Callable action returns an Object
     ********************************************************************************************************/
-    public class MalformedMethodInvocationException extends Exception {}
-
-    /*******************************************************************************************************
-    * @description call function implementation of the callable Interface will dispatch to the appropriate
-    * action handler based on the action text
-    * @param action string of the target action
-    * @param args name value map of arguments
-    * @return Object returned will depend on the results of the target function otherwise it returns true
-    ********************************************************************************************************/
-    global Object call(String action, Map<String, Object> params) {
-        String cleanActionText = (String.isBlank(action) ? '' : action.toLowerCase());
-
-        switch on (cleanActionText) {
-            when 'tdtm.disablealltriggers' {
-                TDTM_Config_API.disableAllTriggers();
-            }
-            when else {
-                throw new MalformedMethodInvocationException(
-                    String.format(System.Label.CallableApiMethodNotImplemented, new List<String> { action }) 
-                );
-            }
+    @IsTest
+    private static void verifyCallableReturnsAnObject() {
+        // skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
         }
 
-        // if the action does not return a value then return success 
-        return true;
+        Test.startTest();
 
+        Integer accountCountBefore = Database.countQuery('SELECT COUNT() FROM Account');
+
+        Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
+        Map<String, Object> triggerArgs = new Map<String, Object>();
+        Object result = npspApi.call(TDTM_TRIGGER_ACTION, triggerArgs);
+
+        Contact contact1 = new Contact(LastName = 'CallableApi_Test');
+        insert contact1;
+
+        Test.stopTest();
+
+        Object callResult = result;
+        System.assertNotEquals(null, callResult, 'No result was returned from call');
+
+        Integer accountCountAfter = Database.countQuery('SELECT COUNT() FROM Account');
+        System.assertEquals(accountCountBefore, accountCountAfter, 'Account record was created');
+    }
+
+
+    /*******************************************************************************************************
+    * @description Call the API with an invalid action text and make sure an exception is thrown
+    ********************************************************************************************************/
+    @IsTest
+    private static void callableApiThrowsExceptionWhenActionIsInvalid() {
+       
+        Test.startTest();
+
+        Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
+        Map<String, Object> triggerArgs = new Map<String, Object>();
+
+        try {
+            Object result = npspApi.call('InvalidAction', triggerArgs);
+            System.assert(false, 'The exception was not thrown');
+        } catch (Callable_API.MalformedMethodInvocationException apiException) {
+            System.assert(apiException.getMessage().contains(' is not implemented'));
+        }
+
+        Test.stopTest();
     }
 
 }
