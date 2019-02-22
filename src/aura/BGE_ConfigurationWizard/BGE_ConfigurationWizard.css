@@ -13,27 +13,11 @@
     text-decoration: underline;
 }
 /*formatting for edit mode checkboxes*/
-.THIS .bgeInputCheckbox{
+.THIS .bgeInputCheckbox {
     display: inline-flex;
-}
-/*give info icons extra space*/
-.THIS .slds-form-element__icon{
-    margin-left: .2rem;
 }
 /*padding for helptext icon*/
 .THIS .uiOutputCheckbox {
-    padding-right: .5rem;
-}
-.THIS.header {
-    margin-bottom: .75rem;
-}
-.THIS .headerButtonActions {
-    padding-top: .75rem;
-}
-.THIS .headerText {
-    padding-top: .5rem;
-}
-.THIS .slds-accordion__summary-heading lightning-primitive-icon {
     padding-right: .5rem;
 }
 /*override different sized list options*/
@@ -46,12 +30,8 @@
     visibility: hidden;
 }
 /*formatting for checkboxes with help text */
-.THIS .inputCheckbox{
+.THIS .inputCheckbox {
     display: inline-flex;
-}
-/*remove extra top padding on help text icons*/
-.THIS .slds-form-element__icon {
-    padding-top: 0px;
 }
 /* hide rogue label spacing on lightning:select when variant="label-hidden" */
 .THIS .label-hidden > label {
