@@ -219,8 +219,7 @@ public with sharing class BDI_Donations_TEST {
         Decimal stableAmount = listOppT[1].Amount;
 
         // BGE interface, user selects an unpaid payment and updates the amount
-        dataImports.add(new DataImport__c(Contact1_Firstname__c=listConT[0].Firstname, Contact1_Lastname__c=listConT[0].Lastname,
-            Contact1_Work_Email__c=listConT[0].npe01__WorkEmail__c));
+        dataImports.add(configureDataImportContactFields(new DataImport__c(), listConT[0]));
         dataImports[0].Donation_Donor__c = 'Contact1';
         dataImports[0].Donation_Amount__c = updatedAmount;
         dataImports[0].DonationImported__c = listOppT[0].Id;
@@ -232,8 +231,7 @@ public with sharing class BDI_Donations_TEST {
         dataImports[0].NPSP_Data_Import_Batch__c = batch.Id;
 
         // BGE interface, user selects an unpaid payment
-        dataImports.add(new DataImport__c(Contact1_Firstname__c=listConT[1].Firstname, Contact1_Lastname__c=listConT[1].Lastname,
-                Contact1_Work_Email__c=listConT[1].npe01__WorkEmail__c));
+        dataImports.add(configureDataImportContactFields(new DataImport__c(), listConT[1]));
         dataImports[1].Donation_Donor__c = 'Contact1';
         dataImports[1].Donation_Amount__c = stableAmount;
         dataImports[1].DonationImported__c = listOppT[1].Id;
@@ -245,8 +243,7 @@ public with sharing class BDI_Donations_TEST {
         dataImports[1].NPSP_Data_Import_Batch__c = batch.Id;
 
         // BGE interface, user selects to Update an open Opportunity with no Payments and updates Amount
-        dataImports.add(new DataImport__c(Contact1_Firstname__c=listConT[1].Firstname, Contact1_Lastname__c=listConT[1].Lastname,
-                Contact1_Work_Email__c=listConT[1].npe01__WorkEmail__c));
+        dataImports.add(configureDataImportContactFields(new DataImport__c(), listConT[1]));
         dataImports[2].Donation_Donor__c = 'Contact1';
         dataImports[2].Donation_Amount__c = updatedAmount;
         dataImports[2].DonationImported__c = newOpp.Id;
@@ -399,41 +396,30 @@ public with sharing class BDI_Donations_TEST {
 
         List<DataImport__c> dataImports = new List<DataImport__c>();
 
-        Decimal newPaymentAmount = listOppT[0].Amount/2;
-        String newPaymentReference = 'abc';
-        String newPaymentMethod = 'Check';
-        Date newPaymentDate = System.today();
-
-        Decimal updatedPaymentAmount = listOppT[1].Amount;
-        String updatedPaymentReference = '1234';
-        String updatedPaymentMethod = 'Visa';
-        Date updatedPaymentDate = System.today().addDays(-1);
-
         // BGE interface, user selects "Apply New Payment" to existing Opportunity
-        dataImports.add(new DataImport__c(Contact1_Firstname__c=listConT[0].Firstname, Contact1_Lastname__c=listConT[0].Lastname,
-            Contact1_Work_Email__c=listConT[0].npe01__WorkEmail__c));
-        dataImports[0].Donation_Donor__c = 'Contact1';
-        dataImports[0].Donation_Amount__c = newPaymentAmount;
-        dataImports[0].Donation_Date__c = newPaymentDate;
-        dataImports[0].DonationImported__c = listOppT[0].Id;
-        dataImports[0].DonationImportStatus__c = System.Label.bdiMatchedApplyNewPayment;
-        dataImports[0].Payment_Check_Reference_Number__c = newPaymentReference;
-        dataImports[0].Payment_Method__c = newPaymentMethod;
-        dataImports[0].NPSP_Data_Import_Batch__c = batch.Id;
+        PaymentInfo newPaymentInfo =
+                new PaymentInfo(listOppT[0].Amount / 2, System.today(), 'Check', 'abc');
+        DonationInfo donationInfoForApplyNewPayment =
+                new DonationInfo('Contact1', newPaymentInfo.amount,
+                        newPaymentInfo.paymentDate, listOppT[0].Id, System.Label.bdiMatchedApplyNewPayment);
+
+        DataImport__c dataImportToApplyNewPayment =
+                getDataImport(batch.Id, listConT[0], donationInfoForApplyNewPayment, newPaymentInfo);
+        dataImports.add(dataImportToApplyNewPayment);
+
 
         // BGE interface, user selects an unpaid payment to pay off
-        dataImports.add(new DataImport__c(Contact1_Firstname__c=listConT[1].Firstname, Contact1_Lastname__c=listConT[1].Lastname,
-                Contact1_Work_Email__c=listConT[1].npe01__WorkEmail__c));
-        dataImports[1].Donation_Donor__c = 'Contact1';
-        dataImports[1].Donation_Amount__c = updatedPaymentAmount;
-        dataImports[1].Donation_Date__c = updatedPaymentDate;
-        dataImports[1].DonationImported__c = listOppT[1].Id;
-        dataImports[1].DonationImportStatus__c = System.Label.bdiMatchedByUser;
-        dataImports[1].PaymentImported__c = payments[1].Id;
-        dataImports[1].PaymentImportStatus__c = System.Label.bdiMatchedByUser;
-        dataImports[1].Payment_Check_Reference_Number__c = updatedPaymentReference;
-        dataImports[1].Payment_Method__c = updatedPaymentMethod;
-        dataImports[1].NPSP_Data_Import_Batch__c = batch.Id;
+        PaymentInfo updatedPaymentInfo =
+                new PaymentInfo(listOppT[1].Amount, System.today().addDays(-1), 'Visa', '1234');
+        DonationInfo donationInfo =
+                new DonationInfo('Contact1', updatedPaymentInfo.amount,
+                        updatedPaymentInfo.paymentDate, listOppT[1].Id, System.Label.bdiMatchedByUser);
+
+        DataImport__c dataImportToPayoffUnpaidPayment =
+                getDataImport(batch.Id, listConT[1], donationInfo, updatedPaymentInfo);
+        dataImportToPayoffUnpaidPayment.PaymentImported__c = payments[1].Id;
+        dataImportToPayoffUnpaidPayment.PaymentImportStatus__c = System.Label.bdiMatchedByUser;
+        dataImports.add(dataImportToPayoffUnpaidPayment);
 
         insert dataImports;
 
@@ -486,12 +472,12 @@ public with sharing class BDI_Donations_TEST {
         System.assertEquals(false, opps[0].isWon);
         System.assertEquals(listOppT[0].Amount, opps[0].Amount);
         System.assertEquals(listOppT[0].CloseDate, opps[0].CloseDate);
-        System.assertEquals(newPaymentAmount, opps[0].npe01__Payments_Made__c);
+        System.assertEquals(newPaymentInfo.amount, opps[0].npe01__Payments_Made__c);
 
         System.assertEquals(true, opps[1].isWon);
         System.assertEquals(listOppT[1].Amount, opps[1].Amount);
-        System.assertEquals(updatedPaymentDate, opps[1].CloseDate);
-        System.assertEquals(updatedPaymentAmount, opps[1].npe01__Payments_Made__c);
+        System.assertEquals(updatedPaymentInfo.paymentDate, opps[1].CloseDate);
+        System.assertEquals(updatedPaymentInfo.amount, opps[1].npe01__Payments_Made__c);
 
         payments = [
             SELECT Id,
@@ -509,19 +495,19 @@ public with sharing class BDI_Donations_TEST {
 
         // user-requested new payment is worth 50% of oppty and was paid today
         npe01__OppPayment__c newPayment = payments[1];
-        System.assertEquals(newPaymentAmount, newPayment.npe01__Payment_Amount__c);
-        System.assertEquals(newPaymentMethod, newPayment.npe01__Payment_Method__c);
-        System.assertEquals(newPaymentReference, newPayment.npe01__Check_Reference_Number__c);
+        System.assertEquals(newPaymentInfo.amount, newPayment.npe01__Payment_Amount__c);
+        System.assertEquals(newPaymentInfo.method, newPayment.npe01__Payment_Method__c);
+        System.assertEquals(newPaymentInfo.checkReference, newPayment.npe01__Check_Reference_Number__c);
         System.assertEquals(true, newPayment.npe01__Paid__c);
-        System.assertEquals(newPaymentDate, newPayment.npe01__Payment_Date__c);
+        System.assertEquals(newPaymentInfo.paymentDate, newPayment.npe01__Payment_Date__c);
 
         // updated payment paid off entire opp today
         npe01__OppPayment__c updatedPayment = payments[2];
-        System.assertEquals(updatedPaymentAmount, updatedPayment.npe01__Payment_Amount__c);
-        System.assertEquals(updatedPaymentMethod, updatedPayment.npe01__Payment_Method__c);
-        System.assertEquals(updatedPaymentReference, updatedPayment.npe01__Check_Reference_Number__c);
+        System.assertEquals(updatedPaymentInfo.amount, updatedPayment.npe01__Payment_Amount__c);
+        System.assertEquals(updatedPaymentInfo.method, updatedPayment.npe01__Payment_Method__c);
+        System.assertEquals(updatedPaymentInfo.checkReference, updatedPayment.npe01__Check_Reference_Number__c);
         System.assertEquals(true, updatedPayment.npe01__Paid__c);
-        System.assertEquals(updatedPaymentDate, updatedPayment.npe01__Payment_Date__c);
+        System.assertEquals(updatedPaymentInfo.paymentDate, updatedPayment.npe01__Payment_Date__c);
 
         dataImports = [
             SELECT Id,
@@ -535,15 +521,20 @@ public with sharing class BDI_Donations_TEST {
         ];
         System.assertEquals(2, dataImports.size());
 
-        System.assertEquals(opps[0].Id, dataImports[0].DonationImported__c);
-        System.assertEquals(System.Label.bdiMatchedApplyNewPayment, dataImports[0].DonationImportStatus__c);
-        System.assertEquals(newPayment.Id, dataImports[0].PaymentImported__c);
-        System.assertEquals(System.Label.bdiCreated, dataImports[0].PaymentImportStatus__c);
+        DataImport__c dataImportWithNewPaymentApplied = dataImports[0];
+        System.assertEquals(opps[0].Id, dataImportWithNewPaymentApplied.DonationImported__c);
+        System.assertEquals(System.Label.bdiMatchedApplyNewPayment, dataImportWithNewPaymentApplied.DonationImportStatus__c);
 
-        System.assertEquals(opps[1].Id, dataImports[1].DonationImported__c);
-        System.assertEquals(System.Label.bdiMatchedByUser, dataImports[1].DonationImportStatus__c);
-        System.assertEquals(updatedPayment.Id, dataImports[1].PaymentImported__c);
-        System.assertEquals(System.Label.bdiMatchedByUser, dataImports[1].PaymentImportStatus__c);
+        System.assertEquals(newPayment.Id, dataImportWithNewPaymentApplied.PaymentImported__c);
+        System.assertEquals(System.Label.bdiCreated, dataImportWithNewPaymentApplied.PaymentImportStatus__c);
+
+
+        DataImport__c dataImportWithUnpaidPaymentPaidOff = dataImports[1];
+        System.assertEquals(opps[1].Id, dataImportWithUnpaidPaymentPaidOff.DonationImported__c);
+        System.assertEquals(System.Label.bdiMatchedByUser, dataImportWithUnpaidPaymentPaidOff.DonationImportStatus__c);
+
+        System.assertEquals(updatedPayment.Id, dataImportWithUnpaidPaymentPaidOff.PaymentImported__c);
+        System.assertEquals(System.Label.bdiMatchedByUser, dataImportWithUnpaidPaymentPaidOff.PaymentImportStatus__c);
     }
 
     /*********************************************************************************************************
@@ -921,28 +912,22 @@ public with sharing class BDI_Donations_TEST {
         List<DataImport__c> dataImports = new List<DataImport__c>();
 
         // BGE interface, user elects to make a new opp
-        dataImports.add(new DataImport__c(Contact1_Firstname__c=listConT[0].Firstname,
-                Contact1_Lastname__c=listConT[0].Lastname,
-                Contact1_Work_Email__c=listConT[0].npe01__WorkEmail__c,
-                Donation_Donor__c = 'Contact1',
-                Donation_Amount__c = listOppT[0].Amount,
-                DonationImportStatus__c = Label.bdiMatchedByUserNewOpp,
-                Payment_Check_Reference_Number__c = 'abc',
-                Payment_Method__c = 'Check',
-                NPSP_Data_Import_Batch__c = batch.Id
-        ));
+        dataImports.add(configureDataImportContactFields(new DataImport__c(), listConT[0]));
+        dataImports[0].Donation_Donor__c = 'Contact1';
+        dataImports[0].Donation_Amount__c = listOppT[0].Amount;
+        dataImports[0].DonationImportStatus__c = Label.bdiMatchedByUserNewOpp;
+        dataImports[0].Payment_Check_Reference_Number__c = 'abc';
+        dataImports[0].Payment_Method__c = 'Check';
+        dataImports[0].NPSP_Data_Import_Batch__c = batch.Id;
 
         // BGE interface, user elects to make a new opp
-        dataImports.add(new DataImport__c(Contact1_Firstname__c=listConT[1].Firstname,
-                Contact1_Lastname__c=listConT[1].Lastname,
-                Contact1_Work_Email__c=listConT[1].npe01__WorkEmail__c,
-                Donation_Donor__c = 'Contact1',
-                Donation_Amount__c = listOppT[1].Amount,
-                DonationImportStatus__c = Label.bdiMatchedByUserNewOpp,
-                Payment_Check_Reference_Number__c = '1234',
-                Payment_Method__c = 'Visa',
-                NPSP_Data_Import_Batch__c = batch.Id
-        ));
+        dataImports.add(configureDataImportContactFields(new DataImport__c(), listConT[1]));
+        dataImports[1].Donation_Donor__c = 'Contact1';
+        dataImports[1].Donation_Amount__c = listOppT[1].Amount;
+        dataImports[1].DonationImportStatus__c = Label.bdiMatchedByUserNewOpp;
+        dataImports[1].Payment_Check_Reference_Number__c = '1234';
+        dataImports[1].Payment_Method__c = 'Visa';
+        dataImports[1].NPSP_Data_Import_Batch__c = batch.Id;
 
         insert dataImports;
 
@@ -2541,6 +2526,8 @@ public with sharing class BDI_Donations_TEST {
         }
     }
 
+    /******************************** Helper Methods *****************************/
+
     private static Opportunity getOpportunityWithPayments(Id oppId) {
         // requery the Opportunity for all fields that we need.
         return [SELECT Id, IsWon, IsClosed, Amount, npe01__Amount_Outstanding__c,
@@ -2548,4 +2535,85 @@ public with sharing class BDI_Donations_TEST {
             FROM Opportunity WHERE Id = :oppId LIMIT 1];
     }
 
+    private static DataImport__c configureDataImportContactFields(DataImport__c dataImport, Contact con) {
+        dataImport.Contact1_Firstname__c = con.Firstname;
+        dataImport.Contact1_Lastname__c = con.Lastname;
+        dataImport.Contact1_Work_Email__c = con.npe01__WorkEmail__c;
+        return dataImport;
+    }
+
+    private static DataImport__c configureDataImportDonationFields(
+            DataImport__c dataImport,
+            DonationInfo donationInfo
+    ){
+        dataImport.Donation_Donor__c = donationInfo.donor;
+        dataImport.Donation_Amount__c = donationInfo.amount;
+        dataImport.Donation_Date__c = donationInfo.donationDate;
+        dataImport.DonationImported__c = donationInfo.donationImported;
+        dataImport.DonationImportStatus__c = donationInfo.donationImportStatus;
+        return dataImport;
+    }
+
+    private class DonationInfo {
+        String donor;
+        Decimal amount;
+        Date donationDate;
+        Id donationImported;
+        String donationImportStatus;
+
+        private DonationInfo(
+                String donor,
+                Decimal amount,
+                Date donationDate,
+                Id donationImported,
+                String donationImportStatus
+        ) {
+            this.donor = donor;
+            this.amount = amount;
+            this.donationDate = donationDate;
+            this.donationImported = donationImported;
+            this.donationImportStatus = donationImportStatus;
+        }
+    }
+
+    private static DataImport__c configureDataImportPaymentFields(
+            DataImport__c dataImport,
+            PaymentInfo paymentInfo
+    ) {
+        dataImport.Payment_Check_Reference_Number__c = paymentInfo.checkReference;
+        dataImport.Payment_Method__c = paymentInfo.method;
+        return dataImport;
+    }
+
+    private class PaymentInfo {
+        Decimal amount;
+        Date paymentDate;
+        String method;
+        String checkReference;
+
+        private PaymentInfo(
+                Decimal paymentAmount,
+                Date paymentDate,
+                String paymentMethod,
+                String checkNumber
+        ) {
+            this.amount = paymentAmount;
+            this.paymentDate = paymentDate;
+            this.method = paymentMethod;
+            this.checkReference = checkNumber;
+        }
+    }
+
+    private static DataImport__c getDataImport(
+            Id batchId,
+            Contact con,
+            DonationInfo donationInfo,
+            PaymentInfo paymentInfo
+    ){
+        DataImport__c dataImport = new DataImport__c(NPSP_Data_Import_Batch__c = batchId);
+        configureDataImportContactFields(dataImport, con);
+        configureDataImportDonationFields(dataImport, donationInfo);
+        configureDataImportPaymentFields(dataImport, paymentInfo);
+        return dataImport;
+    }
 }
