@@ -222,11 +222,11 @@ private class OPP_PrimaryContactRoleMerge_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Verifies duplicate primary OCRs are not removed for Opportunities having
-    * "Disable Contact Role Automation" is checked
+    * @description Verifies duplicate primary OCRs are removed for Opportunities having
+    * "Disable Contact Role Automation" checked.
     */
     @isTest 
-    private static void shouldNotRemoveDuplicatePrimaryOcrsWhenOppDisableContactRoleAutomationIsChecked() {
+    private static void shouldRemoveDuplicatePrimaryOcrsWhenOppDisableContactRoleAutomationIsChecked() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
             Contact_Role_for_Organizational_Opps__c = NPSP_ROLE
         ));
@@ -277,13 +277,11 @@ private class OPP_PrimaryContactRoleMerge_TEST {
         Database.executeBatch(new OPP_PrimaryContactRoleMerge_BATCH());
         Test.stopTest();
 
-        Opportunity opp = loadOpportunityWithOCRs(opps[0].Id);
-        System.assertEquals(1, opp.OpportunityContactRoles.size(), 'Duplicate primary OCRs should be removed: ' + opp.OpportunityContactRoles);
-        System.assertEquals(true, opp.OpportunityContactRoles[0].IsPrimary, 'The OCR should be marked as primary');
-
-        opp = loadOpportunityWithOCRs(opps[1].Id);
-        System.assertEquals(duplPrimaryOcrCount, opp.OpportunityContactRoles.size(), 
-            'Duplicate primary OCRs should be unchanged: ' + opp.OpportunityContactRoles);
+        for (Opportunity opp : opps) {
+            Opportunity actualOpp = loadOpportunityWithOCRs(opp.Id);
+            System.assertEquals(1, actualOpp.OpportunityContactRoles.size(), 'Duplicate primary OCRs should be removed: ' + actualOpp.OpportunityContactRoles);
+            System.assertEquals(true, actualOpp.OpportunityContactRoles[0].IsPrimary, 'The OCR should be marked as primary');
+        }
     }
 
     // Helpers

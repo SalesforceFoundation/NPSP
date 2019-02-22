@@ -637,45 +637,43 @@ public class RD_RecurringDonations {
         Map<String, Id> contactOppToContactRole = new Map<String, Id>();
             
         Opportunity[] oppsFromRecurringDonations = [
-            SELECT Id, npe03__Recurring_Donation__c, npe03__Recurring_Donation__r.npe03__Contact__c 
+            SELECT id, npe03__Recurring_Donation__c, npe03__Recurring_Donation__r.npe03__Contact__c 
             FROM Opportunity 
-            WHERE Id IN :oppIds 
-            AND npe03__Recurring_Donation__r.npe03__Contact__c != null
-            AND DisableContactRoleAutomation__c = false
+            WHERE Id IN :oppIds AND 
+            npe03__Recurring_Donation__r.npe03__Contact__c != null
         ];
         
-        if (oppsFromRecurringDonations.isEmpty()) {
-            return;
-        }
+        if (!oppsFromRecurringDonations.isEmpty()) {
+            String uniqueConRole = '';
 
-        String uniqueConRole = '';
+            for (OpportunityContactRole thisCR : [
+                SELECT Id, OpportunityId, ContactId 
+                FROM OpportunityContactRole 
+                WHERE IsPrimary = true AND 
+                OpportunityId IN :oppIds 
+            ]) {
+                uniqueConRole = String.valueOf(thisCR.OpportunityId) + String.valueOf(thisCR.ContactId);
+                contactOppToContactRole.put(uniqueConRole , thisCR.Id );
+            }
+                
+            for (Opportunity createdOpp : oppsFromRecurringDonations) {
+              
+                OpportunityContactRole ocr = new OpportunityContactRole();
+                ocr.OpportunityId = createdOpp.Id;
+                ocr.Role = System.Label.npe03.RecurringDonationContactRole;
+                ocr.IsPrimary = true;
+                
+                uniqueConRole = String.valueOf(createdOpp.Id)+String.valueOf(createdOpp.npe03__Recurring_Donation__r.npe03__Contact__c);
 
-        for (OpportunityContactRole thisCR : [
-            SELECT Id, OpportunityId, ContactId 
-            FROM OpportunityContactRole 
-            WHERE IsPrimary = true AND 
-            OpportunityId IN :oppIds 
-        ]) {
-            uniqueConRole = String.valueOf(thisCR.OpportunityId) + String.valueOf(thisCR.ContactId);
-            contactOppToContactRole.put(uniqueConRole , thisCR.Id );
-        }
-            
-        for (Opportunity createdOpp : oppsFromRecurringDonations) {
-            OpportunityContactRole ocr = new OpportunityContactRole();
-            ocr.OpportunityId = createdOpp.Id;
-            ocr.Role = System.Label.npe03.RecurringDonationContactRole;
-            ocr.IsPrimary = true;
-            
-            uniqueConRole = String.valueOf(createdOpp.Id) + String.valueOf(createdOpp.npe03__Recurring_Donation__r.npe03__Contact__c);
+                if (contactOppToContactRole.get(uniqueConRole) == null) {
+                    ocr.ContactId = createdOpp.npe03__Recurring_Donation__r.npe03__Contact__c;
+                    contactRoleInserts.add(ocr);
 
-            if (contactOppToContactRole.get(uniqueConRole) == null) {
-                ocr.ContactId = createdOpp.npe03__Recurring_Donation__r.npe03__Contact__c;
-                contactRoleInserts.add(ocr);
-
-                if (contactRoleInserts.size() == 100) {
-                    // all or nothing so errors not lost
-                    insert contactRoleInserts;
-                    contactRoleInserts.clear();
+                    if (contactRoleInserts.size() == 100) {
+                        // all or nothing so errors not lost
+                        insert contactRoleInserts;
+                        contactRoleInserts.clear();
+                    }
                 }
             }
         }

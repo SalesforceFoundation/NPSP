@@ -484,15 +484,14 @@ private with sharing class STG_PanelHealthCheck_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Verifies success defect result is created when Opportunity has duplicate primary OCRs
-    * and "Disable Contact Role Automation" checked and there is no Opportunity with duplicate primary OCRS
-    * and "Disable Contact Role Automation" unchecked.
+    * @description Verifies error defect result is created when Opportunity has duplicate primary OCRs
+    * and "Disable Contact Role Automation" checked.
     **********************************************************************************************************/ 
     @isTest
-    private static void shouldCreateSuccessDefectResultWhenOppDisableContactRoleAutomationIsChecked() {
+    private static void shouldCreateErrorDefectResultWhenOppDisableContactRoleAutomationIsChecked() {
         STG_PanelHealthCheck_CTRL healthCheck = new STG_PanelHealthCheck_CTRL();
 
-        Account acc = new Account(Name = 'No Defect Result for Disable Contact Role Automation');
+        Account acc = new Account(Name = 'Error Defect Result Account');
         insert acc;
         Opportunity opp = buildOpportunity(acc.Id);
         opp.DisableContactRoleAutomation__c = true;
@@ -508,45 +507,6 @@ private with sharing class STG_PanelHealthCheck_TEST {
                 IsPrimary = true,
                 Role = 'Donor'
             ));
-        }
-        insert primaryOCRs;
-
-        healthCheck.verifyOppContactRoles();
-
-        System.assertEquals(1, healthCheck.listDR.size(), 'One Detect Result should be created: ' + healthCheck.listDR);  
-        System.assertEquals(STG_PanelHealthCheck_CTRL.statusSuccess, healthCheck.listDR[0].strStatus);
-        System.assertEquals(System.Label.healthDetailsOCRDupPrimaryValid, healthCheck.listDR[0].strSolution);
-    }
-
-    /*********************************************************************************************************
-    * @description Verifies error defect result is created when at least one Opportunity exists
-    * with duplicate primary OCRs and "Disable Contact Role Automation" unchecked
-    **********************************************************************************************************/ 
-    @isTest
-    private static void shouldCreateErrorDefectResultWhenOppDisableContactRoleAutomationIsUnchecked() {
-        STG_PanelHealthCheck_CTRL healthCheck = new STG_PanelHealthCheck_CTRL();
-
-        Account acc = new Account(Name = 'No Defect Result for Disable Contact Role Automation');
-        insert acc;
-        List<Opportunity> opps = new List<Opportunity>{
-            buildOpportunity(acc.Id),
-            buildOpportunity(acc.Id)
-        };
-        opps[1].DisableContactRoleAutomation__c = true;
-        insert opps;
-        Contact contact = UTIL_UnitTestData_TEST.getContact();
-        insert contact;
-        
-        List<OpportunityContactRole> primaryOCRs = new List<OpportunityContactRole>();
-        for (Opportunity opp : opps) {
-            for (Integer i = 0; i < 2; i++) {
-                primaryOCRs.add(new OpportunityContactRole(
-                    OpportunityId = opps[i].Id,
-                    ContactId = contact.Id,
-                    IsPrimary = true,
-                    Role = 'Donor'
-                ));
-            }
         }
         insert primaryOCRs;
 
