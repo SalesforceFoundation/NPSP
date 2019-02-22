@@ -514,15 +514,12 @@ public with sharing class BDI_Donations_TEST {
         DataImport__c dataImportWithNewPaymentApplied = dataImports[0];
         System.assertEquals(opps[0].Id, dataImportWithNewPaymentApplied.DonationImported__c);
         System.assertEquals(System.Label.bdiMatchedApplyNewPayment, dataImportWithNewPaymentApplied.DonationImportStatus__c);
-
         System.assertEquals(newPayment.Id, dataImportWithNewPaymentApplied.PaymentImported__c);
         System.assertEquals(System.Label.bdiCreated, dataImportWithNewPaymentApplied.PaymentImportStatus__c);
-
 
         DataImport__c dataImportWithUnpaidPaymentPaidOff = dataImports[1];
         System.assertEquals(opps[1].Id, dataImportWithUnpaidPaymentPaidOff.DonationImported__c);
         System.assertEquals(System.Label.bdiMatchedByUser, dataImportWithUnpaidPaymentPaidOff.DonationImportStatus__c);
-
         System.assertEquals(updatedPayment.Id, dataImportWithUnpaidPaymentPaidOff.PaymentImported__c);
         System.assertEquals(System.Label.bdiMatchedByUser, dataImportWithUnpaidPaymentPaidOff.PaymentImportStatus__c);
     }
