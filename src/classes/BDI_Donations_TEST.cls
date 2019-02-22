@@ -198,11 +198,7 @@ public with sharing class BDI_Donations_TEST {
         newOpp.npe01__Do_Not_Automatically_Create_Payment__c = true;
         insert newOpp;
 
-        DataImportBatch__c batch = new DataImportBatch__c(name='testBatch');
-        batch.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
-        batch.Run_Opportunity_Rollups_while_Processing__c = true;
-        batch.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
-                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        DataImportBatch__c batch = getBatch();
         insert batch;
 
         List<npe01__OppPayment__c> payments = [
@@ -219,38 +215,35 @@ public with sharing class BDI_Donations_TEST {
         Decimal stableAmount = listOppT[1].Amount;
 
         // BGE interface, user selects an unpaid payment and updates the amount
-        dataImports.add(configureDataImportContactFields(new DataImport__c(), listConT[0]));
-        dataImports[0].Donation_Donor__c = 'Contact1';
-        dataImports[0].Donation_Amount__c = updatedAmount;
-        dataImports[0].DonationImported__c = listOppT[0].Id;
-        dataImports[0].DonationImportStatus__c = System.Label.bdiMatchedByUser;
-        dataImports[0].PaymentImported__c = payments[0].Id;
-        dataImports[0].PaymentImportStatus__c = System.Label.bdiMatchedByUser;
-        dataImports[0].Payment_Check_Reference_Number__c = 'abc';
-        dataImports[0].Payment_Method__c = 'Check';
-        dataImports[0].NPSP_Data_Import_Batch__c = batch.Id;
+        PaymentInfo paymentInfoUpdateExistingPayment =
+                new PaymentInfo(null, null, 'Check', 'abc', payments[0].Id, System.Label.bdiMatchedByUser);
+        DonationInfo donationInfoUpdateExistingPayment =
+                new DonationInfo('Contact1', updatedAmount, null, listOppT[0].Id,
+                        System.Label.bdiMatchedByUser);
+
+        DataImport__c dataImportToUpdateExistingPayment =
+                getDataImport(batch.Id, listConT[0], donationInfoUpdateExistingPayment, paymentInfoUpdateExistingPayment);
+        dataImports.add(dataImportToUpdateExistingPayment);
 
         // BGE interface, user selects an unpaid payment
-        dataImports.add(configureDataImportContactFields(new DataImport__c(), listConT[1]));
-        dataImports[1].Donation_Donor__c = 'Contact1';
-        dataImports[1].Donation_Amount__c = stableAmount;
-        dataImports[1].DonationImported__c = listOppT[1].Id;
-        dataImports[1].DonationImportStatus__c = System.Label.bdiMatchedByUser;
-        dataImports[1].PaymentImported__c = payments[1].Id;
-        dataImports[1].PaymentImportStatus__c = System.Label.bdiMatchedByUser;
-        dataImports[1].Payment_Check_Reference_Number__c = '1234';
-        dataImports[1].Payment_Method__c = 'Visa';
-        dataImports[1].NPSP_Data_Import_Batch__c = batch.Id;
+        PaymentInfo paymentInfoUnpaidPayment =
+                new PaymentInfo(null, null, 'Visa', '1234', payments[1].Id, System.Label.bdiMatchedByUser);
+        DonationInfo donationInfoUnpaidPayment =
+                new DonationInfo('Contact1', stableAmount, null, listOppT[1].Id, System.Label.bdiMatchedByUser);
+
+        DataImport__c dataImportUserSelectsUnpaidPayment =
+                getDataImport(batch.Id, listConT[1], donationInfoUnpaidPayment, paymentInfoUnpaidPayment);
+        dataImports.add(dataImportUserSelectsUnpaidPayment);
 
         // BGE interface, user selects to Update an open Opportunity with no Payments and updates Amount
-        dataImports.add(configureDataImportContactFields(new DataImport__c(), listConT[1]));
-        dataImports[2].Donation_Donor__c = 'Contact1';
-        dataImports[2].Donation_Amount__c = updatedAmount;
-        dataImports[2].DonationImported__c = newOpp.Id;
-        dataImports[2].DonationImportStatus__c = System.Label.bdiMatchedByUser;
-        dataImports[2].Payment_Check_Reference_Number__c = '1234';
-        dataImports[2].Payment_Method__c = 'Visa';
-        dataImports[2].NPSP_Data_Import_Batch__c = batch.Id;
+        PaymentInfo paymentInfoOpenOpportunityNoPayment =
+                new PaymentInfo(null, null, 'Visa', '1234', null, null);
+        DonationInfo donationInfoOpenOpportunityNoPayments =
+                new DonationInfo('Contact1', updatedAmount, null, newOpp.Id, System.Label.bdiMatchedByUser);
+
+        DataImport__c dataImportOpenOpportunityNoPayments =
+                getDataImport(batch.Id, listConT[1], donationInfoOpenOpportunityNoPayments, paymentInfoOpenOpportunityNoPayment);
+        dataImports.add(dataImportOpenOpportunityNoPayments);
 
         insert dataImports;
 
