@@ -259,7 +259,7 @@
                     <!--will break scrolling if removed. above div also can't be aura:if for same reason-->
                     <div class="slds-m-around_medium">
 
-                        <aura:if isTrue="{!greaterthan(v.batchInfo.recordCount,0)}">
+                        <aura:if isTrue="{!and(greaterthan(v.batchInfo.recordCount,0), v.wizardMetadata.progressIndicatorStep == '3')}">
                             <lightning:layout horizontalAlign="center">
                                 <lightning:layoutItem size="12" class="slds-grid slds-grid_align-center slds-p-bottom_medium">
                                     <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
@@ -332,7 +332,7 @@
                                     </lightning:layoutItem>
 
                                     <!-- BEGIN ADVANCED OPTIONS -->
-                                    <aura:if isTrue="{!v.wizardMetadata.showAdvancedOptions}">
+                                    <aura:if isTrue="{!and(v.wizardMetadata.showAdvancedOptions, v.wizardMetadata.progressIndicatorStep == '3')}">
                                         <lightning:layoutItem size="12">
                                             <lightning:layout horizontalAlign="spread" multipleRows="true">
                                                 <lightning:layoutItem class="slds-p-around_x-small" size="12">
