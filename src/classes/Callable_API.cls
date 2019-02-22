@@ -13,7 +13,7 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -55,15 +55,18 @@ global with sharing class Callable_API implements System.Callable {
         switch on (cleanActionText) {
             when 'tdtm.disablealltriggers' {
                 TDTM_Config_API.disableAllTriggers();
-            }
-            when else {
+
+            } when 'opp.mapstagetostate' {
+                return OPP_StageMappingUtil.determineOppStateFromOppStage((String) params.get('OpportunityStage'));
+
+            } when else {
                 throw new MalformedMethodInvocationException(
-                    String.format(System.Label.CallableApiMethodNotImplemented, new List<String> { action }) 
+                    String.format(System.Label.CallableApiMethodNotImplemented, new List<String> { action })
                 );
             }
         }
 
-        // if the action does not return a value then return success 
+        // if the action does not return a value then return success
         return true;
 
     }
