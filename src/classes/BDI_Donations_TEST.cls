@@ -374,11 +374,7 @@ public with sharing class BDI_Donations_TEST {
         // create 2 contacts, each with a HH Account and an Opportunity with a Payment
         createTestData();
 
-        DataImportBatch__c batch = new DataImportBatch__c(name='testBatch');
-        batch.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
-        batch.Run_Opportunity_Rollups_while_Processing__c = true;
-        batch.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
-                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        DataImportBatch__c batch = getBatch();
         insert batch;
 
         List<npe01__OppPayment__c> payments = [
@@ -398,7 +394,7 @@ public with sharing class BDI_Donations_TEST {
 
         // BGE interface, user selects "Apply New Payment" to existing Opportunity
         PaymentInfo newPaymentInfo =
-                new PaymentInfo(listOppT[0].Amount / 2, System.today(), 'Check', 'abc');
+                new PaymentInfo(listOppT[0].Amount / 2, System.today(), 'Check', 'abc', null, null);
         DonationInfo donationInfoForApplyNewPayment =
                 new DonationInfo('Contact1', newPaymentInfo.amount,
                         newPaymentInfo.paymentDate, listOppT[0].Id, System.Label.bdiMatchedApplyNewPayment);
@@ -410,15 +406,13 @@ public with sharing class BDI_Donations_TEST {
 
         // BGE interface, user selects an unpaid payment to pay off
         PaymentInfo updatedPaymentInfo =
-                new PaymentInfo(listOppT[1].Amount, System.today().addDays(-1), 'Visa', '1234');
+                new PaymentInfo(listOppT[1].Amount, System.today().addDays(-1), 'Visa', '1234', payments[1].Id, System.Label.bdiMatchedByUser);
         DonationInfo donationInfo =
                 new DonationInfo('Contact1', updatedPaymentInfo.amount,
                         updatedPaymentInfo.paymentDate, listOppT[1].Id, System.Label.bdiMatchedByUser);
 
         DataImport__c dataImportToPayoffUnpaidPayment =
                 getDataImport(batch.Id, listConT[1], donationInfo, updatedPaymentInfo);
-        dataImportToPayoffUnpaidPayment.PaymentImported__c = payments[1].Id;
-        dataImportToPayoffUnpaidPayment.PaymentImportStatus__c = System.Label.bdiMatchedByUser;
         dataImports.add(dataImportToPayoffUnpaidPayment);
 
         insert dataImports;
@@ -2582,6 +2576,8 @@ public with sharing class BDI_Donations_TEST {
     ) {
         dataImport.Payment_Check_Reference_Number__c = paymentInfo.checkReference;
         dataImport.Payment_Method__c = paymentInfo.method;
+        dataImport.PaymentImported__c = paymentInfo.paymentImportedId;
+        dataImport.PaymentImportStatus__c = paymentInfo.paymentImportedStatus;
         return dataImport;
     }
 
@@ -2590,17 +2586,23 @@ public with sharing class BDI_Donations_TEST {
         Date paymentDate;
         String method;
         String checkReference;
+        Id paymentImportedId;
+        String paymentImportedStatus;
 
         private PaymentInfo(
                 Decimal paymentAmount,
                 Date paymentDate,
                 String paymentMethod,
-                String checkNumber
+                String checkNumber,
+                Id paymentImportedId,
+                String paymentImportedStatus
         ) {
             this.amount = paymentAmount;
             this.paymentDate = paymentDate;
             this.method = paymentMethod;
             this.checkReference = checkNumber;
+            this.paymentImportedId = paymentImportedId;
+            this.paymentImportedStatus = paymentImportedStatus;
         }
     }
 
@@ -2615,5 +2617,15 @@ public with sharing class BDI_Donations_TEST {
         configureDataImportDonationFields(dataImport, donationInfo);
         configureDataImportPaymentFields(dataImport, paymentInfo);
         return dataImport;
+    }
+
+    private static DataImportBatch__c getBatch() {
+        DataImportBatch__c batch = new DataImportBatch__c();
+        batch.Name = 'testBatch';
+        batch.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+        batch.Run_Opportunity_Rollups_while_Processing__c = true;
+        batch.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        return batch;
     }
 }
