@@ -336,20 +336,23 @@ public with sharing class BDI_Donations_TEST {
         ];
         System.assertEquals(3, dataImports.size());
 
-        System.assertEquals(opps[0].Id, dataImports[0].DonationImported__c);
-        System.assertEquals(System.Label.bdiMatchedByUser, dataImports[0].DonationImportStatus__c);
-        System.assertEquals(updatedPayment.Id, dataImports[0].PaymentImported__c);
-        System.assertEquals(System.Label.bdiMatchedByUser, dataImports[0].PaymentImportStatus__c);
+        DataImport__c dataImportUpdateUnpaidPayment = dataImports[0];
+        System.assertEquals(opps[0].Id, dataImportUpdateUnpaidPayment.DonationImported__c);
+        System.assertEquals(System.Label.bdiMatchedByUser, dataImportUpdateUnpaidPayment.DonationImportStatus__c);
+        System.assertEquals(updatedPayment.Id, dataImportUpdateUnpaidPayment.PaymentImported__c);
+        System.assertEquals(System.Label.bdiMatchedByUser, dataImportUpdateUnpaidPayment.PaymentImportStatus__c);
 
-        System.assertEquals(opps[1].Id, dataImports[1].DonationImported__c);
-        System.assertEquals(System.Label.bdiMatchedByUser, dataImports[1].DonationImportStatus__c);
-        System.assertEquals(stablePayment.Id, dataImports[1].PaymentImported__c);
-        System.assertEquals(System.Label.bdiMatchedByUser, dataImports[1].PaymentImportStatus__c);
+        DataImport__c dataImportUnpaidPaymentSelected = dataImports[1];
+        System.assertEquals(opps[1].Id, dataImportUnpaidPaymentSelected.DonationImported__c);
+        System.assertEquals(System.Label.bdiMatchedByUser, dataImportUnpaidPaymentSelected.DonationImportStatus__c);
+        System.assertEquals(stablePayment.Id, dataImportUnpaidPaymentSelected.PaymentImported__c);
+        System.assertEquals(System.Label.bdiMatchedByUser, dataImportUnpaidPaymentSelected.PaymentImportStatus__c);
 
-        System.assertEquals(opps[2].Id, dataImports[2].DonationImported__c);
-        System.assertEquals(System.Label.bdiMatchedByUser, dataImports[2].DonationImportStatus__c);
-        System.assertEquals(null, dataImports[2].PaymentImported__c);
-        System.assertEquals(null, dataImports[2].PaymentImportStatus__c);
+        DataImport__c dataImportUpdateOpenOpportunityNoPayments = dataImports[2];
+        System.assertEquals(opps[2].Id, dataImportUpdateOpenOpportunityNoPayments.DonationImported__c);
+        System.assertEquals(System.Label.bdiMatchedByUser, dataImportUpdateOpenOpportunityNoPayments.DonationImportStatus__c);
+        System.assertEquals(null, dataImportUpdateOpenOpportunityNoPayments.PaymentImported__c);
+        System.assertEquals(null, dataImportUpdateOpenOpportunityNoPayments.PaymentImportStatus__c);
     }
 
     /*********************************************************************************************************
