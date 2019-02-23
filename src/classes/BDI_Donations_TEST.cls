@@ -313,15 +313,15 @@ public with sharing class BDI_Donations_TEST {
         System.assertEquals(2, payments.size());
 
         npe01__OppPayment__c updatedPayment = payments[0];
-        System.assertEquals(updatedAmount, updatedPayment.npe01__Payment_Amount__c);
-        System.assertEquals('Check', updatedPayment.npe01__Payment_Method__c);
-        System.assertEquals('abc', updatedPayment.npe01__Check_Reference_Number__c);
+        System.assertEquals(donationInfoUpdateExistingPayment.amount, updatedPayment.npe01__Payment_Amount__c);
+        System.assertEquals(paymentInfoUpdateExistingPayment.method, updatedPayment.npe01__Payment_Method__c);
+        System.assertEquals(paymentInfoUpdateExistingPayment.checkReference, updatedPayment.npe01__Check_Reference_Number__c);
         System.assertEquals(true, updatedPayment.npe01__Paid__c);
 
         npe01__OppPayment__c stablePayment = payments[1];
-        System.assertEquals(stableAmount, stablePayment.npe01__Payment_Amount__c);
-        System.assertEquals('Visa', stablePayment.npe01__Payment_Method__c);
-        System.assertEquals('1234', stablePayment.npe01__Check_Reference_Number__c);
+        System.assertEquals(donationInfoUnpaidPayment.amount, stablePayment.npe01__Payment_Amount__c);
+        System.assertEquals(paymentInfoUnpaidPayment.method, stablePayment.npe01__Payment_Method__c);
+        System.assertEquals(paymentInfoUnpaidPayment.checkReference, stablePayment.npe01__Check_Reference_Number__c);
         System.assertEquals(true, stablePayment.npe01__Paid__c);
 
         dataImports = [
