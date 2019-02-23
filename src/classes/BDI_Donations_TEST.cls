@@ -899,22 +899,28 @@ public with sharing class BDI_Donations_TEST {
         List<DataImport__c> dataImports = new List<DataImport__c>();
 
         // BGE interface, user elects to make a new opp
-        dataImports.add(configureDataImportContactFields(new DataImport__c(), listConT[0]));
-        dataImports[0].Donation_Donor__c = 'Contact1';
-        dataImports[0].Donation_Amount__c = listOppT[0].Amount;
-        dataImports[0].DonationImportStatus__c = Label.bdiMatchedByUserNewOpp;
-        dataImports[0].Payment_Check_Reference_Number__c = 'abc';
-        dataImports[0].Payment_Method__c = 'Check';
-        dataImports[0].NPSP_Data_Import_Batch__c = batch.Id;
+        dataImports.add(new DataImport__c(Contact1_Firstname__c=listConT[0].Firstname,
+                Contact1_Lastname__c=listConT[0].Lastname,
+                Contact1_Work_Email__c=listConT[0].npe01__WorkEmail__c,
+                Donation_Donor__c = 'Contact1',
+                Donation_Amount__c = listOppT[0].Amount,
+                DonationImportStatus__c = Label.bdiMatchedByUserNewOpp,
+                Payment_Check_Reference_Number__c = 'abc',
+                Payment_Method__c = 'Check',
+                NPSP_Data_Import_Batch__c = batch.Id
+        ));
 
         // BGE interface, user elects to make a new opp
-        dataImports.add(configureDataImportContactFields(new DataImport__c(), listConT[1]));
-        dataImports[1].Donation_Donor__c = 'Contact1';
-        dataImports[1].Donation_Amount__c = listOppT[1].Amount;
-        dataImports[1].DonationImportStatus__c = Label.bdiMatchedByUserNewOpp;
-        dataImports[1].Payment_Check_Reference_Number__c = '1234';
-        dataImports[1].Payment_Method__c = 'Visa';
-        dataImports[1].NPSP_Data_Import_Batch__c = batch.Id;
+        dataImports.add(new DataImport__c(Contact1_Firstname__c=listConT[1].Firstname,
+                Contact1_Lastname__c=listConT[1].Lastname,
+                Contact1_Work_Email__c=listConT[1].npe01__WorkEmail__c,
+                Donation_Donor__c = 'Contact1',
+                Donation_Amount__c = listOppT[1].Amount,
+                DonationImportStatus__c = Label.bdiMatchedByUserNewOpp,
+                Payment_Check_Reference_Number__c = '1234',
+                Payment_Method__c = 'Visa',
+                NPSP_Data_Import_Batch__c = batch.Id
+        ));
 
         insert dataImports;
 
