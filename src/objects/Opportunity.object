@@ -847,9 +847,9 @@
     <fields>
         <fullName>DisableContactRoleAutomation__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>When selected, this field disables all NPSP Opportunity Contact Role automation, potentially resulting in incorrect or duplicate Contact Roles. It doesn't affect Contact Role automation from other installed packages or your own customizations.</description>
+        <description>When selected, this field disables several aspects of NPSP Opportunity Contact Role automation, potentially resulting in incorrect or duplicate data. Refer to the product documentation for more details.</description>
         <externalId>false</externalId>
-        <inlineHelpText>When selected, this field disables all NPSP Opportunity Contact Role automation, potentially resulting in incorrect or duplicate Contact Roles. It doesn't affect Contact Role automation from other installed packages or your own customizations.</inlineHelpText>
+        <inlineHelpText>When selected, this field disables several aspects of NPSP Opportunity Contact Role automation, potentially resulting in incorrect or duplicate data. Refer to the product documentation for more details.</inlineHelpText>
         <label>Disable Contact Role Automation</label>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
