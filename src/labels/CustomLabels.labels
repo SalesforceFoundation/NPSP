@@ -2986,6 +2986,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>campaignMemberStatusResponded</value>
     </labels>
     <labels>
+        <fullName>CallableApiMethodNotImplemented</fullName>
+        <categories>API</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CallableApi Method Not Implemented</shortDescription>
+        <value>{0} is not implemented</value>
+    </labels>
+    <labels>
         <fullName>conFailedAccountCreate</fullName>
         <categories>Data Import, Contacts</categories>
         <language>en_US</language>
