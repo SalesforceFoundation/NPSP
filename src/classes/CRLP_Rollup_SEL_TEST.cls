@@ -120,7 +120,7 @@ public class CRLP_Rollup_SEL_TEST {
      * @description Test the Rollup selector methods. Relies on hardcoded JSON deserialized
      * MDT data for these tests.
      */
-    @IsTest
+    //@IsTest
     static void test_Rollup_Selectors() {
 
         mockRollupCMTValues();
@@ -154,16 +154,527 @@ public class CRLP_Rollup_SEL_TEST {
     }
 
 
+
+
+    /**
+     * @description           Useful when needing to set SObject's relationship values without querying
+     * @param sObjectTypeName Name of SObjectType to be returned
+     * @param fields          Map:Field Name -> Field Value of SObject's Fields.  May include Relationships.
+     * @return                JSON deserailziation of an SObject for sObjectTypeName with fields
+     */
+    public static SObject getSObject(
+		String sObjectTypeName,  
+		Map<String, Object> fields
+	) {
+		Map<String, Object> jsonFields = new Map<String, Object> ();
+		
+        // Set fields
+		if(fields != null) {
+			jsonFields.putAll(fields);
+		}
+
+		// Set attributes
+        jsonFields.put(
+            'attributes', 
+            new Map<String, Object> {
+                'type' => sObjectTypeName
+            }
+        );
+		
+		return (SObject) JSON.deserialize(JSON.serialize(jsonFields), SObject.class);
+	}
+
+    /**
+     * @description             Shortcut to set Metadata Relationships when using getSObject(...)
+     * @param  sObjectTypeName  SObjectType's Name Metadata Relationship is pointing to
+     * @param  qualifiedApiName QualifiedApiName
+     * @return                  SObject for sObjectTypeName and fields mapping QualifiedApiName to qualifiedApiName
+     */
+	public static SObject getMetadataRelationship(String sObjectTypeName, String qualifiedApiName) {
+		return getSObject(
+			sObjectTypeName, 
+			new Map<String, Object> {
+				'QualifiedApiName' => qualifiedApiName
+			}
+		);
+	}
+
+    /**
+     * @description             Shortcut to set EntityDefinition Metadata Relationships when using getSObject(...)
+     * @param  qualifiedApiName QualifiedApiName
+     * @return                  getMetadataRelationship for EntityDefinition's SObjecType's Name and qualifiedApiName
+     */
+	public static SObject getEntityMetadataRelationship(String qualifiedApiName) {
+		return getMetadataRelationship(
+            Schema.SObjectType.EntityDefinition.getName(), 
+            qualifiedApiName
+        );
+	}
+
+    /**
+     * @description             Shortcut to set FieldDefinition Metadata Relationships when using getSObject(...)
+     * @param  qualifiedApiName QualifiedApiName
+     * @return                  getMetadataRelationship for FieldDefinition's SObjecType's Name and qualifiedApiName
+     */
+	public static SObject getFieldMetadataRelationship(String qualifiedApiName) {
+		return getMetadataRelationship(
+            Schema.SObjectType.FieldDefinition.getName(), 
+            qualifiedApiName
+        );
+	}
+
+    @IsTest
+    private static void testGetQualifiedApiName() {
+        // Data
+        final SObjectField[] lookups = new SObjectField[] {
+            Schema.Rollup__mdt.Date_Object__c, 
+            Schema.Rollup__mdt.Date_Field__c, 
+            Schema.Rollup__mdt.Amount_Object__c, 
+            Schema.Rollup__mdt.Amount_Field__c, 
+            Schema.Rollup__mdt.Detail_Object__c, 
+            Schema.Rollup__mdt.Detail_Field__c
+        };
+
+        // RollupFields' Lookups should be included above, but add test RollupFields' Lookups to lookups anyways
+        for(CRLP_Rollup_SEL.RollupField rollupField : CRLP_Rollup_SEL.getRollupFields()) {
+            // SObject Lookup
+            {
+                System.assertNotEquals(null, rollupFIeld.getSObjectLookup());
+                lookups.add(rollupField.getSObjectLookup());
+            }
+            // Field Lookup
+            {
+                System.assertNotEquals(null, rollupFIeld.getFieldLookup());
+                lookups.add(rollupField.getFieldLookup());
+            }
+        }
+
+        final String[] qualifiedApiNames = new String[] {
+            null, 
+            'QualifiedApiName'
+        };
+
+        Test.startTest();
+
+        // CRLP_Rollup_SEL
+        {
+            // String getQualifiedApiName(Rollup__mdt rollup, SObjectField lookup)
+            for (SObjectField lookup : lookups) {
+                for (String qualifiedApiName : qualifiedApiNames) {
+                    final String relationshipName = lookup.getDescribe().getName().removeEnd('__c') + '__r';
+                    final Rollup__mdt rollup = (Rollup__mdt) getSObject(
+                        Schema.SObjectType.Rollup__mdt.getName(), 
+                        new Map<String, Object> {
+                            relationshipName => getFieldMetadataRelationship(qualifiedApiName)
+                        }
+                    );
+
+                    // Null rollup
+                    {
+                        final String expected = null;
+
+                        Exception e;
+                        String actual;
+
+                        try {
+                            actual = CRLP_Rollup_SEL.getQualifiedApiName((Rollup__mdt) null, lookup);
+                        }
+                        catch(Exception whoops) {
+                            e = whoops;
+                        }
+
+                        System.assertEquals(null, e);
+                        System.assertEquals(expected, actual);
+                    }
+
+                    // With rollup
+                    {
+                        final String expected = qualifiedApiName;
+                        {
+                            System.assertEquals(
+                                qualifiedApiName, 
+                                rollup.getSObject(lookup).get('QualifiedApiName')
+                            );
+                        }
+
+                        Exception e;
+                        String actual;
+
+                        try {
+                            actual = CRLP_Rollup_SEL.getQualifiedApiName(rollup, lookup);
+                        }
+                        catch(Exception whoops) {
+                            e = whoops;
+                        }
+
+                        System.assertEquals(null, e);
+                        System.assertEquals(expected, actual);
+                    }
+                }
+            }
+        }
+
+        Test.stopTest();
+    }
+
+    @IsTest
+    private static void testRollupField() {
+        // Data
+
+        final SObjectField[] sObjectLookups = new SObjectField[] {
+            Schema.Rollup__mdt.Date_Object__c,
+            Schema.Rollup__mdt.Amount_Object__c,
+            Schema.Rollup__mdt.Detail_Object__c
+        };
+        final Integer sObjectLookupsSize = sObjectLookups.size();
+
+        final SObjectField[] fieldLookups = new SObjectField[] {
+            Schema.Rollup__mdt.Date_Field__c, 
+            Schema.Rollup__mdt.Amount_Field__c, 
+            Schema.Rollup__mdt.Detail_Field__c
+        };
+        {
+            System.assertEquals(sObjectLookupsSize, fieldLookups.size());
+        }
+        
+        final String[] testOperations = new String[] {
+            null
+        };
+
+        final String[] testTimeBoundOperationTypes = new String[] {
+            null
+        };
+
+        final List<Map<String, Set<String>>> supportedOperationsByTimeBoundOperationTypes = new List<Map<String, Set<String>>> {
+            new Map<String, Set<String>>()
+        };
+        {
+            // Picklist Values
+            String firstOperation;
+            final Set<String> operations = new Set<String>();
+            for (Schema.PicklistEntry picklist : Schema.SObjectType.Rollup__mdt.fields.Operation__c.getPicklistValues()) {
+                operations.add(picklist.getValue());
+                testOperations.add(picklist.getValue());
+            }
+
+            final Set<String> timeBoundOperationTypes = new Set<String>();
+            for (Schema.PicklistEntry picklist : Schema.SObjectType.Rollup__mdt.fields.Time_Bound_Operation_Type__c.getPicklistValues()) {
+                timeBoundOperationTypes.add(picklist.getValue());
+                testTimeBoundOperationTypes.add(picklist.getValue());
+            }
+
+            // All
+            {
+                Map<String, Set<String>> supportedOperations = new Map<String, Set<String>>();
+                {
+                    supportedOperationsByTimeBoundOperationTypes.add(supportedOperations);
+                }
+
+                for (String timeBoundOperationType : timeBoundOperationTypes) {
+                    supportedOperations.put(timeBoundOperationType, operations);
+                }
+            }
+
+            // First Time Bound Operation Type with subset of Operations
+            {
+                Map<String, Set<String>> supportedOperations = new Map<String, Set<String>>();
+                {
+                    supportedOperationsByTimeBoundOperationTypes.add(supportedOperations);
+                }
+
+                final Set<String> operationsSubset = new Set<String>();
+                final Integer operationsSize = operations.size();
+                if (1 < operationsSize) {
+                    final Integer size = Math.floor(Math.random() * Double.valueOf(operationsSize - 1)).intValue();
+                    final String[] operationsList = new List<String>(operations);
+                    for(Integer i = 0; i < size; i ++) {
+                        operationsSubset.add(operationsList[i]);
+                    }
+                }
+                
+                Boolean isFirst = true;
+                for (String timeBoundOperationType : timeBoundOperationTypes) {
+                    if(isFirst) {
+                        supportedOperations.put(timeBoundOperationType, operationsSubset);
+                        isFirst = false;
+                    }
+                    else {
+                        supportedOperations.put(timeBoundOperationType, new Set<String>());
+                    }
+                }
+            }
+        }
+
+        final String[] sObjectNames = new String[] {
+            null, 
+            Schema.SObjectType.Opportunity.getName()
+        };
+
+        Test.startTest();
+
+        // CRLP_Rollup_SEL
+        {
+            // RollupField
+            for (Integer rollupFieldIndex = 0; rollupFieldIndex < sObjectLookupsSize; rollupFieldIndex ++) {
+                final SObjectField sObjectLookup = sObjectLookups[rollupFieldIndex];
+                final SObjectField fieldLookup = fieldLookups[rollupFieldIndex];
+                {
+                    System.assertNotEquals(null, sObjectLookup);
+                    System.assertNotEquals(null, fieldLookup);
+                }
+
+                final String sObjectLookupRelationshipName = sObjectLookup.getDescribe().getName().removeEnd('__c') + '__r';
+                final String fieldLookupRelationshipName = fieldLookup.getDescribe().getName().removeEnd('__c') + '__r';
+
+                for (Map<String, Set<String>> supportedOperationsByTimeBoundOperationType : supportedOperationsByTimeBoundOperationTypes) {
+                    final CRLP_Rollup_SEL.RollupField rollupField = new CRLP_Rollup_SEL.RollupField(
+                        sObjectLookup, 
+                        fieldLookup, 
+                        supportedOperationsByTimeBoundOperationType
+                    );
+
+                    // SObjectField getSObjectLookup()
+                    {
+                        System.assertEquals(
+                            sObjectLookup, 
+                            rollupField.getSObjectLookup()
+                        );
+                    }
+
+                    // String getFieldLookup()
+                    {
+                        System.assertEquals(
+                            fieldLookup, 
+                            rollupField.getFieldLookup()
+                        );
+                    }
+
+                    // Map<String, Set<String>> getSupportedOperationsByTimeBoundOperationType()
+                    {
+                        System.assertEquals(
+                            supportedOperationsByTimeBoundOperationType, 
+                            rollupField.getSupportedOperationsByTimeBoundOperationType()
+                        );
+                    }
+
+                    // Methods requiring Rollup__mdt with null Rollup__mdt
+                    {
+                        final Rollup__mdt rollup = null;
+
+                        // String getSObjectName(Rollup__mdt rollup)
+                        {
+                            final String expected = CRLP_Rollup_SEL.getQualifiedApiName(
+                                rollup, 
+                                rollupField.getSObjectLookup()
+                            );
+                            
+                            Exception e;
+                            String actual;
+
+                            try {
+                                actual = rollupField.getSObjectName((rollup));
+                            }
+                            catch (Exception whoops) {
+                                e = whoops;
+                            }
+                            
+                            System.assertEquals(null, e);
+                            System.assertEquals(expected, actual);
+                        }
+
+                        // String getFieldName(Rollup__mdt rollup)
+                        {
+                            final String expected = CRLP_Rollup_SEL.getQualifiedApiName(
+                                rollup, 
+                                rollupField.getFieldLookup()
+                            );
+                            
+                            Exception e;
+                            String actual;
+
+                            try {
+                                actual = rollupField.getFieldName((rollup));
+                            }
+                            catch (Exception whoops) {
+                                e = whoops;
+                            }
+                            
+                            System.assertEquals(null, e);
+                            System.assertEquals(expected, actual);
+                        }
+
+                        // Boolean isRollupSupported(Rollup__mdt rollup)
+                        {
+                            final Boolean expected = rollup != null 
+                                && rollupField.getSupportedOperations(rollup.Time_Bound_Operation_Type__c).contains(rollup.Operation__c);
+                            
+                            Exception e;
+                            Boolean actual;
+
+                            try {
+                                actual = rollupField.isRollupSupported(rollup);
+                            }
+                            catch (Exception whoops) {
+                                e = whoops;
+                            }
+                            
+                            System.assertEquals(null, e);
+                            System.assertEquals(expected, actual);
+                        }
+
+                        // Boolean isFieldUsed(Rollup__mdt rollup, String sObjectName)
+                        for(String sObjectName : sObjectNames) {
+                            final Boolean expected = rollupField.getFieldName(rollup) != null
+                                && rollupField.getSObjectName(rollup) == sObjectName
+                                && rollupField.isRollupSupported(rollup);
+                            
+                            Exception e;
+                            Boolean actual;
+
+                            try {
+                                actual = rollupField.isFieldUsed(rollup, sObjectName);
+                            }
+                            catch (Exception whoops) {
+                                e = whoops;
+                            }
+                            
+                            System.assertEquals(null, e);
+                            System.assertEquals(expected, actual);
+                        }
+                    }
+
+                    for (String timeBoundOperationType : testTimeBoundOperationTypes) {
+                        // Set<String> getSupportedOperations(String timeBoundOperationType)
+                        {
+                            final Set<String> expected = supportedOperationsByTimeBoundOperationType.get(timeBoundOperationType) == null ? new Set<String>() : supportedOperationsByTimeBoundOperationType.get(timeBoundOperationType);
+
+                            Exception e;
+                            Set<String> actual;
+
+                            try {
+                                actual = rollupField.getSupportedOperations(timeBoundOperationType);
+                            }
+                            catch (Exception whoops) {
+                                e = whoops;
+                            }
+                            
+                            System.assertEquals(null, e);
+                            System.assertEquals(expected, actual);
+                        }
+
+                        for (String operation : testOperations) {
+                            final Rollup__mdt rollup = (Rollup__mdt) getSObject(
+                                Schema.SObjectType.Rollup__mdt.getName(), 
+                                new Map<String, Object> {
+                                    fieldLookupRelationshipName => getEntityMetadataRelationship(Schema.SObjectType.Opportunity.getName()), 
+                                    fieldLookupRelationshipName => getFieldMetadataRelationship(Schema.SObjectType.Opportunity.fields.Amount.getName()), 
+                                    Schema.SObjectType.Rollup__mdt.fields.Time_Bound_Operation_Type__c.getName() => timeBoundOperationType, 
+                                    Schema.SObjectType.Rollup__mdt.fields.Operation__c.getName() => operation
+                                }
+                            );
+
+                            // String getSObjectName(Rollup__mdt rollup)
+                            {
+                                final String expected = CRLP_Rollup_SEL.getQualifiedApiName(
+                                    rollup, 
+                                    rollupField.getSObjectLookup()
+                                );
+                                
+                                Exception e;
+                                String actual;
+
+                                try {
+                                    actual = rollupField.getSObjectName((rollup));
+                                }
+                                catch (Exception whoops) {
+                                    e = whoops;
+                                }
+                                
+                                System.assertEquals(null, e);
+                                System.assertEquals(expected, actual);
+                            }
+
+                            // String getFieldName(Rollup__mdt rollup)
+                            {
+                                final String expected = CRLP_Rollup_SEL.getQualifiedApiName(
+                                    rollup, 
+                                    rollupField.getFieldLookup()
+                                );
+                                
+                                Exception e;
+                                String actual;
+
+                                try {
+                                    actual = rollupField.getFieldName((rollup));
+                                }
+                                catch (Exception whoops) {
+                                    e = whoops;
+                                }
+                                
+                                System.assertEquals(null, e);
+                                System.assertEquals(expected, actual);
+                            }
+
+                            // Boolean isRollupSupported(Rollup__mdt rollup)
+                            {
+                                final Boolean expected = rollup != null 
+                                    && rollupField.getSupportedOperations(rollup.Time_Bound_Operation_Type__c).contains(rollup.Operation__c);
+                                
+                                Exception e;
+                                Boolean actual;
+
+                                try {
+                                    actual = rollupField.isRollupSupported(rollup);
+                                }
+                                catch (Exception whoops) {
+                                    e = whoops;
+                                }
+                                
+                                System.assertEquals(null, e);
+                                System.assertEquals(expected, actual);
+                            }
+
+                            // Boolean isFieldUsed(Rollup__mdt rollup, String sObjectName)
+                            for(String sObjectName : sObjectNames) {
+                                final Boolean expected = rollupField.getFieldName(rollup) != null
+                                    && rollupField.getSObjectName(rollup) == sObjectName
+                                    && rollupField.isRollupSupported(rollup);
+                                
+                                Exception e;
+                                Boolean actual;
+
+                                try {
+                                    actual = rollupField.isFieldUsed(rollup, sObjectName);
+                                }
+                                catch (Exception whoops) {
+                                    e = whoops;
+                                }
+                                
+                                System.assertEquals(null, e);
+                                System.assertEquals(expected, actual);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Test.stopTest();
+    }
+
+    public class TestException extends Exception {}
+
+/*
     /**
      * Cached data for Set<String> getRollupPicklistValues(SObjectField picklistField)
-     */
+     * /
     private static final Map<SObjectField, Set<String>> ROLLUP_PICKLIST_VALUES_BY_FIELD = new Map<SObjectField, Set<String>>();
     
     /**
      * Returns cached Set of Picklist Values for picklistField
      * @param  picklistField 
      * @return               return cached Set of picklistField's Picklist Entries' values
-     */
+     * /
     public static Set<String> getRollupPicklistValues(SObjectField picklistField) {
         if(
             picklistField != null 
@@ -186,7 +697,7 @@ public class CRLP_Rollup_SEL_TEST {
      * @param  rollupField            rollupField Used in Boolean isFieldReferenced(Rollup__mdt rollup, SObjectField rollupField).  Asserts rollupField is supported.
      * @param  timeBoundOperationType timeBoundOperationType rollup's Time_Bound_Operation_Type__c used in Boolean isFieldReferenced(Rollup__mdt rollup, SObjectField rollupField).  Asserts timeBoundOperationType is a valid Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value
      * @return                        return Set of Rollup__mdt.Operation__c Picklist Values from CRLP_Rollup_SEL.operationsByFieldByTimeBoundOperationType after validating rollupField and timeBoundOperationType are valid values and return Set of Rollup__mdt.Operation
-     */
+     * /
     public static Set<String> getOperationsAndAssertValidity(
         SObjectField rollupField, 
         String timeBoundOperationType
@@ -259,7 +770,7 @@ public class CRLP_Rollup_SEL_TEST {
     /**
      * @description Tests the following CRLP_Rollup_SEL methods:
      *      Boolean isFieldReferenced(Rollup__mdt rollup, SObjectField rollupField)
-     */ 
+     * / 
     @IsTest
     private static void testIsFieldReferenced() {
         // Supported rollupField values
@@ -613,4 +1124,5 @@ public class CRLP_Rollup_SEL_TEST {
 
         Test.stopTest();
     }
+*/
 }

@@ -176,8 +176,8 @@ public class CRLP_Rollup_SEL {
      * @param  relationshipName Metadata Relationship Field's Relationship Name used to call rollup.getSObject(...)
      * @return                  rollup's SObject for relationshipName's QualifiedApiName.  Returns null if rollup or rollup's SObject for relationshipName is null.
      */
-    public static String getQualifiedApiName(Rollup__mdt rollup, String relationshipName) {
-        SObject record = rollup == null ? null : rollup.getSObject(relationshipName);
+    public static String getQualifiedApiName(Rollup__mdt rollup, SObjectField lookup) {
+        SObject record = rollup == null ? null : rollup.getSObject(lookup);
         return record == null ? null : (String) record.get('QualifiedApiName');
     }
 
@@ -185,25 +185,25 @@ public class CRLP_Rollup_SEL {
      * @description 
      */
     public with sharing class RollupField {
-        final String s, d;
+        final SObjectField s, f;
         final Map<String, Set<String>> o;
 
         @TestVisible
         private RollupField(
-            String sObjectRelationshipName, 
-            String fieldRelationshipName, 
+            SObjectField sObjectLookup, 
+            SObjectField fieldLookup, 
             Map<String, Set<String>> supportedOperationsByTimeBoundOperationType
         ) {
-            this.s = sObjectRelationshipName;
-            this.f = fieldRelationshipName;
+            this.s = sObjectLookup;
+            this.f = fieldLookup;
             this.o = supportedOperationsByTimeBoundOperationType;
         }
     
         /**
          * @description 
-         * @return      Rollup__mdt Metadata Relationship's Relationship Name for this RollupField's SObject
+         * @return      Rollup__mdt's Object Lookup
          */
-        public String getSObjectRelationshipName() {
+        public SObjectField getSObjectLookup() {
             return this.s;
         }
 
@@ -213,14 +213,14 @@ public class CRLP_Rollup_SEL {
          * @return       getQualifiedApiName for rollup and SObject Relationship Name
          */
         public String getSObjectName(Rollup__mdt rollup) {
-            return getQualifiedApiName(rollup, this.getSObjectRelationshipName());
+            return getQualifiedApiName(rollup, this.getSObjectLookup());
         }
 
         /**
          * @description 
-         * @return      Rollup__mdt Metadata Relationship's Relationship Name for this RollupField's Field
+         * @return      Rollup__mdt's Field Lookup
          */
-        public String getFieldRelationshipName() {
+        public SObjectField getFieldLookup() {
             return this.f;
         }
 
@@ -230,7 +230,7 @@ public class CRLP_Rollup_SEL {
          * @return       getQualifiedApiName for rollup and Field Relationship Name
          */
         public String getFieldName(Rollup__mdt rollup) {
-            return getQualifiedApiName(rollup, this.getFieldRelationshipName());
+            return getQualifiedApiName(rollup, this.getFieldLookup());
         }
 
         /**
@@ -283,8 +283,8 @@ public class CRLP_Rollup_SEL {
     public static RollupField getDateRollupField() {
         if(dateRollupField == null) {
             dateRollupField = new RollupField(
-                Schema.SObjectType.Rollup__mdt.fields.Date_Object__c.getRelationshipName(), 
-                Schema.SObjectType.Rollup__mdt.fields.Date_Field__c.getRelationshipName(), 
+                Schema.Rollup__mdt.Date_Object__c, 
+                Schema.Rollup__mdt.Date_Field__c, 
                 new Map<String, Set<String>> {
                     CRLP_Operation.TimeBoundOperationType.All_Time.name() => new Set<String> {
                         CRLP_Operation.RollupType.First.name(), 
@@ -329,8 +329,8 @@ public class CRLP_Rollup_SEL {
     public static RollupField getAmountRollupField() {
         if(amountRollupField == null) {
             amountRollupField = new RollupField(
-                Schema.SObjectType.Rollup__mdt.fields.Amount_Object__c.getRelationshipName(), 
-                Schema.SObjectType.Rollup__mdt.fields.Amount_Field__c.getRelationshipName(), 
+                Schema.Rollup__mdt.Amount_Object__c, 
+                Schema.Rollup__mdt.Amount_Field__c, 
                 new Map<String, Set<String>> {
                     CRLP_Operation.TimeBoundOperationType.All_Time.name() => new Set<String> {
                         CRLP_Operation.RollupType.First.name(), 
@@ -375,8 +375,8 @@ public class CRLP_Rollup_SEL {
     public static RollupField getDetailRollupField() {
         if(detailRollupField == null) {
             detailRollupField = new RollupField(
-                Schema.SObjectType.Rollup__mdt.fields.Detail_Object__c.getRelationshipName(), 
-                Schema.SObjectType.Rollup__mdt.fields.Detail_Field__c.getRelationshipName(), 
+                Schema.Rollup__mdt.Detail_Object__c, 
+                Schema.Rollup__mdt.Detail_Field__c, 
                 new Map<String, Set<String>> {
                     CRLP_Operation.TimeBoundOperationType.All_Time.name() => new Set<String> {
                         CRLP_Operation.RollupType.First.name(), 
@@ -420,130 +420,12 @@ public class CRLP_Rollup_SEL {
 
     public static RollupField[] getRollupFields() {
         return new RollupField[] {
-            this.getDateRollupField(), 
-            this.getAmountRollupField(), 
-            this.getDetailRollupField()
+            getDateRollupField(), 
+            getAmountRollupField(), 
+            getDetailRollupField()
         };
     }
 
-/*
-    @TestVisible
-    private static Map<SObjectField, Map<String, Set<String>>> operationsByRollupFieldByTimeBoundOperationType;
-
-    // isFieldUsedByOperation
-
-    public static Set<String> getOperations(SObjectField rollupField, Rollup__mdt rollup) {
-        if(operationsByRollupFieldByTimeBoundOperationType == null) {
-            operationsByRollupFieldByTimeBoundOperationType = new Map<SObjectField, Map<String, Set<String>>> {
-                Schema.Rollup__mdt.Date_Field__c => new Map<String, Set<String>> {
-                    CRLP_Operation.TimeBoundOperationType.All_Time.name() => new Set<String> {
-                        CRLP_Operation.RollupType.First.name(), 
-                        CRLP_Operation.RollupType.Last.name(), 
-                        CRLP_Operation.RollupType.Years_Donated.name(), 
-                        CRLP_Operation.RollupType.Donor_Streak.name(), 
-                        CRLP_Operation.RollupType.Best_Year.name(), 
-                        CRLP_Operation.RollupType.Best_Year_Total.name()
-                    }, 
-                    CRLP_Operation.TimeBoundOperationType.Days_Back.name() => new Set<String> {
-                        CRLP_Operation.RollupType.Sum.name(), 
-                        CRLP_Operation.RollupType.Count.name(), 
-                        CRLP_Operation.RollupType.Average.name(), 
-                        CRLP_Operation.RollupType.Smallest.name(), 
-                        CRLP_Operation.RollupType.Largest.name(), 
-                        CRLP_Operation.RollupType.First.name(), 
-                        CRLP_Operation.RollupType.Last.name(), 
-                        CRLP_Operation.RollupType.Years_Donated.name(), 
-                        CRLP_Operation.RollupType.Donor_Streak.name(), 
-                        CRLP_Operation.RollupType.Best_Year.name(), 
-                        CRLP_Operation.RollupType.Best_Year_Total.name()
-                    }, 
-                    CRLP_Operation.TimeBoundOperationType.Years_Ago.name() => new Set<String> {
-                        CRLP_Operation.RollupType.Sum.name(), 
-                        CRLP_Operation.RollupType.Count.name(), 
-                        CRLP_Operation.RollupType.Average.name(), 
-                        CRLP_Operation.RollupType.Smallest.name(), 
-                        CRLP_Operation.RollupType.Largest.name(), 
-                        CRLP_Operation.RollupType.First.name(), 
-                        CRLP_Operation.RollupType.Last.name(), 
-                        CRLP_Operation.RollupType.Years_Donated.name(), 
-                        CRLP_Operation.RollupType.Donor_Streak.name(), 
-                        CRLP_Operation.RollupType.Best_Year.name(), 
-                        CRLP_Operation.RollupType.Best_Year_Total.name()
-                    }
-                }, 
-                Schema.Rollup__mdt.Amount_Field__c => new Map<String, Set<String>> {
-                    CRLP_Operation.TimeBoundOperationType.All_Time.name() => new Set<String> {
-                        CRLP_Operation.RollupType.Sum.name(), 
-                        CRLP_Operation.RollupType.Average.name(), 
-                        CRLP_Operation.RollupType.Smallest.name(), 
-                        CRLP_Operation.RollupType.Largest.name(), 
-                        CRLP_Operation.RollupType.Years_Donated.name(), 
-                        CRLP_Operation.RollupType.Donor_Streak.name(), 
-                        CRLP_Operation.RollupType.Best_Year.name(), 
-                        CRLP_Operation.RollupType.Best_Year_Total.name()
-                    }, 
-                    CRLP_Operation.TimeBoundOperationType.Days_Back.name() => new Set<String> {
-                        CRLP_Operation.RollupType.Sum.name(), 
-                        CRLP_Operation.RollupType.Average.name(), 
-                        CRLP_Operation.RollupType.Smallest.name(), 
-                        CRLP_Operation.RollupType.Largest.name(), 
-                        CRLP_Operation.RollupType.Years_Donated.name(), 
-                        CRLP_Operation.RollupType.Donor_Streak.name(), 
-                        CRLP_Operation.RollupType.Best_Year.name(), 
-                        CRLP_Operation.RollupType.Best_Year_Total.name()
-                    }, 
-                    CRLP_Operation.TimeBoundOperationType.Years_Ago.name() => new Set<String> {
-                        CRLP_Operation.RollupType.Sum.name(), 
-                        CRLP_Operation.RollupType.Average.name(), 
-                        CRLP_Operation.RollupType.Smallest.name(), 
-                        CRLP_Operation.RollupType.Largest.name(), 
-                        CRLP_Operation.RollupType.Years_Donated.name(), 
-                        CRLP_Operation.RollupType.Donor_Streak.name(), 
-                        CRLP_Operation.RollupType.Best_Year.name(), 
-                        CRLP_Operation.RollupType.Best_Year_Total.name()
-                    }
-                }, 
-                Schema.Rollup__mdt.Detail_Field__c => new Map<String, Set<String>> {
-                    CRLP_Operation.TimeBoundOperationType.All_Time.name() => new Set<String> {
-                        CRLP_Operation.RollupType.Smallest.name(), 
-                        CRLP_Operation.RollupType.Largest.name(), 
-                        CRLP_Operation.RollupType.First.name(), 
-                        CRLP_Operation.RollupType.Last.name()
-                    }, 
-                    CRLP_Operation.TimeBoundOperationType.Days_Back.name() => new Set<String> {
-                        CRLP_Operation.RollupType.Smallest.name(), 
-                        CRLP_Operation.RollupType.Largest.name(), 
-                        CRLP_Operation.RollupType.First.name(), 
-                        CRLP_Operation.RollupType.Last.name()
-                    }, 
-                    CRLP_Operation.TimeBoundOperationType.Years_Ago.name() => new Set<String> {
-                        CRLP_Operation.RollupType.Smallest.name(), 
-                        CRLP_Operation.RollupType.Largest.name(), 
-                        CRLP_Operation.RollupType.First.name(), 
-                        CRLP_Operation.RollupType.Last.name()
-                    }
-                }
-            };
-        }
-
-        final Map<String, Set<String>> operationsByTimeboundOperationType = operationsByRollupFieldByTimeBoundOperationType.get(rollupField);
-        final Set<String> operations = rollup == null || operationsByTimeboundOperationType == null ? null : operationsByTimeboundOperationType.get(rollup.Time_Bound_Operation_Type__c);
-        return operations == null ? new Set<String>() : operations;
-    }
-
-    /**
-     * @description        Not all Rollup Fields needed to be included when calling getReferencedFieldsByObject(SObjectType objType). Returns true iff operationsByFieldByTimeBoundOperationType for rollupField and for rollup's Time_Bound_Operation_Type__c contains rollup's Operation__c (converted into CRLP_Operation.RollupType).
-     * @param  rollup      
-     * @param  rollupField Only supports Rollup_mdt's Date_Field__c, Amount_Field__c, Detail_Field__c
-     * @return             If rollup for rollupField is included when calling getReferencedFieldsByObject(SObjectType objType)
-     * /
-    public static Boolean isFieldUsed(SObjectField rollupField, Rollup__mdt rollup) {
-        // rollupField is initially considered referenced if rollup's Operation__c is contained in map by Time_Bound_Operation_Type__c
-        return rollup != null 
-            && rollup.get(rollupField) != null
-            && getOperationsUsedByRollupFieldByTimeBoundOperationType(rollupField, rollup).contains(rollup.Operation__c);
-    }
-*/
     /**
      * @description Creates a list of all fields for a given object that are referenced in any way on an
      *  existing Rollup. This list can be used when building a query of the needed fields to retrieve
@@ -558,35 +440,21 @@ public class CRLP_Rollup_SEL {
         Map<String, Schema.DescribeFieldResult> referencedFields = new Map<String, Schema.DescribeFieldResult>();
 
         {
-            final RollupFields[] rollupFields = getRollupFields();
+            final RollupField[] rollupFields = getRollupFields();
 
             for (Rollup__mdt rollup : cachedRollups) {
                 if (rollup.Active__c == true) {
                     // Summary Field
                     if (rollup.Summary_Object__r.QualifiedApiName == sObjectName) {
-                        String fldName = rollup.Summary_Field__r.QualifiedApiName;
-                        referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
-                    }
-                /*
-                    // Detail Field
-                    if (rollup.Detail_Object__r.QualifiedApiName == sObjectName && isFieldUsed(Schema.Rollup__mdt.Detail_Fields__c, rollup)) {
-                        String fldName = rollup.Detail_Field__r.QualifiedApiName;
-                        referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
+                        String fieldName = rollup.Summary_Field__r.QualifiedApiName;
+                        referencedFields.put(
+                            fieldName, 
+                            allFields.get(fieldName.toLowerCase())
+                        );
                     }
 
-                    // Amount Field
-                    if (rollup.Amount_Object__r.QualifiedApiName == sObjectName && isFieldUsed(Schema.Rollup__mdt.Amount_Fields__c, rollup)) {
-                        String fldName = rollup.Amount_Field__r.QualifiedApiName;
-                        referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
-                    }
-
-                    // Date Field
-                    if (rollup.Date_Object__r.QualifiedApiName == sObjectName && isFieldUsed(Schema.Rollup__mdt.Date_Fields__c, rollup)) {
-                        String fldName = rollup.Date_Field__r.QualifiedApiName;
-                        referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
-                    }
-                */
-                    for(RollupField rollupField : rollupFields) {
+                    // Rollup Fields
+                    for (RollupField rollupField : rollupFields) {
                         if (rollupField.isFieldUsed(rollup, sObjectName)) {
                             final String fieldName = rollupField.getFieldName(rollup);
                             referencedFields.put(
@@ -595,6 +463,7 @@ public class CRLP_Rollup_SEL {
                             );
                         }
                     }
+
                 }
             }
         }
@@ -610,7 +479,10 @@ public class CRLP_Rollup_SEL {
                 Schema.SObjectType.Opportunity.fields.AccountId.getName(), 
                 Schema.SObjectType.Opportunity.fields.Primary_Contact__c.getName()
             }) {
-                referencedFields.put(fieldName, allFields.get(fieldName.toLowerCase()));
+                referencedFields.put(
+                    fieldName, 
+                    allFields.get(fieldName.toLowerCase())
+                );
             }
         }
 
