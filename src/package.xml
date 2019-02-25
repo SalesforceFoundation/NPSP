@@ -135,6 +135,7 @@
         <members>CRLP_Batch_Base</members>
         <members>CRLP_Batch_Base_NonSkew</members>
         <members>CRLP_Batch_Base_Skew</members>
+        <members>CRLP_Batch_Base_TEST</members>
         <members>CRLP_ConfigBuilder_SVC</members>
         <members>CRLP_ConfigBuilder_TEST</members>
         <members>CRLP_ContactSkew_BATCH</members>
@@ -186,6 +187,8 @@
         <members>CRLP_Rollup_TDTM</members>
         <members>CRLP_SkewDispatcher_BATCH</members>
         <members>CRLP_VRollupHandler</members>
+        <members>Callable_API</members>
+        <members>Callable_API_TEST</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
@@ -271,6 +274,8 @@
         <members>OPP_PrimaryContact_TEST</members>
         <members>OPP_SendAcknowledgmentBTN_CTRL</members>
         <members>OPP_SendAcknowledgmentBTN_TEST</members>
+        <members>OPP_StageMappingUtil</members>
+        <members>OPP_StageMappingUtil_TEST</members>
         <members>PMT_CascadeDeleteLookups_TDTM</members>
         <members>PMT_CascadeDeleteLookups_TEST</members>
         <members>PMT_PaymentCreator</members>
@@ -453,7 +458,6 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>UTIL_LightningComponentSupport</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -748,7 +752,9 @@
         <members>Contact.Primary_Contact__c</members>
         <members>Contact.Soft_Credit_Last_N_Days__c</members>
         <members>Contact.is_Address_Override__c</members>
+        <members>Customizable_Rollup_Settings__c.AccountHardCreditNonSkew_Incremental__c</members>
         <members>Customizable_Rollup_Settings__c.CMT_API_Status__c</members>
+        <members>Customizable_Rollup_Settings__c.ContactHardCreditNonSkew_Incremental__c</members>
         <members>Customizable_Rollup_Settings__c.Customizable_Rollups_Enabled__c</members>
         <members>Customizable_Rollup_Settings__c.Disable_Related_Records_Filter__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_Batch_Size__c</members>
@@ -758,6 +764,8 @@
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_SkewMode_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_Soft_Credit_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_GAU_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_IncrementalLastNDays_FldOverride__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_IncrementalLastNDays_ValOverride__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Limit_on_Attached_Opps_for_Skew__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Skew_Dispatcher_Batch_Size__c</members>
         <members>DataImportBatch__c.Account_Custom_Unique_ID__c</members>
@@ -834,6 +842,8 @@
         <members>DataImport__c.Contact2_Title__c</members>
         <members>DataImport__c.Contact2_Work_Email__c</members>
         <members>DataImport__c.Contact2_Work_Phone__c</members>
+        <members>DataImport__c.DonationCampaignImportStatus__c</members>
+        <members>DataImport__c.DonationCampaignImported__c</members>
         <members>DataImport__c.DonationImportStatus__c</members>
         <members>DataImport__c.DonationImported__c</members>
         <members>DataImport__c.Donation_Amount__c</members>
@@ -1080,6 +1090,8 @@
         <members>npe5__Affiliation__c.Related_Opportunity_Contact_Role__c</members>
         <members>npo02__Household__c.Number_of_Household_Members__c</members>
         <members>npo02__Households_Settings__c.Matched_Donor_Role__c</members>
+        <members>npo02__Households_Settings__c.Opportunity_Committed_Stages__c</members>
+        <members>npo02__Households_Settings__c.Opportunity_Finalized_Stages__c</members>
         <members>npo02__Households_Settings__c.Use_Dated_Conversion_Rates__c</members>
         <name>CustomField</name>
     </types>
@@ -1222,6 +1234,7 @@
         <members>CRLP_SaveSuccess</members>
         <members>CRLP_SaveTimeout</members>
         <members>CRLP_SoftCredit</members>
+        <members>CallableApiMethodNotImplemented</members>
         <members>CampaignMemberStatusOmit</members>
         <members>CascadeDeletionError</members>
         <members>CascadeDeletionErrorLightning</members>
@@ -1429,8 +1442,8 @@
         <members>bgeBatchSelectedFields</members>
         <members>bgeBatchSetBatchOptions</members>
         <members>bgeBatchSetFieldOptions</members>
-        <members>bgeCopyBatchSetupButton</members>
         <members>bgeCopyBatchSetupBatchNameAppend</members>
+        <members>bgeCopyBatchSetupButton</members>
         <members>bgeEditBatchFieldOptionsWarning</members>
         <members>bgeEditBatchFieldSelectionWarning</members>
         <members>bgeEditBatchOptionsWarning</members>
