@@ -172,11 +172,22 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
     }
 
     /**
+     * @description Build the list of Rollup defintion groupings to use for the specified rollup operation type.
+     * Builds the rollup collection in the current instance of the class
+     * @param rollupType Rollup Type Enum
+     */
+    public void buildGroupedRollups(CRLP_RollupProcessingOptions.RollupType rollupType) {
+        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(rollupType, this.jobFilter)) {
+            addRollupDefinition(r);
+        }
+    }
+
+    /**
      * @description Either add the passed Rollup__mdt defintion to the collection of CRLP_Rollup or if it's in the
      * same 'group' as existing Rollups, just add the mdt to the collection of rollups rollupsMdt the CRLP_Rollup
      * @param Rollup__mdt
      */
-    public void addRollupDefinition(Rollup__mdt rlp) {
+    private void addRollupDefinition(Rollup__mdt rlp) {
         // Should this Rollup__mdt record be added to an existing group of Rollup records?
         Boolean addNewRollup = true;
         for (CRLP_Rollup rollup : this.rollups) {
