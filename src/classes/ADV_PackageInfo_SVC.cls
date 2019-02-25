@@ -103,7 +103,7 @@ public with sharing class ADV_PackageInfo_SVC {
         //If Adv is installed, we need to throw exception if Adv is not configured correctly
         Boolean hasConfigError = true;
 
-        String nsPrefixOrBlank = (isManaged) ? orgSetting.Advancement_Namespace__c + '__' : '';
+        String nsPrefixOrBlank = (isManaged) ?  String.escapeSingleQuotes(orgSetting.Advancement_Namespace__c) + '__' : '';
 
         String useAdvStr = nsPrefixOrBlank + useGEMField;
         String apiNpspClassStr = nsPrefixOrBlank + 'API_NPSP_Class__c';
@@ -117,7 +117,7 @@ public with sharing class ADV_PackageInfo_SVC {
                 String apiNPSPClass = (String)advSettings[0].get(apiNpspClassStr);
                 if (String.isNotBlank(apiNPSPClass)) {
                     if (isManaged == true) {
-                        apiNPSPClass = orgSetting.Advancement_Namespace__c + '.' + apiNPSPClass;
+                        apiNPSPClass = String.escapeSingleQuotes(orgSetting.Advancement_Namespace__c) + '.' + apiNPSPClass;
                     }
                     Type classType = Type.forName(apiNPSPClass);
                     if (classType != null) {
