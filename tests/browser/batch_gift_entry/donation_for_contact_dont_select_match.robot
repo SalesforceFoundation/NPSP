@@ -11,13 +11,14 @@ Dont select match for contact new donation with grid changes
     #Enter a donation for a contact that has an exact opp match, don't select the match, make grid changes, and process batch
     [tags]  unstable
     ${ns} =  Get NPSP Namespace Prefix
-    &{batch} =       API Create DataImportBatch    Batch_Process_Size__c=50    Batch_Description__c=Created via API    Donation_Matching_Behavior__c=Single Match or Create    Donation_Matching_Rule__c=donation_amount__c;donation_date__c    RequireTotalMatch__c=false    Run_Opportunity_Rollups_while_Processing__c=true   GiftBatch__c=true    Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}] 
+    &{batch} =       API Create DataImportBatch    ${ns}Batch_Process_Size__c=50    ${ns}Batch_Description__c=Created via API    ${ns}Donation_Matching_Behavior__c=Single Match or Create    ${ns}Donation_Matching_Rule__c=${ns}donation_amount__c;${ns}donation_date__c    ${ns}RequireTotalMatch__c=false    ${ns}Run_Opportunity_Rollups_while_Processing__c=true   ${ns}GiftBatch__c=true    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}] 
     &{contact} =     API Create Contact
     ${date} =     Get Current Date    result_format=%Y-%m-%d
     &{opportunity} =     API Create Opportunity   &{contact}[AccountId]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}      
     Select App Launcher Tab   Batch Gift Entry
     # Click Link  &{batch}[Name]
     Click Link With Text    &{batch}[Name]
+    Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Contact
     Populate Address    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
     Click Link    &{contact}[FirstName] &{contact}[LastName]
@@ -53,6 +54,7 @@ Dont select match for contact new donation with grid changes
     ${opp_name}    Return Locator Value    check_field    Opportunity
     Click Link    ${opp_name}
     ${newopp_id}    Get Current Record ID
+    Store Session Record      Opportunity    ${newopp_id}
     &{new_opp} =  Salesforce Get    Opportunity    ${newopp_id}
     Should Be Equal As Strings    &{new_opp}[Amount]    20.0
     Should Be Equal As Strings    &{new_opp}[CloseDate]    ${date}
@@ -61,6 +63,7 @@ Dont select match for contact new donation with grid changes
     Select Tab    Related
     Load Related List    Opportunities
     Verify Occurrence    Opportunities    2
+    Store Session Record      Account    &{contact}[AccountId]
       
 
     

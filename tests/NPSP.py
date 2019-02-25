@@ -901,4 +901,4 @@ class NPSP(object):
         self.builtin.log("This test is using the 'Click link with text' workaround", "WARN")
         element = self.selenium.driver.find_element_by_link_text(text)
         self.selenium.driver.execute_script('arguments[0].click()', element)
-        return value
+        

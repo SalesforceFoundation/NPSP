@@ -106,19 +106,20 @@ API Create GAU
 API Create DataImportBatch
     [Arguments]      &{fields}
     ${name} =   Generate Random String
-    ${batch_id} =  Salesforce Insert  DataImportBatch__c
+    ${ns} =  Get NPSP Namespace Prefix
+    ${batch_id} =  Salesforce Insert  ${ns}DataImportBatch__c
     ...                  Name=${name}
     ...                  &{fields}
-    &{batch} =     Salesforce Get  DataImportBatch__c  ${batch_id}
+    &{batch} =     Salesforce Get  ${ns}DataImportBatch__c  ${batch_id}
     [return]         &{batch}
     
 API Create DataImport   
     [Arguments]     ${batch}     &{fields}
-
-    ${dataimport_id} =  Salesforce Insert  DataImport__c
-    ...                  NPSP_Data_Import_Batch__c=${batch}
+    ${ns} =  Get NPSP Namespace Prefix
+    ${dataimport_id} =  Salesforce Insert  ${ns}DataImport__c
+    ...                  ${ns}NPSP_Data_Import_Batch__c=${batch}
     ...                  &{fields}
-    &{data_import} =     Salesforce Get  DataImport__c  ${dataimport_id}
+    &{data_import} =     Salesforce Get  ${ns}DataImport__c  ${dataimport_id}
     [return]         &{data_import} 
    
 Create Contact
