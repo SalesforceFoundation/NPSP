@@ -344,6 +344,10 @@ public class CRLP_Rollup_SEL {
     @TestVisible
     private static RollupField dateRollupField, amountRollupField, detailRollupField;
 
+    /**
+     * @description See "CRLP Operations Matrix" for matrix of included and excluded (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) values for each Rollup Field at https://salesforce.quip.com/YnKAApuvLgNj
+     * @return Cached RollupField for (Date_Object__c, Date_Field__c)
+     */
     public static RollupField getDateRollupField() {
         if(dateRollupField == null) {
             dateRollupField = new RollupField(
@@ -357,16 +361,18 @@ public class CRLP_Rollup_SEL {
                         CRLP_Operation.RollupType.Smallest, 
                         CRLP_Operation.RollupType.Largest
                     }, 
-                    CRLP_Operation.TimeBoundOperationType.Days_Back => new Set<CRLP_Operation.RollupType> {
-                    }, 
-                    CRLP_Operation.TimeBoundOperationType.Years_Ago => new Set<CRLP_Operation.RollupType> {
-                    }
+                    CRLP_Operation.TimeBoundOperationType.Days_Back => new Set<CRLP_Operation.RollupType>(), 
+                    CRLP_Operation.TimeBoundOperationType.Years_Ago => new Set<CRLP_Operation.RollupType>()
                 }
             );
         }
         return dateRollupField;
     }
 
+    /**
+     * @description See "CRLP Operations Matrix" for matrix of included and excluded (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) values for each Rollup Field at https://salesforce.quip.com/YnKAApuvLgNj
+     * @return Cached RollupField for (Amount_Object__c, Amount_Field__c)
+     */
     public static RollupField getAmountRollupField() {
         if(amountRollupField == null) {
             final Map<CRLP_Operation.TimeBoundOperationType, Set<CRLP_Operation.RollupType>> excludedOperationsByTimeBoundOperationType = new Map<CRLP_Operation.TimeBoundOperationType,  Set<CRLP_Operation.RollupType>>();
@@ -392,6 +398,10 @@ public class CRLP_Rollup_SEL {
         return amountRollupField;
     }
 
+    /**
+     * @description See "CRLP Operations Matrix" for matrix of included and excluded (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) values for each Rollup Field at https://salesforce.quip.com/YnKAApuvLgNj
+     * @return Cached RollupField for (Detail_Object__c, Detail_Field__c)
+     */
     public static RollupField getDetailRollupField() {
         if(detailRollupField == null) {
             final Map<CRLP_Operation.TimeBoundOperationType, Set<CRLP_Operation.RollupType>> excludedOperationsByTimeBoundOperationType = new Map<CRLP_Operation.TimeBoundOperationType, Set<CRLP_Operation.RollupType>>();
@@ -421,6 +431,10 @@ public class CRLP_Rollup_SEL {
         return detailRollupField;
     }
 
+    /**
+     * @description See "CRLP Operations Matrix" for matrix of included and excluded (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) values for each Rollup Field at https://salesforce.quip.com/YnKAApuvLgNj
+     * @return new List<RollupField> containing getDateRollupField(), getAmountRollupField(), and getDetailRollupField()
+     */
     public static List<RollupField> getRollupFields() {
         return new List<RollupField> {
             getDateRollupField(), 
@@ -466,7 +480,6 @@ public class CRLP_Rollup_SEL {
                             );
                         }
                     }
-
                 }
             }
         }
