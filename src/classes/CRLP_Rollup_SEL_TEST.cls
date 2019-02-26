@@ -223,79 +223,95 @@ public class CRLP_Rollup_SEL_TEST {
         );
 	}
 
+    /**
+     * @description
+     */
     @IsTest
     private static void testGetQualifiedApiName() {
         // Data
-        final SObjectField[] lookups = new SObjectField[] {
-            Schema.Rollup__mdt.Date_Object__c, 
-            Schema.Rollup__mdt.Date_Field__c, 
-            Schema.Rollup__mdt.Amount_Object__c, 
-            Schema.Rollup__mdt.Amount_Field__c, 
-            Schema.Rollup__mdt.Detail_Object__c, 
-            Schema.Rollup__mdt.Detail_Field__c
-        };
+        final List<SObjectField> lookups = new List<SObjectField>();
+        final Map<SObjectField, List<Rollup__mdt>> rollupsByLookup = new Map<SObjectField, List<Rollup__mdt>>();
 
-        // RollupFields' Lookups should be included above, but add test RollupFields' Lookups to lookups anyways
-        for(CRLP_Rollup_SEL.RollupField rollupField : CRLP_Rollup_SEL.getRollupFields()) {
-            // SObject Lookup
-            {
-                System.assertNotEquals(null, rollupFIeld.getSObjectLookup());
-                lookups.add(rollupField.getSObjectLookup());
-            }
-            // Field Lookup
-            {
-                System.assertNotEquals(null, rollupFIeld.getFieldLookup());
-                lookups.add(rollupField.getFieldLookup());
-            }
+        // Lookups that are not Metadata Relationships
+        for (SObjectField lookup : new List<SObjectField> {
+            null, 
+            Schema.Rollup__mdt.Id
+        }) {
+            lookups.add(lookup);
+            rollupsByLookup.put(
+                lookup, 
+                new List<Rollup__mdt> {
+                    null, 
+                    new Rollup__mdt()
+                }
+            );
         }
 
-        final String[] qualifiedApiNames = new String[] {
-            null, 
-            'QualifiedApiName'
-        };
+        // Valid Metadata Relationship Lookups from RollupFields' Lookups
+        {
+            final List<String> qualifiedApiNames = new List<String> {
+                null, 
+                'Opportunity__c'
+            };
+        
+            for (CRLP_Rollup_SEL.RollupField rollupField : CRLP_Rollup_SEL.getRollupFields()) {
+                for(SObjectField lookup : new List<SObjectField> {
+                    rollupField.getSObjectLookup(), 
+                    rollupFIeld.getFieldLookup()
+                }) {
+                    System.assertNotEquals(
+                        null, 
+                        lookup, 
+                        'getSObjectLookup() and getFieldLookup() should not return null for all CRLP_Rollup_SEL.RollupFields returned in CRLP_Rollup_SEL.getRollupFields()'
+                    );
+
+                    lookups.add(lookup);
+                    rollupsByLookup.put(
+                        lookup, 
+                        new List<Rollup__mdt> {
+                            null, 
+                            new Rollup__mdt()
+                        }
+                    );
+
+                    // Add Rollups who has an SObject for lookup
+                    final String relationshipName = lookup.getDescribe().getName().removeEnd('__c') + '__r';
+
+                    for(String qualifiedApiName : qualifiedApiNames) {
+                        rollupsByLookup.get(lookup).add((Rollup__mdt) getSObject(
+                            Schema.SObjectType.Rollup__mdt.getName(), 
+                            new Map<String, Object> {
+                                relationshipName => getFieldMetadataRelationship(qualifiedApiName)
+                            }
+                        ));
+                    }
+                }
+            }
+        }
 
         Test.startTest();
 
         // CRLP_Rollup_SEL
         {
             // String getQualifiedApiName(Rollup__mdt rollup, SObjectField lookup)
-            for (SObjectField lookup : lookups) {
-                for (String qualifiedApiName : qualifiedApiNames) {
-                    final String relationshipName = lookup.getDescribe().getName().removeEnd('__c') + '__r';
-                    final Rollup__mdt rollup = (Rollup__mdt) getSObject(
-                        Schema.SObjectType.Rollup__mdt.getName(), 
-                        new Map<String, Object> {
-                            relationshipName => getFieldMetadataRelationship(qualifiedApiName)
-                        }
-                    );
+            {
+                Boolean isExceptionThrownEveryTest = true;
 
-                    // Null rollup
-                    {
-                        final String expected = null;
-
-                        Exception e;
-                        String actual;
-
-                        try {
-                            actual = CRLP_Rollup_SEL.getQualifiedApiName((Rollup__mdt) null, lookup);
-                        }
-                        catch(Exception whoops) {
-                            e = whoops;
-                        }
-
-                        System.assertEquals(null, e);
-                        System.assertEquals(expected, actual);
-                    }
-
-                    // With rollup
-                    {
-                        final String expected = qualifiedApiName;
+                for (SObjectField lookup : lookups) {
+                    for (Rollup__mdt rollup : rollupsByLookup.get(lookup)) {
+                        Boolean isExceptionThrown;
                         {
-                            System.assertEquals(
-                                qualifiedApiName, 
-                                rollup.getSObject(lookup).get('QualifiedApiName')
-                            );
+                            try {
+                                String actual = (String) rollup.getSObject(lookup).get('QualifiedApiName');
+                                isExceptionThrown = false;
+                                isExceptionThrownEveryTest = false;
+                            }
+                            catch (Exception e) {
+                                isExceptionThrown = true;
+                            }
                         }
+
+                        final String expected = isExceptionThrown ? null : (String) rollup.getSObject(lookup).get('QualifiedApiName');
 
                         Exception e;
                         String actual;
@@ -307,20 +323,40 @@ public class CRLP_Rollup_SEL_TEST {
                             e = whoops;
                         }
 
-                        System.assertEquals(null, e);
-                        System.assertEquals(expected, actual);
+                        System.assertEquals(
+                            null, 
+                            e, 
+                            'CRLP_Rollup_SEL.getQualifiedApiName(...) should never throw an Exception'
+                        );
+                        
+                        System.assertEquals(
+                            expected, 
+                            actual, 
+                            String.format(
+                                'CRLP_Rollup_SEL.getQualifiedApiName(...) is returning an unexpected value.  lookup: "{0}"; rollup: "{1}"', 
+                                new List<String> {
+                                    String.valueOf(lookup), 
+                                    String.valueOf(rollup)
+                                }
+                            )
+                        );
                     }
                 }
+
+                System.assertEquals(
+                    false, 
+                    isExceptionThrownEveryTest, 
+                    'CRLP_Rollup_SEL.getQualifiedApiName(...): All test data threw an Exception when testing (String) rollup.getSObject(lookup).get(\'QualifiedApiName\').   Update the test data so getQualifiedApiName(...) can be tested with at least one positive test.'
+                );
             }
         }
 
         Test.stopTest();
     }
-
+/*
     @IsTest
     private static void testRollupField() {
         // Data
-
         final SObjectField[] sObjectLookups = new SObjectField[] {
             Schema.Rollup__mdt.Date_Object__c,
             Schema.Rollup__mdt.Amount_Object__c,
@@ -387,14 +423,14 @@ public class CRLP_Rollup_SEL_TEST {
                 if (1 < operationsSize) {
                     final Integer size = Math.floor(Math.random() * Double.valueOf(operationsSize - 1)).intValue();
                     final String[] operationsList = new List<String>(operations);
-                    for(Integer i = 0; i < size; i ++) {
+                    for (Integer i = 0; i < size; i ++) {
                         operationsSubset.add(operationsList[i]);
                     }
                 }
                 
                 Boolean isFirst = true;
                 for (String timeBoundOperationType : timeBoundOperationTypes) {
-                    if(isFirst) {
+                    if (isFirst) {
                         supportedOperations.put(timeBoundOperationType, operationsSubset);
                         isFirst = false;
                     }
@@ -523,7 +559,7 @@ public class CRLP_Rollup_SEL_TEST {
                         }
 
                         // Boolean isFieldUsed(Rollup__mdt rollup, String sObjectName)
-                        for(String sObjectName : sObjectNames) {
+                        for (String sObjectName : sObjectNames) {
                             final Boolean expected = rollupField.getFieldName(rollup) != null
                                 && rollupField.getSObjectName(rollup) == sObjectName
                                 && rollupField.isRollupSupported(rollup);
@@ -635,7 +671,7 @@ public class CRLP_Rollup_SEL_TEST {
                             }
 
                             // Boolean isFieldUsed(Rollup__mdt rollup, String sObjectName)
-                            for(String sObjectName : sObjectNames) {
+                            for (String sObjectName : sObjectNames) {
                                 final Boolean expected = rollupField.getFieldName(rollup) != null
                                     && rollupField.getSObjectName(rollup) == sObjectName
                                     && rollupField.isRollupSupported(rollup);
@@ -662,7 +698,103 @@ public class CRLP_Rollup_SEL_TEST {
         Test.stopTest();
     }
 
-    public class TestException extends Exception {}
+    public static Set<String> getPicklistValues(Schema.PicklistEntry[] picklists) {
+        final Set<String> picklistValues = new Set<String>();
+        for(Schema.PicklistEntry picklist : picklists) {
+            picklistValues.add(picklist.getValue());
+        }
+        return picklistValues;
+    }
+
+    public static void assertEquals(CRLP_Rollup_SEL.RollupField expected, CRLP_Rollup_SEL.RollupField actual, String description) {
+        if (expected == null) {
+            System.assertEquals(null, actual, description);
+        }
+        else {
+            System.assertNotEquals(null, actual, description);
+            System.assertEquals(
+                expected.getSObjectLookup(), 
+                actual.getSObjectLookup(), 
+                description
+            );
+            System.assertEquals(
+                expected.getFieldLookup(), 
+                actual.getFieldLookup(), 
+                description
+            );
+            System.assertEquals(
+                expected.getSupportedOperationsByTimeBoundOperationType(), 
+                actual.getSupportedOperationsByTimeBoundOperationType(), 
+                description
+            );
+        }
+    }
+
+    /**
+     * @description Tests CRLP_Rollup_SEL's RollupField getDateRollupField(), RollupField getAmountRollupField(), RollupField getDetailRollupField(), RollupField[] getRollupFields()
+     * /
+    @IsTest
+    private static void testGetRollupFields() {
+        // Data
+        final Set<String> timeBoundOperationTypes = getPicklistValues(Schema.SObjectType.Rollup__mdt.fields.Time_Bound_Operation_Type__c.getPicklistValues());
+        final Set<String> operations = getPicklistValues(Schema.SObjectType.Rollup__mdt.fields.Operation__c.getPicklistValues());
+
+        Test.startTest();
+
+        // CRLP_Rollup_SEL
+        {
+            // RollupField getDateRollupField()
+            {
+                final CRLP_Rollup_SEL.RollupField expected = new CRLP_Rollup_SEL.RollupField(
+                    Schema.Rollup__mdt.Detail_Object__c, 
+                    Schema.Rollup__mdt.Detail_Field__c, 
+                    new Map<String, Set<String>> {
+                        CRLP_Operation.TimeBoundOperationType.All_Time.name() => new Set<String> {
+                            CRLP_Operation.RollupType.First.name(), 
+                            CRLP_Operation.RollupType.Last.name(), 
+                            CRLP_Operation.RollupType.Years_Donated.name(), 
+                            CRLP_Operation.RollupType.Donor_Streak.name(), 
+                            CRLP_Operation.RollupType.Best_Year.name(), 
+                            CRLP_Operation.RollupType.Best_Year_Total.name()
+                        }, 
+                        CRLP_Operation.TimeBoundOperationType.Days_Back.name() => new Set<String> {
+                            CRLP_Operation.RollupType.Sum.name(), 
+                            CRLP_Operation.RollupType.Count.name(), 
+                            CRLP_Operation.RollupType.Average.name(), 
+                            CRLP_Operation.RollupType.Smallest.name(), 
+                            CRLP_Operation.RollupType.Largest.name(), 
+                            CRLP_Operation.RollupType.First.name(), 
+                            CRLP_Operation.RollupType.Last.name(), 
+                            CRLP_Operation.RollupType.Years_Donated.name(), 
+                            CRLP_Operation.RollupType.Donor_Streak.name(), 
+                            CRLP_Operation.RollupType.Best_Year.name(), 
+                            CRLP_Operation.RollupType.Best_Year_Total.name()
+                        }, 
+                        CRLP_Operation.TimeBoundOperationType.Years_Ago.name() => new Set<String> {
+                            CRLP_Operation.RollupType.Sum.name(), 
+                            CRLP_Operation.RollupType.Count.name(), 
+                            CRLP_Operation.RollupType.Average.name(), 
+                            CRLP_Operation.RollupType.Smallest.name(), 
+                            CRLP_Operation.RollupType.Largest.name(), 
+                            CRLP_Operation.RollupType.First.name(), 
+                            CRLP_Operation.RollupType.Last.name(), 
+                            CRLP_Operation.RollupType.Years_Donated.name(), 
+                            CRLP_Operation.RollupType.Donor_Streak.name(), 
+                            CRLP_Operation.RollupType.Best_Year.name(), 
+                            CRLP_Operation.RollupType.Best_Year_Total.name()
+                        }
+                    }
+                );
+
+                // Setup
+                {
+
+                }
+            }
+        }
+
+        Test.stopTest();
+    }
 
 /*
     /**
