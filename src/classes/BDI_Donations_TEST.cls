@@ -199,9 +199,8 @@ public with sharing class BDI_Donations_TEST {
         insert newOpp;
 
         DataImportBatch__c batch = createBatch();
-        insert batch;
 
-        List<npe01__OppPayment__c> payments = getPaymentsForOppsInList();
+        List<npe01__OppPayment__c> payments = getPaymentsForOppsInListOrderedByIdAndCreatedDate();
 
         List<DataImport__c> dataImports = new List<DataImport__c>();
 
@@ -247,17 +246,17 @@ public with sharing class BDI_Donations_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> contacts = getContacts();
+        List<Contact> contacts = getContactsOrderedById();
         System.assertEquals(2, contacts.size());
         System.assertEquals(0, contacts[0].npo02__TotalOppAmount__c);
         System.assertEquals(stableAmount + updatedAmount, contacts[1].npo02__TotalOppAmount__c);
 
-        List<Account> accounts = getAccounts();
+        List<Account> accounts = getAccountsOrderedById();
         System.assertEquals(2, accounts.size());
         System.assertEquals(0, accounts[0].npo02__TotalOppAmount__c);
         System.assertEquals(stableAmount + updatedAmount, accounts[1].npo02__TotalOppAmount__c);
 
-        List<Opportunity> opps = getOpportunities();
+        List<Opportunity> opps = getOpportunitiesOrderedById();
         System.assertEquals(3, opps.size());
 
         System.assertEquals(false, opps[0].isWon);
@@ -269,7 +268,7 @@ public with sharing class BDI_Donations_TEST {
         System.assertEquals(true, opps[2].isWon);
         System.assertEquals(updatedAmount, opps[2].Amount);
 
-        payments = getPaymentsForOppsInList();
+        payments = getPaymentsForOppsInListOrderedByIdAndCreatedDate();
         System.assertEquals(2, payments.size());
 
         npe01__OppPayment__c updatedPayment = payments[0];
@@ -284,7 +283,7 @@ public with sharing class BDI_Donations_TEST {
         System.assertEquals(paymentInfoUnpaidPayment.checkReference, stablePayment.npe01__Check_Reference_Number__c);
         System.assertEquals(true, stablePayment.npe01__Paid__c);
 
-        dataImports = getDataImports();
+        dataImports = getDataImportsOrderedById();
         System.assertEquals(3, dataImports.size());
 
         DataImport__c dataImportUpdateUnpaidPayment = dataImports[0];
@@ -323,7 +322,7 @@ public with sharing class BDI_Donations_TEST {
 
         DataImportBatch__c batch = createBatch();
 
-        List<npe01__OppPayment__c> payments = getPaymentsForOppsInList();
+        List<npe01__OppPayment__c> payments = getPaymentsForOppsInListOrderedByIdAndCreatedDate();
         System.assertEquals(2, payments.size());
 
         List<DataImport__c> dataImports = new List<DataImport__c>();
@@ -359,20 +358,20 @@ public with sharing class BDI_Donations_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> contacts = getContacts();
+        List<Contact> contacts = getContactsOrderedById();
         System.assertEquals(2, contacts.size());
         // contacts[0] has a $0 rollup because the opp isn't paid in full yet
         System.assertEquals(0, contacts[0].npo02__TotalOppAmount__c);
         System.assertEquals(listOppT[1].Amount, contacts[1].npo02__TotalOppAmount__c);
 
-        List<Account> accounts = getAccounts();
+        List<Account> accounts = getAccountsOrderedById();
 
         System.assertEquals(2, accounts.size());
         // accounts[0] has a $0 rollup because the opp isn't paid in full yet
         System.assertEquals(0, accounts[0].npo02__TotalOppAmount__c);
         System.assertEquals(listOppT[1].Amount, accounts[1].npo02__TotalOppAmount__c);
 
-        List<Opportunity> opps = getOpportunities();
+        List<Opportunity> opps = getOpportunitiesOrderedById();
         System.assertEquals(2, opps.size());
 
         System.assertEquals(false, opps[0].isWon);
@@ -385,7 +384,7 @@ public with sharing class BDI_Donations_TEST {
         System.assertEquals(updatedPaymentInfo.paymentDate, opps[1].CloseDate);
         System.assertEquals(updatedPaymentInfo.amount, opps[1].npe01__Payments_Made__c);
 
-        payments = getPaymentsForOppsInList();
+        payments = getPaymentsForOppsInListOrderedByIdAndCreatedDate();
         // there should be the two automatically created payments, plus the newly created payment
         System.assertEquals(3, payments.size(), 'There should be three payment records.');
 
@@ -405,7 +404,7 @@ public with sharing class BDI_Donations_TEST {
         System.assertEquals(true, updatedPayment.npe01__Paid__c);
         System.assertEquals(updatedPaymentInfo.paymentDate, updatedPayment.npe01__Payment_Date__c);
 
-        dataImports = getDataImports();
+        dataImports = getDataImportsOrderedById();
         System.assertEquals(2, dataImports.size());
 
         DataImport__c dataImportWithNewPaymentApplied = dataImports[0];
@@ -2525,7 +2524,7 @@ public with sharing class BDI_Donations_TEST {
         return batch;
     }
 
-    public static List<Contact> getContacts() {
+    public static List<Contact> getContactsOrderedById() {
         return [
                 SELECT Id,
                         Name,
@@ -2536,7 +2535,7 @@ public with sharing class BDI_Donations_TEST {
         ];
     }
 
-    private static List<Account> getAccounts() {
+    private static List<Account> getAccountsOrderedById() {
         return [
                 SELECT Id,
                         Name,
@@ -2546,7 +2545,7 @@ public with sharing class BDI_Donations_TEST {
         ];
     }
 
-    private static List<Opportunity> getOpportunities() {
+    private static List<Opportunity> getOpportunitiesOrderedById() {
         return [
                 SELECT Id,
                         Name,
@@ -2562,7 +2561,7 @@ public with sharing class BDI_Donations_TEST {
         ];
     }
 
-    private static List<npe01__OppPayment__c> getPaymentsForOppsInList() {
+    private static List<npe01__OppPayment__c> getPaymentsForOppsInListOrderedByIdAndCreatedDate() {
         return [
                 SELECT Id,
                         npe01__Paid__c,
@@ -2577,7 +2576,7 @@ public with sharing class BDI_Donations_TEST {
         ];
     }
 
-    private static List<DataImport__c> getDataImports() {
+    private static List<DataImport__c> getDataImportsOrderedById() {
         return [
                 SELECT Id,
                         Status__c,
