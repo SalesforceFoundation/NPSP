@@ -201,13 +201,7 @@ public with sharing class BDI_Donations_TEST {
         DataImportBatch__c batch = getBatch();
         insert batch;
 
-        List<npe01__OppPayment__c> payments = [
-            SELECT Id,
-                npe01__Opportunity__c
-            FROM npe01__OppPayment__c
-            WHERE npe01__Opportunity__c IN :listOppT
-            ORDER BY npe01__Opportunity__r.Id
-        ];
+        List<npe01__OppPayment__c> payments = getPaymentsForOppsInList();
 
         List<DataImport__c> dataImports = new List<DataImport__c>();
 
@@ -253,43 +247,17 @@ public with sharing class BDI_Donations_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> contacts = [
-            SELECT Id,
-                Name,
-                AccountId,
-                npo02__TotalOppAmount__c
-            FROM Contact
-            ORDER BY Id
-        ];
-
+        List<Contact> contacts = getContacts();
         System.assertEquals(2, contacts.size());
         System.assertEquals(0, contacts[0].npo02__TotalOppAmount__c);
         System.assertEquals(stableAmount + updatedAmount, contacts[1].npo02__TotalOppAmount__c);
 
-        List<Account> accounts = [
-                SELECT Id,
-                        Name,
-                        npo02__TotalOppAmount__c
-                FROM Account
-                ORDER BY Id
-        ];
-
+        List<Account> accounts = getAccounts();
         System.assertEquals(2, accounts.size());
         System.assertEquals(0, accounts[0].npo02__TotalOppAmount__c);
         System.assertEquals(stableAmount + updatedAmount, accounts[1].npo02__TotalOppAmount__c);
 
-        List<Opportunity> opps = [
-                SELECT Id,
-                        Name,
-                        Amount,
-                        StageName,
-                        isWon,
-                        isClosed,
-                        AccountId
-                FROM Opportunity
-                ORDER BY Id
-        ];
-
+        List<Opportunity> opps = getOpportunities();
         System.assertEquals(3, opps.size());
 
         System.assertEquals(false, opps[0].isWon);
@@ -301,15 +269,7 @@ public with sharing class BDI_Donations_TEST {
         System.assertEquals(true, opps[2].isWon);
         System.assertEquals(updatedAmount, opps[2].Amount);
 
-        payments = [
-            SELECT Id,
-                npe01__Paid__c,
-                npe01__Payment_Amount__c,
-                npe01__Payment_Method__c,
-                npe01__Check_Reference_Number__c
-            FROM npe01__OppPayment__c
-            ORDER BY npe01__Opportunity__r.Id
-        ];
+        payments = getPaymentsForOppsInList();
         System.assertEquals(2, payments.size());
 
         npe01__OppPayment__c updatedPayment = payments[0];
@@ -324,16 +284,7 @@ public with sharing class BDI_Donations_TEST {
         System.assertEquals(paymentInfoUnpaidPayment.checkReference, stablePayment.npe01__Check_Reference_Number__c);
         System.assertEquals(true, stablePayment.npe01__Paid__c);
 
-        dataImports = [
-            SELECT Id,
-                Status__c,
-                DonationImported__c,
-                DonationImportStatus__c,
-                PaymentImported__c,
-                PaymentImportStatus__c
-            FROM DataImport__c
-            ORDER BY Id
-        ];
+        dataImports = getDataImports();
         System.assertEquals(3, dataImports.size());
 
         DataImport__c dataImportUpdateUnpaidPayment = dataImports[0];
