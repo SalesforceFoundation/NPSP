@@ -198,7 +198,7 @@ public with sharing class BDI_Donations_TEST {
         newOpp.npe01__Do_Not_Automatically_Create_Payment__c = true;
         insert newOpp;
 
-        DataImportBatch__c batch = getBatch();
+        DataImportBatch__c batch = createBatch();
         insert batch;
 
         List<npe01__OppPayment__c> payments = getPaymentsForOppsInList();
@@ -321,8 +321,7 @@ public with sharing class BDI_Donations_TEST {
         // create 2 contacts, each with a HH Account and an Opportunity with a Payment
         createTestData();
 
-        DataImportBatch__c batch = getBatch();
-        insert batch;
+        DataImportBatch__c batch = createBatch();
 
         List<npe01__OppPayment__c> payments = getPaymentsForOppsInList();
         System.assertEquals(2, payments.size());
@@ -2515,13 +2514,14 @@ public with sharing class BDI_Donations_TEST {
         return dataImport;
     }
 
-    private static DataImportBatch__c getBatch() {
+    private static DataImportBatch__c createBatch() {
         DataImportBatch__c batch = new DataImportBatch__c();
         batch.Name = 'testBatch';
         batch.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
         batch.Run_Opportunity_Rollups_while_Processing__c = true;
         batch.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
                 UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        insert batch;
         return batch;
     }
 
