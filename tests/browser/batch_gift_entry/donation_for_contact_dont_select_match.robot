@@ -20,7 +20,7 @@ Dont select match for contact new donation with grid changes
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Contact
-    Populate Address    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
+    Populate Field By Placeholder    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
     Click Link    &{contact}[FirstName] &{contact}[LastName]
     Page Should Contain Link    Review Donations
     Fill BGE Form

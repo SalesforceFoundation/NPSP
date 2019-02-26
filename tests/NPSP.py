@@ -83,11 +83,11 @@ class NPSP(object):
         level_object = [o for o in objects if o['label'] == 'Level'][0]
         return self.get_namespace_prefix(level_object['name'])
 
-    def populate_address(self, loc, value):
-        """ Populate address with Place Holder as a locator
+    def populate_field_by_placeholder(self, loc, value):
+        """ Populate field with Place Holder as a locator
             and actual value of the place holder.
         """
-        xpath = npsp_lex_locators["mailing_address"].format(loc)
+        xpath = npsp_lex_locators["placeholder"].format(loc)
         field = self.selenium.get_webelement(xpath)
         field.send_keys(value)
         time.sleep(1)
@@ -313,7 +313,6 @@ class NPSP(object):
                 self.selenium.get_webelement(locator).send_keys(value)
                 
     def fill_bge_form(self, **kwargs):
-        """Validates if the affiliated contacts have the added contact details enter Y for positive case and N for negative case""" 
         for label, value in kwargs.items():
             if label=="Batch Description":
                 locator= npsp_lex_locators['bge']['field-text'].format(label,value)  
@@ -380,23 +379,19 @@ class NPSP(object):
         locator=npsp_lex_locators['manage_hh_page']['button'].format(title)
         self.selenium.get_webelement(locator).click()  
         
-    def click_managehh_link(self,title):  
-        """clicks on the new contact button on manage hh page"""      
+    def click_managehh_link(self,title):       
         locator=npsp_lex_locators['manage_hh_page']['address_link'].format(title)
         self.selenium.get_webelement(locator).click()      
     
     def select_lightning_checkbox(self,title):
-        """"""
         locator=npsp_lex_locators['checkbox'].format(title)
         self.selenium.get_webelement(locator).click()
         
     def select_lightning_table_checkbox(self,title):
-        """"""
         locator=npsp_lex_locators['table_checkbox'].format(title)
         self.selenium.get_webelement(locator).click()
         
     def select_bge_checkbox(self,title):
-        """"""
         locator=npsp_lex_locators['bge']['checkbox'].format(title)
         self.selenium.get_webelement(locator).click()     
         
@@ -406,7 +401,6 @@ class NPSP(object):
     
         
     def verify_occurrence(self,title,value):
-        """"""
         locator=npsp_lex_locators['record']['related']['check_occurrence'].format(title,value)
         actual_value=self.selenium.get_webelement(locator).text
         exp_value="("+value+")"
@@ -415,7 +409,6 @@ class NPSP(object):
         )  
         
     def check_record_related_item(self,title,value):
-        """"""
         locator=npsp_lex_locators['record']['related']['item'].format(title,value)
         actual_value=self.selenium.get_webelement(locator).text
         assert value == actual_value, "Expected value to be {} but found {}".format(
@@ -728,15 +721,14 @@ class NPSP(object):
         self.selenium.set_focus_to_element(locator)       
         self.selenium.select_from_list_by_label(loc,*args) 
         
-    def select_duellist_values(self,object,list_name, *args):
-        """ """
-        if object == 'Donation Matching Rule':
+    def select_duellist_values(self,obj,list_name, *args):
+        if obj == 'Donation Matching Rule':
             for value in args:
-                locator = npsp_lex_locators['bge']['field-duellist'].format(object,list_name,value)
+                locator = npsp_lex_locators['bge']['field-duellist'].format(obj,list_name,value)
                 self.selenium.get_webelement(locator).click()
         else:
             for value in args:
-                locator = npsp_lex_locators['bge']['duellist'].format(object,list_name,value)
+                locator = npsp_lex_locators['bge']['duellist'].format(obj,list_name,value)
                 self.selenium.get_webelement(locator).click()
 
         
@@ -838,15 +830,15 @@ class NPSP(object):
         assert value == actual_value, "Expected value to be {} but found {}".format(
             value, actual_value
         )  
-    def get_npsp_record_id(self):
-        """ Parses the current url to get the object id of the current record.
-            Expects url format like: [a-zA-Z0-9]{15,18}
-        """
-        url = self.selenium.get_location()
-        for part in url.split("/"):
-            if re.match(r"^[a-zA-Z0-9]{15,18}$", part):
-                return part
-        raise AssertionError("Could not parse record id from url: {}".format(url))            
+#     def get_npsp_record_id(self):
+#         """ Parses the current url to get the object id of the current record.
+#             Expects url format like: [a-zA-Z0-9]{15,18}
+#         """
+#         url = self.selenium.get_location()
+#         for part in url.split("/"):
+#             if re.match(r"^[a-zA-Z0-9]{15,18}$", part):
+#                 return part
+#         raise AssertionError("Could not parse record id from url: {}".format(url))            
     
     def page_scroll_to_locator(self, path, *args, **kwargs):
         locator = self.get_npsp_locator(path, *args, **kwargs)

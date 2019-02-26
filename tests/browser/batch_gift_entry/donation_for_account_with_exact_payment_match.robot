@@ -20,7 +20,7 @@ Enter a donation for an account with exact payment match
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
-    Populate Address    Search Accounts    &{account}[Name]
+    Populate Field By Placeholder    Search Accounts    &{account}[Name]
     Click Link    &{account}[Name]
     Click Link    Review Donations
     ${pay_no}    Get BGE Card Header    &{opportunity}[Name]

@@ -21,7 +21,7 @@ BGE Batch With Default Values
     Click BGE Button        Save
     Wait For Locator    bge.title    Batch Gift Entry
     Verify Title    Batch Gift Entry    ${batch}
-    ${batch_id}    Get NPSP Record ID
+    ${batch_id}    Get Current Record Id
     ${ns} =  Get NPSP Namespace Prefix
     Store Session Record      ${ns}DataImportBatch__c  ${batch_id}
     &{bge_batch} =     Salesforce Get  ${ns}DataImportBatch__c  ${batch_id}

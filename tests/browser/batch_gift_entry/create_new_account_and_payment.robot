@@ -18,7 +18,7 @@ Create a new account and enter payment information
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
     ${acc_name} =  Generate Random String
-    Populate Address    Search Accounts    ${acc_name}
+    Populate Field By Placeholder    Search Accounts    ${acc_name}
     Click Element    title:Search Accounts...
     Wait For Locator    record.edit_button    New Account
     Click Element    title=New Account

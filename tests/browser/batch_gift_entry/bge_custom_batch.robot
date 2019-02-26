@@ -51,7 +51,7 @@ BGE Batch With Custom Values
     Page Should Contain Element    ${field}
     ${field}    Get NPSP Locator    bge.field-input    Payment Check/Reference Number
     Page Should Not Contain Element    ${field}
-    ${batch_id}    Get NPSP Record ID
+    ${batch_id}    Get Current Record Id
     Store Session Record      ${ns}DataImportBatch__c  ${batch_id}
     &{bge_batch} =     Salesforce Get  ${ns}DataImportBatch__c  ${batch_id}
     Should Be Equal As Strings    &{bge_batch}[${ns}Batch_Process_Size__c]    100.0

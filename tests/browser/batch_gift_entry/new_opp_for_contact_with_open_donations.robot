@@ -22,13 +22,13 @@ Create a new opportunity for a contact with open donations
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
     Select Value From BGE DD    Donor Type    Account
-    Populate Address    Search Accounts    &{account}[Name]
+    Populate Field By Placeholder    Search Accounts    &{account}[Name]
     Click Link    &{account}[Name]
     Click Link    Review Donations
     Click BGE Button    Update this Opportunity
     Select Value From BGE DD    Donor Type    Contact
     Page Should Not Contain Link    Review Donations
-    Populate Address    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
+    Populate Field By Placeholder    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
     Click Link    &{contact}[FirstName] &{contact}[LastName]
     Click Link    Review Donations
     Click Link    Alternatively, create a new Opportunity.

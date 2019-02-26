@@ -19,7 +19,7 @@ Select a payment for a contact make grid changes and process it
     # Click Link  &{batch}[Name]
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
-    Populate Address    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
+    Populate Field By Placeholder    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
     Click Link    &{contact}[FirstName] &{contact}[LastName]
     Click Link    Review Donations
     ${pay_no}    Get BGE Card Header    &{opportunity}[Name]
