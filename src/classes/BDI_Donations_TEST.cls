@@ -373,17 +373,7 @@ public with sharing class BDI_Donations_TEST {
         DataImportBatch__c batch = getBatch();
         insert batch;
 
-        List<npe01__OppPayment__c> payments = [
-            SELECT Id,
-                npe01__Opportunity__c,
-                npe01__Payment_Amount__c,
-                npe01__Payment_Method__c,
-                npe01__Check_Reference_Number__c,
-                npe01__Payment_Date__c
-            FROM npe01__OppPayment__c
-            WHERE npe01__Opportunity__c IN :listOppT
-            ORDER BY npe01__Opportunity__r.Id, CreatedDate
-        ];
+        List<npe01__OppPayment__c> payments = getPaymentsForOppsInList();
         System.assertEquals(2, payments.size());
 
         List<DataImport__c> dataImports = new List<DataImport__c>();
@@ -419,44 +409,20 @@ public with sharing class BDI_Donations_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> contacts = [
-            SELECT Id,
-                Name,
-                AccountId,
-                npo02__TotalOppAmount__c
-            FROM Contact
-            ORDER BY Id
-        ];
+        List<Contact> contacts = getContacts();
         System.assertEquals(2, contacts.size());
         // contacts[0] has a $0 rollup because the opp isn't paid in full yet
         System.assertEquals(0, contacts[0].npo02__TotalOppAmount__c);
         System.assertEquals(listOppT[1].Amount, contacts[1].npo02__TotalOppAmount__c);
 
-        List<Account> accounts = [
-            SELECT Id,
-                Name,
-                npo02__TotalOppAmount__c
-            FROM Account
-            ORDER BY Id
-        ];
+        List<Account> accounts = getAccounts();
+
         System.assertEquals(2, accounts.size());
         // accounts[0] has a $0 rollup because the opp isn't paid in full yet
         System.assertEquals(0, accounts[0].npo02__TotalOppAmount__c);
         System.assertEquals(listOppT[1].Amount, accounts[1].npo02__TotalOppAmount__c);
 
-        List<Opportunity> opps = [
-            SELECT Id,
-                Name,
-                Amount,
-                CloseDate,
-                StageName,
-                isWon,
-                isClosed,
-                AccountId,
-                npe01__Payments_Made__c
-            FROM Opportunity
-            ORDER BY Id
-        ];
+        List<Opportunity> opps = getOpportunities();
         System.assertEquals(2, opps.size());
 
         System.assertEquals(false, opps[0].isWon);
@@ -469,17 +435,7 @@ public with sharing class BDI_Donations_TEST {
         System.assertEquals(updatedPaymentInfo.paymentDate, opps[1].CloseDate);
         System.assertEquals(updatedPaymentInfo.amount, opps[1].npe01__Payments_Made__c);
 
-        payments = [
-            SELECT Id,
-                npe01__Paid__c,
-                npe01__Payment_Amount__c,
-                npe01__Payment_Method__c,
-                npe01__Check_Reference_Number__c,
-                npe01__Payment_Date__c
-            FROM npe01__OppPayment__c
-            WHERE npe01__Opportunity__c IN :listOppT
-            ORDER BY npe01__Opportunity__r.Id, CreatedDate
-        ];
+        payments = getPaymentsForOppsInList();
         // there should be the two automatically created payments, plus the newly created payment
         System.assertEquals(3, payments.size(), 'There should be three payment records.');
 
@@ -499,16 +455,7 @@ public with sharing class BDI_Donations_TEST {
         System.assertEquals(true, updatedPayment.npe01__Paid__c);
         System.assertEquals(updatedPaymentInfo.paymentDate, updatedPayment.npe01__Payment_Date__c);
 
-        dataImports = [
-            SELECT Id,
-                Status__c,
-                DonationImported__c,
-                DonationImportStatus__c,
-                PaymentImported__c,
-                PaymentImportStatus__c
-            FROM DataImport__c
-            ORDER BY Id
-        ];
+        dataImports = getDataImports();
         System.assertEquals(2, dataImports.size());
 
         DataImport__c dataImportWithNewPaymentApplied = dataImports[0];
@@ -523,7 +470,6 @@ public with sharing class BDI_Donations_TEST {
         System.assertEquals(updatedPayment.Id, dataImportWithUnpaidPaymentPaidOff.PaymentImported__c);
         System.assertEquals(System.Label.bdiMatchedByUser, dataImportWithUnpaidPaymentPaidOff.PaymentImportStatus__c);
     }
-
     /*********************************************************************************************************
     * @description operation
     *        import existing contacts with existing open Opportunities in a currency other than the org default
@@ -2626,5 +2572,70 @@ public with sharing class BDI_Donations_TEST {
         batch.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
                 UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
         return batch;
+    }
+
+    public static List<Contact> getContacts() {
+        return [
+                SELECT Id,
+                        Name,
+                        AccountId,
+                        npo02__TotalOppAmount__c
+                FROM Contact
+                ORDER BY Id
+        ];
+    }
+
+    private static List<Account> getAccounts() {
+        return [
+                SELECT Id,
+                        Name,
+                        npo02__TotalOppAmount__c
+                FROM Account
+                ORDER BY Id
+        ];
+    }
+
+    private static List<Opportunity> getOpportunities() {
+        return [
+                SELECT Id,
+                        Name,
+                        Amount,
+                        CloseDate,
+                        StageName,
+                        isWon,
+                        isClosed,
+                        AccountId,
+                        npe01__Payments_Made__c
+                FROM Opportunity
+                ORDER BY Id
+        ];
+    }
+
+    private static List<npe01__OppPayment__c> getPaymentsForOppsInList() {
+        return [
+                SELECT Id,
+                        npe01__Paid__c,
+                        npe01__Payment_Amount__c,
+                        npe01__Payment_Method__c,
+                        npe01__Check_Reference_Number__c,
+                        npe01__Payment_Date__c,
+                        npe01__Opportunity__c
+                FROM npe01__OppPayment__c
+                WHERE npe01__Opportunity__c IN :listOppT
+                ORDER BY npe01__Opportunity__r.Id, CreatedDate
+        ];
+    }
+
+    private static List<DataImport__c> getDataImports() {
+        return [
+                SELECT Id,
+                        Status__c,
+                        DonationImported__c,
+                        DonationImportStatus__c,
+                        PaymentImported__c,
+                        PaymentImportStatus__c
+                FROM DataImport__c
+                ORDER BY Id
+        ];
     }
 }
