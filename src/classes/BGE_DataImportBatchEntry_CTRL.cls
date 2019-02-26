@@ -256,7 +256,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             'donationAmountField' => Schema.SObjectType.DataImport__c.fields.Donation_Amount__c.getName(),
             'expectedCountField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Count_of_Gifts__c.getName(),
             'expectedTotalField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getName(),
-            'namespacePrefix' => UTIL_Namespace.StrTokenNSPrefix(''),
             'noDataImportsFound' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.DataImport__c.getName()}),
             'opportunityImportedLookupField' => Schema.SObjectType.DataImport__c.fields.DonationImported__c.getName(),
             'opportunityImportedStatusField' => Schema.SObjectType.DataImport__c.fields.DonationImportStatus__c.getName(),
@@ -364,11 +363,11 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                         columns.add(col);
 
                         if (dataImportDFR.getType().name() == 'reference') {
-                            // manually construct EXTRA column for campaign link
+                            // manually construct EXTRA column for lookup link
                             Column linkCol = new Column();
                             linkCol.label = dataImportDFR.getLabel();
-                            String fieldLabel = dataImportDFR.name + 'label';
-                            String fieldName = dataImportDFR.name + 'link';
+                            String fieldLabel = dataImportDFR.name + '_label';
+                            String fieldName = dataImportDFR.name + '_link';
                             linkCol.fieldName = fieldName;
                             linkCol.readOnly = true;
                             linkCol.required = field.requiredInEntryForm;
