@@ -195,16 +195,22 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'REFERENCE'
         };
 
+        // these fields have been whitelisted since they have special handling in BDI
+        Set<String> allowedFields = new Set<String>{
+                'Donation_Record_Type_Name__c'
+        };
+
         // looping through the fields on DataImport__c and remove unsupported data types
         for (Schema.DescribeFieldResult dfr : allFieldsMap.values()) {
             String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.getName());
 
             String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(dfr.getName());
 
-            Boolean fieldAllowed = allowedObjects.contains(dataImportFieldMappedObject)
+            Boolean fieldAllowed = (allowedObjects.contains(dataImportFieldMappedObject)
                 && allowedDataTypes.contains(dfr.getType().name())
                 && !bannedFields.contains(dataImportFieldApiName)
-                && dfr.getInlineHelpText() != null;
+                && dfr.getInlineHelpText() != null)
+                || allowedFields.contains(dataImportFieldApiName);
 
             if (fieldAllowed) {
                 filteredDFRMap.put(dfr.label, dfr);
