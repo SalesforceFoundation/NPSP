@@ -233,9 +233,6 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         } else if (rawSourceFieldType == Schema.DisplayType.String) {
 
             String targetObject = BDI_DataImportService.getTargetObject(dataImportField);
-            if (targetObject == 'Payment') {
-                targetObject = 'npe01__OppPayment__c';
-            }
 
             String targetField = BDI_DataImportService.getTargetField(dataImportField);
             Schema.DisplayType targetFieldType = UTIL_Describe.getFieldDisplaytype(targetObject, targetField);
