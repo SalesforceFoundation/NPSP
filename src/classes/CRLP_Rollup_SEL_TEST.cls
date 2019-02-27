@@ -356,119 +356,194 @@ public class CRLP_Rollup_SEL_TEST {
         Test.stopTest();
     }
 
+    /**
+     * @description Provide a descriptive message in System.assertEquals(...)
+     * @param  format format used when returning String.format(format, ...)
+     * @param  title  First parameter in String.format, i.e. {0}
+     * @param  values If values is not null, adds a message of 'key: "value"'' for all values.   Then joins Strings by '; '.  This is the second paramter in String.format, i.e. {1}
+     * @return String.format(format, new List<String> { title, String.join(messages, '; ')})
+     */
+    public static String getAssertMessage(String format, String title, Map<String, Object> values) {
+        final List<String> messages = new List<String> ();
+        if (values != null) {
+            for(String field : values.keySet()) {
+                messages.add(field + ': "' + values.get(field) + '"');
+            }
+        }
+         
+        return String.format(
+            format, 
+            new List<String> {
+                title, 
+                String.join(messages, ': ')
+            }
+        );
+    }
 
-/*
+    /**
+     * @description Provide a descriptive message in System.assertEquals(...) when testing if a method should never throw an Exception when called
+     * @param  methodName Passes methodName as getAssertMessage(...)'s title
+     * @return getAssertMessage('{0' should never throw an Exception, methodName, (Map<String, Object>) null)
+     */
+    public static String getNeverExpectExceptionMessage(String methodName) {
+        return getAssertMessage(
+            '{0} should never throw an Exception', 
+            methodName, 
+            (Map<String, Object>) null
+        );
+    }
+    
+    /**
+     * @description Provide a descriptive message in System.assertEquals(...) when testing expected equals actual
+     * @param  methodName Passes methodName as getAssertMessage(...)'s title
+     * @return getAssertMessage('Unexpected value of {0}', methodName, (Map<String, Object>) null)
+     */
+    public static String getUnexpectedValueMessage(String methodName) {
+        return getAssertMessage(
+            'Unexpected value of {0}', 
+            methodName, 
+            (Map<String, Object>) null
+        );
+    }
+
+    /**
+     * @description Provide a descriptive message in System.assertEquals(...) when testing expected equals actual
+     * @param  methodName Passes methodName as getAssertMessage(...)'s title
+     * @param values Map: Value Name -> Value to be passed in as getAssertMessage(...)'s values
+     * @return getAssertMessage('Unexpected value of {0}', methodName, values)
+     */
+    public static String getUnexpectedValueMessage(String methodName, Map<String, Object> values) {
+        return getAssertMessage(
+            'Unexpected value of {0}.  {1}', 
+            methodName, 
+            values
+        );
+    }
+
+    /**
+     * @description testRollupField() tests all combinations of inputs to test each part of CRLP_Rollup_SEL.RollupField.  The validity of this test is proved in the quality of the test data.  This test should also "future proof" meaning if someone changes the behavior of CRLP_Rollup_SEL.RollupField, this test should fail.  A side note, CRLP_Operation_TEST asserts that the is a 1:1 correspondence between both CRLP_Operation.TimeBoundOperationType and Rollup__mdt.Time_Bound_Operation_Type__c Picklist Vlaues and CRLP_Operation.RollupType and Rollup__mdt.Operation__c Picklist Values.
+     */
     @IsTest
     private static void testRollupField() {
         // Data
-        final SObjectField[] sObjectLookups = new SObjectField[] {
-            Schema.Rollup__mdt.Date_Object__c,
-            Schema.Rollup__mdt.Amount_Object__c,
-            Schema.Rollup__mdt.Detail_Object__c
+        final Map<SObjectField, SObjectField> fieldLookupBySObjectLookup = new Map<SObjectField, SObjectField> {
+            null => null, 
+            Schema.Rollup__mdt.Date_Object__c => Schema.Rollup__mdt.Date_Field__c, 
+            Schema.Rollup__mdt.Amount_Object__c => Schema.Rollup__mdt.Amount_Field__c, 
+            Schema.Rollup__mdt.Detail_Object__c => Schema.Rollup__mdt.Detail_Field__c
         };
-        final Integer sObjectLookupsSize = sObjectLookups.size();
-
-        final SObjectField[] fieldLookups = new SObjectField[] {
-            Schema.Rollup__mdt.Date_Field__c, 
-            Schema.Rollup__mdt.Amount_Field__c, 
-            Schema.Rollup__mdt.Detail_Field__c
-        };
-        {
-            System.assertEquals(
-                sObjectLookupsSize, 
-                fieldLookups.size(), 
-                'Test data should have same size.  sObjectLookups and fieldLookups should have 1:1 correspondence: Each fieldLookup belongs to sObjectLookup for the same index'    
-            );
-        }
-        
-        final String[] testOperations = new String[] {
-            null
-        };
-
-        final String[] testTimeBoundOperationTypes = new String[] {
-            null
-        };
-
+    
         final List<Map<String, Set<String>>> supportedOperationsByTimeBoundOperationTypes = new List<Map<String, Set<String>>> {
-            new Map<String, Set<String>>()
+            null, 
+            new Map<String, Set<String>>(), 
+            new Map<String, Set<String>> {
+                CRLP_Operation.TimeBoundOperationType.All_Time.name() => (Set<String>) null, 
+                CRLP_Operation.TimeBoundOperationType.Days_Back.name() => new Set<String> {
+                    CRLP_Operation.RollupType.Average.name(), 
+                    CRLP_Operation.RollupType.Best_Year.name()
+                }
+                // Missing Key: CRLP_Operation.TimeBoundOperationType.Years_Ago.name()
+            }
         };
+
+        final List<Rollup__mdt> rollups = new List<Rollup__mdt> {
+            null
+        };
+
+        final List<String> timeBoundOperationTypes = new List<String> {
+            null
+        };
+
+        final List<String> sObjectNames = new List<String> {
+            null, 
+            'A_Different_Custom_Object__c'
+        };
+
+        // Set rollups
         {
-            // Picklist Values
-            String firstOperation;
-            final Set<String> operations = new Set<String>();
-            for (Schema.PicklistEntry picklist : Schema.SObjectType.Rollup__mdt.fields.Operation__c.getPicklistValues()) {
-                operations.add(picklist.getValue());
-                testOperations.add(picklist.getValue());
-            }
+            final List<Boolean> options = new List<Boolean> {
+                true, 
+                false
+            };
 
-            final Set<String> timeBoundOperationTypes = new Set<String>();
-            for (Schema.PicklistEntry picklist : Schema.SObjectType.Rollup__mdt.fields.Time_Bound_Operation_Type__c.getPicklistValues()) {
-                timeBoundOperationTypes.add(picklist.getValue());
-                testTimeBoundOperationTypes.add(picklist.getValue());
-            }
-
-            // All
+            final String ROLLUP_OBJECT_NAME = Schema.SObjectType.Rollup__mdt.getName();
+            final String FIELD_NAME = 'Field__c';
+            final String SOBJECT_NAME = 'Custom_Object__c';
             {
-                Map<String, Set<String>> supportedOperations = new Map<String, Set<String>>();
-                {
-                    supportedOperationsByTimeBoundOperationTypes.add(supportedOperations);
-                }
+                sObjectNames.add(SOBJECT_NAME);
+            }
 
-                for (String timeBoundOperationType : timeBoundOperationTypes) {
-                    supportedOperations.put(timeBoundOperationType, operations);
+            final String TIME_BOUND_OPERATION_TYPE_FIELD = Schema.SObjectType.Rollup__mdt.fields.Time_Bound_Operation_Type__c.getName();
+            final String OPERATION_FIELD = Schema.SObjectType.Rollup__mdt.fields.Operation__c.getName();
+
+            final List<String> SOBJECT_RELATIONSHIP_NAMES = new List<String>();
+            for (SObjectField sObjectField : fieldLookupBySObjectLookup.keySet()) {
+                if (sObjectField != null) {
+                    SOBJECT_RELATIONSHIP_NAMES.add(sObjectField.getDescribe().getName().removeEnd('__c') + '__r');
                 }
             }
 
-            // First Time Bound Operation Type with subset of Operations
-            {
-                Map<String, Set<String>> supportedOperations = new Map<String, Set<String>>();
-                {
-                    supportedOperationsByTimeBoundOperationTypes.add(supportedOperations);
+            final List<String> FIELD_RELATIONSHIP_NAMES = new List<String>();
+            for (SObjectField sObjectField : fieldLookupBySObjectLookup.values()) {
+                if (sObjectField != null) {
+                    FIELD_RELATIONSHIP_NAMES.add(sObjectField.getDescribe().getName().removeEnd('__c') + '__r');
                 }
-
-                final Set<String> operationsSubset = new Set<String>();
-                final Integer operationsSize = operations.size();
-                if (1 < operationsSize) {
-                    final Integer size = Math.floor(Math.random() * Double.valueOf(operationsSize - 1)).intValue();
-                    final String[] operationsList = new List<String>(operations);
-                    for (Integer i = 0; i < size; i ++) {
-                        operationsSubset.add(operationsList[i]);
-                    }
+            }
+            
+            Map<String, Set<String>> allOperationsByTimeBoundOperationType = new Map<String, Set<String>>();
+            {
+                supportedOperationsByTimeBoundOperationTypes.add(allOperationsByTimeBoundOperationType);
+            }
+            for (CRLP_Operation.TimeBoundOperationType timeBoundOperationType : CRLP_Operation.TimeBoundOperationType.values()) {
+                Set<String> allOperations = new Set<String>();
+                {
+                    allOperationsByTimeBoundOperationType.put(timeBoundOperationType.name(), allOperations);
+                }
+                {
+                    timeBoundOperationTypes.add(timeBoundOperationType.name());
                 }
                 
-                Boolean isFirst = true;
-                for (String timeBoundOperationType : timeBoundOperationTypes) {
-                    if (isFirst) {
-                        supportedOperations.put(timeBoundOperationType, operationsSubset);
-                        isFirst = false;
+                for( CRLP_Operation.RollupType rollupType : CRLP_Operation.RollupType.values()) {
+                    {
+                        allOperations.add(rollupType.name());
                     }
-                    else {
-                        supportedOperations.put(timeBoundOperationType, new Set<String>());
+
+                    for (Boolean isSObjectNotNull : options) {
+                        for (Boolean isFieldNotNull : options) {
+                            final Map<String, Object> fields = new Map<String, Object> {
+                                TIME_BOUND_OPERATION_TYPE_FIELD => timeBoundOperationType.name(), 
+                                OPERATION_FIELD => rollupType.name()
+                            };
+
+                            if (isSObjectNotNull) {
+                                final Object relationship = getEntityMetadataRelationship(SOBJECT_NAME);
+                                for(String relationshipName : SOBJECT_RELATIONSHIP_NAMES) {
+                                    fields.put(relationshipName, relationship);
+                                }
+                            }
+
+                            if (isFieldNotNull) {
+                                final Object relationship = getFieldMetadataRelationship(FIELD_NAME);
+                                for(String relationshipName : FIELD_RELATIONSHIP_NAMES) {
+                                    fields.put(relationshipName, relationship);
+                                }
+                            }
+
+                            rollups.add((Rollup__mdt) getSObject(ROLLUP_OBJECT_NAME, fields));
+                        }
                     }
                 }
             }
         }
-
-        final String[] sObjectNames = new String[] {
-            null, 
-            Schema.SObjectType.Opportunity.getName()
-        };
 
         Test.startTest();
 
         // CRLP_Rollup_SEL
         {
             // RollupField
-            for (Integer rollupFieldIndex = 0; rollupFieldIndex < sObjectLookupsSize; rollupFieldIndex ++) {
-                final SObjectField sObjectLookup = sObjectLookups[rollupFieldIndex];
-                final SObjectField fieldLookup = fieldLookups[rollupFieldIndex];
-                {
-                    System.assertNotEquals(null, sObjectLookup);
-                    System.assertNotEquals(null, fieldLookup);
-                }
+            for (SObjectField sObjectLookup : fieldLookupBySObjectLookup.keySet()) {
+                final SObjectField fieldLookup = fieldLookupBySObjectLookup.get(sObjectLookup);
 
-                final String sObjectLookupRelationshipName = sObjectLookup.getDescribe().getName().removeEnd('__c') + '__r';
-                final String fieldLookupRelationshipName = fieldLookup.getDescribe().getName().removeEnd('__c') + '__r';
 
                 for (Map<String, Set<String>> supportedOperationsByTimeBoundOperationType : supportedOperationsByTimeBoundOperationTypes) {
                     final CRLP_Rollup_SEL.RollupField rollupField = new CRLP_Rollup_SEL.RollupField(
@@ -481,7 +556,8 @@ public class CRLP_Rollup_SEL_TEST {
                     {
                         System.assertEquals(
                             sObjectLookup, 
-                            rollupField.getSObjectLookup()
+                            rollupField.getSObjectLookup(), 
+                            getUnexpectedValueMessage('CRLP_Rollup_SEL.RollupField.getSObjectLookup()')
                         );
                     }
 
@@ -489,7 +565,8 @@ public class CRLP_Rollup_SEL_TEST {
                     {
                         System.assertEquals(
                             fieldLookup, 
-                            rollupField.getFieldLookup()
+                            rollupField.getFieldLookup(), 
+                            getUnexpectedValueMessage('CRLP_Rollup_SEL.RollupField.getFieldLookup()')
                         );
                     }
 
@@ -497,16 +574,50 @@ public class CRLP_Rollup_SEL_TEST {
                     {
                         System.assertEquals(
                             supportedOperationsByTimeBoundOperationType, 
-                            rollupField.getSupportedOperationsByTimeBoundOperationType()
+                            rollupField.getSupportedOperationsByTimeBoundOperationType(), 
+                            getUnexpectedValueMessage('CRLP_Rollup_SEL.RollupField.getSupportedOperationsByTimeBoundOperationType()')
                         );
                     }
 
-                    // Methods requiring Rollup__mdt with null Rollup__mdt
-                    {
-                        final Rollup__mdt rollup = null;
+                    // Set<String> getSupportedOperations(String timeBoundOperationType)
+                    for (String timeBoundOperationType : timeBoundOperationTypes) {
+                        final String METHOD_NAME = 'CRLP_Rollup_SEL.RollupField.getSupportedOperations(String timeBoundOperationType)';
+                        
+                        final Set<String> operations = supportedOperationsByTimeBoundOperationType == null || supportedOperationsByTimeBoundOperationType.get(timeBoundOperationType) == null ? new Set<String>() : supportedOperationsByTimeBoundOperationType.get(timeBoundOperationType);
+                        final Set<String> expected = operations == null ? new Set<String>() : operations;
 
+                        Exception e;
+                        Set<String> actual;
+
+                        try {
+                            actual = rollupField.getSupportedOperations(timeBoundOperationType);
+                        }
+                        catch (Exception whoops) {
+                            e = whoops;
+                        }
+                        
+                        System.assertEquals(
+                            null, 
+                            e, 
+                            getNeverExpectExceptionMessage(METHOD_NAME)
+                        );
+                        System.assertEquals(
+                            expected, 
+                            actual, 
+                            getUnexpectedValueMessage(
+                                METHOD_NAME, 
+                                new Map<String, Object> {
+                                    'timeBoundOperationType' => timeBoundOperationType
+                                }
+                            )
+                        );
+                    }
+
+                    for(Rollup__mdt rollup : rollups) {
                         // String getSObjectName(Rollup__mdt rollup)
                         {
+                            final String METHOD_NAME = 'CRLP_Rollup_SEL.RollupField.getSObjectName(Rollup__mdt rollup)';
+
                             final String expected = CRLP_Rollup_SEL.getQualifiedApiName(
                                 rollup, 
                                 rollupField.getSObjectLookup()
@@ -522,12 +633,28 @@ public class CRLP_Rollup_SEL_TEST {
                                 e = whoops;
                             }
                             
-                            System.assertEquals(null, e);
-                            System.assertEquals(expected, actual);
+                            System.assertEquals(
+                                null, 
+                                e, 
+                                getNeverExpectExceptionMessage(METHOD_NAME)
+                            );
+                            System.assertEquals(
+                                expected, 
+                                actual, 
+                                getUnexpectedValueMessage(
+                                    METHOD_NAME, 
+                                    new Map<String, Object> {
+                                        'rollup' => rollup, 
+                                        'rollupField.getSObjectLookup()' => rollupField.getSObjectLookup()
+                                    }
+                                )
+                            );
                         }
 
                         // String getFieldName(Rollup__mdt rollup)
                         {
+                            final String METHOD_NAME = 'CRLP_Rollup_SEL.RollupField.getFieldName(Rollup__mdt rollup)';
+
                             final String expected = CRLP_Rollup_SEL.getQualifiedApiName(
                                 rollup, 
                                 rollupField.getFieldLookup()
@@ -543,13 +670,30 @@ public class CRLP_Rollup_SEL_TEST {
                                 e = whoops;
                             }
                             
-                            System.assertEquals(null, e);
-                            System.assertEquals(expected, actual);
+                            System.assertEquals(
+                                null, 
+                                e, 
+                                getNeverExpectExceptionMessage(METHOD_NAME)
+                            );
+                            System.assertEquals(
+                                expected, 
+                                actual, 
+                                getUnexpectedValueMessage(
+                                    METHOD_NAME, 
+                                    new Map<String, Object> {
+                                        'rollup' => rollup, 
+                                        'rollupField.getFieldLookup()' => rollupField.getFieldLookup()
+                                    }
+                                )
+                            );
                         }
 
                         // Boolean isRollupSupported(Rollup__mdt rollup)
                         {
-                            final Boolean expected = rollup != null 
+                            final String METHOD_NAME = 'CRLP_Rollup_SEL.RollupField.isRollupSupported(Rollup__mdt rollup)';
+
+                            final Boolean expected = 
+                                rollup != null 
                                 && rollupField.getSupportedOperations(rollup.Time_Bound_Operation_Type__c).contains(rollup.Operation__c);
                             
                             Exception e;
@@ -562,13 +706,31 @@ public class CRLP_Rollup_SEL_TEST {
                                 e = whoops;
                             }
                             
-                            System.assertEquals(null, e);
-                            System.assertEquals(expected, actual);
+                            System.assertEquals(
+                                null, 
+                                e, 
+                                getNeverExpectExceptionMessage(METHOD_NAME)
+                            );
+                            System.assertEquals(
+                                expected, 
+                                actual, 
+                                getUnexpectedValueMessage(
+                                    METHOD_NAME, 
+                                    new Map<String, Object> {
+                                        'rollup' => rollup, 
+                                        'rollupField.getSupportedOperations(rollup == null ? null : rollup.Time_Bound_Operation_Type__c)' => rollupField.getSupportedOperations(rollup == null ? null : rollup.Time_Bound_Operation_Type__c)
+                                    }
+                                )
+                            );
                         }
 
                         // Boolean isFieldUsed(Rollup__mdt rollup, String sObjectName)
                         for (String sObjectName : sObjectNames) {
-                            final Boolean expected = rollupField.getFieldName(rollup) != null
+                            final String METHOD_NAME = 'CRLP_Rollup_SEL.RollupField.isFieldUsed(Rollup__mdt rollup, String sObjectName)';
+
+                            final Boolean expected = 
+                                rollupField.getFieldName(rollup) != null
+                                && sObjectName != null
                                 && rollupField.getSObjectName(rollup) == sObjectName
                                 && rollupField.isRollupSupported(rollup);
                             
@@ -582,121 +744,22 @@ public class CRLP_Rollup_SEL_TEST {
                                 e = whoops;
                             }
                             
-                            System.assertEquals(null, e);
-                            System.assertEquals(expected, actual);
-                        }
-                    }
-
-                    for (String timeBoundOperationType : testTimeBoundOperationTypes) {
-                        // Set<String> getSupportedOperations(String timeBoundOperationType)
-                        {
-                            final Set<String> expected = supportedOperationsByTimeBoundOperationType.get(timeBoundOperationType) == null ? new Set<String>() : supportedOperationsByTimeBoundOperationType.get(timeBoundOperationType);
-
-                            Exception e;
-                            Set<String> actual;
-
-                            try {
-                                actual = rollupField.getSupportedOperations(timeBoundOperationType);
-                            }
-                            catch (Exception whoops) {
-                                e = whoops;
-                            }
-                            
-                            System.assertEquals(null, e);
-                            System.assertEquals(expected, actual);
-                        }
-
-                        for (String operation : testOperations) {
-                            final Rollup__mdt rollup = (Rollup__mdt) getSObject(
-                                Schema.SObjectType.Rollup__mdt.getName(), 
-                                new Map<String, Object> {
-                                    fieldLookupRelationshipName => getEntityMetadataRelationship(Schema.SObjectType.Opportunity.getName()), 
-                                    fieldLookupRelationshipName => getFieldMetadataRelationship(Schema.SObjectType.Opportunity.fields.Amount.getName()), 
-                                    Schema.SObjectType.Rollup__mdt.fields.Time_Bound_Operation_Type__c.getName() => timeBoundOperationType, 
-                                    Schema.SObjectType.Rollup__mdt.fields.Operation__c.getName() => operation
-                                }
+                            System.assertEquals(
+                                null, 
+                                e, 
+                                getNeverExpectExceptionMessage(METHOD_NAME)
                             );
-
-                            // String getSObjectName(Rollup__mdt rollup)
-                            {
-                                final String expected = CRLP_Rollup_SEL.getQualifiedApiName(
-                                    rollup, 
-                                    rollupField.getSObjectLookup()
-                                );
-                                
-                                Exception e;
-                                String actual;
-
-                                try {
-                                    actual = rollupField.getSObjectName((rollup));
-                                }
-                                catch (Exception whoops) {
-                                    e = whoops;
-                                }
-                                
-                                System.assertEquals(null, e);
-                                System.assertEquals(expected, actual);
-                            }
-
-                            // String getFieldName(Rollup__mdt rollup)
-                            {
-                                final String expected = CRLP_Rollup_SEL.getQualifiedApiName(
-                                    rollup, 
-                                    rollupField.getFieldLookup()
-                                );
-                                
-                                Exception e;
-                                String actual;
-
-                                try {
-                                    actual = rollupField.getFieldName((rollup));
-                                }
-                                catch (Exception whoops) {
-                                    e = whoops;
-                                }
-                                
-                                System.assertEquals(null, e);
-                                System.assertEquals(expected, actual);
-                            }
-
-                            // Boolean isRollupSupported(Rollup__mdt rollup)
-                            {
-                                final Boolean expected = rollup != null 
-                                    && rollupField.getSupportedOperations(rollup.Time_Bound_Operation_Type__c).contains(rollup.Operation__c);
-                                
-                                Exception e;
-                                Boolean actual;
-
-                                try {
-                                    actual = rollupField.isRollupSupported(rollup);
-                                }
-                                catch (Exception whoops) {
-                                    e = whoops;
-                                }
-                                
-                                System.assertEquals(null, e);
-                                System.assertEquals(expected, actual);
-                            }
-
-                            // Boolean isFieldUsed(Rollup__mdt rollup, String sObjectName)
-                            for (String sObjectName : sObjectNames) {
-                                final Boolean expected = rollupField.getFieldName(rollup) != null
-                                    && rollupField.getSObjectName(rollup) == sObjectName
-                                    && rollupField.isRollupSupported(rollup);
-                                
-                                Exception e;
-                                Boolean actual;
-
-                                try {
-                                    actual = rollupField.isFieldUsed(rollup, sObjectName);
-                                }
-                                catch (Exception whoops) {
-                                    e = whoops;
-                                }
-                                
-                                System.assertEquals(null, e);
-                                System.assertEquals(expected, actual);
-                            }
+                            System.assertEquals(
+                                expected, 
+                                actual, 
+                                getUnexpectedValueMessage(
+                                    METHOD_NAME, 
+                                    new Map<String, Object> {
+                                        'rollup' => rollup, 
+                                        'sObjectName' => sObjectName
+                                    }
+                                )
+                            );
                         }
                     }
                 }
@@ -706,46 +769,114 @@ public class CRLP_Rollup_SEL_TEST {
         Test.stopTest();
     }
 
+    /**
+     * @param  DescribeFieldResult's getPicklsitValues()
+     * @return Set of all picklists' Values
+     */
     public static Set<String> getPicklistValues(Schema.PicklistEntry[] picklists) {
         final Set<String> picklistValues = new Set<String>();
-        for(Schema.PicklistEntry picklist : picklists) {
+        for (Schema.PicklistEntry picklist : picklists) {
             picklistValues.add(picklist.getValue());
         }
         return picklistValues;
     }
 
-    public static void assertEquals(CRLP_Rollup_SEL.RollupField expected, CRLP_Rollup_SEL.RollupField actual, String description) {
+    /**
+     * @description Asserts CRLP_Rollup_SEL.RollupFields are equal
+     * @param  expected 
+     * @param  actual 
+     * @param  methodName Name of method being tested.  Prefixes all assertEquals(...) messages
+     */
+    public static void assertEquals(
+        CRLP_Rollup_SEL.RollupField expected, 
+        CRLP_Rollup_SEL.RollupField actual, 
+        String methodName
+    ) {
         if (expected == null) {
-            System.assertEquals(null, actual, description);
+            System.assertEquals(
+                null, 
+                actual, 
+                methodName + ' is expected to be null'
+            );
         }
         else {
-            System.assertNotEquals(null, actual, description);
+            System.assertNotEquals(
+                null, 
+                actual, 
+                methodName + ' is expected to be non-null'
+            );
+
             System.assertEquals(
                 expected.getSObjectLookup(), 
                 actual.getSObjectLookup(), 
-                description
+                methodName + ' has an unexpected getSObjectLookup()'
             );
+
             System.assertEquals(
                 expected.getFieldLookup(), 
                 actual.getFieldLookup(), 
-                description
+                methodName + ' has an unexpected getFieldLookup()'
             );
+
             System.assertEquals(
                 expected.getSupportedOperationsByTimeBoundOperationType(), 
                 actual.getSupportedOperationsByTimeBoundOperationType(), 
-                description
+                methodName + ' has an unxpected getSupportedOperationsByTimeBoundOperationType()'
             );
         }
     }
 
     /**
+     * @description Asserts List<CRLP_Rollup_SEL.RollupField> are equal
+     * @param  expected 
+     * @param  actual 
+     * @param  methodName Name of method being tested.  Prefixes all assertEquals(...) messages
+     */
+    public static void assertEquals(
+        List<CRLP_Rollup_SEL.RollupField> expected, 
+        List<CRLP_Rollup_SEL.RollupField> actual, 
+        String methodName
+    ) {
+        if (expected == null) {
+            System.assertEquals(
+                null, 
+                actual, 
+                methodName + ' is expected to be null'
+            );
+        }
+        else {
+            System.assertNotEquals(
+                null, 
+                actual, 
+                methodName + ' is expected to be non-null'
+            );
+
+            final Integer expectedSize = expected.size();
+
+            System.assertEquals(
+                expectedSize, 
+                actual.size(), 
+                methodName + ' has an unexpected size()'
+            );
+
+            for(Integer i = 0; i < expectedSize; i ++) {
+                assertEquals(
+                    expected[i], 
+                    actual[i], 
+                    methodName + '[' + i + ']'
+                );
+            }
+        }
+    }
+
+    /**
      * @description Tests CRLP_Rollup_SEL's RollupField getDateRollupField(), RollupField getAmountRollupField(), RollupField getDetailRollupField(), RollupField[] getRollupFields()
-     * /
+     */
     @IsTest
     private static void testGetRollupFields() {
         // Data
         final Set<String> timeBoundOperationTypes = getPicklistValues(Schema.SObjectType.Rollup__mdt.fields.Time_Bound_Operation_Type__c.getPicklistValues());
-        final Set<String> operations = getPicklistValues(Schema.SObjectType.Rollup__mdt.fields.Operation__c.getPicklistValues());
+        
 
         Test.startTest();
 
@@ -753,9 +884,13 @@ public class CRLP_Rollup_SEL_TEST {
         {
             // RollupField getDateRollupField()
             {
+                final String METHOD_NAME = 'CRLP_Rollup_SEL.getDateRollupField()';
+
+                final Set<String> allOperations = getPicklistValues(Schema.SObjectType.Rollup__mdt.fields.Operation__c.getPicklistValues());
+
                 final CRLP_Rollup_SEL.RollupField expected = new CRLP_Rollup_SEL.RollupField(
-                    Schema.Rollup__mdt.Detail_Object__c, 
-                    Schema.Rollup__mdt.Detail_Field__c, 
+                    Schema.Rollup__mdt.Date_Object__c, 
+                    Schema.Rollup__mdt.Date_Field__c, 
                     new Map<String, Set<String>> {
                         CRLP_Operation.TimeBoundOperationType.All_Time.name() => new Set<String> {
                             CRLP_Operation.RollupType.First.name(), 
@@ -765,504 +900,198 @@ public class CRLP_Rollup_SEL_TEST {
                             CRLP_Operation.RollupType.Best_Year.name(), 
                             CRLP_Operation.RollupType.Best_Year_Total.name()
                         }, 
-                        CRLP_Operation.TimeBoundOperationType.Days_Back.name() => new Set<String> {
-                            CRLP_Operation.RollupType.Sum.name(), 
-                            CRLP_Operation.RollupType.Count.name(), 
-                            CRLP_Operation.RollupType.Average.name(), 
-                            CRLP_Operation.RollupType.Smallest.name(), 
-                            CRLP_Operation.RollupType.Largest.name(), 
-                            CRLP_Operation.RollupType.First.name(), 
-                            CRLP_Operation.RollupType.Last.name(), 
-                            CRLP_Operation.RollupType.Years_Donated.name(), 
-                            CRLP_Operation.RollupType.Donor_Streak.name(), 
-                            CRLP_Operation.RollupType.Best_Year.name(), 
-                            CRLP_Operation.RollupType.Best_Year_Total.name()
-                        }, 
-                        CRLP_Operation.TimeBoundOperationType.Years_Ago.name() => new Set<String> {
-                            CRLP_Operation.RollupType.Sum.name(), 
-                            CRLP_Operation.RollupType.Count.name(), 
-                            CRLP_Operation.RollupType.Average.name(), 
-                            CRLP_Operation.RollupType.Smallest.name(), 
-                            CRLP_Operation.RollupType.Largest.name(), 
-                            CRLP_Operation.RollupType.First.name(), 
-                            CRLP_Operation.RollupType.Last.name(), 
-                            CRLP_Operation.RollupType.Years_Donated.name(), 
-                            CRLP_Operation.RollupType.Donor_Streak.name(), 
-                            CRLP_Operation.RollupType.Best_Year.name(), 
-                            CRLP_Operation.RollupType.Best_Year_Total.name()
-                        }
+                        CRLP_Operation.TimeBoundOperationType.Days_Back.name() => allOperations, 
+                        CRLP_Operation.TimeBoundOperationType.Years_Ago.name() => allOperations
                     }
                 );
 
+                Exception e;
+                CRLP_Rollup_SEL.RollupField actual;
+
                 // Setup
                 {
-
+                    CRLP_Rollup_SEL.dateRollupField = null;
                 }
+
+                try {
+                    actual = CRLP_Rollup_SEL.getDateRollupField();
+                }
+                catch (Exception whoops) {
+                    e = whoops;
+                }
+                
+                System.assertEquals(
+                    null, 
+                    e, 
+                    getNeverExpectExceptionMessage(METHOD_NAME)
+                );
+
+                assertEquals(
+                    expected, 
+                    actual, 
+                    METHOD_NAME
+                );
+
+                assertEquals(
+                    expected, 
+                    CRLP_Rollup_SEL.dateRollupField, 
+                    'CRLP_Rollup_SEL.dateRollupField'
+                );
             }
-        }
 
-        Test.stopTest();
-    }
-
-/*
-    /**
-     * Cached data for Set<String> getRollupPicklistValues(SObjectField picklistField)
-     * /
-    private static final Map<SObjectField, Set<String>> ROLLUP_PICKLIST_VALUES_BY_FIELD = new Map<SObjectField, Set<String>>();
-    
-    /**
-     * Returns cached Set of Picklist Values for picklistField
-     * @param  picklistField 
-     * @return               return cached Set of picklistField's Picklist Entries' values
-     * /
-    public static Set<String> getRollupPicklistValues(SObjectField picklistField) {
-        if(
-            picklistField != null 
-            && ROLLUP_PICKLIST_VALUES_BY_FIELD.get(picklistField) == null
-        ) {
-            Set<String> picklistValues = new Set<String>{};
+            // RollupField getAmountRollupField()
             {
-                ROLLUP_PICKLIST_VALUES_BY_FIELD.put(picklistField, picklistValues);
-            }
-            for(Schema.PicklistEntry picklistEntry : picklistField.getDescribe().getPicklistValues()) {
-                // Including all Picklist Entries, i.e. not checking if picklistEntry.isActive() is true
-                picklistValues.add(picklistEntry.getValue());
-            }
-        }
-       return ROLLUP_PICKLIST_VALUES_BY_FIELD.get(picklistField);
-    }
+                final String METHOD_NAME = 'CRLP_Rollup_SEL.getAmountRollupField()';
 
-    /**
-     * getOperationsAndAssertValidity Validates rollupField and timeBoundOperationType are supported in  CRLP_Rollup_SEL.operationsByFieldByTimeBoundOperationType and returns CRLP_Rollup_SEL.operationsByFieldByTimeBoundOperationType's Set of supported Rollup__mdt.Operation__c Picklist Values.
-     * @param  rollupField            rollupField Used in Boolean isFieldReferenced(Rollup__mdt rollup, SObjectField rollupField).  Asserts rollupField is supported.
-     * @param  timeBoundOperationType timeBoundOperationType rollup's Time_Bound_Operation_Type__c used in Boolean isFieldReferenced(Rollup__mdt rollup, SObjectField rollupField).  Asserts timeBoundOperationType is a valid Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value
-     * @return                        return Set of Rollup__mdt.Operation__c Picklist Values from CRLP_Rollup_SEL.operationsByFieldByTimeBoundOperationType after validating rollupField and timeBoundOperationType are valid values and return Set of Rollup__mdt.Operation
-     * /
-    public static Set<String> getOperationsAndAssertValidity(
-        SObjectField rollupField, 
-        String timeBoundOperationType
-    ) {
-        if(CRLP_Rollup_SEL.operationsByFieldByTimeBoundOperationType == null) {
-            CRLP_Rollup_SEL.isFieldReferenced(
-                (Rollup__mdt) null, 
-                (SObjectField) null
-            );
-            System.assertNotEquals(null, CRLP_Rollup_SEL.operationsByFieldByTimeBoundOperationType);
-        }
+                final Set<String> operations = new Set<String> {
+                    CRLP_Operation.RollupType.Sum.name(), 
+                    CRLP_Operation.RollupType.Average.name(), 
+                    CRLP_Operation.RollupType.Smallest.name(), 
+                    CRLP_Operation.RollupType.Largest.name(), 
+                    CRLP_Operation.RollupType.Years_Donated.name(), 
+                    CRLP_Operation.RollupType.Donor_Streak.name(), 
+                    CRLP_Operation.RollupType.Best_Year.name(), 
+                    CRLP_Operation.RollupType.Best_Year_Total.name()
+                };
 
-        // Assert supported rollupField
-        System.assertNotEquals(
-            null, 
-            CRLP_Rollup_SEL.operationsByFieldByTimeBoundOperationType.get(rollupField), 
-            String.format(
-                '"{0}" is not a supported Rollup__mdt rollup field', 
-                new String[] {
-                    String.valueOf(rollupField)
-                }
-            )
-        );
-        
-        // Assert timeBoundOperationType is a valid Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value
-        System.assertEquals(
-            true, 
-            getRollupPicklistValues(Schema.Rollup__mdt.Time_Bound_Operation_Type__c).contains(timeBoundOperationType), 
-            String.format(
-                '"{0}" is not a Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value', 
-                new String[] {
-                    timeBoundOperationType
-                }
-            )
-        );
+                final CRLP_Rollup_SEL.RollupField expected = new CRLP_Rollup_SEL.RollupField(
+                    Schema.Rollup__mdt.Amount_Object__c, 
+                    Schema.Rollup__mdt.Amount_Field__c, 
+                    new Map<String, Set<String>> {
+                        CRLP_Operation.TimeBoundOperationType.All_Time.name() => operations, 
+                        CRLP_Operation.TimeBoundOperationType.Days_Back.name() => operations, 
+                        CRLP_Operation.TimeBoundOperationType.Years_Ago.name() => operations
+                    }
+                );
 
-        final Set<String> operations = CRLP_Rollup_SEL.operationsByFieldByTimeBoundOperationType
-            .get(rollupField)
-            .get(timeBoundOperationType);
-        
-        // Assert timeBoundOperationType is supported operations
-        System.assertNotEquals(
-            null, 
-            operations, 
-            String.format(
-                'CRLP_Rollup_SEL.operationsByFieldByTimeBoundOperationType cannot be null for SObjectField "{0}" and Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value "{1}"', 
-                new String[] {
-                    String.valueOf(rollupField), 
-                    timeBoundOperationType
-                }
-            )    
-        );
+                Exception e;
+                CRLP_Rollup_SEL.RollupField actual;
 
-        // operations contains only Rollup__mdt.Operation__c Picklist Values
-        System.assertEquals(
-            true, 
-            getRollupPicklistValues(Schema.Rollup__mdt.Operation__c).containsAll(operations), 
-            String.format(
-                'CRLP_Rollup_SEL.operationsByFieldByTimeBoundOperationType for SObjectField "{0}" and Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value "{1}" can only contain Rollup__mdt.Operation__c Picklsit Values', 
-                new String[] {
-                    String.valueOf(rollupField), 
-                    timeBoundOperationType
-                }
-            )
-        );
-
-        return operations;
-    }
-
-    /**
-     * @description Tests the following CRLP_Rollup_SEL methods:
-     *      Boolean isFieldReferenced(Rollup__mdt rollup, SObjectField rollupField)
-     * / 
-    @IsTest
-    private static void testIsFieldReferenced() {
-        // Supported rollupField values
-        final Set<SObjectField> rollupFields = new Set<SObjectField>{
-            Schema.Rollup__mdt.Date_Field__c, 
-            Schema.Rollup__mdt.Amount_Field__c, 
-            Schema.Rollup__mdt.Detail_Field__c
-        };
-
-        // Used to test all possible rollupFields
-        final SObjectField[] testRollupFields = new SObjectField[] {
-            null, 
-            Schema.Rollup__mdt.Id
-        };
-        {
-            testRollupFields.addAll(rollupFields);
-        }
-
-        // Used to test all possible Time_Bound_Operation_Type__c values
-        final String[] testTimeBoundOperationTypes = new String[] {
-            null, 
-            'Not a supported Time Bound Operation Type'
-        };
-        {
-            testTimeBoundOperationTypes.addAll(getRollupPicklistValues(Schema.Rollup__mdt.Time_Bound_Operation_Type__c));
-        }
-        
-        // Used to test all possible Time_Bound_Operation_Type__c values
-        final String[] testOperations = new String[] {
-            null, 
-            'Not a supported Operation'
-        };
-        {
-            testOperations.addAll(getRollupPicklistValues(Schema.Rollup__mdt.Operation__c));
-        }
-
-        // Note: CRLP_Operation_TEST asserts CRLP_Operation.RollupType getRollupTypeFromString(String operation) returns a non-null CRLP_Operation.RollupType for all Schema.Rollup__mdt.Operation__c Picklist Values
-
-        Test.startTest();
-        
-        // CRLP_Rollup_SEL
-        {
-            // Boolean isFieldReferenced(Rollup__mdt rollup, SObjectField rollupField)
-            {
-                // operationsByFieldByTimeBoundOperationType
+                // Setup
                 {
-                    CRLP_Rollup_SEL.operationsByFieldByTimeBoundOperationType = null;
-
-                    CRLP_Rollup_SEL.isFieldReferenced(
-                        (Rollup__mdt) null, 
-                        Schema.Rollup__mdt.Date_Field__c
-                    );
-
-                    System.assertNotEquals(null, CRLP_Rollup_SEL.operationsByFieldByTimeBoundOperationType);
-                    System.assertEquals(
-                        rollupFields, 
-                        CRLP_Rollup_SEL.operationsByFieldByTimeBoundOperationType.keySet(), 
-                        'CRLP_Rollup_SEL.operationsByFieldByTimeBoundOperationType only supports SObjectFields listed in rollupFields defined at the start of this test'
-                    );
-                    
-                    // Date_Field__c
-                    {
-                        // All_Time
-                        {
-                            final Set<String> operations = getOperationsAndAssertValidity(
-                                Schema.Rollup__mdt.Date_Field__c, 
-                                'All_Time'
-                            );
-                            
-                            // Contains
-                            System.assertEquals(6, operations.size());
-
-                            System.assertEquals(true, operations.contains('First'));
-                            System.assertEquals(true, operations.contains('Last'));
-                            System.assertEquals(true, operations.contains('Years_Donated'));
-                            System.assertEquals(true, operations.contains('Donor_Streak'));
-                            System.assertEquals(true, operations.contains('Best_Year'));
-                            System.assertEquals(true, operations.contains('Best_Year_Total'));
-
-                            // Not contains
-                            System.assertEquals(false, operations.contains('Sum'));
-                            System.assertEquals(false, operations.contains('Count'));
-                            System.assertEquals(false, operations.contains('Average'));
-                            System.assertEquals(false, operations.contains('Smallest'));
-                            System.assertEquals(false, operations.contains('Largest'));
-                        }
-
-                        // Days_Back
-                        {
-                            final Set<String> operations = getOperationsAndAssertValidity(
-                                Schema.Rollup__mdt.Date_Field__c, 
-                                'Days_Back'
-                            );
-                            
-                            // Contains all
-                            System.assertEquals(11, operations.size());
-
-                            System.assertEquals(true, operations.containsAll(getRollupPicklistValues(Schema.Rollup__mdt.Operation__c)));
-                        }
-
-                        // Years_Ago
-                        {
-                            final Set<String> operations = getOperationsAndAssertValidity(
-                                Schema.Rollup__mdt.Date_Field__c, 
-                                'Years_Ago'
-                            );
-                            
-                            // Contains all
-                            System.assertEquals(11, operations.size());
-
-                            System.assertEquals(true, operations.containsAll(getRollupPicklistValues(Schema.Rollup__mdt.Operation__c)));
-                        }
-                    }
-
-                    // Amount_Field__c
-                    {
-                        // All_Time
-                        {
-                            final Set<String> operations = getOperationsAndAssertValidity(
-                                Schema.Rollup__mdt.Amount_Field__c, 
-                                'All_Time'
-                            );
-                            
-                            // Contains
-                            System.assertEquals(8, operations.size());
-
-                            System.assertEquals(true, operations.contains('Sum'));
-                            System.assertEquals(true, operations.contains('Average'));
-                            System.assertEquals(true, operations.contains('Smallest'));
-                            System.assertEquals(true, operations.contains('Largest'));
-                            System.assertEquals(true, operations.contains('Years_Donated'));
-                            System.assertEquals(true, operations.contains('Donor_Streak'));
-                            System.assertEquals(true, operations.contains('Best_Year'));
-                            System.assertEquals(true, operations.contains('Best_Year_Total'));
-
-                            // Not contains
-                            System.assertEquals(false, operations.contains('Count'));
-                            System.assertEquals(false, operations.contains('First'));
-                            System.assertEquals(false, operations.contains('Last'));
-                        }
-
-                        // Days_Back
-                        {
-                            final Set<String> operations = getOperationsAndAssertValidity(
-                                Schema.Rollup__mdt.Amount_Field__c, 
-                                'Days_Back'
-                            );
-                            
-                            // Contains
-                            System.assertEquals(8, operations.size());
-
-                            System.assertEquals(true, operations.contains('Sum'));
-                            System.assertEquals(true, operations.contains('Average'));
-                            System.assertEquals(true, operations.contains('Smallest'));
-                            System.assertEquals(true, operations.contains('Largest'));
-                            System.assertEquals(true, operations.contains('Years_Donated'));
-                            System.assertEquals(true, operations.contains('Donor_Streak'));
-                            System.assertEquals(true, operations.contains('Best_Year'));
-                            System.assertEquals(true, operations.contains('Best_Year_Total'));
-
-                            // Not contains
-                            System.assertEquals(false, operations.contains('Count'));
-                            System.assertEquals(false, operations.contains('First'));
-                            System.assertEquals(false, operations.contains('Last'));
-                        }
-
-                        // Years_Ago
-                        {
-                            final Set<String> operations = getOperationsAndAssertValidity(
-                                Schema.Rollup__mdt.Amount_Field__c, 
-                                'Years_Ago'
-                            );
-                            
-                            // Contains
-                            System.assertEquals(8, operations.size());
-
-                            System.assertEquals(true, operations.contains('Sum'));
-                            System.assertEquals(true, operations.contains('Average'));
-                            System.assertEquals(true, operations.contains('Smallest'));
-                            System.assertEquals(true, operations.contains('Largest'));
-                            System.assertEquals(true, operations.contains('Years_Donated'));
-                            System.assertEquals(true, operations.contains('Donor_Streak'));
-                            System.assertEquals(true, operations.contains('Best_Year'));
-                            System.assertEquals(true, operations.contains('Best_Year_Total'));
-
-                            // Not contains
-                            System.assertEquals(false, operations.contains('Count'));
-                            System.assertEquals(false, operations.contains('First'));
-                            System.assertEquals(false, operations.contains('Last'));
-                        }
-                    }
-
-                    // Detail_Field__c
-                    {
-                        // All_Time
-                        {
-                            final Set<String> operations = getOperationsAndAssertValidity(
-                                Schema.Rollup__mdt.Detail_Field__c, 
-                                'All_Time'
-                            );
-                            
-                            // Contains
-                            System.assertEquals(4, operations.size());
-
-                            System.assertEquals(true, operations.contains('Smallest'));
-                            System.assertEquals(true, operations.contains('Largest'));
-                            System.assertEquals(true, operations.contains('First'));
-                            System.assertEquals(true, operations.contains('Last'));
-
-
-                            // Not contains
-                            System.assertEquals(false, operations.contains('Sum'));
-                            System.assertEquals(false, operations.contains('Count'));
-                            System.assertEquals(false, operations.contains('Average'));
-                            System.assertEquals(false, operations.contains('Years_Donated'));
-                            System.assertEquals(false, operations.contains('Donor_Streak'));
-                            System.assertEquals(false, operations.contains('Best_Year'));
-                            System.assertEquals(false, operations.contains('Best_Year_Total'));
-                        }
-
-                        // Days_Back
-                        {
-                            final Set<String> operations = getOperationsAndAssertValidity(
-                                Schema.Rollup__mdt.Detail_Field__c, 
-                                'Days_Back'
-                            );
-                            
-                            // Contains
-                            System.assertEquals(4, operations.size());
-
-                            System.assertEquals(true, operations.contains('Smallest'));
-                            System.assertEquals(true, operations.contains('Largest'));
-                            System.assertEquals(true, operations.contains('First'));
-                            System.assertEquals(true, operations.contains('Last'));
-
-
-                            // Not contains
-                            System.assertEquals(false, operations.contains('Sum'));
-                            System.assertEquals(false, operations.contains('Count'));
-                            System.assertEquals(false, operations.contains('Average'));
-                            System.assertEquals(false, operations.contains('Years_Donated'));
-                            System.assertEquals(false, operations.contains('Donor_Streak'));
-                            System.assertEquals(false, operations.contains('Best_Year'));
-                            System.assertEquals(false, operations.contains('Best_Year_Total'));
-                        }
-
-                        // Years_Ago
-                        {
-                            final Set<String> operations = getOperationsAndAssertValidity(
-                                Schema.Rollup__mdt.Detail_Field__c, 
-                                'Years_Ago'
-                            );
-                            
-                            // Contains
-                            System.assertEquals(4, operations.size());
-
-                            System.assertEquals(true, operations.contains('Smallest'));
-                            System.assertEquals(true, operations.contains('Largest'));
-                            System.assertEquals(true, operations.contains('First'));
-                            System.assertEquals(true, operations.contains('Last'));
-
-
-                            // Not contains
-                            System.assertEquals(false, operations.contains('Sum'));
-                            System.assertEquals(false, operations.contains('Count'));
-                            System.assertEquals(false, operations.contains('Average'));
-                            System.assertEquals(false, operations.contains('Years_Donated'));
-                            System.assertEquals(false, operations.contains('Donor_Streak'));
-                            System.assertEquals(false, operations.contains('Best_Year'));
-                            System.assertEquals(false, operations.contains('Best_Year_Total'));
-                        }
-                    }
-                }
-            
-                // null Rollup__mdt  
-                for(SObjectField rollupField : testRollupFields) {
-                    // Test
-                    final Boolean expected = false;
-                    
-                    Exception e;
-                    Boolean actual;
-
-                    try {
-                        actual = CRLP_Rollup_SEL.isFieldReferenced(
-                            (Rollup__mdt) null, 
-                            rollupField
-                        );
-                    }
-                    catch(Exception whoops) {
-                        e = whoops;
-                    }
-
-                    System.assertEquals(null, e);
-                    System.assertEquals(
-                        expected, 
-                        actual, 
-                        'CRLP_Rollup_SEL.isFieldReferenced(...) should always return false for a null Rollup__mdt'
-                    );
+                    CRLP_Rollup_SEL.amountRollupField = null;
                 }
 
-                // With rollup + isDateFieldReferenced + isAmountFieldReferenced + isDetailFieldReferenced
-                for(String timeBoundOperationType : testTimeBoundOperationTypes) {
-                    for(String operation : testOperations) {
-                        final Rollup__mdt rollup = new Rollup__mdt(
-                            Time_Bound_Operation_Type__c = timeBoundOperationType, 
-                            Operation__c = operation
-                        );
-
-                        // With rollup
-                        for(SObjectField rollupField : testRollupFields) {
-                            if(CRLP_Rollup_SEL.operationsByFieldByTimeBoundOperationType == null) {
-                                CRLP_Rollup_SEL.isFieldReferenced(
-                                    (Rollup__mdt) null, 
-                                    (SObjectField) null
-                                );
-                                System.assertNotEquals(
-                                    null, 
-                                    CRLP_Rollup_SEL.operationsByFieldByTimeBoundOperationType
-                                );
-                            }
-                            
-                            final Boolean expected = rollup != null
-                                && CRLP_Rollup_SEL.operationsByFieldByTimeBoundOperationType.get(rollupField) != null
-                                && getRollupPicklistValues(Schema.Rollup__mdt.Time_Bound_Operation_Type__c).contains(timeBoundOperationType)
-                                && getRollupPicklistValues(Schema.Rollup__mdt.Operation__c).contains(operation)
-                                && CRLP_Rollup_SEL.operationsByFieldByTimeBoundOperationType
-                                    .get(rollupField)
-                                    .get(timeBoundOperationType)
-                                    .contains(operation);
-
-                            Exception e;
-                            Boolean actual;
-
-                            try {
-                                actual = CRLP_Rollup_SEL.isFieldReferenced(
-                                    rollup, 
-                                    rollupField
-                                );
-                            }
-                            catch(Exception whoops) {
-                                e = whoops;
-                            }
-
-                            System.assertEquals(null, e);
-                            System.assertEquals(expected, actual);
-                        }
-                    }
+                try {
+                    actual = CRLP_Rollup_SEL.getAmountRollupField();
                 }
+                catch (Exception whoops) {
+                    e = whoops;
+                }
+                
+                System.assertEquals(
+                    null, 
+                    e, 
+                    getNeverExpectExceptionMessage(METHOD_NAME)
+                );
+
+                assertEquals(
+                    expected, 
+                    actual, 
+                    METHOD_NAME
+                );
+
+                assertEquals(
+                    expected, 
+                    CRLP_Rollup_SEL.amountRollupField, 
+                    'CRLP_Rollup_SEL.amountRollupField'
+                );
+            }
+
+            // RollupField getDetailRollupField()
+            {
+                final String METHOD_NAME = 'CRLP_Rollup_SEL.getDetailRollupField()';
+
+                final Set<String> operations = new Set<String> {
+                    CRLP_Operation.RollupType.Smallest.name(), 
+                    CRLP_Operation.RollupType.Largest.name(), 
+                    CRLP_Operation.RollupType.First.name(), 
+                    CRLP_Operation.RollupType.Last.name()
+                };
+
+                final CRLP_Rollup_SEL.RollupField expected = new CRLP_Rollup_SEL.RollupField(
+                    Schema.Rollup__mdt.Detail_Object__c, 
+                    Schema.Rollup__mdt.Detail_Field__c, 
+                    new Map<String, Set<String>> {
+                        CRLP_Operation.TimeBoundOperationType.All_Time.name() => operations, 
+                        CRLP_Operation.TimeBoundOperationType.Days_Back.name() => operations, 
+                        CRLP_Operation.TimeBoundOperationType.Years_Ago.name() => operations
+                    }
+                );
+
+                Exception e;
+                CRLP_Rollup_SEL.RollupField actual;
+
+                // Setup
+                {
+                    CRLP_Rollup_SEL.detailRollupField = null;
+                }
+
+                try {
+                    actual = CRLP_Rollup_SEL.getDetailRollupField();
+                }
+                catch (Exception whoops) {
+                    e = whoops;
+                }
+                
+                System.assertEquals(
+                    null, 
+                    e, 
+                    getNeverExpectExceptionMessage(METHOD_NAME)
+                );
+
+                assertEquals(
+                    expected, 
+                    actual, 
+                    METHOD_NAME
+                );
+
+                assertEquals(
+                    expected, 
+                    CRLP_Rollup_SEL.detailRollupField, 
+                    'CRLP_Rollup_SEL.detailRollupField'
+                );
+            }
+
+            // List<RollupField> getRollupFields()
+            {
+                final String METHOD_NAME = 'CRLP_Rollup_SEL.getRollupFields()';
+
+                final List<CRLP_Rollup_SEL.RollupField> expected = new List<CRLP_Rollup_SEL.RollupField> {
+                    CRLP_Rollup_SEL.getDateRollupField(), 
+                    CRLP_Rollup_SEL.getAmountRollupField(), 
+                    CRLP_Rollup_SEL.getDetailRollupField()
+                };
+
+                Exception e;
+                List<CRLP_Rollup_SEL.RollupField> actual;
+
+                // Setup
+                {
+                    CRLP_Rollup_SEL.detailRollupField = null;
+                }
+
+                try {
+                    actual = CRLP_Rollup_SEL.getRollupFields();
+                }
+                catch (Exception whoops) {
+                    e = whoops;
+                }
+                
+                System.assertEquals(
+                    null, 
+                    e, 
+                    getNeverExpectExceptionMessage(METHOD_NAME)
+                );
+
+                assertEquals(
+                    expected, 
+                    actual, 
+                    METHOD_NAME
+                );
             }
         }
 
         Test.stopTest();
     }
-*/
 }
