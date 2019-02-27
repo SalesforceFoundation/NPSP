@@ -893,4 +893,14 @@ class NPSP(object):
         self.builtin.log("This test is using the 'Click link with text' workaround", "WARN")
         element = self.selenium.driver.find_element_by_link_text(text)
         self.selenium.driver.execute_script('arguments[0].click()', element)
-        
+    
+    def verify_expected_batch_values(self, batch_id,**kwargs):    
+        ns=self.get_npsp_namespace_prefix()
+        table=ns + "DataImportBatch__c"
+        bge_batch=self.salesforce.salesforce_get(table,batch_id)
+        for key, value in kwargs.items():
+            label=ns + key
+            self.builtin.should_be_equal_as_strings(bge_batch[label], value)
+            
+             
+            

@@ -46,21 +46,21 @@ BGE Batch With Custom Values
     Click Duellist Button    Donation Matching Rule    Move selection to Available Fields
     Click BGE Button        Save
     Wait For Locator    bge.title    Batch Gift Entry
+    ${batch_id}    Get Current Record Id
     Verify Title    Batch Gift Entry    ${batch}
     ${field}    Get NPSP Locator    bge.field-input    Donation Name
     Page Should Contain Element    ${field}
     ${field}    Get NPSP Locator    bge.field-input    Payment Check/Reference Number
     Page Should Not Contain Element    ${field}
-    ${batch_id}    Get Current Record Id
     Store Session Record      ${ns}DataImportBatch__c  ${batch_id}
-    &{bge_batch} =     Salesforce Get  ${ns}DataImportBatch__c  ${batch_id}
-    Should Be Equal As Strings    &{bge_batch}[${ns}Batch_Process_Size__c]    100.0
-    Should Be Equal As Strings    &{bge_batch}[${ns}Donation_Date_Range__c]    2.0
-    Should Be Equal As Strings    &{bge_batch}[${ns}Donation_Matching_Behavior__c]    Single Match
-    Should Be Equal As Strings    &{bge_batch}[${ns}Donation_Matching_Implementing_Class__c]    None
-    Should Be Equal As Strings    &{bge_batch}[${ns}Donation_Matching_Rule__c]    ${ns}donation_amount__c
-    Should Be Equal As Strings    &{bge_batch}[${ns}Expected_Count_of_Gifts__c]    2.0
-    Should Be Equal As Strings    &{bge_batch}[${ns}Expected_Total_Batch_Amount__c]    100.0
-    Should Be Equal As Strings    &{bge_batch}[${ns}Post_Process_Implementing_Class__c]    None
-    Should Be Equal As Strings    &{bge_batch}[${ns}RequireTotalMatch__c]    False
-    Should Be Equal As Strings    &{bge_batch}[${ns}Run_Opportunity_Rollups_while_Processing__c]    True
+    Verify Expected Batch Values    ${batch_id}
+    ...    Batch_Process_Size__c=100.0
+    ...    Donation_Date_Range__c=2.0
+    ...    Donation_Matching_Behavior__c=Single Match
+    ...    Donation_Matching_Implementing_Class__c=None
+    ...    Donation_Matching_Rule__c=${ns}donation_amount__c
+    ...    Expected_Count_of_Gifts__c=2.0
+    ...    Expected_Total_Batch_Amount__c=100.0
+    ...    Post_Process_Implementing_Class__c=None
+    ...    RequireTotalMatch__c=False
+    ...    Run_Opportunity_Rollups_while_Processing__c=True

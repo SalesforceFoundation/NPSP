@@ -11,7 +11,15 @@ Create a new account and enter payment information
     #Create a new account and enter payment information, then process batch
     [tags]  unstable
     ${ns} =  Get NPSP Namespace Prefix
-    &{batch} =       API Create DataImportBatch    ${ns}Batch_Process_Size__c=50    ${ns}Batch_Description__c=Created via API    ${ns}Donation_Matching_Behavior__c=Single Match or Create    ${ns}Donation_Matching_Rule__c=donation_amount__c;donation_date__c    ${ns}RequireTotalMatch__c=false    ${ns}Run_Opportunity_Rollups_while_Processing__c=true   ${ns}GiftBatch__c=true    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}]     
+    &{batch} =       API Create DataImportBatch    
+    ...    ${ns}Batch_Process_Size__c=50    
+    ...    ${ns}Batch_Description__c=Created via API    
+    ...    ${ns}Donation_Matching_Behavior__c=Single Match or Create    
+    ...    ${ns}Donation_Matching_Rule__c=donation_amount__c;donation_date__c    
+    ...    ${ns}RequireTotalMatch__c=false    
+    ...    ${ns}Run_Opportunity_Rollups_while_Processing__c=true   
+    ...    ${ns}GiftBatch__c=true    
+    ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}]     
     Select App Launcher Tab   Batch Gift Entry
     # Click Link  &{batch}[Name]
     Click Link With Text    &{batch}[Name]

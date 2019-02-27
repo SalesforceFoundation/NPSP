@@ -11,7 +11,15 @@ Select an opportunity for an account make grid changes and process it
     #Select an opportunity for an account, make grid changes, and process it
     [tags]  unstable
     ${ns} =  Get NPSP Namespace Prefix
-    &{batch} =       API Create DataImportBatch    ${ns}Batch_Process_Size__c=50    ${ns}Batch_Description__c=Created via API    ${ns}Donation_Matching_Behavior__c=Single Match or Create    ${ns}Donation_Matching_Rule__c=${ns}donation_amount__c;${ns}donation_date__c    ${ns}RequireTotalMatch__c=false    ${ns}Run_Opportunity_Rollups_while_Processing__c=true   ${ns}GiftBatch__c=true    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}] 
+    &{batch} =       API Create DataImportBatch    
+    ...    ${ns}Batch_Process_Size__c=50    
+    ...    ${ns}Batch_Description__c=Created via API    
+    ...    ${ns}Donation_Matching_Behavior__c=Single Match or Create    
+    ...    ${ns}Donation_Matching_Rule__c=${ns}donation_amount__c;${ns}donation_date__c    
+    ...    ${ns}RequireTotalMatch__c=false    
+    ...    ${ns}Run_Opportunity_Rollups_while_Processing__c=true   
+    ...    ${ns}GiftBatch__c=true    
+    ...    ${ns}Active_Fields__c=[{"label":"Donation Amount","name":"${ns}Donation_Amount__c","sObjectName":"Opportunity","defaultValue":null,"required":true,"hide":false,"sortOrder":0,"type":"number","options":null},{"label":"Donation Date","name":"${ns}Donation_Date__c","sObjectName":"Opportunity","defaultValue":null,"required":false,"hide":false,"sortOrder":1,"type":"date","options":null}] 
     &{account} =     API Create Organization Account
     ${date} =     Get Current Date    result_format=%Y-%m-%d
     &{opportunity} =     API Create Opportunity   &{account}[Id]    Donation  StageName=Prospecting    Amount=100    CloseDate=${date}    
