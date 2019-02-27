@@ -224,21 +224,21 @@ public class CRLP_Rollup_SEL_TEST {
 	}
 
     /**
-     * @description
+     * @description This test loops through all combinations of CRLP_Rollup_SEL's getQualifiedApiName(SObject metadata, SObjectField metadataRelationship) inputs -- both good and bad inputs.
      */
     @IsTest
     private static void testGetQualifiedApiName() {
         // Data
-        final List<SObjectField> lookups = new List<SObjectField>();
-        final Map<SObjectField, List<Rollup__mdt>> rollupsByLookup = new Map<SObjectField, List<Rollup__mdt>>();
+        final List<SObjectField> metadataRelationships = new List<SObjectField>();
+        final Map<SObjectField, List<Rollup__mdt>> rollupsByMetadataRelationship = new Map<SObjectField, List<Rollup__mdt>>();
 
-        // Lookups that are not Metadata Relationships
+        // SObjectFields that are not Metadata Relationships
         for (SObjectField lookup : new List<SObjectField> {
             null, 
             Schema.Rollup__mdt.Id
         }) {
-            lookups.add(lookup);
-            rollupsByLookup.put(
+            metadataRelationships.add(lookup);
+            rollupsByMetadataRelationship.put(
                 lookup, 
                 new List<Rollup__mdt> {
                     null, 
@@ -247,7 +247,7 @@ public class CRLP_Rollup_SEL_TEST {
             );
         }
 
-        // Valid Metadata Relationship Lookups from RollupFields' Lookups
+        // Lookups that are Metadata Relationships.  Taken from RollupFields' Lookups
         {
             final List<String> qualifiedApiNames = new List<String> {
                 null, 
@@ -255,19 +255,19 @@ public class CRLP_Rollup_SEL_TEST {
             };
         
             for (CRLP_Rollup_SEL.RollupField rollupField : CRLP_Rollup_SEL.getRollupFields()) {
-                for(SObjectField lookup : new List<SObjectField> {
+                for (SObjectField metadataRelationship : new List<SObjectField> {
                     rollupField.getSObjectLookup(), 
                     rollupFIeld.getFieldLookup()
                 }) {
                     System.assertNotEquals(
                         null, 
-                        lookup, 
+                        metadataRelationship, 
                         'getSObjectLookup() and getFieldLookup() should not return null for all CRLP_Rollup_SEL.RollupFields returned in CRLP_Rollup_SEL.getRollupFields()'
                     );
 
-                    lookups.add(lookup);
-                    rollupsByLookup.put(
-                        lookup, 
+                    metadataRelationships.add(metadataRelationship);
+                    rollupsByMetadataRelationship.put(
+                        metadataRelationship, 
                         new List<Rollup__mdt> {
                             null, 
                             new Rollup__mdt()
@@ -275,15 +275,17 @@ public class CRLP_Rollup_SEL_TEST {
                     );
 
                     // Add Rollups who has an SObject for lookup
-                    final String relationshipName = lookup.getDescribe().getName().removeEnd('__c') + '__r';
+                    {
+                        final String relationshipName = metadataRelationship.getDescribe().getName().removeEnd('__c') + '__r';
 
-                    for(String qualifiedApiName : qualifiedApiNames) {
-                        rollupsByLookup.get(lookup).add((Rollup__mdt) getSObject(
-                            Schema.SObjectType.Rollup__mdt.getName(), 
-                            new Map<String, Object> {
-                                relationshipName => getFieldMetadataRelationship(qualifiedApiName)
-                            }
-                        ));
+                        for (String qualifiedApiName : qualifiedApiNames) {
+                            rollupsByMetadataRelationship.get(metadataRelationship).add((Rollup__mdt) getSObject(
+                                Schema.SObjectType.Rollup__mdt.getName(), 
+                                new Map<String, Object> {
+                                    relationshipName => getFieldMetadataRelationship(qualifiedApiName)
+                                }
+                            ));
+                        }
                     }
                 }
             }
@@ -293,16 +295,16 @@ public class CRLP_Rollup_SEL_TEST {
 
         // CRLP_Rollup_SEL
         {
-            // String getQualifiedApiName(Rollup__mdt rollup, SObjectField lookup)
+            // String getQualifiedApiName(SObject metadata, SObjectField metadataRelationship)
             {
                 Boolean isExceptionThrownEveryTest = true;
 
-                for (SObjectField lookup : lookups) {
-                    for (Rollup__mdt rollup : rollupsByLookup.get(lookup)) {
+                for (SObjectField metadataRelationship : metadataRelationships) {
+                    for (SObject metadata : rollupsByMetadataRelationship.get(metadataRelationship)) {
                         Boolean isExceptionThrown;
                         {
                             try {
-                                String actual = (String) rollup.getSObject(lookup).get('QualifiedApiName');
+                                String actual = (String) metadata.getSObject(metadataRelationship).get('QualifiedApiName');
                                 isExceptionThrown = false;
                                 isExceptionThrownEveryTest = false;
                             }
@@ -311,13 +313,13 @@ public class CRLP_Rollup_SEL_TEST {
                             }
                         }
 
-                        final String expected = isExceptionThrown ? null : (String) rollup.getSObject(lookup).get('QualifiedApiName');
+                        final String expected = isExceptionThrown ? null : (String) metadata.getSObject(metadataRelationship).get('QualifiedApiName');
 
                         Exception e;
                         String actual;
 
                         try {
-                            actual = CRLP_Rollup_SEL.getQualifiedApiName(rollup, lookup);
+                            actual = CRLP_Rollup_SEL.getQualifiedApiName(metadata, metadataRelationship);
                         }
                         catch(Exception whoops) {
                             e = whoops;
@@ -333,10 +335,10 @@ public class CRLP_Rollup_SEL_TEST {
                             expected, 
                             actual, 
                             String.format(
-                                'CRLP_Rollup_SEL.getQualifiedApiName(...) is returning an unexpected value.  lookup: "{0}"; rollup: "{1}"', 
+                                'CRLP_Rollup_SEL.getQualifiedApiName(metadata, metadataRelationship) is returning an unexpected value.  metadataRelationship: "{0}"; metadata: "{1}"', 
                                 new List<String> {
-                                    String.valueOf(lookup), 
-                                    String.valueOf(rollup)
+                                    String.valueOf(metadataRelationship), 
+                                    String.valueOf(metadata)
                                 }
                             )
                         );
@@ -346,13 +348,15 @@ public class CRLP_Rollup_SEL_TEST {
                 System.assertEquals(
                     false, 
                     isExceptionThrownEveryTest, 
-                    'CRLP_Rollup_SEL.getQualifiedApiName(...): All test data threw an Exception when testing (String) rollup.getSObject(lookup).get(\'QualifiedApiName\').   Update the test data so getQualifiedApiName(...) can be tested with at least one positive test.'
+                    'CRLP_Rollup_SEL.getQualifiedApiName(...): All test data threw an Exception when testing (String) metadata.getSObject(lookup).get(\'QualifiedApiName\').   Update the test data so getQualifiedApiName(...) can be tested with at least one positive test.'
                 );
             }
         }
 
         Test.stopTest();
     }
+
+
 /*
     @IsTest
     private static void testRollupField() {
@@ -370,7 +374,11 @@ public class CRLP_Rollup_SEL_TEST {
             Schema.Rollup__mdt.Detail_Field__c
         };
         {
-            System.assertEquals(sObjectLookupsSize, fieldLookups.size());
+            System.assertEquals(
+                sObjectLookupsSize, 
+                fieldLookups.size(), 
+                'Test data should have same size.  sObjectLookups and fieldLookups should have 1:1 correspondence: Each fieldLookup belongs to sObjectLookup for the same index'    
+            );
         }
         
         final String[] testOperations = new String[] {

@@ -189,28 +189,18 @@ public class CRLP_Rollup_SEL {
      * @return    return description
      */
     public static Rollup__mdt getRollupById(Id id) {
-
         return getRollupsById().get(id);
-
     }
 
     /**
-     * @description             Returns rollup's SObject for relationshipName's QualifiedApiName with null checking.
-     * @param  rollup           Metadata
-     * @param  relationshipName Metadata Relationship Field's Relationship Name used to call rollup.getSObject(...)
-     * @return                  rollup's SObject for relationshipName's QualifiedApiName.  Returns null if rollup or rollup's SObject for relationshipName is null.
+     * @description Returns metadata's SObject for relationshipName's QualifiedApiName with null checking.
+     * @param  metadata Metadata SObject with Metadata Relationship
+     * @param  metadataRelationship Metadata Relationship of metadata's SObject
+     * @return Tries to return metadata's SObject for metadataRelationship's QualifiedApiName.  Else, returns null
      */
-
-    /**
-     * getQualifiedApiName description
-     * @return   return description
-     */
-    public static String getQualifiedApiName(
-        Rollup__mdt rollup, 
-        SObjectField lookup
-    ) {
+    public static String getQualifiedApiName(SObject metadata, SObjectField metadataRelationship) {
         try {
-            return (String) rollup.getSObject(lookup).get('QualifiedApiName');
+            return (String) metadata.getSObject(metadataRelationship).get('QualifiedApiName');
         }
         catch (Exception e) {
             return null;
@@ -224,6 +214,12 @@ public class CRLP_Rollup_SEL {
         final SObjectField sObjectField, fieldLookup;
         final Map<String, Set<String>> supportedOperationsByTimeBoundOperationType;
 
+        /**
+         * @description 
+         * @param  sObjectLookup Metadata Relationship to an Entity Definition
+         * @param  fieldLookup Metadata Relationship to an Field Definition dependent on sObjectLookup
+         * @param  excludedOperationsByTimeBoundOperationType Matrix of (CRLP_Operation.TimeBoundOperationType, CRLP_Operation.RollupType) to exclude from being supported.  This means that isFieldSupported(Rollup__mdt rollup) will return false for (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) mapping to this matrix.
+         */
         @TestVisible
         private RollupField(
             SObjectField sObjectLookup, 
