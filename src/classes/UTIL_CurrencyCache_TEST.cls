@@ -61,6 +61,10 @@ private class UTIL_CurrencyCache_TEST {
                 'Should return the effective rate for 1/1/2010');
         System.AssertEquals( 1.55, UTIL_CurrencyCache.getEffectiveExchangeRate('CAD', null),
                 'Should return the org default effective rate');
+
+        // Add null rates value to simulate disabled currency.  Expect 1 if no rate found.
+        UTIL_CurrencyCache.cachedMapOfRatesByCurrencyCode.put('AUD', null);
+        System.AssertEquals(1, UTIL_CurrencyCache.getEffectiveExchangeRate('AUD', null));
     }
 
     /**
