@@ -172,7 +172,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
             ACCT_IndividualAccounts_TDTM.renameHHAccounts(listAccIdHH);
             
             // move any Contact Opps to winning Accounts
-            ACCT_IndividualAccounts_TDTM.moveOppsToContactAccount(mapContactIdAccountIdWinner, mapContactIdAccountIdLoser, null);
+            ACCT_IndividualAccounts_TDTM.moveOppsToContactAccount(mapContactIdAccountIdWinner, mapContactIdAccountIdLoser);
             
             // recreate Soft Credits 
             HH_OppContactRoles_TDTM.recreateHouseholdSoftCredits(listAccId);
