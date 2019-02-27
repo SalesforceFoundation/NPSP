@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.org
+    Copyright (c) 2019, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2014
+* @date 2019
 * @group Allocations
 * @group-content ../../ApexDocContent/Allocations.htm
 * @description Tests specific to Allocations trigger based functionality. 
@@ -37,8 +37,34 @@
 @isTest
 private with sharing  class ALLO_PaymentSync_TEST {
 //TODO null and zero amounts for both opps and payments
-//TODO negative amounts
+//TODO negative payment amounts
 //TODO over and underscheduled
+
+    static General_Accounting_Unit__c defaultGau;
+    static List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
+
+    static Opportunity opportunity;
+    static List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c>();
+
+    @testSetup 
+    static void setup() {
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='Default GAU');
+        insert gau;
+
+        Account account = new Account(Name='Account');
+        insert account;
+
+        Opportunity opportunity = new Opportunity(
+            Name = 'Opp', 
+            Amount = 1000, 
+            AccountID = account.Id, 
+            CloseDate = System.today(), 
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            npe01__Do_Not_Automatically_Create_Payment__c = true
+        );
+        insert opportunity;
+
+    }
 
     /*******************************************************************************************************
     * @description When changing the amount of a Payment with Allocations: 
@@ -48,50 +74,32 @@ private with sharing  class ALLO_PaymentSync_TEST {
     * Decreasing the amount so that the total allocation amount is greater than the payment amount, an 
     * error is thrown and the payment update is blocked.
     ********************************************************************************************************/
-    static testMethod void syncPaymentsToOpportunities() {
-        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
-        insert defaultGau;
+    @isTest
+    static void syncPaymentToOpportunity() {
+        makePayments(1000, 1);
+        makeGAUs(2);
 
-        UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(
-            new Allocations_Settings__c(
-                Payment_Allocations_Enabled__c = true,
-                Default_Allocations_Enabled__c = true,
-                Default__c = defaultGau.Id
-            )
-        );
-
-        Account acc = new Account(Name='Account-syncPaymentsToOpportunities');
-        insert acc;
-        Opportunity opp = new Opportunity(
-            Name = 'Opp-syncPaymentsToOpportunities', 
-            Amount = 10, 
-            AccountID = acc.id, 
-            CloseDate = system.today(), 
-            StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
-        );
-        insert opp;
-        npe01__OppPayment__c pmt = new npe01__OppPayment__c(
-            npe01__Payment_Amount__c = 8, 
-            npe01__Opportunity__c = opp.Id
-        );
-        insert pmt;
-
-        list<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
-        gaus.add(new General_Accounting_Unit__c(Name='GAU-syncPaymentsToOpportunities-1'));
-        gaus.add(new General_Accounting_Unit__c(Name='GAU-syncPaymentsToOpportunities-2'));
-        insert gaus;
+        System.assert(UTIL_CustomSettingsFacade.getAllocationsSettings().Payment_Allocations_Enabled__c, UTIL_CustomSettingsFacade.getAllocationsSettings());
 
         //resetting these manually as a test is considered a single context for static variables
         List<Allocation__c> alloForInsert = new List<Allocation__c>();
 
-        Allocation__c percentAllo = new Allocation__c(Payment__c=pmt.id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].id);
+        Allocation__c percentAllo = new Allocation__c(Payment__c=payments[0].id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].id);
         alloForInsert.add(percentAllo);
-        Allocation__c amountAllo = new Allocation__c(Payment__c=pmt.id, Amount__c = 3, General_Accounting_Unit__c = gaus[1].id);
+        Allocation__c amountAllo = new Allocation__c(Payment__c=payments[0].id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].id);
         alloForInsert.add(amountAllo);
         insert alloForInsert;
 
-        List<Allocation__c> queryAllocations = getAllocationsOrderByAmount(opp.id);
-        System.assertEquals(3, queryAllocations.size(), 'Three opportunity allocations should exist.');
+        List<Allocation__c> queryAllocations = getAllocationsOrderByAmount();
+        System.assertEquals(6, queryAllocations.size(), 'Six opportunity allocations should exist.');
+        //synced opportunity allocations
+        assertAllocation(queryAllocations[0], 200, defaultGau.Id, true);
+        assertAllocation(queryAllocations[1], 300, gaus[1].id, true);
+        assertAllocation(queryAllocations[2], 500, gaus[0].id, true);
+        //original payment allocations
+        assertAllocation(queryAllocations[3], 200, defaultGau.Id, false);
+        assertAllocation(queryAllocations[4], 300, gaus[1].id, false);
+        assertAllocation(queryAllocations[5], 500, gaus[0].id, false);
     }
 
     /*******************************************************************************************************
@@ -102,9 +110,43 @@ private with sharing  class ALLO_PaymentSync_TEST {
     * Decreasing the amount so that the total allocation amount is greater than the payment amount, an 
     * error is thrown and the payment update is blocked.
     ********************************************************************************************************/
-    static testMethod void syncOpportunitiesToPayments() {
-        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
-        insert defaultGau;
+    @isTest
+    static void syncOpportunityToPayment() {
+        makePayments(1000, 1);
+        makeGAUs(2);
+
+        //resetting these manually as a test is considered a single context for static variables
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        Allocation__c percentAllo = new Allocation__c(Opportunity__c=opportunity.id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].id);
+        alloForInsert.add(percentAllo);
+        Allocation__c amountAllo = new Allocation__c(Opportunity__c=opportunity.id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].id);
+        alloForInsert.add(amountAllo);
+        insert alloForInsert;
+
+        List<Allocation__c> queryAllocations = getAllocationsOrderByAmount();
+        System.assertEquals(6, queryAllocations.size(), 'Six allocations should exist.');
+        //original opportunity allocations
+        assertAllocation(queryAllocations[0], 200, defaultGau.Id, true);
+        assertAllocation(queryAllocations[1], 300, gaus[1].id, true);
+        assertAllocation(queryAllocations[2], 500, gaus[0].id, true);
+        //synced payment allocations
+        assertAllocation(queryAllocations[3], 200, defaultGau.Id, false);
+        assertAllocation(queryAllocations[4], 300, gaus[1].id, false);
+        assertAllocation(queryAllocations[5], 500, gaus[0].id, false);
+    }
+
+//TODO can't update opportunity and payment allocations for the same opportunity (only substantial updates)
+    @isTest
+    private static void validateOverlappingChanges() {
+
+    }
+
+    // Helpers
+    ////////////
+    private static void makePayments(Decimal totalAmount, Integer numberOfPayments) {
+        defaultGau = [SELECT Id FROM General_Accounting_Unit__c WHERE Name = 'Default GAU' LIMIT 1];
+        opportunity = [SELECT Id, Name, Amount FROM Opportunity LIMIT 1];
 
         UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(
             new Allocations_Settings__c(
@@ -114,50 +156,34 @@ private with sharing  class ALLO_PaymentSync_TEST {
             )
         );
 
-        Account acc = new Account(Name='Account-syncPaymentsToOpportunities');
-        insert acc;
-        Opportunity opp = new Opportunity(
-            Name = 'Opp-syncPaymentsToOpportunities', 
-            Amount = 10, 
-            AccountID = acc.id, 
-            CloseDate = system.today(), 
-            StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
-        );
-        insert opp;
-        npe01__OppPayment__c pmt = new npe01__OppPayment__c(
-            npe01__Payment_Amount__c = 8, 
-            npe01__Opportunity__c = opp.Id
-        );
-        insert pmt;
+        for (Integer i=0; i<numberOfPayments; i++) {
+            payments.add(new npe01__OppPayment__c(
+                npe01__Payment_Amount__c = totalAmount / numberOfPayments, 
+                npe01__Opportunity__c = opportunity.Id,
+                npe01__Payment_Date__c = System.today()
+            ));
+        }
+        insert payments;
+    } 
 
-        list<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
-        gaus.add(new General_Accounting_Unit__c(Name='GAU-syncPaymentsToOpportunities-1'));
-        gaus.add(new General_Accounting_Unit__c(Name='GAU-syncPaymentsToOpportunities-2'));
+    private static void makeGAUs(Integer numberOfGAUs) {
+        for (Integer i=0; i<numberOfGAUs; i++) {
+            gaus.add(new General_Accounting_Unit__c(Name='GAU' + i));
+        }
         insert gaus;
-
-        //resetting these manually as a test is considered a single context for static variables
-        List<Allocation__c> alloForInsert = new List<Allocation__c>();
-
-        Allocation__c percentAllo = new Allocation__c(Payment__c=pmt.id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].id);
-        alloForInsert.add(percentAllo);
-        Allocation__c amountAllo = new Allocation__c(Payment__c=pmt.id, Amount__c = 3, General_Accounting_Unit__c = gaus[1].id);
-        alloForInsert.add(amountAllo);
-        insert alloForInsert;
-
-        List<Allocation__c> queryAllocations = getAllocationsOrderByAmount(opp.id);
-        System.assertEquals(3, queryAllocations.size(), 'Three payment allocations should exist.');
     }
 
-
-    // Helpers
-    ////////////
-
+    private static void assertAllocation(Allocation__c allocation, Decimal amount, Id gau, Boolean isOpportunityAllocation) {
+        System.assertEquals(amount, allocation.Amount__c, 'Allocation amount mismatch: ' + allocation);
+        System.assertEquals(gau, allocation.General_Accounting_Unit__c, 'Allocation GAU mismatch: ' + allocation);
+        System.assertEquals(isOpportunityAllocation, allocation.Opportunity__c != null, 'Allocation type mismatch: ' + allocation);
+    }
     /*********************************************************************************************************
     * @description Get all Allocations ordered by Amount
     * @return List<Allocation__c> A list of all Allocations 
     **********************************************************************************************************/
     private static List<Allocation__c> getAllocationsOrderByAmount() {
-        return Database.query(getAllocationsQuery().build() + ' ORDER BY Amount__c');
+        return Database.query(getAllocationsQuery().build() + ' ORDER BY Payment__c, Amount__c');
     }
 
     /*********************************************************************************************************
@@ -165,34 +191,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
     * @return List<Allocation__c> A list of all Allocations 
     **********************************************************************************************************/
     private static List<Allocation__c> getAllocationsOrderByPercent() {
-        return Database.query(getAllocationsQuery().build() + ' ORDER BY Percent__c');
-    }
-
-    /*********************************************************************************************************
-    * @description Get Allocations for the Opportunity ordered by Amount
-    * @param oppId An Opportunity Id
-    * @return List<Allocation__c> A list of Allocations assigned to the Opportunity
-    **********************************************************************************************************/
-    private static List<Allocation__c> getAllocationsOrderByAmount(Id oppId) {
-        return Database.query(getAllocationsQuery(oppId).build() + ' ORDER BY Amount__c');
-    }
-
-    /*********************************************************************************************************
-    * @description Get Allocations for the Opportunity ordered by Percent
-    * @param oppId An Opportunity Id
-    * @return List<Allocation__c> A list of Allocations assigned to the Opportunity
-    **********************************************************************************************************/
-    private static List<Allocation__c> getAllocationsOrderByPercent(Id oppId) {
-        return Database.query(getAllocationsQuery(oppId).build() + ' ORDER BY Percent__c');
-    }
-
-    /*********************************************************************************************************
-    * @description Build query to retrieve Allocations for the Opportunity
-    * @return UTIL_Query Allocation SOQL
-    **********************************************************************************************************/
-    private static UTIL_Query getAllocationsQuery(Id oppId) {
-        return getAllocationsQuery()
-            .withWhere(String.format('Opportunity__c = \'\'{0}\'\'', new String[] { oppId }));
+        return Database.query(getAllocationsQuery().build() + ' ORDER BY Payment__c, Percent__c');
     }
 
     /*********************************************************************************************************
@@ -202,6 +201,8 @@ private with sharing  class ALLO_PaymentSync_TEST {
     private static UTIL_Query getAllocationsQuery() {
         return new UTIL_Query()
             .withSelectFields(new String[]{
+                'Opportunity__c',
+                'Payment__c',
                 'General_Accounting_Unit__c', 
                 'General_Accounting_Unit__r.Name', 
                 'Amount__c', 
