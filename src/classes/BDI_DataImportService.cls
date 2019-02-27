@@ -705,9 +705,9 @@ global with sharing class BDI_DataImportService {
     public static Boolean failFieldLevelSecurity = false;
 
     /*******************************************************************************************************
-    * @description returns the target object (bdi name) for a given Data Import field
+    * @description returns the target object (api name) for a given Data Import field
     * @param sourceFieldName the api name of the Data Import field
-    * @return String the BDI name of the target object for that field, derived from the help text
+    * @return String the api name of the target object for that field, derived from the help text
     */
     public static String getTargetObject(String sourceFieldName) {
         sourceFieldName = sourceFieldName.toLowerCase();
@@ -715,7 +715,25 @@ global with sharing class BDI_DataImportService {
         DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(dataImportObjectName, sourceFieldName);
         String targetObject = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[0] : null;
 
-        return targetObject;
+        switch on targetObject {
+            when 'Account', 'Contact', 'Opportunity' {
+                return targetObject;
+            }
+            when 'Payment' {
+                return 'npe01__OppPayment__c';
+            }
+            when 'Household' {
+                return 'npo02__Household__c';
+            }
+            when 'Address' {
+                return UTIL_Namespace.StrTokenNSPrefix('Address__c');
+            }
+            when else {
+                // any unhandled object names in help text will be ignored but shouldn't throw a blocking error
+                return targetObject;
+            }
+        }
+
     }
 
     /*******************************************************************************************************
@@ -746,7 +764,6 @@ global with sharing class BDI_DataImportService {
 
         for (String dataImportField : dataImportFields) {
 
-            // TODO: refactor to use new getTargetObject get getTargetField methods
             DescribeFieldResult fieldDescribe =
                 UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), dataImportField);
             String helpText = fieldDescribe.getInlineHelpText();
