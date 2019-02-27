@@ -23,8 +23,7 @@
                 helper.updateBatchFieldOptions(component);
                 // note: all required fields are set by the model so checking validity is not currently necessary.
             } else if (step === '2') {
-                helper.commitBatchFieldOptionsToEveryField(component);
-                isValid = helper.checkBatchFieldOptionsValidity(component);
+                // Nothing to do here. recordeditform handles validation and binds the values for us.
             } else if (step === '3') {
                 isValid = helper.checkBatchProcessingSettingsValidity(component);
             }
