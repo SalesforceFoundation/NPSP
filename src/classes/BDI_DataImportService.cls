@@ -710,14 +710,17 @@ global with sharing class BDI_DataImportService {
     * @return String the api name of the target object for that field, derived from the help text
     */
     public static String getTargetObject(String sourceFieldName) {
+
+        // record type is special-cased by BDI so in some orgs, it has no help text
+        // BGE needs this object for display purposes only
+        if (sourceFieldName == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c')) {
+            return 'Opportunity';
+        }
+
         sourceFieldName = sourceFieldName.toLowerCase();
         String dataImportObjectName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
         DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(dataImportObjectName, sourceFieldName);
         String targetObject = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[0] : null;
-
-        if (sourceFieldName == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c')) {
-            targetObject = 'Opportunity';
-        }
 
         switch on targetObject {
             when 'Account', 'Contact', 'Opportunity' {
@@ -746,14 +749,17 @@ global with sharing class BDI_DataImportService {
     * @return String the api name of the target field for that source field, derived from the help text
     */
     public static String getTargetField(String sourceFieldName) {
+
+        // record type is special-cased by BDI so in some orgs, it has no help text
+        // BGE needs this for display purposes only
+        if (sourceFieldName == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c')) {
+            return 'RecordTypeId';
+        }
+
         sourceFieldName = sourceFieldName.toLowerCase();
         String dataImportObjectName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
         DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(dataImportObjectName, sourceFieldName);
         String targetField = dfr.inlineHelpText != null ? dfr.inlineHelpText.split('\\.')[1] : null;
-
-        if (sourceFieldName == UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c')) {
-            targetField = 'RecordTypeId';
-        }
 
         return targetField;
     }
