@@ -173,7 +173,7 @@
         for (let i=0; i<dataImportFields.length; i++) {
             if (dataImportFields[i].required) {
                 const fieldValue = dynamicInputFields[i].get('v.value');
-                if (fieldValue === '' || fieldValue === null) {
+                if (fieldValue === '' || fieldValue === null || (Array.isArray(fieldValue) && !fieldValue.length) ) {
                     missingFields.push(dataImportFields[i].label);
                 }
             }
