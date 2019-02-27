@@ -115,44 +115,27 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         Set<String> allowedObjects = new Set<String>{
             'Opportunity',
-            'Payment'
+            'npe01__OppPayment__c'
         };
 
         List<DescribeFieldResult> dfrs = getRelevantFields(allowedObjects);
 
         for (DescribeFieldResult dfr : dfrs) {
 
-            String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(dfr.getName());
-
             BGEField field = new BGEField();
-
-            field.sObjectName = dataImportFieldMappedObject;
-
-            // this will require iteration if/when we allow objects beyond Opp and Payment
-            String translatedObjectLabel;
-            if (dataImportFieldMappedObject == 'Opportunity') {
-                translatedObjectLabel = UTIL_Describe.getObjectLabel(dataImportFieldMappedObject);
-            } else if (dataImportFieldMappedObject == 'Payment') {
-                translatedObjectLabel = UTIL_Describe.getObjectLabel('npe01__OppPayment__c');
-            }
-            field.sObjectLabel = translatedObjectLabel;
-
+            field.name = dfr.getName();
             // TODO: pull these labels from target fields' schema based on help text mapping
             Boolean fieldHasSpacesAndObjName = dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == field.sObjectName;
             field.label = (fieldHasSpacesAndObjName) ? dfr.getLabel().split(' ',2)[1] : dfr.getLabel();
-            field.name = dfr.getName();
 
-            String unnamespacedField = UTIL_Namespace.StrTokenRemoveNSPrefix(field.name);
-            if (conditionallyRequiredFields.contains(unnamespacedField)) {
+            field.sObjectName = BDI_DataImportService.getTargetObject(dfr.getName());
+            field.sObjectLabel = UTIL_Describe.getObjectLabel(field.sObjectName);
+
+            if (conditionallyRequiredFields.contains(field.name)) {
                 field.conditionallyRequired = true;
             }
 
-            String rawFieldType = dfr.getType().name().toLowerCase();
             field.type = UTIL_LightningComponentSupport.getLightningInputDataType(dfr.getType());
-            if (rawFieldType == 'currency') {
-                field.formatter = 'currency';
-            }
-
             field.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(field.name);
 
             fields.add(field);
@@ -164,11 +147,13 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     * @description Returns the Data Import DFRs for a set of target objects
     * @return list of DescribeFieldResults
     */
-    public static List<DescribeFieldResult> getRelevantFields(Set<String> allowedObjects) {
+    public static List<Schema.DescribeFieldResult> getRelevantFields(Set<String> allowedObjects) {
 
-        List<DescribeFieldResult> dfrs = new List<DescribeFieldResult>();
+        Map<String, Schema.DescribeFieldResult> dfrMap = new Map<String, Schema.DescribeFieldResult>();
 
-        Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
+        Map<String, Schema.DescribeFieldResult> fieldMap =
+                UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
+
         Set<String> bannedFields = new Set<String>{
             'Account1Imported__c',
             'Account1ImportStatus__c',
@@ -195,9 +180,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'Account2ImportStatus__c'
         };
 
-        List<String> sortedFieldNames = new List<String>(fieldMap.keySet());
-        sortedFieldNames.sort();
-
         // these data types have been whitelisted since they already work with BGE
         Set<String> allowedDataTypes = new Set<String>{
             'CURRENCY',
@@ -212,27 +194,39 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             'URL'
         };
 
+        // these fields have been whitelisted since they have special handling in BDI
+        Set<String> allowedFields = new Set<String>{
+            'DonationCampaignImported__c'
+        };
+
         // looping through the fields on DataImport__c and remove unsupported data types
-        for (String fieldName : sortedFieldNames) {
-            DescribeFieldResult dfr = fieldMap.get(fieldName);
+        for (Schema.DescribeFieldResult dfr : fieldMap.values()) {
             String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.getName());
 
             String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(dfr.getName());
-            Boolean fieldAllowed = allowedObjects.contains(dataImportFieldMappedObject)
+            Boolean fieldAllowed = (allowedObjects.contains(dataImportFieldMappedObject)
                 && allowedDataTypes.contains(dfr.getType().name())
                 && !bannedFields.contains(dataImportFieldApiName)
-                && dfr.getInlineHelpText() != null;
+                && dfr.getInlineHelpText() != null)
+                || allowedFields.contains(dataImportFieldApiName);
 
             if (fieldAllowed) {
-                dfrs.add(dfr);
+                dfrMap.put(dfr.label, dfr);
             }
         }
 
-        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(dfrs);
+        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(dfrMap.values());
 
-        return dfrs;
+        List<String> sortedFieldLabels = new List<String>(dfrMap.keySet());
+        sortedFieldLabels.sort();
+
+        List<Schema.DescribeFieldResult> sortedDFRs = new List<Schema.DescribeFieldResult>();
+        for (String fieldLabel : sortedFieldLabels) {
+            sortedDFRs.add(dfrMap.get(fieldLabel));
+        }
+
+        return sortedDFRs;
     }
-
 
     /*******************************************************************************************************
     * @description Retrieves the default active fields for a new Batch or Template in a JSON String
@@ -241,10 +235,10 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         List<BGEField> fields = new List<BGEField>();
 
         String dataImportApiName = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
-        String opportunityName = 'Opportunity';
+        String opportunityName = Schema.SObjectType.Opportunity.name;
         String opportunityLabel = UTIL_Describe.getObjectLabel(opportunityName);
-        String paymentName = 'Payment'; // bdi object name, not api name
-        String paymentLabel = UTIL_Describe.getObjectLabel('npe01__OppPayment__c');
+        String paymentName = Schema.SObjectType.npe01__OppPayment__c.name;
+        String paymentLabel = UTIL_Describe.getObjectLabel(paymentName);
 
         BGEField donationAmount = new BGEField();
         String donationAmountApiName = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c');
@@ -257,7 +251,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         donationAmount.requiredInEntryForm = true;
         donationAmount.hide = false;
         donationAmount.type = UTIL_LightningComponentSupport.getLightningInputDataType(Schema.DisplayType.CURRENCY);
-        donationAmount.formatter = 'currency';
         donationAmount.sortOrder = 0;
         donationAmount.alwaysRequired = true;
         fields.add(donationAmount);
@@ -406,7 +399,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         Set<String> donationObjects = new Set<String>{
             'Opportunity',
-            'Payment'
+            'npe01__OppPayment__c'
         };
         List<DescribeFieldResult> dfrs = getRelevantFields(donationObjects);
 
@@ -427,6 +420,9 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         Map<String, String> labels = new Map<String, String> {
             'objectLabel' => Schema.SObjectType.DataImportBatch__c.getLabel(),
             'sObjectName' => Schema.SObjectType.DataImportBatch__c.getName(),
+            'opportunitySObjectName' => Schema.SObjectType.Opportunity.getName(),
+            'paymentSObjectName' => Schema.SObjectType.npe01__OppPayment__c.getName(),
+            'dataImportSObjectName' => Schema.SObjectType.DataImport__c.getName(),
             'sObjectNameNoNamespace' => UTIL_Namespace.StrTokenRemoveNSPrefix(Schema.SObjectType.DataImportBatch__c.getName()),
             'missingNameError' => Label.exceptionRequiredField + ' ' + Schema.DataImportBatch__c.Name.getDescribe().getLabel(),
             'missingFieldsError' => Label.exceptionRequiredField,
@@ -553,7 +549,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public Boolean alwaysRequired; // always required in BGE (e.g., Donation Amount and Donation Date)
         @AuraEnabled public Boolean conditionallyRequired; // required if any other field on its object is selected (e.g., Account Name and Contact Last Name)
         @AuraEnabled public String defaultValue;
-        @AuraEnabled public String formatter;
         @AuraEnabled public Boolean hide;
         @AuraEnabled public Boolean isActive;
         @AuraEnabled public String label;
