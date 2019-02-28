@@ -196,7 +196,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
         // these fields have been whitelisted since they have special handling in BDI
         Set<String> allowedFields = new Set<String>{
-            'DonationCampaignImported__c'
+            'DonationCampaignImported__c',
+            'Donation_Record_Type_Name__c'
         };
 
         // looping through the fields on DataImport__c and remove unsupported data types
