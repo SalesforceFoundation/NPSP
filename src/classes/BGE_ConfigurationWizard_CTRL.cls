@@ -181,23 +181,23 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         };
 
         // these data types have been whitelisted since they already work with BGE
-        Set<String> allowedDataTypes = new Set<String>{
-            'CURRENCY',
-            'DATE',
-            'STRING',
-            'TEXTAREA',
-            'DOUBLE',
-            'PICKLIST',
-            'EMAIL',
-            'MULTIPICKLIST',
-            'PHONE',
-            'URL',
-            'REFERENCE'
+        Set<Schema.DisplayType> allowedDataTypes = new Set<Schema.DisplayType>{
+            Schema.DisplayType.CURRENCY,
+            Schema.DisplayType.DATE,
+            Schema.DisplayType.STRING,
+            Schema.DisplayType.TEXTAREA,
+            Schema.DisplayType.DOUBLE,
+            Schema.DisplayType.PICKLIST,
+            Schema.DisplayType.EMAIL,
+            Schema.DisplayType.MULTIPICKLIST,
+            Schema.DisplayType.PHONE,
+            Schema.DisplayType.URL,
+            Schema.DisplayType.REFERENCE
         };
 
         // these fields have been whitelisted since they have special handling in BDI
         Set<String> allowedFields = new Set<String>{
-                'Donation_Record_Type_Name__c'
+            'Donation_Record_Type_Name__c'
         };
 
         // looping through the fields on DataImport__c and remove unsupported data types
@@ -207,7 +207,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(dfr.getName());
 
             Boolean fieldAllowed = (allowedObjects.contains(dataImportFieldMappedObject)
-                && allowedDataTypes.contains(dfr.getType().name())
+                && allowedDataTypes.contains(dfr.type)
                 && !bannedFields.contains(dataImportFieldApiName)
                 && dfr.getInlineHelpText() != null)
                 || allowedFields.contains(dataImportFieldApiName);
