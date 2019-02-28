@@ -256,6 +256,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             'donationAmountField' => Schema.SObjectType.DataImport__c.fields.Donation_Amount__c.getName(),
             'expectedCountField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Count_of_Gifts__c.getName(),
             'expectedTotalField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getName(),
+            'namespacePrefix' => UTIL_Namespace.StrTokenNSPrefix(''),
             'noDataImportsFound' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.DataImport__c.getName()}),
             'opportunityImportedLookupField' => Schema.SObjectType.DataImport__c.fields.DonationImported__c.getName(),
             'opportunityImportedStatusField' => Schema.SObjectType.DataImport__c.fields.DonationImportStatus__c.getName(),
@@ -346,27 +347,39 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 if (dataImportDFR != null) {
 
                     if (UTIL_Permissions.canUpdate(dataImportDFR, false)) {
+
                         Column col = new Column();
+
                         col.label = dataImportDFR.getLabel();
                         col.fieldName = dataImportDFR.getName();
-                        col.readOnly = false;
                         col.defaultValue = field.defaultValue;
                         col.required = field.requiredInEntryForm;
                         col.hide = field.hide;
                         col.type = UTIL_LightningComponentSupport.getLightningDataTableDataType(dataImportDFR.getType());
+                        // lookups aren't editable in the grid since we don't have lookup support there
+                        col.readOnly = col.type == 'reference' ? true : false;
                         col.typeAttributes = '{}';
-
                         col.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(col.fieldName);
 
                         columns.add(col);
 
-                        String targetObject = BDI_DataImportService.getTargetObject(col.fieldName);
-                        if (targetObject == 'Payment') {
-                            targetObject = 'npe01__OppPayment__c';
+                        if (dataImportDFR.getType().name() == 'reference') {
+                            // manually construct EXTRA column for campaign link
+                            Column linkCol = new Column();
+                            linkCol.label = dataImportDFR.getLabel();
+                            String fieldLabel = dataImportDFR.name + 'label';
+                            String fieldName = dataImportDFR.name + 'link';
+                            linkCol.fieldName = fieldName;
+                            linkCol.readOnly = true;
+                            linkCol.required = field.requiredInEntryForm;
+                            linkCol.type = 'url';
+                            linkCol.typeAttributes = '{"label":{"fieldName":"'+fieldLabel+'"},"target":"_blank"}';
+                            columns.add(linkCol);
                         }
+
+                        String targetObject = BDI_DataImportService.getTargetObject(col.fieldName);
                         String targetField = BDI_DataImportService.getTargetField(col.fieldName);
                         DescribeFieldResult targetDFR = UTIL_Describe.getFieldDescribe(targetObject,targetField);
-
 
                         if (!UTIL_Permissions.canUpdate(targetDFR, false)) {
                             unpermittedFields.add(targetDFR);
@@ -482,9 +495,14 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         List<String> activeFieldNames = new List<String>();
 
         if (activeFieldsJSON != null) {
-            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields = (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
+            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields =
+                    (List<BGE_ConfigurationWizard_CTRL.BGEField>)
+                            JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
             for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
                 activeFieldNames.add(field.name);
+                if (field.type == 'reference') {
+                    activeFieldNames.add(field.name.substringBefore('__c') + '__r.Name');
+                }
             }
         }
 
@@ -499,7 +517,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
         List<String> fields = getDataImportFields();
         fields.addAll(getActiveFieldNamesFromBatch(batchId));
-
         return fields;
     }
 
