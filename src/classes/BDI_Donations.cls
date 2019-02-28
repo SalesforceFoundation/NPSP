@@ -455,14 +455,12 @@ public class BDI_Donations {
                 continue;
             }
 
-            // only look at Stage and Amount if we aren't applying a new Payment
-            if (dataImport.DonationImportStatus__c != System.Label.bdiMatchedApplyNewPayment) {
-                // only honor Stage if we aren't updating its payment
-                if (dataImportField == donationStage && dataImport.PaymentImported__c != null) {
-                    continue;
-                }
-                // only honor Amount if we aren't updating its payment
-                if (dataImportField == donationAmount && dataImport.PaymentImported__c != null) {
+            if (dataImportField == donationStage
+                    || dataImportField == donationAmount) {
+
+                // only copy over Stage and Amount if we aren't applying a new Payment
+                if (dataImport.DonationImportStatus__c != System.Label.bdiMatchedApplyNewPayment
+                        && dataImport.PaymentImported__c != null) {
                     continue;
                 }
             }
