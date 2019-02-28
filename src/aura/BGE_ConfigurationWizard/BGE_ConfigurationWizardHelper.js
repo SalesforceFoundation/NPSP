@@ -124,9 +124,12 @@
                 currentField.requiredInEntryForm = activeFieldMap.get(currentField.id).requiredInEntryForm;
                 currentField.sortOrder = activeFieldMap.get(currentField.id).sortOrder;
                 currentField.type = activeFieldMap.get(currentField.id).type;
-                currentField.formatter = activeFieldMap.get(currentField.id).formatter;
                 currentField.options = activeFieldMap.get(currentField.id).options;
                 currentField.alwaysRequired = activeFieldMap.get(currentField.id).alwaysRequired;
+                if (currentField.defaultValue && currentField.type == 'reference') {
+                    // recordeditform expects an array for a reference field
+                    currentField.defaultValue = [currentField.defaultValue];
+                }
             } else {
                 currentField.isActive = false;
             }
@@ -145,8 +148,8 @@
         // returns map of sobject name => list of fields
         var allFieldsBySObject = this.groupFieldsBySObject(everyField);
 
-        const opportunitySObjectName = "Opportunity";
-        const paymentSObjectName = "Payment";
+        const opportunitySObjectName = component.get('v.wizardMetadata.labels.opportunitySObjectName');
+        const paymentSObjectName = component.get('v.wizardMetadata.labels.paymentSObjectName');
 
         var sObjectKeys = Object.keys(allFieldsBySObject);
 
@@ -350,20 +353,6 @@
     },
 
     /**
-     * @description Checks validity object on every lightning:input field
-     * @return Boolean if user can proceed to next step
-     */
-    checkBatchFieldOptionsValidity: function(component) {
-        var isValid = component.find('defaultValueField').reduce(function(validSoFar, defaultValueField) {
-            return validSoFar && defaultValueField.get('v.validity').valid;
-        }, true);
-        if (isValid) {
-            this.clearError(component);
-        }
-        return isValid;
-    },
-
-    /**
      * @description Checks for required fields Donation Date Range and Batch Process Size
      * @return Boolean if user can proceed to next step
      */
@@ -467,40 +456,19 @@
     },
 
     /**
-     * @description Updates everyField with values from Set Field Options step
-     */
-    commitBatchFieldOptionsToEveryField: function(component) {
-
-        var batchFieldGroups = component.get('v.batchFieldOptions.fieldGroups');
-        var batchFieldOptions = [];
-        batchFieldGroups.forEach(function(currentFieldGroup) {
-            currentFieldGroup.fields.forEach(function(currentField) {
-                batchFieldOptions.push(currentField);
-            });
-        });
-
-        let everyField = component.get('v.everyField');
-
-        everyField.forEach(function(currentField) {
-            batchFieldOptions.forEach(function(currentActiveField) {
-                if (currentField.name === currentActiveField.name) {
-                    currentField.requiredInEntryForm = currentActiveField.requiredInEntryForm;
-                    currentField.hide = currentActiveField.hide;
-                    currentField.defaultValue = currentActiveField.defaultValue;
-                }
-            });
-        });
-
-        component.set('v.everyField',everyField);
-    },
-
-    /**
      * @description Commits Batch record
      */
     saveRecord: function(component) {
         var batchInfo = component.get('v.batchInfo');
         // getActives grabs allFields, returns those isActive, sorted.
         let activeFields = this.getActives(component);
+
+        activeFields.forEach(function(currentField) {
+            if (currentField.defaultValue && currentField.type == 'reference') {
+                // lookups in recordeditform store as an array of IDs; need to flatten
+                currentField.defaultValue = currentField.defaultValue[0];
+            }
+        });
 
         var action = component.get('c.saveRecord');
         action.setParams({

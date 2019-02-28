@@ -24,8 +24,8 @@
 .THIS .wideListbox .slds-dueling-list__column_responsive .slds-dueling-list__options {
     min-width: 240px;
 }
-/*removes the extra label and automatic tooltip for inputFields*/
-.THIS .hideLabel > label {
+/*removes the automatic tooltip for inputFields*/
+.THIS .hideTooltip lightning-helptext {
     display: none;
     visibility: hidden;
 }
@@ -35,5 +35,17 @@
 }
 /* hide rogue label spacing on lightning:select when variant="label-hidden" */
 .THIS .label-hidden > label {
-    display: none;
+    position: absolute!important;
+}
+/*Workaround since label-hidden variant on lightning:inputField is inconsistent in hiding labels for types of fields.
+Revist this Summer '19 and after to see if it's still necessary or the CSS has changed*/
+.THIS .hideLabelFix lightning-grouped-combobox .slds-form-element__label {
+    /*partial copy from .slds-assistive-text*/
+    position: absolute!important;
+    overflow: hidden!important;
+}
+.THIS .hideLabelFix lightning-textarea .slds-form-element__label {
+    /*partial copy from .slds-assistive-text*/
+    position: absolute!important;
+    overflow: hidden!important;
 }
