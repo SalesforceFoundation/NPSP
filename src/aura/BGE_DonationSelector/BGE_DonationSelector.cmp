@@ -119,8 +119,7 @@
                         <div class="selectedDonationBody">
                             <lightning:layout multipleRows="true">
                                 <lightning:layoutItem size="12" padding="around_xx-small">
-                                    <aura:if
-                                            isTrue="{!and(equals(donation.Id, v.selectedDonation.Id), !v.selectedDonation.applyPayment)}">
+                                    <aura:if isTrue="{!and(equals(donation.Id, v.selectedDonation.Id), !v.selectedDonation.applyPayment)}">
                                         <lightning:icon iconName="utility:check" size="small"
                                                         class="slds-p-right_small selectedCheckmark"
                                                         alternativeText="{!$Label.c.stgCheckboxTrue}"
@@ -155,8 +154,6 @@
                                     </aura:if>
                                 </lightning:layoutItem>
                             </lightning:layout>
-
-                            <!--<br/>-->
                         </div>
                     </aura:set>
 
