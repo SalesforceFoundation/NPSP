@@ -1094,4 +1094,356 @@ public class CRLP_Rollup_SEL_TEST {
 
         Test.stopTest();
     }
+
+    public with sharing class GetReferencedFieldsByObjectData {
+        final SObjectType sObjectType;
+        final List<Rollup__mdt> cachedRollups;
+        final List<Schema.DescribeFieldResult> expectedReferencedFieldsBySObject;
+        final String description;
+
+        public GetReferencedFieldsByObjectData(
+            final SObjectType objType, 
+            final List<Rollup__mdt> cachedRollups, 
+            final List<Schema.DescribeFieldResult> expectedReferencedFieldsBySObject, 
+            final String description
+        ) {
+            this.sObjectType = objType; // Uses objType as name to match CRLP_Rollup_SEL.getReferencedFieldsByObject(...)'s signature
+            this.cachedRollups = cachedRollups;
+            this.expectedReferencedFieldsBySObject = expectedReferencedFieldsBySObject;
+            this.description = description;
+        }
+
+        public String getMethodName() {
+            return 'CRLP_Rollup_SEL.getReferencedFieldsByObject(SObjectType objType)';
+        }
+
+        public SObjectType getSObjectType() {
+            return this.sObjectType;
+        }
+
+        public List<Rollup__mdt> getCachedRollups() {
+            return this.cachedRollups;
+        }
+
+        public List<Schema.DescribeFieldResult> getExpectedReferencedFieldsBySObject() {
+            return this.expectedReferencedFieldsBySObject;
+        }
+
+        public String getDescription() {
+            return this.description;
+        }
+
+        public String getDescription(List<Schema.DescribeFieldResult> describes) {
+            final List<String> names = new List<String>();
+            for (Schema.DescribeFieldResult describe : describes) {
+                names.add(describe.getName());
+            }
+            return String.join(names, ', ');
+        }
+
+        public void assertGetsReferencedFieldsBySObject() {
+            final List<Schema.DescribeFieldResult> expected = this.getExpectedReferencedFieldsBySObject();
+
+            Exception e;
+            List<Schema.DescribeFieldResult> actual;
+
+            // Setup
+            {
+                //CRLP_Rollup_SEL.cachedRollups = null; // Reset so previous reference doesn't get overwritten
+                CRLP_Rollup_SEL.cachedRollups = this.getCachedRollups();
+            }
+
+            try {
+                actual = CRLP_Rollup_SEL.getReferencedFieldsByObject(this.getSObjectType());
+            }
+            catch (Exception whoops) {
+                e = whoops;
+            }
+
+            System.assertEquals(
+                null, 
+                e, 
+                getNeverExpectExceptionMessage(this.getMethodName())
+            );
+            System.assertEquals(
+                expected, 
+                actual, 
+                getUnexpectedValueMessage(
+                    this.getMethodName(), 
+                    new Map<String, Object> {
+                        'README' => 'Check that all Rollup__mdt Time_Bound_Operation_Type__c and Operation__c supported by all RollupFields', 
+                        'description' => this.getDescription(), 
+                        'objType' => this.getSObjectType(), 
+                        'this.getCachedRollups()' => this.getCachedRollups(), 
+                        'CRLP_Rollup_SEL.cachedRollups' => CRLP_Rollup_SEL.cachedRollups, 
+                        'expected' => getDescription(expected), 
+                        'actual' => getDescription(actual)
+                    }
+                )
+            );
+        }
+    }
+
+    public static void addCurrencyIsoCode(
+        List<Schema.DescribeFieldResult> expectedReferencedFields, 
+        DescribeSObjectResult describe
+    ) {
+        if (
+            UserInfo.isMultiCurrencyOrganization()
+            && describe.fields.getMap().get('CurrencyIsoCode') != null
+        ) {
+            expectedReferencedFields.add(describe.fields.getMap().get('CurrencyIsoCode').getDescribe());
+        }
+    }
+
+    public static List<List<Rollup__mdt>> getAllRollupsWithNoSObjectReference() {
+        return new List<List<Rollup__mdt>> {
+            new List<Rollup__mdt>(), 
+            
+            // No Summary or Rollup Fields
+            new List<Rollup__mdt> {
+                new Rollup__mdt(
+                    Active__c = false, 
+                    // Rollup__mdt's Time_Bound_Operation_Type__c and Operation__c should be supported for all RollupFields
+                    Time_Bound_Operation_Type__c = CRLP_Operation.TimeBoundOperationType.Years_Ago.name(), 
+                    Operation__c = CRLP_Operation.RollupType.Smallest.name()
+                ), 
+                new Rollup__mdt(
+                    Active__c = true, 
+                    // Rollup__mdt's Time_Bound_Operation_Type__c and Operation__c should be supported for all RollupFields
+                    Time_Bound_Operation_Type__c = CRLP_Operation.TimeBoundOperationType.Years_Ago.name(), 
+                    Operation__c = CRLP_Operation.RollupType.Smallest.name()
+                )
+            }
+        };
+    }
+
+    public static List<Rollup__mdt> getRollupsWithSummaryAndRollupFields() {
+        final List<Rollup__mdt> rollups = new List<Rollup__mdt>();
+
+        for (Boolean isActive : new List<Boolean> {
+            true, 
+            false
+        }) {
+            final Map<String, Object> fields = new Map<String, Object> {
+                'Summary_Object__r' => getEntityMetadataRelationship(Schema.SObjectType.Account.getName()), 
+                'Summary_Field__r' => getFieldMetadataRelationship(Schema.SObjectType.Account.fields.AccountNumber.getName()), 
+                'Date_Object__r' => getEntityMetadataRelationship(Schema.SObjectType.Contact.getName()), 
+                'Date_Field__r' => getFieldMetadataRelationship(Schema.SObjectType.Contact.fields.npo02__FirstCloseDate__c.getName()), 
+                'Amount_Object__r' => getEntityMetadataRelationship(Schema.SObjectType.Opportunity.getName()), 
+                'Amount_Field__r' => getFieldMetadataRelationship(Schema.SObjectType.Opportunity.fields.Amount.getName()), 
+                'Detail_Object__r' => getEntityMetadataRelationship(Schema.SObjectType.Opportunity.getName()), 
+                'Detail_Field__r' => getFieldMetadataRelationship(Schema.SObjectType.Opportunity.fields.Amount.getName())
+            };
+            {
+                fields.put(Schema.SObjectType.Rollup__mdt.fields.Active__c.getName(), isActive);
+
+                // Rollup__mdt's Time_Bound_Operation_Type__c and Operation__c should be supported for all RollupFields
+                fields.put(
+                    Schema.SObjectType.Rollup__mdt.fields.Time_Bound_Operation_Type__c.getName(), CRLP_Operation.TimeBoundOperationType.Years_Ago.name()
+                );
+                fields.put(
+                    Schema.SObjectType.Rollup__mdt.fields.Operation__c.getName(), 
+                    CRLP_Operation.RollupType.Smallest.name()
+                );
+                
+            }
+            rollups.add((Rollup__mdt) getSObject(
+                Schema.SObjectType.Rollup__mdt.getName(), 
+                fields
+            ));
+        }
+        return rollups;
+    }
+
+    @IsTest
+    private static void testGetReferencedFieldByObject() {
+        // Data
+
+        final List<GetReferencedFieldsByObjectData> allGetReferencedFieldsByObjectData = new List<GetReferencedFieldsByObjectData>();
+        {
+            // Null SObjectType + any cached Rollups => empty referencedFields
+            {
+                // allRollupsWithNoSObjectReference
+                for(List<Rollup__mdt> rollups : getAllRollupsWithNoSObjectReference()) {
+                    allGetReferencedFieldsByObjectData.add(new GetReferencedFieldsByObjectData(
+                        (SObjectType) null, 
+                        rollups, 
+                        new List<Schema.DescribeFieldResult>(), 
+                        'Null SObjectType + any cached Rollups => empty referencedFields; allRollupsWithNoSObjectReference'
+                    ));
+                }
+
+                // rollupsWithSummaryAndRollupFields
+                {
+                    allGetReferencedFieldsByObjectData.add(new GetReferencedFieldsByObjectData(
+                        (SObjectType) null, 
+                        getRollupsWithSummaryAndRollupFields(), 
+                        new List<Schema.DescribeFieldResult>(), 
+                        'Null SObjectType + any cached Rollups => empty referencedFields; rollupsWithSummaryAndRollupFields'
+                    ));
+                }
+            }
+
+            // Non-Null SObjectType + any cached Rollups => expected referencedFields
+            {
+                // No cachedRollup matches objType
+                {
+                    final SObjectType objType = Schema.Lead.SObjectType;
+
+                    final List<Schema.DescribeFieldResult> expectedReferencedFields = new List<Schema.DescribeFieldResult>();
+                    addCurrencyIsoCode(expectedReferencedFields, Schema.SObjectType.Lead);
+
+                    // rollupsWithNoSObjectReference
+                    for (List<Rollup__mdt> rollups : getAllRollupsWithNoSObjectReference()) {
+                        allGetReferencedFieldsByObjectData.add(new GetReferencedFieldsByObjectData(
+                            objType, 
+                            rollups, 
+                            expectedReferencedFields, 
+                            'No cachedRollup matches objType; rollupsWithNoSObjectReference'
+                        ));
+                    }
+
+                    // rollupsWithSummaryAndRollupFields
+                    {
+                        allGetReferencedFieldsByObjectData.add(new GetReferencedFieldsByObjectData(
+                            objType, 
+                            getRollupsWithSummaryAndRollupFields(), 
+                            expectedReferencedFields, 
+                            'No cachedRollup matches objType; rollupsWithSummaryAndRollupFields'
+                        ));
+                    }
+                }
+
+                // objType: Account
+                {
+                    final SObjectType objType = Schema.Account.SObjectType;
+
+                    // rollupsWithNoSObjectReference
+                    {
+                        final List<Schema.DescribeFieldResult> expectedReferencedFields = new List<Schema.DescribeFieldResult>();
+                        addCurrencyIsoCode(expectedReferencedFields, Schema.SObjectType.Account);
+
+                        for (List<Rollup__mdt> rollups : getAllRollupsWithNoSObjectReference()) {
+                            allGetReferencedFieldsByObjectData.add(new GetReferencedFieldsByObjectData(
+                                objType, 
+                                rollups, 
+                                expectedReferencedFields, 
+                                'objType: Account; rollupsWithNoSObjectReference'
+                            ));
+                        }
+                    }
+
+                    // rollupsWithSummaryAndRollupFields
+                    {
+                        final List<Schema.DescribeFieldResult> expectedReferencedFields = new List<Schema.DescribeFieldResult>();
+                        addCurrencyIsoCode(expectedReferencedFields, Schema.SObjectType.Account);
+                        {
+                            expectedReferencedFields.add(Schema.SObjectType.Account.fields.AccountNumber);
+                        }
+
+                        allGetReferencedFieldsByObjectData.add(new GetReferencedFieldsByObjectData(
+                            objType, 
+                            getRollupsWithSummaryAndRollupFields(), 
+                            expectedReferencedFields, 
+                            'objType: Account; rollupsWithSummaryAndRollupFields'
+                        ));
+                    }
+                }
+            
+                // objType: Contact
+                {
+                    final SObjectType objType = Schema.Contact.SObjectType;
+
+                    // rollupsWithNoSObjectReference
+                    {
+                        final List<Schema.DescribeFieldResult> expectedReferencedFields = new List<Schema.DescribeFieldResult>();
+                        addCurrencyIsoCode(expectedReferencedFields, Schema.SObjectType.Contact);
+
+                        for (List<Rollup__mdt> rollups : getAllRollupsWithNoSObjectReference()) {
+                            allGetReferencedFieldsByObjectData.add(new GetReferencedFieldsByObjectData(
+                                objType, 
+                                rollups, 
+                                expectedReferencedFields, 
+                                'objType: Contact; rollupsWithNoSObjectReference'
+                            ));
+                        }
+                    }
+                    // rollupsWithSummaryAndRollupFields
+                    {
+                        final List<Schema.DescribeFieldResult> expectedReferencedFields = new List<Schema.DescribeFieldResult>();
+                        addCurrencyIsoCode(expectedReferencedFields, Schema.SObjectType.Contact);
+                        {
+                            expectedReferencedFields.add(Schema.SObjectType.Contact.fields.npo02__FirstCloseDate__c);
+                        }
+
+                        GetReferencedFieldsByObjectData data = new GetReferencedFieldsByObjectData(
+                            objType, 
+                            getRollupsWithSummaryAndRollupFields(), 
+                            expectedReferencedFields, 
+                            'objType: Contact; rollupsWithSummaryAndRollupFields'
+                        );
+
+                        allGetReferencedFieldsByObjectData.add(data);
+                    }
+                
+                }
+            
+                // objType: Opportunity
+                {
+                    final SObjectType objType = Schema.Opportunity.SObjectType;
+
+                    // rollupsWithNoSObjectReference
+                    {
+                        final List<Schema.DescribeFieldResult> expectedReferencedFields = new List<Schema.DescribeFieldResult> {
+                            Schema.SObjectType.Opportunity.fields.AccountId, 
+                            Schema.SObjectType.Opportunity.fields.Primary_Contact__c
+                        };
+                        addCurrencyIsoCode(expectedReferencedFields, Schema.SObjectType.Opportunity);
+
+                        for (List<Rollup__mdt> rollups : getAllRollupsWithNoSObjectReference()) {
+                            allGetReferencedFieldsByObjectData.add(new GetReferencedFieldsByObjectData(
+                                objType, 
+                                rollups, 
+                                expectedReferencedFields, 
+                                'objType: Opportunity; rollupsWithNoSObjectReference'
+                            ));
+                        }
+                    }
+
+                    // rollupsWithSummaryAndRollupFields
+                    {
+                        final List<Schema.DescribeFieldResult> expectedReferencedFields = new List<Schema.DescribeFieldResult> {
+                            Schema.SObjectType.Opportunity.fields.AccountId, 
+                            Schema.SObjectType.Opportunity.fields.Primary_Contact__c
+                        };
+                        addCurrencyIsoCode(expectedReferencedFields, Schema.SObjectType.Opportunity);
+                        {
+                            // Opportunity.Amount is "duplicated" in Rollup__mdt.Amount_Field__c and Rollup__mdt.Detail_Field__c
+                            expectedReferencedFields.add(Schema.SObjectType.Opportunity.fields.Amount);
+                        }
+
+                        allGetReferencedFieldsByObjectData.add(new GetReferencedFieldsByObjectData(
+                            objType, 
+                            getRollupsWithSummaryAndRollupFields(), 
+                            expectedReferencedFields, 
+                            'objType: Opportunity; rollupsWithSummaryAndRollupFields'
+                        ));
+                    }
+                }
+            }
+        }
+
+        Test.startTest();
+
+        // CRLP_Rollup_SEL
+        {
+            // List<Schema.DescribeFieldResult> getReferencedFieldsByObject(SObjectType objType)
+            for(GetReferencedFieldsByObjectData getReferencedFieldsByObjectData : allGetReferencedFieldsByObjectData) {
+                getReferencedFieldsByObjectData.assertGetsReferencedFieldsBySObject();
+            }
+        }
+
+        Test.stopTest();
+    }
 }

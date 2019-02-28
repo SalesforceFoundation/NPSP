@@ -424,11 +424,70 @@ public class CRLP_Rollup_SEL {
      * @return List<DescribeFieldResult>
      */
     public static List<Schema.DescribeFieldResult> getReferencedFieldsByObject(SObjectType objType) {
-        final String sObjectName = UTIL_Describe.getObjectDescribe(objType).getName();
+        // Collect SObjectFields in set in case there are duplicates
+        final Set<SObjectField> fields = new Set<SObjectField>();
 
+        // Always add the AccountId and Primary_Contact__c for the Opportunity object
+        if (objType == Schema.Opportunity.SObjectType) {
+            fields.add(Schema.Opportunity.AccountId);
+            fields.add(Schema.Opportunity.Primary_Contact__c);
+        }
+
+        if (objType != null) {
+            final DescribeSObjectResult sObjectDescribe = UTIL_Describe.getObjectDescribe(objType);
+            final String sObjectName = sObjectDescribe.getName();
+            
+            // Note: DescribeSObjectResult.fields.getMap() is a case-insensitive map
+            final Map<String, SObjectField> fieldsByName = sObjectDescribe.fields.getMap();
+
+            // Always include the CurrencyIsoCode field if available for the object
+            if (
+                UserInfo.isMultiCurrencyOrganization() 
+                && fieldsByName.get('CurrencyIsoCode') != null
+            ) {
+                fields.add(fieldsByName.get('CurrencyIsoCode'));
+            }
+    
+            // Summary Field and Rollup Field from cachedRollups
+            {   
+                final RollupField[] rollupFields = getRollupFields();
+
+                for (Rollup__mdt rollup : cachedRollups) {
+                    if (rollup.Active__c == true) {
+                        // Summary Field
+                        if (rollup.Summary_Object__r.QualifiedApiName == sObjectName) {
+                            final SObjectField field = fieldsByName.get(rollup.Summary_Field__r.QualifiedApiName);
+                            if (field != null) {
+                                fields.add(field);
+                            }
+                        }
+
+                        // Rollup Fields
+                        for (RollupField rollupField : rollupFields) {
+                            if (rollupField.isFieldUsed(rollup, sObjectName)) {
+                                final SObjectField field = fieldsByName.get(rollupField.getFieldName(rollup));
+                                if (field != null) {
+                                    fields.add(field);
+                                }
+                            }
+                        }
+                    }
+                }
+            }   
+        }
+
+        final List<Schema.DescribeFieldResult> referencedFields = new List<Schema.DescribeFieldResult>();
+        // Add fields' Describes to referencedFields
+        for (SObjectField field : fields) {
+            referencedFields.add(field.getDescribe());
+        }
+
+        return referencedFields;
+    /*
         Map<String, Schema.DescribeFieldResult> allFields = UTIL_Describe.getAllFieldsDescribe(sObjectName);
-        Map<String, Schema.DescribeFieldResult> referencedFields = new Map<String, Schema.DescribeFieldResult>();
+        Map<String, Schema.DescribeFieldResult> referencedFieldsByName = new Map<String, Schema.DescribeFieldResult>();
 
+        // Summary Field and Rollup Field from cachedRollups
         {
             final RollupField[] rollupFields = getRollupFields();
 
@@ -437,7 +496,7 @@ public class CRLP_Rollup_SEL {
                     // Summary Field
                     if (rollup.Summary_Object__r.QualifiedApiName == sObjectName) {
                         String fieldName = rollup.Summary_Field__r.QualifiedApiName;
-                        referencedFields.put(
+                        referencedFieldsByName.put(
                             fieldName, 
                             allFields.get(fieldName.toLowerCase())
                         );
@@ -447,7 +506,7 @@ public class CRLP_Rollup_SEL {
                     for (RollupField rollupField : rollupFields) {
                         if (rollupField.isFieldUsed(rollup, sObjectName)) {
                             final String fieldName = rollupField.getFieldName(rollup);
-                            referencedFields.put(
+                            referencedFieldsByName.put(
                                 fieldName, 
                                 allFields.get(fieldName.toLowerCase())
                             );
@@ -459,7 +518,7 @@ public class CRLP_Rollup_SEL {
 
         // Always include the CurrencyIsoCode field if it's available for the object
         if (UserInfo.isMultiCurrencyOrganization() && allFields.get('currencyisocode') != null) {
-            referencedFields.put('CurrencyIsoCode', allFields.get('currencyisocode'));
+            referencedFieldsByName.put('CurrencyIsoCode', allFields.get('currencyisocode'));
         }
 
         // Always add the AccountId and Primary_Contact__c for the Opportunity object
@@ -468,15 +527,16 @@ public class CRLP_Rollup_SEL {
                 Schema.SObjectType.Opportunity.fields.AccountId.getName(), 
                 Schema.SObjectType.Opportunity.fields.Primary_Contact__c.getName()
             }) {
-                referencedFields.put(
+                referencedFieldsByName.put(
                     fieldName, 
                     allFields.get(fieldName.toLowerCase())
                 );
             }
         }
 
-        validateReferencedFields(referencedFields, sObjectName);
-        return referencedFields.values();
+        validateReferencedFields(referencedFieldsByName, sObjectName);
+        return referencedFieldsByName.values();
+    */
     }
 
     /**
