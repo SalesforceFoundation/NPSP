@@ -291,12 +291,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         updateOneToOneAccounts(oneToOneContactsToUpdate);
         moveOppsToContactAccount(newHouseholdIdByContactId, oldHouseholdIdByContactId);
         updateHHAccount(householdIdsToUpdate);
-        if (householdIdsToRename.size() > 0) {
-            renameHHAccounts(householdIdsToRename);
-        }
-        if (contactWithNewOwnerById.size() > 0) {
-            updateOwners(contactWithNewOwnerById);
-        }
+        renameHHAccounts(householdIdsToRename);
+        updateOwners(contactWithNewOwnerById);
     }
 
     /*******************************************************************************************************
@@ -630,49 +626,51 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     * @return void
     */
     private void updateOwners(Map<Id, Contact> contactWithNewOwnerById) {
-        if (contactWithNewOwnerById.size() > 0) {
-            Map<Id, Account> allAccounts = new Map<Id, Account>();
-            Map<Id, Account> accountsToUpdate = new Map<Id, Account>();
+        if (contactWithNewOwnerById.isEmpty()) {
+            return;
+        }
 
-            for (Contact con : contactWithNewOwnerById.values()) {
-                allAccounts.put(con.AccountId, null);
-            }
+        Map<Id, Account> allAccounts = new Map<Id, Account>();
+        Map<Id, Account> accountsToUpdate = new Map<Id, Account>();
 
-            allAccounts = new Map<Id, Account>(
-                [SELECT Id, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, OwnerId,
-                    (SELECT Id FROM Contacts limit 2)
-                 FROM Account WHERE Id IN :allAccounts.keySet()]
-            );
+        for (Contact con : contactWithNewOwnerById.values()) {
+            allAccounts.put(con.AccountId, null);
+        }
 
-            for (Account acc : allAccounts.values()) {
-                // only consider 1:1 and HH Accounts
-                if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
-                    // if there is only 1 contact associated with this account
-                    if (acc.Contacts.size() == 1 && acc.npe01__One2OneContact__c != null) {
-                        Contact c = contactWithNewOwnerById.get(acc.npe01__One2OneContact__c);
-                        Id ownerIdContact = (c != null ? c.OwnerId : null);
-                        if (acc.OwnerId != ownerIdContact) {
-                            acc.OwnerId = ownerIdContact;
-                            accountsToUpdate.put(acc.id, acc);
-                        }
+        allAccounts = new Map<Id, Account>(
+            [SELECT Id, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, OwnerId,
+                (SELECT Id FROM Contacts limit 2)
+                FROM Account WHERE Id IN :allAccounts.keySet()]
+        );
+
+        for (Account acc : allAccounts.values()) {
+            // only consider 1:1 and HH Accounts
+            if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
+                // if there is only 1 contact associated with this account
+                if (acc.Contacts.size() == 1 && acc.npe01__One2OneContact__c != null) {
+                    Contact c = contactWithNewOwnerById.get(acc.npe01__One2OneContact__c);
+                    Id ownerIdContact = (c != null ? c.OwnerId : null);
+                    if (acc.OwnerId != ownerIdContact) {
+                        acc.OwnerId = ownerIdContact;
+                        accountsToUpdate.put(acc.id, acc);
                     }
                 }
             }
+        }
 
-            //update existing dmlWrapper objects with accounts already in the list
-            //avoids "duplicate id in list" errors updating the same account twice
-            for (sObject dmlObj : dmlWrapper.objectsToUpdate) {
-                Id objId = (Id) dmlObj.get('id');
-                if (accountsToUpdate.containsKey(objId)) {
-                    dmlObj.put('OwnerId', accountsToUpdate.get(objId).OwnerId);
-                    accountsToUpdate.remove(objId);
-                }
+        //update existing dmlWrapper objects with accounts already in the list
+        //avoids "duplicate id in list" errors updating the same account twice
+        for (sObject dmlObj : dmlWrapper.objectsToUpdate) {
+            Id objId = (Id) dmlObj.get('id');
+            if (accountsToUpdate.containsKey(objId)) {
+                dmlObj.put('OwnerId', accountsToUpdate.get(objId).OwnerId);
+                accountsToUpdate.remove(objId);
             }
+        }
 
-            // add the rest of the accounts that weren't already in the update list
-            if (!accountsToUpdate.isEmpty()) {
-                dmlWrapper.objectsToUpdate.addAll(accountsToUpdate.values());
-            }
+        // add the rest of the accounts that weren't already in the update list
+        if (!accountsToUpdate.isEmpty()) {
+            dmlWrapper.objectsToUpdate.addAll(accountsToUpdate.values());
         }
     }
 
@@ -912,15 +910,19 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description for the list of HH AccountId's, update their Household Names
-    * @param listAccountId the list of Account (Id's) that need updating.
+    * @param accountIds the list of Account (Id's) that need updating.
     * @return void
     */
-    public static void renameHHAccounts(List<Id> listAccountId) {
-        if (listAccountId.size() == 1 || system.isFuture() || system.isBatch()) {
+    public static void renameHHAccounts(List<Id> accountIds) {
+        if (accountIds.isEmpty()) {
+            return;
+        }
+
+        if (accountIds.size() == 1 || system.isFuture() || system.isBatch()) {
             HH_HouseholdNaming hhName = new HH_HouseholdNaming();
-            hhName.UpdateNames(listAccountId);
+            hhName.UpdateNames(accountIds);
         } else {
-            HH_HouseholdNaming.FutureUpdateNames(listAccountId);
+            HH_HouseholdNaming.FutureUpdateNames(accountIds);
         }
     }
 
@@ -953,19 +955,23 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description for the list of AccountId's, recalc their rollups
-    * @param listAccountId the list of Account (Id's) that need updating.
+    * @description for the list of AccountId's, recalc their rollups 
+    * @param accountIds the list of Account (Id's) that need updating.
     * @return void
-    */
-    public static void rollupAccounts(List<Id> listAccountId) {
-        if (listAccountId.size() == 1 || system.isFuture() || system.isBatch()) {
+    */ 
+    public static void rollupAccounts(List<Id> accountIds) {
+        Boolean isImmediate = accountIds.size() == 1 || System.isFuture() || System.isBatch() || System.isQueueable();
+
+        if (isImmediate) {
             RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
-            Map<Id, Account> amap = new Map<Id, account>((List<Account>)Database.query(oppRollupUtil.buildAccountQuery() +
-                                                           ' where id IN :listAccountId'));
-            RLLP_OppRollup rg = new RLLP_OppRollup();
-            rg.rollupAccounts(amap);
+            String query = new RLLP_OppRollup_UTIL().buildAccountQuery() + ' WHERE Id IN :accountIds';
+            Map<Id, Account> accountsById = new Map<Id, Account>((List<Account>)Database.query(query));
+            RLLP_OppRollup oppRollup = new RLLP_OppRollup();
+
+            oppRollup.rollupAccounts(accountsById);
+
         } else {
-            RLLP_OppRollup.rollupAccountsFuture(new Set<Id>(listAccountId));
+            RLLP_OppRollup.rollupAccountsFuture(new set<Id>(accountIds));
         }
     }
 
