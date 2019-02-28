@@ -103,7 +103,6 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         for (DataImport__c di : dataImports) {
             // User told us in BGE interface to not match this record and only create new Opportunity
             // OR User told us in BGE interface to apply a new payment to a given Opportunity
-            // TODO: could this be summarized as "new opp OR donation already specified"?
             if (di.DonationImportStatus__c != Label.bdiMatchedByUserNewOpp
                     && di.DonationImportStatus__c != Label.bdiMatchedApplyNewPayment) {
                 ID id;

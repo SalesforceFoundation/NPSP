@@ -93,7 +93,7 @@
                                         <p>{!$Label.c.bgeFormNewDonationHelptext}</p>
                                         <aura:set attribute="else">
                                         <p class="slds-m-right_x-small">
-                                            <aura:if isTrue="{!equals(v.selectedDonation.applyPayment, true)}">
+                                            <aura:if isTrue="{!v.selectedDonation.applyPayment}">
                                                 {!$Label.c.bgeFormNewPaymentHelptext}
                                                 <aura:set attribute="else">
                                                     {!$Label.c.bgeFormUpdateHelptext}
