@@ -171,8 +171,6 @@ public class BDI_Donations {
                 );
                 dataImport.PaymentImportStatus__c = Label.bdiCreated;
             } else {
-                // don't process opps in the case of user-selected Apply New Payment
-
                 // validate against our desired matching behavior (exact match, best match, new, etc.)
                 if (!isValidMatchBehavior(dataImport, matchBehavior)) {
                     continue;
