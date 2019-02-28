@@ -443,9 +443,9 @@ public class BDI_Donations {
             }
         }
 
-        String donationRecordTypeName = UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c').toLowerCase();
-        String donationStage = UTIL_Namespace.StrTokenNSPrefix('Donation_Stage__c').toLowerCase();
-        String donationAmount = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowerCase();
+        String donationRecordTypeName = UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c');
+        String donationStage = UTIL_Namespace.StrTokenNSPrefix('Donation_Stage__c');
+        String donationAmount = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c');
 
         // now copy over all the data to the Opp
         for (String dataImportField : dataImportFieldToOpportunityField.keySet()) {
