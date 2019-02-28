@@ -161,9 +161,17 @@ public class BDI_Donations {
         List<DataImport__c> dataImportsToUpdate = new List<DataImport__c>();
 
         for (DataImport__c dataImport : dataImportDonations) {
-
-            // don't process opps in the case of user-selected Apply New Payment
-            if (dataImport.DonationImportStatus__c != Label.bdiMatchedApplyNewPayment) {
+            if (dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
+                // park a new empty payment in the map if the user specified Apply New Payment
+                paymentsByDataImportId.put(
+                        dataImport.Id,
+                        new npe01__OppPayment__c(
+                                npe01__Opportunity__c = dataImport.DonationImported__c
+                        )
+                );
+                dataImport.PaymentImportStatus__c = Label.bdiCreated;
+            } else {
+                // don't process opps in the case of user-selected Apply New Payment
 
                 // validate against our desired matching behavior (exact match, best match, new, etc.)
                 if (!isValidMatchBehavior(dataImport, matchBehavior)) {
@@ -190,15 +198,6 @@ public class BDI_Donations {
                 if (Test.isRunningTest() && opp.Name != null && opp.Name.startsWith('FailTest')) {
                     opp.Name = null;
                 }
-            } else if (dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
-                // park a new empty payment in the map if the user specified Apply New Payment
-                paymentsByDataImportId.put(
-                        dataImport.Id,
-                        new npe01__OppPayment__c(
-                                npe01__Opportunity__c = dataImport.DonationImported__c
-                        )
-                );
-                dataImport.PaymentImportStatus__c = Label.bdiCreated;
             }
         }
 
@@ -455,7 +454,7 @@ public class BDI_Donations {
                 continue;
             }
 
-            // only copy over Stage and Amount if we aren't applying a new Payment
+            // Don't copy over Stage or Amount if we are applying a new Payment or updating a Payment
             if (dataImportField == donationStage || dataImportField == donationAmount) {
                 if (dataImport.DonationImportStatus__c != System.Label.bdiMatchedApplyNewPayment
                         && dataImport.PaymentImported__c != null) {
