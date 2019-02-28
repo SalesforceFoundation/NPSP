@@ -115,7 +115,6 @@ private with sharing  class ALLO_PaymentSync_TEST {
         makePayments(1000, 1);
         makeGAUs(2);
 
-        //resetting these manually as a test is considered a single context for static variables
         List<Allocation__c> alloForInsert = new List<Allocation__c>();
 
         Allocation__c percentAllo = new Allocation__c(Opportunity__c=opportunity.id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].id);
@@ -135,11 +134,27 @@ private with sharing  class ALLO_PaymentSync_TEST {
         assertAllocation(queryAllocations[4], 300, gaus[1].id, false);
         assertAllocation(queryAllocations[5], 500, gaus[0].id, false);
     }
-
-//TODO can't update opportunity and payment allocations for the same opportunity (only substantial updates)
+    
+    /*******************************************************************************************************
+    * @description Prevent creating or modifying Opportunity and Payment Allocations for the same Opportunity
+    * in the same transaction.
+    ********************************************************************************************************/
     @isTest
     private static void validateOverlappingChanges() {
+        makePayments(1000, 1);
+        makeGAUs(2);
 
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].id));
+        alloForInsert.add(new Allocation__c(Payment__c=opportunity.id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].id));
+        String error;
+        try {
+            insert alloForInsert;
+        } catch (Exception ex) {
+            error = ex.getMessage();
+        }
+        System.assertEquals(, actual)
     }
 
     // Helpers

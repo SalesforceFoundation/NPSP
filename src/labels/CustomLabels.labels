@@ -1834,6 +1834,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Manage Allocations button is only supported from a Campaign, Opportunity, Payment or Recurring Donation record.</value>
     </labels>
     <labels>
+        <fullName>alloPaidPmtsExceedsOpp</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloPaidPmtsExceedsOpp</shortDescription>
+        <value>The total allocation of paid payments cannot exceed the opportunity allocation for a GAU.</value>
+    </labels>
+    <labels>
         <fullName>alloPaymentNotEnabled</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
@@ -1850,12 +1858,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Percent-based Allocations cannot exceed 100%.</value>
     </labels>
     <labels>
+        <fullName>alloPmtOppSingleTransaction</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloPmtOppSingleTransaction</shortDescription>
+        <value>Opportunity and Payment Allocations for the same Opportunity record cannot be created or modified at the same time.</value>
+    </labels>
+    <labels>
         <fullName>alloRemainder</fullName>
         <categories>Allocation</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloRemainder</shortDescription>
         <value>Remainder:</value>
+    </labels>
+    <labels>
+        <fullName>alloRemoveOppWithPmt</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloRemoveOppWithPmt</shortDescription>
+        <value>You cannot remove an opportunity allocation for a GAU that has paid payment allocations.</value>
     </labels>
     <labels>
         <fullName>alloSignMistmatch</fullName>

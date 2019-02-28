@@ -111,7 +111,7 @@ public class ALLO_PaymentSync_TDTM extends TDTM_Runnable {
             for (Allocation__c opportunityAllocation : opportunityAllocations.values()) {
                 //validation: verify no updates to payment and opportunity allocations for the same opportunity
                 if (opportunityAllocation.Opportunity__c == opportunityId) {
-                    opportunityAllocation.addError('Opportunity and Payment Allocations for the same Opportunity record cannot be modified at the same time.');
+                    opportunityAllocation.addError(System.Label.alloPmtOppSingleTransaction);
                 }
             }
         }
