@@ -448,7 +448,25 @@
             fieldGroups: []
         };
         let activeFieldsBySObject = this.getActivesBySObject(component);
-        Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
+
+        const opportunitySObjectName = "Opportunity";
+        const paymentSObjectName = "Payment";
+
+        var sObjectKeys = Object.keys(activeFieldsBySObject);
+
+        // Make sure Opportunity is always the first sObject to be shown and Payment the second.
+        var orderedKeys = [opportunitySObjectName, paymentSObjectName];
+
+        // If there happens to be other objects appart from Opportunity and Payment
+        // Add them to the list behind them.
+        for(var i=0; i<sObjectKeys.length; i++) {
+            var key = sObjectKeys[i];
+            if(key !== opportunitySObjectName && key !== paymentSObjectName) {
+               orderedKeys.push(key);
+            }
+        }
+
+        orderedKeys.forEach(function(sObjectName) {
 
             var currentFieldGroup = {
                 sObjectName: sObjectName,
