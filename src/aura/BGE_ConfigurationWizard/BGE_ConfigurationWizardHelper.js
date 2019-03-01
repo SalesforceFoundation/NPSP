@@ -142,29 +142,15 @@
 
         // store everyField with its metadata
         component.set('v.everyField', everyField);
+
         // sort into groups by object
         // returns map of sobject name => list of fields
-        var activeFieldsBySObject = this.getActivesBySObject(component);
+        let activeFieldsBySObject = this.getActivesBySObject(component);
         // returns map of sobject name => list of fields
         var allFieldsBySObject = this.groupFieldsBySObject(everyField);
 
-        const opportunitySObjectName = component.get('v.wizardMetadata.labels.opportunitySObjectName');
-        const paymentSObjectName = component.get('v.wizardMetadata.labels.paymentSObjectName');
-
-        var sObjectKeys = Object.keys(allFieldsBySObject);
-
-        // Make sure Opportunity is always the first sObject to be shown and Payment the second.
-        var orderedKeys = [opportunitySObjectName, paymentSObjectName];
-
-        // If there happens to be other objects appart from Opportunity and Payment
-        // Add them to the list behind them.
-        for(var i=0; i<sObjectKeys.length; i++) {
-            var key = sObjectKeys[i];
-            if(key !== opportunitySObjectName && key !== paymentSObjectName) {
-               orderedKeys.push(key);
-            }
-        }
-                
+        let orderedKeys = this.getOrderedSObjectNames(component, Object.keys(allFieldsBySObject));
+     
         orderedKeys.forEach(function(sObjectName) {
             let currentFieldGroup = {
                 sObjectName: sObjectName,
@@ -328,6 +314,30 @@
         return result;
     },
 
+    /**
+     * @description Orders a list of object names for grouping fields, 1. Opp 2. Payment 3. Others in orig order
+     * @param sObjectNames: list of string object names, not modified in function
+     * @return Ordered list of object names
+     */
+    getOrderedSObjectNames: function(component, sObjectNames) {    
+
+        const opportunitySObjectName = component.get('v.wizardMetadata.labels.opportunitySObjectName');
+        const paymentSObjectName = component.get('v.wizardMetadata.labels.paymentSObjectName');
+
+        // Make sure Opportunity is always the first sObject to be shown and Payment the second.
+        let orderedSObjectNames = [opportunitySObjectName, paymentSObjectName];
+
+        // If there happens to be other objects appart from Opportunity and Payment
+        // Add them to the list behind them.
+        for(var i=0; i<sObjectNames.length; i++) {
+            let sObjectName = sObjectNames[i];
+            if(sObjectName !== opportunitySObjectName && sObjectName !== paymentSObjectName) {
+                orderedSObjectNames.push(sObjectName);
+            }
+        }
+        return orderedSObjectNames;
+    },    
+
     /******************************** Validity Functions *****************************/
 
     /**
@@ -438,26 +448,10 @@
         };
         let activeFieldsBySObject = this.getActivesBySObject(component);
 
-        const opportunitySObjectName = "Opportunity";
-        const paymentSObjectName = "Payment";
-
-        var sObjectKeys = Object.keys(activeFieldsBySObject);
-
-        // Make sure Opportunity is always the first sObject to be shown and Payment the second.
-        var orderedKeys = [opportunitySObjectName, paymentSObjectName];
-
-        // If there happens to be other objects appart from Opportunity and Payment
-        // Add them to the list behind them.
-        for(var i=0; i<sObjectKeys.length; i++) {
-            var key = sObjectKeys[i];
-            if(key !== opportunitySObjectName && key !== paymentSObjectName) {
-               orderedKeys.push(key);
-            }
-        }
-
+        let orderedKeys = this.getOrderedSObjectNames(component, Object.keys(activeFieldsBySObject));
         orderedKeys.forEach(function(sObjectName) {
 
-            var currentFieldGroup = {
+            let currentFieldGroup = {
                 sObjectName: sObjectName,
                 fields: []
             };
