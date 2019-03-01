@@ -202,7 +202,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <apex:commandButton styleClass="slds-button slds-button_destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="theTable" immediate="true">
+                                    <apex:commandButton styleClass="slds-button slds-button_destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="theForm" immediate="true">
                                         <span class="slds-form-element__label slds-assistive-text">Delete Row {!cnt}</span>
                                         <apex:param name="rowForDel" value="{!cnt}" assignTo="{!rowNumber}"/>
                                     </apex:commandButton>
