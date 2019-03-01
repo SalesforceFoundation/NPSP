@@ -483,60 +483,6 @@ public class CRLP_Rollup_SEL {
         }
 
         return referencedFields;
-    /*
-        Map<String, Schema.DescribeFieldResult> allFields = UTIL_Describe.getAllFieldsDescribe(sObjectName);
-        Map<String, Schema.DescribeFieldResult> referencedFieldsByName = new Map<String, Schema.DescribeFieldResult>();
-
-        // Summary Field and Rollup Field from cachedRollups
-        {
-            final RollupField[] rollupFields = getRollupFields();
-
-            for (Rollup__mdt rollup : cachedRollups) {
-                if (rollup.Active__c == true) {
-                    // Summary Field
-                    if (rollup.Summary_Object__r.QualifiedApiName == sObjectName) {
-                        String fieldName = rollup.Summary_Field__r.QualifiedApiName;
-                        referencedFieldsByName.put(
-                            fieldName, 
-                            allFields.get(fieldName.toLowerCase())
-                        );
-                    }
-
-                    // Rollup Fields
-                    for (RollupField rollupField : rollupFields) {
-                        if (rollupField.isFieldUsed(rollup, sObjectName)) {
-                            final String fieldName = rollupField.getFieldName(rollup);
-                            referencedFieldsByName.put(
-                                fieldName, 
-                                allFields.get(fieldName.toLowerCase())
-                            );
-                        }
-                    }
-                }
-            }
-        }
-
-        // Always include the CurrencyIsoCode field if it's available for the object
-        if (UserInfo.isMultiCurrencyOrganization() && allFields.get('currencyisocode') != null) {
-            referencedFieldsByName.put('CurrencyIsoCode', allFields.get('currencyisocode'));
-        }
-
-        // Always add the AccountId and Primary_Contact__c for the Opportunity object
-        if (objType == Schema.Opportunity.SObjectType) {
-            for (String fieldName : new String[] {
-                Schema.SObjectType.Opportunity.fields.AccountId.getName(), 
-                Schema.SObjectType.Opportunity.fields.Primary_Contact__c.getName()
-            }) {
-                referencedFieldsByName.put(
-                    fieldName, 
-                    allFields.get(fieldName.toLowerCase())
-                );
-            }
-        }
-
-        validateReferencedFields(referencedFieldsByName, sObjectName);
-        return referencedFieldsByName.values();
-    */
     }
 
     /**
