@@ -309,15 +309,13 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             accountIds.add(thisContact.accountId);
         }
 
-        accounts = [
-            SELECT Id, Type, npe01__SYSTEM_AccountType__c,
-                (SELECT Id FROM Opportunities LIMIT 1),
-                (SELECT Id FROM Contacts LIMIT 1)
-            FROM Account 
-            WHERE Id IN :accountIds
-        ];
-
-        for (Account accountRecord : accounts) {
+        for (Account accountRecord : [
+                SELECT Id, Type, npe01__SYSTEM_AccountType__c,
+                    (SELECT Id FROM Opportunities LIMIT 1),
+                    (SELECT Id FROM Contacts LIMIT 1)
+                FROM Account 
+                WHERE Id IN :accountIds
+        ]) {
             if (accountRecord.Contacts.size() > 0
                 && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
                 householdIdsToUpdate.add(accountRecord.Id);
@@ -391,7 +389,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-     * @description Builds SOQL on Contact Sobject. Fields include Household Naming Settings Format fields.
+     * @description Builds SOQL on Contact SObject. Fields include Household Naming Settings Format fields.
      * @return String SOQL
      */
     @TestVisible
@@ -665,7 +663,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
         //update existing dmlWrapper objects with accounts already in the list
         //avoids "duplicate id in list" errors updating the same account twice
-        for (sObject dmlObj : dmlWrapper.objectsToUpdate) {
+        for (SObject dmlObj : dmlWrapper.objectsToUpdate) {
             Id objId = (Id) dmlObj.get('id');
             if (accountsToUpdate.containsKey(objId)) {
                 dmlObj.put('OwnerId', accountsToUpdate.get(objId).OwnerId);
@@ -761,8 +759,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             return true;
         }
 
-        if (contactRecord.FirstName == null) contactRecord.FirstName = '';
-        if (contactRecord.LastName == null) contactRecord.LastName = '';
+        contactRecord.FirstName = contactRecord.FirstName == null ? '' : contactRecord.FirstName;
+        contactRecord.LastName = contactRecord.LastName == null ? '' : contactRecord.LastName;
 
         // check all household naming fields for changes
         for(String fieldName : HH_NAMING_FIELDS) {
@@ -922,7 +920,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             return;
         }
 
-        if (accountIds.size() == 1 || System.isFuture() || System.isBatch()) {
+        if (accountIds.size() == 1 || System.isFuture() || System.isBatch() || System.isQueueable()) {
             HH_HouseholdNaming hhName = new HH_HouseholdNaming();
             hhName.UpdateNames(accountIds);
         } else {
@@ -977,7 +975,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             oppRollup.rollupAccounts(accountsById);
 
         } else {
-            RLLP_OppRollup.rollupAccountsFuture(new set<Id>(accountIds));
+            RLLP_OppRollup.rollupAccountsFuture(new Set<Id>(accountIds));
         }
     }
 
