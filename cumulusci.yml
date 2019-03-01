@@ -67,10 +67,9 @@ tasks:
             path: unpackaged/config/delete
 
     robot_libdoc:
-        class_path: cumulusci.tasks.robotframework.RobotLibDoc
         options:
-            path: tests/NPSP.robot
-            output: tests/NPSP_Robot_Library.html
+            path: tests/NPSP.py,tests/NPSP.robot
+            output: tests/Keywords.html
             
     update_admin_profile:
         options:
