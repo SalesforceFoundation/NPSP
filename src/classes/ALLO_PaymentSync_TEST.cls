@@ -36,9 +36,6 @@
 */
 @isTest
 private with sharing  class ALLO_PaymentSync_TEST {
-//TODO null and zero amounts for both opps and payments
-//TODO negative payment amounts
-//TODO over and underscheduled
 
     static General_Accounting_Unit__c defaultGau;
     static List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c>();
@@ -84,22 +81,20 @@ private with sharing  class ALLO_PaymentSync_TEST {
         //resetting these manually as a test is considered a single context for static variables
         List<Allocation__c> alloForInsert = new List<Allocation__c>();
 
-        Allocation__c percentAllo = new Allocation__c(Payment__c=payments[0].id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].id);
-        alloForInsert.add(percentAllo);
-        Allocation__c amountAllo = new Allocation__c(Payment__c=payments[0].id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].id);
-        alloForInsert.add(amountAllo);
+        alloForInsert.add(new Allocation__c(Payment__c=payments[0].Id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].Id));
+        alloForInsert.add(new Allocation__c(Payment__c=payments[0].Id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].Id));
         insert alloForInsert;
 
         List<Allocation__c> queryAllocations = getAllocationsOrderByAmount();
         System.assertEquals(6, queryAllocations.size(), 'Six opportunity allocations should exist.');
         //synced opportunity allocations
         assertAllocation(queryAllocations[0], 200, defaultGau.Id, true);
-        assertAllocation(queryAllocations[1], 300, gaus[1].id, true);
-        assertAllocation(queryAllocations[2], 500, gaus[0].id, true);
+        assertAllocation(queryAllocations[1], 300, gaus[1].Id, true);
+        assertAllocation(queryAllocations[2], 500, gaus[0].Id, true);
         //original payment allocations
         assertAllocation(queryAllocations[3], 200, defaultGau.Id, false);
-        assertAllocation(queryAllocations[4], 300, gaus[1].id, false);
-        assertAllocation(queryAllocations[5], 500, gaus[0].id, false);
+        assertAllocation(queryAllocations[4], 300, gaus[1].Id, false);
+        assertAllocation(queryAllocations[5], 500, gaus[0].Id, false);
     }
 
     /*******************************************************************************************************
@@ -117,24 +112,124 @@ private with sharing  class ALLO_PaymentSync_TEST {
 
         List<Allocation__c> alloForInsert = new List<Allocation__c>();
 
-        Allocation__c percentAllo = new Allocation__c(Opportunity__c=opportunity.id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].id);
-        alloForInsert.add(percentAllo);
-        Allocation__c amountAllo = new Allocation__c(Opportunity__c=opportunity.id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].id);
-        alloForInsert.add(amountAllo);
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].Id));
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].Id));
         insert alloForInsert;
 
         List<Allocation__c> queryAllocations = getAllocationsOrderByAmount();
         System.assertEquals(6, queryAllocations.size(), 'Six allocations should exist.');
         //original opportunity allocations
         assertAllocation(queryAllocations[0], 200, defaultGau.Id, true);
-        assertAllocation(queryAllocations[1], 300, gaus[1].id, true);
-        assertAllocation(queryAllocations[2], 500, gaus[0].id, true);
+        assertAllocation(queryAllocations[1], 300, gaus[1].Id, true);
+        assertAllocation(queryAllocations[2], 500, gaus[0].Id, true);
         //synced payment allocations
         assertAllocation(queryAllocations[3], 200, defaultGau.Id, false);
-        assertAllocation(queryAllocations[4], 300, gaus[1].id, false);
-        assertAllocation(queryAllocations[5], 500, gaus[0].id, false);
+        assertAllocation(queryAllocations[4], 300, gaus[1].Id, false);
+        assertAllocation(queryAllocations[5], 500, gaus[0].Id, false);
     }
-    
+
+    /*******************************************************************************************************
+    * @description When changing the Allocation amount of an Opportunity with overscheduled Payments:
+    * (i.e. the sum of unpaid and paid payments exceeds the opportunity amount)
+    * Increasing the amount will adjust the percentage allocations.
+    * Decreasing the amount so that the total allocation amount is below the payment amount will adjust 
+    * the percentage allocations.
+    * Decreasing the amount so that the total allocation amount is greater than the payment amount, an 
+    * error is thrown and the payment update is blocked.
+    ********************************************************************************************************/
+    @isTest
+    static void syncOpportunityToOverscheduledPayments() {
+        makePayments(1100, 2);
+        makeGAUs(2);
+
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Percent__c = 10, General_Accounting_Unit__c = gaus[0].Id));
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Percent__c = 20, General_Accounting_Unit__c = gaus[1].Id));
+        insert alloForInsert;
+
+        List<Allocation__c> queryAllocations = getAllocationsOrderByAmount();
+        System.assertEquals(9, queryAllocations.size(), 'Nine allocations should exist.');
+
+        //original opportunity allocations
+        assertAllocation(queryAllocations[0], 100, gaus[0].Id, true);
+        assertAllocation(queryAllocations[1], 200, gaus[1].Id, true);
+        assertAllocation(queryAllocations[2], 700, defaultGau.Id, true);
+        //synced payment allocations
+        assertAllocation(queryAllocations[3], 55, gaus[0].Id, false);
+        assertAllocation(queryAllocations[4], 55, gaus[0].Id, false);
+        assertAllocation(queryAllocations[5], 110, gaus[1].Id, false);
+        assertAllocation(queryAllocations[6], 110, gaus[1].Id, false);
+        assertAllocation(queryAllocations[7], 385, defaultGau.Id, false);
+        assertAllocation(queryAllocations[8], 385, defaultGau.Id, false);
+
+        alloForInsert[1].Percent__c = 30;
+        update alloForInsert[1];
+
+        queryAllocations = getAllocationsOrderByAmount();
+        System.assertEquals(9, queryAllocations.size(), 'Nine allocations should still exist.');
+
+        //original opportunity allocations
+        assertAllocation(queryAllocations[0], 100, gaus[0].Id, true);
+        assertAllocation(queryAllocations[1], 300, gaus[1].Id, true);
+        assertAllocation(queryAllocations[2], 600, defaultGau.Id, true);
+        //synced payment allocations
+        assertAllocation(queryAllocations[3], 55, gaus[0].Id, false);
+        assertAllocation(queryAllocations[4], 55, gaus[0].Id, false);
+        assertAllocation(queryAllocations[5], 165, gaus[1].Id, false);
+        assertAllocation(queryAllocations[6], 165, gaus[1].Id, false);
+        assertAllocation(queryAllocations[7], 330, defaultGau.Id, false);
+        assertAllocation(queryAllocations[8], 330, defaultGau.Id, false);
+    }
+
+    /*******************************************************************************************************
+    * @description When changing the Allocation amount of an Opportunity with Payments:
+    * Increasing the amount will adjust the percentage allocations.
+    * Decreasing the amount so that the total allocation amount is below the payment amount will adjust 
+    * the percentage allocations.
+    * Decreasing the amount so that the total allocation amount is greater than the payment amount, an 
+    * error is thrown and the payment update is blocked.
+    ********************************************************************************************************/
+    @isTest
+    static void syncOpportunityToPaymentsWithWriteoffs() {
+        makePayments(1000, 2;
+        makeGAUs(2);
+
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Amount__c = 500, General_Accounting_Unit__c = gaus[0].Id));
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].Id));
+        insert alloForInsert;
+
+        List<Allocation__c> queryAllocations = getAllocationsOrderByAmount();
+        System.assertEquals(6, queryAllocations.size(), 'Six allocations should exist.');
+        //original opportunity allocations
+        assertAllocation(queryAllocations[0], 200, defaultGau.Id, true);
+        assertAllocation(queryAllocations[1], 300, gaus[1].Id, true);
+        assertAllocation(queryAllocations[2], 500, gaus[0].Id, true);
+        //synced payment allocations
+        assertAllocation(queryAllocations[3], 100, defaultGau.Id, false);
+        assertAllocation(queryAllocations[4], 100, defaultGau.Id, false);
+        assertAllocation(queryAllocations[5], 150, gaus[1].Id, false);
+        assertAllocation(queryAllocations[6], 150, gaus[1].Id, false);
+        assertAllocation(queryAllocations[7], 250, gaus[0].Id, false);
+        assertAllocation(queryAllocations[8], 250, gaus[0].Id, false);
+
+        payments[0].npe01__Paid__c = true;
+        update payments[0];
+
+        alloForInsert[0].Amount__c = 250;
+    }
+
+//TODO written off payments aren't counted in the sync
+//TODO Paid payment allocations aren't updated with opportunity allocations changes
+    //TODO can't lower or delete an opp allocation for a GAU that has paid payment allocations
+//TODO updating paid payment allocations does update opportunity allocations
+//TODO null and zero amounts for both opps and payments
+//TODO negative payment amounts
+
+
+
     /*******************************************************************************************************
     * @description Prevent creating or modifying Opportunity and Payment Allocations for the same Opportunity
     * in the same transaction.
@@ -146,19 +241,23 @@ private with sharing  class ALLO_PaymentSync_TEST {
 
         List<Allocation__c> alloForInsert = new List<Allocation__c>();
 
-        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].id));
-        alloForInsert.add(new Allocation__c(Payment__c=opportunity.id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].id));
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].Id));
+        alloForInsert.add(new Allocation__c(Payment__c=payments[0].Id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].Id));
+        
         String error;
         try {
             insert alloForInsert;
         } catch (Exception ex) {
             error = ex.getMessage();
         }
-        System.assertEquals(, actual)
+        System.assert(error != null && error.contains(System.Label.alloPmtOppSingleTransaction), 
+            'Inserting or updating opportunity and payment allocations for the same opportunity failed to cause the expected exception.');
     }
 
-    // Helpers
-    ////////////
+
+
+    /*** Helpers ***/
+
     private static void makePayments(Decimal totalAmount, Integer numberOfPayments) {
         defaultGau = [SELECT Id FROM General_Accounting_Unit__c WHERE Name = 'Default GAU' LIMIT 1];
         opportunity = [SELECT Id, Name, Amount FROM Opportunity LIMIT 1];
@@ -189,24 +288,17 @@ private with sharing  class ALLO_PaymentSync_TEST {
     }
 
     private static void assertAllocation(Allocation__c allocation, Decimal amount, Id gau, Boolean isOpportunityAllocation) {
-        System.assertEquals(amount, allocation.Amount__c, 'Allocation amount mismatch: ' + allocation);
         System.assertEquals(gau, allocation.General_Accounting_Unit__c, 'Allocation GAU mismatch: ' + allocation);
+        System.assertEquals(amount, allocation.Amount__c, 'Allocation amount mismatch: ' + allocation);
         System.assertEquals(isOpportunityAllocation, allocation.Opportunity__c != null, 'Allocation type mismatch: ' + allocation);
     }
+
     /*********************************************************************************************************
     * @description Get all Allocations ordered by Amount
     * @return List<Allocation__c> A list of all Allocations 
     **********************************************************************************************************/
     private static List<Allocation__c> getAllocationsOrderByAmount() {
-        return Database.query(getAllocationsQuery().build() + ' ORDER BY Payment__c, Amount__c');
-    }
-
-    /*********************************************************************************************************
-    * @description Get all Allocations ordered by Percent
-    * @return List<Allocation__c> A list of all Allocations 
-    **********************************************************************************************************/
-    private static List<Allocation__c> getAllocationsOrderByPercent() {
-        return Database.query(getAllocationsQuery().build() + ' ORDER BY Payment__c, Percent__c');
+        return Database.query(getAllocationsQuery().build() + ' ORDER BY Opportunity__c NULLS LAST, Amount__c, General_Accounting_Unit__c');
     }
 
     /*********************************************************************************************************
