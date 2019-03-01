@@ -309,7 +309,13 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             accountIds.add(thisContact.accountId);
         }
 
-        accounts = [SELECT Id, Type, npe01__SYSTEM_AccountType__c, (SELECT Id FROM Opportunities LIMIT 1), (SELECT Id FROM Contacts LIMIT 1) FROM Account WHERE Id IN :accountIds];
+        accounts = [
+            SELECT Id, Type, npe01__SYSTEM_AccountType__c,
+                (SELECT Id FROM Opportunities LIMIT 1),
+                (SELECT Id FROM Contacts LIMIT 1)
+            FROM Account 
+            WHERE Id IN :accountIds
+        ];
 
         for (Account accountRecord : accounts) {
             if (accountRecord.Contacts.size() > 0
@@ -323,18 +329,17 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description Updates Accounts with the primary Individual Contact Id. Used for 1:1 and HH Accounts.
-    * @param mapAccountIdContactId a map of AccountId's to ContactId's which specifies which accounts need updating.
+    * @param primaryContactByAccountId a map of AccountId's to ContactId's which specifies which accounts need updating.
     * @return void
     */
-    private void updatePrimaryContactOnAccount(Map<Id, Id> mapAccountIdContactId) {
-        List<Account> listAccount = new List<Account>();
-        for (Id i : mapAccountIdContactId.keySet()) {
-            Account a = new Account(Id = i, npe01__One2OneContact__c = mapAccountIdContactId.get(i));
-            listAccount.add(a);
+    private void updatePrimaryContactOnAccount(Map<Id, Id> primaryContactByAccountId) {
+        List<Account> accounts = new List<Account>();
+        for (Id accountId : primaryContactByAccountId.keySet()) {
+            Account accountRecord = new Account(Id = accountId, npe01__One2OneContact__c = primaryContactByAccountId.get(accountId));
+            accounts.add(accountRecord);
         }
-        if (listAccount.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll(listAccount);
-            //Database.SaveResult[] lsr = Database.update(listAccount, false);
+        if (accounts.size() > 0) {
+            dmlWrapper.objectsToUpdate.addAll(accounts);
         }
     }
 
@@ -355,38 +360,34 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description sets the Primary Account for each Account in the list of Accounts
-    * @param listAccountId the list of Account (Id's) that need updating.
+    * @param accountIds the list of Account (Id's) that need updating.
     * @return void
     */
-    private void resetPrimaryContactForAccount(List<Id> listAccountId) {
+    private void resetPrimaryContactForAccount(List<Id> accountIds) {
 
         // for each account, we need a set of their contacts.
-        Map<Id, Set<Id>> mapAccountIdSetContacts = new Map<Id, Set<Id>>();
+        Map<Id, Set<Id>> contactIdsByAccountId = new Map<Id, Set<Id>>();
 
-        List<Contact> listCon = [SELECT Id, AccountId, Account.npe01__One2OneContact__c FROM Contact WHERE AccountId IN :listAccountId];
-        for (Contact con : listCon) {
-            Set<Id> setContactId = mapAccountIdSetContacts.get(con.AccountId);
-            if (setContactId == null) {
-                setContactId = new Set<Id>();
-                mapAccountIdSetContacts.put(con.AccountId, setContactId);
+        for (Contact contactRecord : [SELECT Id, AccountId, Account.npe01__One2OneContact__c FROM Contact WHERE AccountId IN :accountIds]) {
+            Set<Id> contactIds = contactIdsByAccountId.get(contactRecord.AccountId);
+            if (contactIds == null) {
+                contactIds = new Set<Id>();
+                contactIdsByAccountId.put(contactRecord.AccountId, contactIds);
             }
-            setContactId.add(con.Id);
+            contactIds.add(contactRecord.Id);
         }
 
         // now go thru each account and update their primary contact if the current one isn't valid
-        List<Account> listAcc = [SELECT Id, npe01__One2OneContact__c FROM Account WHERE Id IN :listAccountId];
-        List<Account> listAccToUpdate = new List<Account>();
-        for (Account acc : listAcc) {
-            Set<Id> setContactId = mapAccountIdSetContacts.get(acc.Id);
-            if (setContactId != null && !setContactId.contains(acc.npe01__One2OneContact__c)) {
-                acc.npe01__One2OneContact__c = firstIdFromSet(setContactId);
-                listAccToUpdate.add(acc);
+        List<Account> accounts = new List<Account>();
+        for (Account accountRecord : [SELECT Id, npe01__One2OneContact__c FROM Account WHERE Id IN :accountIds]) {
+            Set<Id> setContactId = contactIdsByAccountId.get(accountRecord.Id);
+            if (setContactId != null && !setContactId.contains(accountRecord.npe01__One2OneContact__c)) {
+                accountRecord.npe01__One2OneContact__c = firstIdFromSet(setContactId);
+                accounts.add(accountRecord);
             }
         }
 
-        // now do the update
-        dmlWrapper.objectsToUpdate.addAll(listAccToUpdate);
-        //update listAccToUpdate;
+        dmlWrapper.objectsToUpdate.addAll(accounts);
     }
 
     /*******************************************************************************************************
@@ -429,6 +430,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         for (Id recordId : ids) {
             return recordId;
         }
+
         return null;
     }
 
@@ -490,8 +492,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
 
         List<Id> contactIds = new List<Id>();
-        Map<Id, Account> mapContactIdAccount = new Map<Id, Account>();
-        List<Contact> listContactNewAcct = new List<Contact>();
+        Map<Id, Account> accountByPrimaryContactId = new Map<Id, Account>();
+        List<Contact> contacts = new List<Contact>();
 
         for (Contact contactRecord : contactsWithoutAccounts) {
             //track which contacts are being inserted vs. updated
@@ -500,52 +502,55 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
         }
         // get all the Accounts that are connected to the existing Contacts
-        for (Account acc : [SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c FROM Account
-                WHERE npe01__One2OneContact__c IN :contactIds]) {
-            mapContactIdAccount.put(acc.npe01__One2OneContact__c, acc);
+        for (Account accountRecord : [
+                SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
+                FROM Account
+                WHERE npe01__One2OneContact__c IN :contactIds
+        ]) {
+            accountByPrimaryContactId.put(accountRecord.npe01__One2OneContact__c, accountRecord);
         }
 
         List<Account> accountInserts = new List<Account>();
-        Id rtIdAcccount = rtIdForNewAccount();
+        Id individualRecordTypeId = rtIdForNewAccount();
 
         for (Contact contactRecord : contactsWithoutAccounts) {
             // if we found an Account already connected to this Contact, connect the Contact to that Account if it
             // is the correct type for the current account processor
-            Account acc = mapContactIdAccount.get(contactRecord.Id);
-            if (acc != null &&
-                ((CAO_Constants.isHHAccountModel() && acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) ||
-                (CAO_Constants.isOneToOne() && acc.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)) ) {
+            Account accountRecord = accountByPrimaryContactId.get(contactRecord.Id);
+            if (accountRecord != null &&
+                ((CAO_Constants.isHHAccountModel() && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) ||
+                (CAO_Constants.isOneToOne() && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)) ) {
                 // if a user has blanked out the Account for a Contact, this will put it right back
-                contactRecord.AccountId = acc.Id;
+                contactRecord.AccountId = accountRecord.Id;
             } else {
                 // construct the individul account for the Contact
-                Account a = new Account();
+                accountRecord = new Account();
 
                 // construct the Account name
-                a.Name = CAO_Constants.isHHAccountModel() ? strNameHHAccountForContact(contactRecord) : strNameOne2OneAccountForContact(contactRecord);
+                accountRecord.Name = CAO_Constants.isHHAccountModel() ? strNameHHAccountForContact(contactRecord) : strNameOne2OneAccountForContact(contactRecord);
 
                 // connect the Account to the Contact for 1:1 and HHAccount
                 if (contactRecord.Id != null) {
-                    a.npe01__One2OneContact__c = contactRecord.Id;
+                    accountRecord.npe01__One2OneContact__c = contactRecord.Id;
                 }
-                a.Phone = contactRecord.Phone;
-                a.Fax = contactRecord.Fax;
-                a.OwnerId = contactRecord.OwnerId;
+                accountRecord.Phone = contactRecord.Phone;
+                accountRecord.Fax = contactRecord.Fax;
+                accountRecord.OwnerId = contactRecord.OwnerId;
                 // only set account's billing address if address management is off.
                 // otherwise, we'll let ADDR_Contact_TDTM push the new address into the account.
                 if (!CAO_Constants.isHHAccountModel() || UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
-                    ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Mailing', a, 'Billing');
+                    ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
                 }
-                ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Other', a, 'Shipping');
+                ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
 
-                a.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
-                if (rtIdAcccount != null) {
-                    a.put('RecordTypeID', rtIdAcccount);
+                accountRecord.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+                if (individualRecordTypeId != null) {
+                    accountRecord.put('RecordTypeID', individualRecordTypeId);
                 }
-                a.Type = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_TYPE : '';
-                a.npe01__SYSTEMISINDIVIDUAL__c = true;
-                accountInserts.add(a);
-                listContactNewAcct.add(contactRecord);
+                accountRecord.Type = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_TYPE : '';
+                accountRecord.npe01__SYSTEMISINDIVIDUAL__c = true;
+                accountInserts.add(accountRecord);
+                contacts.add(contactRecord);
             }
         }
 
@@ -555,22 +560,22 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
             // identify the specific records that had the problem, and don't fail the whole batch
             List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
-            for (integer i = 0; i < insertResults.size(); i++) {
-                Database.SaveResult sr = insertResults[i];
-                if (!sr.isSuccess()) {
-                    for (Database.Error err : sr.getErrors()) {
-                        accountInserts[i].addError(err.getMessage());
-                        Contact con = listContactNewAcct[i];
-                        con.addError(String.format(label.conFailedAccountCreate, new String[]{con.Firstname, con.Lastname, err.getMessage()}));
+            for (integer index = 0; index < insertResults.size(); index++) {
+                Database.SaveResult insertResult = insertResults[index];
+                if (!insertResult.isSuccess()) {
+                    for (Database.Error err : insertResult.getErrors()) {
+                        accountInserts[index].addError(err.getMessage());
+                        Contact contactRecord = contacts[index];
+                        contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{contactRecord.Firstname, contactRecord.Lastname, err.getMessage()}));
                     }
                 }
             }
 
             // now update each contact's accountId
-            Integer i = 0;
-            for (Contact contactRecord : listContactNewAcct) {
-                contactRecord.AccountId = accountInserts[i].Id;
-                i++;
+            Integer index = 0;
+            for (Contact contactRecord : contacts) {
+                contactRecord.AccountId = accountInserts[index].Id;
+                index++;
             }
         }
     }
@@ -585,33 +590,35 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             return;
         }
 
-        Map<Id,Contact> accConMap = new Map<Id,Contact>();
+        Map<Id,Contact> contactByAccountId = new Map<Id,Contact>();
         for (Contact contactRecord : oneToOneContactsToUpdate) {
-            accConMap.put(contactRecord.AccountId, contactRecord);
+            contactByAccountId.put(contactRecord.AccountId, contactRecord);
         }
         //get the corresponding Accounts
         // DJH: note that we explicitly do NOT get the account name.  This is to avoid the changes to the account from
         // this routine which get added to dmlWrapper, don't end up overwriting the name changes that are done syncronously
         // for HH accounts (which don't use dmlWrapper).
-        List<Account> accts = [SELECT a.npe01__SYSTEM_AccountType__c, a.ShippingStreet, a.ShippingState, a.ShippingPostalCode, a.ShippingCountry,
-            a.ShippingCity, a.BillingStreet, a.BillingState, a.BillingPostalCode, a.BillingCountry, a.BillingCity
-            FROM Account a WHERE a.Id IN :accConMap.keyset()];
         List<Account> listAccount = new List<Account>();
 
-        for (Account a : accts) {
-            Contact contactRecord = accConMap.get(a.Id);
+        for (Account accountRecord : [
+                SELECT npe01__SYSTEM_AccountType__c, ShippingStreet, ShippingState, ShippingPostalCode, ShippingCountry,
+                    ShippingCity, BillingStreet, BillingState, BillingPostalCode, BillingCountry, BillingCity
+                FROM Account
+                WHERE Id IN :contactByAccountId.keyset()
+        ]) {
+            Contact contactRecord = contactByAccountId.get(accountRecord.Id);
             //if any address data has changed on the contact, push it all to the Account
             {
                 // Update Account fields
-                ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Mailing', a, 'Billing');
-                ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Other', a, 'Shipping');
+                ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
+                ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
 
-                if (a.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
-                    a.Name = strNameOne2OneAccountForContact(contactRecord);
+                if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+                    accountRecord.Name = strNameOne2OneAccountForContact(contactRecord);
                 }
                 // HH Account naming updates handled seperately to deal with asyncronous naming
 
-                listAccount.add(a);
+                listAccount.add(accountRecord);
             }
         }
 
@@ -630,29 +637,27 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             return;
         }
 
-        Map<Id, Account> allAccounts = new Map<Id, Account>();
+        Set<Id> accountIds = new Set<Id>();
         Map<Id, Account> accountsToUpdate = new Map<Id, Account>();
 
-        for (Contact con : contactWithNewOwnerById.values()) {
-            allAccounts.put(con.AccountId, null);
+        for (Contact contactRecord : contactWithNewOwnerById.values()) {
+            accountIds.add(contactRecord.AccountId);
         }
 
-        allAccounts = new Map<Id, Account>(
-            [SELECT Id, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, OwnerId,
-                (SELECT Id FROM Contacts limit 2)
-                FROM Account WHERE Id IN :allAccounts.keySet()]
-        );
-
-        for (Account acc : allAccounts.values()) {
+        for (Account accountRecord : [
+                SELECT Id, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, OwnerId, (SELECT Id FROM Contacts limit 2)
+                FROM Account
+                WHERE Id IN :accountIds
+        ]) {
             // only consider 1:1 and HH Accounts
-            if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
+            if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
                 // if there is only 1 contact associated with this account
-                if (acc.Contacts.size() == 1 && acc.npe01__One2OneContact__c != null) {
-                    Contact c = contactWithNewOwnerById.get(acc.npe01__One2OneContact__c);
-                    Id ownerIdContact = (c != null ? c.OwnerId : null);
-                    if (acc.OwnerId != ownerIdContact) {
-                        acc.OwnerId = ownerIdContact;
-                        accountsToUpdate.put(acc.id, acc);
+                if (accountRecord.Contacts.size() == 1 && accountRecord.npe01__One2OneContact__c != null) {
+                    Contact contactRecord = contactWithNewOwnerById.get(accountRecord.npe01__One2OneContact__c);
+                    Id ownerId = (contactRecord != null ? contactRecord.OwnerId : null);
+                    if (accountRecord.OwnerId != ownerId) {
+                        accountRecord.OwnerId = ownerId;
+                        accountsToUpdate.put(accountRecord.Id, accountRecord);
                     }
                 }
             }
@@ -705,92 +710,94 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description returns whether changes in the contact require an update to the 1:1 account
-    * @param conNew the new version of the Contact
-    * @param conOld the old version of the Contact
+    * @param contactRecord the new version of the Contact
+    * @param oldContact the old version of the Contact
     * @return Boolean
     */
-    private Boolean needsOne2OneAccountUpdate(Contact conNew, Contact conOld) {
-        if (conNew.npe01__Organization_Type__c != CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+    private Boolean needsOne2OneAccountUpdate(Contact contactRecord, Contact oldContact) {
+        if (contactRecord.npe01__Organization_Type__c != CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
             return false;
         }
 
-        if(conNew != null && conOld == null) {
+        if(contactRecord != null && oldContact == null) {
             return true;
         }
-        
-        String newFirst = conNew.FirstName == null ? '' : conNew.FirstName;
-        String oldFirst = conOld.FirstName == null ? '' : conOld.FirstName;
-        String newLast = conNew.LastName == null ? '' : conNew.LastName;
-        String oldLast = conOld.LastName == null ? '' : conOld.LastName;
 
-        return (conNew.AccountId != conOld.AccountId ||
+        String newFirst = contactRecord.FirstName == null ? '' : contactRecord.FirstName;
+        String oldFirst = oldContact.FirstName == null ? '' : oldContact.FirstName;
+        String newLast = contactRecord.LastName == null ? '' : contactRecord.LastName;
+        String oldLast = oldContact.LastName == null ? '' : oldContact.LastName;
+
+        return (contactRecord.AccountId != oldContact.AccountId ||
                 !newFirst.equals(oldFirst) ||
                 !newLast.equals(oldLast) ||
-                conNew.MailingStreet != conOld.MailingStreet ||
-                conNew.MailingCity != conOld.MailingCity ||
-                conNew.MailingState != conOld.MailingState ||
-                conNew.MailingPostalCode != conOld.MailingPostalCode ||
-                conNew.MailingCountry != conOld.MailingCountry ||
-                conNew.OtherStreet != conOld.OtherStreet ||
-                conNew.OtherCity != conOld.OtherCity ||
-                conNew.OtherState != conOld.OtherState ||
-                conNew.OtherPostalCode != conOld.OtherPostalCode ||
-                conNew.OtherCountry != conOld.OtherCountry ||
-                conNew.Phone != conOld.Phone ||
-                conNew.Fax != conOld.Fax);
+                contactRecord.MailingStreet != oldContact.MailingStreet ||
+                contactRecord.MailingCity != oldContact.MailingCity ||
+                contactRecord.MailingState != oldContact.MailingState ||
+                contactRecord.MailingPostalCode != oldContact.MailingPostalCode ||
+                contactRecord.MailingCountry != oldContact.MailingCountry ||
+                contactRecord.OtherStreet != oldContact.OtherStreet ||
+                contactRecord.OtherCity != oldContact.OtherCity ||
+                contactRecord.OtherState != oldContact.OtherState ||
+                contactRecord.OtherPostalCode != oldContact.OtherPostalCode ||
+                contactRecord.OtherCountry != oldContact.OtherCountry ||
+                contactRecord.Phone != oldContact.Phone ||
+                contactRecord.Fax != oldContact.Fax);
     }
 
     /*******************************************************************************************************
     * @description returns whether changes in the contact require a rename of a HH Account
     * @param hhNamingFields the set of fields used in the namespec
-    * @param conNew the new version of the Contact
-    * @param conOld the old version of the Contact
+    * @param contactRecord the new version of the Contact
+    * @param oldContact the old version of the Contact
     * @return Boolean
     */
-    private Boolean needsHHAccountRename(Contact conNew, Contact conOld) {
-        if (conNew.npe01__Organization_Type__c != CAO_Constants.HH_ACCOUNT_TYPE) {
+    private Boolean needsHHAccountRename(Contact contactRecord, Contact oldContact) {
+        if (contactRecord.npe01__Organization_Type__c != CAO_Constants.HH_ACCOUNT_TYPE) {
             return false;
         }
-        if (conNew != null && conOld == null) {
+
+        if (contactRecord != null && oldContact == null) {
             return true;
         }
-        if (conNew.FirstName == null) conNew.FirstName = '';
-        if (conNew.LastName == null) conNew.LastName = '';
+
+        if (contactRecord.FirstName == null) contactRecord.FirstName = '';
+        if (contactRecord.LastName == null) contactRecord.LastName = '';
 
         // check all household naming fields for changes
         for(String fieldName : HH_NAMING_FIELDS) {
-            String strName;
-            String strNameOld;
+            String currentName;
+            String oldName;
 
             //separate cross object references, i.e. account.name
-            List<String> splitField = (fieldName.split('\\.',0));
-            if (splitField.size() > 1) {
-                SObject sobj = conNew.getSobject(splitField[0]);
-                if (sobj != null) {
-                    strName = sobj.Id;
+            List<String> splitFields = (fieldName.split('\\.',0));
+            if (splitFields.size() > 1) {
+                SObject sObj = contactRecord.getSObject(splitFields[0]);
+                if (sObj != null) {
+                    currentName = sObj.Id;
                 }
-                sobj = conOld.getSobject(splitField[0]);
-                if (sobj != null) {
-                    strNameOld = sobj.Id;
+                sObj = oldContact.getSObject(splitFields[0]);
+                if (sObj != null) {
+                    oldName = sObj.Id;
                 }
             } else {
-                strName = String.valueOf(conNew.get(fieldName));
-                strNameOld = String.valueOf(conOld.get(fieldName));
+                currentName = String.valueOf(contactRecord.get(fieldName));
+                oldName = String.valueOf(oldContact.get(fieldName));
             }
 
             // make sure to use case sensitive comparison
-            if (strName == null) {
-                strName = '';
+            if (currentName == null) {
+                currentName = '';
             }
-            if (strNameOld == null) {
-                strNameOld = '';
+            if (oldName == null) {
+                oldName = '';
             }
-            if (!strName.equals(strNameOld)) {
+            if (!currentName.equals(oldName)) {
                 return true;
             }
         }
-        if (conNew.npo02__Household_Naming_Order__c != conOld.npo02__Household_Naming_Order__c ||
-            conNew.npo02__Naming_Exclusions__c != conOld.npo02__Naming_Exclusions__c) {
+        if (contactRecord.npo02__Household_Naming_Order__c != oldContact.npo02__Household_Naming_Order__c ||
+            contactRecord.npo02__Naming_Exclusions__c != oldContact.npo02__Naming_Exclusions__c) {
             return true;
         }
         return false;
@@ -843,68 +850,65 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /*******************************************************************************************************
     * @description returns the default name for a new HH Account. Custom household naming will update this
     * account later if enabled, but we still need one if not enabled.
-    * @param con the Contact
+    * @param contactRecord the Contact
     * @return String. the Household account name
     */
-    public static String strNameHHAccountForContact(Contact con) {
-        return con.LastName + ' ' + System.Label.npo02.DefaultHouseholdName;
+    public static String strNameHHAccountForContact(Contact contactRecord) {
+        return contactRecord.LastName + ' ' + System.Label.npo02.DefaultHouseholdName;
     }
 
     /*******************************************************************************************************
     * @description returns the default name for a new 1:1 Account
-    * @param con the Contact
+    * @param contactRecord the Contact
     * @return String. the 1:1 account name
     */
-    public static String strNameOne2OneAccountForContact(Contact con) {
-        String str = '';
+    public static String strNameOne2OneAccountForContact(Contact contactRecord) {
+        String accountName = '';
 
-        if (con.FirstName != null) {
-            str += con.FirstName;
-            str += ' ' ;
+        if (contactRecord.FirstName != null) {
+            accountName += contactRecord.FirstName;
+            accountName += ' ' ;
         }
+
         if (EASTERN_ORDER_LANGUAGES.contains(userLocale)) {
-            str = con.LastName + ' ' + str;
+            accountName = contactRecord.LastName + ' ' + accountName;
 
         } else {
-            str += con.LastName;
+            accountName += contactRecord.LastName;
         }
 
-        return str;
+        return accountName;
     }
 
     /*******************************************************************************************************
     * @description Moves all opps for the Primary OCR provided contacts to their new account.  Note that it
     * is the caller's responsibility to decide whether moving opps is appropriate for the involved accounts.
-    * @param mapContactIdAccountIdNew a map of Contact Id to Account Id, for the Accounts to move opps to
-    * @param mapContactIdAccountIdOld a map of Contact Id to Account Id, for the Accounts to move opps from
+    * @param newHouseholdIdByContactId a map of Contact Id to Account Id, for the Accounts to move opps to
+    * @param oldHouseholdIdByContactId a map of Contact Id to Account Id, for the Accounts to move opps from
     * @return void
     */
-    public static void moveOppsToContactAccount(Map<Id,Id> mapContactIdAccountIdNew, Map<Id,Id> mapContactIdAccountIdOld) {
-        if (mapContactIdAccountIdNew.isEmpty()) {
+    public static void moveOppsToContactAccount(Map<Id,Id> newHouseholdIdByContactId, Map<Id,Id> oldHouseholdIdByContactId) {
+        if (newHouseholdIdByContactId.isEmpty()) {
             return;
         }
 
-        Set<Id> setConId = mapContactIdAccountIdNew.keySet();
-        List<Id> listAccIdOld = mapContactIdAccountIdOld.values();
-        List<Opportunity> listOpp = new List<Opportunity>();
-        Set<Id> setOppId = new Set<Id>();
+        List<Opportunity> opportunities = new List<Opportunity>();
+        Set<Id> oppIds = new Set<Id>();
 
-        // query changed to also include Role = default role, because Contact Merge scenarios were clearing isPrimary (not by our code)!
-        npe01__Contacts_and_Orgs_Settings__c cs = UTIL_CustomSettingsFacade.getContactsSettings();
-
-        List<OpportunityContactRole> listOCR = [SELECT ContactId, OpportunityId, Opportunity.isClosed, Opportunity.AccountId, IsPrimary, Role
-            FROM OpportunityContactRole WHERE IsPrimary = true AND Opportunity.AccountId IN :listAccIdOld AND ContactId IN :setConId];
-
-        for (OpportunityContactRole ocr : listOCR) {
-            if (mapContactIdAccountIdOld.get(ocr.ContactId) == ocr.Opportunity.AccountId) {
-                if (setOppId.add(ocr.OpportunityId)) {
-                    listOpp.add(new Opportunity(Id = ocr.OpportunityId, AccountId = mapContactIdAccountIdNew.get(ocr.ContactId)));
+        for (OpportunityContactRole role : [
+                SELECT ContactId, OpportunityId
+                FROM OpportunityContactRole
+                WHERE IsPrimary = true AND Opportunity.AccountId IN :oldHouseholdIdByContactId.values() AND ContactId IN :newHouseholdIdByContactId.keySet()
+        ]) {
+            if (oldHouseholdIdByContactId.get(role.ContactId) == role.Opportunity.AccountId) {
+                if (oppIds.add(role.OpportunityId)) {
+                    opportunities.add(new Opportunity(Id = role.OpportunityId, AccountId = newHouseholdIdByContactId.get(role.ContactId)));
                 }
             }
         }
 
-        if (listOpp.size() > 0) {
-            UTIL_DMLService.updateRecords(listOpp);
+        if (opportunities.size() > 0) {
+            UTIL_DMLService.updateRecords(opportunities);
         }
     }
 
@@ -918,7 +922,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             return;
         }
 
-        if (accountIds.size() == 1 || system.isFuture() || system.isBatch()) {
+        if (accountIds.size() == 1 || System.isFuture() || System.isBatch()) {
             HH_HouseholdNaming hhName = new HH_HouseholdNaming();
             hhName.UpdateNames(accountIds);
         } else {
@@ -941,29 +945,31 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     */
     public static Id rtIdForAccountModel(Boolean isHHAccountModel) {
         contactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
-        Schema.Recordtypeinfo rtById = null;
         // check if recordtypes are enabled, and if it matches the existing setting
         // we go thru describe to validate that it is a valid recordType ID.
-        Id rtId = isHHAccountModel ? contactsSettings.npe01__HH_Account_RecordTypeID__c : contactsSettings.npe01__One_to_One_RecordTypeID__c;
-        if (rtId != null) {
-            Schema.DescribeSObjectResult R = Account.SObjectType.getDescribe();
-            Map<Id,Schema.RecordTypeInfo> rtMapById = r.getRecordTypeInfosById();
-            rtById = rtMapById.get(rtId);
-            return (rtById == null ? null : rtById.getRecordTypeID());
+        Id individualRecordTypeId = isHHAccountModel ? contactsSettings.npe01__HH_Account_RecordTypeID__c : contactsSettings.npe01__One_to_One_RecordTypeID__c;
+        if (individualRecordTypeId != null) {
+            Schema.RecordTypeInfo recordTypeInfo = null;
+            Schema.DescribeSObjectResult describeResult = Account.SObjectType.getDescribe();
+            Map<Id,Schema.RecordTypeInfo> recordTypeInfoById = describeResult.getRecordTypeInfosById();
+            recordTypeInfo = recordTypeInfoById.get(individualRecordTypeId);
+            return recordTypeInfo == null
+                ? null
+                : recordTypeInfo.getRecordTypeId();
         }
+
         return null;
     }
 
     /*******************************************************************************************************
-    * @description for the list of AccountId's, recalc their rollups 
+    * @description for the list of AccountId's, recalc their rollups
     * @param accountIds the list of Account (Id's) that need updating.
     * @return void
-    */ 
+    */
     public static void rollupAccounts(List<Id> accountIds) {
         Boolean isImmediate = accountIds.size() == 1 || System.isFuture() || System.isBatch() || System.isQueueable();
 
         if (isImmediate) {
-            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
             String query = new RLLP_OppRollup_UTIL().buildAccountQuery() + ' WHERE Id IN :accountIds';
             Map<Id, Account> accountsById = new Map<Id, Account>((List<Account>)Database.query(query));
             RLLP_OppRollup oppRollup = new RLLP_OppRollup();
