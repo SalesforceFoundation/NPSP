@@ -504,11 +504,11 @@ public class CRLP_Rollup_SEL {
      * @return String list of fields to append to a SOQL query
      */
     public static String getReferencedFieldsByObjectAsString(SObjectType objType) {
-        String soql = '';
-        for (DescribeFieldResult dfr : getReferencedFieldsByObject(objType)) {
-            soql += dfr.getName() + ',';
+        List<String> names = new List<String>();
+        for (DescribeFieldResult describe : getReferencedFieldsByObject(objType)) {
+            names.add(describe.getName());
         }
-        return soql.removeEnd(',');
+        return String.join(names, ',');
     }
 
     /** @description Static cache of filtered rollups by RollupType and Applied Filter */
@@ -520,8 +520,11 @@ public class CRLP_Rollup_SEL {
      * @param typeFilter Enum of the rollup filter to apply (All, DaysAgoOnly, NonDaysAgoOnly, etc.)
      * @param rollups List of Rollup__mdt records to store
      */
-    public static void stuffRollupsByTypeCache(CRLP_RollupProcessingOptions.RollupType rollupType,
-            CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter, List<Rollup__mdt> rollups) {
+    public static void stuffRollupsByTypeCache(
+        CRLP_RollupProcessingOptions.RollupType rollupType,
+        CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter, 
+        List<Rollup__mdt> rollups
+    ) {
         cachedRollupsByTypeAndFilter.put(rollupType.name() + typeFilter.name(), rollups);
     }
 
@@ -533,11 +536,15 @@ public class CRLP_Rollup_SEL {
      * @param typeFilter Enum of the rollup filter to apply (All, DaysAgoOnly, NonDaysAgoOnly, etc.)
      * @return List<Rollup__mdt>
      */
-    public static List<Rollup__mdt> getRollupDefinitionsToUse(CRLP_RollupProcessingOptions.RollupType rollupType,
-            CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter) {
-
+    public static List<Rollup__mdt> getRollupDefinitionsToUse(
+        CRLP_RollupProcessingOptions.RollupType rollupType,
+        CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter
+    ) {
         // If the list exists in the cache, just return it
-        if (cachedRollupsByTypeAndFilter != null && cachedRollupsByTypeAndFilter.containsKey(rollupType.name() + typeFilter.name())) {
+        if (
+            cachedRollupsByTypeAndFilter != null 
+            && cachedRollupsByTypeAndFilter.containsKey(rollupType.name() + typeFilter.name())
+        ) {
             return cachedRollupsByTypeAndFilter.get(rollupType.name() + typeFilter.name());
         }
 
@@ -550,57 +557,97 @@ public class CRLP_Rollup_SEL {
 
         // Determine the correct base summary object based on the Rollup Type
         SObjectType summaryObjectType;
-        if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+        if (
+            rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit 
+            || rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit 
+            || rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit
+        ) {
             summaryObjectType = Account.SObjectType;
-        } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-                rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+        } 
+        else if (
+            rollupType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit 
+            || rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit
+        ) {
             summaryObjectType = Contact.SObjectType;
-        } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+        } 
+        else if (rollupType == CRLP_RollupProcessingOptions.RollupType.GAU) {
             summaryObjectType = General_Accounting_Unit__c.SObjectType;
-        } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+        } 
+        else if (rollupType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
             summaryObjectType = npe03__Recurring_Donation__c.SObjectType;
         }
 
         // Retrieve all the Rollup Definitions for the summary object
-        List<Rollup__mdt> rlps = CRLP_Rollup_SEL.getRollupsBySummaryType().get(summaryObjectType);
-        if (rlps != null) {
+        List<Rollup__mdt> rollups = CRLP_Rollup_SEL.getRollupsBySummaryType().get(summaryObjectType);
+        if (rollups != null) {
             // Loop through each Rollup__mdt and determine whether the record should be included based on the
             // Rollup Type Job AND the Type Filter if there is one.
-            for (Rollup__mdt r : rlps) {
+            for (Rollup__mdt rollup : rollups) {
                 Boolean includeRollupDefinition=false;
-                if (r.Is_Deleted__c == true || r.Active__c == false) {
+                if (
+                    rollup.Is_Deleted__c == true 
+                    || rollup.Active__c == false
+                ) {
                     // ignore deleted or inactive rollups
-                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                        rollupType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                    includeRollupDefinition = ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == pmtObjectName)
-                            && r.Amount_Object__r.QualifiedApiName != pscObjectName && r.Amount_Object__r.QualifiedApiName != accSCObjectName);
-                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                    includeRollupDefinition = ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == accSCObjectName)
-                            && r.Amount_Object__r.QualifiedApiName == accSCObjectName);
-                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                        rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                    includeRollupDefinition = (r.Amount_Object__r.QualifiedApiName == pscObjectName);
-                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-                    includeRollupDefinition = true;
-                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+                }
+                else if (
+                    rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit 
+                    || rollupType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit
+                ) {
+                    includeRollupDefinition = (
+                        (
+                            rollup.Detail_Object__r.QualifiedApiName == oppObjectName 
+                            || rollup.Detail_Object__r.QualifiedApiName == pmtObjectName
+                        )
+                        && rollup.Amount_Object__r.QualifiedApiName != pscObjectName 
+                        && rollup.Amount_Object__r.QualifiedApiName != accSCObjectName
+                    );
+                }
+                else if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                    includeRollupDefinition = (
+                        (
+                            rollup.Detail_Object__r.QualifiedApiName == oppObjectName 
+                            || rollup.Detail_Object__r.QualifiedApiName == accSCObjectName
+                        )
+                        && rollup.Amount_Object__r.QualifiedApiName == accSCObjectName
+                    );
+                } 
+                else if (
+                    rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit 
+                    || rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit
+                ) {
+                    includeRollupDefinition = (rollup.Amount_Object__r.QualifiedApiName == pscObjectName);
+                }
+                else if (rollupType == CRLP_RollupProcessingOptions.RollupType.GAU) {
                     includeRollupDefinition = true;
                 }
+                else if (rollupType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+                    includeRollupDefinition = true;
+                }
+                
                 if (includeRollupDefinition) {
-                    if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.NonDaysAgo &&
-                            r.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()) {
+                    if (
+                        typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.NonDaysAgo 
+                        && r.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()
+                    ) {
                         includeRollupDefinition = false;
-                    } else if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.DaysAgoOnly &&
-                            r.Time_Bound_Operation_Type__c != CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()) {
+                    }
+                    else if (
+                        typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.DaysAgoOnly 
+                        && r.Time_Bound_Operation_Type__c != CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()
+                    ) {
                         includeRollupDefinition = false;
-                    } else if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.MembershipsOnly &&
-                            !r.Summary_Field__r.QualifiedApiName.containsIgnoreCase('Membership')) {
+                    }
+                    else if (
+                        typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.MembershipsOnly 
+                        && !r.Summary_Field__r.QualifiedApiName.containsIgnoreCase('Membership')
+                    ) {
                         includeRollupDefinition = false;
                     }
                 }
+
                 if (includeRollupDefinition) {
-                    filteredRollups.add(r);
+                    filteredRollups.add(rollup);
                 }
             }
         }
