@@ -87,6 +87,13 @@
      */
     processBatch: function(component, event, helper) {
         helper.processBatch(component);
+    },
+
+    /**
+     * @description: called when the 'Dry Run' button is clicked
+     */
+    massDryRun: function(component, event, helper) {
+        helper.massDryRun(component);
     }
 
 })

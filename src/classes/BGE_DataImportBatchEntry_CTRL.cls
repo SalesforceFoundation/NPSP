@@ -186,17 +186,21 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return DataImportModel with updated data import record row and updated totals for the batch
     */
     @AuraEnabled
-    public static String runDryRun(Id dataImportId, Id batchId) {
+    public static String runDryRun(List<Id> dataImportIds, Id batchId) {
         try {
             Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
-            List<DataImport__c> dataImportListToRun = prepareDataImportForDryRun(getDataImportRecordById(batchId, dataImportId));
+            List<DataImport__c> dataImportListToRun = prepareDataImportsForDryRun(getDataImportRecordsByIds(batchId, dataImportIds));
             BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
 
             DataImportModel dataImportModel = getUpdatedTotals(batchId);
-            DataImportRow processedDataImportRow = new DataImportRow(getDataImportRecordById(batchId, dataImportId));
-            dataImportModel.dataImportRows = new List<DataImportRow>{
-                    processedDataImportRow
-            };
+
+            List<DataImportRow> rows = new List<DataImportRow>();
+            List<DataImport__c> toBeProcessedDataImports = getDataImportRecordsByIds(batchId, dataImportIds);
+            for (DataImport__c di : toBeProcessedDataImports) {
+                DataImportRow processedDataImportRow = new DataImportRow(di);
+                rows.add(processedDataImportRow);
+            }
+            dataImportModel.dataImportRows = rows;
 
             return JSON.serialize(dataImportModel);
         } catch (Exception ex){
@@ -215,7 +219,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     public static String updateAndDryRunRow(Id batchId, DataImport__c dataImport) {
         try {
             Database.update(dataImport);
-            return runDryRun(dataImport.Id, batchId);
+            return runDryRun(new List<Id>{dataImport.Id}, batchId);
         } catch (Exception ex) {
             String saveErrorMessage = String.format(Label.CRLP_SaveError, new List<String>{Schema.SObjectType.DataImport__c.getName()});
             throw new AuraHandledException(saveErrorMessage + '. ' + ex.getMessage());
@@ -404,24 +408,26 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * to check for potential errors.
     * @return List<DataImport__c> because BDI expects a list
     */
-    private static List<DataImport__c> prepareDataImportForDryRun(DataImport__c dataImportRecord) {
+    private static List<DataImport__c> prepareDataImportsForDryRun(List<DataImport__c> dataImportRecords) {
         // Skip records where user has explicitly selected a matching record in BGE UI
-        if (dataImportRecord.DonationImportStatus__c == Label.bdiMatchedByUser
-                || dataImportRecord.DonationImportStatus__c == Label.bdiMatchedByUserNewOpp
-                || dataImportRecord.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
-            // User defined match, so we do nothing and retain the values
-        } else {
-            // Clear Dry Run fields before running Dry Run so new field values are accounted for
-            dataImportRecord.Status__c = null;
-            dataImportRecord.FailureInformation__c = null;
-            dataImportRecord.DonationImported__c = null;
-            dataImportRecord.DonationImportStatus__c = null;
-            dataImportRecord.PaymentImported__c = null;
-            dataImportRecord.PaymentImportStatus__c = null;
+        for(DataImport__c dataImportRecord : dataImportRecords) {
+            if (dataImportRecord.DonationImportStatus__c == Label.bdiMatchedByUser
+                    || dataImportRecord.DonationImportStatus__c == Label.bdiMatchedByUserNewOpp
+                    || dataImportRecord.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
+                // User defined match, so we do nothing and retain the values
+            } else {
+                // Clear Dry Run fields before running Dry Run so new field values are accounted for
+                dataImportRecord.Status__c = null;
+                dataImportRecord.FailureInformation__c = null;
+                dataImportRecord.DonationImported__c = null;
+                dataImportRecord.DonationImportStatus__c = null;
+                dataImportRecord.PaymentImported__c = null;
+                dataImportRecord.PaymentImportStatus__c = null;
+            }
         }
-        update dataImportRecord;
+        update dataImportRecords;
 
-        return new List<DataImport__c>{dataImportRecord};
+        return dataImportRecords;
     }
 
     /*******************************************************************************************************
@@ -447,14 +453,12 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @param dataImportId the Id to query
     * @return DataImport__c
     */
-    private static DataImport__c getDataImportRecordById(Id batchId, Id dataImportId) {
-
+    private static List<DataImport__c> getDataImportRecordsByIds(Id batchId, List<Id> dataImportIds) {
         List<String> dataImportFields = getDataImportFields(batchId);
 
         String query = 'SELECT ' + String.join(dataImportFields,', ') +
             ' FROM DataImport__c' +
-            ' WHERE Id =:dataImportId ' +
-            ' LIMIT 1';
+            ' WHERE Id IN :dataImportIds';
 
         return Database.query(query);
     }

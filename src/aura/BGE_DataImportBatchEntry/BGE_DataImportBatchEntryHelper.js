@@ -221,7 +221,7 @@
         var action = component.get('c.runDryRun');
         var batchId = component.get('v.recordId');
         this.showSpinner(component);
-        action.setParams({dataImportId: recordId, batchId: batchId});
+        action.setParams({dataImportIds: [recordId], batchId: batchId});
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
@@ -257,15 +257,15 @@
 
     /**
      * @description: set new total amount and count variables and update data table after dry run completes
-     * @param updatedRecord: DataImport__c record that needs to be updated in the table
-     * @param isNewRecord: flag to indicate if record is new or existing
+     * @param model: model with records that need to be updated in the table
+     * @param isNewRecord: flag to indicate if record(s) is new or existing
      */
     afterDryRun: function(component, model, isNewRecord) {
         this.setTotals(component, model);
         if (model.dataImportRows.length > 0) {
-            //we only process one record at a time, but the model passes back a list
-            let newRecord = model.dataImportRows[0];
-            this.updateDataTableAfterDryRun(component, newRecord, isNewRecord);
+            for (let i = 0; i < model.dataImportRows.length; i++) {
+                this.updateDataTableAfterDryRun(component, model.dataImportRows[i], isNewRecord);
+            }
         }
     },
 
@@ -636,6 +636,32 @@
     hideSpinner: function (component) {
         var spinner = component.find('dataTableSpinner');
         $A.util.addClass(spinner, 'slds-hide');
-    }
+    },
 
+    /**
+     * @description: Dry run all data import records in current table
+     */
+    massDryRun: function (component) {
+        let dataImportIds = component.get('v.data').map(function(dataImport) { return dataImport.Id });
+
+        this.showSpinner(component);
+        this.showFormSpinner(component);
+        let action = component.get('c.runDryRun');
+        action.setParams({
+            dataImportIds: dataImportIds,
+            batchId: component.get('v.recordId')
+        });
+        action.setCallback(this, function (response) {
+            const state = response.getState();
+            if (state === 'SUCCESS') {
+                this.afterDryRun(component, JSON.parse(response.getReturnValue()), false);
+                this.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeDryRunComplete'), 'success');
+            } else {
+                this.handleApexErrors(component, response.getError());
+            }
+            this.hideSpinner(component);
+            this.hideFormSpinner(component);
+        });
+        $A.enqueueAction(action);
+    }
 })

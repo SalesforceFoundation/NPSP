@@ -2695,6 +2695,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>COPY</value>
     </labels>
     <labels>
+        <fullName>bgeDryRunButton</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button text for starting mass dry run in BGE.</shortDescription>
+        <value>Mass Dry Run</value>
+    </labels>
+    <labels>
+        <fullName>bgeDryRunComplete</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Success message when mass dry run completes in BGE.</shortDescription>
+        <value>Mass Dry Run Complete</value>
+    </labels>
+    <labels>
         <fullName>bgeEditBatchFieldOptionsWarning</fullName>
         <language>en_US</language>
         <protected>true</protected>
