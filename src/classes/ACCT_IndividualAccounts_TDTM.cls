@@ -894,7 +894,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         Set<Id> oppIds = new Set<Id>();
 
         for (OpportunityContactRole role : [
-                SELECT ContactId, OpportunityId
+                SELECT ContactId, OpportunityId, Opportunity.AccountId
                 FROM OpportunityContactRole
                 WHERE IsPrimary = true AND Opportunity.AccountId IN :oldHouseholdIdByContactId.values() AND ContactId IN :newHouseholdIdByContactId.keySet()
         ]) {
