@@ -265,9 +265,9 @@ public class CRLP_RollupBatch_SVC {
      * @return Integer value
      */
     public static Integer getBatchSize(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.BatchJobMode jobMode) {
-        Integer batchSize;
-        Integer recurringDonationBatchSize =
-                UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c.intValue();
+        Decimal batchSize;
+        Decimal recurringDonationBatchSize =
+                UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c;
 
         try {
 
@@ -275,19 +275,19 @@ public class CRLP_RollupBatch_SVC {
                 when NonSkewMode {
                     switch on (jobType) {
                         when AccountHardCredit {
-                            batchSize = customizableRollupSettings.Rollups_Account_Batch_Size__c.intValue();
+                            batchSize = customizableRollupSettings.Rollups_Account_Batch_Size__c;
                         }
                         when ContactHardCredit {
-                            batchSize = customizableRollupSettings.Rollups_Contact_Batch_Size__c.intValue();
+                            batchSize = customizableRollupSettings.Rollups_Contact_Batch_Size__c;
                         }
                         when AccountContactSoftCredit {
-                            batchSize = customizableRollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c.intValue();
+                            batchSize = customizableRollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c;
                         }
                         when ContactSoftCredit {
-                            batchSize = customizableRollupSettings.Rollups_Contact_Soft_Credit_Batch_Size__c.intValue();
+                            batchSize = customizableRollupSettings.Rollups_Contact_Soft_Credit_Batch_Size__c;
                         }
                         when GAU {
-                            batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c.intValue();
+                            batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c;
                         }
                         when RecurringDonations {
                             batchSize = recurringDonationBatchSize;
@@ -298,19 +298,19 @@ public class CRLP_RollupBatch_SVC {
                 when else {
                     switch on (jobType) {
                         when AccountHardCredit {
-                            batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c.intValue();
+                            batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c;
                         }
                         when ContactHardCredit {
-                            batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c.intValue();
+                            batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c;
                         }
                         when AccountContactSoftCredit {
-                            batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c.intValue();
+                            batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c;
                         }
                         when ContactSoftCredit {
-                            batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c.intValue();
+                            batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c;
                         }
                         when GAU {
-                            batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c.intValue();
+                            batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c;
                         }
                         when RecurringDonations {
                             batchSize = recurringDonationBatchSize;
@@ -327,6 +327,6 @@ public class CRLP_RollupBatch_SVC {
         if (customizableRollupSettings.Customizable_Rollups_Enabled__c != true && batchSize > 200) {
             batchSize = 200;
         }
-        return (batchSize != null ? batchSize : 200);
+        return (batchSize != null ? batchSize.intValue() : 200);
     }
 }
