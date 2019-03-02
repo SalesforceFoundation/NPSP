@@ -116,20 +116,45 @@
                                 class="{!'slds-card_boundary sameCardHeight' + if(equals(donation.Id, v.selectedDonation.Id), ' selectedDonationCard')}">
 
                     <aura:set attribute="footer">
-                        <aura:if isTrue="{!equals(donation.Id, v.selectedDonation.Id)}">
-                            <div class="selectedDonationBody">
-                                <lightning:icon iconName="utility:check" size="small" class="slds-p-right_small selectedCheckmark"
-                                                alternativeText="{!$Label.c.stgCheckboxTrue}" title="{!$Label.c.stgCheckboxTrue}"/>
-                                <lightning:formattedText value="{!$Label.c.bgeFormSelectedOpportunity}"/>
-                            </div>
-                            <aura:set attribute="else">
-                                <lightning:button
-                                        value="{!donation}"
-                                        label="{!$Label.c.bgeFormUpdateOpportunity}"
-                                        onclick="{!c.handleDonationSelection}"
-                                        variant="base"/>
-                            </aura:set>
-                        </aura:if>
+                        <div class="selectedDonationBody">
+                            <lightning:layout multipleRows="true">
+                                <lightning:layoutItem size="12" padding="around_xx-small">
+                                    <aura:if isTrue="{!and(equals(donation.Id, v.selectedDonation.Id), not(v.selectedDonation.applyPayment))}">
+                                        <lightning:icon iconName="utility:check" size="small"
+                                                        class="slds-p-right_small selectedCheckmark"
+                                                        alternativeText="{!$Label.c.stgCheckboxTrue}"
+                                                        title="{!$Label.c.stgCheckboxTrue}"/>
+                                        <lightning:formattedText
+                                                value="{!$Label.c.bgeFormSelectedOpportunity}"/>
+                                        <aura:set attribute="else">
+                                            <lightning:button
+                                                    value="{!donation}"
+                                                    label="{!$Label.c.bgeFormUpdateOpportunity}"
+                                                    onclick="{!c.handleDonationSelection}"
+                                                    variant="base"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem size="12" padding="around_xx-small"
+                                                      class="slds-border_top slds-p-top_x-small slds-m-top_x-small">
+                                    <aura:if isTrue="{!and(equals(donation.Id, v.selectedDonation.Id), v.selectedDonation.applyPayment)}">
+                                        <lightning:icon iconName="utility:check" size="small"
+                                                        class="slds-p-right_small selectedCheckmark"
+                                                        alternativeText="{!$Label.c.stgCheckboxTrue}"
+                                                        title="{!$Label.c.stgCheckboxTrue}"/>
+                                        <lightning:formattedText
+                                                value="{!$Label.c.bgeFormSelectedOpportunityApplyNewPayment}"/>
+                                        <aura:set attribute="else">
+                                            <lightning:button
+                                                    value="{!donation}"
+                                                    label="{!$Label.c.bdiMatchedApplyNewPayment}"
+                                                    onclick="{!c.handleApplyPaymentSelection}"
+                                                    variant="base"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                        </div>
                     </aura:set>
 
                     <!--CARD BODY-->
