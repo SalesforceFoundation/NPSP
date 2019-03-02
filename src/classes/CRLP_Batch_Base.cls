@@ -91,6 +91,8 @@ public abstract class CRLP_Batch_Base {
         private set;
     }
 
+    protected Customizable_Rollup_Settings__c customizableRollupSettings;
+
     /*******************************************************************************************************
      * @description Constructs the class, inits the class instance vars used across all CRLP batch jobs
      */
@@ -98,6 +100,7 @@ public abstract class CRLP_Batch_Base {
         this.statefulMapOfOppIdsByParentId = new Map<Id, Set<Id>>();
         this.summaryObjectType = CRLP_RollupBatch_SVC.getSummaryObjectType(this.jobType);
         this.isScheduledJob = System.isScheduled();
+        this.customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
     }
 
     /*******************************************************************************************************
