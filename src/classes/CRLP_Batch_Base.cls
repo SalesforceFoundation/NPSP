@@ -344,7 +344,6 @@ public abstract class CRLP_Batch_Base {
      */
     @TestVisible protected String getMainQueryInnerJoinFilter() {
         String whereClause = null;
-        Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
         Boolean hasMaxValuesForIncrementalMode = (maxDaysAgo != null || maxYearsAgo != null);
 
         if (getIsIncrementalModeEnabled() && hasMaxValuesForIncrementalMode) {
@@ -481,9 +480,6 @@ public abstract class CRLP_Batch_Base {
             return false;
         }
 
-        Customizable_Rollup_Settings__c customizableRollupSettings =
-                UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-
         switch on (jobMode) {
 
             when NonSkewMode {
@@ -527,9 +523,6 @@ public abstract class CRLP_Batch_Base {
     private Integer overrideForLastNDaysValue {
         get {
             if (overrideForLastNDaysValue == null) {
-                Customizable_Rollup_Settings__c customizableRollupSettings =
-                        UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-
                 if (customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c != null) {
                     overrideForLastNDaysValue = (Integer) customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c;
                 }
@@ -546,9 +539,6 @@ public abstract class CRLP_Batch_Base {
     private String overrideForLastNDaysField {
         get {
             if (overrideForLastNDaysField == null) {
-                Customizable_Rollup_Settings__c customizableRollupSettings =
-                        UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-
                 if (String.isNotBlank(customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c)) {
                     overrideForLastNDaysField = customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c;
                 }

@@ -353,7 +353,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      * @return Limit value to use or Null if chunking is not enabled.
      */
     private Integer getBatchChunkSizeLimit() {
-        Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
         Decimal rtnValue;
         if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
             rtnValue = customizableRollupSettings.Rollups_Account_HardCredit_ChunkSize__c;
