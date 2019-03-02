@@ -149,9 +149,9 @@
         // returns map of sobject name => list of fields
         var allFieldsBySObject = this.groupFieldsBySObject(component, everyField);
 
-        let orderedKeys = this.getOrderedSObjectNames(component, Object.keys(allFieldsBySObject));
+        let sObjectNames = Object.keys(allFieldsBySObject);
      
-        orderedKeys.forEach(function(sObjectName) {
+        sObjectNames.forEach(function(sObjectName) {
             let currentFieldGroup = {
                 sObjectName: sObjectName,
                 options: [],
@@ -319,34 +319,7 @@
         });
 
         return result;
-    },
-
-    /**
-     * @description Orders a list of object names for grouping fields, 1. Opp 2. Payment 3. Others in orig order
-     * @param sObjectNames: list of string object names, not modified in function
-     * @return Ordered list of object names
-     */
-    getOrderedSObjectNames: function(component, sObjectNames) {    
-        return sObjectNames;
-
-        /***
-        const opportunitySObjectName = component.get('v.wizardMetadata.labels.opportunitySObjectName');
-        const paymentSObjectName = component.get('v.wizardMetadata.labels.paymentSObjectName');
-
-        // Make sure Opportunity is always the first sObject to be shown and Payment the second.
-        let orderedSObjectNames = [opportunitySObjectName, paymentSObjectName];
-
-        // If there happens to be other objects appart from Opportunity and Payment
-        // Add them to the list behind them.
-        for(var i=0; i<sObjectNames.length; i++) {
-            let sObjectName = sObjectNames[i];
-            if(sObjectName !== opportunitySObjectName && sObjectName !== paymentSObjectName) {
-                orderedSObjectNames.push(sObjectName);
-            }
-        }
-        return orderedSObjectNames;
-        **/
-    },    
+    }, 
 
     /******************************** Validity Functions *****************************/
 
@@ -458,8 +431,8 @@
         };
         let activeFieldsBySObject = this.getActivesBySObject(component);
 
-        let orderedKeys = this.getOrderedSObjectNames(component, Object.keys(activeFieldsBySObject));
-        orderedKeys.forEach(function(sObjectName) {
+        let sObjectNames = Object.keys(activeFieldsBySObject);
+        sObjectNames.forEach(function(sObjectName) {
 
             let currentFieldGroup = {
                 sObjectName: sObjectName,
