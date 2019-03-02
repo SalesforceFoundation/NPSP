@@ -268,47 +268,55 @@ public class CRLP_RollupBatch_SVC {
         Integer batchSize;
 
         try {
-            if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
-                if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-                    batchSize = customizableRollupSettings.Rollups_Account_Batch_Size__c.intValue();
 
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                    batchSize = customizableRollupSettings.Rollups_Contact_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                    batchSize = customizableRollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                    batchSize = customizableRollupSettings.Rollups_Contact_Soft_Credit_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-                    batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-                    batchSize = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c.intValue();
+            switch on (jobMode) {
+                when NonSkewMode {
+                    switch on (jobType) {
+                        when AccountHardCredit {
+                            batchSize = customizableRollupSettings.Rollups_Account_Batch_Size__c.intValue();
+                        }
+                        when ContactHardCredit {
+                            batchSize = customizableRollupSettings.Rollups_Contact_Batch_Size__c.intValue();
+                        }
+                        when AccountContactSoftCredit {
+                            batchSize = customizableRollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c.intValue();
+                        }
+                        when ContactSoftCredit {
+                            batchSize = customizableRollupSettings.Rollups_Contact_Soft_Credit_Batch_Size__c.intValue();
+                        }
+                        when GAU {
+                            batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c.intValue();
+                        }
+                        when RecurringDonations {
+                            batchSize = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c.intValue();
+                        }
+                    }
                 }
 
-            } else {
-
-                if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-                    batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                    batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                    batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                    batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-                    batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-                    batchSize = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c.intValue();
+                when else {
+                    switch on (jobType) {
+                        when AccountHardCredit {
+                            batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c.intValue();
+                        }
+                        when ContactHardCredit {
+                            batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c.intValue();
+                        }
+                        when AccountContactSoftCredit {
+                            batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c.intValue();
+                        }
+                        when ContactSoftCredit {
+                            batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c.intValue();
+                        }
+                        when GAU {
+                            batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c.intValue();
+                        }
+                        when RecurringDonations {
+                            batchSize = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c.intValue();
+                        }
+                    }
                 }
             }
+
         } catch (Exception ex) {
             // ignore null pointer exception errors because a default will be returned
         }
