@@ -1044,7 +1044,6 @@ public with sharing class BDI_DataImport_TEST {
         Test.stopTest();
     
         // verify expected results
-        // verify expected results
         Map<Id, Contact> contactById = new Map<Id, Contact>(getContacts());
         System.assertEquals(4, contactById.size());
         dataImports = getDataImports();
