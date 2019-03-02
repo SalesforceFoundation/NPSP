@@ -1451,8 +1451,10 @@
         <members>bgeFLSError</members>
         <members>bgeFormMatchingModalText</members>
         <members>bgeFormNewDonationHelptext</members>
+        <members>bgeFormNewPaymentHelptext</members>
         <members>bgeFormNoneLink</members>
         <members>bgeFormSelectedOpportunity</members>
+        <members>bgeFormSelectedOpportunityApplyNewPayment</members>
         <members>bgeFormSelectedPayment</members>
         <members>bgeFormUpdateDonation</members>
         <members>bgeFormUpdateHelptext</members>
