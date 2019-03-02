@@ -40,7 +40,7 @@ private class CRLP_Batch_Base_TEST {
     private static void accountHardCreditRollupGeneratesStandardJoinQueryWhenNotScheduledJob() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
 
-        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
+        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>(), null);
         accountBatchJob.initializeJobData();
 
         String whereClause = accountBatchJob.getMainQueryInnerJoinFilter();
@@ -52,7 +52,7 @@ private class CRLP_Batch_Base_TEST {
     private static void accountHardCreditRollupGeneratesIncrementalModeJoinQuery() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
 
-        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
+        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>(), null);
         accountBatchJob.initializeJobData();
         accountBatchJob.isScheduledJob = true; // Set the Batch Base isScheduledJob flag to true.
         // This is necessary because the Schedulable Job constructs and submits a separate instance of the
@@ -74,7 +74,7 @@ private class CRLP_Batch_Base_TEST {
                 CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                 CRLP_Operation.TimeBoundOperationType.Years_Ago);
 
-        CRLP_Account_Batch accountBatchJob = new CRLP_Account_Batch(new List<Id>());
+        CRLP_Account_Batch accountBatchJob = new CRLP_Account_Batch(new List<Id>(), null);
         accountBatchJob.initializeJobData();
         accountBatchJob.isScheduledJob = true;
 
@@ -92,7 +92,7 @@ private class CRLP_Batch_Base_TEST {
                 CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                 CRLP_Operation.TimeBoundOperationType.Days_Back);
 
-        CRLP_Account_Batch accountBatchJob = new CRLP_Account_Batch(new List<Id>());
+        CRLP_Account_Batch accountBatchJob = new CRLP_Account_Batch(new List<Id>(), null);
         accountBatchJob.initializeJobData();
         accountBatchJob.isScheduledJob = true;
 
@@ -107,7 +107,7 @@ private class CRLP_Batch_Base_TEST {
     private static void accountHardCreditRollupGeneratesLastNDaysJoinQueryWithCustomSettingFalse() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, false);
 
-        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
+        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>(), null);
         accountBatchJob.initializeJobData();
         accountBatchJob.isScheduledJob = true;
 
@@ -120,7 +120,7 @@ private class CRLP_Batch_Base_TEST {
     private static void contactHardCreditRollupGeneratesStandardJoinQueryWhenNotScheduledJob() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
 
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
+        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>(), null);
         contactBatchJob.initializeJobData();
 
         String whereClause = contactBatchJob.getMainQueryInnerJoinFilter();
@@ -132,7 +132,7 @@ private class CRLP_Batch_Base_TEST {
     private static void contactHardCreditRollupGeneratesIncrementalModeJoinQuery() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
 
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
+        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>(), null);
         contactBatchJob.initializeJobData();
         contactBatchJob.isScheduledJob = true;
 
@@ -151,7 +151,7 @@ private class CRLP_Batch_Base_TEST {
                 CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
                 CRLP_Operation.TimeBoundOperationType.Years_Ago);
 
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
+        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>(), null);
         contactBatchJob.initializeJobData();
         contactBatchJob.isScheduledJob = true;
 
@@ -169,7 +169,7 @@ private class CRLP_Batch_Base_TEST {
                 CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
                 CRLP_Operation.TimeBoundOperationType.Days_Back);
 
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
+        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>(), null);
         contactBatchJob.initializeJobData();
         contactBatchJob.isScheduledJob = true;
 
@@ -184,7 +184,7 @@ private class CRLP_Batch_Base_TEST {
     private static void contactHardCreditRollupGeneratesLastNDaysJoinQueryWithCustomSettingFalse() {
         configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, false);
 
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
+        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>(), null);
         contactBatchJob.initializeJobData();
         contactBatchJob.isScheduledJob = true;
 
@@ -202,7 +202,7 @@ private class CRLP_Batch_Base_TEST {
                 userDefinedLastNDaysFieldOverride,
                 userDefinedLastNDaysValueOverride);
 
-        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
+        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>(), null);
         accountBatchJob.initializeJobData();
         accountBatchJob.isScheduledJob = true;
 
@@ -222,7 +222,7 @@ private class CRLP_Batch_Base_TEST {
                 userDefinedLastNDaysFieldOverride,
                 userDefinedLastNDaysValueOverride);
 
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
+        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>(), null);
         contactBatchJob.initializeJobData();
         contactBatchJob.isScheduledJob = true;
 
