@@ -270,55 +270,50 @@ public class CRLP_RollupBatch_SVC {
                 UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c;
 
         try {
-
-            switch on (jobMode) {
-                when NonSkewMode {
-                    switch on (jobType) {
-                        when AccountHardCredit {
-                            batchSize = customizableRollupSettings.Rollups_Account_Batch_Size__c;
-                        }
-                        when ContactHardCredit {
-                            batchSize = customizableRollupSettings.Rollups_Contact_Batch_Size__c;
-                        }
-                        when AccountContactSoftCredit {
-                            batchSize = customizableRollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c;
-                        }
-                        when ContactSoftCredit {
-                            batchSize = customizableRollupSettings.Rollups_Contact_Soft_Credit_Batch_Size__c;
-                        }
-                        when GAU {
-                            batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c;
-                        }
-                        when RecurringDonations {
-                            batchSize = recurringDonationBatchSize;
-                        }
-                    }
+            switch on (jobType){
+                when GAU {
+                    batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c;
                 }
-
+                when RecurringDonations {
+                    batchSize = recurringDonationBatchSize;
+                }
                 when else {
-                    switch on (jobType) {
-                        when AccountHardCredit {
-                            batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c;
+                    switch on (jobMode) {
+                        when NonSkewMode {
+                            switch on (jobType) {
+                                when AccountHardCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Account_Batch_Size__c;
+                                }
+                                when ContactHardCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Contact_Batch_Size__c;
+                                }
+                                when AccountContactSoftCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c;
+                                }
+                                when ContactSoftCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Contact_Soft_Credit_Batch_Size__c;
+                                }
+                            }
                         }
-                        when ContactHardCredit {
-                            batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c;
-                        }
-                        when AccountContactSoftCredit {
-                            batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c;
-                        }
-                        when ContactSoftCredit {
-                            batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c;
-                        }
-                        when GAU {
-                            batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c;
-                        }
-                        when RecurringDonations {
-                            batchSize = recurringDonationBatchSize;
+                        when else {
+                            switch on (jobType) {
+                                when AccountHardCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c;
+                                }
+                                when ContactHardCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c;
+                                }
+                                when AccountContactSoftCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c;
+                                }
+                                when ContactSoftCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c;
+                                }
+                            }
                         }
                     }
                 }
             }
-
         } catch (Exception ex) {
             // ignore null pointer exception errors because a default will be returned
         }
