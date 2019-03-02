@@ -99,6 +99,7 @@ public abstract class CRLP_Batch_Base {
     public CRLP_Batch_Base() {
         this.statefulMapOfOppIdsByParentId = new Map<Id, Set<Id>>();
         this.summaryObjectType = CRLP_RollupBatch_SVC.getSummaryObjectType(this.jobType);
+        this.jobType = jobType;
         this.isScheduledJob = System.isScheduled();
         this.customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
     }
@@ -108,7 +109,6 @@ public abstract class CRLP_Batch_Base {
      */
     public CRLP_Batch_Base(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
         this();
-        this.jobType = jobType;
         this.jobFilter = jobFilter;
     }
 
@@ -117,7 +117,6 @@ public abstract class CRLP_Batch_Base {
      */
     public CRLP_Batch_Base(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds) {
         this();
-        this.jobType = jobType;
         this.recordIds = recordIds;
     }
 
