@@ -100,7 +100,6 @@
      * @param allFields: parsed list of all possible fields for dueling picklist
      */
     loadAvailableFields: function(component, activeFields, allFields) {
-        debugger;
         let availableFieldsBySObject = {
             fieldGroups: []
         };
@@ -265,7 +264,8 @@
                 activeFields.push(currentField);
             }
         });
-        return activeFields;
+        var sortedActiveFields = this.sortFieldsByOrder(activeFields);
+        return sortedActiveFields;
     },
 
     /**
