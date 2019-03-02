@@ -354,13 +354,22 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      */
     private Integer getBatchChunkSizeLimit() {
         Decimal rtnValue;
-        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-            rtnValue = customizableRollupSettings.Rollups_Account_HardCredit_ChunkSize__c;
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-            rtnValue = customizableRollupSettings.Rollups_Contact_HardCredit_ChunkSize__c;
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-            rtnValue = customizableRollupSettings.Rollups_Contact_SoftCredit_ChunkSize__c;
+
+        switch on (jobType) {
+
+            when AccountHardCredit {
+                rtnValue = customizableRollupSettings.Rollups_Account_HardCredit_ChunkSize__c;
+            }
+
+            when ContactHardCredit {
+                rtnValue = customizableRollupSettings.Rollups_Contact_HardCredit_ChunkSize__c;
+            }
+
+            when ContactSoftCredit {
+                rtnValue = customizableRollupSettings.Rollups_Contact_SoftCredit_ChunkSize__c;
+            }
         }
+
         return (rtnValue > 0 ? rtnValue.intValue() : null);
     }
 }
