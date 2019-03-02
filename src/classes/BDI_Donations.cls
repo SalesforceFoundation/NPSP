@@ -159,32 +159,43 @@ public class BDI_Donations {
         List<Opportunity> opportunitiesToUpdate = new List<Opportunity>();
         List<DataImport__c> dataImportsToInsert = new List<DataImport__c>();
         List<DataImport__c> dataImportsToUpdate = new List<DataImport__c>();
-        
+
         for (DataImport__c dataImport : dataImportDonations) {
-            // validate against our desired matching behavior (exact match, best match, new, etc.)
-            if (!isValidMatchBehavior(dataImport, matchBehavior)) {
-                continue;
-            }
-            
-            // update the new or existing Opp with the DI's field data
-            Opportunity opp = prepareOppForUpdateInsert(dataImport);
-            
-            // handle any error from the prepare
-            if (opp == null) {
-                continue;
-            }
-            
-            if (opp.Id == null) {
-                opportunitiesToInsert.add(opp);
-                dataImportsToInsert.add(dataImport);
+            if (dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
+                // park a new empty payment in the map if the user specified Apply New Payment
+                paymentsByDataImportId.put(
+                        dataImport.Id,
+                        new npe01__OppPayment__c(
+                                npe01__Opportunity__c = dataImport.DonationImported__c
+                        )
+                );
+                dataImport.PaymentImportStatus__c = Label.bdiCreated;
             } else {
-                opportunitiesToUpdate.add(opp);
-                dataImportsToUpdate.add(dataImport);
-            }
-            
-            // for some error handling detection tests  
-            if (Test.isRunningTest() && opp.Name != null && opp.Name.startsWith('FailTest')) {
-                opp.Name = null;
+                // validate against our desired matching behavior (exact match, best match, new, etc.)
+                if (!isValidMatchBehavior(dataImport, matchBehavior)) {
+                    continue;
+                }
+
+                // update the new or existing Opp with the DI's field data
+                Opportunity opp = prepareOppForUpdateInsert(dataImport);
+
+                // handle any error from the prepare
+                if (opp == null) {
+                    continue;
+                }
+
+                if (opp.Id == null) {
+                    opportunitiesToInsert.add(opp);
+                    dataImportsToInsert.add(dataImport);
+                } else {
+                    opportunitiesToUpdate.add(opp);
+                    dataImportsToUpdate.add(dataImport);
+                }
+
+                // for some error handling detection tests
+                if (Test.isRunningTest() && opp.Name != null && opp.Name.startsWith('FailTest')) {
+                    opp.Name = null;
+                }
             }
         }
 
@@ -314,8 +325,7 @@ public class BDI_Donations {
             errorMessage = System.Label.bdiErrorDonationNoMatch;
         } else if (matchBehavior == BDI_DataImport_API.ExactMatchOrCreate && dataImport.Donation_Possible_Matches__c != null) {
             errorMessage = System.Label.bdiErrorDonationMultiMatch;
-        }
-        else if (matchBehavior == BDI_DataImport_API.RequireBestMatch && dataImport.DonationImported__c == null) {
+        } else if (matchBehavior == BDI_DataImport_API.RequireBestMatch && dataImport.DonationImported__c == null) {
             errorMessage = System.Label.bdiErrorDonationNoMatch;
         }
         else { 
@@ -430,9 +440,9 @@ public class BDI_Donations {
             }
         }
 
-        String donationRecordTypeName = UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c').toLowerCase();
-        String donationStage = UTIL_Namespace.StrTokenNSPrefix('Donation_Stage__c').toLowerCase();
-        String donationAmount = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowerCase();
+        String donationRecordTypeName = UTIL_Namespace.StrTokenNSPrefix('Donation_Record_Type_Name__c');
+        String donationStage = UTIL_Namespace.StrTokenNSPrefix('Donation_Stage__c');
+        String donationAmount = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c');
 
         // now copy over all the data to the Opp
         for (String dataImportField : dataImportFieldToOpportunityField.keySet()) {
@@ -441,14 +451,15 @@ public class BDI_Donations {
             if (dataImportField == donationRecordTypeName) {
                 continue;
             }
-            // only honor Stage if we aren't updating its payment
-            if (dataImportField == donationStage && dataImport.PaymentImported__c != null) {
-                continue;
+
+            // Don't copy over Stage or Amount if we are applying a new Payment or updating a Payment
+            if (dataImportField == donationStage || dataImportField == donationAmount) {
+                if (dataImport.DonationImportStatus__c != System.Label.bdiMatchedApplyNewPayment
+                        && dataImport.PaymentImported__c != null) {
+                    continue;
+                }
             }
-            // only honor Amount if we aren't updating its payment
-            if (dataImportField == donationAmount && dataImport.PaymentImported__c != null) {
-                continue;
-            }
+
             // If the user has a custom field on the Data Import which maps to CurrencyIsoCode
             if (dataImportField == 'CurrencyIsoCode' && useCustomMappingInsteadOfCurrencyIsoCode) {
                 continue;
@@ -506,7 +517,8 @@ public class BDI_Donations {
             if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
                 continue;
             }
-            if (dataImport.PaymentImported__c != null) {
+            if (dataImport.PaymentImported__c != null
+                    || dataImport.DonationImportStatus__c == System.Label.bdiMatchedApplyNewPayment) {
                 npe01__OppPayment__c payment = paymentsByDataImportId.get(dataImport.Id);
                 payment.npe01__Paid__c = true;
                 payment.npe01__Payment_Amount__c = dataImport.Donation_Amount__c;
@@ -530,6 +542,10 @@ public class BDI_Donations {
         for (DataImport__c dataImport : dataImportDonations) {
             // skip di's that already have an error
             if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
+                continue;
+            }
+            // skip DIs where user selected Apply New Payment
+            if (dataImport.DonationImportStatus__c == System.Label.bdiMatchedApplyNewPayment) {
                 continue;
             }
             if (dataImport.DonationImported__c != null && dataImport.PaymentImported__c == null) {
@@ -602,7 +618,8 @@ public class BDI_Donations {
             if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
                 continue;
             }
-            if (dataImport.PaymentImported__c != null) {
+            if (dataImport.PaymentImported__c != null
+                    || dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
                 npe01__OppPayment__c payment = paymentsByDataImportId.get(dataImport.Id);
                 if (payment != null) {
                     Integer numberOfCopiedFields = 0;
@@ -619,11 +636,17 @@ public class BDI_Donations {
                 }
             }
         }
-        List<Database.SaveResult> results = UTIL_DMLService.updateRecords(paymentsToUpdate, false);
+        List<Database.UpsertResult> results = UTIL_DMLService.upsertRecords(paymentsToUpdate, false);
         for (Integer i = 0; i < results.size(); i++) {
-            Database.SaveResult result = results[i];
+            Database.UpsertResult result = results[i];
             if (!result.isSuccess()) {
                 bdi.LogBDIError(dataImportsToUpdate[i], result.getErrors()[0].getMessage(), null);
+            }
+        }
+
+        for (DataImport__c dataImport : dataImportsWithDonations) {
+            if (dataImport.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
+                dataImport.PaymentImported__c = paymentsByDataImportId.get(dataImport.Id).Id;
             }
         }
     }

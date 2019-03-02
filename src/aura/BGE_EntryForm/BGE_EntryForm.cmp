@@ -92,18 +92,26 @@
                                     <aura:if isTrue="{!equals(v.selectedDonation, '')}">
                                         <p>{!$Label.c.bgeFormNewDonationHelptext}</p>
                                         <aura:set attribute="else">
-                                            <p class="slds-m-right_x-small">{!$Label.c.bgeFormUpdateHelptext}
-                                                <lightning:formattedUrl value="{! '/' + v.selectedDonation.Id}"
-                                                                        label="{!v.selectedDonation.Name}"
-                                                                        class="slds-m-left_x-small"
-                                                                        target="_blank"/>
-                                            </p>
+                                        <p class="slds-m-right_x-small">
+                                            <aura:if isTrue="{!v.selectedDonation.applyPayment}">
+                                                {!$Label.c.bgeFormNewPaymentHelptext}
+                                                <aura:set attribute="else">
+                                                    {!$Label.c.bgeFormUpdateHelptext}
+                                                </aura:set>
+                                            </aura:if>
+                                            <lightning:formattedUrl value="{! '/' + v.selectedDonation.Id}"
+                                                                    label="{!v.selectedDonation.Name}"
+                                                                    class="slds-m-left_x-small"
+                                                                    target="_blank"/>
+                                        </p>
                                         </aura:set>
                                     </aura:if>
-                                    <p>
-                                        <a onclick="{!c.openMatchModal}">{!$Label.c.bgeFormUpdateDonation}</a>
-                                    </p>
                                 </aura:set>
+                            </aura:if>
+                            <aura:if isTrue="{!or(v.selectedDonation, equals(v.selectedDonation, ''))}">
+                                <p>
+                                    <a onclick="{!c.openMatchModal}">{!$Label.c.bgeFormUpdateDonation}</a>
+                                </p>
                             </aura:if>
                         </div>
                     </div>
