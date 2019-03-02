@@ -266,6 +266,8 @@ public class CRLP_RollupBatch_SVC {
      */
     public static Integer getBatchSize(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.BatchJobMode jobMode) {
         Integer batchSize;
+        Integer recurringDonationBatchSize =
+                UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c.intValue();
 
         try {
 
@@ -288,7 +290,7 @@ public class CRLP_RollupBatch_SVC {
                             batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c.intValue();
                         }
                         when RecurringDonations {
-                            batchSize = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c.intValue();
+                            batchSize = recurringDonationBatchSize;
                         }
                     }
                 }
@@ -311,7 +313,7 @@ public class CRLP_RollupBatch_SVC {
                             batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c.intValue();
                         }
                         when RecurringDonations {
-                            batchSize = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c.intValue();
+                            batchSize = recurringDonationBatchSize;
                         }
                     }
                 }
