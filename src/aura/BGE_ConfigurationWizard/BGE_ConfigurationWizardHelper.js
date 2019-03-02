@@ -100,6 +100,7 @@
      * @param allFields: parsed list of all possible fields for dueling picklist
      */
     loadAvailableFields: function(component, activeFields, allFields) {
+        debugger;
         let availableFieldsBySObject = {
             fieldGroups: []
         };
@@ -147,7 +148,7 @@
         // returns map of sobject name => list of fields
         let activeFieldsBySObject = this.getActivesBySObject(component);
         // returns map of sobject name => list of fields
-        var allFieldsBySObject = this.groupFieldsBySObject(everyField);
+        var allFieldsBySObject = this.groupFieldsBySObject(component, everyField);
 
         let orderedKeys = this.getOrderedSObjectNames(component, Object.keys(allFieldsBySObject));
      
@@ -264,8 +265,7 @@
                 activeFields.push(currentField);
             }
         });
-        var sortedActiveFields = this.sortFieldsByOrder(activeFields);
-        return sortedActiveFields;
+        return activeFields;
     },
 
     /**
@@ -274,7 +274,7 @@
      */
     getActivesBySObject: function(component) {
         let activeFields = this.getActives(component);
-        var activesBySObject = this.groupFieldsBySObject(activeFields);
+        var activesBySObject = this.groupFieldsBySObject(component, activeFields);
         return activesBySObject;
     },
 
@@ -302,8 +302,15 @@
      * @param fields: list of fields to be grouped.
      * @return Map of SObject name to List of related fields.
      */
-    groupFieldsBySObject: function(fields) {
-        var result = {};
+    groupFieldsBySObject: function(component, fields) {
+
+        const opportunitySObjectName = component.get('v.wizardMetadata.labels.opportunitySObjectName');
+        const paymentSObjectName = component.get('v.wizardMetadata.labels.paymentSObjectName');
+
+        let result = {};
+        result[opportunitySObjectName] = [];
+        result[paymentSObjectName] = [];
+
         fields.forEach(function(currentField) {
             if ((currentField.sObjectName in result) === false) {
                 result[currentField.sObjectName] = [];
@@ -320,7 +327,9 @@
      * @return Ordered list of object names
      */
     getOrderedSObjectNames: function(component, sObjectNames) {    
+        return sObjectNames;
 
+        /***
         const opportunitySObjectName = component.get('v.wizardMetadata.labels.opportunitySObjectName');
         const paymentSObjectName = component.get('v.wizardMetadata.labels.paymentSObjectName');
 
@@ -336,6 +345,7 @@
             }
         }
         return orderedSObjectNames;
+        **/
     },    
 
     /******************************** Validity Functions *****************************/
@@ -419,7 +429,7 @@
      */
     updateToActive: function(component) {
         var fieldCountPreviousObjects = 0;
-        var allFieldsBySObject = this.groupFieldsBySObject(component.get('v.everyField'));
+        var allFieldsBySObject = this.groupFieldsBySObject(component, component.get('v.everyField'));
         var everyFieldUpdated = [];
         Object.keys(allFieldsBySObject).forEach(function(currentSObject) {
             var batchFieldGroups = component.get('v.availableFieldsBySObject').fieldGroups;
