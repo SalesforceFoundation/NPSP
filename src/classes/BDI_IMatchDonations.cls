@@ -48,6 +48,6 @@ global interface BDI_IMatchDonations {
     * @param mapDIIdToPmt Map to fill in of DI Id's to matched Payments
     * @return void
     */ 
-    void match(BDI_DataImportService bdi, list<DataImport__c> listDI,
-        map<Id, Opportunity> mapDIIdToOpp, map<Id, npe01__OppPayment__c> mapDIIdToPmt);
+    void match(BDI_DataImportService bdi, List<DataImport__c> listDI,
+        Map<Id, Opportunity> mapDIIdToOpp, Map<Id, npe01__OppPayment__c> mapDIIdToPmt);
 }
