@@ -37,171 +37,31 @@ private class OPP_StageMappingUtil_TEST {
     private static final String OPP_MAPPING_STAGETOSTATE_ACTION = 'OPP.MapStageToState';
 
     /******************************************************************************************************
-    * @description Test value used to test "convertToSet" method with alternate separator
-    */
-    private static final String TEST_CONVERT_1_VAL = '1~ 2 ~3~4 ~a~B';
-    /******************************************************************************************************
-    * @description Test value used to test "convertToSet" method
-    */
-    private static final String TEST_CONVERT_2_VAL = '1; 2 ;3;4 ;a;B';
-
-    /******************************************************************************************************
-    * @description Expected values to be found in set after calling "convertToSet" method.
-    */
-    private static final List<String> RESULT_CONVERT_VALS = new List<String> {'1', '2', '3', '4', 'a', 'b'};
-
-    /******************************************************************************************************
     * @description Test values used to test determineStateFromOppStage
     */
     private static final List<String> TEST_OPP_STAGE_VALS = new List<String> {
-            'Prospecting',
-            'Qualification',
-            'Needs Analysis',
-            'Value Proposition',
-            'Id. Decision Makers',
-            'Perception Analysis',
-            'Proposal/Price Quote',
             'Negotiation/Review',
             'Closed Won',
-            'Closed Lost',
-            'Pledged',
-            'PLEDGED',
-            'CLOSED WON',
             null,
             'CLOSED WON  ',
             ' CLOSED WON',
-            '  CLOSED WON  '
+            '  CLOSED WON  ',
+            'Finalized'
     };
 
-    /******************************************************************************************************
-    * @description Test Setting for Committed Stages to be used when testing determineStateFromOppStage
-    * with settings present/populated
-    */
-    private static final String COMMITTED_STAGES_VAL = 'Pledged; Closed Won; Proposal/Price Quote';
 
     /******************************************************************************************************
-    * @description Test Setting for Finalized Stages to be used when testing determineStateFromOppStage
-    * with settings present/populated
+    * @description Expected return values for tests of determineStateFromOppStage
     */
-    private static final String FINALIZED_STAGES_VAL = 'Closed Won; Closed Lost;';
-
-    /******************************************************************************************************
-    * @description Expected return values for tests of determineStateFromOppStage when Settings are not
-    * populated.
-    */
-    private static final List<String> RESULT_NO_SETTINGS = new List<String> {
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL
-    };
-
-    /******************************************************************************************************
-    * @description Expected return values for tests of determineStateFromOppStage when Settings are
-    * populated.
-    */
-    private static final List<String> RESULT_WITH_SETTINGS = new List<String> {
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
+    private static final List<String> RESULTS = new List<String> {
         OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
         OPP_StageMappingUtil.COMMITTED_STATE_VAL,
         OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.FINALIZED_STATE_VAL,
-        OPP_StageMappingUtil.FINALIZED_STATE_VAL,
         OPP_StageMappingUtil.COMMITTED_STATE_VAL,
         OPP_StageMappingUtil.COMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.FINALIZED_STATE_VAL,
-        OPP_StageMappingUtil.UNCOMMITTED_STATE_VAL,
-        OPP_StageMappingUtil.FINALIZED_STATE_VAL,
-        OPP_StageMappingUtil.FINALIZED_STATE_VAL,
+        OPP_StageMappingUtil.COMMITTED_STATE_VAL,
         OPP_StageMappingUtil.FINALIZED_STATE_VAL
     };
-
-    /*********************************************************************************************************
-    * @description Tests the convert to Set Method
-    * verifies that it properly splits values in Sets passing a separator String.
-    * @return void
-    **********************************************************************************************************/
-    @isTest
-    private static void testConvertToSetMethod() {
-        System.assertEquals (true, OPP_StageMappingUtil.convertToSet(null, '~', true).isEmpty());
-        System.assertEquals (true, OPP_StageMappingUtil.convertToSet(' ', '~', true).isEmpty());
-
-        Set<String> testVals = OPP_StageMappingUtil.convertToSet(TEST_CONVERT_1_VAL, '~', true);
-        System.assertEquals(6, testVals.size());
-        for (String resultVal : RESULT_CONVERT_VALS) {
-            System.assertEquals(true, testVals.contains(resultVal), 'Expected ' + resultVal + ' to be in testVals');
-        }
-
-        // Will use ; as the default because one was not supplied.
-        testVals = OPP_StageMappingUtil.convertToSet(TEST_CONVERT_2_VAL, null, true);
-        System.assertEquals(6, testVals.size());
-        for (String resultVal : RESULT_CONVERT_VALS) {
-            System.assertEquals(true, testVals.contains(resultVal), 'Expected ' + resultVal + ' to be in testVals');
-        }
-
-        // Will use ; as the default
-        testVals = OPP_StageMappingUtil.convertToSet(TEST_CONVERT_2_VAL);
-        System.assertEquals(6, testVals.size());
-        for (String resultVal : RESULT_CONVERT_VALS) {
-            System.assertEquals(true, testVals.contains(resultVal), 'Expected ' + resultVal + ' to be in testVals');
-        }
-    }
-
-    /*********************************************************************************************************
-    * @description Tests the determineOppStateFromOppStage Method with No Stages Defined in Settings
-    * verifies that it only returns UNCOMMITTED as a value.
-    * @return void
-    **********************************************************************************************************/
-    @isTest
-    private static void testdetermineOppStateFromOppStageNoSettingsMethod() {
-        // Check when Committed and Finalized Stage are not mapped in settings...
-        for (Integer i = 0; i < TEST_OPP_STAGE_VALS.size(); i++) {
-            String testVal = TEST_OPP_STAGE_VALS[i];
-            String resultVal = RESULT_NO_SETTINGS[i];
-
-            System.assertEquals (resultVal, OPP_StageMappingUtil.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
-        }
-    }
-
-    /*********************************************************************************************************
-    * @description Tests the determineOppStateFromOppStage Method with No Stages Defined in Settings,
-    * but with settings present/initialized
-    * verifies that it only returns UNCOMMITTED as a value.
-    * @return void
-    **********************************************************************************************************/
-    @isTest
-    private static void testdetermineOppStateFromOppStageSettingsNoValuesMethod() {
-    // Check when Committed and Finalized Stage are mapped in settings...
-        npo02__Households_Settings__c householdSettings = Util_CustomSettingsFacade.getHouseholdsSettingsForTests(
-            new npo02__Households_Settings__c(
-             )
-        );
-
-        // Check when Committed and Finalized Stage are not mapped in settings...
-        for (Integer i = 0; i < TEST_OPP_STAGE_VALS.size(); i++) {
-            String testVal = TEST_OPP_STAGE_VALS[i];
-            String resultVal = RESULT_NO_SETTINGS[i];
-
-            System.assertEquals (resultVal, OPP_StageMappingUtil.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
-        }
-    }
 
     /*********************************************************************************************************
     * @description Tests the determineOppStateFromOppStage Method with Stages Defined in Settings
@@ -210,17 +70,10 @@ private class OPP_StageMappingUtil_TEST {
     **********************************************************************************************************/
     @isTest
     private static void testdetermineOppStateFromOppStageWithSettingsMethod() {
-        // Check when Committed and Finalized Stage are mapped in settings...
-        npo02__Households_Settings__c householdSettings = Util_CustomSettingsFacade.getHouseholdsSettingsForTests(
-            new npo02__Households_Settings__c(
-                Opportunity_Committed_Stages__c = COMMITTED_STAGES_VAL,
-                Opportunity_Finalized_Stages__c = FINALIZED_STAGES_VAL
-            )
-        );
 
         for (Integer i = 0; i < TEST_OPP_STAGE_VALS.size(); i++) {
             String testVal = TEST_OPP_STAGE_VALS[i];
-            String resultVal = RESULT_WITH_SETTINGS[i];
+            String resultVal = RESULTS[i];
 
             System.assertEquals (resultVal, OPP_StageMappingUtil.determineOppStateFromOppStage(testVal), 'Expected ' + resultVal + ' for ' + testVal);
         }
@@ -232,19 +85,11 @@ private class OPP_StageMappingUtil_TEST {
     private static void testCallableAPISupport() {
         Test.startTest();
 
-        // Check when Committed and Finalized Stage are mapped in settings...
-        npo02__Households_Settings__c householdSettings = Util_CustomSettingsFacade.getHouseholdsSettingsForTests(
-            new npo02__Households_Settings__c(
-                Opportunity_Committed_Stages__c = COMMITTED_STAGES_VAL,
-                Opportunity_Finalized_Stages__c = FINALIZED_STAGES_VAL
-            )
-        );
-
         Callable npspApi = (Callable) Type.forName('Callable_API').newInstance();
 
         for (Integer i = 0; i < TEST_OPP_STAGE_VALS.size(); i++) {
             String testVal = TEST_OPP_STAGE_VALS[i];
-            String resultVal = RESULT_WITH_SETTINGS[i];
+            String resultVal = RESULTS[i];
 
             Map<String, Object> npspApiParams = new Map<String, Object> {
                 'OpportunityStage' => testVal
