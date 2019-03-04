@@ -258,7 +258,7 @@
     /**
      * @description: set new total amount and count variables and update data table after dry run completes
      * @param model: model with records that need to be updated in the table
-     * @param isNewRecord: flag to indicate if record(s) is new or existing
+     * @param isNewRecord: flag to indicate if newly entered record
      */
     afterDryRun: function(component, model, isNewRecord) {
         this.setTotals(component, model);
