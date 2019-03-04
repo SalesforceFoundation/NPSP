@@ -22,28 +22,4 @@
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
-    <fields>
-        <fullName>Opportunity_Committed_Stages__c</fullName>
-        <description>These Opportunity Stages are Committed; additional payments are expected.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Specify which Opportunity Stage(s) are in a Committed state, with additional payments expected. When defining multiple stages, separate them with a semicolon.</inlineHelpText>
-        <label>Opportunity Committed Stage(s)</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Opportunity_Finalized_Stages__c</fullName>
-        <description>These Opportunity Stages are Finalized; no additional payments are expected. </description>
-        <externalId>false</externalId>
-        <inlineHelpText>Specify which Opportunity Stage(s) are in a Finalized state, with no additional payments  expected. When defining multiple stages, separate them with a semicolon.</inlineHelpText>
-        <label>Opportunity Finalized Stage(s)</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
 </CustomObject>

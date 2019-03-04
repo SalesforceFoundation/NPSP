@@ -1091,8 +1091,6 @@
         <members>npe5__Affiliation__c.Related_Opportunity_Contact_Role__c</members>
         <members>npo02__Household__c.Number_of_Household_Members__c</members>
         <members>npo02__Households_Settings__c.Matched_Donor_Role__c</members>
-        <members>npo02__Households_Settings__c.Opportunity_Committed_Stages__c</members>
-        <members>npo02__Households_Settings__c.Opportunity_Finalized_Stages__c</members>
         <members>npo02__Households_Settings__c.Use_Dated_Conversion_Rates__c</members>
         <name>CustomField</name>
     </types>
