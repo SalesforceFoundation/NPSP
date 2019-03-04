@@ -18,15 +18,5 @@
         <label><!-- Use Dated Conversion Rates if available --></label>
         <name>Use_Dated_Conversion_Rates__c</name>
     </fields>
-    <fields>
-        <help><!-- Specify which Opportunity Stage(s) are in a Committed state, with additional payments expected. When defining multiple stages, separate them with a semicolon. --></help>
-        <label><!-- Opportunity Committed Stage(s) --></label>
-        <name>Opportunity_Committed_Stages__c</name>
-    </fields>
-    <fields>
-        <help><!-- Specify which Opportunity Stage(s) are in a Finalized state, with no additional payments  expected. When defining multiple stages, separate them with a semicolon. --></help>
-        <label><!-- Opportunity Finalized Stage(s) --></label>
-        <name>Opportunity_Finalized_Stages__c</name>
-    </fields>
     <gender><!-- Neuter --></gender>
 </CustomObjectTranslation>
