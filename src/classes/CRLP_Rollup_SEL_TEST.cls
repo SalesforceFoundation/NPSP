@@ -583,7 +583,17 @@ public class CRLP_Rollup_SEL_TEST {
                     for (String timeBoundOperationType : timeBoundOperationTypes) {
                         final String METHOD_NAME = 'CRLP_Rollup_SEL.RollupField.getSupportedOperations(String timeBoundOperationType)';
                         
-                        final Set<String> operations = supportedOperationsByTimeBoundOperationType == null || supportedOperationsByTimeBoundOperationType.get(timeBoundOperationType) == null ? new Set<String>() : supportedOperationsByTimeBoundOperationType.get(timeBoundOperationType);
+                        final Set<String> operations;
+                        if (supportedOperationsByTimeBoundOperationType == null) {
+                            operations = null;
+                        } 
+                        else if (timeBoundOperationType == null) {
+                            operations = supportedOperationsByTimeBoundOperationType.get(CRLP_Operation.TimeBoundOperationType.All_Time.name());
+                        }
+                        else {
+                            operations = supportedOperationsByTimeBoundOperationType.get(timeBoundOperationType);
+                        }
+
                         final Set<String> expected = operations == null ? new Set<String>() : operations;
 
                         Exception e;

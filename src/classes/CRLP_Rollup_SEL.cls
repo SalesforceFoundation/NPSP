@@ -290,7 +290,7 @@ public class CRLP_Rollup_SEL {
             else {
                 operations = this.getSupportedOperationsByTimeBoundOperationType().get(timeBoundOperationType);
             }
-            
+
             return operations == null ? new Set<String>() : operations;
         }
 
@@ -639,19 +639,19 @@ public class CRLP_Rollup_SEL {
                 if (includeRollupDefinition) {
                     if (
                         typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.NonDaysAgo 
-                        && r.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()
+                        && rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()
                     ) {
                         includeRollupDefinition = false;
                     }
                     else if (
                         typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.DaysAgoOnly 
-                        && r.Time_Bound_Operation_Type__c != CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()
+                        && rollup.Time_Bound_Operation_Type__c != CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()
                     ) {
                         includeRollupDefinition = false;
                     }
                     else if (
                         typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.MembershipsOnly 
-                        && !r.Summary_Field__r.QualifiedApiName.containsIgnoreCase('Membership')
+                        && !rollup.Summary_Field__r.QualifiedApiName.containsIgnoreCase('Membership')
                     ) {
                         includeRollupDefinition = false;
                     }
