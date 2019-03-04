@@ -709,8 +709,6 @@ public without sharing class UTIL_CustomSettingsFacade {
         householdsSettings.npo02__Household_Mailing_List_ID__c = mySettings.npo02__Household_Mailing_List_ID__c;
         householdsSettings.npo02__Schedule_Job_Limit__c = 25;
         householdsSettings.Use_Dated_Conversion_Rates__c = mySettings.Use_Dated_Conversion_Rates__c;
-        householdsSettings.Opportunity_Committed_Stages__c = mySettings.Opportunity_Committed_Stages__c;
-        householdsSettings.Opportunity_Finalized_Stages__c = mySettings.Opportunity_Finalized_Stages__c;
 
         orgHouseholdsSettings = householdsSettings;
 
