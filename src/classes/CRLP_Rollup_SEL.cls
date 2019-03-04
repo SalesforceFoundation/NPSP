@@ -279,7 +279,18 @@ public class CRLP_Rollup_SEL {
          */
         @TestVisible
         private Set<String> getSupportedOperations(String timeBoundOperationType) {
-            Set<String> operations = this.getSupportedOperationsByTimeBoundOperationType() == null ? null :  this.getSupportedOperationsByTimeBoundOperationType().get(timeBoundOperationType);
+            Set<String> operations;
+            if (this.getSupportedOperationsByTimeBoundOperationType() == null) {
+                operations = null;
+            }
+            else if (timeBoundOperationType == null) {
+                // Treat a null timeBoundOperationType as All_Time
+                operations = this.getSupportedOperationsByTimeBoundOperationType().get(CRLP_Operation.TimeBoundOperationType.All_Time.name());
+            }
+            else {
+                operations = this.getSupportedOperationsByTimeBoundOperationType().get(timeBoundOperationType);
+            }
+            
             return operations == null ? new Set<String>() : operations;
         }
 
@@ -491,9 +502,9 @@ public class CRLP_Rollup_SEL {
      * @param objName Object Name
      */
     public static void validateReferencedFields(Map<String, Schema.DescribeFieldResult> referencedFields, String objName) {
-        for (String fld : referencedFields.keySet()) {
-            if (referencedFields.get(fld) == null) {
-                throw new CRLP_Rollup_SVC.CRLP_Exception('Field ' + fld + ' not found in allFields collection for ' + objName);
+        for (String field : referencedFields.keySet()) {
+            if (referencedFields.get(field) == null) {
+                throw new CRLP_Rollup_SVC.CRLP_Exception('Field ' + field + ' not found in allFields collection for ' + objName);
             }
         }
     }
