@@ -437,15 +437,12 @@
     /**
      * @description: checks that user has all necessary permissions and then launches modal or displays error
      */
-    checkFieldPermissions: function(component, event, helper) {
+    checkFieldPermissions: function(component, onSuccess) {
         var action = component.get('c.checkFieldPermissions');
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
-                if (!component.get('v.modalOpen')) {
-                    component.set('v.modalOpen', true);
-                    this.openBatchWizard(component, event);
-                }
+                onSuccess();
             } else if (state === 'ERROR') {
                 this.handleApexErrors(component, response.getError());
             }
@@ -456,11 +453,15 @@
     /**
      * @description: opens the batch wizard modal for edit mode of the component
      */
-    openBatchWizard: function(component, event) {
+    openBatchWizard: function(component) {
+        if (component.get('v.modalOpen')) {
+            return;
+        }
+        component.set('v.modalOpen', true);
+
         let modalBody;
         let modalHeader;
         let modalFooter;
-        const batchId = component.get('v.recordId');
 
         let progressStepLabels = [
             $A.get('$Label.c.bgeBatchOverviewWizard'),
@@ -470,7 +471,7 @@
         ];
 
         $A.createComponents([
-                ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c', recordId: batchId}],
+                ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c', recordId: component.get('v.recordId')}],
                 ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
                 ['c:modalFooter', {progressStepLabels: progressStepLabels}]
             ],

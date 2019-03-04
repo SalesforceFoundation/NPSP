@@ -63,7 +63,9 @@
      * @description: checks that user has all necessary permissions and then launches modal or displays error
      */
     onEditClick: function(component, event, helper) {
-        helper.checkFieldPermissions(component, event, helper);
+        helper.checkFieldPermissions(component, function () {
+            return helper.openBatchWizard(component);
+        }.bind(helper));
     },
 
     /**
