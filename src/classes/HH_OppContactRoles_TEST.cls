@@ -110,7 +110,8 @@ private class HH_OppContactRoles_TEST {
     }
 
     /*********************************************************************************************************
-    * @description 
+    * @description Opportunity Contact Roles should not be created for Contacts referenced in Opportunities
+    * with "Disable Contact Role Automation" when Household is being managed.
     */
     @isTest
     private static void shouldNotCreateOcrsWhenOppDisableContactRoleAutomationIsChecked() {

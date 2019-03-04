@@ -147,15 +147,15 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             List<Contact> householdContacts = new List<Contact>();
             
             // map Contacts to Opps
-            Map<id,List<Opportunity>> contactIdToOpps = new Map<id, List<Opportunity>>();
+            Map<Id, List<Opportunity>> contactIdToOpps = new Map<Id, List<Opportunity>>();
             
             // map Household Id to the member Contacts
             // note that householdId can be either a Household__c or a HH Account.
-            Map<id,List<Contact>> householdIdToContact = new Map<id, List<Contact>>();           
+            Map<Id, List<Contact>> householdIdToContact = new Map<Id, List<Contact>>();           
             
             // query for OppConRoles where primary=true and OppID in arg set
             // query changed to also include Role = default role, because Contact Merge scenarios were clearing isPrimary (not by our code)!
-            Map<String,Id> contactOppToContactRole = new Map<String,Id>();
+            Map<String, Id> contactOppToContactRole = new Map<String, Id>();
             OpportunityContactRole[] conRoles = [select Id, OpportunityId, ContactId, Role, isPrimary From OpportunityContactRole 
                 WHERE OpportunityId IN :oppsForContactRoles.values() ];
 
