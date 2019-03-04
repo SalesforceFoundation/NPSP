@@ -29,7 +29,7 @@
 * @date 2019
 * @group Opportunity
 * @group-content ../../ApexDocContent/Opportunity.htm
-* @description API Class to allow caller to determine Opportunity's State (Uncommitted, Committed. or Finalized) using the Opportunities Stage and Household Settings
+* @description API Class to allow caller to determine Opportunity's State (Uncommitted, Committed. or Finalized) using the Opportunities Stage
 */
 public with sharing class OPP_StageMappingUtil {
 
@@ -55,11 +55,6 @@ public with sharing class OPP_StageMappingUtil {
     * @description Used to Cache Set of Opportunity Stages that mean Opportunity is in a Finalized State.
     */
     private static Set<String> FINALIZED_STATE_SET = null;
-
-    /******************************************************************************************************
-    * @description Separator String used to parse Strings into multiple values
-    */
-    private static final String DEFAULT_SEPARATOR_VAL = ';';
 
     /*******************************************************************************************************
     * @description Determines the Opportunity State (UNCOMMITTED, COMMITTED, or FINALIZED) from the
@@ -93,56 +88,13 @@ public with sharing class OPP_StageMappingUtil {
 
     /*******************************************************************************************************
     * @description initializes the Opportunity State Sets, used by other parts of this class, if
-    * necessary.  It retrieves them from fields on the NPSP Household Settings Custom Settings object.
-    * If the Opportunity Committed Stages, and/or the Opportunity Finalized Stages are not blank, it will
-    * convert them to Sets that can be used to determine if the Opportunity Stage is a member of that set.
+    * necessary.
     ********************************************************************************************************/
     @testVisible private static void initializeStates() {
-        if (COMMITTED_STATE_SET == null || FINALIZED_STATE_SET == null) {
-            npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-
-            if (String.isNotBlank(householdSettings.Opportunity_Committed_Stages__c)) {
-                COMMITTED_STATE_SET = convertToSet(householdSettings.Opportunity_Committed_Stages__c);
-            }
-
-            if (String.isNotBlank(householdSettings.Opportunity_Finalized_Stages__c)) {
-                FINALIZED_STATE_SET = convertToSet(householdSettings.Opportunity_Finalized_Stages__c);
-            }
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description converts a String value to a set of values (all lowercase), splitting it by using a ; as the default
-    * separator.  Leading and Trailing Spaces are trimmed.
-    * @param String val
-    * @return Set<String> A set of String values
-    ********************************************************************************************************/
-    @testVisible private static Set<String> convertToSet(String val) {
-        return convertToSet(val, DEFAULT_SEPARATOR_VAL, true);
-    }
-
-    /*******************************************************************************************************
-    * @description converts a String value to a set of values (all lowercase), splitting it by using a String separator
-    * value.  If not provided, it uses a ; by default.  Leading and Trailing Spaces are trimmed.
-    * @param String val
-    * @param String separatorVal a String value used to split the provided String into multiple values
-    * @param Boolean forceValuesToLowerCase if true, set values will be converted to lower case as part of process.
-    * @return Set<String> A set of String values
-    ********************************************************************************************************/
-    @testVisible private static Set<String> convertToSet(String val, String separatorVal, Boolean forceValuesToLowerCase) {
-
-        Set<String> vals = new Set<String>();
-
-        String regexForSplit = (String.isNotBlank(separatorVal) ? '\\s*' + separatorVal + '\\s*' : '\\s*' + DEFAULT_SEPARATOR_VAL + '\\s*');
-
-        if (String.isNotBlank(val)) {
-            String cvtVal = (forceValuesToLowerCase) ? val.toLowerCase() : val;
-
-            List<String> valStrs = cvtVal.trim().split(regexForSplit);
-            vals.addAll(valStrs);
-        }
-
-        return vals;
+        // These are temporary values to be used only during interim for internal development on Abacus project.
+        // This will be updated in March 2019 timeframe with revised code to retrieve from Custom Metadata instead
+        COMMITTED_STATE_SET = new Set<String> {'closed won'};
+        FINALIZED_STATE_SET = new Set<String> {'finalized'};
     }
 
 }
