@@ -442,7 +442,10 @@
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
-                this.openBatchWizard(component, event);
+                if (!component.get('v.modalOpen')) {
+                    component.set('v.modalOpen', true);
+                    this.openBatchWizard(component, event);
+                }
             } else if (state === 'ERROR') {
                 this.handleApexErrors(component, response.getError());
             }
@@ -481,9 +484,13 @@
                         header: modalHeader,
                         footer: modalFooter,
                         showCloseButton: true,
-                        cssClass: 'slds-modal_large'
+                        cssClass: 'slds-modal_large',
+                        closeCallback: function() {
+                            component.set('v.modalOpen', false);
+                        }
                     })
                 } else {
+                    component.set('v.modalOpen', false);
                     this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
                 }
             }
