@@ -70,15 +70,15 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
 
     private List<Contact> contacts;
-    private List<Contact> oldContacts;
+    private Map<Id, Contact> oldContactById;
     private TDTM_Runnable.Action triggerAction;
     private DmlWrapper dmlWrapper;
 
     /*******************************************************************************************************************
      * @description Trigger Handler on Contact that handles account management.  Depending on the Account
      * Model, creates a Household Account, One-to-One Account, or uses the Individual Bucket Account.
-     * @param listNew the list of Contacts from trigger new.
-     * @param listOld the list of Contacts from trigger old.
+     * @param newSObjects the list of Contacts from trigger new.
+     * @param oldSObjects the list of Contacts from trigger old.
      * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
      * @param objResult the describe for Contacts
      * @return dmlWrapper.
@@ -87,9 +87,9 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         this.contacts = newSObjects;
-        this.oldContacts = oldSObjects;
+        this.oldContactById = oldSObjects == null ? null : new Map<Id, Contact>((List<Contact>) oldSObjects);
         this.triggerAction = triggerAction;
-        dmlWrapper = new DmlWrapper();
+        this.dmlWrapper = new DmlWrapper();
         contactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
 
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
@@ -99,7 +99,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             handleAfter();
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
-            processAccountsAfterDelete(oldContacts);
+            processAccountsAfterDelete(oldSObjects);
         }
 
         return dmlWrapper;
@@ -116,7 +116,11 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             accountIds.add(contactRecord.AccountId);
         }
 
-        accountById = new Map<Id, Account>([SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c FROM Account WHERE Id IN :accountIds]);
+        accountById = new Map<Id, Account>([
+            SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
+            FROM Account
+            WHERE Id IN :accountIds
+        ]);
 
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
             processAccountsBeforeInsert(accountById);
@@ -133,8 +137,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
      * household updates.
      */
     private void handleAfter() {
-        String soql = buildContactSoql();
-        contacts = database.query(soql);
+        contacts = database.query(buildContactSoql());
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
             processAccountsAfterInsert();
@@ -175,7 +178,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
         }
 
-        insertContactAccount(contactsWithoutAccounts);
+        createAccounts(contactsWithoutAccounts);
         attachToBucketAccount(contactsWithoutBucketAccount);
     }
 
@@ -187,7 +190,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
         List<Contact> contactsWithoutBucketAccount = new List<Contact>();
 
-        Integer index = 0;
         for (Contact contactRecord : contacts) {
             // always clear this deprecated field to avoid confusing users.
             contactRecord.npe01__SystemAccountProcessor__c = null;
@@ -196,7 +198,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 contactsWithoutAccounts.add(contactRecord);
 
             } else if (needsOneToOneAccount(contactRecord, accountById.get(contactRecord.AccountId))) {
-                Contact oldContact = oldContacts[index];
+                Contact oldContact = oldContactById.get(contactRecord.Id);
 
                 if (shouldClearExistingOneToOneAccount(contactRecord, oldContact, accountById.get(contactRecord.AccountId))) {
                     contactRecord.AccountId = null;
@@ -214,11 +216,9 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             if (contactRecord.AccountId != null && contactRecord.npe01__Private__c == true) {
                 contactRecord.AccountId = null;
             }
-
-            index++;
         }
 
-        insertContactAccount(contactsWithoutAccounts);
+        createAccounts(contactsWithoutAccounts);
         attachToBucketAccount(contactsWithoutBucketAccount);
     }
 
@@ -265,9 +265,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         Map<Id, Id> newHouseholdIdByContactId = new Map<Id, Id>();
         Map<Id, Contact> contactWithNewOwnerById = new Map<Id, Contact>();
 
-        Integer index = 0;
         for (Contact contactRecord : contacts) {
-            Contact oldContact = oldContacts[index];
+            Contact oldContact = oldContactById.get(contactRecord.Id);
 
             if (needsOne2OneAccountUpdate(contactRecord, oldContact)) {
                 oneToOneContactsToUpdate.add(contactRecord);
@@ -284,8 +283,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             } else if (needsHHAccountRename(contactRecord, oldContact)) {
                 householdIdsToRename.add(contactRecord.AccountId);
             }
-
-            index++;
         }
 
         updateOneToOneAccounts(oneToOneContactsToUpdate);
@@ -378,9 +375,9 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         // now go thru each account and update their primary contact if the current one isn't valid
         List<Account> accounts = new List<Account>();
         for (Account accountRecord : [SELECT Id, npe01__One2OneContact__c FROM Account WHERE Id IN :accountIds]) {
-            Set<Id> setContactId = contactIdsByAccountId.get(accountRecord.Id);
-            if (setContactId != null && !setContactId.contains(accountRecord.npe01__One2OneContact__c)) {
-                accountRecord.npe01__One2OneContact__c = firstIdFromSet(setContactId);
+            Set<Id> contactIds = contactIdsByAccountId.get(accountRecord.Id);
+            if (contactIds != null && !contactIds.contains(accountRecord.npe01__One2OneContact__c)) {
+                accountRecord.npe01__One2OneContact__c = extractFirstId(contactIds);
                 accounts.add(accountRecord);
             }
         }
@@ -424,7 +421,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     * @param ids a set of Id's
     * @return Id.  null if the set is empty.
     */
-    private Id firstIdFromSet(Set<Id> ids) {
+    private Id extractFirstId(Set<Id> ids) {
         for (Id recordId : ids) {
             return recordId;
         }
@@ -484,7 +481,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     * @param contactsWithoutAccounts the list of Contacts that need updating.
     * @return void
     */
-    private void insertContactAccount(List<Contact> contactsWithoutAccounts){
+    private void createAccounts(List<Contact> contactsWithoutAccounts){
         if (contactsWithoutAccounts.isEmpty()) {
             return;
         }
@@ -558,7 +555,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
             // identify the specific records that had the problem, and don't fail the whole batch
             List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
-            for (integer index = 0; index < insertResults.size(); index++) {
+            for (Integer index = 0; index < insertResults.size(); index++) {
                 Database.SaveResult insertResult = insertResults[index];
                 if (!insertResult.isSuccess()) {
                     for (Database.Error err : insertResult.getErrors()) {
@@ -588,7 +585,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             return;
         }
 
-        Map<Id,Contact> contactByAccountId = new Map<Id,Contact>();
+        Map<Id, Contact> contactByAccountId = new Map<Id, Contact>();
         for (Contact contactRecord : oneToOneContactsToUpdate) {
             contactByAccountId.put(contactRecord.AccountId, contactRecord);
         }
@@ -596,7 +593,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         // DJH: note that we explicitly do NOT get the account name.  This is to avoid the changes to the account from
         // this routine which get added to dmlWrapper, don't end up overwriting the name changes that are done syncronously
         // for HH accounts (which don't use dmlWrapper).
-        List<Account> listAccount = new List<Account>();
+        List<Account> accounts = new List<Account>();
 
         for (Account accountRecord : [
                 SELECT npe01__SYSTEM_AccountType__c, ShippingStreet, ShippingState, ShippingPostalCode, ShippingCountry,
@@ -605,23 +602,19 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 WHERE Id IN :contactByAccountId.keyset()
         ]) {
             Contact contactRecord = contactByAccountId.get(accountRecord.Id);
-            //if any address data has changed on the contact, push it all to the Account
-            {
-                // Update Account fields
-                ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
-                ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
+            ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
+            ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
 
-                if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
-                    accountRecord.Name = strNameOne2OneAccountForContact(contactRecord);
-                }
-                // HH Account naming updates handled seperately to deal with asyncronous naming
-
-                listAccount.add(accountRecord);
+            if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+                accountRecord.Name = strNameOne2OneAccountForContact(contactRecord);
             }
+
+            // HH Account naming updates handled seperately to deal with asyncronous naming
+            accounts.add(accountRecord);
         }
 
-        if (listAccount.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll(listAccount);
+        if (accounts.size() > 0) {
+            dmlWrapper.objectsToUpdate.addAll(accounts);
         }
     }
 
