@@ -142,30 +142,16 @@
 
         // store everyField with its metadata
         component.set('v.everyField', everyField);
+
         // sort into groups by object
         // returns map of sobject name => list of fields
-        var activeFieldsBySObject = this.getActivesBySObject(component);
+        let activeFieldsBySObject = this.getActivesBySObject(component);
         // returns map of sobject name => list of fields
-        var allFieldsBySObject = this.groupFieldsBySObject(everyField);
+        var allFieldsBySObject = this.groupFieldsBySObject(component, everyField);
 
-        const opportunitySObjectName = component.get('v.wizardMetadata.labels.opportunitySObjectName');
-        const paymentSObjectName = component.get('v.wizardMetadata.labels.paymentSObjectName');
-
-        var sObjectKeys = Object.keys(allFieldsBySObject);
-
-        // Make sure Opportunity is always the first sObject to be shown and Payment the second.
-        var orderedKeys = [opportunitySObjectName, paymentSObjectName];
-
-        // If there happens to be other objects appart from Opportunity and Payment
-        // Add them to the list behind them.
-        for(var i=0; i<sObjectKeys.length; i++) {
-            var key = sObjectKeys[i];
-            if(key !== opportunitySObjectName && key !== paymentSObjectName) {
-               orderedKeys.push(key);
-            }
-        }
-                
-        orderedKeys.forEach(function(sObjectName) {
+        let sObjectNames = Object.keys(allFieldsBySObject);
+     
+        sObjectNames.forEach(function(sObjectName) {
             let currentFieldGroup = {
                 sObjectName: sObjectName,
                 options: [],
@@ -288,7 +274,7 @@
      */
     getActivesBySObject: function(component) {
         let activeFields = this.getActives(component);
-        var activesBySObject = this.groupFieldsBySObject(activeFields);
+        var activesBySObject = this.groupFieldsBySObject(component, activeFields);
         return activesBySObject;
     },
 
@@ -316,8 +302,15 @@
      * @param fields: list of fields to be grouped.
      * @return Map of SObject name to List of related fields.
      */
-    groupFieldsBySObject: function(fields) {
-        var result = {};
+    groupFieldsBySObject: function(component, fields) {
+
+        const opportunitySObjectName = component.get('v.wizardMetadata.labels.opportunitySObjectName');
+        const paymentSObjectName = component.get('v.wizardMetadata.labels.paymentSObjectName');
+
+        let result = {};
+        result[opportunitySObjectName] = [];
+        result[paymentSObjectName] = [];
+
         fields.forEach(function(currentField) {
             if ((currentField.sObjectName in result) === false) {
                 result[currentField.sObjectName] = [];
@@ -409,7 +402,7 @@
      */
     updateToActive: function(component) {
         var fieldCountPreviousObjects = 0;
-        var allFieldsBySObject = this.groupFieldsBySObject(component.get('v.everyField'));
+        var allFieldsBySObject = this.groupFieldsBySObject(component, component.get('v.everyField'));
         var everyFieldUpdated = [];
         Object.keys(allFieldsBySObject).forEach(function(currentSObject) {
             var batchFieldGroups = component.get('v.availableFieldsBySObject').fieldGroups;
@@ -437,9 +430,11 @@
             fieldGroups: []
         };
         let activeFieldsBySObject = this.getActivesBySObject(component);
-        Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
 
-            var currentFieldGroup = {
+        let sObjectNames = Object.keys(activeFieldsBySObject);
+        sObjectNames.forEach(function(sObjectName) {
+
+            let currentFieldGroup = {
                 sObjectName: sObjectName,
                 fields: []
             };
