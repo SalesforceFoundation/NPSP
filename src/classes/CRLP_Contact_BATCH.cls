@@ -56,11 +56,10 @@ public class CRLP_Contact_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup is for a specific set of Contact Id's
-     * @param recordIds Specific set of parent record id's to roll up to
      * @param lastIdProcessedForChunking The last Id retrieved in the previous batch. Used in chunk mode.
      */
-    public CRLP_Contact_BATCH(List<Id> recordIds, Id lastIdProcessedForChunking) {
-        super(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, recordIds, lastIdProcessedForChunking);
+    public CRLP_Contact_BATCH(Id lastIdProcessedForChunking) {
+        super(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, lastIdProcessedForChunking);
     }
 
     /**

@@ -121,6 +121,14 @@ public abstract class CRLP_Batch_Base {
         this.recordIds = recordIds;
     }
 
+    /*******************************************************************************************************
+     * @description Constructs the class - Rollup is for a specific set of Summary Object Id's
+     */
+    public CRLP_Batch_Base(CRLP_RollupProcessingOptions.RollupType jobType) {
+        this();
+        this.jobType = jobType;
+    }
+
     /********************************************************************************************************
      * @description Create an instance of the CRLP_RollupProcessingOptions.ProcessingOptions class to use with the
      * CRLP_RollupProcessor_SVC.startRollupProcess() calls.

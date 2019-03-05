@@ -86,8 +86,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      * @param jobType Defines the type of rollup job
      * @param recordIds Specific set of parent record id's to roll up to
      */
-    public CRLP_Batch_Base_NonSkew(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds, Id lastIdProcessedForChunking) {
-        super(jobType, recordIds);
+    public CRLP_Batch_Base_NonSkew(CRLP_RollupProcessingOptions.RollupType jobType, Id lastIdProcessedForChunking) {
+        super(jobType);
         this.chunkModeStartingId = lastIdProcessedForChunking;
     }
 
@@ -316,7 +316,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
     /**
      * @description Batch finish method. Logs the result if debugging is enabled. If chunking mode is enabled for
-     * LDV orgs, chain the batch
+     * LDV orgs, chains the batch
      * @param bc
      */
     public void finish(Database.BatchableContext bc) {
@@ -333,12 +333,27 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             insert logEntry;
         }
 
-        // If chunking mode is required, restart the batch job
-        Integer chunkingSize = getBatchChunkSizeLimit();
-        if (this.recordIds == null && chunkingSize != null) {
-            // If this job had more than one child batch, then kick off the job again with the last Id processed
-            if (this.batchIteration > 1) {
-                CRLP_RollupBatch_SVC.executeBatchRollupJob(this.jobType, this.jobMode, null, this.chunkModeStartingId);
+        // If chunk mode is enabled and we (probably) have more records to process,
+        // submit another batchable job
+        if (String.isNotBlank(chunkModeStartingId) && batchIteration > 1) {
+            submitBatchableJobForNextChunk();
+        }
+    }
+
+    /**
+     * @description Submits another Rollup Job of the same type, passing in the starting Id as a
+     * param to the batch job constructor.  Used to support chunk mode.
+     */
+    private void submitBatchableJobForNextChunk(){
+        switch on (jobType) {
+            when AccountHardCredit {
+                Database.executeBatch(new CRLP_Account_BATCH(chunkModeStartingId));
+            }
+            when ContactHardCredit {
+                Database.executeBatch(new CRLP_Contact_BATCH(chunkModeStartingId));
+            }
+            when ContactSoftCredit {
+                Database.executeBatch(new CRLP_Contact_SoftCredit_BATCH(chunkModeStartingId));
             }
         }
     }
