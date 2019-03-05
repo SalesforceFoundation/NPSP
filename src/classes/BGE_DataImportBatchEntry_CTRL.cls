@@ -464,7 +464,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return List<DataImport__c>
     */
     public static List<DataImport__c> getAllDataImportRecordsByBatchId(Id batchId) {
-        return Database.query(getBaseDataImportQuery(batchId));
+        String query = getDataImportQuery(batchId, null, null, null);
+        return Database.query(query);
     }
 
     /*******************************************************************************************************
@@ -473,16 +474,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return List<DataImport__c>
     */
     private static List<DataImport__c> getNumOfDataImportRecordsByBatchId(Id batchId, Integer numberOfRowsToReturn) {
-        return Database.query(getBaseDataImportQuery(batchId) + ' LIMIT ' + numberOfRowsToReturn);
-    }
-
-    public static String getBaseDataImportQuery(Id batchId) {
-        List<String> dataImportFields = getDataImportFields(batchId);
-
-        return 'SELECT ' + String.join(dataImportFields,', ') +
-                ' FROM DataImport__c' +
-                ' WHERE NPSP_Data_Import_Batch__c = :batchId' +
-                ' ORDER BY CreatedDate DESC';
+        String query = getDataImportQuery(batchId, null, numberOfRowsToReturn, null);
+        return Database.query(query);
     }
 
     /*******************************************************************************************************
@@ -492,14 +485,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     */
     private static List<DataImport__c> getDataImportRecordsByBatchId(Id batchId, Integer offset) {
 
-        List<String> dataImportFields = getDataImportFields(batchId);
-
-        String query = 'SELECT ' + String.join(dataImportFields,', ') +
-            ' FROM DataImport__c' +
-            ' WHERE NPSP_Data_Import_Batch__c = :batchId' +
-            ' ORDER BY CreatedDate DESC' +
-            ' LIMIT ' + loadSize +
-            ' OFFSET ' + offset;
+        String query = getDataImportQuery(batchId, null, null, offset);
         return Database.query(query);
     }
 
@@ -509,13 +495,37 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return DataImport__c
     */
     private static List<DataImport__c> getDataImportRecordsByIds(Id batchId, List<Id> dataImportIds) {
+        String query = getDataImportQuery(batchId, dataImportIds, null, null);
+        return Database.query(query);
+    }
+
+    /*******************************************************************************************************
+    * @description
+    * @param batchId a Data Import Batch Id
+    * @return List<DataImport__c>
+    */
+    public static String getDataImportQuery(Id batchId, List<Id> dataImportIds, Integer numRows, Integer offset) {
         List<String> dataImportFields = getDataImportFields(batchId);
 
         String query = 'SELECT ' + String.join(dataImportFields,', ') +
-            ' FROM DataImport__c' +
-            ' WHERE Id IN :dataImportIds';
+                ' FROM DataImport__c' +
+                ' WHERE NPSP_Data_Import_Batch__c = :batchId';
 
-        return Database.query(query);
+        if (dataImportIds != null && dataImportIds.size() > 0) {
+            query += ' AND Id IN :dataImportIds';
+        }
+
+        query += ' ORDER BY CreatedDate DESC';
+
+        if (numRows != null) {
+            query += ' LIMIT ' + numRows;
+        }
+
+        if (offset != null) {
+            query += ' OFFSET ' + offset;
+        }
+
+        return query;
     }
 
     /*******************************************************************************************************
