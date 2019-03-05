@@ -642,19 +642,16 @@
      * @description: Dry run all data import records in current table
      */
     massDryRun: function (component) {
+        this.showToast(component, 'Processing', 'Please don\'t navigate out of page.', 'sticky');
         let dataImportIds = component.get('v.data').map(function(dataImport) { return dataImport.Id });
 
-        this.showSpinner(component);
-        this.showFormSpinner(component);
-        let action = component.get('c.runDryRun');
+        let action = component.get('c.runMassDryRun');
         action.setParams({
-            dataImportIds: dataImportIds,
             batchId: component.get('v.recordId')
         });
         action.setCallback(this, function (response) {
             const state = response.getState();
             if (state === 'SUCCESS') {
-                this.afterDryRun(component, JSON.parse(response.getReturnValue()), false);
                 this.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeDryRunComplete'), 'success');
             } else {
                 this.handleApexErrors(component, response.getError());

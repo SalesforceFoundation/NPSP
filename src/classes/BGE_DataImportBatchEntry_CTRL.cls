@@ -208,6 +208,34 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         }
     }
 
+    /*******************************************************************************************************
+    * @description runs BDI Dry Run against all Data Import records based on the processing settings of a given batch
+    * @param batchId: ID of the NPSP_Data_Import_Batch__c
+    * @return DataImportModel with updated data import record row and updated totals for the batch
+    */
+    @AuraEnabled
+    public static String runMassDryRun(Id batchId) {
+        try {
+            Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
+            List<DataImport__c> dataImportListToRun = prepareDataImportsForDryRun(getAllDataImportRecordsByBatchId(batchId));
+            BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
+
+            DataImportModel dataImportModel = getUpdatedTotals(batchId);
+
+            List<DataImportRow> rows = new List<DataImportRow>();
+            List<DataImport__c> toBeProcessedDataImports = getAllDataImportRecordsByBatchId(batchId);
+            for (DataImport__c di : toBeProcessedDataImports) {
+                DataImportRow processedDataImportRow = new DataImportRow(di);
+                rows.add(processedDataImportRow);
+            }
+            dataImportModel.dataImportRows = rows;
+
+            return JSON.serialize(dataImportModel);
+        } catch (Exception ex){
+            throw new AuraHandledException('ERROR: ' + ex.getMessage());
+        }
+    }
+
 
     /*******************************************************************************************************
     * @description updates data import record, dry runs the record, and returns updated totals with the new row.
@@ -428,6 +456,22 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         update dataImportRecords;
 
         return dataImportRecords;
+    }
+
+    /*******************************************************************************************************
+    * @description returns a list of all DataImport__c records from a batch Id
+    * @param batchId a Data Import Batch Id
+    * @return List<DataImport__c>
+    */
+    private static List<DataImport__c> getAllDataImportRecordsByBatchId(Id batchId) {
+
+        List<String> dataImportFields = getDataImportFields(batchId);
+
+        String query = 'SELECT ' + String.join(dataImportFields,', ') +
+            ' FROM DataImport__c' +
+            ' WHERE NPSP_Data_Import_Batch__c = :batchId' +
+            ' ORDER BY CreatedDate DESC';
+        return Database.query(query);
     }
 
     /*******************************************************************************************************
