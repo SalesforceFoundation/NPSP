@@ -255,7 +255,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         List<Contact> oneToOneContactsToUpdate = new List<Contact>();
         Map<Id, Id> oldHouseholdIdByContactId = new Map<Id, Id>();
         Map<Id, Id> newHouseholdIdByContactId = new Map<Id, Id>();
-        Map<Id, Contact> contactWithNewOwnerById = new Map<Id, Contact>();
+        Map<Id, Contact> newOwnerContactById = new Map<Id, Contact>();
 
         for (Contact contactRecord : contacts) {
             Contact oldContact = oldContactById.get(contactRecord.Id);
@@ -265,7 +265,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
 
             if (contactRecord.OwnerId != oldContact.OwnerId) {
-                contactWithNewOwnerById.put(contactRecord.Id, contactRecord);
+                newOwnerContactById.put(contactRecord.Id, contactRecord);
             }
 
             if (contactRecord.AccountId != oldContact.AccountId) {
@@ -279,9 +279,9 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
         updateOneToOneAccounts(oneToOneContactsToUpdate);
         moveOppsToContactAccount(newHouseholdIdByContactId, oldHouseholdIdByContactId);
-        updateHHAccount(householdIdsToUpdate);
+        updateHouseholds(householdIdsToUpdate);
         renameHHAccounts(householdIdsToRename);
-        updateOwners(contactWithNewOwnerById);
+        updateOwners(newOwnerContactById);
     }
 
     /*******************************************************************************************************
@@ -294,17 +294,18 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         List<Id> householdIdsToUpdate = new List<Id>();
         List<Account> accounts = new List<Account>();
 
-        for (Contact thisContact : deletedContacts) {
-            accountIds.add(thisContact.accountId);
+        for (Contact contactRecord : deletedContacts) {
+            accountIds.add(contactRecord.accountId);
         }
 
         for (Account accountRecord : [
             SELECT Id, Type, npe01__SYSTEM_AccountType__c,
-                (SELECT Id FROM Contacts LIMIT 1)
+                (SELECT Id FROM Contacts LIMIT 1),
+                (SELECT Id FROM Opportunities LIMIT 1)
             FROM Account
             WHERE Id IN :accountIds
         ]) {
-            Boolean needsAccountUpdate = !accountRecord.Contacts.isEmpty()
+            Boolean needsAccountUpdate = (!accountRecord.Contacts.isEmpty() || !accountRecord.Opportunities.isEmpty())
                 && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
 
             if (needsAccountUpdate) {
@@ -312,7 +313,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
         }
 
-        updateHHAccount(householdIdsToUpdate);
+        updateHouseholds(householdIdsToUpdate);
     }
 
     /*******************************************************************************************************
@@ -339,7 +340,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     * @param accountIds the list of Account (Id's) that need updating.
     * @return void
     */
-    private void updateHHAccount(List<Id> accountIds) {
+    private void updateHouseholds(List<Id> accountIds) {
         if (accountIds.isEmpty()) {
             return;
         }
@@ -624,18 +625,18 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description contact's owner has changed.  consider updating related account owner.
-    * @param contactWithNewOwnerById a map of Contact Id to Contact, for the contacts to consider
+    * @param newOwnerContactById a map of Contact Id to Contact, for the contacts to consider
     * @return void
     */
-    private void updateOwners(Map<Id, Contact> contactWithNewOwnerById) {
-        if (contactWithNewOwnerById.isEmpty()) {
+    private void updateOwners(Map<Id, Contact> newOwnerContactById) {
+        if (newOwnerContactById.isEmpty()) {
             return;
         }
 
         Set<Id> accountIds = new Set<Id>();
         Map<Id, Account> accountsToUpdate = new Map<Id, Account>();
 
-        for (Contact contactRecord : contactWithNewOwnerById.values()) {
+        for (Contact contactRecord : newOwnerContactById.values()) {
             accountIds.add(contactRecord.AccountId);
         }
 
@@ -648,7 +649,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
                 // if there is only 1 contact associated with this account
                 if (accountRecord.Contacts.size() == 1 && accountRecord.npe01__One2OneContact__c != null) {
-                    Contact contactRecord = contactWithNewOwnerById.get(accountRecord.npe01__One2OneContact__c);
+                    Contact contactRecord = newOwnerContactById.get(accountRecord.npe01__One2OneContact__c);
                     Id ownerId = (contactRecord != null ? contactRecord.OwnerId : null);
                     if (accountRecord.OwnerId != ownerId) {
                         accountRecord.OwnerId = ownerId;
