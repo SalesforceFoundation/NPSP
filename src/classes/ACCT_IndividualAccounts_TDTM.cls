@@ -240,13 +240,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
         }
 
-        if (primaryContactByAccountId.size() > 0) {
-            updatePrimaryContactOnAccount(primaryContactByAccountId);
-        }
-
-        if (householdIdsToRename.size() > 0) {
-            renameHHAccounts(householdIdsToRename);
-        }
+        updatePrimaryContactOnAccount(primaryContactByAccountId);
+        renameHHAccounts(householdIdsToRename);
     }
 
     /**
@@ -307,11 +302,14 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 SELECT Id, Type, npe01__SYSTEM_AccountType__c,
                     (SELECT Id FROM Opportunities LIMIT 1),
                     (SELECT Id FROM Contacts LIMIT 1)
-                FROM Account 
+                FROM Account
                 WHERE Id IN :accountIds
         ]) {
-            if (accountRecord.Contacts.size() > 0
-                && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
+            if (accountRecord.Contacts.isEmpty()) {
+                continue;
+            }
+
+            if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
                 householdIdsToUpdate.add(accountRecord.Id);
             }
         }
@@ -325,14 +323,17 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     * @return void
     */
     private void updatePrimaryContactOnAccount(Map<Id, Id> primaryContactByAccountId) {
+        if (primaryContactByAccountId.isEmpty()) {
+            return;
+        }
+
         List<Account> accounts = new List<Account>();
         for (Id accountId : primaryContactByAccountId.keySet()) {
             Account accountRecord = new Account(Id = accountId, npe01__One2OneContact__c = primaryContactByAccountId.get(accountId));
             accounts.add(accountRecord);
         }
-        if (accounts.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll(accounts);
-        }
+
+        dmlWrapper.objectsToUpdate.addAll(accounts);
     }
 
     /*******************************************************************************************************
@@ -546,29 +547,31 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
         }
 
-        if (accountInserts.size() > 0) {
-            // with current TDTM design, we can't use dmlWrapper
-            // because we need to get the new AccountID's into the Contacts.
+        if (accountInserts.isEmpty()) {
+            return;
+        }
 
-            // identify the specific records that had the problem, and don't fail the whole batch
-            List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
-            for (Integer index = 0; index < insertResults.size(); index++) {
-                Database.SaveResult insertResult = insertResults[index];
-                if (!insertResult.isSuccess()) {
-                    for (Database.Error err : insertResult.getErrors()) {
-                        accountInserts[index].addError(err.getMessage());
-                        Contact contactRecord = contacts[index];
-                        contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{contactRecord.Firstname, contactRecord.Lastname, err.getMessage()}));
-                    }
+        // with current TDTM design, we can't use dmlWrapper
+        // because we need to get the new AccountID's into the Contacts.
+
+        // identify the specific records that had the problem, and don't fail the whole batch
+        List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
+        for (Integer index = 0; index < insertResults.size(); index++) {
+            Database.SaveResult insertResult = insertResults[index];
+            if (!insertResult.isSuccess()) {
+                for (Database.Error err : insertResult.getErrors()) {
+                    accountInserts[index].addError(err.getMessage());
+                    Contact contactRecord = contacts[index];
+                    contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{contactRecord.Firstname, contactRecord.Lastname, err.getMessage()}));
                 }
             }
+        }
 
-            // now update each contact's accountId
-            Integer index = 0;
-            for (Contact contactRecord : contacts) {
-                contactRecord.AccountId = accountInserts[index].Id;
-                index++;
-            }
+        // now update each contact's accountId
+        Integer index = 0;
+        for (Contact contactRecord : contacts) {
+            contactRecord.AccountId = accountInserts[index].Id;
+            index++;
         }
     }
 
@@ -610,9 +613,11 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             accounts.add(accountRecord);
         }
 
-        if (accounts.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll(accounts);
+        if (accounts.isEmpty()) {
+            return;
         }
+
+        dmlWrapper.objectsToUpdate.addAll(accounts);
     }
 
     /*******************************************************************************************************
@@ -895,9 +900,11 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
         }
 
-        if (opportunities.size() > 0) {
-            UTIL_DMLService.updateRecords(opportunities);
+        if (opportunities.isEmpty()) {
+            return;
         }
+
+        UTIL_DMLService.updateRecords(opportunities);
     }
 
     /*******************************************************************************************************
