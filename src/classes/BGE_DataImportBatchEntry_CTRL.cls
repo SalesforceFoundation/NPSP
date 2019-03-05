@@ -214,7 +214,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return DataImportModel with updated data import record row and updated totals for the batch
     */
     @AuraEnabled
-    public static String runMassDryRun(Id batchId) {
+    public static String runMassDryRun(Id batchId, Integer numberOfRowsToReturn) {
         try {
             Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
             List<DataImport__c> dataImportListToRun = prepareDataImportsForDryRun(getAllDataImportRecordsByBatchId(batchId));
@@ -223,8 +223,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             DataImportModel dataImportModel = getUpdatedTotals(batchId);
 
             List<DataImportRow> rows = new List<DataImportRow>();
-            List<DataImport__c> toBeProcessedDataImports = getAllDataImportRecordsByBatchId(batchId);
-            for (DataImport__c di : toBeProcessedDataImports) {
+            List<DataImport__c> dataImportsToReturn = getNumOfDataImportRecordsByBatchId(batchId, numberOfRowsToReturn);
+            for (DataImport__c di : dataImportsToReturn) {
                 DataImportRow processedDataImportRow = new DataImportRow(di);
                 rows.add(processedDataImportRow);
             }
@@ -463,15 +463,26 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @param batchId a Data Import Batch Id
     * @return List<DataImport__c>
     */
-    private static List<DataImport__c> getAllDataImportRecordsByBatchId(Id batchId) {
+    public static List<DataImport__c> getAllDataImportRecordsByBatchId(Id batchId) {
+        return Database.query(getBaseDataImportQuery(batchId));
+    }
 
+    /*******************************************************************************************************
+    * @description returns a list of all DataImport__c records from a batch Id
+    * @param batchId a Data Import Batch Id
+    * @return List<DataImport__c>
+    */
+    private static List<DataImport__c> getNumOfDataImportRecordsByBatchId(Id batchId, Integer numberOfRowsToReturn) {
+        return Database.query(getBaseDataImportQuery(batchId) + ' LIMIT ' + numberOfRowsToReturn);
+    }
+
+    public static String getBaseDataImportQuery(Id batchId) {
         List<String> dataImportFields = getDataImportFields(batchId);
 
-        String query = 'SELECT ' + String.join(dataImportFields,', ') +
-            ' FROM DataImport__c' +
-            ' WHERE NPSP_Data_Import_Batch__c = :batchId' +
-            ' ORDER BY CreatedDate DESC';
-        return Database.query(query);
+        return 'SELECT ' + String.join(dataImportFields,', ') +
+                ' FROM DataImport__c' +
+                ' WHERE NPSP_Data_Import_Batch__c = :batchId' +
+                ' ORDER BY CreatedDate DESC';
     }
 
     /*******************************************************************************************************

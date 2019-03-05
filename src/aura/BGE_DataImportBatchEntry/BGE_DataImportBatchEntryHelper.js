@@ -261,12 +261,14 @@
      * @param isNewRecord: flag to indicate if newly entered record
      */
     afterDryRun: function(component, model, isNewRecord) {
+        console.time('UI/Table Update');
         this.setTotals(component, model);
         if (model.dataImportRows.length > 0) {
             for (let i = 0; i < model.dataImportRows.length; i++) {
                 this.updateDataTableAfterDryRun(component, model.dataImportRows[i], isNewRecord);
             }
         }
+        console.timeEnd('UI/Table Update');
     },
 
     /**
@@ -323,6 +325,36 @@
             }
         }
         component.set('v.data', rows);
+    },
+
+    /**
+     * @description: Dry run all data import records for batch
+     */
+    massDryRun: function (component) {
+        console.log('JS Helper | massDryRun');
+        console.time('Overall Mass Dry Run');
+        this.showToast(component, 'Processing', 'Please don\'t navigate out of this page.', 'sticky');
+
+        let action = component.get('c.runMassDryRun');
+        action.setParams({
+            batchId: component.get('v.recordId')
+        });
+        action.setCallback(this, function (response) {
+            const state = response.getState();
+            if (state === 'SUCCESS') {
+                let processedModel = JSON.parse(response.getReturnValue());
+                this.afterDryRun(component, processedModel, false);
+                //location.reload();
+
+                this.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeDryRunComplete'), 'success');
+            } else {
+                this.handleApexErrors(component, response.getError());
+            }
+            this.hideSpinner(component);
+            this.hideFormSpinner(component);
+            console.timeEnd('Overall Mass Dry Run');
+        });
+        $A.enqueueAction(action);
     },
 
     /******************************** Table Error Functions *****************************/
@@ -636,29 +668,5 @@
     hideSpinner: function (component) {
         var spinner = component.find('dataTableSpinner');
         $A.util.addClass(spinner, 'slds-hide');
-    },
-
-    /**
-     * @description: Dry run all data import records in current table
-     */
-    massDryRun: function (component) {
-        this.showToast(component, 'Processing', 'Please don\'t navigate out of page.', 'sticky');
-        let dataImportIds = component.get('v.data').map(function(dataImport) { return dataImport.Id });
-
-        let action = component.get('c.runMassDryRun');
-        action.setParams({
-            batchId: component.get('v.recordId')
-        });
-        action.setCallback(this, function (response) {
-            const state = response.getState();
-            if (state === 'SUCCESS') {
-                this.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeDryRunComplete'), 'success');
-            } else {
-                this.handleApexErrors(component, response.getError());
-            }
-            this.hideSpinner(component);
-            this.hideFormSpinner(component);
-        });
-        $A.enqueueAction(action);
     }
 })
