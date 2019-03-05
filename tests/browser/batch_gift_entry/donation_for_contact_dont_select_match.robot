@@ -33,7 +33,7 @@ Dont select match for contact new donation with grid changes
     Page Should Contain Link    Review Donations
     Fill BGE Form
     ...                       Donation Amount=100
-    Select BGE Date Picker    Donation Date
+    Click Element With Locator    bge.field-input    Donation Date
     Click BGE Button    Today
     Click BGE Button       Save
     Reload Page

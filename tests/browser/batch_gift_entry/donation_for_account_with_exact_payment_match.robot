@@ -42,7 +42,7 @@ Enter a donation for an account with exact payment match
     Click Button    title:Close this window
     Fill BGE Form
     ...                       Donation Amount=100
-    Select BGE Date Picker    Donation Date
+    Click Element With Locator    bge.field-input    Donation Date
     Click BGE Button    Today
     Click BGE Button       Save
     Reload Page

@@ -39,7 +39,7 @@ Select a payment for a contact make grid changes and process it
     Click BGE Button    Update this Payment
     Fill BGE Form
     ...                       Donation Amount=10
-    Select BGE Date Picker    Donation Date
+    Click Element With Locator    bge.field-input    Donation Date
     Click BGE Button    Today
     Click BGE Button       Save
     Reload Page

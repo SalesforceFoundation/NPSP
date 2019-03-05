@@ -34,7 +34,7 @@ Select an opportunity for an account make grid changes and process it
     Click BGE Button    Update this Opportunity
     Fill BGE Form
     ...                       Donation Amount=20
-    Select BGE Date Picker    Donation Date
+    Click Element With Locator    bge.field-input    Donation Date
     Click BGE Button    Today
     Click BGE Button       Save
     Reload Page

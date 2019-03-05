@@ -321,24 +321,7 @@ class NPSP(object):
             else:
                 locator= npsp_lex_locators['bge']['field-input'].format(label,value)
                 self.salesforce._populate_field(locator, value)
-
-    
-    def select_bge_date_picker(self,title): 
-        locator= npsp_lex_locators['bge']['field-input'].format(title)
-        self.selenium.set_focus_to_element(locator)
-        self.selenium.get_webelement(locator).click()     
-    
-    def pick_bge_date(self, value):
-        """To pick a date from the date picker"""
-        locator = npsp_lex_locators['bge']['date'].format(value)
-        self.selenium.set_focus_to_element(locator)
-        self.selenium.get_webelement(locator).click() 
-       
-    def change_bge_month(self, value):    
-        """To change month in the date picker"""
-        locator = npsp_lex_locators['bge']['month'].format(value)
-        self.selenium.set_focus_to_element(locator)
-        self.selenium.get_webelement(locator).click()     
+     
          
     def Verify_details_address(self,field,npsp_street, npsp_city, npsp_country):   
         """Validates if the details page address field has specified value"""   
@@ -704,7 +687,7 @@ class NPSP(object):
         self.selenium.select_from_list_by_label(loc,value) 
         
     def select_value_from_bge_dd(self,list_name,value):
-        if list_name == 'Method': 
+        if list_name == 'Payment Method': 
             locator = npsp_lex_locators['bge']['dd'].format(list_name)
             loc = self.selenium.get_webelement(locator)
             self.selenium.set_focus_to_element(locator)       
@@ -721,15 +704,7 @@ class NPSP(object):
         self.selenium.set_focus_to_element(locator)       
         self.selenium.select_from_list_by_label(loc,*args) 
         
-    def select_duellist_values(self,obj,list_name, *args):
-        if obj == 'Donation Matching Rule':
-            for value in args:
-                locator = npsp_lex_locators['bge']['field-duellist'].format(obj,list_name,value)
-                self.selenium.get_webelement(locator).click()
-        else:
-            for value in args:
-                locator = npsp_lex_locators['bge']['duellist'].format(obj,list_name,value)
-                self.selenium.get_webelement(locator).click()
+
 
         
         
@@ -763,14 +738,7 @@ class NPSP(object):
         locator=npsp_lex_locators['npsp_settings']['button'].format(page,title)
         self.selenium.get_webelement(locator).click()   
         
-    def click_duellist_button (self,object,title):  
-        """clicks on the list selection buttons """  
-        if object == 'Donation Matching Rule':    
-            locator=npsp_lex_locators['bge']['field-select-button'].format(object,title)
-            self.selenium.get_webelement(locator).click()   
-        else:
-            locator=npsp_lex_locators['bge']['select-button'].format(object,title)
-            self.selenium.get_webelement(locator).click()  
+ 
     
     def verify_payment_details(self):
         locator = "//tbody/tr/td[2]/span/span"
@@ -829,16 +797,7 @@ class NPSP(object):
         actual_value=self.selenium.get_webelement(locator).text
         assert value == actual_value, "Expected value to be {} but found {}".format(
             value, actual_value
-        )  
-#     def get_npsp_record_id(self):
-#         """ Parses the current url to get the object id of the current record.
-#             Expects url format like: [a-zA-Z0-9]{15,18}
-#         """
-#         url = self.selenium.get_location()
-#         for part in url.split("/"):
-#             if re.match(r"^[a-zA-Z0-9]{15,18}$", part):
-#                 return part
-#         raise AssertionError("Could not parse record id from url: {}".format(url))            
+        )             
     
     def page_scroll_to_locator(self, path, *args, **kwargs):
         locator = self.get_npsp_locator(path, *args, **kwargs)
@@ -902,5 +861,7 @@ class NPSP(object):
             label=ns + key
             self.builtin.should_be_equal_as_strings(bge_batch[label], value)
             
-             
+    def click_element_with_locator(self, path, *args, **kwargs):
+        locator=self.get_npsp_locator(path, *args, **kwargs)  
+        self.selenium.click_element(locator)      
             
