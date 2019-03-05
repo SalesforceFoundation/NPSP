@@ -36,9 +36,13 @@
 */
 public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
-    protected CRLP_Batch_Base_NonSkew() { }
-
+    /*******************************************************************************************************
+    * @description When Chunking mode is used for an LDV org, this is the last Id retrieved
+    * in the previous batch. When the job is chained, it'll query records with Ids greater than this Id.
+    */
     protected Id chunkModeStartingId;
+
+    protected CRLP_Batch_Base_NonSkew() { }
 
     // These 2 fields are used to check for Contacts or Accounts (both objects have the same fields) that may have
     // non-zero values in these fields even though they have no attached opportunities. In that case, the parents

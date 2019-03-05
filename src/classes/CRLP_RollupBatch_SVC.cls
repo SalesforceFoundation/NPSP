@@ -222,23 +222,23 @@ public class CRLP_RollupBatch_SVC {
                 switch on (jobType) {
 
                     when AccountHardCredit {
-                        Database.executeBatch(new CRLP_Account_BATCH(recordIds, lastIdProcessed), batchSize);
+                        Database.executeBatch(new CRLP_Account_BATCH(recordIds), batchSize);
                     }
 
                     when AccountSoftCredit {
-                        Database.executeBatch(new CRLP_Account_AccSoftCredit_BATCH(recordIds, lastIdProcessed), batchSize);
+                        Database.executeBatch(new CRLP_Account_AccSoftCredit_BATCH(recordIds), batchSize);
                     }
 
                     when ContactHardCredit {
-                        Database.executeBatch(new CRLP_Contact_BATCH(recordIds, lastIdProcessed), batchSize);
+                        Database.executeBatch(new CRLP_Contact_BATCH(recordIds), batchSize);
                     }
 
                     when AccountContactSoftCredit {
-                        Database.executeBatch(new CRLP_Account_SoftCredit_BATCH(recordIds, lastIdProcessed), batchSize);
+                        Database.executeBatch(new CRLP_Account_SoftCredit_BATCH(recordIds), batchSize);
                     }
 
                     when ContactSoftCredit {
-                        Database.executeBatch(new CRLP_Contact_SoftCredit_BATCH(recordIds, lastIdProcessed), batchSize);
+                        Database.executeBatch(new CRLP_Contact_SoftCredit_BATCH(recordIds), batchSize);
                     }
 
                     when GAU {
