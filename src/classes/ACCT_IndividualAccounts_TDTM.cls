@@ -299,17 +299,15 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
 
         for (Account accountRecord : [
-                SELECT Id, Type, npe01__SYSTEM_AccountType__c,
-                    (SELECT Id FROM Opportunities LIMIT 1),
-                    (SELECT Id FROM Contacts LIMIT 1)
-                FROM Account
-                WHERE Id IN :accountIds
+            SELECT Id, Type, npe01__SYSTEM_AccountType__c,
+                (SELECT Id FROM Contacts LIMIT 1)
+            FROM Account
+            WHERE Id IN :accountIds
         ]) {
-            if (accountRecord.Contacts.isEmpty()) {
-                continue;
-            }
+            Boolean needsAccountUpdate = !accountRecord.Contacts.isEmpty()
+                && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
 
-            if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
+            if (needsAccountUpdate) {
                 householdIdsToUpdate.add(accountRecord.Id);
             }
         }
@@ -361,7 +359,11 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         // for each account, we need a set of their contacts.
         Map<Id, Set<Id>> contactIdsByAccountId = new Map<Id, Set<Id>>();
 
-        for (Contact contactRecord : [SELECT Id, AccountId, Account.npe01__One2OneContact__c FROM Contact WHERE AccountId IN :accountIds]) {
+        for (Contact contactRecord : [
+            SELECT Id, AccountId, Account.npe01__One2OneContact__c
+            FROM Contact
+            WHERE AccountId IN :accountIds
+        ]) {
             Set<Id> contactIds = contactIdsByAccountId.get(contactRecord.AccountId);
             if (contactIds == null) {
                 contactIds = new Set<Id>();
@@ -496,9 +498,9 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
         // get all the Accounts that are connected to the existing Contacts
         for (Account accountRecord : [
-                SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
-                FROM Account
-                WHERE npe01__One2OneContact__c IN :contactIds
+            SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
+            FROM Account
+            WHERE npe01__One2OneContact__c IN :contactIds
         ]) {
             accountByPrimaryContactId.put(accountRecord.npe01__One2OneContact__c, accountRecord);
         }
@@ -596,10 +598,10 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         List<Account> accounts = new List<Account>();
 
         for (Account accountRecord : [
-                SELECT npe01__SYSTEM_AccountType__c, ShippingStreet, ShippingState, ShippingPostalCode, ShippingCountry,
-                    ShippingCity, BillingStreet, BillingState, BillingPostalCode, BillingCountry, BillingCity
-                FROM Account
-                WHERE Id IN :contactByAccountId.keyset()
+            SELECT npe01__SYSTEM_AccountType__c, ShippingStreet, ShippingState, ShippingPostalCode, ShippingCountry,
+                ShippingCity, BillingStreet, BillingState, BillingPostalCode, BillingCountry, BillingCity
+            FROM Account
+            WHERE Id IN :contactByAccountId.keyset()
         ]) {
             Contact contactRecord = contactByAccountId.get(accountRecord.Id);
             ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
@@ -638,9 +640,9 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
 
         for (Account accountRecord : [
-                SELECT Id, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, OwnerId, (SELECT Id FROM Contacts limit 2)
-                FROM Account
-                WHERE Id IN :accountIds
+            SELECT Id, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, OwnerId, (SELECT Id FROM Contacts limit 2)
+            FROM Account
+            WHERE Id IN :accountIds
         ]) {
             // only consider 1:1 and HH Accounts
             if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
@@ -889,22 +891,26 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         Set<Id> oppIds = new Set<Id>();
 
         for (OpportunityContactRole role : [
-                SELECT ContactId, OpportunityId, Opportunity.AccountId
-                FROM OpportunityContactRole
-                WHERE IsPrimary = true AND Opportunity.AccountId IN :oldHouseholdIdByContactId.values() AND ContactId IN :newHouseholdIdByContactId.keySet()
+            SELECT ContactId, OpportunityId, Opportunity.AccountId
+            FROM OpportunityContactRole
+            WHERE IsPrimary = true
+                AND Opportunity.AccountId IN :oldHouseholdIdByContactId.values()
+                AND ContactId IN :newHouseholdIdByContactId.keySet()
         ]) {
-            if (oldHouseholdIdByContactId.get(role.ContactId) == role.Opportunity.AccountId) {
-                if (oppIds.add(role.OpportunityId)) {
-                    opportunities.add(new Opportunity(Id = role.OpportunityId, AccountId = newHouseholdIdByContactId.get(role.ContactId)));
-                }
+            Boolean shouldMoveOpp = oldHouseholdIdByContactId.get(role.ContactId) == role.Opportunity.AccountId
+                && oppIds.add(role.OpportunityId);
+
+            if (shouldMoveOpp) {
+                opportunities.add(new Opportunity(
+                    Id = role.OpportunityId,
+                    AccountId = newHouseholdIdByContactId.get(role.ContactId)));
             }
         }
 
-        if (opportunities.isEmpty()) {
-            return;
+        if (!opportunities.isEmpty()) {
+            UTIL_DMLService.updateRecords(opportunities);
         }
 
-        UTIL_DMLService.updateRecords(opportunities);
     }
 
     /*******************************************************************************************************
