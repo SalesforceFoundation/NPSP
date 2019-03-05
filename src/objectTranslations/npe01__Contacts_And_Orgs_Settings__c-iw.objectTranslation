@@ -22,7 +22,7 @@
     </caseValues>
     <fields>
         <help><!-- For system use only: Namespace for cross package functionality. --></help>
-        <label><!-- Advancement Namespace --></label>
+        <label><!-- GEM Namespace --></label>
         <name>Advancement_Namespace__c</name>
     </fields>
     <fields>
