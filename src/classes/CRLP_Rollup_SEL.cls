@@ -95,8 +95,8 @@ public class CRLP_Rollup_SEL {
     }
 
     /**
-     * @description Return a map of Rollup Definitions with a key of the Summary object and a list of
-     * all rollups for each Summary object
+     * @description Return a map of Rollup Definitions with a key of the Summary object 
+     * and a list of all rollups for each Summary object
      */
     private static Map<Schema.SObjectType, List<Rollup__mdt>> rollupsBySummaryType;
     public static Map<Schema.SObjectType, List<Rollup__mdt>> getRollupsBySummaryType() {
@@ -182,12 +182,6 @@ public class CRLP_Rollup_SEL {
      * @description Queries a single Rollup Definition based on the requested Id
      * @return requested rollup__mdt
      */
-
-    /**
-     * getRollupById description
-     * @param  id id description
-     * @return    return description
-     */
     public static Rollup__mdt getRollupById(Id id) {
         return getRollupsById().get(id);
     }
@@ -215,10 +209,12 @@ public class CRLP_Rollup_SEL {
         final Map<String, Set<String>> supportedOperationsByTimeBoundOperationType;
 
         /**
-         * @description 
          * @param  sObjectLookup Metadata Relationship to an Entity Definition
          * @param  fieldLookup Metadata Relationship to an Field Definition dependent on sObjectLookup
-         * @param  excludedOperationsByTimeBoundOperationType Matrix of (CRLP_Operation.TimeBoundOperationType, CRLP_Operation.RollupType) to exclude from being supported.  This means that isFieldSupported(Rollup__mdt rollup) will return false for (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) mapping to this matrix.
+         * @param  excludedOperationsByTimeBoundOperationType Matrix of 
+         * (CRLP_Operation.TimeBoundOperationType, CRLP_Operation.RollupType) to exclude from being supported.  
+         * This means that isFieldSupported(Rollup__mdt rollup) will return false for 
+         * (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) mapping to this matrix.
          */
         @TestVisible
         private RollupField(
@@ -246,7 +242,8 @@ public class CRLP_Rollup_SEL {
         }
 
         /**
-         * @description Set of Rollup__mdt.Operation__c Picklist Values by Rollup__mdt.Time_Bound_Operation_Type__c which this RollupField supports. Private so the return value is publically immutable.
+         * @description Set of Rollup__mdt.Operation__c Picklist Values by Rollup__mdt.Time_Bound_Operation_Type__c 
+         * which this RollupField supports. Private so the return value is publically immutable.
          * @return supportedOperationsByTimeBoundOperationType
          */
         @TestVisible
@@ -273,9 +270,12 @@ public class CRLP_Rollup_SEL {
         }
 
         /**
-         * @description Returns set of Rollup__mdt.Operation__c Picklist Values this RollupField supports for timeboundOperationType.  Private so the return value is publically immutable.
+         * @description Returns set of Rollup__mdt.Operation__c Picklist Values
+         * this RollupField supports for timeboundOperationType.  
+         * Private so the return value is publically immutable.
          * @param timeBoundOperationType Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value
-         * @return Supported Operations By Time Bound Operation Type for timeBoundOperationType with null checking.  Never returns null.
+         * @return Supported Operations By Time Bound Operation Type for timeBoundOperationType with null checking.  
+         * Never returns null.
          */
         @TestVisible
         private Set<String> getSupportedOperations(String timeBoundOperationType) {
@@ -295,7 +295,8 @@ public class CRLP_Rollup_SEL {
         }
 
         /**
-         * @description Returns if this RollupField is supported for rollup's Operation__c and Time_Bound_Operation_Type__c
+         * @description Returns if this RollupField is supported for rollup's Operation__c 
+         * and Time_Bound_Operation_Type__c
          * *param rollup 
          * @return If this RollupField is supported for rollup's Operation__c and Time_Bound_Operation_Type__c
          */
@@ -324,7 +325,9 @@ public class CRLP_Rollup_SEL {
     private static RollupField dateRollupField, amountRollupField, detailRollupField;
 
     /**
-     * @description See "CRLP Operations Matrix" for matrix of included and excluded (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) values for each Rollup Field at https://salesforce.quip.com/YnKAApuvLgNj
+     * @description See "CRLP Operations Matrix" for matrix of included and excluded 
+     * (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) values 
+     * for each Rollup Field at https://salesforce.quip.com/YnKAApuvLgNj
      * @return Cached RollupField for (Date_Object__c, Date_Field__c)
      */
     public static RollupField getDateRollupField() {
@@ -355,7 +358,9 @@ public class CRLP_Rollup_SEL {
     }
 
     /**
-     * @description See "CRLP Operations Matrix" for matrix of included and excluded (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) values for each Rollup Field at https://salesforce.quip.com/YnKAApuvLgNj
+     * @description See "CRLP Operations Matrix" for matrix of included 
+     * and excluded (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) values 
+     * for each Rollup Field at https://salesforce.quip.com/YnKAApuvLgNj
      * @return Cached RollupField for (Amount_Object__c, Amount_Field__c)
      */
     public static RollupField getAmountRollupField() {
@@ -387,7 +392,9 @@ public class CRLP_Rollup_SEL {
     }
 
     /**
-     * @description See "CRLP Operations Matrix" for matrix of included and excluded (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) values for each Rollup Field at https://salesforce.quip.com/YnKAApuvLgNj
+     * @description See "CRLP Operations Matrix" for matrix of included 
+     * and excluded (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) values 
+     * for each Rollup Field at https://salesforce.quip.com/YnKAApuvLgNj
      * @return Cached RollupField for (Detail_Object__c, Detail_Field__c)
      */
     public static RollupField getDetailRollupField() {
@@ -416,7 +423,9 @@ public class CRLP_Rollup_SEL {
     }
 
     /**
-     * @description See "CRLP Operations Matrix" for matrix of included and excluded (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) values for each Rollup Field at https://salesforce.quip.com/YnKAApuvLgNj
+     * @description See "CRLP Operations Matrix" for matrix of included 
+     * and excluded (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) values 
+     * for each Rollup Field at https://salesforce.quip.com/YnKAApuvLgNj
      * @return new List<RollupField> containing getDateRollupField(), getAmountRollupField(), and getDetailRollupField()
      */
     public static List<RollupField> getRollupFields() {
