@@ -6,7 +6,7 @@
         <description>For system use only: Namespace for cross package functionality.</description>
         <externalId>false</externalId>
         <inlineHelpText>For system use only: Namespace for cross package functionality.</inlineHelpText>
-        <label>Advancement Namespace</label>
+        <label>GEM Namespace</label>
         <length>10</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
