@@ -1442,7 +1442,6 @@
         <members>bgeBatchSetFieldOptions</members>
         <members>bgeCopyBatchSetupBatchNameAppend</members>
         <members>bgeCopyBatchSetupButton</members>
-        <members>bgeDryRunButton</members>
         <members>bgeDryRunComplete</members>
         <members>bgeEditBatchFieldOptionsWarning</members>
         <members>bgeEditBatchFieldSelectionWarning</members>
@@ -1472,6 +1471,7 @@
         <members>bgeGridTotalAmount</members>
         <members>bgeGridTotalCount</members>
         <members>bgeGridWarningRequiredTotalsExpected</members>
+        <members>bgeMassDryRun</members>
         <members>bgeMatchingAlert</members>
         <members>bgeMatchingSelect</members>
         <members>bgeNewBatch</members>
