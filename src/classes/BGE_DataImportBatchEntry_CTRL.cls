@@ -485,7 +485,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     */
     private static List<DataImport__c> getDataImportRecordsByBatchId(Id batchId, Integer offset) {
 
-        String query = getDataImportQuery(batchId, null, null, offset);
+        String query = getDataImportQuery(batchId, null, loadSize, offset);
         return Database.query(query);
     }
 
