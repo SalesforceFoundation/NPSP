@@ -36,17 +36,55 @@
 @IsTest(IsParallel=true)
 private class CRLP_ApiService_TEST {
 
+    /**
+     * @description Validate the getRollupDefsForRollupType returns the expected collection of CRLP_Rollup instances
+     */
     @IsTest
-    static void validateRollupTypeConversion() {
-        mockRollupTypes();
+    static void validateGetRollupDefsForRollupTypeReturnValues() {
+        // Call the mocking utilities to build a bunch of rollup definitions and filter groups/rules fo
+        CRLP_RollupContact_TEST.mockRollupCMTValues();
+        List<Rollup__mdt> contactHardCreditDefs = CRLP_Rollup_SEL.cachedRollups;
+        CRLP_RollupAccount_TEST.mockRollupCMTValues();
+
+        // Stuff these into the RollupSelector cache
+        CRLP_Rollup_SEL.cachedRollups.addAll(contactHardCreditDefs);
+
         CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
-        for (CRLP_RollupProcessingOptions.RollupType crlpType : CRLP_RollupProcessingOptions.RollupType.values()) {
-            String crlpTypeString = crlpType.name();
-            List<CRLP_Rollup> rollups = crlpApiSvc.getRollupDefsForRollupType(crlpTypeString);
-            System.assert(!rollups.isEmpty(), 'The collection of returned rollups should not be empty for ' + crlpTypeString);
+
+        // These first three have mocked CMT's for rollup definitions
+        List<CRLP_Rollup> rollups = crlpApiSvc.getRollupDefsForRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name());
+        System.assert(!rollups.isEmpty(), 'The collection of returned rollups should not be empty for AccountHardCredit');
+
+        rollups = crlpApiSvc.getRollupDefsForRollupType(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit.name());
+        System.assert(!rollups.isEmpty(), 'The collection of returned rollups should not be empty for ContactHardCredit');
+
+        rollups = crlpApiSvc.getRollupDefsForRollupType(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit.name());
+        System.assert(!rollups.isEmpty(), 'The collection of returned rollups should not be empty for AccountSoftCredit');
+
+        // These do not and should all return a empty set
+        rollups = crlpApiSvc.getRollupDefsForRollupType(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit.name());
+        System.assert(rollups.isEmpty(), 'The collection of returned rollups should be empty for AccountContactSoftCredit');
+
+        rollups = crlpApiSvc.getRollupDefsForRollupType(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit.name());
+        System.assert(rollups.isEmpty(), 'The collection of returned rollups should be empty for ContactSoftCredit');
+
+        rollups = crlpApiSvc.getRollupDefsForRollupType(CRLP_RollupProcessingOptions.RollupType.RecurringDonations.name());
+        System.assert(rollups.isEmpty(), 'The collection of returned rollups should be empty for RecurringDonations');
+
+        rollups = crlpApiSvc.getRollupDefsForRollupType(CRLP_RollupProcessingOptions.RollupType.GAU.name());
+        System.assert(rollups.isEmpty(), 'The collection of returned rollups should be empty for GAU');
+
+        try {
+            rollups = crlpApiSvc.getRollupDefsForRollupType('NonExistentType');
+            System.assert(false, 'Should fail!');
+        } catch (Exception ex) {
+            System.assert(true, 'Should fail!');
         }
     }
 
+    /**
+     * @description WORK-IN-PROGRESS
+     */
     static void mockRollupTypes() {
         List<Rollup__mdt> mockedRollupDefs = new List<Rollup__mdt>{
                 new Rollup__mdt(
