@@ -38,18 +38,6 @@ public inherited sharing class CRLP_ApiService {
 
     private static final String CallableApiParameterError = 'Error parsing {0} parameter';
 
-    /** @description Map the string name for each of the different rollup types enum vales */
-    private static final Map<String, CRLP_RollupProcessingOptions.RollupType> rollupTypesByString =
-            new Map<String, CRLP_RollupProcessingOptions.RollupType>{
-                    CRLP_RollupProcessingOptions.RollupType.ContactHardCredit.name().toLowerCase() => CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
-                    CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit.name().toLowerCase() => CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
-                    CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name().toLowerCase() => CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
-                    CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit.name().toLowerCase() => CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
-                    CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit.name().toLowerCase() => CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
-                    CRLP_RollupProcessingOptions.RollupType.RecurringDonations.name().toLowerCase() => CRLP_RollupProcessingOptions.RollupType.RecurringDonations,
-                    CRLP_RollupProcessingOptions.RollupType.GAU.name().toLowerCase() => CRLP_RollupProcessingOptions.RollupType.GAU
-            };
-
     /**
     * @description Generates the list of Rollup Definitions for the specified rollup type
     * @param rollupTypeString String representation of the Rollup Type enum
@@ -58,7 +46,7 @@ public inherited sharing class CRLP_ApiService {
     public List<CRLP_Rollup> getRollupDefsForRollupType(String rollupTypeString) {
         CRLP_RollupProcessingOptions.RollupType rollupType;
         try {
-            rollupType = rollupTypesByString.get((String)rollupTypeString.toLowerCase());
+            rollupType = CRLP_RollupProcessingOptions.rollupTypesEnumByString.get((String)rollupTypeString.toLowerCase());
         } catch (Exception ex) {
             throw new CRLPApiException(String.format( CallableApiParameterError, new List<String>{'RollupType'} ));
         }

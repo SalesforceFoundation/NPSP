@@ -51,6 +51,24 @@ public class CRLP_RollupProcessingOptions {
         RecurringDonations
     }
 
+    /** @description Map the string name for each of the different rollup types enum vales */
+    public static Map<String, RollupType> rollupTypesEnumByString {
+        get {
+            if (rollupTypesEnumByString == null) {
+                rollupTypesEnumByString = new Map<String, RollupType>{
+                        RollupType.ContactHardCredit.name().toLowerCase() => RollupType.ContactHardCredit,
+                        RollupType.ContactSoftCredit.name().toLowerCase() => RollupType.ContactSoftCredit,
+                        RollupType.AccountHardCredit.name().toLowerCase() => RollupType.AccountHardCredit,
+                        RollupType.AccountSoftCredit.name().toLowerCase() => RollupType.AccountSoftCredit,
+                        RollupType.AccountContactSoftCredit.name().toLowerCase() => RollupType.AccountContactSoftCredit,
+                        RollupType.RecurringDonations.name().toLowerCase() => RollupType.RecurringDonations,
+                        RollupType.GAU.name().toLowerCase() => RollupType.GAU
+                };
+            }
+            return rollupTypesEnumByString;
+        } set;
+    }
+
     /**
      * @description The processing mode for the calling batch operation - normal or Skew mode. In Skew mode,
      * the List<CRLP_Rollup> collection is saved back into the ProcessingOptions class so that it can be
