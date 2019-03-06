@@ -293,8 +293,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
             ACCT_IndividualAccounts_TDTM.renameHHAccounts(householdIds);
             ACCT_IndividualAccounts_TDTM.moveOppsToContactAccount(
                 newIndividualAcctIdByMasterId,
-                oldIndividualAcctIdByMasterId,
-                null
+                oldIndividualAcctIdByMasterId
             );
             HH_OppContactRoles_TDTM.recreateHouseholdSoftCredits(accountIds);
             ACCT_IndividualAccounts_TDTM.rollupAccounts(accountIds);
