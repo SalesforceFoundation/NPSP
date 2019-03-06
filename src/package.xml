@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -133,6 +133,7 @@
         <members>CRLP_Account_BATCH</members>
         <members>CRLP_Account_SoftCredit_BATCH</members>
         <members>CRLP_ApiService</members>
+        <members>CRLP_ApiService_TEST</members>
         <members>CRLP_Batch_Base</members>
         <members>CRLP_Batch_Base_NonSkew</members>
         <members>CRLP_Batch_Base_Skew</members>
