@@ -471,6 +471,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     /*******************************************************************************************************
     * @description returns a list of all DataImport__c records from a batch Id
     * @param batchId a Data Import Batch Id
+    @ param numberOfRowsToReturn Limit on the query
     * @return List<DataImport__c>
     */
     private static List<DataImport__c> getNumOfDataImportRecordsByBatchId(Id batchId, Integer numberOfRowsToReturn) {
@@ -481,17 +482,18 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     /*******************************************************************************************************
     * @description returns an offset list of DataImport__c records from a batch Id
     * @param batchId a Data Import Batch Id
+    * @param offset Offset on the query
     * @return List<DataImport__c>
     */
     private static List<DataImport__c> getDataImportRecordsByBatchId(Id batchId, Integer offset) {
-
         String query = getDataImportQuery(batchId, null, loadSize, offset);
         return Database.query(query);
     }
 
     /*******************************************************************************************************
-    * @description returns one Data Import record by Id
-    * @param dataImportId the Id to query
+    * @description Returns a list of DataImport__c records by their ids
+    * @param batchId a Data Import Batch Id
+    * @param dataImportIds List of Data Import Ids
     * @return DataImport__c
     */
     private static List<DataImport__c> getDataImportRecordsByIds(Id batchId, List<Id> dataImportIds) {
@@ -500,9 +502,12 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description
+    * @description Builds DataImport__c query based on provided parameters
     * @param batchId a Data Import Batch Id
-    * @return List<DataImport__c>
+    * @param dataImportIds List of Data Import Ids
+    * @param numRows Limit on the query
+    * @param offset Offset on the query
+    * @return Query string
     */
     public static String getDataImportQuery(Id batchId, List<Id> dataImportIds, Integer numRows, Integer offset) {
         List<String> dataImportFields = getDataImportFields(batchId);
