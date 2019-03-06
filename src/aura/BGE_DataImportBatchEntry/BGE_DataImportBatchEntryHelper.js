@@ -218,10 +218,10 @@
      * @param recordIds: list of DataImport__c RecordIds to check for dry run
      */
     runNewRecordDryRun: function(component, recordId) {
-        var action = component.get('c.runDryRun');
+        var action = component.get('c.runSingleDryRun');
         var batchId = component.get('v.recordId');
         this.showSpinner(component);
-        action.setParams({dataImportIds: [recordId], batchId: batchId});
+        action.setParams({dataImportId: recordId, batchId: batchId});
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
@@ -261,14 +261,12 @@
      * @param isNewRecord: flag to indicate if newly entered record
      */
     afterDryRun: function(component, model, isNewRecord) {
-        console.time('UI/Table Update');
         this.setTotals(component, model);
         if (model.dataImportRows.length > 0) {
             for (let i = 0; i < model.dataImportRows.length; i++) {
                 this.updateDataTableAfterDryRun(component, model.dataImportRows[i], isNewRecord);
             }
         }
-        console.timeEnd('UI/Table Update');
     },
 
     /**
@@ -331,8 +329,6 @@
      * @description: Dry run all data import records for batch
      */
     massDryRun: function (component) {
-        console.log('JS Helper | massDryRun');
-        console.time('Overall Mass Dry Run');
         this.showToast(component, 'Processing', 'Please don\'t navigate out of this page.', 'sticky');
 
         let action = component.get('c.runMassDryRun');
@@ -342,17 +338,13 @@
         action.setCallback(this, function (response) {
             const state = response.getState();
             if (state === 'SUCCESS') {
-                let processedModel = JSON.parse(response.getReturnValue());
-                this.afterDryRun(component, processedModel, false);
-                //location.reload();
-
+                this.afterDryRun(component, JSON.parse(response.getReturnValue(), false));
                 this.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeDryRunComplete'), 'success');
             } else {
                 this.handleApexErrors(component, response.getError());
             }
             this.hideSpinner(component);
             this.hideFormSpinner(component);
-            console.timeEnd('Overall Mass Dry Run');
         });
         $A.enqueueAction(action);
     },

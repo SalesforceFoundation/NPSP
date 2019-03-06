@@ -186,21 +186,18 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return DataImportModel with updated data import record row and updated totals for the batch
     */
     @AuraEnabled
-    public static String runDryRun(List<Id> dataImportIds, Id batchId) {
+    public static String runSingleDryRun(Id dataImportId, Id batchId) {
         try {
             Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
-            List<DataImport__c> dataImportListToRun = prepareDataImportsForDryRun(getDataImportRecordsByIds(batchId, dataImportIds));
+            List<DataImport__c> dataImportListToRun = prepareDataImportsForDryRun(getDataImportRecordsByIds(batchId, new List<Id>{dataImportId}));
             BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
 
             DataImportModel dataImportModel = getUpdatedTotals(batchId);
 
-            List<DataImportRow> rows = new List<DataImportRow>();
-            List<DataImport__c> toBeProcessedDataImports = getDataImportRecordsByIds(batchId, dataImportIds);
-            for (DataImport__c di : toBeProcessedDataImports) {
-                DataImportRow processedDataImportRow = new DataImportRow(di);
-                rows.add(processedDataImportRow);
-            }
-            dataImportModel.dataImportRows = rows;
+            DataImport__c dataImport = getDataImportRecordsByIds(batchId, new List<Id>{dataImportId})[0];
+            DataImportRow processedDataImportRow = new DataImportRow(dataImport);
+
+            dataImportModel.dataImportRows = new List<DataImportRow>{processedDataImportRow};
 
             return JSON.serialize(dataImportModel);
         } catch (Exception ex){
@@ -247,7 +244,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     public static String updateAndDryRunRow(Id batchId, DataImport__c dataImport) {
         try {
             Database.update(dataImport);
-            return runDryRun(new List<Id>{dataImport.Id}, batchId);
+            return runSingleDryRun(dataImport.Id, batchId);
         } catch (Exception ex) {
             String saveErrorMessage = String.format(Label.CRLP_SaveError, new List<String>{Schema.SObjectType.DataImport__c.getName()});
             throw new AuraHandledException(saveErrorMessage + '. ' + ex.getMessage());
