@@ -454,6 +454,10 @@
      * @description: opens the batch wizard modal for edit mode of the component
      */
     openBatchWizard: function(component) {
+        let setModalOpenToFalse = function() {
+            component.set('v.modalOpen', false);
+        }
+
         if (component.get('v.modalOpen')) {
             return;
         }
@@ -486,12 +490,10 @@
                         footer: modalFooter,
                         showCloseButton: true,
                         cssClass: 'slds-modal_large',
-                        closeCallback: function() {
-                            component.set('v.modalOpen', false);
-                        }
+                        closeCallback: setModalOpenToFalse
                     })
                 } else {
-                    component.set('v.modalOpen', false);
+                    setModalOpenToFalse();
                     this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
                 }
             }
