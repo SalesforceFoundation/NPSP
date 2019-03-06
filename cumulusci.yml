@@ -262,6 +262,8 @@ flows:
                 task: update_admin_profile
                 options:
                     managed: true
+            5:
+                task: test_data_relationships
 
     config_offsetfiscal:
         description: 'Configure an offset fiscal year'
