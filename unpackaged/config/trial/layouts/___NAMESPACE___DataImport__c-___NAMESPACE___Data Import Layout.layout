@@ -434,6 +434,14 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
+                <field>%%%NAMESPACE%%%DonationCampaignImported__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>%%%NAMESPACE%%%DonationCampaignImportStatus__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
                 <field>%%%NAMESPACE%%%Payment_Method__c</field>
             </layoutItems>
             <layoutItems>
