@@ -94,7 +94,7 @@
                 </div>
                 <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
                     <lightning:buttonGroup>
-                        <lightning:button aura:id="dryRunBatch" label="{!$Label.c.bgeDryRunButton}" onclick="{!c.massDryRun}"/>
+                        <lightning:button aura:id="dryRunBatch" label="{!$Label.c.bgeMassDryRun}" onclick="{!c.massDryRun}"/>
                         <lightning:button aura:id="processBatch" label="{!$Label.c.bgeProcessBatch}" onclick="{!c.processBatch}"/>
                         <lightning:button aura:id="editBGEBatch" label="{!$Label.c.stgBtnEdit}" onclick="{!c.onEditClick}"/>
                     </lightning:buttonGroup>

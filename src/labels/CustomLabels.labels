@@ -2695,10 +2695,10 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>COPY</value>
     </labels>
     <labels>
-        <fullName>bgeDryRunButton</fullName>
+        <fullName>bgeMassDryRun</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Button text for starting mass dry run in BGE.</shortDescription>
+        <shortDescription>Text for mass dry run in BGE.</shortDescription>
         <value>Mass Dry Run</value>
     </labels>
     <labels>
