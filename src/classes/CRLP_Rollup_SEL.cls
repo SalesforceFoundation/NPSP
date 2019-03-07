@@ -282,12 +282,10 @@ public class CRLP_Rollup_SEL {
             Set<String> operations;
             if (this.getSupportedOperationsByTimeBoundOperationType() == null) {
                 operations = null;
-            }
-            else if (timeBoundOperationType == null) {
+            } else if (timeBoundOperationType == null) {
                 // Treat a null timeBoundOperationType as All_Time
                 operations = this.getSupportedOperationsByTimeBoundOperationType().get(CRLP_Operation.TimeBoundOperationType.All_Time.name());
-            }
-            else {
+            } else {
                 operations = this.getSupportedOperationsByTimeBoundOperationType().get(timeBoundOperationType);
             }
 
@@ -583,17 +581,14 @@ public class CRLP_Rollup_SEL {
             || rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit
         ) {
             summaryObjectType = Account.SObjectType;
-        } 
-        else if (
+        }  else if (
             rollupType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit 
             || rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit
         ) {
             summaryObjectType = Contact.SObjectType;
-        } 
-        else if (rollupType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+        }  else if (rollupType == CRLP_RollupProcessingOptions.RollupType.GAU) {
             summaryObjectType = General_Accounting_Unit__c.SObjectType;
-        } 
-        else if (rollupType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+        }  else if (rollupType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
             summaryObjectType = npe03__Recurring_Donation__c.SObjectType;
         }
 
@@ -609,8 +604,7 @@ public class CRLP_Rollup_SEL {
                     || rollup.Active__c == false
                 ) {
                     // ignore deleted or inactive rollups
-                }
-                else if (
+                } else if (
                     rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit 
                     || rollupType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit
                 ) {
@@ -622,8 +616,7 @@ public class CRLP_Rollup_SEL {
                         && rollup.Amount_Object__r.QualifiedApiName != pscObjectName 
                         && rollup.Amount_Object__r.QualifiedApiName != accSCObjectName
                     );
-                }
-                else if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
                     includeRollupDefinition = (
                         (
                             rollup.Detail_Object__r.QualifiedApiName == oppObjectName 
@@ -631,17 +624,14 @@ public class CRLP_Rollup_SEL {
                         )
                         && rollup.Amount_Object__r.QualifiedApiName == accSCObjectName
                     );
-                } 
-                else if (
+                }  else if (
                     rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit 
                     || rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit
                 ) {
                     includeRollupDefinition = (rollup.Amount_Object__r.QualifiedApiName == pscObjectName);
-                }
-                else if (rollupType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.GAU) {
                     includeRollupDefinition = true;
-                }
-                else if (rollupType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
                     includeRollupDefinition = true;
                 }
                 
@@ -651,14 +641,12 @@ public class CRLP_Rollup_SEL {
                         && rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()
                     ) {
                         includeRollupDefinition = false;
-                    }
-                    else if (
+                    } else if (
                         typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.DaysAgoOnly 
                         && rollup.Time_Bound_Operation_Type__c != CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()
                     ) {
                         includeRollupDefinition = false;
-                    }
-                    else if (
+                    } else if (
                         typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.MembershipsOnly 
                         && !rollup.Summary_Field__r.QualifiedApiName.containsIgnoreCase('Membership')
                     ) {
