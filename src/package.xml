@@ -1258,6 +1258,7 @@
         <members>PageMessagesError</members>
         <members>PageMessagesFatal</members>
         <members>PageMessagesInfo</members>
+        <members>PageMessagesProcessing</members>
         <members>PageMessagesWarning</members>
         <members>RD_ErrorAddDonationHeaderText</members>
         <members>RD_ErrorAddDonationMissingId</members>
@@ -1472,6 +1473,7 @@
         <members>bgeGridTotalCount</members>
         <members>bgeGridWarningRequiredTotalsExpected</members>
         <members>bgeMassDryRun</members>
+        <members>bgeMassDryRunProcessing</members>
         <members>bgeMatchingAlert</members>
         <members>bgeMatchingSelect</members>
         <members>bgeNewBatch</members>

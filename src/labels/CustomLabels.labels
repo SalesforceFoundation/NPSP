@@ -1271,6 +1271,14 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <value>Warning</value>
     </labels>
     <labels>
+        <fullName>PageMessagesProcessing</fullName>
+        <categories>PageMessages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Processing</shortDescription>
+        <value>Processing</value>
+    </labels>
+    <labels>
         <fullName>RD_ErrorAddDonationHeaderText</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -2695,13 +2703,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>COPY</value>
     </labels>
     <labels>
-        <fullName>bgeMassDryRun</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Text for mass dry run in BGE.</shortDescription>
-        <value>Mass Dry Run</value>
-    </labels>
-    <labels>
         <fullName>bgeDryRunComplete</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2903,6 +2904,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Message warning user if totals don&apos;t match expected</shortDescription>
         <value>Require Expected Totals Match is selected but the Expected Count of Gifts and Expected Total Batch Amount fields are blank. Edit the batch details and either uncheck Require Expected Totals Match or add values in the related fields.</value>
+    </labels>
+    <labels>
+        <fullName>bgeMassDryRun</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for mass dry run in BGE.</shortDescription>
+        <value>Mass Dry Run</value>
+    </labels>
+    <labels>
+        <fullName>bgeMassDryRunProcessing</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for toast when mass dry run is started</shortDescription>
+        <value>Please don't navigate out of this page.</value>
     </labels>
     <labels>
         <fullName>bgeMatchingAlert</fullName>

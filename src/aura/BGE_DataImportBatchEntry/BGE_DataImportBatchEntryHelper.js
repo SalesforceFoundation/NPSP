@@ -329,7 +329,7 @@
      * @description: Dry run all data import records for batch
      */
     massDryRun: function (component) {
-        this.showToast(component, 'Processing', 'Please don\'t navigate out of this page.', 'sticky');
+        this.showToast(component, $A.get('$Label.c.PageMessagesProcessing'), $A.get('$Label.c.bgeMassDryRunProcessing'), 'sticky');
 
         let action = component.get('c.runMassDryRun');
         action.setParams({
