@@ -503,7 +503,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
                 activeFieldNames.add(field.name);
                 if (field.type == 'reference') {
-                    activeFieldNames.add(field.name.substringBefore('__c') + '__r.Name');
+                    DescribeFieldResult lookupDFR = UTIL_Describe.getFieldDescribe(field.sObjectName, field.name);
+                    String referencedObjectName = lookupDFR.getReferenceTo()[0].getDescribe().name;
+                    activeFieldNames.add(field.name.substringBefore('__c') + '__r.' + UTIL_Describe.getNameField(referencedObjectName));
                 }
             }
         }

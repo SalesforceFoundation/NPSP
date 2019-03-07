@@ -562,12 +562,19 @@
         // reformat lookups to display as links in datatable
         referenceFields.forEach(function(fieldName) {
             if (row[fieldName]) {
-                let campaignLinkFieldLabel = fieldName + '_label';
-                let campaignLinkFieldName = fieldName + '_link';
-                //TODO: is this the easiest way to do this string manipulation?
+                let linkFieldLabel = fieldName + '_label';
+                let linkFieldName = fieldName + '_link';
                 let relationshipName = fieldName.slice(0, -1) + 'r';
-                row[campaignLinkFieldLabel] = row[relationshipName].Name;
-                row[campaignLinkFieldName] = '/' + row[fieldName];
+                // The relationship will have exactly two attributes:
+                // Id and the name field (e.g., Name, CaseNumber, etc.)
+                // They are sorted alphabetically, so references to different objects may have
+                // these attributes in differring orders. Iterate to find and use the non-Id value.
+                Object.keys(row[relationshipName]).forEach(function(key,index) {
+                    if (key !== 'Id') {
+                        row[linkFieldLabel] = row[relationshipName][key];
+                    }
+                });
+                row[linkFieldName] = '/' + row[fieldName];
             }
         });
 
