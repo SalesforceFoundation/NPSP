@@ -263,6 +263,8 @@ flows:
                 task: update_admin_profile
                 options:
                     managed: true
+            5:
+                task: test_data_relationships
 
     install_upgrade:
         steps:
