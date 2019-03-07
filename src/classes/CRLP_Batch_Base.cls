@@ -607,37 +607,28 @@ public abstract class CRLP_Batch_Base {
                             query = query.split(' FROM ')[0] + ', ' + f + ' FROM ' + query.split(' FROM ')[1];
                         }
                     }
-                    System.debug(LoggingLevel.ERROR, '*** ##### after checking fields ######');
 
                     List<String> whereClauses = new List<String>();
 
                     // Add additional query filters as needed
                     if (base.recordIds != null && base.recordIds.size() > 0) {
-                        System.debug(LoggingLevel.ERROR, '*** in recordIds check: ');
                         whereClauses.add('Id IN :recordIds');
                     } else {
-                        System.debug(LoggingLevel.ERROR, '*** ##### in else ######');
                         // Exclude Accounts or Contacts that will be rolled up in the SkewMode batch job
-                        System.debug(LoggingLevel.ERROR, '*** jobType: ' + base.jobType);
                         String skewClause = CRLP_RollupBatch_SVC.getSkewWhereClause(base.jobType, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
-                        System.debug(LoggingLevel.ERROR, '*** skewClause: ' + skewClause);
                         if (!String.isEmpty(skewClause)) {
                             whereClauses.add(skewClause);
                         }
 
                         if (chunkModeStartingId != null) {
-                            System.debug(LoggingLevel.ERROR, '*** chunkModeStartingId: ' + chunkModeStartingId);
                             whereClauses.add('Id > \'' + chunkModeStartingId + '\'');
                         }
-                        System.debug(LoggingLevel.ERROR, '*** ##### added chunk mode Id > ######');
 
                         String whereClause = base.getMainQueryInnerJoinFilter();
                         if (whereClause != null) {
                             whereClauses.add(whereClause);
                         }
-                        System.debug(LoggingLevel.ERROR, '*** ##### checked getMain ######');
                     }
-                    System.debug(LoggingLevel.ERROR, '*** ##### checked record Ids ######');
 
                     if (!whereClauses.isEmpty()) {
                         query += ' WHERE ' + String.join(whereClauses, ' AND ');
