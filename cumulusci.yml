@@ -59,6 +59,7 @@ tasks:
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
             path: unpackaged/config/qa
+            namespace_inject: $project_config.project__package__namespace
 
     deploy_dev_config_delete:
         description: Deploys the metadata deletions for the post-install DE org config
@@ -264,6 +265,18 @@ flows:
                     managed: true
             5:
                 task: test_data_relationships
+
+    install_upgrade:
+        steps:
+            # Add QA metadata needed for regression
+            5:
+                task: deploy_qa_config
+                options:
+                    unmanaged: False
+            6:
+                task: update_admin_profile
+                options:
+                    managed: true
 
     config_offsetfiscal:
         description: 'Configure an offset fiscal year'
