@@ -17,7 +17,7 @@
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
         <label>Level</label>
-        <referenceTo>Level__c</referenceTo>
+        <referenceTo>%%%NAMESPACE%%%Level__c</referenceTo>
         <relationshipLabel>Contacts</relationshipLabel>
         <relationshipName>Contacts</relationshipName>
         <required>false</required>
@@ -29,7 +29,7 @@
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
         <label>Previous Level</label>
-        <referenceTo>Level__c</referenceTo>
+        <referenceTo>%%%NAMESPACE%%%Level__c</referenceTo>
         <relationshipLabel>Contacts (Previous Level)</relationshipLabel>
         <relationshipName>PreviousContacts</relationshipName>
         <required>false</required>
