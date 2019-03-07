@@ -51,7 +51,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     // when an Opportunity was inserted/updated, but maybe that Opportunity was deleted or the reference changed.
     // There may be some custom rollups that use other fields that this wouldn't know about, or the user may have
     // modified the filters to somehow change those meaning. This is a good 99.9% check though.
-    protected List<String> fieldsToCheckForNonZero {
+    public List<String> fieldsToCheckForNonZero {
         get {
             if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
                     this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
@@ -106,66 +106,32 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     * @return database.Querylocator
     */
     public Database.Querylocator start(Database.BatchableContext bc) {
+        System.debug(LoggingLevel.ERROR, '*** ##### START Method ######');
+        System.debug(LoggingLevel.ERROR, '*** chunkModeStartingId: ' + chunkModeStartingId);
         try {
             initializeJobData();
 
-            Integer chunkingSize = getBatchChunkSizeLimit();
-
-            // Build a query string of the target Summary object.
-            String query = CRLP_Query_SEL.buildObjectQueryForRollup(this.summaryObjectType);
-
-            // Fields in the fieldsToCheckForNonZero[] list must always be in the Contact query
-            for (String f : fieldsToCheckForNonZero) {
-                if (!query.containsIgnoreCase(f)) {
-                    query = query.split(' FROM ')[0] + ', ' + f + ' FROM ' + query.split(' FROM ')[1];
-                }
-            }
-
-            List<String> whereClauses = new List<String>();
-
-            // Add additional query filters as needed
-            if (this.recordIds != null && this.recordIds.size() > 0) {
-                whereClauses.add('Id IN :recordIds');
-            } else {
-                // Exclude Accounts or Contacts that will be rolled up in the SkewMode batch job
-                String skewClause = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
-                if (!String.isEmpty(skewClause)) {
-                    whereClauses.add(skewClause);
-                }
-
-                if (this.chunkModeStartingId != null) {
-                    whereClauses.add('Id > \'' + this.chunkModeStartingId + '\'');
-                }
-
-                String whereClause = getMainQueryInnerJoinFilter();
-                if (whereClause != null) {
-                    whereClauses.add(whereClause);
-                }
-            }
-
-            if (!whereClauses.isEmpty()) {
-                query += ' WHERE ' + String.join(whereClauses, ' AND ');
-            }
-
-            // If there are no active rollups for the object type, then force the query to return zero records.
-            if (hasActiveRollupsForThisJob() == false) {
-                // This is needed because can't return null as a valid iterator.
-                query += ' LIMIT 0';
-            } else if (chunkingSize != null && this.recordIds == null) {
-                // In an LDV Org, there may be too many records to query in the main query. Core support has recommended
-                // a chunking approach where the main query is limited to under 1M records and the finish() method
-                // kicks off the job again starting with the last Id that was queried
-                query += ' ORDER BY Id LIMIT ' + chunkingSize;
-            }
+//            String query = '';
+            String query = getQuery(chunkModeStartingId, getBatchChunkSizeLimit(), fieldsToCheckForNonZero);
 
             UTIL_Debug.debug(LoggingLevel.WARN, '>> Batch Query =' + query);
+            System.debug(LoggingLevel.ERROR, '*** query: ' + query);
             return Database.getQueryLocator(query);
 
         } catch (Exception ex) {
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP + '.' + this.jobType.name());
             return Database.getQueryLocator([SELECT Id FROM Account LIMIT 0]);
         }
+
+
+
+
+
+
+
     }
+
+
 
     /*******************************************************************************************************
     * @description Handle each group of Summary records to roll-up.
@@ -371,7 +337,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      * @description If chunking mode is enabled for this type of rollup job, get the chunk size limit to use in the main query
      * @return Limit value to use or Null if chunking is not enabled.
      */
-    private Integer getBatchChunkSizeLimit() {
+    public Integer getBatchChunkSizeLimit() {
         Decimal rtnValue;
 
         switch on (jobType) {
