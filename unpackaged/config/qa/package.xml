@@ -17,5 +17,9 @@
         <members>Opportunity</members>
         <name>CustomObject</name>
     </types>
+    <types>
+        <members>Contact-Contact Lightning Layout</members>
+        <name>Layout</name>
+    </types>
     <version>40.0</version>
 </Package>
