@@ -879,8 +879,10 @@ global with sharing class BDI_DataImportService {
             }
 
             // If the destination field is a Boolean and the DI field intermediate requires interpretation to Boolean
-            // This allows for mapping checkboxes to a tri-state picklist - None, True, False - or a text with either blank, "True", or "False"
-            if ((UTIL_Describe.getFieldDisplayType(destinationRecord.getSObjectType().getDescribe().getName(), destinationField) == 
+            // This allows for mapping checkboxes to a tri-state picklist - None, True, False - or a text with either blank, 
+            // "True", or "False"
+            String destinationSObjectname = destinationRecord.getSObjectType().getDescribe().getName(); 
+            if ((UTIL_Describe.getFieldDisplayType(destinationSObjectname, destinationField) == 
                 Schema.DisplayType.BOOLEAN) && !(value instanceof Boolean)) {
 
                 value = Boolean.valueOf(value);
