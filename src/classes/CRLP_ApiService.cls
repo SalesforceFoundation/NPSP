@@ -36,8 +36,6 @@
 */
 public inherited sharing class CRLP_ApiService {
 
-    private static final String CallableApiParameterError = 'Error parsing {0} parameter';
-
     /**
     * @description Generates the list of Rollup Definitions for the specified rollup type
     * @param rollupTypeString String representation of the Rollup Type enum
@@ -47,8 +45,9 @@ public inherited sharing class CRLP_ApiService {
         CRLP_RollupProcessingOptions.RollupType rollupType;
         try {
             rollupType = CRLP_RollupProcessingOptions.rollupTypesEnumByString.get((String)rollupTypeString.toLowerCase());
-        } catch (Exception ex) {
-            throw new CRLPApiException(String.format( CallableApiParameterError, new List<String>{'RollupType'} ));
+        } catch (Exception ex) { }
+        if (rollupType == null) {
+            throw new CRLPApiException(String.format( System.Label.CallableApiParameterError, new List<String>{'RollupType'} ));
         }
         CRLP_VRollupHandler handler = new CRLP_VRollupHandler();
         handler.buildGroupedRollups(rollupType);

@@ -2994,6 +2994,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>{0} is not implemented</value>
     </labels>
     <labels>
+        <fullName>CallableApiParameterError</fullName>
+        <categories>API</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error parsing/type casting a parameter</shortDescription>
+        <value>Error parsing {0} parameter</value>
+    </labels>
+    <labels>
         <fullName>conFailedAccountCreate</fullName>
         <categories>Data Import, Contacts</categories>
         <language>en_US</language>

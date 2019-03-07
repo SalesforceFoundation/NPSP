@@ -51,6 +51,8 @@ private class CRLP_ApiService_TEST {
 
         CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
 
+        Test.startTest();
+
         // These first three have mocked CMT's for rollup definitions
         List<CRLP_Rollup> rollups = crlpApiSvc.getRollupDefsForRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name());
         System.assert(!rollups.isEmpty(), 'The collection of returned rollups should not be empty for AccountHardCredit');
@@ -74,110 +76,29 @@ private class CRLP_ApiService_TEST {
         rollups = crlpApiSvc.getRollupDefsForRollupType(CRLP_RollupProcessingOptions.RollupType.GAU.name());
         System.assert(rollups.isEmpty(), 'The collection of returned rollups should be empty for GAU');
 
-        try {
-            rollups = crlpApiSvc.getRollupDefsForRollupType('NonExistentType');
-            System.assert(false, 'Should fail!');
-        } catch (Exception ex) {
-            System.assert(true, 'Should fail!');
-        }
     }
 
     /**
-     * @description WORK-IN-PROGRESS
+     * @description Validate the getRollupDefsForRollupType returns the expected collection of CRLP_Rollup instances
      */
-    static void mockRollupTypes() {
-        List<Rollup__mdt> mockedRollupDefs = new List<Rollup__mdt>{
-                new Rollup__mdt(
-                        MasterLabel = 'Account Hard Credit',
-                        Summary_Field__c = 'npo02__TotalOppAmount__c',
-                        Operation__c = CRLP_Operation.RollupType.Sum.name(),
-                        Detail_Object__c = 'Opportunity',
-                        Detail_Field__c = 'Amount',
-                        Amount_Object__c = 'Opportunity',
-                        Amount_Field__c = 'Amount',
-                        Date_Object__c = 'Opportunity',
-                        Date_Field__c = 'CloseDate',
-                        Active__c = True
-                ),
-                new Rollup__mdt(
-                        MasterLabel = 'Contact Hard Credit',
-                        Summary_Object__c = 'Contact',
-                        Summary_Field__c = 'npo02__TotalOppAmount__c',
-                        Operation__c = CRLP_Operation.RollupType.Sum.name(),
-                        Detail_Object__c = 'Opportunity',
-                        Detail_Field__c = 'Amount',
-                        Amount_Object__c = 'Opportunity',
-                        Amount_Field__c = 'Amount',
-                        Date_Object__c = 'Opportunity',
-                        Date_Field__c = 'CloseDate',
-                        Active__c = True
-                ),
-                new Rollup__mdt(
-                        MasterLabel = 'Contact Soft Credit',
-                        Summary_Object__c = 'Contact',
-                        Summary_Field__c = 'npo02__TotalOppAmount__c',
-                        Operation__c = CRLP_Operation.RollupType.Sum.name(),
-                        Detail_Object__c = Partial_Soft_Credit__c.SObjectType.getDescribe().getName(),
-                        Detail_Field__c = Partial_Soft_Credit__c.Amount__c.getDescribe().getName(),
-                        Amount_Object__c = Partial_Soft_Credit__c.SObjectType.getDescribe().getName(),
-                        Amount_Field__c = Partial_Soft_Credit__c.Amount__c.getDescribe().getName(),
-                        Date_Object__c = 'Opportunity',
-                        Date_Field__c = 'CloseDate',
-                        Active__c = True
-                ),
-                new Rollup__mdt(
-                        MasterLabel = 'Account Soft Credit',
-                        Summary_Object__c = 'Account',
-                        Summary_Field__c = 'npo02__TotalOppAmount__c',
-                        Operation__c = CRLP_Operation.RollupType.Sum.name(),
-                        Detail_Object__c = Partial_Soft_Credit__c.SObjectType.getDescribe().getName(),
-                        Detail_Field__c = Partial_Soft_Credit__c.Amount__c.getDescribe().getName(),
-                        Amount_Object__c = Partial_Soft_Credit__c.SObjectType.getDescribe().getName(),
-                        Amount_Field__c = Partial_Soft_Credit__c.Amount__c.getDescribe().getName(),
-                        Date_Object__c = 'Opportunity',
-                        Date_Field__c = 'CloseDate',
-                        Active__c = True
-                ),
-                new Rollup__mdt(
-                        MasterLabel = 'Account Contact Soft Credit',
-                        Summary_Object__c = 'Account',
-                        Summary_Field__c = 'npo02__TotalOppAmount__c',
-                        Operation__c = CRLP_Operation.RollupType.Sum.name(),
-                        Detail_Object__c = Partial_Soft_Credit__c.SObjectType.getDescribe().getName(),
-                        Detail_Field__c = Partial_Soft_Credit__c.Amount__c.getDescribe().getName(),
-                        Amount_Object__c = Partial_Soft_Credit__c.SObjectType.getDescribe().getName(),
-                        Amount_Field__c = Partial_Soft_Credit__c.Amount__c.getDescribe().getName(),
-                        Date_Object__c = 'Opportunity',
-                        Date_Field__c = 'CloseDate',
-                        Active__c = True
-                ),
-                new Rollup__mdt(
-                        MasterLabel = 'GAU',
-                        Summary_Object__c = General_Accounting_Unit__c.SObjectType.getDescribe().getName(),
-                        Summary_Field__c = General_Accounting_Unit__c.Total_Allocations__c.getDescribe().getName(),
-                        Operation__c = CRLP_Operation.RollupType.Sum.name(),
-                        Detail_Object__c = Allocation__c.SObjectType.getDescribe().getName(),
-                        Detail_Field__c = Allocation__c.Amount__c.getDescribe().getName(),
-                        Amount_Object__c = Allocation__c.SObjectType.getDescribe().getName(),
-                        Amount_Field__c = Allocation__c.Amount__c.getDescribe().getName(),
-                        Date_Object__c = 'Opportunity',
-                        Date_Field__c = 'CloseDate',
-                        Active__c = True
-                ),
-                new Rollup__mdt(
-                        MasterLabel = 'Recurring Donation',
-                        Summary_Object__c = npe03__Recurring_Donation__c.SObjectType.getDescribe().getName(),
-                        Summary_Field__c = npe03__Recurring_Donation__c.npe03__Total_Paid_Installments__c.getDescribe().getName(),
-                        Operation__c = CRLP_Operation.RollupType.Sum.name(),
-                        Detail_Object__c = 'Opportunity',
-                        Detail_Field__c = 'Amount',
-                        Amount_Object__c = 'Opportunity',
-                        Amount_Field__c = 'Amount',
-                        Date_Object__c = 'Opportunity',
-                        Date_Field__c = 'CloseDate',
-                        Active__c = True
-                )
-        };
-        CRLP_Rollup_SEL.cachedRollups = mockedRollupDefs;
+    @IsTest
+    static void validateGetRollupDefsForRollupTypeInvalidParameter() {
+        CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
+
+        Test.startTest();
+        try {
+            crlpApiSvc.getRollupDefsForRollupType('NonExistentType');
+            System.assert(false, 'This call should have failed due to an invalid parameter!');
+        } catch (Exception ex) {
+            System.assert(ex.getMessage().containsIgnoreCase('parameter'), 'The error should contain the word "parameter": ' + ex.getMessage());
+        }
+
+        try {
+            crlpApiSvc.getRollupDefsForRollupType(null);
+            System.assert(false, 'This call should have failed due to an invalid parameter!');
+        } catch (Exception ex) {
+            System.assert(ex.getMessage().containsIgnoreCase('parameter'), 'The error should contain the word "parameter": ' + ex.getMessage());
+        }
     }
+
 }
