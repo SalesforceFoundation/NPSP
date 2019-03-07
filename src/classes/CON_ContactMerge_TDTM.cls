@@ -38,8 +38,6 @@
 */
 public class CON_ContactMerge_TDTM extends TDTM_Runnable {
     @TestVisible
-    private static RLLP_OppRollup oppRollup = new RLLP_OppRollup();
-    @TestVisible
     private static ContactMergeProcessor mergeProcessor {
         get {
             if (mergeProcessor == null) {
@@ -305,12 +303,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         * @param masterContacts the collection of master contacts
         ********************************************************************************************************/
         private void fixupContactData(List<Contact> masterContacts) {
-            if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
-                CRLP_RollupQueueable.runRollupsForIds(masterContactIds);
-
-            } else {
-                oppRollup.rollupContacts(new Map<Id, Contact>(masterContacts));
-            }
+            new RLLP_OppRollup().rollupContacts(new Map<Id, SObject>(masterContacts).keySet());
 
             AFFL_Affiliations_TDTM.cleanupContactAffiliations(masterContacts);
             REL_Relationships_TDTM.cleanupContactRelationships(masterContacts);

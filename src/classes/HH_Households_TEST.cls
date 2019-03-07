@@ -582,15 +582,15 @@ public with sharing class HH_Households_TEST {
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Advanced_Household_Naming__c = true, npo02__Enable_Opp_Rollup_Triggers__c = false));
          
         Contact c1 = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
-            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS            
-        );            
-        insert c1;  
-        
+            LastName='HH Merge Test 1'
+        );
+        insert c1;
+
+        Contact c2 = new Contact(
+            LastName='HH Merge Test 1'
+        );
+        insert c2;
+
         id rtid = UTIL_RecordTypes.GetRecordTypeId (Opportunity.sObjectType,UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType));
         Opportunity newOpp = New Opportunity (
                 Name = 'Test Opp ',
@@ -606,8 +606,8 @@ public with sharing class HH_Households_TEST {
 
         system.assertEquals(1, [select count() from OpportunityContactRole where isPrimary = true and ContactId = :c1.id]);
                 
-        Test.startTest();        
-        HH_Households_TDTM.contactMergeUpdate(new Set<Id>{c1.Id});  
+        Test.startTest();
+        merge c1 c2;
         Test.stopTest();
         c1 = [select npo02__TotalOppAmount__c, npo02__Household__r.npo02__TotalOppAmount__c from Contact where Id = :c1.id];
         system.assertEquals(100, c1.npo02__TotalOppAmount__c);

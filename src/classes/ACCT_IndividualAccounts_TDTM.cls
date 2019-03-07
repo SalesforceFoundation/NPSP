@@ -969,18 +969,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     * @return void
     */
     public static void rollupAccounts(List<Id> accountIds) {
-        Boolean isImmediate = accountIds.size() == 1 || System.isFuture() || System.isBatch() || System.isQueueable();
-
-        if (isImmediate) {
-            String query = new RLLP_OppRollup_UTIL().buildAccountQuery() + ' WHERE Id IN :accountIds';
-            Map<Id, Account> accountsById = new Map<Id, Account>((List<Account>)Database.query(query));
-            RLLP_OppRollup oppRollup = new RLLP_OppRollup();
-
-            oppRollup.rollupAccounts(accountsById);
-
-        } else {
-            RLLP_OppRollup.rollupAccountsFuture(new Set<Id>(accountIds));
-        }
+        new RLLP_OppRollup().rollupAccounts(new Set<Id>(accountIds));
     }
 
 }
