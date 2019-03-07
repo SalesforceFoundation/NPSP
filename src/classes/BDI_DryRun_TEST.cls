@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017 Salesforce.org
+    Copyright (c) 2019 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2019
 * @group Batch Data Import
 * @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description tests specific to the Batch Data Importer Dry Run mode
@@ -47,11 +47,11 @@ public with sharing class BDI_DryRun_TEST {
     **********************************************************************************************************/
     static testMethod void manyDISameNewC1Contact() {
 
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com'));
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Work_Email__c='c1@foo.com'));
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Alternate_Email__c='c1@foo.com'));
-        insert listDI;
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
+        insert dataImports;
 
         //run batch data import
         Test.StartTest();
@@ -60,17 +60,16 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = [select Id, Name from Contact];
-        system.assertEquals(0, listCon.size());
+        List<Contact> contacts = [SELECT Id, Name FROM Contact];
+        System.assertEquals(0, contacts.size());
 
-        listDI = [select Status__c, Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c,
-            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Id];
-        system.assertEquals(3, listDI.size());
-        for (DataImport__c di : listDI) {
-            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
-            system.assertEquals(null, di.Contact1Imported__c);
-            system.assertEquals(null, di.HouseholdAccountImported__c);
-            system.assertEquals(label.bdiDryRunNoMatch, di.Contact1ImportStatus__c);
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(3, dataImports.size());
+        for (DataImport__c dataImport : dataImports) {
+            System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, dataImport.Status__c);
+            System.assertEquals(null, dataImport.Contact1Imported__c);
+            System.assertEquals(null, dataImport.HouseholdAccountImported__c);
+            System.assertEquals(Label.bdiDryRunNoMatch, dataImport.Contact1ImportStatus__c);
         }
     }
 
@@ -83,11 +82,11 @@ public with sharing class BDI_DryRun_TEST {
     **********************************************************************************************************/
     static testMethod void manyDINewC1andC2Contacts() {
 
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact2_Firstname__c='c1Spouse'));
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c2', Contact1_Lastname__c='C2', Contact2_Firstname__c='c2Spouse'));
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c3', Contact1_Lastname__c='C3', Contact2_Firstname__c='c3Spouse'));
-        insert listDI;
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1', 'c1Spouse', null));
+        dataImports.add(BDI_DataImport_TEST.newDI('c2', 'C2', 'c2Spouse', null));
+        dataImports.add(BDI_DataImport_TEST.newDI('c3', 'C3', 'c3Spouse', null));
+        insert dataImports;
 
         //run batch data import
         Test.StartTest();
@@ -96,19 +95,18 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = [select Id, Name from Contact];
-        system.assertEquals(0, listCon.size());
+        List<Contact> contacts = [SELECT Id, Name FROM Contact];
+        System.assertEquals(0, contacts.size());
 
-        listDI = [select Status__c, Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c,
-            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Id];
-        system.assertEquals(3, listDI.size());
-        for (DataImport__c di : listDI) {
-            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
-            system.assertEquals(null, di.Contact1Imported__c);
-            system.assertEquals(null, di.HouseholdAccountImported__c);
-            system.assertEquals(label.bdiDryRunNoMatch, di.Contact1ImportStatus__c);
-            system.assertEquals(null, di.Contact2Imported__c);
-            system.assertEquals(label.bdiDryRunNoMatch, di.Contact2ImportStatus__c);
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(3, dataImports.size());
+        for (DataImport__c dataImport : dataImports) {
+            System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, dataImport.Status__c);
+            System.assertEquals(null, dataImport.Contact1Imported__c);
+            System.assertEquals(null, dataImport.HouseholdAccountImported__c);
+            System.assertEquals(Label.bdiDryRunNoMatch, dataImport.Contact1ImportStatus__c);
+            System.assertEquals(null, dataImport.Contact2Imported__c);
+            System.assertEquals(Label.bdiDryRunNoMatch, dataImport.Contact2ImportStatus__c);
         }
     }
 
@@ -121,11 +119,11 @@ public with sharing class BDI_DryRun_TEST {
     **********************************************************************************************************/
     static testMethod void manyDISameNewC1andC2Contacts() {
 
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com', Contact2_Firstname__c='c1Spouse'));
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Work_Email__c='c1@foo.com', Contact2_Firstname__c='c1Spouse'));
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Alternate_Email__c='c1@foo.com', Contact2_Firstname__c='c1Spouse'));
-        insert listDI;
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1', 'c1Spouse', null));
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1', 'c1Spouse', null));
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1', 'c1Spouse', null));
+        insert dataImports;
 
         //run batch data import
         Test.StartTest();
@@ -134,19 +132,18 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = [select Id, Name from Contact];
-        system.assertEquals(0, listCon.size());
+        List<Contact> contacts = [SELECT Id, Name FROM Contact];
+        System.assertEquals(0, contacts.size());
 
-        listDI = [select Status__c, Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c,
-            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Id];
-        system.assertEquals(3, listDI.size());
-        for (DataImport__c di : listDI) {
-            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
-            system.assertEquals(null, di.Contact1Imported__c);
-            system.assertEquals(null, di.HouseholdAccountImported__c);
-            system.assertEquals(label.bdiDryRunNoMatch, di.Contact1ImportStatus__c);
-            system.assertEquals(label.bdiDryRunNoMatch, di.Contact2ImportStatus__c);
-            system.assertEquals(null, di.Contact2Imported__c);
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(3, dataImports.size());
+        for (DataImport__c dataImport : dataImports) {
+            System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, dataImport.Status__c);
+            System.assertEquals(null, dataImport.Contact1Imported__c);
+            System.assertEquals(null, dataImport.HouseholdAccountImported__c);
+            System.assertEquals(Label.bdiDryRunNoMatch, dataImport.Contact1ImportStatus__c);
+            System.assertEquals(Label.bdiDryRunNoMatch, dataImport.Contact2ImportStatus__c);
+            System.assertEquals(null, dataImport.Contact2Imported__c);
         }
     }
 
@@ -160,23 +157,19 @@ public with sharing class BDI_DryRun_TEST {
     static testMethod void manyDIExistingC1andC2Contacts() {
 
         // existing contacts
-        List<Contact> listConExisting = new List<Contact>();
-        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com'));
-        listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@foo.com'));
-        listConExisting.add(new Contact(Firstname='c3', Lastname='C3', Email='c3@foo.com'));
-        listConExisting.add(new Contact(Firstname='c4', Lastname='C4', Email='c4@foo.com'));
-        insert listConExisting;
+        List<Contact> existingContacts = new List<Contact>();
+        existingContacts.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com'));
+        existingContacts.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com'));
+        existingContacts.add(new Contact(Firstname='c3', Lastname='C3', Email='c3@C3.com'));
+        existingContacts.add(new Contact(Firstname='c4', Lastname='C4', Email='c4@C4.com'));
+        insert existingContacts;
 
-        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
+        UTIL_UnitTestData_TEST.setFixedSearchResults(existingContacts);
 
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(
-            Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com',
-            Contact2_Firstname__c='c2', Contact2_Lastname__c='C2', Contact2_Personal_Email__c='c2@foo.com'));
-        listDI.add(new DataImport__c(
-            Contact1_Firstname__c='c3', Contact1_Lastname__c='C3', Contact1_Personal_Email__c='c3@foo.com',
-            Contact2_Firstname__c='c4', Contact2_Lastname__c='C4', Contact2_Personal_Email__c='c4@foo.com'));
-        insert listDI;
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1', 'c2', 'C2'));
+        dataImports.add(BDI_DataImport_TEST.newDI('c3', 'C3', 'c4', 'C4'));
+        insert dataImports;
 
         //run batch data import
         Test.StartTest();
@@ -185,19 +178,18 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = [select Id, Name from Contact];
-        system.assertEquals(4, listCon.size());
+        List<Contact> contacts = [SELECT Id, Name FROM Contact];
+        System.assertEquals(4, contacts.size());
 
-        listDI = [select Status__c, Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c,
-            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Id];
-        system.assertEquals(2, listDI.size());
-        for (DataImport__c di : listDI) {
-            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
-            system.assertNotEquals(null, di.Contact1Imported__c);
-            system.assertNotEquals(null, di.HouseholdAccountImported__c);
-            system.assertEquals(label.bdiDryRunMatched, di.Contact1ImportStatus__c);
-            system.assertNotEquals(null, di.Contact2Imported__c);
-            system.assertEquals(label.bdiDryRunMatched, di.Contact2ImportStatus__c);
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(2, dataImports.size());
+        for (DataImport__c dataImport : dataImports) {
+            System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, dataImport.Status__c);
+            System.assertNotEquals(null, dataImport.Contact1Imported__c);
+            System.assertNotEquals(null, dataImport.HouseholdAccountImported__c);
+            System.assertEquals(Label.bdiDryRunMatched, dataImport.Contact1ImportStatus__c);
+            System.assertNotEquals(null, dataImport.Contact2Imported__c);
+            System.assertEquals(Label.bdiDryRunMatched, dataImport.Contact2ImportStatus__c);
         }
     }
 
@@ -210,11 +202,11 @@ public with sharing class BDI_DryRun_TEST {
     **********************************************************************************************************/
     static testMethod void manyDISameNewA1A2Accounts() {
 
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(Account1_Name__c='A1', Account2_Name__c='A2'));
-        listDI.add(new DataImport__c(Account1_Name__c='A1', Account2_Name__c='A2'));
-        listDI.add(new DataImport__c(Account1_Name__c='A1', Account2_Name__c='A2'));
-        insert listDI;
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(new DataImport__c(Account1_Name__c='A1', Account2_Name__c='A2'));
+        dataImports.add(new DataImport__c(Account1_Name__c='A1', Account2_Name__c='A2'));
+        dataImports.add(new DataImport__c(Account1_Name__c='A1', Account2_Name__c='A2'));
+        insert dataImports;
 
         //run batch data import
         Test.StartTest();
@@ -223,18 +215,17 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Account> listAcc = [select Id, Name from Account];
-        system.assertEquals(0, listAcc.size());
+        List<Account> accounts = [SELECT Id, Name FROM Account];
+        System.assertEquals(0, accounts.size());
 
-        listDI = [select Status__c, Account1Imported__c, Account1ImportStatus__c,
-            Account2Imported__c, Account2ImportStatus__c from DataImport__c order by Id];
-        system.assertEquals(3, listDI.size());
-        for (DataImport__c di : listDI) {
-            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
-            system.assertEquals(null, di.Account1Imported__c);
-            system.assertEquals(null, di.Account2Imported__c);
-            system.assertEquals(label.bdiDryRunNoMatch, di.Account1ImportStatus__c);
-            system.assertEquals(label.bdiDryRunNoMatch, di.Account2ImportStatus__c);
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(3, dataImports.size());
+        for (DataImport__c dataImport : dataImports) {
+            System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, dataImport.Status__c);
+            System.assertEquals(null, dataImport.Account1Imported__c);
+            System.assertEquals(null, dataImport.Account2Imported__c);
+            System.assertEquals(Label.bdiDryRunNoMatch, dataImport.Account1ImportStatus__c);
+            System.assertEquals(Label.bdiDryRunNoMatch, dataImport.Account2ImportStatus__c);
         }
     }
 
@@ -248,19 +239,19 @@ public with sharing class BDI_DryRun_TEST {
     static testMethod void manyDIExistingA1A2Accounts() {
 
         // existing Accounts
-        List<Account> listAccExisting = new List<Account>();
-        listAccExisting.add(new Account(Name='A1'));
-        listAccExisting.add(new Account(Name='A2'));
-        listAccExisting.add(new Account(Name='A3'));
-        listAccExisting.add(new Account(Name='A4'));
-        insert listAccExisting;
+        List<Account> existingAccounts = new List<Account>();
+        existingAccounts.add(new Account(Name='A1'));
+        existingAccounts.add(new Account(Name='A2'));
+        existingAccounts.add(new Account(Name='A3'));
+        existingAccounts.add(new Account(Name='A4'));
+        insert existingAccounts;
 
-        UTIL_UnitTestData_TEST.setFixedSearchResults(listAccExisting);
+        UTIL_UnitTestData_TEST.setFixedSearchResults(existingAccounts);
 
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(Account1_Name__c='A1', Account2_Name__c='A2'));
-        listDI.add(new DataImport__c(Account1_Name__c='A3', Account2_Name__c='A4'));
-        insert listDI;
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(new DataImport__c(Account1_Name__c='A1', Account2_Name__c='A2'));
+        dataImports.add(new DataImport__c(Account1_Name__c='A3', Account2_Name__c='A4'));
+        insert dataImports;
 
         //run batch data import
         Test.StartTest();
@@ -269,18 +260,17 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Account> listAcc = [select Id, Name from Account];
-        system.assertEquals(4, listAcc.size());
+        List<Account> accounts = [SELECT Id, Name FROM Account];
+        System.assertEquals(4, accounts.size());
 
-        listDI = [select Status__c, Account1Imported__c, Account1ImportStatus__c,
-            Account2Imported__c, Account2ImportStatus__c from DataImport__c order by Id];
-        system.assertEquals(2, listDI.size());
-        for (DataImport__c di : listDI) {
-            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
-            system.assertNotEquals(null, di.Account1Imported__c);
-            system.assertNotEquals(null, di.Account2Imported__c);
-            system.assertEquals(label.bdiDryRunMatched, di.Account1ImportStatus__c);
-            system.assertEquals(label.bdiDryRunMatched, di.Account2ImportStatus__c);
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(2, dataImports.size());
+        for (DataImport__c dataImport : dataImports) {
+            System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, dataImport.Status__c);
+            System.assertNotEquals(null, dataImport.Account1Imported__c);
+            System.assertNotEquals(null, dataImport.Account2Imported__c);
+            System.assertEquals(Label.bdiDryRunMatched, dataImport.Account1ImportStatus__c);
+            System.assertEquals(Label.bdiDryRunMatched, dataImport.Account2ImportStatus__c);
         }
     }
 
@@ -295,24 +285,22 @@ public with sharing class BDI_DryRun_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
+        Address__c address = new Address__c(MailingCity__c='Seattle', MailingState__c='Washington', MailingCountry__c='United States');
+
         // existing contacts
-        List<Contact> listConExisting = new List<Contact>();
-        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com', MailingCity='Seattle', MailingState='Washington', MailingCountry='United States'));
-        listConExisting.add(new Contact(Firstname='c3', Lastname='C3', Email='c3@foo.com', MailingCity='Seattle', MailingState='Washington', MailingCountry='United States'));
-        insert listConExisting;
+        List<Contact> existingContacts = new List<Contact>();
+        existingContacts.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com',
+                MailingCity=address.MailingCity__c, MailingState=address.MailingState__c, MailingCountry=address.MailingCountry__c));
+        existingContacts.add(new Contact(Firstname='c3', Lastname='C3', Email='c3@C3.com',
+                MailingCity=address.MailingCity__c, MailingState=address.MailingState__c, MailingCountry=address.MailingCountry__c));
+        insert existingContacts;
 
-        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
+        UTIL_UnitTestData_TEST.setFixedSearchResults(existingContacts);
 
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(
-            Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com',
-            Contact2_Firstname__c='c2', Contact2_Lastname__c='C2', Contact2_Personal_Email__c='c2@foo.com',
-            Home_City__c='Seattle', Home_State_Province__c='Washington'));
-        listDI.add(new DataImport__c(
-            Contact1_Firstname__c='c3', Contact1_Lastname__c='C3', Contact1_Personal_Email__c='c3@foo.com',
-            Contact2_Firstname__c='c4', Contact2_Lastname__c='C4', Contact2_Personal_Email__c='c4@foo.com',
-            Home_City__c='Seattle', Home_State_Province__c='Washington'));
-        insert listDI;
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1', 'c2', 'C2', address));
+        dataImports.add(BDI_DataImport_TEST.newDI('c3', 'C3', 'c4', 'C4', address));
+        insert dataImports;
 
         //run batch data import
         Test.StartTest();
@@ -321,18 +309,18 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = [select Id, Name, AccountId, MailingCity from Contact];
-        system.assertEquals(2, listCon.size());
+        List<Contact> contacts = [SELECT Id, Name, AccountId, MailingCity FROM Contact];
+        System.assertEquals(2, contacts.size());
 
-        List<Address__c> listAddr = [select Id, Household_Account__c, MailingCity__c from Address__c];
-        system.assertEquals(2, listAddr.size());
+        List<Address__c> addresses = [SELECT Id, Household_Account__c, MailingCity__c FROM Address__c];
+        System.assertEquals(2, addresses.size());
 
-        listDI = [select Status__c, HomeAddressImported__c, HomeAddressImportStatus__c, Home_City__c from DataImport__c];
-        system.assertEquals(2, listDI.size());
-        for (DataImport__c di : listDI) {
-            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
-            system.assertNotEquals(null, di.HomeAddressImported__c);
-            system.assertEquals(label.bdiDryRunMatched, di.HomeAddressImportStatus__c);
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(2, dataImports.size());
+        for (DataImport__c dataImport : dataImports) {
+            System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, dataImport.Status__c);
+            System.assertNotEquals(null, dataImport.HomeAddressImported__c);
+            System.assertEquals(Label.bdiDryRunMatched, dataImport.HomeAddressImportStatus__c);
         }
     }
 
@@ -346,29 +334,25 @@ public with sharing class BDI_DryRun_TEST {
     static testMethod void manyDIUpdatedHomeAddresses() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
-        
+
+        Address__c address1 = new Address__c(MailingCity__c='Seattle', MailingState__c='Washington', MailingCountry__c='United States');
+        Address__c address2 = new Address__c(MailingCity__c='Portland', MailingState__c='Oregon');
+
         // existing contacts
-        List<Contact> listConExisting = new List<Contact>();
-        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com', MailingCity='Seattle', MailingState='Washington', MailingCountry='United States'));
-        listConExisting.add(new Contact(Firstname='c3', Lastname='C3', Email='c3@foo.com', MailingCity='Seattle', MailingState='Washington', MailingCountry='United States'));
-        insert listConExisting;
+        List<Contact> existingContacts = new List<Contact>();
+        existingContacts.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com',
+                MailingCity=address1.MailingCity__c, MailingState=address1.MailingState__c, MailingCountry=address1.MailingCountry__c));
+        existingContacts.add(new Contact(Firstname='c3', Lastname='C3', Email='c3@C3.com',
+                MailingCity=address1.MailingCity__c, MailingState=address1.MailingState__c, MailingCountry=address1.MailingCountry__c));
+        insert existingContacts;
 
-        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
+        UTIL_UnitTestData_TEST.setFixedSearchResults(existingContacts);
 
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(
-            Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com',
-            Contact2_Firstname__c='c2', Contact2_Lastname__c='C2', Contact2_Personal_Email__c='c2@foo.com',
-            Home_City__c='Portland', Home_State_Province__c='Oregon'));
-        listDI.add(new DataImport__c(
-            Contact1_Firstname__c='c3', Contact1_Lastname__c='C3', Contact1_Personal_Email__c='c3@foo.com',
-            Contact2_Firstname__c='c4', Contact2_Lastname__c='C4', Contact2_Personal_Email__c='c4@foo.com',
-            Home_City__c='Portland', Home_State_Province__c='Oregon'));
-        listDI.add(new DataImport__c(
-            Contact1_Firstname__c='c3', Contact1_Lastname__c='C3', Contact1_Personal_Email__c='c3@foo.com',
-            Contact2_Firstname__c='c5', Contact2_Lastname__c='C5', Contact2_Personal_Email__c='c5@foo.com',
-            Home_City__c='Portland', Home_State_Province__c='Oregon'));
-        insert listDI;
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1', 'c2', 'C2', address2));
+        dataImports.add(BDI_DataImport_TEST.newDI('c3', 'C3', 'c4', 'C4', address2));
+        dataImports.add(BDI_DataImport_TEST.newDI('c3', 'C3', 'c5', 'C5', address2));
+        insert dataImports;
 
         //run batch data import
         Test.StartTest();
@@ -377,18 +361,18 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = [select Id, Name, AccountId, MailingCity from Contact];
-        system.assertEquals(2, listCon.size());
+        List<Contact> contacts = [SELECT Id, Name, AccountId, MailingCity FROM Contact];
+        System.assertEquals(2, contacts.size());
 
-        List<Address__c> listAddr = [select Id, Household_Account__c, MailingCity__c from Address__c];
-        system.assertEquals(2, listAddr.size());
+        List<Address__c> addresses = [SELECT Id, Household_Account__c, MailingCity__c FROM Address__c];
+        System.assertEquals(2, addresses.size());
 
-        listDI = [select Status__c, HomeAddressImported__c, HomeAddressImportStatus__c, Home_City__c from DataImport__c];
-        system.assertEquals(3, listDI.size());
-        for (DataImport__c di : listDI) {
-            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
-            system.assertEquals(null, di.HomeAddressImported__c);
-            system.assertEquals(label.bdiDryRunNoMatch, di.HomeAddressImportStatus__c);
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(3, dataImports.size());
+        for (DataImport__c dataImport : dataImports) {
+            System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, dataImport.Status__c);
+            System.assertEquals(null, dataImport.HomeAddressImported__c);
+            System.assertEquals(Label.bdiDryRunNoMatch, dataImport.HomeAddressImportStatus__c);
         }
     }
 
@@ -401,11 +385,11 @@ public with sharing class BDI_DryRun_TEST {
     **********************************************************************************************************/
     static testMethod void manyDIContainingErrors() {
 
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(Contact1_Firstname__c='fail'));
-        listDI.add(new DataImport__c(Contact1_Firstname__c='fail'));
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c3', Contact1_Lastname__c='C3'));
-        insert listDI;
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(new DataImport__c(Contact1_Firstname__c='fail'));
+        dataImports.add(new DataImport__c(Contact1_Firstname__c='fail'));
+        dataImports.add(new DataImport__c(Contact1_Firstname__c='c3', Contact1_Lastname__c='C3'));
+        insert dataImports;
 
         //run batch data import
         Test.StartTest();
@@ -414,23 +398,22 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = [select Id, Name from Contact];
-        system.assertEquals(0, listCon.size());
+        List<Contact> contacts = [SELECT Id, Name FROM Contact];
+        System.assertEquals(0, contacts.size());
 
-        listDI = [select Status__c, Contact1_Firstname__c, Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c,
-            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Id];
-        system.assertEquals(3, listDI.size());
-        for (DataImport__c di : listDI) {
-            if (di.Contact1_Firstname__c == 'fail') {
-                system.assertEquals(BDI_DataImport_API.bdiDryRunError, di.Status__c);
-                system.assertEquals(null, di.Contact1Imported__c);
-                system.assertEquals(null, di.HouseholdAccountImported__c);
-                system.assertNotEquals(null, di.Contact1ImportStatus__c);
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(3, dataImports.size());
+        for (DataImport__c dataImport : dataImports) {
+            if (dataImport.Contact1_Firstname__c == 'fail') {
+                System.assertEquals(BDI_DataImport_API.bdiDryRunError, dataImport.Status__c);
+                System.assertEquals(null, dataImport.Contact1Imported__c);
+                System.assertEquals(null, dataImport.HouseholdAccountImported__c);
+                System.assertNotEquals(null, dataImport.Contact1ImportStatus__c);
             } else {
-                system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
-                system.assertEquals(null, di.Contact1Imported__c);
-                system.assertEquals(null, di.HouseholdAccountImported__c);
-                system.assertEquals(label.bdiDryRunNoMatch, di.Contact1ImportStatus__c);
+                System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, dataImport.Status__c);
+                System.assertEquals(null, dataImport.Contact1Imported__c);
+                System.assertEquals(null, dataImport.HouseholdAccountImported__c);
+                System.assertEquals(Label.bdiDryRunNoMatch, dataImport.Contact1ImportStatus__c);
             }
         }
     }
@@ -444,12 +427,11 @@ public with sharing class BDI_DryRun_TEST {
     **********************************************************************************************************/
     static testMethod void manyDINewC1ContactNewDonations() {
 
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com',
-            Donation_Amount__c=100, Donation_Date__c=System.today()));
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c2', Contact1_Lastname__c='C2', Contact1_Work_Email__c='c2@foo.com',
-        Donation_Amount__c=200, Donation_Date__c=System.today()));
-        insert listDI;
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1', 100));
+
+        dataImports.add(BDI_DataImport_TEST.newDI('c2', 'C2', 100));
+        insert dataImports;
 
         //run batch data import
         Test.StartTest();
@@ -458,28 +440,26 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = [select Id, Name from Contact];
-        system.assertEquals(0, listCon.size());
-        List<Opportunity> listOpp = [SELECT Id, Name FROM Opportunity];
-        system.assertEquals(0, listOpp.size());
+        List<Contact> contacts = [SELECT Id, Name FROM Contact];
+        System.assertEquals(0, contacts.size());
+        List<Opportunity> opps = [SELECT Id, Name FROM Opportunity];
+        System.assertEquals(0, opps.size());
 
-        listDI = [select Status__c, Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c,
-            PaymentImportStatus__c, PaymentImported__c, Payment_Possible_Matches__c,
-            DonationImportStatus__c, DonationImported__c, Donation_Possible_Matches__c from DataImport__c order by Id];
-        system.assertEquals(2, listDI.size());
-        for (DataImport__c di : listDI) {
-            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
-            system.assertEquals(null, di.Contact1Imported__c);
-            system.assertEquals(null, di.HouseholdAccountImported__c);
-            system.assertEquals(label.bdiDryRunNoMatch, di.Contact1ImportStatus__c);
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(2, dataImports.size());
+        for (DataImport__c dataImport : dataImports) {
+            System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, dataImport.Status__c);
+            System.assertEquals(null, dataImport.Contact1Imported__c);
+            System.assertEquals(null, dataImport.HouseholdAccountImported__c);
+            System.assertEquals(Label.bdiDryRunNoMatch, dataImport.Contact1ImportStatus__c);
 
-            system.assertEquals(null, di.DonationImported__c);
-            system.assertEquals(null, di.Donation_Possible_Matches__c);
-            system.assertEquals(null, di.DonationImportStatus__c);
+            System.assertEquals(null, dataImport.DonationImported__c);
+            System.assertEquals(null, dataImport.Donation_Possible_Matches__c);
+            System.assertEquals(null, dataImport.DonationImportStatus__c);
 
-            system.assertEquals(null, di.PaymentImported__c);
-            system.assertEquals(null, di.Payment_Possible_Matches__c);
-            system.assertEquals(null, di.PaymentImportStatus__c);
+            System.assertEquals(null, dataImport.PaymentImported__c);
+            System.assertEquals(null, dataImport.Payment_Possible_Matches__c);
+            System.assertEquals(null, dataImport.PaymentImportStatus__c);
         }
     }
 
@@ -493,19 +473,18 @@ public with sharing class BDI_DryRun_TEST {
     static testMethod void manyDIExistingC1ContactNewDonations() {
 
         // existing contacts
-        List<Contact> listConExisting = new List<Contact>();
-        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com'));
-        listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@foo.com'));
-        insert listConExisting;
+        List<Contact> existingContacts = new List<Contact>();
+        existingContacts.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com'));
+        existingContacts.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com'));
+        insert existingContacts;
 
-        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
+        UTIL_UnitTestData_TEST.setFixedSearchResults(existingContacts);
 
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com',
-            Donation_Amount__c=100, Donation_Date__c=System.today()));
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c2', Contact1_Lastname__c='C2', Contact1_Work_Email__c='c2@foo.com',
-            Donation_Amount__c=200, Donation_Date__c=System.today()));
-        insert listDI;
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1', 100));
+
+        dataImports.add(BDI_DataImport_TEST.newDI('c2', 'C2', 200));
+        insert dataImports;
 
         // set the specified settings
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
@@ -520,28 +499,26 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = [select Id, Name from Contact];
-        system.assertEquals(2, listCon.size());
-        List<Opportunity> listOpp = [SELECT Id, Name FROM Opportunity];
-        system.assertEquals(0, listOpp.size());
+        List<Contact> contacts = [SELECT Id, Name FROM Contact];
+        System.assertEquals(2, contacts.size());
+        List<Opportunity> opps = [SELECT Id, Name FROM Opportunity];
+        System.assertEquals(0, opps.size());
 
-        listDI = [select Status__c, Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c,
-            PaymentImportStatus__c, PaymentImported__c, Payment_Possible_Matches__c,
-            DonationImportStatus__c, DonationImported__c, Donation_Possible_Matches__c from DataImport__c order by Id];
-        system.assertEquals(2, listDI.size());
-        for (DataImport__c di : listDI) {
-            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
-            system.assertNotEquals(null, di.Contact1Imported__c);
-            system.assertNotEquals(null, di.HouseholdAccountImported__c);
-            system.assertEquals(label.bdiDryRunMatched, di.Contact1ImportStatus__c);
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(2, dataImports.size());
+        for (DataImport__c dataImport : dataImports) {
+            System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, dataImport.Status__c);
+            System.assertNotEquals(null, dataImport.Contact1Imported__c);
+            System.assertNotEquals(null, dataImport.HouseholdAccountImported__c);
+            System.assertEquals(Label.bdiDryRunMatched, dataImport.Contact1ImportStatus__c);
 
-            system.assertEquals(null, di.DonationImported__c);
-            system.assertEquals(null, di.Donation_Possible_Matches__c);
-            system.assertEquals(label.bdiDryRunNoMatch, di.DonationImportStatus__c);
+            System.assertEquals(null, dataImport.DonationImported__c);
+            System.assertEquals(null, dataImport.Donation_Possible_Matches__c);
+            System.assertEquals(Label.bdiDryRunNoMatch, dataImport.DonationImportStatus__c);
 
-            system.assertEquals(null, di.PaymentImported__c);
-            system.assertEquals(null, di.Payment_Possible_Matches__c);
-            system.assertEquals(null, di.PaymentImportStatus__c);
+            System.assertEquals(null, dataImport.PaymentImported__c);
+            System.assertEquals(null, dataImport.Payment_Possible_Matches__c);
+            System.assertEquals(null, dataImport.PaymentImportStatus__c);
         }
     }
 
@@ -555,25 +532,24 @@ public with sharing class BDI_DryRun_TEST {
     static testMethod void manyDIExistingC1ContactExistingMatchedDonations() {
 
         // existing contacts
-        List<Contact> listConExisting = new List<Contact>();
-        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com'));
-        listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@foo.com'));
-        insert listConExisting;
+        List<Contact> existingContacts = new List<Contact>();
+        existingContacts.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com'));
+        existingContacts.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com'));
+        insert existingContacts;
 
-        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
+        UTIL_UnitTestData_TEST.setFixedSearchResults(existingContacts);
         
         // existing opps
-        List<Opportunity> listOppExisting = UTIL_UnitTestData_TEST.OppsForContactList(listConExisting, null,
+        List<Opportunity> existingOpps = UTIL_UnitTestData_TEST.OppsForContactList(existingContacts, null,
             UTIL_unitTestData_TEST.getOpenStage(), System.today(), 100, null, null);
-        insert listOppExisting;
+        insert existingOpps;
 
-
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com',
-            Donation_Amount__c=100, Donation_Date__c=System.today()));
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c2', Contact1_Lastname__c='C2', Contact1_Work_Email__c='c2@foo.com',
-            Donation_Amount__c=100, Donation_Date__c=System.today()));
-        insert listDI;
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1', 100));
+        //should stay in old format for Contact1_Work_Email__c only
+        dataImports.add(new DataImport__c(Contact1_Firstname__c='c2', Contact1_Lastname__c='C2', Contact1_Work_Email__c='c2@C2.com',
+                Donation_Amount__c=100, Donation_Date__c=System.today()));
+        insert dataImports;
 
         // set the specified settings
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
@@ -588,28 +564,26 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = [select Id, Name from Contact];
-        system.assertEquals(2, listCon.size());
-        List<Opportunity> listOpp = [SELECT Id, Name FROM Opportunity];
-        system.assertEquals(2, listOpp.size());
+        List<Contact> contacts = [SELECT Id, Name FROM Contact];
+        System.assertEquals(2, contacts.size());
+        List<Opportunity> opps = [SELECT Id, Name FROM Opportunity];
+        System.assertEquals(2, opps.size());
 
-        listDI = [select Status__c, Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c,
-            PaymentImportStatus__c, PaymentImported__c, Payment_Possible_Matches__c,
-            DonationImportStatus__c, DonationImported__c, Donation_Possible_Matches__c from DataImport__c order by Id];
-        system.assertEquals(2, listDI.size());
-        for (DataImport__c di : listDI) {
-            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
-            system.assertNotEquals(null, di.Contact1Imported__c);
-            system.assertNotEquals(null, di.HouseholdAccountImported__c);
-            system.assertEquals(label.bdiDryRunMatched, di.Contact1ImportStatus__c);
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(2, dataImports.size());
+        for (DataImport__c dataImport : dataImports) {
+            System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, dataImport.Status__c);
+            System.assertNotEquals(null, dataImport.Contact1Imported__c);
+            System.assertNotEquals(null, dataImport.HouseholdAccountImported__c);
+            System.assertEquals(Label.bdiDryRunMatched, dataImport.Contact1ImportStatus__c);
 
-            system.assertNotEquals(null, di.DonationImported__c);
-            system.assertEquals(null, di.Donation_Possible_Matches__c);
-            system.assertEquals(label.bdiDryRunMatched, di.DonationImportStatus__c);
+            System.assertNotEquals(null, dataImport.DonationImported__c);
+            System.assertEquals(null, dataImport.Donation_Possible_Matches__c);
+            System.assertEquals(Label.bdiDryRunMatched, dataImport.DonationImportStatus__c);
 
-            system.assertNotEquals(null, di.PaymentImported__c);
-            system.assertEquals(null, di.Payment_Possible_Matches__c);
-            system.assertEquals(label.bdiDryRunMatched, di.PaymentImportStatus__c);
+            System.assertNotEquals(null, dataImport.PaymentImported__c);
+            System.assertEquals(null, dataImport.Payment_Possible_Matches__c);
+            System.assertEquals(Label.bdiDryRunMatched, dataImport.PaymentImportStatus__c);
         }
     }
 
@@ -623,25 +597,26 @@ public with sharing class BDI_DryRun_TEST {
     static testMethod void manyDIExistingC1ContactExistingMatchedByIdDonations() {
 
         // existing contacts
-        List<Contact> listConExisting = new List<Contact>();
-        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com'));
-        listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@foo.com'));
-        insert listConExisting;
+        List<Contact> existingContacts = new List<Contact>();
+        existingContacts.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com'));
+        existingContacts.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com'));
+        insert existingContacts;
 
-        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
+        UTIL_UnitTestData_TEST.setFixedSearchResults(existingContacts);
 
         // existing opps
-        List<Opportunity> listOppExisting = UTIL_UnitTestData_TEST.OppsForContactList(listConExisting, null,
+        List<Opportunity> existingOpps = UTIL_UnitTestData_TEST.OppsForContactList(existingContacts, null,
             UTIL_unitTestData_TEST.getOpenStage(), System.today(), 100, null, null);
-        insert listOppExisting;
+        insert existingOpps;
 
 
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com',
-            Donation_Amount__c=100, Donation_Date__c=System.today(), DonationImported__c=listOppExisting[0].Id));
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c2', Contact1_Lastname__c='C2', Contact1_Work_Email__c='c2@foo.com',
-            Donation_Amount__c=100, Donation_Date__c=System.today(), DonationImported__c=listOppExisting[1].Id));
-        insert listDI;
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1', 100));
+        dataImports[0].DonationImported__c = existingOpps[0].Id;
+
+        dataImports.add(BDI_DataImport_TEST.newDI('c2', 'C2', 200));
+        dataImports[1].DonationImported__c = existingOpps[1].Id;
+        insert dataImports;
 
         // set the specified settings
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
@@ -656,28 +631,26 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = [select Id, Name from Contact];
-        system.assertEquals(2, listCon.size());
-        List<Opportunity> listOpp = [SELECT Id, Name FROM Opportunity];
-        system.assertEquals(2, listOpp.size());
+        List<Contact> contacts = [SELECT Id, Name FROM Contact];
+        System.assertEquals(2, contacts.size());
+        List<Opportunity> opps = [SELECT Id, Name FROM Opportunity];
+        System.assertEquals(2, opps.size());
 
-        listDI = [select Status__c, Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c,
-            PaymentImportStatus__c, PaymentImported__c, Payment_Possible_Matches__c,
-            DonationImportStatus__c, DonationImported__c, Donation_Possible_Matches__c from DataImport__c order by Id];
-        system.assertEquals(2, listDI.size());
-        for (DataImport__c di : listDI) {
-            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
-            system.assertNotEquals(null, di.Contact1Imported__c);
-            system.assertNotEquals(null, di.HouseholdAccountImported__c);
-            system.assertEquals(label.bdiDryRunMatched, di.Contact1ImportStatus__c);
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(2, dataImports.size());
+        for (DataImport__c dataImport : dataImports) {
+            System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, dataImport.Status__c);
+            System.assertNotEquals(null, dataImport.Contact1Imported__c);
+            System.assertNotEquals(null, dataImport.HouseholdAccountImported__c);
+            System.assertEquals(Label.bdiDryRunMatched, dataImport.Contact1ImportStatus__c);
 
-            system.assertNotEquals(null, di.DonationImported__c);
-            system.assertEquals(null, di.Donation_Possible_Matches__c);
-            system.assertEquals(label.bdiDryRunMatchedId, di.DonationImportStatus__c);
+            System.assertNotEquals(null, dataImport.DonationImported__c);
+            System.assertEquals(null, dataImport.Donation_Possible_Matches__c);
+            System.assertEquals(Label.bdiDryRunMatchedId, dataImport.DonationImportStatus__c);
 
-            system.assertNotEquals(null, di.PaymentImported__c);
-            system.assertEquals(null, di.Payment_Possible_Matches__c);
-            system.assertEquals(label.bdiDryRunMatched, di.PaymentImportStatus__c);
+            System.assertNotEquals(null, dataImport.PaymentImported__c);
+            System.assertEquals(null, dataImport.Payment_Possible_Matches__c);
+            System.assertEquals(Label.bdiDryRunMatched, dataImport.PaymentImportStatus__c);
         }
     }
 
@@ -691,28 +664,29 @@ public with sharing class BDI_DryRun_TEST {
     static testMethod void manyDIExistingC1ContactExistingMatchedByIdPayments() {
 
         // existing contacts
-        List<Contact> listConExisting = new List<Contact>();
-        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com'));
-        listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@foo.com'));
-        insert listConExisting;
+        List<Contact> existingContacts = new List<Contact>();
+        existingContacts.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com'));
+        existingContacts.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com'));
+        insert existingContacts;
 
-        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
+        UTIL_UnitTestData_TEST.setFixedSearchResults(existingContacts);
 
         // existing opps
-        List<Opportunity> listOppExisting = UTIL_UnitTestData_TEST.OppsForContactList(listConExisting, null,
+        List<Opportunity> listOppExisting = UTIL_UnitTestData_TEST.OppsForContactList(existingContacts, null,
             UTIL_unitTestData_TEST.getOpenStage(), System.today(), 100, null, null);
         insert listOppExisting;
 
         // find auto-created payments
         List<npe01__OppPayment__c> listPaymentExisting = [SELECT Id FROM npe01__OppPayment__c ORDER BY npe01__Opportunity__c];
-        system.assertEquals(2, listPaymentExisting.size());
+        System.assertEquals(2, listPaymentExisting.size());
 
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com',
-            Donation_Amount__c=100, Donation_Date__c=System.today(), PaymentImported__c=listPaymentExisting[0].Id));
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c2', Contact1_Lastname__c='C2', Contact1_Work_Email__c='c2@foo.com',
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1', 100));
+        dataImports[0].PaymentImported__c=listPaymentExisting[0].Id;
+        //use old format for work email only
+        dataImports.add(new DataImport__c(Contact1_Firstname__c='c2', Contact1_Lastname__c='C2', Contact1_Work_Email__c='c2@C2.com',
             Donation_Amount__c=100, Donation_Date__c=System.today(), PaymentImported__c=listPaymentExisting[1].Id));
-        insert listDI;
+        insert dataImports;
 
         // set the specified settings
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
@@ -727,28 +701,26 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = [select Id, Name from Contact];
-        system.assertEquals(2, listCon.size());
-        List<Opportunity> listOpp = [SELECT Id, Name FROM Opportunity];
-        system.assertEquals(2, listOpp.size());
+        List<Contact> contacts = [SELECT Id, Name FROM Contact];
+        System.assertEquals(2, contacts.size());
+        List<Opportunity> opps = [SELECT Id, Name FROM Opportunity];
+        System.assertEquals(2, opps.size());
 
-        listDI = [select Status__c, Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c,
-            PaymentImportStatus__c, PaymentImported__c, Payment_Possible_Matches__c,
-            DonationImportStatus__c, DonationImported__c, Donation_Possible_Matches__c from DataImport__c order by Id];
-        system.assertEquals(2, listDI.size());
-        for (DataImport__c di : listDI) {
-            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
-            system.assertNotEquals(null, di.Contact1Imported__c);
-            system.assertNotEquals(null, di.HouseholdAccountImported__c);
-            system.assertEquals(label.bdiDryRunMatched, di.Contact1ImportStatus__c);
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(2, dataImports.size());
+        for (DataImport__c dataImport : dataImports) {
+            System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, dataImport.Status__c);
+            System.assertNotEquals(null, dataImport.Contact1Imported__c);
+            System.assertNotEquals(null, dataImport.HouseholdAccountImported__c);
+            System.assertEquals(Label.bdiDryRunMatched, dataImport.Contact1ImportStatus__c);
 
-            system.assertNotEquals(null, di.DonationImported__c);
-            system.assertEquals(null, di.Donation_Possible_Matches__c);
-            system.assertEquals(label.bdiDryRunMatchedId, di.DonationImportStatus__c);
+            System.assertNotEquals(null, dataImport.DonationImported__c);
+            System.assertEquals(null, dataImport.Donation_Possible_Matches__c);
+            System.assertEquals(Label.bdiDryRunMatchedId, dataImport.DonationImportStatus__c);
 
-            system.assertNotEquals(null, di.PaymentImported__c);
-            system.assertEquals(null, di.Payment_Possible_Matches__c);
-            system.assertEquals(label.bdiDryRunMatchedId, di.PaymentImportStatus__c);
+            System.assertNotEquals(null, dataImport.PaymentImported__c);
+            System.assertEquals(null, dataImport.Payment_Possible_Matches__c);
+            System.assertEquals(Label.bdiDryRunMatchedId, dataImport.PaymentImportStatus__c);
         }
     }
 
@@ -762,27 +734,27 @@ public with sharing class BDI_DryRun_TEST {
     static testMethod void manyDIExistingC1ContactExistingBestMatchedDonations() {
 
         // existing contacts
-        List<Contact> listConExisting = new List<Contact>();
-        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com'));
-        listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@foo.com'));
-        insert listConExisting;
+        List<Contact> existingContacts = new List<Contact>();
+        existingContacts.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com'));
+        existingContacts.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com'));
+        insert existingContacts;
 
-        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
+        UTIL_UnitTestData_TEST.setFixedSearchResults(existingContacts);
 
         // existing opps
-        List<Opportunity> listOppExisting = UTIL_UnitTestData_TEST.OppsForContactList(listConExisting, null,
+        List<Opportunity> existingOpportunities = UTIL_UnitTestData_TEST.OppsForContactList(existingContacts, null,
             UTIL_unitTestData_TEST.getOpenStage(), System.today().addDays(-1), 100, null, null);
-        listOppExisting.addAll(UTIL_UnitTestData_TEST.OppsForContactList(listConExisting, null,
+        existingOpportunities.addAll(UTIL_UnitTestData_TEST.OppsForContactList(existingContacts, null,
             UTIL_unitTestData_TEST.getOpenStage(), System.today(), 100, null, null));
-        insert listOppExisting;
+        insert existingOpportunities;
 
 
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com',
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1', 100));
+        //use old format for work email only
+        dataImports.add(new DataImport__c(Contact1_Firstname__c='c2', Contact1_Lastname__c='C2', Contact1_Work_Email__c='c2@C2.com',
             Donation_Amount__c=100, Donation_Date__c=System.today()));
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c2', Contact1_Lastname__c='C2', Contact1_Work_Email__c='c2@foo.com',
-            Donation_Amount__c=100, Donation_Date__c=System.today()));
-        insert listDI;
+        insert dataImports;
 
         // set the specified settings
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
@@ -798,28 +770,26 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = [select Id, Name from Contact];
-        system.assertEquals(2, listCon.size());
+        List<Contact> listCon = [SELECT Id, Name FROM Contact];
+        System.assertEquals(2, listCon.size());
         List<Opportunity> listOpp = [SELECT Id, Name FROM Opportunity];
-        system.assertEquals(4, listOpp.size());
+        System.assertEquals(4, listOpp.size());
 
-        listDI = [select Status__c, Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c,
-            PaymentImportStatus__c, PaymentImported__c, Payment_Possible_Matches__c,
-            DonationImportStatus__c, DonationImported__c, Donation_Possible_Matches__c from DataImport__c order by Id];
-        system.assertEquals(2, listDI.size());
-        for (DataImport__c di : listDI) {
-            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
-            system.assertNotEquals(null, di.Contact1Imported__c);
-            system.assertNotEquals(null, di.HouseholdAccountImported__c);
-            system.assertEquals(label.bdiDryRunMatched, di.Contact1ImportStatus__c);
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(2, dataImports.size());
+        for (DataImport__c dataImport : dataImports) {
+            System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, dataImport.Status__c);
+            System.assertNotEquals(null, dataImport.Contact1Imported__c);
+            System.assertNotEquals(null, dataImport.HouseholdAccountImported__c);
+            System.assertEquals(Label.bdiDryRunMatched, dataImport.Contact1ImportStatus__c);
 
-            system.assertNotEquals(null, di.DonationImported__c);
-            system.assertNotEquals(null, di.Donation_Possible_Matches__c);
-            system.assertEquals(label.bdiDryRunMatchedBest, di.DonationImportStatus__c);
+            System.assertNotEquals(null, dataImport.DonationImported__c);
+            System.assertNotEquals(null, dataImport.Donation_Possible_Matches__c);
+            System.assertEquals(Label.bdiDryRunMatchedBest, dataImport.DonationImportStatus__c);
 
-            system.assertNotEquals(null, di.PaymentImported__c);
-            system.assertNotEquals(null, di.Payment_Possible_Matches__c);
-            system.assertEquals(label.bdiDryRunMatchedBest, di.PaymentImportStatus__c);
+            System.assertNotEquals(null, dataImport.PaymentImported__c);
+            System.assertNotEquals(null, dataImport.Payment_Possible_Matches__c);
+            System.assertEquals(Label.bdiDryRunMatchedBest, dataImport.PaymentImportStatus__c);
         }
     }
 
@@ -833,19 +803,19 @@ public with sharing class BDI_DryRun_TEST {
     static testMethod void manyDIExistingC1ContactNewDonationsInvalidRecordtype() {
 
         // existing contacts
-        List<Contact> listConExisting = new List<Contact>();
-        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com'));
-        listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@foo.com'));
-        insert listConExisting;
+        List<Contact> existingContacts = new List<Contact>();
+        existingContacts.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com'));
+        existingContacts.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com'));
+        insert existingContacts;
 
-        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
+        UTIL_UnitTestData_TEST.setFixedSearchResults(existingContacts);
 
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com',
-            Donation_Amount__c=100, Donation_Date__c=System.today(), Donation_Record_Type_Name__c='bogus rt'));
-        listDI.add(new DataImport__c(Contact1_Firstname__c='c2', Contact1_Lastname__c='C2', Contact1_Work_Email__c='c2@foo.com',
-            Donation_Amount__c=200, Donation_Date__c=System.today(), Donation_Record_Type_Name__c='bogus rt'));
-        insert listDI;
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1', 100));
+        dataImports[0].Donation_Record_Type_Name__c='bogus rt';
+        dataImports.add(BDI_DataImport_TEST.newDI('c2', 'C2', 200));
+        dataImports[1].Donation_Record_Type_Name__c='bogus rt';
+        insert dataImports;
 
         // set the specified settings
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
@@ -860,28 +830,26 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = [select Id, Name from Contact];
-        system.assertEquals(2, listCon.size());
-        List<Opportunity> listOpp = [SELECT Id, Name FROM Opportunity];
-        system.assertEquals(0, listOpp.size());
+        List<Contact> contacts = [SELECT Id, Name FROM Contact];
+        System.assertEquals(2, contacts.size());
+        List<Opportunity> opps = [SELECT Id, Name FROM Opportunity];
+        System.assertEquals(0, opps.size());
 
-        listDI = [select Status__c, Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c,
-            PaymentImportStatus__c, PaymentImported__c, Payment_Possible_Matches__c,
-            DonationImportStatus__c, DonationImported__c, Donation_Possible_Matches__c from DataImport__c order by Id];
-        system.assertEquals(2, listDI.size());
-        for (DataImport__c di : listDI) {
-            system.assertEquals(BDI_DataImport_API.bdiDryRunError, di.Status__c);
-            system.assertNotEquals(null, di.Contact1Imported__c);
-            system.assertNotEquals(null, di.HouseholdAccountImported__c);
-            system.assertEquals(label.bdiDryRunMatched, di.Contact1ImportStatus__c);
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(2, dataImports.size());
+        for (DataImport__c dataImport : dataImports) {
+            System.assertEquals(BDI_DataImport_API.bdiDryRunError, dataImport.Status__c);
+            System.assertNotEquals(null, dataImport.Contact1Imported__c);
+            System.assertNotEquals(null, dataImport.HouseholdAccountImported__c);
+            System.assertEquals(Label.bdiDryRunMatched, dataImport.Contact1ImportStatus__c);
 
-            system.assertEquals(null, di.DonationImported__c);
-            system.assertEquals(null, di.Donation_Possible_Matches__c);
-            system.assertEquals(label.bdiErrorInvalidOppRTName, di.DonationImportStatus__c);
+            System.assertEquals(null, dataImport.DonationImported__c);
+            System.assertEquals(null, dataImport.Donation_Possible_Matches__c);
+            System.assertEquals(Label.bdiErrorInvalidOppRTName, dataImport.DonationImportStatus__c);
 
-            system.assertEquals(null, di.PaymentImported__c);
-            system.assertEquals(null, di.Payment_Possible_Matches__c);
-            system.assertEquals(null, di.PaymentImportStatus__c);
+            System.assertEquals(null, dataImport.PaymentImported__c);
+            System.assertEquals(null, dataImport.Payment_Possible_Matches__c);
+            System.assertEquals(null, dataImport.PaymentImportStatus__c);
         }
     }
 
@@ -896,11 +864,11 @@ public with sharing class BDI_DryRun_TEST {
     static testMethod void manyDISameBatch() {
 
         DataImportBatch__c batch = BDI_DataImportAPI_TEST.newBatch('mybatch', false);
-        List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(BDI_DataImportAPI_TEST.newDI(batch.Id, 'c1', 'C1'));
-        listDI.add(BDI_DataImportAPI_TEST.newDI(batch.Id, 'c1', 'C1'));
-        listDI.add(BDI_DataImportAPI_TEST.newDI(batch.Id, 'c1', 'C1'));
-        insert listDI;
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(BDI_DataImportAPI_TEST.newDI(batch.Id, 'c1', 'C1'));
+        dataImports.add(BDI_DataImportAPI_TEST.newDI(batch.Id, 'c1', 'C1'));
+        dataImports.add(BDI_DataImportAPI_TEST.newDI(batch.Id, 'c1', 'C1'));
+        insert dataImports;
 
         //run batch data import
         Test.StartTest();
@@ -909,23 +877,128 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = [select Id, Name from Contact];
-        system.assertEquals(0, listCon.size());
+        List<Contact> contacts = [SELECT Id, Name FROM Contact];
+        System.assertEquals(0, contacts.size());
 
-        listDI = [select Status__c, Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c,
-            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Id];
-        system.assertEquals(3, listDI.size());
-        for (DataImport__c di : listDI) {
-            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
-            system.assertEquals(null, di.Contact1Imported__c);
-            system.assertEquals(null, di.HouseholdAccountImported__c);
-            system.assertEquals(label.bdiDryRunNoMatch, di.Contact1ImportStatus__c);
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(3, dataImports.size());
+        for (DataImport__c dataImport : dataImports) {
+            System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, dataImport.Status__c);
+            System.assertEquals(null, dataImport.Contact1Imported__c);
+            System.assertEquals(null, dataImport.HouseholdAccountImported__c);
+            System.assertEquals(Label.bdiDryRunNoMatch, dataImport.Contact1ImportStatus__c);
         }
 
-        DataImportBatch__c diBatch = [SELECT Id, Records_Failed__c, Records_Successfully_Processed__c, Last_Processed_On__c from DataImportBatch__c];
-        system.assertEquals(null, diBatch.Records_Failed__c);
-        system.assertEquals(null, diBatch.Records_Successfully_Processed__c);
-        system.assertEquals(null, diBatch.Last_Processed_On__c);
+        batch = [SELECT Id, Records_Failed__c, Records_Successfully_Processed__c, Last_Processed_On__c FROM DataImportBatch__c];
+        System.assertEquals(null, batch.Records_Failed__c);
+        System.assertEquals(null, batch.Records_Successfully_Processed__c);
+        System.assertEquals(null, batch.Last_Processed_On__c);
+    }
+
+    /*********************************************************************************************************
+    * @description operation
+    *        run dry run contacts with donation & campaign IDs and Names
+    * verify:
+    *    DonationCampaignImported__c is set on ID and name match
+    *    Campaign Status is still matched instead of Matched by ID
+    **********************************************************************************************************/
+    static testMethod void TwoDIWithDonationsAndCampaignIdsInDryRun() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
+        List<Campaign> campaigns = new List<Campaign>();
+        campaigns.add(new Campaign(Name = 'CmpExisting'));
+        campaigns.add(new Campaign(Name = 'AnotherCmpExisting'));
+        insert campaigns;
+
+        Id campaignId = campaigns[0].Id;
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1', 100));
+        dataImports[0].DonationCampaignImported__c = campaignId;
+
+        dataImports.add(BDI_DataImport_TEST.newDI('c2', 'C2', 200));
+        dataImports[1].DonationCampaignImported__c = null;
+        dataImports[1].Donation_Campaign_Name__c = 'AnotherCmpExisting';
+
+        insert dataImports;
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(null, true);
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        //verify dry run statuses and import fields
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(System.Label.bdiDryRunMatchedId, dataImports[0].DonationCampaignImportStatus__c, 'DonationCampaignImportStatus__c should have a match by ID');
+        System.assertEquals(campaigns[0].Id, dataImports[0].DonationCampaignImported__c, 'DonationCampaignImported__c does not have the correct campaign ID');
+        System.assertEquals(System.Label.bdiDryRunMatched, dataImports[1].DonationCampaignImportStatus__c, 'DonationCampaignImportStatus__c should have a match');
+        System.assertEquals(campaigns[1].Id, dataImports[1].DonationCampaignImported__c, 'DonationCampaignImported__c does not have the correct campaign ID');
+    }
+
+    /*********************************************************************************************************
+    * @description operation
+    *        import contacts with donation & campaign names -- Only Dry Run
+    * verify:
+    *    no opportunity objects created during dry run
+    *    no campaign objects created during dry run
+    *    correct campaign status for dry run matching
+    **********************************************************************************************************/
+    static testMethod void TwoDIWithDonationsAndDuplicateCampaignNameInDryRun() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        String duplicateCampaignName = 'Matching Campaign Name';
+
+        dataImports.add(BDI_DataImport_TEST.newDI('c1', 'C1', 100));
+        dataImports[0].Donation_Campaign_Name__c = duplicateCampaignName;
+
+        dataImports.add(BDI_DataImport_TEST.newDI('c2', 'C2', 200));
+        dataImports[1].Donation_Campaign_Name__c = duplicateCampaignName;
+
+        insert dataImports;
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(null, true);
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        // verify expected results
+        List<Opportunity> opps = [SELECT Id, Name FROM Opportunity];
+        System.assertEquals(0, opps.size());
+
+        List<Campaign> campaigns = [SELECT Id, Name FROM Campaign ORDER BY Id];
+        System.assertEquals(0, campaigns.size());
+
+        dataImports = getUpdatedDataImports();
+        System.assertEquals(2, dataImports.size());
+
+        System.assertEquals(null, dataImports[0].DonationCampaignImported__c, 'DonationCampaignImported__c should not be populated.');
+        System.assertEquals(System.Label.bdiDryRunNoMatch, dataImports[0].DonationCampaignImportStatus__c, 'DonationCampaignImportStatus__c should show no match');
+        System.assertEquals(null, dataImports[1].DonationCampaignImported__c, 'DonationCampaignImported__c should not be populated.');
+        System.assertEquals(System.Label.bdiDryRunNoMatch, dataImports[1].DonationCampaignImportStatus__c, 'DonationCampaignImportStatus__c should show no match');
+    }
+
+    /*********************************************************************************************************
+    * @description operation:
+    *    Retrieves data import records in the order they were created during the test.
+    * @return List<DataImport__c> All data import records in creation order
+    **********************************************************************************************************/
+    private static List<DataImport__c> getUpdatedDataImports() {
+        return [
+                SELECT Account1Imported__c, Account1ImportStatus__c, Account2Imported__c, Account2ImportStatus__c,
+                        Contact1_Firstname__c, Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c,
+                        Contact2ImportStatus__c, DonationImported__c, DonationImportStatus__c, Donation_Possible_Matches__c,
+                        DonationCampaignImported__c, DonationCampaignImportStatus__c, HomeAddressImported__c,
+                        HomeAddressImportStatus__c, HouseholdAccountImported__c, PaymentImported__c, PaymentImportStatus__c,
+                        Payment_Possible_Matches__c, Status__c
+                FROM DataImport__c
+                ORDER BY Id
+        ];
     }
 
 }
