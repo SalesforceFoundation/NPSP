@@ -42,8 +42,7 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
     /*******************************************************************************************************
      * @description Constructs the class, passing the RollupType of this class.
      */
-    public CRLP_Account_BATCH() { //This constructor is currently only used in tests - but even if it is used in the future
-        // by non-test classes, it should still set the jobType property on the base class
+    public CRLP_Account_BATCH() {
         super(jobType);
     }
 
