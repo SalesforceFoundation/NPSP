@@ -186,252 +186,30 @@ public class CRLP_Rollup_SEL {
         return getRollupsById().get(id);
     }
 
-    /**
-     * @description Returns metadata's SObject for relationshipName's QualifiedApiName with null checking.
-     * @param  metadata Metadata SObject with Metadata Relationship
-     * @param  metadataRelationship Metadata Relationship of metadata's SObject
-     * @return Tries to return metadata's SObject for metadataRelationship's QualifiedApiName.  Else, returns null
-     */
-    public static String getQualifiedApiName(SObject metadata, SObjectField metadataRelationship) {
-        try {
-            return (String) metadata.getSObject(metadataRelationship).get('QualifiedApiName');
+    @TestVisible
+    private static final Map<SObjectField, Set<String>> UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD = new Map<SObjectField, Set<String>> {
+        Schema.Rollup__mdt.Date_Field__c => new Set<String> {}, // All Operations Supported
+        Schema.Rollup__mdt.Amount_Field__c => new Set<String> {
+            CRLP_Operation.RollupType.Count.name(), 
+            CRLP_Operation.RollupType.First.name(), 
+            CRLP_Operation.RollupType.Last.name()
+        }, 
+        Schema.Rollup__mdt.Detail_Field__c => new Set<String> {
+            CRLP_Operation.RollupType.Sum.name(), 
+            CRLP_Operation.RollupType.Count.name(), 
+            CRLP_Operation.RollupType.Average.name(), 
+            CRLP_Operation.RollupType.Years_Donated.name(), 
+            CRLP_Operation.RollupType.Donor_Streak.name(), 
+            CRLP_Operation.RollupType.Best_Year.name(), 
+            CRLP_Operation.RollupType.Best_Year_Total.name()
         }
-        catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * @description 
-     */
-    public with sharing class RollupField {
-        final SObjectField sObjectField, fieldLookup;
-        final Map<String, Set<String>> supportedOperationsByTimeBoundOperationType;
-
-        /**
-         * @param  sObjectLookup Metadata Relationship to an Entity Definition
-         * @param  fieldLookup Metadata Relationship to an Field Definition dependent on sObjectLookup
-         * @param  excludedOperationsByTimeBoundOperationType Matrix of 
-         * (CRLP_Operation.TimeBoundOperationType, CRLP_Operation.RollupType) to exclude from being supported.  
-         * This means that isFieldSupported(Rollup__mdt rollup) will return false for 
-         * (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) mapping to this matrix.
-         */
-        @TestVisible
-        private RollupField(
-            SObjectField sObjectLookup, 
-            SObjectField fieldLookup, 
-            Map<String, Set<String>> supportedOperationsByTimeBoundOperationType
-        ) {
-            this.sObjectField = sObjectLookup;
-            this.fieldLookup = fieldLookup;
-            this.supportedOperationsByTimeBoundOperationType = supportedOperationsByTimeBoundOperationType;
-        }
-    
-        /**
-         * @return Rollup__mdt's SObject Metadata Relationship
-         */
-        public SObjectField getSObjectLookup() {
-            return this.sObjectField;
-        }
-
-        /**
-         * @return Rollup__mdt's Field Metadata Relationship
-         */
-        public SObjectField getFieldLookup() {
-            return this.fieldLookup;
-        }
-
-        /**
-         * @description Set of Rollup__mdt.Operation__c Picklist Values by Rollup__mdt.Time_Bound_Operation_Type__c 
-         * which this RollupField supports. Private so the return value is publically immutable.
-         * @return supportedOperationsByTimeBoundOperationType
-         */
-        @TestVisible
-        private Map<String, Set<String>> getSupportedOperationsByTimeBoundOperationType() {
-            return this.supportedOperationsByTimeBoundOperationType;
-        }
-
-        /**
-         * @description Returns rollup's SObject Name for this RollupField
-         * @param rollup 
-         * @return getQualifiedApiName for rollup and SObject Relationship Name
-         */
-        public String getSObjectName(Rollup__mdt rollup) {
-            return getQualifiedApiName(rollup, this.getSObjectLookup());
-        }
-
-        /**
-         * @description  Returns rollup's Field Name for this RollupField
-         * *param rollup 
-         * @return       getQualifiedApiName for rollup and Field Relationship Name
-         */
-        public String getFieldName(Rollup__mdt rollup) {
-            return getQualifiedApiName(rollup, this.getFieldLookup());
-        }
-
-        /**
-         * @description Returns set of Rollup__mdt.Operation__c Picklist Values
-         * this RollupField supports for timeboundOperationType.  
-         * Private so the return value is publically immutable.
-         * @param timeBoundOperationType Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value
-         * @return Supported Operations By Time Bound Operation Type for timeBoundOperationType with null checking.  
-         * Never returns null.
-         */
-        @TestVisible
-        private Set<String> getSupportedOperations(String timeBoundOperationType) {
-            Set<String> operations;
-            if (this.getSupportedOperationsByTimeBoundOperationType() == null) {
-                operations = null;
-            } else if (timeBoundOperationType == null) {
-                // Treat a null timeBoundOperationType as All_Time
-                operations = this.getSupportedOperationsByTimeBoundOperationType().get(CRLP_Operation.TimeBoundOperationType.All_Time.name());
-            } else {
-                operations = this.getSupportedOperationsByTimeBoundOperationType().get(timeBoundOperationType);
-            }
-
-            return operations == null ? new Set<String>() : operations;
-        }
-
-        /**
-         * @description Returns if this RollupField is supported for rollup's Operation__c 
-         * and Time_Bound_Operation_Type__c
-         * *param rollup 
-         * @return If this RollupField is supported for rollup's Operation__c and Time_Bound_Operation_Type__c
-         */
-        public Boolean isRollupSupported(Rollup__mdt rollup) {
-            return 
-                rollup != null 
-                && this.getSupportedOperations(rollup.Time_Bound_Operation_Type__c).contains(rollup.Operation__c);
-        }
-
-        /**
-         * @description Returns if this RollupField for rollup may be used in query builder
-         * @param  rollup 
-         * @param  sObjectName Name of SObject to equal SObject Name for rollup
-         * @return If Field Name for rollup is not null, SObject Name for rollup equals sObjectName, and isRollupSupported for rollup all are true.
-         */
-        public Boolean isFieldUsed(Rollup__mdt rollup, String sObjectName) {
-            return 
-                sObjectName != null
-                && this.getSObjectName(rollup) == sObjectName
-                && this.getFieldName(rollup) != null
-                && this.isRollupSupported(rollup);
-        }
-    }
+    };
 
     @TestVisible
-    private static RollupField dateRollupField, amountRollupField, detailRollupField;
-
-    /**
-     * @description See "CRLP Operations Matrix" for matrix of included and excluded 
-     * (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) values 
-     * for each Rollup Field at https://salesforce.quip.com/YnKAApuvLgNj
-     * @return Cached RollupField for (Date_Object__c, Date_Field__c)
-     */
-    public static RollupField getDateRollupField() {
-        if (dateRollupField == null) {
-            Set<String> allOperations = new Set<String>();
-            for (CRLP_Operation.RollupType rollupType : CRLP_Operation.RollupType.values()) {
-                allOperations.add(rollupType.name());
-            }
-
-            dateRollupField = new RollupField(
-                Schema.Rollup__mdt.Date_Object__c, 
-                Schema.Rollup__mdt.Date_Field__c, 
-                new Map<String, Set<String>> {
-                    CRLP_Operation.TimeBoundOperationType.All_Time.name() => new Set<String> {
-                        CRLP_Operation.RollupType.First.name(), 
-                        CRLP_Operation.RollupType.Last.name(), 
-                        CRLP_Operation.RollupType.Years_Donated.name(), 
-                        CRLP_Operation.RollupType.Donor_Streak.name(), 
-                        CRLP_Operation.RollupType.Best_Year.name(), 
-                        CRLP_Operation.RollupType.Best_Year_Total.name()
-                    }, 
-                    CRLP_Operation.TimeBoundOperationType.Days_Back.name() => allOperations, 
-                    CRLP_Operation.TimeBoundOperationType.Years_Ago.name() => allOperations
-                }
-            );
-        }
-        return dateRollupField;
-    }
-
-    /**
-     * @description See "CRLP Operations Matrix" for matrix of included 
-     * and excluded (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) values 
-     * for each Rollup Field at https://salesforce.quip.com/YnKAApuvLgNj
-     * @return Cached RollupField for (Amount_Object__c, Amount_Field__c)
-     */
-    public static RollupField getAmountRollupField() {
-        if (amountRollupField == null) {
-            final Set<String> operations = new Set<String> {
-                CRLP_Operation.RollupType.Sum.name(), 
-                CRLP_Operation.RollupType.Average.name(), 
-                CRLP_Operation.RollupType.Smallest.name(), 
-                CRLP_Operation.RollupType.Largest.name(), 
-                CRLP_Operation.RollupType.Years_Donated.name(), 
-                CRLP_Operation.RollupType.Donor_Streak.name(), 
-                CRLP_Operation.RollupType.Best_Year.name(), 
-                CRLP_Operation.RollupType.Best_Year_Total.name()
-            };
-
-            Map<String, Set<String>> supportedOperationsByTimeBoundOperationType = new Map<String, Set<String>>();
-            // Same operations for all Time Bound Operation Types
-            for (CRLP_Operation.TimeBoundOperationType timeBoundOperationType : CRLP_Operation.TimeBoundOperationType.values()) {
-                supportedOperationsByTimeBoundOperationType.put(timeBoundOperationType.name(), operations);
-            }
-
-            amountRollupField = new RollupField(
-                Schema.Rollup__mdt.Amount_Object__c, 
-                Schema.Rollup__mdt.Amount_Field__c, 
-                supportedOperationsByTimeBoundOperationType
-            );
-        }
-        return amountRollupField;
-    }
-
-    /**
-     * @description See "CRLP Operations Matrix" for matrix of included 
-     * and excluded (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) values 
-     * for each Rollup Field at https://salesforce.quip.com/YnKAApuvLgNj
-     * @return Cached RollupField for (Detail_Object__c, Detail_Field__c)
-     */
-    public static RollupField getDetailRollupField() {
-        if (detailRollupField == null) {
-            final Set<String> operations = new Set<String> {
-                CRLP_Operation.RollupType.Smallest.name(), 
-                CRLP_Operation.RollupType.Largest.name(), 
-                CRLP_Operation.RollupType.First.name(), 
-                CRLP_Operation.RollupType.Last.name()
-            };
-
-            Map<String, Set<String>> supportedOperationsByTimeBoundOperationType = new Map<String, Set<String>>();
-
-            // Same operations for all Time Bound Operation Types
-            for (CRLP_Operation.TimeBoundOperationType timeBoundOperationType : CRLP_Operation.TimeBoundOperationType.values()) {
-                supportedOperationsByTimeBoundOperationType.put(timeBoundOperationType.name(), operations);
-            }
-
-            detailRollupField = new RollupField(
-                Schema.Rollup__mdt.Detail_Object__c, 
-                Schema.Rollup__mdt.Detail_Field__c, 
-                supportedOperationsByTimeBoundOperationType
-            );
-        }
-        return detailRollupField;
-    }
-
-    /**
-     * @description See "CRLP Operations Matrix" for matrix of included 
-     * and excluded (Rollup__mdt.Time_Bound_Operation_Type__c, Rollup__mdt.Operation__c) values 
-     * for each Rollup Field at https://salesforce.quip.com/YnKAApuvLgNj
-     * @return new List<RollupField> containing getDateRollupField(), getAmountRollupField(), and getDetailRollupField()
-     */
-    public static List<RollupField> getRollupFields() {
-        return new List<RollupField> {
-            getDateRollupField(), 
-            getAmountRollupField(), 
-            getDetailRollupField()
-        };
+    private static Boolean isOperationSupported(Rollup__mdt rollup, Schema.SObjectField metadataRelationship) {
+        return
+            rollup.Operation__c != null // rollup.Operation__c should never be null
+            && !UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD.get(metadataRelationship).contains(rollup.Operation__c);
     }
 
     /**
@@ -466,29 +244,64 @@ public class CRLP_Rollup_SEL {
                 fields.add(fieldsByName.get('CurrencyIsoCode'));
             }
     
-            // Summary Field and Rollup Field from cachedRollups
-            {   
-                final RollupField[] rollupFields = getRollupFields();
+            // Summary, Date, Amount, Detail Fields from cachedRollups
+            for (Rollup__mdt rollup : cachedRollups) {
+                if (rollup.Active__c == true) {
+                    // Summary Field
+                    if (rollup.Summary_Object__r.QualifiedApiName == sObjectName) {
+                    /*
+                        fields.add(getValidatedReferencedField(
+                            fieldsByName, 
+                            rollup.Summary_Field__r.QualifiedApiName, 
+                            sObjectName
+                        ));
+                    */
+                        fields.add(fieldsByName.get(rollup.Summary_Field__r.QualifiedApiName));
+                    }
 
-                for (Rollup__mdt rollup : cachedRollups) {
-                    if (rollup.Active__c == true) {
-                        // Summary Field
-                        if (rollup.Summary_Object__r.QualifiedApiName == sObjectName) {
-                            final SObjectField field = fieldsByName.get(rollup.Summary_Field__r.QualifiedApiName);
-                            if (field != null) {
-                                fields.add(field);
-                            }
-                        }
+                    // Date Field
+                    if (
+                        rollup.Date_Object__r.QualifiedApiName == sObjectName
+                        && isOperationSupported(rollup, Schema.Rollup__mdt.Date_Field__c)
+                    ) {
+                    /*
+                        fields.add(getValidatedReferencedField(
+                            fieldsByName, 
+                            rollup.Date_Field__r.QualifiedApiName, 
+                            sObjectName
+                        ));
+                    */
+                        fields.add(fieldsByName.get(rollup.Summary_Field__r.QualifiedApiName));
+                    }
 
-                        // Rollup Fields
-                        for (RollupField rollupField : rollupFields) {
-                            if (rollupField.isFieldUsed(rollup, sObjectName)) {
-                                final SObjectField field = fieldsByName.get(rollupField.getFieldName(rollup));
-                                if (field != null) {
-                                    fields.add(field);
-                                }
-                            }
-                        }
+                    // Amount Field
+                    if (
+                        rollup.Amount_Object__r.QualifiedApiName == sObjectName
+                        && isOperationSupported(rollup, Schema.Rollup__mdt.Amount_Field__c)
+                    ) {
+                    /*
+                        fields.add(getValidatedReferencedField(
+                            fieldsByName, 
+                            rollup.Amount_Field__r.QualifiedApiName, 
+                            sObjectName
+                        ));
+                    */
+                        fields.add(fieldsByName.get(rollup.Summary_Field__r.QualifiedApiName));
+                    }
+
+                    // Detail Field
+                    if (
+                        rollup.Detail_Object__r.QualifiedApiName == sObjectName
+                        && isOperationSupported(rollup, Schema.Rollup__mdt.Detail_Field__c)
+                    ) {
+                    /*
+                        fields.add(getValidatedReferencedField(
+                            fieldsByName, 
+                            rollup.Detail_Field__r.QualifiedApiName, 
+                            sObjectName
+                        ));
+                    */
+                        fields.add(fieldsByName.get(rollup.Summary_Field__r.QualifiedApiName));
                     }
                 }
             }   
@@ -502,7 +315,19 @@ public class CRLP_Rollup_SEL {
 
         return referencedFields;
     }
-
+/*
+    @TestVisible
+    private static SObjectField getValidatedReferencedField(
+        Map<String, Schema.SObjectField> fieldsByName, 
+        String qualifiedApiName, 
+        String sObjectName    
+    ) {
+        if (fieldsByName.get(qualifiedApiName) == null) {
+            throw new CRLP_Rollup_SVC.CRLP_Exception('Field "' + qualifiedApiName + '" not found in ' + sObjectName + '.fields.getMap()');
+        }
+        return fieldsByName.get(qualifiedApiName);
+    }
+*/
     /**
      * @description If the field describe for a given field is null, assert a false to allow for debugging
      * @param referencedFields Map<String, DescribeFieldResult>
