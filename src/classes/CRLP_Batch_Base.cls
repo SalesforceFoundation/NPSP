@@ -91,6 +91,7 @@ public abstract class CRLP_Batch_Base {
         private set;
     }
 
+    /** @description The customizable rollup custom settings */
     protected Customizable_Rollup_Settings__c customizableRollupSettings;
 
     /*******************************************************************************************************
