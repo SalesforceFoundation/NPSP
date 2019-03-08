@@ -55,112 +55,51 @@ private class CRLP_Operation_TEST {
         System.assertEquals(CRLP_Operation.RollupType.SUM, CRLP_Operation.getRollupTypeFromString('Sum'));
     }
 
-    /**
-     * @description CRLP_Operation.RollupType should be in one-to-one correspondce with Rollup__mdt.Operation__c Picklist Values.   Each RollupType values' name should be a Rollup__mdt.Operation__c Picklist Value, and each Rollup__mdt.Operation__c Picklist Value should have a corresponding CRLP_Operation.RollupType whose name equals the Picklist Value
-     */
     @IsTest
-    private static void assertRollupTypeExistsForEachRollupOperationPicklistValue() {
-        Set<String> enumNames = new Set<String>();
+    private static void testRollupType() {
+        // Data
+        final Set<String> enumNames = new Set<String>();
         for (CRLP_Operation.RollupType rollupType : CRLP_Operation.RollupType.values()) {
             enumNames.add(rollupType.name());
         }
 
-        Test.startTest();
-
-        // CRLP_Operation
-        {
-            // Each Rollup__mdt.Operation__c Picklist Value should be a CRLP_Operation.RollupType name()
-            for (Schema.PicklistEntry picklist : Schema.SObjectType.Rollup__mdt.fields.Operation__c.getPicklistValues()) {
-                System.assertEquals(
-                    true, 
-                    enumNames.contains(picklist.getValue()), 
-                    'For each Rollup__mdt.Operation__c Picklist Value, there should exist a CRLP_Operation.RollupType whose name() equals the Picklist Value.  There is no CRLP_Operation.RollupType name() that equals the Rollup__mdt.Operation__c Picklist Value of "' + picklist.getValue() + '"'
-                );
-            }
-        }
-
-        Test.stopTest();
-    }
-
-    /**
-     * @description CRLP_Operation.RollupType should be in one-to-one correspondce with Rollup__mdt.Operation__c Picklist Values.   Each RollupType values' name should be a Rollup__mdt.Operation__c Picklist Value, and each Rollup__mdt.Operation__c Picklist Value should have a corresponding CRLP_Operation.RollupType whose name equals the Picklist Value
-     */
-    @IsTest
-    private static void assertRollupOperationPicklistValueExistsForEachRollupType() {
-        Set<String> picklistValues = new Set<String>();
+        final Set<String> picklistValues = new Set<String>();
         for (Schema.PicklistEntry picklist : Schema.SObjectType.Rollup__mdt.fields.Operation__c.getPicklistValues()) {
             picklistValues.add(picklist.getValue());
         }
 
         Test.startTest();
 
-        // CRLP_Operation
-        {
-            // Each RollupType values' name should be a Rollup__mdt.Operation__c Picklist Value
-            for (CRLP_Operation.RollupType enumeration : CRLP_Operation.RollupType.values()) {
-                System.assertEquals(
-                    true, 
-                    picklistValues.contains(enumeration.name()), 
-                    'For each CRLP_Operation.RollupType, there should exist a Rollup__mdt.Operation__c Picklist Value that equals the CRLP_Operation.RollupType name().  There is no Rollup__mdt.Operation__c Picklist Value that equals the CRLP_Operation.RollupType name() of "' + enumeration.name() + '"'
-                );
-            }
-        }
+        System.assertEquals(
+            enumNames, 
+            picklistValues, 
+            'There must exist a CRLP_Operation.RollupType for each Rollup__mdt.Operation__c Picklist Value and vice versa'
+        );
 
         Test.stopTest();
     }
 
-    /**
-     * @description CRLP_Operation.TimeBoundOperationType should be in one-to-one correspondce with Rollup__mdt.Time_Bound_Operation_Type__c Picklist Values.   Each TimeBoundOperationType values' name should be a Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value, and each Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value should have a corresponding CRLP_Operation.TimeBoundOperationType whose name equals the Picklist Value
-     */
     @IsTest
-    private static void assertTimeBoundOperationTypeExistsForEachRollupTimeBoundOperationTypePicklistValue() {
-        Set<String> enumNames = new Set<String>();
+    private static void testTimeBoundOperationType() {
+        // Data
+        final Set<String> enumNames = new Set<String>();
         for (CRLP_Operation.TimeBoundOperationType rollupType : CRLP_Operation.TimeBoundOperationType.values()) {
             enumNames.add(rollupType.name());
         }
 
-        Test.startTest();
-
-        // CRLP_Operation
-        {
-            // Each Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value should be a CRLP_Operation.TimeBoundOperationType name()
-            for (Schema.PicklistEntry picklist : Schema.SObjectType.Rollup__mdt.fields.Time_Bound_Operation_Type__c.getPicklistValues()) {
-                System.assertEquals(
-                    true, 
-                    enumNames.contains(picklist.getValue()), 
-                    'For each Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value, there should exist a CRLP_Operation.TimeBoundOperationType whose name() equals the Picklist Value.  There is no CRLP_Operation.TimeBoundOperationType name() that equals the Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value of "' + picklist.getValue() + '"'
-                );
-            }
-        }
-
-        Test.stopTest();
-    }
-
-    /**
-     * @description CRLP_Operation.TimeBoundOperationType should be in one-to-one correspondce with Rollup__mdt.Time_Bound_Operation_Type__c Picklist Values.   Each TimeBoundOperationType values' name should be a Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value, and each Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value should have a corresponding CRLP_Operation.TimeBoundOperationType whose name equals the Picklist Value
-     */
-    @IsTest
-    private static void assertRollupTimeBoundOperationTypePicklistValueExistsForEachTimeBoundOperationType() {
-        Set<String> picklistValues = new Set<String>();
+        final Set<String> picklistValues = new Set<String>();
         for (Schema.PicklistEntry picklist : Schema.SObjectType.Rollup__mdt.fields.Time_Bound_Operation_Type__c.getPicklistValues()) {
             picklistValues.add(picklist.getValue());
         }
 
         Test.startTest();
 
-        // CRLP_Operation
-        {
-            // Each TimeBoundOperationType values' name should be a Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value
-            for (CRLP_Operation.TimeBoundOperationType enumeration : CRLP_Operation.TimeBoundOperationType.values()) {
-                System.assertEquals(
-                    true, 
-                    picklistValues.contains(enumeration.name()), 
-                    'For each CRLP_Operation.TimeBoundOperationType, there should exist a Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value that equals the CRLP_Operation.TimeBoundOperationType name().  There is no Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value that equals the CRLP_Operation.TimeBoundOperationType name() of "' + enumeration.name() + '"'
-                );
-            }
-        }
+        System.assertEquals(
+            enumNames, 
+            picklistValues, 
+            'There must exist a CRLP_Operation.TimeBoundOperationType for each Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value and vice versa'
+        );
 
         Test.stopTest();
     }
-
 }
