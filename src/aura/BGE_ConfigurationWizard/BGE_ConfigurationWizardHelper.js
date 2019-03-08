@@ -426,6 +426,7 @@
      * @description Updates batchFieldOptions attribute based on selected fields
      */
     updateBatchFieldOptions: function(component) {
+        let donationMatchingOptions = [];
         let batchFieldOptions = {
             fieldGroups: []
         };
@@ -442,12 +443,17 @@
             activeFieldsBySObject[sObjectName].forEach(function(currentField) {
                 currentFieldGroup.fields.push(currentField);
                 currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
+                donationMatchingOptions.push({
+                    label: currentField.label,
+                    value: currentField.name
+                });
             });
 
             batchFieldOptions.fieldGroups.push(currentFieldGroup);
 
         });
         component.set('v.batchFieldOptions', batchFieldOptions);
+        component.set('v.batchInfo.donationMatchingOptions', donationMatchingOptions);
     },
 
     /**

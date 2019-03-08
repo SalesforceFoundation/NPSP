@@ -2600,7 +2600,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
-        <value>Specifies which fields to match by when trying to match Donations in batch records against existing Opportunties and Payments.</value>
+        <value>You can match against any of the Opportunity or Payment fields that you chose to include in this batch.</value>
     </labels>
     <labels>
         <fullName>bgeBatchDonorLookupInfo</fullName>
