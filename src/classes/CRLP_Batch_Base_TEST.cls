@@ -241,7 +241,6 @@ private class CRLP_Batch_Base_TEST {
         Account testAccount = new Account(Name='TestAccount1');
         insert testAccount;
 
-//        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
         CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH();
         accountBatchJob.initializeJobData();
 
@@ -253,7 +252,7 @@ private class CRLP_Batch_Base_TEST {
 
         System.assertEquals(null, accountBatchJob.chunkModeLastProcessedId,
                 'chunkModeStartingId should be null for this, the first chunk mode job ' +
-                        '(built with the empty constructor).');
+                        '(created using the empty constructor).');
 
         System.assert(query.contains('ORDER BY Id'),
                 'All chunk mode queries should contain "ORDER BY Id"');
