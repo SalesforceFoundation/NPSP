@@ -51,11 +51,17 @@ private with sharing class BDI_SettingsUI_TEST {
         ctrl.diBatch = new DataImportBatch__c();
 
         Test.startTest();
-        system.assertEquals(false, ctrl.isEditMode);
-        system.assertEquals(true, ctrl.isReadOnlyMode);
-        system.assertNotEquals(null, ctrl.listSODonationFields);
-        system.assertNotEquals(null, ctrl.listSOContactUniqueID);
-        system.assertNotEquals(null, ctrl.listSOAccountUniqueID);
+        System.assertEquals(false, ctrl.isEditMode);
+        System.assertEquals(true, ctrl.isReadOnlyMode);
+        System.assertNotEquals(null, ctrl.listSODonationFields);
+        System.assertNotEquals(null, ctrl.listSOContactUniqueID);
+        System.assertNotEquals(null, ctrl.listSOAccountUniqueID);
+        System.assertEquals(BDI_DataImport_API.DoNotMatch, ctrl.getDoNotMatch());
+        System.assertEquals(BDI_DataImport_API.RequireNoMatch, ctrl.getRequireNoMatch());
+        System.assertEquals(BDI_DataImport_API.RequireExactMatch, ctrl.getRequireExactMatch());
+        System.assertEquals(BDI_DataImport_API.ExactMatchOrCreate, ctrl.getExactMatchOrCreate());
+        System.assertEquals(BDI_DataImport_API.RequireBestMatch, ctrl.getRequireBestMatch());
+        System.assertEquals(BDI_DataImport_API.BestMatchOrCreate, ctrl.getBestMatchOrCreate());
         Test.stopTest();
     }
 
