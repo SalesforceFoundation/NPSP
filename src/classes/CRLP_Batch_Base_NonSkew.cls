@@ -135,10 +135,10 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         try {
             initializeJobData();
 
-            // Remember the last Id in the scope as the Id to start in the next chunking mode operation
-            //todo: we only need to do this if we are in chunk mode.  If not, no need
-            this.chunkModeLastProcessedId = summaryRecords[summaryRecords.size()-1].Id;
-
+            if (isChunkModeEnabled) {
+                // Remember the last Id in the scope as the Id to start in the next chunking mode operation
+                chunkModeLastProcessedId = summaryRecords[summaryRecords.size() - 1].Id;
+            }
 
             CRLP_RollupProcessingOptions.ProcessingOptions options = buildProcessingOptions();
 
