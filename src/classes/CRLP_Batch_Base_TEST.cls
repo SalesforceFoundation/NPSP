@@ -433,8 +433,9 @@ private class CRLP_Batch_Base_TEST {
 
         Customizable_Rollup_Settings__c settings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(
                 new Customizable_Rollup_Settings__c (
-                        Customizable_Rollups_Enabled__c = true,
-                        Rollups_Limit_on_Attached_Opps_for_Skew__c = 200
+                        Customizable_Rollups_Enabled__c = true
+                        //todo: investigate why this is needed here (null pointer if not)
+                        ,Rollups_Limit_on_Attached_Opps_for_Skew__c = 200
                 ));
 
         switch on (jobType) {
