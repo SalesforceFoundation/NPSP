@@ -302,10 +302,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
         // If chunk mode is enabled and we (probably) have more records to process,
         // submit another batchable job
-        //todo: Note: in finish method, chunkModeStartingId will always be populated, even in first batchable job, since set in execute method
-        //todo: additionally, for that reason we can check first if we are in chunk mode before needing to check these variables,
-        // and batch iteration is the only thing we need to check if we know we are in chunk mode
-        if (String.isNotBlank(chunkModeStartingId) && batchIteration > 1) {
+        if (isChunkModeEnabled && batchIteration > 1) {
             submitBatchableJobForNextChunk();
         }
     }
@@ -335,6 +332,15 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         CRLP_RollupProcessingOptions.ProcessingOptions options = super.initOptionsInstance();
         options.detailObjType = this.detailObjectType;
         return options;
+    }
+
+    /**
+     * @description Returns true if chunk mode is enabled.
+     */
+    public Boolean isChunkModeEnabled {
+        get {
+            return batchSizeChunkLimit != null && batchSizeChunkLimit > 0;
+        }
     }
 
     /**
