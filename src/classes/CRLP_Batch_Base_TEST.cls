@@ -355,7 +355,6 @@ private class CRLP_Batch_Base_TEST {
                 'All chunk mode queries should contain "LIMIT ' + chunkSize + '"');
     }
 
-
     @isTest
     private static void contactSoftCreditRollupChunkModeFirstJobQueryContainsOrderByLimit() {
         Integer chunkSize = 500;
