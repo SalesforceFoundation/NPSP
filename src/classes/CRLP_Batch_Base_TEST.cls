@@ -249,7 +249,7 @@ private class CRLP_Batch_Base_TEST {
                 accountBatchJob.batchSizeChunkLimit,
                 accountBatchJob.fieldsToCheckForNonZero
         );
-System.debug(LoggingLevel.ERROR, '*** variable value: ' + query);
+
         System.assertEquals(null, accountBatchJob.chunkModeLastProcessedId,
                 'chunkModeStartingId should be null for this, the first chunk mode job ' +
                         '(built with the empty constructor).');
@@ -281,7 +281,6 @@ System.debug(LoggingLevel.ERROR, '*** variable value: ' + query);
                 accountBatchJob.fieldsToCheckForNonZero
         );
 
-        System.debug(LoggingLevel.ERROR, '*** query: ' + query);
         System.assertEquals(testAccount.Id, accountBatchJob.chunkModeLastProcessedId,
                 'chunkModeStartingId should equal testAccount.Id');
 
@@ -449,7 +448,6 @@ System.debug(LoggingLevel.ERROR, '*** variable value: ' + query);
                 CRLP_RollupSoftCredit_TEST.mockRollupCMTValues();
             }
         }
-
         return settings;
     }
 
