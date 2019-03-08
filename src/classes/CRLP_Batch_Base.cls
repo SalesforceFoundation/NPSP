@@ -574,21 +574,30 @@ public abstract class CRLP_Batch_Base {
 
     }
 
+    @TestVisible
     protected String getQuery(Id lastId, Integer chunkSize, List<String> fields) {
 
-            BatchQueryBuilder builder = new BatchQueryBuilder(this, lastId, chunkSize, fields);
-            String query = builder.buildQuery();
+        BatchQueryBuilder builder = new BatchQueryBuilder(this, lastId, chunkSize, fields);
+        String query = builder.buildQuery();
         return query;
-
     }
 
     public class BatchQueryBuilder {
+        /**
+         * @description the CRLP_Batch_Base instance that created this class instance.  Enables this
+         * instance to access the member variables in the initializing class.
+         */
         CRLP_Batch_Base base;
         Integer chunkingSize;
         Id chunkModeStartingId;
         List<String> fieldsToCheckForNonZero;
 
-        BatchQueryBuilder(CRLP_Batch_Base base, Id chunkModeStartingId, Integer chunkSize, List<String> fieldsToCheckForNonZero) {
+        BatchQueryBuilder(
+                CRLP_Batch_Base base,
+                Id chunkModeStartingId,
+                Integer chunkSize,
+                List<String> fieldsToCheckForNonZero
+        ) {
             this.base = base;
             this.chunkModeStartingId = chunkModeStartingId;
             this.chunkingSize = chunkSize;

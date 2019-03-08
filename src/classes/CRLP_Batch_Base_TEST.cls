@@ -233,6 +233,71 @@ private class CRLP_Batch_Base_TEST {
         System.assert(generatedWhereClause.contains(String.valueOf(userDefinedLastNDaysValueOverride)));
     }
 
+    @isTest
+    private static void accountHardCreditRollupChunkModeFirstJobQueryContainsOrderByLimit() {
+        Integer chunkSize = 500;
+        configureChunkMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, chunkSize);
+
+        Account testAccount = new Account(Name='TestAccount1');
+        insert testAccount;
+
+        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
+        accountBatchJob.initializeJobData();
+
+        String query = accountBatchJob.getQuery(
+                accountBatchJob.chunkModeStartingId,
+                accountBatchJob.getBatchChunkSizeLimit(),
+                accountBatchJob.fieldsToCheckForNonZero
+        );
+System.debug(LoggingLevel.ERROR, '*** variable value: ' + query);
+        System.assertEquals(null, accountBatchJob.chunkModeStartingId,
+                'chunkModeStartingId should be null for this, the first chunk mode job ' +
+                        '(built with the empty constructor).');
+
+        System.assert(query.contains('ORDER BY Id'),
+                'All chunk mode queries should contain "ORDER BY Id"');
+
+        System.assertEquals(chunkSize, accountBatchJob.getBatchChunkSizeLimit(),
+                'getBatchChunkSizeLimit() should equal chunkSize');
+
+        System.assert(query.contains('LIMIT ' + chunkSize),
+                'All chunk mode queries should contain chunk size "LIMIT ' + chunkSize + '"');
+    }
+
+    @isTest
+    private static void accountHardCreditRollupChunkModeQueryContainsOrderByLimitId() {
+        Integer chunkSize = 500;
+        configureChunkMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, chunkSize);
+
+        Account testAccount = new Account(Name='TestAccount1');
+        insert testAccount;
+
+        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(testAccount.Id);
+        accountBatchJob.initializeJobData();
+
+        String query = accountBatchJob.getQuery(
+                accountBatchJob.chunkModeStartingId,
+                accountBatchJob.getBatchChunkSizeLimit(),
+                accountBatchJob.fieldsToCheckForNonZero
+        );
+
+        System.debug(LoggingLevel.ERROR, '*** query: ' + query);
+        System.assertEquals(testAccount.Id, accountBatchJob.chunkModeStartingId,
+                'chunkModeStartingId should equal testAccount.Id');
+
+        System.assert(query.contains(' > \'' + accountBatchJob.chunkModeStartingId + '\''),
+                'This chunk mode query should contain " > ' + accountBatchJob.chunkModeStartingId + '"');
+
+        System.assert(query.contains('ORDER BY Id'),
+                'All chunk mode queries should contain "ORDER BY Id"');
+
+        System.assertEquals(chunkSize, accountBatchJob.getBatchChunkSizeLimit(),
+                'getBatchChunkSizeLimit() should equal chunkSize');
+
+        System.assert(query.contains('LIMIT ' + chunkSize),
+                'All chunk mode queries should contain "LIMIT ' + chunkSize + '"');
+    }
+
     /******************************** Helper Methods *****************************/
 
     /**
@@ -355,4 +420,37 @@ private class CRLP_Batch_Base_TEST {
             }
         }
     }
+
+    private static Customizable_Rollup_Settings__c configureChunkMode(
+            CRLP_RollupProcessingOptions.RollupType jobType,
+            Integer chunkSize) {
+
+        Customizable_Rollup_Settings__c settings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(
+                new Customizable_Rollup_Settings__c (
+                        Customizable_Rollups_Enabled__c = true,
+                        Rollups_Limit_on_Attached_Opps_for_Skew__c = 200
+                ));
+
+        switch on (jobType) {
+
+            when AccountHardCredit {
+                settings.Rollups_Account_HardCredit_ChunkSize__c = chunkSize;
+                // Create the test data
+                CRLP_RollupAccount_TEST.mockRollupCMTValues();
+            }
+
+            when ContactHardCredit {
+                settings.Rollups_Contact_HardCredit_ChunkSize__c = chunkSize;
+                CRLP_RollupContact_TEST.mockRollupCMTValues();
+            }
+
+            when ContactSoftCredit {
+                settings.Rollups_Contact_SoftCredit_ChunkSize__c = chunkSize;
+                CRLP_RollupSoftCredit_TEST.mockRollupCMTValues();
+            }
+        }
+
+        return settings;
+    }
+
 }

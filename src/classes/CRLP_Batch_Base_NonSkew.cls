@@ -40,7 +40,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     * @description When Chunking mode is used for an LDV org, this is the last Id retrieved
     * in the previous batch. When the job is chained, it'll query records with Ids greater than this Id.
     */
-    protected Id chunkModeStartingId;
+    @TestVisible
+    public Id chunkModeStartingId;
 
     protected CRLP_Batch_Base_NonSkew() { }
 
@@ -111,7 +112,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         try {
             initializeJobData();
 
-//            String query = '';
             String query = getQuery(chunkModeStartingId, getBatchChunkSizeLimit(), fieldsToCheckForNonZero);
 
             UTIL_Debug.debug(LoggingLevel.WARN, '>> Batch Query =' + query);
@@ -144,6 +144,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             initializeJobData();
 
             // Remember the last Id in the scope as the Id to start in the next chunking mode operation
+            //todo: we only need to do this if we are in chunk mode.  If not, no need
             this.chunkModeStartingId = summaryRecords[summaryRecords.size()-1].Id;
 
 
@@ -301,6 +302,9 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
         // If chunk mode is enabled and we (probably) have more records to process,
         // submit another batchable job
+        //todo: Note: in finish method, chunkModeStartingId will always be populated, even in first batchable job, since set in execute method
+        //todo: additionally, for that reason we can check first if we are in chunk mode before needing to check these variables,
+        // and batch iteration is the only thing we need to check if we know we are in chunk mode
         if (String.isNotBlank(chunkModeStartingId) && batchIteration > 1) {
             submitBatchableJobForNextChunk();
         }

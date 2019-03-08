@@ -34,7 +34,7 @@
 * @description Unit Test for the Soft Credit to Account/Contact Rollups
 */
 @isTest
-private class CRLP_RollupSoftCredit_TEST {
+public class CRLP_RollupSoftCredit_TEST {
 
     private Enum TestType {
         TestBatchContact, TestBatchAccount, testSkewBatchContact, TestWithAlwaysRollupToPrimary
@@ -72,7 +72,7 @@ private class CRLP_RollupSoftCredit_TEST {
     /**
      * @description Create Rollup__mdt records to test rolling up from the Opp and Payment objects to the Account
      */
-    private static void mockRollupCMTValues() {
+    public static void mockRollupCMTValues() {
 
         String donationRTId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
         String membershipRTId = UTIL_RecordTypes.getRecordTypeIdForMembershipTests(Opportunity.SObjectType);
