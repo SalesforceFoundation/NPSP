@@ -54,8 +54,7 @@ public with sharing class BDI_BatchOverride_CTRL {
     public BDI_BatchOverride_CTRL(ApexPages.StandardController controller) {
         redirect = false;
         // since our page doesn't directly refer to the Batch fields, we must explicitly list them
-        if (!Test.isRunningTest()) {
-            List<String> listFields = new List<String>{
+        List<String> listFields = new List<String>{
                 'Id',
                 'Name',
                 UTIL_Namespace.StrTokenNSPrefix('Account_Custom_Unique_ID__c'),
@@ -68,9 +67,8 @@ public with sharing class BDI_BatchOverride_CTRL {
                 UTIL_Namespace.StrTokenNSPrefix('Donation_Matching_Implementing_Class__c'),
                 UTIL_Namespace.StrTokenNSPrefix('Donation_Matching_Rule__c'),
                 UTIL_Namespace.StrTokenNSPrefix('Process_Using_Scheduled_Job__c')
-            };
-            controller.addFields(listFields);
-        }
+        };
+        if (!Test.isRunningTest()) controller.addFields(listFields); //written as one line for test coverage
 
         diBatch = (DataImportBatch__c) controller.getRecord();
 
