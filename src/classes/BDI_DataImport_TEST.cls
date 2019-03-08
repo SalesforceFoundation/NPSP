@@ -43,7 +43,7 @@ public with sharing class BDI_DataImport_TEST {
     * @param lastname the lastname to specify for Contact1
     * @return DataImport__c the new Data Import record
     */
-    public static DataImport__c newDI(string firstname, string lastname) {
+    public static DataImport__c newDI(String firstname, String lastname) {
         return new DataImport__c(
            Contact1_Firstname__c = firstname,
            Contact1_Lastname__c = lastname,
@@ -55,11 +55,28 @@ public with sharing class BDI_DataImport_TEST {
     * @description creates a new di record for tests
     * @param firstname the firstname to specify for Contact1
     * @param lastname the lastname to specify for Contact1
+    * @param donationamount the amount to use for the donation
+    * @return DataImport__c the new Data Import record
+    */
+    public static DataImport__c newDI(String firstname, String lastname, Integer donationamount) {
+        return new DataImport__c(
+           Contact1_Firstname__c = firstname,
+           Contact1_Lastname__c = lastname,
+           Contact1_Personal_Email__c = firstname + '@' + lastname + '.com',
+           Donation_Amount__c = donationamount,
+           Donation_Date__c = System.today()
+        );
+    }
+
+    /*******************************************************************************************************
+    * @description creates a new di record for tests
+    * @param firstname the firstname to specify for Contact1
+    * @param lastname the lastname to specify for Contact1
     * @param firstname2 the firstname to specify for Contact2
     * @param lastname2 the lastname to specify for Contact2
     * @return DataImport__c the new Data Import record
     */
-    public static DataImport__c newDI(string firstname, string lastname, string firstname2, string lastname2) {
+    public static DataImport__c newDI(String firstname, String lastname, String firstname2, String lastname2) {
         return new DataImport__c(
            Contact1_Firstname__c = firstname,
            Contact1_Lastname__c = lastname,
@@ -69,6 +86,30 @@ public with sharing class BDI_DataImport_TEST {
            Contact2_Personal_Email__c = (lastname2 == null ? null : firstname2 + '@' + lastname2 + '.com')
         );
     }
+
+    /*******************************************************************************************************
+    * @description creates a new di record for tests
+    * @param firstname the firstname to specify for Contact1
+    * @param lastname the lastname to specify for Contact1
+    * @param firstname2 the firstname to specify for Contact2
+    * @param lastname2 the lastname to specify for Contact2
+    * @param address the address to use for the Data Import record
+    * @return DataImport__c the new Data Import record
+    */
+    public static DataImport__c newDI(String firstname, String lastname, String firstname2, String lastname2, Address__c address) {
+        return new DataImport__c(
+                Contact1_Firstname__c = firstname,
+                Contact1_Lastname__c = lastname,
+                Contact1_Personal_Email__c = (lastname == null ? null : firstname + '@' + lastname + '.com'),
+                Contact2_Firstname__c = firstname2,
+                Contact2_Lastname__c = lastname2,
+                Contact2_Personal_Email__c = (lastname2 == null ? null : firstname2 + '@' + lastname2 + '.com'),
+                Home_City__c = (address.MailingCity__c == null ? null : address.MailingCity__c),
+                Home_State_Province__c = (address.MailingState__c == null ? null : address.MailingState__c),
+                Home_Country__c = (address.MailingCountry__c == null ? null : address.MailingCountry__c)
+        );
+    }
+
 
     /*********************************************************************************************************
     * @description operation
@@ -346,9 +387,8 @@ public with sharing class BDI_DataImport_TEST {
         UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
         
         List<DataImport__c> dataImports = new List<DataImport__c>();
-        dataImports.add(newDI('TestFirstname00', 'TestLastname00', 'c2', 'C2'));
+        dataImports.add(newDI('TestFirstname00', 'TestLastname00', 'c2', 'C2', new Address__c(MailingCity__c='Seattle')));
         dataImports[0].Contact1_Personal_Email__c = 'foo@bar.com';
-        dataImports[0].Home_City__c = 'Seattle';
         insert dataImports;
           
         //run batch data import
@@ -652,10 +692,8 @@ public with sharing class BDI_DataImport_TEST {
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
         List<DataImport__c> dataImports = new List<DataImport__c>();
-        dataImports.add(newDI('c1', 'C1', 'c2', 'C2'));
-        dataImports.add(newDI('c3', 'C3', 'c4', 'C4'));
-        dataImports[0].Home_City__c = 'Seattle';
-        dataImports[1].Home_City__c = 'Portland';
+        dataImports.add(newDI('c1', 'C1', 'c2', 'C2', new Address__c(MailingCity__c='Seattle')));
+        dataImports.add(newDI('c3', 'C3', 'c4', 'C4', new Address__c(MailingCity__c='Portland')));
         insert dataImports;
           
         //run batch data import
@@ -717,10 +755,8 @@ public with sharing class BDI_DataImport_TEST {
         UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
 
         List<DataImport__c> dataImports = new List<DataImport__c>();
-        dataImports.add(newDI('c1', 'C1', 'c2', 'C2'));
-        dataImports.add(newDI('c3', 'C3', 'c4', 'C4'));
-        dataImports[0].Home_City__c = 'Portland';
-        dataImports[1].Home_City__c = 'Portland';
+        dataImports.add(newDI('c1', 'C1', 'c2', 'C2', new Address__c(MailingCity__c='Portland')));
+        dataImports.add(newDI('c3', 'C3', 'c4', 'C4', new Address__c(MailingCity__c='Portland')));
         insert dataImports;
 
         //run batch data import
@@ -863,10 +899,8 @@ public with sharing class BDI_DataImport_TEST {
         ));
 
         List<DataImport__c> dataImports = new List<DataImport__c>();
-        dataImports.add(newDI('c1', 'C1', 'c2', 'C2'));
-        dataImports.add(newDI('c3', 'C3', 'c4', 'C4'));
-        dataImports[0].Home_City__c = 'Seattle';
-        dataImports[1].Home_City__c = 'Portland';
+        dataImports.add(newDI('c1', 'C1', 'c2', 'C2', new Address__c(MailingCity__c='Seattle')));
+        dataImports.add(newDI('c3', 'C3', 'c4', 'C4', new Address__c(MailingCity__c='Portland')));
         insert dataImports;
           
         //run batch data import
@@ -1176,10 +1210,8 @@ public with sharing class BDI_DataImport_TEST {
         insert campaigns;
             
         List<DataImport__c> dataImports = new List<DataImport__c>();
-        dataImports.add(newDI('c1', 'C1'));
-        dataImports.add(newDI('c2', 'C2'));
-        dataImports[0].Donation_Amount__c = 100;
-        dataImports[1].Donation_Amount__c = 200;
+        dataImports.add(newDI('c1', 'C1', 100));
+        dataImports.add(newDI('c2', 'C2', 200));
         dataImports[0].Donation_Campaign_Name__c = 'CmpExisting';
         dataImports[1].Donation_Campaign_Name__c = 'CmpNew';
         insert dataImports;
@@ -1247,12 +1279,10 @@ public with sharing class BDI_DataImport_TEST {
 
         List<DataImport__c> dataImports = new List<DataImport__c>();
 
-        dataImports.add(newDI('c1', 'C1'));
-        dataImports[0].Donation_Amount__c = 100;
+        dataImports.add(newDI('c1', 'C1', 100));
         dataImports[0].DonationCampaignImported__c = campaignId;
 
-        dataImports.add(newDI('c2', 'C2'));
-        dataImports[1].Donation_Amount__c = 200;
+        dataImports.add(newDI('c2', 'C2', 200));
         dataImports[1].DonationCampaignImported__c = null;
         dataImports[1].Donation_Campaign_Name__c = 'AnotherCmpExisting';
 
@@ -1305,12 +1335,10 @@ public with sharing class BDI_DataImport_TEST {
         List<DataImport__c> dataImports = new List<DataImport__c>();
         String duplicateCampaignName = 'Matching Campaign Name';
 
-        dataImports.add(newDI('c1', 'C1'));
-        dataImports[0].Donation_Amount__c = 100;
+        dataImports.add(newDI('c1', 'C1', 100));
         dataImports[0].Donation_Campaign_Name__c = duplicateCampaignName;
 
-        dataImports.add(newDI('c2', 'C2'));
-        dataImports[1].Donation_Amount__c = 200;
+        dataImports.add(newDI('c2', 'C2', 200));
         dataImports[1].Donation_Campaign_Name__c = duplicateCampaignName;
 
         insert dataImports;
@@ -1353,12 +1381,10 @@ public with sharing class BDI_DataImport_TEST {
         List<DataImport__c> dataImports = new List<DataImport__c>();
         String duplicateCampaignName = 'Matching Campaign Name';
 
-        dataImports.add(newDI('c1', 'C1'));
-        dataImports[0].Donation_Amount__c = 100;
+        dataImports.add(newDI('c1', 'C1', 100));
         dataImports[0].Donation_Campaign_Name__c = duplicateCampaignName;
 
-        dataImports.add(newDI('c2', 'C2'));
-        dataImports[1].Donation_Amount__c = 200;
+        dataImports.add(newDI('c2', 'C2', 200));
         dataImports[1].Donation_Campaign_Name__c = duplicateCampaignName;
 
         insert dataImports;
@@ -1415,12 +1441,10 @@ public with sharing class BDI_DataImport_TEST {
 
         List<DataImport__c> dataImports = new List<DataImport__c>();
 
-        dataImports.add(newDI('c1', 'C1'));
-        dataImports[0].Donation_Amount__c = 100;
+        dataImports.add(newDI('c1', 'C1', 100));
         dataImports[0].DonationCampaignImported__c = campaignId;
 
-        dataImports.add(newDI('c2', 'C2'));
-        dataImports[1].Donation_Amount__c = 200;
+        dataImports.add(newDI('c2', 'C2', 200));
         dataImports[1].DonationCampaignImported__c = null;
         dataImports[1].Donation_Campaign_Name__c = 'AnotherCmpExisting';
 
@@ -1461,12 +1485,10 @@ public with sharing class BDI_DataImport_TEST {
 
         List<DataImport__c> dataImports = new List<DataImport__c>();
 
-        dataImports.add(newDI('c1', 'C1'));
-        dataImports[0].Donation_Amount__c = 100;
+        dataImports.add(newDI('c1', 'C1', 100));
         dataImports[0].DonationCampaignImported__c = campaignId;
 
-        dataImports.add(newDI('c2', 'C2'));
-        dataImports[1].Donation_Amount__c = 200;
+        dataImports.add(newDI('c2', 'C2', 200));
         dataImports[1].DonationCampaignImported__c = null;
         dataImports[1].Donation_Campaign_Name__c = 'AnotherCmpExisting';
 
