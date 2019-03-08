@@ -36,9 +36,15 @@
 */
 public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 
+    private static final CRLP_RollupProcessingOptions.RollupType jobType =
+            CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+
+    /*******************************************************************************************************
+     * @description Constructs the class, passing the RollupType of this class.
+     */
     public CRLP_Account_BATCH() { //This constructor is currently only used in tests - but even if it is used in the future
         // by non-test classes, it should still set the jobType property on the base class
-        super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
+        super(jobType);
     }
 
     /*******************************************************************************************************
@@ -46,7 +52,7 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
     public CRLP_Account_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
-        super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, jobFilter);
+        super(jobType, jobFilter);
     }
 
     /*******************************************************************************************************
@@ -54,7 +60,7 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
      * @param recordIds Specific set of parent record id's to roll up to
      */
     public CRLP_Account_BATCH(List<Id> recordIds) {
-        super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, recordIds);
+        super(jobType, recordIds);
     }
 
     /*******************************************************************************************************
@@ -62,7 +68,7 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
      * @param lastIdProcessedForChunking The last Id retrieved in the previous batch. Used in chunk mode.
      */
     public CRLP_Account_BATCH(Id lastIdProcessedForChunking) {
-        super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, lastIdProcessedForChunking);
+        super(jobType, lastIdProcessedForChunking);
     }
 
     /**
@@ -72,7 +78,7 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
         String className = CRLP_Account_BATCH.class.getName();
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
             if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
-                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(jobType,
                         CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
             } else {
                 logDuplicateBatchError(className);

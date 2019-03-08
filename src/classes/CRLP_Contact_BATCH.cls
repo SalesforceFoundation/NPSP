@@ -36,14 +36,23 @@
 */
 public class CRLP_Contact_BATCH extends CRLP_Batch_Base_NonSkew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 
-    public CRLP_Contact_BATCH() { }
+
+    private static final CRLP_RollupProcessingOptions.RollupType jobType =
+            CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+
+    /*******************************************************************************************************
+     * @description Constructs the class, passing the RollupType of this class.
+     */
+    public CRLP_Contact_BATCH() {
+        super(jobType);
+    }
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Contacts that meet the "Non Skew" criteria
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
     public CRLP_Contact_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
-        super(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, jobFilter);
+        super(jobType, jobFilter);
     }
 
     /*******************************************************************************************************
@@ -51,7 +60,7 @@ public class CRLP_Contact_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
      * @param recordIds Specific set of parent record id's to roll up to
      */
     public CRLP_Contact_BATCH(List<Id> recordIds) {
-        super(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, recordIds);
+        super(jobType, recordIds);
     }
 
     /*******************************************************************************************************
@@ -59,7 +68,7 @@ public class CRLP_Contact_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
      * @param lastIdProcessedForChunking The last Id retrieved in the previous batch. Used in chunk mode.
      */
     public CRLP_Contact_BATCH(Id lastIdProcessedForChunking) {
-        super(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, lastIdProcessedForChunking);
+        super(jobType, lastIdProcessedForChunking);
     }
 
     /**
@@ -69,7 +78,7 @@ public class CRLP_Contact_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
         String className = CRLP_Contact_BATCH.class.getName();
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
             if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
-                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(jobType,
                         CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
             } else {
                 logDuplicateBatchError(className);
