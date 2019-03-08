@@ -7,6 +7,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Delete Contact from Household
+    [tags]  unstable
     &{contact1} =  API Create Contact    Email=skristem@robot.com
     Go To Record Home  &{contact1}[AccountId]
     ${contact_id2} =  New Contact for HouseHold
