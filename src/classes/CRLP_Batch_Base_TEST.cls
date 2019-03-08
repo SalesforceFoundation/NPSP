@@ -246,7 +246,7 @@ private class CRLP_Batch_Base_TEST {
 
         String query = accountBatchJob.getQuery(
                 accountBatchJob.chunkModeStartingId,
-                accountBatchJob.getBatchChunkSizeLimit(),
+                accountBatchJob.batchSizeChunkLimit,
                 accountBatchJob.fieldsToCheckForNonZero
         );
 System.debug(LoggingLevel.ERROR, '*** variable value: ' + query);
@@ -257,8 +257,8 @@ System.debug(LoggingLevel.ERROR, '*** variable value: ' + query);
         System.assert(query.contains('ORDER BY Id'),
                 'All chunk mode queries should contain "ORDER BY Id"');
 
-        System.assertEquals(chunkSize, accountBatchJob.getBatchChunkSizeLimit(),
-                'getBatchChunkSizeLimit() should equal chunkSize');
+        System.assertEquals(chunkSize, accountBatchJob.batchSizeChunkLimit,
+                'batchSizeChunkLimit should equal chunkSize');
 
         System.assert(query.contains('LIMIT ' + chunkSize),
                 'All chunk mode queries should contain chunk size "LIMIT ' + chunkSize + '"');
@@ -277,7 +277,7 @@ System.debug(LoggingLevel.ERROR, '*** variable value: ' + query);
 
         String query = accountBatchJob.getQuery(
                 accountBatchJob.chunkModeStartingId,
-                accountBatchJob.getBatchChunkSizeLimit(),
+                accountBatchJob.batchSizeChunkLimit,
                 accountBatchJob.fieldsToCheckForNonZero
         );
 
@@ -291,8 +291,8 @@ System.debug(LoggingLevel.ERROR, '*** variable value: ' + query);
         System.assert(query.contains('ORDER BY Id'),
                 'All chunk mode queries should contain "ORDER BY Id"');
 
-        System.assertEquals(chunkSize, accountBatchJob.getBatchChunkSizeLimit(),
-                'getBatchChunkSizeLimit() should equal chunkSize');
+        System.assertEquals(chunkSize, accountBatchJob.batchSizeChunkLimit,
+                'batchSizeChunkLimit should equal chunkSize');
 
         System.assert(query.contains('LIMIT ' + chunkSize),
                 'All chunk mode queries should contain "LIMIT ' + chunkSize + '"');

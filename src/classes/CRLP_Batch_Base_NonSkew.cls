@@ -112,7 +112,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         try {
             initializeJobData();
 
-            String query = getQuery(chunkModeStartingId, getBatchChunkSizeLimit(), fieldsToCheckForNonZero);
+            String query = getQuery(chunkModeStartingId, batchSizeChunkLimit, fieldsToCheckForNonZero);
 
             UTIL_Debug.debug(LoggingLevel.WARN, '>> Batch Query =' + query);
             System.debug(LoggingLevel.ERROR, '*** query: ' + query);
@@ -338,27 +338,31 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     }
 
     /**
-     * @description If chunking mode is enabled for this type of rollup job, get the chunk size limit to use in the main query
-     * @return Limit value to use or Null if chunking is not enabled.
+     * @description The chunk size used to limit the number of records returned in the main query.
+     * Used in chunk mode.
+     * @return Limit value to use or null if chunking is not enabled.
      */
-    public Integer getBatchChunkSizeLimit() {
-        Decimal rtnValue;
+    public Integer batchSizeChunkLimit {
+        get {
+            if (batchSizeChunkLimit == null) {
+                Decimal rtnValue;
+                switch on (jobType) {
+                    when AccountHardCredit {
+                        rtnValue = customizableRollupSettings.Rollups_Account_HardCredit_ChunkSize__c;
+                    }
 
-        switch on (jobType) {
+                    when ContactHardCredit {
+                        rtnValue = customizableRollupSettings.Rollups_Contact_HardCredit_ChunkSize__c;
+                    }
 
-            when AccountHardCredit {
-                rtnValue = customizableRollupSettings.Rollups_Account_HardCredit_ChunkSize__c;
+                    when ContactSoftCredit {
+                        rtnValue = customizableRollupSettings.Rollups_Contact_SoftCredit_ChunkSize__c;
+                    }
+                }
+                batchSizeChunkLimit = (rtnValue > 0 ? rtnValue.intValue() : null);
             }
-
-            when ContactHardCredit {
-                rtnValue = customizableRollupSettings.Rollups_Contact_HardCredit_ChunkSize__c;
-            }
-
-            when ContactSoftCredit {
-                rtnValue = customizableRollupSettings.Rollups_Contact_SoftCredit_ChunkSize__c;
-            }
+            return batchSizeChunkLimit;
         }
-
-        return (rtnValue > 0 ? rtnValue.intValue() : null);
+        private set;
     }
 }
