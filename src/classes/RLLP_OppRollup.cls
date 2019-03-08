@@ -35,6 +35,18 @@
 * @description Main logic class for rollups of opportunities to the Accounts, Contacts, and Households.
 */
 public without sharing class RLLP_OppRollup {
+    @TestVisible
+    private Boolean isCustomizableRollupsEnabled {
+        get {
+            if (isCustomizableRollupsEnabled == null) {
+                isCustomizableRollupsEnabled = RLLP_OppRollup_UTIL.customizableRollupEngineEnabled;
+            }
+
+            return isCustomizableRollupsEnabled;
+        }
+        set;
+    }
+
     /** @description Constructor gets settings and sets up variables. */
     public RLLP_OppRollup(){
         // setup households settings
@@ -125,33 +137,42 @@ public without sharing class RLLP_OppRollup {
     * @param oppIds A set of opportunity ids.
     * @return void This method does updates directly and returns nothing.
     ********************************************************************************************************/
-    public static void rollupContactsandHouseholdsForTrigger(set<id> oppIds){
+    public static void rollupContactsandHouseholdsForTrigger(Set<Id> oppIds){
         //we need this to make sure there's a proper OCR when Contact Opps are inserted
         // use the contact roles to find the contacts and households
         String query = new RLLP_OppRollup_UTIL().buildOpportunityContactRoleQuery() +
             ' WHERE Opportunity.Id IN :oppIds and IsPrimary = true ALL ROWS ';
+        Map<Id, Contact> contactById = new Map<Id, Contact>();
         Map<Id, npo02__Household__c> householdById = new Map<Id, npo02__Household__c>();
 
 
         for (OpportunityContactRole role : Database.query(query)){
-            if (role.Contact.npo02__Household__c == null) {
-                continue;
+            contactById.put(role.ContactId, role.Contact);
+
+            if (role.Contact.npo02__Household__c != null) {
+                householdById.put(role.Contact.npo02__Household__c, role.Contact.npo02__Household__r);
             }
 
-            householdById.put(role.Contact.npo02__Household__c, role.Contact.npo02__Household__r);
         }
 
+        if (contactById.isEmpty()) {
+            return;
+        }
+
+        RLLP_OppRollup oppRollup = new RLLP_OppRollup();
+        oppRollup.rollupContacts(contactById);
+
         if (!householdById.isEmpty()) {
-            new RLLP_OppRollup().rollupHouseholds(householdById);
+            oppRollup.rollupHouseholds(householdById);
         }
     }
 
     /**
-     * @description Calls the appropriate rollup engine for the account ids provided
+     * @description Calls the appropriate rollup engine (legacy or crlp) for the account ids provided
      * @param accountIds Ids for the accounts that require rollups to be recalculated
      */
     public void rollupAccounts(Set<Id> accountIds) {
-        if (useCustomizableRollups()) {
+        if (isCustomizableRollupsEnabled) {
             runCustomizableRollups(accountIds);
 
             return;
@@ -166,11 +187,11 @@ public without sharing class RLLP_OppRollup {
     }
 
     /**
-     * @description Calls the appropriate rollup engine for the contact ids provided
+     * @description Calls the appropriate rollup engine (legacy or crlp) for the contact ids provided
      * @param contactIds Ids for the contacts that require rollups to be recalculated
      */
     public void rollupContacts(Set<Id> contactIds) {
-        if (useCustomizableRollups()) {
+        if (isCustomizableRollupsEnabled) {
             runCustomizableRollups(contactIds);
 
             return;
@@ -198,18 +219,19 @@ public without sharing class RLLP_OppRollup {
     }
 
     /**
-     * @description Determines whether or not the customizable rollup engine should be used
-     * NOTE: Customizable rollups is not supported on the old Household object model
-     * @return Boolean true when customizable rollup engine is enabled and class should check
+     * @description Determines if the context is already async or if there is only 1 record to update
+     * @param ids The set of ids that need their rollups refreshed
+     * @return Boolean - true when the rollups should happen immediately
      */
-    private Boolean useCustomizableRollups() {
-        return RLLP_OppRollup_UTIL.customizableRollupEngineEnabled;
-    }
-
     private Boolean isImmediate(Set<Id> ids) {
         return ids.size() == 1 || System.isFuture() || System.isBatch() || System.isQueueable();
     }
 
+    /**
+     * @description Returns the map of contacts with the fields required for processing the rollups
+     * @param contactIds The set of contact ids that require their rollups to be updated
+     * @return Map<Id, Contact> the map of contacts by their ids
+     */
     private static Map<Id, Account> getAccountById(Set<Id> accountIds) {
         if (accountIds == null || accountIds.isEmpty()) {
             return new Map<Id, Account>();
@@ -220,6 +242,12 @@ public without sharing class RLLP_OppRollup {
         return new Map<Id, Account>((List<Account>)Database.query(query));
     }
 
+    /**
+     * @description Returns the map of contacts with the fields required for processing the rollups
+     * @param contactIds The set of contact ids that require their rollups to be updated
+     * @return Map<Id, Contact> the map of contacts by their ids
+     */
+    @TestVisible
     private static Map<Id, Contact> getContactById(Set<Id> contactIds) {
         if (contactIds == null || contactIds.isEmpty()) {
             return new Map<Id, Contact>();
