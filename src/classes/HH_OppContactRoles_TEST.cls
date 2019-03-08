@@ -102,10 +102,10 @@ private class HH_OppContactRoles_TEST {
         if (strProcessor == CAO_Constants.BUCKET_PROCESSOR) {
             System.assertEquals(0,createdRoles.size());
         } else {
-	        System.assertEquals(2,createdRoles.size());
-	        System.assertEquals(OCR_DONOR_ROLE,createdRoles[0].Role);
-	        System.assert(createdRoles[0].IsPrimary);
-	        System.assertEquals(HH_MEMBER_CONTACT_ROLE,createdRoles[1].Role);
+            System.assertEquals(2,createdRoles.size());
+            System.assertEquals(OCR_DONOR_ROLE,createdRoles[0].Role);
+            System.assert(createdRoles[0].IsPrimary);
+            System.assertEquals(HH_MEMBER_CONTACT_ROLE,createdRoles[1].Role);
         }
     }
 
@@ -336,17 +336,18 @@ private class HH_OppContactRoles_TEST {
         insert con2;
 
         Test.startTest();
-        insert new Opportunity(
-            Name = 'o1',
-            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-            CloseDate = System.today(),
-            Primary_Contact__c = (String)con1.id);
-            
-        insert new Opportunity(
-            Name = 'o2',
-            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-            CloseDate = System.today(),
-            Primary_Contact__c = (String)con2.id);
+        insert new List<Opportunity>{
+            new Opportunity(
+                Name = 'o1',
+                StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+                CloseDate = System.today(),
+                Primary_Contact__c = (String)con1.id),
+            new Opportunity(
+                Name = 'o2',
+                StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+                CloseDate = System.today(),
+                Primary_Contact__c = (String)con2.id)
+        };
         Test.stopTest();
         
         System.assertEquals(2, [SELECT count() FROM Opportunity]);
@@ -361,10 +362,10 @@ private class HH_OppContactRoles_TEST {
     private static void updateOppHHAccountRefreshOpen() {
         updateOppHHAccount('Open Opportunities');
     }
-	@isTest
+    @isTest
     private static void updateOppHHAccountRefreshOpenAndClosed() {
         updateOppHHAccount('Open and Closed Opportunities');
-	}
+    }
     /*********************************************************************************************************
     @description
     operation:

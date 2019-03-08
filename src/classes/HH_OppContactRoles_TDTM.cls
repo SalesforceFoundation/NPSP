@@ -52,8 +52,9 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
         npo02__Households_Settings__c currentHouseholdsSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
         // bail out if the user has disabled household contact roles.
-        if (!currentHouseholdsSettings.npo02__Household_Contact_Roles_On__c)
+        if (!currentHouseholdsSettings.npo02__Household_Contact_Roles_On__c) {
             return null;
+        }
 
         List<Opportunity> opportunities = new List<Opportunity>();
         List<Opportunity> oldOpportunities = new List<Opportunity>();
@@ -73,16 +74,19 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
         // for AfterInserts, we can just go ahead and do our work to create the household soft credits.
         // but for AfterUpdates, we only do work if the Opp's HH account has changed.
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-               // from custom settings, see whether the user wants us to refresh soft credit ocrs.
-               // UNDONE: waiting to add the actual custom setting to use.
-        	if (strRefreshSetting == null || strRefreshSetting == 'none')
+            // from custom settings, see whether the user wants us to refresh soft credit ocrs.
+            // UNDONE: waiting to add the actual custom setting to use.
+        	if (strRefreshSetting == null || strRefreshSetting == 'none') {
         	   return null;
+            }
+
         	Boolean isOpenOnly = (strRefreshSetting == 'Open Opportunities');
 
-            string strSoql = 'SELECT Id, AccountId, Primary_Contact__c FROM Opportunity WHERE Account.npe01__SYSTEM_AccountType__c = \'' +
+            String strSoql = 'SELECT Id, AccountId, Primary_Contact__c FROM Opportunity WHERE Account.npe01__SYSTEM_AccountType__c = \'' +
         	   CAO_Constants.HH_ACCOUNT_TYPE + '\' and ';
-        	if (isOpenOnly)
+        	if (isOpenOnly) {
         	   strSoql += ' IsClosed = false and ';
+            }
         	strSoql += '(Id in :opportunities or Id in :oldOpportunities)';
             
             Map<Id, Opportunity> mapIdToOpp = null;
@@ -98,7 +102,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                     // delay our soql until we know we need it.
                     if (mapIdToOpp == null) {
 			            // query for the Opps of household accounts involved.
-			            mapIdToOpp = new Map<Id, Opportunity>((List<Opportunity>)database.query(strSoql));
+			            mapIdToOpp = new Map<Id, Opportunity>((List<Opportunity>)Database.query(strSoql));
                     }
 
                     if (mapIdToOpp.get(opportunities[i].Id) != null && mapIdToOpp.get(oldOpportunities[i].Id) != null) {
@@ -107,13 +111,16 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                 }
             }
             // bail out if the hh accounts did not change.
-            if (listOppToProcess.size() == 0) {
+            if (listOppToProcess.isEmpty()) {
                 return null;
             }
 
             // delete the old household soft credits.
-            delete [select Id from OpportunityContactRole where OpportunityId in :listOppToProcess and 
-                Role = :currentHouseholdsSettings.npo02__Household_Member_Contact_Role__c];
+            delete [
+                SELECT Id 
+                FROM OpportunityContactRole 
+                WHERE OpportunityId IN :listOppToProcess  
+                AND Role = :currentHouseholdsSettings.npo02__Household_Member_Contact_Role__c];
 
             // now continue with our processing to create the new household soft credits
             opportunities = listOppToProcess;
@@ -127,14 +134,18 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
         }
 
         Boolean recordTypesOnCons = false;
-        if (Schema.sObjectType.Contact.fields.getMap().get('RecordTypeId') != null)
+        if (Schema.sObjectType.Contact.fields.getMap().get('RecordTypeId') != null) {
             recordTypesOnCons = true;
+        }
                 
         // get all Opps in the trigger set that are for individual accounts 
         // issue 318, also get Contact ID for Role if available
-        Map<Id, Opportunity> oppsForContactRoles = new Map<Id, Opportunity>([select Id, Primary_Contact__c, AccountId, account.npe01__One2OneContact__c,
-            account.npe01__SYSTEMIsIndividual__c, account.npe01__SYSTEM_AccountType__c from Opportunity 
-            where Id IN :opportunities AND account.npe01__SYSTEMIsIndividual__c = true]);
+        Map<Id, Opportunity> oppsForContactRoles = new Map<Id, Opportunity>([
+            SELECT Id, Primary_Contact__c, AccountId, account.npe01__One2OneContact__c,
+                account.npe01__SYSTEMIsIndividual__c, account.npe01__SYSTEM_AccountType__c 
+            FROM Opportunity 
+            WHERE Id IN :opportunities 
+            AND account.npe01__SYSTEMIsIndividual__c = true]);
 
         if (oppsForContactRoles.size() > 0) {
             // set of contact Ids on Accounts for Opps in the trigger set
@@ -156,19 +167,23 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             // query for OppConRoles where primary=true and OppID in arg set
             // query changed to also include Role = default role, because Contact Merge scenarios were clearing isPrimary (not by our code)!
             Map<String, Id> contactOppToContactRole = new Map<String, Id>();
-            OpportunityContactRole[] conRoles = [select Id, OpportunityId, ContactId, Role, isPrimary From OpportunityContactRole 
-                WHERE OpportunityId IN :oppsForContactRoles.values() ];
+            OpportunityContactRole[] conRoles = [
+                SELECT Id, OpportunityId, ContactId, Role, isPrimary 
+                FROM OpportunityContactRole 
+                WHERE OpportunityId IN :oppsForContactRoles.values()];
 
             String uniqueConRole = '';
             // now loop through the results and build the map
             for (OpportunityContactRole thisCR : conRoles) {
-                uniqueConRole = string.valueOf(thisCR.OpportunityId) + string.valueOf(thisCR.ContactId);
-                contactOppToContactRole.put(uniqueConRole , thisCR.Id);
+                uniqueConRole = String.valueOf(thisCR.OpportunityId) + String.valueOf(thisCR.ContactId);
+                contactOppToContactRole.put(uniqueConRole, thisCR.Id);
                 
                 if (thisCR.isPrimary || thisCR.Role == ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c) {
                     contactIds.add(thisCR.ContactId);
-                    if (contactIdToOpps.get(thisCR.ContactId) == null)
+
+                    if (contactIdToOpps.get(thisCR.ContactId) == null) {
                         contactIdToOpps.put(thisCR.ContactId, new List<Opportunity>());
+                    }
                     contactIdToOpps.get(thisCR.ContactId).add(oppsForContactRoles.get(thisCR.OpportunityId));    
                     
                     // now remove any Primary_Contact__c or npe01__One2OneContact__c that may conflict with the primary ocr already created
@@ -180,30 +195,45 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             // loop throught the Opportunities
             for (Opportunity thisOpp : oppsForContactRoles.values()) { 
                 // grab all the contacts off the Accounts or via the role lookup
-                if (thisOpp.account.npe01__One2OneContact__c != null && thisOpp.account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
+                if (thisOpp.account.npe01__One2OneContact__c != null 
+                    && thisOpp.account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE
+                ) {
                     contactIds.add(thisOpp.account.npe01__One2OneContact__c);
-                else if (thisOpp.Primary_Contact__c != null) 
+
+                } else if (thisOpp.Primary_Contact__c != null) {
                     contactIds.add(thisOpp.Primary_Contact__c);
+                }
                                     
                 // create the map of contacts to opps
-                if (contactIdToOpps.get(thisOpp.account.npe01__One2OneContact__c) == null && contactIdToOpps.get(thisOpp.Primary_Contact__c) == null) {
-                    if (thisOpp.account.npe01__One2OneContact__c != null && thisOpp.account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
+                if (contactIdToOpps.get(thisOpp.account.npe01__One2OneContact__c) == null 
+                    && contactIdToOpps.get(thisOpp.Primary_Contact__c) == null
+                ) {
+                    if (thisOpp.account.npe01__One2OneContact__c != null 
+                        && thisOpp.account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE
+                    ) {
                         contactIdToOpps.put(thisOpp.account.npe01__One2OneContact__c, new List<Opportunity>());
-                    else if (thisOpp.Primary_Contact__c != null)
-                        contactIdToOpps.put(thisOpp.Primary_Contact__c, new List<Opportunity>());                                          
+                    } else if (thisOpp.Primary_Contact__c != null) {
+                        contactIdToOpps.put(thisOpp.Primary_Contact__c, new List<Opportunity>());   
+                    }                                       
                 }
                 
-                if (thisOpp.account.npe01__One2OneContact__c != null && thisOpp.account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)
+                if (thisOpp.account.npe01__One2OneContact__c != null 
+                    && thisOpp.account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE
+                ) {
                     contactIdToOpps.get(thisOpp.account.npe01__One2OneContact__c).add(thisOpp);
-                else if (contactIdToOpps.get(thisOpp.Primary_Contact__c) != null) 
-                    contactIdToOpps.get(thisOpp.Primary_Contact__c).add(thisOpp);                                            
+                } else if (contactIdToOpps.get(thisOpp.Primary_Contact__c) != null) {
+                    contactIdToOpps.get(thisOpp.Primary_Contact__c).add(thisOpp);   
+                }                                         
             }            
 
             // map for contacts to their households because we can't get a query with Opp Id, Contact Id, and Household Id
             Map<Id, Id> contactIdToHouseholdId = new Map<Id, Id>();
             
             // query all contacts to get the Household Ids
-            individualContacts = [select id, npo02__Household__c, AccountId, Account.npe01__SYSTEM_AccountType__c from Contact where Id IN :contactIds];
+            individualContacts = [
+                SELECT Id, npo02__Household__c, AccountId, Account.npe01__SYSTEM_AccountType__c 
+                FROM Contact 
+                WHERE Id IN :contactIds];
 
             // create a map of contacts and their Household Ids
             for (Contact myContact : individualContacts) {  
@@ -216,11 +246,12 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             
             List<Id> c2HId = contactIdToHouseholdId.values();
             // query all contacts in all the Households
-            if (recordTypesOnCons)
+            if (recordTypesOnCons) {
                 householdContacts = database.query('select id, npo02__Household__c, RecordTypeId, AccountId, Deceased__c, Account.npe01__SYSTEM_AccountType__c from Contact where (npo02__Household__c IN :c2HId or AccountId in :c2HId)');
-            else
+            } else {
                 householdContacts = database.query('select id, npo02__Household__c, AccountId, Deceased__c, Account.npe01__SYSTEM_AccountType__c from Contact where (npo02__Household__c IN :c2HId or AccountId in :c2HId)');
-
+            }
+            
             // create a map of Household Id to list of member contacts
             for (Contact myContact : householdContacts) {
                 ID hhId;
@@ -263,9 +294,10 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                                     thisRole.isPrimary = true;
                                     contactRolesForCreation.add(thisRole);
                                 }
+
                             } else if (!householdMember.Deceased__c) {
                                 // exclude any Contacts with an excluded record type
-                                if (recordTypesOnCons && conRecordTypesToExclude.contains((id)householdMember.get('RecordTypeId'))) {
+                                if (recordTypesOnCons && conRecordTypesToExclude.contains((Id)householdMember.get('RecordTypeId'))) {
                                    // backwards, but prevents having to query for a RecordTypeId that may or may not be there...
 
                                 //only create contact role if we don't have one for this contact/opportunity
@@ -301,17 +333,18 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
     * @return void
     ********************************************************************************************************/
     public static void recreateHouseholdSoftCredits(List<Id> hhIds) {
+        npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        if (hs.npo02__Household_Member_Contact_Role__c == null) {
+            return;
+        }
+
+        //retrieve Opportunities with required fields so they can be processed by the Household OCR TDTM
         List<Opportunity> opps = [
             SELECT Id, AccountId, DisableContactRoleAutomation__c 
             FROM Opportunity 
             WHERE AccountId IN :hhIds];
         
         if (opps.isEmpty()) {
-            return;
-        }
-
-        npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-        if (hs.npo02__Household_Member_Contact_Role__c == null) {
             return;
         }
 

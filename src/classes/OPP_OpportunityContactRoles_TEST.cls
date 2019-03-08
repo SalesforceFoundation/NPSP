@@ -152,7 +152,7 @@ private class OPP_OpportunityContactRoles_TEST {
     */
     @isTest
     private static void oppCRTriggerTurnedOff() {
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR, 
                 npe01__Opportunity_Contact_Role_Default_role__c = OCR_ROLE_DONOR));
 
@@ -188,9 +188,9 @@ private class OPP_OpportunityContactRoles_TEST {
     @isTest
     private static void oppRolesForOneToOneContact() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, 
@@ -228,9 +228,9 @@ private class OPP_OpportunityContactRoles_TEST {
     @isTest
     private static void oppRolesForIndividualContact() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
         
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, 
@@ -269,9 +269,9 @@ private class OPP_OpportunityContactRoles_TEST {
     @isTest
     private static void oppRolesForOneToOneAccount() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, 
@@ -305,9 +305,9 @@ private class OPP_OpportunityContactRoles_TEST {
     @isTest
     private static void oppRolesForIndividualAccount() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR,
                 npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, 
@@ -522,7 +522,7 @@ private class OPP_OpportunityContactRoles_TEST {
     @isTest
     private static void avoidDuplicateCRs(){
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
         
         createHHAccountProcessorContactSettings();
 
@@ -880,7 +880,7 @@ private class OPP_OpportunityContactRoles_TEST {
     @isTest
     private static void testOppAccountIdChanges() {
         //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         Account orgAcct = new Account(Name = 'OrgTest567890', npe01__SYSTEMIsIndividual__c = false);
         insert orgAcct;
