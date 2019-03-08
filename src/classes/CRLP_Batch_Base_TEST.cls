@@ -338,7 +338,7 @@ private class CRLP_Batch_Base_TEST {
     }
 
     /**
-     * @description
+     * @description Configures incremental mode field override custom settings fields.
      * @param jobType The RollupType whose user defined inner join override should be configured
      * @param overrideForLastNDaysField API name of the custom field that should be used in the user-defined
      * inner join override
@@ -420,6 +420,13 @@ private class CRLP_Batch_Base_TEST {
         }
     }
 
+    /**
+     * @description Configures incremental mode field override custom settings fields.
+     * @param jobType RollupType for which chunk mode should be configured.
+     * @param chunkSize The number of records to process in each chunk mode batch job. Used
+     * in the batch start query.
+     * @return The configured Customizable_Rollup_Settings__c record.
+     */
     private static Customizable_Rollup_Settings__c configureChunkMode(
             CRLP_RollupProcessingOptions.RollupType jobType,
             Integer chunkSize) {
