@@ -633,9 +633,9 @@ public abstract class CRLP_Batch_Base {
                             whereClauses.add('Id > \'' + chunkModeStartingId + '\'');
                         }
 
-                        String whereClause = base.getMainQueryInnerJoinFilter();
-                        if (whereClause != null) {
-                            whereClauses.add(whereClause);
+                        String innerJoinWhereClause = base.getMainQueryInnerJoinFilter();
+                        if (innerJoinWhereClause != null) {
+                            whereClauses.add(innerJoinWhereClause);
                         }
                     }
 
