@@ -267,12 +267,10 @@ private class CRLP_Batch_Base_TEST {
     @isTest
     private static void accountHardCreditRollupChunkModeQueryContainsOrderByLimitId() {
         Integer chunkSize = 500;
+        Id chunkModeLastProcessedId = getAccountIdForTesting();
         configureChunkMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, chunkSize);
 
-        Account testAccount = new Account(Name='TestAccount1');
-        insert testAccount;
-
-        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(testAccount.Id);
+        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(chunkModeLastProcessedId);
         accountBatchJob.initializeJobData();
 
         String query = accountBatchJob.getBatchStartQuery(
@@ -281,7 +279,7 @@ private class CRLP_Batch_Base_TEST {
                 accountBatchJob.fieldsToCheckForNonZero
         );
 
-        System.assertEquals(testAccount.Id, accountBatchJob.chunkModeLastProcessedId,
+        System.assertEquals(chunkModeLastProcessedId, accountBatchJob.chunkModeLastProcessedId,
                 'chunkModeStartingId should equal testAccount.Id');
 
         System.assert(query.contains(' > \'' + accountBatchJob.chunkModeLastProcessedId + '\''),
@@ -457,6 +455,16 @@ private class CRLP_Batch_Base_TEST {
             }
         }
         return settings;
+    }
+
+    /**
+     * @description Inserts a simple Account for use in test methods
+     * @return the Inserted AccountId
+     */
+    private static Id getAccountIdForTesting() {
+        Account testAccount = new Account(Name = 'TestAccount1');
+        insert testAccount;
+        return testAccount.Id;
     }
 
 }
