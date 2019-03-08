@@ -10,6 +10,7 @@ Suite Teardown  Delete Records and Close Browser
 Select a payment for a contact make grid changes and process it
     #Select a payment for a contact, make grid changes, and process it
     [tags]  unstable
+    Set Window Size    1024    768
     ${ns} =  Get NPSP Namespace Prefix
     &{batch} =       API Create DataImportBatch    
     ...    ${ns}Batch_Process_Size__c=50    

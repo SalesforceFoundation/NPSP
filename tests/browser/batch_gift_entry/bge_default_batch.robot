@@ -9,6 +9,7 @@ Suite Teardown  Delete Records and Close Browser
 BGE Batch With Default Values
     #Create a BGE batch with default values
     [tags]  unstable
+    Set Window Size    1024    768
     ${batch} =           Generate Random String
     Select App Launcher Tab   Batch Gift Entry
     Click BGE Button       New Batch

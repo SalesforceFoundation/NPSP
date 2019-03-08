@@ -11,6 +11,7 @@ Suite Teardown  Delete Records and Close Browser
 BGE Batch With Custom Values
     #Create a BGE batch with custom values (count/amount, new fields, new defaults, different settings)
     [tags]  unstable
+    Set Window Size    1024    768
     ${batch} =           Generate Random String
     ${ns} =  Get NPSP Namespace Prefix
     Select App Launcher Tab   Batch Gift Entry
