@@ -36,7 +36,10 @@
 */
 public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 
-    public CRLP_Account_BATCH() { }
+    public CRLP_Account_BATCH() { //This constructor is currently only used in tests - but even if it is used in the future
+        // by non-test classes, it should still set the jobType property on the base class
+        super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
+    }
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Accounts that meet the "Non Skew" criteria

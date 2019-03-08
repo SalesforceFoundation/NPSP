@@ -441,7 +441,11 @@ public abstract class CRLP_Batch_Base {
                     if (base.hasActiveRollupsForThisJob() == false) {
                         // This is needed because can't return null as a valid iterator.
                         query += ' LIMIT 0';
-                    } else if (base.recordIds == null || (Test.isRunningTest() && base.recordIds.isEmpty())) {
+                    } else if (base.recordIds == null ||
+                            //todo: we should refactor to enable use of the empty constructors for tests,
+                            // which would eliminate the need to check for recordIds being empty, which
+                            // is only ever the case in test method setup...
+                            (Test.isRunningTest() && base.recordIds.isEmpty())) {
                         if (chunkSize != null) {
                             // In an LDV Org, there may be too many records to query in the main query. Core support has recommended
                             // a chunking approach where the main query is limited to under 1M records and the finish() method

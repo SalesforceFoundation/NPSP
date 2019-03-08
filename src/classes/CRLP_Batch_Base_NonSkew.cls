@@ -95,6 +95,14 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     /*******************************************************************************************************
      * @description Constructs the class - Rollup is for a specific set of Summary Object Id's
      * @param jobType Defines the type of rollup job
+     */
+    public CRLP_Batch_Base_NonSkew(CRLP_RollupProcessingOptions.RollupType jobType) {
+        super(jobType);
+    }
+
+    /*******************************************************************************************************
+     * @description Constructs the class - Rollup is for a specific set of Summary Object Id's
+     * @param jobType Defines the type of rollup job
      * @param recordIds Specific set of parent record id's to roll up to
      */
     public CRLP_Batch_Base_NonSkew(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds) {

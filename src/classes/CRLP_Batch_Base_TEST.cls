@@ -241,7 +241,8 @@ private class CRLP_Batch_Base_TEST {
         Account testAccount = new Account(Name='TestAccount1');
         insert testAccount;
 
-        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
+//        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
+        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH();
         accountBatchJob.initializeJobData();
 
         String query = accountBatchJob.getBatchStartQuery(
