@@ -186,6 +186,9 @@ public class CRLP_Rollup_SEL {
         return getRollupsById().get(id);
     }
 
+    /**
+     * @description Blacklist of Rollup__mdt.Operation__c picklist values not supported by Metadata Relationship.
+     */
     @TestVisible
     private static final Map<SObjectField, Set<String>> UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD = new Map<SObjectField, Set<String>> {
         Schema.Rollup__mdt.Date_Field__c => new Set<String> {}, // All Operations Supported
@@ -205,6 +208,14 @@ public class CRLP_Rollup_SEL {
         }
     };
 
+    /**
+     * @description Returns if rollup's Operation is supported for metadataRelationship.
+     * rollup.Operation__c should never be null, so a null rollup.Operation__c is not supported.
+     * @param  rollup 
+     * @param  metadataRelationship SObjectField of Rollup__mdt Metadata Relationship
+     * @return If rollup's Operation is not null and not in the blacklist, UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD, 
+     * for metadataRelationship.
+     */
     @TestVisible
     private static Boolean isOperationSupported(Rollup__mdt rollup, Schema.SObjectField metadataRelationship) {
         return
@@ -249,13 +260,6 @@ public class CRLP_Rollup_SEL {
                 if (rollup.Active__c == true) {
                     // Summary Field
                     if (rollup.Summary_Object__r.QualifiedApiName == sObjectName) {
-                    /*
-                        fields.add(getValidatedReferencedField(
-                            fieldsByName, 
-                            rollup.Summary_Field__r.QualifiedApiName, 
-                            sObjectName
-                        ));
-                    */
                         fields.add(fieldsByName.get(rollup.Summary_Field__r.QualifiedApiName));
                     }
 
@@ -264,14 +268,7 @@ public class CRLP_Rollup_SEL {
                         rollup.Date_Object__r.QualifiedApiName == sObjectName
                         && isOperationSupported(rollup, Schema.Rollup__mdt.Date_Field__c)
                     ) {
-                    /*
-                        fields.add(getValidatedReferencedField(
-                            fieldsByName, 
-                            rollup.Date_Field__r.QualifiedApiName, 
-                            sObjectName
-                        ));
-                    */
-                        fields.add(fieldsByName.get(rollup.Summary_Field__r.QualifiedApiName));
+                        fields.add(fieldsByName.get(rollup.Date_Field__r.QualifiedApiName));
                     }
 
                     // Amount Field
@@ -279,14 +276,7 @@ public class CRLP_Rollup_SEL {
                         rollup.Amount_Object__r.QualifiedApiName == sObjectName
                         && isOperationSupported(rollup, Schema.Rollup__mdt.Amount_Field__c)
                     ) {
-                    /*
-                        fields.add(getValidatedReferencedField(
-                            fieldsByName, 
-                            rollup.Amount_Field__r.QualifiedApiName, 
-                            sObjectName
-                        ));
-                    */
-                        fields.add(fieldsByName.get(rollup.Summary_Field__r.QualifiedApiName));
+                        fields.add(fieldsByName.get(rollup.Amount_Field__r.QualifiedApiName));
                     }
 
                     // Detail Field
@@ -294,14 +284,7 @@ public class CRLP_Rollup_SEL {
                         rollup.Detail_Object__r.QualifiedApiName == sObjectName
                         && isOperationSupported(rollup, Schema.Rollup__mdt.Detail_Field__c)
                     ) {
-                    /*
-                        fields.add(getValidatedReferencedField(
-                            fieldsByName, 
-                            rollup.Detail_Field__r.QualifiedApiName, 
-                            sObjectName
-                        ));
-                    */
-                        fields.add(fieldsByName.get(rollup.Summary_Field__r.QualifiedApiName));
+                        fields.add(fieldsByName.get(rollup.Detail_Field__r.QualifiedApiName));
                     }
                 }
             }   
@@ -315,19 +298,7 @@ public class CRLP_Rollup_SEL {
 
         return referencedFields;
     }
-/*
-    @TestVisible
-    private static SObjectField getValidatedReferencedField(
-        Map<String, Schema.SObjectField> fieldsByName, 
-        String qualifiedApiName, 
-        String sObjectName    
-    ) {
-        if (fieldsByName.get(qualifiedApiName) == null) {
-            throw new CRLP_Rollup_SVC.CRLP_Exception('Field "' + qualifiedApiName + '" not found in ' + sObjectName + '.fields.getMap()');
-        }
-        return fieldsByName.get(qualifiedApiName);
-    }
-*/
+
     /**
      * @description If the field describe for a given field is null, assert a false to allow for debugging
      * @param referencedFields Map<String, DescribeFieldResult>
