@@ -63,9 +63,27 @@
      * @description: checks that user has all necessary permissions and then launches modal or displays error
      */
     onEditClick: function(component, event, helper) {
-        helper.checkFieldPermissions(component, function () {
-            return helper.openBatchWizard(component);
-        }.bind(helper));
+        let openBatchWizard = function () {
+            helper.openBatchWizard(component);
+        }
+
+        let handleApexError = function (error) {
+            helper.handleApexErrors(component, error);
+        }
+
+        let checkFieldPermissionsPromise = helper.checkFieldPermissions(component);
+
+        checkFieldPermissionsPromise
+            .then(
+                $A.getCallback(function (result) {
+                    openBatchWizard();
+                })
+            )
+            .catch(
+                $A.getCallback(function (error) {
+                    handleApexError(error);
+                })
+            )
     },
 
     /**

@@ -437,17 +437,19 @@
     /**
      * @description: checks that user has all necessary permissions and then launches modal or displays error
      */
-    checkFieldPermissions: function(component, onSuccess) {
-        var action = component.get('c.checkFieldPermissions');
-        action.setCallback(this, function (response) {
-            var state = response.getState();
-            if (state === 'SUCCESS') {
-                onSuccess();
-            } else if (state === 'ERROR') {
-                this.handleApexErrors(component, response.getError());
-            }
-        });
-        $A.enqueueAction(action);
+    checkFieldPermissions: function(component) {
+        return new Promise($A.getCallback(function (resolve, reject) {
+            var action = component.get('c.checkFieldPermissions');
+            action.setCallback(this, function (response) {
+                var state = response.getState();
+                if (state === 'SUCCESS') {
+                    resolve();
+                } else if (state === 'ERROR') {
+                    reject(response.getError());
+                }
+            });
+            $A.enqueueAction(action);
+        }));
     },
 
     /**
