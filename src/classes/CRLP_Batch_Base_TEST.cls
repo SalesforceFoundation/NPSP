@@ -244,13 +244,13 @@ private class CRLP_Batch_Base_TEST {
         CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
         accountBatchJob.initializeJobData();
 
-        String query = accountBatchJob.getQuery(
-                accountBatchJob.chunkModeStartingId,
+        String query = accountBatchJob.getBatchStartQuery(
+                accountBatchJob.chunkModeLastProcessedId,
                 accountBatchJob.batchSizeChunkLimit,
                 accountBatchJob.fieldsToCheckForNonZero
         );
 System.debug(LoggingLevel.ERROR, '*** variable value: ' + query);
-        System.assertEquals(null, accountBatchJob.chunkModeStartingId,
+        System.assertEquals(null, accountBatchJob.chunkModeLastProcessedId,
                 'chunkModeStartingId should be null for this, the first chunk mode job ' +
                         '(built with the empty constructor).');
 
@@ -275,18 +275,18 @@ System.debug(LoggingLevel.ERROR, '*** variable value: ' + query);
         CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(testAccount.Id);
         accountBatchJob.initializeJobData();
 
-        String query = accountBatchJob.getQuery(
-                accountBatchJob.chunkModeStartingId,
+        String query = accountBatchJob.getBatchStartQuery(
+                accountBatchJob.chunkModeLastProcessedId,
                 accountBatchJob.batchSizeChunkLimit,
                 accountBatchJob.fieldsToCheckForNonZero
         );
 
         System.debug(LoggingLevel.ERROR, '*** query: ' + query);
-        System.assertEquals(testAccount.Id, accountBatchJob.chunkModeStartingId,
+        System.assertEquals(testAccount.Id, accountBatchJob.chunkModeLastProcessedId,
                 'chunkModeStartingId should equal testAccount.Id');
 
-        System.assert(query.contains(' > \'' + accountBatchJob.chunkModeStartingId + '\''),
-                'This chunk mode query should contain " > ' + accountBatchJob.chunkModeStartingId + '"');
+        System.assert(query.contains(' > \'' + accountBatchJob.chunkModeLastProcessedId + '\''),
+                'This chunk mode query should contain " > ' + accountBatchJob.chunkModeLastProcessedId + '"');
 
         System.assert(query.contains('ORDER BY Id'),
                 'All chunk mode queries should contain "ORDER BY Id"');

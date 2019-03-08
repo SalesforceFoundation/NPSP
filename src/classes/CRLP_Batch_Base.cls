@@ -347,6 +347,119 @@ public abstract class CRLP_Batch_Base {
     }
 
     /**
+     * @description Builds and returns batch job start query string.
+     * @param chunkLastId The last processed Id from the previous chunk.
+     * @param chunkSize The size of each chunk - used in the LIMIT statement in the query.
+     * @param fieldsToCheckForNonZero A list of fields that were checked for non-zero values,
+     * used in the query.
+     * @return The query string to be used by the batch start method.
+     */
+    @TestVisible
+    protected String getBatchStartQuery(Id chunkLastId, Integer chunkSize, List<String> fieldsToCheckForNonZero) {
+
+        BatchQueryBuilder builder = new BatchQueryBuilder(
+                this,
+                chunkLastId,
+                chunkSize,
+                fieldsToCheckForNonZero
+        );
+
+        String query = builder.buildQuery();
+        return query;
+    }
+
+    /**
+     * @description Inner Class used to build the start method query.
+     */
+    public class BatchQueryBuilder {
+        /**
+         * @description the CRLP_Batch_Base instance that created this class instance.  Enables this
+         * instance to access the member variables in the initializing class.
+         */
+        CRLP_Batch_Base base;
+        Integer chunkSize;
+        Id chunkLastId;
+        List<String> fieldsToCheckForNonZero;
+
+        BatchQueryBuilder(
+                CRLP_Batch_Base base,
+                Id chunkModeStartingId,
+                Integer chunkSize,
+                List<String> fieldsToCheckForNonZero
+        ) {
+            this.base = base;
+            this.chunkLastId = chunkModeStartingId;
+            this.chunkSize = chunkSize;
+            this.fieldsToCheckForNonZero = fieldsToCheckForNonZero;
+        }
+
+        /**
+         * @description Uses the local and base class variables to construct the batch class
+         * start query.
+         * @return The query string.
+         */
+        String buildQuery() {
+            switch on (base.jobMode) {
+                when NonSkewMode {
+                    // Build a query string of the target Summary object.
+                    String query = CRLP_Query_SEL.buildObjectQueryForRollup(base.summaryObjectType);
+
+                    // Fields in the fieldsToCheckForNonZero[] list must always be in the Contact query
+                    for (String f : fieldsToCheckForNonZero) {
+                        if (!query.containsIgnoreCase(f)) {
+                            query = query.split(' FROM ')[0] + ', ' + f + ' FROM ' + query.split(' FROM ')[1];
+                        }
+                    }
+
+                    List<String> whereClauses = new List<String>();
+
+                    // Add additional query filters as needed
+                    if (base.recordIds != null && base.recordIds.size() > 0) {
+                        whereClauses.add('Id IN :recordIds');
+                    } else {
+                        // Exclude Accounts or Contacts that will be rolled up in the SkewMode batch job
+                        String skewClause = CRLP_RollupBatch_SVC.getSkewWhereClause(base.jobType, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
+                        if (!String.isEmpty(skewClause)) {
+                            whereClauses.add(skewClause);
+                        }
+
+                        if (chunkLastId != null) {
+                            whereClauses.add('Id > \'' + chunkLastId + '\'');
+                        }
+
+                        String innerJoinWhereClause = base.getMainQueryInnerJoinFilter();
+                        if (innerJoinWhereClause != null) {
+                            whereClauses.add(innerJoinWhereClause);
+                        }
+                    }
+
+                    if (!whereClauses.isEmpty()) {
+                        query += ' WHERE ' + String.join(whereClauses, ' AND ');
+                    }
+
+                    // If there are no active rollups for the object type, then force the query to return zero records.
+                    if (base.hasActiveRollupsForThisJob() == false) {
+                        // This is needed because can't return null as a valid iterator.
+                        query += ' LIMIT 0';
+                    } else if (base.recordIds == null || (Test.isRunningTest() && base.recordIds.isEmpty())) {
+                        if (chunkSize != null) {
+                            // In an LDV Org, there may be too many records to query in the main query. Core support has recommended
+                            // a chunking approach where the main query is limited to under 1M records and the finish() method
+                            // kicks off the job again starting with the last Id that was queried
+                            query += ' ORDER BY Id LIMIT ' + chunkSize;
+                        }
+                    }
+                    return query;
+                }
+
+                when else {
+                    return null;
+                }
+            }
+        }
+    }
+
+    /**
      * @description Produces the where clause that should be used for the inner join
      * @return The WHERE clause, as a string, that should be used to filter the detail records
      */
@@ -572,96 +685,5 @@ public abstract class CRLP_Batch_Base {
         ex.setMessage(String.format(Label.CRLP_BatchSkipped, new List<String>{className}));
         ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
 
-    }
-
-    @TestVisible
-    protected String getQuery(Id lastId, Integer chunkSize, List<String> fields) {
-
-        BatchQueryBuilder builder = new BatchQueryBuilder(this, lastId, chunkSize, fields);
-        String query = builder.buildQuery();
-        return query;
-    }
-
-    public class BatchQueryBuilder {
-        /**
-         * @description the CRLP_Batch_Base instance that created this class instance.  Enables this
-         * instance to access the member variables in the initializing class.
-         */
-        CRLP_Batch_Base base;
-        Integer chunkingSize;
-        Id chunkModeStartingId;
-        List<String> fieldsToCheckForNonZero;
-
-        BatchQueryBuilder(
-                CRLP_Batch_Base base,
-                Id chunkModeStartingId,
-                Integer chunkSize,
-                List<String> fieldsToCheckForNonZero
-        ) {
-            this.base = base;
-            this.chunkModeStartingId = chunkModeStartingId;
-            this.chunkingSize = chunkSize;
-            this.fieldsToCheckForNonZero = fieldsToCheckForNonZero;
-        }
-
-        String buildQuery() {
-            switch on (base.jobMode) {
-                when NonSkewMode {
-                    // Build a query string of the target Summary object.
-                    String query = CRLP_Query_SEL.buildObjectQueryForRollup(base.summaryObjectType);
-
-                    // Fields in the fieldsToCheckForNonZero[] list must always be in the Contact query
-                    for (String f : fieldsToCheckForNonZero) {
-                        if (!query.containsIgnoreCase(f)) {
-                            query = query.split(' FROM ')[0] + ', ' + f + ' FROM ' + query.split(' FROM ')[1];
-                        }
-                    }
-
-                    List<String> whereClauses = new List<String>();
-
-                    // Add additional query filters as needed
-                    if (base.recordIds != null && base.recordIds.size() > 0) {
-                        whereClauses.add('Id IN :recordIds');
-                    } else {
-                        // Exclude Accounts or Contacts that will be rolled up in the SkewMode batch job
-                        String skewClause = CRLP_RollupBatch_SVC.getSkewWhereClause(base.jobType, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
-                        if (!String.isEmpty(skewClause)) {
-                            whereClauses.add(skewClause);
-                        }
-
-                        if (chunkModeStartingId != null) {
-                            whereClauses.add('Id > \'' + chunkModeStartingId + '\'');
-                        }
-
-                        String innerJoinWhereClause = base.getMainQueryInnerJoinFilter();
-                        if (innerJoinWhereClause != null) {
-                            whereClauses.add(innerJoinWhereClause);
-                        }
-                    }
-
-                    if (!whereClauses.isEmpty()) {
-                        query += ' WHERE ' + String.join(whereClauses, ' AND ');
-                    }
-
-                    // If there are no active rollups for the object type, then force the query to return zero records.
-                    if (base.hasActiveRollupsForThisJob() == false) {
-                        // This is needed because can't return null as a valid iterator.
-                        query += ' LIMIT 0';
-                    } else if (base.recordIds == null || (Test.isRunningTest() && base.recordIds.isEmpty())) {
-                        if (chunkingSize != null) {
-                        // In an LDV Org, there may be too many records to query in the main query. Core support has recommended
-                        // a chunking approach where the main query is limited to under 1M records and the finish() method
-                        // kicks off the job again starting with the last Id that was queried
-                            query += ' ORDER BY Id LIMIT ' + chunkingSize;
-                        }
-                    }
-                    return query;
-                }
-
-                when else {
-                    return null;
-                }
-            }
-        }
     }
 }

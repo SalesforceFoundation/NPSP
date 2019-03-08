@@ -41,7 +41,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     * in the previous batch. When the job is chained, it'll query records with Ids greater than this Id.
     */
     @TestVisible
-    public Id chunkModeStartingId;
+    public Id chunkModeLastProcessedId;
 
     protected CRLP_Batch_Base_NonSkew() { }
 
@@ -89,7 +89,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      */
     public CRLP_Batch_Base_NonSkew(CRLP_RollupProcessingOptions.RollupType jobType, Id lastIdProcessedForChunking) {
         super(jobType);
-        this.chunkModeStartingId = lastIdProcessedForChunking;
+        this.chunkModeLastProcessedId = lastIdProcessedForChunking;
     }
 
     /*******************************************************************************************************
@@ -107,31 +107,23 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     * @return database.Querylocator
     */
     public Database.Querylocator start(Database.BatchableContext bc) {
-        System.debug(LoggingLevel.ERROR, '*** ##### START Method ######');
-        System.debug(LoggingLevel.ERROR, '*** chunkModeStartingId: ' + chunkModeStartingId);
         try {
             initializeJobData();
 
-            String query = getQuery(chunkModeStartingId, batchSizeChunkLimit, fieldsToCheckForNonZero);
+            String query = getBatchStartQuery(
+                    chunkModeLastProcessedId,
+                    batchSizeChunkLimit,
+                    fieldsToCheckForNonZero
+            );
 
             UTIL_Debug.debug(LoggingLevel.WARN, '>> Batch Query =' + query);
-            System.debug(LoggingLevel.ERROR, '*** query: ' + query);
             return Database.getQueryLocator(query);
 
         } catch (Exception ex) {
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP + '.' + this.jobType.name());
             return Database.getQueryLocator([SELECT Id FROM Account LIMIT 0]);
         }
-
-
-
-
-
-
-
     }
-
-
 
     /*******************************************************************************************************
     * @description Handle each group of Summary records to roll-up.
@@ -145,7 +137,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
             // Remember the last Id in the scope as the Id to start in the next chunking mode operation
             //todo: we only need to do this if we are in chunk mode.  If not, no need
-            this.chunkModeStartingId = summaryRecords[summaryRecords.size()-1].Id;
+            this.chunkModeLastProcessedId = summaryRecords[summaryRecords.size()-1].Id;
 
 
             CRLP_RollupProcessingOptions.ProcessingOptions options = buildProcessingOptions();
@@ -309,18 +301,19 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
     /**
      * @description Submits another Rollup Job of the same type, passing in the starting Id as a
-     * param to the batch job constructor.  Used to support chunk mode.
+     * param to the batch job constructor.  Used to support chunk mode.  This enables the Batchable
+     * class to fully encapsulate the responsibility of running itself in Chunk mode.
      */
     private void submitBatchableJobForNextChunk(){
         switch on (jobType) {
             when AccountHardCredit {
-                Database.executeBatch(new CRLP_Account_BATCH(chunkModeStartingId));
+                Database.executeBatch(new CRLP_Account_BATCH(chunkModeLastProcessedId));
             }
             when ContactHardCredit {
-                Database.executeBatch(new CRLP_Contact_BATCH(chunkModeStartingId));
+                Database.executeBatch(new CRLP_Contact_BATCH(chunkModeLastProcessedId));
             }
             when ContactSoftCredit {
-                Database.executeBatch(new CRLP_Contact_SoftCredit_BATCH(chunkModeStartingId));
+                Database.executeBatch(new CRLP_Contact_SoftCredit_BATCH(chunkModeLastProcessedId));
             }
         }
     }
