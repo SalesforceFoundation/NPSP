@@ -53,8 +53,7 @@
     <lightning:layout verticalAlign="stretch" multipleRows="true">
 
         <!--Contextual help to explain which records will appear-->
-        <lightning:layoutItem size="12"
-                              padding="horizontal-small">
+        <lightning:layoutItem size="12" padding="horizontal-small">
             {!$Label.c.bgeDonationSelectorHelp}
         </lightning:layoutItem>
 
