@@ -347,6 +347,8 @@ public abstract class CRLP_Batch_Base {
         return pscDetailRecords;
     }
 
+    /******************************** Helper Methods *****************************/
+
     /**
      * @description Builds and returns batch job start query string.
      * @param chunkLastId The last processed Id from the previous chunk.
@@ -477,8 +479,6 @@ public abstract class CRLP_Batch_Base {
         }
         return whereClause;
     }
-
-    /******************************** Helper Methods *****************************/
 
     /**
      * @description Produces the where clause that should be used for the inner join when NOT in incremental mode
