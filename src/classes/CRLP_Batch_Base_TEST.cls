@@ -238,9 +238,6 @@ private class CRLP_Batch_Base_TEST {
         Integer chunkSize = 500;
         configureChunkMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, chunkSize);
 
-        Account testAccount = new Account(Name='TestAccount1');
-        insert testAccount;
-
         CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH();
         accountBatchJob.initializeJobData();
 
@@ -266,9 +263,11 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void accountHardCreditRollupChunkModeQueryContainsOrderByLimitId() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
         Integer chunkSize = 500;
-        Id chunkModeLastProcessedId = getAccountIdForTesting();
-        configureChunkMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, chunkSize);
+        Id chunkModeLastProcessedId = getAccountOrContactIdForTesting(jobType);
+        configureChunkMode(jobType, chunkSize);
 
         CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(chunkModeLastProcessedId);
         accountBatchJob.initializeJobData();
@@ -289,6 +288,131 @@ private class CRLP_Batch_Base_TEST {
                 'All chunk mode queries should contain "ORDER BY Id"');
 
         System.assertEquals(chunkSize, accountBatchJob.batchSizeChunkLimit,
+                'batchSizeChunkLimit should equal chunkSize');
+
+        System.assert(query.contains('LIMIT ' + chunkSize),
+                'All chunk mode queries should contain "LIMIT ' + chunkSize + '"');
+    }
+
+    @isTest
+    private static void contactHardCreditRollupChunkModeFirstJobQueryContainsOrderByLimit() {
+        Integer chunkSize = 500;
+        configureChunkMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, chunkSize);
+
+        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH();
+        contactBatchJob.initializeJobData();
+
+        String query = contactBatchJob.getBatchStartQuery(
+                contactBatchJob.chunkModeLastProcessedId,
+                contactBatchJob.batchSizeChunkLimit,
+                contactBatchJob.fieldsToCheckForNonZero
+        );
+
+        System.assertEquals(null, contactBatchJob.chunkModeLastProcessedId,
+                'chunkModeStartingId should be null for this, the first chunk mode job ' +
+                        '(created using the empty constructor).');
+
+        System.assert(query.contains('ORDER BY Id'),
+                'All chunk mode queries should contain "ORDER BY Id"');
+
+        System.assertEquals(chunkSize, contactBatchJob.batchSizeChunkLimit,
+                'batchSizeChunkLimit should equal chunkSize');
+
+        System.assert(query.contains('LIMIT ' + chunkSize),
+                'All chunk mode queries should contain chunk size "LIMIT ' + chunkSize + '"');
+    }
+
+    @isTest
+    private static void contactHardCreditRollupChunkModeQueryContainsOrderByLimitId() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+        Integer chunkSize = 500;
+        Id chunkModeLastProcessedId = getAccountOrContactIdForTesting(jobType);
+        configureChunkMode(jobType, chunkSize);
+
+        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(chunkModeLastProcessedId);
+        contactBatchJob.initializeJobData();
+
+        String query = contactBatchJob.getBatchStartQuery(
+                contactBatchJob.chunkModeLastProcessedId,
+                contactBatchJob.batchSizeChunkLimit,
+                contactBatchJob.fieldsToCheckForNonZero
+        );
+
+        System.assertEquals(chunkModeLastProcessedId, contactBatchJob.chunkModeLastProcessedId,
+                'chunkModeStartingId should equal testAccount.Id');
+
+        System.assert(query.contains(' > \'' + contactBatchJob.chunkModeLastProcessedId + '\''),
+                'This chunk mode query should contain " > ' + contactBatchJob.chunkModeLastProcessedId + '"');
+
+        System.assert(query.contains('ORDER BY Id'),
+                'All chunk mode queries should contain "ORDER BY Id"');
+
+        System.assertEquals(chunkSize, contactBatchJob.batchSizeChunkLimit,
+                'batchSizeChunkLimit should equal chunkSize');
+
+        System.assert(query.contains('LIMIT ' + chunkSize),
+                'All chunk mode queries should contain "LIMIT ' + chunkSize + '"');
+    }
+
+
+    @isTest
+    private static void contactSoftCreditRollupChunkModeFirstJobQueryContainsOrderByLimit() {
+        Integer chunkSize = 500;
+        configureChunkMode(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit, chunkSize);
+
+        CRLP_Contact_SoftCredit_BATCH contactBatchJob = new CRLP_Contact_SoftCredit_BATCH();
+        contactBatchJob.initializeJobData();
+
+        String query = contactBatchJob.getBatchStartQuery(
+                contactBatchJob.chunkModeLastProcessedId,
+                contactBatchJob.batchSizeChunkLimit,
+                contactBatchJob.fieldsToCheckForNonZero
+        );
+
+        System.assertEquals(null, contactBatchJob.chunkModeLastProcessedId,
+                'chunkModeStartingId should be null for this, the first chunk mode job ' +
+                        '(created using the empty constructor).');
+
+        System.assert(query.contains('ORDER BY Id'),
+                'All chunk mode queries should contain "ORDER BY Id"');
+
+        System.assertEquals(chunkSize, contactBatchJob.batchSizeChunkLimit,
+                'batchSizeChunkLimit should equal chunkSize');
+
+        System.assert(query.contains('LIMIT ' + chunkSize),
+                'All chunk mode queries should contain chunk size "LIMIT ' + chunkSize + '"');
+    }
+
+    @isTest
+    private static void contactSoftCreditRollupChunkModeQueryContainsOrderByLimitId() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
+        Integer chunkSize = 500;
+        Id chunkModeLastProcessedId = getAccountOrContactIdForTesting(jobType);
+        configureChunkMode(jobType, chunkSize);
+
+        CRLP_Contact_SoftCredit_BATCH contactBatchJob =
+                new CRLP_Contact_SoftCredit_BATCH(chunkModeLastProcessedId);
+        contactBatchJob.initializeJobData();
+
+        String query = contactBatchJob.getBatchStartQuery(
+                contactBatchJob.chunkModeLastProcessedId,
+                contactBatchJob.batchSizeChunkLimit,
+                contactBatchJob.fieldsToCheckForNonZero
+        );
+
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + query);
+        System.assertEquals(chunkModeLastProcessedId, contactBatchJob.chunkModeLastProcessedId,
+                'chunkModeStartingId should equal testAccount.Id');
+
+        System.assert(query.contains(' > \'' + contactBatchJob.chunkModeLastProcessedId + '\''),
+                'This chunk mode query should contain " > ' + contactBatchJob.chunkModeLastProcessedId + '"');
+
+        System.assert(query.contains('ORDER BY Id'),
+                'All chunk mode queries should contain "ORDER BY Id"');
+
+        System.assertEquals(chunkSize, contactBatchJob.batchSizeChunkLimit,
                 'batchSizeChunkLimit should equal chunkSize');
 
         System.assert(query.contains('LIMIT ' + chunkSize),
@@ -461,10 +585,27 @@ private class CRLP_Batch_Base_TEST {
      * @description Inserts a simple Account for use in test methods
      * @return the Inserted AccountId
      */
-    private static Id getAccountIdForTesting() {
+    private static Id getAccountOrContactIdForTesting(CRLP_RollupProcessingOptions.RollupType jobType) {
         Account testAccount = new Account(Name = 'TestAccount1');
         insert testAccount;
-        return testAccount.Id;
+
+        switch on (jobType) {
+            when AccountHardCredit {
+                return testAccount.Id;
+            }
+            when ContactHardCredit, ContactSoftCredit {
+                Contact testContact = new Contact(
+                        LastName='TestContact1',
+                        Email='testcontact1@testemail.com',
+                        AccountId = testAccount.Id
+                );
+                insert testContact;
+                return testContact.Id;
+            }
+            when else {
+                return null;
+            }
+        }
     }
 
 }
