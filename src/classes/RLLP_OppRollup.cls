@@ -172,6 +172,10 @@ public without sharing class RLLP_OppRollup {
      * @param accountIds Ids for the accounts that require rollups to be recalculated
      */
     public void rollupAccounts(Set<Id> accountIds) {
+        if (accountIds == null || accountIds.isEmpty()) {
+            return;
+        }
+
         if (isCustomizableRollupsEnabled) {
             runCustomizableRollups(accountIds);
 
@@ -191,6 +195,10 @@ public without sharing class RLLP_OppRollup {
      * @param contactIds Ids for the contacts that require rollups to be recalculated
      */
     public void rollupContacts(Set<Id> contactIds) {
+        if (contactIds == null || contactIds.isEmpty()) {
+            return;
+        }
+
         if (isCustomizableRollupsEnabled) {
             runCustomizableRollups(contactIds);
 
