@@ -277,7 +277,7 @@ public class UTIL_Describe {
     */
     public static Schema.DescribeFieldResult getFieldDescribe(String objectName, String fieldName) {
         // make sure we have this field's schema mapped
-        if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName)){
+        if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName)) {
             fillFieldMapsForObject(objectName, fieldName);
         }
 
