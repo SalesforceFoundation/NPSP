@@ -182,35 +182,26 @@ public class CRLP_RollupBatch_SVC {
         Integer batchSize = getBatchSize(jobType, jobMode);
 
         switch on (jobMode) {
-
             when SkewMode {
-
                 switch on (jobType) {
-
                     when AccountHardCredit {
                         Database.executeBatch(new CRLP_AccountSkew_BATCH(recordIds, lastIdProcessed), batchSize);
                     }
-
                     when AccountSoftCredit {
                         Database.executeBatch(new CRLP_AccountSkew_AccSoftCredit_BATCH(recordIds, lastIdProcessed), batchSize);
                     }
-
                     when ContactHardCredit {
                         Database.executeBatch(new CRLP_ContactSkew_BATCH(recordIds, lastIdProcessed), batchSize);
                     }
-
                     when AccountContactSoftCredit {
                         Database.executeBatch(new CRLP_AccountSkew_SoftCredit_BATCH(recordIds, lastIdProcessed), batchSize);
                     }
-
                     when ContactSoftCredit {
                         Database.executeBatch(new CRLP_ContactSkew_SoftCredit_BATCH(recordIds, lastIdProcessed), batchSize);
                     }
-
                     when GAU {
                         Database.executeBatch(new CRLP_GAU_BATCH(recordIds, lastIdProcessed), batchSize);
                     }
-
                     when RecurringDonations {
                         Database.executeBatch(new CRLP_RDSkew_BATCH(recordIds, lastIdProcessed), batchSize);
                     }
@@ -218,34 +209,26 @@ public class CRLP_RollupBatch_SVC {
             }
 
             when else {
-
                 switch on (jobType) {
-
                     when AccountHardCredit {
                         Database.executeBatch(new CRLP_Account_BATCH(recordIds), batchSize);
                     }
-
                     when AccountSoftCredit {
                         Database.executeBatch(new CRLP_Account_AccSoftCredit_BATCH(recordIds), batchSize);
                     }
-
                     when ContactHardCredit {
                         Database.executeBatch(new CRLP_Contact_BATCH(recordIds), batchSize);
                     }
-
                     when AccountContactSoftCredit {
                         Database.executeBatch(new CRLP_Account_SoftCredit_BATCH(recordIds), batchSize);
                     }
-
                     when ContactSoftCredit {
                         Database.executeBatch(new CRLP_Contact_SoftCredit_BATCH(recordIds), batchSize);
                     }
-
                     when GAU {
                         // Technically this job is always processed in "skew" mode
                         Database.executeBatch(new CRLP_GAU_BATCH(recordIds, lastIdProcessed), batchSize);
                     }
-
                     when RecurringDonations {
                         Database.executeBatch(new CRLP_RD_BATCH(recordIds), batchSize);
                     }
