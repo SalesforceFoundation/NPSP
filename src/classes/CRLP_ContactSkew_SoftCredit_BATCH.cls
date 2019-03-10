@@ -46,7 +46,6 @@ public class CRLP_ContactSkew_SoftCredit_BATCH extends CRLP_Batch_Base_Skew impl
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Contacts that meet the "Non Skew" criteria
-     * @param jobType Defines the type of rollup job
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
     public CRLP_ContactSkew_SoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {

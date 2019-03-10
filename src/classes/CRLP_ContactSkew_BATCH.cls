@@ -46,7 +46,6 @@ public class CRLP_ContactSkew_BATCH extends CRLP_Batch_Base_Skew implements Data
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Contacts that meet the "Skew" criteria
-     * @param jobType Defines the type of rollup job
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
     public CRLP_ContactSkew_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {

@@ -47,7 +47,6 @@ public class CRLP_RDSkew_BATCH extends CRLP_Batch_Base_Skew implements Database.
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all RDs that meet the "Skew" criteria
-     * @param jobType Defines the type of rollup job
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
     public CRLP_RDSkew_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
