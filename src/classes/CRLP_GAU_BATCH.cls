@@ -36,6 +36,12 @@
 */
 public class CRLP_GAU_BATCH extends CRLP_Batch_Base_Skew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 
+    /*******************************************************************************************************
+     * @description The CRLP_RollupProcessingOptions.RollupType of this class.
+     */
+    private static final CRLP_RollupProcessingOptions.RollupType jobType =
+            CRLP_RollupProcessingOptions.RollupType.GAU;
+
     public CRLP_GAU_BATCH() {}
 
     /*******************************************************************************************************
@@ -43,15 +49,17 @@ public class CRLP_GAU_BATCH extends CRLP_Batch_Base_Skew implements Database.Bat
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
     public CRLP_GAU_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
-        super(CRLP_RollupProcessingOptions.RollupType.GAU, jobFilter);
+        super(jobType, jobFilter);
     }
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup is for a specific set of Account Id's
      * @param recordIds Specific set of parent record id's to roll up to
+     * @param lastIdProcessedForChunking If this job is called by the SkewDispatcher, this contains the last Id queried
+     * by the SkewDispatcher Id chunking logic.
      */
     public CRLP_GAU_BATCH(List<Id> recordIds, Id lastIdProcessedForChunking) {
-        super(CRLP_RollupProcessingOptions.RollupType.GAU, recordIds, lastIdProcessedForChunking);
+        super(jobType, recordIds, lastIdProcessedForChunking);
     }
 
     /**
@@ -61,7 +69,7 @@ public class CRLP_GAU_BATCH extends CRLP_Batch_Base_Skew implements Database.Bat
         String className = CRLP_GAU_BATCH.class.getName();
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
             if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
-                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.GAU,
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(jobType,
                         CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
             } else {
                 logDuplicateBatchError(className);

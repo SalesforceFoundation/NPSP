@@ -36,6 +36,12 @@
 */
 public class CRLP_AccountSkew_BATCH extends CRLP_Batch_Base_Skew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 
+    /*******************************************************************************************************
+     * @description The CRLP_RollupProcessingOptions.RollupType of this class.
+     */
+    private static final CRLP_RollupProcessingOptions.RollupType jobType =
+            CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+
     public CRLP_AccountSkew_BATCH() {}
 
     /*******************************************************************************************************
@@ -44,7 +50,7 @@ public class CRLP_AccountSkew_BATCH extends CRLP_Batch_Base_Skew implements Data
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
     public CRLP_AccountSkew_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
-        super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, jobFilter);
+        super(jobType, jobFilter);
     }
 
     /*******************************************************************************************************
@@ -54,7 +60,7 @@ public class CRLP_AccountSkew_BATCH extends CRLP_Batch_Base_Skew implements Data
      * by the SkewDispatcher Id chunking logic.
      */
     public CRLP_AccountSkew_BATCH(List<Id> recordIds, Id lastIdProcessedForChunking) {
-        super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, recordIds, lastIdProcessedForChunking);
+        super(jobType, recordIds, lastIdProcessedForChunking);
     }
 
     /**
@@ -64,7 +70,7 @@ public class CRLP_AccountSkew_BATCH extends CRLP_Batch_Base_Skew implements Data
         String className = CRLP_AccountSkew_BATCH.class.getName();
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
             if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
-                Database.executeBatch(new CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
+                Database.executeBatch(new CRLP_SkewDispatcher_BATCH(jobType), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
             } else {
                 logDuplicateBatchError(className);
             }

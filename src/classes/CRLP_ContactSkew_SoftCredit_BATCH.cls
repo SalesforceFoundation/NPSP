@@ -36,6 +36,12 @@
 */
 public class CRLP_ContactSkew_SoftCredit_BATCH extends CRLP_Batch_Base_Skew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 
+    /*******************************************************************************************************
+     * @description The CRLP_RollupProcessingOptions.RollupType of this class.
+     */
+    private static final CRLP_RollupProcessingOptions.RollupType jobType =
+            CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
+
     public CRLP_ContactSkew_SoftCredit_BATCH() { }
 
     /*******************************************************************************************************
@@ -44,7 +50,7 @@ public class CRLP_ContactSkew_SoftCredit_BATCH extends CRLP_Batch_Base_Skew impl
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
     public CRLP_ContactSkew_SoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
-        super(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit, jobFilter);
+        super(jobType, jobFilter);
     }
 
     /*******************************************************************************************************
@@ -54,7 +60,7 @@ public class CRLP_ContactSkew_SoftCredit_BATCH extends CRLP_Batch_Base_Skew impl
      * by the SkewDispatcher Id chunking logic.
      */
     public CRLP_ContactSkew_SoftCredit_BATCH(List<Id> recordIds, Id lastIdProcessedForChunking) {
-        super(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit, recordIds, lastIdProcessedForChunking);
+        super(jobType, recordIds, lastIdProcessedForChunking);
     }
 
     /**
@@ -64,7 +70,7 @@ public class CRLP_ContactSkew_SoftCredit_BATCH extends CRLP_Batch_Base_Skew impl
         String className = CRLP_ContactSkew_SoftCredit_BATCH.class.getName();
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
             if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
-                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(jobType,
                         CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
             } else {
                 logDuplicateBatchError(className);
