@@ -36,6 +36,9 @@
 */
 public class CRLP_Contact_SoftCredit_BATCH extends CRLP_Batch_Base_NonSkew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 
+    /*******************************************************************************************************
+     * @description The CRLP_RollupProcessingOptions.RollupType of this class.
+     */
     private static final CRLP_RollupProcessingOptions.RollupType jobType =
             CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
 
