@@ -86,7 +86,7 @@ public class CRLP_RollupBatch_SVC {
 
         // If the Summary Object is the Account, then filter on Accounts that have at least a single
         // Opportunity attached. This is helpful to reduce the overall query size.
-        // To handle a scenario where an attached Oppportunity was deleted, but the record not recalculated
+        // To handle a scenario where an attached Opportunity was deleted, but the record not recalculated
         // also include any records where the TotalGifts or TotalMemberships fields are not zero.
         // If the field is null, a query with "< #" will not work. "= null" must be explicitly included in the query.
         if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
