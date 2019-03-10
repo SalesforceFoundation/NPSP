@@ -55,23 +55,27 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     @TestVisible
     private List<String> fieldsToCheckForNonZero {
         get {
-            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
-                    ) {
-                return new List<String>{
-                        'npo02__NumberOfClosedOpps__c', 'npo02__NumberOfMembershipOpps__c'
-                };
-            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                return new List<String>{
-                        SObjectType.Contact.fields.Number_of_Soft_Credits__c.getName()
-                };
-            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-                return new List<String>{
-                        SObjectType.General_Accounting_Unit__c.fields.Total_Number_of_Allocations__c.getName()
-                };
+            if (fieldsToCheckForNonZero == null) {
+                List<String> fieldsToCheck = new List<String>();
+                switch on (jobType) {
+                    when AccountHardCredit, ContactHardCredit {
+                        fieldsToCheck.add('npo02__NumberOfClosedOpps__c');
+                        fieldsToCheck.add('npo02__NumberOfMembershipOpps__c');
+                    }
+                    when ContactSoftCredit {
+                        fieldsToCheck.add(
+                                SObjectType.Contact.fields.Number_of_Soft_Credits__c.getName());
+                    }
+                    when GAU {
+                        fieldsToCheck.add(
+                                SObjectType.General_Accounting_Unit__c.fields.Total_Number_of_Allocations__c.getName());
+                    }
+                }
+                fieldsToCheckForNonZero = fieldsToCheck;
             }
-            return new List<String>();
-        } private set;
+            return fieldsToCheckForNonZero;
+        }
+        private set;
     }
 
     /*******************************************************************************************************
