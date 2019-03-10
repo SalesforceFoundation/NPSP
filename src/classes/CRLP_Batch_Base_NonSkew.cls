@@ -41,7 +41,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     * in the previous batch. When the job is chained, it'll query records with Ids greater than this Id.
     */
     @TestVisible
-    public Id chunkModeLastProcessedId;
+    private Id chunkModeLastProcessedId;
 
     protected CRLP_Batch_Base_NonSkew() { }
 
@@ -52,7 +52,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     // when an Opportunity was inserted/updated, but maybe that Opportunity was deleted or the reference changed.
     // There may be some custom rollups that use other fields that this wouldn't know about, or the user may have
     // modified the filters to somehow change those meaning. This is a good 99.9% check though.
-    public List<String> fieldsToCheckForNonZero {
+    @TestVisible
+    private List<String> fieldsToCheckForNonZero {
         get {
             if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
                     this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
@@ -338,7 +339,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     /**
      * @description Returns true if chunk mode is enabled.
      */
-    public Boolean isChunkModeEnabled {
+    private Boolean isChunkModeEnabled {
         get {
             return batchSizeChunkLimit != null && batchSizeChunkLimit > 0;
         }
@@ -349,7 +350,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      * Used in chunk mode.
      * @return Limit value to use or null if chunking is not enabled.
      */
-    public Integer batchSizeChunkLimit {
+    @TestVisible
+    private Integer batchSizeChunkLimit {
         get {
             if (batchSizeChunkLimit == null) {
                 Decimal rtnValue;
@@ -370,6 +372,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             }
             return batchSizeChunkLimit;
         }
-        private set;
+        set;
     }
 }
