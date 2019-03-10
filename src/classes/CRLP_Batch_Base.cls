@@ -367,8 +367,7 @@ public abstract class CRLP_Batch_Base {
                 fieldsToCheckForNonZero
         );
 
-        String query = builder.buildQuery();
-        return query;
+        return builder.buildQuery();
     }
 
     /**
