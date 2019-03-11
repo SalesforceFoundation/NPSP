@@ -149,9 +149,9 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     */
     public static List<Schema.DescribeFieldResult> getRelevantFields(Set<String> allowedObjects) {
 
-        Map<String, Schema.DescribeFieldResult> dfrMap = new Map<String, Schema.DescribeFieldResult>();
+        Map<String, Schema.DescribeFieldResult> filteredDFRMap = new Map<String, Schema.DescribeFieldResult>();
 
-        Map<String, Schema.DescribeFieldResult> fieldMap =
+        Map<String, Schema.DescribeFieldResult> allFieldsMap =
                 UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
 
         Set<String> bannedFields = new Set<String>{
@@ -181,49 +181,50 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         };
 
         // these data types have been whitelisted since they already work with BGE
-        Set<String> allowedDataTypes = new Set<String>{
-            'CURRENCY',
-            'DATE',
-            'STRING',
-            'TEXTAREA',
-            'DOUBLE',
-            'PICKLIST',
-            'EMAIL',
-            'MULTIPICKLIST',
-            'PHONE',
-            'URL'
+        Set<Schema.DisplayType> allowedDataTypes = new Set<Schema.DisplayType>{
+            Schema.DisplayType.CURRENCY,
+            Schema.DisplayType.DATE,
+            Schema.DisplayType.STRING,
+            Schema.DisplayType.TEXTAREA,
+            Schema.DisplayType.DOUBLE,
+            Schema.DisplayType.PICKLIST,
+            Schema.DisplayType.EMAIL,
+            Schema.DisplayType.MULTIPICKLIST,
+            Schema.DisplayType.PHONE,
+            Schema.DisplayType.URL,
+            Schema.DisplayType.REFERENCE
         };
 
         // these fields have been whitelisted since they have special handling in BDI
         Set<String> allowedFields = new Set<String>{
-            'DonationCampaignImported__c',
             'Donation_Record_Type_Name__c'
         };
 
         // looping through the fields on DataImport__c and remove unsupported data types
-        for (Schema.DescribeFieldResult dfr : fieldMap.values()) {
+        for (Schema.DescribeFieldResult dfr : allFieldsMap.values()) {
             String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.getName());
 
             String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(dfr.getName());
+
             Boolean fieldAllowed = (allowedObjects.contains(dataImportFieldMappedObject)
-                && allowedDataTypes.contains(dfr.getType().name())
+                && allowedDataTypes.contains(dfr.type)
                 && !bannedFields.contains(dataImportFieldApiName)
                 && dfr.getInlineHelpText() != null)
                 || allowedFields.contains(dataImportFieldApiName);
 
             if (fieldAllowed) {
-                dfrMap.put(dfr.label, dfr);
+                filteredDFRMap.put(dfr.label, dfr);
             }
         }
 
-        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(dfrMap.values());
+        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(filteredDFRMap.values());
 
-        List<String> sortedFieldLabels = new List<String>(dfrMap.keySet());
+        List<String> sortedFieldLabels = new List<String>(filteredDFRMap.keySet());
         sortedFieldLabels.sort();
 
         List<Schema.DescribeFieldResult> sortedDFRs = new List<Schema.DescribeFieldResult>();
         for (String fieldLabel : sortedFieldLabels) {
-            sortedDFRs.add(dfrMap.get(fieldLabel));
+            sortedDFRs.add(filteredDFRMap.get(fieldLabel));
         }
 
         return sortedDFRs;
