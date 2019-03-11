@@ -44,6 +44,7 @@
      */
     setColumns: function(component, dataColumns) {
         var columns = [];
+        var referenceFields = [];
         columns.push({
             label: 'Donor',
             fieldName: 'donorLink',
@@ -60,6 +61,8 @@
                     editable: !col.readOnly,
                     typeAttributes: JSON.parse(col.typeAttributes)
                 });
+            } else {
+                referenceFields.push(col.fieldName);
             }
         });
 
@@ -82,6 +85,7 @@
         });
 
         component.set('v.columns', columns);
+        component.set('v.referenceFields', referenceFields);
     },
 
     /**
@@ -186,10 +190,9 @@
     setDataTableRows: function(component, baseRows, responseRows) {
         let rows = [];
         let errors = [];
-        let namespace = component.get('v.labels.namespacePrefix');
 
         for (let i=0; i<responseRows.length; i++) {
-            const row = this.flattenDataImportRow(namespace, responseRows[i]);
+            const row = this.flattenDataImportRow(component, responseRows[i]);
             rows.push(row);
 
             //get payment and opportunity error information if import failed
@@ -275,8 +278,7 @@
      * @param isNewRecord: flag to indicate if record needs to be inserted or replaced
      */
     updateDataTableAfterDryRun: function (component, updatedRecord, isNewRecord) {
-        let namespace = component.get('v.labels.namespacePrefix');
-        let tableRow = this.flattenDataImportRow(namespace, updatedRecord);
+        let tableRow = this.flattenDataImportRow(component, updatedRecord);
         let hasError = false;
 
         //get payment and opportunity error information if import failed
@@ -547,20 +549,35 @@
      * @param currentRow: custom DataImportRow class data passed from the Apex controller.
      * @return Object row
      */
-    flattenDataImportRow: function(namespace, currentRow) {
+    flattenDataImportRow: function(component, currentRow) {
+        const referenceFields = component.get('v.referenceFields');
+
         let row = currentRow.record;
         row.donorName = currentRow.donorName;
         row.donorLink = currentRow.donorLink;
         row.matchedRecordUrl = currentRow.matchedRecordUrl;
         row.matchedRecordLabel = currentRow.matchedRecordLabel;
         row.errors = currentRow.errors;
-        // reformat lookup info to display as a url in datatable
-        if (row[namespace + 'DonationCampaignImported__c']) {
-            let campaignLinkFieldLabel = namespace + 'DonationCampaignImported__clabel';
-            let campaignLinkFieldName = namespace + 'DonationCampaignImported__clink';
-            row[campaignLinkFieldLabel] = row[namespace + 'DonationCampaignImported__r'].Name;
-            row[campaignLinkFieldName] = '/' + row[namespace + 'DonationCampaignImported__c'];
-        }
+
+        // reformat lookups to display as links in datatable
+        referenceFields.forEach(function(fieldName) {
+            if (row[fieldName]) {
+                let linkFieldLabel = fieldName + '_label';
+                let linkFieldName = fieldName + '_link';
+                let relationshipName = fieldName.slice(0, -1) + 'r';
+                // The relationship will have exactly two attributes:
+                // Id and the name field (e.g., Name, CaseNumber, etc.)
+                // They are sorted alphabetically, so references to different objects may have
+                // these attributes in differring orders. Iterate to find and use the non-Id value.
+                Object.keys(row[relationshipName]).forEach(function(key,index) {
+                    if (key !== 'Id') {
+                        row[linkFieldLabel] = row[relationshipName][key];
+                    }
+                });
+                row[linkFieldName] = '/' + row[fieldName];
+            }
+        });
+
         return row;
     },
 

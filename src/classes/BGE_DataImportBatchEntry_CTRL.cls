@@ -256,7 +256,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             'donationAmountField' => Schema.SObjectType.DataImport__c.fields.Donation_Amount__c.getName(),
             'expectedCountField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Count_of_Gifts__c.getName(),
             'expectedTotalField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getName(),
-            'namespacePrefix' => UTIL_Namespace.StrTokenNSPrefix(''),
             'noDataImportsFound' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.DataImport__c.getName()}),
             'opportunityImportedLookupField' => Schema.SObjectType.DataImport__c.fields.DonationImported__c.getName(),
             'opportunityImportedStatusField' => Schema.SObjectType.DataImport__c.fields.DonationImportStatus__c.getName(),
@@ -347,39 +346,42 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 if (dataImportDFR != null) {
 
                     if (UTIL_Permissions.canUpdate(dataImportDFR, false)) {
+                        String targetObject = BDI_DataImportService.getTargetObject(dataImportDFR.name);
+                        String targetField = BDI_DataImportService.getTargetField(dataImportDFR.name);
+                        DescribeFieldResult targetDFR = UTIL_Describe.getFieldDescribe(targetObject, targetField);
 
                         Column col = new Column();
 
-                        col.label = dataImportDFR.getLabel();
-                        col.fieldName = dataImportDFR.getName();
+                        col.label = dataImportDFR.label;
+                        col.fieldName = dataImportDFR.name;
                         col.defaultValue = field.defaultValue;
                         col.required = field.requiredInEntryForm;
                         col.hide = field.hide;
-                        col.type = UTIL_LightningComponentSupport.getLightningDataTableDataType(dataImportDFR.getType());
+                        col.type = UTIL_LightningComponentSupport.getLightningDataTableDataType(dataImportDFR.type);
                         // lookups aren't editable in the grid since we don't have lookup support there
                         col.readOnly = col.type == 'reference' ? true : false;
                         col.typeAttributes = '{}';
                         col.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(col.fieldName);
+                        
+                        if (dataImportDFR.type == Schema.DisplayType.Reference) {
+                            if (targetDFR.getReferenceTo() == dataImportDFR.getReferenceTo()) {
+                                // manually construct EXTRA column for lookup link
+                                Column linkCol = new Column();
+                                linkCol.label = dataImportDFR.getLabel();
+                                String fieldLabel = dataImportDFR.name + '_label';
+                                String fieldName = dataImportDFR.name + '_link';
+                                linkCol.fieldName = fieldName;
+                                linkCol.readOnly = true;
+                                linkCol.required = field.requiredInEntryForm;
+                                linkCol.type = 'url';
+                                linkCol.typeAttributes = '{"label":{"fieldName":"' + fieldLabel + '"},"target":"_blank"}';
 
-                        columns.add(col);
-
-                        if (dataImportDFR.getType().name() == 'reference') {
-                            // manually construct EXTRA column for campaign link
-                            Column linkCol = new Column();
-                            linkCol.label = dataImportDFR.getLabel();
-                            String fieldLabel = dataImportDFR.name + 'label';
-                            String fieldName = dataImportDFR.name + 'link';
-                            linkCol.fieldName = fieldName;
-                            linkCol.readOnly = true;
-                            linkCol.required = field.requiredInEntryForm;
-                            linkCol.type = 'url';
-                            linkCol.typeAttributes = '{"label":{"fieldName":"'+fieldLabel+'"},"target":"_blank"}';
-                            columns.add(linkCol);
+                                columns.add(linkCol);
+                                columns.add(col);
+                            }
+                        } else {
+                            columns.add(col);
                         }
-
-                        String targetObject = BDI_DataImportService.getTargetObject(col.fieldName);
-                        String targetField = BDI_DataImportService.getTargetField(col.fieldName);
-                        DescribeFieldResult targetDFR = UTIL_Describe.getFieldDescribe(targetObject,targetField);
 
                         if (!UTIL_Permissions.canUpdate(targetDFR, false)) {
                             unpermittedFields.add(targetDFR);
@@ -501,7 +503,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
             for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
                 activeFieldNames.add(field.name);
                 if (field.type == 'reference') {
-                    activeFieldNames.add(field.name.substringBefore('__c') + '__r.Name');
+                    DescribeFieldResult lookupDFR = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), field.name.toLowerCase());
+                    String referencedObjectName = lookupDFR.getReferenceTo()[0].getDescribe().name;
+                    activeFieldNames.add(field.name.substringBefore('__c') + '__r.' + UTIL_Describe.getNameField(referencedObjectName));
                 }
             }
         }
