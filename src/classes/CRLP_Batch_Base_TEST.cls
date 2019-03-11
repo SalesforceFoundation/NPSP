@@ -405,10 +405,8 @@ private class CRLP_Batch_Base_TEST {
             CRLP_RollupProcessingOptions.RollupType jobType,
             Boolean isIncrementalMode) {
 
-        Customizable_Rollup_Settings__c settings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(
-                new Customizable_Rollup_Settings__c (
-                        Customizable_Rollups_Enabled__c = true
-                ));
+        Customizable_Rollup_Settings__c settings =
+                getRollupSettingsForTestsCustomizableRollupsEnabled();
 
         switch on (jobType) {
 
@@ -525,10 +523,8 @@ private class CRLP_Batch_Base_TEST {
             CRLP_RollupProcessingOptions.RollupType jobType,
             Integer chunkSize) {
 
-        Customizable_Rollup_Settings__c settings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(
-                new Customizable_Rollup_Settings__c (
-                        Customizable_Rollups_Enabled__c = true
-                ));
+        Customizable_Rollup_Settings__c settings =
+                getRollupSettingsForTestsCustomizableRollupsEnabled();
 
         switch on (jobType) {
 
@@ -638,4 +634,15 @@ private class CRLP_Batch_Base_TEST {
         return outerQueryOrderByAndLimitString;
     }
 
+    /**
+     * @description Gets the Rollup Settings to be used for testing with Customizable
+     * Rollups enabled.
+     * @return The Customizable Rollups Custom Settings with Customizable Rollups enabled.
+     */
+    private static Customizable_Rollup_Settings__c getRollupSettingsForTestsCustomizableRollupsEnabled() {
+        return UTIL_CustomSettingsFacade.getRollupSettingsForTests(
+                new Customizable_Rollup_Settings__c (
+                        Customizable_Rollups_Enabled__c = true
+                ));
+    }
 }
