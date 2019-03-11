@@ -70,35 +70,45 @@ public with sharing class ADV_PackageInfo_SVC {
             orgSetting.Advancement_Namespace__c = String.valueOf(npe01__Contacts_And_Orgs_Settings__c.Advancement_Namespace__c.getDescribe().getDefaultValueFormula()).remove('\"');
         }
 
-        //Check if Advancement is installed
-        try {
-            Schema.DescribeSObjectResult[] descResult = Schema.describeSObjects(new String[]{orgSetting.Advancement_Namespace__c + '__Advancement_Setting__mdt'});
-            isManaged = true;
-        } catch (Exception e) {
-            try {
-                Schema.DescribeSObjectResult[] descResult = Schema.describeSObjects(new String[]{'Advancement_Setting__mdt'});
-            } catch (Exception ex) {
-                setupCalled = true;
-                return;
+        //Check if GEM is installed
+        List<String> settingsObjs = new List<String> {'Advancement_Setting__mdt', 'GEM_API_Settings__mdt'};
+        List<String> useGEMFields = new List<String> {'Use_Advancement__c', 'Use_GEM__c'};
+
+        boolean found = false;
+
+        Integer i=0;
+        while (!found && i < settingsObjs.size()) {
+            try { // With Namespace
+                Schema.DescribeSObjectResult[] descResult = Schema.describeSObjects(new String[]{orgSetting.Advancement_Namespace__c + '__' + settingsObjs[i]});
+                isManaged = true;
+                found = true;
+            } catch (Exception e) {
+                try { // Without Namespace
+                    Schema.DescribeSObjectResult[] descResult = Schema.describeSObjects(new String[]{settingsObjs[i]});
+                    found = true;
+                } catch (Exception ex) {
+                    i++;
+                }
             }
         }
+
+        if (!found) {
+            setupCalled = true;
+            return;
+        }
+
+        String gemAPISettingsObj = settingsObjs[i];
+        String useGEMField= useGEMFields[i];
 
         //If Adv is installed, we need to throw exception if Adv is not configured correctly
         Boolean hasConfigError = true;
 
-        String advSettingQuery = 'select Use_Advancement__c, API_NPSP_Class__c from Advancement_Setting__mdt';
-        String useAdvStr = 'Use_Advancement__c';
-        String apiNpspClassStr = 'API_NPSP_Class__c';
+        String nsPrefixOrBlank = (isManaged) ?  String.escapeSingleQuotes(orgSetting.Advancement_Namespace__c) + '__' : '';
 
-        if (isManaged == true) {
-            advSettingQuery = 'select ' + orgSetting.Advancement_Namespace__c + '__' + 'Use_Advancement__c, ' +
-                    orgSetting.Advancement_Namespace__c + '__' + 'API_NPSP_Class__c from ' +
-                    orgSetting.Advancement_Namespace__c + '__' + 'Advancement_Setting__mdt';
-            useAdvStr = orgSetting.Advancement_Namespace__c + '__' + 'Use_Advancement__c';
-            apiNpspClassStr = orgSetting.Advancement_Namespace__c + '__' + 'API_NPSP_Class__c';
+        String useAdvStr = nsPrefixOrBlank + useGEMField;
+        String apiNpspClassStr = nsPrefixOrBlank + 'API_NPSP_Class__c';
 
-        }
-
+        String advSettingQuery = 'select ' + useAdvStr + ', ' + apiNpspClassStr + ' from ' + nsPrefixOrBlank + gemAPISettingsObj;
 
         List<SObject> advSettings = Database.query(advSettingQuery);
         if (advSettings != null && advSettings.size() > 0) {
@@ -107,7 +117,7 @@ public with sharing class ADV_PackageInfo_SVC {
                 String apiNPSPClass = (String)advSettings[0].get(apiNpspClassStr);
                 if (String.isNotBlank(apiNPSPClass)) {
                     if (isManaged == true) {
-                        apiNPSPClass = orgSetting.Advancement_Namespace__c + '.' + apiNPSPClass;
+                        apiNPSPClass = String.escapeSingleQuotes(orgSetting.Advancement_Namespace__c) + '.' + apiNPSPClass;
                     }
                     Type classType = Type.forName(apiNPSPClass);
                     if (classType != null) {
@@ -122,7 +132,6 @@ public with sharing class ADV_PackageInfo_SVC {
                 hasConfigError = false;
             }
         }
-
 
         setupCalled = true;
 
