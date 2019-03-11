@@ -102,6 +102,26 @@ API Create GAU
     ...               Name=${name}
     &{gau} =     Salesforce Get  ${ns}General_Accounting_Unit__c  ${gau_id}
     [return]         &{gau}  
+
+API Create DataImportBatch
+    [Arguments]      &{fields}
+    ${name} =   Generate Random String
+    ${ns} =  Get NPSP Namespace Prefix
+    ${batch_id} =  Salesforce Insert  ${ns}DataImportBatch__c
+    ...                  Name=${name}
+    ...                  &{fields}
+    &{batch} =     Salesforce Get  ${ns}DataImportBatch__c  ${batch_id}
+    [return]         &{batch}
+    
+API Create DataImport   
+    [Arguments]     ${batch}     &{fields}
+    ${ns} =  Get NPSP Namespace Prefix
+    ${dataimport_id} =  Salesforce Insert  ${ns}DataImport__c
+    ...                  ${ns}NPSP_Data_Import_Batch__c=${batch}
+    ...                  &{fields}
+    &{data_import} =     Salesforce Get  ${ns}DataImport__c  ${dataimport_id}
+    [return]         &{data_import} 
+
    
 Create Contact
     ${first_name} =           Generate Random String
@@ -143,11 +163,11 @@ Create Contact with Address
     ...                       Last Name=${last_name}
     Click Dropdown            Primary Address Type
     Click Link                link=Work
-    Populate Address          Mailing Street            50 Fremont Street  
-    Populate Address          Mailing City              San Francisco
-    Populate Address          Mailing Zip/Postal Code   95320
-    Populate Address          Mailing State/Province    CA
-    Populate Address          Mailing Country           USA  
+    Populate Field By Placeholder          Mailing Street            50 Fremont Street  
+    Populate Field By Placeholder          Mailing City              San Francisco
+    Populate Field By Placeholder          Mailing Zip/Postal Code   95320
+    Populate Field By Placeholder          Mailing State/Province    CA
+    Populate Field By Placeholder          Mailing Country           USA  
     Click Modal Button        Save    
     Wait Until Modal Is Closed
     
@@ -331,3 +351,5 @@ Open NPSP Settings
     Wait Until Element Is Visible  text:${submenu}
     Click Link    text:${submenu}
     Sleep  1
+    
+    

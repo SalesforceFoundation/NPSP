@@ -2,7 +2,7 @@
 
 npsp_lex_locators={
     'breadcrumb': "//li[contains(@class, 'slds-breadcrumb__item')]/span[text()='{}']",
-    'mailing_address': "//*[contains(@placeholder,'{}')]",
+    'placeholder': "//*[contains(@placeholder,'{}')]",
     'app_launcher':{
         'select-option':'//span/mark[text()="{}"]',
     },
@@ -12,6 +12,7 @@ npsp_lex_locators={
         'button': "//div[@class='actionsContainer']/button[@title='{}']",
         'datepicker':"//div[contains(@class,'uiDatePickerGrid')]/table[@class='calGrid']//span[text()='{}']",
         'month_pick':"//div[@class='dateBar']//a[@title='{}']",
+        'edit_button':'//*[@title="{}"]',
         'edit_form': 'css: div.forcePageBlockItemEdit',
         'list':"//div[contains(@class,'forcePageBlockSectionRow')]/div[contains(@class,'forcePageBlockItem')]/div[contains(@class,'slds-hint-parent')]/div[@class='slds-form-element__control']/div[.//span[text()='{}']][//div[contains(@class,'uiMenu')]//a[@class='select']]",
         'dropdown':"//div[@class='select-options']/ul[@class='scrollable']/li[@class='uiMenuItem uiRadioMenuItem']/a[contains(text(),'{}')]",
@@ -127,9 +128,33 @@ npsp_lex_locators={
     'data_imports':{
         'status':'//div[contains(@class,"slds-tile__title")][./p[text()="BDI_DataImport_BATCH"]]/div[contains(@class,"slds-col")]/span[text()="{}"]',
         },
+    'bge':{
+        'checkbox':'//label/span[text()="{}"]//parent::label/span[@class="slds-checkbox_faux"]',
+        'list':'//div[./label[text()="{}"]]/div//select',
+        'field-duellist':'//label[text()="{}"]/following-sibling::lightning-dual-listbox//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
+        'duellist':'//h3[./span[text()="{}"]]/following-sibling::div//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
+        'field-select-button':'//label[text()="{}"]/following-sibling::lightning-dual-listbox//div[contains(@class,"slds-dueling-list__column")]//button[@title="{}"]',
+        'select-button':'//h3[./span[text()="{}"]]/following-sibling::div//div[contains(@class,"slds-dueling-list__column")]//button[@title="{}"]',
+        'title':'//p[text()="{}"]/following-sibling::h1',
+        'field-input':'//label[text()="{}"]/following-sibling::div/input',
+        'field-text':'//label[text()="{}"]/following-sibling::div/textarea',
+        'button':'//button[text()="{}"]',
+        'dd':"//div[contains(@class,'slds-grid')]/div[contains(@class,'slds-text-align_left')]/span[text()='{}']/../following-sibling::div//select",
+        'month':"//div[@class='slds-align-middle']//button[@title='{}']",
+        'date':"//div[contains(@class,'slds-datepicker')]/table[@class='slds-datepicker__month']//span[text()='{}']",
+        'card-header':'//article[./div[@class="slds-card__body"]//lightning-formatted-text[text()="{}"]]/header',
+        'edit_button':'//td[@data-label="{}"]//button',
+        'edit_field':'//lightning-primitive-datatable-iedit-panel//input',
+        'count':'//tbody/tr/td[1]',
+        'value':'//td[@data-label="{}"]//a',
+        'name':'//tbody/tr/th//a',
+        'locate_dropdown':'//tbody/tr[{}]/td[6]//div//button[./span[text()="Show actions"]]/lightning-primitive-icon',
+        'gift-amount':'//div[./label[text()="{}"]]',
+        },    
     'object_manager':{
-        'button':'//input[@title="{}"]'
+        'button':'//input[@title="{}"]',
         }
+    
 }
     
 
