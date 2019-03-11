@@ -2,7 +2,7 @@
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
         <fullName>Advancement_Namespace__c</fullName>
-        <defaultValue>&quot;adv1&quot;</defaultValue>
+        <defaultValue>&quot;gem0&quot;</defaultValue>
         <description>For system use only: Namespace for cross package functionality.</description>
         <externalId>false</externalId>
         <inlineHelpText>For system use only: Namespace for cross package functionality.</inlineHelpText>
