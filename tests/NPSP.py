@@ -687,6 +687,7 @@ class NPSP(object):
         self.selenium.select_from_list_by_label(loc,value) 
         
     def select_value_from_bge_dd(self,list_name,value):
+        """Pass the list name and value to be selected from the dropdown"""
         if list_name == 'Payment Method': 
             locator = npsp_lex_locators['bge']['dd'].format(list_name)
             loc = self.selenium.get_webelement(locator)
@@ -699,6 +700,7 @@ class NPSP(object):
             self.selenium.select_from_list_by_label(loc,value)  
         
     def select_multiple_values_from_list(self,list_name,*args): 
+        """Pass the list name and values to be selected from the dropdown. Please note that this doesn't unselect the existing values"""
         locator = npsp_lex_locators['npsp_settings']['multi_list'].format(list_name)
         loc = self.selenium.get_webelement(locator)
         self.selenium.set_focus_to_element(locator)       
@@ -720,6 +722,7 @@ class NPSP(object):
         return main_loc   
 
     def wait_for_locator(self, path, *args, **kwargs):
+        """Waits for 60 sec for the specified locator"""
         main_loc = self.get_npsp_locator(path,*args, **kwargs)    
         self.selenium.wait_until_element_is_visible(main_loc, timeout=60)
 
@@ -801,25 +804,22 @@ class NPSP(object):
     
     def page_scroll_to_locator(self, path, *args, **kwargs):
         locator = self.get_npsp_locator(path, *args, **kwargs)
-        self.selenium.scroll_element_into_view(locator)
-
-    def return_locator_value(self, path, *args, **kwargs): 
-        locator=self.get_npsp_locator(path, *args, **kwargs)
-        value=self.selenium.get_webelement(locator).text   
-        return value    
+        self.selenium.scroll_element_into_view(locator)   
 
     def get_bge_card_header(self,title):   
-        """Validates if the specified header field has specified value"""   
+        """Validates if the specific header field has specified value"""   
         locator= npsp_lex_locators['bge']['card-header'].format(title)
         id=self.selenium.get_webelement(locator).text   
         return id    
         
     def click_bge_edit_button(self, title):  
+        """clicks the button in the table by using name mentioned in data-label"""
         locator=npsp_lex_locators['bge']['edit_button'].format(title)
         #self.selenium.get_webelement(locator).click()
         self.selenium.click_button(locator)
             
     def populate_bge_edit_field(self, title, value):
+        """Clears the data in input field and enters the value specified """
         locator=npsp_lex_locators['bge']['edit_field'].format(title)
         field=self.salesforce._populate_field(locator, value)
  
@@ -834,6 +834,7 @@ class NPSP(object):
         )       
         
     def return_locator_value(self, path, *args, **kwargs): 
+        """Returns the value pointed by the specified locator"""
         locator=self.get_npsp_locator(path, *args, **kwargs)
         value=self.selenium.get_webelement(locator).text   
         return value
@@ -853,7 +854,8 @@ class NPSP(object):
         element = self.selenium.driver.find_element_by_link_text(text)
         self.selenium.driver.execute_script('arguments[0].click()', element)
     
-    def verify_expected_batch_values(self, batch_id,**kwargs):    
+    def verify_expected_batch_values(self, batch_id,**kwargs):
+        """To verify that the data in Data Import Batch matches expected value provide batch_id and the data u want to verify"""    
         ns=self.get_npsp_namespace_prefix()
         table=ns + "DataImportBatch__c"
         bge_batch=self.salesforce.salesforce_get(table,batch_id)
@@ -862,6 +864,7 @@ class NPSP(object):
             self.builtin.should_be_equal_as_strings(bge_batch[label], value)
             
     def click_element_with_locator(self, path, *args, **kwargs):
+        """Pass the locator and its values for the element you want to click """
         locator=self.get_npsp_locator(path, *args, **kwargs)  
         self.selenium.click_element(locator)      
             
