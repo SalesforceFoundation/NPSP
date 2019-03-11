@@ -40,16 +40,29 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void accountHardCreditRollupGeneratesStandardJoinQueryWhenNotScheduledJob() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
 
-        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH();
-        accountBatchJob.initializeJobData();
+        configureIncrementalMode(jobType, true);
+
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType);
 
         String whereClause = accountBatchJob.getMainQueryInnerJoinFilter();
         System.assert(whereClause.contains('WHERE') == false, 'The standard query for the inner join ' +
                 'should NOT contain a where filter on the Opportunities when not a scheduled job.');
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(accountBatchJob),
                 'The outer query should not contain "ORDER BY" or "LIMIT".');
+    }
+
+    private static CRLP_Batch_Base_NonSkew getBatchJobInstanceWithData(CRLP_RollupProcessingOptions.RollupType jobType) {
+        CRLP_Batch_Base_NonSkew instance;
+        switch on (jobType) {
+            when AccountHardCredit {
+                instance = new CRLP_Account_BATCH();
+            }
+        }
+        instance.initializeJobData();
+        return instance;
     }
 
     @isTest
