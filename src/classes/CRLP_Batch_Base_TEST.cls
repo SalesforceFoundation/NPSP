@@ -67,10 +67,11 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void accountHardCreditRollupGeneratesIncrementalModeJoinQuery() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+        configureIncrementalMode(jobType, true);
 
-        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH();
-        accountBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType);
         accountBatchJob.isScheduledJob = true; // Set the Batch Base isScheduledJob flag to true.
         // This is necessary because the Schedulable Job constructs and submits a separate instance of the
         // CRLP_Account_BATCH class.  So we "mock" the isScheduledJob value here, to test the correct
@@ -87,14 +88,15 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void accountHardCreditRollupGeneratesLastNDaysJoinQuery() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+        configureIncrementalMode(jobType, true);
 
         deactivateTimeBoundRollups(
-                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                jobType,
                 CRLP_Operation.TimeBoundOperationType.Years_Ago);
 
-        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH();
-        accountBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType);
         accountBatchJob.isScheduledJob = true;
 
         String generatedWhereClause = accountBatchJob.getMainQueryInnerJoinFilter();
@@ -107,14 +109,15 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void accountHardCreditRollupGeneratesLastNYearsJoinQuery() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+        configureIncrementalMode(jobType, true);
 
         deactivateTimeBoundRollups(
-                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                jobType,
                 CRLP_Operation.TimeBoundOperationType.Days_Back);
 
-        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH();
-        accountBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType);
         accountBatchJob.isScheduledJob = true;
 
         String generatedWhereClause = accountBatchJob.getMainQueryInnerJoinFilter();
@@ -128,10 +131,11 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void accountHardCreditRollupGeneratesLastNDaysJoinQueryWithCustomSettingFalse() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, false);
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+        configureIncrementalMode(jobType, false);
 
-        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH();
-        accountBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType);
         accountBatchJob.isScheduledJob = true;
 
         String whereClause = accountBatchJob.getMainQueryInnerJoinFilter();
@@ -143,15 +147,16 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void accountHardCreditRollupWithUserDefinedJoinGeneratesProperJoinQuery() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
         String userDefinedLastNDaysFieldOverride = 'LastModifiedDate';
         Integer userDefinedLastNDaysValueOverride = 44;
         configureIncrementalFieldOverrides(
-                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                jobType,
                 userDefinedLastNDaysFieldOverride,
                 userDefinedLastNDaysValueOverride);
 
-        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH();
-        accountBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType);
         accountBatchJob.isScheduledJob = true;
 
         String generatedWhereClause = accountBatchJob.getMainQueryInnerJoinFilter();
@@ -276,11 +281,12 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void accountHardCreditRollupChunkModeFirstJobQueryContainsOrderByLimit() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
         Integer chunkSize = 500;
-        configureChunkMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, chunkSize);
+        configureChunkMode(jobType, chunkSize);
 
-        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH();
-        accountBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType);
 
         System.assertEquals(null, accountBatchJob.chunkModeLastProcessedId,
                 'chunkModeStartingId should be null for this, the first chunk mode job ' +
