@@ -561,6 +561,9 @@ private with sharing class BDI_DataImport_TEST2 {
     *    all contacts matched
     **********************************************************************************************************/            
     static testMethod void ManyDIUniqueIdNotMatchingExistingContacts() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
         //Since Data Import API does not have other non-encryptable fields to test matching on,
         //we need to exit the test if the matching is done on the encrypted field. 
         if (!Schema.sObjectType.Contact.fields.Title.isFilterable()) return;
