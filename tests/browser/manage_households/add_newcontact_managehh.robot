@@ -15,7 +15,7 @@ Add New Contact to Existing Household
     Select Frame With Title   Manage Household
     ${first_name} =           Generate Random String
     ${last_name} =            Generate Random String
-    Populate Address    Find a Contact or add a new Contact to the Household    ${first_name} ${last_name}
+    Populate Field By Placeholder    Find a Contact or add a new Contact to the Household    ${first_name} ${last_name}
     Wait For Locator    manage_hh_page.button    New Contact
     Click Managehh Button    New Contact
     Click Span Button    New Contact
