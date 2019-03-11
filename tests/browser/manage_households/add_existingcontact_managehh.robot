@@ -16,7 +16,7 @@ Add Existing Contact to Existing Household through Manage Household Page
     Sleep     5
     Select Frame With Title   Manage Household
     #Wait until element is visible    //div[text()="Household Address"]
-    Populate Address    Find a Contact or add a new Contact to the Household    &{contact1}[FirstName] &{contact1}[LastName]
+    Populate Field By Placeholder    Find a Contact or add a new Contact to the Household    &{contact1}[FirstName] &{contact1}[LastName]
     Click Button  title=Add
     Sleep  5
     Click Managehh Button       Save
