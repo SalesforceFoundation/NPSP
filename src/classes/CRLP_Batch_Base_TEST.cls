@@ -45,7 +45,7 @@ private class CRLP_Batch_Base_TEST {
 
         configureIncrementalMode(jobType, true);
 
-        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType);
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
 
         String whereClause = accountBatchJob.getMainQueryInnerJoinFilter();
         System.assert(whereClause.contains('WHERE') == false, 'The standard query for the inner join ' +
@@ -54,24 +54,13 @@ private class CRLP_Batch_Base_TEST {
                 'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
 
-    private static CRLP_Batch_Base_NonSkew getBatchJobInstanceWithData(CRLP_RollupProcessingOptions.RollupType jobType) {
-        CRLP_Batch_Base_NonSkew instance;
-        switch on (jobType) {
-            when AccountHardCredit {
-                instance = new CRLP_Account_BATCH();
-            }
-        }
-        instance.initializeJobData();
-        return instance;
-    }
-
     @isTest
     private static void accountHardCreditRollupGeneratesIncrementalModeJoinQuery() {
         CRLP_RollupProcessingOptions.RollupType jobType =
                 CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
         configureIncrementalMode(jobType, true);
 
-        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType);
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
         accountBatchJob.isScheduledJob = true; // Set the Batch Base isScheduledJob flag to true.
         // This is necessary because the Schedulable Job constructs and submits a separate instance of the
         // CRLP_Account_BATCH class.  So we "mock" the isScheduledJob value here, to test the correct
@@ -96,7 +85,7 @@ private class CRLP_Batch_Base_TEST {
                 jobType,
                 CRLP_Operation.TimeBoundOperationType.Years_Ago);
 
-        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType);
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
         accountBatchJob.isScheduledJob = true;
 
         String generatedWhereClause = accountBatchJob.getMainQueryInnerJoinFilter();
@@ -117,7 +106,7 @@ private class CRLP_Batch_Base_TEST {
                 jobType,
                 CRLP_Operation.TimeBoundOperationType.Days_Back);
 
-        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType);
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
         accountBatchJob.isScheduledJob = true;
 
         String generatedWhereClause = accountBatchJob.getMainQueryInnerJoinFilter();
@@ -135,7 +124,7 @@ private class CRLP_Batch_Base_TEST {
                 CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
         configureIncrementalMode(jobType, false);
 
-        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType);
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
         accountBatchJob.isScheduledJob = true;
 
         String whereClause = accountBatchJob.getMainQueryInnerJoinFilter();
@@ -156,7 +145,7 @@ private class CRLP_Batch_Base_TEST {
                 userDefinedLastNDaysFieldOverride,
                 userDefinedLastNDaysValueOverride);
 
-        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType);
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
         accountBatchJob.isScheduledJob = true;
 
         String generatedWhereClause = accountBatchJob.getMainQueryInnerJoinFilter();
@@ -170,10 +159,11 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void contactHardCreditRollupGeneratesStandardJoinQueryWhenNotScheduledJob() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+        configureIncrementalMode(jobType, true);
 
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH();
-        contactBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
 
         String whereClause = contactBatchJob.getMainQueryInnerJoinFilter();
         System.assert(whereClause.contains('WHERE') == false, 'The standard query for the inner join ' +
@@ -184,10 +174,11 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void contactHardCreditRollupGeneratesIncrementalModeJoinQuery() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+        configureIncrementalMode(jobType, true);
 
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH();
-        contactBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
         contactBatchJob.isScheduledJob = true;
 
         String generatedWhereClause = contactBatchJob.getMainQueryInnerJoinFilter();
@@ -201,14 +192,15 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void contactHardCreditRollupGeneratesLastNDaysJoinQuery() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+        configureIncrementalMode(jobType, true);
 
         deactivateTimeBoundRollups(
-                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                jobType,
                 CRLP_Operation.TimeBoundOperationType.Years_Ago);
 
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH();
-        contactBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
         contactBatchJob.isScheduledJob = true;
 
         String generatedWhereClause = contactBatchJob.getMainQueryInnerJoinFilter();
@@ -221,14 +213,15 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void contactHardCreditRollupGeneratesLastNYearsJoinQuery() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+        configureIncrementalMode(jobType, true);
 
         deactivateTimeBoundRollups(
-                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                jobType,
                 CRLP_Operation.TimeBoundOperationType.Days_Back);
 
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH();
-        contactBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
         contactBatchJob.isScheduledJob = true;
 
         String generatedWhereClause = contactBatchJob.getMainQueryInnerJoinFilter();
@@ -242,10 +235,11 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void contactHardCreditRollupGeneratesLastNDaysJoinQueryWithCustomSettingFalse() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, false);
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+        configureIncrementalMode(jobType, false);
 
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH();
-        contactBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
         contactBatchJob.isScheduledJob = true;
 
         String whereClause = contactBatchJob.getMainQueryInnerJoinFilter();
@@ -257,15 +251,16 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void contactHardCreditRollupWithUserDefinedJoinGeneratesProperJoinQuery() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
         String userDefinedLastNDaysFieldOverride = 'LastModifiedDate';
         Integer userDefinedLastNDaysValueOverride = 555;
         configureIncrementalFieldOverrides(
-                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                jobType,
                 userDefinedLastNDaysFieldOverride,
                 userDefinedLastNDaysValueOverride);
 
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH();
-        contactBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
         contactBatchJob.isScheduledJob = true;
 
         String generatedWhereClause = contactBatchJob.getMainQueryInnerJoinFilter();
@@ -286,7 +281,9 @@ private class CRLP_Batch_Base_TEST {
         Integer chunkSize = 500;
         configureChunkMode(jobType, chunkSize);
 
-        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType);
+        // With chunk mode enabled, the first job is constructed with
+        // the empty constructor and does not pass in a lastProcessedId.
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
 
         System.assertEquals(null, accountBatchJob.chunkModeLastProcessedId,
                 'chunkModeStartingId should be null for this, the first chunk mode job ' +
@@ -307,8 +304,11 @@ private class CRLP_Batch_Base_TEST {
         Id chunkModeLastProcessedId = getAccountOrContactIdForTesting(jobType);
         configureChunkMode(jobType, chunkSize);
 
-        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(chunkModeLastProcessedId);
-        accountBatchJob.initializeJobData();
+        // With chunk mode enabled, the second and subsequent jobs are constructed with
+        // the lastProcessedId constructor, passing in the Id to use in the start query.
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(
+                jobType,
+                chunkModeLastProcessedId);
 
         System.assertEquals(chunkModeLastProcessedId, accountBatchJob.chunkModeLastProcessedId,
                 'chunkModeStartingId should equal testAccount.Id');
@@ -325,11 +325,12 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void contactHardCreditRollupChunkModeFirstJobQueryContainsOrderByLimit() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
         Integer chunkSize = 500;
-        configureChunkMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, chunkSize);
+        configureChunkMode(jobType, chunkSize);
 
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH();
-        contactBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
 
         System.assertEquals(null, contactBatchJob.chunkModeLastProcessedId,
                 'chunkModeStartingId should be null for this, the first chunk mode job ' +
@@ -350,8 +351,9 @@ private class CRLP_Batch_Base_TEST {
         Id chunkModeLastProcessedId = getAccountOrContactIdForTesting(jobType);
         configureChunkMode(jobType, chunkSize);
 
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(chunkModeLastProcessedId);
-        contactBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(
+                jobType,
+                chunkModeLastProcessedId);
 
         System.assertEquals(chunkModeLastProcessedId, contactBatchJob.chunkModeLastProcessedId,
                 'chunkModeStartingId should equal testAccount.Id');
@@ -368,11 +370,12 @@ private class CRLP_Batch_Base_TEST {
 
     @isTest
     private static void contactSoftCreditRollupChunkModeFirstJobQueryContainsOrderByLimit() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
         Integer chunkSize = 500;
         configureChunkMode(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit, chunkSize);
 
-        CRLP_Contact_SoftCredit_BATCH contactBatchJob = new CRLP_Contact_SoftCredit_BATCH();
-        contactBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
 
         System.assertEquals(null, contactBatchJob.chunkModeLastProcessedId,
                 'chunkModeStartingId should be null for this, the first chunk mode job ' +
@@ -393,9 +396,9 @@ private class CRLP_Batch_Base_TEST {
         Id chunkModeLastProcessedId = getAccountOrContactIdForTesting(jobType);
         configureChunkMode(jobType, chunkSize);
 
-        CRLP_Contact_SoftCredit_BATCH contactBatchJob =
-                new CRLP_Contact_SoftCredit_BATCH(chunkModeLastProcessedId);
-        contactBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(
+                jobType,
+                chunkModeLastProcessedId);
 
         System.assertEquals(chunkModeLastProcessedId, contactBatchJob.chunkModeLastProcessedId,
                 'chunkModeStartingId should equal testAccount.Id');
@@ -428,23 +431,16 @@ private class CRLP_Batch_Base_TEST {
                 getRollupSettingsForTestsCustomizableRollupsEnabled();
 
         switch on (jobType) {
-
             when AccountHardCredit {
-
                 settings.AccountHardCreditNonSkew_Incremental__c = isIncrementalMode;
-
                 // Create the test data
                 CRLP_RollupAccount_TEST.mockRollupCMTValues();
             }
-
             when ContactHardCredit {
-
                 settings.ContactHardCreditNonSkew_Incremental__c = isIncrementalMode;
-
                 CRLP_RollupContact_TEST.mockRollupCMTValues();
             }
         }
-
         return settings;
     }
 
@@ -664,4 +660,39 @@ private class CRLP_Batch_Base_TEST {
                         Customizable_Rollups_Enabled__c = true
                 ));
     }
+
+    /**
+     * @description Utility used to initialize an instance of the Non-Skew Batch Job for a
+     * Rollup Type, and initialize its job data.
+     * @param jobType The RollupType of the class instance to create.
+     * @param chunkModeLastProcessedId An Id that is passed to the class instance for use in the
+     * start method query when in chunk mode.
+     * @return An instance of the CRLP_Batch_Base_NonSkew class.
+     */
+    private static CRLP_Batch_Base_NonSkew getBatchJobInstanceWithData(
+            CRLP_RollupProcessingOptions.RollupType jobType,
+            Id chunkModeLastProcessedId
+    ) {
+        CRLP_Batch_Base_NonSkew instance;
+        switch on (jobType) {
+            when AccountHardCredit {
+                instance = chunkModeLastProcessedId == null ?
+                        new CRLP_Account_BATCH() :
+                        new CRLP_Account_BATCH(chunkModeLastProcessedId);
+            }
+            when ContactHardCredit {
+                instance = chunkModeLastProcessedId == null ?
+                        new CRLP_Contact_BATCH() :
+                        new CRLP_Contact_BATCH(chunkModeLastProcessedId);
+            }
+            when ContactSoftCredit {
+                instance = chunkModeLastProcessedId == null ?
+                        new CRLP_Contact_SoftCredit_BATCH() :
+                        new CRLP_Contact_SoftCredit_BATCH(chunkModeLastProcessedId);
+            }
+        }
+        instance.initializeJobData();
+        return instance;
+    }
+
 }
