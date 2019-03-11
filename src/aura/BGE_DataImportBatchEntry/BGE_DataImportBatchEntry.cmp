@@ -44,6 +44,7 @@
     <aura:attribute name="data" type="List" default="[]" description="Data Import records that appear in the table" access="public"/>
     <aura:attribute name="errors" type="Map" description="Dry run errors to display on the lightning:dataTable" access="public"/>
     <aura:attribute name="columns" type="List" description="Columns for the table" access="public"/>
+    <aura:attribute name="referenceFields" type="List" description="Reference fields used in this batch" access="private"/>
     <aura:attribute name="labels" type="Map" description="Labels retrieved in Apex related to Schema information." access="public"/>
     <aura:attribute name="dataImportFields" type="Object[]" default="[]" description="List of Data Import fields to use in the new row component." access="public"/>
     <aura:attribute name="donorType" type="String" default="Contact1" description="Used to circumvent unhelpful labeling of Account1/Contact1" access="public"/>
