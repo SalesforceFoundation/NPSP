@@ -64,7 +64,6 @@
         batchInfo.runOpportunityRollupsWhileProcessing = model.runOpportunityRollupsWhileProcessing;
         batchInfo.donationMatchingBehavior = model.donationMatchingBehavior;
         batchInfo.donationMatchingClass = model.donationMatchingClass;
-        batchInfo.donationMatchingOptions = model.donationMatchingOptions;
         batchInfo.donationMatchingRule = model.donationMatchingRule;
         batchInfo.donationDateRange = model.donationDateRange;
         batchInfo.postProcessClass = model.postProcessClass;
