@@ -36,18 +36,21 @@
 */
 public inherited sharing class CRLP_ApiService {
 
+    public static final String PARAM_ROLLUPTYPE = 'RollupType';
+
+
     /**
     * @description Generates the list of Rollup Definitions for the specified rollup type
     * @param rollupTypeString String representation of the Rollup Type enum
     * @return List<CRLP_Rollup>
     */
-    public List<CRLP_Rollup> getRollupDefsForRollupType(String rollupTypeString) {
+    public List<CRLP_Rollup> getRollupDefinitions(String rollupTypeString) {
         CRLP_RollupProcessingOptions.RollupType rollupType;
         try {
-            rollupType = CRLP_RollupProcessingOptions.rollupTypesEnumByString.get((String)rollupTypeString.toLowerCase());
+            rollupType = CRLP_RollupProcessingOptions.rollupTypeByName.get((String)rollupTypeString.toLowerCase());
         } catch (Exception ex) { }
         if (rollupType == null) {
-            throw new CRLPApiException(String.format( System.Label.CallableApiParameterError, new List<String>{'RollupType'} ));
+            throw new ApiException(String.format( System.Label.CallableApiParameterError, new List<String>{PARAM_ROLLUPTYPE} ));
         }
         CRLP_VRollupHandler handler = new CRLP_VRollupHandler();
         handler.buildGroupedRollups(rollupType);
@@ -57,6 +60,6 @@ public inherited sharing class CRLP_ApiService {
     /**
     * @description Exception class for Parameter Parsing
     */
-    public class CRLPApiException extends Exception {}
+    public class ApiException extends Exception {}
 
 }

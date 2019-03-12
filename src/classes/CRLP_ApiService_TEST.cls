@@ -37,67 +37,41 @@
 private class CRLP_ApiService_TEST {
 
     /**
-     * @description Validate the getRollupDefsForRollupType returns the expected collection of CRLP_Rollup instances
+     * @description Validate the getRollupDefsForRollupType returns the expected collection of CRLP_Rollup instances.
+     * Calls the mocking utilities to build a bunch of rollup definitions and filter groups/rules fo
      */
     @IsTest
-    static void validateGetRollupDefsForRollupTypeReturnValues() {
-        // Call the mocking utilities to build a bunch of rollup definitions and filter groups/rules fo
+    private static void shouldReturnRollupDefinitionsWhenParameterIsValid() {
         mockRollupDefinitions();
 
-        CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
+        CRLP_ApiService service = new CRLP_ApiService();
 
         Test.startTest();
-
-        // These first three have mocked CMT's for rollup definitions
-        List<CRLP_Rollup> rollups = crlpApiSvc.getRollupDefsForRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name());
-        System.assertEquals(1, rollups.size(), 'The collection of returned rollups should contain exactly 1 instance for AccountHardCredit');
-        System.assertEquals(2, rollups[0].rollupsMdt.size(), 'There should be two Rollup__mdt records associated with the CRLP_Rollup instance');
-
-        rollups = crlpApiSvc.getRollupDefsForRollupType(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit.name());
-        System.assertEquals(1, rollups.size(), 'The collection of returned rollups should contain exactly 1 instance for ContactHardCredit');
-        System.assertEquals(2, rollups[0].rollupsMdt.size(), 'There should be two Rollup__mdt records associated with the CRLP_Rollup instance');
-
-        rollups = crlpApiSvc.getRollupDefsForRollupType(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit.name());
-        System.assertEquals(1, rollups.size(), 'The collection of returned rollups should contain exactly 1 instance for AccountSoftCredit');
-        System.assertEquals(2, rollups[0].rollupsMdt.size(), 'There should be two Rollup__mdt records associated with the CRLP_Rollup instance');
-
-        rollups = crlpApiSvc.getRollupDefsForRollupType(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit.name());
-        System.assertEquals(1, rollups.size(), 'The collection of returned rollups should contain exactly 1 instance for AccountContactSoftCredit');
-        System.assertEquals(2, rollups[0].rollupsMdt.size(), 'There should be two Rollup__mdt records associated with the CRLP_Rollup instance');
-
-        rollups = crlpApiSvc.getRollupDefsForRollupType(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit.name());
-        System.assertEquals(1, rollups.size(), 'The collection of returned rollups should contain exactly 1 instance for ContactSoftCredit');
-        System.assertEquals(2, rollups[0].rollupsMdt.size(), 'There should be two Rollup__mdt records associated with the CRLP_Rollup instance');
-
-        rollups = crlpApiSvc.getRollupDefsForRollupType(CRLP_RollupProcessingOptions.RollupType.RecurringDonations.name());
-        System.assertEquals(1, rollups.size(), 'The collection of returned rollups should contain exactly 1 instance for RecurringDonations');
-        System.assertEquals(2, rollups[0].rollupsMdt.size(), 'There should be two Rollup__mdt records associated with the CRLP_Rollup instance');
-
-        rollups = crlpApiSvc.getRollupDefsForRollupType(CRLP_RollupProcessingOptions.RollupType.GAU.name());
-        System.assertEquals(1, rollups.size(), 'The collection of returned rollups should contain exactly 1 instance for GAU');
-        System.assertEquals(2, rollups[0].rollupsMdt.size(), 'There should be two Rollup__mdt records associated with the CRLP_Rollup instance');
+        for (CRLP_RollupProcessingOptions.RollupType rollupType : CRLP_RollupProcessingOptions.RollupType.values()) {
+            List<CRLP_Rollup> rollups = service.getRollupDefinitions(rollupType.name());
+            System.assertEquals(1, rollups.size(), 'The collection of returned rollups should contain exactly 1 instance for ' + rollupType.name());
+            System.assertEquals(2, rollups[0].rollupsMdt.size(), 'There should be two Rollup__mdt records associated with the CRLP_Rollup instance');
+        }
     }
 
     /**
      * @description Validate the getRollupDefsForRollupType returns an exception if the RollupType is null or invalid
      */
     @IsTest
-    static void validateGetRollupDefsForRollupTypeInvalidParameter() {
+    private static void shouldThrowExceptionWhenParameterIsInvalid() {
         CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
 
         Test.startTest();
-        try {
-            crlpApiSvc.getRollupDefsForRollupType('NonExistentType');
-            System.assert(false, 'This call should have failed due to an invalid parameter!');
-        } catch (Exception ex) {
-            System.assert(ex.getMessage().containsIgnoreCase('parameter'), 'The error should contain the word "parameter": ' + ex.getMessage());
-        }
-
-        try {
-            crlpApiSvc.getRollupDefsForRollupType(null);
-            System.assert(false, 'This call should have failed due to an invalid parameter!');
-        } catch (Exception ex) {
-            System.assert(ex.getMessage().containsIgnoreCase('parameter'), 'The error should contain the word "parameter": ' + ex.getMessage());
+        for (String param : new String[] { null, 'NonExistentType' }) {
+            Exception actualException = null;
+            try {
+                crlpApiSvc.getRollupDefinitions(param);
+            } catch (Exception e) {
+                actualException = e;
+            }
+            System.assertNotEquals(null, actualException, 'An exception should be thrown for invalid param: ' + param);
+            System.assert(actualException.getMessage().containsIgnoreCase(CRLP_ApiService.PARAM_ROLLUPTYPE),
+                    'Message should contain "' + CRLP_ApiService.PARAM_ROLLUPTYPE + '" param: ' + actualException.getMessage());
         }
     }
 

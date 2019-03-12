@@ -61,7 +61,7 @@ global with sharing class Callable_API implements System.Callable {
 
             } when 'crlp.getrollupdefsforrolluptype' {
                 CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
-                return crlpApiSvc.getRollupDefsForRollupType((String) params.get('RollupType'));
+                return crlpApiSvc.getRollupDefinitions((String) params.get(CRLP_ApiService.PARAM_ROLLUPTYPE));
 
             } when else {
                 throw new MalformedMethodInvocationException(
