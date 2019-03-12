@@ -86,71 +86,71 @@ private class CRLP_ApiService_TEST {
         // The FilterGroup itself doesn't need to exist for this test, but an Id is needed.
         String rollupsJSON = '[' +
 
-                // Contact Hard Credit
-                CMT_UnitTestData_TEST.createRollupRecord('Total Donations All Time', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
-                        'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Amount') + ',' +
+            // Contact Hard Credit
+            CMT_UnitTestData_TEST.createRollupRecord('Total Donations All Time', filterGroupId1,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                    'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Amount') + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
-                        'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
+            CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId1,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                    'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
 
-                // Account Hard Credit
-                CMT_UnitTestData_TEST.createRollupRecord('Total Donations All Time', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                        'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Amount') + ',' +
+            // Account Hard Credit
+            CMT_UnitTestData_TEST.createRollupRecord('Total Donations All Time', filterGroupId1,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Amount') + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                        'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
+            CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId1,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
 
-                // Account Contact Soft Credit
-                CMT_UnitTestData_TEST.createRollupRecord('Account: Soft Credits - Total', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
-                        'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Amount__c') + ',' +
+            // Account Contact Soft Credit
+            CMT_UnitTestData_TEST.createRollupRecord('Account: Soft Credits - Total', filterGroupId1,
+                    CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
+                    'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Amount__c') + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
-                        'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
+            CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId1,
+                    CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
+                    'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
 
-                // Account Soft Credit
-                CMT_UnitTestData_TEST.createRollupRecord('Total Account Soft Credits', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.AccountSoftCreditToAccount, 'Matching_Gift_Amount_Max__c',
-                        CRLP_Operation.RollupType.Sum, 'Amount__c') + ',' +
+            // Account Soft Credit
+            CMT_UnitTestData_TEST.createRollupRecord('Total Account Soft Credits', filterGroupId1,
+                    CMT_UnitTestData_TEST.RollupRecordType.AccountSoftCreditToAccount, 'Matching_Gift_Amount_Max__c',
+                    CRLP_Operation.RollupType.Sum, 'Amount__c') + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.AccountSoftCreditToAccount,
-                        'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
+            CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId1,
+                    CMT_UnitTestData_TEST.RollupRecordType.AccountSoftCreditToAccount,
+                    'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
 
-                // Contact Soft Credit
-                CMT_UnitTestData_TEST.createRollupRecord('Contact: Soft Credits - Total', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToContact,
-                        'npo02__Soft_Credit_Total__c', CRLP_Operation.RollupType.Sum, 'Amount__c') + ',' +
+            // Contact Soft Credit
+            CMT_UnitTestData_TEST.createRollupRecord('Contact: Soft Credits - Total', filterGroupId1,
+                    CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToContact,
+                    'npo02__Soft_Credit_Total__c', CRLP_Operation.RollupType.Sum, 'Amount__c') + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToContact,
-                        'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
+            CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId1,
+                    CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToContact,
+                    'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
 
-                // GAU
-                CMT_UnitTestData_TEST.createRollupRecord('Total Allocations All Time', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.GAU,
-                        'Total_Allocations__c', CRLP_Operation.RollupType.Sum, 'Amount__c',
-                        CRLP_Operation.TimeBoundOperationType.All_Time, 0) + ',' +
+            // GAU
+            CMT_UnitTestData_TEST.createRollupRecord('Total Allocations All Time', filterGroupId1,
+                    CMT_UnitTestData_TEST.RollupRecordType.GAU,
+                    'Total_Allocations__c', CRLP_Operation.RollupType.Sum, 'Amount__c',
+                    CRLP_Operation.TimeBoundOperationType.All_Time, 0) + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.GAU,
-                        'Total_Number_of_Allocations__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
+            CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId1,
+                    CMT_UnitTestData_TEST.RollupRecordType.GAU,
+                    'Total_Number_of_Allocations__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
 
-                // Recurring Donations
-                CMT_UnitTestData_TEST.createRollupRecord('RD Next Payment Date', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
-                        'npe03__Next_Payment_Date__c', CRLP_Operation.RollupType.First, 'CloseDate') + ',' +
+            // Recurring Donations
+            CMT_UnitTestData_TEST.createRollupRecord('RD Next Payment Date', filterGroupId1,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
+                    'npe03__Next_Payment_Date__c', CRLP_Operation.RollupType.First, 'CloseDate') + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
-                        'npe03__Total_Paid_Installments__c', CRLP_Operation.RollupType.Count, 'Amount') +
+            CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId1,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
+                    'npe03__Total_Paid_Installments__c', CRLP_Operation.RollupType.Count, 'Amount') +
 
-                ']';
+            ']';
 
         // Deserialize the rollups to use for testing
         CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
