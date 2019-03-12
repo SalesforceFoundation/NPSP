@@ -45,15 +45,19 @@ public inherited sharing class CRLP_ApiService {
     * @return List<CRLP_Rollup>
     */
     public List<CRLP_Rollup> getRollupDefinitions(String rollupTypeString) {
+
         CRLP_RollupProcessingOptions.RollupType rollupType;
         try {
             rollupType = CRLP_RollupProcessingOptions.rollupTypeByName.get((String)rollupTypeString.toLowerCase());
         } catch (Exception ex) { }
+
         if (rollupType == null) {
             throw new ApiException(String.format( System.Label.CallableApiParameterError, new List<String>{PARAM_ROLLUPTYPE} ));
         }
+
         CRLP_VRollupHandler handler = new CRLP_VRollupHandler();
         handler.buildGroupedRollups(rollupType);
+
         return handler.getRollupsList();
     }
 
