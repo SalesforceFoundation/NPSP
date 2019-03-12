@@ -8,6 +8,7 @@ Suite Teardown  Delete Records and Close Browser
 
 Add New Contact to Existing Household 
     &{contact} =  API Create Contact    Email=skristem@robot.com
+    Store Session Record    Account    &{contact}[AccountId]
     Go To Record Home  &{contact}[AccountId] 
     Click Link    link=Show more actions
     Click Link    link=Manage Household    
@@ -18,6 +19,7 @@ Add New Contact to Existing Household
     Populate Field By Placeholder    Find a Contact or add a new Contact to the Household    ${first_name} ${last_name}
     Wait For Locator    manage_hh_page.button    New Contact
     Click Managehh Button    New Contact
+    Wait For Locator    span_button    New Contact    
     Click Span Button    New Contact
     Click Managehh Button       Save
     Unselect Frame

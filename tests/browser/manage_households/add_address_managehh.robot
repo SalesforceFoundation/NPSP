@@ -8,6 +8,7 @@ Suite Teardown  Delete Records and Close Browser
 
 Add New Address to Household 
     &{contact1} =  API Create Contact    MailingStreet=50 Fremont Street    MailingCity=San Francisco    MailingPostalCode=95320    MailingState=CA    MailingCountry=USA
+    Store Session Record    Account    &{contact1}[AccountId]
     Go To Record Home  &{contact1}[AccountId]    
     Click Link    link=Show more actions
     Click Link    link=Manage Household 

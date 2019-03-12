@@ -9,6 +9,7 @@ Suite Teardown  Delete Records and Close Browser
 Change Naming on Manage Household Page
     [tags]  unstable
     &{contact1} =  API Create Contact    Email=skristem@robot.com
+    Store Session Record    Account    &{contact1}[AccountId]
     Go To Record Home  &{contact1}[AccountId] 
     #2 Create a new contact under HouseHold Validation
     ${contact_id2} =  New Contact for HouseHold

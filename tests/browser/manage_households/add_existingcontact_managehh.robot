@@ -7,8 +7,10 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Add Existing Contact to Existing Household through Manage Household Page
-    &{contact1} =  API Create Contact    Email=skristem@robot.com   
+    &{contact1} =  API Create Contact    Email=skristem@robot.com
+    Store Session Record    Account    &{contact1}[AccountId]   
     &{contact2} =  API Create Contact
+    Store Session Record    Account    &{contact2}[AccountId]
     Go To Record Home  &{contact2}[AccountId] 
     Click Link    link=Show more actions
     Click Link    link=Manage Household 
