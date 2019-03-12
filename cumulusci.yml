@@ -370,6 +370,9 @@ plans:
                 task: install_managed
             3:
                 task: deploy_post
+                ui_options:
+                    first:
+                        name: NPSP Config for Salesforce Mobile App
     new_org:
         slug: trial
         title: Install NPSP Trial
