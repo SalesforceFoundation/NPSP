@@ -37,7 +37,7 @@
 private class CRLP_ApiService_TEST {
 
     /**
-     * @description Validate the getRollupDefsForRollupType returns the expected collection of CRLP_Rollup instances.
+     * @description Validate the getDefinitionsForRollupType returns the expected collection of CRLP_Rollup instances.
      * Calls the mocking utilities to build a bunch of rollup definitions and filter groups/rules fo
      */
     @IsTest
@@ -55,7 +55,7 @@ private class CRLP_ApiService_TEST {
     }
 
     /**
-     * @description Validate the getRollupDefsForRollupType returns an exception if the RollupType is null or invalid
+     * @description Validate the getDefinitionsForRollupType returns an exception if the RollupType is null or invalid
      */
     @IsTest
     private static void shouldThrowExceptionWhenParameterIsInvalid() {
