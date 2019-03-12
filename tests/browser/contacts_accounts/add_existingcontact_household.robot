@@ -16,5 +16,7 @@ Add Existing Contact to Existing Household
     Populate Lookup Field    Account Name    &{contact1}[LastName] Household
     Click Modal Button    Save
     Click Header Field Link  Account Name
+    ${id}  Get Current Record Id
+    Store Session Record    Account    ${id}
     Verify Related List Items    Contacts    &{contact1}[FirstName] &{contact1}[LastName]
     Verify Related List Items    Contacts    &{contact2}[FirstName] &{contact2}[LastName]
