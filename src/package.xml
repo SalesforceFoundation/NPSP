@@ -1458,6 +1458,7 @@
         <members>bgeBatchSetFieldOptions</members>
         <members>bgeCopyBatchSetupBatchNameAppend</members>
         <members>bgeCopyBatchSetupButton</members>
+        <members>bgeDonationSelectorHelp</members>
         <members>bgeEditBatchFieldOptionsWarning</members>
         <members>bgeEditBatchFieldSelectionWarning</members>
         <members>bgeEditBatchOptionsWarning</members>
