@@ -444,7 +444,7 @@
                 currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
                 donationMatchingOptions.push({
                     label: currentField.label,
-                    value: currentField.name
+                    value: currentField.name.toLowerCase()
                 });
             });
 
