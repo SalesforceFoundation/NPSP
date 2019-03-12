@@ -41,14 +41,14 @@ public inherited sharing class CRLP_ApiService {
 
     /**
     * @description Generates the list of Rollup Definitions for the specified rollup type
-    * @param rollupTypeString String representation of the Rollup Type enum
+    * @param rollupTypeName String representation of the Rollup Type enum
     * @return List<CRLP_Rollup>
     */
-    public List<CRLP_Rollup> getRollupDefinitions(String rollupTypeString) {
+    public List<CRLP_Rollup> getRollupDefinitions(String rollupTypeName) {
 
         CRLP_RollupProcessingOptions.RollupType rollupType;
         try {
-            rollupType = CRLP_RollupProcessingOptions.rollupTypeByName.get((String)rollupTypeString.toLowerCase());
+            rollupType = CRLP_RollupProcessingOptions.rollupTypeByName.get((String) rollupTypeName.toLowerCase());
         } catch (Exception ex) { }
 
         if (rollupType == null) {
