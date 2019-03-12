@@ -1094,6 +1094,9 @@ public with sharing class RLLP_OppRollup_TEST {
             System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmount2YearsAgo__c );
     }
 
+    /**
+     * @description - Verifies that customizable rollups are called when they are enabled.
+     */
     @IsTest
     private static void shouldCallCustomizableRollupsWhenEnabledAndAsync() {
         Set<Id> contactIds = new Set<Id>(UTIL_UnitTestData_Test.mockIds(Contact.SObjectType, 2));
@@ -1106,6 +1109,9 @@ public with sharing class RLLP_OppRollup_TEST {
         System.assert(!asyncJobs.isEmpty(), 'Expected the customizable rollup job to be scheduled when enabled.');
     }
 
+    /**
+     * @description - Verifies that customizable rollups are not called when they are not enabled.
+     */
     @IsTest
     private static void shouldNotCallCustomizableRollupsWhenDisabledAndAsync() {
         Set<Id> contactIds = new Set<Id>(UTIL_UnitTestData_Test.mockIds(Contact.SObjectType, 2));

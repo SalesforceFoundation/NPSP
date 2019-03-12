@@ -178,11 +178,10 @@ public without sharing class RLLP_OppRollup {
 
         if (isCustomizableRollupsEnabled) {
             runCustomizableRollups(accountIds);
-
             return;
         }
 
-        if (isImmediate(accountIds)) {
+        if (shouldRunImmediate(accountIds)) {
             rollupAccounts(getAccountById(accountIds));
 
         } else {
@@ -201,11 +200,10 @@ public without sharing class RLLP_OppRollup {
 
         if (isCustomizableRollupsEnabled) {
             runCustomizableRollups(contactIds);
-
             return;
         }
 
-        if (isImmediate(contactIds)) {
+        if (shouldRunImmediate(contactIds)) {
             rollupContacts(getContactById(contactIds));
 
         } else {
@@ -218,7 +216,7 @@ public without sharing class RLLP_OppRollup {
      * @param  ids The ids of the sObjects that require rollups to be recalculated
      */
     private void runCustomizableRollups(Set<Id> ids){
-        if (isImmediate(ids)) {
+        if (shouldRunImmediate(ids)) {
             CRLP_RollupQueueable.runRollupsForIds(new List<Id>(ids));
 
         } else {
@@ -231,7 +229,7 @@ public without sharing class RLLP_OppRollup {
      * @param ids The set of ids that need their rollups refreshed
      * @return Boolean - true when the rollups should happen immediately
      */
-    private Boolean isImmediate(Set<Id> ids) {
+    private Boolean shouldRunImmediate(Set<Id> ids) {
         return ids.size() == 1 || System.isFuture() || System.isBatch() || System.isQueueable();
     }
 
