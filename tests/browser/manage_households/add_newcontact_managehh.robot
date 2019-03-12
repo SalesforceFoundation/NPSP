@@ -22,7 +22,10 @@ Add New Contact to Existing Household
     Wait For Locator    span_button    New Contact    
     Click Span Button    New Contact
     Click Managehh Button       Save
-    Unselect Frame
-    Wait For Locator    header    &{contact}[LastName] and ${last_name} Household
+    Sleep    3
+    Go To Object Home          Account
+    Click Link    link=&{contact}[LastName] and ${last_name} Household
     Verify Header    &{contact}[LastName] and ${last_name} Household
+    Select Tab    Related
+    Load Related List    Contacts
     Verify Related List Items    Contacts    ${first_name} ${last_name}

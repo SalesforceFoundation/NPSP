@@ -18,19 +18,16 @@ Change Naming on Manage Household Page
     Click Link    link=&{contact1}[LastName] and &{contact2}[LastName] Household    
     Click Link    link=Show more actions
     Click Link    link=Manage Household    
-    Wait For Locator    frame    Manage Household
-    # Sleep     3        
+    Wait For Locator    frame    Manage Household       
     Select Frame With Title   Manage Household
     ${loc}    Validate Checkbox    &{contact1}[FirstName] &{contact1}[LastName]    Informal Greeting
     Double Click Element    ${loc}
     ${loc}    Validate Checkbox    &{contact2}[FirstName] &{contact2}[LastName]    Formal Greeting
     Double Click Element    ${loc}
-    #Sleep    2
     Click Managehh Button       Save
-    #Sleep    3
+    Sleep    3
     Go To Object Home          Account
     Click Link    link=&{contact1}[LastName] and &{contact2}[LastName] Household
-    #Sleep    3
     Select Tab     Details
     Check Field Value    Informal Greeting    &{contact2}[FirstName]
     Check Field Value    Formal Greeting    &{contact1}[FirstName] &{contact1}[LastName]

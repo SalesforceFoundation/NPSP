@@ -13,16 +13,17 @@ Add Existing Contact to Existing Household through Manage Household Page
     Store Session Record    Account    &{contact2}[AccountId]
     Go To Record Home  &{contact2}[AccountId] 
     Click Link    link=Show more actions
-    Click Link    link=Manage Household 
-    #Wait For Locator    frame    Manage Household    
+    Click Link    link=Manage Household    
     Sleep     5
     Select Frame With Title   Manage Household
-    #Wait until element is visible    //div[text()="Household Address"]
     Populate Field By Placeholder    Find a Contact or add a new Contact to the Household    &{contact1}[FirstName] &{contact1}[LastName]
     Click Button  title=Add
     Sleep  5
     Click Managehh Button       Save
-    Unselect Frame
-    Wait For Locator    header    &{contact2}[LastName] and &{contact1}[LastName] Household
+    Sleep    3
+    Go To Object Home          Account
+    Click Link    link=&{contact2}[LastName] and &{contact1}[LastName] Household
     Verify Header    &{contact2}[LastName] and &{contact1}[LastName] Household
+    Select Tab    Related
+    Load Related List    Contacts
     Verify Related List Items    Contacts    &{contact1}[FirstName] &{contact1}[LastName]
