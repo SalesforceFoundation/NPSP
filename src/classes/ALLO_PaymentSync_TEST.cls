@@ -192,7 +192,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
     ********************************************************************************************************/
     @isTest
     static void syncOpportunityToPaymentsWithWriteoffs() {
-        makePayments(1000, 2;
+        makePayments(1000, 2);
         makeGAUs(2);
 
         List<Allocation__c> alloForInsert = new List<Allocation__c>();
