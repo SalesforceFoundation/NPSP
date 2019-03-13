@@ -63,7 +63,30 @@
      * @description: checks that user has all necessary permissions and then launches modal or displays error
      */
     onEditClick: function(component, event, helper) {
-        helper.checkFieldPermissions(component, event, helper);
+        let openBatchWizard = function () {
+            helper.openBatchWizard(component);
+        }
+
+        let handleApexErrors = function (errors) {
+            helper.handleApexErrors(component, errors);
+        }
+
+        let apexMethodName = 'c.checkFieldPermissions';
+        let param = { batchId: component.get('v.recordId') };
+
+        let checkFieldPermissionsPromise = helper.callApex(component, apexMethodName, param);
+
+        checkFieldPermissionsPromise
+            .then(
+                $A.getCallback(function (result) {
+                    openBatchWizard();
+                })
+            )
+            .catch(
+                $A.getCallback(function (errors) {
+                    handleApexErrors(errors);
+                })
+            )
     },
 
     /**
@@ -93,6 +116,12 @@
      * @description: called when the 'Dry Run' button is clicked
      */
     massDryRun: function(component, event, helper) {
+        helper.showToast(
+            component,
+            $A.get('$Label.c.PageMessagesProcessing'),
+            $A.get('$Label.c.bgeMassDryRunProcessing'),
+            'sticky'
+        );
         helper.showSpinner(component);
         helper.showFormSpinner(component);
         helper.massDryRun(component);

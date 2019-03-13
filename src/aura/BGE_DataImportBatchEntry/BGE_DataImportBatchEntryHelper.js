@@ -331,24 +331,50 @@
      * @description: Dry run all data import records for batch
      */
     massDryRun: function (component) {
-        this.showToast(component, $A.get('$Label.c.PageMessagesProcessing'), $A.get('$Label.c.bgeMassDryRunProcessing'), 'sticky');
+        let afterDryRun = function (result) {
+            helper.afterDryRun(component, JSON.parse(result, false));
+        }
 
-        let action = component.get('c.runMassDryRun');
-        action.setParams({
-            batchId: component.get('v.recordId')
-        });
-        action.setCallback(this, function (response) {
-            const state = response.getState();
-            if (state === 'SUCCESS') {
-                this.afterDryRun(component, JSON.parse(response.getReturnValue(), false));
-                this.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeDryRunComplete'), 'success');
-            } else {
-                this.handleApexErrors(component, response.getError());
-            }
-            this.hideSpinner(component);
-            this.hideFormSpinner(component);
-        });
-        $A.enqueueAction(action);
+        let handleApexErrors = function (error) {
+            helper.handleApexErrors(component, error);
+        }
+
+        let showToast = function (title, message, type) {
+            helper.showToast(component, title, message, type);
+        }
+
+        let hideSpinners = function () {
+            helper.hideSpinner(component);
+            helper.hideFormSpinner(component);
+        }
+
+        let helper = this;
+        let apexMethodName = 'c.runMassDryRun';
+        let param = { batchId: component.get('v.recordId') };
+
+        let runMassDryRunPromise = helper.callApex(component, apexMethodName, param);
+
+        runMassDryRunPromise
+            .then(
+                $A.getCallback(function (result) {
+                    afterDryRun(result);
+                    showToast(
+                        $A.get('$Label.c.PageMessagesConfirm'),
+                        $A.get('$Label.c.bgeDryRunComplete'),
+                        'success'
+                    );
+                })
+            )
+            .catch(
+                $A.getCallback(function (errors) {
+                    handleApexErrors(errors);
+                })
+            )
+            .finally(
+                function () {
+                    hideSpinners();
+                }
+            )
     },
 
     /******************************** Table Error Functions *****************************/
@@ -461,22 +487,6 @@
     /******************************** Edit Batch Modal Functions *****************************/
 
     /**
-     * @description: checks that user has all necessary permissions and then launches modal or displays error
-     */
-    checkFieldPermissions: function(component, event, helper) {
-        var action = component.get('c.checkFieldPermissions');
-        action.setCallback(this, function (response) {
-            var state = response.getState();
-            if (state === 'SUCCESS') {
-                this.openBatchWizard(component, event);
-            } else if (state === 'ERROR') {
-                this.handleApexErrors(component, response.getError());
-            }
-        });
-        $A.enqueueAction(action);
-    },
-
-    /**
      * @description: opens the batch wizard modal for edit mode of the component
      */
     openBatchWizard: function(component, event) {
@@ -567,6 +577,27 @@
     },
 
     /******************************** Utility Functions *****************************/
+
+    /**
+     * @description: Call Apex method and return a Promise
+     * @param apexMethodName: Apex method name to be called
+     * @param params: Parameters for apex method, if any required
+     */
+    callApex: function(component, apexMethodName, params) {
+        let helper = this;
+        return new Promise(function(resolve, reject) {
+            var action = component.get(apexMethodName);
+            if (params) { action.setParams(params); }
+            action.setCallback(helper, function(response) {
+                if (component.isValid() && response.getState() === 'SUCCESS') {
+                    resolve(response.getReturnValue());
+                } else {
+                    reject(response.getError());
+                }
+            });
+            $A.enqueueAction(action);
+        });
+    },
 
     /**
      * @description: flattens the DataImportRow class data to include donor information at the same level as the rest of the DataImport__c record.
