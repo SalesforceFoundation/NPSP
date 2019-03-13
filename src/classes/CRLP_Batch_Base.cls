@@ -561,8 +561,6 @@ public abstract class CRLP_Batch_Base {
          * @return true if the rollup should be run in incremental mode, otherwise false
          */
         Boolean getIsIncrementalModeEnabled() {
-            System.debug(LoggingLevel.ERROR, '*** ##### in getIsIncrementalModeEnabled ######');
-            System.debug(LoggingLevel.ERROR, '*** variable value base.isScheduledJob: ' + base.isScheduledJob);
             if (base.isScheduledJob == null || base.isScheduledJob == false) {
                 return false;
             }

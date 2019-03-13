@@ -124,7 +124,6 @@ private class CRLP_Batch_Base_TEST {
                 new CRLP_Batch_Base.BatchQueryBuilder(accountBatchJob, null, null, null);
 
         String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
-        System.debug(LoggingLevel.ERROR, '*** variable value: ' + generatedWhereClause);
         System.assert(generatedWhereClause.contains('WHERE') == false, 'The standard where clause should be used ' +
                 'for the inner join when the custom setting is set to false.');
         System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
