@@ -362,13 +362,11 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                     when AccountHardCredit {
                         rtnValue = customizableRollupSettings.ChunkSize_Account_HardCredit__c;
                     }
-
                     when ContactHardCredit {
                         rtnValue = customizableRollupSettings.ChunkSize_Contact_HardCredit__c;
                     }
-
                     when ContactSoftCredit {
-                        rtnValue = customizableRollupSettings.ChunkSize_Account_SoftCredit__c;
+                        rtnValue = customizableRollupSettings.ChunkSize_Contact_SoftCredit__c;
                     }
                 }
                 batchSizeChunkLimit = (rtnValue > 0 ? rtnValue.intValue() : null);

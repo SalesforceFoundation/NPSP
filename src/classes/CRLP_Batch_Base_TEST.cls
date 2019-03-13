@@ -563,7 +563,7 @@ private class CRLP_Batch_Base_TEST {
             }
 
             when ContactSoftCredit {
-                settings.ChunkSize_Account_SoftCredit__c = chunkSize;
+                settings.ChunkSize_Contact_SoftCredit__c = chunkSize;
                 CRLP_RollupSoftCredit_TEST.mockRollupCMTValues();
             }
         }
