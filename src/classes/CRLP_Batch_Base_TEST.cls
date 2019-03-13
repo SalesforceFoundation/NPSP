@@ -263,12 +263,12 @@ private class CRLP_Batch_Base_TEST {
         CRLP_RollupProcessingOptions.RollupType jobType =
                 CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
         Integer chunkSize = 1;
-        Id chunkModeLastProcessedId = getAccountOrContactIdForTesting(jobType);
+        Id lastIdProcessed = getAccountOrContactIdForTesting(jobType);
         configureChunkMode(jobType, chunkSize);
 
-        Id additionalAccountId = getAccountOrContactIdForTesting(jobType);
+        Id nextIdToBeProcessed = getAccountOrContactIdForTesting(jobType);
         Opportunity opportunityForAdditionalAccount = new Opportunity(
-                AccountId = additionalAccountId,
+                AccountId = nextIdToBeProcessed,
                 StageName = 'Open',
                 CloseDate = date.today(), name = 'test');
         insert opportunityForAdditionalAccount;
@@ -277,9 +277,9 @@ private class CRLP_Batch_Base_TEST {
         // the lastProcessedId constructor, passing in the Id to use in the start query.
         CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(
                 jobType,
-                chunkModeLastProcessedId);
+                lastIdProcessed);
 
-        System.assert(accountBatchJob.hasAdditionalRecordsToProcess(chunkModeLastProcessedId),
+        System.assert(accountBatchJob.hasAdditionalRecordsToProcess(lastIdProcessed),
             'hasAdditionalRecordsToProcess should be true, ' +
                     'since the chunk size is 1 and there is another Account to process.');
     }
@@ -295,7 +295,7 @@ private class CRLP_Batch_Base_TEST {
         // the empty constructor and does not pass in a lastProcessedId.
         CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
 
-        System.assertEquals(null, accountBatchJob.chunkModeLastProcessedId,
+        System.assertEquals(null, accountBatchJob.lastIdProcessed,
                 'chunkModeStartingId should be null for this, the first chunk mode job ' +
                         '(created using the empty constructor).');
 
@@ -311,21 +311,21 @@ private class CRLP_Batch_Base_TEST {
         CRLP_RollupProcessingOptions.RollupType jobType =
                 CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
         Integer chunkSize = 500;
-        Id chunkModeLastProcessedId = getAccountOrContactIdForTesting(jobType);
+        Id lastIdProcessed = getAccountOrContactIdForTesting(jobType);
         configureChunkMode(jobType, chunkSize);
 
         CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(
                 jobType,
-                chunkModeLastProcessedId);
+                lastIdProcessed);
 
-        System.assertEquals(chunkModeLastProcessedId, accountBatchJob.chunkModeLastProcessedId,
+        System.assertEquals(lastIdProcessed, accountBatchJob.lastIdProcessed,
                 'chunkModeStartingId should equal testAccount.Id');
 
         System.assertEquals(chunkSize, accountBatchJob.batchSizeChunkLimit,
                 'batchSizeChunkLimit should equal chunkSize');
 
         System.assert(batchStartQueryContainsChunkModeId(accountBatchJob),
-                'This chunk mode query should contain " > ' + accountBatchJob.chunkModeLastProcessedId + '"');
+                'This chunk mode query should contain " > ' + accountBatchJob.lastIdProcessed + '"');
 
         System.assert(batchStartOuterQueryContainsOrderByAndLimit(accountBatchJob),
                 'The chunk mode start query should always contain "ORDER BY" and "LIMIT".');
@@ -340,7 +340,7 @@ private class CRLP_Batch_Base_TEST {
 
         CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
 
-        System.assertEquals(null, contactBatchJob.chunkModeLastProcessedId,
+        System.assertEquals(null, contactBatchJob.lastIdProcessed,
                 'chunkModeStartingId should be null for this, the first chunk mode job ' +
                         '(created using the empty constructor).');
 
@@ -356,21 +356,21 @@ private class CRLP_Batch_Base_TEST {
         CRLP_RollupProcessingOptions.RollupType jobType =
                 CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
         Integer chunkSize = 500;
-        Id chunkModeLastProcessedId = getAccountOrContactIdForTesting(jobType);
+        Id lastIdProcessed = getAccountOrContactIdForTesting(jobType);
         configureChunkMode(jobType, chunkSize);
 
         CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(
                 jobType,
-                chunkModeLastProcessedId);
+                lastIdProcessed);
 
-        System.assertEquals(chunkModeLastProcessedId, contactBatchJob.chunkModeLastProcessedId,
+        System.assertEquals(lastIdProcessed, contactBatchJob.lastIdProcessed,
                 'chunkModeStartingId should equal testAccount.Id');
 
         System.assertEquals(chunkSize, contactBatchJob.batchSizeChunkLimit,
                 'batchSizeChunkLimit should equal chunkSize');
 
         System.assert(batchStartQueryContainsChunkModeId(contactBatchJob),
-                'This chunk mode query should contain " > ' + contactBatchJob.chunkModeLastProcessedId + '"');
+                'This chunk mode query should contain " > ' + contactBatchJob.lastIdProcessed + '"');
 
         System.assert(batchStartOuterQueryContainsOrderByAndLimit(contactBatchJob),
                 'The chunk mode start query should always contain "ORDER BY" and "LIMIT".');
@@ -385,7 +385,7 @@ private class CRLP_Batch_Base_TEST {
 
         CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
 
-        System.assertEquals(null, contactBatchJob.chunkModeLastProcessedId,
+        System.assertEquals(null, contactBatchJob.lastIdProcessed,
                 'chunkModeStartingId should be null for this, the first chunk mode job ' +
                         '(created using the empty constructor).');
 
@@ -408,14 +408,14 @@ private class CRLP_Batch_Base_TEST {
                 jobType,
                 chunkModeLastProcessedId);
 
-        System.assertEquals(chunkModeLastProcessedId, contactBatchJob.chunkModeLastProcessedId,
+        System.assertEquals(chunkModeLastProcessedId, contactBatchJob.lastIdProcessed,
                 'chunkModeStartingId should equal testAccount.Id');
 
         System.assertEquals(chunkSize, contactBatchJob.batchSizeChunkLimit,
                 'batchSizeChunkLimit should equal chunkSize');
 
         System.assert(batchStartQueryContainsChunkModeId(contactBatchJob),
-                'This chunk mode query should contain " > ' + contactBatchJob.chunkModeLastProcessedId + '"');
+                'This chunk mode query should contain " > ' + contactBatchJob.lastIdProcessed + '"');
 
         System.assert(batchStartOuterQueryContainsOrderByAndLimit(contactBatchJob),
                 'The chunk mode start query should always contain "ORDER BY" and "LIMIT".');
@@ -617,7 +617,7 @@ private class CRLP_Batch_Base_TEST {
      */
     private static Boolean batchStartQueryContainsChunkModeId(CRLP_Batch_Base_NonSkew classInstance) {
         String query = getBatchStartQuery(classInstance);
-        return query.contains(' > \'' + classInstance.chunkModeLastProcessedId + '\'');
+        return query.contains(' > \'' + classInstance.lastIdProcessed + '\'');
     }
 
     /**
@@ -627,7 +627,7 @@ private class CRLP_Batch_Base_TEST {
      */
     private static String getBatchStartQuery(CRLP_Batch_Base_NonSkew classInstance) {
         return classInstance.getBatchStartQuery(
-                classInstance.chunkModeLastProcessedId,
+                classInstance.lastIdProcessed,
                 classInstance.batchSizeChunkLimit,
                 classInstance.fieldsToCheckForNonZero
         );

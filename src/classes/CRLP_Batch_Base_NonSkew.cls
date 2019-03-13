@@ -41,7 +41,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     * in the previous batch. When the job is chained, it'll query records with Ids greater than this Id.
     */
     @TestVisible
-    private Id chunkModeLastProcessedId;
+    private Id lastIdProcessed;
 
     protected CRLP_Batch_Base_NonSkew() { }
 
@@ -92,9 +92,9 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      * @param jobType Defines the type of rollup job
      * @param recordIds Specific set of parent record id's to roll up to
      */
-    public CRLP_Batch_Base_NonSkew(CRLP_RollupProcessingOptions.RollupType jobType, Id lastIdProcessedForChunking) {
+    public CRLP_Batch_Base_NonSkew(CRLP_RollupProcessingOptions.RollupType jobType, Id lastIdProcessed) {
         super(jobType);
-        this.chunkModeLastProcessedId = lastIdProcessedForChunking;
+        this.lastIdProcessed = lastIdProcessed;
     }
 
     /*******************************************************************************************************
@@ -122,7 +122,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     public Database.Querylocator start(Database.BatchableContext bc) {
         try {
             String query = getBatchStartQuery(
-                    chunkModeLastProcessedId,
+                    lastIdProcessed,
                     batchSizeChunkLimit,
                     fieldsToCheckForNonZero
             );
@@ -145,10 +145,10 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             if (isChunkModeEnabled) {
                 // Since execution contexts might not run in order (ex., chunk size 10k,
                 // batch size 2k has 5 batches but they won't run in a guaranteed order)
-                // we first need to check if the last Id is greater than the value in chunkModeLastProcessedId
+                // we first need to check if the last Id is greater than the value in lastIdProcessed
                 Id lastProcessedId = summaryRecords[summaryRecords.size() - 1].Id;
-                if (chunkModeLastProcessedId == null || lastProcessedId > chunkModeLastProcessedId) {
-                    chunkModeLastProcessedId = lastProcessedId;
+                if (lastIdProcessed == null || lastProcessedId > lastIdProcessed) {
+                    lastIdProcessed = lastProcessedId;
                 }
             }
 
@@ -306,7 +306,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
         // If chunk mode is enabled and there are more records to process,
         // submit the next batch job
-        if (isChunkModeEnabled && hasAdditionalRecordsToProcess(chunkModeLastProcessedId)) {
+        if (isChunkModeEnabled && hasAdditionalRecordsToProcess(lastIdProcessed)) {
             submitBatchableJobForNextChunk();
         }
     }
@@ -319,13 +319,13 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     private void submitBatchableJobForNextChunk(){
         switch on (jobType) {
             when AccountHardCredit {
-                Database.executeBatch(new CRLP_Account_BATCH(chunkModeLastProcessedId));
+                Database.executeBatch(new CRLP_Account_BATCH(lastIdProcessed));
             }
             when ContactHardCredit {
-                Database.executeBatch(new CRLP_Contact_BATCH(chunkModeLastProcessedId));
+                Database.executeBatch(new CRLP_Contact_BATCH(lastIdProcessed));
             }
             when ContactSoftCredit {
-                Database.executeBatch(new CRLP_Contact_SoftCredit_BATCH(chunkModeLastProcessedId));
+                Database.executeBatch(new CRLP_Contact_SoftCredit_BATCH(lastIdProcessed));
             }
         }
     }

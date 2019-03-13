@@ -354,18 +354,18 @@ public abstract class CRLP_Batch_Base {
 
     /**
      * @description Builds and returns batch job start query string.
-     * @param chunkLastId The last processed Id from the previous chunk.
+     * @param lastIdProcessed The last processed Id from the previous chunk.
      * @param chunkSize The size of each chunk - used in the LIMIT statement in the query.
      * @param fieldsToCheckForNonZero A list of fields that were checked for non-zero values,
      * used in the query.
      * @return The query string to be used by the batch start method.
      */
     @TestVisible
-    protected String getBatchStartQuery(Id chunkLastId, Integer chunkSize, List<String> fieldsToCheckForNonZero) {
+    protected String getBatchStartQuery(Id lastIdProcessed, Integer chunkSize, List<String> fieldsToCheckForNonZero) {
 
         BatchQueryBuilder builder = new BatchQueryBuilder(
                 this,
-                chunkLastId,
+                lastIdProcessed,
                 chunkSize,
                 fieldsToCheckForNonZero
         );
@@ -383,17 +383,17 @@ public abstract class CRLP_Batch_Base {
          */
         CRLP_Batch_Base base;
         Integer chunkSize;
-        Id chunkLastId;
+        Id lastIdProcessed;
         List<String> fieldsToCheckForNonZero;
 
         BatchQueryBuilder(
                 CRLP_Batch_Base base,
-                Id chunkModeStartingId,
+                Id lastIdProcessed,
                 Integer chunkSize,
                 List<String> fieldsToCheckForNonZero
         ) {
             this.base = base;
-            this.chunkLastId = chunkModeStartingId;
+            this.lastIdProcessed = lastIdProcessed;
             this.chunkSize = chunkSize;
             this.fieldsToCheckForNonZero = fieldsToCheckForNonZero;
         }
@@ -444,8 +444,8 @@ public abstract class CRLP_Batch_Base {
                     whereClauses.add(skewClause);
                 }
 
-                if (chunkLastId != null) {
-                    whereClauses.add('Id > \'' + chunkLastId + '\'');
+                if (lastIdProcessed != null) {
+                    whereClauses.add('Id > \'' + lastIdProcessed + '\'');
                 }
 
                 String innerJoinWhereClause = base.getMainQueryInnerJoinFilter();
@@ -684,15 +684,15 @@ public abstract class CRLP_Batch_Base {
 
     /**
      * @description Checks whether there are additional records to be processed when in chunk mode.
-     * @param chunkModeStartingId The last processed Id.
+     * @param lastIdProcessed The last processed Id.
      * @return True if there are any records that still need to be processed.
      */
     @TestVisible
-    protected Boolean hasAdditionalRecordsToProcess(Id chunkModeStartingId) {
+    protected Boolean hasAdditionalRecordsToProcess(Id lastIdProcessed) {
         Integer queryLimitForAdditionalRecordsCheck = 1;
         BatchQueryBuilder builder = new BatchQueryBuilder(
                 this,
-                chunkModeStartingId,
+                lastIdProcessed,
                 queryLimitForAdditionalRecordsCheck,
                 null
         );
