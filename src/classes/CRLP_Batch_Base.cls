@@ -468,11 +468,11 @@ public abstract class CRLP_Batch_Base {
                 // This is needed because can't return null as a valid iterator.
                 query += ' LIMIT 0';
             } else if (base.recordIds == null) {
-                if (chunkSize != null) {
+                if (isChunkModeEnabled) {
                     // In an LDV Org, there may be too many records to query in the main query. Core support has recommended
                     // a chunking approach where the main query is limited to under 1M records and the finish() method
                     // kicks off the job again starting with the last Id that was queried
-                    query += ' ORDER BY Id LIMIT ' + chunkSize;
+                    query += ' ORDER BY Id LIMIT ' + batchSizeChunkLimit;
                 }
             }
             return query;
@@ -674,6 +674,43 @@ public abstract class CRLP_Batch_Base {
             }
             set;
         }
+    }
+
+    /**
+    * @description Checks whether chunk mode is enabled for this job.
+    * @return True if chunk mode is enabled, false otherwise.
+    */
+    protected Boolean isChunkModeEnabled {
+        get {
+            return batchSizeChunkLimit != null && batchSizeChunkLimit > 0;
+        }
+    }
+
+    /**
+     * @description The chunk size used to limit the number of records returned in the main query.
+     * Used in chunk mode.
+     * @return Limit value to use or null if chunking is not enabled.
+     */
+    protected Integer batchSizeChunkLimit {
+        get {
+            if (batchSizeChunkLimit == null) {
+                Decimal rtnValue;
+                switch on (jobType) {
+                    when AccountHardCredit {
+                        rtnValue = customizableRollupSettings.ChunkSize_Account_HardCredit__c;
+                    }
+                    when ContactHardCredit {
+                        rtnValue = customizableRollupSettings.ChunkSize_Contact_HardCredit__c;
+                    }
+                    when ContactSoftCredit {
+                        rtnValue = customizableRollupSettings.ChunkSize_Contact_SoftCredit__c;
+                    }
+                }
+                batchSizeChunkLimit = (rtnValue > 0 ? rtnValue.intValue() : null);
+            }
+            return batchSizeChunkLimit;
+        }
+        set;
     }
 
     /**

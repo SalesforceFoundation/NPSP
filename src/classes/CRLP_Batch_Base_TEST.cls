@@ -277,7 +277,6 @@ private class CRLP_Batch_Base_TEST {
         CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
         contactBatchJob.isScheduledJob = true;
 
-
         CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
                 new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, null, null, null);
 

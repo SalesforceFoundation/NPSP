@@ -339,40 +339,4 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         return options;
     }
 
-    /**
-     * @description Returns true if chunk mode is enabled.
-     */
-    private Boolean isChunkModeEnabled {
-        get {
-            return batchSizeChunkLimit != null && batchSizeChunkLimit > 0;
-        }
-    }
-
-    /**
-     * @description The chunk size used to limit the number of records returned in the main query.
-     * Used in chunk mode.
-     * @return Limit value to use or null if chunking is not enabled.
-     */
-    @TestVisible
-    private Integer batchSizeChunkLimit {
-        get {
-            if (batchSizeChunkLimit == null) {
-                Decimal rtnValue;
-                switch on (jobType) {
-                    when AccountHardCredit {
-                        rtnValue = customizableRollupSettings.ChunkSize_Account_HardCredit__c;
-                    }
-                    when ContactHardCredit {
-                        rtnValue = customizableRollupSettings.ChunkSize_Contact_HardCredit__c;
-                    }
-                    when ContactSoftCredit {
-                        rtnValue = customizableRollupSettings.ChunkSize_Contact_SoftCredit__c;
-                    }
-                }
-                batchSizeChunkLimit = (rtnValue > 0 ? rtnValue.intValue() : null);
-            }
-            return batchSizeChunkLimit;
-        }
-        set;
-    }
 }
