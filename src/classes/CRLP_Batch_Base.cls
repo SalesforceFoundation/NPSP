@@ -353,7 +353,10 @@ public abstract class CRLP_Batch_Base {
     /******************************** Helper Methods *****************************/
 
     /**
-     * @description Builds and returns batch job start query string.
+     * @description Builds and returns batch job start query string.  The BatchQueryBuilder instance
+     * needs to be constructed here in the top-level CRLP_Batch_Base class so that a reference to it
+     * can be passed in to the BatchQueryBuilder constructor, making the top-level class variables
+     * accessible to the inner class. Used in the start method of the CRLP_Batch_Base_NonSkew class.
      * @param lastIdProcessed The last processed Id from the previous chunk.
      * @param chunkSize The size of each chunk - used in the LIMIT statement in the query.
      * @param fieldsToCheckForNonZero A list of fields that were checked for non-zero values,
@@ -386,6 +389,7 @@ public abstract class CRLP_Batch_Base {
         Id lastIdProcessed;
         List<String> fieldsToCheckForNonZero;
 
+        @TestVisible
         BatchQueryBuilder(
                 CRLP_Batch_Base base,
                 Id lastIdProcessed,
@@ -403,6 +407,7 @@ public abstract class CRLP_Batch_Base {
          * start query.
          * @return The query string.
          */
+        @TestVisible
         String buildQuery() {
             switch on (base.jobMode) {
                 when NonSkewMode {
@@ -448,7 +453,7 @@ public abstract class CRLP_Batch_Base {
                     whereClauses.add('Id > \'' + lastIdProcessed + '\'');
                 }
 
-                String innerJoinWhereClause = base.getMainQueryInnerJoinFilter();
+                String innerJoinWhereClause = getMainQueryInnerJoinFilter();
                 if (innerJoinWhereClause != null) {
                     whereClauses.add(innerJoinWhereClause);
                 }
@@ -472,214 +477,205 @@ public abstract class CRLP_Batch_Base {
             }
             return query;
         }
-    }
 
-    /**
-     * @description Produces the where clause that should be used for the inner join
-     * @return The WHERE clause, as a string, that should be used to filter the detail records
-     */
-    @TestVisible protected String getMainQueryInnerJoinFilter() {
-        String whereClause = null;
-        Boolean hasMaxValuesForIncrementalMode = (maxDaysAgo != null || maxYearsAgo != null);
+        /**
+         * @description Produces the where clause that should be used for the inner join
+         * @return The WHERE clause, as a string, that should be used to filter the detail records
+         */
+        @TestVisible
+        String getMainQueryInnerJoinFilter() {
+            String whereClause = null;
+            Boolean hasMaxValuesForIncrementalMode = (maxDaysAgo != null || maxYearsAgo != null);
 
-        if (getIsIncrementalModeEnabled() && hasMaxValuesForIncrementalMode) {
-            whereClause = buildIncrementalModeWhereClause();
-        } else {
-            if (customizableRollupSettings.Disable_Related_Records_Filter__c == false) {
-                whereClause = buildNonIncrementalModeWhereClause();
+            if (getIsIncrementalModeEnabled() && hasMaxValuesForIncrementalMode) {
+                whereClause = buildIncrementalModeWhereClause();
+            } else {
+                if (base.customizableRollupSettings.Disable_Related_Records_Filter__c == false) {
+                    whereClause = buildNonIncrementalModeWhereClause();
+                }
             }
-        }
-        return whereClause;
-    }
-
-    /**
-     * @description Produces the where clause that should be used for the inner join when NOT in incremental mode
-     * @return The WHERE clause, as a string, that should be used to filter the detail records
-     */
-    private String buildNonIncrementalModeWhereClause() {
-        String whereClause = null; //will return null if this method is called from an unsupported rollup type
-
-        switch on (jobType) {
-
-            when AccountHardCredit, ContactHardCredit {
-                whereClause = 'Id IN (' +
-                        'SELECT ' + keyField + ' ' +
-                        'FROM ' + detailObjectType + ')';
-            }
-
-            when ContactSoftCredit {
-                whereClause = 'Id IN (SELECT ContactId FROM OpportunityContactRole)';
-            }
-
-            when AccountContactSoftCredit, AccountSoftCredit {
-                // It's not possible to do an inner query on this due to the following Salesforce error:
-                // "The inner select field 'Contact.AccountId' cannot have more than one level of relationships"
-            }
-
-            when RecurringDonations {
-                whereClause = 'Id IN (SELECT npe03__Recurring_Donation__c FROM Opportunity)';
-            }
+            return whereClause;
         }
 
-        return whereClause;
-    }
+        /**
+         * @description Produces the where clause that should be used for the inner join when NOT in incremental mode
+         * @return The WHERE clause, as a string, that should be used to filter the detail records
+         */
+        String buildNonIncrementalModeWhereClause() {
+            String whereClause = null; //will return null if this method is called from an unsupported rollup type
 
-    /**
-     * @description Produces the where clause that should be used for the inner join when in incremental mode
-     * @return The WHERE clause, as a string, that should be used to filter the detail records
-     */
-    private String buildIncrementalModeWhereClause() {
-        String whereClause = 'Id IN (' +
-                'SELECT ' + keyField + ' ' +
-                'FROM ' + detailObjectType + ' ' +
-                'WHERE ';
+            switch on (base.jobType) {
+                when AccountHardCredit, ContactHardCredit {
+                    whereClause = 'Id IN (' +
+                            'SELECT ' + base.keyField + ' ' +
+                            'FROM ' + base.detailObjectType + ')';
+                }
+                when ContactSoftCredit {
+                    whereClause = 'Id IN (SELECT ContactId FROM OpportunityContactRole)';
+                }
+                when AccountContactSoftCredit, AccountSoftCredit {
+                    // It's not possible to do an inner query on this due to the following Salesforce error:
+                    // "The inner select field 'Contact.AccountId' cannot have more than one level of relationships"
+                }
+                when RecurringDonations {
+                    whereClause = 'Id IN (SELECT npe03__Recurring_Donation__c FROM Opportunity)';
+                }
+            }
+            return whereClause;
+        }
 
-        if (hasIncrementalFieldOverrides) {
-            whereClause += overrideForLastNDaysField + ' >= LAST_N_DAYS:' + overrideForLastNDaysValue;
-        } else {
-            // Set to CloseDate for testing, SystemModstamp for prod.
-            String whereClauseDateField = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp';
-            whereClause += whereClauseDateField + ' ';
+        /**
+         * @description Produces the where clause that should be used for the inner join when in incremental mode
+         * @return The WHERE clause, as a string, that should be used to filter the detail records
+         */
+        String buildIncrementalModeWhereClause() {
+            String whereClause = 'Id IN (' +
+                    'SELECT ' + base.keyField + ' ' +
+                    'FROM ' + base.detailObjectType + ' ' +
+                    'WHERE ';
 
-            if (maxDaysAgo != null && maxYearsAgo != null) {
-                if ((maxDaysAgo / 365) > maxYearsAgo) {
+            if (hasIncrementalFieldOverrides) {
+                whereClause += overrideForLastNDaysField + ' >= LAST_N_DAYS:' + overrideForLastNDaysValue;
+            } else {
+                // Set to CloseDate for testing, SystemModstamp for prod.
+                String whereClauseDateField = Test.isRunningTest() ? 'CloseDate' : 'SystemModstamp';
+                whereClause += whereClauseDateField + ' ';
+
+                if (maxDaysAgo != null && maxYearsAgo != null) {
+                    if ((maxDaysAgo / 365) > maxYearsAgo) {
+                        whereClause += '>= LAST_N_DAYS:' + maxDaysAgo;
+                    } else {
+                        whereClause += '>= LAST_N_YEARS:' + maxYearsAgo;
+                    }
+                } else if (maxDaysAgo != null) {
                     whereClause += '>= LAST_N_DAYS:' + maxDaysAgo;
-                } else {
+                } else if (maxYearsAgo != null) {
                     whereClause += '>= LAST_N_YEARS:' + maxYearsAgo;
                 }
-            } else if (maxDaysAgo != null) {
-                whereClause += '>= LAST_N_DAYS:' + maxDaysAgo;
-            } else if (maxYearsAgo != null) {
-                whereClause += '>= LAST_N_YEARS:' + maxYearsAgo;
             }
-        }
-        return whereClause += ')';
-    }
-
-    /**
-     * @description The max Integer for all active time-bound Days_Back rollups,
-     * or null if there are no active time-bound Days_Back rollups for this summary object
-     */
-    private Integer maxDaysAgo {
-        get {
-            if (maxDaysAgo == null) {
-                maxDaysAgo = getMaxIntegerValueFromRollupsForType(CRLP_Operation.TimeBoundOperationType.Days_Back);
-            }
-            return maxDaysAgo;
-        }
-        private set;
-    }
-
-    /**
-     * @description The max Integer for all active time-bound Years_Ago rollups,
-     * or null if there are no active time-bound Years_Ago rollups for this summary object
-     */
-    private Integer maxYearsAgo {
-        get {
-            if (maxYearsAgo == null) {
-                maxYearsAgo = getMaxIntegerValueFromRollupsForType(CRLP_Operation.TimeBoundOperationType.Years_Ago);
-            }
-            return maxYearsAgo;
-        }
-        private set;
-    }
-
-    /**
-     * @description Returns the maximum integer for time-bound rollups by time-bound type
-     * @param timeBoundType Time-bound type for which the max integer should be calculated
-     * @return max integer for the specified time bound type
-     */
-    private Integer getMaxIntegerValueFromRollupsForType(CRLP_Operation.TimeBoundOperationType timeBoundType) {
-        Integer maxInteger = null;
-        for (Rollup__mdt rollup : statefulCacheOfRollupsToBeProcessed) {
-            if (rollup.Active__c == true
-                    && String.isNotBlank(rollup.Time_Bound_Operation_Type__c)
-                    && rollup.Time_Bound_Operation_Type__c == timeBoundType.name()
-                    && rollup.Integer__c != null) {
-                if (maxInteger == null || rollup.Integer__c > maxInteger) {
-                    maxInteger = (Integer) rollup.Integer__c;
-                }
-            }
-        }
-        return maxInteger;
-    }
-
-    /**
-     * @description Determines whether the rollup should be run in incremental mode
-     * @param jobType the type of rollup job
-     * @return true if the rollup should be run in incremental mode, otherwise false
-     */
-    private Boolean getIsIncrementalModeEnabled() {
-        if (isScheduledJob == null || isScheduledJob == false) {
-            return false;
+            return whereClause += ')';
         }
 
-        switch on (jobMode) {
-
-            when NonSkewMode {
-
-                switch on (jobType) {
-
-                    when AccountHardCredit {
-                        return customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c;
-                    }
-
-                    when ContactHardCredit {
-                        return customizableRollupSettings.ContactHardCreditNonSkew_Incremental__c;
-                    }
-
-                    when else {
-                        return false;
-                    }
-                }
-            }
-
-            when else {
+        /**
+         * @description Determines whether the rollup should be run in incremental mode
+         * @return true if the rollup should be run in incremental mode, otherwise false
+         */
+        Boolean getIsIncrementalModeEnabled() {
+            System.debug(LoggingLevel.ERROR, '*** ##### in getIsIncrementalModeEnabled ######');
+            System.debug(LoggingLevel.ERROR, '*** variable value base.isScheduledJob: ' + base.isScheduledJob);
+            if (base.isScheduledJob == null || base.isScheduledJob == false) {
                 return false;
             }
-        }
-    }
 
-    /**
-     * @description Returns true if the org has configured a
-     * user-defined inner join for incremental rollups
-     */
-    private Boolean hasIncrementalFieldOverrides {
-        get {
-            return overrideForLastNDaysField != null && overrideForLastNDaysValue != null;
-        }
-    }
-
-    /**
-     * @description Value to use with LAST_N_DAYS: in the inner join query
-     * when the org has the user-defined inner join for incremental rollups
-     */
-    private Integer overrideForLastNDaysValue {
-        get {
-            if (overrideForLastNDaysValue == null) {
-                if (customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c != null) {
-                    overrideForLastNDaysValue = (Integer) customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c;
+            switch on (base.jobMode) {
+                when NonSkewMode {
+                    switch on (base.jobType) {
+                        when AccountHardCredit {
+                            return base.customizableRollupSettings.AccountHardCreditNonSkew_Incremental__c;
+                        }
+                        when ContactHardCredit {
+                            return base.customizableRollupSettings.ContactHardCreditNonSkew_Incremental__c;
+                        }
+                        when else {
+                            return false;
+                        }
+                    }
+                }
+                when else {
+                    return false;
                 }
             }
-            return overrideForLastNDaysValue;
         }
-        set;
-    }
 
-    /**
-     * @description API name of the date field to use as in the inner join query
-     * when the org has the user-defined inner join for incremental rollups
-     */
-    private String overrideForLastNDaysField {
-        get {
-            if (overrideForLastNDaysField == null) {
-                if (String.isNotBlank(customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c)) {
-                    overrideForLastNDaysField = customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c;
+        /**
+         * @description The max Integer for all active time-bound Days_Back rollups,
+         * or null if there are no active time-bound Days_Back rollups for this summary object
+         */
+        Integer maxDaysAgo {
+            get {
+                if (maxDaysAgo == null) {
+                    maxDaysAgo = getMaxIntegerValueFromRollupsForType(CRLP_Operation.TimeBoundOperationType.Days_Back);
+                }
+                return maxDaysAgo;
+            }
+            private set;
+        }
+
+        /**
+         * @description The max Integer for all active time-bound Years_Ago rollups,
+         * or null if there are no active time-bound Years_Ago rollups for this summary object
+         */
+        private Integer maxYearsAgo {
+            get {
+                if (maxYearsAgo == null) {
+                    maxYearsAgo = getMaxIntegerValueFromRollupsForType(CRLP_Operation.TimeBoundOperationType.Years_Ago);
+                }
+                return maxYearsAgo;
+            }
+            private set;
+        }
+
+        /**
+         * @description Returns the maximum integer for time-bound rollups by time-bound type
+         * @param timeBoundType Time-bound type for which the max integer should be calculated
+         * @return max integer for the specified time bound type
+         */
+        Integer getMaxIntegerValueFromRollupsForType(CRLP_Operation.TimeBoundOperationType timeBoundType) {
+            Integer maxInteger = null;
+            for (Rollup__mdt rollup : base.statefulCacheOfRollupsToBeProcessed) {
+                if (rollup.Active__c == true
+                        && String.isNotBlank(rollup.Time_Bound_Operation_Type__c)
+                        && rollup.Time_Bound_Operation_Type__c == timeBoundType.name()
+                        && rollup.Integer__c != null) {
+                    if (maxInteger == null || rollup.Integer__c > maxInteger) {
+                        maxInteger = (Integer) rollup.Integer__c;
+                    }
                 }
             }
-            return overrideForLastNDaysField;
+            return maxInteger;
         }
-        set;
+
+        /**
+         * @description Returns true if the org has configured a
+         * user-defined inner join for incremental rollups
+         */
+        Boolean hasIncrementalFieldOverrides {
+            get {
+                return overrideForLastNDaysField != null && overrideForLastNDaysValue != null;
+            }
+        }
+
+        /**
+         * @description Value to use with LAST_N_DAYS: in the inner join query
+         * when the org has the user-defined inner join for incremental rollups
+         */
+        Integer overrideForLastNDaysValue {
+            get {
+                if (overrideForLastNDaysValue == null) {
+                    if (base.customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c != null) {
+                        overrideForLastNDaysValue = (Integer) base.customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c;
+                    }
+                }
+                return overrideForLastNDaysValue;
+            }
+            set;
+        }
+
+        /**
+         * @description API name of the date field to use as in the inner join query
+         * when the org has the user-defined inner join for incremental rollups
+         */
+        String overrideForLastNDaysField {
+            get {
+                if (overrideForLastNDaysField == null) {
+                    if (String.isNotBlank(base.customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c)) {
+                        overrideForLastNDaysField = base.customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c;
+                    }
+                }
+                return overrideForLastNDaysField;
+            }
+            set;
+        }
     }
 
     /**

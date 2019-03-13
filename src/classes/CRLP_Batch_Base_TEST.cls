@@ -50,12 +50,15 @@ private class CRLP_Batch_Base_TEST {
         // CRLP_Account_BATCH class.  So we "mock" the isScheduledJob value here, to test the correct
         // response from the getWhereClause() method below.
 
-        String generatedWhereClause = accountBatchJob.getMainQueryInnerJoinFilter();
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(accountBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('FROM'));
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + new RollupInfo().maxYearsAgoInteger));
-        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(accountBatchJob),
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
                 'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
 
@@ -72,11 +75,14 @@ private class CRLP_Batch_Base_TEST {
         CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
         accountBatchJob.isScheduledJob = true;
 
-        String generatedWhereClause = accountBatchJob.getMainQueryInnerJoinFilter();
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(accountBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + new RollupInfo().maxDaysBackInteger));
-        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(accountBatchJob),
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
                 'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
 
@@ -93,12 +99,15 @@ private class CRLP_Batch_Base_TEST {
         CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
         accountBatchJob.isScheduledJob = true;
 
-        String generatedWhereClause = accountBatchJob.getMainQueryInnerJoinFilter();
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(accountBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         Integer lastNYears = new RollupInfo().maxYearsAgoInteger;
         System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + lastNYears));
-        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(accountBatchJob),
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
                 'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
 
@@ -111,10 +120,14 @@ private class CRLP_Batch_Base_TEST {
         CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
         accountBatchJob.isScheduledJob = true;
 
-        String whereClause = accountBatchJob.getMainQueryInnerJoinFilter();
-        System.assert(whereClause.contains('WHERE') == false, 'The standard where clause should be used ' +
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(accountBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + generatedWhereClause);
+        System.assert(generatedWhereClause.contains('WHERE') == false, 'The standard where clause should be used ' +
                 'for the inner join when the custom setting is set to false.');
-        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(accountBatchJob),
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
                 'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
 
@@ -132,12 +145,15 @@ private class CRLP_Batch_Base_TEST {
         CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
         accountBatchJob.isScheduledJob = true;
 
-        String generatedWhereClause = accountBatchJob.getMainQueryInnerJoinFilter();
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(accountBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains(userDefinedLastNDaysFieldOverride));
         System.assert(generatedWhereClause.contains(String.valueOf(userDefinedLastNDaysValueOverride)));
-        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(accountBatchJob),
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
                 'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
 
@@ -149,10 +165,13 @@ private class CRLP_Batch_Base_TEST {
 
         CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
 
-        String whereClause = contactBatchJob.getMainQueryInnerJoinFilter();
-        System.assert(whereClause.contains('WHERE') == false, 'The standard query for the inner join ' +
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
+        System.assert(generatedWhereClause.contains('WHERE') == false, 'The standard query for the inner join ' +
                 'should NOT contain a where filter on the Opportunities when not a scheduled job.');
-        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(contactBatchJob),
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
                 'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
 
@@ -165,12 +184,15 @@ private class CRLP_Batch_Base_TEST {
         CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
         contactBatchJob.isScheduledJob = true;
 
-        String generatedWhereClause = contactBatchJob.getMainQueryInnerJoinFilter();
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('FROM'));
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + new RollupInfo().maxYearsAgoInteger));
-        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(contactBatchJob),
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
                 'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
 
@@ -187,11 +209,14 @@ private class CRLP_Batch_Base_TEST {
         CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
         contactBatchJob.isScheduledJob = true;
 
-        String generatedWhereClause = contactBatchJob.getMainQueryInnerJoinFilter();
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + new RollupInfo().maxDaysBackInteger));
-        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(contactBatchJob),
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
                 'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
 
@@ -208,12 +233,15 @@ private class CRLP_Batch_Base_TEST {
         CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
         contactBatchJob.isScheduledJob = true;
 
-        String generatedWhereClause = contactBatchJob.getMainQueryInnerJoinFilter();
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         Integer lastNYears = new RollupInfo().maxYearsAgoInteger;
         System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + lastNYears));
-        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(contactBatchJob),
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
                 'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
 
@@ -226,10 +254,13 @@ private class CRLP_Batch_Base_TEST {
         CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
         contactBatchJob.isScheduledJob = true;
 
-        String whereClause = contactBatchJob.getMainQueryInnerJoinFilter();
-        System.assert(whereClause.contains('WHERE') == false, 'The standard where clause should be used ' +
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
+        System.assert(generatedWhereClause.contains('WHERE') == false, 'The standard where clause should be used ' +
                 'for the inner join when the custom setting is set to false.');
-        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(contactBatchJob),
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
                 'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
 
@@ -247,12 +278,16 @@ private class CRLP_Batch_Base_TEST {
         CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
         contactBatchJob.isScheduledJob = true;
 
-        String generatedWhereClause = contactBatchJob.getMainQueryInnerJoinFilter();
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains(userDefinedLastNDaysFieldOverride));
         System.assert(generatedWhereClause.contains(String.valueOf(userDefinedLastNDaysValueOverride)));
-        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(contactBatchJob),
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
                 'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
 
@@ -302,7 +337,10 @@ private class CRLP_Batch_Base_TEST {
         System.assertEquals(chunkSize, accountBatchJob.batchSizeChunkLimit,
                 'batchSizeChunkLimit should equal chunkSize');
 
-        System.assert(batchStartOuterQueryContainsOrderByAndLimit(accountBatchJob),
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(accountBatchJob, null, chunkSize, null);
+
+        System.assert(batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
                 'The chunk mode start query should always contain "ORDER BY" and "LIMIT".');
     }
 
@@ -324,10 +362,14 @@ private class CRLP_Batch_Base_TEST {
         System.assertEquals(chunkSize, accountBatchJob.batchSizeChunkLimit,
                 'batchSizeChunkLimit should equal chunkSize');
 
-        System.assert(batchStartQueryContainsChunkModeId(accountBatchJob),
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(accountBatchJob, lastIdProcessed, chunkSize, null);
+        String query = queryBuilder.buildQuery();
+
+        System.assert(batchStartQueryContainsChunkModeId(accountBatchJob, query),
                 'This chunk mode query should contain " > ' + accountBatchJob.lastIdProcessed + '"');
 
-        System.assert(batchStartOuterQueryContainsOrderByAndLimit(accountBatchJob),
+        System.assert(batchStartOuterQueryContainsOrderByAndLimit(query),
                 'The chunk mode start query should always contain "ORDER BY" and "LIMIT".');
     }
 
@@ -347,7 +389,10 @@ private class CRLP_Batch_Base_TEST {
         System.assertEquals(chunkSize, contactBatchJob.batchSizeChunkLimit,
                 'batchSizeChunkLimit should equal chunkSize');
 
-        System.assert(batchStartOuterQueryContainsOrderByAndLimit(contactBatchJob),
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, null, chunkSize, null);
+
+        System.assert(batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
                 'The chunk mode start query should always contain "ORDER BY" and "LIMIT".');
     }
 
@@ -369,10 +414,14 @@ private class CRLP_Batch_Base_TEST {
         System.assertEquals(chunkSize, contactBatchJob.batchSizeChunkLimit,
                 'batchSizeChunkLimit should equal chunkSize');
 
-        System.assert(batchStartQueryContainsChunkModeId(contactBatchJob),
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, lastIdProcessed, chunkSize, null);
+        String query = queryBuilder.buildQuery();
+
+        System.assert(batchStartQueryContainsChunkModeId(contactBatchJob, query),
                 'This chunk mode query should contain " > ' + contactBatchJob.lastIdProcessed + '"');
 
-        System.assert(batchStartOuterQueryContainsOrderByAndLimit(contactBatchJob),
+        System.assert(batchStartOuterQueryContainsOrderByAndLimit(query),
                 'The chunk mode start query should always contain "ORDER BY" and "LIMIT".');
     }
 
@@ -392,7 +441,10 @@ private class CRLP_Batch_Base_TEST {
         System.assertEquals(chunkSize, contactBatchJob.batchSizeChunkLimit,
                 'batchSizeChunkLimit should equal chunkSize');
 
-        System.assert(batchStartOuterQueryContainsOrderByAndLimit(contactBatchJob),
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, null, chunkSize, null);
+
+        System.assert(batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
                 'The chunk mode start query should always contain "ORDER BY" and "LIMIT".');
     }
 
@@ -414,10 +466,14 @@ private class CRLP_Batch_Base_TEST {
         System.assertEquals(chunkSize, contactBatchJob.batchSizeChunkLimit,
                 'batchSizeChunkLimit should equal chunkSize');
 
-        System.assert(batchStartQueryContainsChunkModeId(contactBatchJob),
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, chunkModeLastProcessedId, chunkSize, null);
+        String query = queryBuilder.buildQuery();
+
+        System.assert(batchStartQueryContainsChunkModeId(contactBatchJob, query),
                 'This chunk mode query should contain " > ' + contactBatchJob.lastIdProcessed + '"');
 
-        System.assert(batchStartOuterQueryContainsOrderByAndLimit(contactBatchJob),
+        System.assert(batchStartOuterQueryContainsOrderByAndLimit(query),
                 'The chunk mode start query should always contain "ORDER BY" and "LIMIT".');
     }
 
@@ -545,7 +601,6 @@ private class CRLP_Batch_Base_TEST {
     private static Customizable_Rollup_Settings__c configureChunkMode(
             CRLP_RollupProcessingOptions.RollupType jobType,
             Integer chunkSize) {
-
         Customizable_Rollup_Settings__c settings =
                 getRollupSettingsForTestsCustomizableRollupsEnabled();
 
@@ -600,37 +655,25 @@ private class CRLP_Batch_Base_TEST {
     /**
      * @description Gets the query string from an instance of CRLP_Batch_Base_NonSkew and
      * checks whether it contains Order By and Limit clauses.
-     * @param classInstance An instance of CRLP_Batch_Base_NonSkew class or its subclasses.
+     * @param query The query string to analyze.
      * @return True if the query contains Order By and Limit, false otherwise.
      */
-    private static Boolean batchStartOuterQueryContainsOrderByAndLimit(CRLP_Batch_Base_NonSkew classInstance) {
+    private static Boolean batchStartOuterQueryContainsOrderByAndLimit(String query) {
         return stringContainsOrderByAndLimit(
-                getOuterQueryOrderByAndLimitString(
-                        getBatchStartQuery(classInstance)));
+                getOuterQueryOrderByAndLimitString(query));
     }
 
     /**
      * @description Gets the query string from an instance of CRLP_Batch_Base_NonSkew and
      * checks whether it contains the last processed Id for chunk mode.
      * @param classInstance An instance of CRLP_Batch_Base_NonSkew class or its subclasses.
+     * @param query The query string to analyze.
      * @return True if the query contains the last processed Id, false otherwise.
      */
-    private static Boolean batchStartQueryContainsChunkModeId(CRLP_Batch_Base_NonSkew classInstance) {
-        String query = getBatchStartQuery(classInstance);
+    private static Boolean batchStartQueryContainsChunkModeId(
+            CRLP_Batch_Base_NonSkew classInstance,
+            String query) {
         return query.contains(' > \'' + classInstance.lastIdProcessed + '\'');
-    }
-
-    /**
-     * @description Calls getBatchStartQuery on an instance of CRLP_Batch_Base_NonSkew class or its subclasses.
-     * @param classInstance An instance of CRLP_Batch_Base_NonSkew class or its subclasses.
-     * @return The batch Start query string.
-     */
-    private static String getBatchStartQuery(CRLP_Batch_Base_NonSkew classInstance) {
-        return classInstance.getBatchStartQuery(
-                classInstance.lastIdProcessed,
-                classInstance.batchSizeChunkLimit,
-                classInstance.fieldsToCheckForNonZero
-        );
     }
 
     /**
