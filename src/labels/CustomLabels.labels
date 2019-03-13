@@ -2843,6 +2843,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>There are errors on one or more entries. You must resolve all errors before you can process this batch.</value>
     </labels>
     <labels>
+        <fullName>bgeGridErrorConflictingGifts</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message preventing user from processing batch if there are conflicting gifts.</shortDescription>
+        <value>There are conflicting gifts for this batch. These conflicts must be resolved before you can process the batch.</value>
+    </labels>
+    <labels>
         <fullName>bgeGridErrorRequiredTotalsExpected</fullName>
         <language>en_US</language>
         <protected>true</protected>

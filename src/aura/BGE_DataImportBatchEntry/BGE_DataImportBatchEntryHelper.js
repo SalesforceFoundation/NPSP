@@ -493,10 +493,10 @@
      * @return: boolean indicating if there is a conflict
      */
     tableHasConflictingGifts: function(component) {
-        let helper = this;
-        let conflictFound = false;
         const rows = component.get('v.data');
         const labels = component.get('v.labels');
+
+        let conflictFound = false;
 
         let donationIds = rows.reduce(function (filtered, row) {
             let opportunityLookup = row[labels.opportunityImportedLookupField];
@@ -507,16 +507,12 @@
         }, []);
 
         conflictFound = donationIds.some(function (donationId, index) {
-            if(donationIds.indexOf(donationId) != index) {
-                helper.showToast(
-                    component,
-                    $A.get('$Label.c.PageMessagesError'),
-                    'There are conflicting gifts for this batch. These conflicts must be resolved before you can process the batch.',
-                    'error'
-                );
-                return true;
-            }
+            return donationIds.indexOf(donationId) != index;
         });
+
+        if(conflictFound) {
+            this.showToast(component, $A.get('$Label.c.PageMessagesError'), $A.get('$Label.c.bgeGridErrorConflictingGifts'), 'error');
+        }
 
         return conflictFound;
     },

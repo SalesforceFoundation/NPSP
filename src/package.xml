@@ -1443,8 +1443,8 @@
         <members>bgeBatchSetFieldOptions</members>
         <members>bgeCopyBatchSetupBatchNameAppend</members>
         <members>bgeCopyBatchSetupButton</members>
-        <members>bgeDryRunComplete</members>
         <members>bgeDonationSelectorHelp</members>
+        <members>bgeDryRunComplete</members>
         <members>bgeEditBatchFieldOptionsWarning</members>
         <members>bgeEditBatchFieldSelectionWarning</members>
         <members>bgeEditBatchOptionsWarning</members>
@@ -1462,6 +1462,7 @@
         <members>bgeFormUpdatePayment</members>
         <members>bgeGridAllGifts</members>
         <members>bgeGridDonorType</members>
+        <members>bgeGridErrorConflictingGifts</members>
         <members>bgeGridErrorFromDryRun</members>
         <members>bgeGridErrorRequiredTotalsExpected</members>
         <members>bgeGridGiftCountHeader</members>
