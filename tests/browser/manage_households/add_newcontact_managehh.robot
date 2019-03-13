@@ -10,7 +10,7 @@ Add New Contact to Existing Household
     &{contact} =  API Create Contact    Email=skristem@robot.com
     Store Session Record    Account    &{contact}[AccountId]
     Go To Record Home  &{contact}[AccountId] 
-    Click Link    link=Show more actions
+    # Click Link    link=Show more actions
     Click Link    link=Manage Household    
     Sleep     5     Input-textbox-notloaded-properly    
     Select Frame With Title   Manage Household
@@ -18,14 +18,11 @@ Add New Contact to Existing Household
     ${last_name} =            Generate Random String
     Populate Field By Placeholder    Find a Contact or add a new Contact to the Household    ${first_name} ${last_name}
     Wait For Locator    manage_hh_page.button    New Contact
-    Click Managehh Button    New Contact
+    Click Button    text=New Contact
     Wait For Locator    span_button    New Contact    
     Click Span Button    New Contact
-    Click Managehh Button       Save
-    Sleep    3
-    Go To Object Home          Account
-    Click Link    link=&{contact}[LastName] and ${last_name} Household
-    Verify Header    &{contact}[LastName] and ${last_name} Household
+    Click Button       title=Save
+    Wait For Record To Update    &{contact}[AccountId]    &{contact}[LastName] and ${last_name} Household
     Select Tab    Related
     Load Related List    Contacts
     Verify Related List Items    Contacts    ${first_name} ${last_name}

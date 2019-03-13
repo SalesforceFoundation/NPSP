@@ -16,7 +16,7 @@ Change Naming on Manage Household Page
     &{contact2} =  Salesforce Get  Contact  ${contact_id2}
     Header Field Value    Account Name    &{contact1}[LastName] and &{contact2}[LastName] Household
     Click Link    link=&{contact1}[LastName] and &{contact2}[LastName] Household    
-    Click Link    link=Show more actions
+    # Click Link    link=Show more actions
     Click Link    link=Manage Household    
     Wait For Locator    frame    Manage Household       
     Select Frame With Title   Manage Household
@@ -24,7 +24,7 @@ Change Naming on Manage Household Page
     Double Click Element    ${loc}
     ${loc}    Validate Checkbox    &{contact2}[FirstName] &{contact2}[LastName]    Formal Greeting
     Double Click Element    ${loc}
-    Click Managehh Button       Save
+    Click Button       title=Save
     Sleep    3
     Go To Object Home          Account
     Click Link    link=&{contact1}[LastName] and &{contact2}[LastName] Household
