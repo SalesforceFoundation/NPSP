@@ -56,6 +56,7 @@
     <aura:attribute name="entryFormBody" type="Aura.Component[]" description="Facet used to hold the BGE_EntryForm component" access="public"/>
     <aura:attribute name="totalNumberOfRows" type="Integer" description="Total number of data import records in the datatable"/>
     <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true" access="private"/>
+    <aura:attribute name="modalOpen" type="Boolean" description="Prevents multiple modals from opening"/>
 
     <!--Events-->
     <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
