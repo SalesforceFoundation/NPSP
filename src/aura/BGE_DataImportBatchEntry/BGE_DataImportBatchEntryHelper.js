@@ -431,7 +431,7 @@
         let userCanProcessBatch = (
             this.tableHasNoDryRunErrors(component)
             && this.totalsMatchIfRequired(component)
-            && this.tableHasNoConflictingGifts(component)
+            && !this.tableHasConflictingGifts(component)
         );
 
         if (userCanProcessBatch) {
@@ -490,11 +490,11 @@
 
     /**
      * @description: check if there are conflicting gifts in the table.
-     * @return: boolean indicating if there is no conflict
+     * @return: boolean indicating if there is a conflict
      */
-    tableHasNoConflictingGifts: function(component) {
+    tableHasConflictingGifts: function(component) {
         let helper = this;
-        let noConflict = true;
+        let conflictFound = false;
         const rows = component.get('v.data');
         const labels = component.get('v.labels');
 
@@ -506,7 +506,7 @@
             return filtered;
         }, []);
 
-        donationIds.some(function (donationId, index) {
+        conflictFound = donationIds.some(function (donationId, index) {
             if(donationIds.indexOf(donationId) != index) {
                 helper.showToast(
                     component,
@@ -514,11 +514,11 @@
                     'There are conflicting gifts for this batch. These conflicts must be resolved before you can process the batch.',
                     'error'
                 );
-                noConflict = false;
+                return true;
             }
         });
 
-        return noConflict;
+        return conflictFound;
     },
 
     /******************************** Edit Batch Modal Functions *****************************/
