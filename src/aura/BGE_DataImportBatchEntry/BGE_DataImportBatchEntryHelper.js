@@ -428,7 +428,11 @@
      * @description: redirects the user to the Process Batch page if validity conditions are met
      */
     processBatch: function(component) {
-        let userCanProcessBatch = (this.tableHasNoDryRunErrors(component) && this.totalsMatchIfRequired(component));
+        let userCanProcessBatch = (
+            this.tableHasNoDryRunErrors(component)
+            && this.totalsMatchIfRequired(component)
+            && this.tableHasNoConflictingGifts(component)
+        );
 
         if (userCanProcessBatch) {
             const batchId = component.get('v.recordId');
@@ -482,6 +486,39 @@
         }
 
         return totalsMatchIfRequired;
+    },
+
+    /**
+     * @description: check if there are conflicting gifts in the table.
+     * @return: boolean indicating if there is no conflict
+     */
+    tableHasNoConflictingGifts: function(component) {
+        let helper = this;
+        let noConflict = true;
+        const rows = component.get('v.data');
+        const labels = component.get('v.labels');
+
+        let donationIds = rows.reduce(function (filtered, row) {
+            let opportunityLookup = row[labels.opportunityImportedLookupField];
+            if (opportunityLookup != undefined) {
+                filtered.push(opportunityLookup);
+            }
+            return filtered;
+        }, []);
+
+        donationIds.some(function (donationId, index) {
+            if(donationIds.indexOf(donationId) != index) {
+                helper.showToast(
+                    component,
+                    $A.get('$Label.c.PageMessagesError'),
+                    'There are conflicting gifts for this batch. These conflicts must be resolved before you can process the batch.',
+                    'error'
+                );
+                noConflict = false;
+            }
+        });
+
+        return noConflict;
     },
 
     /******************************** Edit Batch Modal Functions *****************************/
