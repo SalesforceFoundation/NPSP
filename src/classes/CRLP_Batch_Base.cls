@@ -469,9 +469,6 @@ public abstract class CRLP_Batch_Base {
                 query += ' LIMIT 0';
             } else if (base.recordIds == null) {
                 if (base.isChunkModeEnabled) {
-                    // In an LDV Org, there may be too many records to query in the main query. Core support has recommended
-                    // a chunking approach where the main query is limited to under 1M records and the finish() method
-                    // kicks off the job again starting with the last Id that was queried
                     query += ' ORDER BY Id LIMIT ' + chunkSize;
                 }
             }
