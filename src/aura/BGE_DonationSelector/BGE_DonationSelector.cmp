@@ -49,10 +49,18 @@
         {!$Label.c.bgeFormMatchingModalText}
         <a class="slds-m-left_x-small" onclick="{!c.handleNewOppDonationSelection}">{!$Label.c.bgeFormNoneLink}</a>
     </h3>
+
     <lightning:layout verticalAlign="stretch" multipleRows="true">
+
+        <!--Contextual help to explain which records will appear-->
+        <lightning:layoutItem size="12" padding="horizontal-small">
+            {!$Label.c.bgeDonationSelectorHelp}
+        </lightning:layoutItem>
+
         <!--START UNPAID PAYMENTS CARDS-->
         <aura:iteration var="donation" items="{!v.unpaidPayments}">
-            <lightning:layoutItem largeDeviceSize="4" mediumDeviceSize="6"
+            <lightning:layoutItem largeDeviceSize="4"
+                                  mediumDeviceSize="6"
                                   size="12"
                                   padding="around-small">
                 <lightning:card class="{!'slds-card_boundary sameCardHeight' + if(equals(donation.Id, v.selectedDonation.Id), ' selectedDonationCard')}">
