@@ -453,21 +453,21 @@ private class CRLP_Batch_Base_TEST {
         CRLP_RollupProcessingOptions.RollupType jobType =
                 CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
         Integer chunkSize = 500;
-        Id chunkModeLastProcessedId = getAccountOrContactIdForTesting(jobType);
+        Id lastIdProcessed = getAccountOrContactIdForTesting(jobType);
         configureChunkMode(jobType, chunkSize);
 
         CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(
                 jobType,
-                chunkModeLastProcessedId);
+                lastIdProcessed);
 
-        System.assertEquals(chunkModeLastProcessedId, contactBatchJob.lastIdProcessed,
+        System.assertEquals(lastIdProcessed, contactBatchJob.lastIdProcessed,
                 'chunkModeStartingId should equal testAccount.Id');
 
         System.assertEquals(chunkSize, contactBatchJob.batchSizeChunkLimit,
                 'batchSizeChunkLimit should equal chunkSize');
 
         CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
-                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, chunkModeLastProcessedId, chunkSize, null);
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, lastIdProcessed, chunkSize, null);
         String query = queryBuilder.buildQuery();
 
         System.assert(batchStartQueryContainsChunkModeId(contactBatchJob, query),
@@ -716,30 +716,30 @@ private class CRLP_Batch_Base_TEST {
      * @description Utility used to initialize an instance of the Non-Skew Batch Job for a
      * Rollup Type, and initialize its job data.
      * @param jobType The RollupType of the class instance to create.
-     * @param chunkModeLastProcessedId An Id that is passed to the class instance for use in the
+     * @param lastIdProcessed An Id that is passed to the class instance for use in the
      * start method query when in chunk mode.
      * @return An instance of the CRLP_Batch_Base_NonSkew class.
      */
     private static CRLP_Batch_Base_NonSkew getBatchJobInstanceWithData(
             CRLP_RollupProcessingOptions.RollupType jobType,
-            Id chunkModeLastProcessedId
+            Id lastIdProcessed
     ) {
         CRLP_Batch_Base_NonSkew instance;
         switch on (jobType) {
             when AccountHardCredit {
-                instance = chunkModeLastProcessedId == null ?
+                instance = lastIdProcessed == null ?
                         new CRLP_Account_BATCH() :
-                        new CRLP_Account_BATCH(chunkModeLastProcessedId);
+                        new CRLP_Account_BATCH(lastIdProcessed);
             }
             when ContactHardCredit {
-                instance = chunkModeLastProcessedId == null ?
+                instance = lastIdProcessed == null ?
                         new CRLP_Contact_BATCH() :
-                        new CRLP_Contact_BATCH(chunkModeLastProcessedId);
+                        new CRLP_Contact_BATCH(lastIdProcessed);
             }
             when ContactSoftCredit {
-                instance = chunkModeLastProcessedId == null ?
+                instance = lastIdProcessed == null ?
                         new CRLP_Contact_SoftCredit_BATCH() :
-                        new CRLP_Contact_SoftCredit_BATCH(chunkModeLastProcessedId);
+                        new CRLP_Contact_SoftCredit_BATCH(lastIdProcessed);
             }
         }
         return instance;
