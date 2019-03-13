@@ -468,11 +468,11 @@ public abstract class CRLP_Batch_Base {
                 // This is needed because can't return null as a valid iterator.
                 query += ' LIMIT 0';
             } else if (base.recordIds == null) {
-                if (isChunkModeEnabled) {
+                if (base.isChunkModeEnabled) {
                     // In an LDV Org, there may be too many records to query in the main query. Core support has recommended
                     // a chunking approach where the main query is limited to under 1M records and the finish() method
                     // kicks off the job again starting with the last Id that was queried
-                    query += ' ORDER BY Id LIMIT ' + batchSizeChunkLimit;
+                    query += ' ORDER BY Id LIMIT ' + chunkSize;
                 }
             }
             return query;
@@ -691,6 +691,7 @@ public abstract class CRLP_Batch_Base {
      * Used in chunk mode.
      * @return Limit value to use or null if chunking is not enabled.
      */
+    @TestVisible
     protected Integer batchSizeChunkLimit {
         get {
             if (batchSizeChunkLimit == null) {
