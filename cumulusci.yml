@@ -352,3 +352,43 @@ orgs:
         enterprise:
             config_file: orgs/enterprise.json
 
+plans:
+    existing_org:
+        slug: install
+        title: Install NPSP
+        tier: primary
+        steps:
+            1:
+                flow: dependencies
+                ui_options:
+                    deploy_pre:
+                        account_record_types:
+                            name: Account Record Types
+                        opportunity_record_types:
+                            name: Opportunity Record Types
+            2:
+                task: install_managed
+            3:
+                task: deploy_post
+                ui_options:
+                    first:
+                        name: NPSP Config for Salesforce Mobile App
+    new_org:
+        slug: trial
+        title: Install NPSP Trial
+        # This will be tier: unlisted once that is an option.
+        tier: additional
+        is_listed: False
+        steps:
+            1:
+                flow: dependencies
+                ui_options:
+                    deploy_pre:
+                        account_record_types:
+                            name: Account Record Types
+                        opportunity_record_types:
+                            name: Opportunity Record Types
+            2:
+                task: install_managed
+            3:
+                flow: config_managed
