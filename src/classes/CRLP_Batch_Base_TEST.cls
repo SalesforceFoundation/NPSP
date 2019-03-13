@@ -626,11 +626,6 @@ private class CRLP_Batch_Base_TEST {
      * @return The batch Start query string.
      */
     private static String getBatchStartQuery(CRLP_Batch_Base_NonSkew classInstance) {
-        System.debug(LoggingLevel.ERROR, '*** variable value: ' + classInstance.getBatchStartQuery(
-                classInstance.chunkModeLastProcessedId,
-                classInstance.batchSizeChunkLimit,
-                classInstance.fieldsToCheckForNonZero
-        ));
         return classInstance.getBatchStartQuery(
                 classInstance.chunkModeLastProcessedId,
                 classInstance.batchSizeChunkLimit,
