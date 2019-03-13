@@ -200,11 +200,11 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Rollups_Contact_HardCredit_ChunkSize__c</fullName>
+        <fullName>ChunkSize_Contact_HardCredit__c</fullName>
         <description>Only used by the new Customizable Rollups engine in LDV Orgs and only when required for LDV orgs</description>
         <externalId>false</externalId>
-        <inlineHelpText>LDV ORGS ONLY: If chunking is needed to avoid a Query Timeout in the batch job, this specifies the number of Contacts processed in each batch.</inlineHelpText>
-        <label>Contact Hard Credit Chunk Size</label>
+        <inlineHelpText>FOR LDV ORGS ONLY WITH SFDO GUIDANCE. To avoid a Query Timeout in the rollup batch job in orgs with many millions of Contacts, this specifies the maximum number of Contacts processed in each batch.</inlineHelpText>
+        <label>LDV: Contact Hard Credit Chunk Size</label>
         <precision>7</precision>
         <required>false</required>
         <scale>0</scale>
@@ -213,11 +213,11 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Rollups_Account_HardCredit_ChunkSize__c</fullName>
+        <fullName>ChunkSize_Account_HardCredit__c</fullName>
         <description>Only used by the new Customizable Rollups engine in LDV Orgs and only when required for LDV orgs</description>
         <externalId>false</externalId>
-        <inlineHelpText>LDV ORGS ONLY: If chunking is needed to avoid a Query Timeout in the batch job, this specifies the number of Accounts processed in each batch.</inlineHelpText>
-        <label>Account Hard Credit Chunk Size</label>
+        <inlineHelpText>FOR LDV ORGS ONLY WITH SFDO GUIDANCE. To avoid a Query Timeout in the rollup batch job in orgs with many millions of Accounts, this specifies the maximum number of Accounts processed in each batch.</inlineHelpText>
+        <label>LDV: Account Hard Credit Chunk Size</label>
         <precision>7</precision>
         <required>false</required>
         <scale>0</scale>
@@ -226,11 +226,11 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Rollups_Contact_SoftCredit_ChunkSize__c</fullName>
+        <fullName>ChunkSize_Account_SoftCredit__c</fullName>
         <description>Only used by the new Customizable Rollups engine in LDV Orgs and only when required for LDV orgs</description>
         <externalId>false</externalId>
-        <inlineHelpText>LDV ORGS ONLY: If chunking is needed to avoid a Query Timeout in the batch job, this specifies the number of Accounts processed in each batch.</inlineHelpText>
-        <label>Contact Soft Credit Chunk Size</label>
+        <inlineHelpText>FOR LDV ORGS ONLY WITH SFDO GUIDANCE. To avoid a Query Timeout in the rollup batch job in orgs with many millions of Accounts, this specifies the maximum number of Accounts processed in each batch.</inlineHelpText>
+        <label>LDV: Account Soft Credit Chunk Size</label>
         <precision>7</precision>
         <required>false</required>
         <scale>0</scale>

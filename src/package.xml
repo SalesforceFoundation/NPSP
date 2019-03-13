@@ -758,13 +758,13 @@
         <members>Customizable_Rollup_Settings__c.Customizable_Rollups_Enabled__c</members>
         <members>Customizable_Rollup_Settings__c.Disable_Related_Records_Filter__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_Batch_Size__c</members>
-        <members>Customizable_Rollup_Settings__c.Rollups_Account_HardCredit_ChunkSize__c</members>
+        <members>Customizable_Rollup_Settings__c.ChunkSize_Account_HardCredit__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_SkewMode_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_Soft_Credit_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_Batch_Size__c</members>
-        <members>Customizable_Rollup_Settings__c.Rollups_Contact_HardCredit_ChunkSize__c</members>
+        <members>Customizable_Rollup_Settings__c.ChunkSize_Contact_HardCredit__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_SkewMode_Batch_Size__c</members>
-        <members>Customizable_Rollup_Settings__c.Rollups_Contact_SoftCredit_ChunkSize__c</members>
+        <members>Customizable_Rollup_Settings__c.ChunkSize_Account_SoftCredit__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_Soft_Credit_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_GAU_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_IncrementalLastNDays_FldOverride__c</members>

@@ -552,18 +552,18 @@ private class CRLP_Batch_Base_TEST {
         switch on (jobType) {
 
             when AccountHardCredit {
-                settings.Rollups_Account_HardCredit_ChunkSize__c = chunkSize;
+                settings.ChunkSize_Account_HardCredit__c = chunkSize;
                 // Create the test data
                 CRLP_RollupAccount_TEST.mockRollupCMTValues();
             }
 
             when ContactHardCredit {
-                settings.Rollups_Contact_HardCredit_ChunkSize__c = chunkSize;
+                settings.ChunkSize_Contact_HardCredit__c = chunkSize;
                 CRLP_RollupContact_TEST.mockRollupCMTValues();
             }
 
             when ContactSoftCredit {
-                settings.Rollups_Contact_SoftCredit_ChunkSize__c = chunkSize;
+                settings.ChunkSize_Account_SoftCredit__c = chunkSize;
                 CRLP_RollupSoftCredit_TEST.mockRollupCMTValues();
             }
         }
