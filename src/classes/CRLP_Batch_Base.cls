@@ -122,13 +122,14 @@ public abstract class CRLP_Batch_Base {
      * @description Called during the start() method for the actual batch job to initialize the summary object, detail
      * object, key field, and if there are payment rollups that need to be included for the given summary object
      */
-    @TestVisible protected void initializeJobData(
+    @TestVisible
+    protected void initializeJobData(
             CRLP_RollupProcessingOptions.RollupType jobType,
             CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter,
             List<Id> recordIds) {
 
         this.jobType = jobType;
-        if (jobFilter !=null) {
+        if (jobFilter != null) {
             this.jobFilter = jobFilter;
         }
         this.recordIds = recordIds;
@@ -138,33 +139,35 @@ public abstract class CRLP_Batch_Base {
         this.isScheduledJob = System.isScheduled();
         this.customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
 
-        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-            this.detailObjectType = Allocation__c.SObjectType;
-            this.keyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-            this.detailObjectType = Opportunity.SObjectType;
-            this.keyField = SObjectType.Opportunity.fields.AccountId.getName();
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-            this.detailObjectType = Account_Soft_Credit__c.SObjectType;
-            this.keyField = SObjectType.Account_Soft_Credit__c.fields.Account__c.getName();
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-            this.detailObjectType = Opportunity.SObjectType;
-            this.keyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-            this.detailObjectType = OpportunityContactRole.SObjectType;
-            this.keyField = SObjectType.OpportunityContactRole.fields.ContactId.getName();
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-            this.detailObjectType = OpportunityContactRole.SObjectType;
-            this.keyField = 'Contact.AccountId';
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-            this.detailObjectType = Opportunity.SObjectType;
-            this.keyField = SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getName();
+        switch on (jobType) {
+            when GAU {
+                this.detailObjectType = Allocation__c.SObjectType;
+                this.keyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
+            }
+            when AccountHardCredit {
+                this.detailObjectType = Opportunity.SObjectType;
+                this.keyField = SObjectType.Opportunity.fields.AccountId.getName();
+            }
+            when AccountSoftCredit {
+                this.detailObjectType = Account_Soft_Credit__c.SObjectType;
+                this.keyField = SObjectType.Account_Soft_Credit__c.fields.Account__c.getName();
+            }
+            when ContactHardCredit {
+                this.detailObjectType = Opportunity.SObjectType;
+                this.keyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+            }
+            when ContactSoftCredit {
+                this.detailObjectType = OpportunityContactRole.SObjectType;
+                this.keyField = SObjectType.OpportunityContactRole.fields.ContactId.getName();
+            }
+            when AccountContactSoftCredit {
+                this.detailObjectType = OpportunityContactRole.SObjectType;
+                this.keyField = 'Contact.AccountId';
+            }
+            when RecurringDonations {
+                this.detailObjectType = Opportunity.SObjectType;
+                this.keyField = SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getName();
+            }
         }
     }
 
