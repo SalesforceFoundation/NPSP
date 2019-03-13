@@ -259,6 +259,32 @@ private class CRLP_Batch_Base_TEST {
     /******************************** Chunk Mode Tests *****************************/
 
     @isTest
+    private static void chunkModeRollupHasAdditionalRecordsToProcess() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+        Integer chunkSize = 1;
+        Id chunkModeLastProcessedId = getAccountOrContactIdForTesting(jobType);
+        configureChunkMode(jobType, chunkSize);
+
+        Id additionalAccountId = getAccountOrContactIdForTesting(jobType);
+        Opportunity opportunityForAdditionalAccount = new Opportunity(
+                AccountId = additionalAccountId,
+                StageName = 'Open',
+                CloseDate = date.today(), name = 'test');
+        insert opportunityForAdditionalAccount;
+
+        // With chunk mode enabled, the second and subsequent jobs are constructed with
+        // the lastProcessedId constructor, passing in the Id to use in the start query.
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(
+                jobType,
+                chunkModeLastProcessedId);
+
+        System.assert(accountBatchJob.hasAdditionalRecordsToProcess(chunkModeLastProcessedId),
+            'hasAdditionalRecordsToProcess should be true, ' +
+                    'since the chunk size is 1 and there is another Account to process.');
+    }
+
+    @isTest
     private static void accountHardCreditRollupChunkModeFirstJobQueryContainsOrderByLimit() {
         CRLP_RollupProcessingOptions.RollupType jobType =
                 CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
@@ -288,8 +314,6 @@ private class CRLP_Batch_Base_TEST {
         Id chunkModeLastProcessedId = getAccountOrContactIdForTesting(jobType);
         configureChunkMode(jobType, chunkSize);
 
-        // With chunk mode enabled, the second and subsequent jobs are constructed with
-        // the lastProcessedId constructor, passing in the Id to use in the start query.
         CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(
                 jobType,
                 chunkModeLastProcessedId);
@@ -602,6 +626,11 @@ private class CRLP_Batch_Base_TEST {
      * @return The batch Start query string.
      */
     private static String getBatchStartQuery(CRLP_Batch_Base_NonSkew classInstance) {
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + classInstance.getBatchStartQuery(
+                classInstance.chunkModeLastProcessedId,
+                classInstance.batchSizeChunkLimit,
+                classInstance.fieldsToCheckForNonZero
+        ));
         return classInstance.getBatchStartQuery(
                 classInstance.chunkModeLastProcessedId,
                 classInstance.batchSizeChunkLimit,

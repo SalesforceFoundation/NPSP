@@ -424,9 +424,11 @@ public abstract class CRLP_Batch_Base {
             String query = CRLP_Query_SEL.buildObjectQueryForRollup(base.summaryObjectType);
 
             // Fields in the fieldsToCheckForNonZero[] list must always be in the Contact query
-            for (String f : fieldsToCheckForNonZero) {
-                if (!query.containsIgnoreCase(f)) {
-                    query = query.split(' FROM ')[0] + ', ' + f + ' FROM ' + query.split(' FROM ')[1];
+            if (fieldsToCheckForNonZero != null) {
+                for (String f : fieldsToCheckForNonZero) {
+                    if (!query.containsIgnoreCase(f)) {
+                        query = query.split(' FROM ')[0] + ', ' + f + ' FROM ' + query.split(' FROM ')[1];
+                    }
                 }
             }
 
@@ -678,6 +680,24 @@ public abstract class CRLP_Batch_Base {
             return overrideForLastNDaysField;
         }
         set;
+    }
+
+    /**
+     * @description Checks whether there are additional records to be processed when in chunk mode.
+     * @param chunkModeStartingId The last processed Id.
+     * @return True if there are any records that still need to be processed.
+     */
+    @TestVisible
+    protected Boolean hasAdditionalRecordsToProcess(Id chunkModeStartingId) {
+        Integer queryLimitForAdditionalRecordsCheck = 1;
+        BatchQueryBuilder builder = new BatchQueryBuilder(
+                this,
+                chunkModeStartingId,
+                queryLimitForAdditionalRecordsCheck,
+                null
+        );
+        String query = builder.buildQuery();
+        return Database.query(query).size() == 1;
     }
 
     /*******************************************************************************************************

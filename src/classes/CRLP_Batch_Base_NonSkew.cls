@@ -141,12 +141,15 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     * @param summaryRecords List of Summary records
     */
     public void execute(Database.BatchableContext bc, List<SObject> summaryRecords) {
-
-        this.batchIteration++;
         try {
             if (isChunkModeEnabled) {
-                // Remember the last Id in the scope as the Id to start in the next chunking mode operation
-                chunkModeLastProcessedId = summaryRecords[summaryRecords.size() - 1].Id;
+                // Since execution contexts might not run in order (ex., chunk size 10k,
+                // batch size 2k has 5 batches but they won't run in a guaranteed order)
+                // we first need to check if the last Id is greater than the value in chunkModeLastProcessedId
+                Id lastProcessedId = summaryRecords[summaryRecords.size() - 1].Id;
+                if (chunkModeLastProcessedId == null || lastProcessedId > chunkModeLastProcessedId) {
+                    chunkModeLastProcessedId = lastProcessedId;
+                }
             }
 
             CRLP_RollupProcessingOptions.ProcessingOptions options = buildProcessingOptions();
@@ -301,9 +304,9 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             insert logEntry;
         }
 
-        // If chunk mode is enabled and we (probably) have more records to process,
-        // submit another batchable job
-        if (isChunkModeEnabled && batchIteration > 1) {
+        // If chunk mode is enabled and there are more records to process,
+        // submit the next batch job
+        if (isChunkModeEnabled && hasAdditionalRecordsToProcess(chunkModeLastProcessedId)) {
             submitBatchableJobForNextChunk();
         }
     }
