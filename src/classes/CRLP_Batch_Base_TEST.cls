@@ -36,18 +36,6 @@
 @IsTest(isParallel=true)
 private class CRLP_Batch_Base_TEST {
 
-    @isTest
-    private static void batchBaseInstanceSummaryObjectTypeIsSet() {
-        CRLP_RollupProcessingOptions.RollupType jobType =
-                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
-
-        configureIncrementalMode(jobType, true);
-
-        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
-
-        System.assertEquals(SObjectType.Account.getSObjectType(), accountBatchJob.summaryObjectType);
-    }
-
     /******************************** Incremental Mode Tests *****************************/
 
     @isTest
