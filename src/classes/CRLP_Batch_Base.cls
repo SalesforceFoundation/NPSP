@@ -387,19 +387,19 @@ public abstract class CRLP_Batch_Base {
         CRLP_Batch_Base base;
         Integer chunkSize;
         Id lastIdProcessed;
-        List<String> fieldsToCheckForNonZero;
+        List<String> additionalFieldsToQuery;
 
         @TestVisible
         BatchQueryBuilder(
                 CRLP_Batch_Base base,
                 Id lastIdProcessed,
                 Integer chunkSize,
-                List<String> fieldsToCheckForNonZero
+                List<String> additionalFieldsToQuery
         ) {
             this.base = base;
             this.lastIdProcessed = lastIdProcessed;
             this.chunkSize = chunkSize;
-            this.fieldsToCheckForNonZero = fieldsToCheckForNonZero;
+            this.additionalFieldsToQuery = additionalFieldsToQuery;
         }
 
         /**
@@ -429,8 +429,8 @@ public abstract class CRLP_Batch_Base {
             String query = CRLP_Query_SEL.buildObjectQueryForRollup(base.summaryObjectType);
 
             // Fields in the fieldsToCheckForNonZero[] list must always be in the Contact query
-            if (fieldsToCheckForNonZero != null) {
-                for (String f : fieldsToCheckForNonZero) {
+            if (additionalFieldsToQuery != null) {
+                for (String f : additionalFieldsToQuery) {
                     if (!query.containsIgnoreCase(f)) {
                         query = query.split(' FROM ')[0] + ', ' + f + ' FROM ' + query.split(' FROM ')[1];
                     }
