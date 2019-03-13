@@ -25,7 +25,7 @@
     /**
      * @description: handles ltng:sendMessage from child component
      */
-    handleMessage: function(component, event, helper) {
+    handleMessage: function (component, event, helper) {
         var message = event.getParam('message');
         var channel = event.getParam('channel');
 
@@ -92,7 +92,7 @@
     /**
      * @description: handles infinite scroll for the Data Import records datatable
      */
-    onLoadMore: function(component, event, helper) {
+    onLoadMore: function (component, event, helper) {
         event.getSource().set('v.isLoading', true);
         let totals = component.get('v.totals');
         let totalCountGifts = totals.countGifts ? totals.countGifts : 0;
@@ -108,7 +108,7 @@
     /**
      * @description: called when the 'Process Batch' button is clicked
      */
-    processBatch: function(component, event, helper) {
+    processBatch: function (component, event, helper) {
         helper.processBatch(component);
     },
 

@@ -517,16 +517,39 @@
         return conflictFound;
     },
 
+    checkFieldPermissions: function(component) {
+        return new Promise($A.getCallback(function (resolve, reject) {
+            var action = component.get('c.checkFieldPermissions');
+            action.setCallback(this, function (response) {
+                var state = response.getState();
+                if (state === 'SUCCESS') {
+                    resolve();
+                } else if (state === 'ERROR') {
+                    reject(response.getError());
+                }
+            });
+            $A.enqueueAction(action);
+        }));
+    },
+
     /******************************** Edit Batch Modal Functions *****************************/
 
     /**
      * @description: opens the batch wizard modal for edit mode of the component
      */
-    openBatchWizard: function(component, event) {
+    openBatchWizard: function(component) {
+        let setModalOpenToFalse = function() {
+            component.set('v.modalOpen', false);
+        }
+
+        if (component.get('v.modalOpen')) {
+            return;
+        }
+        component.set('v.modalOpen', true);
+
         let modalBody;
         let modalHeader;
         let modalFooter;
-        const batchId = component.get('v.recordId');
 
         let progressStepLabels = [
             $A.get('$Label.c.bgeBatchOverviewWizard'),
@@ -536,7 +559,7 @@
         ];
 
         $A.createComponents([
-                ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c', recordId: batchId}],
+                ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c', recordId: component.get('v.recordId')}],
                 ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
                 ['c:modalFooter', {progressStepLabels: progressStepLabels}]
             ],
@@ -550,9 +573,11 @@
                         header: modalHeader,
                         footer: modalFooter,
                         showCloseButton: true,
-                        cssClass: 'slds-modal_large'
+                        cssClass: 'slds-modal_large',
+                        closeCallback: setModalOpenToFalse
                     })
                 } else {
+                    setModalOpenToFalse();
                     this.showToast(component, $A.get('$Label.c.PageMessagesError'), errorMessage, 'error');
                 }
             }

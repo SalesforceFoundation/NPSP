@@ -40,7 +40,6 @@
                 access="global">
 
     <!--Public Attributes-->
-    <aura:attribute name="recordId" type="Id" description="ID of the Batch record" access="public"/>
     <aura:attribute name="data" type="List" default="[]" description="Data Import records that appear in the table" access="public"/>
     <aura:attribute name="errors" type="Map" description="Dry run errors to display on the lightning:dataTable" access="public"/>
     <aura:attribute name="columns" type="List" description="Columns for the table" access="public"/>
@@ -56,6 +55,7 @@
     <aura:attribute name="entryFormBody" type="Aura.Component[]" description="Facet used to hold the BGE_EntryForm component" access="public"/>
     <aura:attribute name="totalNumberOfRows" type="Integer" description="Total number of data import records in the datatable"/>
     <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true" access="private"/>
+    <aura:attribute name="modalOpen" type="Boolean" description="Prevents multiple modals from opening"/>
 
     <!--Events-->
     <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
