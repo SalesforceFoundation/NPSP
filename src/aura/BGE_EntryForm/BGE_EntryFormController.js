@@ -90,7 +90,13 @@
      * @description: launches modal so user can select open donation
      */
     openMatchModal: function(component, event, helper) {
-        $A.createComponent('c:BGE_DonationSelector', {
+        let setModalOpenToFalse = function() {
+            component.set('v.modalOpen', false);
+        }
+
+        if (!component.get('v.modalOpen')) {
+            component.set('v.modalOpen', true);
+            $A.createComponent('c:BGE_DonationSelector', {
                 'aura:id': 'donationSelector',
                 'name': 'donationSelector',
                 'unpaidPayments': component.get('v.unpaidPayments'),
@@ -104,20 +110,19 @@
                         header: component.get('v.donationModalHeader'),
                         body: newcomponent,
                         showCloseButton: true,
-                        cssClass: 'slds-modal_large'
+                        cssClass: 'slds-modal_large',
+                        closeCallback: setModalOpenToFalse
                     });
-                } else if (status === 'INCOMPLETE') {
+                } else {
+                    setModalOpenToFalse();
                     const message = {
                         title: $A.get('$Label.c.PageMessagesError'),
-                        errorMessage: $A.get('$Label.c.stgUnknownError')
+                        errorMessage: status === 'ERROR' ? errorMessage : $A.get('$Label.c.stgUnknownError')
                     };
-                    helper.sendMessage('onError', message);
-
-                } else if (status === 'ERROR') {
-                    const message = {title: $A.get('$Label.c.PageMessagesError'), errorMessage: errorMessage};
                     helper.sendMessage('onError', message);
                 }
             });
+        }
     },
 
     /**
