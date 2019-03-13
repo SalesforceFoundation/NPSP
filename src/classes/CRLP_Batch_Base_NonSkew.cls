@@ -121,8 +121,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     */
     public Database.Querylocator start(Database.BatchableContext bc) {
         try {
-            initializeJobData();
-
             String query = getBatchStartQuery(
                     chunkModeLastProcessedId,
                     batchSizeChunkLimit,
@@ -146,8 +144,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
         this.batchIteration++;
         try {
-            initializeJobData();
-
             if (isChunkModeEnabled) {
                 // Remember the last Id in the scope as the Id to start in the next chunking mode operation
                 chunkModeLastProcessedId = summaryRecords[summaryRecords.size() - 1].Id;

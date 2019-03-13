@@ -59,7 +59,7 @@ public abstract class CRLP_Batch_Base {
      * @description Map of Opportunity Id's already processed by Account to avoid duplicating a donation amount
      * to the Account when rolling up soft credits by the Contact.AccountId
      */
-    protected Map<Id,Set<Id>> statefulMapOfOppIdsByParentId;
+    protected Map<Id,Set<Id>> statefulMapOfOppIdsByParentId = new Map<Id, Set<Id>>();
 
     /** @description Simple counters used to track state */
     protected Integer batchIteration = 0;
@@ -94,40 +94,78 @@ public abstract class CRLP_Batch_Base {
     /** @description The customizable rollup custom settings */
     protected Customizable_Rollup_Settings__c customizableRollupSettings;
 
-    /*******************************************************************************************************
-     * @description Constructs the class, inits the class instance vars used across all CRLP batch jobs
-     */
-    public CRLP_Batch_Base() {
-        this.statefulMapOfOppIdsByParentId = new Map<Id, Set<Id>>();
-        this.summaryObjectType = CRLP_RollupBatch_SVC.getSummaryObjectType(this.jobType);
-        this.isScheduledJob = System.isScheduled();
-        this.customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-    }
+    public CRLP_Batch_Base(){}
 
     /*******************************************************************************************************
-     * @description Constructs the class - rollup is for a specific Summary SObject
+     * @description Constructs the class - rollup is for a specific RollupType and RollupTypeFilter
      */
     public CRLP_Batch_Base(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
-        this();
-        this.jobType = jobType;
-        this.jobFilter = jobFilter;
+        initializeJobData(jobType, jobFilter, null);
     }
 
+
     /*******************************************************************************************************
-     * @description Constructs the class - Rollup is for a specific set of Summary Object Id's
+     * @description Constructs the class - Rollup is a specific RollupType and a specific set of Summary Object Id's
      */
     public CRLP_Batch_Base(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds) {
-        this();
-        this.jobType = jobType;
-        this.recordIds = recordIds;
+        initializeJobData(jobType, null, recordIds);
     }
 
     /*******************************************************************************************************
-     * @description Constructs the class - Rollup is for a specific set of Summary Object Id's
+     * @description Constructs the class - Rollup is for a specific RollupType
      */
     public CRLP_Batch_Base(CRLP_RollupProcessingOptions.RollupType jobType) {
-        this();
+        initializeJobData(jobType, null, null);
+    }
+
+    /**
+     * @description Called during the start() method for the actual batch job to initialize the summary object, detail
+     * object, key field, and if there are payment rollups that need to be included for the given summary object
+     */
+    @TestVisible protected void initializeJobData(
+            CRLP_RollupProcessingOptions.RollupType jobType,
+            CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter,
+            List<Id> recordIds) {
+
         this.jobType = jobType;
+        if (jobFilter !=null) {
+            this.jobFilter = jobFilter;
+        }
+        this.recordIds = recordIds;
+
+        this.summaryObjectType = CRLP_RollupBatch_SVC.getSummaryObjectType(this.jobType);
+        this.statefulCacheOfRollupsToBeProcessed = CRLP_Rollup_SEL.getRollupDefinitionsToUse(this.jobType, this.jobFilter);
+        this.isScheduledJob = System.isScheduled();
+        this.customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+
+        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+            this.detailObjectType = Allocation__c.SObjectType;
+            this.keyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
+
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
+            this.detailObjectType = Opportunity.SObjectType;
+            this.keyField = SObjectType.Opportunity.fields.AccountId.getName();
+
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            this.detailObjectType = Account_Soft_Credit__c.SObjectType;
+            this.keyField = SObjectType.Account_Soft_Credit__c.fields.Account__c.getName();
+
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+            this.detailObjectType = Opportunity.SObjectType;
+            this.keyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+            this.detailObjectType = OpportunityContactRole.SObjectType;
+            this.keyField = SObjectType.OpportunityContactRole.fields.ContactId.getName();
+
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+            this.detailObjectType = OpportunityContactRole.SObjectType;
+            this.keyField = 'Contact.AccountId';
+
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+            this.detailObjectType = Opportunity.SObjectType;
+            this.keyField = SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getName();
+        }
     }
 
     /********************************************************************************************************
@@ -214,44 +252,6 @@ public abstract class CRLP_Batch_Base {
             }
         }
         return parentIds;
-    }
-
-    /**
-     * @description Called during the start() method for the actual batch job to initialize the summary object, detail
-     * object, key field, and if there are payment rollups that need to be included for the given summary object
-     */
-    @TestVisible protected void initializeJobData() {
-        this.summaryObjectType = CRLP_RollupBatch_SVC.getSummaryObjectType(this.jobType);
-        this.statefulCacheOfRollupsToBeProcessed = CRLP_Rollup_SEL.getRollupDefinitionsToUse(this.jobType, this.jobFilter);
-
-        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-            this.detailObjectType = Allocation__c.SObjectType;
-            this.keyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-            this.detailObjectType = Opportunity.SObjectType;
-            this.keyField = SObjectType.Opportunity.fields.AccountId.getName();
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-            this.detailObjectType = Account_Soft_Credit__c.SObjectType;
-            this.keyField = SObjectType.Account_Soft_Credit__c.fields.Account__c.getName();
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-            this.detailObjectType = Opportunity.SObjectType;
-            this.keyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-            this.detailObjectType = OpportunityContactRole.SObjectType;
-            this.keyField = SObjectType.OpportunityContactRole.fields.ContactId.getName();
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-            this.detailObjectType = OpportunityContactRole.SObjectType;
-            this.keyField = 'Contact.AccountId';
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-            this.detailObjectType = Opportunity.SObjectType;
-            this.keyField = SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getName();
-        }
     }
 
     /**

@@ -103,7 +103,6 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     */
     public database.Querylocator start(Database.BatchableContext bc) {
         try {
-            initializeJobData();
 
             // Not including OppPayment as the child object because including the sub-query in an LDV org
             // may cause a cpu time out issue.

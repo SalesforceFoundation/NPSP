@@ -36,10 +36,8 @@
 @IsTest(isParallel=true)
 private class CRLP_Batch_Base_TEST {
 
-    /******************************** Incremental Mode Tests *****************************/
-
     @isTest
-    private static void accountHardCreditRollupGeneratesStandardJoinQueryWhenNotScheduledJob() {
+    private static void batchBaseInstanceSummaryObjectTypeIsSet() {
         CRLP_RollupProcessingOptions.RollupType jobType =
                 CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
 
@@ -47,12 +45,10 @@ private class CRLP_Batch_Base_TEST {
 
         CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
 
-        String whereClause = accountBatchJob.getMainQueryInnerJoinFilter();
-        System.assert(whereClause.contains('WHERE') == false, 'The standard query for the inner join ' +
-                'should NOT contain a where filter on the Opportunities when not a scheduled job.');
-        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(accountBatchJob),
-                'The outer query should not contain "ORDER BY" or "LIMIT".');
+        System.assertEquals(SObjectType.Account.getSObjectType(), accountBatchJob.summaryObjectType);
     }
+
+    /******************************** Incremental Mode Tests *****************************/
 
     @isTest
     private static void accountHardCreditRollupGeneratesIncrementalModeJoinQuery() {
@@ -691,7 +687,6 @@ private class CRLP_Batch_Base_TEST {
                         new CRLP_Contact_SoftCredit_BATCH(chunkModeLastProcessedId);
             }
         }
-        instance.initializeJobData();
         return instance;
     }
 
