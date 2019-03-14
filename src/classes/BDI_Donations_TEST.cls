@@ -88,14 +88,14 @@ public with sharing class BDI_Donations_TEST {
         dataImports[0].Donation_Amount__c = opportunities[0].Amount;
         dataImports[0].Donation_Date__c = opportunities[0].CloseDate;
         dataImports[0].DonationImported__c = opportunities[0].Id;
-        dataImports[0].Donation_Membership_Origin__c = 'True';
+        dataImports[0].Donation_Membership_Origin__c = 'True'; // will map to 'Opp.IsPrivate'
         dataImports[0].Payment_Check_Reference_Number__c = 'abc';
         dataImports[0].Payment_Method__c = 'Check';
 
         dataImports[1].Donation_Amount__c = opportunities[1].Amount;
         dataImports[1].Donation_Date__c = opportunities[1].CloseDate;
         dataImports[1].DonationImported__c = opportunities[1].Id;
-        dataImports[1].Donation_Membership_Origin__c = 'False';
+        dataImports[1].Donation_Membership_Origin__c = 'False'; // will map to 'Opp.IsPrivate'
         dataImports[1].Payment_Check_Reference_Number__c = '1234';
         dataImports[1].Payment_Method__c = 'Visa';       
         insert dataImports;
@@ -175,14 +175,14 @@ public with sharing class BDI_Donations_TEST {
         dataImports[0].Donation_Amount__c = opportunities[0].Amount;
         dataImports[0].Donation_Date__c = opportunities[0].CloseDate;
         dataImports[0].DonationImported__c = opportunities[0].Id;
-        dataImports[0].Donation_Membership_Origin__c = null;
+        dataImports[0].Donation_Membership_Origin__c = null; // will map to 'Opp.IsPrivate'
         dataImports[0].Payment_Check_Reference_Number__c = 'abc';
         dataImports[0].Payment_Method__c = 'Check';
 
         dataImports[1].Donation_Amount__c = opportunities[1].Amount;
         dataImports[1].Donation_Date__c = opportunities[1].CloseDate;
         dataImports[1].DonationImported__c = opportunities[1].Id;
-        dataImports[1].Donation_Membership_Origin__c = null;
+        dataImports[1].Donation_Membership_Origin__c = null; // will map to 'Opp.IsPrivate'
         dataImports[1].Payment_Check_Reference_Number__c = '1234';
         dataImports[1].Payment_Method__c = 'Visa';       
         insert dataImports;
