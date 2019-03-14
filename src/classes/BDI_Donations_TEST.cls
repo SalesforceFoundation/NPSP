@@ -62,13 +62,11 @@ public with sharing class BDI_Donations_TEST {
         insert listOppT;
     }
 
-
-
     /*********************************************************************************************************
-    * @description 
+    * @description  operation
+    *       map to checkbox field and manually match to exiting opp
     * verify: 
-    *       opportunity objects matched & closed
-    *       payment objects updated
+    *       checkbox field is updated by Data Import
     */
     static testMethod void TwoDIWithExistingDonationsSpecified_mapAndUpdateCheckbox() {
         //skip the test if Advancement is installed
@@ -111,9 +109,6 @@ public with sharing class BDI_Donations_TEST {
         // manually insert checkbox field mapping
         Map<String,String> oppFieldsByDIFields = BDI_Donations.dataImportFieldToOpportunityField;
         oppFieldsByDIFields.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c'),'IsPrivate');
-        System.assert(oppFieldsByDIFields.values().size() > 0, 'There should be fields');
-        System.assertEquals(oppFieldsByDIFields.get(UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c')), 'IsPrivate', 
-            'Field mapping to checkbox field must exist in map: '+oppFieldsByDIFields.get('Donation_Membership_Origin__c'));
 
         //run batch data import
         Test.StartTest();
@@ -133,6 +128,12 @@ public with sharing class BDI_Donations_TEST {
         }
     }
 
+    /*********************************************************************************************************
+    * @description  operation
+    *       map to checkbox field and manually match to exiting opp but don't specify value in DI source field
+    * verify: 
+    *       checkbox field is not changed by Data Import
+    */
     static testMethod void TwoDIWithExistingDonationsSpecified_mapCheckboxNoUpdate() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
@@ -178,9 +179,6 @@ public with sharing class BDI_Donations_TEST {
         // manually insert checkbox field mapping
         Map<String,String> oppFieldsByDIFields = BDI_Donations.dataImportFieldToOpportunityField;
         oppFieldsByDIFields.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c'),'IsPrivate');
-        System.assert(oppFieldsByDIFields.values().size() > 0, 'There should be fields');
-        System.assertEquals(oppFieldsByDIFields.get(UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c')), 'IsPrivate', 
-            'Field mapping to checkbox field must exist in map: '+oppFieldsByDIFields.get('Donation_Membership_Origin__c'));
 
         //run batch data import
         Test.StartTest();
