@@ -37,7 +37,7 @@
 private class CRLP_ApiService_TEST {
 
     /**
-     * @description Validate the getDefinitionsForRollupType returns the expected collection of CRLP_Rollup instances.
+     * @description Validate the getRollupDefinitions returns the expected collection of CRLP_Rollup instances.
      * Calls the mocking utilities to build a bunch of rollup definitions and filter groups/rules fo
      */
     @IsTest
@@ -45,34 +45,33 @@ private class CRLP_ApiService_TEST {
         mockRollupDefinitions();
 
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true
+            Customizable_Rollups_Enabled__c = true
         ));
 
         CRLP_ApiService service = new CRLP_ApiService();
 
         Test.startTest();
-        System.debug(CRLP_Rollup_SEL.cachedRollups.size());
         for (CRLP_RollupProcessingOptions.RollupType rollupType : CRLP_RollupProcessingOptions.RollupType.values()) {
             List<CRLP_Rollup> rollups = service.getRollupDefinitions(rollupType.name());
-            System.assertEquals(1, rollups.size(), 'The collection of returned rollups should contain exactly 1 instance for ' + rollupType.name());
-            System.assertEquals(2, rollups[0].rollupsMdt.size(), 'There should be two Rollup__mdt records associated with the CRLP_Rollup instance');
+            System.assertEquals(1, rollups.size(),
+                    'The collection of returned rollups should contain exactly 1 instance for ' + rollupType.name());
+            System.assertEquals(2, rollups[0].rollupsMdt.size(),
+                    'There should be two Rollup__mdt records associated with the CRLP_Rollup instance');
         }
     }
 
     /**
-     * @description Validate the getDefinitionsForRollupType returns an exception if the RollupType is null or invalid
+     * @description Validate the getRollupDefinitions returns an exception if the RollupType is null or invalid
      */
     @IsTest
     private static void shouldThrowExceptionWhenParameterIsInvalid() {
         CRLP_ApiService service = new CRLP_ApiService();
 
-        System.assert(service.getRollupDefinitions(null).isEmpty(),
-                'When CRLP is disabled, then call to getRollupDefinitions should return an empty list');
-
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true
+            Customizable_Rollups_Enabled__c = true
         ));
 
+        Test.startTest();
         for (String param : new String[] { null, 'NonExistentType' }) {
             Exception actualException = null;
             try {
@@ -80,10 +79,22 @@ private class CRLP_ApiService_TEST {
             } catch (Exception e) {
                 actualException = e;
             }
-            System.assertNotEquals(null, actualException, 'An exception should be thrown for invalid param: ' + param);
+            System.assertNotEquals(null, actualException,
+                    'An exception should be thrown for invalid param: ' + param);
             System.assert(actualException.getMessage().containsIgnoreCase(CRLP_ApiService.PARAM_ROLLUPTYPE),
                     'Message should contain "' + CRLP_ApiService.PARAM_ROLLUPTYPE + '" param: ' + actualException.getMessage());
         }
+    }
+
+    /**
+     * @description Validate the getRollupDefinitions returns an empty list<> when CRLP is not enabled
+     */
+    @IsTest
+    private static void shouldThrowReturnEmptyListWhenCRLPNotEnabled() {
+        CRLP_ApiService service = new CRLP_ApiService();
+
+        System.assert(service.getRollupDefinitions(null).isEmpty(),
+                'When CRLP is disabled, then call to getRollupDefinitions should return an empty list');
     }
 
     /**
