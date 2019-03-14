@@ -113,18 +113,18 @@
     },
 
     /**
-     * @description: called when the 'Dry Run' button is clicked
+     * @description: called when the 'Batch Dry Run' button is clicked
      */
-    massDryRun: function(component, event, helper) {
+    batchDryRunClick: function(component, event, helper) {
         helper.showToast(
             component,
             $A.get('$Label.c.PageMessagesProcessing'),
-            $A.get('$Label.c.bgeMassDryRunProcessing'),
+            $A.get('$Label.c.bgeBatchDryRunProcessing'),
             'sticky'
         );
         helper.showSpinner(component);
         helper.showFormSpinner(component);
-        helper.massDryRun(component);
+        helper.batchDryRun(component);
     }
 
 })

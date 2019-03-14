@@ -1474,8 +1474,8 @@
         <members>bgeGridTotalAmount</members>
         <members>bgeGridTotalCount</members>
         <members>bgeGridWarningRequiredTotalsExpected</members>
-        <members>bgeMassDryRun</members>
-        <members>bgeMassDryRunProcessing</members>
+        <members>bgeBatchDryRun</members>
+        <members>bgeBatchDryRunProcessing</members>
         <members>bgeMatchingAlert</members>
         <members>bgeMatchingSelect</members>
         <members>bgeNewBatch</members>

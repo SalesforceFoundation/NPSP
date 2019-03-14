@@ -2706,8 +2706,8 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>bgeDryRunComplete</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Success message when mass dry run completes in BGE.</shortDescription>
-        <value>Mass Dry Run Complete</value>
+        <shortDescription>Success message when batch dry run completes in BGE.</shortDescription>
+        <value>Batch Dry Run Complete</value>
     </labels>
     <labels>
         <fullName>bgeDonationSelectorHelp</fullName>
@@ -2920,17 +2920,17 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Require Expected Totals Match is selected but the Expected Count of Gifts and Expected Total Batch Amount fields are blank. Edit the batch details and either uncheck Require Expected Totals Match or add values in the related fields.</value>
     </labels>
     <labels>
-        <fullName>bgeMassDryRun</fullName>
+        <fullName>bgeBatchDryRun</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Text for mass dry run in BGE.</shortDescription>
-        <value>Mass Dry Run</value>
+        <shortDescription>Text for batch dry run in BGE.</shortDescription>
+        <value>Batch Dry Run</value>
     </labels>
     <labels>
-        <fullName>bgeMassDryRunProcessing</fullName>
+        <fullName>bgeBatchDryRunProcessing</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Text for toast when mass dry run is started</shortDescription>
+        <shortDescription>Text for toast when batch dry run is started</shortDescription>
         <value>Please don't navigate out of this page.</value>
     </labels>
     <labels>

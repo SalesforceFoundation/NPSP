@@ -211,7 +211,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return DataImportModel with updated data import record row and updated totals for the batch
     */
     @AuraEnabled
-    public static String runMassDryRun(Id batchId, Integer numberOfRowsToReturn) {
+    public static String runBatchDryRun(Id batchId, Integer numberOfRowsToReturn) {
         try {
             Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
             List<DataImport__c> dataImportListToRun = prepareDataImportsForDryRun(getAllDataImportRecordsByBatchId(batchId));

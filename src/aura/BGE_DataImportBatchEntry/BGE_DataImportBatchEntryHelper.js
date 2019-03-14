@@ -330,7 +330,7 @@
     /**
      * @description: Dry run all data import records for batch
      */
-    massDryRun: function (component) {
+    batchDryRun: function (component) {
         let afterDryRun = function (result) {
             helper.afterDryRun(component, JSON.parse(result, false));
         }
@@ -349,12 +349,12 @@
         }
 
         let helper = this;
-        let apexMethodName = 'c.runMassDryRun';
+        let apexMethodName = 'c.runBatchDryRun';
         let param = { batchId: component.get('v.recordId') };
 
-        let runMassDryRunPromise = helper.callApex(component, apexMethodName, param);
+        let runBatchDryRunPromise = helper.callApex(component, apexMethodName, param);
 
-        runMassDryRunPromise
+        runBatchDryRunPromise
             .then(
                 $A.getCallback(function (result) {
                     afterDryRun(result);
