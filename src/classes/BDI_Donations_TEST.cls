@@ -78,9 +78,11 @@ public with sharing class BDI_Donations_TEST {
         List<Opportunity> opportunities = listOppT;
             
         list<DataImport__c> dataImports = new list<DataImport__c>();
-        dataImports.add(new DataImport__c(Contact1_Firstname__c=contacts[0].Firstname, Contact1_Lastname__c=contacts[0].Lastname, 
+        dataImports.add(new DataImport__c(Contact1_Firstname__c=contacts[0].Firstname, 
+            Contact1_Lastname__c=contacts[0].Lastname, 
             Contact1_Work_Email__c=contacts[0].npe01__WorkEmail__c));
-        dataImports.add(new DataImport__c(Contact1_Firstname__c=contacts[1].Firstname, Contact1_Lastname__c=contacts[1].Lastname, 
+        dataImports.add(new DataImport__c(Contact1_Firstname__c=contacts[1].Firstname, 
+            Contact1_Lastname__c=contacts[1].Lastname, 
             Contact1_Work_Email__c=contacts[1].npe01__WorkEmail__c));
 
         dataImports[0].Donation_Amount__c = opportunities[0].Amount;
@@ -108,7 +110,8 @@ public with sharing class BDI_Donations_TEST {
 
         // manually insert checkbox field mapping
         Map<String,String> oppFieldsByDIFields = BDI_Donations.dataImportFieldToOpportunityField;
-        oppFieldsByDIFields.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c'),'IsPrivate');
+        oppFieldsByDIFields.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c'),
+                'IsPrivate');
 
         //run batch data import
         Test.StartTest();
@@ -117,13 +120,27 @@ public with sharing class BDI_Donations_TEST {
         Test.stopTest();
     
         // verify expected results
-        list<Opportunity> updatedOpps = [SELECT Id, Name, Amount, StageName, IsWon, IsPrivate, IsClosed, AccountId FROM Opportunity ORDER BY Id];
-        system.assertEquals(2, updatedOpps.size());
+        // verify expected results
+        list<Opportunity> updatedOpps = [SELECT 
+                    Id, 
+                    Name, 
+                    Amount, 
+                    StageName, 
+                    IsWon, 
+                    IsPrivate, 
+                    IsClosed, 
+                    AccountId 
+            FROM Opportunity 
+            ORDER BY Id];
+
+        System.assertEquals(2, updatedOpps.size());
         for(Opportunity opp: updatedOpps) {
             if(opp.Id == opportunities[0].Id) {
-                System.assertEquals(true, opp.IsPrivate, 'Import should have set checkbox IsPrivate to true');
+                System.assertEquals(true, opp.IsPrivate, 
+                    'Import should have set checkbox IsPrivate to true');
             } else {
-                System.assertEquals(false, opp.IsPrivate, 'Import should have set checkbox IsPrivate to false');                
+                System.assertEquals(false, opp.IsPrivate, 
+                    'Import should have set checkbox IsPrivate to false');                
             }
         }
     }
@@ -148,9 +165,11 @@ public with sharing class BDI_Donations_TEST {
         update opportunities;
 
         list<DataImport__c> dataImports = new list<DataImport__c>();
-        dataImports.add(new DataImport__c(Contact1_Firstname__c=contacts[0].Firstname, Contact1_Lastname__c=contacts[0].Lastname, 
+        dataImports.add(new DataImport__c(Contact1_Firstname__c=contacts[0].Firstname, 
+            Contact1_Lastname__c=contacts[0].Lastname, 
             Contact1_Work_Email__c=contacts[0].npe01__WorkEmail__c));
-        dataImports.add(new DataImport__c(Contact1_Firstname__c=contacts[1].Firstname, Contact1_Lastname__c=contacts[1].Lastname, 
+        dataImports.add(new DataImport__c(Contact1_Firstname__c=contacts[1].Firstname, 
+            Contact1_Lastname__c=contacts[1].Lastname, 
             Contact1_Work_Email__c=contacts[1].npe01__WorkEmail__c));
 
         dataImports[0].Donation_Amount__c = opportunities[0].Amount;
@@ -178,7 +197,8 @@ public with sharing class BDI_Donations_TEST {
 
         // manually insert checkbox field mapping
         Map<String,String> oppFieldsByDIFields = BDI_Donations.dataImportFieldToOpportunityField;
-        oppFieldsByDIFields.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c'),'IsPrivate');
+        oppFieldsByDIFields.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c'),
+                'IsPrivate');
 
         //run batch data import
         Test.StartTest();
@@ -187,13 +207,26 @@ public with sharing class BDI_Donations_TEST {
         Test.stopTest();
     
         // verify expected results
-        list<Opportunity> updatedOpps = [SELECT Id, Name, Amount, StageName, IsWon, IsPrivate, IsClosed, AccountId FROM Opportunity ORDER BY Id];
+        list<Opportunity> updatedOpps = [SELECT 
+                    Id, 
+                    Name, 
+                    Amount, 
+                    StageName, 
+                    IsWon, 
+                    IsPrivate, 
+                    IsClosed, 
+                    AccountId 
+            FROM Opportunity 
+            ORDER BY Id];
+
         system.assertEquals(2, updatedOpps.size());
         for(Opportunity opp: updatedOpps) {
             if(opp.Id == opportunities[0].Id) {
-                System.assertEquals(true, opp.IsPrivate, 'Import should not have changed initial value of IsPrivate');
+                System.assertEquals(true, opp.IsPrivate, 
+                    'Import should not have changed initial value of IsPrivate');
             } else {
-                System.assertEquals(false, opp.IsPrivate, 'Import should not have changed initial value of IsPrivate');                
+                System.assertEquals(false, opp.IsPrivate, 
+                    'Import should not have changed initial value of IsPrivate');                
             }
         }
     }
