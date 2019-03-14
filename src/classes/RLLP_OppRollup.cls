@@ -162,7 +162,7 @@ public without sharing class RLLP_OppRollup {
         RLLP_OppRollup oppRollup = new RLLP_OppRollup();
         oppRollup.rollupContacts(contactById);
 
-        // NOTE: Household here refers to the household object
+        // NOTE: Household here refers to the household object which require legacy rollups only.
         if (!householdById.isEmpty()) {
             oppRollup.rollupHouseholds(householdById);
         }
