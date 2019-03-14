@@ -871,20 +871,19 @@ class NPSP(object):
     def wait_for_record_to_update(self, id, value):
         """Waits for specified record header to be updated by checking every second for 10 times.
         """
-        el = None
         i = 0
-        while el is None:
+        while True:
             i += 1
             if i > 10:
                 raise AssertionError(
-                    "Timed out waiting for account name to be {} .".format(value)
+                    "Timed out waiting for record name to be {} .".format(value)
                 )
             self.salesforce.go_to_record_home(id)
             try:
                 self.verify_header(value)
                 break
-            except :
+            except Exception:
                 time.sleep(1)
-                continue     
+                     
             
                

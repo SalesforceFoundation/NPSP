@@ -20,6 +20,8 @@ Add Existing Contact to Existing Household through Manage Household Page
     Click Button  title=Add
     Sleep  5
     Click Button       title=Save
+    Unselect Frame
+    Wait Until Page Contains    Account Owner
     Wait For Record To Update    &{contact2}[AccountId]    &{contact2}[LastName] and &{contact1}[LastName] Household
     Select Tab    Related
     Load Related List    Contacts

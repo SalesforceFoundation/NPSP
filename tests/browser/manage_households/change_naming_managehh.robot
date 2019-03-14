@@ -25,6 +25,8 @@ Change Naming on Manage Household Page
     ${loc}    Validate Checkbox    &{contact2}[FirstName] &{contact2}[LastName]    Formal Greeting
     Double Click Element    ${loc}
     Click Button       title=Save
+    Unselect Frame
+    Wait Until Page Contains    Account Owner
     Sleep    3
     Go To Object Home          Account
     Click Link    link=&{contact1}[LastName] and &{contact2}[LastName] Household

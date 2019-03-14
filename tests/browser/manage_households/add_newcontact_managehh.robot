@@ -22,6 +22,8 @@ Add New Contact to Existing Household
     Wait For Locator    span_button    New Contact    
     Click Span Button    New Contact
     Click Button       title=Save
+    Unselect Frame
+    Wait Until Page Contains    Account Owner
     Wait For Record To Update    &{contact}[AccountId]    &{contact}[LastName] and ${last_name} Household
     Select Tab    Related
     Load Related List    Contacts
