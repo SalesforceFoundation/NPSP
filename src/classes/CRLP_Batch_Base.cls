@@ -674,7 +674,10 @@ public abstract class CRLP_Batch_Base {
     }
 
     /**
-    * @description Checks whether chunk mode is enabled for this job.
+    * @description Checks whether chunk mode is enabled for this job.  In an LDV Org, there may be
+    * too many records to query in the main query. Core support has recommended a chunking approach
+    * where the main query is limited to under 1M records and the finish() method kicks off the job
+    * again starting with the last Id that was queried.
     * @return True if chunk mode is enabled, false otherwise.
     */
     protected Boolean isChunkModeEnabled {
