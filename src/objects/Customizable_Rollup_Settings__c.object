@@ -205,7 +205,7 @@
         <externalId>false</externalId>
         <inlineHelpText>FOR LDV ORGS ONLY WITH SFDO GUIDANCE. To avoid a Query Timeout in the rollup batch job in orgs with many millions of Contacts, this specifies the maximum number of Contacts processed in each batch.</inlineHelpText>
         <label>LDV: Contact Hard Credit Chunk Size</label>
-        <precision>7</precision>
+        <precision>8</precision>
         <required>false</required>
         <scale>0</scale>
         <trackTrending>false</trackTrending>
@@ -218,7 +218,7 @@
         <externalId>false</externalId>
         <inlineHelpText>FOR LDV ORGS ONLY WITH SFDO GUIDANCE. To avoid a Query Timeout in the rollup batch job in orgs with many millions of Accounts, this specifies the maximum number of Accounts processed in each batch.</inlineHelpText>
         <label>LDV: Account Hard Credit Chunk Size</label>
-        <precision>7</precision>
+        <precision>8</precision>
         <required>false</required>
         <scale>0</scale>
         <trackTrending>false</trackTrending>
@@ -231,7 +231,7 @@
         <externalId>false</externalId>
         <inlineHelpText>FOR LDV ORGS ONLY WITH SFDO GUIDANCE. To avoid a Query Timeout in the rollup batch job in orgs with many millions of Contacts, this specifies the maximum number of Contacts processed in each batch.</inlineHelpText>
         <label>LDV: Contact Soft Credit Chunk Size</label>
-        <precision>7</precision>
+        <precision>8</precision>
         <required>false</required>
         <scale>0</scale>
         <trackTrending>false</trackTrending>
