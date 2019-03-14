@@ -159,7 +159,7 @@
                 parentAction="javascript:window.urlHome();" parentRecordName="{!objectName}" parentRecordAction="/{!parentId}"
                 header="{!pageTitle}" icon="custom" iconCategory="standard" cancelAction="{!cancel}"
                 saveAction="{!saveClose}" saveReRender="theForm" saveDisabled="{!OR(NOT(isSupportedObject),(opp!=null&&parentAmount==0))}"/>
-            <c:UTIL_PageMessages />
+            <c:UTIL_PageMessages id="messages"/>
             <div>
                 <apex:outputPanel id="theTable">
                 <table class="slds-table slds-table_bordered slds-table_cell-buffer" >
@@ -202,7 +202,9 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <apex:commandButton styleClass="slds-button slds-button_destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="theForm" immediate="true">
+                                    <apex:commandButton 
+                                        styleClass="slds-button slds-button_destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}" 
+                                        action="{!delRow}" reRender="theTable,messages" immediate="false">
                                         <span class="slds-form-element__label slds-assistive-text">Delete Row {!cnt}</span>
                                         <apex:param name="rowForDel" value="{!cnt}" assignTo="{!rowNumber}"/>
                                     </apex:commandButton>
@@ -229,7 +231,7 @@
 
                  <!-- Add Row -->
                 <div class="slds-p-around_medium">
-                        <apex:commandLink action="{!addRow}" immediate="true" reRender="theTable" 
+                        <apex:commandLink action="{!addRow}" immediate="true" reRender="theTable, messages" 
                             value="{!$Label.alloAddRow}" title="{!$Label.alloAddRow}" />
                 </div>
                 <script>
