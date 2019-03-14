@@ -44,9 +44,14 @@ private class CRLP_ApiService_TEST {
     private static void shouldReturnRollupDefinitionsWhenParameterIsValid() {
         mockRollupDefinitions();
 
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+                Customizable_Rollups_Enabled__c = true
+        ));
+
         CRLP_ApiService service = new CRLP_ApiService();
 
         Test.startTest();
+        System.debug(CRLP_Rollup_SEL.cachedRollups.size());
         for (CRLP_RollupProcessingOptions.RollupType rollupType : CRLP_RollupProcessingOptions.RollupType.values()) {
             List<CRLP_Rollup> rollups = service.getRollupDefinitions(rollupType.name());
             System.assertEquals(1, rollups.size(), 'The collection of returned rollups should contain exactly 1 instance for ' + rollupType.name());
@@ -61,7 +66,13 @@ private class CRLP_ApiService_TEST {
     private static void shouldThrowExceptionWhenParameterIsInvalid() {
         CRLP_ApiService service = new CRLP_ApiService();
 
-        Test.startTest();
+        System.assert(service.getRollupDefinitions(null).isEmpty(),
+                'When CRLP is disabled, then call to getRollupDefinitions should return an empty list');
+
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+                Customizable_Rollups_Enabled__c = true
+        ));
+
         for (String param : new String[] { null, 'NonExistentType' }) {
             Exception actualException = null;
             try {
