@@ -350,7 +350,9 @@
 
         let helper = this;
         let apexMethodName = 'c.runBatchDryRun';
-        let param = { batchId: component.get('v.recordId') };
+        let param = { batchId: component.get('v.recordId'),
+            numberOfRowsToReturn: component.get('v.data').length
+        };
 
         let runBatchDryRunPromise = helper.callApex(component, apexMethodName, param);
 

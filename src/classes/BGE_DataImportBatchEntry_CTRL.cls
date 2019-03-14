@@ -214,8 +214,19 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     public static String runBatchDryRun(Id batchId, Integer numberOfRowsToReturn) {
         try {
             Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
-            List<DataImport__c> dataImportListToRun = prepareDataImportsForDryRun(getAllDataImportRecordsByBatchId(batchId));
-            BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
+
+            List<DataImport__c> allRawDataImports = getAllDataImportRecordsByBatchId(batchId);
+            List<DataImport__c> rawDataImportsToPrepareForDryRun = new List<DataImport__c>();
+            for (DataImport__c di : allRawDataImports) {
+                if (di.Status__c != BDI_DataImport_API.bdiImported) {
+                    rawDataImportsToPrepareForDryRun.add(di);
+                }
+            }
+
+            if (rawDataImportsToPrepareForDryRun.size() > 0) {
+                List<DataImport__c> dataImportListToRun = prepareDataImportsForDryRun(rawDataImportsToPrepareForDryRun);
+                BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
+            }
 
             DataImportModel dataImportModel = getUpdatedTotals(batchId);
 
