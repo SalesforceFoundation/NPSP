@@ -436,25 +436,30 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return List<DataImport__c> because BDI expects a list
     */
     private static List<DataImport__c> prepareDataImportsForDryRun(List<DataImport__c> dataImportRecords) {
-        // Skip records where user has explicitly selected a matching record in BGE UI
+        List<DataImport__c> preparedDataImportRecords = new List<DataImport__c>();
         for(DataImport__c dataImportRecord : dataImportRecords) {
+            // Skip if already imported
+            if(dataImportRecord.Status__c == Label.bdiImported) { continue; }
+            // Skip records where user has explicitly selected a matching record in BGE UI
             if (dataImportRecord.DonationImportStatus__c == Label.bdiMatchedByUser
                     || dataImportRecord.DonationImportStatus__c == Label.bdiMatchedByUserNewOpp
                     || dataImportRecord.DonationImportStatus__c == Label.bdiMatchedApplyNewPayment) {
-                // User defined match, so we do nothing and retain the values
+                // User defined match, so we retain the values and add to list of prepared DIs
+                preparedDataImportRecords.add(dataImportRecord);
             } else {
-                // Clear Dry Run fields before running Dry Run so new field values are accounted for
+                // Clear Dry Run fields before running Dry Run so new field values are accounted for and add to list of prepared DIs
                 dataImportRecord.Status__c = null;
                 dataImportRecord.FailureInformation__c = null;
                 dataImportRecord.DonationImported__c = null;
                 dataImportRecord.DonationImportStatus__c = null;
                 dataImportRecord.PaymentImported__c = null;
                 dataImportRecord.PaymentImportStatus__c = null;
+                preparedDataImportRecords.add(dataImportRecord);
             }
         }
-        update dataImportRecords;
+        update preparedDataImportRecords;
 
-        return dataImportRecords;
+        return preparedDataImportRecords;
     }
 
     /*******************************************************************************************************
