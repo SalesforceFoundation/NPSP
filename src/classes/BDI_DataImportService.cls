@@ -882,8 +882,10 @@ global with sharing class BDI_DataImportService {
             // This allows for mapping checkboxes to a tri-state picklist - None, True, False - or a text with either 
             // blank, "True", or "False"
             String destinationSObjectname = destinationRecord.getSObjectType().getDescribe().getName(); 
-            if ((UTIL_Describe.getFieldDisplayType(destinationSObjectname, destinationField) == 
-                Schema.DisplayType.BOOLEAN) && !(value instanceof Boolean)) {
+            if (!(value instanceof Boolean) && 
+                (UTIL_Describe.getFieldDisplayType(UTIL_Namespace.StrTokenNSPrefix(destinationSObjectname), 
+                 UTIL_Namespace.StrTokenNSPrefix(destinationField.toLowerCase())) == 
+                Schema.DisplayType.BOOLEAN)) {
 
                 value = Boolean.valueOf(value);
             }

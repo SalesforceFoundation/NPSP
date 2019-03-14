@@ -61,6 +61,145 @@ public with sharing class BDI_Donations_TEST {
             UTIL_unitTestData_TEST.getOpenStage(), system.Today(), 100, null, null);
         insert listOppT;
     }
+
+
+
+    /*********************************************************************************************************
+    * @description 
+    * verify: 
+    *       opportunity objects matched & closed
+    *       payment objects updated
+    */
+    static testMethod void TwoDIWithExistingDonationsSpecified_mapAndUpdateCheckbox() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
+        createTestData();
+
+        List<Contact> contacts = listConT;
+        List<Opportunity> opportunities = listOppT;
+            
+        list<DataImport__c> dataImports = new list<DataImport__c>();
+        dataImports.add(new DataImport__c(Contact1_Firstname__c=contacts[0].Firstname, Contact1_Lastname__c=contacts[0].Lastname, 
+            Contact1_Work_Email__c=contacts[0].npe01__WorkEmail__c));
+        dataImports.add(new DataImport__c(Contact1_Firstname__c=contacts[1].Firstname, Contact1_Lastname__c=contacts[1].Lastname, 
+            Contact1_Work_Email__c=contacts[1].npe01__WorkEmail__c));
+
+        dataImports[0].Donation_Amount__c = opportunities[0].Amount;
+        dataImports[0].Donation_Date__c = opportunities[0].CloseDate;
+        dataImports[0].DonationImported__c = opportunities[0].Id;
+        dataImports[0].Donation_Membership_Origin__c = 'True';
+        dataImports[0].Payment_Check_Reference_Number__c = 'abc';
+        dataImports[0].Payment_Method__c = 'Check';
+
+        dataImports[1].Donation_Amount__c = opportunities[1].Amount;
+        dataImports[1].Donation_Date__c = opportunities[1].CloseDate;
+        dataImports[1].DonationImported__c = opportunities[1].Id;
+        dataImports[1].Donation_Membership_Origin__c = 'False';
+        dataImports[1].Payment_Check_Reference_Number__c = '1234';
+        dataImports[1].Payment_Method__c = 'Visa';       
+        insert dataImports;
+          
+        // set the specified settings
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        // make sure we support matching by Id even when no match specified.
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.RequireNoMatch;
+        diSettings.Run_Opportunity_Rollups_while_Processing__c = true;
+
+        // manually insert checkbox field mapping
+        Map<String,String> oppFieldsByDIFields = BDI_Donations.dataImportFieldToOpportunityField;
+        oppFieldsByDIFields.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c'),'IsPrivate');
+        System.assert(oppFieldsByDIFields.values().size() > 0, 'There should be fields');
+        System.assertEquals(oppFieldsByDIFields.get(UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c')), 'IsPrivate', 
+            'Field mapping to checkbox field must exist in map: '+oppFieldsByDIFields.get('Donation_Membership_Origin__c'));
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Opportunity> updatedOpps = [SELECT Id, Name, Amount, StageName, IsWon, IsPrivate, IsClosed, AccountId FROM Opportunity ORDER BY Id];
+        system.assertEquals(2, updatedOpps.size());
+        for(Opportunity opp: updatedOpps) {
+            if(opp.Id == opportunities[0].Id) {
+                System.assertEquals(true, opp.IsPrivate, 'Import should have set checkbox IsPrivate to true');
+            } else {
+                System.assertEquals(false, opp.IsPrivate, 'Import should have set checkbox IsPrivate to false');                
+            }
+        }
+    }
+
+    static testMethod void TwoDIWithExistingDonationsSpecified_mapCheckboxNoUpdate() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
+        createTestData();
+
+        List<Contact> contacts = listConT;
+        List<Opportunity> opportunities = listOppT;
+
+        opportunities[0].IsPrivate = true;
+        opportunities[1].IsPrivate = false;
+        update opportunities;
+
+        list<DataImport__c> dataImports = new list<DataImport__c>();
+        dataImports.add(new DataImport__c(Contact1_Firstname__c=contacts[0].Firstname, Contact1_Lastname__c=contacts[0].Lastname, 
+            Contact1_Work_Email__c=contacts[0].npe01__WorkEmail__c));
+        dataImports.add(new DataImport__c(Contact1_Firstname__c=contacts[1].Firstname, Contact1_Lastname__c=contacts[1].Lastname, 
+            Contact1_Work_Email__c=contacts[1].npe01__WorkEmail__c));
+
+        dataImports[0].Donation_Amount__c = opportunities[0].Amount;
+        dataImports[0].Donation_Date__c = opportunities[0].CloseDate;
+        dataImports[0].DonationImported__c = opportunities[0].Id;
+        dataImports[0].Donation_Membership_Origin__c = null;
+        dataImports[0].Payment_Check_Reference_Number__c = 'abc';
+        dataImports[0].Payment_Method__c = 'Check';
+
+        dataImports[1].Donation_Amount__c = opportunities[1].Amount;
+        dataImports[1].Donation_Date__c = opportunities[1].CloseDate;
+        dataImports[1].DonationImported__c = opportunities[1].Id;
+        dataImports[1].Donation_Membership_Origin__c = null;
+        dataImports[1].Payment_Check_Reference_Number__c = '1234';
+        dataImports[1].Payment_Method__c = 'Visa';       
+        insert dataImports;
+          
+        // set the specified settings
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+            UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        // make sure we support matching by Id even when no match specified.
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.RequireNoMatch;
+        diSettings.Run_Opportunity_Rollups_while_Processing__c = true;
+
+        // manually insert checkbox field mapping
+        Map<String,String> oppFieldsByDIFields = BDI_Donations.dataImportFieldToOpportunityField;
+        oppFieldsByDIFields.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c'),'IsPrivate');
+        System.assert(oppFieldsByDIFields.values().size() > 0, 'There should be fields');
+        System.assertEquals(oppFieldsByDIFields.get(UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c')), 'IsPrivate', 
+            'Field mapping to checkbox field must exist in map: '+oppFieldsByDIFields.get('Donation_Membership_Origin__c'));
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        // verify expected results
+        list<Opportunity> updatedOpps = [SELECT Id, Name, Amount, StageName, IsWon, IsPrivate, IsClosed, AccountId FROM Opportunity ORDER BY Id];
+        system.assertEquals(2, updatedOpps.size());
+        for(Opportunity opp: updatedOpps) {
+            if(opp.Id == opportunities[0].Id) {
+                System.assertEquals(true, opp.IsPrivate, 'Import should not have changed initial value of IsPrivate');
+            } else {
+                System.assertEquals(false, opp.IsPrivate, 'Import should not have changed initial value of IsPrivate');                
+            }
+        }
+    }
+
     /*********************************************************************************************************
     * @description Verifies rollups are not calculated when rollup settings if not checked
     */
