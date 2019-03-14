@@ -118,8 +118,7 @@ public with sharing class BDI_Donations_TEST {
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
-        // verify expected results
+
         // verify expected results
         list<Opportunity> updatedOpps = [SELECT 
                     Id, 
