@@ -335,6 +335,7 @@ orgs:
         dev_namespaced:
             config_file: orgs/dev.json
             namespaced: True
+            days: 7
         beta_middlesuffix:
             config_file: orgs/beta_middlesuffix.json
         beta_multicurrency:
