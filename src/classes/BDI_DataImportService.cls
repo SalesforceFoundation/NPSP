@@ -860,7 +860,7 @@ global with sharing class BDI_DataImportService {
     * also explicitly ignores boolean false's, since we can't differentiate null from false.
     * @param dataImport The DataImport record
     * @param dataImportField The DI field to copy from
-    * @param objDst The object to copy to
+    * @param destinationRecord The object to copy to
     * @param mapDIFieldToDstField The field map from a DI field to the destination field
     * @return boolean True if copied, False is not copied.
     */
@@ -879,13 +879,10 @@ global with sharing class BDI_DataImportService {
             }
 
             // If the destination field is a Boolean and the DI field intermediate requires interpretation to Boolean
-            // This allows for mapping checkboxes to a tri-state picklist - None, True, False - or a text with either 
-            // blank, "True", or "False"
-            String destinationSObjectname = destinationRecord.getSObjectType().getDescribe().getName(); 
+            // This allows for mapping checkboxes to a tri-state picklist - null, True, False - or a text with either 
+            // null, "True", or "False"
             if (!(value instanceof Boolean) && 
-                (UTIL_Describe.getFieldDisplayType(UTIL_Namespace.StrTokenNSPrefix(destinationSObjectname), 
-                 UTIL_Namespace.StrTokenNSPrefix(destinationField.toLowerCase())) == 
-                Schema.DisplayType.BOOLEAN)) {
+                fieldIsBooleanDisplayType(destinationRecord, destinationField)) {
 
                 value = Boolean.valueOf(value);
             }
@@ -896,6 +893,28 @@ global with sharing class BDI_DataImportService {
             return false;
         }
     }
+
+    /*******************************************************************************************************
+    * @description Correctly handling checkbox fields requires mapping to a non-checkbox intermediate
+    *   DI field. Check if the destination field is boolean 
+    * @param destinationRecord The SObject to copy to 
+    * @param destinationField The field mapped to on the destination record
+    * @return true if field is Display Type BOOLEAN
+    */
+    private static Boolean fieldIsBooleanDisplayType(SObject destinationRecord, String destinationField) {
+
+        String destinationSObjectname = destinationRecord.getSObjectType().getDescribe().getName(); 
+        Schema.DisplayType destinationFieldDisplayType = UTIL_Describe.getFieldDisplayType(
+            UTIL_Namespace.StrTokenNSPrefix(destinationSObjectname), 
+            UTIL_Namespace.StrTokenNSPrefix(destinationField.toLowerCase()));
+
+        if(destinationFieldDisplayType == Schema.DisplayType.BOOLEAN) {
+            return true;
+        }
+
+        return false;
+    }
+
 
     /*******************************************************************************************************
     * @description disables the Opportunity trigger handler that invokes rollups (unless settings say
