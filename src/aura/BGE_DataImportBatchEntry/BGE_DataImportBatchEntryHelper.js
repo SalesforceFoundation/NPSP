@@ -331,6 +331,8 @@
      * @description: Dry run all data import records for batch
      */
     batchDryRun: function (component) {
+        let helper = this;
+
         let afterDryRun = function (result) {
             helper.afterDryRun(component, JSON.parse(result));
         }
@@ -348,7 +350,6 @@
             helper.hideFormSpinner(component);
         }
 
-        let helper = this;
         let apexMethodName = 'c.runBatchDryRun';
         let params = {
             batchId: component.get('v.recordId'),
@@ -650,11 +651,12 @@
      * @param params: Parameters for apex method, if any required
      */
     callApex: function(component, apexMethodName, params) {
-        let helper = this;
         return new Promise(function(resolve, reject) {
             var action = component.get(apexMethodName);
-            if (params) { action.setParams(params); }
-            action.setCallback(helper, function(response) {
+            if (params) {
+                action.setParams(params);
+            }
+            action.setCallback(this, function(response) {
                 if (component.isValid() && response.getState() === 'SUCCESS') {
                     resolve(response.getReturnValue());
                 } else {
