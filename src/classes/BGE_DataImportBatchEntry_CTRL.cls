@@ -522,9 +522,9 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     public static String getDataImportQuery(Id batchId, List<Id> dataImportIds, Integer numRows, Integer offset) {
         List<String> dataImportFields = getDataImportFields(batchId);
 
-        String query = 'SELECT ' + String.join(dataImportFields,', ') +
-                ' FROM DataImport__c' +
-                ' WHERE NPSP_Data_Import_Batch__c = :batchId';
+        String query =  'SELECT ' + String.join(dataImportFields,', ') +
+                        ' FROM DataImport__c' +
+                        ' WHERE NPSP_Data_Import_Batch__c = :batchId';
 
         if (dataImportIds != null && dataImportIds.size() > 0) {
             query += ' AND Id IN :dataImportIds';

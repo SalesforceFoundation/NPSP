@@ -332,7 +332,7 @@
      */
     batchDryRun: function (component) {
         let afterDryRun = function (result) {
-            helper.afterDryRun(component, JSON.parse(result, false));
+            helper.afterDryRun(component, JSON.parse(result));
         }
 
         let handleApexErrors = function (error) {
@@ -350,11 +350,12 @@
 
         let helper = this;
         let apexMethodName = 'c.runBatchDryRun';
-        let param = { batchId: component.get('v.recordId'),
+        let params = {
+            batchId: component.get('v.recordId'),
             numberOfRowsToReturn: component.get('v.data').length
         };
 
-        let runBatchDryRunPromise = helper.callApex(component, apexMethodName, param);
+        let runBatchDryRunPromise = helper.callApex(component, apexMethodName, params);
 
         runBatchDryRunPromise
             .then(
@@ -513,7 +514,12 @@
         });
 
         if(conflictFound) {
-            this.showToast(component, $A.get('$Label.c.PageMessagesError'), $A.get('$Label.c.bgeGridErrorConflictingGifts'), 'error');
+            this.showToast(
+                component,
+                $A.get('$Label.c.PageMessagesError'),
+                $A.get('$Label.c.bgeGridErrorConflictingGifts'),
+                'error'
+            );
         }
 
         return conflictFound;
