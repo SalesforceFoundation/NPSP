@@ -12,7 +12,7 @@
                 strBatchComponentLabel="{!$Label.stgLabelOppNamingRefreshTitle}"
                 cNumberOfJobs="1"
                 startPolling="True"
-                stopPollingOnComplete="False"
+                stopPollingOnComplete="True"
                 pollingDelay="1000"/>
         </apex:outputPanel>
     </apex:form>
