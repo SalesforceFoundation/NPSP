@@ -8,6 +8,7 @@ Suite Teardown  Delete Records and Close Browser
 
 Create Donation from a Contact and Delete Opportunity
     &{contact} =  API Create Contact    Email=skristem@robot.com
+    Store Session Record    Account    &{contact}[AccountId]
     &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Donation    Name=Delete test $100 donation
     Go To Record Home  &{opportunity}[Id]
     ${donation_name}    Get Main Header
