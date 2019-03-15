@@ -8,6 +8,7 @@ Suite Teardown  Delete Records and Close Browser
 
 Create Donation from Contact and Verify Contact Roles on Opportunity Page
     &{contact1} =  API Create Contact    Email=skristem@robot.com
+    Store Session Record    Account    &{contact1}[AccountId]
     &{contact2} =  API Create Contact    AccountId=&{contact1}[AccountId]
     &{opportunity} =  API Create Opportunity    &{Contact1}[AccountId]    Donation    Name=Role test $100 donation
     Go To Record Home  &{opportunity}[Id]
