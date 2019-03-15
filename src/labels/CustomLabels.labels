@@ -2847,7 +2847,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Message preventing user from processing batch if there are conflicting gifts.</shortDescription>
-        <value>There are conflicting gifts for this batch. These conflicts must be resolved before you can process the batch.</value>
+        <value>There are conflicting gifts in this batch. You will need to resolve these conflicts before you're able to process this batch.</value>
     </labels>
     <labels>
         <fullName>bgeGridErrorRequiredTotalsExpected</fullName>
@@ -2931,7 +2931,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Text for toast when batch dry run is started</shortDescription>
-        <value>Please don't navigate out of this page.</value>
+        <value>Batch Dry Run in progress. Please stay on this page until it's done processing.</value>
     </labels>
     <labels>
         <fullName>bgeMatchingAlert</fullName>
