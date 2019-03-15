@@ -10,10 +10,13 @@ Suite Teardown  Delete Records and Close Browser
 Create Donation and Opportunity and Create Payment Manually
     [tags]  unstable
     &{contact} =  API Create Contact    Email=skristem@robot.com
+    Store Session Record    Account    &{contact}[AccountId]
     Go To Object Home         Opportunity
     Click Object Button       New
     Select Record Type        Donation
     Create Opportunities    Sravani $100 donation    &{Contact}[LastName] Household    Closed Won
+    ${id}    Get Current Record Id
+    Store Session Record    Opportunity    ${id}
     Select Tab    Related
     Load Related List    Payments
     Verify Occurrence    Payments    0
