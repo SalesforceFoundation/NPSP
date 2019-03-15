@@ -39,7 +39,7 @@ public class OPP_OpportunityNaming_BATCH implements Database.Batchable<sObject>,
     private String query;
 
     @TestVisible
-    private static Integer defaultQueryLimit= 10000000;
+    private static Integer defaultQueryLimit = 10000000;
 
     @TestVisible
     private Id lastOppIdProcessed;
