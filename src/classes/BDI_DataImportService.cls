@@ -905,7 +905,7 @@ global with sharing class BDI_DataImportService {
 
         String destinationSObjectname = destinationRecord.getSObjectType().getDescribe().getName(); 
         Schema.DisplayType destinationFieldDisplayType = UTIL_Describe.getFieldDisplayType(
-            UTIL_Namespace.StrTokenNSPrefix(destinationSObjectname), 
+            destinationSObjectname, 
             UTIL_Namespace.StrTokenNSPrefix(destinationField.toLowerCase()));
 
         if(destinationFieldDisplayType == Schema.DisplayType.BOOLEAN) {
