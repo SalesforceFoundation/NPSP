@@ -8,7 +8,8 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***    
 Remove Secondary Affiliation for Contact    
     &{account} =  API Create Organization Account
-    &{contact} =  API Create Contact    Email=skristem@robot.com    
+    &{contact} =  API Create Contact    Email=skristem@robot.com   
+    Store Session Record    Account    &{contact}[AccountId] 
     API Create Secondary Affiliation    &{account}[Id]    &{contact}[Id]
     Go To Object Home          Contact
     Click Link    link=&{contact}[FirstName] &{contact}[LastName]
