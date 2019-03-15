@@ -453,7 +453,9 @@
         });
 
         let selectedMatchingRule = component.get('v.batchInfo.donationMatchingRule');
-        let donationMatchingOptionValues = donationMatchingOptions.map(function(option) { return option.value });
+        let donationMatchingOptionValues = donationMatchingOptions.map(function (option) {
+            return option.value;
+        });
         // Filter out any selected matching rules that aren't selected as available matching fields
         selectedMatchingRule = selectedMatchingRule.filter(function (selectedRule) {
             return (donationMatchingOptionValues.indexOf(selectedRule) >= 0);
