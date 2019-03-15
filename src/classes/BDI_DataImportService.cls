@@ -904,9 +904,8 @@ global with sharing class BDI_DataImportService {
     private static Boolean fieldIsBooleanDisplayType(SObject destinationRecord, String destinationField) {
 
         String destinationSObjectname = destinationRecord.getSObjectType().getDescribe().getName(); 
-        Schema.DisplayType destinationFieldDisplayType = UTIL_Describe.getFieldDisplayType(
-            destinationSObjectname, 
-            UTIL_Namespace.StrTokenNSPrefix(destinationField.toLowerCase()));
+        Schema.DisplayType destinationFieldDisplayType = 
+            UTIL_Describe.getFieldDisplayType(destinationSObjectname, destinationField.toLowerCase());
 
         if(destinationFieldDisplayType == Schema.DisplayType.BOOLEAN) {
             return true;
