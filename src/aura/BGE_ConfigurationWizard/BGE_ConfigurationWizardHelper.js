@@ -451,8 +451,17 @@
             batchFieldOptions.fieldGroups.push(currentFieldGroup);
 
         });
+
+        let selectedMatchingRule = component.get('v.batchInfo.donationMatchingRule');
+        let donationMatchingOptionValues = donationMatchingOptions.map(function(option) { return option.value });
+        // Filter out any selected matching rules that aren't selected as available matching fields
+        selectedMatchingRule = selectedMatchingRule.filter(function (selectedRule) {
+            return (donationMatchingOptionValues.indexOf(selectedRule) >= 0);
+        });
+
         component.set('v.batchFieldOptions', batchFieldOptions);
         component.set('v.batchInfo.donationMatchingOptions', donationMatchingOptions);
+        component.set("v.batchInfo.donationMatchingRule", selectedMatchingRule);
     },
 
     /**
