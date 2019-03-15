@@ -64,7 +64,6 @@
         batchInfo.runOpportunityRollupsWhileProcessing = model.runOpportunityRollupsWhileProcessing;
         batchInfo.donationMatchingBehavior = model.donationMatchingBehavior;
         batchInfo.donationMatchingClass = model.donationMatchingClass;
-        batchInfo.donationMatchingOptions = model.donationMatchingOptions;
         batchInfo.donationMatchingRule = model.donationMatchingRule;
         batchInfo.donationDateRange = model.donationDateRange;
         batchInfo.postProcessClass = model.postProcessClass;
@@ -426,6 +425,7 @@
      * @description Updates batchFieldOptions attribute based on selected fields
      */
     updateBatchFieldOptions: function(component) {
+        let donationMatchingOptions = [];
         let batchFieldOptions = {
             fieldGroups: []
         };
@@ -442,12 +442,28 @@
             activeFieldsBySObject[sObjectName].forEach(function(currentField) {
                 currentFieldGroup.fields.push(currentField);
                 currentFieldGroup.sObjectLabel = currentField.sObjectLabel;
+                donationMatchingOptions.push({
+                    label: currentField.label,
+                    value: currentField.name.toLowerCase()
+                });
             });
 
             batchFieldOptions.fieldGroups.push(currentFieldGroup);
 
         });
+
+        let selectedMatchingRule = component.get('v.batchInfo.donationMatchingRule');
+        let donationMatchingOptionValues = donationMatchingOptions.map(function (option) {
+            return option.value;
+        });
+        // Filter out any selected matching rules that aren't selected as available matching fields
+        selectedMatchingRule = selectedMatchingRule.filter(function (selectedRule) {
+            return (donationMatchingOptionValues.indexOf(selectedRule) >= 0);
+        });
+
         component.set('v.batchFieldOptions', batchFieldOptions);
+        component.set('v.batchInfo.donationMatchingOptions', donationMatchingOptions);
+        component.set("v.batchInfo.donationMatchingRule", selectedMatchingRule);
     },
 
     /**
