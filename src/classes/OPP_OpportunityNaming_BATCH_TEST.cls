@@ -136,7 +136,6 @@ private with sharing class OPP_OpportunityNaming_BATCH_TEST {
      * @description Confirms that the finish method chains the next batch with an offset
      * of the last Opportunity Id processed
      */
-
     @isTest
     private static void shouldChainNextBatchOffsetByLastRecordProcessed() {
         List<Opportunity> testOpps = [SELECT Id FROM Opportunity ORDER BY Id];

@@ -32,7 +32,8 @@
 * @date 2015
 * @group Opportunity
 * @group-content ../../ApexDocContent/Opportunity.htm
-* @description Batch class creates names all Opportunities per the naming spec.
+* @description Batch class creates names all Opportunities per the naming spec. Batch job chunks Opportunities
+* in groups of 10,000,000 records ordered by Id and chains itself to process additional records to avoid query limits
  */
 public class OPP_OpportunityNaming_BATCH implements Database.Batchable<sObject>, Schedulable, Database.Stateful {
     /** @description The query for the batch process to run on.*/
@@ -75,8 +76,7 @@ public class OPP_OpportunityNaming_BATCH implements Database.Batchable<sObject>,
     /*********************************************************************************************************
     * @description Batch process execute method. Names and updates all opportunities in the current batch.
     */
-    public void execute(Database.BatchableContext BC, List<sObject> scope) {
-        List<Opportunity> oppsToProcess = scope;
+    public void execute(Database.BatchableContext BC, List<Opportunity> oppsToProcess) {
         lastOppIdProcessed = oppsToProcess[oppsToProcess.size() - 1].Id;
 
         //save old opp names to see if we need an update
@@ -97,7 +97,7 @@ public class OPP_OpportunityNaming_BATCH implements Database.Batchable<sObject>,
         }
 
         if (!oppsForUpdate.isEmpty()) {
-            Database.update(oppsForUpdate, false);
+            UTIL_DMLService.updateRecords(oppsForUpdate, false);
         }
     }
     
