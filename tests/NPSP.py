@@ -852,7 +852,7 @@ class NPSP(object):
     def click_link_with_text(self, text):
         self.builtin.log("This test is using the 'Click link with text' workaround", "WARN")
         element = self.selenium.driver.find_element_by_link_text(text)
-        self.selenium.driver.execute_script('arguments[0].click()', element)
+        self.selenium.driver.execute_script('arguments[0].click()', element)  
     
     def verify_expected_batch_values(self, batch_id,**kwargs):
         """To verify that the data in Data Import Batch matches expected value provide batch_id and the data u want to verify"""    
@@ -868,3 +868,22 @@ class NPSP(object):
         locator=self.get_npsp_locator(path, *args, **kwargs)  
         self.selenium.click_element(locator)      
             
+    def wait_for_record_to_update(self, id, value):
+        """Waits for specified record header to be updated by checking every second for 10 times.
+        """
+        i = 0
+        while True:
+            i += 1
+            if i > 10:
+                raise AssertionError(
+                    "Timed out waiting for record name to be {} .".format(value)
+                )
+            self.salesforce.go_to_record_home(id)
+            try:
+                self.verify_header(value)
+                break
+            except Exception:
+                time.sleep(1)
+                     
+            
+               
