@@ -97,7 +97,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         setDefaultValuesOnBGEDetailsModel(model);
 
         model.namespacePrefix = UTIL_Namespace.getNamespace();
-        model.donationMatchingOptions = getDonationMatchingOptions();
         model.availableFields = getAvailableFields();
 
         model.labels = getBatchLabels();
@@ -393,28 +392,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Sets donation field options for BGEDetailsModel
-    * @return List<Map<String,String>> donationMatchingOptions
-    */
-    private static List<Map<String, String>> getDonationMatchingOptions() {
-        List<Map<String, String>> donationMatchingOptions = new List<Map<String, String>>();
-
-        Set<String> donationObjects = new Set<String>{
-            'Opportunity',
-            'npe01__OppPayment__c'
-        };
-        List<DescribeFieldResult> dfrs = getRelevantFields(donationObjects);
-
-        for (DescribeFieldResult donationField : dfrs) {
-            Map<String, String> option = new Map<String, String>();
-            option.put('value', donationField.Name.toLowerCase());
-            option.put('label', donationField.Label);
-            donationMatchingOptions.add(option);
-        }
-        return donationMatchingOptions;
-    }
-
-    /*******************************************************************************************************
     * @description Retrieves the object and field labels for the batch object.
     * @return Map of object and field name keys to their labels.
     */
@@ -530,7 +507,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         @AuraEnabled public String donationMatchingBehavior;
         @AuraEnabled public String donationMatchingClass;
         @AuraEnabled public List<String> donationMatchingRule;
-        @AuraEnabled public List<Map<String,String>> donationMatchingOptions;
         @AuraEnabled public String namespacePrefix;
         @AuraEnabled public String postProcessClass;
         @AuraEnabled public Boolean runOpportunityRollupsWhileProcessing;
