@@ -34,21 +34,38 @@
 * @group-content ../../ApexDocContent/Opportunity.htm
 * @description Batch class creates names all Opportunities per the naming spec.
  */
-public class OPP_OpportunityNaming_BATCH implements Database.Batchable<sObject>, Schedulable {
-    
+public class OPP_OpportunityNaming_BATCH implements Database.Batchable<sObject>, Schedulable, Database.Stateful {
     /** @description The query for the batch process to run on.*/
-    String query;
-    
+    private String query;
+
+    @TestVisible
+    private static Integer defaultQueryLimit= 10000000;
+
+    @TestVisible
+    private Id lastOppIdProcessed;
+
     /** @description The batch process constructor; creates opportunity query for all opportunities.*/
     public OPP_OpportunityNaming_BATCH() {
-        query = 'SELECT Id, Name FROM Opportunity';
+        query = 'SELECT Id, Name FROM Opportunity ORDER BY Id LIMIT ' + defaultQueryLimit;
+    }
+
+    /** @description Constructor that accepts Id offset*/
+    public OPP_OpportunityNaming_BATCH(Id idToOffset) {
+        query = buildOffsetQuery(idToOffset, defaultQueryLimit);
+    }
+
+    /** @description Builds query string with given Id to offset and query limit*/
+    private String buildOffsetQuery(Id idToOffset, Integer queryLimit) {
+        return String.format(
+            'SELECT Id, Name FROM Opportunity WHERE Id > \'\'{0}\'\' ORDER BY Id LIMIT {1}',
+            new List<String>{ idToOffset, String.valueOf(queryLimit) }
+        );
     }
 
     /** @description Batch process start method.*/
     public Database.QueryLocator start(Database.BatchableContext BC) {
         return Database.getQueryLocator(query);
     }
-
 
     /** @description Schedulable execute method.*/
     public void execute(SchedulableContext context) {
@@ -59,27 +76,45 @@ public class OPP_OpportunityNaming_BATCH implements Database.Batchable<sObject>,
     * @description Batch process execute method. Names and updates all opportunities in the current batch.
     */
     public void execute(Database.BatchableContext BC, List<sObject> scope) {
+        List<Opportunity> oppsToProcess = scope;
+        lastOppIdProcessed = oppsToProcess[oppsToProcess.size() - 1].Id;
+
         //save old opp names to see if we need an update
-        list<opportunity> oppsForUpdate = new list<Opportunity>();
-        map<id,string> oppNames = new map<id,string>();
-        for (Opportunity opp : (list<Opportunity>)scope)
-            oppNames.put(opp.id, opp.Name);
+        Map<Id, String> originalOppNamesById = new Map<Id, String>();
+        for (Opportunity opp : oppsToProcess) {
+            originalOppNamesById.put(opp.id, opp.Name);
+        }
 
         //refresh names
-        OPP_OpportunityNaming.refreshOppNames((list<Opportunity>)scope);
+        OPP_OpportunityNaming.refreshOppNames(oppsToProcess);
 
         //find which names have been updated, add to list
-        for (Opportunity opp : (list<Opportunity>)scope) {
-            if (opp.Name != oppNames.get(opp.id))
+        List<Opportunity> oppsForUpdate = new List<Opportunity>();
+        for (Opportunity opp : oppsToProcess) {
+            if (opp.Name != originalOppNamesById.get(opp.id)) {
                 oppsForUpdate.add(opp);
+            }
         }
 
         if (!oppsForUpdate.isEmpty()) {
-            database.update(oppsForUpdate, false);
+            Database.update(oppsForUpdate, false);
         }
     }
     
-    /** @description Batch process finish method, does nothing.*/
-    public void finish(Database.BatchableContext BC) {}
-    
+    /** @description Batch process finish method, chains another batch if there are more opportunities to process.*/
+    public void finish(Database.BatchableContext BC) {
+        if (shouldChainNextBatch()) {
+            Database.executeBatch(new OPP_OpportunityNaming_BATCH(lastOppIdProcessed), 200);
+        }
+    }
+
+    /** @description Returns whether or not another batch should be chained*/
+    private Boolean shouldChainNextBatch() {
+        if (lastOppIdProcessed == null) {
+            return false;
+        }
+
+        String hasMoreQuery = buildOffsetQuery(lastOppIdProcessed, 1);
+        return !Database.query(hasMoreQuery).isEmpty();
+    }
 }
