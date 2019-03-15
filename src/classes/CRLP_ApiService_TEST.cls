@@ -90,7 +90,7 @@ private class CRLP_ApiService_TEST {
      * @description Validate the getRollupDefinitions returns an empty list<> when CRLP is not enabled
      */
     @IsTest
-    private static void shouldThrowReturnEmptyListWhenCRLPNotEnabled() {
+    private static void shouldReturnEmptyListWhenCRLPNotEnabled() {
         CRLP_ApiService service = new CRLP_ApiService();
 
         System.assert(service.getRollupDefinitions(null).isEmpty(),
