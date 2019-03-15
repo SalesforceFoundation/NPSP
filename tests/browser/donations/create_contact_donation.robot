@@ -9,6 +9,7 @@ Suite Teardown  Delete Records and Close Browser
 Create Donation from a Contact
     [tags]  unstable
     &{contact} =  API Create Contact    Email=skristem@robot.com
+    Store Session Record    Account    &{contact}[AccountId]
     Go To Record Home  &{contact}[Id]
     Click Object Button  New Donation
     Populate Form
@@ -21,6 +22,8 @@ Create Donation from a Contact
     ${value}    Return Locator Value    alert
     Go To Object Home         Opportunity
     Click Link    ${value}
+    ${id}    Get Current Record Id
+    Store Session Record    Opportunity    ${id}
     Select Tab    Related
     Load Related List    Payments
     Verify Occurrence    Payments    1
