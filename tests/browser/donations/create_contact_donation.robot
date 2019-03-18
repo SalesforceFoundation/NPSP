@@ -27,3 +27,4 @@ Create Donation from a Contact
     Select Tab    Related
     Load Related List    Payments
     Verify Occurrence    Payments    1
+    

@@ -29,3 +29,10 @@ Create Donation and Opportunity and Create Payment Manually
     Pick Date    Today
     Click Modal Button        Save
     Verify Occurrence    Payments    1
+    ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
+    Go To Record Home  &{contact}[Id]
+    Scroll Element Into View    text:Donation Totals
+    Confirm Value           Last Gift Date    ${opp_date}    Y
+    Scroll Element Into View    text:Soft Credit Total
+    Confirm Value           Total Gifts    $100.00    Y
+    Confirm Value           Total Number of Gifts    1    Y
