@@ -568,7 +568,7 @@
         ];
 
         $A.createComponents([
-                ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c', recordId: component.get('v.recordId')}],
+                ['c:BGE_ConfigurationWizard', {sObjectName: 'DataImportBatch__c'}],
                 ['c:modalHeader', {header: $A.get('$Label.c.bgeBatchInfoWizard')}],
                 ['c:modalFooter', {progressStepLabels: progressStepLabels}]
             ],

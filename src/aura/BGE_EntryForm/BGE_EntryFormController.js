@@ -19,7 +19,7 @@
      * @description: alerts parent component that form needs to be reset
      */
     cancelForm: function (component, event, helper) {
-        helper.sendMessage('onCancel', '');
+        helper.sendMessage(component, 'onCancel', '');
         component.destroy();
     },
 
@@ -39,7 +39,7 @@
      * @description: alerts parent component that form is loaded
      */
     onFormLoad: function (component, event, helper) {
-        helper.sendMessage('hideFormSpinner', '');
+        helper.sendMessage(component, 'hideFormSpinner', '');
         component.find('donorType').focus();
     },
 
@@ -53,7 +53,7 @@
         const lookupValueIsValidId = lookupValue.length === 18;
 
         if (lookupValueIsValidId) {
-            helper.sendMessage('showFormSpinner', '');
+            helper.sendMessage(component, 'showFormSpinner', '');
             helper.queryOpenDonations(component, lookupValue);
         }
     },
@@ -82,7 +82,8 @@
      */
     onSuccess: function (component, event, helper) {
         var message = {'recordId': event.getParams().response.id};
-        helper.sendMessage('onSuccess', message);
+        console.log(message);
+        helper.sendMessage(component, 'onSuccess', message);
         component.destroy();
     },
 
@@ -119,7 +120,7 @@
                         title: $A.get('$Label.c.PageMessagesError'),
                         errorMessage: status === 'ERROR' ? errorMessage : $A.get('$Label.c.stgUnknownError')
                     };
-                    helper.sendMessage('onError', message);
+                    helper.sendMessage(component, 'onError', message);
                 }
             });
         }
@@ -133,7 +134,7 @@
         component.set('v.donorType', donorType);
 
         let message = {'donorType': donorType};
-        helper.sendMessage('setDonorType', message);
+        helper.sendMessage(component, 'setDonorType', message);
         helper.clearDonationSelectionOptions(component);
     }
 
