@@ -86,7 +86,7 @@ public class CRLP_RollupBatch_SVC {
 
         // If the Summary Object is the Account, then filter on Accounts that have at least a single
         // Opportunity attached. This is helpful to reduce the overall query size.
-        // To handle a scenario where an attached Oppportunity was deleted, but the record not recalculated
+        // To handle a scenario where an attached Opportunity was deleted, but the record not recalculated
         // also include any records where the TotalGifts or TotalMemberships fields are not zero.
         // If the field is null, a query with "< #" will not work. "= null" must be explicitly included in the query.
         if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
@@ -176,42 +176,63 @@ public class CRLP_RollupBatch_SVC {
      * the parent records is passed into the batch job to allow it to be passed back to the SkewDispatcher to
      * support chunking by Id.
      */
-    public static void executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType jobType, 
+    public static void executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType jobType,
             CRLP_RollupProcessingOptions.BatchJobMode jobMode, List<Id> recordIds, Id lastIdProcessed) {
 
         Integer batchSize = getBatchSize(jobType, jobMode);
-        if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode) {
-            if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-               database.executeBatch(new CRLP_AccountSkew_BATCH(recordIds, lastIdProcessed), batchSize);
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                database.executeBatch(new CRLP_AccountSkew_AccSoftCredit_BATCH(recordIds, lastIdProcessed), batchSize);
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                database.executeBatch(new CRLP_ContactSkew_BATCH(recordIds, lastIdProcessed), batchSize);
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-               database.executeBatch(new CRLP_AccountSkew_SoftCredit_BATCH(recordIds, lastIdProcessed), batchSize);
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-               database.executeBatch(new CRLP_ContactSkew_SoftCredit_BATCH(recordIds, lastIdProcessed), batchSize);
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-               database.executeBatch(new CRLP_GAU_BATCH(recordIds, lastIdProcessed), batchSize);
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-               database.executeBatch(new CRLP_RDSkew_BATCH(recordIds, lastIdProcessed), batchSize);
+
+        switch on (jobMode) {
+            when SkewMode {
+                switch on (jobType) {
+                    when AccountHardCredit {
+                        Database.executeBatch(new CRLP_AccountSkew_BATCH(recordIds, lastIdProcessed), batchSize);
+                    }
+                    when AccountSoftCredit {
+                        Database.executeBatch(new CRLP_AccountSkew_AccSoftCredit_BATCH(recordIds, lastIdProcessed), batchSize);
+                    }
+                    when ContactHardCredit {
+                        Database.executeBatch(new CRLP_ContactSkew_BATCH(recordIds, lastIdProcessed), batchSize);
+                    }
+                    when AccountContactSoftCredit {
+                        Database.executeBatch(new CRLP_AccountSkew_SoftCredit_BATCH(recordIds, lastIdProcessed), batchSize);
+                    }
+                    when ContactSoftCredit {
+                        Database.executeBatch(new CRLP_ContactSkew_SoftCredit_BATCH(recordIds, lastIdProcessed), batchSize);
+                    }
+                    when GAU {
+                        Database.executeBatch(new CRLP_GAU_BATCH(recordIds, lastIdProcessed), batchSize);
+                    }
+                    when RecurringDonations {
+                        Database.executeBatch(new CRLP_RDSkew_BATCH(recordIds, lastIdProcessed), batchSize);
+                    }
+                }
             }
-        } else {
-            if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-                database.executeBatch(new CRLP_Account_BATCH(recordIds), batchSize);
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                database.executeBatch(new CRLP_Account_AccSoftCredit_BATCH(recordIds), batchSize);
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                database.executeBatch(new CRLP_Contact_BATCH(recordIds), batchSize);
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                database.executeBatch(new CRLP_Account_SoftCredit_BATCH(recordIds), batchSize);
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                database.executeBatch(new CRLP_Contact_SoftCredit_BATCH(recordIds), batchSize);
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-                // Technically this job is always processed in "skew" mode
-                database.executeBatch(new CRLP_GAU_BATCH(recordIds, lastIdProcessed), batchSize);
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-                database.executeBatch(new CRLP_RD_BATCH(recordIds), batchSize);
+
+            when else {
+                switch on (jobType) {
+                    when AccountHardCredit {
+                        Database.executeBatch(new CRLP_Account_BATCH(recordIds), batchSize);
+                    }
+                    when AccountSoftCredit {
+                        Database.executeBatch(new CRLP_Account_AccSoftCredit_BATCH(recordIds), batchSize);
+                    }
+                    when ContactHardCredit {
+                        Database.executeBatch(new CRLP_Contact_BATCH(recordIds), batchSize);
+                    }
+                    when AccountContactSoftCredit {
+                        Database.executeBatch(new CRLP_Account_SoftCredit_BATCH(recordIds), batchSize);
+                    }
+                    when ContactSoftCredit {
+                        Database.executeBatch(new CRLP_Contact_SoftCredit_BATCH(recordIds), batchSize);
+                    }
+                    when GAU {
+                        // Technically this job is always processed in "skew" mode
+                        Database.executeBatch(new CRLP_GAU_BATCH(recordIds, lastIdProcessed), batchSize);
+                    }
+                    when RecurringDonations {
+                        Database.executeBatch(new CRLP_RD_BATCH(recordIds), batchSize);
+                    }
+                }
             }
         }
     }
@@ -227,48 +248,53 @@ public class CRLP_RollupBatch_SVC {
      * @return Integer value
      */
     public static Integer getBatchSize(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.BatchJobMode jobMode) {
-        Integer batchSize;
+        Decimal batchSize;
+        Decimal recurringDonationBatchSize =
+                UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c;
 
         try {
-            if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
-                if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-                    batchSize = customizableRollupSettings.Rollups_Account_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                    batchSize = customizableRollupSettings.Rollups_Contact_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                    batchSize = customizableRollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                    batchSize = customizableRollupSettings.Rollups_Contact_Soft_Credit_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-                    batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-                    batchSize = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c.intValue();
+            switch on (jobType){
+                when GAU {
+                    batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c;
                 }
-
-            } else {
-
-                if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-                    batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                    batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                    batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                    batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-                    batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c.intValue();
-
-                } else if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-                    batchSize = UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c.intValue();
+                when RecurringDonations {
+                    batchSize = recurringDonationBatchSize;
+                }
+                when else {
+                    switch on (jobMode) {
+                        when NonSkewMode {
+                            switch on (jobType) {
+                                when AccountHardCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Account_Batch_Size__c;
+                                }
+                                when ContactHardCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Contact_Batch_Size__c;
+                                }
+                                when AccountContactSoftCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c;
+                                }
+                                when ContactSoftCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Contact_Soft_Credit_Batch_Size__c;
+                                }
+                            }
+                        }
+                        when else {
+                            switch on (jobType) {
+                                when AccountHardCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c;
+                                }
+                                when ContactHardCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c;
+                                }
+                                when AccountContactSoftCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c;
+                                }
+                                when ContactSoftCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         } catch (Exception ex) {
@@ -279,6 +305,6 @@ public class CRLP_RollupBatch_SVC {
         if (customizableRollupSettings.Customizable_Rollups_Enabled__c != true && batchSize > 200) {
             batchSize = 200;
         }
-        return (batchSize != null ? batchSize : 200);
+        return (batchSize != null ? batchSize.intValue() : 200);
     }
 }
