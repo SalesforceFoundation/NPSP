@@ -225,9 +225,11 @@ private with sharing  class ALLO_PaymentSync_TEST {
 //TODO Paid payment allocations aren't updated with opportunity allocations changes
     //TODO can't lower or delete an opp allocation for a GAU that has paid payment allocations
 
-//TODO updating paid payment allocations does update opportunity allocations
-@isTest
-private static void validateUpdatingPmtAllocUpdatesOppAllocs() {
+    /*******************************************************************************************************
+    * @description Updating paid Payment Allocations updates Opportunity Allocations
+    ********************************************************************************************************/
+    @isTest
+    private static void validateUpdatingPmtAllocUpdatesOppAllocs() {
         makePayments(1000, 1);
         makeGAUs(2);
 
@@ -249,7 +251,10 @@ private static void validateUpdatingPmtAllocUpdatesOppAllocs() {
         }
 
         pmtAllocs[1].Amount__c= 350;
+        pmtAllocs[1].Percent__c = 35;
         pmtAllocs[2].Amount__c = 450;
+        pmtAllocs[2].Percent__c = 45;
+
         update pmtAllocs;
 
         allocations = getAllocationsOrderByAmount();
@@ -261,6 +266,99 @@ private static void validateUpdatingPmtAllocUpdatesOppAllocs() {
 }
 
 //TODO null and zero amounts for both opps and payments
+    @isTest
+    private static void validateNullAndZeroAmountsForOppsAndPayments() {
+
+        Account acct = [select  Id
+                        from Account];
+
+        List<Opportunity> opps = new List<Opportunity>();
+
+        Opportunity opp = new Opportunity(
+            Name = 'Opp',
+            Amount = 0,
+            AccountID = acct.Id,
+            CloseDate = System.today(),
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            npe01__Do_Not_Automatically_Create_Payment__c = false
+        );
+
+        opps.add (opp);
+        Opportunity opp2 = new Opportunity(
+            Name = 'Opp2',
+            Amount = null,
+            AccountID = acct.Id,
+            CloseDate = System.today(),
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            npe01__Do_Not_Automatically_Create_Payment__c = false
+        );
+        opps.add(opp2);
+
+        insert opps;
+
+        Set<Id> oppIds = new Set<Id>();
+        for (Opportunity anOpp : opps) {
+            oppIds.add(anOpp.id);
+            System.debug('Opp Id: ' + anOpp.Id);
+        }
+
+        List<Allocation__c> allocs = [select    Id,
+                                                Opportunity__c,
+                                                Payment__c,
+                                                General_Accounting_Unit__c,
+                                                General_Accounting_Unit__r.Name,
+                                                Amount__c,
+                                                Percent__c
+                                        from Allocation__c
+                                        where Opportunity__c in :oppIds
+        ];
+
+        System.assertEquals(0, allocs.size(), 'Should be no allocations');
+
+        for (Integer i = 0; i < opps.size(); i++) {
+            opps[i].Amount = 1000;
+        }
+        update opps;
+
+        List<Opportunity> aOpps = [select Id, Amount from Opportunity where Id in :oppIds];
+        System.assertEquals (2, aOpps.size());
+
+        for (Opportunity anOpp : aOpps) {
+            System.assertEquals (1000, anOpp.Amount);
+        }
+
+
+        allocs = [select    Id,
+                            Opportunity__c,
+                            Payment__c,
+                            General_Accounting_Unit__c,
+                            General_Accounting_Unit__r.Name,
+                            Amount__c,
+                            Percent__c
+                  from Allocation__c
+                  where Opportunity__c in :oppIds
+        ];
+
+        System.assertEquals (2, allocs.size(), 'Default Allocs for Opportunity should now be present.');
+
+        opps[0].Amount = 0;
+        opps[1].Amount = null;
+        update opps;
+
+        allocs = [select    Id,
+                            Opportunity__c,
+                            Payment__c,
+                            General_Accounting_Unit__c,
+                            General_Accounting_Unit__r.Name,
+                            Amount__c,
+                            Percent__c
+                  from Allocation__c
+                  where Opportunity__c in :oppIds
+        ];
+
+        System.assertEquals(0, allocs.size(), 'No allocations should be present');
+
+    }
 //TODO negative payment amounts
 
 
