@@ -40,7 +40,6 @@ public class CRLP_Account_SoftCredit_BATCH extends CRLP_Batch_Base_NonSkew imple
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Accounts that meet the "Non Skew" criteria
-     * @param jobType Defines the type of rollup job
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
     public CRLP_Account_SoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
@@ -49,8 +48,7 @@ public class CRLP_Account_SoftCredit_BATCH extends CRLP_Batch_Base_NonSkew imple
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup is for a specific set of Account Id's
-     * @param jobType Defines the type of rollup job
-     * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
+     * @param recordIds Specific set of parent record id's to roll up to
      */
     public CRLP_Account_SoftCredit_BATCH(List<Id> recordIds) {
         super(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit, recordIds);

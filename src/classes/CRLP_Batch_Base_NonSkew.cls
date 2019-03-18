@@ -36,6 +36,13 @@
 */
 public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
+    /*******************************************************************************************************
+    * @description When Chunking mode is used for an LDV org, this is the last Id retrieved
+    * in the previous batch. When the job is chained, it'll query records with Ids greater than this Id.
+    */
+    @TestVisible
+    private Id lastIdProcessed;
+
     protected CRLP_Batch_Base_NonSkew() { }
 
     // These 2 fields are used to check for Contacts or Accounts (both objects have the same fields) that may have
@@ -45,25 +52,30 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     // when an Opportunity was inserted/updated, but maybe that Opportunity was deleted or the reference changed.
     // There may be some custom rollups that use other fields that this wouldn't know about, or the user may have
     // modified the filters to somehow change those meaning. This is a good 99.9% check though.
-    protected List<String> fieldsToCheckForNonZero {
+    @TestVisible
+    private List<String> fieldsToCheckForNonZero {
         get {
-            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
-                    ) {
-                return new List<String>{
-                        'npo02__NumberOfClosedOpps__c', 'npo02__NumberOfMembershipOpps__c'
-                };
-            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                return new List<String>{
-                        SObjectType.Contact.fields.Number_of_Soft_Credits__c.getName()
-                };
-            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-                return new List<String>{
-                        SObjectType.General_Accounting_Unit__c.fields.Total_Number_of_Allocations__c.getName()
-                };
+            if (fieldsToCheckForNonZero == null) {
+                List<String> fieldsToCheck = new List<String>();
+                switch on (jobType) {
+                    when AccountHardCredit, ContactHardCredit {
+                        fieldsToCheck.add('npo02__NumberOfClosedOpps__c');
+                        fieldsToCheck.add('npo02__NumberOfMembershipOpps__c');
+                    }
+                    when ContactSoftCredit {
+                        fieldsToCheck.add(
+                                SObjectType.Contact.fields.Number_of_Soft_Credits__c.getName());
+                    }
+                    when GAU {
+                        fieldsToCheck.add(
+                                SObjectType.General_Accounting_Unit__c.fields.Total_Number_of_Allocations__c.getName());
+                    }
+                }
+                fieldsToCheckForNonZero = fieldsToCheck;
             }
-            return new List<String>();
-        } private set;
+            return fieldsToCheckForNonZero;
+        }
+        private set;
     }
 
     /*******************************************************************************************************
@@ -73,6 +85,24 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      */
     public CRLP_Batch_Base_NonSkew(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
         super(jobType, jobFilter);
+    }
+
+    /*******************************************************************************************************
+     * @description Constructs the class - Rollup is for a specific set of Summary Object Id's
+     * @param jobType Defines the type of rollup job
+     * @param recordIds Specific set of parent record id's to roll up to
+     */
+    public CRLP_Batch_Base_NonSkew(CRLP_RollupProcessingOptions.RollupType jobType, Id lastIdProcessed) {
+        super(jobType);
+        this.lastIdProcessed = lastIdProcessed;
+    }
+
+    /*******************************************************************************************************
+     * @description Constructs the class - Rollup is for a specific set of Summary Object Id's
+     * @param jobType Defines the type of rollup job
+     */
+    public CRLP_Batch_Base_NonSkew(CRLP_RollupProcessingOptions.RollupType jobType) {
+        super(jobType);
     }
 
     /*******************************************************************************************************
@@ -91,47 +121,11 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     */
     public Database.Querylocator start(Database.BatchableContext bc) {
         try {
-            initializeJobData();
-
-            // Build a query string of the target Summary object.
-            String query = CRLP_Query_SEL.buildObjectQueryForRollup(this.summaryObjectType);
-
-            // Fields in the fieldsToCheckForNonZero[] list must always be in the Contact query
-            for (String f : fieldsToCheckForNonZero) {
-                if (!query.containsIgnoreCase(f)) {
-                    query = query.split(' FROM ')[0] + ', ' + f + ' FROM ' + query.split(' FROM ')[1];
-                }
-            }
-
-            List<String> whereClauses = new List<String>();
-
-            // Add additional query filters as needed
-            if (this.recordIds != null && this.recordIds.size() > 0) {
-                whereClauses.add('Id IN :recordIds');
-            } else {
-                // Exclude Accounts or Contacts that will be rolled up in the SkewMode batch job
-                String skewClause = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
-                if (!String.isEmpty(skewClause)) {
-                    whereClauses.add(skewClause);
-                }
-
-                String whereClause = getMainQueryInnerJoinFilter();
-                if (whereClause != null) {
-                    whereClauses.add(whereClause);
-                }
-            }
-
-            // TODO DO we need to exclude Organization Donations??
-
-            if (!whereClauses.isEmpty()) {
-                query += ' WHERE ' + String.join(whereClauses, ' AND ');
-            }
-
-            // If there are no active rollups for the object type, then force the query to return zero records.
-            if (hasActiveRollupsForThisJob() == false) {
-                // This is needed because can't return null as a valid iterator.
-                query += ' LIMIT 0';
-            }
+            String query = getBatchStartQuery(
+                    lastIdProcessed,
+                    batchSizeChunkLimit,
+                    fieldsToCheckForNonZero
+            );
 
             UTIL_Debug.debug(LoggingLevel.WARN, '>> Batch Query =' + query);
             return Database.getQueryLocator(query);
@@ -147,10 +141,16 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     * @param summaryRecords List of Summary records
     */
     public void execute(Database.BatchableContext bc, List<SObject> summaryRecords) {
-
-        this.batchIteration++;
         try {
-            initializeJobData();
+            if (isChunkModeEnabled) {
+                // Since execution contexts might not run in order (ex., chunk size 10k,
+                // batch size 2k has 5 batches but they won't run in a guaranteed order)
+                // we first need to check if the last Id is greater than the value in lastIdProcessed
+                Id lastProcessedId = summaryRecords[summaryRecords.size() - 1].Id;
+                if (lastIdProcessed == null || lastProcessedId > lastIdProcessed) {
+                    lastIdProcessed = lastProcessedId;
+                }
+            }
 
             CRLP_RollupProcessingOptions.ProcessingOptions options = buildProcessingOptions();
 
@@ -285,6 +285,11 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         }
     }
 
+    /**
+     * @description Batch finish method. Logs the result if debugging is enabled. If chunking mode is enabled for
+     * LDV orgs, chains the batch
+     * @param bc
+     */
     public void finish(Database.BatchableContext bc) {
         // In debug mode, write a summary of the job to the error log
         if (CRLP_Debug_UTIL.isDebuggingEnabled) {
@@ -298,6 +303,31 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             );
             insert logEntry;
         }
+
+        // If chunk mode is enabled and there are more records to process,
+        // submit the next batch job
+        if (isChunkModeEnabled && hasAdditionalRecordsToProcess(lastIdProcessed)) {
+            submitBatchableJobForNextChunk();
+        }
+    }
+
+    /**
+     * @description Submits another Rollup Job of the same type, passing in the starting Id as a
+     * param to the batch job constructor.  Used to support chunk mode.  This enables the Batchable
+     * class to fully encapsulate the responsibility of running itself in Chunk mode.
+     */
+    private void submitBatchableJobForNextChunk(){
+        switch on (jobType) {
+            when AccountHardCredit {
+                Database.executeBatch(new CRLP_Account_BATCH(lastIdProcessed));
+            }
+            when ContactHardCredit {
+                Database.executeBatch(new CRLP_Contact_BATCH(lastIdProcessed));
+            }
+            when ContactSoftCredit {
+                Database.executeBatch(new CRLP_Contact_SoftCredit_BATCH(lastIdProcessed));
+            }
+        }
     }
 
     /**
@@ -308,4 +338,5 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         options.detailObjType = this.detailObjectType;
         return options;
     }
+
 }

@@ -913,6 +913,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         customizableRollupSettings.Rollups_IncrementalLastNDays_FldOverride__c = mySettings.Rollups_IncrementalLastNDays_FldOverride__c;
         customizableRollupSettings.Rollups_IncrementalLastNDays_ValOverride__c = mySettings.Rollups_IncrementalLastNDays_ValOverride__c;
 
+        // Default values
+        if (customizableRollupSettings.Rollups_Limit_on_Attached_Opps_for_Skew__c == null) {
+            customizableRollupSettings.Rollups_Limit_on_Attached_Opps_for_Skew__c = 250;
+        }
+
         orgCustomizableRollupSettings = customizableRollupSettings;
 
         return customizableRollupSettings;

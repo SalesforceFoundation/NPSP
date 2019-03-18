@@ -48,12 +48,14 @@ public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
     /*********************************************************************************************************
     * @description Returns the string Id of the Batch Opp Rollups panel. 
     */
-    public override string idPanel() { return 'idPanelOppBatch'; }
+    public override String idPanel() {
+        return 'idPanelOppBatch';
+    }
     
     /*********************************************************************************************************
     * @description Whether we are currently running the batch process 
     */
-    public boolean isRunningBatch { get; set; }
+    public Boolean isRunningBatch { get; set; }
     
     /*********************************************************************************************************
     * @description Action Method to run the Batch Opp Rollups  
@@ -93,7 +95,13 @@ public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
                         CRLP_RollupBatch_SVC.getSkewWhereClause(jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode) +
                         ' LIMIT 1';
 
-                Boolean executeSkewMode = (database.countQuery(query) != 0);
+                Boolean executeSkewMode = true;
+                // Only attempt a count of skew mode if there is enough cpu time left for the query
+                // otherwise just assume it's needed to avoid the CPU timeout on the page.
+                Decimal cpuTime = (Decimal)Limits.getCpuTime();
+                if (cpuTime.divide(Limits.getLimitCpuTime(), 2) < .80) {
+                    executeSkewMode = (Database.countQuery(query) != 0);
+                }
                 if (executeSkewMode) {
                     Database.executeBatch(new CRLP_SkewDispatcher_BATCH(jobType), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
                     this.numJobSubmitted++;
