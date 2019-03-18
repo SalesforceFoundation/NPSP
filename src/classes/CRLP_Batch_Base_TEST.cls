@@ -36,201 +36,443 @@
 @IsTest(isParallel=true)
 private class CRLP_Batch_Base_TEST {
 
-    @isTest
-    private static void accountHardCreditRollupGeneratesStandardJoinQueryWhenNotScheduledJob() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
-
-        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
-        accountBatchJob.initializeJobData();
-
-        String whereClause = accountBatchJob.getMainQueryInnerJoinFilter();
-        System.assert(whereClause.contains('WHERE') == false, 'The standard query for the inner join ' +
-                'should NOT contain a where filter on the Opportunities when not a scheduled job.');
-    }
+    /******************************** Incremental Mode Tests *****************************/
 
     @isTest
     private static void accountHardCreditRollupGeneratesIncrementalModeJoinQuery() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+        configureIncrementalMode(jobType, true);
 
-        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
-        accountBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
         accountBatchJob.isScheduledJob = true; // Set the Batch Base isScheduledJob flag to true.
         // This is necessary because the Schedulable Job constructs and submits a separate instance of the
         // CRLP_Account_BATCH class.  So we "mock" the isScheduledJob value here, to test the correct
         // response from the getWhereClause() method below.
 
-        String generatedWhereClause = accountBatchJob.getMainQueryInnerJoinFilter();
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(accountBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('FROM'));
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + new RollupInfo().maxYearsAgoInteger));
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
 
     @isTest
     private static void accountHardCreditRollupGeneratesLastNDaysJoinQuery() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+        configureIncrementalMode(jobType, true);
 
         deactivateTimeBoundRollups(
-                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                jobType,
                 CRLP_Operation.TimeBoundOperationType.Years_Ago);
 
-        CRLP_Account_Batch accountBatchJob = new CRLP_Account_Batch(new List<Id>());
-        accountBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
         accountBatchJob.isScheduledJob = true;
 
-        String generatedWhereClause = accountBatchJob.getMainQueryInnerJoinFilter();
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(accountBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + new RollupInfo().maxDaysBackInteger));
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
 
     @isTest
     private static void accountHardCreditRollupGeneratesLastNYearsJoinQuery() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, true);
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+        configureIncrementalMode(jobType, true);
 
         deactivateTimeBoundRollups(
-                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                jobType,
                 CRLP_Operation.TimeBoundOperationType.Days_Back);
 
-        CRLP_Account_Batch accountBatchJob = new CRLP_Account_Batch(new List<Id>());
-        accountBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
         accountBatchJob.isScheduledJob = true;
 
-        String generatedWhereClause = accountBatchJob.getMainQueryInnerJoinFilter();
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(accountBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         Integer lastNYears = new RollupInfo().maxYearsAgoInteger;
         System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + lastNYears));
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
 
     @isTest
     private static void accountHardCreditRollupGeneratesLastNDaysJoinQueryWithCustomSettingFalse() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, false);
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+        configureIncrementalMode(jobType, false);
 
-        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
-        accountBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
         accountBatchJob.isScheduledJob = true;
 
-        String whereClause = accountBatchJob.getMainQueryInnerJoinFilter();
-        System.assert(whereClause.contains('WHERE') == false, 'The standard where clause should be used ' +
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(accountBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
+        System.assert(generatedWhereClause.contains('WHERE') == false, 'The standard where clause should be used ' +
                 'for the inner join when the custom setting is set to false.');
-    }
-
-    @isTest
-    private static void contactHardCreditRollupGeneratesStandardJoinQueryWhenNotScheduledJob() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
-
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
-        contactBatchJob.initializeJobData();
-
-        String whereClause = contactBatchJob.getMainQueryInnerJoinFilter();
-        System.assert(whereClause.contains('WHERE') == false, 'The standard query for the inner join ' +
-                'should NOT contain a where filter on the Opportunities when not a scheduled job.');
-    }
-
-    @isTest
-    private static void contactHardCreditRollupGeneratesIncrementalModeJoinQuery() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
-
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
-        contactBatchJob.initializeJobData();
-        contactBatchJob.isScheduledJob = true;
-
-        String generatedWhereClause = contactBatchJob.getMainQueryInnerJoinFilter();
-        System.assert(generatedWhereClause.contains('FROM'));
-        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
-                'where clause for the inner join should contain a where filter on the Opportunities.');
-        System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + new RollupInfo().maxYearsAgoInteger));
-    }
-
-    @isTest
-    private static void contactHardCreditRollupGeneratesLastNDaysJoinQuery() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
-
-        deactivateTimeBoundRollups(
-                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
-                CRLP_Operation.TimeBoundOperationType.Years_Ago);
-
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
-        contactBatchJob.initializeJobData();
-        contactBatchJob.isScheduledJob = true;
-
-        String generatedWhereClause = contactBatchJob.getMainQueryInnerJoinFilter();
-        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
-                'where clause for the inner join should contain a where filter on the Opportunities.');
-        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + new RollupInfo().maxDaysBackInteger));
-    }
-
-    @isTest
-    private static void contactHardCreditRollupGeneratesLastNYearsJoinQuery() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, true);
-
-        deactivateTimeBoundRollups(
-                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
-                CRLP_Operation.TimeBoundOperationType.Days_Back);
-
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
-        contactBatchJob.initializeJobData();
-        contactBatchJob.isScheduledJob = true;
-
-        String generatedWhereClause = contactBatchJob.getMainQueryInnerJoinFilter();
-        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
-                'where clause for the inner join should contain a where filter on the Opportunities.');
-        Integer lastNYears = new RollupInfo().maxYearsAgoInteger;
-        System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + lastNYears));
-    }
-
-    @isTest
-    private static void contactHardCreditRollupGeneratesLastNDaysJoinQueryWithCustomSettingFalse() {
-        configureIncrementalMode(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, false);
-
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
-        contactBatchJob.initializeJobData();
-        contactBatchJob.isScheduledJob = true;
-
-        String whereClause = contactBatchJob.getMainQueryInnerJoinFilter();
-        System.assert(whereClause.contains('WHERE') == false, 'The standard where clause should be used ' +
-                'for the inner join when the custom setting is set to false.');
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
 
     @isTest
     private static void accountHardCreditRollupWithUserDefinedJoinGeneratesProperJoinQuery() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
         String userDefinedLastNDaysFieldOverride = 'LastModifiedDate';
         Integer userDefinedLastNDaysValueOverride = 44;
         configureIncrementalFieldOverrides(
-                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                jobType,
                 userDefinedLastNDaysFieldOverride,
                 userDefinedLastNDaysValueOverride);
 
-        CRLP_Account_BATCH accountBatchJob = new CRLP_Account_BATCH(new List<Id>());
-        accountBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
         accountBatchJob.isScheduledJob = true;
 
-        String generatedWhereClause = accountBatchJob.getMainQueryInnerJoinFilter();
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(accountBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains(userDefinedLastNDaysFieldOverride));
         System.assert(generatedWhereClause.contains(String.valueOf(userDefinedLastNDaysValueOverride)));
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The outer query should not contain "ORDER BY" or "LIMIT".');
+    }
+
+    @isTest
+    private static void contactHardCreditRollupGeneratesStandardJoinQueryWhenNotScheduledJob() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+        configureIncrementalMode(jobType, true);
+
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
+        System.assert(generatedWhereClause.contains('WHERE') == false, 'The standard query for the inner join ' +
+                'should NOT contain a where filter on the Opportunities when not a scheduled job.');
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The outer query should not contain "ORDER BY" or "LIMIT".');
+    }
+
+    @isTest
+    private static void contactHardCreditRollupGeneratesIncrementalModeJoinQuery() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+        configureIncrementalMode(jobType, true);
+
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
+        contactBatchJob.isScheduledJob = true;
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
+        System.assert(generatedWhereClause.contains('FROM'));
+        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
+                'where clause for the inner join should contain a where filter on the Opportunities.');
+        System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + new RollupInfo().maxYearsAgoInteger));
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The outer query should not contain "ORDER BY" or "LIMIT".');
+    }
+
+    @isTest
+    private static void contactHardCreditRollupGeneratesLastNDaysJoinQuery() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+        configureIncrementalMode(jobType, true);
+
+        deactivateTimeBoundRollups(
+                jobType,
+                CRLP_Operation.TimeBoundOperationType.Years_Ago);
+
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
+        contactBatchJob.isScheduledJob = true;
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
+        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
+                'where clause for the inner join should contain a where filter on the Opportunities.');
+        System.assert(generatedWhereClause.contains('LAST_N_DAYS:' + new RollupInfo().maxDaysBackInteger));
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The outer query should not contain "ORDER BY" or "LIMIT".');
+    }
+
+    @isTest
+    private static void contactHardCreditRollupGeneratesLastNYearsJoinQuery() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+        configureIncrementalMode(jobType, true);
+
+        deactivateTimeBoundRollups(
+                jobType,
+                CRLP_Operation.TimeBoundOperationType.Days_Back);
+
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
+        contactBatchJob.isScheduledJob = true;
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
+        System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
+                'where clause for the inner join should contain a where filter on the Opportunities.');
+        Integer lastNYears = new RollupInfo().maxYearsAgoInteger;
+        System.assert(generatedWhereClause.contains('LAST_N_YEARS:' + lastNYears));
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The outer query should not contain "ORDER BY" or "LIMIT".');
+    }
+
+    @isTest
+    private static void contactHardCreditRollupGeneratesLastNDaysJoinQueryWithCustomSettingFalse() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+        configureIncrementalMode(jobType, false);
+
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
+        contactBatchJob.isScheduledJob = true;
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
+        System.assert(generatedWhereClause.contains('WHERE') == false, 'The standard where clause should be used ' +
+                'for the inner join when the custom setting is set to false.');
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The outer query should not contain "ORDER BY" or "LIMIT".');
     }
 
     @isTest
     private static void contactHardCreditRollupWithUserDefinedJoinGeneratesProperJoinQuery() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
         String userDefinedLastNDaysFieldOverride = 'LastModifiedDate';
         Integer userDefinedLastNDaysValueOverride = 555;
         configureIncrementalFieldOverrides(
-                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                jobType,
                 userDefinedLastNDaysFieldOverride,
                 userDefinedLastNDaysValueOverride);
 
-        CRLP_Contact_BATCH contactBatchJob = new CRLP_Contact_BATCH(new List<Id>());
-        contactBatchJob.initializeJobData();
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
         contactBatchJob.isScheduledJob = true;
 
-        String generatedWhereClause = contactBatchJob.getMainQueryInnerJoinFilter();
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, null, null, null);
+
+        String generatedWhereClause = queryBuilder.getMainQueryInnerJoinFilter();
         System.assert(generatedWhereClause.contains('WHERE'), 'The incremental mode ' +
                 'where clause for the inner join should contain a where filter on the Opportunities.');
         System.assert(generatedWhereClause.contains(userDefinedLastNDaysFieldOverride));
         System.assert(generatedWhereClause.contains(String.valueOf(userDefinedLastNDaysValueOverride)));
+        System.assert(!batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The outer query should not contain "ORDER BY" or "LIMIT".');
+    }
+
+    /******************************** Chunk Mode Tests *****************************/
+
+    @isTest
+    private static void chunkModeRollupHasAdditionalRecordsToProcess() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+        Integer chunkSize = 1;
+        Id lastIdProcessed = getAccountOrContactIdForTesting(jobType);
+        configureChunkMode(jobType, chunkSize);
+
+        Id nextIdToBeProcessed = getAccountOrContactIdForTesting(jobType);
+        Opportunity opportunityForAdditionalAccount = new Opportunity(
+                AccountId = nextIdToBeProcessed,
+                StageName = 'Open',
+                CloseDate = date.today(), name = 'test');
+        insert opportunityForAdditionalAccount;
+
+        // With chunk mode enabled, the second and subsequent jobs are constructed with
+        // the lastProcessedId constructor, passing in the Id to use in the start query.
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(
+                jobType,
+                lastIdProcessed);
+
+        System.assert(accountBatchJob.hasAdditionalRecordsToProcess(lastIdProcessed),
+            'hasAdditionalRecordsToProcess should be true, ' +
+                    'since the chunk size is 1 and there is another Account to process.');
+    }
+
+    @isTest
+    private static void accountHardCreditRollupChunkModeFirstJobQueryContainsOrderByLimit() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+        Integer chunkSize = 500;
+        configureChunkMode(jobType, chunkSize);
+
+        // With chunk mode enabled, the first job is constructed with
+        // the empty constructor and does not pass in a lastProcessedId.
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(jobType, null);
+
+        System.assertEquals(null, accountBatchJob.lastIdProcessed,
+                'chunkModeStartingId should be null for this, the first chunk mode job ' +
+                        '(created using the empty constructor).');
+
+        System.assertEquals(chunkSize, accountBatchJob.batchSizeChunkLimit,
+                'batchSizeChunkLimit should equal chunkSize');
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(accountBatchJob, null, chunkSize, null);
+
+        System.assert(batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The chunk mode start query should always contain "ORDER BY" and "LIMIT".');
+    }
+
+    @isTest
+    private static void accountHardCreditRollupChunkModeQueryContainsOrderByLimitId() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+        Integer chunkSize = 500;
+        Id lastIdProcessed = getAccountOrContactIdForTesting(jobType);
+        configureChunkMode(jobType, chunkSize);
+
+        CRLP_Batch_Base_NonSkew accountBatchJob = getBatchJobInstanceWithData(
+                jobType,
+                lastIdProcessed);
+
+        System.assertEquals(lastIdProcessed, accountBatchJob.lastIdProcessed,
+                'chunkModeStartingId should equal testAccount.Id');
+
+        System.assertEquals(chunkSize, accountBatchJob.batchSizeChunkLimit,
+                'batchSizeChunkLimit should equal chunkSize');
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(accountBatchJob, lastIdProcessed, chunkSize, null);
+        String query = queryBuilder.buildQuery();
+
+        System.assert(batchStartQueryContainsChunkModeId(accountBatchJob, query),
+                'This chunk mode query should contain " > ' + accountBatchJob.lastIdProcessed + '"');
+
+        System.assert(batchStartOuterQueryContainsOrderByAndLimit(query),
+                'The chunk mode start query should always contain "ORDER BY" and "LIMIT".');
+    }
+
+    @isTest
+    private static void contactHardCreditRollupChunkModeFirstJobQueryContainsOrderByLimit() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+        Integer chunkSize = 500;
+        configureChunkMode(jobType, chunkSize);
+
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
+
+        System.assertEquals(null, contactBatchJob.lastIdProcessed,
+                'chunkModeStartingId should be null for this, the first chunk mode job ' +
+                        '(created using the empty constructor).');
+
+        System.assertEquals(chunkSize, contactBatchJob.batchSizeChunkLimit,
+                'batchSizeChunkLimit should equal chunkSize');
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, null, chunkSize, null);
+
+        System.assert(batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The chunk mode start query should always contain "ORDER BY" and "LIMIT".');
+    }
+
+    @isTest
+    private static void contactHardCreditRollupChunkModeQueryContainsOrderByLimitId() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+        Integer chunkSize = 500;
+        Id lastIdProcessed = getAccountOrContactIdForTesting(jobType);
+        configureChunkMode(jobType, chunkSize);
+
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(
+                jobType,
+                lastIdProcessed);
+
+        System.assertEquals(lastIdProcessed, contactBatchJob.lastIdProcessed,
+                'chunkModeStartingId should equal testAccount.Id');
+
+        System.assertEquals(chunkSize, contactBatchJob.batchSizeChunkLimit,
+                'batchSizeChunkLimit should equal chunkSize');
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, lastIdProcessed, chunkSize, null);
+        String query = queryBuilder.buildQuery();
+
+        System.assert(batchStartQueryContainsChunkModeId(contactBatchJob, query),
+                'This chunk mode query should contain " > ' + contactBatchJob.lastIdProcessed + '"');
+
+        System.assert(batchStartOuterQueryContainsOrderByAndLimit(query),
+                'The chunk mode start query should always contain "ORDER BY" and "LIMIT".');
+    }
+
+    @isTest
+    private static void contactSoftCreditRollupChunkModeFirstJobQueryContainsOrderByLimit() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
+        Integer chunkSize = 500;
+        configureChunkMode(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit, chunkSize);
+
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(jobType, null);
+
+        System.assertEquals(null, contactBatchJob.lastIdProcessed,
+                'chunkModeStartingId should be null for this, the first chunk mode job ' +
+                        '(created using the empty constructor).');
+
+        System.assertEquals(chunkSize, contactBatchJob.batchSizeChunkLimit,
+                'batchSizeChunkLimit should equal chunkSize');
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, null, chunkSize, null);
+
+        System.assert(batchStartOuterQueryContainsOrderByAndLimit(queryBuilder.buildQuery()),
+                'The chunk mode start query should always contain "ORDER BY" and "LIMIT".');
+    }
+
+    @isTest
+    private static void contactSoftCreditRollupChunkModeQueryContainsOrderByLimitId() {
+        CRLP_RollupProcessingOptions.RollupType jobType =
+                CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
+        Integer chunkSize = 500;
+        Id lastIdProcessed = getAccountOrContactIdForTesting(jobType);
+        configureChunkMode(jobType, chunkSize);
+
+        CRLP_Batch_Base_NonSkew contactBatchJob = getBatchJobInstanceWithData(
+                jobType,
+                lastIdProcessed);
+
+        System.assertEquals(lastIdProcessed, contactBatchJob.lastIdProcessed,
+                'chunkModeStartingId should equal testAccount.Id');
+
+        System.assertEquals(chunkSize, contactBatchJob.batchSizeChunkLimit,
+                'batchSizeChunkLimit should equal chunkSize');
+
+        CRLP_Batch_Base.BatchQueryBuilder queryBuilder =
+                new CRLP_Batch_Base.BatchQueryBuilder(contactBatchJob, lastIdProcessed, chunkSize, null);
+        String query = queryBuilder.buildQuery();
+
+        System.assert(batchStartQueryContainsChunkModeId(contactBatchJob, query),
+                'This chunk mode query should contain " > ' + contactBatchJob.lastIdProcessed + '"');
+
+        System.assert(batchStartOuterQueryContainsOrderByAndLimit(query),
+                'The chunk mode start query should always contain "ORDER BY" and "LIMIT".');
     }
 
     /******************************** Helper Methods *****************************/
@@ -247,34 +489,25 @@ private class CRLP_Batch_Base_TEST {
             CRLP_RollupProcessingOptions.RollupType jobType,
             Boolean isIncrementalMode) {
 
-        Customizable_Rollup_Settings__c settings = UTIL_CustomSettingsFacade.getRollupSettingsForTests(
-                new Customizable_Rollup_Settings__c (
-                        Customizable_Rollups_Enabled__c = true
-                ));
+        Customizable_Rollup_Settings__c settings =
+                getRollupSettingsForTestsCustomizableRollupsEnabled();
 
         switch on (jobType) {
-
             when AccountHardCredit {
-
                 settings.AccountHardCreditNonSkew_Incremental__c = isIncrementalMode;
-
                 // Create the test data
                 CRLP_RollupAccount_TEST.mockRollupCMTValues();
             }
-
             when ContactHardCredit {
-
                 settings.ContactHardCreditNonSkew_Incremental__c = isIncrementalMode;
-
                 CRLP_RollupContact_TEST.mockRollupCMTValues();
             }
         }
-
         return settings;
     }
 
     /**
-     * @description
+     * @description Configures incremental mode field override custom settings fields.
      * @param jobType The RollupType whose user defined inner join override should be configured
      * @param overrideForLastNDaysField API name of the custom field that should be used in the user-defined
      * inner join override
@@ -355,4 +588,159 @@ private class CRLP_Batch_Base_TEST {
             }
         }
     }
+
+    /**
+     * @description Configures incremental mode field override custom settings fields.
+     * @param jobType RollupType for which chunk mode should be configured.
+     * @param chunkSize The number of records to process in each chunk mode batch job. Used
+     * in the batch start query.
+     * @return The configured Customizable_Rollup_Settings__c record.
+     */
+    private static Customizable_Rollup_Settings__c configureChunkMode(
+            CRLP_RollupProcessingOptions.RollupType jobType,
+            Integer chunkSize) {
+        Customizable_Rollup_Settings__c settings =
+                getRollupSettingsForTestsCustomizableRollupsEnabled();
+
+        switch on (jobType) {
+
+            when AccountHardCredit {
+                settings.ChunkSize_Account_HardCredit__c = chunkSize;
+                // Create the test data
+                CRLP_RollupAccount_TEST.mockRollupCMTValues();
+            }
+
+            when ContactHardCredit {
+                settings.ChunkSize_Contact_HardCredit__c = chunkSize;
+                CRLP_RollupContact_TEST.mockRollupCMTValues();
+            }
+
+            when ContactSoftCredit {
+                settings.ChunkSize_Contact_SoftCredit__c = chunkSize;
+                CRLP_RollupSoftCredit_TEST.mockRollupCMTValues();
+            }
+        }
+        return settings;
+    }
+
+    /**
+     * @description Inserts a simple Account for use in test methods
+     * @return the Inserted AccountId
+     */
+    private static Id getAccountOrContactIdForTesting(CRLP_RollupProcessingOptions.RollupType jobType) {
+        Account testAccount = new Account(Name = 'TestAccount1');
+        insert testAccount;
+
+        switch on (jobType) {
+            when AccountHardCredit {
+                return testAccount.Id;
+            }
+            when ContactHardCredit, ContactSoftCredit {
+                Contact testContact = new Contact(
+                        LastName='TestContact1',
+                        Email='testcontact1@testemail.com',
+                        AccountId = testAccount.Id
+                );
+                insert testContact;
+                return testContact.Id;
+            }
+            when else {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * @description Gets the query string from an instance of CRLP_Batch_Base_NonSkew and
+     * checks whether it contains Order By and Limit clauses.
+     * @param query The query string to analyze.
+     * @return True if the query contains Order By and Limit, false otherwise.
+     */
+    private static Boolean batchStartOuterQueryContainsOrderByAndLimit(String query) {
+        return stringContainsOrderByAndLimit(
+                getOuterQueryOrderByAndLimitString(query));
+    }
+
+    /**
+     * @description Gets the query string from an instance of CRLP_Batch_Base_NonSkew and
+     * checks whether it contains the last processed Id for chunk mode.
+     * @param classInstance An instance of CRLP_Batch_Base_NonSkew class or its subclasses.
+     * @param query The query string to analyze.
+     * @return True if the query contains the last processed Id, false otherwise.
+     */
+    private static Boolean batchStartQueryContainsChunkModeId(
+            CRLP_Batch_Base_NonSkew classInstance,
+            String query) {
+        return query.contains(' > \'' + classInstance.lastIdProcessed + '\'');
+    }
+
+    /**
+     * @description Checks if a string contains Order By and Limit.
+     * @param queryString The string to analyze.
+     * @return True if the string contains Order By and Limit, false otherwise.
+     */
+    private static Boolean stringContainsOrderByAndLimit(String queryString) {
+        return String.isNotBlank(queryString) ?
+                (queryString.contains('ORDER BY')
+                        && queryString.contains('LIMIT')) : false;
+    }
+
+    /**
+     * @description returns the last part of the outer query, used to test for the
+     * presence of ORDER BY and LIMIT clauses.
+     * @param query The query string to analyze.
+     * @return A string that represents the characters to the right of the final ")" in
+     * the query.  Null if there are no characters right of the last ")".
+     */
+    private static String getOuterQueryOrderByAndLimitString(String query){
+        Integer i = query.lastIndexOf(')');
+        String outerQueryOrderByAndLimitString = query.right(query.length() - i - 1);
+        return outerQueryOrderByAndLimitString;
+    }
+
+    /**
+     * @description Gets the Rollup Settings to be used for testing with Customizable
+     * Rollups enabled.
+     * @return The Customizable Rollups Custom Settings with Customizable Rollups enabled.
+     */
+    private static Customizable_Rollup_Settings__c getRollupSettingsForTestsCustomizableRollupsEnabled() {
+        return UTIL_CustomSettingsFacade.getRollupSettingsForTests(
+                new Customizable_Rollup_Settings__c (
+                        Customizable_Rollups_Enabled__c = true
+                ));
+    }
+
+    /**
+     * @description Utility used to initialize an instance of the Non-Skew Batch Job for a
+     * Rollup Type, and initialize its job data.
+     * @param jobType The RollupType of the class instance to create.
+     * @param lastIdProcessed An Id that is passed to the class instance for use in the
+     * start method query when in chunk mode.
+     * @return An instance of the CRLP_Batch_Base_NonSkew class.
+     */
+    private static CRLP_Batch_Base_NonSkew getBatchJobInstanceWithData(
+            CRLP_RollupProcessingOptions.RollupType jobType,
+            Id lastIdProcessed
+    ) {
+        CRLP_Batch_Base_NonSkew instance;
+        switch on (jobType) {
+            when AccountHardCredit {
+                instance = lastIdProcessed == null ?
+                        new CRLP_Account_BATCH() :
+                        new CRLP_Account_BATCH(lastIdProcessed);
+            }
+            when ContactHardCredit {
+                instance = lastIdProcessed == null ?
+                        new CRLP_Contact_BATCH() :
+                        new CRLP_Contact_BATCH(lastIdProcessed);
+            }
+            when ContactSoftCredit {
+                instance = lastIdProcessed == null ?
+                        new CRLP_Contact_SoftCredit_BATCH() :
+                        new CRLP_Contact_SoftCredit_BATCH(lastIdProcessed);
+            }
+        }
+        return instance;
+    }
+
 }
