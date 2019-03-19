@@ -27,18 +27,16 @@
      */
     handleMessage: function (component, event, helper) {
         var response = event.getParam('message');
-        let message = response.info;
         let batchId = response.batchId;
-        var channel = event.getParam('channel');
-        console.log('channel received: ' + channel);
-        console.log('message received: ' + message);
-        console.log(component.getGlobalId());
+
         if (batchId !== component.get('v.recordId')) {
             return;
         }
 
+        var channel = event.getParam('channel');
+        let message = response.info;
+
         if (channel === 'onSuccess') {
-            console.log('in bge controller on success: ' + message.recordId);
             helper.runNewRecordDryRun(component, message.recordId);
             helper.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftSaved'), 'success');
             helper.createEntryForm(component);

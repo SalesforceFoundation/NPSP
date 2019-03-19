@@ -82,7 +82,6 @@
      */
     onSuccess: function (component, event, helper) {
         var message = {'recordId': event.getParams().response.id};
-        console.log(message);
         helper.sendMessage(component, 'onSuccess', message);
         component.destroy();
     },

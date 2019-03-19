@@ -127,10 +127,10 @@
      * @description: send a message to other components
      */
     sendMessage: function (component, channel, info) {
-        console.log('channel: '+channel);
-        let message = {};
-        message.info = info;
-        message.batchId = component.get('v.recordId');
+        let message = {
+            info: info,
+            batchId: component.get('v.recordId')
+        };
         let sendMessage = $A.get('e.ltng:sendMessage');
         sendMessage.setParams({
             'channel': channel,
