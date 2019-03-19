@@ -59,6 +59,11 @@ global with sharing class Callable_API implements System.Callable {
             } when 'opp.mapstagetostate' {
                 return OPP_StageMappingUtil.determineOppStateFromOppStage((String) params.get('OpportunityStage'));
 
+            } when 'crlp.getdefinitionsforrolluptype' {
+                CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
+                List<CRLP_Rollup> response = crlpApiSvc.getRollupDefinitions((String) params.get(CRLP_ApiService.PARAM_ROLLUPTYPE));
+                return JSON.serialize(response, true);
+
             } when else {
                 throw new MalformedMethodInvocationException(
                     String.format(System.Label.CallableApiMethodNotImplemented, new List<String> { action })
