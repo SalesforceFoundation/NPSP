@@ -20,4 +20,6 @@
         <protected>false</protected>
         <url>{!URLFOR(&apos;/apex/%%%NAMESPACE%%%RD_AddDonationsBTN?id=&apos; + npe03__Recurring_Donation__c.Id)}</url>
     </webLinks>
+    <enableActivities>true</enableActivities>
+    <enableReports>true</enableReports>
 </CustomObject>

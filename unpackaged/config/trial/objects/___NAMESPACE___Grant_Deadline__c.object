@@ -16,7 +16,6 @@
         <fields>%%%NAMESPACE%%%Type__c</fields>
         <label>Deliverable Layout</label>
     </compactLayouts>
-    <enableActivities>true</enableActivities>
     <listViews>
         <fullName>All</fullName>
         <filterScope>Everything</filterScope>
@@ -33,6 +32,8 @@
     <deploymentStatus>Deployed</deploymentStatus>
     <sharingModel>ControlledByParent</sharingModel>
     <description>A custom object for tracking various grant/gift seeking deliverables such as the LOI delivery date, application date, and report due dates.</description>
+    <enableActivities>true</enableActivities>
+    <enableReports>true</enableReports>
     <fields>
         <fullName>%%%NAMESPACE%%%Opportunity__c</fullName>
         <description>Master-Detail relationship that determines which Opportunity this Deliverable is related to.</description>

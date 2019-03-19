@@ -61,6 +61,13 @@ tasks:
             path: unpackaged/config/qa
             namespace_inject: $project_config.project__package__namespace
 
+    deploy_reports:
+        description: Deploys reports & dashboards
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/reports
+            namespace_inject: $project_config.project__package__namespace
+
     deploy_dev_config_delete:
         description: Deploys the metadata deletions for the post-install DE org config
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -231,6 +238,8 @@ flows:
                 task: update_admin_profile
             8:
                 task: test_data_relationships
+            9:
+                task: deploy_reports
 
     config_acctsc_rollups:
         description: 'Deploys custom fields and rollups for testing account soft credits.'
@@ -265,6 +274,10 @@ flows:
                     managed: true
             5:
                 task: test_data_relationships
+            6:
+                task: deploy_reports
+                options:
+                    unmanaged: False
 
     install_upgrade:
         steps:
@@ -374,6 +387,13 @@ plans:
                 ui_options:
                     first:
                         name: NPSP Config for Salesforce Mobile App
+            4:
+                task: deploy_reports
+                options:
+                    unmanaged: False
+                ui_options:
+                    name: NPSP Reports & Dashboards
+                    is_required: False
     new_org:
         slug: trial
         title: Install NPSP Trial
@@ -393,3 +413,22 @@ plans:
                 task: install_managed
             3:
                 flow: config_managed
+                options:
+                    deploy_reports:
+                        unmanaged: False
+                ui_options:
+                    deploy_reports:
+                        name: NPSP Reports & Dashboards
+                        is_required: False
+    reports:
+        slug: reports
+        title: Install Reports & Dashboards
+        tier: additional
+        is_listed: True
+        steps:
+            1:
+                task: deploy_reports
+                options:
+                    unmanaged: False
+                ui_options:
+                    name: NPSP Reports & Dashboards
