@@ -43,10 +43,7 @@ public class CRLP_RollupGAU_SVC extends CRLP_VRollupHandler {
      * CRLP_Rollup object instances that are used to do the actual rollup work for the target Account record.
      */
     public override void initRollup() {
-        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(
-                CRLP_RollupProcessingOptions.RollupType.GAU, this.jobFilter)) {
-            addRollupDefinition(r);
-        }
+        buildGroupedRollups(CRLP_RollupProcessingOptions.RollupType.GAU);
     }
 
     /**
