@@ -56,9 +56,7 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
         } else {
             rollupType = CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
         }
-        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(rollupType, this.jobFilter)) {
-            addRollupDefinition(r);
-        }
+        buildGroupedRollups(rollupType);
     }
 
     /**
