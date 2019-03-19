@@ -73,6 +73,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
     ********************************************************************************************************/
     @isTest
     static void syncPaymentToOpportunity() {
+        setupForTests();
         makePayments(1000, 1);
         makeGAUs(2);
 
@@ -107,6 +108,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
     ********************************************************************************************************/
     @isTest
     static void syncOpportunityToPayment() {
+        setupForTests();
         makePayments(1000, 1);
         makeGAUs(2);
 
@@ -139,6 +141,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
     ********************************************************************************************************/
     @isTest
     static void syncOpportunityToOverscheduledPayments() {
+        setupForTests();
         makePayments(1100, 2);
         makeGAUs(2);
 
@@ -192,6 +195,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
     ********************************************************************************************************/
     @isTest
     static void syncOpportunityToPaymentsWithWriteoffs() {
+        setupForTests();
         makePayments(1000, 2);
         makeGAUs(2);
 
@@ -230,6 +234,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
     ********************************************************************************************************/
     @isTest
     private static void validateUpdatingPmtAllocUpdatesOppAllocs() {
+        setupForTests();
         makePayments(1000, 1);
         makeGAUs(2);
 
@@ -268,7 +273,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
 //TODO null and zero amounts for both opps and payments
     @isTest
     private static void validateNullAndZeroAmountsForOppsAndPayments() {
-
+        setupForTests();
         Account acct = [select  Id
                         from Account];
 
@@ -295,6 +300,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
         opps.add(opp2);
 
         insert opps;
+        System.assertEquals (true, !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC), 'Trigger is not disabled for recursion');
 
         Set<Id> oppIds = new Set<Id>();
         for (Opportunity anOpp : opps) {
@@ -313,6 +319,10 @@ private with sharing  class ALLO_PaymentSync_TEST {
                                         where Opportunity__c in :oppIds
         ];
 
+        for (Integer i=0; i < allocs.size(); i++) {
+            System.debug('allocs.Amount: ' + allocs[i].Amount__c);
+        }
+
         System.assertEquals(0, allocs.size(), 'Should be no allocations');
 
         for (Integer i = 0; i < opps.size(); i++) {
@@ -327,6 +337,8 @@ private with sharing  class ALLO_PaymentSync_TEST {
             System.assertEquals (1000, anOpp.Amount);
         }
 
+        Test.startTest();
+        Test.stopTest();
 
         allocs = [select    Id,
                             Opportunity__c,
@@ -369,6 +381,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
     ********************************************************************************************************/
     @isTest
     private static void validateOverlappingChanges() {
+        setupForTests();
         makePayments(1000, 1);
         makeGAUs(2);
 
@@ -387,13 +400,8 @@ private with sharing  class ALLO_PaymentSync_TEST {
             'Inserting or updating opportunity and payment allocations for the same opportunity failed to cause the expected exception.');
     }
 
-
-    /*** Helpers ***/
-
-    private static void makePayments(Decimal totalAmount, Integer numberOfPayments) {
+    private static void setupForTests() {
         defaultGau = [SELECT Id FROM General_Accounting_Unit__c WHERE Name = 'Default GAU' LIMIT 1];
-        opportunity = [SELECT Id, Name, Amount FROM Opportunity LIMIT 1];
-
         UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(
             new Allocations_Settings__c(
                 Payment_Allocations_Enabled__c = true,
@@ -401,6 +409,13 @@ private with sharing  class ALLO_PaymentSync_TEST {
                 Default__c = defaultGau.Id
             )
         );
+    }
+    /*** Helpers ***/
+
+    private static void makePayments(Decimal totalAmount, Integer numberOfPayments) {
+        defaultGau = [SELECT Id FROM General_Accounting_Unit__c WHERE Name = 'Default GAU' LIMIT 1];
+        opportunity = [SELECT Id, Name, Amount FROM Opportunity LIMIT 1];
+
 
         for (Integer i=0; i<numberOfPayments; i++) {
             payments.add(new npe01__OppPayment__c(
