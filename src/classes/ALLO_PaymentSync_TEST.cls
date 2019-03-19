@@ -202,7 +202,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
         insert alloForInsert;
 
         List<Allocation__c> queryAllocations = getAllocationsOrderByAmount();
-        System.assertEquals(6, queryAllocations.size(), 'Six allocations should exist.');
+        System.assertEquals(9, queryAllocations.size(), 'Nine allocations should exist.');
         //original opportunity allocations
         assertAllocation(queryAllocations[0], 200, defaultGau.Id, true);
         assertAllocation(queryAllocations[1], 300, gaus[1].Id, true);
@@ -221,9 +221,130 @@ private with sharing  class ALLO_PaymentSync_TEST {
         alloForInsert[0].Amount__c = 250;
     }
 
-//TODO written off payments aren't counted in the sync
-//TODO Paid payment allocations aren't updated with opportunity allocations changes
-    //TODO can't lower or delete an opp allocation for a GAU that has paid payment allocations
+    //IN PROGRESS written off payments aren't counted in the sync
+    /*******************************************************************************************************
+    * @description When changing the amount of a Written off Payment with Allocations: 
+    * Changes to the payment values will not change the opportunity allocations
+    ********************************************************************************************************/
+    @isTest
+    static void doNotSyncWrittenOffPaymentToOpportunity() {
+        makePayments(1000, 1);
+        for(npe01__OppPayment__c payment: payments) {
+            payment.npe01__Written_Off__c = true;
+        }
+        update payments;
+        makeGAUs(2);
+
+        System.assert(UTIL_CustomSettingsFacade.getAllocationsSettings().Payment_Allocations_Enabled__c, 
+            UTIL_CustomSettingsFacade.getAllocationsSettings());
+
+        //resetting these manually as a test is considered a single context for static variables
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        alloForInsert.add(new Allocation__c(Payment__c=payments[0].Id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].Id));
+        alloForInsert.add(new Allocation__c(Payment__c=payments[0].Id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].Id));
+        insert alloForInsert;
+
+        List<Allocation__c> queryAllocations = getAllocationsOrderByAmount();
+        System.assertEquals(3, queryAllocations.size(), 'Three allocations should exist.');
+
+        // no allocations should have been created for opportunity
+        System.assertEquals(null, queryAllocations[0].Opportunity__c, 'Only Payment allocations should have been created');
+        System.assertEquals(null, queryAllocations[1].Opportunity__c, 'Only Payment allocations should have been created');
+        System.assertEquals(null, queryAllocations[2].Opportunity__c, 'Only Payment allocations should have been created');
+
+        //original payment allocations
+        assertAllocation(queryAllocations[0], 200, defaultGau.Id, false);
+        assertAllocation(queryAllocations[1], 300, gaus[1].Id, false);
+        assertAllocation(queryAllocations[2], 500, gaus[0].Id, false);
+    }
+
+
+    //IN PROGRESS Paid payment allocations aren't updated with opportunity allocations changes
+    /*******************************************************************************************************
+    * @description When changing the amount of Opportunity allocations connected to paid payments
+    * Payment Allocations for paid payments will not be changed
+    ********************************************************************************************************/
+    @isTest
+    static void doNotUpdatePaidPaymentsWithOpportunityChanges() {
+        makePayments(1000, 1);
+        makeGAUs(2);
+        
+        // mark payments as paid
+        for(npe01__OppPayment__c payment: payments) {
+            payment.npe01__Paid__c = true;
+        }
+        update payments;
+
+        System.assert(UTIL_CustomSettingsFacade.getAllocationsSettings().Payment_Allocations_Enabled__c, 
+            UTIL_CustomSettingsFacade.getAllocationsSettings());
+
+        List<Allocation__c> queryAllocations = getAllocationsOrderByAmount();
+        System.assertEquals(1, queryAllocations.size(), 'One allocation should exist.');
+        assertAllocation(queryAllocations[0], 1000, defaultGau.Id, false);
+
+        Decimal origAllocAmount = queryAllocations[0].Amount__c;
+        Decimal origAllocPercent = queryAllocations[0].Percent__c;
+
+        //resetting these manually as a test is considered a single context for static variables
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].Id));
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].Id));
+        insert alloForInsert;
+
+        queryAllocations = getAllocationsOrderByAmount();
+
+        System.assertEquals(4, queryAllocations.size(), 'Four allocations should exist.');
+
+        //original payment allocations
+        assertAllocation(queryAllocations[0], 200, defaultGau.Id, true);
+        assertAllocation(queryAllocations[1], 300, gaus[1].Id, true);
+        assertAllocation(queryAllocations[2], 500, gaus[0].Id, true);
+        assertAllocation(queryAllocations[3], origAllocAmount, defaultGau.Id, false);
+    }
+
+    //IN PROGRESS can't lower or delete an opp allocation for a GAU that has paid payment allocations
+    /*******************************************************************************************************
+    * @description Block attempts to lower or delete an opp allocation for a GAU that has paid payment allocations
+    ********************************************************************************************************/
+    @isTest
+    static void doNotAllowLowerOrDeleteOfOpportunityAllocationWithPaidPayments() {
+        makePayments(1000, 1);
+        makeGAUs(2);
+
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].Id));
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].Id));
+        insert alloForInsert;
+
+        List<Allocation__c> queryAllocations = getAllocationsOrderByAmount();
+        System.assertEquals(6, queryAllocations.size(), 'Six allocations should exist.');
+        //original opportunity allocations
+        assertAllocation(queryAllocations[0], 200, defaultGau.Id, true);
+        assertAllocation(queryAllocations[1], 300, gaus[1].Id, true);
+        assertAllocation(queryAllocations[2], 500, gaus[0].Id, true);
+        //synced payment allocations
+        assertAllocation(queryAllocations[3], 200, defaultGau.Id, false);
+        assertAllocation(queryAllocations[4], 300, gaus[1].Id, false);
+        assertAllocation(queryAllocations[5], 500, gaus[0].Id, false);
+
+        // mark payments as paid
+        for(npe01__OppPayment__c payment: payments) {
+            payment.npe01__Paid__c = true;
+        }
+        update payments;
+
+        // TODO: This should fail but does not
+        queryAllocations[2].Amount__c = 200;
+        update queryAllocations[2];
+
+        // TODO: This should fail and does, but for the wrong reasons
+        delete queryAllocations[1];
+
+    }
+
 //TODO updating paid payment allocations does update opportunity allocations
 //TODO null and zero amounts for both opps and payments
 //TODO negative payment amounts
