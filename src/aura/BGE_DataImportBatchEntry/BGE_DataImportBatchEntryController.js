@@ -26,30 +26,30 @@
      * @description: handles ltng:sendMessage from child component
      */
     handleMessage: function (component, event, helper) {
-        var response = event.getParam('message');
-        let batchId = response.batchId;
+        var message = event.getParam('message');
+        let batchId = message.batchId;
 
         if (batchId !== component.get('v.recordId')) {
             return;
         }
 
         var channel = event.getParam('channel');
-        let message = response.info;
+        let info = message.info;
 
         if (channel === 'onSuccess') {
-            helper.runNewRecordDryRun(component, message.recordId);
+            helper.runNewRecordDryRun(component, info.recordId);
             helper.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftSaved'), 'success');
             helper.createEntryForm(component);
         } else if (channel === 'onCancel') {
             helper.createEntryForm(component);
         } else if (channel === 'setDonorType') {
-            component.set('v.donorType', message.donorType);
+            component.set('v.donorType', info.donorType);
         } else if (channel === 'hideFormSpinner') {
             helper.hideFormSpinner(component);
         } else if (channel === 'showFormSpinner') {
             helper.showFormSpinner(component);
         } else if (channel === 'onError') {
-            helper.showToast(component, message.title, message.errorMessage, 'error');
+            helper.showToast(component, info.title, info.errorMessage, 'error');
         }
     },
 

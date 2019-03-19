@@ -120,7 +120,7 @@
         let channel = 'onError';
         let error = $A.get('$Label.c.exceptionRequiredField') + ' ' + missingFields.join(', ') + '.';
         let message = {title: $A.get('$Label.c.PageMessagesError'), errorMessage: error};
-        this.sendMessage(channel, message);
+        this.sendMessage(component, channel, message);
     },
 
     /**
