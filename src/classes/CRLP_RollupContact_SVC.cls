@@ -46,10 +46,7 @@ public class CRLP_RollupContact_SVC extends CRLP_VRollupHandler {
      * are handled by a different service class.
      */
     public override void initRollup() {
-        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(
-                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, this.jobFilter)) {
-            addRollupDefinition(r);
-        }
+        buildGroupedRollups(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit);
     }
 
     /**
