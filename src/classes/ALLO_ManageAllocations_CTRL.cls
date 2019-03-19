@@ -268,12 +268,9 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         else if (payment!=null)
             allo.Payment__c = parentId;
 
-        //enable adding to the last row
-        if (rowNumber == null || rowNumber >= listAllo.size()-1)
-            listAllo.add(allo);
-        else
-            listAllo.add(rowNumber+1, allo);
-
+        // always add to last row
+        listAllo.add(allo);
+        
         return null;
     }
 
