@@ -11,6 +11,7 @@ ${contact_id}
 *** Test Cases ***
 
 1 Create Level and Verify Fields
+    [tags]  unstable
     ${level_id}  ${level_name}     Create Level
     Set Global Variable      ${level_name}
     Set Global Variable      ${level_id}

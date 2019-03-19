@@ -36,15 +36,20 @@
 */
 public class CRLP_GAU_BATCH extends CRLP_Batch_Base_Skew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 
+    /*******************************************************************************************************
+     * @description The CRLP_RollupProcessingOptions.RollupType of this class.
+     */
+    private static final CRLP_RollupProcessingOptions.RollupType jobType =
+            CRLP_RollupProcessingOptions.RollupType.GAU;
+
     public CRLP_GAU_BATCH() {}
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Accounts that meet the "Non Skew" criteria
-     * @param jobType Defines the type of rollup job
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
     public CRLP_GAU_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
-        super(CRLP_RollupProcessingOptions.RollupType.GAU, jobFilter);
+        super(jobType, jobFilter);
     }
 
     /*******************************************************************************************************
@@ -54,7 +59,7 @@ public class CRLP_GAU_BATCH extends CRLP_Batch_Base_Skew implements Database.Bat
      * by the SkewDispatcher Id chunking logic.
      */
     public CRLP_GAU_BATCH(List<Id> recordIds, Id lastIdProcessedForChunking) {
-        super(CRLP_RollupProcessingOptions.RollupType.GAU, recordIds, lastIdProcessedForChunking);
+        super(jobType, recordIds, lastIdProcessedForChunking);
     }
 
     /**
