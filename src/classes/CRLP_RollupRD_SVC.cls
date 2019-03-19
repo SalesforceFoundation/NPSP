@@ -45,11 +45,7 @@ public class CRLP_RollupRD_SVC extends CRLP_VRollupHandler {
      * filtering the rollups to those from the Opportunity object.
      */
     public override void initRollup() {
-
-        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(
-                CRLP_RollupProcessingOptions.RollupType.RecurringDonations, this.jobFilter)) {
-            addRollupDefinition(r);
-        }
+        buildGroupedRollups(CRLP_RollupProcessingOptions.RollupType.RecurringDonations);
     }
 
     /**

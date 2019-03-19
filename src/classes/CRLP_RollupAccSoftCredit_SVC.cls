@@ -45,10 +45,7 @@ public class CRLP_RollupAccSoftCredit_SVC extends CRLP_VRollupHandler {
      * records.
      */
     public override void initRollup() {
-        // Get Soft Credit Rollups to the Account OR Contact object, but NOT BOTH
-        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit, this.jobFilter)) {
-            addRollupDefinition(r);
-        }
+        buildGroupedRollups(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit);
     }
 
     /**
