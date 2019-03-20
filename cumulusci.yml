@@ -266,7 +266,7 @@ flows:
             5:
                 task: test_data_relationships
 
-    install_upgrade:
+    install_regression:
         steps:
             # Add QA metadata needed for regression
             5:
