@@ -2723,7 +2723,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text to appear in Donation Selector modal in BGE.</shortDescription>
-        <value>Batch Gift Entry displays unpaid Payments and open Opportunities that have no unpaid Payments.</value>
+        <value>This screen displays unpaid Payments and open Opportunities that have no unpaid Payments.</value>
     </labels>
     <labels>
         <fullName>bgeEditBatchFieldOptionsWarning</fullName>
