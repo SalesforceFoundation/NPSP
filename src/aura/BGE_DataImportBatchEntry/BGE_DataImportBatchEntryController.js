@@ -123,12 +123,6 @@
      * @description: called when the 'Batch Dry Run' button is clicked
      */
     batchDryRunClick: function(component, event, helper) {
-        helper.showToast(
-            component,
-            $A.get('$Label.c.PageMessagesProcessing'),
-            $A.get('$Label.c.bgeBatchDryRunProcessing'),
-            'sticky'
-        );
         helper.showSpinner(component);
         helper.showFormSpinner(component);
         helper.batchDryRun(component);

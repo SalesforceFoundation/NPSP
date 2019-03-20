@@ -2927,13 +2927,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batch Dry Run</value>
     </labels>
     <labels>
-        <fullName>bgeBatchDryRunProcessing</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Text for toast when batch dry run is started</shortDescription>
-        <value>Batch Dry Run in progress. Please stay on this page until it's done processing.</value>
-    </labels>
-    <labels>
         <fullName>bgeMatchingAlert</fullName>
         <language>en_US</language>
         <protected>true</protected>
