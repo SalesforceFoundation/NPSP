@@ -885,5 +885,23 @@ class NPSP(object):
             except Exception:
                 time.sleep(1)
                      
-            
+    def load_locator(self, path, *args, **kwargs):
+        """Scrolls down until the specified locator is found.
+        """
+        locator = self.get_npsp_locator(path, *args, **kwargs)
+        i = 0
+        while True:
+            i += 1
+            if i > 20:
+                raise AssertionError(
+                    "Timed out waiting for locator {} to load.".format(locator)
+                )
+            self.selenium.execute_javascript("window.scrollBy(0, 100)")
+            self.wait_for_aura()
+            try:
+                self.selenium.get_webelement(locator)
+                break
+            except ElementNotFound:
+                time.sleep(0.2)
+                        
                
