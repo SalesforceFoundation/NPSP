@@ -270,10 +270,14 @@ private with sharing  class ALLO_PaymentSync_TEST {
 
 }
 
-//TODO null and zero amounts for both opps and payments
-    @isTest
-    private static void validateNullAndZeroAmountsForOppsAndPayments() {
+
+    /*******************************************************************************************************
+    * @description Validate null and zero amount Opportunities have proper allocations
+    ********************************************************************************************************/
+     @isTest
+    private static void validateNullAndZeroAmountsForOpps() {
         setupForTests();
+
         Account acct = [select  Id
                         from Account];
 
@@ -300,12 +304,10 @@ private with sharing  class ALLO_PaymentSync_TEST {
         opps.add(opp2);
 
         insert opps;
-        System.assertEquals (true, !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC), 'Trigger is not disabled for recursion');
 
         Set<Id> oppIds = new Set<Id>();
         for (Opportunity anOpp : opps) {
             oppIds.add(anOpp.id);
-            System.debug('Opp Id: ' + anOpp.Id);
         }
 
         List<Allocation__c> allocs = [select    Id,
@@ -319,26 +321,12 @@ private with sharing  class ALLO_PaymentSync_TEST {
                                         where Opportunity__c in :oppIds
         ];
 
-        for (Integer i=0; i < allocs.size(); i++) {
-            System.debug('allocs.Amount: ' + allocs[i].Amount__c);
-        }
-
-        System.assertEquals(0, allocs.size(), 'Should be no allocations');
+        System.assertEquals(0, allocs.size(), 'No allocations should be present.');
 
         for (Integer i = 0; i < opps.size(); i++) {
             opps[i].Amount = 1000;
         }
         update opps;
-
-        List<Opportunity> aOpps = [select Id, Amount from Opportunity where Id in :oppIds];
-        System.assertEquals (2, aOpps.size());
-
-        for (Opportunity anOpp : aOpps) {
-            System.assertEquals (1000, anOpp.Amount);
-        }
-
-        Test.startTest();
-        Test.stopTest();
 
         allocs = [select    Id,
                             Opportunity__c,
@@ -371,8 +359,105 @@ private with sharing  class ALLO_PaymentSync_TEST {
         System.assertEquals(0, allocs.size(), 'No allocations should be present');
 
     }
-//TODO negative payment amounts
 
+    /*******************************************************************************************************
+    * @description Validate null and zero amount payments have proper payment allocations
+    * Should test insertion, as well as updates to and from null and negative values
+    ********************************************************************************************************/
+    @isTest
+    private static void validateNullAndZeroAmountsForPayments() {
+
+        setupForTests();
+        makePayments(1000, 1);
+        makeGAUs(2);
+
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Amount__c = 500, General_Accounting_Unit__c = gaus[0].Id));
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].Id));
+        insert alloForInsert;
+
+        List<Allocation__c> allocations = getAllocationsOrderByAmount();
+        System.assertEquals(6, allocations.size(), '6 allocations should exist.');
+
+        npe01__OppPayment__c payment = [select Id, npe01__Payment_Amount__c from npe01__OppPayment__c where npe01__Opportunity__c = :opportunity.Id];
+
+        payment.npe01__Payment_Amount__c = null;
+        update payment;
+        allocations = [select Id from Allocation__c where Payment__c=:payment.Id];
+        System.assertEquals (0, allocations.size(), 'No payment allocations should exist');
+
+        payment.npe01__Payment_Amount__c = 1000;
+        update payment;
+        allocations = [select Id from Allocation__c where Payment__c=:payment.Id];
+        System.assertEquals (3, allocations.size(), 'Three payment allocations should exist');
+    }
+
+    /*******************************************************************************************************
+    * @description Validate Payments with negative amounts inserted, or updated to negative
+    * amount creates the proper allocations
+    ********************************************************************************************************/
+    @isTest
+    private static void validateNegativePaymentAmounts() {
+        setupForTests();
+        makeGAUs(2);
+
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+        opportunity = [SELECT Id, Name, Amount FROM Opportunity LIMIT 1];
+
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Amount__c = 500, General_Accounting_Unit__c = gaus[0].Id));
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].Id));
+        insert alloForInsert;
+
+        List<Allocation__c> allocations = getAllocationsOrderByAmount();
+
+        makePayments(-1000, 1);
+
+        npe01__OppPayment__c payment = [select Id, npe01__Payment_Amount__c from npe01__OppPayment__c where npe01__Opportunity__c = :opportunity.Id];
+
+        allocations = [select   Id,
+                                Opportunity__c,
+                                Payment__c,
+                                General_Accounting_Unit__c,
+                                General_Accounting_Unit__r.Name,
+                                Amount__c,
+                                Percent__c
+                       from Allocation__c
+                       where Payment__c = :payment.Id
+                       order by Amount__c DESC];
+
+        System.assertEquals(3, allocations.size());
+        System.assertEquals(-200, allocations[0].Amount__c, 'Allocation Amount for Default GAU');
+        System.assertEquals(defaultGAU.Id, allocations[0].General_Accounting_Unit__c, 'Default GAU');
+        System.assertEquals(-300, allocations[1].Amount__c, 'Allocation Amount for GAU 2');
+        System.assertEquals(gaus[1].Id, allocations[1].General_Accounting_Unit__c, 'GAU 2');
+        System.assertEquals(-500, allocations[2].Amount__c, 'Allocation Amount for GAU 1');
+        System.assertEquals(gaus[0].Id, allocations[2].General_Accounting_Unit__c, 'GAU 1');
+
+        // Confirm payment allocations for update to negative payment are correct
+        payment.npe01__Payment_Amount__c = -100;
+        update payment;
+
+        allocations = [select   Id,
+                                Opportunity__c,
+                                Payment__c,
+                                General_Accounting_Unit__c,
+                                General_Accounting_Unit__r.Name,
+                                Amount__c,
+                                Percent__c
+                       from Allocation__c
+                       where Payment__c = :payment.Id
+                       order by Amount__c DESC];
+
+        System.assertEquals(3, allocations.size());
+
+        System.assertEquals(-20, allocations[0].Amount__c, 'Allocation Amount for Default GAU');
+        System.assertEquals(defaultGAU.Id, allocations[0].General_Accounting_Unit__c, 'Default GAU');
+        System.assertEquals(-30, allocations[1].Amount__c, 'Allocation Amount for GAU 2');
+        System.assertEquals(gaus[1].Id, allocations[1].General_Accounting_Unit__c, 'GAU 2');
+        System.assertEquals(-50, allocations[2].Amount__c, 'Allocation Amount for GAU 1');
+        System.assertEquals(gaus[0].Id, allocations[2].General_Accounting_Unit__c, 'GAU 1');
+    }
 
 
     /*******************************************************************************************************
