@@ -279,7 +279,7 @@ flows:
                 options:
                     unmanaged: False
 
-    install_upgrade:
+    install_regression:
         steps:
             # Add QA metadata needed for regression
             5:
