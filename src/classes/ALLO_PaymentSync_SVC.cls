@@ -43,6 +43,8 @@ public class ALLO_PaymentSync_SVC {
 
     private Map<Id, SynchronizationContext> contextByOpportunity = new Map<Id, SynchronizationContext>();
 
+    private List<Allocation__c> triggerAllocations = new List<Allocation__c>();
+
     private class SynchronizationContext {
         Opportunity opportunity;
         Map<Id, npe01__OppPayment__c> payments = new Map<Id, npe01__OppPayment__c>();
@@ -62,6 +64,8 @@ public class ALLO_PaymentSync_SVC {
     }
 
     public ALLO_PaymentSync_SVC(List<Allocation__c> allocations) {
+        triggerAllocations = allocations;
+
         Set<Id> paymentIds = new Set<Id>();
         Set<Id> opportunityIds = new Set<Id>();
         Map<Id, List<npe01__OppPayment__c>> paymentsByOpportunityId = new Map<Id, List<npe01__OppPayment__c>>();
@@ -290,7 +294,7 @@ public class ALLO_PaymentSync_SVC {
                     }
                 }
             //no payment allocations for this GAU; create them
-            } else {
+            } else if (context.totalUnpaidPayments > 0) {
                 for (npe01__OppPayment__c payment : context.payments.values()) {
                     Decimal paymentRatio = payment.npe01__Payment_Amount__c / context.totalUnpaidPayments;
                     Allocation__c newAllocation = new Allocation__c(
@@ -317,6 +321,23 @@ public class ALLO_PaymentSync_SVC {
                     //since we can't delete paid payment allocations
                     //add error to opportunity allocation if we have paid payment allocations for this GAU
                     if (payment.npe01__Paid__c) {
+                        // TODO: We verified that context.opportunityAllocationsByGAU does not contain key gau above,
+                        // but are attempting to access it here.
+
+                        /*** debug stuff ****/
+                        System.debug(' **** pgt tracking allocation context, # gaus in opp alloc map: '+context.opportunityAllocationsByGAU.size()+
+                            'trigger list size: '+triggerAllocations.size());
+                        for(Id gauId: context.opportunityAllocationsByGAU.keySet()) {
+                            for(Allocation__c oppAlloc: context.opportunityAllocationsByGAU.get(gauId)) {
+                                System.debug(' **** pgt: Alloc Id from opportunityAllocationsByGAU map for gauId key:'+gauId+' allocId:'+oppAlloc.Id);
+                            }
+                        }
+
+                        for(Allocation__c alloc: triggerAllocations) {
+                            System.debug(' **** pgt: Alloc Id from trigger list allocId:'+alloc.Id);
+                        }
+                        /*** end debug stuff ***/
+
                         for (Allocation__c opportunityAllocation : context.opportunityAllocationsByGAU.get(gau)) {
                             opportunityAllocation.addError(System.Label.alloRemoveOppWithPmt);
                         }
