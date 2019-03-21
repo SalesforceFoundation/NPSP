@@ -26,15 +26,16 @@
      * @description: handles ltng:sendMessage from child component
      */
     handleMessage: function (component, event, helper) {
-        var message = event.getParam('message');
-        let batchId = message.batchId;
+        let message = event.getParam('message');
+        let channel = event.getParam('channel');
+        let info;
 
-        if (batchId !== component.get('v.recordId')) {
-            return;
+        if (message) {
+            if (message.batchId !== component.get('v.recordId')) {
+                return;
+            }
+            info = message.info || message;
         }
-
-        var channel = event.getParam('channel');
-        let info = message.info;
 
         if (channel === 'onSuccess') {
             helper.runNewRecordDryRun(component, info.recordId);
