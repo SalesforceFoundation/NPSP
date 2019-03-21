@@ -7,6 +7,7 @@
     <apex:attribute name="styleClass" type="String" default="" description="The style to apply to the outer form element." />
     <apex:attribute name="labelOverride" type="String" default="" description="Override the standard field label with this text" />
     <apex:attribute name="showLabel" type="Boolean" default="true" description="When false, hide the field label" />
+    <apex:attribute name="overrideRequired" type="Boolean" default="false" description="When true, it will set the field as not required" />
 
     <!-- Action Support assumes onchange event and calling page has an action status component on the page -->
     <apex:attribute name="actSup" type="Boolean" default="false" description="When true the input field will render action support, defaults to false." />
@@ -55,7 +56,7 @@
         rendered="{!($ObjectType[sObjType].fields[field].updateable
                     || $ObjectType[sObjType].fields[field].createable && sObj['Id']=='') && $ObjectType[sObjType].fields[field].type != 'boolean'}">        
         <apex:outputLabel for="{!$Component.inputx.util_inputfield.inputx}" styleClass="slds-form-element__label" rendered="{!showLabel == true && ftype!='boolean'}" id="lblInputField">
-            <apex:outputText rendered="{!IF(required == true, true, NOT($ObjectType[sObjType].fields[field].nillable))}" id="lblInputFieldRequired">
+            <apex:outputText rendered="{!IF(overrideRequired, false, IF(required == true, true, NOT($ObjectType[sObjType].fields[field].nillable)))}" id="lblInputFieldRequired">
                 <abbr class="slds-required" title="{!$Label.lblRequired}">*</abbr>
             </apex:outputText>
             <apex:outputText rendered="{!showLabel == true}" value="{!label}"/>
@@ -65,7 +66,7 @@
                 onchange="{!onchange}" actSupAction="{!actSupAction}"
                 actSupReRender="{!actSupReRender}" actSup="{!actSup}" 
                 actSupStatus="{!actSupStatus}" actSupImmediate="{!actSupImmediate}"
-                required="{!IF(required == true, true, NOT($ObjectType[sObjType].fields[field].nillable))}" 
+                required="{!IF(overrideRequired, false, IF(required == true, true, NOT($ObjectType[sObjType].fields[field].nillable)))}" 
                 id="inputx"
             />
         </div>
