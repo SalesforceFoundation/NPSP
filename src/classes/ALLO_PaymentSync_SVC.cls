@@ -290,7 +290,7 @@ public class ALLO_PaymentSync_SVC {
                     }
                 }
             //no payment allocations for this GAU; create them
-            } else if (context.totalUnpaidPayments > 0) {
+            } else {
                 for (npe01__OppPayment__c payment : context.payments.values()) {
                     Decimal paymentRatio = payment.npe01__Payment_Amount__c / context.totalUnpaidPayments;
                     Allocation__c newAllocation = new Allocation__c(
@@ -317,8 +317,6 @@ public class ALLO_PaymentSync_SVC {
                     //since we can't delete paid payment allocations
                     //add error to opportunity allocation if we have paid payment allocations for this GAU
                     if (payment.npe01__Paid__c) {
-                        // TODO: We verified that context.opportunityAllocationsByGAU does not contain key gau above,
-                        // but are attempting to access it here.
                         for (Allocation__c opportunityAllocation : context.opportunityAllocationsByGAU.get(gau)) {
                             opportunityAllocation.addError(System.Label.alloRemoveOppWithPmt);
                         }
