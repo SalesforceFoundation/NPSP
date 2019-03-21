@@ -55,6 +55,8 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Org_Environment,
         Data_MaxNumRelatedOpps,
         Data_CountRdOpps,
+        Data_CountRecurringDonations,
+        Data_CountRds,
         Data_CountErrorLog
     }
 
@@ -70,11 +72,16 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Data_CountErrorLog,
         Data_CountRdOppsAll,
         Data_CountRdOppsOpenEnded,
+        Data_CountRdsWithDiffAmount,
+        Data_CountRecurringDonationsAll,
         Data_MaxNumRelatedOpps,
         HasUserManagedTDTM,
         Org_CountNonEnglishLanguages,
         Org_IsEnabled_AdvancedMultiCurrency
     }
+
+    @TestVisible
+    private UTIL_FeatureManagement featureManager = new UTIL_FeatureManagement();
 
     /**
      * @description Execute the batch job that will process each telemetry featureParameter type one at a time
@@ -126,8 +133,14 @@ public without sharing class UTIL_OrgTelemetry_SVC {
 
             when Data_CountRdOpps {
                 // Default these to -1 so we can determine (in the LMO) if there was an error retrieving them
-                System.FeatureManagement.setPackageIntegerValue(TelemetryParameterName.Data_CountRdOppsAll.name(), -1);
-                System.FeatureManagement.setPackageIntegerValue(TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), -1);
+                featureManager.setPackageIntegerValue(TelemetryParameterName.Data_CountRdOppsAll.name(), -1);
+                featureManager.setPackageIntegerValue(TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), -1);
+            }
+
+            when Data_CountRecurringDonations {
+                // Default these to -1 so we can determine (in the LMO) if there was an error retrieving them
+                featureManager.setPackageIntegerValue(TelemetryParameterName.Data_CountRecurringDonationsAll.name(), -1);
+                featureManager.setPackageIntegerValue(TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), -1);
             }
 
             when Data_CountErrorLog {
@@ -145,15 +158,15 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         STG_SettingsService stgSvc = new STG_SettingsService();
         Addr_Verification_Settings__c addrVerifSettings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
 
-        System.FeatureManagement.setPackageBooleanValue(TelemetryParameterName.IsEnabled_HouseholdAcctModel.name(),
+        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_HouseholdAcctModel.name(),
                 stgSvc.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR);
-        System.FeatureManagement.setPackageBooleanValue(TelemetryParameterName.IsEnabled_AutomaticPayments.name(),
+        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_AutomaticPayments.name(),
                 (stgSvc.stgCon.npe01__Payments_Enabled__c == true));
-        System.FeatureManagement.setPackageBooleanValue(TelemetryParameterName.IsEnabled_DefaultGAU.name(),
+        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_DefaultGAU.name(),
                 stgSvc.stgAllo.Default__c != null);
-        System.FeatureManagement.setPackageBooleanValue(TelemetryParameterName.IsEnabled_AddressVerification.name(),
+        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_AddressVerification.name(),
                 (addrVerifSettings.Enable_Automatic_Verification__c == true));
-        System.FeatureManagement.setPackageBooleanValue(TelemetryParameterName.IsEnabled_CustomizableRollups.name(),
+        featureManager.setPackageBooleanValue(TelemetryParameterName.IsEnabled_CustomizableRollups.name(),
                 (stgSvc.stgCRLP.Customizable_Rollups_Enabled__c == true));
         if (!Test.isRunningTest()) {
             handleHasUserManagedTriggers();
@@ -176,7 +189,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 }
             } catch (Exception e) { }
         }
-        System.FeatureManagement.setPackageBooleanValue(TelemetryParameterName.Org_IsEnabled_AdvancedMultiCurrency.name(), isEnabled);
+        featureManager.setPackageBooleanValue(TelemetryParameterName.Org_IsEnabled_AdvancedMultiCurrency.name(), isEnabled);
     }
 
     /**
@@ -195,7 +208,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 languages.add(u.LanguageLocaleKey);
             }
         }
-        System.FeatureManagement.setPackageIntegerValue(TelemetryParameterName.Org_CountNonEnglishLanguages.name(), languages.size());
+        featureManager.setPackageIntegerValue(TelemetryParameterName.Org_CountNonEnglishLanguages.name(), languages.size());
     }
 
     /**
@@ -209,7 +222,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 break;
             }
         }
-        System.FeatureManagement.setPackageBooleanValue(TelemetryParameterName.HasUserManagedTDTM.name(), hasUserManagedTrigger);
+        featureManager.setPackageBooleanValue(TelemetryParameterName.HasUserManagedTDTM.name(), hasUserManagedTrigger);
     }
 
     /**
@@ -218,9 +231,9 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     private void handleErrorLogCount() {
         try {
             Integer count = Database.countQuery('SELECT Count() FROM Error__c');
-            System.FeatureManagement.setPackageIntegerValue(TelemetryParameterName.Data_CountErrorLog.name(), count);
+            featureManager.setPackageIntegerValue(TelemetryParameterName.Data_CountErrorLog.name(), count);
         } catch (Exception ex) {
-            System.FeatureManagement.setPackageIntegerValue(TelemetryParameterName.Data_CountErrorLog.name(), -1);
+            featureManager.setPackageIntegerValue(TelemetryParameterName.Data_CountErrorLog.name(), -1);
         }
     }
 
@@ -240,9 +253,9 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             if (!accts.isEmpty()) {
                 cnt = accts[0].npo02__NumberOfClosedOpps__c.intValue();
             }
-            System.FeatureManagement.setPackageIntegerValue(TelemetryParameterName.Data_MaxNumRelatedOpps.name(), cnt);
+            featureManager.setPackageIntegerValue(TelemetryParameterName.Data_MaxNumRelatedOpps.name(), cnt);
         } catch (Exception ex) {
-            System.FeatureManagement.setPackageIntegerValue(TelemetryParameterName.Data_MaxNumRelatedOpps.name(), -1);
+            featureManager.setPackageIntegerValue(TelemetryParameterName.Data_MaxNumRelatedOpps.name(), -1);
         }
     }
 }

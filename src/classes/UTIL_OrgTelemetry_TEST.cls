@@ -36,6 +36,7 @@
 @IsTest(IsParallel=false)
 private class UTIL_OrgTelemetry_TEST {
 
+    private static UTIL_FeatureManagement_TEST.Mock featureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
     /**
      * @description Create a single Account, Contact and Opportunity to use for the telemetry test data
      **/
@@ -78,16 +79,60 @@ private class UTIL_OrgTelemetry_TEST {
         UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
 
         Integer currQueryCount = Limits.getQueries();
+
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
         telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings);
 
         System.assertEquals(currQueryCount, Limits.getQueries(), 'There should no new queries executed because these only reference static custom setting');
         Test.stopTest();
+
+        String expectedKey = UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.NPSP_Settings.name();
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_HouseholdAcctModel.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature IsEnabled_HouseholdAcctModel'
+        );
+
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_AutomaticPayments.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature IsEnabled_AutomaticPayments'
+        );
+
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_DefaultGAU.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature IsEnabled_DefaultGAU'
+        );
+
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_AddressVerification.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature IsEnabled_AddressVerification'
+        );
+
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.IsEnabled_CustomizableRollups.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature IsEnabled_CustomizableRollups'
+        );
+
     }
 
     /**
-     * @description Test that the org settings telemetry data is retrieved.
-     * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
+     * @description Test that the org settings telemetry data is retrieved
      */
     @IsTest
     static void validateOrgEnvironmentTelemetry() {
@@ -95,43 +140,121 @@ private class UTIL_OrgTelemetry_TEST {
         Integer currQueryCount = Limits.getQueries();
 
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
         telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Org_Environment);
 
         System.assert(Limits.getQueries() > currQueryCount, 'There should be at least one new query executed');
         Test.stopTest();
+
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageBooleanValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Org_IsEnabled_AdvancedMultiCurrency.name()
+            ),
+            'setPackageBooleanValue should have been called with the feature Org_IsEnabled_AdvancedMultiCurrency'
+        );
+
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Org_CountNonEnglishLanguages.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Org_CountNonEnglishLanguages'
+        );
     }
 
     /**
      * @description Test that the MaxNumRelatedOpps settings telemetry data is retrieved.
-     * that the call to System.FeatureManagement() call succeeded.
      */
     @IsTest
     static void validateMaxNumRelatedOppsTelemetry() {
+        Integer maxNumRelatedOpps = 10;
+
+        Account accountWithMaxOpps = new Account(Name = 'Test Account', npo02__NumberOfClosedOpps__c = maxNumRelatedOpps);
+        Account accountWithOpps = new Account(Name = 'Test Account 2', npo02__NumberOfClosedOpps__c = 1);
+        insert new List<Account>{ accountWithMaxOpps, accountWithOpps };
+
         Test.startTest();
         Integer currQueryCount = Limits.getQueries();
 
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
         telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_MaxNumRelatedOpps);
 
         System.assertEquals(currQueryCount+1, Limits.getQueries(), 'There should be one new query executed');
         Test.stopTest();
+
+        System.assertEquals(
+            maxNumRelatedOpps,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_MaxNumRelatedOpps.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_MaxNumRelatedOpps and set with the max number of opportunities on an account'
+        );
     }
 
     /**
      * @description Test that the DataCountOfRD settings telemetry data is retrieved.
-     * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
      */
     @IsTest
     static void validateCountOfRDOppsTelemetry() {
         Test.startTest();
 
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
         telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountRdOpps);
 
         Test.stopTest();
-        // Haven't found a way to assert that this job is have been queued to execute.
-        // This category no longer does a query and there is no way to check the value of a featureParameter
-        // in a unit test.
+
+        System.assertEquals(
+            -1,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountRdOppsAll and defaulted to -1'
+        );
+
+        System.assertEquals(
+            -1,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountRdOppsOpenEnded and defaulted to -1'
+        );
+    }
+
+    /**
+     * @description Test that the Data_CountRecurringDonations settings telemetry data is retrieved.
+     */
+    @IsTest
+    static void validateCountOfRecurringDonationsTelemetry() {
+        Test.startTest();
+
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountRecurringDonations);
+
+        Test.stopTest();
+
+        System.assertEquals(
+            -1,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountRecurringDonationsAll and defaulted to -1'
+        );
+
+        System.assertEquals(
+            -1,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountRdsWithDiffAmount and defaulted to -1'
+        );
     }
 
     /**
@@ -140,13 +263,30 @@ private class UTIL_OrgTelemetry_TEST {
      */
     @IsTest
     static void validateCountOfErrorLogTelemetry() {
+        Integer numErrors = 10;
+        List<Error__c> errors = new List<Error__c>();
+        for (Integer i = 0; i < numErrors; i++) {
+            errors.add(new Error__c());
+        }
+        insert errors;
+
         Test.startTest();
         Integer currQueryCount = Limits.getQueries();
 
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
         telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryBatchCategory.Data_CountErrorLog);
 
         System.assertEquals(currQueryCount+1, Limits.getQueries(), 'There should be one new query executed');
         Test.stopTest();
+
+        System.assertEquals(
+            numErrors,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountErrorLog.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountRdOppsOpenEnded and the correct number of errors'
+        );
     }
 }

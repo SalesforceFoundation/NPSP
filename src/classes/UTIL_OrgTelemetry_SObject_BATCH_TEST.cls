@@ -36,26 +36,40 @@
 @IsTest(IsParallel=false)
 private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
+    private static UTIL_FeatureManagement_TEST.Mock featureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
+
     /**
      * @description Create test data needed for the unit tests in this class
      */
     @TestSetup
     static void testDataSetup() {
+        TDTM_Config_API.disableAllTriggers();
 
-        Account a = new Account(Name = 'UTIL_OrgTelemetry_SObject_BATCH_TEST', Type = 'New');
-        insert a;
-
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-                Name = 'UTIL_OrgTelemetry_SObject_BATCH_TEST',
-                npe03__Organization__c = a.Id,
-                npe03__Installments__c = 3,
-                npe03__Amount__c = 100,
-                npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
-                npe03__Date_Established__c = Date.newInstance(2018,6,15),
-                npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
-                npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus
+        npe03__Recurring_Donation__c openRd = new npe03__Recurring_Donation__c(
+            npe03__Amount__c = 100,
+            npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationOpenStatus
         );
-        insert rd;
+
+        npe03__Recurring_Donation__c closedRd = new npe03__Recurring_Donation__c(
+            npe03__Amount__c = 1200,
+            npe03__Open_Ended_Status__c = System.Label.npe03.RecurringDonationClosedStatus
+        );
+
+        insert new List<npe03__Recurring_Donation__c>{ openRd, closedRd };
+
+        Map<Schema.SObjectField, Object> fieldValues = new Map<Schema.SObjectField, Object> {
+            Opportunity.Amount => 100,
+            Opportunity.npe03__Recurring_Donation__c => openRd.Id
+        };
+
+        //Build opps for open recurring donation
+        List<Opportunity> opps = buildOpps(1, fieldValues);
+
+        //Build opps for closed recurring donation
+        fieldValues.put(Opportunity.npe03__Recurring_Donation__c, closedRd.Id);
+        opps.addAll(buildOpps(12, fieldValues));
+
+        insert opps;
     }
 
     /**
@@ -67,7 +81,166 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     static void testSObjectBatchJob() {
         Test.startTest();
         Database.executeBatch(
-                new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS), 20);
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS_OPPS), 20);
         Test.stopTest();
+    }
+
+    /**
+     * @description Confirms job modes query for the correct SObject type
+     */
+    @IsTest
+    static void jobModeShouldReturnCorrectQuery() {
+        UTIL_OrgTelemetry_SObject_BATCH oppBatch =
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS_OPPS);
+
+        String oppBatchQuery = oppBatch.start(null).getQuery();
+        System.assert(Database.query(oppBatchQuery) instanceof List<Opportunity>,
+            'RECURRING_DONATIONS_OPPS job mode should query Opportunities');
+
+        UTIL_OrgTelemetry_SObject_BATCH rdBatch =
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS);
+
+        String rdBatchQuery = rdBatch.start(null).getQuery();
+        System.assert(Database.query(rdBatchQuery) instanceof List<npe03__Recurring_Donation__c>,
+            'RECURRING_DONATIONS_OPPS job mode should query Recurring Donations');
+    }
+
+    /**
+     * @description Confirms Recurring Donation Opportunity counts are calculated correctly
+     */
+    @IsTest
+    static void shouldCalculateCorrectRecurringDonationOppMetrics() {
+        UTIL_OrgTelemetry_SObject_BATCH oppBatch =
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS_OPPS);
+
+        String oppBatchQuery = oppBatch.start(null).getQuery();
+        List<Opportunity> opps = Database.query(oppBatchQuery);
+
+        Test.startTest();
+        oppBatch.execute(null, opps);
+        Test.stopTest();
+
+        System.assertEquals(13, oppBatch.rdAllOppsCount,
+            'The number of opps should be tracked correctly');
+        System.assertEquals(1, oppBatch.rdOpenStatusOppsCount,
+            'The number of open ended opps should be tracked correctly');
+    }
+
+    /**
+     * @description Confirms Recurring Donation counts are calculated correctly
+     */
+    @IsTest
+    static void shouldCalculateCorrectRecurringDonationMetrics() {
+        UTIL_OrgTelemetry_SObject_BATCH rdBatch =
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS);
+
+        String rdBatchQuery = rdBatch.start(null).getQuery();
+        List<npe03__Recurring_Donation__c> recurringDonations = Database.query(rdBatchQuery);
+
+        Test.startTest();
+        rdBatch.execute(null, recurringDonations);
+        Test.stopTest();
+
+        System.assertEquals(2, rdBatch.rdAllCount,
+            'The number of Recurring Donations should be tracked correctly');
+
+        System.assertEquals(1, rdBatch.rdDiffCount,
+            'The number of Recurring Donations with an amount differing from its opportunities should be tracked correctly');
+    }
+
+    /**
+     * @description Confirms Recurring Donation Opportunity metrics are captured in FeatureManagement
+     * at the end of the batch
+     */
+    @isTest
+    private static void shouldCaptureRecurringDonationOppMetricsInFeatureManagement() {
+        UTIL_OrgTelemetry_SObject_BATCH oppBatch =
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS_OPPS);
+        oppBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        oppBatch.rdAllOppsCount = 2;
+        oppBatch.rdOpenStatusOppsCount = 1;
+
+        oppBatch.rdAllCount = 4;
+        oppBatch.rdDiffCount = 3;
+
+        Test.startTest();
+        oppBatch.finish(null);
+        Test.stopTest();
+
+        System.assertEquals(
+            oppBatch.rdAllOppsCount,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountRdOppsAll and set correctly'
+        );
+
+        System.assertEquals(
+            oppBatch.rdOpenStatusOppsCount,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountRdOppsOpenEnded and set correctly'
+        );
+    }
+
+    /**
+     * @description Confirms Recurring Donation metrics are captured in FeatureManagement at the end of the batch
+     */
+    @isTest
+    private static void shouldCaptureRecurringDonationMetricsInFeatureManagement() {
+        UTIL_OrgTelemetry_SObject_BATCH rdBatch =
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS);
+        rdBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
+
+        rdBatch.rdAllOppsCount = 2;
+        rdBatch.rdOpenStatusOppsCount = 1;
+
+        rdBatch.rdAllCount = 4;
+        rdBatch.rdDiffCount = 3;
+
+        Test.startTest();
+        rdBatch.finish(null);
+        Test.stopTest();
+
+        System.assertEquals(
+            rdBatch.rdAllCount,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountRecurringDonationsAll and set correctly'
+        );
+
+        System.assertEquals(
+            rdBatch.rdDiffCount,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Data_CountRdsWithDiffAmount and set correctly'
+        );
+    }
+
+    /**
+     * @description Builds test opportunity records with the given field values
+     */
+    private static List<Opportunity> buildOpps(Integer numOpps, Map<Schema.SObjectField, Object> fieldValues) {
+        List<Opportunity> opps = new List<Opportunity>();
+
+        for (Integer i = 0; i < numOpps; i++) {
+            Opportunity opp = new Opportunity(
+                Name = 'Test Opp ' + i,
+                StageName = 'Closed Won',
+                CloseDate = Date.today()
+            );
+
+            for (Schema.SObjectField field : fieldValues.keySet()) {
+                opp.put(field, fieldValues.get(field));
+            }
+
+            opps.add(opp);
+        }
+
+        return opps;
     }
 }
