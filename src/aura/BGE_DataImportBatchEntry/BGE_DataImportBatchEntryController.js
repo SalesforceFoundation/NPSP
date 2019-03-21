@@ -28,29 +28,49 @@
     handleMessage: function (component, event, helper) {
         let message = event.getParam('message');
         let channel = event.getParam('channel');
-        let info;
+        let relevantChannels = ['onSuccess', 'onCancel', 'setDonorType', 'hideFormSpinner', 'showFormSpinner', 'onError'];
 
-        if (message) {
-            if (message.batchId !== component.get('v.recordId')) {
-                return;
-            }
-            info = message.info || message;
+        // Check if channel is in relevant channels or if there is no message and return
+        let wrongChannel = (relevantChannels.indexOf(channel) === -1);
+        if (wrongChannel || !message) {
+            return;
         }
 
-        if (channel === 'onSuccess') {
-            helper.runNewRecordDryRun(component, info.recordId);
-            helper.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftSaved'), 'success');
-            helper.createEntryForm(component);
-        } else if (channel === 'onCancel') {
-            helper.createEntryForm(component);
-        } else if (channel === 'setDonorType') {
-            component.set('v.donorType', info.donorType);
-        } else if (channel === 'hideFormSpinner') {
-            helper.hideFormSpinner(component);
-        } else if (channel === 'showFormSpinner') {
-            helper.showFormSpinner(component);
-        } else if (channel === 'onError') {
-            helper.showToast(component, info.title, info.errorMessage, 'error');
+        // Check if event batchId is relevant to current instance of component
+        let wrongBatch = (message.batchId !== component.get('v.recordId'));
+        if (wrongBatch) {
+            return;
+        }
+
+        // Prioritize info property if it exists on event message
+        let info = message.info || message;
+
+        switch (channel) {
+            case 'onSuccess':
+                helper.runNewRecordDryRun(component, info.recordId);
+                helper.showToast(component, $A.get('$Label.c.PageMessagesConfirm'), $A.get('$Label.c.bgeGridGiftSaved'), 'success');
+                helper.createEntryForm(component);
+                break;
+
+            case 'onCancel':
+                helper.createEntryForm(component);
+                break;
+
+            case 'setDonorType':
+                component.set('v.donorType', info.donorType);
+                break;
+
+            case 'hideFormSpinner':
+                helper.hideFormSpinner(component);
+                break;
+
+            case 'showFormSpinner':
+                helper.showFormSpinner(component);
+                break;
+
+            case 'onError':
+                helper.showToast(component, info.title, info.errorMessage, 'error');
+                break;
         }
     },
 
