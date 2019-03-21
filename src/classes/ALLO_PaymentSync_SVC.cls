@@ -43,11 +43,13 @@ public class ALLO_PaymentSync_SVC {
 
     private Map<Id, SynchronizationContext> contextByOpportunity = new Map<Id, SynchronizationContext>();
 
-    private List<Allocation__c> triggerAllocations = new List<Allocation__c>();
-
     private class SynchronizationContext {
         Opportunity opportunity;
         Map<Id, npe01__OppPayment__c> payments = new Map<Id, npe01__OppPayment__c>();
+
+        //Orig allocations from trigger context, arranged by gau Id
+        //This is needed for deletes, where deleted allocation is not available in other context vars
+        Map<Id, Allocation__c> triggerAllocationsByGAUId = new Map<Id, Allocation__c>();
 
         //list of allocations by GAU
         Map<Id, List<Allocation__c>> opportunityAllocationsByGAU = new Map<Id, List<Allocation__c>>();
@@ -64,19 +66,27 @@ public class ALLO_PaymentSync_SVC {
     }
 
     public ALLO_PaymentSync_SVC(List<Allocation__c> allocations) {
-        triggerAllocations = allocations;
 
         Set<Id> paymentIds = new Set<Id>();
         Set<Id> opportunityIds = new Set<Id>();
         Map<Id, List<npe01__OppPayment__c>> paymentsByOpportunityId = new Map<Id, List<npe01__OppPayment__c>>();
+        Map<Id, Map<Id, Allocation__c>> triggerAllocationsByGAUByParentId = new Map<Id, Map<Id, Allocation__c>>();
 
         for (Allocation__c allocation : allocations) {
+            Map<Id, Allocation__c> allocationsByGAUId = new Map<Id, Allocation__c>();
             if (allocation.Opportunity__c != null) {
                 paymentsByOpportunityId.put(allocation.Opportunity__c, new List<npe01__OppPayment__c>());
+                if(!triggerAllocationsByGAUByParentId.containsKey(allocation.Opportunity__c)) {
+                    triggerAllocationsByGAUByParentId.put(allocation.Opportunity__c, allocationsByGAUId);
+                }
             }
             if (allocation.Payment__c != null) {
                 paymentIds.add(allocation.Payment__c);
+                if(!triggerAllocationsByGAUByParentId.containsKey(allocation.Payment__c)) {
+                    triggerAllocationsByGAUByParentId.put(allocation.Payment__c, allocationsByGAUId);
+                }            
             }
+            allocationsByGAUId.put(allocation.General_Accounting_Unit__c, allocation);
         }
 
         //unfortunately, we need to first gather the opportunity IDs of all payment allocations changes in order to query for all child payments
@@ -117,6 +127,12 @@ public class ALLO_PaymentSync_SVC {
         for (Opportunity opportunity : opportunitiesWithAllocations.values()) {
             SynchronizationContext context = new SynchronizationContext();
             context.opportunity = opportunity;
+
+            if(triggerAllocationsByGAUByParentId.containsKey(opportunity.Id)) {
+                context.triggerAllocationsByGAUId = triggerAllocationsByGAUByParentId.get(opportunity.Id);
+            } else {
+                context.triggerAllocationsByGAUId = new Map<Id, Allocation__c>();
+            }
 
             for (Allocation__c oppAllocation : opportunity.Allocations__r) {
                 Id gau = oppAllocation.General_Accounting_Unit__c;
@@ -320,27 +336,10 @@ public class ALLO_PaymentSync_SVC {
                     npe01__OppPayment__c payment = context.payments.get(paymentAllocation.Payment__c);
                     //since we can't delete paid payment allocations
                     //add error to opportunity allocation if we have paid payment allocations for this GAU
-                    if (payment.npe01__Paid__c) {
-                        // TODO: We verified that context.opportunityAllocationsByGAU does not contain key gau above,
-                        // but are attempting to access it here.
-
-                        /*** debug stuff ****/
-                        System.debug(' **** pgt tracking allocation context, # gaus in opp alloc map: '+context.opportunityAllocationsByGAU.size()+
-                            'trigger list size: '+triggerAllocations.size());
-                        for(Id gauId: context.opportunityAllocationsByGAU.keySet()) {
-                            for(Allocation__c oppAlloc: context.opportunityAllocationsByGAU.get(gauId)) {
-                                System.debug(' **** pgt: Alloc Id from opportunityAllocationsByGAU map for gauId key:'+gauId+' allocId:'+oppAlloc.Id);
-                            }
-                        }
-
-                        for(Allocation__c alloc: triggerAllocations) {
-                            System.debug(' **** pgt: Alloc Id from trigger list allocId:'+alloc.Id);
-                        }
-                        /*** end debug stuff ***/
-
-                        for (Allocation__c opportunityAllocation : context.opportunityAllocationsByGAU.get(gau)) {
-                            opportunityAllocation.addError(System.Label.alloRemoveOppWithPmt);
-                        }
+                    if (payment.npe01__Paid__c && context.triggerAllocationsByGAUId.containsKey(gau)) {
+                        // flag the allocation we are attempting to delete with an error; this record is
+                        // not available in the opportunityAllocationsByGAU map
+                        context.triggerAllocationsByGAUId.get(gau).addError(System.Label.alloRemoveOppWithPmt);
                     } else {
                         allocationsChanges.objectsToDelete.add(paymentAllocation);
                     }

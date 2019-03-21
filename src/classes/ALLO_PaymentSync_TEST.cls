@@ -336,13 +336,24 @@ private with sharing  class ALLO_PaymentSync_TEST {
         }
         update payments;
 
+        String errMessage = '';
+        try {
+            delete queryAllocations[1];
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        System.Assert(errMessage.contains(System.Label.alloRemoveOppWithPmt));
+
         // TODO: This should fail but does not
-        queryAllocations[2].Amount__c = 200;
-        update queryAllocations[2];
-
-        // TODO: This should fail and does, but for the wrong reasons
-        delete queryAllocations[1];
-
+        errMessage = '';
+        try {
+            queryAllocations[2].Amount__c = 200;
+            update queryAllocations[2];
+        } catch (Exception e) {
+            errMessage = e.getMessage();
+        }
+        System.Assert(errMessage != '', 'Attempt to reduce allocation amount corresponding to paid '+
+            'payment allocation should fail but did not');
     }
 
 //TODO updating paid payment allocations does update opportunity allocations
