@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -1266,6 +1266,7 @@
         <members>PageMessagesError</members>
         <members>PageMessagesFatal</members>
         <members>PageMessagesInfo</members>
+        <members>PageMessagesProcessing</members>
         <members>PageMessagesWarning</members>
         <members>RD_ErrorAddDonationHeaderText</members>
         <members>RD_ErrorAddDonationMissingId</members>
@@ -1437,6 +1438,7 @@
         <members>bgeBatchDonationMatchingClassHelp</members>
         <members>bgeBatchDonationMatchingRuleHelp</members>
         <members>bgeBatchDonorLookupInfo</members>
+        <members>bgeBatchDryRun</members>
         <members>bgeBatchErrorRequiredFields</members>
         <members>bgeBatchInfoWizard</members>
         <members>bgeBatchOverview</members>
@@ -1451,6 +1453,7 @@
         <members>bgeCopyBatchSetupBatchNameAppend</members>
         <members>bgeCopyBatchSetupButton</members>
         <members>bgeDonationSelectorHelp</members>
+        <members>bgeDryRunComplete</members>
         <members>bgeEditBatchFieldOptionsWarning</members>
         <members>bgeEditBatchFieldSelectionWarning</members>
         <members>bgeEditBatchOptionsWarning</members>
@@ -1468,6 +1471,7 @@
         <members>bgeFormUpdatePayment</members>
         <members>bgeGridAllGifts</members>
         <members>bgeGridDonorType</members>
+        <members>bgeGridErrorConflictingGifts</members>
         <members>bgeGridErrorFromDryRun</members>
         <members>bgeGridErrorRequiredTotalsExpected</members>
         <members>bgeGridGiftCountHeader</members>
