@@ -384,6 +384,8 @@ plans:
                 task: install_managed
             3:
                 task: deploy_post
+                options:
+                    unmanaged: False
                 ui_options:
                     first:
                         name: NPSP Config for Salesforce Mobile App
