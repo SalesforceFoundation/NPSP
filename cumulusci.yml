@@ -419,6 +419,15 @@ plans:
                     deploy_reports:
                         unmanaged: False
                 ui_options:
+                    deploy_post:
+                        first:
+                            name: NPSP Config for Salesforce Mobile App
+                    deploy_dev_config_delete:
+                        name: Delete Developer Edition Sample Profiles
+                        description: This deletes sample page layouts and profiles intended for Sales, Marketing, and Support use cases.
+                        is_required: False
+                    deploy_trial_config:
+                        name: NPSP Trial Experience
                     deploy_reports:
                         name: NPSP Reports & Dashboards
                         is_required: False
