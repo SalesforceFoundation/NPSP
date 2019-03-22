@@ -50,7 +50,6 @@
                                 structured for iteration on Set Field Options step."/>
 
     <!-- public attributes -->
-    <aura:attribute name="recordId" type="Id" description="The Id of the Batch used when editing a Batch."/>
     <aura:attribute name="sourceBatchId" type="Id" description="The Id of the source Batch used when copying Batch setup."/>
     <aura:attribute name="sObjectName" type="String" />
 

@@ -259,8 +259,8 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                             }
                         }
                     }
-                } else {
-                    di.DonationImportStatus__c = label.bdiMatchedNone;
+                } else if (di.DonationImportStatus__c != Label.bdiMatchedByUser) {
+                    di.DonationImportStatus__c = Label.bdiMatchedNone;
                 }
             }
         }
