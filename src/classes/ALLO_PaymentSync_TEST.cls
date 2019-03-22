@@ -357,7 +357,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
 
 //TODO updating paid payment allocations does update opportunity allocations
 //TODO null and zero amounts for both opps and payments
-//TODO negative payment amounts
+//TODO negative payment amounts 
 
     /*******************************************************************************************************
     * @description Prevent creating or modifying Opportunity and Payment Allocations for the same Opportunity

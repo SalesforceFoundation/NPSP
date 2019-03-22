@@ -262,7 +262,7 @@ public class ALLO_PaymentSync_SVC {
             Decimal totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
             Decimal newTotalPaymentAllocations = totalOpportunityAllocations * context.scheduleRatio;
 
-            //if we have payment allocations for this GAU
+            //if we have payment allocations for this GAU 
             if (context.paymentAllocationsByGAU.containsKey(gau)) {
                 Decimal currentTotalPaymentAllocations = context.totalPaymentAllocationsByGAU.get(gau);
                 Decimal totalPaidPaymentAllocations = 0;
