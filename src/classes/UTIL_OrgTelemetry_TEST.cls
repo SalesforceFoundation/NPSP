@@ -162,6 +162,23 @@ private class UTIL_OrgTelemetry_TEST {
             ),
             'setPackageIntegerValue should have been called with the feature Org_CountNonEnglishLanguages'
         );
+
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Org_LongestRunningBatchLast7Days.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Org_LongestRunningBatchLast7Days'
+        );
+
+        System.assertNotEquals(
+            null,
+            featureManagementMock.packageIntegerValuesByName.get(
+                UTIL_OrgTelemetry_SVC.TelemetryParameterName.Org_CountTimedOutBatchJobsLast7Days.name()
+            ),
+            'setPackageIntegerValue should have been called with the feature Org_CountTimedOutBatchJobsLast7Days'
+        );
+
     }
 
     /**

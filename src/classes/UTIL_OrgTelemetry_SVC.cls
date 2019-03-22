@@ -77,7 +77,9 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Data_MaxNumRelatedOpps,
         HasUserManagedTDTM,
         Org_CountNonEnglishLanguages,
-        Org_IsEnabled_AdvancedMultiCurrency
+        Org_IsEnabled_AdvancedMultiCurrency,
+        Org_LongestRunningBatchLast7Days,
+        Org_CountTimedOutBatchJobsLast7Days
     }
 
     @TestVisible
@@ -125,6 +127,8 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             when Org_Environment {
                 handleIsAdvancedMulticurrencyEnabled();
                 handleNonEnglishLanguageCount();
+                handleLongestRunningBatchLast7Days();
+                handleCountTimedOutBatchJobsLast7Days();
             }
 
             when Data_MaxNumRelatedOpps {
@@ -209,6 +213,78 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             }
         }
         featureManager.setPackageIntegerValue(TelemetryParameterName.Org_CountNonEnglishLanguages.name(), languages.size());
+    }
+
+    /**
+     * @description Captures the longest running batch time in minutes of the last 7 days.
+     */
+    private void handleLongestRunningBatchLast7Days() {
+        Integer longestJobLength = 0;
+
+        for (AsyncApexJob job : [
+            SELECT CreatedDate, CompletedDate
+            FROM AsyncApexJob
+            WHERE CreatedDate = LAST_N_DAYS:7
+                AND JobType = 'BatchApex'
+                AND Status IN ('Aborted', 'Completed', 'Failed')
+                AND ApexClass.NamespacePrefix IN ('npsp', 'npe01', 'npo02', 'npe03', 'npe4', 'npe5')
+        ]) {
+
+            Integer jobLength = getMinutesBetween(job.CreatedDate, job.CompletedDate);
+            longestJobLength = jobLength > longestJobLength ? jobLength : longestJobLength;
+
+        }
+
+        featureManager.setPackageIntegerValue(TelemetryParameterName.Org_LongestRunningBatchLast7Days.name(), longestJobLength);
+    }
+
+    /**
+     * @description Calculates the number of minutes between two date times
+     */
+    private Integer getMinutesBetween(DateTime startDateTime, DateTime endDateTime) {
+        Long startTime = startDateTime.addDays(-1).getTime();
+        Long endTime = endDateTime.getTime();
+
+        Long milliseconds = endTime - startTime;
+        Long seconds = milliseconds / 1000;
+        return Integer.valueOf(seconds / 60);
+    }
+
+    /**
+     * @description Counts the number of batches that have a time out error within the last 7 days
+     */
+    private void handleCountTimedOutBatchJobsLast7Days() {
+        Integer countTimeouts = 0;
+
+        for (AsyncApexJob job : [
+            SELECT ExtendedStatus
+            FROM AsyncApexJob
+            WHERE CreatedDate = LAST_N_DAYS:7
+                AND JobType = 'BatchApex'
+                AND Status IN ('Aborted', 'Completed', 'Failed')
+                AND ApexClass.NamespacePrefix IN ('npsp', 'npe01', 'npo02', 'npe03', 'npe4', 'npe5')
+                AND NumberOfErrors > 0
+        ]) {
+
+            if (batchHasTimeoutError(job)) {
+                countTimeouts++;
+            }
+
+        }
+
+        featureManager.setPackageIntegerValue(TelemetryParameterName.Org_CountTimedOutBatchJobsLast7Days.name(), countTimeouts);
+    }
+
+    /**
+     * @description Determins whether batch has a time out error using the ExtendedStatus field
+     */
+    private Boolean batchHasTimeoutError(AsyncApexJob job) {
+        String requestTooLongMessge = 'request_running_too_long';
+        String cpuTimeOutMessage = 'cpu time limit';
+
+        String status = job.ExtendedStatus.toLowerCase();
+
+        return status.contains(requestTooLongMessge) || status.contains(cpuTimeOutMessage);
     }
 
     /**
