@@ -77,6 +77,13 @@
     },
 
     /**
+     * @description: reenable save button when there's an inline error
+     */
+    onError: function (component, event, helper) {
+        component.set('v.pendingSave', false);
+    },
+
+    /**
      * @description: alerts parent component that record is saved and needs to be reset
      */
     onSuccess: function (component, event, helper) {
