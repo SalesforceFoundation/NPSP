@@ -389,13 +389,6 @@ plans:
                 ui_options:
                     first:
                         name: NPSP Config for Salesforce Mobile App
-            4:
-                task: deploy_reports
-                options:
-                    unmanaged: False
-                ui_options:
-                    name: NPSP Reports & Dashboards
-                    is_required: False
     new_org:
         slug: trial
         title: Install NPSP Trial
