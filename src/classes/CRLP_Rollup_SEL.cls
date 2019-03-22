@@ -209,17 +209,18 @@ public class CRLP_Rollup_SEL {
     };
 
     /**
-     * @description Returns if rollup's Operation is supported for metadataRelationship.
-     * rollup.Operation__c should never be null, so a null rollup.Operation__c is not supported.
-     * @param  rollup 
-     * @param  metadataRelationship SObjectField of Rollup__mdt Metadata Relationship
-     * @return If rollup's Operation is not null and not in the blacklist, UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD, 
-     * for metadataRelationship.
+     * @description Determines if specific Rollup.Amount, Date, or Detail__c field should be included in a query
+     * of the Detail object based on the specific Rollup operation type. In the event that the field refers to a
+     * field that will never be used in the rollup logic, this prevents that field from being included in the Query.
+     * @param  rollup Rollup__mdt
+     * @param  metadataRelationship SObjectField of Rollup__mdt Metadata Relationship (Amount, Detail or Date field)
+     * @return True if the rollup Operation is not null and not in the UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD map
      */
     @TestVisible
     private static Boolean isOperationSupported(Rollup__mdt rollup, Schema.SObjectField metadataRelationship) {
         return
-            rollup.Operation__c != null // rollup.Operation__c should never be null
+            rollup.Operation__c != null
+            && rollup.get(metadataRelationship) != null
             && !UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD.get(metadataRelationship).contains(rollup.Operation__c);
     }
 
@@ -248,8 +249,7 @@ public class CRLP_Rollup_SEL {
             final Map<String, SObjectField> fieldsByName = sObjectDescribe.fields.getMap();
 
             // Always include the CurrencyIsoCode field if available for the object
-            if (
-                UserInfo.isMultiCurrencyOrganization() 
+            if (UserInfo.isMultiCurrencyOrganization()
                 && fieldsByName.get('CurrencyIsoCode') != null
             ) {
                 fields.add(fieldsByName.get('CurrencyIsoCode'));
@@ -264,25 +264,22 @@ public class CRLP_Rollup_SEL {
                     }
 
                     // Date Field
-                    if (
-                        rollup.Date_Object__r.QualifiedApiName == sObjectName
-                        && isOperationSupported(rollup, Schema.Rollup__mdt.Date_Field__c)
+                    if (rollup.Date_Object__r.QualifiedApiName == sObjectName
+                        && isRollupFieldNeededInQuery(rollup, Schema.Rollup__mdt.Date_Field__c)
                     ) {
                         fields.add(fieldsByName.get(rollup.Date_Field__r.QualifiedApiName));
                     }
 
                     // Amount Field
-                    if (
-                        rollup.Amount_Object__r.QualifiedApiName == sObjectName
-                        && isOperationSupported(rollup, Schema.Rollup__mdt.Amount_Field__c)
+                    if (rollup.Amount_Object__r.QualifiedApiName == sObjectName
+                        && isRollupFieldNeededInQuery(rollup, Schema.Rollup__mdt.Amount_Field__c)
                     ) {
                         fields.add(fieldsByName.get(rollup.Amount_Field__r.QualifiedApiName));
                     }
 
                     // Detail Field
-                    if (
-                        rollup.Detail_Object__r.QualifiedApiName == sObjectName
-                        && isOperationSupported(rollup, Schema.Rollup__mdt.Detail_Field__c)
+                    if (rollup.Detail_Object__r.QualifiedApiName == sObjectName
+                        && isRollupFieldNeededInQuery(rollup, Schema.Rollup__mdt.Detail_Field__c)
                     ) {
                         fields.add(fieldsByName.get(rollup.Detail_Field__r.QualifiedApiName));
                     }
@@ -291,6 +288,7 @@ public class CRLP_Rollup_SEL {
         }
 
         final List<Schema.DescribeFieldResult> referencedFields = new List<Schema.DescribeFieldResult>();
+
         // Add fields' Describes to referencedFields
         for (SObjectField field : fields) {
             referencedFields.add(field.getDescribe());
