@@ -1271,6 +1271,14 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <value>Warning</value>
     </labels>
     <labels>
+        <fullName>PageMessagesProcessing</fullName>
+        <categories>PageMessages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Processing</shortDescription>
+        <value>Processing</value>
+    </labels>
+    <labels>
         <fullName>RD_ErrorAddDonationHeaderText</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -2719,6 +2727,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>COPY</value>
     </labels>
     <labels>
+        <fullName>bgeDryRunComplete</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Success message when batch dry run completes in BGE.</shortDescription>
+        <value>Batch Dry Run Complete</value>
+    </labels>
+    <labels>
         <fullName>bgeDonationSelectorHelp</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2852,6 +2867,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>There are errors on one or more entries. You must resolve all errors before you can process this batch.</value>
     </labels>
     <labels>
+        <fullName>bgeGridErrorConflictingGifts</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message preventing user from processing batch if there are conflicting gifts.</shortDescription>
+        <value>There are conflicting gifts in this batch. You will need to resolve these conflicts before you're able to process this batch.</value>
+    </labels>
+    <labels>
         <fullName>bgeGridErrorRequiredTotalsExpected</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2920,6 +2942,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Message warning user if totals don&apos;t match expected</shortDescription>
         <value>Require Expected Totals Match is selected but the Expected Count of Gifts and Expected Total Batch Amount fields are blank. Edit the batch details and either uncheck Require Expected Totals Match or add values in the related fields.</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchDryRun</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for batch dry run in BGE.</shortDescription>
+        <value>Batch Dry Run</value>
     </labels>
     <labels>
         <fullName>bgeMatchingAlert</fullName>
