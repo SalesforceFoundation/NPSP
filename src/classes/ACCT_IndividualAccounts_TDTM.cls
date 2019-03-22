@@ -560,6 +560,11 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 a.Phone = c.Phone;
                 a.Fax = c.Fax;
                 a.OwnerId = c.OwnerId;
+
+                if (UserInfo.isMultiCurrencyOrganization()) {
+                    a.put('CurrencyIsoCode', String.valueOf(c.get('CurrencyIsoCode')));
+                }
+
                 // only set account's billing address if address management is off.
                 // otherwise, we'll let ADDR_Contact_TDTM push the new address into the account.
                 if (!CAO_Constants.isHHAccountModel() || UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
@@ -568,9 +573,9 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 ADDR_Addresses_TDTM.copyAddressStdSObj(c, 'Other', a, 'Shipping');
 
                 a.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
-                if (rtIdAcccount != null) {                
+                if (rtIdAcccount != null) {
                     a.put('RecordTypeID', rtIdAcccount);
-                }                
+                }
                 a.Type = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_TYPE : '';
                 a.npe01__SYSTEMISINDIVIDUAL__c = true;
                 accountInserts.add(a);
