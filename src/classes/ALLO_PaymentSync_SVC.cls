@@ -219,14 +219,16 @@ public class ALLO_PaymentSync_SVC {
                 Decimal totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
                 Decimal adjustedTotalPaymentAllocations = totalPaymentAllocations * context.scheduleRatio;
                 
-                System.debug('njjc totalOpportunityAllocations ' + totalOpportunityAllocations + ' adjustedTotalPaymentAllocations ' + adjustedTotalPaymentAllocations);
+                System.debug('njjc totalOpportunityAllocations ' + totalOpportunityAllocations + ' adjustedTotalPaymentAllocations ' + 
+                    adjustedTotalPaymentAllocations);
 
                 //check if they need updating
                 if (adjustedTotalPaymentAllocations != totalOpportunityAllocations) {
                     for (Allocation__c oppAllocation : context.opportunityAllocationsByGAU.get(gau)) {
                         //we want to keep the ratios amongst duplicate opportunity allocations
                         Decimal duplicateAllocationPaidUnpaidAmountRatio = oppAllocation.Amount__c / totalOpportunityAllocations;
-                        System.debug('njjc duplicateAllocationPaidUnpaidAmountRatio ' + duplicateAllocationPaidUnpaidAmountRatio + ' calculatedAmount ' + totalPaymentAllocations * duplicateAllocationpaidUnpaidAmountRatio);
+                        System.debug('njjc duplicateAllocationPaidUnpaidAmountRatio ' + duplicateAllocationPaidUnpaidAmountRatio + 
+                            ' calculatedAmount ' + totalPaymentAllocations * duplicateAllocationpaidUnpaidAmountRatio);
 
                         oppAllocation.Amount__c = totalPaymentAllocations * duplicateAllocationpaidUnpaidAmountRatio;
                         if (oppAllocation.Percent__c != null) {
@@ -254,8 +256,6 @@ public class ALLO_PaymentSync_SVC {
         }
     }
 
-
-
     public void syncOpportunityAllocationsToPayments(Id opportunityId) {
         SynchronizationContext context = contextByOpportunity.get(opportunityId);
         for (Id gau : context.opportunityAllocationsByGAU.keySet()) {
@@ -270,10 +270,13 @@ public class ALLO_PaymentSync_SVC {
                     totalPaidPaymentAllocations = context.totalPaidPaymentAllocationsByGAU.get(gau);
                 }
 
-                //validation: if the total of payment allocations already paid is greater than the opportunity allocations for that GAU, we can't sync and must throw an error
-                if (totalPaidPaymentAllocations > newTotalPaymentAllocations) {
-                    for (Allocation__c allocation : context.opportunityAllocationsByGAU.get(gau)) {
-                        allocation.addError(System.Label.alloPaidPmtsExceedsOpp);
+                //validation: if the total of payment allocations already paid is greater than the opportunity 
+                //allocations for that GAU, we can't sync and must throw an error
+                if (totalPaidPaymentAllocations > newTotalPaymentAllocations || 
+                    totalPaidPaymentAllocations > totalOpportunityAllocations) {
+                    
+                    if(context.triggerAllocationsByGAUId.containsKey(gau)) {
+                        context.triggerAllocationsByGAUId.get(gau).addError(System.Label.alloPaidPmtsExceedsOpp);
                     }
                     continue;
                 }

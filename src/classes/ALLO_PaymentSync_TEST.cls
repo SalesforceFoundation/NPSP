@@ -221,7 +221,6 @@ private with sharing  class ALLO_PaymentSync_TEST {
         alloForInsert[0].Amount__c = 250;
     }
 
-    //IN PROGRESS written off payments aren't counted in the sync
     /*******************************************************************************************************
     * @description When changing the amount of a Written off Payment with Allocations: 
     * Changes to the payment values will not change the opportunity allocations
@@ -260,7 +259,6 @@ private with sharing  class ALLO_PaymentSync_TEST {
     }
 
 
-    //IN PROGRESS Paid payment allocations aren't updated with opportunity allocations changes
     /*******************************************************************************************************
     * @description When changing the amount of Opportunity allocations connected to paid payments
     * Payment Allocations for paid payments will not be changed
@@ -304,9 +302,9 @@ private with sharing  class ALLO_PaymentSync_TEST {
         assertAllocation(queryAllocations[3], origAllocAmount, defaultGau.Id, false);
     }
 
-    //IN PROGRESS can't lower or delete an opp allocation for a GAU that has paid payment allocations
     /*******************************************************************************************************
-    * @description Block attempts to lower or delete an opp allocation for a GAU that has paid payment allocations
+    * @description When attempting to lower or delete an opp allocation for a GAU that has paid payment allocations:
+    * Changes to Opportunity allocations will be blocked by error
     ********************************************************************************************************/
     @isTest
     static void doNotAllowLowerOrDeleteOfOpportunityAllocationWithPaidPayments() {
@@ -342,25 +340,24 @@ private with sharing  class ALLO_PaymentSync_TEST {
         } catch (Exception e) {
             errMessage = e.getMessage();
         }
-        System.Assert(errMessage.contains(System.Label.alloRemoveOppWithPmt));
+        System.Assert(errMessage.contains(System.Label.alloRemoveOppWithPmt), 
+            'Failure message should contain '+System.Label.alloRemoveOppWithPmt);
 
-        // TODO: This should fail but does not
         errMessage = '';
         try {
             queryAllocations[2].Amount__c = 200;
+            queryAllocations[2].Percent__c = 20.0;
             update queryAllocations[2];
         } catch (Exception e) {
             errMessage = e.getMessage();
         }
-        System.Assert(errMessage != '', 'Attempt to reduce allocation amount corresponding to paid '+
-            'payment allocation should fail but did not');
+        System.Assert(errMessage.contains(System.Label.alloPaidPmtsExceedsOpp), 
+            'Failure message should contain '+System.Label.alloPaidPmtsExceedsOpp);
     }
 
 //TODO updating paid payment allocations does update opportunity allocations
 //TODO null and zero amounts for both opps and payments
 //TODO negative payment amounts
-
-
 
     /*******************************************************************************************************
     * @description Prevent creating or modifying Opportunity and Payment Allocations for the same Opportunity
@@ -385,8 +382,6 @@ private with sharing  class ALLO_PaymentSync_TEST {
         System.assert(error != null && error.contains(System.Label.alloPmtOppSingleTransaction), 
             'Inserting or updating opportunity and payment allocations for the same opportunity failed to cause the expected exception.');
     }
-
-
 
     /*** Helpers ***/
 
