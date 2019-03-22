@@ -221,7 +221,7 @@
      * @param recordIds: list of DataImport__c RecordIds to check for dry run
      */
     runNewRecordDryRun: function(component, recordId) {
-        var action = component.get('c.runDryRun');
+        var action = component.get('c.runSingleDryRun');
         var batchId = component.get('v.recordId');
         this.showSpinner(component);
         action.setParams({dataImportId: recordId, batchId: batchId});
@@ -260,15 +260,15 @@
 
     /**
      * @description: set new total amount and count variables and update data table after dry run completes
-     * @param updatedRecord: DataImport__c record that needs to be updated in the table
-     * @param isNewRecord: flag to indicate if record is new or existing
+     * @param model: model with records that need to be updated in the table
+     * @param isNewRecord: flag to indicate if newly entered record
      */
     afterDryRun: function(component, model, isNewRecord) {
         this.setTotals(component, model);
         if (model.dataImportRows.length > 0) {
-            //we only process one record at a time, but the model passes back a list
-            let newRecord = model.dataImportRows[0];
-            this.updateDataTableAfterDryRun(component, newRecord, isNewRecord);
+            for (let i = 0; i < model.dataImportRows.length; i++) {
+                this.updateDataTableAfterDryRun(component, model.dataImportRows[i], isNewRecord);
+            }
         }
     },
 
@@ -327,6 +327,60 @@
         component.set('v.data', rows);
     },
 
+    /**
+     * @description: Dry run all data import records for batch
+     */
+    batchDryRun: function (component) {
+        let helper = this;
+
+        let afterDryRun = function (result) {
+            helper.afterDryRun(component, JSON.parse(result));
+        }
+
+        let handleApexErrors = function (error) {
+            helper.handleApexErrors(component, error);
+        }
+
+        let showToast = function (title, message, type) {
+            helper.showToast(component, title, message, type);
+        }
+
+        let hideSpinners = function () {
+            helper.hideSpinner(component);
+            helper.hideFormSpinner(component);
+        }
+
+        let apexMethodName = 'c.runBatchDryRun';
+        let params = {
+            batchId: component.get('v.recordId'),
+            numberOfRowsToReturn: component.get('v.data').length
+        };
+
+        let runBatchDryRunPromise = helper.callApex(component, apexMethodName, params);
+
+        runBatchDryRunPromise
+            .then(
+                $A.getCallback(function (result) {
+                    afterDryRun(result);
+                    showToast(
+                        $A.get('$Label.c.PageMessagesConfirm'),
+                        $A.get('$Label.c.bgeDryRunComplete'),
+                        'success'
+                    );
+                })
+            )
+            .catch(
+                $A.getCallback(function (errors) {
+                    handleApexErrors(errors);
+                })
+            )
+            .finally(
+                function () {
+                    hideSpinners();
+                }
+            )
+    },
+
     /******************************** Table Error Functions *****************************/
 
     /**
@@ -378,7 +432,11 @@
      * @description: redirects the user to the Process Batch page if validity conditions are met
      */
     processBatch: function(component) {
-        let userCanProcessBatch = (this.tableHasNoDryRunErrors(component) && this.totalsMatchIfRequired(component));
+        let userCanProcessBatch = (
+            this.tableHasNoDryRunErrors(component)
+            && this.totalsMatchIfRequired(component)
+            && !this.tableHasConflictingGifts(component)
+        );
 
         if (userCanProcessBatch) {
             const batchId = component.get('v.recordId');
@@ -434,11 +492,40 @@
         return totalsMatchIfRequired;
     },
 
-    /******************************** Edit Batch Modal Functions *****************************/
-
     /**
-     * @description: checks that user has all necessary permissions and then launches modal or displays error
+     * @description: check if there are conflicting gifts in the table.
+     * @return: boolean indicating if there is a conflict
      */
+    tableHasConflictingGifts: function(component) {
+        const rows = component.get('v.data');
+        const labels = component.get('v.labels');
+
+        let conflictFound = false;
+
+        let donationIds = rows.reduce(function (filtered, row) {
+            let opportunityLookup = row[labels.opportunityImportedLookupField];
+            if (opportunityLookup != undefined) {
+                filtered.push(opportunityLookup);
+            }
+            return filtered;
+        }, []);
+
+        conflictFound = donationIds.some(function (donationId, index) {
+            return donationIds.indexOf(donationId) != index;
+        });
+
+        if(conflictFound) {
+            this.showToast(
+                component,
+                $A.get('$Label.c.PageMessagesError'),
+                $A.get('$Label.c.bgeGridErrorConflictingGifts'),
+                'error'
+            );
+        }
+
+        return conflictFound;
+    },
+
     checkFieldPermissions: function(component) {
         return new Promise($A.getCallback(function (resolve, reject) {
             var action = component.get('c.checkFieldPermissions');
@@ -453,6 +540,8 @@
             $A.enqueueAction(action);
         }));
     },
+
+    /******************************** Edit Batch Modal Functions *****************************/
 
     /**
      * @description: opens the batch wizard modal for edit mode of the component
@@ -555,6 +644,28 @@
     },
 
     /******************************** Utility Functions *****************************/
+
+    /**
+     * @description: Call Apex method and return a Promise
+     * @param apexMethodName: Apex method name to be called
+     * @param params: Parameters for apex method, if any required
+     */
+    callApex: function(component, apexMethodName, params) {
+        return new Promise(function(resolve, reject) {
+            var action = component.get(apexMethodName);
+            if (params) {
+                action.setParams(params);
+            }
+            action.setCallback(this, function(response) {
+                if (component.isValid() && response.getState() === 'SUCCESS') {
+                    resolve(response.getReturnValue());
+                } else {
+                    reject(response.getError());
+                }
+            });
+            $A.enqueueAction(action);
+        });
+    },
 
     /**
      * @description: flattens the DataImportRow class data to include donor information at the same level as the rest of the DataImport__c record.
@@ -666,5 +777,4 @@
         var spinner = component.find('dataTableSpinner');
         $A.util.addClass(spinner, 'slds-hide');
     }
-
 })
