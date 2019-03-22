@@ -71,10 +71,9 @@
             component.find('recordEditForm').submit(completeRow);
         } else if (validity.missingFields.length !== 0) {
             helper.sendErrorToast(component, validity.missingFields);
-        } else {
-            //do nothing since data format errors display inline
+            // Allow users to attempt another save
+            component.set('v.pendingSave', false);
         }
-        component.set('v.pendingSave', false);
     },
 
     /**
