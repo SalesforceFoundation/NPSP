@@ -40,7 +40,6 @@
                 access="global">
 
     <!--Public Attributes-->
-    <aura:attribute name="recordId" type="Id" description="ID of the Batch record" access="public"/>
     <aura:attribute name="data" type="List" default="[]" description="Data Import records that appear in the table" access="public"/>
     <aura:attribute name="errors" type="Map" description="Dry run errors to display on the lightning:dataTable" access="public"/>
     <aura:attribute name="columns" type="List" description="Columns for the table" access="public"/>
@@ -96,6 +95,7 @@
                 </div>
                 <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
                     <lightning:buttonGroup>
+                        <lightning:button aura:id="dryRunBatch" label="{!$Label.c.bgeBatchDryRun}" onclick="{!c.batchDryRunClick}"/>
                         <lightning:button aura:id="processBatch" label="{!$Label.c.bgeProcessBatch}" onclick="{!c.processBatch}"/>
                         <lightning:button aura:id="editBGEBatch" label="{!$Label.c.stgBtnEdit}" onclick="{!c.onEditClick}"/>
                     </lightning:buttonGroup>

@@ -25,7 +25,7 @@
                 message = errors[0].message;
             }
         }
-        this.sendMessage('onError', {title: $A.get('$Label.c.PageMessagesError'), errorMessage: message});
+        this.sendMessage(component, 'onError', {title: $A.get('$Label.c.PageMessagesError'), errorMessage: message});
     },
 
     /**
@@ -107,7 +107,7 @@
             } else {
                 this.handleApexErrors(component, response.getError());
             }
-            this.sendMessage('hideFormSpinner', '');
+            this.sendMessage(component, 'hideFormSpinner', '');
         });
         $A.enqueueAction(action);
     },
@@ -120,13 +120,17 @@
         let channel = 'onError';
         let error = $A.get('$Label.c.exceptionRequiredField') + ' ' + missingFields.join(', ') + '.';
         let message = {title: $A.get('$Label.c.PageMessagesError'), errorMessage: error};
-        this.sendMessage(channel, message);
+        this.sendMessage(component, channel, message);
     },
 
     /**
      * @description: send a message to other components
      */
-    sendMessage: function (channel, message) {
+    sendMessage: function (component, channel, info) {
+        let message = {
+            info: info,
+            batchId: component.get('v.recordId')
+        };
         let sendMessage = $A.get('e.ltng:sendMessage');
         sendMessage.setParams({
             'channel': channel,
