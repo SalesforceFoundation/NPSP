@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Selector class for Rollup definition custom metadata.
 */
-public class CRLP_Rollup_SEL {
+public inherited sharing class CRLP_Rollup_SEL {
 
     /**
      * @description Private static var to cache the Custom Metadata Type records.
@@ -187,7 +187,7 @@ public class CRLP_Rollup_SEL {
     }
 
     /**
-     * @description Blacklist of Rollup__mdt.Operation__c picklist values not supported by Metadata Relationship.
+     * @description Blacklist of
      */
     @TestVisible
     private static final Map<SObjectField, Set<String>> UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD = new Map<SObjectField, Set<String>> {
@@ -217,7 +217,7 @@ public class CRLP_Rollup_SEL {
      * @return True if the rollup Operation is not null and not in the UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD map
      */
     @TestVisible
-    private static Boolean isOperationSupported(Rollup__mdt rollup, Schema.SObjectField metadataRelationship) {
+    private static Boolean isRollupFieldNeededInQuery(Rollup__mdt rollup, Schema.SObjectField metadataRelationship) {
         return
             rollup.Operation__c != null
             && rollup.get(metadataRelationship) != null

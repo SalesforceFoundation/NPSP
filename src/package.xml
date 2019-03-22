@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -267,8 +267,8 @@
         <members>OPP_OpportunityContactRoles_TEST</members>
         <members>OPP_OpportunityNaming</members>
         <members>OPP_OpportunityNamingBTN_CTRL</members>
-        <members>OPP_OpportunityNaming_BATCH_TEST</members>
         <members>OPP_OpportunityNaming_BATCH</members>
+        <members>OPP_OpportunityNaming_BATCH_TEST</members>
         <members>OPP_OpportunityNaming_TEST</members>
         <members>OPP_PrimaryContactRoleMerge</members>
         <members>OPP_PrimaryContactRoleMerge_BATCH</members>

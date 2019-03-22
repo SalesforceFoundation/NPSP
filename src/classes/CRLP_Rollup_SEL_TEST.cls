@@ -330,15 +330,15 @@ public class CRLP_Rollup_SEL_TEST {
     }
 
     /**
-     * @description Tests all secenarios for CRLP_Rollup_SEL.isOperationSupported(Rollup__mdt rollup, SObjectField metadataRelationship)
-     * isOperationSupported(...) returns true if rollup.Operation__c is not null and not in the blacklist 
+     * @description Tests all secenarios for CRLP_Rollup_SEL.isRollupFieldNeededInQuery(Rollup__mdt rollup, SObjectField metadataRelationship)
+     * isRollupFieldNeededInQuery(...) returns true if rollup.Operation__c is not null and not in the blacklist
      * CRLP_Rollup_SEL.UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD.
      * If rollup.Operation__c is not null and metadataRelationship is not a key in 
-     * CRLP_Rollup_SEL.UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD, isOperationSupported(...) should throw an 
+     * CRLP_Rollup_SEL.UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD, isRollupFieldNeededInQuery(...) should throw an
      * Exception.
      */
     @IsTest
-    private static void testIsOperationSupported() {
+    private static void testisRollupFieldNeededInQuery() {
         // Data
         final List<Rollup__mdt> rollups = new List<Rollup__mdt> {
             new Rollup__mdt() // Operation is null
@@ -361,10 +361,10 @@ public class CRLP_Rollup_SEL_TEST {
 
         // CRLP_Rollup_SEL
         {
-            // Boolean isOperationSupported(Rollup__mdt rollup, SObjectField metadataRelationship)
+            // Boolean isRollupFieldNeededInQuery(Rollup__mdt rollup, SObjectField metadataRelationship)
             {
                 // Used in Exception messages
-                final String METHOD_NAME = 'CRLP_Rollup_SEL.isOperationSupported(Rollup__mdt rollup, Schema.SObjectField metadataRelationship)';
+                final String METHOD_NAME = 'CRLP_Rollup_SEL.isRollupFieldNeededInQuery(Rollup__mdt rollup, Schema.SObjectField metadataRelationship)';
                 final String BLACKLIST_NAME = 'CRLP_Rollup_SEL.UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD';
 
                 // Test
@@ -392,7 +392,7 @@ public class CRLP_Rollup_SEL_TEST {
                         Boolean actual;
 
                         try {
-                            actual = CRLP_Rollup_SEL.isOperationSupported(rollup, metadataRelationship);
+                            actual = CRLP_Rollup_SEL.isRollupFieldNeededInQuery(rollup, metadataRelationship);
                         } catch (Exception whoops) {
                             e = whoops;
                         }
@@ -855,8 +855,8 @@ public class CRLP_Rollup_SEL_TEST {
                             expectedWithSingleRelationship.addAll(baseExpected);
                         }
                         if (
-                            fieldRelationship == ROLLUP_SUMMARY_FIELD_RELATIONSHIP // no isOperationSupported check
-                            || CRLP_Rollup_SEL.isOperationSupported(
+                            fieldRelationship == ROLLUP_SUMMARY_FIELD_RELATIONSHIP // no isRollupFieldNeededInQuery check
+                            || CRLP_Rollup_SEL.isRollupFieldNeededInQuery(
                                 rollupWithSingleRelationship, 
                                 ROLLUP_SOBJECTFIELD_BY_RELATIONSHIP.get(fieldRelationship)
                             )
