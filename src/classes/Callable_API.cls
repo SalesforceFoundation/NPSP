@@ -52,20 +52,27 @@ global with sharing class Callable_API implements System.Callable {
     global Object call(String action, Map<String, Object> params) {
         String cleanActionText = (String.isBlank(action) ? '' : action.toLowerCase());
 
+        CallableApiParameter_SVC paramService = new CallableApiParameter_SVC(params);
+
         switch on (cleanActionText) {
             when 'tdtm.disablealltriggers' {
                 TDTM_Config_API.disableAllTriggers();
 
             } when 'opp.mapstagetostate' {
-                return OPP_StageMappingUtil.determineOppStateFromOppStage((String) params.get('OpportunityStage'));
+                String oppStage = paramService.getStringValue('OpportunityStage');
+                return OPP_StageMappingUtil.determineOppStateFromOppStage(oppStage);
 
             } when 'crlp.getdefinitionsforrolluptype' {
                 CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
-                List<CRLP_Rollup> response = crlpApiSvc.getRollupDefinitions((String) params.get(CRLP_ApiService.PARAM_ROLLUPTYPE));
+                String rollupType = paramService.getStringValue(CRLP_ApiService.PARAM_ROLLUPTYPE);
+                List<CRLP_Rollup> response = crlpApiSvc.getRollupDefinitions(rollupType);
                 return JSON.serialize(response, true);
 
             } when 'crlp.executerollups' {  // PLACEHOLDER CODE ONLY
-                return params.get(CRLP_ApiService.PARAM_ROLLUPDEFS);
+                CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
+                String rollupType = paramService.getStringValue(CRLP_ApiService.PARAM_ROLLUPTYPE);
+                List<CRLP_Rollup> rollupDefs = paramService.getListRollupDefsValue(CRLP_ApiService.PARAM_ROLLUPDEFS);
+                return JSON.serialize(rollupDefs,false);
 
             } when else {
                 throw new MalformedMethodInvocationException(
@@ -76,7 +83,6 @@ global with sharing class Callable_API implements System.Callable {
 
         // if the action does not return a value then return success
         return true;
-
     }
 
 }

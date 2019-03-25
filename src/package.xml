@@ -191,6 +191,7 @@
         <members>CRLP_VRollupHandler</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
+        <members>CallableApiParameter_SVC</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
