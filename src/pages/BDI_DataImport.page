@@ -38,11 +38,6 @@
             dominant-baseline: middle;
             fill: #00396B;
         }
-
-        .slds-button_extension-disabled {
-            pointer-events: none;
-            cursor: default;
-        }
     </style>
 
     <script>
