@@ -724,7 +724,7 @@ class NPSP(object):
     def wait_for_locator(self, path, *args, **kwargs):
         """Waits for 60 sec for the specified locator"""
         main_loc = self.get_npsp_locator(path,*args, **kwargs)    
-        self.selenium.wait_until_element_is_visible(main_loc, timeout=60)
+        self.selenium.wait_until_element_is_visible(main_loc, timeout=90)
 
     def get_npsp_settings_value(self,field_name): 
         locator = npsp_lex_locators['npsp_settings']['field_value'].format(field_name)
