@@ -111,7 +111,6 @@
                                             </apex:actionFunction>
 
                                             <apex:commandButton value="{!$Label.bdiRunBtn}"
-                                                                action="{!importData}"
                                                                 immediate="false"
                                                                 styleClass="slds-button slds-button_brand"
                                                                 rerender="idForm"
