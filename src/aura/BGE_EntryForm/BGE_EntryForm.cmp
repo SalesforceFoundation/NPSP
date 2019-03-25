@@ -67,7 +67,8 @@
                               objectApiName="{!v.labels.dataImportObject}"
                               onsuccess="{!c.onSuccess}"
                               onsubmit="{!c.onSubmit}"
-                              onload="{!c.onFormLoad}">
+                              onload="{!c.onFormLoad}"
+                              onerror="{!c.onError}">
         <lightning:messages />
 
         <lightning:layout multipleRows="true">
