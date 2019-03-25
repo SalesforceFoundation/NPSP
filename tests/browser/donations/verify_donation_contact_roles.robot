@@ -18,3 +18,20 @@ Create Donation from Contact and Verify Contact Roles on Opportunity Page
     Verify Related List Field Values
     ...                     &{contact1}[FirstName] &{contact1}[LastName]=Donor
     ...                     &{contact2}[FirstName] &{contact2}[LastName]=Household Member  
+    &{opportunity2} =  API Create Opportunity    &{Contact2}[AccountId]    Donation    
+    ...            Name=Rollup test $50 donation    
+    ...            Primary_Contact__c=&{contact2}[Id]
+    ...            Amount=50
+    Go To Record Home  &{contact1}[AccountId]
+    Select Tab    Details
+    Scroll Element Into View    text:Membership Information
+    Confirm Value           Total Gifts    $150.00    Y
+    Confirm Value           Total Number of Gifts    2    Y
+    Run Donations Batch Process
+    Go To Record Home  &{contact1}[Id]
+    Scroll Element Into View    text:Soft Credit Total
+    Confirm Value           Total Gifts    $100.00    Y
+    Confirm Value           Total Number of Gifts    1    Y
+    Scroll Element Into View    text:Household Donation Info
+    Confirm Value           Soft Credit Total    $50.00    Y
+    Confirm Value           Number of Soft Credits    1    Y
