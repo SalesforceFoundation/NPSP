@@ -64,6 +64,9 @@ global with sharing class Callable_API implements System.Callable {
                 List<CRLP_Rollup> response = crlpApiSvc.getRollupDefinitions((String) params.get(CRLP_ApiService.PARAM_ROLLUPTYPE));
                 return JSON.serialize(response, true);
 
+            } when 'crlp.executerollups' {  // PLACEHOLDER CODE ONLY
+                return params.get(CRLP_ApiService.PARAM_ROLLUPDEFS);
+
             } when else {
                 throw new MalformedMethodInvocationException(
                     String.format(System.Label.CallableApiMethodNotImplemented, new List<String> { action })
