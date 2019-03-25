@@ -5254,7 +5254,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pscManageSoftCreditsContactMissing</shortDescription>
-        <value>Please enter a contact for each soft credit.</value>
+        <value>Please enter a Contact for each soft credit.</value>
     </labels>
     <labels>
         <fullName>pscManageSoftCreditsAmountOrPercent</fullName>
