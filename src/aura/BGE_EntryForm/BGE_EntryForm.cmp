@@ -35,12 +35,11 @@
   @description Component used to create DataImport__c records on the related NPSP_Data_Import_Batch__c record home.
 -->
 
-<aura:component controller="BGE_DataImportBatchEntry_CTRL">
+<aura:component implements="force:hasRecordId" controller="BGE_DataImportBatchEntry_CTRL">
 
     <!--Public Attributes-->
     <aura:attribute name="labels" type="Map" description="Labels retrieved in Apex related to Schema information." access="public"/>
     <aura:attribute name="donorType" type="String" default="Contact1" description="Used to circumvent unhelpful labeling of Account1/Contact1" access="public"/>
-    <aura:attribute name="recordId" type="Id" description="Populated by force:hasRecordId" access="public"/>
     <aura:attribute name="record" type="DataImport__c" description="Object" access="public"/>
     <aura:attribute name="dataImportFields" type="Object[]" description="List of dynamic field objects to use in the field iteration" access="public"/>
     <aura:attribute name="openOpportunities" type="List" description="List of open Opportunities" access="public" />
@@ -68,7 +67,8 @@
                               objectApiName="{!v.labels.dataImportObject}"
                               onsuccess="{!c.onSuccess}"
                               onsubmit="{!c.onSubmit}"
-                              onload="{!c.onFormLoad}">
+                              onload="{!c.onFormLoad}"
+                              onerror="{!c.onError}">
         <lightning:messages />
 
         <lightning:layout multipleRows="true">
