@@ -37,6 +37,7 @@
 public inherited sharing class CRLP_ApiService {
 
     public static final String PARAM_ROLLUPTYPE = 'RollupType';
+    public static final String PARAM_ROLLUPDEFS = 'RollupDefinitions';
 
 
     /**
