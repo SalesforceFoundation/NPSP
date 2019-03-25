@@ -562,7 +562,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 a.OwnerId = c.OwnerId;
 
                 if (UserInfo.isMultiCurrencyOrganization()) {
-                    a.put('CurrencyIsoCode', String.valueOf(c.get('CurrencyIsoCode')));
+                    a.put('CurrencyIsoCode', (String) c.get('CurrencyIsoCode'));
                 }
 
                 // only set account's billing address if address management is off.
