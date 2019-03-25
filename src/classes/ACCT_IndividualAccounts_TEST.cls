@@ -101,8 +101,8 @@ private class ACCT_IndividualAccounts_TEST {
         String defaultCurrency = UserInfo.getDefaultCurrency();
 
         Contact newContact = new Contact(
-            lastname = 'CurrencyTest',
-            firstname = 'Test'
+            LastName = 'CurrencyTest',
+            FirstName = 'Test'
         );
         
         String currencyField = '';
