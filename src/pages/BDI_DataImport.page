@@ -38,26 +38,20 @@
             dominant-baseline: middle;
             fill: #00396B;
         }
+
+        .slds-button_extension-disabled {
+            pointer-events: none;
+            cursor: default;
+        }
     </style>
 
     <script>
-        function buttonsEnabled(enabled) {
+        function enableButton(enabled) {
             let targetButton = document.getElementById('{!$Component.idForm.idDataImportProcessButton}');
             let enableProcessButton = targetButton.setAttribute('disabled', null);
             let disableProcessButton = targetButton.setAttribute('disabled', 'disabled');
 
             enabled === true ? enableProcessButton : disableProcessButton;
-        }
-
-        function tryImportData() {
-            // Call action function to post form
-            importDataActionFunction();
-
-            // Disable button to prevent spam saving
-            buttonsEnabled(false);
-
-            // Return false to prevent the click from posting the form a second time
-            return false;
         }
     </script>
 
@@ -104,18 +98,14 @@
                                 <div class="slds-form slds-form_stacked slds-m-left_large">
                                     <div class="slds-form-element">
                                         <div class="slds-form-element__control">
-                                            <apex:actionFunction name="importDataActionFunction"
-                                                                 action="{!importData}"
-                                                                 oncomplete="buttonsEnabled(true);"
-                                                                 rerender="idForm">
-                                            </apex:actionFunction>
-
                                             <apex:commandButton value="{!$Label.bdiRunBtn}"
+                                                                action="{!importData}"
                                                                 immediate="false"
                                                                 styleClass="slds-button slds-button_brand"
                                                                 rerender="idForm"
                                                                 id="idDataImportProcessButton"
-                                                                onclick="return tryImportData();"/>
+                                                                onclick="enableButton(false)"
+                                                                oncomplete="enableButton(true)"/>
 
                                             <apex:commandButton value="{!$Label.bdiDryRunBeginButton}" action="{!startDryRun}" immediate="false" styleClass="slds-button slds-button_neutral" rendered="{!NOT(isGiftBatch)}" rerender="idForm"/>
                                             <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!close}" immediate="true" styleClass="slds-button slds-button_neutral" />
