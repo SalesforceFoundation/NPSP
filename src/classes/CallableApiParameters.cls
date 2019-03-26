@@ -35,18 +35,26 @@
 * @description Parses and Casts Callable_API Parameter values into the requested data type. Throws an Exception
 * if the parameter cannot be retrieved and cast into the appropriate data type.
 */
-public class CallableApiParameter_SVC {
+public class CallableApiParameters {
+
+    public static final String PARAM_ROLLUP_TYPE = 'RollupType';
+    public static final String PARAM_ROLLUP_DEFS = 'RollupDefinitions';
+    public static final String PARAM_OPPORTUNITY_STAGE = 'OpportunityStage';
 
     private Map<String, Object> params;
 
     /** @description Constructor
      * @param params Map<String,Object> parameters list from the CallableApi.call() method
      */
-    public CallableApiParameter_SVC(Map<String, Object> params) {
+    public CallableApiParameters(Map<String, Object> params) {
         this.params = params;
     }
 
-    public String getStringValue(String paramName) {
+    /**
+     * @description Retrieve the specified Parameter as a String value
+     * @param paramName
+     */
+    public String getString(String paramName) {
         try {
             return (String) params.get(paramName);
         } catch (Exception ex) {
@@ -55,7 +63,11 @@ public class CallableApiParameter_SVC {
         return null;
     }
 
-    public Boolean getBooleanValue(String paramName) {
+    /**
+     * @description Retrieve the specified Parameter as a Boolean value
+     * @param paramName
+     */
+    public Boolean getBoolean(String paramName) {
         try {
             return (Boolean)params.get(paramName);
         } catch (Exception ex) {
@@ -64,7 +76,11 @@ public class CallableApiParameter_SVC {
         return null;
     }
 
-    public List<String> getListStringValue(String paramName) {
+    /**
+     * @description Retrieve the specified Parameter as a List<String> collection
+     * @param paramName
+     */
+    public List<String> getListString(String paramName) {
         try {
             return (List<String>)params.get(paramName);
         } catch (Exception ex) {
@@ -73,7 +89,11 @@ public class CallableApiParameter_SVC {
         return null;
     }
 
-    public Set<String> getSetStringValue(String paramName) {
+    /**
+     * @description Retrieve the specified Parameter as a Set<String> collection
+     * @param paramName
+     */
+    public Set<String> getSetString(String paramName) {
         try {
             return (Set<String>)params.get(paramName);
         } catch (Exception ex) {
@@ -82,7 +102,11 @@ public class CallableApiParameter_SVC {
         return null;
     }
 
-    public List<SObject> getListSObjectValue(String paramName) {
+    /**
+     * @description Retrieve the specified Parameter as a List<SObject> collection
+     * @param paramName
+     */
+    public List<SObject> getSObjects(String paramName) {
         try {
             return (List<SObject>)params.get(paramName);
         } catch (Exception ex) {
@@ -91,9 +115,14 @@ public class CallableApiParameter_SVC {
         return null;
     }
 
-    public List<CRLP_Rollup> getListRollupDefsValue(String paramName) {
+    /**
+     * @description Retrieve the specified Parameter as a List<CRLP_Rollup> collection. This expects to the parameter
+     * value to be a JSON String. This method will deserialize and return as the appropriate data type.
+     * @param paramName
+     */
+    public List<CRLP_Rollup> getRollupDefinitions(String paramName) {
         try {
-            String rollupDefsJson = getStringValue(paramName);
+            String rollupDefsJson = getString(paramName);
             return (List<CRLP_Rollup>)JSON.deserialize(rollupDefsJson, List<CRLP_Rollup>.class);
         } catch (Exception ex) {
             throwParameterException('List<CRLP_Rollup> JSON', paramName);
@@ -101,9 +130,17 @@ public class CallableApiParameter_SVC {
         return null;
     }
 
+    /**
+     * @description Thrown a custom exception when the parameter cannot be cast as the specified type
+     */
     private void throwParameterException(String dataType, String paramName) {
-        throw new CRLP_ApiService.ApiException(String.format( System.Label.CallableApiParameterError,
+        throw new ParameterException(String.format( System.Label.CallableApiParameterError,
                 new List<String>{ '[' + dataType + '] ' + paramName} ));
     }
+
+    /**
+    * @description Exception class for Parameter Parsing
+    */
+    private class ParameterException extends Exception {}
 
 }

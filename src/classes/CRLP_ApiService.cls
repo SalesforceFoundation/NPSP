@@ -36,9 +36,6 @@
 */
 public inherited sharing class CRLP_ApiService {
 
-    public static final String PARAM_ROLLUPTYPE = 'RollupType';
-    public static final String PARAM_ROLLUPDEFS = 'RollupDefinitions';
-
 
     /**
     * @description Generates the list of Rollup Definitions for the specified rollup type
@@ -57,7 +54,10 @@ public inherited sharing class CRLP_ApiService {
         } catch (Exception ex) { }
 
         if (rollupType == null) {
-            throw new ApiException(String.format( System.Label.CallableApiParameterError, new List<String>{PARAM_ROLLUPTYPE} ));
+            throw new ApiException(String.format( System.Label.CallableApiParameterError,
+                    new List<String>{ CallableApiParameters.PARAM_ROLLUP_TYPE
+                    }
+            ));
         }
 
         CRLP_VRollupHandler handler = new CRLP_VRollupHandler();
@@ -69,6 +69,6 @@ public inherited sharing class CRLP_ApiService {
     /**
     * @description Exception class for Parameter Parsing
     */
-    public class ApiException extends Exception {}
+    private class ApiException extends Exception {}
 
 }

@@ -52,28 +52,27 @@ global with sharing class Callable_API implements System.Callable {
     global Object call(String action, Map<String, Object> params) {
         String cleanActionText = (String.isBlank(action) ? '' : action.toLowerCase());
 
-        CallableApiParameter_SVC paramService = new CallableApiParameter_SVC(params);
+        CallableApiParameters paramService = new CallableApiParameters(params);
 
         switch on (cleanActionText) {
             when 'tdtm.disablealltriggers' {
                 TDTM_Config_API.disableAllTriggers();
 
             } when 'opp.mapstagetostate' {
-                String oppStage = paramService.getStringValue('OpportunityStage');
+                String oppStage = paramService.getString(CallableApiParameters.PARAM_OPPORTUNITY_STAGE);
                 return OPP_StageMappingUtil.determineOppStateFromOppStage(oppStage);
 
             } when 'crlp.getdefinitionsforrolluptype' {
                 CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
-                String rollupType = paramService.getStringValue(CRLP_ApiService.PARAM_ROLLUPTYPE);
+                String rollupType = paramService.getString(CallableApiParameters.PARAM_ROLLUP_TYPE);
                 List<CRLP_Rollup> response = crlpApiSvc.getRollupDefinitions(rollupType);
                 return JSON.serialize(response, true);
 
             } when 'crlp.executerollups' {  // PLACEHOLDER CODE ONLY
                 CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
-                String rollupType = paramService.getStringValue(CRLP_ApiService.PARAM_ROLLUPTYPE);
-                List<CRLP_Rollup> rollupDefs = paramService.getListRollupDefsValue(CRLP_ApiService.PARAM_ROLLUPDEFS);
+                String rollupType = paramService.getString(CallableApiParameters.PARAM_ROLLUP_TYPE);
+                List<CRLP_Rollup> rollupDefs = paramService.getRollupDefinitions(CallableApiParameters.PARAM_ROLLUP_DEFS);
                 return JSON.serialize(rollupDefs,false);
-
             } when else {
                 throw new MalformedMethodInvocationException(
                     String.format(System.Label.CallableApiMethodNotImplemented, new List<String> { action })
