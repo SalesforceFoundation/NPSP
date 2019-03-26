@@ -23,8 +23,7 @@ Create Engagement Plan and Edit to Add New Task
     Click Link    link=Edit
     #Sleep    2
     Select Frame With Title    Manage Engagement Plan Template
-    Execute JavaScript    document.getElementsByTagName('iframe').scrollTop(document.body.scrollHeight)
-    #Page Scroll To Locator    button    Add Task
+    Page Scroll To Locator    button    Add Task
     Click Button With Value    Add Task
     Enter Task Id and Subject    Task 3    ${task3_1}
     Page Scroll To Locator    button    Save
