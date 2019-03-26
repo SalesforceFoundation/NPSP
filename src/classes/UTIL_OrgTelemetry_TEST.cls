@@ -75,6 +75,10 @@ private class UTIL_OrgTelemetry_TEST {
      */
     @IsTest
     private static void validateNPSPSettingsTelemetry() {
+        UTIL_FeatureManagement_TEST.Mock asyncFeatureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
+        UTIL_OrgTelemetry_SVC.asyncTelemetrySvc.featureManager =
+            (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, asyncFeatureManagementMock);
+
         Test.startTest();
         UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
 
@@ -316,7 +320,7 @@ private class UTIL_OrgTelemetry_TEST {
         DateTime startDate = DateTime.newInstanceGMT(2019, 03, 01, 23, 00,00);
         DateTime endDate = DateTime.newInstanceGMT(2019, 03, 02, 10, 00,00);
 
-        System.assertEquals(660, getMinutesBetween(startDate, endDate),
+        System.assertEquals(660, service.getMinutesBetween(startDate, endDate),
             'The minutes between the two dates should be calculated correctly: ' + startDate + ' -> ' + endDate);
     }
 }

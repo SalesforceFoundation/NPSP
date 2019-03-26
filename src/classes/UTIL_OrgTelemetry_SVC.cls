@@ -85,6 +85,17 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     @TestVisible
     private UTIL_FeatureManagement featureManager = new UTIL_FeatureManagement();
 
+    @TestVisible
+    private static UTIL_OrgTelemetry_SVC asyncTelemetrySvc {
+        get {
+            if (asyncTelemetrySvc == null) {
+                asyncTelemetrySvc = new UTIL_OrgTelemetry_SVC();
+            }
+            return asyncTelemetrySvc;
+        }
+        private set;
+    }
+
     /**
      * @description Execute the batch job that will process each telemetry featureParameter type one at a time
      * as individual batch iterations. This process has to be asynchronous to handle governor limits against
@@ -101,8 +112,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      */
     @Future
     public static void asyncProcessNpspSettingsTelemetry() {
-        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
-        telemetrySvc.processTelemetryType(TelemetryBatchCategory.NPSP_Settings);
+        asyncTelemetrySvc.processTelemetryType(TelemetryBatchCategory.NPSP_Settings);
     }
 
     /**
@@ -243,7 +253,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      */
     @TestVisible
     private Integer getMinutesBetween(DateTime startDateTime, DateTime endDateTime) {
-        Long startTime = startDateTime.addDays(-1).getTime();
+        Long startTime = startDateTime.getTime();
         Long endTime = endDateTime.getTime();
 
         Long milliseconds = endTime - startTime;
