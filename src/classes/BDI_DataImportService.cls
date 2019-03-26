@@ -771,6 +771,8 @@ global with sharing class BDI_DataImportService {
     * @param targetObjectName the underlying object the bdi object is (ie, Contact, Account, etc)
     * @param dataImportFields the DataImport fields to consider
     * @return Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
+    *
+    * TODO: Support custom metadata-based mapping
     */
     global static Map<String, String> mapFieldsForDIObject(String dataImportObjectName, String targetObjectName, List<String> dataImportFields) {
 
