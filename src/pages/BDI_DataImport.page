@@ -40,6 +40,16 @@
         }
     </style>
 
+    <script>
+        function enableButton(enabled) {
+            let targetButton = document.getElementById('{!$Component.idForm.idDataImportProcessButton}');
+            let enableProcessButton = targetButton.setAttribute('disabled', null);
+            let disableProcessButton = targetButton.setAttribute('disabled', 'disabled');
+
+            enabled === true ? enableProcessButton : disableProcessButton;
+        }
+    </script>
+
     <div class="slds-scope slds-p-bottom_x-large">
         <apex:form id="idForm" html-novalidate="novalidate" styleClass="slds-p-bottom_x-large">
 
@@ -83,7 +93,15 @@
                                 <div class="slds-form slds-form_stacked slds-m-left_large">
                                     <div class="slds-form-element">
                                         <div class="slds-form-element__control">
-                                            <apex:commandButton value="{!$Label.bdiRunBtn}" action="{!importData}" immediate="false" styleClass="slds-button slds-button_brand" rerender="idForm"/>
+                                            <apex:commandButton value="{!$Label.bdiRunBtn}"
+                                                                action="{!importData}"
+                                                                immediate="false"
+                                                                styleClass="slds-button slds-button_brand"
+                                                                rerender="idForm"
+                                                                id="idDataImportProcessButton"
+                                                                onclick="enableButton(false)"
+                                                                oncomplete="enableButton(true)"/>
+
                                             <apex:commandButton value="{!$Label.bdiDryRunBeginButton}" action="{!startDryRun}" immediate="false" styleClass="slds-button slds-button_neutral" rendered="{!NOT(isGiftBatch)}" rerender="idForm"/>
                                             <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!close}" immediate="true" styleClass="slds-button slds-button_neutral" />
                                         </div>
