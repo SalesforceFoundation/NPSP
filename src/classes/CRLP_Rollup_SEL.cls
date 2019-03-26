@@ -187,7 +187,9 @@ public inherited sharing class CRLP_Rollup_SEL {
     }
 
     /**
-     * @description Blacklist of
+     * @description Defines which Operations do not use specific fields in their processing. For example, the Count
+     * operation does not need the Amount_Field__c or Detail_Field__c fields to complete. As a result, the contents
+     * of these fields can be ignored when building out the dynamic query against the detail object(s).
      */
     @TestVisible
     private static final Map<SObjectField, Set<String>> UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD = new Map<SObjectField, Set<String>> {
@@ -365,17 +367,22 @@ public inherited sharing class CRLP_Rollup_SEL {
 
         // Determine the correct base summary object based on the Rollup Type
         SObjectType summaryObjectType;
-        if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-            summaryObjectType = Account.SObjectType;
-        } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-                rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-            summaryObjectType = Contact.SObjectType;
-        } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-            summaryObjectType = General_Accounting_Unit__c.SObjectType;
-        } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-            summaryObjectType = npe03__Recurring_Donation__c.SObjectType;
+        switch on (rollupType) {
+            when AccountHardCredit, AccountContactSoftCredit, AccountSoftCredit {
+                summaryObjectType = Account.SObjectType;
+            }
+
+            when ContactHardCredit, ContactSoftCredit {
+                summaryObjectType = Contact.SObjectType;
+            }
+
+            when GAU {
+                summaryObjectType = General_Accounting_Unit__c.SObjectType;
+            }
+
+            when RecurringDonations {
+                summaryObjectType = npe03__Recurring_Donation__c.SObjectType;
+            }
         }
 
         // Retrieve all the Rollup Definitions for the summary object
@@ -384,38 +391,46 @@ public inherited sharing class CRLP_Rollup_SEL {
             // Loop through each Rollup__mdt and determine whether the record should be included based on the
             // Rollup Type Job AND the Type Filter if there is one.
             for (Rollup__mdt r : rlps) {
-                Boolean includeRollupDefinition=false;
-                if (r.Is_Deleted__c == true || r.Active__c == false) {
-                    // ignore deleted or inactive rollups
-                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                        rollupType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                    includeRollupDefinition = ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == pmtObjectName)
-                            && r.Amount_Object__r.QualifiedApiName != pscObjectName && r.Amount_Object__r.QualifiedApiName != accSCObjectName);
-                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                    includeRollupDefinition = ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == accSCObjectName)
-                            && r.Amount_Object__r.QualifiedApiName == accSCObjectName);
-                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                        rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                    includeRollupDefinition = (r.Amount_Object__r.QualifiedApiName == pscObjectName);
-                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-                    includeRollupDefinition = true;
-                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-                    includeRollupDefinition = true;
+                Boolean includeRollupDefinition = false;
+                if (r.Is_Deleted__c == false && r.Active__c == true) {
+                    switch on (rollupType) {
+                        when AccountHardCredit, ContactHardCredit {
+                            includeRollupDefinition = ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == pmtObjectName)
+                                    && r.Amount_Object__r.QualifiedApiName != pscObjectName && r.Amount_Object__r.QualifiedApiName != accSCObjectName);
+                        }
+
+                        when AccountSoftCredit {
+                            includeRollupDefinition = ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == accSCObjectName)
+                                    && r.Amount_Object__r.QualifiedApiName == accSCObjectName);
+                        }
+
+                        when AccountContactSoftCredit, ContactSoftCredit {
+                            includeRollupDefinition = (r.Amount_Object__r.QualifiedApiName == pscObjectName);
+                        }
+
+                        when GAU, RecurringDonations {
+                            includeRollupDefinition = true;
+                        }
+                    }
                 }
+
                 if (includeRollupDefinition) {
                     if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.NonDaysAgo &&
                             r.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()) {
                         includeRollupDefinition = false;
+
                     } else if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.DaysAgoOnly &&
                             r.Time_Bound_Operation_Type__c != CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()) {
                         includeRollupDefinition = false;
+
                     } else if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.MembershipsOnly &&
                             !r.Summary_Field__r.QualifiedApiName.containsIgnoreCase('Membership')) {
                         includeRollupDefinition = false;
                     }
-                }
-                if (includeRollupDefinition) {
-                    filteredRollups.add(r);
+
+                    if (includeRollupDefinition) {
+                        filteredRollups.add(r);
+                    }
                 }
             }
         }
