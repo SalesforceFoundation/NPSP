@@ -33,7 +33,7 @@
 * @group Utilities
 * @description Unit Tests related to the org telemetry class
 */
-@IsTest(IsParallel=false)
+@IsTest(IsParallel=true)
 private class UTIL_OrgTelemetry_TEST {
 
     private static UTIL_FeatureManagement_TEST.Mock featureManagementMock = new UTIL_FeatureManagement_TEST.Mock();
@@ -41,7 +41,7 @@ private class UTIL_OrgTelemetry_TEST {
      * @description Create a single Account, Contact and Opportunity to use for the telemetry test data
      **/
     @TestSetup
-    static void testDataSetup() {
+    private static void testDataSetup() {
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
 
@@ -74,7 +74,7 @@ private class UTIL_OrgTelemetry_TEST {
      * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
      */
     @IsTest
-    static void validateNPSPSettingsTelemetry() {
+    private static void validateNPSPSettingsTelemetry() {
         Test.startTest();
         UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
 
@@ -135,7 +135,7 @@ private class UTIL_OrgTelemetry_TEST {
      * @description Test that the org settings telemetry data is retrieved
      */
     @IsTest
-    static void validateOrgEnvironmentTelemetry() {
+    private static void validateOrgEnvironmentTelemetry() {
         Test.startTest();
         Integer currQueryCount = Limits.getQueries();
 
@@ -185,7 +185,7 @@ private class UTIL_OrgTelemetry_TEST {
      * @description Test that the MaxNumRelatedOpps settings telemetry data is retrieved.
      */
     @IsTest
-    static void validateMaxNumRelatedOppsTelemetry() {
+    private static void validateMaxNumRelatedOppsTelemetry() {
         Integer maxNumRelatedOpps = 10;
 
         Account accountWithMaxOpps = new Account(Name = 'Test Account', npo02__NumberOfClosedOpps__c = maxNumRelatedOpps);
@@ -216,7 +216,7 @@ private class UTIL_OrgTelemetry_TEST {
      * @description Test that the DataCountOfRD settings telemetry data is retrieved.
      */
     @IsTest
-    static void validateCountOfRDOppsTelemetry() {
+    private static void validateCountOfRDOppsTelemetry() {
         Test.startTest();
 
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
@@ -247,7 +247,7 @@ private class UTIL_OrgTelemetry_TEST {
      * @description Test that the Data_CountRecurringDonations settings telemetry data is retrieved.
      */
     @IsTest
-    static void validateCountOfRecurringDonationsTelemetry() {
+    private static void validateCountOfRecurringDonationsTelemetry() {
         Test.startTest();
 
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
@@ -279,7 +279,7 @@ private class UTIL_OrgTelemetry_TEST {
      * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
      */
     @IsTest
-    static void validateCountOfErrorLogTelemetry() {
+    private static void validateCountOfErrorLogTelemetry() {
         Integer numErrors = 10;
         List<Error__c> errors = new List<Error__c>();
         for (Integer i = 0; i < numErrors; i++) {
@@ -305,5 +305,18 @@ private class UTIL_OrgTelemetry_TEST {
             ),
             'setPackageIntegerValue should have been called with the feature Data_CountRdOppsOpenEnded and the correct number of errors'
         );
+    }
+
+    /**
+     * @description Validates calculation in getMinutesBetween()
+     */
+    @IsTest
+    private static void shouldCalculateMinutesBetweenTwoDateTimes() {
+        UTIL_OrgTelemetry_SVC service = new UTIL_OrgTelemetry_SVC();
+        DateTime startDate = DateTime.newInstanceGMT(2019, 03, 01, 23, 00,00);
+        DateTime endDate = DateTime.newInstanceGMT(2019, 03, 02, 10, 00,00);
+
+        System.assertEquals(660, getMinutesBetween(startDate, endDate),
+            'The minutes between the two dates should be calculated correctly: ' + startDate + ' -> ' + endDate);
     }
 }

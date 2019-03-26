@@ -241,6 +241,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     /**
      * @description Calculates the number of minutes between two date times
      */
+    @TestVisible
     private Integer getMinutesBetween(DateTime startDateTime, DateTime endDateTime) {
         Long startTime = startDateTime.addDays(-1).getTime();
         Long endTime = endDateTime.getTime();

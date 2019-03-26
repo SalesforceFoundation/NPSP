@@ -51,7 +51,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
      */
     public enum TelemetryBatchJobMode {
         RECURRING_DONATIONS,
-        RECURRING_DONATIONS_OPPS
+        OPPORTUNITIES
     }
 
     @TestVisible
@@ -88,13 +88,13 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
      */
     public Database.QueryLocator start(Database.BatchableContext context) {
         switch on (jobMode) {
-            when RECURRING_DONATIONS_OPPS {
+            when OPPORTUNITIES {
                 String soql = 'SELECT Id, npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c FROM Opportunity';
                 return Database.getQueryLocator(soql);
             }
 
             when RECURRING_DONATIONS {
-                String soql = 'SELECT npe03__Amount__c, (SELECT Amount FROM npe03__Donations__r) FROM npe03__Recurring_Donation__c';
+                String soql = 'SELECT npe03__Amount__c FROM npe03__Recurring_Donation__c';
                 return Database.getQueryLocator(soql);
             }
         }
@@ -107,16 +107,23 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
      * stateful vars
      */
     public void execute(Database.BatchableContext context, List<SObject> scope) {
-        for (SObject record : scope) {
-            switch on (jobMode) {
-                when RECURRING_DONATIONS_OPPS {
-                    getOppRecurringDonationsCounts((Opportunity)record);
-                }
-
-                when RECURRING_DONATIONS {
-                    getRecurringDonationsCounts((npe03__Recurring_Donation__c)record);
-                }
+        switch on (jobMode) {
+            when OPPORTUNITIES {
+                handleOpportunityJobMode((List<Opportunity>) scope);
             }
+
+            when RECURRING_DONATIONS {
+                handleRecurringDonationsJobMode((List<npe03__Recurring_Donation__c>) scope);
+            }
+        }
+    }
+
+    /**
+     * @description Handles batch logic for OPPORTUNITIES job mode
+     */
+    private void handleOpportunityJobMode(List<Opportunity> opps) {
+        for (Opportunity opp : opps) {
+            getOppRecurringDonationsCounts(opp);
         }
     }
 
@@ -137,12 +144,27 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     }
 
     /**
+     * @description Handles batch logic for RECURRING_DONATIONS job mode
+     */
+    private void handleRecurringDonationsJobMode(List<npe03__Recurring_Donation__c> recurringDonations) {
+        Map<Id, List<Opportunity>> oppsByRecurringDonationId = getOppsByRecurringDonationId(recurringDonations);
+
+        for (npe03__Recurring_Donation__c recurringDonation : recurringDonations) {
+            getRecurringDonationsCounts(recurringDonation, oppsByRecurringDonationId.get(recurringDonation.Id));
+        }
+    }
+
+    /**
      * @description Process RecurringDonation counters for the specific Opportunity
      */
-    private void getRecurringDonationsCounts(npe03__Recurring_Donation__c recurringDonation) {
+    private void getRecurringDonationsCounts(npe03__Recurring_Donation__c recurringDonation, List<Opportunity> relatedOpps) {
         rdAllCount++;
 
-        for (Opportunity opp : recurringDonation.npe03__Donations__r) {
+        if (relatedOpps == null) {
+            return;
+        }
+
+        for (Opportunity opp : relatedOpps) {
             if (opp.Amount != recurringDonation.npe03__Amount__c) {
                 rdDiffCount++;
                 break;
@@ -151,11 +173,38 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     }
 
     /**
+     * @description Builds a map of opportunities grouped by npe03__Recurring_Donation__c
+     */
+    private Map<Id, List<Opportunity>> getOppsByRecurringDonationId(List<npe03__Recurring_Donation__c> recurringDonations) {
+        List<Opportunity> opps = [
+            SELECT Amount, npe03__Recurring_Donation__c
+            FROM Opportunity
+            WHERE npe03__Recurring_Donation__c IN :recurringDonations
+        ];
+
+        Map<Id, List<Opportunity>> oppsByRecurringDonationId = new Map<Id, List<Opportunity>>();
+
+        for (Opportunity opp : opps) {
+            if (opp.npe03__Recurring_Donation__c == null) {
+                continue;
+            }
+
+            if (!oppsByRecurringDonationId.containsKey(opp.npe03__Recurring_Donation__c)) {
+                oppsByRecurringDonationId.put(opp.npe03__Recurring_Donation__c, new List<Opportunity>());
+            }
+
+            oppsByRecurringDonationId.get(opp.npe03__Recurring_Donation__c).add(opp);
+        }
+
+        return oppsByRecurringDonationId;
+    }
+
+    /**
      * @description When the entire batch job is done, submit the final count variables to the LMO
      */
     public void finish(Database.BatchableContext context) {
         switch on (jobMode) {
-            when RECURRING_DONATIONS_OPPS {
+            when OPPORTUNITIES {
                 featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), rdOpenStatusOppsCount);
                 featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), rdAllOppsCount);
             }

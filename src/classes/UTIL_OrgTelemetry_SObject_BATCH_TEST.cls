@@ -81,7 +81,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     static void testSObjectBatchJob() {
         Test.startTest();
         Database.executeBatch(
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS_OPPS), 20);
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES), 20);
         Test.stopTest();
     }
 
@@ -91,18 +91,18 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     @IsTest
     static void jobModeShouldReturnCorrectQuery() {
         UTIL_OrgTelemetry_SObject_BATCH oppBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS_OPPS);
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES);
 
         String oppBatchQuery = oppBatch.start(null).getQuery();
         System.assert(Database.query(oppBatchQuery) instanceof List<Opportunity>,
-            'RECURRING_DONATIONS_OPPS job mode should query Opportunities');
+            'OPPORTUNITIES job mode should query Opportunities');
 
         UTIL_OrgTelemetry_SObject_BATCH rdBatch =
             new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS);
 
         String rdBatchQuery = rdBatch.start(null).getQuery();
         System.assert(Database.query(rdBatchQuery) instanceof List<npe03__Recurring_Donation__c>,
-            'RECURRING_DONATIONS_OPPS job mode should query Recurring Donations');
+            'OPPORTUNITIES job mode should query Recurring Donations');
     }
 
     /**
@@ -111,7 +111,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     @IsTest
     static void shouldCalculateCorrectRecurringDonationOppMetrics() {
         UTIL_OrgTelemetry_SObject_BATCH oppBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS_OPPS);
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES);
 
         String oppBatchQuery = oppBatch.start(null).getQuery();
         List<Opportunity> opps = Database.query(oppBatchQuery);
@@ -155,7 +155,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     @isTest
     private static void shouldCaptureRecurringDonationOppMetricsInFeatureManagement() {
         UTIL_OrgTelemetry_SObject_BATCH oppBatch =
-            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS_OPPS);
+            new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES);
         oppBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
 
         oppBatch.rdAllOppsCount = 2;
