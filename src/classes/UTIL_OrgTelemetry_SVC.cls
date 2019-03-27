@@ -82,6 +82,9 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Org_CountTimedOutBatchJobsLast7Days
     }
 
+    private Set<String> completedBatchStatuses = new Set<String>{ 'Aborted', 'Completed', 'Failed' };
+    private Set<String> npspNamespaces = new Set<String> {'npsp', 'npe01', 'npo02', 'npe03', 'npe4', 'npe5'};
+
     @TestVisible
     private UTIL_FeatureManagement featureManager = new UTIL_FeatureManagement();
 
@@ -236,8 +239,8 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             FROM AsyncApexJob
             WHERE CreatedDate = LAST_N_DAYS:7
                 AND JobType = 'BatchApex'
-                AND Status IN ('Aborted', 'Completed', 'Failed')
-                AND ApexClass.NamespacePrefix IN ('npsp', 'npe01', 'npo02', 'npe03', 'npe4', 'npe5')
+                AND Status IN :completedBatchStatuses
+                AND ApexClass.NamespacePrefix IN :npspNamespaces
         ]) {
 
             Integer jobLength = getMinutesBetween(job.CreatedDate, job.CompletedDate);
@@ -272,8 +275,8 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             FROM AsyncApexJob
             WHERE CreatedDate = LAST_N_DAYS:7
                 AND JobType = 'BatchApex'
-                AND Status IN ('Aborted', 'Completed', 'Failed')
-                AND ApexClass.NamespacePrefix IN ('npsp', 'npe01', 'npo02', 'npe03', 'npe4', 'npe5')
+                AND Status IN :completedBatchStatuses
+                AND ApexClass.NamespacePrefix IN :npspNamespaces
                 AND NumberOfErrors > 0
         ]) {
 

@@ -230,7 +230,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         for (Integer i = 0; i < numOpps; i++) {
             Opportunity opp = new Opportunity(
                 Name = 'Test Opp ' + i,
-                StageName = 'Closed Won',
+                StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
                 CloseDate = Date.today()
             );
 
