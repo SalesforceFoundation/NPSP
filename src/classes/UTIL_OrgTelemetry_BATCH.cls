@@ -86,11 +86,20 @@ public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchab
     public void finish(Database.BatchableContext info) {
         Integer cnt = Database.countQuery('SELECT Count() FROM npe03__Recurring_Donation__c LIMIT 1');
         if (cnt == 1) {
-            Database.executeBatch(new UTIL_OrgTelemetry_SObject_BATCH(
-                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES), 2000);
+            Database.executeBatch(
+                new UTIL_OrgTelemetry_SObject_BATCH(
+                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES
+                ),
+                UTIL_OrgTelemetry_SObject_BATCH.OPPORTUNITIES_BATCH_SIZE
+            );
 
-            Database.executeBatch(new UTIL_OrgTelemetry_SObject_BATCH(
-                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS), 200);
+            Database.executeBatch(
+                new UTIL_OrgTelemetry_SObject_BATCH(
+                    UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS
+                ),
+                UTIL_OrgTelemetry_SObject_BATCH.RECURRING_DONATIONS_BATCH_SIZE
+            );
+
         } else {
             System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), 0);
             System.FeatureManagement.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), 0);
