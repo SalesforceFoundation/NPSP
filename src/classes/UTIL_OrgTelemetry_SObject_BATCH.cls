@@ -253,11 +253,11 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
 
             switch on (jobMode) {
                 when OPPORTUNITIES {
-                    Database.executeBatch(this, 2000);
+                    Database.executeBatch(this, OPPORTUNITIES_BATCH_SIZE);
                 }
 
                 when RECURRING_DONATIONS {
-                    Database.executeBatch(this, 200);
+                    Database.executeBatch(this, RECURRING_DONATIONS_BATCH_SIZE);
                 }
             }
 
