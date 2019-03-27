@@ -58,26 +58,32 @@ public class OPP_PrimaryContact_BATCH implements Database.Batchable<sObject> {
     * @description Batch process execute method. Update existing opportunities' Primary Contact field based on
     * primary Opportunity Contact Role.
     */
-    public void execute(Database.BatchableContext BC, List<sObject> scope) {
+    public void execute(Database.BatchableContext BC, List<OpportunityContactRole> scope) {
         
         //creates an opportunity object
         //if there are duplicate primary contact roles, take the oldest modified one, so if the
         //duplicate is the result of a merge, the winner of the merge keeps the primary contact role
-        Map<Id, Opportunity> mapOppsForUpdate = new Map<Id, Opportunity>();
-        for (OpportunityContactRole ocr : (List<OpportunityContactRole>)scope) {
-            mapOppsForUpdate.put(ocr.OpportunityId, new Opportunity(Id = ocr.OpportunityId, Primary_Contact__c = ocr.ContactId));
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>();
+        for (OpportunityContactRole ocr : scope) {
+            oppById.put(
+                ocr.OpportunityId, 
+                new Opportunity(
+                    Id = ocr.OpportunityId, 
+                    Primary_Contact__c = ocr.ContactId
+                )
+            );
         }
 
         //verify we have an actual update to the primary contact field, otherwise remove the record
-        for (OpportunityContactRole ocr : (List<OpportunityContactRole>)scope) {
-            if (mapOppsForUpdate.get(ocr.OpportunityId).Primary_Contact__c == ocr.Opportunity.Primary_Contact__c) {
-                mapOppsForUpdate.remove(ocr.OpportunityId);
+        for (OpportunityContactRole ocr : scope) {
+            if (oppById.get(ocr.OpportunityId).Primary_Contact__c == ocr.Opportunity.Primary_Contact__c) {
+                oppById.remove(ocr.OpportunityId);
             }
         }
 
-        if (!mapOppsForUpdate.isEmpty()) {
+        if (!oppById.isEmpty()) {
             TDTM_TriggerHandler.disableTDTM = true;
-            Database.update(mapOppsForUpdate.values(), false);
+            Database.update(oppById.values(), false);
             TDTM_TriggerHandler.disableTDTM = false;
         }
     }

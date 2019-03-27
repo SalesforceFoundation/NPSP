@@ -47,7 +47,7 @@ private with sharing class OPP_PrimaryContact_TEST {
         insert contacts;
 
         Opportunity opp = new Opportunity(
-            Name = 'foo',
+            Name = 'Test OCR change on Primary Contact change',
             Primary_Contact__c = contacts[0].Id,
             CloseDate = System.today(),
             StageName = CLOSE_WON_STAGE,
@@ -89,7 +89,7 @@ private with sharing class OPP_PrimaryContact_TEST {
         List<Opportunity> opps = new List<Opportunity>();
         for (Integer i = 0; i < size; i++) {
             opps.add(new Opportunity(
-                Name = 'foo',
+                Name = 'Test Refresh Opportunity Primary Contact batch',
                 Primary_Contact__c = contacts[i].Id,
                 CloseDate = System.today(),
                 StageName = CLOSE_WON_STAGE,
@@ -154,7 +154,7 @@ private with sharing class OPP_PrimaryContact_TEST {
         insert contacts;
         
         Opportunity opp = new Opportunity(
-            Name = 'foo',
+            Name = 'Test OCR recreation on Primary Contact update',
             Primary_Contact__c = contacts[0].Id,
             CloseDate = System.today(),
             StageName = CLOSE_WON_STAGE,
