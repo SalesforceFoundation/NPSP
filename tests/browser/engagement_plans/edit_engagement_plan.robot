@@ -16,6 +16,9 @@ Create Engagement Plan and Edit to Add New Task
     Unselect Frame
     Select App Launcher Tab  Engagement Plan Templates
     Click Link    link=${plan_name}
+    ${ns} =  Get NPSP Namespace Prefix
+    ${id}    Get Current Record Id
+    Store Session Record    ${ns}Engagement_Plan_Template__c    ${id}
     Click Link    link=Show more actions
     Click Link    link=Edit
     #Sleep    2

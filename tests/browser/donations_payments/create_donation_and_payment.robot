@@ -15,6 +15,7 @@ ${opp_name}
 Create Donation from a Contact
     [tags]  unstable
     &{contact} =  API Create Contact    Email=skristem@robot.com
+    Store Session Record    Account    &{contact}[AccountId]
     &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Donation    Name=Sravani $100 donation
     Go To Record Home  &{opportunity}[Id]
     Select Tab    Related
@@ -36,14 +37,8 @@ Create Donation from a Contact
     Page Scroll To Locator    payments.check_occurrence    Payments
     ${value}    Verify Occurrence Payments    Payments
     Should not be equal as strings    ${value}    0
-    
-Verify Payments 
-    [tags]  unstable
-    Go To Object Home         Opportunity
-    Click Link    ${opp_name}  
-    Select Tab    Related
-    Load Related List    Payments
     Click ViewAll Related List    Payments
     Reload Page
     ${flag}     Verify payment    
     should be equal as strings     ${flag}    pass
+    
