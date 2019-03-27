@@ -134,6 +134,13 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
      * stateful vars
      */
     public void execute(Database.BatchableContext context, List<SObject> scope) {
+        // Since execution contexts might not run in order (ex., chunk size 10k,
+        // batch size 2k has 5 batches but they won't run in a guaranteed order)
+        // we first need to check if the last Id is greater than the value in lastProcessedId
+        Id lastIdInScope = scope[scope.size() - 1].Id;
+        if (lastProcessedId == null || lastIdInScope > lastProcessedId) {
+            lastProcessedId = lastIdInScope;
+        }
 
         switch on (jobMode) {
             when OPPORTUNITIES {
