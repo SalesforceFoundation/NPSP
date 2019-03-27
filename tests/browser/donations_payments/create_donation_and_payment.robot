@@ -15,6 +15,7 @@ ${opp_name}
 Create Donation from a Contact
     [tags]  unstable
     &{contact} =  API Create Contact    Email=skristem@robot.com
+    Store Session Record    Account    &{contact}[AccountId]
     &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Donation    Name=Sravani $100 donation
     Go To Record Home  &{opportunity}[Id]
     Select Tab    Related

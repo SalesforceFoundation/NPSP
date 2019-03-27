@@ -11,6 +11,7 @@ Assign GAU to Opportunity
     &{gau1} =  API Create GAU
     &{gau2} =  API Create GAU
     &{contact} =  API Create Contact    Email=skristem@robot.com
+    Store Session Record    Account    &{contact}[AccountId]
     &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Donation    Name=Test GAU donation
     Go To Record Home  &{opportunity}[Id]
     Select Tab    Related
