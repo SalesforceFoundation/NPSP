@@ -2527,8 +2527,8 @@
         <members>Data_CountRecurringDonationsAll</members>
         <members>Data_MaxNumRelatedOpps</members>
         <members>Org_CountNonEnglishLanguages</members>
-        <members>Org_LongestRunningBatchLast7Days</members>
         <members>Org_CountTimedOutBatchJobsLast7Days</members>
+        <members>Org_LongestRunningBatchLast7Days</members>
         <name>FeatureParameterInteger</name>
     </types>
     <types>
