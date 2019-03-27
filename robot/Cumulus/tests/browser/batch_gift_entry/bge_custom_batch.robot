@@ -1,6 +1,6 @@
 *** Settings ***
 
-Resource        tests/NPSP.robot
+Resource        robot/Cumulus/resources/NPSP.robot
 Library           DateTime
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser

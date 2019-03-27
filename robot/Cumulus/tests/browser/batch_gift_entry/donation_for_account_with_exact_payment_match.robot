@@ -1,6 +1,6 @@
 *** Settings ***
 
-Resource        tests/NPSP.robot
+Resource        robot/Cumulus/resources/NPSP.robot
 Library           DateTime
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
@@ -71,7 +71,3 @@ Enter a donation for an account with exact payment match
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
     Confirm Value    Close Date    ${opp_date}    Y 
     Confirm Value    Stage    Closed Won    Y 
-      
-
-    
-    

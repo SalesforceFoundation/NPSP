@@ -1,6 +1,6 @@
 *** Settings ***
 
-Resource        tests/NPSP.robot
+Resource        robot/Cumulus/resources/NPSP.robot
 Library           DateTime
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
@@ -73,7 +73,3 @@ Dont select match for contact new donation with grid changes
     Load Related List    Opportunities
     Verify Occurrence    Opportunities    2
     Store Session Record      Account    &{contact}[AccountId]
-      
-
-    
-    

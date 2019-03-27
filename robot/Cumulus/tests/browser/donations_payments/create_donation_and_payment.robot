@@ -1,6 +1,6 @@
 *** Settings ***
 
-Resource        tests/NPSP.robot
+Resource        robot/Cumulus/resources/NPSP.robot
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 

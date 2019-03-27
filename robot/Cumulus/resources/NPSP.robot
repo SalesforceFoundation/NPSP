@@ -2,7 +2,7 @@
 
 Resource       cumulusci/robotframework/Salesforce.robot
 Library        DateTime
-Library        tests/NPSP.py
+Library        NPSP.py
 
 *** Variables ***
 ${task1}  Send Email1
@@ -351,5 +351,3 @@ Open NPSP Settings
     Wait Until Element Is Visible  text:${submenu}
     Click Link    text:${submenu}
     Sleep  1
-    
-    

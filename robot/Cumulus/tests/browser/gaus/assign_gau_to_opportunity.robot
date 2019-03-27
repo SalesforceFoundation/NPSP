@@ -1,6 +1,6 @@
 *** Settings ***
 
-Resource        tests/NPSP.robot
+Resource        robot/Cumulus/resources/NPSP.robot
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -27,4 +27,3 @@ Assign GAU to Opportunity
     Select Window
     Page Scroll To Locator    record.related.check_occurrence    GAU Allocations
     Verify Occurrence    GAU Allocations    2
-   

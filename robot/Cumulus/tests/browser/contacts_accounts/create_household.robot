@@ -1,6 +1,6 @@
 *** Settings ***
 
-Resource        tests/NPSP.robot
+Resource        robot/Cumulus/resources/NPSP.robot
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -31,5 +31,3 @@ Create Household with Name and Address
     Page Should Contain    50 Fremont Street  
     Go To Object Home         Contact
     Verify Record    &{contact}[FirstName] &{contact}[LastName]
-
-         

@@ -1,6 +1,6 @@
 *** Settings ***
 
-Resource        tests/NPSP.robot
+Resource        robot/Cumulus/resources/NPSP.robot
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -28,4 +28,4 @@ Verify Tasks Exist Under Activity
     [tags]  unstable
     Scroll Page To Location    0    0
     Click Span Button    More Steps
-    Check Activity Tasks    ${task1}    ${sub_task}    ${task2}    
+    Check Activity Tasks    ${task1}    ${sub_task}    ${task2}

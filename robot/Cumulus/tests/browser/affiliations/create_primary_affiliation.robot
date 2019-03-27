@@ -1,6 +1,6 @@
 *** Settings ***
 
-Resource        tests/NPSP.robot
+Resource        robot/Cumulus/resources/NPSP.robot
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -17,4 +17,3 @@ Create Primary Affiliation for Contact
     Click Related Item Link      Affiliated Contacts    &{contact}[FirstName] &{contact}[LastName]
     ${id}    Get Current Record Id
     Store Session Record    npe5__Affiliation__c    ${id}
-   

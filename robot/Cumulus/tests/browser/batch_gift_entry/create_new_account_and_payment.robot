@@ -1,6 +1,6 @@
 *** Settings ***
 
-Resource        tests/NPSP.robot
+Resource        robot/Cumulus/resources/NPSP.robot
 Library           DateTime
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
@@ -66,7 +66,3 @@ Create a new account and enter payment information
     Click Link With Text    text=${acc_name}
     ${account_id} =           Get Current Record Id
     Store Session Record      Account  ${account_id}
-    
-    
-    
-    

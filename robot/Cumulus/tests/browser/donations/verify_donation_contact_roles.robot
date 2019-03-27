@@ -1,6 +1,6 @@
 *** Settings ***
 
-Resource        tests/NPSP.robot
+Resource        robot/Cumulus/resources/NPSP.robot
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -17,4 +17,4 @@ Create Donation from Contact and Verify Contact Roles on Opportunity Page
     Select Relatedlist    Contact Roles
     Verify Related List Field Values
     ...                     &{contact1}[FirstName] &{contact1}[LastName]=Donor
-    ...                     &{contact2}[FirstName] &{contact2}[LastName]=Household Member  
+    ...                     &{contact2}[FirstName] &{contact2}[LastName]=Household Member

@@ -1,6 +1,6 @@
 *** Settings ***
 
-Resource        tests/NPSP.robot
+Resource        robot/Cumulus/resources/NPSP.robot
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
@@ -24,4 +24,3 @@ Make Changes to Settings and Verify Changes
     Select Value From List     Household Account Record Type    Household Account
     Click Button With Value    Save
     Wait For Locator    npsp_settings.list_val    Household Account Record Type    Household Account
-    

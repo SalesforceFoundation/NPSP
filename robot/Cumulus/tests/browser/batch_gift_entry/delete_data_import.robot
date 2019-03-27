@@ -1,6 +1,6 @@
 *** Settings ***
 
-Resource        tests/NPSP.robot
+Resource        robot/Cumulus/resources/NPSP.robot
 Library           DateTime
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
@@ -34,9 +34,3 @@ Delete a Data Import
     Page Should Contain    Total Count: 0
     ${status} =     Run Keyword And Return Status     Salesforce Get      DataImport__c  &{data_import}[Id]
     Should Be Equal As Strings    ${status}    False
-    
-     
-      
-
-    
-    
