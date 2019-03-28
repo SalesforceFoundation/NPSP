@@ -215,15 +215,16 @@ public inherited sharing class CRLP_Rollup_SEL {
      * of the Detail object based on the specific Rollup operation type. In the event that the field refers to a
      * field that will never be used in the rollup logic, this prevents that field from being included in the Query.
      * @param  rollup Rollup__mdt
-     * @param  metadataRelationship SObjectField of Rollup__mdt Metadata Relationship (Amount, Detail or Date field)
-     * @return True if the rollup Operation is not null and not in the UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD map
+     * @param  rollupField SObjectField of Rollup__mdt Metadata Relationship (Amount, Detail or Date field)
+     * @return Returns True if the field specified by the RollupField (Detail, Amount, Date) for the Rollup Operation
+     * (Sum, Count, etc.)is needed when building a query
      */
     @TestVisible
-    private static Boolean isRollupFieldNeededInQuery(Rollup__mdt rollup, Schema.SObjectField metadataRelationship) {
+    private static Boolean shouldQueryRollupField(Rollup__mdt rollup, Schema.SObjectField rollupField) {
         return
             rollup.Operation__c != null
-            && rollup.get(metadataRelationship) != null
-            && !UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD.get(metadataRelationship).contains(rollup.Operation__c);
+            && rollup.get(rollupField) != null
+            && !UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD.get(rollupField).contains(rollup.Operation__c);
     }
 
     /**
@@ -261,27 +262,29 @@ public inherited sharing class CRLP_Rollup_SEL {
             for (Rollup__mdt rollup : cachedRollups) {
                 if (rollup.Active__c == true) {
                     // Summary Field
-                    if (rollup.Summary_Object__r.QualifiedApiName == sObjectName) {
+                    if (rollup.Summary_Object__c != null
+                        && rollup.Summary_Object__r.QualifiedApiName == sObjectName
+                    ) {
                         fields.add(fieldsByName.get(rollup.Summary_Field__r.QualifiedApiName));
                     }
 
                     // Date Field
                     if (rollup.Date_Object__r.QualifiedApiName == sObjectName
-                        && isRollupFieldNeededInQuery(rollup, Schema.Rollup__mdt.Date_Field__c)
+                        && shouldQueryRollupField(rollup, Schema.Rollup__mdt.Date_Field__c)
                     ) {
                         fields.add(fieldsByName.get(rollup.Date_Field__r.QualifiedApiName));
                     }
 
                     // Amount Field
                     if (rollup.Amount_Object__r.QualifiedApiName == sObjectName
-                        && isRollupFieldNeededInQuery(rollup, Schema.Rollup__mdt.Amount_Field__c)
+                        && shouldQueryRollupField(rollup, Schema.Rollup__mdt.Amount_Field__c)
                     ) {
                         fields.add(fieldsByName.get(rollup.Amount_Field__r.QualifiedApiName));
                     }
 
                     // Detail Field
                     if (rollup.Detail_Object__r.QualifiedApiName == sObjectName
-                        && isRollupFieldNeededInQuery(rollup, Schema.Rollup__mdt.Detail_Field__c)
+                        && shouldQueryRollupField(rollup, Schema.Rollup__mdt.Detail_Field__c)
                     ) {
                         fields.add(fieldsByName.get(rollup.Detail_Field__r.QualifiedApiName));
                     }
@@ -334,7 +337,7 @@ public inherited sharing class CRLP_Rollup_SEL {
      * @param typeFilter Enum of the rollup filter to apply (All, DaysAgoOnly, NonDaysAgoOnly, etc.)
      * @param rollups List of Rollup__mdt records to store
      */
-    public static void stuffRollupsByTypeCache(
+    public static void addRollupsToCache(
         CRLP_RollupProcessingOptions.RollupType rollupType,
         CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter, 
         List<Rollup__mdt> rollups
@@ -358,85 +361,110 @@ public inherited sharing class CRLP_Rollup_SEL {
             return cachedRollupsByTypeAndFilter.get(rollupType.name() + typeFilter.name());
         }
 
-        List<Rollup__mdt> filteredRollups = new List<Rollup__mdt>();
+        List<Rollup__mdt> filteredRollupCmts = new List<Rollup__mdt>();
+
+        // Determine the correct base summary object based on the Rollup Type
+        SObjectType summaryObjectType = getSummarySObjectType(rollupType);
+
+        // Retrieve all the Rollup Definitions for the summary object
+        List<Rollup__mdt> allRollupCmts = CRLP_Rollup_SEL.getRollupsBySummaryType().get(summaryObjectType);
+        if (allRollupCmts != null) {
+            // Loop through each Rollup__mdt and determine whether the record should be included based on the
+            // Rollup Type Job AND the Type Filter if there is one.
+            for (Rollup__mdt rollup : allRollupCmts) {
+                if (shouldRollupDefinitionBeIncluded(rollup, rollupType, typeFilter)) {
+                    filteredRollupCmts.add(rollup);
+                }
+            }
+        }
+
+        // Save the list in the cache
+        cachedRollupsByTypeAndFilter.put(rollupType.name() + typeFilter.name(), filteredRollupCmts);
+        return filteredRollupCmts;
+    }
+
+    /**
+     * @description Determine if the Summary SObjectType for a given type of rollup
+     * @param rollupType Enum
+     * @return SObjectType (Account, Contact, GAU, RecurringDonation)
+     */
+    private static SObjectType getSummarySObjectType(CRLP_RollupProcessingOptions.RollupType rollupType) {
+        SObjectType objectType;
+        switch on (rollupType) {
+            when AccountHardCredit, AccountContactSoftCredit, AccountSoftCredit {
+                objectType = Account.SObjectType;
+            }
+            when ContactHardCredit, ContactSoftCredit {
+                objectType = Contact.SObjectType;
+            }
+            when GAU {
+                objectType = General_Accounting_Unit__c.SObjectType;
+            }
+            when RecurringDonations {
+                objectType = npe03__Recurring_Donation__c.SObjectType;
+            }
+        }
+        return objectType;
+    }
+
+    /**
+     * @description Determine if the Rollup__mdt record is valid for the specified RollupType
+     * @param Rollup__mdt CMT Record
+     * @param rollupType RollupType Enum
+     * @param typeFilter RollupTypeFilter Enum
+     * @return True or False
+     */
+    private static Boolean shouldRollupDefinitionBeIncluded(Rollup__mdt rollup,
+            CRLP_RollupProcessingOptions.RollupType rollupType,
+            CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter
+    ) {
+
+        if (rollup.Is_Deleted__c == true || rollup.Active__c == false) {
+            return false;
+        }
 
         String oppObjectName = UTIL_Describe.getObjectDescribe('Opportunity').getName();
         String pmtObjectName = UTIL_Describe.getObjectDescribe('npe01__OppPayment__c').getName();
         String pscObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')).getName();
         String accSCObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c')).getName();
 
-        // Determine the correct base summary object based on the Rollup Type
-        SObjectType summaryObjectType;
+        Boolean include = false;
+
         switch on (rollupType) {
-            when AccountHardCredit, AccountContactSoftCredit, AccountSoftCredit {
-                summaryObjectType = Account.SObjectType;
+            when AccountHardCredit, ContactHardCredit {
+                include = (
+                    (rollup.Detail_Object__r.QualifiedApiName == oppObjectName || rollup.Detail_Object__r.QualifiedApiName == pmtObjectName)
+                    && rollup.Amount_Object__r.QualifiedApiName != pscObjectName
+                    && rollup.Amount_Object__r.QualifiedApiName != accSCObjectName);
             }
-
-            when ContactHardCredit, ContactSoftCredit {
-                summaryObjectType = Contact.SObjectType;
+            when AccountSoftCredit {
+                include = (rollup.Amount_Object__r.QualifiedApiName == accSCObjectName &&
+                    (rollup.Detail_Object__r.QualifiedApiName == oppObjectName || rollup.Detail_Object__r.QualifiedApiName == accSCObjectName));
             }
-
-            when GAU {
-                summaryObjectType = General_Accounting_Unit__c.SObjectType;
+            when AccountContactSoftCredit, ContactSoftCredit {
+                include = (rollup.Amount_Object__r.QualifiedApiName == pscObjectName);
             }
-
-            when RecurringDonations {
-                summaryObjectType = npe03__Recurring_Donation__c.SObjectType;
-            }
-        }
-
-        // Retrieve all the Rollup Definitions for the summary object
-        List<Rollup__mdt> rlps = CRLP_Rollup_SEL.getRollupsBySummaryType().get(summaryObjectType);
-        if (rlps != null) {
-            // Loop through each Rollup__mdt and determine whether the record should be included based on the
-            // Rollup Type Job AND the Type Filter if there is one.
-            for (Rollup__mdt r : rlps) {
-                Boolean includeRollupDefinition = false;
-                if (r.Is_Deleted__c == false && r.Active__c == true) {
-                    switch on (rollupType) {
-                        when AccountHardCredit, ContactHardCredit {
-                            includeRollupDefinition = ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == pmtObjectName)
-                                    && r.Amount_Object__r.QualifiedApiName != pscObjectName && r.Amount_Object__r.QualifiedApiName != accSCObjectName);
-                        }
-
-                        when AccountSoftCredit {
-                            includeRollupDefinition = ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == accSCObjectName)
-                                    && r.Amount_Object__r.QualifiedApiName == accSCObjectName);
-                        }
-
-                        when AccountContactSoftCredit, ContactSoftCredit {
-                            includeRollupDefinition = (r.Amount_Object__r.QualifiedApiName == pscObjectName);
-                        }
-
-                        when GAU, RecurringDonations {
-                            includeRollupDefinition = true;
-                        }
-                    }
-                }
-
-                if (includeRollupDefinition) {
-                    if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.NonDaysAgo &&
-                            r.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()) {
-                        includeRollupDefinition = false;
-
-                    } else if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.DaysAgoOnly &&
-                            r.Time_Bound_Operation_Type__c != CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()) {
-                        includeRollupDefinition = false;
-
-                    } else if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.MembershipsOnly &&
-                            !r.Summary_Field__r.QualifiedApiName.containsIgnoreCase('Membership')) {
-                        includeRollupDefinition = false;
-                    }
-
-                    if (includeRollupDefinition) {
-                        filteredRollups.add(r);
-                    }
-                }
+            when GAU, RecurringDonations {
+                include = true;
             }
         }
 
-        // Save the list in the cache
-        cachedRollupsByTypeAndFilter.put(rollupType.name() + typeFilter.name(), filteredRollups);
-        return filteredRollups;
+        if (include) {
+            if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.NonDaysAgo &&
+                    rollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()) {
+                include = false;
+
+            } else if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.DaysAgoOnly &&
+                    rollup.Time_Bound_Operation_Type__c != CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()) {
+                include = false;
+
+            } else if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.MembershipsOnly &&
+                    !rollup.Summary_Field__r.QualifiedApiName.containsIgnoreCase('Membership')) {
+                include = false;
+            }
+        }
+
+        return include;
     }
+
 }

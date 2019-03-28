@@ -39,7 +39,8 @@ private class CRLP_Operation_TEST {
     /**
      * @description Test the static utility methods in the CRLP_Operation class
      */
-    static testMethod void test_static_methods() {
+    @IsTest
+    private static void test_static_methods() {
         System.assertNotEquals(0, CRLP_Operation.getRollupOperationTypes().size(),
             'There should be whole bunch of Rollup Operations');
         System.assertEquals(1, CRLP_Operation.getAvailableTimeBoundOperationTypes(CRLP_Operation.RollupType.BEST_YEAR.name()).size(),
@@ -55,51 +56,48 @@ private class CRLP_Operation_TEST {
         System.assertEquals(CRLP_Operation.RollupType.SUM, CRLP_Operation.getRollupTypeFromString('Sum'));
     }
 
+    /**
+     * @description Verify that the picklist values of the Rollup__mdt.Operation__c field matches the Enum in the codebase
+     */
     @IsTest
-    private static void testRollupType() {
-        // Data
-        final Set<String> enumNames = new Set<String>();
+    private static void rollupCmtOperationPicklistShouldMatchEnums() {
+        Set<String> enumNames = new Set<String>();
         for (CRLP_Operation.RollupType rollupType : CRLP_Operation.RollupType.values()) {
             enumNames.add(rollupType.name());
         }
 
-        final Set<String> picklistValues = new Set<String>();
+        Set<String> picklistValues = new Set<String>();
         for (Schema.PicklistEntry picklist : Schema.SObjectType.Rollup__mdt.fields.Operation__c.getPicklistValues()) {
             picklistValues.add(picklist.getValue());
         }
-
-        Test.startTest();
 
         System.assertEquals(
             enumNames, 
             picklistValues, 
             'There must exist a CRLP_Operation.RollupType for each Rollup__mdt.Operation__c Picklist Value and vice versa'
         );
-
-        Test.stopTest();
     }
 
+    /**
+     * @description Verify that the picklist values of the Rollup__mdt.Time_Bound_Operation_Type__c field matches
+     * the Enum in the codebase
+     */
     @IsTest
-    private static void testTimeBoundOperationType() {
-        // Data
-        final Set<String> enumNames = new Set<String>();
+    private static void timeBoundOperationTypePicklistShouldMatchEnums() {
+        Set<String> enumNames = new Set<String>();
         for (CRLP_Operation.TimeBoundOperationType rollupType : CRLP_Operation.TimeBoundOperationType.values()) {
             enumNames.add(rollupType.name());
         }
 
-        final Set<String> picklistValues = new Set<String>();
+        Set<String> picklistValues = new Set<String>();
         for (Schema.PicklistEntry picklist : Schema.SObjectType.Rollup__mdt.fields.Time_Bound_Operation_Type__c.getPicklistValues()) {
             picklistValues.add(picklist.getValue());
         }
-
-        Test.startTest();
 
         System.assertEquals(
             enumNames, 
             picklistValues, 
             'There must exist a CRLP_Operation.TimeBoundOperationType for each Rollup__mdt.Time_Bound_Operation_Type__c Picklist Value and vice versa'
         );
-
-        Test.stopTest();
     }
 }

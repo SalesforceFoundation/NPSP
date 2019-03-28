@@ -36,6 +36,8 @@
 @isTest(IsParallel=True)
 public class CRLP_Rollup_SEL_TEST {
 
+    private static Integer rollupMdtCount = 0;
+
     /**
      * @description Because unit tests cannot actually insert Custom Metadata Types and there's no real way to know
      * exactly what's in the CMT objects, we can use this method to mock the contents of the cached MDT queries
@@ -48,20 +50,60 @@ public class CRLP_Rollup_SEL_TEST {
         String filterGroupsJSON = '[' + CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId, 'TestFilterGroup') + ']';
         CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(filterGroupsJSON, List<Filter_Group__mdt>.class);
 
-        // Create two Rollup that uses the above Filter Group
-        // The first is  Sum that uses the Fair_Market_Value__c field.
-        // The second is a Count that specifies two fields that should not be included in the Opp Query
+        // Create a series of Rollups that each specify a different Opp field in for the Rollup__mdt Detail and Amount
+        // fields that should never be included when building the Opportunity Query. This is defined in the Map
+        // in CRLP_Rollup_SEL.UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD.
         String rollupsJSON = '[' +
 
+            // Sum operation. Ignores the Detail field reference
             CMT_UnitTestData_TEST.createRollupRecord('Household Total Donations', filterGroupId,
                     CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                    'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Amount', 'Fair_Market_Value__c')
+                    'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Acknowledgment_Date__c', 'Amount')  + ',' +
 
-            + ',' +
-
+            // Count operation. Ignores the Detail and Amount field references
             CMT_UnitTestData_TEST.createRollupRecord('Household Donations Count', filterGroupId,
                     CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                    'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'ExpectedRevenue', 'Tribute__c')
+                    'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'In_Kind_Type__c', 'Is_Grant_Renewal__c') + ',' +
+
+            // Average operation. Ignores the Detail field references
+            CMT_UnitTestData_TEST.createRollupRecord('Average Total Donations All Time', filterGroupId,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'npo02__AverageAmount__c', CRLP_Operation.RollupType.Average, 'npe01__Amount_Outstanding__c', 'Fair_Market_Value__c') + ',' +
+
+            // Largest operation. Does not ignore any of the fields!
+            CMT_UnitTestData_TEST.createRollupRecord('Largest Donation All Time', filterGroupId,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'npo02__LargestAmount__c', CRLP_Operation.RollupType.Largest, 'Amount', 'Fair_Market_Value__c') + ',' +
+
+            // Smallest operation. Does not ignore any of the fields!
+            CMT_UnitTestData_TEST.createRollupRecord('Smallest Donation All Time', filterGroupId,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'npo02__SmallestAmount__c', CRLP_Operation.RollupType.Smallest, 'Amount', 'Fair_Market_Value__c') + ',' +
+
+            // YearsDonated operation. Ignores the Detail reference
+            CMT_UnitTestData_TEST.createRollupRecord('Years Donated', filterGroupId,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'Description', CRLP_Operation.RollupType.Years_Donated, 'Notification_Preference__c', 'Amount') + ',' +
+
+            // DonorStreak operation. Ignores the Detail reference
+            CMT_UnitTestData_TEST.createRollupRecord('Current Donation Streak', filterGroupId,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'npo02__NumberOfMembershipOpps__c', CRLP_Operation.RollupType.Donor_Streak, 'npe01__Membership_Start_Date__c', 'Amount') + ',' +
+
+            // BestYear operation. Ignores the Detail reference
+            CMT_UnitTestData_TEST.createRollupRecord('Best Year', filterGroupId,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'npo02__Best_Gift_Year__c', CRLP_Operation.RollupType.Best_Year, 'npe01__Membership_End_Date__c', 'Amount') + ',' +
+
+            // Last operation. Ignores the Amount reference
+            CMT_UnitTestData_TEST.createRollupRecord('Last Gift Date', filterGroupId,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'npo02__LastCloseDate__c', CRLP_Operation.RollupType.Last, 'CloseDate', 'Matching_Gift_Status__c') + ',' +
+
+            // First operation. Ignores the Amount reference
+            CMT_UnitTestData_TEST.createRollupRecord('First Gift Date', filterGroupId,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'npo02__FirstCloseDate__c', CRLP_Operation.RollupType.First, 'CloseDate', 'npe01__Member_Level__c')
 
             + ']';
 
@@ -69,6 +111,8 @@ public class CRLP_Rollup_SEL_TEST {
             rollupsJSON, 
             List<Rollup__mdt>.class
         );
+
+        rollupMdtCount = CRLP_Rollup_SEL.cachedRollups.size();
     }
 
     /**
@@ -79,34 +123,34 @@ public class CRLP_Rollup_SEL_TEST {
     private static void shouldReturnExpectedFieldsToQuery() {
         mockRollupCMTValues();
 
-        // Fields expected: AccountId, PrimaryContact, CloseDate, FairMarketValue
-        // The ExpectedRevenue and Tribute__c fields are specified in the Mock CMT values, but will not be queried.
-        final Integer expectedFldCount = (UserInfo.isMultiCurrencyOrganization() ? 5 : 4);
-
-        List<Schema.DescribeFieldResult> referencedFields = CRLP_Rollup_SEL.getReferencedFieldsByObject(Opportunity.SObjectType);
-        List<String> referencedFieldNames = new List<String>();
-        for (DescribeFieldResult fr : referencedFields) {
-            referencedFieldNames.add(fr.getName());
+        Set<String> expectedFields = new Set<String>{
+                'AccountId', 'CloseDate', 'Amount',
+                Opportunity.Primary_Contact__c.getDescribe().getName(),
+                Opportunity.Fair_Market_Value__c.getDescribe().getName()
+        };
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            expectedFields.add('CurrencyIsoCode');
         }
 
-        System.assertEquals(expectedFldCount, referencedFields.size(),
-                String.format('There should be {0} Opportunity fields referenced across the rollup\n{1}',
-                        new List<String>{ expectedFldCount.format(), JSON.serialize(referencedFieldNames) }
-                ));
+        // Verify that the returned set of fields exactly match the expected fields
+        List<Schema.DescribeFieldResult> referencedFields = CRLP_Rollup_SEL.getReferencedFieldsByObject(Opportunity.SObjectType);
+        Set<String> returnedFields = new Set<String>();
+        for (DescribeFieldResult fr : referencedFields) {
+            System.assert(expectedFields.contains(fr.getName()),
+                    'The ' + fr.getName() + ' field is not in the expected fields set');
+            returnedFields.add(fr.getName());
+        }
 
-        // Test that a list of fields to query is returned
-        String queryFields = CRLP_Rollup_SEL.getReferencedFieldsByObjectAsString(Opportunity.SObjectType);
-        System.assert(String.isNotEmpty(queryFields),
-                'There should be at least one referenced field for the Opportunity object in Rollup__mdt');
-
-        System.assert(!queryFields.containsIgnoreCase('ExpectedRevenue'),
-                'The "ExpectedRevenue" field should not be included in the query');
+        // Verify that the expected fields are all in the returned set of fields
+        for (String fld : expectedFields) {
+            System.assert(returnedFields.contains(fld), 'The ' + fld + ' field is not in the returned set of fields');
+        }
 
         // Test that a query can be built and executed, though it's likely there will be zero rows returned
         // so don't attempt to validate the result.
+        String queryFields = CRLP_Rollup_SEL.getReferencedFieldsByObjectAsString(Opportunity.SObjectType);
         String soql = 'SELECT Id,' + queryFields + ' FROM Opportunity LIMIT 1';
         System.assertEquals(0, Database.query(soql).size());
-
     }
 
     /**
@@ -121,12 +165,12 @@ public class CRLP_Rollup_SEL_TEST {
         String devName = CRLP_Rollup_SEL.getRollupDefinitions()[0].DeveloperName;
         String mdtId = CRLP_Rollup_SEL.getRollupDefinitions()[0].Id;
 
-        System.assertEquals(2, CRLP_Rollup_SEL.getRollupDefinitions().size(), 'There should be 2 rollup definitions');
+        System.assertEquals(rollupMdtCount, CRLP_Rollup_SEL.getRollupDefinitions().size(), 'There should be 2 rollup definitions');
 
-        System.assertEquals(2, CRLP_Rollup_SEL.getRollupsByDetailType().get(Opportunity.SObjectType).size(),
+        System.assertEquals(rollupMdtCount, CRLP_Rollup_SEL.getRollupsByDetailType().get(Opportunity.SObjectType).size(),
                 'There should be 2 rollups for the Opportunity detail object');
 
-        System.assertEquals(2, CRLP_Rollup_SEL.getRollupsBySummaryType().get(Account.SObjectType).size(),
+        System.assertEquals(rollupMdtCount, CRLP_Rollup_SEL.getRollupsBySummaryType().get(Account.SObjectType).size(),
                 'There should be 2 rollups for the Account summary object');
 
         System.assertNotEquals(null, CRLP_Rollup_SEL.getRollupIdByDeveloperName(devName),
@@ -135,7 +179,7 @@ public class CRLP_Rollup_SEL_TEST {
         System.assertNotEquals(null, CRLP_Rollup_SEL.getRollupById(mdtId),
                 'There should be one Rollup returned');
 
-        System.assertEquals(2, CRLP_Rollup_SEL.getRollupsById().size(),
+        System.assertEquals(rollupMdtCount, CRLP_Rollup_SEL.getRollupsById().size(),
                 'There should be 2 rollup definitions returned');
 
         System.assertEquals(1, CRLP_Rollup_SEL.getRollupsByFilterGroup().size(),
@@ -149,13 +193,13 @@ public class CRLP_Rollup_SEL_TEST {
     private static void shouldMatchUnsupportedOperationsMap() {
 
         // This should be an exact duplicate of what is in CRLP_Rollup_SEL
-        Map<Schema.SObjectField, Set<String>> operationsMapForMatching = new Map<Schema.SObjectField, Set<String>> {
+        Map<Schema.SObjectField, Set<String>> expectedOperationsByRollupField = new Map<Schema.SObjectField, Set<String>> {
                 Schema.Rollup__mdt.Date_Field__c => new Set<String> {}, // All Operations Supported
                 Schema.Rollup__mdt.Amount_Field__c => new Set<String> {
                         CRLP_Operation.RollupType.Count.name(),
                         CRLP_Operation.RollupType.First.name(),
                         CRLP_Operation.RollupType.Last.name()
-                }, // All Operations Supported
+                },
                 Schema.Rollup__mdt.Detail_Field__c => new Set<String> {
                         CRLP_Operation.RollupType.Sum.name(),
                         CRLP_Operation.RollupType.Count.name(),
@@ -167,7 +211,7 @@ public class CRLP_Rollup_SEL_TEST {
                 }
         };
 
-        System.assertEquals(operationsMapForMatching, CRLP_Rollup_SEL.UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD,
+        System.assertEquals(expectedOperationsByRollupField, CRLP_Rollup_SEL.UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD,
             'CRLP_Rollup_SEL.UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD has unexpected values'
         );
     }
@@ -180,22 +224,30 @@ public class CRLP_Rollup_SEL_TEST {
         Map<String, Schema.DescribeFieldResult> referencedFields = new Map<String, Schema.DescribeFieldResult>();
         Map<String, Schema.DescribeFieldResult> allFields = UTIL_Describe.getAllFieldsDescribe('Account');
 
-        referencedFields.put('name', allFields.get('name'));
-        CRLP_Rollup_SEL.validateReferencedFields(referencedFields, 'Account');
-        System.assert(true, 'An exception was not thrown. Good!');
+        Exception actualException;
+        try {
+            referencedFields.put('name', allFields.get('name'));
+            CRLP_Rollup_SEL.validateReferencedFields(referencedFields, 'Account');
 
+        } catch (Exception ex) {
+            actualException = ex;
+        }
+        System.assertEquals(null, actualException, 'An exception should not have been thrown for a valid field');
+
+        actualException = null;
         try {
             referencedFields.put('nothing', allFields.get('nothing'));
             CRLP_Rollup_SEL.validateReferencedFields(referencedFields, 'Account');
-            System.assert(false, 'An exception was not thrown. Bad!');
 
         } catch (Exception ex) {
-            System.assert(true, 'An exception was not thrown. Good!');
+            actualException = ex;
         }
+        System.assertNotEquals(null, actualException, 'An exception should be thrown for invalid fields');
     }
 
     /**
-     * @description Validate the validateReferencedFields() method to ensure it properly identifies bad fields
+     * @description Validate the getRollupDefinitionsToUse() method retrieves the correct set of Rollup definitions
+     * based on the mocked Rollup__mdt records in this class and the specified RollupType enum.
      */
     @IsTest
     private static void shouldReturnExpectedRollupDefinitions() {
@@ -204,592 +256,21 @@ public class CRLP_Rollup_SEL_TEST {
         List<Rollup__mdt> rollupsAccountHC = CRLP_Rollup_SEL.getRollupDefinitionsToUse(
             CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
             CRLP_RollupProcessingOptions.RollupTypeFilter.All);
-        System.assertEquals(2, rollupsAccountHC.size(), 'There should be exactly two Rollups returned for AccountHardCredit');
+        System.assertEquals(rollupMdtCount, rollupsAccountHC.size(), 'There should be exactly two Rollups returned for AccountHardCredit');
 
-        List<Rollup__mdt> rollupsContactHC = CRLP_Rollup_SEL.getRollupDefinitionsToUse(
+        List<Rollup__mdt> rollups = CRLP_Rollup_SEL.getRollupDefinitionsToUse(
             CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
             CRLP_RollupProcessingOptions.RollupTypeFilter.All);
-        System.assertEquals(0, rollupsContactHC.size(), 'There should be exactly zero Rollup returned for ContactHardCredit');
+        System.assertEquals(0, rollups.size(), 'There should be exactly zero Rollup returned for ContactHardCredit');
+
+        rollups = CRLP_Rollup_SEL.getRollupDefinitionsToUse(
+            CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
+            CRLP_RollupProcessingOptions.RollupTypeFilter.All);
+        System.assertEquals(0, rollups.size(), 'There should be exactly zero Rollup returned for AccountSoftCredit');
+
+        rollups = CRLP_Rollup_SEL.getRollupDefinitionsToUse(
+            CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
+            CRLP_RollupProcessingOptions.RollupTypeFilter.All);
+        System.assertEquals(0, rollups.size(), 'There should be exactly zero Rollup returned for AccountContactSoftCredit');
     }
-
-
-    /**
-     * @description Tests all secenarios for CRLP_Rollup_SEL.getReferencedFieldsByObject(SObjectType objType) 
-     * by storing each scenario in a GetReferencedFieldsByObjectTestData.
-     * Scenario Types:
-     *      Returns empty list: null objType
-     *      Returns special Fields if Opportunity/CurrencyIsoCode: objType doesn't match or no active cachedRollups
-     *      Returns special Fields if Opportunity/CurrencyIsoCode/Cached Rollup: single Rollup Relationship
-     *      Returns special Fields if Opportunity/CurrencyIsoCode/Cached Rollup: all Rollup Relationships and no duplicates
-     */
-    @IsTest
-    private static void testGetReferencedFieldsByObject() {
-        final List<ReferencedFieldsByObjectTestData> allTestData = new List<ReferencedFieldsByObjectTestData>();
-        final String ROLLUP_SOBJECT_NAME = Schema.SObjectType.Rollup__mdt.getName();
-        final String ROLLUP_OPERATION_FIELD = Schema.SObjectType.Rollup__mdt.fields.Operation__c.getName();
-        final String ROLLUP_ACTIVE_FIELD = Schema.SObjectType.Rollup__mdt.fields.Active__c.getName();
-
-        final Map<String, SObjectField> ROLLUP_SOBJECTFIELD_BY_RELATIONSHIP = new Map<String, SObjectField>();
-
-        final String ROLLUP_SUMMARY_OBJECT_RELATIONSHIP = toRelationshipName(Schema.SObjectType.Rollup__mdt.fields.Summary_Object__c);
-        final String ROLLUP_SUMMARY_FIELD_RELATIONSHIP = toRelationshipName(Schema.SObjectType.Rollup__mdt.fields.Summary_Field__c);
-        ROLLUP_SOBJECTFIELD_BY_RELATIONSHIP.put(
-            ROLLUP_SUMMARY_FIELD_RELATIONSHIP,
-            Schema.Rollup__mdt.Summary_Field__c
-        );
-
-        final String ROLLUP_DATE_OBJECT_RELATIONSHIP = toRelationshipName(Schema.SObjectType.Rollup__mdt.fields.Date_Object__c);
-        final String ROLLUP_DATE_FIELD_RELATIONSHIP = toRelationshipName(Schema.SObjectType.Rollup__mdt.fields.Date_Field__c);
-        ROLLUP_SOBJECTFIELD_BY_RELATIONSHIP.put(
-            ROLLUP_DATE_FIELD_RELATIONSHIP,
-            Schema.Rollup__mdt.Date_Field__c
-        );
-
-        final String ROLLUP_AMOUNT_OBJECT_RELATIONSHIP = toRelationshipName(Schema.SObjectType.Rollup__mdt.fields.Amount_Object__c);
-        final String ROLLUP_AMOUNT_FIELD_RELATIONSHIP = toRelationshipName(Schema.SObjectType.Rollup__mdt.fields.Amount_Field__c);
-        ROLLUP_SOBJECTFIELD_BY_RELATIONSHIP.put(
-            ROLLUP_AMOUNT_FIELD_RELATIONSHIP,
-            Schema.Rollup__mdt.Amount_Field__c
-        );
-
-        final String ROLLUP_DETAIL_OBJECT_RELATIONSHIP = toRelationshipName(Schema.SObjectType.Rollup__mdt.fields.Detail_Object__c);
-        final String ROLLUP_DETAIL_FIELD_RELATIONSHIP = toRelationshipName(Schema.SObjectType.Rollup__mdt.fields.Detail_Field__c);
-        ROLLUP_SOBJECTFIELD_BY_RELATIONSHIP.put(
-            ROLLUP_DETAIL_FIELD_RELATIONSHIP,
-            Schema.Rollup__mdt.Detail_Field__c
-        );
-
-        final Map<String, String> ROLLUP_FIELDS_BY_OBJECT = new Map<String, String> {
-            ROLLUP_SUMMARY_OBJECT_RELATIONSHIP => ROLLUP_SUMMARY_FIELD_RELATIONSHIP,
-            ROLLUP_DATE_OBJECT_RELATIONSHIP => ROLLUP_DATE_FIELD_RELATIONSHIP,
-            ROLLUP_AMOUNT_OBJECT_RELATIONSHIP => ROLLUP_AMOUNT_FIELD_RELATIONSHIP,
-            ROLLUP_DETAIL_OBJECT_RELATIONSHIP => ROLLUP_DETAIL_FIELD_RELATIONSHIP
-        };
-
-        final List<Boolean> actives = new List<Boolean> {
-            true,
-            false
-        };
-
-        final Set<String> OPERATIONS = new Set<String> {
-            null
-        };
-        for (Schema.PicklistEntry picklist : Schema.SObjectType.Rollup__mdt.fields.Operation__c.getPicklistValues()) {
-            OPERATIONS.add(picklist.getValue());
-        }
-
-        // Returns empty list: null objType
-        {
-            final Schema.SObjectType objType = null;
-            final List<Schema.DescribeFieldResult> expected = new List<Schema.DescribeFieldResult>();
-
-            final Object entityDefinition = getEntityMetadataRelationship(Schema.SObjectType.Opportunity.getName());
-            final Object fieldDefinition = getFieldMetadataRelationship(Schema.SObjectType.Opportunity.fields.Amount.getName());
-
-            final Map<String, Object> rollupFields = new Map<String, Object> {
-                // ROLLUP_ACTIVE_FIELD
-                ROLLUP_SUMMARY_OBJECT_RELATIONSHIP => entityDefinition,
-                ROLLUP_SUMMARY_FIELD_RELATIONSHIP => fieldDefinition,
-                ROLLUP_DATE_OBJECT_RELATIONSHIP => entityDefinition,
-                ROLLUP_DATE_FIELD_RELATIONSHIP => fieldDefinition,
-                ROLLUP_AMOUNT_OBJECT_RELATIONSHIP => entityDefinition,
-                ROLLUP_AMOUNT_FIELD_RELATIONSHIP => fieldDefinition,
-                ROLLUP_DETAIL_OBJECT_RELATIONSHIP => entityDefinition,
-                ROLLUP_DETAIL_FIELD_RELATIONSHIP => fieldDefinition
-            };
-
-            // Each possible Operation
-            for (Boolean active : new List<Boolean> {
-                true,
-                false
-            }) {
-                for (String operation : OPERATIONS) {
-                    rollupFields.put(ROLLUP_ACTIVE_FIELD, active);
-                    rollupFields.put(ROLLUP_OPERATION_FIELD, operation);
-
-                    allTestData.add(new ReferencedFieldsByObjectTestData(
-                        objType,
-                        (Rollup__mdt) getSObject(
-                            ROLLUP_SOBJECT_NAME,
-                            rollupFields
-                        ),
-                        expected,
-                        'Returns empty list: null objType'
-                    ));
-                }
-            }
-        }
-
-        // Returns special Fields if Opportunity/CurrencyIsoCode: objType doesn't match or no active cachedRollups
-        {
-            final Map<String, Object> activeRollupFields = new Map<String, Object>();
-            {
-                final Object entityDefinition = getEntityMetadataRelationship(Schema.SObjectType.Contact.getName());
-                final Object fieldDefinition = getFieldMetadataRelationship(Schema.SObjectType.Contact.fields.npo02__Best_Gift_Year_Total__c.getName());
-
-                activeRollupFields.put(ROLLUP_ACTIVE_FIELD, true);
-                activeRollupFields.put(ROLLUP_SUMMARY_OBJECT_RELATIONSHIP, entityDefinition);
-                activeRollupFields.put(ROLLUP_SUMMARY_FIELD_RELATIONSHIP, fieldDefinition);
-                activeRollupFields.put(ROLLUP_DATE_OBJECT_RELATIONSHIP, entityDefinition);
-                activeRollupFields.put(ROLLUP_DATE_FIELD_RELATIONSHIP, fieldDefinition);
-                activeRollupFields.put(ROLLUP_AMOUNT_OBJECT_RELATIONSHIP, entityDefinition);
-                activeRollupFields.put(ROLLUP_AMOUNT_FIELD_RELATIONSHIP, fieldDefinition);
-                activeRollupFields.put(ROLLUP_DETAIL_OBJECT_RELATIONSHIP, entityDefinition);
-                activeRollupFields.put(ROLLUP_DETAIL_FIELD_RELATIONSHIP, fieldDefinition);
-            }
-
-            for (Schema.DescribeSObjectResult describe : new List<Schema.DescribeSObjectResult> {
-                Schema.SObjectType.Lead,
-                Schema.SObjectType.Opportunity
-            }) {
-                final Schema.SObjectType objType = describe.getSObjectType();
-                final List<Schema.DescribeFieldResult> expected = new List<Schema.DescribeFieldResult>();
-
-                // Special Opportunity Fields
-                if(objType == Schema.Opportunity.SObjectType) {
-                    expected.add(Schema.SObjectType.Opportunity.fields.AccountId);
-                    expected.add(Schema.SObjectType.Opportunity.fields.Primary_Contact__c);
-                }
-
-                // CurrencyIsoCode
-                if (
-                    UserInfo.isMultiCurrencyOrganization()
-                    && describe.fields.getMap().get('CurrencyIsoCode') != null
-                ) {
-                    expected.add(describe.fields.getMap().get('CurrencyIsoCode').getDescribe());
-                }
-
-                final Map<String, Object> inactiveRollupFields = new Map<String, Object>();
-                {
-                    // Same objType but Rollup is not active
-                    final Object entity = getEntityMetadataRelationship(describe.getName());
-                    final Object field = getFieldMetadataRelationship(describe.fields.getMap().get('Id').getDescribe().getName());
-
-                    inactiveRollupFields.put(ROLLUP_ACTIVE_FIELD, false);
-                    inactiveRollupFields.put(ROLLUP_SUMMARY_OBJECT_RELATIONSHIP, entity);
-                    inactiveRollupFields.put(ROLLUP_SUMMARY_FIELD_RELATIONSHIP, field);
-                    inactiveRollupFields.put(ROLLUP_DATE_OBJECT_RELATIONSHIP, entity);
-                    inactiveRollupFields.put(ROLLUP_DATE_FIELD_RELATIONSHIP, field);
-                    inactiveRollupFields.put(ROLLUP_AMOUNT_OBJECT_RELATIONSHIP, entity);
-                    inactiveRollupFields.put(ROLLUP_AMOUNT_FIELD_RELATIONSHIP, field);
-                    inactiveRollupFields.put(ROLLUP_DETAIL_OBJECT_RELATIONSHIP, entity);
-                    inactiveRollupFields.put(ROLLUP_DETAIL_FIELD_RELATIONSHIP, field);
-                }
-
-                // Each possible Operation
-                for (Map<String, Object> rollupFields : new List<Map<String,Object>> {
-                    activeRollupFields,
-                    inactiveRollupFields
-                }) {
-                    for (String operation : OPERATIONS) {
-                        rollupFields.put(ROLLUP_OPERATION_FIELD, operation);
-
-                        allTestData.add(new ReferencedFieldsByObjectTestData(
-                            objType,
-                            (Rollup__mdt) getSObject(
-                                ROLLUP_SOBJECT_NAME,
-                                rollupFields
-                            ),
-                            expected,
-                            'Returns special Fields if Opportunity/CurrencyIsoCode: objType doesn\'t match or no active cachedRollups'
-                        ));
-                    }
-                }
-            }
-        }
-
-        // Returns special Fields if Opportunity/CurrencyIsoCode/Cached Rollup: single/all Rollup Relationship(s)
-        for (Schema.DescribeSObjectResult describe : new List<Schema.DescribeSObjectResult> {
-            Schema.SObjectType.Lead,
-            Schema.SObjectType.Opportunity
-        }) {
-            final Schema.SObjectType objType = describe.getSObjectType();
-            final List<Schema.DescribeFieldResult> baseExpected = new List<Schema.DescribeFieldResult>();
-            {
-                // Special Opportunity Fields
-                if(objType == Schema.Opportunity.SObjectType) {
-                    baseExpected.add(Schema.SObjectType.Opportunity.fields.AccountId);
-                    baseExpected.add(Schema.SObjectType.Opportunity.fields.Primary_Contact__c);
-                }
-
-                // CurrencyIsoCode
-                if (UserInfo.isMultiCurrencyOrganization()
-                    && describe.fields.getMap().get('CurrencyIsoCode') != null
-                ) {
-                    baseExpected.add(describe.fields.getMap().get('CurrencyIsoCode').getDescribe());
-                }
-            }
-
-            // Expected result for Relationship
-            final DescribeFieldResult fieldDescribe = describe.fields.getMap().get('Id').getDescribe();
-
-            // Rollup Relationships for QualifiedApiName
-            final Object entityDefinition = getEntityMetadataRelationship(describe.getName());
-            final Object fieldDefinition = getFieldMetadataRelationship(fieldDescribe.getName());
-
-            // Each possible Operation
-            for (String operation : OPERATIONS) {
-                final Map<String, Object> rollupFieldsWithAllRelationships = new Map<String, Object> {
-                    ROLLUP_ACTIVE_FIELD => true,
-                    ROLLUP_OPERATION_FIELD => operation
-                };
-
-                final List<Schema.DescribeFieldResult> expectedWithAllRelationships = new List<Schema.DescribeFieldResult>();
-                expectedWithAllRelationships.addAll(baseExpected);
-                expectedWithAllRelationships.add(fieldDescribe); // Summary always included if objType matches
-
-                for (String sObjectRelationship : ROLLUP_FIELDS_BY_OBJECT.keySet()) {
-                    final String fieldRelationship = ROLLUP_FIELDS_BY_OBJECT.get(sObjectRelationship);
-
-                    rollupFieldsWithAllRelationships.put(sObjectRelationship, entityDefinition);
-                    rollupFieldsWithAllRelationships.put(fieldRelationship, fieldDefinition);
-
-                    Rollup__mdt rollupWithSingleRelationship;
-                    {
-                        final Map<String, Object> rollupFieldsWithSingleRelationship = new Map<String, Object>();
-                        rollupFieldsWithSingleRelationship.put(ROLLUP_ACTIVE_FIELD, true);
-                        rollupFieldsWithSingleRelationship.put(sObjectRelationship, entityDefinition);
-                        rollupFieldsWithSingleRelationship.put(fieldRelationship, fieldDefinition);
-                        rollupFieldsWithSingleRelationship.put(ROLLUP_OPERATION_FIELD, operation);
-
-                        rollupWithSingleRelationship = (Rollup__mdt) getSObject(
-                            ROLLUP_SOBJECT_NAME,
-                            rollupFieldsWithSingleRelationship
-                        );
-                    }
-
-                    final List<Schema.DescribeFieldResult> expectedWithSingleRelationship = new List<Schema.DescribeFieldResult>();
-                    expectedWithSingleRelationship.addAll(baseExpected);
-
-                    if (fieldRelationship == ROLLUP_SUMMARY_FIELD_RELATIONSHIP // no isRollupFieldNeededInQuery check
-                        || CRLP_Rollup_SEL.isRollupFieldNeededInQuery(
-                            rollupWithSingleRelationship,
-                            ROLLUP_SOBJECTFIELD_BY_RELATIONSHIP.get(fieldRelationship)
-                        )
-                    ) {
-                        expectedWithSingleRelationship.add(fieldDescribe);
-                    }
-
-                    allTestData.add(new ReferencedFieldsByObjectTestData(
-                        objType,
-                        rollupWithSingleRelationship,
-                        expectedWithSingleRelationship,
-                        'Returns special Fields if Opportunity/CurrencyIsoCode/Cached Rollup: single Rollup Relationship'
-                    ));
-                }
-
-                final Rollup__mdt rollupWithAllRelationships = (Rollup__mdt) getSObject(
-                    ROLLUP_SOBJECT_NAME,
-                    rollupFieldsWithAllRelationships
-                );
-
-                allTestData.add(new ReferencedFieldsByObjectTestData(
-                    objType,
-                    rollupWithAllRelationships,
-                    expectedWithAllRelationships,
-                    'Returns special Fields if Opportunity/CurrencyIsoCode/Cached Rollup: all Rollup Relationships and no duplicates'
-                ));
-            }
-        }
-
-        Test.startTest();
-
-        // CRLP_Rollup_SEL
-        // List<Schema.DescribeFieldResult> getReferencedFieldsByObject(SObjectType objType)
-        for (ReferencedFieldsByObjectTestData testData : allTestData) {
-            testData.assertGetReferencedFieldsByObject();
-        }
-
-        Test.stopTest();
-    }
-
-    // ===================================================================================================
-    // HELPER METHODS
-    // ===================================================================================================
-
-    /**
-     * @description Container for each scenario to test CRLP_Rollup_SEL.getReferencedFieldsByObject(SObjectType objType)
-     */
-    private class ReferencedFieldsByObjectTestData {
-        final SObjectType sObjectType;
-        final Rollup__mdt rollup;
-        final List<Schema.DescribeFieldResult> expected;
-        final String expectation, rollupMessage;
-
-        private ReferencedFieldsByObjectTestData(
-                Schema.SObjectType objType,
-                Rollup__mdt rollup,
-                List<DescribeFieldResult> expected,
-                String expectation
-        ) {
-            this.sObjectType = objType;
-            this.rollup = rollup;
-            this.expected = expected;
-            this.expectation = expectation;
-            this.rollupMessage = getAssertMessage(
-                    '{1}',
-                    '',
-                    new Map<String, Object> {
-                            '\tbase fields' => this.getRollup(),
-                            '\tSummary_Object__r' => this.getRollup().Summary_Object__r,
-                            '\tSummary_Field__r' => this.getRollup().Summary_Field__r,
-                            '\tDate_Object__r' => this.getRollup().Date_Object__r,
-                            '\tDate_Field__r' => this.getRollup().Date_Field__r,
-                            '\tAmount_Object__r' => this.getRollup().Amount_Object__r,
-                            '\tAmount_Field__r' => this.getRollup().Amount_Field__r,
-                            '\tDetail_Object__r' => this.getRollup().Detail_Object__r,
-                            '\tDetail_Field__r' => this.getRollup().Detail_Field__r
-                    }
-            );
-        }
-
-        /**
-         * @return objType to pass into CRLP_Rollup_SEL.getReferencedFieldsByObject(SObjectType objType)
-         */
-        private SObjectType getSObjectType() {
-            return this.sObjectType;
-        }
-
-        /**
-         * @return Rollup__mdt to set as CRLP_Rollup_SEL.cachedRollups
-         */
-        private Rollup__mdt getRollup() {
-            return this.rollup;
-        }
-
-        /**
-         * @return Value to set as Rollup__mdt to set as CRLP_Rollup_SEL.cachedRollups before running test
-         */
-        private List<Rollup__mdt> getCachedRollups() {
-            return new List<Rollup__mdt> {
-                    this.getRollup()
-            };
-        }
-
-        /**
-         * @return Expected value of CRLP_Rollup_SEL.getReferencedFieldsByObject(SObjectType objType)
-         */
-        private List<Schema.DescribeFieldResult> getExpected() {
-            return this.expected;
-        }
-
-        /**
-         * @return Description of what this test scenario expects
-         */
-        private String getExpectation() {
-            return this.expectation;
-        }
-
-        /**
-         * @return Name of method tested; used in System.assert messages for debugging
-         */
-        private String getMethodName() {
-            return 'List<Schema.DescribeFieldResult> CRLP_Rollup_SEL.getReferencedFieldsByObject(SObjectType objType)';
-        }
-
-        /**
-         * @return Message describing the value of Rollup ; used in System.assert messages for debugging
-         */
-        private String getRollupMessage() {
-            return this.rollupMessage;
-        }
-
-        /**
-         * @description Tests CRLP_Rollup_SEL.getReferencedFieldsByObject(SObjectType objType) for this scenario.
-         * Sets CRLP_Rollup_SEL.cachedRollups as Cached Rollups.
-         * Asserts CRLP_Rollup_SEL.getReferencedFieldsByObject(SObjectType objType) for SObjectType equals Expected
-         * and no Exceptions are thrown.
-         */
-        private void assertGetReferencedFieldsByObject() {
-            final SObjectType objType = this.getSObjectType();
-
-            final List<Schema.DescribeFieldResult> expected = this.getExpected();
-
-            Exception ex;
-            List<Schema.DescribeFieldResult> actual;
-
-            // Setup
-            CRLP_Rollup_SEL.cachedRollups = this.getCachedRollups();
-
-            try {
-                actual = CRLP_Rollup_SEL.getReferencedFieldsByObject(objType);
-            } catch (Exception whoops) {
-                ex = whoops;
-            }
-
-            // Expected Exception
-            System.assertEquals(null, ex,
-                    getNeverExpectExceptionMessage(
-                            this.getMethodName(),
-                            new Map<String, Object> {
-                                    'Expectation' => this.getExpectation(),
-                                    'rollup' => this.getRollupMessage(),
-                                    'objType' => objType,
-                                    'Stack Trace' => ex == null ? '' : '\n' + ex.getStackTraceString()
-                            }
-                    )
-            );
-
-            System.assertEquals(expected, actual,
-                    getUnexpectedValueMessage(
-                            this.getMethodName(),
-                            new Map<String, Object> {
-                                    'Expectation' => this.getExpectation(),
-                                    'rollup' => this.getRollupMessage(),
-                                    'objType' => objType
-                            }
-                    )
-            );
-        }
-    }
-
-    /**
-     * @description Returns describe's relationship name.
-     * DescribeFieldResult.getRelationshipName() doesn't return the expected value for Metadata Relationships.
-     * @param  describe Relationship Field
-     * @return If describe is custom, returns describe's name after removing ending '__c' + '__r'.
-     * Else, describe's name
-     */
-    private static String toRelationshipName(Schema.DescribeFieldResult describe) {
-        return describe.isCustom() ? describe.getName().removeEnd('__c') + '__r' : describe.getName();
-    }
-
-    /**
-     * @description Useful when needing to set SObject's relationship values without querying
-     * @param sObjectTypeName Name of SObjectType to be returned
-     * @param fields Map: Field Name -> Field Value of SObject's Fields.  May include Relationships.
-     * @return JSON deserailziation of an SObject for sObjectTypeName with fields
-     */
-    public static SObject getSObject(
-            String sObjectTypeName,
-            Map<String, Object> fields
-    ) {
-        Map<String, Object> jsonFields = new Map<String, Object> ();
-
-        // Set fields
-        if(fields != null) {
-            jsonFields.putAll(fields);
-        }
-
-        // Set attributes
-        jsonFields.put(
-                'attributes',
-                new Map<String, Object> {
-                        'type' => sObjectTypeName
-                }
-        );
-
-        return (SObject) JSON.deserialize(JSON.serialize(jsonFields), SObject.class);
-    }
-
-    /**
-     * @description Shortcut to set Metadata Relationships when using getSObject(...)
-     * @param  sObjectTypeName  SObjectType's Name Metadata Relationship is pointing to
-     * @param  qualifiedApiName QualifiedApiName
-     * @return SObject for sObjectTypeName and fields mapping QualifiedApiName to qualifiedApiName
-     */
-    public static SObject getMetadataRelationship(String sObjectTypeName, String qualifiedApiName) {
-        return getSObject(
-                sObjectTypeName,
-                new Map<String, Object> {
-                        'QualifiedApiName' => qualifiedApiName
-                }
-        );
-    }
-
-    /**
-     * @description Shortcut to set EntityDefinition Metadata Relationships when using getSObject(...)
-     * @param  qualifiedApiName QualifiedApiName
-     * @return getMetadataRelationship for EntityDefinition's SObjecType's Name and qualifiedApiName
-     */
-    public static SObject getEntityMetadataRelationship(String qualifiedApiName) {
-        return getMetadataRelationship(
-                Schema.SObjectType.EntityDefinition.getName(),
-                qualifiedApiName
-        );
-    }
-
-    /**
-     * @description Shortcut to set FieldDefinition Metadata Relationships when using getSObject(...)
-     * @param  qualifiedApiName QualifiedApiName
-     * @return getMetadataRelationship for FieldDefinition's SObjecType's Name and qualifiedApiName
-     */
-    public static SObject getFieldMetadataRelationship(String qualifiedApiName) {
-        return getMetadataRelationship(
-                Schema.SObjectType.FieldDefinition.getName(),
-                qualifiedApiName
-        );
-    }
-
-    /**
-     * @description Provide a descriptive message in System.assertEquals(...)
-     * @param  format format used when returning String.format(format, ...)
-     * @param  title  First parameter in String.format, i.e. {0}
-     * @param  values If values is not null, adds a message of 'key: "value"'' for all values.   Then joins Strings by '; '.  This is the second paramter in String.format, i.e. {1}
-     * @return String.format(format, new List<String> { title, String.join(messages, '; ')})
-     */
-    public static String getAssertMessage(String format, String title, Map<String, Object> values) {
-        final List<String> messages = new List<String> ();
-        if (values != null) {
-            for(String field : values.keySet()) {
-                messages.add('\n' + field + ': "' + values.get(field) + '"');
-            }
-            messages.add('\n\n');
-        }
-
-        return String.format(
-                format,
-                new List<String> {
-                        title,
-                        String.join(messages, '; ')
-                }
-        );
-    }
-
-    /**
-     * @description Provides a descriptive message in System.assertEquals(...) when testing if a method should never throw an Exception when called
-     * @param  methodName Passes methodName as getAssertMessage(...)'s title
-     * @param values Map: Value Name -> Value to be passed in as getAssertMessage(...)'s values
-     * @return getAssertMessage for '{0} should never throw an Exception', methodName, and values
-     */
-    public static String getNeverExpectExceptionMessage(String methodName, Map<String, Object> values) {
-        return getAssertMessage(
-                '{0} should never throw an Exception.  {1}',
-                methodName,
-                values
-        );
-    }
-
-    /**
-     * @description Provides a descriptive message in System.assertEquals(...) when testing if a method should never throw an Exception when called
-     * @param  methodName Passes methodName as getAssertMessage(...)'s title
-     * @return getNeverExpectExceptionMessage for methodName, and (Map<String, Object>) null
-     */
-    public static String getNeverExpectExceptionMessage(String methodName) {
-        return getNeverExpectExceptionMessage(methodName, (Map<String, Object>) null);
-    }
-
-    /**
-     * @description Provides a descriptive message in System.assertEquals(...) when testing expected equals actual
-     * @param  methodName Passes methodName as getAssertMessage(...)'s title
-     * @param values Map: Value Name -> Value to be passed in as getAssertMessage(...)'s values
-     * @return getAssertMessage for 'Unexpected value of {0}', methodName, and values
-     */
-    public static String getUnexpectedValueMessage(String methodName, Map<String, Object> values) {
-        return getAssertMessage(
-                'Unexpected value of {0}.  {1}',
-                methodName,
-                values
-        );
-    }
-
-    /**
-     * @description Provides a descriptive message in System.assertEquals(...) when testing expected equals actual
-     * @param  methodName Passes methodName as getAssertMessage(...)'s title
-     * @return getUnexpectedValueMessage for methodName and (Map<String, Object>) null
-     */
-    public static String getUnexpectedValueMessage(String methodName) {
-        return getUnexpectedValueMessage(methodName, (Map<String, Object>) null);
-    }
-
 }
