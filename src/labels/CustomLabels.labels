@@ -1895,7 +1895,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Sign on Payment and Allocation amount must match(Both positive or both negative)</shortDescription>
-        <value>Negative Allocations are only allowed in negative Payments and positive Allocations are not allowed in negative Payments.</value>
+        <value>Negative Allocations are only allowed in negative donations and positive Allocations are not allowed in negative donations.</value>
     </labels>
     <labels>
         <fullName>alloSingleParent</fullName>
