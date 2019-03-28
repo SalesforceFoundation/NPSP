@@ -65,7 +65,7 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
         OPPORTUNITIES
     }
 
-    /** @description Limit for query locator. Property is public to allow for testing */
+    /** @description Limit for query locator. Property is public to allow for QA testing via the Developer Console */
     public Integer chunkSize = 10000000;
 
     /** @description Last Id processed by the batch so query locator can return records in ID

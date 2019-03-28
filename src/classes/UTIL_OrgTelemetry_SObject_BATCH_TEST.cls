@@ -42,7 +42,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
      * @description Create test data needed for the unit tests in this class
      */
     @TestSetup
-    static void testDataSetup() {
+    private static void testDataSetup() {
         TDTM_Config_API.disableAllTriggers();
 
         npe03__Recurring_Donation__c openRd = new npe03__Recurring_Donation__c(
@@ -78,7 +78,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
      * The lack of a failed test itself is an implicit assert that the batch job completed.
      */
     @IsTest
-    static void testSObjectBatchJob() {
+    private static void testSObjectBatchJob() {
         UTIL_OrgTelemetry_SObject_BATCH oppBatch =
             new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES);
         oppBatch.featureManager = (UTIL_FeatureManagement) Test.createStub(UTIL_FeatureManagement.class, featureManagementMock);
@@ -94,11 +94,10 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Confirms job modes query for the correct SObject type with the correct limit
+     * @description Confirms OPPORTUNITIES job mode queries for the correct SObject type with the correct limit
      */
     @IsTest
-    static void jobModeShouldReturnCorrectQueryWhenThereIsNoLastProcessedId() {
-        //validate OPPORTUNITIES mode
+    private static void opportunitiesJobModeShouldReturnCorrectQueryWhenThereIsNoLastProcessedId() {
         UTIL_OrgTelemetry_SObject_BATCH oppBatch =
             new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES);
 
@@ -110,8 +109,13 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
             'OPPORTUNITIES job mode should query Opportunities');
 
         assertOnOrderedSObjects(queryOpportunitiesInIdOrder(), actualRecords);
+    }
 
-        //validate RECURRING_DONATIONS mode
+    /**
+     * @description Confirms RECURRING_DONATIONS job mode queries for the correct SObject type with the correct limit
+     */
+    @IsTest
+    private static void recurringDonationsJobModeShouldReturnCorrectQueryWhenThereIsNoLastProcessedId() {
         UTIL_OrgTelemetry_SObject_BATCH rdBatch =
             new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS);
         rdBatch.chunkSize = 100;
@@ -119,7 +123,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         String rdBatchQuery = rdBatch.start(null).getQuery();
         System.assert(rdBatchQuery.endsWith('LIMIT 100'), 'The query should be limited with the specified chunk size');
 
-        actualRecords = Database.query(rdBatchQuery);
+        List<SObject> actualRecords = Database.query(rdBatchQuery);
         System.assert(Database.query(rdBatchQuery) instanceof List<npe03__Recurring_Donation__c>,
             'RECURRING_DONATIONS job mode should query Recurring Donations');
 
@@ -127,11 +131,10 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
     }
 
     /**
-     * @description Confirms job modes query for the correct SObject type with the correct Id offset
+     * @description Confirms OPPORTUNITIES job modes query for the correct SObject type with the correct Id offset
      */
     @IsTest
-    static void jobModeShouldReturnCorrectQueryWhenThereIsALastProcessedId() {
-        //validate OPPORTUNITIES mode
+    private static void opportunitiesJobModeShouldReturnCorrectQueryWhenThereIsALastProcessedId() {
         List<SObject> expectedRecords = queryOpportunitiesInIdOrder();
 
         UTIL_OrgTelemetry_SObject_BATCH oppBatch =
@@ -146,19 +149,25 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
         List<SObject> actualRecords = Database.query(oppBatchQuery);
 
         assertOnOrderedSObjects(expectedRecords, actualRecords);
+    }
 
-        //validate RECURRING_DONATIONS mode
-        expectedRecords = queryRecurringDonationsInIdOrder();
+    /**
+     * @description Confirms RECURRING_DONATIONS job modes query for the correct SObject type with the correct Id offset
+     */
+    @IsTest
+    private static void recurringDonationsJobModeShouldReturnCorrectQueryWhenThereIsALastProcessedId() {
+        List<SObject> expectedRecords = queryRecurringDonationsInIdOrder();
 
         UTIL_OrgTelemetry_SObject_BATCH rdBatch =
             new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS);
+
         //offset the first Id
         rdBatch.lastProcessedId = expectedRecords[0].Id;
         expectedRecords.remove(0);
 
         String rdBatchQuery = rdBatch.start(null).getQuery();
 
-        actualRecords = Database.query(rdBatchQuery);
+        List<SObject> actualRecords = Database.query(rdBatchQuery);
 
         assertOnOrderedSObjects(expectedRecords, actualRecords);
     }
@@ -167,7 +176,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
      * @description Confirms Recurring Donation Opportunity counts are calculated correctly
      */
     @IsTest
-    static void shouldCalculateCorrectRecurringDonationOppMetrics() {
+    private static void shouldCalculateCorrectRecurringDonationOppMetrics() {
         UTIL_OrgTelemetry_SObject_BATCH oppBatch =
             new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.OPPORTUNITIES);
 
@@ -191,7 +200,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
      * @description Confirms Recurring Donation counts are calculated correctly
      */
     @IsTest
-    static void shouldCalculateCorrectRecurringDonationMetrics() {
+    private static void shouldCalculateCorrectRecurringDonationMetrics() {
         UTIL_OrgTelemetry_SObject_BATCH rdBatch =
             new UTIL_OrgTelemetry_SObject_BATCH(UTIL_OrgTelemetry_SObject_BATCH.TelemetryBatchJobMode.RECURRING_DONATIONS);
 
@@ -370,6 +379,9 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
     /**
      * @description Builds test opportunity records with the given field values
+     * @param numOpps: number of opportunities to build
+     * @param fieldValues: map of values by SObjectField to set on the opportunities
+     * @return List of uninserted Opportunities
      */
     private static List<Opportunity> buildOpps(Integer numOpps, Map<Schema.SObjectField, Object> fieldValues) {
         List<Opportunity> opps = new List<Opportunity>();
@@ -393,6 +405,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
     /**
      * @description Queries opportunities in order of Id
+     * @return List of Opportunity ordered by Id
      */
     private static List<Opportunity> queryOpportunitiesInIdOrder() {
         return [SELECT Id FROM Opportunity ORDER BY Id];
@@ -400,6 +413,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
     /**
      * @description Queries recurring donations in order of Id
+     * @return List of npe03__Recurring_Donation__c ordered by Id
      */
     private static List<npe03__Recurring_Donation__c> queryRecurringDonationsInIdOrder() {
         return [SELECT Id FROM npe03__Recurring_Donation__c ORDER BY Id];
@@ -407,6 +421,8 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
     /**
      * @description Confirms records are in the same order and are the same size
+     * @param expectedRecords: list of expected, ordered SObjects to validate against
+     * @param actualRecords: list of actual, ordered SObjects to validate
      */
     private static void assertOnOrderedSObjects(List<SObject> expectedRecords, List<SObject> actualRecords) {
         System.assertEquals(expectedRecords.size(), actualRecords.size(),
@@ -420,6 +436,7 @@ private class UTIL_OrgTelemetry_SObject_BATCH_TEST {
 
     /**
      * @description Retrieves UTIL_OrgTelemetry_SObject_BATCH batch jobs
+     * @return List of AsyncApexJob for class UTIL_OrgTelemetry_SObject_BATCH
      */
     private static List<AsyncApexJob> queryOrgTelemetrySObjectBatchJobs() {
         return [
