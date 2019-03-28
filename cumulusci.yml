@@ -67,10 +67,16 @@ tasks:
         options:
             path: unpackaged/config/delete
 
+    robot:
+        options:
+            suites: robot/Cumulus/tests
+            options:
+                outputdir: robot/Cumulus/results
+
     robot_libdoc:
         options:
-            path: tests/NPSP.py,tests/NPSP.robot
-            output: tests/Keywords.html
+            path: robot/Cumulus/resources/NPSP.py,robot/Cumulus/resources/NPSP.robot
+            output: robot/Cumulus/doc/Keywords.html
             
     update_admin_profile:
         options:
