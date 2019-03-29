@@ -65,6 +65,14 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
         OPPORTUNITIES
     }
 
+    /** @description Limit for query locator. Property is public to allow for QA testing via the Developer Console */
+    public Integer chunkSize = 10000000;
+
+    /** @description Last Id processed by the batch so query locator can return records in ID
+     *  order and batch can be chained
+    */
+    public Id lastProcessedId;
+
     @TestVisible
     private UTIL_FeatureManagement featureManager = new UTIL_FeatureManagement();
 
@@ -84,7 +92,6 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     @TestVisible
     private Integer rdDiffCount = 0;
 
-
     private final String recurringDonationOpenStatusValue = System.Label.npe03.RecurringDonationOpenStatus;
 
     /**
@@ -95,22 +102,42 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
     }
 
     /**
-     * @description Execute the appropriate query to use in this batch job.
+     * @description Execute the appropriate query to use in this batch job. Clears out the last processed Id to prevent
+     * infinite loops
      */
     public Database.QueryLocator start(Database.BatchableContext context) {
+        String soqlQuery = buildQuery(lastProcessedId, chunkSize);
+
+        lastProcessedId = null;
+
+        return Database.getQueryLocator(soqlQuery);
+    }
+
+    /**
+     * @description Builds a query based on batch job mode, using specified Id offset and limit
+     */
+    private String buildQuery(Id idToOffset, Integer queryLimit) {
+        String soqlQuery = 'SELECT Id FROM Account LIMIT 0';
         switch on (jobMode) {
             when OPPORTUNITIES {
-                String soql = 'SELECT Id, npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c FROM Opportunity';
-                return Database.getQueryLocator(soql);
+                soqlQuery = 'SELECT Id, npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c FROM Opportunity WHERE Id > \'\'{0}\'\' ORDER BY Id LIMIT {1}';
             }
 
             when RECURRING_DONATIONS {
-                String soql = 'SELECT npe03__Amount__c FROM npe03__Recurring_Donation__c';
-                return Database.getQueryLocator(soql);
+                soqlQuery = 'SELECT npe03__Amount__c FROM npe03__Recurring_Donation__c WHERE Id > \'\'{0}\'\' ORDER BY Id LIMIT {1}';
+            }
+
+            when else {
+                // If no conditions are met, this returns an empty query to avoid an NPE
+                soqlQuery = 'SELECT Id FROM Account LIMIT 0';
             }
         }
-        // If no conditions are met, this returns an empty query to avoid an NPE
-        return Database.getQueryLocator([SELECT Id FROM Account LIMIT 0]);
+
+        return String.format(
+            soqlQuery,
+            new List<String>{ idToOffset == null ? '' : idToOffset, String.valueOf(queryLimit) }
+        );
+
     }
 
     /**
@@ -118,6 +145,14 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
      * stateful vars
      */
     public void execute(Database.BatchableContext context, List<SObject> scope) {
+        // Since execution contexts might not run in order (ex., chunk size 10k,
+        // batch size 2k has 5 batches but they won't run in a guaranteed order)
+        // we first need to check if the last Id is greater than the value in lastProcessedId
+        Id lastIdInScope = scope[scope.size() - 1].Id;
+        if (lastProcessedId == null || lastIdInScope > lastProcessedId) {
+            lastProcessedId = lastIdInScope;
+        }
+
         switch on (jobMode) {
             when OPPORTUNITIES {
                 handleOpportunityJobMode((List<Opportunity>) scope);
@@ -214,16 +249,40 @@ public class UTIL_OrgTelemetry_SObject_BATCH implements Database.Batchable<SObje
      * @description When the entire batch job is done, submit the final count variables to the LMO
      */
     public void finish(Database.BatchableContext context) {
-        switch on (jobMode) {
-            when OPPORTUNITIES {
-                featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), rdOpenStatusOppsCount);
-                featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), rdAllOppsCount);
+        if (shouldChainNextBatch()) {
+
+            switch on (jobMode) {
+                when OPPORTUNITIES {
+                    Database.executeBatch(this, OPPORTUNITIES_BATCH_SIZE);
+                }
+
+                when RECURRING_DONATIONS {
+                    Database.executeBatch(this, RECURRING_DONATIONS_BATCH_SIZE);
+                }
             }
 
-            when RECURRING_DONATIONS {
-                featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), rdAllCount);
-                featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), rdDiffCount);
+        } else {
+            switch on (jobMode) {
+                when OPPORTUNITIES {
+                    featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsOpenEnded.name(), rdOpenStatusOppsCount);
+                    featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdOppsAll.name(), rdAllOppsCount);
+                }
+
+                when RECURRING_DONATIONS {
+                    featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRecurringDonationsAll.name(), rdAllCount);
+                    featureManager.setPackageIntegerValue(UTIL_OrgTelemetry_SVC.TelemetryParameterName.Data_CountRdsWithDiffAmount.name(), rdDiffCount);
+                }
             }
         }
+    }
+
+    /** @description Returns whether or not another batch should be chained*/
+    private Boolean shouldChainNextBatch() {
+        if (lastProcessedId == null) {
+            return false;
+        }
+
+        String hasMoreQuery = buildQuery(lastProcessedId, 1);
+        return !Database.query(hasMoreQuery).isEmpty();
     }
 }
