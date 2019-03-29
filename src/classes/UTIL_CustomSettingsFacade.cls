@@ -35,7 +35,7 @@
 * Needs to be "without sharing" so that the Install Script can run it.
 */
 public without sharing class UTIL_CustomSettingsFacade {
-    private static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR = 'Donor';
+    public static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR = 'Donor';
     public static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT = 'Soft Credit';
 
     //storing user-level custom settings in-memory to avoid trying to isert/update them

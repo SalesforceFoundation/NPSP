@@ -75,6 +75,70 @@ private class CallableApiParameters_TEST {
     }
 
     /**
+     * @description Validate that a proper map of SObjects is returned
+     */
+    @IsTest
+    private static void shouldReturnMapOfSobjectData() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                new npe01__Contacts_And_Orgs_Settings__c(
+                        npe01__Payments_Enabled__c = true,
+                        npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
+                        npe01__Opportunity_Contact_Role_Default_role__c = UTIL_CustomSettingsFacade.DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR,
+                        Contact_Role_for_Organizational_Opps__c = UTIL_CustomSettingsFacade.DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT
+                )
+        );
+
+        List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
+        insert contacts;
+        List<Opportunity> testOpps = UTIL_UnitTestData_TEST.OppsForContactList (
+                contacts, null, UTIL_UnitTestData_TEST.getclosedWonStage(), System.today(), 100, null, null);
+        insert testOpps;
+
+        testOpps = [SELECT Id, Name, Amount, CloseDate, StageName, RecordTypeId,
+                        CampaignId, Description, Type, Tribute_Type__c, Primary_Contact__c,
+                        npe03__Recurring_Donation__c, Honoree_Contact__c, Honoree_Name__c,
+                        Notification_Recipient_Contact__c, Notification_Recipient_Name__c,
+                       (SELECT Id, ContactId, Role FROM OpportunityContactRoles),
+                       (SELECT Id, npe01__Opportunity__c, npe01__Payment_Amount__c,
+                               npe01__Payment_Date__c, npe01__Payment_Method__c,
+                               npe01__Paid__c, npe01__Written_Off__c
+                       FROM npe01__OppPayment__r)
+                    FROM Opportunity];
+
+        Test.startTest();
+        Map<Id, Map<String, List<SObject>>> data = new Map<Id, Map<String, List<SObject>>>();
+        for (Opportunity opp : testOpps) {
+            Map<String, List<SObject>> dataMap = new Map<String, List<SObject>>{
+                    Opportunity.SObjectType.getDescribe().getName() => new List<SObject>{ opp }
+            };
+
+            dataMap.put( 'OpportunityContactRoles', opp.OpportunityContactRoles );
+            dataMap.put( 'npe01__OppPayment__r', opp.npe01__OppPayment__r );
+
+            data.put(opp.Id, dataMap );
+        }
+
+        Map<String, Object> params = new Map<String, Object>{
+                CallableApiParameters.PARAM_ROLLUP_DATA => data
+        };
+
+        CallableApiParameters service = new CallableApiParameters(params);
+        Map<Id, Map<String, List<SObject>>> returnedData = service.getRollupDataMap(CallableApiParameters.PARAM_ROLLUP_DATA);
+
+        System.assertEquals(data.size(), returnedData.size(),
+            'The returned size of the data map should match the original');
+        System.assertEquals(data, returnedData,
+            'The two maps should be equivelent');
+        System.assertEquals(data.get(testOpps[0].Id).get('Opportunity')[0].get('Id'),
+                returnedData.get(testOpps[0].Id).get('Opportunity')[0].get('Id'),
+            'The first Opportunity Id should match');
+        System.assertEquals(data.get(testOpps[1].Id).get('npe01__OppPayment__r').size(),
+                returnedData.get(testOpps[1].Id).get('npe01__OppPayment__r').size(),
+            'The size of the Payments Related List on the second Opportunity should match');
+    }
+
+
+    /**
      * @description Validate that each of the service methods returns the expected data type
      */
     @IsTest

@@ -39,6 +39,7 @@ public class CallableApiParameters {
 
     public static final String PARAM_ROLLUP_TYPE = 'RollupType';
     public static final String PARAM_ROLLUP_DEFS = 'RollupDefinitions';
+    public static final String PARAM_ROLLUP_DATA = 'RollupData';
     public static final String PARAM_OPPORTUNITY_STAGE = 'OpportunityStage';
 
     private Map<String, Object> params;
@@ -126,6 +127,22 @@ public class CallableApiParameters {
             return (List<CRLP_Rollup>)JSON.deserialize(rollupDefsJson, List<CRLP_Rollup>.class);
         } catch (Exception ex) {
             throwParameterException('List<CRLP_Rollup> JSON', paramName);
+        }
+        return null;
+    }
+
+    /**
+     * @description Retrieve the specified Parameter as a map of data where the outter map key is the parent record
+     * id (i.e., Opportunity), and the inner map is each related SObjectName where the first SObject Name is "Opportunity".
+     * value to be a JSON String. This method will deserialize and return as the appropriate data type.
+     * @param paramName
+     * @return Map<Id, Map<String, List<SObject>>>
+     */
+    public Map<Id, Map<String, List<SObject>>> getRollupDataMap(String paramName) {
+        try {
+            return (Map<Id, Map<String, List<SObject>>>)params.get(paramName);
+        } catch (Exception ex) {
+            throwParameterException('Map<Id, Map<String, List<SObject>>>', paramName);
         }
         return null;
     }

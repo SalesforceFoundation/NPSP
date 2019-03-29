@@ -172,6 +172,7 @@
         <members>CRLP_RollupGAU_SVC</members>
         <members>CRLP_RollupGAU_TEST</members>
         <members>CRLP_RollupProcessingOptions</members>
+        <members>CRLP_RollupProcessor</members>
         <members>CRLP_RollupProcessor_SVC</members>
         <members>CRLP_RollupQueueable</members>
         <members>CRLP_RollupRD_SVC</members>
