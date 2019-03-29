@@ -83,6 +83,7 @@ global with sharing class BDI_DataImportService {
             DataImportBatch__c currentBatch = dataImportBatches[0];
             if (!String.isBlank(currentBatch.Active_Fields__c)) {
                 relevantDataImportFields = BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId, false);
+                batchFromBGE = true;
             }
             return currentBatch;
         } else {
@@ -503,14 +504,16 @@ global with sharing class BDI_DataImportService {
                 dataImport.FailureInformation__c = null;
 
                 // collect populated DI fields to use for later mapping
-                Map<String, Object> populatedFieldsMap = dataImport.getPopulatedFieldsAsMap();
-                List<String> populatedFields = new List<String>(populatedFieldsMap.keySet());
-                if(populatedFields.size() > populatedDataImportFields.size()) {
-                    populatedDataImportFields = populatedFields;
+                if (batchFromBGE != true) {
+                    Map<String, Object> populatedFieldsMap = dataImport.getPopulatedFieldsAsMap();
+                    List<String> populatedFields = new List<String>(populatedFieldsMap.keySet());
+                    if(populatedFields.size() > populatedDataImportFields.size()) {
+                        populatedDataImportFields = populatedFields;
+                    }
                 }
             }
 
-            if (populatedDataImportFields != null && populatedDataImportFields.size() > 0) {
+            if (batchFromBGE != true && populatedDataImportFields != null && populatedDataImportFields.size() > 0) {
                 relevantDataImportFields = populatedDataImportFields;
             }
 
@@ -690,6 +693,11 @@ global with sharing class BDI_DataImportService {
             dataImport.put(statusField, errorMessage.left(255));
         }
     }
+
+    /*******************************************************************************************************
+    * @description flag to let us know if we came from BGE
+    */
+    global static Boolean batchFromBGE { get; set; }
 
     /*******************************************************************************************************
     * @description list of the fields in the Data Import object that we care about for FLS checks because
