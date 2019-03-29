@@ -494,7 +494,7 @@ global with sharing class BDI_DataImportService {
             this.diSettings = dataImportSettings;
 
             // list of populated data import fields
-            List<String> populatedDataImportFields = new List<String>();
+            Set<String> populatedDataImportFieldsSet = new Set<String>();
 
             // first set a clean state for each DI
             for (DataImport__c dataImport : dataImports) {
@@ -507,14 +507,12 @@ global with sharing class BDI_DataImportService {
                 if (batchFromBGE != true) {
                     Map<String, Object> populatedFieldsMap = dataImport.getPopulatedFieldsAsMap();
                     List<String> populatedFields = new List<String>(populatedFieldsMap.keySet());
-                    if(populatedFields.size() > populatedDataImportFields.size()) {
-                        populatedDataImportFields = populatedFields;
-                    }
+                    populatedDataImportFieldsSet.addAll(populatedFields);
                 }
             }
 
-            if (batchFromBGE != true && populatedDataImportFields != null && populatedDataImportFields.size() > 0) {
-                relevantDataImportFields = populatedDataImportFields;
+            if (batchFromBGE != true && populatedDataImportFieldsSet != null && populatedDataImportFieldsSet.size() > 0) {
+                relevantDataImportFields = new List<String>(populatedDataImportFieldsSet);
             }
 
             // do any performance optimizations to avoid unnecessary code
