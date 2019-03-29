@@ -100,6 +100,11 @@ public class CRLP_RollupProcessingOptions {
      */
     public class ProcessingOptions {
 
+        /** @description This is set to true if the Summary Object should be built and compared to the current object
+         * in the database. If set to false, the rollup happens and the RollupDefinition instances are updated
+         * accordingly, but the target Summary SObject is not built. */
+        public Boolean doSummaryObjectComparison = true;
+
         /** @description Define the type of batch job mode - LDV or NonLDV mode */
         public BatchJobMode mode = BatchJobMode.NonSkewMode;
 

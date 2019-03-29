@@ -145,35 +145,30 @@ public class CRLP_RollupProcessor_SVC {
     /**
      * @description Returns the Type of the appropriate CRLP_RollupXXXX_SVC class to use for handling the
      * rollups based on the SObjectType of the Summary object
-     * @param summObjType Summary Object Type
-     * @param detailObjType Detail Object Type
+     * @param rollupType Rollup Type
      * @return ApexClassType
      */
-    private static Type getHanderClassType(CRLP_RollupProcessingOptions.ProcessingOptions options) {
+    public static Type getHanderClassType(CRLP_RollupProcessingOptions.RollupType rollupType) {
         Type handlerClass;
-        if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit
-                || options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-            handlerClass = CRLP_RollupSoftCredit_SVC.class;
-
-        } else if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-            handlerClass = CRLP_RollupAccSoftCredit_SVC.class;
-
-        } else if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-            // Opportunity and Payment to Account
-            handlerClass = CRLP_RollupAccount_SVC.class;
-
-        } else if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-            // Opportunity and Payment  to Contact
-            handlerClass = CRLP_RollupContact_SVC.class;
-
-        } else if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-            // Allocation to GeneralAccountingUnit
-            handlerClass = CRLP_RollupGAU_SVC.class;
-
-        } else if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-            // Opportunity to RecurringDonation
-            handlerClass = CRLP_RollupRD_SVC.class;
-
+        switch on (rollupType) {
+            when ContactSoftCredit, AccountContactSoftCredit {
+                handlerClass = CRLP_RollupSoftCredit_SVC.class;
+            }
+            when AccountSoftCredit {
+                handlerClass = CRLP_RollupAccSoftCredit_SVC.class;
+            }
+            when AccountHardCredit {
+                handlerClass = CRLP_RollupAccount_SVC.class;
+            }
+            when ContactHardCredit {
+                handlerClass = CRLP_RollupContact_SVC.class;
+            }
+            when GAU {
+                handlerClass = CRLP_RollupGAU_SVC.class;
+            }
+            when RecurringDonations {
+                handlerClass = CRLP_RollupRD_SVC.class;
+            }
         }
         return handlerClass;
     }
@@ -275,7 +270,7 @@ public class CRLP_RollupProcessor_SVC {
 
         CRLP_VRollupHandler handler = handlersMapByType.get(options.rollupJobType);
         if (handler == null) {
-            Type handlerClassType = getHanderClassType(options);
+            Type handlerClassType = getHanderClassType(options.rollupJobType);
             CRLP_Debug_UTIL.setCurrentRollupState('Instantiate Handler Class: ' + handlerClassType.getName() + ' for ' + parentId);
             handler = (CRLP_VRollupHandler) handlerClassType.newInstance();
             handlersMapByType.put(options.rollupJobType, handler);
@@ -381,7 +376,7 @@ public class CRLP_RollupProcessor_SVC {
      * @param rollups List<CRLP_Rollup> to clone
      * @return Fully cloned list of CRLP_Rollup
      */
-    private static List<CRLP_Rollup> fullyCloneList(List<CRLP_Rollup> rollups) {
+    public static List<CRLP_Rollup> fullyCloneList(List<CRLP_Rollup> rollups) {
         List<CRLP_Rollup> newList = new List<CRLP_Rollup>();
         for (CRLP_Rollup r : rollups) {
             newList.add(r.clone());
