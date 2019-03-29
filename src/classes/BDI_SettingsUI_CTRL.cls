@@ -91,8 +91,8 @@ public with sharing class BDI_SettingsUI_CTRL {
                 listSODonationFields = new list<SelectOption>();
                 
                 set<String> setFields = new set<String>();
-                setFields.addAll(BDI_Donations.dataImportFieldToOpportunityField.keySet());
-                setFields.addAll(BDI_Donations.dataImportFieldToPaymentField.keySet());
+                //setFields.addAll(BDI_Donations.dataImportFieldToOpportunityField.keySet());
+                //setFields.addAll(BDI_Donations.dataImportFieldToPaymentField.keySet());
                 
                 for (String diField : setFields) {
                     String strLabel = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), diField); 

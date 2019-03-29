@@ -39,13 +39,17 @@
 */
 global with sharing class BDI_DataImportService {
 
+    private BDI_FieldMapping_BASE fieldMapper;
+
     /*******************************************************************************************************
     * @description constructor
     * @param isDryRun whether to run in Dry Run mode or commit records.
     */
-    public BDI_DataImportService(Boolean isDryRun) {
+    public BDI_DataImportService(Boolean isDryRun, BDI_FieldMapping_BASE fieldMapper) {
         contactService = new BDI_ContactService(this);
         this.isDryRun = isDryRun;
+
+        this.fieldMapper = fieldMapper;
     }
 
     /*******************************************************************************************************
@@ -466,7 +470,7 @@ global with sharing class BDI_DataImportService {
     public static void execute(Id apexJobId, Data_Import_Settings__c dataImportSettings, List<DataImport__c> dataImports,
         Boolean isDryRun) {
 
-        BDI_DataImportService dataImportService = new BDI_DataImportService(isDryRun);
+        BDI_DataImportService dataImportService = new BDI_DataImportService(isDryRun, BDI_FieldMapping_BASE.getInstance());
         dataImportService.process(apexJobId, dataImportSettings, dataImports);
     }
 
@@ -690,11 +694,6 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
-    * @description our exception object for Field Level Security errors.
-    */
-    private class FLSException extends Exception {}
-
-    /*******************************************************************************************************
     * @description our exception object for Data Import errors.
     */
     private class BDIException extends Exception {}
@@ -772,90 +771,31 @@ global with sharing class BDI_DataImportService {
     * @param dataImportFields the DataImport fields to consider
     * @return Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
     *
-    * TODO: Support custom metadata-based mapping
+    * TODO: Probably deprecate this method in favor of instance variant below
     */
-    global static Map<String, String> mapFieldsForDIObject(String dataImportObjectName, String targetObjectName, List<String> dataImportFields) {
-
-        Map<String, String> dataImportFieldToTargetField = new Map<String, String>();
-
-        for (String dataImportField : dataImportFields) {
-
-            DescribeFieldResult fieldDescribe =
-                UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), dataImportField);
-            String helpText = fieldDescribe.getInlineHelpText();
-
-            if (helpText != null && helpText != '') {
-                List<String> parts = helpText.split('\\.', 2);
-
-                if (parts.size() == 2 && parts[0] == dataImportObjectName && parts[1] != '') {
-                    String fieldName = parts[1];
-                    //if we aren't in the npsp namespace, remove those tokens from help text
-                    //also removes tokens from actual detected namespace, if we happen to be
-                    //in a non-npsp namespace
-                    if (UTIL_Namespace.getNamespace() != 'npsp') {
-                        String fieldNameOld = fieldName;
-                        fieldName = UTIL_Namespace.StrTokenRemoveNSPrefix(fieldName);
-
-                        //if we have a detected namespace, and removed a namespace from the current field
-                        //add the current namespace back in, allowing this code to run in any namespace
-                        if (fieldName != fieldNameOld && UTIL_Namespace.getNamespace() != '') {
-                            fieldName = UTIL_Namespace.StrAllNSPrefix(fieldName);
-                        }
-                    }
-
-                    // make sure they have permissions to modify the target field
-                    // we can't do this in all tests, because many profiles won't have FLS set for all our new fields!
-                    if (!Test.isRunningTest() || failFieldLevelSecurity) {
-                        fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, fieldName);
-                        Set<String> setAuditFields = new Set<String>{
-                            'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'
-                        };
-                        Boolean isAuditField = setAuditFields.contains(fieldName.toLowerCase());
-
-                        if (failFieldLevelSecurity ||
-                            fieldDescribe == null ||
-                            !fieldDescribe.isCreateable() ||
-                            (!isAuditField && !fieldDescribe.isUpdateable())) {
-                                throw (new FLSException(
-                                    String.format(System.Label.flsError, new List<String>{ targetObjectName + '.' + fieldName }
-                                )));
-                        }
-                    }
-
-                    dataImportFieldToTargetField.put(dataImportField, fieldName);
-                }
-            }
-        }
-
-        if (isCurrencyMapped(targetObjectName)) {
-            addCurrencyIsoCode(dataImportFieldToTargetField);
-        }
-
-        return dataImportFieldToTargetField;
+    global static Map<String, String> mapFieldsForDIObject(String dataImportObjectName, 
+                String targetObjectName, 
+                List<String> dataImportFields) {
+        
+        return new Map<String,String>();
+        //return fieldMapper.getFieldMap(dataImportObjectName, targetObjectName, dataImportFields);
     }
 
     /*******************************************************************************************************
-    * @description Checks if this is one of the objects where we want to have a currency mapped.
-    * As of now, that object is Opportunity. Payment CurrencyISOCode is inherited from the Opportunity.
-    * @param strBaseObj the underlying object the bdi object is (ie, Contact, Account, etc)
-    * @return Boolean if the strBaseObj is an Opportunity.
+    * @description returns a map of fields from the DataImport to fields for the given 'object',
+    * from the list of DataImport Fields, which have the form DIObject.developerfieldname in the field's help text property.
+    * @param dataImportObjectName the bdi object we care about (Contact1, Contact2, Account1, etc)
+    * @param targetObjectName the underlying object the bdi object is (ie, Contact, Account, etc)
+    * @param dataImportFields the DataImport fields to consider
+    * @return Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
+    *
     */
-    private static Boolean isCurrencyMapped(String objectName) {
-        return objectName.equalsIgnoreCase('Opportunity');
-    }
-
-    /*******************************************************************************************************
-    * @description Adds the currencyisocode to the Map passed as parameter.
-    * @param Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
-    * @return void.
-    */
-    private static void addCurrencyIsoCode(Map<String, String> fieldMap) {
-
-        // handle multicurrency if it's enabled
-        if (UserInfo.isMultiCurrencyOrganization()) {
-            fieldMap.put('currencyisocode', 'CurrencyIsoCode');
-        }
-    }
+    public Map<String, String> mapDataImportFields(String dataImportObjectName, 
+                String targetObjectName, 
+                List<String> dataImportFields) {
+        
+        return fieldMapper.getFieldMap(dataImportObjectName, targetObjectName, dataImportFields);
+    }    
 
     /*******************************************************************************************************
     * @description Copies non-null DI field values to the destination object, given the provided mapping.
@@ -942,7 +882,7 @@ global with sharing class BDI_DataImportService {
         }
 
         // get our mapping of household custom fields
-        Map<String, String> mapDIFieldToHHField = mapFieldsForDIObject('Household', 'Account', listStrDataImportFields);
+        Map<String, String> mapDIFieldToHHField = mapDataImportFields('Household', 'Account', listStrDataImportFields);
 
         // bail out if no custom fields
         if (mapDIFieldToHHField.size() == 0) {
@@ -1492,7 +1432,7 @@ global with sharing class BDI_DataImportService {
     private Map<String, String> mapDIFieldToA1Field {
         get {
             if (mapDIFieldToA1Field == null) {
-                mapDIFieldToA1Field = BDI_DataImportService.mapFieldsForDIObject(
+                mapDIFieldToA1Field = mapDataImportFields(
                     'Account1', 'Account', BDI_DataImportService.listStrDataImportFields
                 );
             }
@@ -1508,7 +1448,7 @@ global with sharing class BDI_DataImportService {
         get {
             if (mapDIFieldToA2Field == null) {
                 mapDIFieldToA2Field =
-                    BDI_DataImportService.mapFieldsForDIObject(
+                    mapDataImportFields(
                         'Account2', 'Account', BDI_DataImportService.listStrDataImportFields
                     );
             }
@@ -1565,7 +1505,7 @@ global with sharing class BDI_DataImportService {
         }
 
         Map<String, String> mapDIFieldToAddrField =
-            mapFieldsForDIObject('Address', UTIL_Namespace.StrTokenNSPrefix('Address__c'), listStrDataImportFields);
+            mapDataImportFields('Address', UTIL_Namespace.StrTokenNSPrefix('Address__c'), listStrDataImportFields);
         List<Address__c> addressesToInsert = new List<Address__c>();
         List<DataImport__c> dataImportsToInsert = new List<DataImport__c>();
         Map<String, Address__c> mapHHAddrKeyToAddrNew = new Map<String, Address__c>();
