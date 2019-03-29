@@ -78,10 +78,13 @@ global with sharing class BDI_DataImportService {
     * @return DataImportBatch__c
     */
     private static DataImportBatch__c loadBatch(Id batchId) {
-
         List<DataImportBatch__c> dataImportBatches = BDI_DataImportBatch_SEL.selectByIds(new Set<Id>{ batchId });
         if (dataImportBatches.size() == 1) {
-            return dataImportBatches[0];
+            DataImportBatch__c currentBatch = dataImportBatches[0];
+            if (!String.isBlank(currentBatch.Active_Fields__c)) {
+                relevantDataImportFields = BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId, false);
+            }
+            return currentBatch;
         } else {
             throw(new BDIException(String.format(Label.bdiInvalidBatchId, new List<String>{ batchId })));
         }
@@ -489,12 +492,26 @@ global with sharing class BDI_DataImportService {
             this.listDI = dataImports;
             this.diSettings = dataImportSettings;
 
+            // list of populated data import fields
+            List<String> populatedDataImportFields = new List<String>();
+
             // first set a clean state for each DI
             for (DataImport__c dataImport : dataImports) {
                 dataImport.Status__c = null;
                 dataImport.ImportedDate__c = null;
                 dataImport.ApexJobId__c = null;
                 dataImport.FailureInformation__c = null;
+
+                // collect populated DI fields to use for later mapping
+                Map<String, Object> populatedFieldsMap = dataImport.getPopulatedFieldsAsMap();
+                List<String> populatedFields = new List<String>(populatedFieldsMap.keySet());
+                if(populatedFields.size() > populatedDataImportFields.size()) {
+                    populatedDataImportFields = populatedFields;
+                }
+            }
+
+            if (populatedDataImportFields != null && populatedDataImportFields.size() > 0) {
+                relevantDataImportFields = populatedDataImportFields;
             }
 
             // do any performance optimizations to avoid unnecessary code
@@ -672,6 +689,23 @@ global with sharing class BDI_DataImportService {
         if (statusField != null) {
             dataImport.put(statusField, errorMessage.left(255));
         }
+    }
+
+    /*******************************************************************************************************
+    * @description list of the fields in the Data Import object that we care about for FLS checks because
+    * they are present in the Batch we are processing
+    * This list gets set in the loadBatch method.
+    * If no batch is loaded, we use the full list of all DI fields listStrDataImportFields
+    */
+    global static List<String> relevantDataImportFields {
+        get {
+            if (relevantDataImportFields == null || relevantDataImportFields.isEmpty()) {
+                return listStrDataImportFields;
+            } else {
+                return relevantDataImportFields;
+            }
+        }
+        set;
     }
 
     /*******************************************************************************************************
@@ -940,7 +974,7 @@ global with sharing class BDI_DataImportService {
         }
 
         // get our mapping of household custom fields
-        Map<String, String> mapDIFieldToHHField = mapFieldsForDIObject('Household', 'Account', listStrDataImportFields);
+        Map<String, String> mapDIFieldToHHField = mapFieldsForDIObject('Household', 'Account', relevantDataImportFields);
 
         // bail out if no custom fields
         if (mapDIFieldToHHField.size() == 0) {
@@ -1491,7 +1525,7 @@ global with sharing class BDI_DataImportService {
         get {
             if (mapDIFieldToA1Field == null) {
                 mapDIFieldToA1Field = BDI_DataImportService.mapFieldsForDIObject(
-                    'Account1', 'Account', BDI_DataImportService.listStrDataImportFields
+                    'Account1', 'Account', BDI_DataImportService.relevantDataImportFields
                 );
             }
             return mapDIFieldToA1Field;
@@ -1507,7 +1541,7 @@ global with sharing class BDI_DataImportService {
             if (mapDIFieldToA2Field == null) {
                 mapDIFieldToA2Field =
                     BDI_DataImportService.mapFieldsForDIObject(
-                        'Account2', 'Account', BDI_DataImportService.listStrDataImportFields
+                        'Account2', 'Account', BDI_DataImportService.relevantDataImportFields
                     );
             }
             return mapDIFieldToA2Field;
@@ -1563,7 +1597,8 @@ global with sharing class BDI_DataImportService {
         }
 
         Map<String, String> mapDIFieldToAddrField =
-            mapFieldsForDIObject('Address', UTIL_Namespace.StrTokenNSPrefix('Address__c'), listStrDataImportFields);
+            mapFieldsForDIObject('Address', UTIL_Namespace.StrTokenNSPrefix('Address__c'), relevantDataImportFields);
+
         List<Address__c> addressesToInsert = new List<Address__c>();
         List<DataImport__c> dataImportsToInsert = new List<DataImport__c>();
         Map<String, Address__c> mapHHAddrKeyToAddrNew = new Map<String, Address__c>();

@@ -372,8 +372,10 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         String activeFieldsJSON = batch.Active_Fields__c;
         if (activeFieldsJSON != null) {
             List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields =
-                (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(activeFieldsJSON,
-                        List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
+                (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(
+                    activeFieldsJSON,
+                    List<BGE_ConfigurationWizard_CTRL.BGEField>.class
+                );
 
             Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(
                     UTIL_Namespace.StrTokenNSPrefix('DataImport__c')
@@ -520,7 +522,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @return Query string
     */
     public static String getDataImportQuery(Id batchId, List<Id> dataImportIds, Integer numRows, Integer offset) {
-        List<String> dataImportFields = getDataImportFields(batchId);
+        List<String> dataImportFields = BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId);
 
         String query =  'SELECT ' + String.join(dataImportFields,', ') +
                         ' FROM DataImport__c' +
@@ -568,41 +570,13 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description reads the Active_Fields__c field to get active configured fields for the batch
-    * @param batchId: ID of the NPSP_Data_Import_Batch__c
-    * @return list of field API names
-    */
-    private static List<String> getActiveFieldNamesFromBatch(Id batchId) {
-
-        DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
-        String activeFieldsJSON = batch.Active_Fields__c;
-        List<String> activeFieldNames = new List<String>();
-
-        if (activeFieldsJSON != null) {
-            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields =
-                    (List<BGE_ConfigurationWizard_CTRL.BGEField>)
-                            JSON.deserialize(activeFieldsJSON, List<BGE_ConfigurationWizard_CTRL.BGEField>.class);
-            for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
-                activeFieldNames.add(field.name);
-                if (field.type == 'reference') {
-                    DescribeFieldResult lookupDFR = UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), field.name.toLowerCase());
-                    String referencedObjectName = lookupDFR.getReferenceTo()[0].getDescribe().name;
-                    activeFieldNames.add(field.name.substringBefore('__c') + '__r.' + UTIL_Describe.getNameField(referencedObjectName));
-                }
-            }
-        }
-
-        return activeFieldNames;
-    }
-
-    /*******************************************************************************************************
     * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
     * @return List<String> list of DataImport__c field api names
     */
     private static List<String> getDataImportFields(Id batchId) {
 
         List<String> fields = getDataImportFields();
-        fields.addAll(getActiveFieldNamesFromBatch(batchId));
+        fields.addAll(BGE_BatchGiftEntry_UTIL.getActiveFieldNamesFromBatch(batchId));
         return fields;
     }
 

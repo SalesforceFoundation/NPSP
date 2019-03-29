@@ -111,7 +111,7 @@ public class BDI_Donations {
             if (dataImportFieldToOpportunityField == null) {
                 dataImportFieldToOpportunityField = BDI_DataImportService.mapFieldsForDIObject(
                     'Opportunity', 'Opportunity',
-                    BDI_DataImportService.listStrDataImportFields
+                    BDI_DataImportService.relevantDataImportFields
                 );
             }
             return dataImportFieldToOpportunityField;
@@ -127,7 +127,7 @@ public class BDI_Donations {
             if (dataImportFieldToPaymentField == null) {
                 dataImportFieldToPaymentField = BDI_DataImportService.mapFieldsForDIObject(
                     'Payment', 'npe01__OppPayment__c',
-                    BDI_DataImportService.listStrDataImportFields);
+                    BDI_DataImportService.relevantDataImportFields);
             }
             return dataImportFieldToPaymentField;
         }
