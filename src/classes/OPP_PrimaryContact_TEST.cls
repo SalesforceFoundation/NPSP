@@ -34,98 +34,113 @@
 * @description Test class for the Opportunity Primary Contact lookup.
 */
 @isTest
-public with sharing class OPP_PrimaryContact_TEST {
+private with sharing class OPP_PrimaryContact_TEST {
+    private static final String CLOSE_WON_STAGE = UTIL_UnitTestData_TEST.getClosedWonStage();
 
     /*******************************************************************************************************
     * @description Tests insert, update, and delete of the primary opportunity contact role based on the opportunity
     * Primary Contact field.
     ********************************************************************************************************/
-    static testMethod void testCreateUpdateOCR() {
-        list<Contact> conList = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(2);
-        insert conList;
+    @isTest
+    private static void shouldUpdateCreateOrDeleteOCRsBasedPrimaryContactFieldOnOppChange() {
+        List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(2);
+        insert contacts;
 
         Opportunity opp = new Opportunity(
-            Name = 'foo',
-            Primary_Contact__c = conList[0].id,
-            CloseDate = system.today(),
-            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            Name = 'Test OCR change on Primary Contact change',
+            Primary_Contact__c = contacts[0].Id,
+            CloseDate = System.today(),
+            StageName = CLOSE_WON_STAGE,
             Amount = 8
         );
         insert opp;
 
-        list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, IsPrimary FROM OpportunityContactRole WHERE OpportunityId = :opp.Id];
-        system.assertEquals(1,queryOCR.size(), 'One primary contact role should be created for the opportunity.');
-        system.assertEquals(conList[0].id, queryOCR[0].ContactId,'The first contact should have the primary contact role.');
+        List<OpportunityContactRole> actualOCRs = getOCRs(opp.Id);
+        System.assertEquals(1, actualOCRs.size(), 'One primary contact role should be created for the opportunity.');
+        System.assertEquals(contacts[0].Id, actualOCRs[0].ContactId, 'The first contact should have the primary contact role.');
 
-        opp.Primary_Contact__c = conList[1].id;
+        opp.Primary_Contact__c = contacts[1].Id;
         Test.startTest();
         update opp;
         Test.stopTest();
         
-        queryOCR = [SELECT Id, ContactId, IsPrimary FROM OpportunityContactRole WHERE OpportunityId = :opp.Id];
-        system.assertEquals(1,queryOCR.size(), 'One primary contact role should exist for the opportunity.');
-        system.assertEquals(conList[1].id, queryOCR[0].ContactId,'The second contact should now have the primary contact role.');
+        actualOCRs = getOCRs(opp.Id);
+        System.assertEquals(1,actualOCRs.size(), 'One primary contact role should exist for the opportunity.');
+        System.assertEquals(contacts[1].Id, actualOCRs[0].ContactId, 'The second contact should now have the primary contact role.');
 
         opp.Primary_Contact__c = null;
         update opp;
         
-        queryOCR = [SELECT Id, ContactId, IsPrimary FROM OpportunityContactRole WHERE OpportunityId = :opp.Id];
-        system.assertEquals(0,queryOCR.size(), 'The primary contact role should be deleted.');
+        actualOCRs = getOCRs(opp.Id);
+        System.assertEquals(0,actualOCRs.size(), 'The primary contact role should be deleted.');
     }
     
     /*******************************************************************************************************
     * @description Creates opportunities with primary contact roles and with a blank Primary Contact field.
     * Runs the batch utility and verifies the Primary Contact field has been populated.
+    * Only Opportunities with unchecked Disable Contact Role Automation field will be processed.
     ********************************************************************************************************/
-    static testMethod void testBatch() {
-        list<Contact> conList = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(1);
-        insert conList;
+    @isTest
+    private static void shouldUpdatePrimaryContactOnOppBasedOnPrimaryOCRContact() {
+        Integer size = 2;
+        List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(size);
+        insert contacts;
 
-        Opportunity opp = new Opportunity(
-            Name = 'foo',
-            Primary_Contact__c = conList[0].id,
-            CloseDate = system.today(),
-            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-            Amount = 8
-        );
-        insert opp;
-
-        list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, IsPrimary FROM OpportunityContactRole WHERE OpportunityId = :opp.Id];
-        system.assertEquals(1,queryOCR.size(), 'An OCR should be created.');
+        List<Opportunity> opps = new List<Opportunity>();
+        for (Integer i = 0; i < size; i++) {
+            opps.add(new Opportunity(
+                Name = 'Test Refresh Opportunity Primary Contact batch',
+                Primary_Contact__c = contacts[i].Id,
+                CloseDate = System.today(),
+                StageName = CLOSE_WON_STAGE,
+                Amount = 8
+            ));
+        }
+        insert opps;
 
         //null out the field without deleting the OCR
         TDTM_TriggerHandler.disableTDTM = true;
-        opp.Primary_Contact__c = null;
-        update opp;
+        opps[0].Primary_Contact__c = null;
+        opps[1].Primary_Contact__c = null;
+        opps[1].DisableContactRoleAutomation__c = true;
+        update opps;
         TDTM_TriggerHandler.disableTDTM = false;
 
-        list<Opportunity> queryOpp = [SELECT Id, Primary_Contact__c FROM Opportunity WHERE Id = :opp.id];
-        system.assertEquals(null,queryOpp[0].Primary_Contact__c, 'The primary contact field should be blank.');
+        List<OpportunityContactRole> actualOCRs = getOCRs(opps);
+        System.assertEquals(size, actualOCRs.size(), 'An OCR should exist for each Opp.');
 
-        test.startTest();
-        database.executeBatch(new OPP_PrimaryContact_BATCH());
-        test.stopTest();
+        List<Opportunity> actualOpps = getOpportunities(opps);
+        System.assertEquals(null, actualOpps[0].Primary_Contact__c, 'The primary contact on Opp should be blank.');
+        System.assertEquals(null, actualOpps[1].Primary_Contact__c, 'The primary contact on Opp should be blank.');
 
-        queryOpp = [SELECT Id, Primary_Contact__c FROM Opportunity WHERE Id = :opp.id];
-        system.assertEquals(conList[0].id,queryOpp[0].Primary_Contact__c, 'The primary contact field should have the contact id.');
+        Test.startTest();
+        Database.executeBatch(new OPP_PrimaryContact_BATCH());
+        Test.stopTest();
+
+        Map<Id, Opportunity> actualOppById = new Map<Id, Opportunity>(getOpportunities(opps));
+        System.assertEquals(contacts[0].Id, actualOppById.get(opps[0].Id).Primary_Contact__c, 
+            'The primary contact on Opp should be updated when DisableContactRoleAutomation is unchecked.');
+        System.assertEquals(null, actualOppById.get(opps[1].Id).Primary_Contact__c, 
+            'The primary contact on Opp should remain unchanged when DisableContactRoleAutomation is checked.');
     }
 
     /*******************************************************************************************************
     * @description Bulk creates opportunities with Primary Contact set, verifies Contact Roles are created.
     ********************************************************************************************************/
-    static testMethod void testBulkInsert() {
-        integer bulkSize = 50;
+    @isTest
+    private static void shouldCreateOCRsOnBulkOppInsert() {
+        Integer bulkSize = 50;
         
-        list<Contact> conList = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(bulkSize);
-        insert conList;
+        List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(bulkSize);
+        insert contacts;
         
-        list<Opportunity> oppList = UTIL_UnitTestData_TEST.OppsForContactList(conList, null, UTIL_UnitTestData_TEST.getclosedWonStage(), system.Today(), 8, null, null);
+        List<Opportunity> opps = UTIL_UnitTestData_TEST.OppsForContactList(contacts, null, CLOSE_WON_STAGE, System.Today(), 8, null, null);
         Test.startTest();
-        insert oppList;
+        insert opps;
         Test.stopTest();
 
-        list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, IsPrimary FROM OpportunityContactRole WHERE OpportunityId IN :oppList];
-        system.assertEquals(50,queryOCR.size(), 'An OCR should be created for each Opportunity.');
+        List<OpportunityContactRole> actualOCRs = getOCRs(opps);
+        System.assertEquals(50,actualOCRs.size(), 'An OCR should be created for each Opportunity.');
 
     }
 
@@ -133,38 +148,86 @@ public with sharing class OPP_PrimaryContact_TEST {
     * @description Update an opportunity primary contact to a contact with an existing ocr. Verify that the
     * old OCR is deleted.
     ********************************************************************************************************/
-    static testMethod void testExistingConRoles() {
-        list<Contact> conList = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(2);
-        insert conList;
+    @isTest
+    private static void shouldRecreateOCRsWhenPrimaryContactFieldOnOppIsUpdated() {
+        List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(2);
+        insert contacts;
         
         Opportunity opp = new Opportunity(
-            Name = 'foo',
-            Primary_Contact__c = conList[0].id,
-            CloseDate = system.today(),
-            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            Name = 'Test OCR recreation on Primary Contact update',
+            Primary_Contact__c = contacts[0].Id,
+            CloseDate = System.today(),
+            StageName = CLOSE_WON_STAGE,
             Amount = 8
         );
         insert opp;
 
         OpportunityContactRole secondaryOCR = new OpportunityContactRole(
-            ContactId = conList[1].Id,
+            ContactId = contacts[1].Id,
             OpportunityId = opp.Id,
             Role = 'foo'
         );
         insert secondaryOCR;
 
-        list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, IsPrimary FROM OpportunityContactRole WHERE OpportunityId = :opp.id ORDER BY IsPrimary DESC];
-        system.assertEquals(2, queryOCR.size(), 'Two OCRs should exist.');
-        system.assertEquals(conList[0].id, queryOCR[0].ContactId, 'Contact 0 should be primary.');
+        List<OpportunityContactRole> actualOCRs = getOCRs(opp.Id);
+        System.assertEquals(2, actualOCRs.size(), 'Two OCRs should exist.');
+        System.assertEquals(contacts[0].Id, actualOCRs[0].ContactId, 'Contact 0 should be primary.');
 
-        opp.Primary_Contact__c = conList[1].id;
+        opp.Primary_Contact__c = contacts[1].Id;
         Test.startTest();
         update opp;
         Test.stopTest();
 
-        queryOCR = [SELECT Id, ContactId, IsPrimary FROM OpportunityContactRole WHERE OpportunityId = :opp.id ORDER BY IsPrimary DESC];
-        system.assertEquals(1, queryOCR.size(), 'One OCR should exist.');
-        system.assertEquals(conList[1].id, queryOCR[0].ContactId, 'Contact 0 should be primary.');
+        actualOCRs = getOCRs(opp.Id);
+        System.assertEquals(1, actualOCRs.size(), 'One OCR should exist.');
+        System.assertEquals(contacts[1].Id, actualOCRs[0].ContactId, 'Contact 0 should be primary.');
+    }
 
+    // Helpers
+    /////////////
+
+    /*******************************************************************************************************
+    * @description Retrieve OpportunityContactRoles for the Opportunity
+    * @param oppId An Opportunity Id
+    * @return List<OpportunityContactRole>
+    */
+    private static List<OpportunityContactRole> getOCRs(Id oppId) {
+        return getOCRs(new Set<Id>{ oppId });
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieve OpportunityContactRoles for Opportunities
+    * @param opps Opportunity records
+    * @return List<OpportunityContactRole> 
+    */
+    private static List<OpportunityContactRole> getOCRs(List<Opportunity> opps) {
+        return getOCRs(new Map<Id, Opportunity>(opps).keySet());
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieve OpportunityContactRoles for Opportunity Ids
+    * @param oppIds Opportunity Ids
+    * @return List<OpportunityContactRole> 
+    */
+    private static List<OpportunityContactRole> getOCRs(Set<Id> oppIds) {
+        return [
+            SELECT Id, OpportunityId, ContactId, IsPrimary 
+            FROM OpportunityContactRole 
+            WHERE OpportunityId IN :oppIds
+            ORDER BY IsPrimary DESC
+        ];
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieve Opportunities
+    * @param opps Opportunities
+    * @return List<Opportunity>
+    */
+    private static List<Opportunity> getOpportunities(List<Opportunity> opps) {
+        return [
+            SELECT Id, Primary_Contact__c 
+            FROM Opportunity 
+            WHERE Id IN :opps
+        ];
     }
 }
