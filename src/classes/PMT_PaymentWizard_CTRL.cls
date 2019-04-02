@@ -395,17 +395,18 @@ public with sharing class PMT_PaymentWizard_CTRL {
     	Savepoint sp = Database.setSavepoint();
     	try {
 	        List<npe01__OppPayment__c> paymentsToDelete = new List<npe01__OppPayment__c>();
-	        npe01__OppPayment__c[] delPymnts = [
-                SELECT Id, npe01__Paid__c 
+	        List<npe01__OppPayment__c> currentPayments = [
+                SELECT Id, npe01__Paid__c, npe01__Written_Off__c
                 FROM npe01__OppPayment__c 
                 WHERE npe01__OppPayment__c.npe01__Opportunity__c = :currentOpp.Id
             ];
 	        
-	        for (npe01__OppPayment__c thisPayment : delPymnts){
+	        for (npe01__OppPayment__c thisPayment : currentPayments){
 	            if (thisPayment.npe01__Paid__c == false && thisPayment.npe01__Written_Off__c == false) {
 	                paymentsToDelete.add(thisPayment);
 	            }
 	        }
+
 	        if (!paymentsToDelete.isEmpty()) {
                 delete paymentsToDelete;
             }
