@@ -38,9 +38,15 @@ public class OPP_PrimaryContact_BATCH implements Database.Batchable<sObject> {
     /** @description The query for the batch process to run on.*/
     private String query;
     
-    /** @description The batch process constructor; creates opportunity contact role query for all primary OCRs.*/
+    /** @description The batch process constructor; creates opportunity contact role query 
+    * for primary OCRs except those with DisableContactRoleAutomation checked.
+    */
     public OPP_PrimaryContact_BATCH() {
-        query = 'SELECT OpportunityId, Opportunity.Primary_Contact__c, ContactId FROM OpportunityContactRole WHERE IsPrimary=TRUE ORDER BY OpportunityId, LastModifiedDate DESC';
+        query = 'SELECT OpportunityId, Opportunity.Primary_Contact__c, ContactId '
+        + ' FROM OpportunityContactRole '
+        + ' WHERE IsPrimary = true '
+        + ' AND Opportunity.DisableContactRoleAutomation__c = false '
+        + ' ORDER BY OpportunityId, LastModifiedDate DESC';
     }
     
     /** @description Batch process start method.*/
@@ -52,25 +58,32 @@ public class OPP_PrimaryContact_BATCH implements Database.Batchable<sObject> {
     * @description Batch process execute method. Update existing opportunities' Primary Contact field based on
     * primary Opportunity Contact Role.
     */
-    public void execute(Database.BatchableContext BC, List<sObject> scope) {
+    public void execute(Database.BatchableContext BC, List<OpportunityContactRole> scope) {
         
         //creates an opportunity object
         //if there are duplicate primary contact roles, take the oldest modified one, so if the
         //duplicate is the result of a merge, the winner of the merge keeps the primary contact role
-        map<id,Opportunity> mapOppsForUpdate = new map<id,Opportunity>();
-        for (OpportunityContactRole ocr : (list<OpportunityContactRole>)scope) {
-            mapOppsForUpdate.put(ocr.OpportunityId, new Opportunity(id=ocr.OpportunityId, Primary_Contact__c=ocr.ContactId));
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>();
+        for (OpportunityContactRole ocr : scope) {
+            oppById.put(
+                ocr.OpportunityId, 
+                new Opportunity(
+                    Id = ocr.OpportunityId, 
+                    Primary_Contact__c = ocr.ContactId
+                )
+            );
         }
 
         //verify we have an actual update to the primary contact field, otherwise remove the record
-        for (OpportunityContactRole ocr : (list<OpportunityContactRole>)scope) {
-            if (mapOppsForUpdate.get(ocr.OpportunityId).Primary_Contact__c == ocr.Opportunity.Primary_Contact__c)
-                mapOppsForUpdate.remove(ocr.OpportunityId);
+        for (OpportunityContactRole ocr : scope) {
+            if (oppById.get(ocr.OpportunityId).Primary_Contact__c == ocr.Opportunity.Primary_Contact__c) {
+                oppById.remove(ocr.OpportunityId);
+            }
         }
 
-        if (!mapOppsForUpdate.isEmpty()) {
+        if (!oppById.isEmpty()) {
             TDTM_TriggerHandler.disableTDTM = true;
-            database.update(mapOppsForUpdate.values(), false);
+            Database.update(oppById.values(), false);
             TDTM_TriggerHandler.disableTDTM = false;
         }
     }
