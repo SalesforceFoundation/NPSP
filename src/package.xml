@@ -998,6 +998,7 @@
         <members>Opportunity.Ask_Date__c</members>
         <members>Opportunity.Batch__c</members>
         <members>Opportunity.Closed_Lost_Reason__c</members>
+        <members>Opportunity.DisableContactRoleAutomation__c</members>
         <members>Opportunity.Fair_Market_Value__c</members>
         <members>Opportunity.Gift_Strategy__c</members>
         <members>Opportunity.Grant_Contract_Date__c</members>

@@ -84,7 +84,6 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         return new DmlWrapper();
     }
 
-
     /*******************************************************************************************************
     * @description Fills 1:1 and HH accounts for Opportunities where the Contact Id is supplied. Fills the
     * contact Id with the account's primary contact if the account is supplied but not the contact.
@@ -245,6 +244,10 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         }
 
         for (Opportunity opp : listOpps) {
+            if (opp.DisableContactRoleAutomation__c == true) {
+                continue;
+            }
+
             //cloned opportunity is necessary in order to modify the Primary Contact lookup and update the record in the trigger set
             Opportunity clonedOpp = opp.clone(true,true,false,true);
 
@@ -378,6 +381,10 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             Opportunity newOpp = listOpps[i];
             Opportunity oldOpp = listOldOpps[i];
 
+            if (newOpp.DisableContactRoleAutomation__c == true) {
+                continue;
+            }
+
             // 06/26/2018
             // Updating this to run whenever the AccountId is changed regardless of whether the new or old
             // Account is a Household or Organization
@@ -405,6 +412,10 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             for (Integer i=0; i<listOpps.size(); i++) {
                 Opportunity newOpp = listOpps[i];
                 Opportunity oldOpp = listOldOpps[i];
+
+                if (newOpp.DisableContactRoleAutomation__c == true) {
+                    continue;
+                }
 
                 Boolean isIndividualAccount = isIndividualAccount(oppAccountDetails, newOpp.AccountId);
 
@@ -730,9 +741,12 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         }
 
         for (Opportunity eachOppty : currentOpportunities) {
-            if (eachOppty.Primary_Contact__c != null && eachOppty.AccountId != null
+            if (eachOppty.Primary_Contact__c != null 
+                && eachOppty.AccountId != null
                 && oppAccountDetails.get(eachOppty.AccountId) != null
-                && !OPP_AutomatedSoftCreditsService.isOrganizationalAccount(oppAccountDetails.get(eachOppty.AccountId).npe01__SYSTEMIsIndividual__c)) {
+                && !OPP_AutomatedSoftCreditsService.isOrganizationalAccount(oppAccountDetails.get(eachOppty.AccountId).npe01__SYSTEMIsIndividual__c)
+                && eachOppty.DisableContactRoleAutomation__c == false
+            ) {
                 if (primaryContactToOpportunities.containsKey(eachOppty.Primary_Contact__c)) {
                     List<Id> opportunities = primaryContactToOpportunities.get(eachOppty.Primary_Contact__c);
                     opportunities.add(eachOppty.Id);
@@ -762,7 +776,9 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
         for (Opportunity eachOppty : currentOpportunities) {
             if (eachOppty.AccountId != null
-                && OPP_AutomatedSoftCreditsService.isOrganizationalAccount(oppAccountDetails.get(eachOppty.AccountId).npe01__SYSTEMIsIndividual__c)) {
+                && OPP_AutomatedSoftCreditsService.isOrganizationalAccount(oppAccountDetails.get(eachOppty.AccountId).npe01__SYSTEMIsIndividual__c)
+                && eachOppty.DisableContactRoleAutomation__c == false
+            ) {
                 if (accountToOpportunities.containsKey(eachOppty.AccountId)) {
                     List<Id> opportunities = accountToOpportunities.get(eachOppty.AccountId);
                     opportunities.add(eachOppty.Id);

@@ -570,6 +570,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     /*********************************************************************************************************
     * @description Verifies that no Opportunities have multiple primary contact roles, which would throw off opp rollups.
     */
+    @TestVisible
     private void verifyOppContactRoles() {
         try {
             // detect duplicate primary ocr's
