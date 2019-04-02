@@ -145,7 +145,7 @@ public class CRLP_RollupProcessor {
      * @description Inject the collection of Detail records to roll up for the Parent record. Required.
      */
     public CRLP_RollupProcessor withDetailRecords(List<SObject> detailRecords) {
-        this.detailRecordsByParentId = new Map<Id, List<SObject>>();
+        detailRecordsByParentId = new Map<Id, List<SObject>>();
 
         for (SObject dtl : detailRecords) {
             SObject dtlRecord = dtl;
@@ -166,7 +166,7 @@ public class CRLP_RollupProcessor {
      * @description Inject the map of related record linked to each Detail record. Optional.
      */
     public CRLP_RollupProcessor withRelatedRecords(Map<Id, List<SObject>> relatedRecords) {
-        this.relatedRecordsByDetailId = relatedRecords;
+        relatedRecordsByDetailId = relatedRecords;
         return this;
     }
 
@@ -192,7 +192,7 @@ public class CRLP_RollupProcessor {
      */
     public CRLP_RollupProcessor withRollupDefinitions(List<CRLP_Rollup> rollupDefs) {
         return withRollupDefinitions(new Map<Id, List<CRLP_Rollup>>{
-                this.parentRecords[0].Id => rollupDefs
+                parentRecords[0].Id => rollupDefs
         });
     }
 
@@ -202,7 +202,7 @@ public class CRLP_RollupProcessor {
      * This is needed in SkewMode to support rollups that span multiple batch iterations.
      */
     public CRLP_RollupProcessor withPreviouslyProcessedOppIdsMap(Map<Id,Set<Id>> processedOppIdsByParentId) {
-        this.previouslyProcessedOppIdsByParentId = processedOppIdsByParentId;
+        previouslyProcessedOppIdsByParentId = processedOppIdsByParentId;
         return this;
     }
 
@@ -212,20 +212,7 @@ public class CRLP_RollupProcessor {
     private SObjectType detailObjectType {
         get {
             if (detailObjectType == null) {
-                switch on (rollupType) {
-                    when ContactHardCredit, AccountHardCredit, RecurringDonations {
-                        detailObjectType = Opportunity.SObjectType;
-                    }
-                    when ContactSoftCredit, AccountContactSoftCredit {
-                        detailObjectType = Partial_Soft_Credit__c.SObjectType;
-                    }
-                    when GAU {
-                        detailObjectType = Allocation__c.SObjectType;
-                    }
-                    when AccountSoftCredit {
-                        detailObjectType = Account_Soft_Credit__c.SObjectType;
-                    }
-                }
+                detailObjectType = CRLP_Rollup_SVC.getDetailObjectType(rollupType);
             }
             return detailObjectType;
         } set;
@@ -237,30 +224,7 @@ public class CRLP_RollupProcessor {
     private String parentRelationshipField {
         get {
             if (parentRelationshipField == null) {
-                switch on (rollupType) {
-                    when AccountHardCredit {
-                        parentRelationshipField = SObjectType.Opportunity.fields.AccountId.getName();
-                    }
-                    when ContactHardCredit {
-                        parentRelationshipField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-                    }
-                    when RecurringDonations {
-                        parentRelationshipField = SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getName();
-                    }
-                    when ContactSoftCredit {
-                        parentRelationshipField = SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getName();
-                    }
-                    when AccountContactSoftCredit {
-                        parentRelationshipField = SObjectType.Contact.getName() + '.'
-                                + SObjectType.Contact.fields.AccountId.getName();
-                    }
-                    when GAU {
-                        parentRelationshipField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
-                    }
-                    when AccountSoftCredit {
-                        parentRelationshipField = SObjectType.Account_Soft_Credit__c.fields.Account__c.getName();
-                    }
-                }
+                parentRelationshipField = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(rollupType);
             }
             return parentRelationshipField;
         } set;
@@ -340,7 +304,7 @@ public class CRLP_RollupProcessor {
         Map<Id, SObject> recordsToUpdate = new Map<Id, SObject>();
         Id previousParentIdProcessed = null;
 
-        for (Integer itemNum = 0, parentListSize = this.parentRecords.size(); itemNum < parentListSize; itemNum++) {
+        for (Integer itemNum = 0, parentListSize = parentRecords.size(); itemNum < parentListSize; itemNum++) {
             Id parentId = parentRecords[itemNum].Id;
 
             List<SObject> detailsForParent = detailRecordsByParentId.get(parentId);
@@ -354,8 +318,7 @@ public class CRLP_RollupProcessor {
             // methods stores everything in this var because it's not sure of which is the first or last.
             // The block below removes everything from this map that is not the first summary record id.
             if (itemNum > 1 && previousParentIdProcessed != null) {
-//                options.mapOfRollupsByParentId.remove(previousParentIdProcessed);
-                this.rollupsDefsByParentId.remove(previousParentIdProcessed);
+                rollupsDefsByParentId.remove(previousParentIdProcessed);
             }
 
             // Call the method to complete the actual rollup operation for this parent.
@@ -418,8 +381,8 @@ public class CRLP_RollupProcessor {
     @TestVisible
     private Boolean isSoftCreditRollup {
         get {
-            return this.rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                    this.rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
+            return rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+                    rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
         }
     }
 
@@ -436,15 +399,13 @@ public class CRLP_RollupProcessor {
     /**
      * @description Retrieve the rollup definitions for the specified parent record
      */
-    @TestVisible
-    private List<CRLP_Rollup> getRollupDefsForParent(Id parentId) {
+    public List<CRLP_Rollup> getRollupDefsForParent(Id parentId) {
         if (rollupsDefsByParentId.containsKey(parentId)) {
             return rollupsDefsByParentId.get(parentId);
         }
 
         // otherwise need to build these dynamically
-        List<CRLP_Rollup> rollupDefs = new List<CRLP_Rollup>();
-        return rollupDefs;
+        return new List<CRLP_Rollup>();
     }
 
     /**
@@ -452,7 +413,7 @@ public class CRLP_RollupProcessor {
      * rollups summary both Account and Contact soft credits at the same time, it's necessary to use a map to separate the
      * instances by the Summary Object Type. It's still much faster than instantiating on every summary record.
      */
-    private static Map<CRLP_RollupProcessingOptions.RollupType, CRLP_VRollupHandler> handlersMapByType =
+    private static Map<CRLP_RollupProcessingOptions.RollupType, CRLP_VRollupHandler> cachedHandlerInstanceByRollupType =
             new Map<CRLP_RollupProcessingOptions.RollupType, CRLP_VRollupHandler>();
 
     /**
@@ -467,12 +428,12 @@ public class CRLP_RollupProcessor {
         // has changed or not.
         Id parentId = parent.Id;
 
-        CRLP_VRollupHandler handler = handlersMapByType.get(rollupType);
+        CRLP_VRollupHandler handler = cachedHandlerInstanceByRollupType.get(rollupType);
         if (handler == null) {
             Type handlerClassType = CRLP_RollupProcessor_SVC.getHanderClassType(rollupType);
             CRLP_Debug_UTIL.setCurrentRollupState('Instantiate Handler Class: ' + handlerClassType.getName() + ' for ' + parentId);
             handler = (CRLP_VRollupHandler) handlerClassType.newInstance();
-            handlersMapByType.put(rollupType, handler);
+            cachedHandlerInstanceByRollupType.put(rollupType, handler);
         }
 
         if (UserInfo.isMultiCurrencyOrganization()) {

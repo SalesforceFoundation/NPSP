@@ -140,15 +140,25 @@ public class CRLP_RollupQueueable implements System.Queueable {
 
         // Are there actually summary records to process?
         if (!summaryRecords.isEmpty()) {
-            // Get the detail records for the current set of Summary Records
-            List<SObject> detailRecords = CRLP_RollupProcessor_SVC.getDetailOppRecordsForParentRecords(summaryRecords, includeChildPayments, options);
+
+            CRLP_RollupQueryBuilder queryBuilder = new CRLP_RollupQueryBuilder()
+                    .withSummaryRecords(summaryRecords)
+                    .withRollupType(options.rollupJobType)
+                    .withSummaryRecordIdsVar('summaryRecordIds')
+                    .withOrderBy(options.parentKeyField);
+            if (includeChildPayments) {
+                queryBuilder.includePaymentRecords();
+            }
+            String detailsQuery = queryBuilder.getDetailsQueryAsSOQL();
+            List<SObject> detailRecords = Database.query(detailsQuery);
+
 
             Map<Id, List<SObject>> paymentsByOpp = new Map<Id, List<SObject>>();
             if (includeChildPayments && (objType == Account.SObjectType || objType == Contact.SObjectType)) {
                 paymentsByOpp = CRLP_RollupProcessor_SVC.splitChildRecordsInMapByParentId(detailRecords, 'npe01__OppPayment__r');
             }
 
-            // TODO FIgure out if we really need OPTIONS for any of this to work.
+            // TODO Figure out if we really need OPTIONS for any of this to work.
             // Need to pass in the Rollup Type, Rollup Defnitions if they're available along
             // with the Summary Record(s), Detail Record(s) and any Related Records.
             CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
@@ -158,9 +168,6 @@ public class CRLP_RollupQueueable implements System.Queueable {
                     .withRelatedRecords(paymentsByOpp);
 
             List<SObject> updatedRecords = processor.startRollupProcessing();
-
-            // Call the method to do the actual rollups. This returns only records that require updating
-//            List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, paymentsByOpp, options);
 
             // DML and capture any returned DML errors into a Map by Summary Record Id
             CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords, options.rollupJobType);

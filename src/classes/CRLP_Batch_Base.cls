@@ -134,41 +134,14 @@ public abstract class CRLP_Batch_Base {
         }
         this.recordIds = recordIds;
 
-        this.summaryObjectType = CRLP_RollupBatch_SVC.getSummaryObjectType(this.jobType);
+        this.summaryObjectType = CRLP_Rollup_SVC.getSummaryObjectType(this.jobType);
+
         this.statefulCacheOfRollupsToBeProcessed = CRLP_Rollup_SEL.getRollupDefinitionsToUse(this.jobType, this.jobFilter);
         this.isScheduledJob = System.isScheduled();
         this.customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
 
-        switch on (jobType) {
-            when GAU {
-                this.detailObjectType = Allocation__c.SObjectType;
-                this.keyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
-            }
-            when AccountHardCredit {
-                this.detailObjectType = Opportunity.SObjectType;
-                this.keyField = SObjectType.Opportunity.fields.AccountId.getName();
-            }
-            when AccountSoftCredit {
-                this.detailObjectType = Account_Soft_Credit__c.SObjectType;
-                this.keyField = SObjectType.Account_Soft_Credit__c.fields.Account__c.getName();
-            }
-            when ContactHardCredit {
-                this.detailObjectType = Opportunity.SObjectType;
-                this.keyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-            }
-            when ContactSoftCredit {
-                this.detailObjectType = OpportunityContactRole.SObjectType;
-                this.keyField = SObjectType.OpportunityContactRole.fields.ContactId.getName();
-            }
-            when AccountContactSoftCredit {
-                this.detailObjectType = OpportunityContactRole.SObjectType;
-                this.keyField = 'Contact.AccountId';
-            }
-            when RecurringDonations {
-                this.detailObjectType = Opportunity.SObjectType;
-                this.keyField = SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getName();
-            }
-        }
+        this.detailObjectType = CRLP_Rollup_SVC.getDetailObjectType(jobType);
+        this.keyField = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType);
     }
 
     /********************************************************************************************************
@@ -185,32 +158,8 @@ public abstract class CRLP_Batch_Base {
         options.rollupTypesToProcess = this.jobFilter;
         options.mode = this.jobMode;
 
-        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-            options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-            options.parentKeyField = SObjectType.Account_Soft_Credit__c.fields.Account__c.getName();
-            options.detailObjType = Account_Soft_Credit__c.SObjectType;
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-            options.parentKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-            options.parentKeyField = SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getName();
-            options.detailObjType = Partial_Soft_Credit__c.SObjectType;
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-            options.parentKeyField = SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getName().replace('__c','__r') + '.AccountId';
-            options.detailObjType = Partial_Soft_Credit__c.SObjectType;
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-            options.parentKeyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
-            options.detailObjType = Allocation__c.SObjectType;
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-            options.parentKeyField = SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getName();
-
-        }
+        options.detailObjType = CRLP_Rollup_SVC.getDetailObjectType(jobType);
+        options.parentKeyField = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType);
 
         // Retrieve and store the cached list of Rollup__mdt records into the Rollups Processor
         // so that the list never changes throughout the life of the batch job

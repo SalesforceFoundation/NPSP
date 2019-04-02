@@ -42,6 +42,12 @@ public class CRLP_Rollup_SVC {
 
     private static final Boolean DO_NOT_UPDATE_NULL_TO_ZERO = false;
 
+    private static final String oppObjectName = UTIL_Describe.getObjectDescribe('Opportunity').getName();
+    private static final String ocrObjectName = UTIL_Describe.getObjectDescribe('OpportunityContactRole').getName();
+    private static final String pmtObjectName = UTIL_Describe.getObjectDescribe('npe01__OppPayment__c').getName();
+    private static final String pscObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')).getName();
+    private static final String accSCObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c')).getName();
+
     /** @description Custom Settings record that defines specific Customizable Rollups settings */
     private static final Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
 
@@ -190,7 +196,6 @@ public class CRLP_Rollup_SVC {
      * @return True or False
      */
     public static Boolean hasActivePartialSoftCreditRollupsForSObject(SObjectType sObj) {
-        String pscObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')).getName();
         try {
             for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(sObj)) {
                 if (r.Active__c == true && r.Amount_Object__r.QualifiedApiName == pscObjectName) {
@@ -207,7 +212,6 @@ public class CRLP_Rollup_SVC {
      * @return True or False
      */
     public static Boolean hasActiveAccountSoftCreditRollupsForSObject(SObjectType sObj) {
-        String accSCObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrTokenNSPrefix('Account_Soft_Credit__c')).getName();
         try {
             for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(sObj)) {
                 if (r.Active__c == true && r.Amount_Object__r.QualifiedApiName == accSCObjectName) {
@@ -225,7 +229,6 @@ public class CRLP_Rollup_SVC {
      * @return True or False
      */
     public static Boolean hasActivePaymentRollupsForSObject(SObjectType sObj) {
-        String pmtObjectName = UTIL_Describe.getObjectDescribe('npe01__OppPayment__c').getName();
         try {
             for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(sObj)) {
                 if (r.Active__c == true && r.Amount_Object__r.QualifiedApiName == pmtObjectName) {
@@ -234,6 +237,111 @@ public class CRLP_Rollup_SVC {
             }
         } catch (Exception ex){ }
         return false;
+    }
+
+    /**
+     * @description Returns the Summary (Parent) Object Type for a given RollupType
+     * @param rollupType
+     * @return SObjectType
+     */
+    public static SObjectType getSummaryObjectType(CRLP_RollupProcessingOptions.RollupType rollupType) {
+        SObjectType objType;
+        switch on (rollupType) {
+            when GAU {
+                objType = General_Accounting_Unit__c.SObjectType;
+            }
+            when AccountHardCredit, AccountSoftCredit, AccountContactSoftCredit {
+                objType = Account.SObjectType;
+            }
+            when ContactHardCredit, ContactSoftCredit {
+                objType = Contact.SObjectType;
+            }
+            when RecurringDonations {
+                objType = npe03__Recurring_Donation__c.SObjectType;
+            }
+        }
+        return objType;
+    }
+
+    /**
+     * @description Returns the Detail Object Type for a given RollupType
+     * @param rollupType
+     * @return SObjectType
+     */
+    public static SObjectType getDetailObjectType(CRLP_RollupProcessingOptions.RollupType rollupType) {
+        SObjectType objType;
+        switch on (rollupType) {
+            when GAU {
+                objType = Allocation__c.SObjectType;
+            }
+            when ContactHardCredit, AccountHardCredit, RecurringDonations {
+                objType = Opportunity.SObjectType;
+            }
+            when AccountSoftCredit {
+                objType = Account_Soft_Credit__c.SObjectType;
+            }
+            when ContactSoftCredit, AccountContactSoftCredit {
+                objType = OpportunityContactRole.SObjectType;
+            }
+        }
+        return objType;
+    }
+
+    /**
+     * @description Returns the name of the parent relationship field to use when referencing the Summary object
+     * from the detail object from a query on the Detail object.
+     * @param rollupType
+     * @return String
+     */
+    public static String getParentRelationshipFieldForQueryReference(CRLP_RollupProcessingOptions.RollupType rollupType) {
+        String fieldName;
+        switch on (rollupType) {
+            when AccountHardCredit {
+                fieldName = SObjectType.Opportunity.fields.AccountId.getName();
+            }
+            when ContactHardCredit {
+                fieldName = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+            }
+            when ContactSoftCredit {
+                fieldName = SObjectType.OpportunityContactRole.fields.ContactId.getName();
+            }
+            when AccountContactSoftCredit {
+                fieldName = SObjectType.Contact.getName() + '.' + SObjectType.Contact.fields.AccountId.getName();
+            }
+            when AccountSoftCredit {
+                fieldName = SObjectType.Account_Soft_Credit__c.fields.Account__c.getName();
+            }
+            when RecurringDonations {
+                fieldName = SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getName();
+            }
+            when GAU {
+                fieldName = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
+            }
+        }
+        return fieldName;
+    }
+
+    /** TODO
+     * @description For SoftCredit rollups, this returns the Parent field in the rollup processing. The difference is that
+     * detail query for Soft Credits will start with OCR, but the processing will use PartialSoftCredit.
+     * @param rollupType
+     * @return String
+     */
+    public static String getParentRelationshipFieldForProcessingJob(CRLP_RollupProcessingOptions.RollupType rollupType) {
+        String fieldName;
+        switch on (rollupType) {
+            when ContactSoftCredit {
+                fieldName = SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getName();
+            }
+            when AccountContactSoftCredit {
+                fieldName = SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getName().replace('__c', '__r') + '.AccountId';
+            }
+            when else {
+                fieldName = getParentRelationshipFieldForQueryReference(rollupType);
+            }
+        }
+        return fieldName;
+
     }
 
     public class CRLP_Exception extends Exception {}

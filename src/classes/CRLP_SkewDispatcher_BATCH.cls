@@ -58,7 +58,7 @@ public class CRLP_SkewDispatcher_BATCH implements Database.Batchable<SObject>, D
      */
     public CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType jobType) {
         this.jobType = jobType;
-        this.summaryObjectType = CRLP_RollupBatch_SVC.getSummaryObjectType(jobType);
+        this.summaryObjectType = CRLP_Rollup_SVC.getSummaryObjectType(jobType);
     }
 
     /**

@@ -114,9 +114,15 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
 
                 List<String> whereClauses = new List<String>();
 
+                String keyFieldOverrideForQuery = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType);
+                /*if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit
+                        || jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                    keyFieldOverrideForQuery = CRLP_Rollup_SVC.getParentRelationshipFieldForSoftCredit(Partial_Soft_Credit__c.SObjectType);
+                }*/
+
                 // Add necessary filters to limit the LDV batch job to only the records that should be processed as LDV
                 if (this.recordIds != null && this.recordIds.size() > 0) {
-                    whereClauses.add(keyField + ' IN :recordIds');
+                    whereClauses.add(keyFieldOverrideForQuery + ' IN :recordIds');
                 } else {
                     // When querying detail rows and trying to filer on a field in the parent, need to get the
                     // relationship name to use for that parent query.
@@ -176,7 +182,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 if (!whereClauses.isEmpty()) {
                     query += ' WHERE ' + String.join(whereClauses, ' AND ');
                 }
-                query += ' ORDER BY ' + keyField + ', CreatedDate ASC';
+                query += ' ORDER BY ' + keyFieldOverrideForQuery + ', CreatedDate ASC';
 
             } else {
                 // If there are no active rollups for the object type, then force the query to return zero records.
@@ -295,6 +301,8 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                     this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
                 options.setMapOfProcessedOppIdsByParentId(this.statefulMapOfOppIdsByParentId, parentIds);
             }
+
+            options.parentKeyField = CRLP_Rollup_SVC.getParentRelationshipFieldForProcessingJob(jobType);
 
             // Call the method to do the actual rollups. This returns only records that require updating
             List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, paymentsByOpp, options);

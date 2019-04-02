@@ -154,69 +154,56 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
             CRLP_RollupProcessingOptions.ProcessingOptions options = buildProcessingOptions();
 
+            CRLP_RollupQueryBuilder queryBuilder = new CRLP_RollupQueryBuilder()
+                    .withRollupType(jobType)
+                    .withSummaryRecords(summaryRecords)
+                    .withSummaryRecordIdsVar('summaryRecords')
+                    .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+                    .withOrderBy(options.parentKeyField);
+
+            if (hasActivePaymentRollupsForThisJob()) {
+                queryBuilder.includePaymentRecords();
+            }
+
             // Get the detail records for the current set of Summary Records
             // This could be Opportunity or OCR records
-            List<SObject> detailRecords;
+            /*List<SObject> detailRecords;
             if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
                     jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-                detailRecords = CRLP_RollupProcessor_SVC.getDetailOppRecordsForParentRecords(summaryRecords, hasActivePaymentRollupsForThisJob(), options);
+                    jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations
+            ) {
+
+                if (hasActivePaymentRollupsForThisJob()) {
+                    queryBuilder.includePaymentRecords();
+                }
+
+
+                detailRecords = Database.query(query);
 
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
                     jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit
+            ) {
 
-                npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+                String query = queryBuilder.getDetailsQueryAsSOQL();
 
-                String query = CRLP_Query_SEL.buildDetailObjectQueryForRollup(this.detailObjectType, new List<SObjectType>());
+            }*/
 
-                List<String> whereClauses = new List<String>();
-                whereClauses.add(this.keyField + ' IN : summaryRecords');
 
-                String addlFilter;
-                if (jobType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                    addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, Partial_Soft_Credit__c.SObjectType);
-                } else {
-                    addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, this.detailObjectType);
-                }
-                if (!String.isEmpty(addlFilter)) {
-                    whereClauses.add(addlFilter);
-                }
+            String query = queryBuilder.getDetailsQueryAsSOQL();
+            UTIL_Debug.debug(LoggingLevel.ERROR, '>> NonSkew Batch Query =' + query);
 
-                if (jobType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                    if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false) {
-                        whereClauses.add('(IsPrimary = False OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = False)');
-                    } else {
-                        whereClauses.add('IsPrimary = False');
-                    }
-                }
+            List<SObject> detailRecords = Database.query(query);
 
-                if (!whereClauses.isEmpty()) {
-                    query += ' WHERE ' + String.join(whereClauses, ' AND ');
-                }
-
-                // Note that the ORDER BY here doesn't guarantee that the records will actually be in this order
-                query += ' ORDER BY ' + this.keyField;
-
-                String createdDateClause;
-                if (jobType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                    createdDateClause = ', Opportunity.CreatedDate ASC ';
-                } else {
-                    createdDateClause = ', Opportunity__r.CreatedDate ASC ';
-                }
-                query += createdDateClause;
-
-                UTIL_Debug.debug(LoggingLevel.WARN, '>> OCR Query =' + query);
-                // Convert the list of OpportunityContactRole detail records into a list of PartialSoftCredit
-                // records complete with the parent Opportunity details (CloseDate, Amount, ec.)
-                if (jobType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                    detailRecords = buildPartialSoftCreditRecordsFromOCRs(Database.query(query));
-                } else {
-                    detailRecords = Database.query(query);
-                }
+            // Convert the list of OpportunityContactRole detail records into a list of PartialSoftCredit
+            // records complete with the parent Opportunity details (CloseDate, Amount, ec.)
+            if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
+                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+                detailRecords = buildPartialSoftCreditRecordsFromOCRs(detailRecords);
                 UTIL_Debug.debug(LoggingLevel.WARN, '>> PSC Detail Record Size =' + detailRecords.size());
-
             }
+
+            options.parentKeyField = CRLP_Rollup_SVC.getParentRelationshipFieldForProcessingJob(jobType);
 
             String parentObjectField;
             String parentKeyField = options.parentKeyField;
@@ -258,6 +245,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
             }
             summaryRecords = newSummaryRecords;
+
+            UTIL_Debug.debug(LoggingLevel.WARN, '>>> New Summary Record Size=' + newSummaryRecords.size());
 
             // Are there any summary records left to process?
             if (summaryRecords.size() > 0) {

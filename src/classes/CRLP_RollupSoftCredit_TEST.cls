@@ -323,6 +323,12 @@ public class CRLP_RollupSoftCredit_TEST {
         }
         Test.stopTest();
 
+        List<Error__c> errors = [SELECT Id, Full_Message__c, Stack_Trace__c FROM Error__c];
+        for (Error__c e : errors) {
+            System.debug(LoggingLevel.ERROR, e.Full_Message__c + '\n' + e.Stack_Trace__c);
+        }
+        System.assert(errors.isEmpty());
+
         // Query the Contact with Soft Credits with all the target fields specified in the rollups
         if (tt != TestType.TestBatchAccount) {
             Id c2Id = c2.Id;
