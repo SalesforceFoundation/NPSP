@@ -1094,4 +1094,54 @@ public with sharing class RLLP_OppRollup_TEST {
             System.AssertEquals ( 0 , UpdatedCon.npo02__OppAmount2YearsAgo__c );
     }
 
+    /**
+     * @description - Verifies that customizable rollups are called when they are enabled.
+     */
+    @IsTest
+    private static void shouldCallCustomizableRollupsWhenEnabledAndAsync() {
+        Set<Id> contactIds = new Set<Id>(UTIL_UnitTestData_Test.mockIds(Contact.SObjectType, 2));
+        RLLP_OppRollup oppRollup = new RLLP_OppRollup();
+        oppRollup.isCustomizableRollupsEnabled = true;
+
+        oppRollup.rollupContacts(contactIds);
+        List<AsyncApexJob> asyncJobs = [SELECT Id FROM AsyncApexJob WHERE ApexClass.Name = 'CRLP_RollupQueueable' LIMIT 1];
+
+        System.assert(!asyncJobs.isEmpty(), 'Expected the customizable rollup job to be scheduled when enabled.');
+    }
+
+    /**
+     * @description - Verifies that customizable rollups are not called when they are not enabled.
+     */
+    @IsTest
+    private static void shouldNotCallCustomizableRollupsWhenDisabledAndAsync() {
+        Set<Id> contactIds = new Set<Id>(UTIL_UnitTestData_Test.mockIds(Contact.SObjectType, 2));
+        RLLP_OppRollup oppRollup = new RLLP_OppRollup();
+        oppRollup.isCustomizableRollupsEnabled = false;
+
+        oppRollup.rollupContacts(contactIds);
+        List<AsyncApexJob> asyncJobs = [SELECT Id FROM AsyncApexJob WHERE ApexClass.Name = 'CRLP_RollupQueueable' LIMIT 1];
+
+        System.assert(asyncJobs.isEmpty(), 'Did not expect the customizable rollup job to be scheduled when disabled.');
+    }
+
+    /**
+     * @description - Verifies that customizable rollups are called when they are enabled.
+     */
+    @IsTest
+    private static void shouldEnqueMultipleCustomizableRollupsForMultipleSObjects() {
+        Set<Id> contactIds = new Set<Id>(UTIL_UnitTestData_Test.mockIds(Contact.SObjectType, 2));
+        Set<Id> accountIds = new Set<Id>(UTIL_UnitTestData_Test.mockIds(Account.SObjectType, 2));
+
+        RLLP_OppRollup oppRollup = new RLLP_OppRollup();
+        oppRollup.isCustomizableRollupsEnabled = true;
+
+        Test.startTest();
+        oppRollup.rollupContacts(contactIds);
+        oppRollup.rollupAccounts(accountIds);
+        Test.stopTest();
+
+        List<AsyncApexJob> asyncJobs = [SELECT Id FROM AsyncApexJob WHERE ApexClass.Name = 'CRLP_RollupQueueable' LIMIT 2];
+
+        System.assertEquals(2, asyncJobs.size(), 'Expected two customizable rollups job to be scheduled.');
+    }
 }
