@@ -90,6 +90,49 @@ private class ACCT_IndividualAccounts_TEST {
     }
     
     /*********************************************************************************************************
+    * @description Accounts created from the trigger should populate the currency code with the contact currency code
+    */
+    @IsTest
+    private static void shouldPopulateNewAccountCurrencyWithContactCurrency() {
+        //Skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
+        Boolean isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
+        String defaultCurrency = UserInfo.getDefaultCurrency();
+
+        Contact newContact = new Contact(
+            LastName = 'CurrencyTest',
+            FirstName = 'Test'
+        );
+        
+        String currencyField = '';
+        if (isMultiCurrencyEnabled) {
+
+             // Set currency to be something different than the default one if possible
+            UTIL_CurrencyCache.CurrencyData nonDefaultCurrency = UTIL_UnitTestData_TEST.nonDefaultCurrencyType;
+            
+            if (nonDefaultCurrency != null) {
+                defaultCurrency = nonDefaultCurrency.IsoCode;
+            }
+
+            newContact.put('CurrencyIsoCode', defaultCurrency);
+            currencyField = ', CurrencyIsoCode ';
+        }
+
+        Test.startTest();
+        insert newContact;
+        Test.stopTest();
+        
+        String qryString = 'SELECT Id, Name' + currencyField + ' FROM Account LIMIT 1';
+        Account newAccount = Database.query(qryString);
+        System.assertNotEquals(null, newAccount, 'New Account should be created');
+        if (isMultiCurrencyEnabled) {
+            System.assertEquals(defaultCurrency, (String) newAccount.get('CurrencyIsoCode'), 'Account Currency Code should be populated with Contact Currency Code');
+        }
+
+    }
+
+    /*********************************************************************************************************
     * @description Test changing the account model from one-to-one account to household account.  
     */
     private static testMethod void changeFromOneToOneToHouseholdAccount() {
