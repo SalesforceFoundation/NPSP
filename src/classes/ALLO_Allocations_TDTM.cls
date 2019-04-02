@@ -216,6 +216,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
         List<npe01__OppPayment__c> listPmtsForProcessing = new List<npe01__OppPayment__c>();
         List<npe01__OppPayment__c> pmtsWithNullOldAmount = new List<npe01__OppPayment__c>();
+        List<npe01__OppPayment__c> pmtsNeedingAllocations = new List<npe01__OppPayment__c>();
 
         //do not run if Payment allocations are disabled
         if (settings.Payment_Allocations_Enabled__c != true) {
@@ -227,36 +228,38 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
             //INSERT case
             if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-                //don't do anything on insert if we don't have an amount
-                if (pmt.npe01__Payment_Amount__c != null) {
-                    listPmtsForProcessing.add(pmt);
+                //Don't do anything on insert if we don't have an amount or if amount is $0
+                if ((pmt.npe01__Payment_Amount__c != null) && (pmt.npe01__Payment_Amount__c != 0)) {
+                    pmtsNeedingAllocations.add(pmt);
                 }
             }
 
             //UPDATE case: if the payment amount changed, add to the list for processing
             if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-                Decimal oldAmount = (Decimal) oldlist[i].get('npe01__Payment_Amount__c');
+                Decimal oldAmount = valueOrDefaultIfNull((Decimal) oldlist[i].get('npe01__Payment_Amount__c'), 0);
+                Decimal newAmount = valueOrDefaultIfNull(pmt.npe01__Payment_Amount__c, 0);
 
-                if (oldAmount == null && pmt.npe01__Payment_Amount__c != null) {
-                     pmtsWithNullOldAmount.add(pmt);
-
-                } else if (pmt.npe01__Payment_Amount__c != oldAmount) {
-                    listPmtsForProcessing.add(pmt);
-                }
-
-                //if currency has changed, reset allocation currencies
-                if (UserInfo.isMultiCurrencyOrganization()) {
-                    if (pmt.get('CurrencyIsoCode') != oldlist[i].get('CurrencyIsoCode')) {
+                if ((oldAmount == 0) && (newAmount != 0)) { // Need to redo the Allocations for this payment as if it were a new payment
+                    pmtsNeedingAllocations.add(pmt);
+                } else {
+                    if (pmt.npe01__Payment_Amount__c != oldAmount) {
                         listPmtsForProcessing.add(pmt);
                     }
+
+                    //if currency has changed, reset allocation currencies
+                    if (UserInfo.isMultiCurrencyOrganization()) {
+                        if (pmt.get('CurrencyIsoCode') != oldlist[i].get('CurrencyIsoCode')) {
+                            listPmtsForProcessing.add(pmt);
+                        }
+                    }
                 }
+
             }
         }
 
-        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-            fillMapWrapper(listPmtsForProcessing);
-
-            copyRecurringDonationCampaignAllocations(listPmtsForProcessing);
+        if (pmtsNeedingAllocations.size() > 0) {
+            fillMapWrapper(pmtsNeedingAllocations);
+            copyRecurringDonationCampaignAllocations(pmtsNeedingAllocations);
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
@@ -264,7 +267,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             pmts.addAll(pmtsWithNullOldAmount);
             fillMapWrapper(pmts);
 
-            paymentAmountCurrencyChange(listPmtsForProcessing);
+            paymentAmountCurrencyChange(pmts);
+            //paymentAmountCurrencyChange(listPmtsForProcessing);
         }
     }
 
@@ -718,16 +722,15 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
             if (mapWrapper.containsKey(pmt.Id)) {
                 alloWrapper pmtWrap = mapWrapper.get(pmt.Id);
-
-                //null amount: delete all associated allocations
-                if (pmt.npe01__Payment_Amount__c == null) {
+                Decimal amt = valueOrDefaultIfNull(pmt.npe01__Payment_Amount__c, 0);
+                //null or zero amount: delete all associated allocations
+                if (amt == 0) {
                     dmlWrapper.objectsToDelete.addAll((List<SObject>)pmtWrap.listAllo);
                     if (settings.Default_Allocations_Enabled__c && pmtWrap.defaultAllo!=null)
                         dmlWrapper.objectsToDelete.add(pmtWrap.defaultAllo);
                         dmlWrapper.objectsToDelete.addAll((List<SObject>)pmtWrap.defaultDupesById.values());
 
                 } else {
-
                     for (Allocation__c allo : pmtWrap.listAllo) {
                         //if the percentage changed, recalculate the amount
                         if (allo.Percent__c!=null && allo.Percent__c>0 && allo.Amount__c != (pmtWrap.parentAmount * allo.Percent__c * .01).setScale(2)) {
@@ -1076,4 +1079,15 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
         return defaultAllo;
     }
+
+    /*******************************************************************************************************
+    * @description Returns the value or a default value (if null)
+    * @param Decimal val The value to check
+    * @param Decimal defaultVal The value to return if val is null
+    * @return Decimal value to return
+    ********************************************************************************************************/
+    @testVisible private static Decimal valueOrDefaultIfNull(Decimal val, Decimal defaultVal) {
+        return (val != null) ? val : defaultVal;
+    }
+
 }
