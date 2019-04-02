@@ -245,7 +245,7 @@ public class RD_RecurringDonations_TEST {
 
     /*********************************************************************************************************
     @description 
-        Test Primary Opportunity Contact Roles (OCRs) creation using oppContactRoles().
+        Verify Primary Opportunity Contact Roles (OCRs) creation using oppContactRoles().
         NOTE: Test the method even though it has not been used since NPSP3 which always 
         leverages npe01__Contact_Id_for_Role__c field on Opportunity instead of calling this method. 
     verify:
@@ -261,11 +261,7 @@ public class RD_RecurringDonations_TEST {
             
         CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
 
-        Integer size = 3;
-        List<Contact> contacts = new List<Contact>();
-        for (Integer i = 0; i < size; i++) {
-            contacts.add(new Contact(LastName = 'foo' + i));
-        }
+        List<Contact> contacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(3);
         insert contacts;
         contacts = new List<Contact>([SELECT LastName, AccountId FROM Contact]);
 
@@ -304,15 +300,15 @@ public class RD_RecurringDonations_TEST {
         Set<Id> rdIds = new Map<Id, npe03__Recurring_Donation__c>(rds).keySet();
 
         delete getPrimaryOppContactRoles(rdIds);
-        System.assertEquals(0, getPrimaryOppContactRoles(rdIds).size(), 'Opportunity Contact Roles should be deleted if created');
+        System.assertEquals(0, getPrimaryOppContactRoles(rdIds).size(), 'OCRs should be deleted if created');
 
         RD_RecurringDonations.oppContactRoles(oppIds);
 
-        System.assertEquals(opps.size(), getPrimaryOppContactRoles(rdIds).size(), 'Opportunity Contact Role should be created for each Opportunity');
+        System.assertEquals(opps.size(), getPrimaryOppContactRoles(rdIds).size(), 'OCR should be created for each Opportunity');
 
         // Execute the method again and ensure no duplicate OCR is created
         RD_RecurringDonations.oppContactRoles(oppIds);
-        System.assertEquals(opps.size(), getPrimaryOppContactRoles(rdIds).size(), 'No new Opportunity Contact Role should be created when oppContactRoles() is called once more');
+        System.assertEquals(opps.size(), getPrimaryOppContactRoles(rdIds).size(), 'No new OCR should be created when oppContactRoles() is called once more');
     }
     
     
