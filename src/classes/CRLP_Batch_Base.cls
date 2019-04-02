@@ -164,7 +164,7 @@ public abstract class CRLP_Batch_Base {
         // Retrieve and store the cached list of Rollup__mdt records into the Rollups Processor
         // so that the list never changes throughout the life of the batch job
         if (this.statefulCacheOfRollupsToBeProcessed != null) {
-            CRLP_Rollup_SEL.stuffRollupsByTypeCache(this.jobType, this.jobFilter,
+            CRLP_Rollup_SEL.addRollupsToCache(this.jobType, this.jobFilter,
                     this.statefulCacheOfRollupsToBeProcessed);
         }
 
