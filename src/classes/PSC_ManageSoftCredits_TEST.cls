@@ -354,27 +354,33 @@ public with sharing class PSC_ManageSoftCredits_TEST {
     }
     
     /*******************************************************************************************************
-    * @description delete some existing PSCs by clearing their contactId.
-    * verify PSC's deleted, OCR's deleted
+    * @description verify empty contact records are not saved.
+    * verify PSC's are not deleted and OCR's are not deleted
     */ 
-    static testmethod void deleteExistingPSCsByClearContactId() {
+    @IsTest
+    private static void verifyEmptyContactRecordsAreNotSaved() {
         initTestDataWithPscs();
         Test.setCurrentPage(Page.PSC_ManageSoftCredits);
         PSC_ManageSoftCredits_CTRL ctrl = new PSC_ManageSoftCredits_CTRL(new ApexPages.StandardController(opp));
-        system.assertEquals(cPSCExisting, ctrl.softCredits.size());        
-        system.assertEquals(cPSCExisting * 100 , ctrl.oppTotalSoftCredit.Amount);
-        for (integer i = 0; i < cPSCExisting; i++)
+        System.assertEquals(cPSCExisting, ctrl.softCredits.size());
+        System.assertEquals(cPSCExisting * 100 , ctrl.oppTotalSoftCredit.Amount);
+
+        for (Integer i = 0; i < cPSCExisting; i++) {
             ctrl.softCredits[i].contactRole.ContactId = null;
-        
+        }
+
+        List<OpportunityContactRole> existingOCRs = [SELECT Id, ContactId, OpportunityId, Role FROM OpportunityContactRole];
+         
         Test.startTest();
-        system.assertNotEquals(null, ctrl.save());
+        System.assertEquals(null, ctrl.save());
+        UTIL_UnitTestData_TEST.assertPageHasMessage(System.Label.pscManageSoftCreditsContactMissing, ApexPages.Severity.WARNING);
         Test.stopTest();
         
-        list<Partial_Soft_Credit__c> listPSC = [select Id, Contact__c, Opportunity__c, Amount__c, Role_Name__c from Partial_Soft_Credit__c];
-        system.assertEquals(0, listPSC.size());
-        
-        list<OpportunityContactRole> listOCR = [select Id, ContactId, OpportunityId, Role from OpportunityContactRole];
-        system.assertEquals(0, listOCR.size());        
+        List<Partial_Soft_Credit__c> listPSC = [SELECT Id, Contact__c, Opportunity__c, Amount__c, Role_Name__c FROM Partial_Soft_Credit__c];
+        System.assertEquals(cPSCExisting, listPSC.size());
+
+        List<OpportunityContactRole> listOCR = [SELECT Id, ContactId, OpportunityId, Role FROM OpportunityContactRole];
+        System.assertEquals(existingOCRs.size(), listOCR.size());
     }
 
     /*******************************************************************************************************
@@ -612,4 +618,5 @@ public with sharing class PSC_ManageSoftCredits_TEST {
             System.assertNotEquals(0, ApexPages.getMessages().size(), 'A message should be displayed on the page.');
         }
     }
+
 }
