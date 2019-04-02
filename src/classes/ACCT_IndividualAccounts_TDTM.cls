@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2009, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,309 +13,385 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
 * @author Salesforce.org
 * @date 2011 (1.x)
 * @group Accounts
-* @description Implements one of three account models, 1x1 or bucket or HH - controls syncing within the model 
+* @description Implements one of three account models, 1x1 or bucket or HH - controls syncing within the model
 */
 public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
-    /*******************************************************************************************************
-    * @description the current Contact Settings object
-    */ 
-    private static npe01__Contacts_and_Orgs_Settings__c ContactsSettings;
-    
-    /*******************************************************************************************************
-    * @description a set of languages that require different naming conventions
-    */ 
-    private static Set<String> EasternOrderLanguages = new Set<String>{
-        'ja','ko','vi','hu','ro','zh_CN','zh_TW'
+    /*******************************************************************************************************************
+     * @description the current Contact Settings object
+     */
+    private static npe01__Contacts_and_Orgs_Settings__c contactsSettings;
+    /*******************************************************************************************************************
+     * @description the set of fields used for household naming
+     */
+    private static final Set<String> HH_NAMING_FIELDS = new HH_HouseholdNaming().getHouseholdNamingContactFields();
+    /*******************************************************************************************************************
+     * @description a set of languages that require different naming conventions
+     */
+    private static final Set<String> EASTERN_ORDER_LANGUAGES = new Set<String>{
+        'ja',
+        'ko',
+        'vi',
+        'hu',
+        'ro',
+        'zh_CN',
+        'zh_TW'
     };
-              
-    /*******************************************************************************************************
-    * @description the current user's Locale/Language
-    */ 
-    private static String OrgLanguage { get {
-        if (OrgLanguage == null)
-            OrgLanguage = UserInfo.getLocale();// [Select LanguageLocaleKey From Organization].LanguageLocaleKey;
-        return OrgLanguage;             
-    } set; }       
-            
-    /*******************************************************************************************************
-    * @description Trigger Handler on Contact that handles account management.  Depending on the Account
-    * Model, creates a Household Account, One-to-One Account, or uses the Individual Bucket Account.
-    * @param listNew the list of Contacts from trigger new. 
-    * @param listOld the list of Contacts from trigger old. 
-    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
-    * @param objResult the describe for Contacts 
-    * @return dmlWrapper.  
-    ********************************************************************************************************/
-    public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
+    /*******************************************************************************************************************
+     * @description the current user's Locale/Language
+     */
+    private static String userLocale {
+        get {
+            if (userLocale == null) {
+                userLocale = UserInfo.getLocale();
+            }
+
+            return userLocale;
+        }
+        set;
+    }
+
+    private List<Contact> contacts;
+    private Map<Id, Contact> oldContactById;
+    private TDTM_Runnable.Action triggerAction;
+    private DmlWrapper dmlWrapper;
+
+    /*******************************************************************************************************************
+     * @description Trigger Handler on Contact that handles account management.  Depending on the Account
+     * Model, creates a Household Account, One-to-One Account, or uses the Individual Bucket Account.
+     * @param newSObjects the list of Contacts from trigger new.
+     * @param oldSObjects the list of Contacts from trigger old.
+     * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
+     * @param objResult the describe for Contacts
+     * @return dmlWrapper.
+     ********************************************************************************************************************/
+    public override DmlWrapper run(List<SObject> newSObjects, List<SObject> oldSObjects,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-        
-        list<Contact> contacts = newlist;
-        list<Contact> oldContacts = oldlist;
-        
-        DmlWrapper dmlWrapper = new DmlWrapper();
-               
-        ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
-            
-            List<Contact> listContactNeedAccount = new List<Contact>();
-            List<Contact> listContactNeedAccountUpdate = new List<Contact>();
-            List<Contact> listContactAccountDelete = new List<Contact>();
-            List<Contact> listContactNeedBucketAccount = new List<Contact>();
-            Map<Id,Id> mapAccountIdContactId = new Map<Id,Id>();
-            list<Id> listAccountIdHHToUpdate = new list<Id>();
-            list<Id> listAccountIdHHToRename = new list<Id>();
-            Map<Id,Account> mapAccountIdAccount = null;
-            map<Id, Contact> mapContactIdContactOwnerChange = new map<Id, Contact>();
-            map<Id, Id> mapContactIdAccountIdOldMoveOpps = new map<Id, Id>();
-            map<Id, Id> mapContactIdAccountIdNewMoveOpps = new map<Id, Id>();
-            Set<String> hhNamingFields = new HH_HouseholdNaming().getHouseholdNamingContactFields();
 
-            
-            if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {                    
-                // need to query account fields we need to look at
-                Set<Id> setAccountId = new Set<Id>();
-                for (Contact c : contacts) 
-                    setAccountId.add(c.AccountId);
-                mapAccountIdAccount = new Map<Id,Account>([select Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c from Account where Id IN :setAccountId]);
-            } else if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
+        this.contacts = newSObjects;
+        this.oldContactById = oldSObjects == null ? null : new Map<Id, Contact>((List<Contact>) oldSObjects);
+        this.triggerAction = triggerAction;
+        this.dmlWrapper = new DmlWrapper();
+        contactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
 
-                // requery to get correct Account values (and all the other fields we will look at)
-                String soql = buildContactSoql(hhNamingFields);                
-                contacts = database.query(soql);
-            }        
-                        
-            // AFTER DELETE
-            if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
-                for (Contact c : oldContacts)
-                    listContactAccountDelete.add(c);                     
-            } else {               
-                Integer i = 0; // used to index into oldContacts when needed                    
-                for (Contact c : contacts) {
-                    
-                    // BEFORE INSERT
-                    if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-                        // always clear this deprecated field to avoid confusing users.
-                        c.npe01__SystemAccountProcessor__c = null;
-                        
-                        /* HH Account should be created if:
-                            1. The account isn't set by the user
-                            2. The npe01__Private__c checkbox isn't set by the user
-                            3. The Account Model is set to Household Account
-                        */
-                        if (CAO_Constants.isHHAccountModel() && c.AccountId == null && c.npe01__Private__c != true) {
-                            listContactNeedAccount.add(c);
-                        } 
-                                             
-                        /*one-to-one account should be created if:
-                            1. The account isn't set by the user
-                            2. The npe01__Private__c checkbox isn't set by the user
-                            3. The Account Model is set to OneToOne
-                        */ 
-                        else if (CAO_Constants.isOneToOne() && c.npe01__Private__c != true && 
-                            (c.AccountId == null || (mapAccountIdAccount.containsKey(c.AccountId) && mapAccountIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)) ) {
-                            
-                            // Avoid creating a new contact with the 1:1 account of another contact  
-                            if (c.AccountId != null)
-                                c.AccountId = null;
-                           
-                            listContactNeedAccount.add(c);
-                        }                    
-                        /*contact should be connected to the bucket account if:
-                            1. The account isn't set by the user
-                            2. The npe01__Private__c checkbox isn't set by the user
-                            3. The Account Model is set to the individual bucket model
-                        */
-                        else if (CAO_Constants.isBucketModel() && c.AccountId == null && c.npe01__Private__c != true) {        
-                            listContactNeedBucketAccount.add(c);
-                        }                                                
-                    }
-        
-                    // AFTER INSERT and AFTER UNDELETE
-                    if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
-                        /*grab the Accounts that need to have the newly assigned Contact Id to them if:
-                            1. If the contact is connected to an Account
-                            2. The Contact is flagged as an individual
-                            3. we are in the one-to-one or HH Account model
-                        */
-                        if (c.AccountId != null && c.npe01__Private__c != true && 
-                            c.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.BUCKET_ORGANIZATION_TYPE && 
-                            c.Account.npe01__SYSTEMIsIndividual__c &&
-                            c.Account.npe01__One2OneContact__c == null) { 
-                            // contacts are connected to Accounts, make the connection in the other direction
-                            mapAccountIdContactId.put(c.AccountId, c.Id);
-                        }
-                        // there is no after insert processing for the bucket account model.
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            handleBefore();
 
-                        // HHAccount renaming needs to be called to set various HH naming fields like greeting.
-                        if (c.AccountId != null && c.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE)
-                           listAccountIdHHToRename.add(c.AccountId);    
-                    }
-        
-                    // BEFORE UPDATE
-                    if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-                        // always clear this deprecated field to avoid confusing users.
-                        c.npe01__SystemAccountProcessor__c = null;
+        } else if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
+            handleAfter();
 
-                        /* HH account should be created if:
-                            1. The account has been blanked out by the user
-                            2. The npe01__Private__c checkbox isn't set by the user
-                            3. The Account Model is set to Household Account
-                        */
-                        if (CAO_Constants.isHHAccountModel() && c.AccountId == null && c.npe01__Private__c != true) {
-                            listContactNeedAccount.add(c);
-                        }          
-                        /*one-to-one account should be created if:
-                            1. The account has been blanked out by the user
-                            2. The npe01__Private__c checkbox isn't set by the user
-                            3. The Account Model is set to One-to-One
-                        */
-                        else if (CAO_Constants.isOneToOne() && c.npe01__Private__c != true && 
-                            (c.AccountId == null || (mapAccountIdAccount.containsKey(c.AccountId) && mapAccountIdAccount.get(c.AccountId).npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)) ) {
+        } else if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
+            processAccountsAfterDelete(oldSObjects);
+        }
 
-                            // Avoid updating a contact with the 1:1 account of another contact  
-                            if (c.AccountId != null &&
-                                mapAccountIdAccount.get(c.AccountId).npe01__One2OneContact__c != c.Id &&
-                                mapAccountIdAccount.get(c.AccountId).npe01__One2OneContact__c != null &&
-                                c.AccountId != oldContacts[i].AccountId) {
-
-                                // we need to know if this account change is due to an Account Merge, in which case we want to allow it.
-                                boolean isDeletedOldAccount = [select count() from Account where Id =: oldContacts[i].AccountId] == 0;
-                                if (!isDeletedOldAccount) {
-                                    c.AccountId = null;
-                                }
-                            }
-                            
-                            if (c.AccountId == null)
-                                listContactNeedAccount.add(c);
-                        }          
-                        /*contact should be connected to the bucket account if:
-                            1. The account has been blanked out by the user
-                            2. The npe01__Private__c checkbox isn't set by the user
-                            3. The Account Model is set to individual bucket
-                        */ 
-                        else if (CAO_Constants.isBucketModel() && c.AccountId == null && c.npe01__Private__c != true) {        
-                            listContactNeedBucketAccount.add(c);
-                        }
-                        // for contacts marked private after they have been created, break the relationship from their account (any model)
-                        if (c.AccountId != null && c.npe01__Private__c == true) {
-                            c.AccountId = null;
-                        } 
-                    }
-        
-                    // AFTER UPDATE
-                    if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-                        /*if the contact is in the one-to-one model, changes to fields on the Contact
-                        will require data changes on the Account to keep some fields in sync
-                        */
-                        if (c.npe01__Organization_Type__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && needsOne2OneAccountUpdate(c, oldContacts[i])) {
-                            listContactNeedAccountUpdate.add(c);                                
-                        }
-                        
-                        /************* NO MORE, since we now support Address__c objects on HH Accounts, 
-                                        we don't want contact address updates to push to the account directly.
-                        // handle address changes for HH Accounts
-                        if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE && needsHHAccountAddressUpdate(c, oldContacts[i])) {
-                            listContactNeedAccountUpdate.add(c);                               
-                        }
-                        *************/
-                        
-                        // if the account (any type) has changed
-                        if (c.AccountId != oldContacts[i].AccountId) {
-                            
-                            // need to update any HH Accounts, both rollups and naming
-                            if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE) {
-                                listAccountIdHHToUpdate.add(c.AccountId);
-                                mapContactIdAccountIdNewMoveOpps.put(c.Id, c.AccountId);
-                            }
-                            
-                            // old account should be checked for deletion (if it wasn't private)
-                            if (c.npe01__Private__c != true && oldContacts[i].npe01__Private__c != true)
-                                listContactAccountDelete.add(oldContacts[i]);
-                            
-                            // old HH Accounts that don't get deleted still need to have name and rollups redone
-                            if (oldContacts[i].npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE) {    
-                                listAccountIdHHToUpdate.add(oldContacts[i].AccountId);
-                                mapContactIdAccountIdOldMoveOpps.put(c.Id, oldContacts[i].AccountId);
-                            }
-                                                                                 
-                           // HH Account didn't change, but it still might need renaming
-                        } else if (c.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE && 
-                                needsHHAccountRename(hhNamingFields, c, oldContacts[i])) {
-                            listAccountIdHHToRename.add(c.AccountId);    
-                        }  
-                        
-                        // check for ownership changes
-                        if (c.OwnerId != oldContacts[i].OwnerId) {
-                            mapContactIdContactOwnerChange.put(c.Id, c);
-                        }                     
-                    }
-                    i += 1;
-                }               
-            }    
-
-            // now done going thru all contacts, do our DML logic based on our lists
-            
-            if (listContactNeedAccount.size() > 0) {
-                //add the newly created or updated Contacts that need a new individual account
-                insertContactAccount(listContactNeedAccount, dmlWrapper);
-            }
-            if (listContactNeedBucketAccount.size() > 0) {
-                //add the newly created or updated Contact to the bucket account
-                attachToBucketAccount(listContactNeedBucketAccount);
-            }
-            if (listContactNeedAccountUpdate.size() > 0) {
-                //contacts in the one-to-one model that are changing for syncing with account
-                updateContactAccount(listContactNeedAccountUpdate, dmlWrapper);
-            }
-            if (mapAccountIdContactId.size() > 0) {
-                //update Accounts that have newly created Contacts connected to them
-                updateAccountPrimaryContact(mapAccountIdContactId, dmlWrapper);
-            }
-            if (mapContactIdAccountIdNewMoveOpps.size() > 0) {
-                moveOppsToContactAccount(mapContactIdAccountIdNewMoveOpps, mapContactIdAccountIdOldMoveOpps, null);
-            }
-            if (listAccountIdHHToUpdate.size() > 0) {
-                updateHHAccount(listAccountIdHHToUpdate, dmlWrapper);
-            }
-            if (listAccountIdHHToRename.size() > 0) {
-                renameHHAccounts(listAccountIdHHToRename);    
-            }
-            if (mapContactIdContactOwnerChange.size() > 0) {
-                updateOwners(mapContactIdContactOwnerChange, dmlWrapper);
-            }
-            if (listContactAccountDelete.size() > 0) {
-                // check all old accounts to delete is they are left hanging around
-                deleteContactAccountsIfEmpty(listContactAccountDelete, dmlWrapper);
-            }
-            
         return dmlWrapper;
     }
 
+    /**
+     * @description In the before trigger context, determines whether or not a contact requires a new account.
+     */
+    private void handleBefore() {
+        Map<Id, Account> accountById = null;
+
+        Set<Id> accountIds = new Set<Id>();
+        for (Contact contactRecord : contacts) {
+            accountIds.add(contactRecord.AccountId);
+        }
+
+        accountById = new Map<Id, Account>([
+            SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
+            FROM Account
+            WHERE Id IN :accountIds
+        ]);
+
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+            processAccountsBeforeInsert(accountById);
+        }
+
+        if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            processAccountsBeforeUpdate(accountById);
+        }
+
+    }
+
+    /**
+     * @description In the after trigger context, additional fields from the account related to the contact are queried for processing
+     * household updates.
+     */
+    private void handleAfter() {
+        contacts = database.query(buildContactSoql());
+
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
+            processAccountsAfterInsert();
+        }
+
+        if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+            processAccountsAfterUpdate();
+        }
+
+    }
+
+    /**
+     * @description In the before insert trigger context, ensure accounts are created for the new contacts that need them.
+     * @param  accountById - the existing accounts that the contacts are related to.
+     */
+    private void processAccountsBeforeInsert(Map<Id, Account> accountById) {
+        List<Contact> contactsWithoutAccounts = new List<Contact>();
+        List<Contact> contactsWithoutBucketAccount = new List<Contact>();
+
+        for (Contact contactRecord : contacts) {
+            // always clear this deprecated field to avoid confusing users.
+            contactRecord.npe01__SystemAccountProcessor__c = null;
+
+            if (needsHHAccount(contactRecord)) {
+                contactsWithoutAccounts.add(contactRecord);
+            } else if (needsOneToOneAccount(contactRecord, accountById.get(contactRecord.AccountId))) {
+                // Avoid creating a new contact with the 1:1 account of another contact
+                if (contactRecord.AccountId != null) {
+                    contactRecord.AccountId = null;
+                }
+
+                contactsWithoutAccounts.add(contactRecord);
+            } else if (needsBucketAccount(contactRecord)) {
+                contactsWithoutBucketAccount.add(contactRecord);
+            }
+        }
+
+        createAccounts(contactsWithoutAccounts);
+        attachToBucketAccount(contactsWithoutBucketAccount);
+    }
+
+    /**
+     * @description In the before update trigger context, ensure accounts are created for the contacts that need them.
+     * @param  accountById - the existing accounts that the contacts are related to.
+     */
+    private void processAccountsBeforeUpdate(Map<Id, Account> accountById) {
+        List<Contact> contactsWithoutAccounts = new List<Contact>();
+        List<Contact> contactsWithoutBucketAccount = new List<Contact>();
+
+        for (Contact contactRecord : contacts) {
+            // always clear this deprecated field to avoid confusing users.
+            contactRecord.npe01__SystemAccountProcessor__c = null;
+
+            if (needsHHAccount(contactRecord)) {
+                contactsWithoutAccounts.add(contactRecord);
+
+            } else if (needsOneToOneAccount(contactRecord, accountById.get(contactRecord.AccountId))) {
+                Contact oldContact = oldContactById.get(contactRecord.Id);
+
+                if (shouldClearExistingOneToOneAccount(contactRecord, oldContact, accountById.get(contactRecord.AccountId))) {
+                    contactRecord.AccountId = null;
+                }
+
+                if (contactRecord.AccountId == null) {
+                    contactsWithoutAccounts.add(contactRecord);
+                }
+
+            } else if (needsBucketAccount(contactRecord)) {
+                contactsWithoutBucketAccount.add(contactRecord);
+            }
+
+            // for contacts marked private after they have been created, break the relationship from their account (any model)
+            if (contactRecord.AccountId != null && contactRecord.npe01__Private__c == true) {
+                contactRecord.AccountId = null;
+            }
+        }
+
+        createAccounts(contactsWithoutAccounts);
+        attachToBucketAccount(contactsWithoutBucketAccount);
+    }
+
+    /**
+     * @description Sets the primary contact on the account when needed and renames the household.
+     */
+    private void processAccountsAfterInsert() {
+        Map<Id, Id> primaryContactByAccountId = new Map<Id, Id>();
+        List<Id> householdIdsToRename = new List<Id>();
+
+        for (Contact contactRecord : contacts) {
+            if (contactRecord.AccountId == null) {
+                continue;
+            }
+
+            if (needsPrimaryContact(contactRecord)) {
+                primaryContactByAccountId.put(contactRecord.AccountId, contactRecord.Id);
+            }
+
+            if (isHouseholdMember(contactRecord)) {
+                householdIdsToRename.add(contactRecord.AccountId);
+            }
+        }
+
+        updatePrimaryContactOnAccount(primaryContactByAccountId);
+        renameHHAccounts(householdIdsToRename);
+    }
+
+    /**
+     * @description Depending on the contacts household type, this method will update the one to one account,
+     * move opportunities related to contacts changing accounts, update household accounts, rename household accounts
+     * update account owners based on the change in contact owner
+     */
+    private void processAccountsAfterUpdate() {
+        List<Id> householdIdsToUpdate = new List<Id>();
+        List<Id> householdIdsToRename = new List<Id>();
+        List<Contact> oneToOneContactsToUpdate = new List<Contact>();
+        Map<Id, Id> oldHouseholdIdByContactId = new Map<Id, Id>();
+        Map<Id, Id> newHouseholdIdByContactId = new Map<Id, Id>();
+        Map<Id, Contact> newOwnerContactById = new Map<Id, Contact>();
+
+        for (Contact contactRecord : contacts) {
+            Contact oldContact = oldContactById.get(contactRecord.Id);
+
+            if (needsOne2OneAccountUpdate(contactRecord, oldContact)) {
+                oneToOneContactsToUpdate.add(contactRecord);
+            }
+
+            if (contactRecord.OwnerId != oldContact.OwnerId) {
+                newOwnerContactById.put(contactRecord.Id, contactRecord);
+            }
+
+            if (contactRecord.AccountId != oldContact.AccountId) {
+                addHouseholdIds(householdIdsToUpdate, newHouseholdIdByContactId, contactRecord);
+                addHouseholdIds(householdIdsToUpdate, oldHouseholdIdByContactId, oldContact);
+
+            } else if (needsHHAccountRename(contactRecord, oldContact)) {
+                householdIdsToRename.add(contactRecord.AccountId);
+            }
+        }
+
+        updateOneToOneAccounts(oneToOneContactsToUpdate);
+        moveOppsToContactAccount(newHouseholdIdByContactId, oldHouseholdIdByContactId);
+        updateHouseholds(householdIdsToUpdate);
+        renameHHAccounts(householdIdsToRename);
+        updateOwners(newOwnerContactById);
+    }
+
     /*******************************************************************************************************
-    * @description Builds SOQL on Contact Sobject. Fields include Household Naming Settings Format fields.
-    * @param hhNamingFields Household Naming Settings Format field names
-    * @return String SOQL
-    */ 
+    * @description Updates the accounts for contacts that have been deleted if they have other hh members
+    * @param deletedContacts the list of Contacts that need to be considered
+    * @return void
+    */
+    private void processAccountsAfterDelete(List<Contact> deletedContacts) {
+        List<Id> accountIds = new List<Id>();
+        List<Id> householdIdsToUpdate = new List<Id>();
+        List<Account> accounts = new List<Account>();
+
+        for (Contact contactRecord : deletedContacts) {
+            accountIds.add(contactRecord.accountId);
+        }
+
+        for (Account accountRecord : [
+            SELECT Id, Type, npe01__SYSTEM_AccountType__c,
+                (SELECT Id FROM Contacts LIMIT 1),
+                (SELECT Id FROM Opportunities LIMIT 1)
+            FROM Account
+            WHERE Id IN :accountIds
+        ]) {
+            Boolean needsAccountUpdate = (!accountRecord.Contacts.isEmpty() || !accountRecord.Opportunities.isEmpty())
+                && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
+
+            if (needsAccountUpdate) {
+                householdIdsToUpdate.add(accountRecord.Id);
+            }
+        }
+
+        updateHouseholds(householdIdsToUpdate);
+    }
+
+    /*******************************************************************************************************
+    * @description Updates Accounts with the primary Individual Contact Id. Used for 1:1 and HH Accounts.
+    * @param primaryContactByAccountId a map of AccountId's to ContactId's which specifies which accounts need updating.
+    * @return void
+    */
+    private void updatePrimaryContactOnAccount(Map<Id, Id> primaryContactByAccountId) {
+        if (primaryContactByAccountId.isEmpty()) {
+            return;
+        }
+
+        List<Account> accounts = new List<Account>();
+        for (Id accountId : primaryContactByAccountId.keySet()) {
+            Account accountRecord = new Account(Id = accountId, npe01__One2OneContact__c = primaryContactByAccountId.get(accountId));
+            accounts.add(accountRecord);
+        }
+
+        dmlWrapper.objectsToUpdate.addAll(accounts);
+    }
+
+    /*******************************************************************************************************
+    * @description Updates an HH Account's naming, primary contact, and rollups
+    * @param accountIds the list of Account (Id's) that need updating.
+    * @return void
+    */
+    private void updateHouseholds(List<Id> accountIds) {
+        if (accountIds.isEmpty()) {
+            return;
+        }
+
+        resetPrimaryContactForAccount(accountIds);
+        renameHHAccounts(accountIds);
+        rollupAccounts(accountIds);
+    }
+
+    /*******************************************************************************************************
+    * @description sets the Primary Account for each Account in the list of Accounts
+    * @param accountIds the list of Account (Id's) that need updating.
+    * @return void
+    */
+    private void resetPrimaryContactForAccount(List<Id> accountIds) {
+
+        // for each account, we need a set of their contacts.
+        Map<Id, Set<Id>> contactIdsByAccountId = new Map<Id, Set<Id>>();
+
+        for (Contact contactRecord : [
+            SELECT Id, AccountId, Account.npe01__One2OneContact__c
+            FROM Contact
+            WHERE AccountId IN :accountIds
+        ]) {
+            Set<Id> contactIds = contactIdsByAccountId.get(contactRecord.AccountId);
+            if (contactIds == null) {
+                contactIds = new Set<Id>();
+                contactIdsByAccountId.put(contactRecord.AccountId, contactIds);
+            }
+            contactIds.add(contactRecord.Id);
+        }
+
+        // now go thru each account and update their primary contact if the current one isn't valid
+        List<Account> accounts = new List<Account>();
+        for (Account accountRecord : [SELECT Id, npe01__One2OneContact__c FROM Account WHERE Id IN :accountIds]) {
+            Set<Id> contactIds = contactIdsByAccountId.get(accountRecord.Id);
+            if (contactIds != null && !contactIds.contains(accountRecord.npe01__One2OneContact__c)) {
+                accountRecord.npe01__One2OneContact__c = extractFirstId(contactIds);
+                accounts.add(accountRecord);
+            }
+        }
+
+        dmlWrapper.objectsToUpdate.addAll(accounts);
+    }
+
+    /*******************************************************************************************************
+     * @description Builds SOQL on Contact SObject. Fields include Household Naming Settings Format fields.
+     * @return String SOQL
+     */
     @TestVisible
-    private String buildContactSoql(Set<String> hhNamingFields) {
+    private String buildContactSoql() {
         List<String> selectFields = new List<String>{
             'Id', 'npe01__Private__c', 'AccountId', 'Account.npe01__SYSTEMIsIndividual__c',
             'Account.npe01__SYSTEM_AccountType__c', 'Account.npe01__One2OneContact__c', 'npe01__Organization_Type__c', 'Account.Name',
@@ -324,146 +400,65 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             'OtherStreet', 'OtherCity', 'OtherState', 'OtherPostalCode', 'OtherCountry', 'OtherLatitude', 'OtherLongitude',
             'Phone', 'Fax'
         };
-        
+
         if (ADDR_Addresses_TDTM.isStateCountryPicklistsEnabled) {
             selectFields.add('MailingCountryCode');
             selectFields.add('MailingStateCode');
-            selectFields.add('OtherCountryCode'); 
+            selectFields.add('OtherCountryCode');
             selectFields.add('OtherStateCode');
         }
 
-        selectFields.addAll(hhNamingFields);
+        selectFields.addAll(HH_NAMING_FIELDS);
 
         return new UTIL_Query()
             .withSelectFields(selectFields)
-            .withFrom('Contact')
+            .withFrom(String.valueOf(Contact.SObjectType))
             .withWhere('Id IN :contacts')
             .build();
     }
 
     /*******************************************************************************************************
-    * @description Updates Accounts with the primary Individual Contact Id. Used for 1:1 and HH Accounts.
-    * @param mapAccountIdContactId a map of AccountId's to ContactId's which specifies which accounts need updating.
-    * @param dmlWrapper to hold the Accounts that need updating.
-    * @return void
-    */ 
-    private void updateAccountPrimaryContact(Map<Id, Id> mapAccountIdContactId, DmlWrapper dmlWrapper) {
-        List<Account> listAccount = new List<Account>(); 
-        for (Id i : mapAccountIdContactId.keySet()) {
-            Account a = new Account(Id = i, npe01__One2OneContact__c = mapAccountIdContactId.get(i));
-            listAccount.add(a);
-        }
-        if (listAccount.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccount);
-            //Database.SaveResult[] lsr = Database.update(listAccount, false);
-        }      
-    }
-
-    /*******************************************************************************************************
-    * @description Updates an HH Account's naming, primary contact, and rollups
-    * @param listAccountId the list of Account (Id's) that need updating.
-    * @param dmlWrapper to hold the Accounts that need updating.
-    * @return void
-    */ 
-    private void updateHHAccount(list<Id> listAccountId, DmlWrapper dmlWrapper) {
-        resetPrimaryContactForAccount(listAccountId, dmlWrapper);        
-        renameHHAccounts(listAccountId); 
-        rollupAccounts(listAccountId);                  
-    }
-    
-    /*******************************************************************************************************
-    * @description sets the Primary Account for each Account in the list of Accounts
-    * @param listAccountId the list of Account (Id's) that need updating.
-    * @param dmlWrapper to hold the Accounts that need updating.
-    * @return void
-    */ 
-    private void resetPrimaryContactForAccount(list<Id> listAccountId, DmlWrapper dmlWrapper) {
-    
-        // for each account, we need a set of their contacts.
-        map<Id, set<Id>> mapAccountIdSetContacts = new map<Id, set<Id>>();
-        
-        list<Contact> listCon = [select Id, AccountId, Account.npe01__One2OneContact__c from Contact where AccountId in :listAccountId];
-        for (Contact con : listCon) {
-            set<Id> setContactId = mapAccountIdSetContacts.get(con.AccountId);
-            if (setContactId == null) { 
-                setContactId = new set<Id>();
-                mapAccountIdSetContacts.put(con.AccountId, setContactId);
-            }
-            setContactId.add(con.Id);
-        }
-        
-        // now go thru each account and update their primary contact if the current one isn't valid
-        list<Account> listAcc = [select Id, npe01__One2OneContact__c from Account where Id in :listAccountId];
-        list<Account> listAccToUpdate = new list<Account>();
-        for (Account acc : listAcc) {
-            set<Id> setContactId = mapAccountIdSetContacts.get(acc.Id);
-            if (setContactId != null && !setContactId.contains(acc.npe01__One2OneContact__c)) {
-                acc.npe01__One2OneContact__c = firstIdFromSet(setContactId);
-                listAccToUpdate.add(acc);
-            }    
-        }
-        
-        // now do the update
-        dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccToUpdate);
-        //update listAccToUpdate;
-    }
-        
-    /*******************************************************************************************************
     * @description returns the first Id from the specified set
-    * @param setId a set of Id's
+    * @param ids a set of Id's
     * @return Id.  null if the set is empty.
-    */ 
-    private Id firstIdFromSet(set<Id> setId) {
-        for (ID id : setId) {
-            return Id;
+    */
+    private Id extractFirstId(Set<Id> ids) {
+        for (Id recordId : ids) {
+            return recordId;
         }
+
         return null;
     }
 
-    /*******************************************************************************************************
-    * @description for the list of AccountId's, recalc their rollups 
-    * @param listAccountId the list of Account (Id's) that need updating.
-    * @return void
-    */ 
-    public static void rollupAccounts(list<Id> listAccountId) {
-        if (listAccountId.size() == 1 || system.isFuture() || system.isBatch()) {
-            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL(); 
-            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(oppRollupUtil.buildAccountQuery() + 
-                                                           ' where id IN :listAccountId')); 
-            RLLP_OppRollup rg = new RLLP_OppRollup();
-            rg.rollupAccounts(amap);                    
-        } else {
-            RLLP_OppRollup.rollupAccountsFuture(new set<Id>(listAccountId));
-        } 
-    }
-    
-    /*******************************************************************************************************
-    * @description for the list of HH AccountId's, update their Household Names 
-    * @param listAccountId the list of Account (Id's) that need updating.
-    * @return void
-    */ 
-    public static void renameHHAccounts(list<Id> listAccountId) {
-        if (listAccountId.size() == 1 || system.isFuture() || system.isBatch()) {
-            HH_HouseholdNaming hhName = new HH_HouseholdNaming();
-            hhName.UpdateNames(listAccountId);
-        } else {
-            HH_HouseholdNaming.FutureUpdateNames(listAccountId);
+    /**
+     * addHouseholdIds Adds the account ids from all of the contacts belonging to a household
+     * @param  householdIds           The collection of householdIds to add the account ids to
+     * @param  householdIdByContactId The map of household by their id.
+     * @param  contactRecord          The contact to extract the id from.
+     */
+    private void addHouseholdIds(List<Id> householdIds, Map<Id, Id> householdIdByContactId, Contact contactRecord) {
+        if (contactRecord.npe01__Organization_Type__c == CAO_Constants.HH_ACCOUNT_TYPE) {
+            householdIds.add(contactRecord.AccountId);
+            householdIdByContactId.put(contactRecord.Id, contactRecord.AccountId);
         }
     }
 
     /*******************************************************************************************************
-    * @description Updates Contacts to relate to a single Individual Account 
+    * @description Updates Contacts to relate to a single Individual Account
     * @param contacts the list of Contacts that need updating.
     * @return void
-    */ 
-    private void attachToBucketAccount(Contact[] contacts)
-    {
+    */
+    private void attachToBucketAccount(List<Contact> contactsWithoutBucketAccount){
+        if (contactsWithoutBucketAccount.isEmpty()) {
+            return;
+        }
+
         Id individualAccountId = CAO_Constants.getIndividualAccountId();
-        
+
         if (individualAccountId != null) {
-            for (Contact c : contacts) {
+            for (Contact contactRecord : contactsWithoutBucketAccount) {
                 //connect all Contacts to the bucket Account
-                c.AccountId = individualAccountId;
+                contactRecord.AccountId = individualAccountId;
             }
         } else {
             //if there is no bucket Account, the bucket model won't function unless we create one
@@ -475,452 +470,512 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             individual.npe01__SYSTEM_AccountType__c = CAO_Constants.BUCKET_ORGANIZATION_TYPE;
             UTIL_DMLService.insertRecord(individual);
 
-            for (Contact c : contacts) {
+            for (Contact contactRecord : contactsWithoutBucketAccount) {
                 //connect Contact to bucket Account
-                c.AccountId = individual.Id;
+                contactRecord.AccountId = individual.Id;
             }
         }
-    }
-
-    /*******************************************************************************************************
-    * @description utility to return the recordtypeId for a new account, given the account model. 
-    * @return Id. if none is explicitly specified, returns null.
-    */ 
-    public static ID rtIdForNewAccount() {
-        return rtIdForAccountModel(CAO_Constants.isHHAccountModel());
-    }
-
-    /*******************************************************************************************************
-    * @description utility to return the recordtypeId for a new account, given the account model. 
-    * @param isHHAccountModel whether we are using the Household Account Model
-    * @return Id. recordtype Id to use, or null if none is specified for the account model.
-    */ 
-    public static ID rtIdForAccountModel(boolean isHHAccountModel) {
-        ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
-        Schema.Recordtypeinfo rtById = null;
-        // check if recordtypes are enabled, and if it matches the existing setting
-        // we go thru describe to validate that it is a valid recordType ID.
-        ID rtId = isHHAccountModel ? ContactsSettings.npe01__HH_Account_RecordTypeID__c : ContactsSettings.npe01__One_to_One_RecordTypeID__c;
-        if (rtId != null) {
-            Schema.DescribeSObjectResult R = Account.SObjectType.getDescribe();
-            Map<Id,Schema.RecordTypeInfo> rtMapById = r.getRecordTypeInfosById();
-            rtById = rtMapById.get(rtId);
-            return (rtById == null ? null : rtById.getRecordTypeID());            
-        }
-        return null;
     }
 
     /*******************************************************************************************************
     * @description Inserts a new 1:1 or HH Account for an Individual Contact
-    * @param contacts the list of Contacts that need updating.
-    * @param dmlWrapper to hold the Contacts that need updating.
+    * @param contactsWithoutAccounts the list of Contacts that need updating.
     * @return void
-    */ 
-    private void insertContactAccount(Contact[] contacts, DmlWrapper dmlWrapper)
-    {
+    */
+    private void createAccounts(List<Contact> contactsWithoutAccounts){
+        if (contactsWithoutAccounts.isEmpty()) {
+            return;
+        }
+
         List<Id> contactIds = new List<Id>();
-        Map<Id,Account> mapContactIdAccount = new Map<Id,Account>();  
-        list<Contact> listContactNewAcct = new list<Contact>();     
-        
-        for (Contact c : contacts) {
+        Map<Id, Account> accountByPrimaryContactId = new Map<Id, Account>();
+        List<Contact> contacts = new List<Contact>();
+
+        for (Contact contactRecord : contactsWithoutAccounts) {
             //track which contacts are being inserted vs. updated
-            if (c.Id != null) {
-                contactIds.add(c.Id);
+            if (contactRecord.Id != null) {
+                contactIds.add(contactRecord.Id);
             }
         }
         // get all the Accounts that are connected to the existing Contacts
-        for (Account acc : [SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c FROM Account
-                WHERE npe01__One2OneContact__c IN :contactIds]) {
-            mapContactIdAccount.put(acc.npe01__One2OneContact__c, acc);
+        for (Account accountRecord : [
+            SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
+            FROM Account
+            WHERE npe01__One2OneContact__c IN :contactIds
+        ]) {
+            accountByPrimaryContactId.put(accountRecord.npe01__One2OneContact__c, accountRecord);
         }
-        
+
         List<Account> accountInserts = new List<Account>();
-        Id rtIdAcccount = rtIdForNewAccount();
-        
-        for (Contact c : contacts) {
+        Id individualRecordTypeId = rtIdForNewAccount();
+
+        for (Contact contactRecord : contactsWithoutAccounts) {
             // if we found an Account already connected to this Contact, connect the Contact to that Account if it
             // is the correct type for the current account processor
-            Account acc = mapContactIdAccount.get(c.Id);
-            if (acc != null && 
-                ((CAO_Constants.isHHAccountModel() && acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) ||
-                (CAO_Constants.isOneToOne() && acc.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)) ) {
+            Account accountRecord = accountByPrimaryContactId.get(contactRecord.Id);
+            if (accountRecord != null &&
+                ((CAO_Constants.isHHAccountModel() && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) ||
+                (CAO_Constants.isOneToOne() && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)) ) {
                 // if a user has blanked out the Account for a Contact, this will put it right back
-                c.AccountId = acc.Id;                
+                contactRecord.AccountId = accountRecord.Id;
             } else {
                 // construct the individul account for the Contact
-                Account a = new Account();
-                
+                accountRecord = new Account();
+
                 // construct the Account name
-                a.Name = CAO_Constants.isHHAccountModel() ? strNameHHAccountForContact(c) : strNameOne2OneAccountForContact(c);
-                
+                accountRecord.Name = CAO_Constants.isHHAccountModel() ? strNameHHAccountForContact(contactRecord) : strNameOne2OneAccountForContact(contactRecord);
+
                 // connect the Account to the Contact for 1:1 and HHAccount
-                if (c.Id != null) {
-                    a.npe01__One2OneContact__c = c.Id;
+                if (contactRecord.Id != null) {
+                    accountRecord.npe01__One2OneContact__c = contactRecord.Id;
                 }
-                a.Phone = c.Phone;
-                a.Fax = c.Fax;
-                a.OwnerId = c.OwnerId;
+
+                accountRecord.Phone = contactRecord.Phone;
+                accountRecord.Fax = contactRecord.Fax;
+                accountRecord.OwnerId = contactRecord.OwnerId;
+
+                if (UserInfo.isMultiCurrencyOrganization()) {
+                    accountRecord.put('CurrencyIsoCode', (String) contactRecord.get('CurrencyIsoCode'));
+                }
+
                 // only set account's billing address if address management is off.
                 // otherwise, we'll let ADDR_Contact_TDTM push the new address into the account.
                 if (!CAO_Constants.isHHAccountModel() || UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
-                    ADDR_Addresses_TDTM.copyAddressStdSObj(c, 'Mailing', a, 'Billing');
+                    ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
                 }
-                ADDR_Addresses_TDTM.copyAddressStdSObj(c, 'Other', a, 'Shipping');
+                ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
 
-                a.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
-                if (rtIdAcccount != null) {                
-                    a.put('RecordTypeID', rtIdAcccount);
-                }                
-                a.Type = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_TYPE : '';
-                a.npe01__SYSTEMISINDIVIDUAL__c = true;
-                accountInserts.add(a);
-                listContactNewAcct.add(c);
+                accountRecord.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+                if (individualRecordTypeId != null) {
+                    accountRecord.put('RecordTypeID', individualRecordTypeId);
+                }
+                accountRecord.Type = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_TYPE : '';
+                accountRecord.npe01__SYSTEMISINDIVIDUAL__c = true;
+                accountInserts.add(accountRecord);
+                contacts.add(contactRecord);
             }
         }
-        
-        if (accountInserts.size() > 0) {
-            // with current TDTM design, we can't use dmlWrapper
-            // because we need to get the new AccountID's into the Contacts.
 
-            // identify the specific records that had the problem, and don't fail the whole batch
-            List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
-            for (integer i = 0; i < insertResults.size(); i++) {
-                Database.SaveResult sr = insertResults[i];
-                if (!sr.isSuccess()) {
-                    for (Database.Error err : sr.getErrors()) {
-                        accountInserts[i].addError(err.getMessage());
-                        Contact con = listContactNewAcct[i];
-                        con.addError(string.format(label.conFailedAccountCreate, new string[]{con.Firstname, con.Lastname, err.getMessage()}));
-                    }
+        if (accountInserts.isEmpty()) {
+            return;
+        }
+
+        // with current TDTM design, we can't use dmlWrapper
+        // because we need to get the new AccountID's into the Contacts.
+
+        // identify the specific records that had the problem, and don't fail the whole batch
+        List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
+        for (Integer index = 0; index < insertResults.size(); index++) {
+            Database.SaveResult insertResult = insertResults[index];
+            if (!insertResult.isSuccess()) {
+                for (Database.Error err : insertResult.getErrors()) {
+                    accountInserts[index].addError(err.getMessage());
+                    Contact contactRecord = contacts[index];
+                    contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{contactRecord.Firstname, contactRecord.Lastname, err.getMessage()}));
                 }
             }
-                                    
-            // now update each contact's accountId
-            Integer i = 0;
-            for (Contact c : listContactNewAcct) {
-                c.AccountId = accountInserts[i].Id;
-                i++;
-            }
+        }
+
+        // now update each contact's accountId
+        Integer index = 0;
+        for (Contact contactRecord : contacts) {
+            contactRecord.AccountId = accountInserts[index].Id;
+            index++;
         }
     }
 
     /*******************************************************************************************************
     * @description Updates an Individual Account for an Individual Contact
-    * @param contacts the list of Contacts that need updating.
-    * @param dmlWrapper to hold the Contacts that need updating.
+    * @param oneToOneContactsToUpdate the list of Contacts that need updating.
     * @return void
-    */ 
-    private void updateContactAccount(Contact[] contacts, DmlWrapper dmlWrapper)
-    {
-        Map<Id,Contact> accConMap = new Map<Id,Contact>();
-        for (Contact c : contacts) {
-            accConMap.put(c.AccountId, c);
+    */
+    private void updateOneToOneAccounts(List<Contact> oneToOneContactsToUpdate){
+        if (oneToOneContactsToUpdate.isEmpty()) {
+            return;
+        }
+
+        Map<Id, Contact> contactByAccountId = new Map<Id, Contact>();
+        for (Contact contactRecord : oneToOneContactsToUpdate) {
+            contactByAccountId.put(contactRecord.AccountId, contactRecord);
         }
         //get the corresponding Accounts
         // DJH: note that we explicitly do NOT get the account name.  This is to avoid the changes to the account from
         // this routine which get added to dmlWrapper, don't end up overwriting the name changes that are done syncronously
         // for HH accounts (which don't use dmlWrapper).
-        List<Account> accts = [Select a.npe01__SYSTEM_AccountType__c, a.ShippingStreet, a.ShippingState, a.ShippingPostalCode, a.ShippingCountry, 
-            a.ShippingCity, a.BillingStreet, a.BillingState, a.BillingPostalCode, a.BillingCountry, a.BillingCity
-            From Account a where a.Id IN :accConMap.keyset()];
-        List<Account> listAccount = new List<Account>();
-        
-        for (Account a : accts) {         
-            Contact c = accConMap.get(a.Id);
-            //if any address data has changed on the contact, push it all to the Account
-            {
-                // Update Account fields
-                ADDR_Addresses_TDTM.copyAddressStdSObj(c, 'Mailing', a, 'Billing');
-                ADDR_Addresses_TDTM.copyAddressStdSObj(c, 'Other', a, 'Shipping');
+        List<Account> accounts = new List<Account>();
 
-                if (a.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)               
-                    a.Name = strNameOne2OneAccountForContact(c);
-                // HH Account naming updates handled seperately to deal with asyncronous naming
+        for (Account accountRecord : [
+            SELECT npe01__SYSTEM_AccountType__c, ShippingStreet, ShippingState, ShippingPostalCode, ShippingCountry,
+                ShippingCity, BillingStreet, BillingState, BillingPostalCode, BillingCountry, BillingCity
+            FROM Account
+            WHERE Id IN :contactByAccountId.keyset()
+        ]) {
+            Contact contactRecord = contactByAccountId.get(accountRecord.Id);
+            ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
+            ADDR_Addresses_TDTM.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
 
-                listAccount.add(a);
-            }           
-        }   
-
-        if (listAccount.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll((list<SObject>)listAccount);
-            //Database.SaveResult[] lsr = Database.update(listAccount, false);
-        }
-    }
-    
-    /*******************************************************************************************************
-    * @description Deletes the accounts for contacts that have been deleted if they are empty (no ops, no hh members)
-    * @param contacts the list of Contacts that need to be considered
-    * @param dmlWrapper to hold the Accounts that need updating.
-    * @return void
-    */ 
-    public void deleteContactAccountsIfEmpty(Contact[] contacts, DmlWrapper dmlWrapper) {
-        List<Id> accountIds = new List<Id>();
-        List<Account> accountsOnContacts = new List<Account>();
-        List<SObject> accountsForDeletion = new List<SObject>();
-        List<Id> listAccountIdUpdate = new list<Id>();
-        
-        if (contacts.size() > 0) {
-            for (Contact thisContact : contacts) {
-                accountIds.add(thisContact.accountId);
+            if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+                accountRecord.Name = strNameOne2OneAccountForContact(contactRecord);
             }
 
-            accountsOnContacts = [Select Id, Type, npe01__SYSTEM_AccountType__c, (Select Id from Opportunities limit 1), (select Id from Contacts limit 1) from Account where Id IN :accountIds];
-            
-            for (Account thisAccount : accountsOnContacts) {
-                //if the legacy or current type field show it's not a one-to-one or HH Account record, don't delete the account
-                if (thisAccount.Type == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || 
-                    thisAccount.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE ||
-                    thisAccount.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
-                    
-                    // if there are no Opportunities for this Account, add it for deletion
-                    if (thisAccount.Opportunities.size() == 0 && thisAccount.Contacts.size() == 0) {
-                        accountsForDeletion.add(thisAccount);
-                    } else if (thisAccount.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
-                        listAccountIdUpdate.add(thisAccount.Id);
-                    }
-                }   
-            }        
+            // HH Account naming updates handled seperately to deal with asyncronous naming
+            accounts.add(accountRecord);
         }
-        // delete the accounts
-        if (accountsForDeletion.size() > 0) {
-            /*This is a bad strategy as it leaves the deleted contact unrecoverable from the recycle bin.
-            **Leaving an orphaned account is less of an issue than unrecoverable data, and that is solved
-            **by the contact delete button override.
-            */
 
-            //dmlWrapper.objectsToDelete.addAll(accountsForDeletion);
+        if (accounts.isEmpty()) {
+            return;
         }
-        // update any HH accounts that just lost a contact
-        if (listAccountIdUpdate.size() > 0)
-            updateHHAccount(listAccountIdUpdate, dmlWrapper);        
+
+        dmlWrapper.objectsToUpdate.addAll(accounts);
     }
 
     /*******************************************************************************************************
     * @description contact's owner has changed.  consider updating related account owner.
-    * @param mapContactIdContactOwnerChange a map of Contact Id to Contact, for the contacts to consider
-    * @param dmlWrapper to hold the Contacts that need updating.
+    * @param newOwnerContactById a map of Contact Id to Contact, for the contacts to consider
     * @return void
-    */ 
-    private void updateOwners(map<Id, Contact> mapContactIdContactOwnerChange, DmlWrapper dmlWrapper) {        
-        if (mapContactIdContactOwnerChange.size() > 0) {
-            Map<Id, Account> allAccounts = new Map<Id, Account>();
-            Map<Id, Account> accountsToUpdate = new Map<Id, Account>();
+    */
+    private void updateOwners(Map<Id, Contact> newOwnerContactById) {
+        if (newOwnerContactById.isEmpty()) {
+            return;
+        }
 
-            for (Contact con : mapContactIdContactOwnerChange.values()) {
-                allAccounts.put(con.AccountId, null);
-            }
-                       
-            allAccounts = new Map<Id, Account>(
-                [SELECT Id, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, OwnerId, 
-                    (SELECT Id FROM Contacts limit 2) 
-                 FROM Account WHERE Id IN :allAccounts.keySet()]
-            );
-            
-            for (Account acc : allAccounts.values()) {
-                // only consider 1:1 and HH Accounts
-                if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {                    
-                    // if there is only 1 contact associated with this account
-                    if (acc.Contacts.size() == 1 && acc.npe01__One2OneContact__c != null) {
-                        Contact c = mapContactIdContactOwnerChange.get(acc.npe01__One2OneContact__c);
-                        Id ownerIdContact = (c != null ? c.OwnerId : null);
-                        if (acc.OwnerId != ownerIdContact) {
-                            acc.OwnerId = ownerIdContact;
-                            accountsToUpdate.put(acc.id, acc);
-                        }
+        Set<Id> accountIds = new Set<Id>();
+        Map<Id, Account> accountsToUpdate = new Map<Id, Account>();
+
+        for (Contact contactRecord : newOwnerContactById.values()) {
+            accountIds.add(contactRecord.AccountId);
+        }
+
+        for (Account accountRecord : [
+            SELECT Id, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, OwnerId, (SELECT Id FROM Contacts limit 2)
+            FROM Account
+            WHERE Id IN :accountIds
+        ]) {
+            // only consider 1:1 and HH Accounts
+            if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
+                // if there is only 1 contact associated with this account
+                if (accountRecord.Contacts.size() == 1 && accountRecord.npe01__One2OneContact__c != null) {
+                    Contact contactRecord = newOwnerContactById.get(accountRecord.npe01__One2OneContact__c);
+                    Id ownerId = (contactRecord != null ? contactRecord.OwnerId : null);
+                    if (accountRecord.OwnerId != ownerId) {
+                        accountRecord.OwnerId = ownerId;
+                        accountsToUpdate.put(accountRecord.Id, accountRecord);
                     }
-                }   
-            }
-
-            //update existing dmlWrapper objects with accounts already in the list
-            //avoids "duplicate id in list" errors updating the same account twice
-            for (sObject dmlObj : dmlWrapper.objectsToUpdate) {
-                Id objId = (Id) dmlObj.get('id');
-                if (accountsToUpdate.containsKey(objId)) {
-                    dmlObj.put('OwnerId', accountsToUpdate.get(objId).OwnerId);
-                    accountsToUpdate.remove(objId);
                 }
             }
+        }
 
-            // add the rest of the accounts that weren't already in the update list
-            if (!accountsToUpdate.isEmpty()) {
-                dmlWrapper.objectsToUpdate.addAll((List<SObject>)accountsToUpdate.values());
+        //update existing dmlWrapper objects with accounts already in the list
+        //avoids "duplicate id in list" errors updating the same account twice
+        for (SObject dmlObj : dmlWrapper.objectsToUpdate) {
+            Id objId = (Id) dmlObj.get('id');
+            if (accountsToUpdate.containsKey(objId)) {
+                dmlObj.put('OwnerId', accountsToUpdate.get(objId).OwnerId);
+                accountsToUpdate.remove(objId);
             }
         }
-    }
-    
-    /*******************************************************************************************************
-    * @description Moves all opps for the Primary OCR provided contacts to their new account.  Note that it
-    * is the caller's responsibility to decide whether moving opps is appropriate for the involved accounts.
-    * @param mapContactIdAccountIdNew a map of Contact Id to Account Id, for the Accounts to move opps to
-    * @param mapContactIdAccountIdOld a map of Contact Id to Account Id, for the Accounts to move opps from
-    * @param dmlWrapper to hold the Opps that need updating.  If null, will commit immediately.
-    * @return void
-    */ 
-    public static void moveOppsToContactAccount(map<Id,Id> mapContactIdAccountIdNew, map<Id,Id> mapContactIdAccountIdOld, DmlWrapper dmlWrapper) {
-        set<Id> setConId = mapContactIdAccountIdNew.keySet();
-        list<Id> listAccIdOld = mapContactIdAccountIdOld.values();
-        list<Opportunity> listOpp = new list<Opportunity>();
-        set<Id> setOppId = new set<Id>();
-        
-        //system.debug('****DJH: moveOpps setConIdNew: ' + setConId);
-        //system.debug('****DJH: moveOpps listAccIdOld: ' + listAccIdOld);
-    
-        // query changed to also include Role = default role, because Contact Merge scenarios were clearing isPrimary (not by our code)!
-        npe01__Contacts_and_Orgs_Settings__c cs = UTIL_CustomSettingsFacade.getContactsSettings();
-        
-        list<OpportunityContactRole> listOCR = [select ContactId, OpportunityId, Opportunity.isClosed, Opportunity.AccountId, IsPrimary, Role 
-            from OpportunityContactRole where IsPrimary = true and Opportunity.AccountId in :listAccIdOld and ContactId in :setConId];
-        //system.debug('****DJH: moveOpps listOCR: ' + listOCR);
-            
-        for (OpportunityContactRole ocr : listOCR) {
-            if (mapContactIdAccountIdOld.get(ocr.ContactId) == ocr.Opportunity.AccountId) {
-                if (setOppId.add(ocr.OpportunityId))
-                    listOpp.add(new Opportunity(Id = ocr.OpportunityId, AccountId = mapContactIdAccountIdNew.get(ocr.ContactId)));
-            }
-        }
-        //system.debug('****DJH: moveOpps listOpp: ' + listOpp);
-        
-        if (listOpp.size() > 0) {
-            // since our rollup code isn't using dmlWrapper, some callers want us to commit now
-            if (dmlWrapper == null)
-                UTIL_DMLService.updateRecords(listOpp);
-            else
-                dmlWrapper.objectsToUpdate.addAll((list<SObject>)listOpp);
+
+        // add the rest of the accounts that weren't already in the update list
+        if (!accountsToUpdate.isEmpty()) {
+            dmlWrapper.objectsToUpdate.addAll(accountsToUpdate.values());
         }
     }
 
+    /**
+     * @description - Determine whether the account belongs to another contact and is not an deleted during an account merge.
+     */
+    private Boolean shouldClearExistingOneToOneAccount(Contact contactRecord, Contact oldContact, Account accountRecord) {
+        Boolean isExistingOneToOne = contactRecord.AccountId != null
+            && accountRecord.npe01__One2OneContact__c != contactRecord.Id
+            && accountRecord.npe01__One2OneContact__c != null
+            && contactRecord.AccountId != oldContact.AccountId;
+
+        if (!isExistingOneToOne) {
+            return false;
+        }
+
+        Boolean isDeletedOldAccount = [SELECT count() FROM Account WHERE Id =: oldContact.AccountId] == 0;
+
+        return !isDeletedOldAccount;
+
+    }
+    /**
+     * @description Determines whether or not the contact requires a household account.
+     * @param  contactRecord The contact to verify.
+     * @return Boolean - true when the contact needs a household account.
+     */
+    private Boolean needsHHAccount(Contact contactRecord) {
+        return CAO_Constants.isHHAccountModel()
+            && contactRecord.AccountId == null
+            && contactRecord.npe01__Private__c != true;
+    }
+
     /*******************************************************************************************************
-    * @description returns whether changes in the contact require an update to the 1:1 account 
-    * @param conNew the new version of the Contact
-    * @param conOld the old version of the Contact
-    * @return boolean
-    */ 
-    private boolean needsOne2OneAccountUpdate(Contact conNew, Contact conOld) {      
-        if(conNew == null && conOld != null)
+    * @description returns whether changes in the contact require an update to the 1:1 account
+    * @param contactRecord the new version of the Contact
+    * @param oldContact the old version of the Contact
+    * @return Boolean
+    */
+    private Boolean needsOne2OneAccountUpdate(Contact contactRecord, Contact oldContact) {
+        if (contactRecord.npe01__Organization_Type__c != CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+            return false;
+        }
+
+        if(contactRecord != null && oldContact == null) {
             return true;
-        if(conNew != null && conOld == null)
-            return true;
-        String newFirst = conNew.FirstName == null ? '' : conNew.FirstName;
-        String oldFirst = conOld.FirstName == null ? '' : conOld.FirstName;
-        String newLast = conNew.LastName == null ? '' : conNew.LastName;
-        String oldLast = conOld.LastName == null ? '' : conOld.LastName;
-        
-        return (conNew.AccountId != conOld.AccountId ||
+        }
+
+        String newFirst = contactRecord.FirstName == null ? '' : contactRecord.FirstName;
+        String oldFirst = oldContact.FirstName == null ? '' : oldContact.FirstName;
+        String newLast = contactRecord.LastName == null ? '' : contactRecord.LastName;
+        String oldLast = oldContact.LastName == null ? '' : oldContact.LastName;
+
+        return (contactRecord.AccountId != oldContact.AccountId ||
                 !newFirst.equals(oldFirst) ||
                 !newLast.equals(oldLast) ||
-                conNew.MailingStreet != conOld.MailingStreet ||
-                conNew.MailingCity != conOld.MailingCity ||
-                conNew.MailingState != conOld.MailingState ||
-                conNew.MailingPostalCode != conOld.MailingPostalCode ||
-                conNew.MailingCountry != conOld.MailingCountry ||
-                conNew.OtherStreet != conOld.OtherStreet ||
-                conNew.OtherCity != conOld.OtherCity ||
-                conNew.OtherState != conOld.OtherState ||
-                conNew.OtherPostalCode != conOld.OtherPostalCode ||
-                conNew.OtherCountry != conOld.OtherCountry ||
-                conNew.Phone != conOld.Phone ||
-                conNew.Fax != conOld.Fax);
+                contactRecord.MailingStreet != oldContact.MailingStreet ||
+                contactRecord.MailingCity != oldContact.MailingCity ||
+                contactRecord.MailingState != oldContact.MailingState ||
+                contactRecord.MailingPostalCode != oldContact.MailingPostalCode ||
+                contactRecord.MailingCountry != oldContact.MailingCountry ||
+                contactRecord.OtherStreet != oldContact.OtherStreet ||
+                contactRecord.OtherCity != oldContact.OtherCity ||
+                contactRecord.OtherState != oldContact.OtherState ||
+                contactRecord.OtherPostalCode != oldContact.OtherPostalCode ||
+                contactRecord.OtherCountry != oldContact.OtherCountry ||
+                contactRecord.Phone != oldContact.Phone ||
+                contactRecord.Fax != oldContact.Fax);
     }
- 
+
     /*******************************************************************************************************
     * @description returns whether changes in the contact require a rename of a HH Account
     * @param hhNamingFields the set of fields used in the namespec
-    * @param conNew the new version of the Contact
-    * @param conOld the old version of the Contact
-    * @return boolean
+    * @param contactRecord the new version of the Contact
+    * @param oldContact the old version of the Contact
+    * @return Boolean
     */
-    private boolean needsHHAccountRename(Set<String> hhNamingFields, Contact conNew, Contact conOld) {
-        if (conNew == null && conOld != null)
+    private Boolean needsHHAccountRename(Contact contactRecord, Contact oldContact) {
+        if (contactRecord.npe01__Organization_Type__c != CAO_Constants.HH_ACCOUNT_TYPE) {
+            return false;
+        }
+
+        if (contactRecord != null && oldContact == null) {
             return true;
-        if (conNew != null && conOld == null)
-            return true;
-        if (conNew.FirstName == null) conNew.FirstName = '';
-        if (conNew.LastName == null) conNew.LastName = '';
-        
+        }
+
+        contactRecord.FirstName = contactRecord.FirstName == null ? '' : contactRecord.FirstName;
+        contactRecord.LastName = contactRecord.LastName == null ? '' : contactRecord.LastName;
+
         // check all household naming fields for changes
-        for(String fieldName : hhNamingFields) {
-            string strName;
-            string strNameOld;
-            
+        for(String fieldName : HH_NAMING_FIELDS) {
+            String currentName;
+            String oldName;
+
             //separate cross object references, i.e. account.name
-            list<string> splitField = (fieldName.split('\\.',0));
-            if (splitField.size() > 1) {
-                SObject sobj = conNew.getSobject(splitField[0]);
-                if (sobj != null) {
-                    strName = sobj.Id;
+            List<String> splitFields = (fieldName.split('\\.',0));
+            if (splitFields.size() > 1) {
+                SObject sObj = contactRecord.getSObject(splitFields[0]);
+                if (sObj != null) {
+                    currentName = sObj.Id;
                 }
-                sobj = conOld.getSobject(splitField[0]);
-                if (sobj != null) {
-                    strNameOld = sobj.Id;
+                sObj = oldContact.getSObject(splitFields[0]);
+                if (sObj != null) {
+                    oldName = sObj.Id;
                 }
             } else {
-                strName = String.valueOf(conNew.get(fieldName));
-                strNameOld = String.valueOf(conOld.get(fieldName));
+                currentName = String.valueOf(contactRecord.get(fieldName));
+                oldName = String.valueOf(oldContact.get(fieldName));
             }
 
             // make sure to use case sensitive comparison
-            if (strName == null)
-                strName = '';
-            if (strNameOld == null)
-                strNameOld = '';
-            if (!strName.equals(strNameOld)) {
+            if (currentName == null) {
+                currentName = '';
+            }
+            if (oldName == null) {
+                oldName = '';
+            }
+            if (!currentName.equals(oldName)) {
                 return true;
             }
         }
-        if (conNew.npo02__Household_Naming_Order__c != conOld.npo02__Household_Naming_Order__c ||
-            conNew.npo02__Naming_Exclusions__c != conOld.npo02__Naming_Exclusions__c) {
+        if (contactRecord.npo02__Household_Naming_Order__c != oldContact.npo02__Household_Naming_Order__c ||
+            contactRecord.npo02__Naming_Exclusions__c != oldContact.npo02__Naming_Exclusions__c) {
             return true;
         }
         return false;
     }
-    
-    /*******************************************************************************************************
-    * @description returns whether changes in the contact require an address change in the HH Account 
-    * @param conNew the new version of the Contact
-    * @param conOld the old version of the Contact
-    * @return boolean
-    */ 
-    private boolean needsHHAccountAddressUpdate(Contact conNew, Contact conOld) {              
-       return (conNew.MailingStreet != conOld.MailingStreet ||
-                conNew.MailingCity != conOld.MailingCity ||
-                conNew.MailingState != conOld.MailingState ||
-                conNew.MailingPostalCode != conOld.MailingPostalCode ||
-                conNew.MailingCountry != conOld.MailingCountry ||
-                conNew.OtherStreet != conOld.OtherStreet ||
-                conNew.OtherCity != conOld.OtherCity ||
-                conNew.OtherState != conOld.OtherState ||
-                conNew.OtherPostalCode != conOld.OtherPostalCode ||
-                conNew.OtherCountry != conOld.OtherCountry);
+
+    /**
+     * isHouseholdMember Determines whether or not the contact belongs to a household account.
+     * @param  contactRecord The contact record to verify.
+     * @return Boolean - true when the contact belongs to a household account.
+     */
+    private Boolean isHouseholdMember(Contact contactRecord) {
+        return contactRecord.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
+    }
+
+    /**
+     * @description Determines whether or not the contact needs a one to one account assigned.
+     * @param  The contact record to verify.
+     * @param  The existing account record assocatied with the contact.
+     * @return Boolean - true when the contact needs a one to one account.
+     */
+    private Boolean needsOneToOneAccount(Contact contactRecord, Account accountRecord) {
+        return CAO_Constants.isOneToOne()
+            && contactRecord.npe01__Private__c != true
+            && (contactRecord.AccountId == null
+                || (accountRecord != null
+                    && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE));
+    }
+
+    /**
+     * @description Determines whether or not the contact should be assigned to the bucket account
+     * @param  contactRecord The contact record to verify.
+     * @return Boolean - true when the contact should be assigned to the bucket account
+     */
+    private Boolean needsBucketAccount(Contact contactRecord) {
+        return CAO_Constants.isBucketModel() && contactRecord.AccountId == null && contactRecord.npe01__Private__c != true;
+    }
+
+    /**
+     * needsPrimaryContact Determines whether or not the account is in need of a primary contact.
+     * @param  contactRecord The contact record to traverse to the account data.
+     * @return Boolean - true when the account needs the primary contact set.
+     */
+    private Boolean needsPrimaryContact(Contact contactRecord) {
+        return contactRecord.npe01__Private__c != true
+            && contactRecord.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.BUCKET_ORGANIZATION_TYPE
+            && contactRecord.Account.npe01__SYSTEMIsIndividual__c
+            && contactRecord.Account.npe01__One2OneContact__c == null;
     }
 
     /*******************************************************************************************************
-    * @description returns the default name for a new HH Account. Custom household naming will update this 
+    * @description returns the default name for a new HH Account. Custom household naming will update this
     * account later if enabled, but we still need one if not enabled.
-    * @param con the Contact
-    * @return string. the Household account name
-    */ 
-    public static String strNameHHAccountForContact(Contact con) {
-        return con.LastName + ' ' + system.label.npo02.DefaultHouseholdName;
+    * @param contactRecord the Contact
+    * @return String. the Household account name
+    */
+    public static String strNameHHAccountForContact(Contact contactRecord) {
+        return contactRecord.LastName + ' ' + System.Label.npo02.DefaultHouseholdName;
     }
 
     /*******************************************************************************************************
-    * @description returns the default name for a new 1:1 Account 
-    * @param con the Contact
-    * @return string. the 1:1 account name
-    */ 
-    public static String strNameOne2OneAccountForContact(Contact con) {
-        String str = '';
-        
-        if (con.FirstName != null) {
-            str += con.FirstName;
-            str += ' ' ;
-        }                
-        if (EasternOrderLanguages.contains(OrgLanguage))
-            str = con.LastName + ' ' + str;
-        else
-            str += con.LastName;
-        
-        return str;
+    * @description returns the default name for a new 1:1 Account
+    * @param contactRecord the Contact
+    * @return String. the 1:1 account name
+    */
+    public static String strNameOne2OneAccountForContact(Contact contactRecord) {
+        String accountName = '';
+
+        if (contactRecord.FirstName != null) {
+            accountName += contactRecord.FirstName;
+            accountName += ' ' ;
+        }
+
+        if (EASTERN_ORDER_LANGUAGES.contains(userLocale)) {
+            accountName = contactRecord.LastName + ' ' + accountName;
+
+        } else {
+            accountName += contactRecord.LastName;
+        }
+
+        return accountName;
+    }
+
+    /*******************************************************************************************************
+    * @description Moves all opps for the Primary OCR provided contacts to their new account.  Note that it
+    * is the caller's responsibility to decide whether moving opps is appropriate for the involved accounts.
+    * @param newHouseholdIdByContactId a map of Contact Id to Account Id, for the Accounts to move opps to
+    * @param oldHouseholdIdByContactId a map of Contact Id to Account Id, for the Accounts to move opps from
+    * @return void
+    */
+    public static void moveOppsToContactAccount(Map<Id,Id> newHouseholdIdByContactId, Map<Id,Id> oldHouseholdIdByContactId) {
+        if (newHouseholdIdByContactId.isEmpty()) {
+            return;
+        }
+
+        List<Opportunity> opportunities = new List<Opportunity>();
+        Set<Id> oppIds = new Set<Id>();
+
+        for (OpportunityContactRole role : [
+            SELECT ContactId, OpportunityId, Opportunity.AccountId
+            FROM OpportunityContactRole
+            WHERE IsPrimary = true
+                AND Opportunity.AccountId IN :oldHouseholdIdByContactId.values()
+                AND ContactId IN :newHouseholdIdByContactId.keySet()
+        ]) {
+            Boolean shouldMoveOpp = oldHouseholdIdByContactId.get(role.ContactId) == role.Opportunity.AccountId
+                && oppIds.add(role.OpportunityId);
+
+            if (shouldMoveOpp) {
+                opportunities.add(new Opportunity(
+                    Id = role.OpportunityId,
+                    AccountId = newHouseholdIdByContactId.get(role.ContactId)));
+            }
+        }
+
+        if (!opportunities.isEmpty()) {
+            UTIL_DMLService.updateRecords(opportunities);
+        }
+
+    }
+
+    /*******************************************************************************************************
+    * @description for the list of HH AccountId's, update their Household Names
+    * @param accountIds the list of Account (Id's) that need updating.
+    * @return void
+    */
+    public static void renameHHAccounts(List<Id> accountIds) {
+        if (accountIds.isEmpty()) {
+            return;
+        }
+
+        if (accountIds.size() == 1 || System.isFuture() || System.isBatch() || System.isQueueable()) {
+            HH_HouseholdNaming hhName = new HH_HouseholdNaming();
+            hhName.UpdateNames(accountIds);
+        } else {
+            HH_HouseholdNaming.FutureUpdateNames(accountIds);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description utility to return the recordtypeId for a new account, given the account model.
+    * @return Id. if none is explicitly specified, returns null.
+    */
+    public static Id rtIdForNewAccount() {
+        return rtIdForAccountModel(CAO_Constants.isHHAccountModel());
+    }
+
+    /*******************************************************************************************************
+    * @description utility to return the recordtypeId for a new account, given the account model.
+    * @param isHHAccountModel whether we are using the Household Account Model
+    * @return Id. recordtype Id to use, or null if none is specified for the account model.
+    */
+    public static Id rtIdForAccountModel(Boolean isHHAccountModel) {
+        contactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
+        // check if recordtypes are enabled, and if it matches the existing setting
+        // we go thru describe to validate that it is a valid recordType ID.
+        Id individualRecordTypeId = isHHAccountModel ? contactsSettings.npe01__HH_Account_RecordTypeID__c : contactsSettings.npe01__One_to_One_RecordTypeID__c;
+        if (individualRecordTypeId != null) {
+            Schema.RecordTypeInfo recordTypeInfo = null;
+            Schema.DescribeSObjectResult describeResult = Account.SObjectType.getDescribe();
+            Map<Id,Schema.RecordTypeInfo> recordTypeInfoById = describeResult.getRecordTypeInfosById();
+            recordTypeInfo = recordTypeInfoById.get(individualRecordTypeId);
+            return recordTypeInfo == null
+                ? null
+                : recordTypeInfo.getRecordTypeId();
+        }
+
+        return null;
+    }
+
+    /*******************************************************************************************************
+    * @description for the list of AccountId's, recalc their rollups
+    * @param accountIds the list of Account (Id's) that need updating.
+    * @return void
+    */
+    public static void rollupAccounts(List<Id> accountIds) {
+        new RLLP_OppRollup().rollupAccounts(new Set<Id>(accountIds));
     }
 
 }

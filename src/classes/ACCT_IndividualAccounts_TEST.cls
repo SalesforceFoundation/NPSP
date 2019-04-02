@@ -90,6 +90,49 @@ private class ACCT_IndividualAccounts_TEST {
     }
     
     /*********************************************************************************************************
+    * @description Accounts created from the trigger should populate the currency code with the contact currency code
+    */
+    @IsTest
+    private static void shouldPopulateNewAccountCurrencyWithContactCurrency() {
+        //Skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
+        Boolean isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
+        String defaultCurrency = UserInfo.getDefaultCurrency();
+
+        Contact newContact = new Contact(
+            LastName = 'CurrencyTest',
+            FirstName = 'Test'
+        );
+        
+        String currencyField = '';
+        if (isMultiCurrencyEnabled) {
+
+             // Set currency to be something different than the default one if possible
+            UTIL_CurrencyCache.CurrencyData nonDefaultCurrency = UTIL_UnitTestData_TEST.nonDefaultCurrencyType;
+            
+            if (nonDefaultCurrency != null) {
+                defaultCurrency = nonDefaultCurrency.IsoCode;
+            }
+
+            newContact.put('CurrencyIsoCode', defaultCurrency);
+            currencyField = ', CurrencyIsoCode ';
+        }
+
+        Test.startTest();
+        insert newContact;
+        Test.stopTest();
+        
+        String qryString = 'SELECT Id, Name' + currencyField + ' FROM Account LIMIT 1';
+        Account newAccount = Database.query(qryString);
+        System.assertNotEquals(null, newAccount, 'New Account should be created');
+        if (isMultiCurrencyEnabled) {
+            System.assertEquals(defaultCurrency, (String) newAccount.get('CurrencyIsoCode'), 'Account Currency Code should be populated with Contact Currency Code');
+        }
+
+    }
+
+    /*********************************************************************************************************
     * @description Test changing the account model from one-to-one account to household account.  
     */
     private static testMethod void changeFromOneToOneToHouseholdAccount() {
@@ -1394,9 +1437,13 @@ private class ACCT_IndividualAccounts_TEST {
         The SOQL contains Household Naming fields.
     **********************************************************************************************************/ 
     private static testMethod void testContactSoqlReturnsQueryForSpecifiedContacts() {
-        Set<String> hhNamingFields = new Set<String>{ 'FIRSTname', 'PhOnE', 'Fax', 'lastname', 'LastName', 'npe01__WorkEmail__c'};
-
-        String soql = new ACCT_IndividualAccounts_TDTM().buildContactSoql(hhNamingFields);
+        UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.setupHHNamingSettings(
+            'The {!lastname}, {!{!FIRSTname}} Family',
+            '{!{!SALUTATION} {!FIRSTname}} {!LASTNAME}',
+            '{!{!npe01__WorkEmail__c}}'
+        );
+        String soql = new ACCT_IndividualAccounts_TDTM().buildContactSoql();
 
         System.assert(soql.contains('npe01__WorkEmail__c'));// the only field added from Household Naming fields
 
