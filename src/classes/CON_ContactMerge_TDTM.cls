@@ -38,160 +38,335 @@
 */
 public class CON_ContactMerge_TDTM extends TDTM_Runnable {
     @TestVisible
-    private static RLLP_OppRollup oppRollup = new RLLP_OppRollup();
-    
+    private static ContactMergeProcessor mergeProcessor {
+        get {
+            if (mergeProcessor == null) {
+                mergeProcessor = new ContactMergeProcessor();
+            }
+
+            return mergeProcessor;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description Trigger Handler on Contact that handles detecting when an Contact Merge 
     * has completed, in order to fixup an assortment of affected information.
-    * @param listNew the list of Contacts from trigger new. 
-    * @param listOld the list of Contacts from trigger old. 
+    * @param newContacts the list of Contacts from trigger new. 
+    * @param oldContacts the list of Contacts from trigger old. 
     * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
     * @param objResult the describe for Contacts 
     * @return dmlWrapper.  always null.
     ********************************************************************************************************/
-    public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
+    public override DmlWrapper run(List<SObject> newContacts, List<SObject> oldContacts,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-        
-        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();    
+
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
 
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
-            list<string> listMergeKey = new list<string>();
-        
-            for (SObject so : listOld) {
-                Contact con = (Contact)so;
-                if (con != null && con.MasterRecordId != null)
-                    listMergeKey.add(mergeKey(con.Id, con.AccountId, con.MasterRecordId));
+            List<String> mergeKeys = new List<String>();
+
+            for (SObject sObj : oldContacts) {
+                Contact oldContact = (Contact)sObj;
+                if (skipContactMergeFixup(oldContact)) {
+                    continue;
+                }
+
+                mergeKeys.add(generateMergeKey(oldContact.Id, oldContact.AccountId, oldContact.MasterRecordId));
             }
-            
-            if (listMergeKey.size() > 0)
-                handleContactMergeFixupsFuture(listMergeKey);
-        }        
-        
-        return dmlWrapper; 
-    }
-    
-    /*******************************************************************************************************
-    * @description returns a unique key for a tracking a losing Contact, their account, and the winning Contact.
-    * @param contactIdLoser The losing Contact's Id
-    * @param accountIdLoser The losing Contact's Account Id
-    * @param contactIdWinner The winning Contact's Id
-    * @return string
-    ********************************************************************************************************/
-    private static string mergeKey(string contactIdLoser, string accountIdLoser, string contactIdWinner) {
-        return (contactIdLoser + ':' + accountIdLoser + ':' + contactIdWinner);
-    }
-    
-    /*******************************************************************************************************
-    * @description returns the object Id at the specified index of a mergeKey
-    * @param mergeKey The mergeKey to extract an Id from
-    * @param index The index of which Id to return.  values should be 0 - contactIdLoser, 1 - accountIdLower, 
-    * 2 - contactIdWinner
-    * @return Id
-    ********************************************************************************************************/
-    private static string idFromMergeKey(string mergeKey, integer index) {
-        if (mergeKey == null || index < 0 || index > 2)
-            return null;
-        list<string> listId = mergeKey.split(':');
-        string strId = listId[index];
-        if (strId == 'null') strId = null;
-        return strId;
+
+            System.enqueueJob(new ContactMergeFixupQueueable(mergeKeys));
+        }
+
+        return dmlWrapper;
     }
 
     /*******************************************************************************************************
-    * @description After a Contact Merge, call this Future routine to perform assorted fixups that need to
+    * @description Determine if the record provided should be skipped.
+    * @param record - the Contact to check if merge fixup is required.
+    *
+    * @return Boolean - true when contact merge fixup is not needed
+    ********************************************************************************************************/
+    private Boolean skipContactMergeFixup(Contact record) {
+        return record == null || record.MasterRecordId == null;
+    }
+
+    /*******************************************************************************************************
+    * @description returns a unique key for a tracking a merged Contact, their account, and the master
+    * Contact Record Id.
+    * @param oldContactId The merged Contact's Id
+    * @param oldAccountId The merged Contact's Account Id
+    * @param masterContactId The master Contact Record Id
+    * @return String
+    ********************************************************************************************************/
+    private String generateMergeKey(String oldContactId, String oldAccountId, String masterContactId) {
+        return (oldContactId + ':' + oldAccountId + ':' + masterContactId);
+    }
+
+    /*******************************************************************************************************
+    * @description After a Contact Merge, call this async routine to perform assorted fixups that need to
     * occur which include:
     *   - update the Account name and greetings 
-    *   - move Opps to the Winner's Account 
+    *   - move Opps to the Master Contact's Account 
     *   - recalculate Household Soft Credit OCRs 
     *   - recalculate Opportunity Rollups
     *
-    * @param listMergeKey The list of mergeKeys that provide contactIdLoser, accountIdLoser, and contactIdWinner
-    * @return null
     ********************************************************************************************************/
-    @Future    
-    private static void handleContactMergeFixupsFuture(list<string> listMergeKey) {
-    
-        list<string> listContactIdLoser = new list<string>();
-        list<string> listAccountIdLoser = new list<string>();
-        list<string> listContactIdWinner = new list<string>();
+    private class ContactMergeFixupQueueable implements Queueable {
+        List<String> mergeKeys;
 
-        // extract out our Contact and Account Id's from the mergeKeys
-        for (string mergeKey : listMergeKey) {
-            listContactIdLoser.add(idFromMergeKey(mergeKey, 0));
-            listAccountIdLoser.add(idFromMergeKey(mergeKey, 1));
-            listContactIdWinner.add(idFromMergeKey(mergeKey, 2));
+        /***************************************************************************************************************
+         * @description Constructor
+         * @param mergeKeys - the ids relevant to the merge process
+         */
+        private ContactMergeFixupQueueable(List<String> mergeKeys) {
+            this.mergeKeys = mergeKeys;
         }
-    
-        // get the winning Contacts (with the fields we need)
-        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL(); 
-        string strSoql = oppRollupUtil.buildContactQuery();
-        strSoql = strSoql.replace('from Contact', '');
-        strSoql += ', AccountId, Account.npe01__SYSTEM_AccountType__c, Primary_Affiliation__c from Contact where id IN :listContactIdWinner';
-        list<Contact> listContactWinner = Database.query(strSoql);
 
-        // create maps of contactId's to AccountId's that some of our routines need.
-        map<Id,Id> mapContactIdAccountIdWinner = new map<Id,Id>();
-        map<Id,Id> mapContactIdAccountIdLoser = new map<Id,Id>();
-        list<Id> listAccIdHH= new list<Id>();
-        for (Contact con : listContactWinner) {
-        	if (con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE)
-        	   listAccIdHH.add(con.AccountId);
-            if (con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE ||
-                con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE ||
-                con.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
-                mapContactIdAccountIdWinner.put(con.Id, con.AccountId);        
+        public void execute(QueueableContext qc) {
+            if (mergeKeys == null || mergeKeys.isEmpty()) {
+                return;
+            }
+
+            mergeProcessor.fixup(mergeKeys);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Fixes records related to merged contacts
+    ********************************************************************************************************/
+    @TestVisible
+    private class ContactMergeProcessor {
+        @TestVisible
+        private List<String> oldContactIds = new List<String>();
+        @TestVisible
+        private List<String> oldAccountIds = new List<String>();
+        @TestVisible
+        private List<String> masterContactIds = new List<String>();
+
+        private List<Id> householdIds = new List<Id>();
+        private Map<Id, Id> oldIndividualAcctIdByMasterId = new Map<Id, Id>();
+        private Map<Id, Id> newIndividualAcctIdByMasterId = new Map<Id, Id>();
+
+        /***************************************************************************************************************
+         * @description Fixes records involved in the merge process
+         * @param mergeKeys - the ids relevant to the merge process
+         */
+        private void fixup(List<String> mergeKeys) {
+            setMergeKeyIds(mergeKeys);
+
+            List<Account> oldAccounts = getAccounts(oldAccountIds);
+            List<Contact> masterContacts = getContacts(masterContactIds);
+
+            householdIds = extractHouseholdIds(oldAccounts);
+            householdIds.addAll(extractHouseholdIds(masterContacts));
+
+            oldIndividualAcctIdByMasterId = extractAcctIdByMasterId(oldAccounts);
+            newIndividualAcctIdByMasterId = extractAcctIdByMasterId(masterContacts);
+
+            fixupAccountData();
+            fixupContactData(masterContacts);
+        }
+
+        /*******************************************************************************************************
+        * @description Returns the account Id of accounts with household account types
+        * @param accounts - The accounts to return the Id for when they are a household account
+        * @return List<Id> - The list of household account Ids
+        ********************************************************************************************************/
+        @TestVisible
+        private List<Id> extractHouseholdIds(List<Account> accounts) {
+            List<Id> accountIds = new List<Id>();
+
+            for (Account record : accounts) {
+                if (isHousehold(record.npe01__SYSTEM_AccountType__c)) {
+                    accountIds.add(record.Id);
+                }
+            }
+
+            return accountIds;
+        }
+
+        /*******************************************************************************************************
+        * @description Returns the account Id of the master contacts accounts with household account types
+        ********************************************************************************************************/
+        @TestVisible
+        private List<Id> extractHouseholdIds(List<Contact> contacts) {
+            List<Id> accountIds = new List<Id>();
+
+            for (Contact record: contacts) {
+                if (isHousehold(record.Account.npe01__SYSTEM_AccountType__c)) {
+                    accountIds.add(record.AccountId);
+                }
+            }
+
+            return accountIds;
+        }
+
+        /*******************************************************************************************************
+        * @description Adds the account Id of the losing contacts account when it
+        * is any type of individual account
+        ********************************************************************************************************/
+        @TestVisible
+        private Map<Id, Id> extractAcctIdByMasterId(List<Account> oldAccounts) {
+            Map<Id, Id> accountIdByContactId = new Map<Id, Id>();
+
+            Map<Id, Account> oldAccountById = new Map<Id, Account>(oldAccounts);
+
+            for (integer i = 0; i < oldAccountIds.size(); i++) {
+                if (oldAccountIds[i] == null) {
+                    continue;
+                }
+
+                Account oldAccount = oldAccountById.get(oldAccountIds[i]);
+                if (oldAccount == null) {
+                    continue;
+                }
+
+                if (isIndividual(oldAccount.npe01__SYSTEM_AccountType__c)) {
+                    accountIdByContactId.put(masterContactIds[i], oldAccountIds[i]);
+                }
+            }
+
+            return accountIdByContactId;
+        }
+
+        /*******************************************************************************************************
+        * @description Adds the account Id of the master contacts account when it
+        * is any type of individual account
+        *
+        * @param masterContacts the collection of contacts to extract the ids from
+        ********************************************************************************************************/
+        @TestVisible
+        private Map<Id, Id> extractAcctIdByMasterId(List<Contact> masterContacts) {
+            Map<Id, Id> accountIdByContactId = new Map<Id, Id>();
+
+            for (Contact masterContact : masterContacts) {
+                if (masterContact.AccountId == null) {
+                    continue;
+                }
+
+                if (isIndividual(masterContact.Account.npe01__SYSTEM_AccountType__c)) {
+                    accountIdByContactId.put(masterContact.Id, masterContact.AccountId);
+                }
+            }
+
+            return accountIdByContactId;
+        }
+
+        /*******************************************************************************************************
+        * @description Determines if the account type provided matches the Household Account Type
+        *
+        * @param acctType The account type to compare
+        * @return Boolean true if the string passed in matches the Household Account Type
+        ********************************************************************************************************/
+        private Boolean isHousehold(String acctType) {
+            return acctType == CAO_Constants.HH_ACCOUNT_TYPE;
+        }
+
+        /*******************************************************************************************************
+        * @description Determines if the account type provided matches any of the Individual Account Types
+        *
+        * @param acctType The account type to compare
+        * @return Boolean true if the string passed in matches any of the Individual Account Types
+        ********************************************************************************************************/
+        private Boolean isIndividual(String acctType) {
+            return isHousehold(acctType)
+                || acctType == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE
+                || acctType == CAO_Constants.BUCKET_ORGANIZATION_TYPE;
+        }
+
+        /*******************************************************************************************************
+        * @description Performs household naming, moves opportunities from the old accounts to the master contacts
+        * account, recreates Household Soft Credits and performs rollups on all Accounts
+        *
+        ********************************************************************************************************/
+        private void fixupAccountData() {
+            List<Id> accountIds = new List<Id>();
+            accountIds.addAll(oldIndividualAcctIdByMasterId.values());
+            accountIds.addAll(newIndividualAcctIdByMasterId.values());
+            if (accountIds.isEmpty()) {
+                return;
+            }
+
+            ACCT_IndividualAccounts_TDTM.renameHHAccounts(householdIds);
+            ACCT_IndividualAccounts_TDTM.moveOppsToContactAccount(
+                newIndividualAcctIdByMasterId,
+                oldIndividualAcctIdByMasterId
+            );
+            HH_OppContactRoles_TDTM.recreateHouseholdSoftCredits(accountIds);
+            ACCT_IndividualAccounts_TDTM.rollupAccounts(accountIds);
+        }
+
+        /*******************************************************************************************************
+        * @description Performs rollups, affiliation and relationship cleanup on the master contacts
+        *
+        * @param masterContacts the collection of master contacts
+        ********************************************************************************************************/
+        private void fixupContactData(List<Contact> masterContacts) {
+            new RLLP_OppRollup().rollupContacts(new Map<Id, SObject>(masterContacts).keySet());
+
+            AFFL_Affiliations_TDTM.cleanupContactAffiliations(masterContacts);
+            REL_Relationships_TDTM.cleanupContactRelationships(masterContacts);
+        }
+
+        /*******************************************************************************************************
+        * @description Queries for the accounts and fields needed for processing
+        *
+        * @return List<Account> the list of accounts that match the ids provided
+        ********************************************************************************************************/
+        private List<Account> getAccounts(List<Id> accountIds) {
+            return [SELECT Id, npe01__SYSTEM_AccountType__c FROM Account WHERE Id IN :accountIds];
+        }
+
+        /*******************************************************************************************************
+        * @description Uses the opp rollup util to build the query then modifies the query to include additional
+        * fields necessary for processing merged contacts
+        *
+        * @return List<Contact> the list of contacts that match the ids provided
+        ********************************************************************************************************/
+        private List<Contact> getContacts(List<Id> contactIds) {
+            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL(); 
+            String query = oppRollupUtil.buildContactQuery();
+
+            query = query.replace('from Contact', '');
+            query += ', AccountId, Account.npe01__SYSTEM_AccountType__c, Primary_Affiliation__c FROM Contact WHERE Id IN :contactIds';
+            return Database.query(query);
+        }
+
+        /*******************************************************************************************************
+        * @description Splits the ids from the list of merge keys provided.
+        *
+        * @param mergeKeys A list of merged Ids, each merge key is expected to have an id for each collection
+        ********************************************************************************************************/
+        @TestVisible
+        private void setMergeKeyIds(List<String> mergeKeys) {
+            oldAccountIds = new List<String>();
+            oldContactIds = new List<String>();
+            masterContactIds = new List<String>();
+
+            for (String mergeKey : mergeKeys) {
+                List<String> ids = mergeKey.split(':');
+                if (ids == null || ids.size() < 3) {
+                    continue;
+                }
+
+                oldContactIds.add(convertNull(ids[0]));
+                oldAccountIds.add(convertNull(ids[1]));
+                masterContactIds.add(convertNull(ids[2]));
             }
         }
-        
-        // we only want to move opps from non-org accounts, so we need to query for their type.
-        map<Id, Account> mapAccountIdAccountLoser = new map<Id, Account>([select Id, npe01__SYSTEM_AccountType__c 
-            from Account where Id in :listAccountIdLoser]);
-        for (integer i = 0; i < listContactIdLoser.size(); i++) {
-        	if (listAccountIdLoser[i] != null) {
-                Account accLoser = mapAccountIdAccountLoser.get(listAccountIdLoser[i]);
-                if (accLoser == null)
-                    continue;
-                if (accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE)
-                    listAccIdHH.add(accLoser.Id); 
-                if (accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE || 
-                    accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE ||
-                    accLoser.npe01__SYSTEM_AccountType__c == CAO_Constants.BUCKET_ORGANIZATION_TYPE) {
-                    mapContactIdAccountIdLoser.put(listContactIdWinner[i], listAccountIdLoser[i]);
-                }
-        	}
+
+        /*******************************************************************************************************
+        * @description Checks for the string value of null
+        *
+        * @param val The value to compare
+        * @return String null when val passed in is the String value of null
+        ********************************************************************************************************/
+        private String convertNull(String val) {
+            final String nullVal = 'null';
+
+            return val == nullVal ? null : val;
         }
-    
-        // create a list of both Winning and Losing Accounts
-        list<Id> listAccId = new list<Id>();
-        listAccId.addAll(mapContactIdAccountIdLoser.values());
-        listAccId.addAll(mapContactIdAccountIdWinner.values());
-
-        // if we have any winning Contacts in Household or 1:1 Accounts...
-        if (listAccId.size() > 0) {    
-            // refresh account naming
-            ACCT_IndividualAccounts_TDTM.renameHHAccounts(listAccIdHH);
-            
-            // move any Contact Opps to winning Accounts
-            ACCT_IndividualAccounts_TDTM.moveOppsToContactAccount(mapContactIdAccountIdWinner, mapContactIdAccountIdLoser, null);
-            
-            // recreate Soft Credits 
-            HH_OppContactRoles_TDTM.recreateHouseholdSoftCredits(listAccId);
-
-            // recalc Account Rollups
-            ACCT_IndividualAccounts_TDTM.rollupAccounts(listAccId);            
-        }
-
-        // recalc Contact Rollups
-        if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
-            CRLP_RollupQueueable.runRollupsForIds(listContactIdWinner);
-        } else {
-            oppRollup.rollupContacts(new map<Id, Contact>(listContactWinner));
-        }
-
-        // fixup duplicate Affiliations & Primary Affiliation
-        AFFL_Affiliations_TDTM.cleanupContactAffiliations(listContactWinner);
-        
-        // remove duplicate Relationships
-        REL_Relationships_TDTM.cleanupContactRelationships(listContactWinner);
     }
+
 }
