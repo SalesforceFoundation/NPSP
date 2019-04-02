@@ -845,6 +845,17 @@
         <visibleLines>3</visibleLines>
     </fields>
     <fields>
+        <fullName>DisableContactRoleAutomation__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When selected, this field disables several aspects of NPSP Opportunity Contact Role automation, potentially resulting in incorrect or duplicate data. Refer to the product documentation for more details.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When selected, this field disables several aspects of NPSP Opportunity Contact Role automation, potentially resulting in incorrect or duplicate data. Refer to the product documentation for more details.</inlineHelpText>
+        <label>Disable Contact Role Automation</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Fair_Market_Value__c</fullName>
         <description>The Fair Market Value of an In-Kind gift.</description>
         <externalId>false</externalId>
