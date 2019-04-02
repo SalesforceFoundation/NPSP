@@ -33,7 +33,8 @@
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Selector class for relevant summary/target fields for use by the Rollup Engine
-*/public class CRLP_Query_SEL {
+*/
+public inherited sharing class CRLP_Query_SEL {
 
     /**
      * @description For a given SObject, identify all referenced fields from the currently defined Rollups and
@@ -56,19 +57,23 @@
             allFieldsToQuery.add(SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.Partial_Soft_Credit__c.fields.Amount__c.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.Partial_Soft_Credit__c.fields.Role_Name__c.getSobjectField().getDescribe());
+
         } else if (resultObject == Account_Soft_Credit__c.SObjectType) {
             allFieldsToQuery.add(SObjectType.Account_Soft_Credit__c.fields.Opportunity__c.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.Account_Soft_Credit__c.fields.Account__c.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.Account_Soft_Credit__c.fields.Amount__c.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.Account_Soft_Credit__c.fields.Role__c.getSobjectField().getDescribe());
+
         } else if (resultObject == OpportunityContactRole.SObjectType) {
             allFieldsToQuery.add(SObjectType.OpportunityContactRole.fields.ContactId.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.OpportunityContactRole.fields.OpportunityId.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.OpportunityContactRole.fields.Role.getSobjectField().getDescribe());
+
         } else if (resultObject == Opportunity.SObjectType) {
             allFieldsToQuery.add(SObjectType.Opportunity.fields.Amount.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.Opportunity.fields.CloseDate.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getSobjectField().getDescribe());
+
         } else if (resultObject == npe01__OppPayment__c.SObjectType) {
             allFieldsToQuery.add(SObjectType.npe01__OppPayment__c.fields.npe01__Opportunity__c.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.npe01__OppPayment__c.fields.npe01__Payment_Date__c.getSobjectField().getDescribe());
@@ -83,18 +88,24 @@
             // Special conditions - these are foreign key fields that are supported in filters for record type and user
             if (dfr.getName() == 'RecordTypeId') {
                 queryFields.add('RecordType.DeveloperName');
+
             } else if (dfr.getName() == 'OwnerId') {
                 queryFields.add('Owner.Alias');
+
             } else if (dfr.getName() == 'CreatedById') {
                 queryFields.add('CreatedBy.Alias');
+
             } else if (dfr.getName() == 'LastModifiedById') {
                 queryFields.add('LastModifiedBy.Alias');
+
             } else if (dfr.getName() == 'ContactId') {
                 queryFields.add('Contact.AccountId');
+
             } else if (dfr.getName() == contactRelField) {
                 queryFields.add(contactRelField.replace('__c', '__r') + '.AccountId');
             }
         }
+
         // Convert the Set to the List to support String.Join()
         List<String> fieldsList = new List<String>(queryFields);
 
