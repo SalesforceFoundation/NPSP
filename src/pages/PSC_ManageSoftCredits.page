@@ -87,7 +87,8 @@
                     <tr>
                         <td>
                             <c:UTIL_FormField sObj="{!credit.contactRole}" sObjType="OpportunityContactRole" field="ContactId"
-                                  showLabel="false" actSup="true" actSupAction="{!refresh}" actSupReRender="totalSelected, totalUn"/>
+                                  showLabel="false" actSup="true" actSupAction="{!refresh}" actSupReRender="totalSelected, totalUn" 
+                                  overrideRequired="true"/>
 
                         </td>
                         <td>
@@ -114,7 +115,9 @@
                             </apex:outputPanel>
                         </td>
                         <td>
-                            <apex:commandButton styleClass="slds-button slds-button_destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="tablePanel, totalSelected, totalUn" immediate="true">
+                            <apex:commandButton styleClass="slds-button slds-button_destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" 
+                                title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="tablePanel, totalSelected, totalUn" 
+                                immediate="false">
                                 <span class="slds-form-element__label slds-assistive-text">
                                     {!$Label.pscDeleteRow} {!cnt}
                                 </span>
