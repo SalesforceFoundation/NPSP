@@ -529,9 +529,15 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 if (contactRecord.Id != null) {
                     accountRecord.npe01__One2OneContact__c = contactRecord.Id;
                 }
+
                 accountRecord.Phone = contactRecord.Phone;
                 accountRecord.Fax = contactRecord.Fax;
                 accountRecord.OwnerId = contactRecord.OwnerId;
+
+                if (UserInfo.isMultiCurrencyOrganization()) {
+                    accountRecord.put('CurrencyIsoCode', (String) contactRecord.get('CurrencyIsoCode'));
+                }
+
                 // only set account's billing address if address management is off.
                 // otherwise, we'll let ADDR_Contact_TDTM push the new address into the account.
                 if (!CAO_Constants.isHHAccountModel() || UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
