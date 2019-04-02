@@ -1782,6 +1782,7 @@
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>
         <members>pscManageSoftCreditsAmountMissing</members>
+        <members>pscManageSoftCreditsContactMissing</members>
         <members>pscManageSoftCreditsAmountOrPercent</members>
         <members>pscManageSoftCreditsCantChangeCurrency</members>
         <members>pscManageSoftCreditsFull</members>
