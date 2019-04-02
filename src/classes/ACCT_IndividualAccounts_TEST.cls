@@ -1437,9 +1437,13 @@ private class ACCT_IndividualAccounts_TEST {
         The SOQL contains Household Naming fields.
     **********************************************************************************************************/ 
     private static testMethod void testContactSoqlReturnsQueryForSpecifiedContacts() {
-        Set<String> hhNamingFields = new Set<String>{ 'FIRSTname', 'PhOnE', 'Fax', 'lastname', 'LastName', 'npe01__WorkEmail__c'};
-
-        String soql = new ACCT_IndividualAccounts_TDTM().buildContactSoql(hhNamingFields);
+        UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
+        UTIL_UnitTestData_TEST.setupHHNamingSettings(
+            'The {!lastname}, {!{!FIRSTname}} Family',
+            '{!{!SALUTATION} {!FIRSTname}} {!LASTNAME}',
+            '{!{!npe01__WorkEmail__c}}'
+        );
+        String soql = new ACCT_IndividualAccounts_TDTM().buildContactSoql();
 
         System.assert(soql.contains('npe01__WorkEmail__c'));// the only field added from Household Naming fields
 
