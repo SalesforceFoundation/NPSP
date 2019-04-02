@@ -121,11 +121,12 @@ private class PMT_PaymentWizard_TEST {
         );
         
         Opportunity opp = createClosedWonOpportunity(1200);
-        
+
         // Create 11 additional payments (for a total of 12)
         // And mark 2 of them as paid and 3 of them as written off
         // The resulting payments should be (3 paid / 3 written off / 6 open)
         List<npe01__OppPayment__c> newPayments = new List<npe01__OppPayment__c>();
+        
         Boolean isPaid = true;
         Boolean isWrittenOff = false;
 
@@ -150,7 +151,13 @@ private class PMT_PaymentWizard_TEST {
             newPayments.add(newOppPayment);
 
         }
-        insert newPayments;
+
+        // Add auto generated payment
+        List<npe01__OppPayment__c> opmtUpdate = getPayments(opp.Id);
+        opmtUpdate[0].npe01__payment_amount__c = 100;
+        newPayments.add(opmtUpdate[0]); 
+
+        upsert newPayments;
         
         Test.startTest();
         
@@ -173,7 +180,7 @@ private class PMT_PaymentWizard_TEST {
         Test.stopTest();
         
         // should be seven payments - 3 paid, 3 written off (previously), 1 new combined written off
-        npe01__OppPayment__c[] allPayments = getPayments(opp.Id);
+        allPayments = getPayments(opp.Id);
         System.assertEquals(7, allPayments.size(), 'There should be 7 total payments after write off');
 
         // loop through and get counts as well as totals
