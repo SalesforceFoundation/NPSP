@@ -292,6 +292,13 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
                 }
 
             } else {
+                 // Because we turn off UI requirement validation on the contact 
+                 // we need to check on the server side to make sure the contact is populated
+                if (sc.contactRole.ContactId == null) {
+                    Apexpages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pscManageSoftCreditsContactMissing));
+                    return null;
+                }
+
                 if (sc.partial.Id != null) {
                     toDelete.add(sc.partial);
                 }
