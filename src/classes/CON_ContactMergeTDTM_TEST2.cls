@@ -329,45 +329,6 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
         System.assertEquals(2, contacts[0].npo02__NumberOfClosedOpps__c, 'The rollup should have been calculated');
     }
 
-    /*******************************************************************************************************
-    * @description Verifies legacy rollup is used when Customizable Rollups is not activated
-    */
-    @isTest
-    private static void contactMergeShouldUseLegacyRollupWhenCRLPNotEnabled() {
-        RLLP_OppRollupMock mock = setRollupMock();
-
-        List<Contact> contactsToMerge = buildContactsWithOppsForAccount();
-
-        Test.startTest();
-        merge contactsToMerge[0] contactsToMerge[1];
-        Test.stopTest();
-
-        System.assert(mock.rollupContactsCalled, 'Legacy rollup should have been called');
-    }
-
-    /*******************************************************************************************************
-    * @description Verifies legacy rollup is NOT used when Customizable Rollups is activated
-    */
-    @isTest
-    private static void contactMergeShouldNotUseLegacyRollupWhenCRLPEnabled() {
-        UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Customizable_Rollups_Enabled__c = true;
-        RLLP_OppRollupMock mock = setRollupMock();
-
-        List<Contact> contactsToMerge = buildContactsWithOppsForAccount();
-
-        TDTM_ObjectDataGateway.ClearCachedTriggerHandlersForTest();
-
-        Test.startTest();
-        merge contactsToMerge[0] contactsToMerge[1];
-        Test.stopTest();
-
-        //CRLP rollup method is static, so we cannot mock it so just confirming that legacy is not called and rollup is still calculated
-        System.assert(!mock.rollupContactsCalled, 'Legacy rollup should not have been called');
-
-        List<Contact> contacts = [SELECT npo02__NumberOfClosedOpps__c FROM Contact];
-        System.assertEquals(2, contacts[0].npo02__NumberOfClosedOpps__c, 'The rollup should have been calculated');
-    }
-
     /*******************************************************************************************************************
     * @description Builds and inserts contacts with one opportunity each for a single account
     */
@@ -390,35 +351,4 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
         return contacts;
     }
 
-    /*******************************************************************************************************************
-    * @description Builds mock instance and stubs RLLP_OppRollupMock in CON_ContactMerge_TDTM
-    */
-    private static RLLP_OppRollupMock setRollupMock() {
-        RLLP_OppRollupMock rollupMock = new RLLP_OppRollupMock();
-        CON_ContactMerge_TDTM.opprollup =
-            (RLLP_OppRollup)Test.createStub(RLLP_OppRollup.class, rollupMock);
-        return rollupMock;
-    }
-
-    /*******************************************************************************************************************
-    * @description Stub for RLLP_OppRollupMock instance
-    */
-    private class RLLP_OppRollupMock implements System.StubProvider {
-        private Boolean rollupContactsCalled = false;
-        public Object handleMethodCall(
-            Object stubbedObject,
-            String stubbedMethodName,
-            Type returnType,
-            List<Type> listOfParamTypes,
-            List<String> listOfParamNames,
-            List<Object> listOfArgs
-        ) {
-            switch on stubbedMethodName {
-                when 'rollupContacts' {
-                    rollupContactsCalled = true;
-                }
-            }
-            return null;
-        }
-    }
 }
