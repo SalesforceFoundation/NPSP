@@ -417,6 +417,8 @@
         <members>UTIL_Debug</members>
         <members>UTIL_Describe</members>
         <members>UTIL_Describe_TEST</members>
+        <members>UTIL_FeatureManagement</members>
+        <members>UTIL_FeatureManagement_TEST</members>
         <members>UTIL_Finder</members>
         <members>UTIL_Finder_TEST</members>
         <members>UTIL_HtmlOutput_CTRL</members>
@@ -2523,8 +2525,12 @@
         <members>Data_CountErrorLog</members>
         <members>Data_CountRdOppsAll</members>
         <members>Data_CountRdOppsOpenEnded</members>
+        <members>Data_CountRdsWithDiffAmount</members>
+        <members>Data_CountRecurringDonationsAll</members>
         <members>Data_MaxNumRelatedOpps</members>
         <members>Org_CountNonEnglishLanguages</members>
+        <members>Org_CountTimedOutBatchJobsLast7Days</members>
+        <members>Org_LongestRunningBatchLast7Days</members>
         <name>FeatureParameterInteger</name>
     </types>
     <types>
