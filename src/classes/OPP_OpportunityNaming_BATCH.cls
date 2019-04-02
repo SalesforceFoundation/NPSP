@@ -77,7 +77,14 @@ public class OPP_OpportunityNaming_BATCH implements Database.Batchable<sObject>,
     * @description Batch process execute method. Names and updates all opportunities in the current batch.
     */
     public void execute(Database.BatchableContext BC, List<Opportunity> oppsToProcess) {
-        lastOppIdProcessed = oppsToProcess[oppsToProcess.size() - 1].Id;
+        // Since execution contexts might not run in order (ex., chunk size 10k,
+        // batch size 2k has 5 batches but they won't run in a guaranteed order)
+        // we first need to check if the last Id is greater than the value in lastOppIdProcessed
+        Id lastIdInScope = oppsToProcess[oppsToProcess.size() - 1].Id;
+
+        if (lastOppIdProcessed == null || lastIdInScope > lastOppIdProcessed) {
+            lastOppIdProcessed = lastIdInScope;
+        }
 
         //save old opp names to see if we need an update
         Map<Id, String> originalOppNamesById = new Map<Id, String>();
