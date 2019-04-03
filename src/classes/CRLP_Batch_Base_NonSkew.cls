@@ -164,7 +164,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             }
 
             String query = queryBuilder.getDetailsQueryAsSOQL();
-            UTIL_Debug.debug(LoggingLevel.ERROR, '>> NonSkew Batch Query =' + query);
 
             List<SObject> detailRecords = Database.query(query);
 
@@ -173,7 +172,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
                     jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                 detailRecords = buildPartialSoftCreditRecordsFromOCRs(detailRecords);
-                UTIL_Debug.debug(LoggingLevel.WARN, '>> PSC Detail Record Size =' + detailRecords.size());
             }
 
             String parentObjectField;
@@ -216,8 +214,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
             }
             summaryRecords = newSummaryRecords;
-
-            UTIL_Debug.debug(LoggingLevel.WARN, '>>> New Summary Record Size=' + newSummaryRecords.size());
 
             // Are there any summary records left to process?
             if (summaryRecords.size() > 0) {
