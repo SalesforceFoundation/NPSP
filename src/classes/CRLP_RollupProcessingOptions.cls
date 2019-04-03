@@ -94,9 +94,7 @@ public class CRLP_RollupProcessingOptions {
     }
 
     /**
-     * @description Processing Options to use for the startRollupsProcess
-     * These are set by the calling Batch or Queueable job to define how the rollups will be processed by the
-     * CRLP_RollupProcessor_SVC methods.
+     * @description Processing Options to use for the CRLP_RollupProcessor.startRollupProcessing() method
      */
     public class ProcessingOptions {
 
@@ -104,99 +102,5 @@ public class CRLP_RollupProcessingOptions {
          * in the database. If set to false, the rollup happens and the RollupDefinition instances are updated
          * accordingly, but the target Summary SObject is not built. */
         public Boolean doSummaryObjectComparison = true;
-
-        /** @description Define the type of batch job mode - LDV or NonLDV mode */
-        public BatchJobMode mode = BatchJobMode.NonSkewMode;
-
-        /** @description Type of rollup being performed */
-        public RollupType rollupJobType;
-
-        /** @description Support filtering the specific types of Rollup definitions that will be processed */
-        public RollupTypeFilter rollupTypesToProcess = RollupTypeFilter.All;
-
-        public SObjectType parentObjType;   // Summary object (Account, Contact, GAU)
-        public SObjectType detailObjType;   // Used when working with Soft Credits to have a way to know what the detail object is
-        public String parentKeyField;       // Used to know how to get the Id of the Parent record from the supplied detail record
-
-        /**
-         * @description used to recieve and return the last Parent record id processed by startRollupsForLDV().
-         * The value is saved as a stateful var in the calling batch process
-         */
-        public Id lastParentIdProcessed;
-
-        /**
-         * @description Used to return a true to the calling LDV class when the last parent Id was removed from
-         * the list of updated SObjects
-         */
-        public Boolean lastParentIdRemovedFromUpdatesList = false;
-
-        /**
-         * @description Stateful rollups collection for LDV Mode. Needs to stay in ProcessingOptions to allow for passing
-         * between various service methods with the rest of the processing options
-         */
-        public Map<Id, List<CRLP_Rollup>> mapOfRollupsByParentId = new Map<Id, List<CRLP_Rollup>>();
-
-        /**
-         * @description When working with Account Soft Credit Rollups, this var is used to hold a list
-         * of Opportunity Id's that have been rolled up to a given Account. The data is retained in a stateful var
-         * in the batch job to support scenarios where a given Account's rollups straddle multiple batch operations
-         */
-        public Map<Id,Set<Id>> mapOfProcessedOppIdsByParentId = new Map<Id,Set<Id>>();
-
-        /**
-         * @description Set the property
-         */
-        public void setMapOfProcessedOppIdsByParentId(Map<Id,Set<Id>> theMap, List<Id> parentIds) {
-            this.mapOfProcessedOppIdsByParentId = new Map<Id, Set<Id>>();
-            for (Id mapKey : parentIds) {
-                if (theMap.containsKey(mapKey)) {
-                    this.mapOfProcessedOppIdsByParentId.put(mapKey, theMap.get(mapKey));
-                }
-            }
-        }
-
-        /**
-         * @description Set the property by fully cloning the passed Map so that the Map and the list of elements
-         * in each map value are a complete copy of the passed version. This is necesssary because the processing
-         * job will add every parent id to this map, but the stateful var only needs to retain the first and last
-         * parent id's processed.
-         */
-        public void setMapOfRollupsByParentId(Map<Id, List<CRLP_Rollup>> theMap, List<Id> parentIds) {
-            this.mapOfRollupsByParentId = new Map<Id, List<CRLP_Rollup>>();
-            for (Id mapKey : parentIds) {
-                if (theMap.get(mapKey) != null) {
-                    List<CRLP_Rollup> newList = new List<CRLP_Rollup>();
-                    for (CRLP_Rollup r : theMap.get(mapKey)) {
-                        newList.add(r.clone());
-                    }
-                    this.mapOfRollupsByParentId.put(mapKey, newList);
-                }
-            }
-        }
-
-        /**
-         * @description Returns the updated Map of processed Opportunity Id's by the parent Account Id.
-         * Used to expose this value to the LDV Batch Job to retrieve the current setting.
-         */
-        public Map<Id,Set<Id>> getUpdatedMapOfProcessedOppsByParentId() {
-            return this.mapOfProcessedOppIdsByParentId;
-        }
-
-        /**
-         * @description Returns the updated Map of List<CRLP_Rollup> values by the parent record Id.
-         * Used to expose this value to the LDV Batch Job to retrieve the current setting.
-         */
-        public Map<Id, List<CRLP_Rollup>> getUpdatedMapOfRollupsByParentId() {
-            return this.mapOfRollupsByParentId;
-        }
-
-        /**
-         * @description Returns the last parent id processed by the RollupsProcessor logic for the given execution scope
-         */
-        public Id getLastParentIdProcessed() {
-            return this.lastParentIdProcessed;
-        }
-
     }
-
 }

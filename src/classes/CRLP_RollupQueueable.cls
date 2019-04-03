@@ -89,23 +89,24 @@ public class CRLP_RollupQueueable implements System.Queueable {
      */
     public static void runRollupsForIds(List<Id> summaryRecordIds) {
         SObjectType objType = summaryRecordIds[0].getSobjectType();
+        CRLP_RollupProcessingOptions.RollupType rollupType;
 
-        CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
+        /*CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
         options.mode = CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode;
         options.parentObjType = objType;
-        options.detailObjType = Opportunity.SObjectType;
+        options.detailObjType = Opportunity.SObjectType;*/
 
         if (objType == Account.SObjectType) {
-            options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
-            options.rollupJobType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+//            options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
+            rollupType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
 
         } else if (objType == Contact.SObjectType) {
-            options.parentKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-            options.rollupJobType = CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+//            options.parentKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+            rollupType = CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
 
         } else if (objType == npe03__Recurring_Donation__c.SObjectType) {
-            options.parentKeyField = SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getName();
-            options.rollupJobType = CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
+//            options.parentKeyField = SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getName();
+            rollupType = CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
         }
 
         // Query the parent records
@@ -143,9 +144,9 @@ public class CRLP_RollupQueueable implements System.Queueable {
 
             CRLP_RollupQueryBuilder queryBuilder = new CRLP_RollupQueryBuilder()
                     .withSummaryRecords(summaryRecords)
-                    .withRollupType(options.rollupJobType)
+                    .withRollupType(rollupType)
                     .withSummaryRecordIdsVar('summaryRecordIds')
-                    .withOrderBy(options.parentKeyField);
+                    .withOrderBy(CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(rollupType));
             if (includeChildPayments) {
                 queryBuilder.includePaymentRecords();
             }
@@ -158,11 +159,10 @@ public class CRLP_RollupQueueable implements System.Queueable {
                 paymentsByOpp = CRLP_RollupProcessor_SVC.splitChildRecordsInMapByParentId(detailRecords, 'npe01__OppPayment__r');
             }
 
-            // TODO Figure out if we really need OPTIONS for any of this to work.
             // Need to pass in the Rollup Type, Rollup Defnitions if they're available along
             // with the Summary Record(s), Detail Record(s) and any Related Records.
             CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
-                    .withRollupType(options.rollupJobType)
+                    .withRollupType(rollupType)
                     .withSummaryRecords(summaryRecords)
                     .withDetailRecords(detailRecords)
                     .withRelatedRecords(paymentsByOpp);
@@ -170,12 +170,12 @@ public class CRLP_RollupQueueable implements System.Queueable {
             List<SObject> updatedRecords = processor.startRollupProcessing();
 
             // DML and capture any returned DML errors into a Map by Summary Record Id
-            CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords, options.rollupJobType);
+            CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords, rollupType);
 
             // In debug mode, write a summary of the job to the error log
             if (CRLP_Debug_UTIL.isDebuggingEnabled) {
                 Error__c logEntry = new Error__c(
-                        Context_Type__c = ERR_Handler_API.Context.CRLP.name() + ': ' + options.rollupJobType.name() + ' ' + options.mode.name(),
+                        Context_Type__c = ERR_Handler_API.Context.CRLP.name() + ': ' + rollupType.name(),
                         Error_Type__c = 'DEBUG LOG',
                         Full_Message__c = ('CRLP_RollupQueueable\n' +
                                 'detailRecords Count: ' + detailRecords.size() + '\n' +

@@ -414,12 +414,12 @@ public class CRLP_RollupContact_TEST {
 
         // Mark two payments as written off; though only one should be rolled up
         npe01__OppPayment__c pmt1 = [SELECT npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__c
-        WHERE npe01__Opportunity__r.IsWon = false LIMIT 1];
+            WHERE npe01__Opportunity__r.IsWon = false LIMIT 1];
         pmt1.npe01__Written_Off__c = true;
         pmt1.npe01__Paid__c = false;
 
         npe01__OppPayment__c pmt2 = [SELECT npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__c
-        WHERE npe01__Opportunity__r.IsWon = true AND npe01__Written_Off__c = false AND Id != :pmt1.Id LIMIT 1];
+            WHERE npe01__Opportunity__r.IsWon = true AND npe01__Written_Off__c = false AND Id != :pmt1.Id LIMIT 1];
         pmt2.npe01__Written_Off__c = true;
         pmt2.npe01__Paid__c = false;
 
@@ -432,9 +432,9 @@ public class CRLP_RollupContact_TEST {
         CMT_FilterRuleEvaluation_SVC.cachedFilterEvalResults.clear();
         update new List<npe01__OppPayment__c>{ pmt1, pmt2 };
 
-        system.assertEquals(cnt, [SELECT Count() FROM npe01__OppPayment__c WHERE npe01__Opportunity__r.IsWon = true],
+        System.assertEquals(cnt, [SELECT Count() FROM npe01__OppPayment__c WHERE npe01__Opportunity__r.IsWon = true],
                 'There should be 100 payment records on closed won opps');
-        system.assertEquals(cnt+1, [SELECT Count() FROM OpportunityContactRole WHERE Opportunity.IsWon = true AND ContactId = :conId],
+        System.assertEquals(cnt+1, [SELECT Count() FROM OpportunityContactRole WHERE Opportunity.IsWon = true AND ContactId = :conId],
                 'There should be 101 OCR records on closed won opps');
 
         // Now test the rollups to the Contact from the Opportunity
@@ -454,9 +454,9 @@ public class CRLP_RollupContact_TEST {
 
         // Query the Contact with all the target fields specified in the rollups
         String conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
-        c = database.query(conQuery);
+        c = Database.query(conQuery);
         conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :con4Id LIMIT 1';
-        c4 = database.query(conQuery);
+        c4 = Database.query(conQuery);
 
         // If the AlwaysRollupToPrimaryContact field is checked, the totals will include the org donation
         if (tt == TestType.TestWithAlwaysRollupToPrimary) {

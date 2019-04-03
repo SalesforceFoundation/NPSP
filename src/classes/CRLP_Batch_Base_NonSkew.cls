@@ -152,14 +152,12 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 }
             }
 
-            CRLP_RollupProcessingOptions.ProcessingOptions options = buildProcessingOptions();
-
             CRLP_RollupQueryBuilder queryBuilder = new CRLP_RollupQueryBuilder()
                     .withRollupType(jobType)
                     .withSummaryRecords(summaryRecords)
                     .withSummaryRecordIdsVar('summaryRecords')
                     .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
-                    .withOrderBy(options.parentKeyField);
+                    .withOrderBy(CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType));
 
             if (hasActivePaymentRollupsForThisJob()) {
                 queryBuilder.includePaymentRecords();
@@ -203,10 +201,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 UTIL_Debug.debug(LoggingLevel.WARN, '>> PSC Detail Record Size =' + detailRecords.size());
             }
 
-            options.parentKeyField = CRLP_Rollup_SVC.getParentRelationshipFieldForProcessingJob(jobType);
-
             String parentObjectField;
-            String parentKeyField = options.parentKeyField;
+            String parentKeyField = CRLP_Rollup_SVC.getParentRelationshipFieldForProcessingJob(jobType);
 
             // The parentKeyField field may be have dot-notation (ex: Contact__r.AccountId)
             // If this is the case, need to parse out the two components to use
@@ -256,8 +252,15 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                     paymentsByOpp = CRLP_RollupProcessor_SVC.splitChildRecordsInMapByParentId(detailRecords, 'npe01__OppPayment__r');
                 }
 
-                // Call the method to do the actual rollups. This returns only records that require updating
-                List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, paymentsByOpp, options);
+                // Need to pass in the Rollup Type, Rollup Defnitions if they're available along
+                // with the Summary Record(s), Detail Record(s) and any Related Records.
+                CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+                        .withRollupType(jobType)
+                        .withSummaryRecords(summaryRecords)
+                        .withDetailRecords(detailRecords)
+                        .withRelatedRecords(paymentsByOpp);
+
+                List<SObject> updatedRecords = processor.startRollupProcessing();
 
                 // Handle dml on the records to be updated
                 if (updatedRecords != null && !updatedRecords.isEmpty()) {
@@ -318,14 +321,4 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             }
         }
     }
-
-    /**
-     * @description Instantiate the ProcessingOptions class for Non-Skew Mode batch operations.
-     */
-    private CRLP_RollupProcessingOptions.ProcessingOptions buildProcessingOptions() {
-        CRLP_RollupProcessingOptions.ProcessingOptions options = super.initOptionsInstance();
-        options.detailObjType = this.detailObjectType;
-        return options;
-    }
-
 }

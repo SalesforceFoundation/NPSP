@@ -144,32 +144,6 @@ public abstract class CRLP_Batch_Base {
         this.keyField = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType);
     }
 
-    /********************************************************************************************************
-     * @description Create an instance of the CRLP_RollupProcessingOptions.ProcessingOptions class to use with the
-     * CRLP_RollupProcessor_SVC.startRollupProcess() calls.
-     * @return CRLP_RollupProcessingOptions.ProcessingOptions
-     */
-    protected CRLP_RollupProcessingOptions.ProcessingOptions initOptionsInstance() {
-        CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
-        options.detailObjType = Opportunity.SObjectType;    // the default type
-        options.parentObjType = this.summaryObjectType;
-
-        options.rollupJobType = this.jobType;
-        options.rollupTypesToProcess = this.jobFilter;
-        options.mode = this.jobMode;
-
-        options.detailObjType = CRLP_Rollup_SVC.getDetailObjectType(jobType);
-        options.parentKeyField = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType);
-
-        // Retrieve and store the cached list of Rollup__mdt records into the Rollups Processor
-        // so that the list never changes throughout the life of the batch job
-        if (this.statefulCacheOfRollupsToBeProcessed != null) {
-            CRLP_Rollup_SEL.addRollupsToCache(this.jobType, this.jobFilter,
-                    this.statefulCacheOfRollupsToBeProcessed);
-        }
-
-        return options;
-    }
 
     /**
      * @description For a given set of records, returns a Set<Id> of parent records using the passed field name as the parent

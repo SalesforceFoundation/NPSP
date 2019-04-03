@@ -474,7 +474,6 @@ public class CRLP_RollupCMT {
      */
     private static String abbreviateForSpace(String txt, Boolean forDeveloperName) {
 
-        // TODO Talk to Beth about LowerCase().
         txt = txt.replace('General Accounting Unit', 'GAU').
                 replace('Recurring Donation', 'RD').
                 replace('Opportunity', 'Opp').

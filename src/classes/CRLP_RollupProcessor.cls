@@ -32,7 +32,8 @@
 * @date 2019
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description WORK IN PROGRESS (TODO)
+* @description Processor Class for the actual rollup operations. Effectively pass in the rollup type, rollup definitions,
+* summary object, detail object, related objects. Returns an updated SObject if there are changed fields.
 *
 */
 public class CRLP_RollupProcessor {
@@ -46,7 +47,6 @@ public class CRLP_RollupProcessor {
     /** @description Support filtering the specific types of Rollup definitions that will be processed */
     private CRLP_RollupProcessingOptions.RollupTypeFilter rollupTypesToProcess = CRLP_RollupProcessingOptions.RollupTypeFilter.All;
 
-    // TODO Determine whether this is really needed long-term
     /** @description Optional processing options for the rollup operation */
     @TestVisible
     private CRLP_RollupProcessingOptions.ProcessingOptions options {
@@ -78,7 +78,7 @@ public class CRLP_RollupProcessor {
      * @description used to receive and return the last Parent record id processed by startRollupProcessing().
      * The value is saved as a stateful var in the calling batch process
      */
-    public Id lastParentIdProcessed;
+    private Id lastParentIdProcessed;
 
     /**
      * @description Used to return a true to the calling LDV class when the last parent Id was removed from
@@ -224,7 +224,7 @@ public class CRLP_RollupProcessor {
     private String parentRelationshipField {
         get {
             if (parentRelationshipField == null) {
-                parentRelationshipField = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(rollupType);
+                parentRelationshipField = CRLP_Rollup_SVC.getParentRelationshipFieldForProcessingJob(rollupType);
             }
             return parentRelationshipField;
         } set;
@@ -283,6 +283,16 @@ public class CRLP_RollupProcessor {
         return lastParentIdProcessed;
     }
 
+    /**
+     * @description Returns the last parent id processed by the RollupsProcessor logic for the given execution scope
+     */
+    public Set<Id> getPreviouslyProcessedOppIds(Id parentId) {
+        return previouslyProcessedOppIdsByParentId.get(parentId);
+    }
+
+    /**
+     * @description Validate that any required properties have been configured in this class before starting the operation
+     */
     private void validateProcessSettingsBeforeStarting() {
         List<String> errors = new List<String>();
         if (rollupType == null) {
@@ -296,6 +306,11 @@ public class CRLP_RollupProcessor {
         }
     }
 
+    /**
+     * @description The main work engine for roll-up activities. This method is called from both batch jobs
+     * as well as from queuable jobs (via a trigger operation).
+     * @return List<SObject> Records that require updating.
+     */
     public List<SObject> startRollupProcessing() {
 
         validateProcessSettingsBeforeStarting();
@@ -358,9 +373,11 @@ public class CRLP_RollupProcessor {
         return recordsToUpdate.values();
     }
 
-    /** THIS NEEDS A BETTER EXPLANATION
-    * @description When PreventDupesInRollup is true, ensure the list of Opps in the detailsForParent
-    * collection is unique by Opportunity Id
+    /**
+    * @description When PreventDupesInRollup is true, this method will purge the list of detail Opps in the detailsForParent
+    * collection to remove any that were previously processed. This is used in AccountContactSoftCredit rollups to
+    * prevent an Account from both getting soft credit for the same opportunity more than one - when there is more than
+    * one Household Contact that got soft credit for that Opportunity.
     */
     private List<SObject> cleanDetailOppsListForSoftCreditMode(Id parentId, List<SObject> detailsForParent) {
         List<SObject> oppsToRollup = new List<SObject>();
@@ -409,14 +426,6 @@ public class CRLP_RollupProcessor {
     }
 
     /**
-     * @description Saved instance of the instantiated handler class to avoid recreating each time. Because the soft credit
-     * rollups summary both Account and Contact soft credits at the same time, it's necessary to use a map to separate the
-     * instances by the Summary Object Type. It's still much faster than instantiating on every summary record.
-     */
-    private static Map<CRLP_RollupProcessingOptions.RollupType, CRLP_VRollupHandler> cachedHandlerInstanceByRollupType =
-            new Map<CRLP_RollupProcessingOptions.RollupType, CRLP_VRollupHandler>();
-
-    /**
      * @description For a given Parent (Summary) record, and set of detail records, complete the rollup of the
      * details to the parent. The List<CRLP_Rollup> collection in ProcessingOptions is used for the actual rollup
      * accumulations. This method is called by all of the entry points for Rollup Calculations -- Batch, LDV, Queueable
@@ -426,6 +435,74 @@ public class CRLP_RollupProcessor {
     public SObject completeRollupForSingleSummaryRecord(SObject parent) {
         // The Parent record Id has changed, so initiate the rollup and determine if the Summary record
         // has changed or not.
+        Id parentId = parent.Id;
+
+        CRLP_VRollupHandler handler = initHandlerClass(parent);
+
+        List<CRLP_Rollup> rollupDefs = doFinalRollup(handler, parentId);
+
+        if (options.doSummaryObjectComparison == false) {
+            return null;
+        }
+
+        // Build an updated SObject parent record with the calculated rollups
+        SObject updatedRecord = handler.getPopulatedSObject();
+
+        // Determine if the updated SObject record is different than the parent.
+        // If not, set it to null
+        if (CRLP_Rollup_SVC.resultsNeedUpdate(parent, updatedRecord, rollupDefs) == false) {
+            updatedRecord = null;
+        }
+
+        return updatedRecord;
+    }
+
+    /**
+     * @description Call the instantiated handler with the parent and details
+     * @param handler
+     * @param parentId
+     * @return Updated Rollup definitions
+     */
+    private List<CRLP_Rollup> doFinalRollup(CRLP_VRollupHandler handler, Id parentId) {
+
+        // Don't both calling the processRollups() method if there are no details to roll up
+        List<SObject> detailRecords = detailRecordsByParentId.get(parentId);
+        if (detailRecords != null && !detailRecords.isEmpty()) {
+
+            handler.processRollups(detailRecords, relatedRecordsByDetailId);
+
+            if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+                    rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                previouslyProcessedOppIdsByParentId.put(parentId, handler.getListOfOppIdsThatWereRolledUp());
+            }
+
+            // only set the lastParentId when there are actually detail records
+            lastParentIdProcessed = parentId;
+
+            // Save the rollup data from the Handler instance into the processing options instance
+            if (isSkewMode) {
+                rollupsDefsByParentId.put(parentId, CRLP_RollupProcessor_SVC.fullyCloneList(handler.getRollupsList()));
+            }
+        }
+
+        return handler.getRollupsList();
+    }
+
+    /**
+     * @description Saved instance of the instantiated handler class to avoid recreating each time. Because the soft credit
+     * rollups summary both Account and Contact soft credits at the same time, it's necessary to use a map to separate the
+     * instances by the Summary Object Type. It's still much faster than instantiating on every summary record.
+     */
+    private static Map<CRLP_RollupProcessingOptions.RollupType, CRLP_VRollupHandler> cachedHandlerInstanceByRollupType =
+            new Map<CRLP_RollupProcessingOptions.RollupType, CRLP_VRollupHandler>();
+
+
+    /**
+     * @description Instantiate and configure the Rollup Handler class as appropriate for the rollup type.
+     * @param parent SObject
+     * @return Instantiated handlr
+     */
+    private CRLP_VRollupHandler initHandlerClass(SObject parent) {
         Id parentId = parent.Id;
 
         CRLP_VRollupHandler handler = cachedHandlerInstanceByRollupType.get(rollupType);
@@ -454,40 +531,7 @@ public class CRLP_RollupProcessor {
             }
         }
 
-        // Don't both calling the processRollups() method if there are no details to roll up
-        List<SObject> detailRecords = detailRecordsByParentId.get(parentId);
-        if (detailRecords != null && !detailRecords.isEmpty()) {
-
-            handler.processRollups(detailRecords, relatedRecordsByDetailId);
-
-            if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                    rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                previouslyProcessedOppIdsByParentId.put(parentId, handler.getListOfOppIdsThatWereRolledUp());
-            }
-
-            // only set the lastParentId when there are actually detail records
-            lastParentIdProcessed = parentId;
-
-            // Save the rollup data from the Handler instance into the processing options instance
-            if (isSkewMode) {
-                rollupsDefsByParentId.put(parentId, CRLP_RollupProcessor_SVC.fullyCloneList(handler.getRollupsList()));
-            }
-        }
-
-        if (options.doSummaryObjectComparison == false) {
-            return null;
-        }
-
-        // Build an updated SObject parent record with the calculated rollups
-        SObject updatedRecord = handler.getPopulatedSObject();
-
-        // Determine if the updated SObject record is different than the parent.
-        // If not, set it to null
-        if (CRLP_Rollup_SVC.resultsNeedUpdate(parent, updatedRecord, handler.getRollupsList()) == false) {
-            updatedRecord = null;
-        }
-
-        return updatedRecord;
+        return handler;
     }
 
     private class CRLP_RollupException extends Exception {}

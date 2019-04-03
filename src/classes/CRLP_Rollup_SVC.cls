@@ -87,7 +87,6 @@ public class CRLP_Rollup_SVC {
     /**
      * @description Creates an empty target (summary) SObject with all of the specific rollup target fields
      * set to null, but only for the specific rollups passed as a parameter.
-     * TODO: Support extending this for archived records.
      * @param objectId Target object Id.
      * @param rollups The specific list of Rollups to clear the target field values.
      * @return An empty SObject.
@@ -321,7 +320,7 @@ public class CRLP_Rollup_SVC {
         return fieldName;
     }
 
-    /** TODO
+    /**
      * @description For SoftCredit rollups, this returns the Parent field in the rollup processing. The difference is that
      * detail query for Soft Credits will start with OCR, but the processing will use PartialSoftCredit.
      * @param rollupType
