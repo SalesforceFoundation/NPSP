@@ -21,7 +21,8 @@ Create Engagement Plan and Edit to Add New Task
     Store Session Record    ${ns}Engagement_Plan_Template__c    ${id}
     Click Link    link=Show more actions
     Click Link    link=Edit
-    #Sleep    2
+    Sleep    2
+    Reload page
     Select Frame With Title    Manage Engagement Plan Template
     Page Scroll To Locator    button    Add Task
     Click Button With Value    Add Task
