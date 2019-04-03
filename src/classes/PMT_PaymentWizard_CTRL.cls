@@ -195,13 +195,15 @@ public with sharing class PMT_PaymentWizard_CTRL {
 
         for (npe01__OppPayment__c payment : opp.npe01__OppPayment__r) {
             if (payment.npe01__Paid__c) {
-                outstanding_payments++;
                 continue;
             } 
             
             if (payment.npe01__Written_Off__c) {
                 amountWrittenOff += payment.npe01__Payment_Amount__c;
+                continue;
             }
+            
+            outstanding_payments++;
         }
     }
 
@@ -617,10 +619,16 @@ public with sharing class PMT_PaymentWizard_CTRL {
      */
     @TestVisible
     private String formatCurrency(Decimal amount) {
+        // Decimal.format is locale aware but it will truncate the decimals for .00 amounts
+        // Adding thousandths of a cent to keep the decimal and then remove it before returning the result
+        Decimal currencyAmt = Decimal.valueOf(Math.roundToLong(amount * 100)) / 100;
+        String formattedCurrency = (currencyAmt.setScale(2) + (currencyAmt >= 0 ? 0.001 : -0.001)).format();
+        formattedCurrency = formattedCurrency.left(formattedCurrency.length() - 1);
+
         if (UserInfo.isMultiCurrencyOrganization()) {
-            return getCurrencySymbol() + ' ' + amount.format();
+            return getCurrencySymbol() + ' ' + formattedCurrency;
         } else {
-            return amount.format();
+            return formattedCurrency;
         }
     }
 
