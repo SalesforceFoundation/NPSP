@@ -204,7 +204,6 @@ public class ALLO_PaymentSync_SVC {
             }
 
             contextByOpportunity.put(context.opportunity.id, context);
-            System.debug('context' + json.serializePretty(context));
         }
     }
 
@@ -219,16 +218,11 @@ public class ALLO_PaymentSync_SVC {
                 Decimal totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
                 Decimal adjustedTotalPaymentAllocations = totalPaymentAllocations * context.scheduleRatio;
                 
-                System.debug('njjc totalOpportunityAllocations ' + totalOpportunityAllocations + ' adjustedTotalPaymentAllocations ' + 
-                    adjustedTotalPaymentAllocations);
-
                 //check if they need updating
                 if (adjustedTotalPaymentAllocations != totalOpportunityAllocations) {
                     for (Allocation__c oppAllocation : context.opportunityAllocationsByGAU.get(gau)) {
                         //we want to keep the ratios amongst duplicate opportunity allocations
                         Decimal duplicateAllocationPaidUnpaidAmountRatio = oppAllocation.Amount__c / totalOpportunityAllocations;
-                        System.debug('njjc duplicateAllocationPaidUnpaidAmountRatio ' + duplicateAllocationPaidUnpaidAmountRatio + 
-                            ' calculatedAmount ' + totalPaymentAllocations * duplicateAllocationpaidUnpaidAmountRatio);
 
                         oppAllocation.Amount__c = totalPaymentAllocations * duplicateAllocationpaidUnpaidAmountRatio;
                         if (oppAllocation.Percent__c != null) {
