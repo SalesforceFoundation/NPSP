@@ -781,7 +781,6 @@ global with sharing class BDI_DataImportService {
                 List<String> dataImportFields) {
         
         return new Map<String,String>();
-        //return fieldMapper.getFieldMap(dataImportObjectName, targetObjectName, dataImportFields);
     }
 
     /*******************************************************************************************************
