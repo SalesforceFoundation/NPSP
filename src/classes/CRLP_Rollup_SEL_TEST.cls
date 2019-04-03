@@ -36,6 +36,8 @@
 @isTest(IsParallel=True)
 public class CRLP_Rollup_SEL_TEST {
 
+    private static Integer rollupMdtCount = 0;
+
     /**
      * @description Because unit tests cannot actually insert Custom Metadata Types and there's no real way to know
      * exactly what's in the CMT objects, we can use this method to mock the contents of the cached MDT queries
@@ -48,59 +50,227 @@ public class CRLP_Rollup_SEL_TEST {
         String filterGroupsJSON = '[' + CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId, 'TestFilterGroup') + ']';
         CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(filterGroupsJSON, List<Filter_Group__mdt>.class);
 
-        // Create a single Rollup that uses the above Filter Group
+        // Create a series of Rollups that each specify a different Opp field in for the Rollup__mdt Detail and Amount
+        // fields that should never be included when building the Opportunity Query. This is defined in the Map
+        // in CRLP_Rollup_SEL.UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD.
         String rollupsJSON = '[' +
-                CMT_UnitTestData_TEST.buildCMTObjectJSON('Rollup__mdt', 'Household Total Donations All Time',
-                    CMT_UnitTestData_TEST.getNewRecordId(), new List<CMT_UnitTestData_TEST.CMT_Field>{
-                        new CMT_UnitTestData_TEST.CMT_Field('Description__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, 'Household Total Donations All Time'),
-                        new CMT_UnitTestData_TEST.CMT_Field('Filter_Group__c', CMT_UnitTestData_TEST.CMTFieldType.FldText, filterGroupId),
-                        new CMT_UnitTestData_TEST.CMT_Field('Active__c', CMT_UnitTestData_TEST.CMTFieldType.FldBoolean, True),
-                        new CMT_UnitTestData_TEST.CMT_Field('Summary_Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Account'),
-                        new CMT_UnitTestData_TEST.CMT_Field('Summary_Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Account.AnnualRevenue'),
-                        new CMT_UnitTestData_TEST.CMT_Field('Detail_Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                        /*new CMT_UnitTestData_TEST.CMT_Field('Detail_Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.AccountId'),*/
-                        new CMT_UnitTestData_TEST.CMT_Field('Date_Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                        new CMT_UnitTestData_TEST.CMT_Field('Date_Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.CloseDate'),
-                        new CMT_UnitTestData_TEST.CMT_Field('Amount_Object__c', CMT_UnitTestData_TEST.CMTFieldType.FldEntity, 'Opportunity'),
-                        new CMT_UnitTestData_TEST.CMT_Field('Amount_Field__c', CMT_UnitTestData_TEST.CMTFieldType.FldField, 'Opportunity.Amount')
-                }) + ']';
+
+            // Sum operation. Ignores the Detail field reference
+            CMT_UnitTestData_TEST.createRollupRecord('Household Total Donations', filterGroupId,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Acknowledgment_Date__c', 'Amount')  + ',' +
+
+            // Count operation. Ignores the Detail and Amount field references
+            CMT_UnitTestData_TEST.createRollupRecord('Household Donations Count', filterGroupId,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'In_Kind_Type__c', 'Is_Grant_Renewal__c') + ',' +
+
+            // Average operation. Ignores the Detail field references
+            CMT_UnitTestData_TEST.createRollupRecord('Average Total Donations All Time', filterGroupId,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'npo02__AverageAmount__c', CRLP_Operation.RollupType.Average, 'npe01__Amount_Outstanding__c', 'Fair_Market_Value__c') + ',' +
+
+            // Largest operation. Does not ignore any of the fields!
+            CMT_UnitTestData_TEST.createRollupRecord('Largest Donation All Time', filterGroupId,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'npo02__LargestAmount__c', CRLP_Operation.RollupType.Largest, 'Amount', 'Fair_Market_Value__c') + ',' +
+
+            // Smallest operation. Does not ignore any of the fields!
+            CMT_UnitTestData_TEST.createRollupRecord('Smallest Donation All Time', filterGroupId,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'npo02__SmallestAmount__c', CRLP_Operation.RollupType.Smallest, 'Amount', 'Fair_Market_Value__c') + ',' +
+
+            // YearsDonated operation. Ignores the Detail reference
+            CMT_UnitTestData_TEST.createRollupRecord('Years Donated', filterGroupId,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'Description', CRLP_Operation.RollupType.Years_Donated, 'Notification_Preference__c', 'Amount') + ',' +
+
+            // DonorStreak operation. Ignores the Detail reference
+            CMT_UnitTestData_TEST.createRollupRecord('Current Donation Streak', filterGroupId,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'npo02__NumberOfMembershipOpps__c', CRLP_Operation.RollupType.Donor_Streak, 'npe01__Membership_Start_Date__c', 'Amount') + ',' +
+
+            // BestYear operation. Ignores the Detail reference
+            CMT_UnitTestData_TEST.createRollupRecord('Best Year', filterGroupId,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'npo02__Best_Gift_Year__c', CRLP_Operation.RollupType.Best_Year, 'npe01__Membership_End_Date__c', 'Amount') + ',' +
+
+            // Last operation. Ignores the Amount reference
+            CMT_UnitTestData_TEST.createRollupRecord('Last Gift Date', filterGroupId,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'npo02__LastCloseDate__c', CRLP_Operation.RollupType.Last, 'CloseDate', 'Matching_Gift_Status__c') + ',' +
+
+            // First operation. Ignores the Amount reference
+            CMT_UnitTestData_TEST.createRollupRecord('First Gift Date', filterGroupId,
+                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                    'npo02__FirstCloseDate__c', CRLP_Operation.RollupType.First, 'CloseDate', 'npe01__Member_Level__c')
+
+            + ']';
+
         CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(
-                rollupsJSON, List<Rollup__mdt>.class);
+            rollupsJSON, 
+            List<Rollup__mdt>.class
+        );
+
+        rollupMdtCount = CRLP_Rollup_SEL.cachedRollups.size();
+    }
+
+    /**
+     * @description Verify that the getReferencedFieldsByObject() method returns the expected fields to be
+     * queried, including validating that fields that shouldn't be queried aren't included.
+     */
+    @IsTest
+    private static void shouldReturnExpectedFieldsToQuery() {
+        mockRollupCMTValues();
+
+        Set<String> expectedFields = new Set<String>{
+                'AccountId', 'CloseDate', 'Amount',
+                Opportunity.Primary_Contact__c.getDescribe().getName(),
+                Opportunity.Fair_Market_Value__c.getDescribe().getName()
+        };
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            expectedFields.add('CurrencyIsoCode');
+        }
+
+        // Verify that the returned set of fields exactly match the expected fields
+        List<Schema.DescribeFieldResult> referencedFields = CRLP_Rollup_SEL.getReferencedFieldsByObject(Opportunity.SObjectType);
+        Set<String> returnedFields = new Set<String>();
+        for (DescribeFieldResult fr : referencedFields) {
+            System.assert(expectedFields.contains(fr.getName()),
+                    'The ' + fr.getName() + ' field is not in the expected fields set');
+            returnedFields.add(fr.getName());
+        }
+
+        // Verify that the expected fields are all in the returned set of fields
+        for (String fld : expectedFields) {
+            System.assert(returnedFields.contains(fld), 'The ' + fld + ' field is not in the returned set of fields');
+        }
+
+        // Test that a query can be built and executed, though it's likely there will be zero rows returned
+        // so don't attempt to validate the result.
+        String queryFields = CRLP_Rollup_SEL.getReferencedFieldsByObjectAsString(Opportunity.SObjectType);
+        String soql = 'SELECT Id,' + queryFields + ' FROM Opportunity LIMIT 1';
+        System.assertEquals(0, Database.query(soql).size());
     }
 
     /**
      * @description Test the Rollup selector methods. Relies on hardcoded JSON deserialized
      * MDT data for these tests.
      */
-    static testMethod void test_Rollup_Selectors() {
+    @IsTest
+    static void validateRollupSelectorGetterMethodResults() {
 
         mockRollupCMTValues();
 
-        System.AssertEquals(1, CRLP_Rollup_SEL.getRollupDefinitions().size(), 'There should be 1 rollup definition');
+        String devName = CRLP_Rollup_SEL.getRollupDefinitions()[0].DeveloperName;
+        String mdtId = CRLP_Rollup_SEL.getRollupDefinitions()[0].Id;
 
-        System.AssertEquals(1, CRLP_Rollup_SEL.getRollupsByDetailType().get(Opportunity.SObjectType).size(),
-                'There should be 1 rollup for the Opportunity detail object');
-        System.AssertEquals(1, CRLP_Rollup_SEL.getRollupsBySummaryType().get(Account.SObjectType).size(),
-                'There should be 1 rollup for the Account summary object');
-        System.AssertEquals(1, CRLP_Rollup_SEL.getRollupsByFilterGroup().size(),
+        System.assertEquals(rollupMdtCount, CRLP_Rollup_SEL.getRollupDefinitions().size(), 'There should be 2 rollup definitions');
+
+        System.assertEquals(rollupMdtCount, CRLP_Rollup_SEL.getRollupsByDetailType().get(Opportunity.SObjectType).size(),
+                'There should be 2 rollups for the Opportunity detail object');
+
+        System.assertEquals(rollupMdtCount, CRLP_Rollup_SEL.getRollupsBySummaryType().get(Account.SObjectType).size(),
+                'There should be 2 rollups for the Account summary object');
+
+        System.assertNotEquals(null, CRLP_Rollup_SEL.getRollupIdByDeveloperName(devName),
+                'There should be one Rollup that matches that dev name');
+
+        System.assertNotEquals(null, CRLP_Rollup_SEL.getRollupById(mdtId),
+                'There should be one Rollup returned');
+
+        System.assertEquals(rollupMdtCount, CRLP_Rollup_SEL.getRollupsById().size(),
+                'There should be 2 rollup definitions returned');
+
+        System.assertEquals(1, CRLP_Rollup_SEL.getRollupsByFilterGroup().size(),
                 'There should be 1 filter group that has rollups');
+    }
 
-        Integer expectedFldCount = 4;   // the 2 fields above PLUS the AccountID and PrimaryContactId fields
-        if (UserInfo.isMultiCurrencyOrganization()) {
-            expectedFldCount++;
+    /**
+     * @description Tests CRLP_Rollup_SEL.UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD is set as expected.
+     */
+    @IsTest
+    private static void shouldMatchUnsupportedOperationsMap() {
+
+        // This should be an exact duplicate of what is in CRLP_Rollup_SEL
+        Map<Schema.SObjectField, Set<String>> expectedOperationsByRollupField = new Map<Schema.SObjectField, Set<String>> {
+                Schema.Rollup__mdt.Date_Field__c => new Set<String> {}, // All Operations Supported
+                Schema.Rollup__mdt.Amount_Field__c => new Set<String> {
+                        CRLP_Operation.RollupType.Count.name(),
+                        CRLP_Operation.RollupType.First.name(),
+                        CRLP_Operation.RollupType.Last.name()
+                },
+                Schema.Rollup__mdt.Detail_Field__c => new Set<String> {
+                        CRLP_Operation.RollupType.Sum.name(),
+                        CRLP_Operation.RollupType.Count.name(),
+                        CRLP_Operation.RollupType.Average.name(),
+                        CRLP_Operation.RollupType.Years_Donated.name(),
+                        CRLP_Operation.RollupType.Donor_Streak.name(),
+                        CRLP_Operation.RollupType.Best_Year.name(),
+                        CRLP_Operation.RollupType.Best_Year_Total.name()
+                }
+        };
+
+        System.assertEquals(expectedOperationsByRollupField, CRLP_Rollup_SEL.UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD,
+            'CRLP_Rollup_SEL.UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD has unexpected values'
+        );
+    }
+
+    /**
+     * @description Validate the validateReferencedFields() method to ensure it properly identifies bad fields
+     */
+    @IsTest
+    private static void shouldValidateFieldDescribes() {
+        Map<String, Schema.DescribeFieldResult> referencedFields = new Map<String, Schema.DescribeFieldResult>();
+        Map<String, Schema.DescribeFieldResult> allFields = UTIL_Describe.getAllFieldsDescribe('Account');
+
+        Exception actualException;
+        try {
+            referencedFields.put('name', allFields.get('name'));
+            CRLP_Rollup_SEL.validateReferencedFields(referencedFields, 'Account');
+
+        } catch (Exception ex) {
+            actualException = ex;
         }
-        System.AssertEquals(expectedFldCount, CRLP_Rollup_SEL.getReferencedFieldsByObject(Opportunity.SObjectType).size(),
-                'There should be ' + expectedFldCount + ' Opportunity fields referenced across the rollup\n' +
-                CRLP_Rollup_SEL.getReferencedFieldsByObjectAsString(Opportunity.SObjectType));
+        System.assertEquals(null, actualException, 'An exception should not have been thrown for a valid field');
 
-        // Test that a list of fields to query is returned
-        String queryFields = CRLP_Rollup_SEL.getReferencedFieldsByObjectAsString(Opportunity.SObjectType);
-        System.Assert(String.isNotEmpty(queryFields),
-                'There should be at least one referenced field for the Opportunity object in Rollup__mdt');
+        actualException = null;
+        try {
+            referencedFields.put('nothing', allFields.get('nothing'));
+            CRLP_Rollup_SEL.validateReferencedFields(referencedFields, 'Account');
 
-        // Test that a query can be built and executed, though it's likely there will be zero rows returned
-        // so don't attempt to validate the result.
-        String soql = 'SELECT Id,' + queryFields + ' FROM Opportunity LIMIT 1';
-        List<SObject> test = database.query(soql);
+        } catch (Exception ex) {
+            actualException = ex;
+        }
+        System.assertNotEquals(null, actualException, 'An exception should be thrown for invalid fields');
+    }
+
+    /**
+     * @description Validate the getRollupDefinitionsToUse() method retrieves the correct set of Rollup definitions
+     * based on the mocked Rollup__mdt records in this class and the specified RollupType enum.
+     */
+    @IsTest
+    private static void shouldReturnExpectedRollupDefinitions() {
+        mockRollupCMTValues();
+
+        List<Rollup__mdt> rollupsAccountHC = CRLP_Rollup_SEL.getRollupDefinitionsToUse(
+            CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+            CRLP_RollupProcessingOptions.RollupTypeFilter.All);
+        System.assertEquals(rollupMdtCount, rollupsAccountHC.size(), 'There should be exactly two Rollups returned for AccountHardCredit');
+
+        List<Rollup__mdt> rollups = CRLP_Rollup_SEL.getRollupDefinitionsToUse(
+            CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+            CRLP_RollupProcessingOptions.RollupTypeFilter.All);
+        System.assertEquals(0, rollups.size(), 'There should be exactly zero Rollup returned for ContactHardCredit');
+
+        rollups = CRLP_Rollup_SEL.getRollupDefinitionsToUse(
+            CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
+            CRLP_RollupProcessingOptions.RollupTypeFilter.All);
+        System.assertEquals(0, rollups.size(), 'There should be exactly zero Rollup returned for AccountSoftCredit');
+
+        rollups = CRLP_Rollup_SEL.getRollupDefinitionsToUse(
+            CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
+            CRLP_RollupProcessingOptions.RollupTypeFilter.All);
+        System.assertEquals(0, rollups.size(), 'There should be exactly zero Rollup returned for AccountContactSoftCredit');
     }
 }

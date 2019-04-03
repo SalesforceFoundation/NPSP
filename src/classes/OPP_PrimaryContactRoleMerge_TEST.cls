@@ -39,39 +39,32 @@ private class OPP_PrimaryContactRoleMerge_TEST {
 
     private final static String NPSP_ROLE = 'NPSP_ROLE';
     private final static String NON_NPSP_ROLE = 'NON_NPSP_ROLE';
+    private final static String OPP_OPEN_STAGE = UTIL_UnitTestData_TEST.getOpenStage();
 
     /*********************************************************************************************************
     * @description Given a Non Organizational Opportunity with duplicate primary OCRs, AND all the primary OCRs 
     * Role != NPSP Settings Role when the batch runs, then an error log is created, with a link to the Opportunity.
     */
-    @isTest static void test_NonOrganizational_LogErrorIf_NoPrimaryOCRsWithRoleDefinedInNPSPSettings() {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+    @isTest 
+    private static void test_NonOrganizational_LogErrorIf_NoPrimaryOCRsWithRoleDefinedInNPSPSettings() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
             npe01__Opportunity_Contact_Role_Default_role__c = NPSP_ROLE
         ));
 
-        Account account = new Account(
-            Name = 'TEST_ACCOUNT',
-            npe01__SYSTEMIsIndividual__c = true
-        );
-
-        executeTest_LogErrorIf_NoPrimaryOCRsWithRoleDefinedInNPSPSettings(account);
+        executeTest_LogErrorIf_NoPrimaryOCRsWithRoleDefinedInNPSPSettings(buildNonOrgAccount());
     }
 
     /*********************************************************************************************************
     * @description Given an Organizational Opportunity with duplicate primary OCRs, AND all the primary OCRs 
     * Role != NPSP Settings Role when the batch runs, then an error log is created, with a link to the Opportunity.
     */
-    @isTest static void test_Organization_LogErrorIf_NoPrimaryOCRsWithRoleDefinedInNPSPSettings() {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+    @isTest 
+    private static void test_Organization_LogErrorIf_NoPrimaryOCRsWithRoleDefinedInNPSPSettings() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
             Contact_Role_for_Organizational_Opps__c = NPSP_ROLE
         ));
 
-        Account account = new Account(
-            Name = 'TEST_ACCOUNT',
-            npe01__SYSTEMIsIndividual__c = false
-        );
-
-        executeTest_LogErrorIf_NoPrimaryOCRsWithRoleDefinedInNPSPSettings(account);
+        executeTest_LogErrorIf_NoPrimaryOCRsWithRoleDefinedInNPSPSettings(buildOrgAccount());
     }
 
     /*********************************************************************************************************
@@ -80,17 +73,13 @@ private class OPP_PrimaryContactRoleMerge_TEST {
     * the primary OCRs with blank role AND role not defined in NPSP Settings should be deleted. The Opportunity 
     * should have only 1 primary OCR with role equals to the NPSP Settings Role.
     */
-    @isTest static void test_NonOrganizational_DeleteBlankAndNonNPSPRole() {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+    @isTest 
+    private static void test_NonOrganizational_DeleteBlankAndNonNPSPRole() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
             npe01__Opportunity_Contact_Role_Default_role__c = NPSP_ROLE
         ));
 
-        Account account = new Account(
-            Name = 'TEST_ACCOUNT',
-            npe01__SYSTEMIsIndividual__c = true
-        );
-
-        executeTest_DeleteBlankAndNonNPSPRole(account);        
+        executeTest_DeleteBlankAndNonNPSPRole(buildNonOrgAccount());        
     }
 
     /*********************************************************************************************************
@@ -99,17 +88,13 @@ private class OPP_PrimaryContactRoleMerge_TEST {
     * the primary OCRs with blank role AND role not defined in NPSP Settings should be deleted. The Opportunity 
     * should have only 1 primary OCR with role equals to the NPSP Settings Role.
     */
-    @isTest static void test_Organizational_DeleteBlankAndNonNPSPRole() {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+    @isTest 
+    private static void test_Organizational_DeleteBlankAndNonNPSPRole() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
             Contact_Role_for_Organizational_Opps__c = NPSP_ROLE
         ));
 
-        Account account = new Account(
-            Name = 'TEST_ACCOUNT',
-            npe01__SYSTEMIsIndividual__c = false
-        );
-
-        executeTest_DeleteBlankAndNonNPSPRole(account); 
+        executeTest_DeleteBlankAndNonNPSPRole(buildOrgAccount()); 
     }
 
     /*******************************************************************************************************
@@ -126,32 +111,28 @@ private class OPP_PrimaryContactRoleMerge_TEST {
 
         Opportunity opportunity = new Opportunity(
             Name = 'TEST_OPPORTUNITY',
-            StageName = UTIL_UnitTestData_TEST.getOpenStage(),
+            StageName = OPP_OPEN_STAGE,
             CloseDate = Date.today(),
             AccountId = account.Id
         );
         insert opportunity;
 
-        List<OpportunityContactRole> primaryOCRs = new List<OpportunityContactRole>{
-            new OpportunityContactRole(
+        Integer duplPrimaryOcrCount = 2;
+        List<OpportunityContactRole> primaryOCRs = new List<OpportunityContactRole>();
+        for (Integer i = 0; i < duplPrimaryOcrCount; i++) {
+            primaryOCRs.add(new OpportunityContactRole(
                 OpportunityId = opportunity.Id,
                 ContactId = contact.Id,
                 IsPrimary = true,
                 Role = NON_NPSP_ROLE
-            ),
-            new OpportunityContactRole(
-                OpportunityId = opportunity.Id,
-                ContactId = contact.Id,
-                IsPrimary = true,
-                Role = NON_NPSP_ROLE
-            )
-        };
+            ));
+        }
         insert primaryOCRs;
 
         activateTriggers();
 
         Opportunity createdOpportunity = loadOpportunityWithOCRs(opportunity.Id);
-        System.assertEquals(2, createdOpportunity.OpportunityContactRoles.size());
+        System.assertEquals(duplPrimaryOcrCount, createdOpportunity.OpportunityContactRoles.size());
         for (OpportunityContactRole expectedOCR : createdOpportunity.OpportunityContactRoles) {
             System.assert(
                 expectedOCR.ContactId == contact.Id && 
@@ -166,8 +147,8 @@ private class OPP_PrimaryContactRoleMerge_TEST {
 
         Opportunity expectedOpportunity = loadOpportunityWithPrimaryOCRs(createdOpportunity.Id);
         // Opportunity and the related Opportunity Contact Roles should not change.
-        System.assertEquals(2, expectedOpportunity.OpportunityContactRoles.size());
-        System.assertEquals(2, createdOpportunity.OpportunityContactRoles.size());
+        System.assertEquals(duplPrimaryOcrCount, expectedOpportunity.OpportunityContactRoles.size());
+        System.assertEquals(duplPrimaryOcrCount, createdOpportunity.OpportunityContactRoles.size());
         for (OpportunityContactRole expectedOCR : expectedOpportunity.OpportunityContactRoles) {
             System.assert(
                 expectedOCR.ContactId == contact.Id && 
@@ -176,11 +157,8 @@ private class OPP_PrimaryContactRoleMerge_TEST {
             );
         }
 
-        List<Error__c> errors = [
-            SELECT Object_Type__c, Full_Message__c, Record_URL__c, Context_Type__c
-            FROM Error__c
-        ];
-        System.assertEquals(1, errors.size(), 'An Error Log should be created');
+        List<Error__c> errors = getErrors();
+        System.assertEquals(1, errors.size(), 'An Error Log should be created: ' + errors);
         System.assertEquals(String.format(OPP_PrimaryContactRoleMerge.ERROR_MESSAGE, new List<String>{opportunity.Name}), errors[0].Full_Message__c);
         System.assertEquals(OPP_PrimaryContactRoleMerge.ERROR_CONTEXT, errors[0].Context_Type__c);
         System.assertEquals(OPP_PrimaryContactRoleMerge.ERROR_SOBJECT, errors[0].Object_Type__c);
@@ -201,51 +179,24 @@ private class OPP_PrimaryContactRoleMerge_TEST {
 
         Opportunity opportunity = new Opportunity(
             Name = 'TEST_OPPORTUNITY',
-            StageName = UTIL_UnitTestData_TEST.getOpenStage(),
+            StageName = OPP_OPEN_STAGE,
             CloseDate = Date.today(),
             AccountId = account.Id,
             Primary_Contact__c = null
         );
         insert opportunity;
 
-        List<OpportunityContactRole> primaryOCRs = new List<OpportunityContactRole>{
-            new OpportunityContactRole(
-                OpportunityId = opportunity.Id,
-                ContactId = contact.Id,
-                IsPrimary = true,
-                Role = NPSP_ROLE
-            ),
-            new OpportunityContactRole(
-                OpportunityId = opportunity.Id,
-                ContactId = contact.Id,
-                IsPrimary = true,
-                Role = NPSP_ROLE
-            ),
-            new OpportunityContactRole(
-                OpportunityId = opportunity.Id,
-                ContactId = contact.Id,
-                IsPrimary = true,
-                Role = NON_NPSP_ROLE
-            ),
-            new OpportunityContactRole(
-                OpportunityId = opportunity.Id,
-                ContactId = contact.Id,
-                IsPrimary = true,
-                Role = NON_NPSP_ROLE
-            ),
-            new OpportunityContactRole(
-                OpportunityId = opportunity.Id,
-                ContactId = contact.Id,
-                IsPrimary = true,
-                Role = ''
-            ),
-            new OpportunityContactRole(
-                OpportunityId = opportunity.Id,
-                ContactId = contact.Id,
-                IsPrimary = true,
-                Role = ''
-            )
-        };
+        List<OpportunityContactRole> primaryOCRs = new List<OpportunityContactRole>();
+        for (String role : new String[]{ NPSP_ROLE, NON_NPSP_ROLE, '' }) {
+            for (Integer i = 0; i < 2; i++) {
+                primaryOCRs.add(new OpportunityContactRole(
+                    OpportunityId = opportunity.Id,
+                    ContactId = contact.Id,
+                    IsPrimary = true,
+                    Role = role
+                ));
+            }
+        }
         insert primaryOCRs;
         activateTriggers();
 
@@ -266,12 +217,75 @@ private class OPP_PrimaryContactRoleMerge_TEST {
         System.assert(contact.Id == expectedOpportunity.OpportunityContactRoles[0].ContactId);
         System.assert(NPSP_ROLE == expectedOpportunity.OpportunityContactRoles[0].Role);
 
-        List<Error__c> errors = [
-            SELECT Object_Type__c, Full_Message__c 
-            FROM Error__c
-        ];
-        System.assertEquals(0, errors.size(), 'No Error Log should be created.');
+        List<Error__c> errors = getErrors();
+        System.assertEquals(0, errors.size(), 'No Error Log should be created: ' + errors);
     }
+
+    /*********************************************************************************************************
+    * @description Verifies duplicate primary OCRs are removed for Opportunities having
+    * "Disable Contact Role Automation" checked.
+    */
+    @isTest 
+    private static void shouldRemoveDuplicatePrimaryOcrsWhenOppDisableContactRoleAutomationIsChecked() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            Contact_Role_for_Organizational_Opps__c = NPSP_ROLE
+        ));
+
+        Account account = buildOrgAccount(); 
+        insert account;
+
+        Contact contact = new Contact(LastName = 'TEST_CONTACT');
+        insert contact;
+
+        List<Opportunity> opps = new List<Opportunity>{
+            new Opportunity(
+                Name = 'Test Opp: merge duplicate primary OCRs',
+                StageName = OPP_OPEN_STAGE,
+                CloseDate = Date.today(),
+                AccountId = account.Id
+            ),
+            new Opportunity(
+                Name = 'Test Opp: ignore duplicate primary OCRs',
+                StageName = OPP_OPEN_STAGE,
+                CloseDate = Date.today(),
+                AccountId = account.Id,
+                DisableContactRoleAutomation__c = true
+            )
+        };
+        insert opps;
+
+        Integer duplPrimaryOcrCount = 2;
+        List<OpportunityContactRole> ocrs = new List<OpportunityContactRole>();
+
+        for (Integer i = 0; i < opps.size(); i++) {
+            for (Integer size = 0; size < duplPrimaryOcrCount; size++) {
+                ocrs.add(new OpportunityContactRole(
+                    OpportunityId = opps[i].Id,
+                    ContactId = contact.Id,
+                    IsPrimary = true,
+                    Role = NPSP_ROLE
+                ));
+            }
+        }
+        insert ocrs;
+
+        for (Integer i = 0; i < opps.size(); i++) {
+            System.assertEquals(duplPrimaryOcrCount, loadOpportunityWithOCRs(opps[i].Id).OpportunityContactRoles.size(), 'OCRs should be created');
+        }
+
+        Test.startTest();
+        Database.executeBatch(new OPP_PrimaryContactRoleMerge_BATCH());
+        Test.stopTest();
+
+        for (Opportunity opp : opps) {
+            Opportunity actualOpp = loadOpportunityWithOCRs(opp.Id);
+            System.assertEquals(1, actualOpp.OpportunityContactRoles.size(), 'Duplicate primary OCRs should be removed: ' + actualOpp.OpportunityContactRoles);
+            System.assertEquals(true, actualOpp.OpportunityContactRoles[0].IsPrimary, 'The OCR should be marked as primary');
+        }
+    }
+
+    // Helpers
+    //////////////
 
     /*******************************************************************************************************
     * @description Deactivates all the Triggers.
@@ -328,5 +342,44 @@ private class OPP_PrimaryContactRoleMerge_TEST {
         ];
         System.assertEquals(1, result.size());
         return result[0];
+    }
+
+    /*******************************************************************************************************
+    * @description Get all errors
+    * @return List<Error__c> List of errors
+    ********************************************************************************************************/
+    private static List<Error__c> getErrors() {
+        return [
+            SELECT Object_Type__c, Full_Message__c, Record_URL__c, Context_Type__c
+            FROM Error__c
+        ];
+    }
+
+    /*******************************************************************************************************
+    * @description Builds non-organizational Account
+    * @return Account
+    ********************************************************************************************************/
+    private static Account buildNonOrgAccount() {
+        return buildAccount(true);
+    }
+
+    /*******************************************************************************************************
+    * @description Builds organizational Account
+    * @return Account
+    ********************************************************************************************************/
+    private static Account buildOrgAccount() {
+        return buildAccount(false);
+    }
+
+    /*******************************************************************************************************
+    * @description Builds an Account
+    * @param isIndividualType Indicates if the Account is non-organizational type
+    * @return Account
+    ********************************************************************************************************/
+    private static Account buildAccount(Boolean isIndividualType) {
+        return new Account(
+            Name = 'TEST_ACCOUNT',
+            npe01__SYSTEMIsIndividual__c = isIndividualType
+        );
     }
 }
