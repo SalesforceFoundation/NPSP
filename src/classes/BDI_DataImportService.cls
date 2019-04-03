@@ -81,10 +81,6 @@ global with sharing class BDI_DataImportService {
         List<DataImportBatch__c> dataImportBatches = BDI_DataImportBatch_SEL.selectByIds(new Set<Id>{ batchId });
         if (dataImportBatches.size() == 1) {
             DataImportBatch__c currentBatch = dataImportBatches[0];
-            if (!String.isBlank(currentBatch.Active_Fields__c)) {
-                relevantDataImportFields = BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId, false);
-                batchFromBGE = true;
-            }
             return currentBatch;
         } else {
             throw(new BDIException(String.format(Label.bdiInvalidBatchId, new List<String>{ batchId })));
@@ -504,14 +500,11 @@ global with sharing class BDI_DataImportService {
                 dataImport.FailureInformation__c = null;
 
                 // collect populated DI fields to use for later mapping
-                if (batchFromBGE != true) {
-                    Map<String, Object> populatedFieldsMap = dataImport.getPopulatedFieldsAsMap();
-                    List<String> populatedFields = new List<String>(populatedFieldsMap.keySet());
-                    populatedDataImportFieldsSet.addAll(populatedFields);
-                }
+                Map<String, Object> populatedFieldsMap = dataImport.getPopulatedFieldsAsMap();
+                populatedDataImportFieldsSet.addAll(new List<String>(populatedFieldsMap.keySet()));
             }
 
-            if (batchFromBGE != true && populatedDataImportFieldsSet != null && populatedDataImportFieldsSet.size() > 0) {
+            if (populatedDataImportFieldsSet != null && populatedDataImportFieldsSet.size() > 0) {
                 relevantDataImportFields = new List<String>(populatedDataImportFieldsSet);
             }
 
@@ -693,17 +686,12 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
-    * @description flag to let us know if we came from BGE
-    */
-    global static Boolean batchFromBGE { get; set; }
-
-    /*******************************************************************************************************
     * @description list of the fields in the Data Import object that we care about for FLS checks because
     * they are present in the Batch we are processing
     * This list gets set in the loadBatch method.
     * If no batch is loaded, we use the full list of all DI fields listStrDataImportFields
     */
-    global static List<String> relevantDataImportFields {
+    public static List<String> relevantDataImportFields {
         get {
             if (relevantDataImportFields == null || relevantDataImportFields.isEmpty()) {
                 return listStrDataImportFields;

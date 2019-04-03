@@ -95,7 +95,10 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         dataImportModel.totalRowAmount = (Decimal)aggResult[0].get('amount');
 
         // check permissions on hard coded fields
-        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'), getDataImportFields());
+        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
+            UTIL_Namespace.StrTokenNSPrefix('DataImport__c'),
+            BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId)
+        );
 
         return JSON.serialize(dataImportModel);
     }
@@ -543,41 +546,6 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         }
 
         return query;
-    }
-
-    /*******************************************************************************************************
-    * @description returns the subset of DataImport__c fields that are part of every batch
-    * @return List<String> list of DataImport__c field api names
-    */
-    private static List<String> getDataImportFields() {
-        return new List<String> {
-            'Id',
-            'Account1Imported__c',
-            'Account1Imported__r.Name',
-            'Contact1Imported__c',
-            'Contact1Imported__r.Name',
-            'Donation_Donor__c',
-            'DonationImported__c',
-            'DonationImported__r.Name',
-            'DonationImportStatus__c',
-            'FailureInformation__c',
-            'NPSP_Data_Import_Batch__c',
-            'PaymentImported__c',
-            'PaymentImported__r.Name',
-            'PaymentImportStatus__c',
-            'Status__c'
-        };
-    }
-
-    /*******************************************************************************************************
-    * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
-    * @return List<String> list of DataImport__c field api names
-    */
-    private static List<String> getDataImportFields(Id batchId) {
-
-        List<String> fields = getDataImportFields();
-        fields.addAll(BGE_BatchGiftEntry_UTIL.getActiveFieldNamesFromBatch(batchId));
-        return fields;
     }
 
     /*******************************************************************************************************
