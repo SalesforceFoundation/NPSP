@@ -32,10 +32,10 @@
 * @date 2019
 * @group Batch Data Import
 * @group-content ../../ApexDocContent/BatchDataImport.htm
-* @description define behaviors of field mapping classes
+* @description Implement field mapping behavior for mapping with custom metadata types
 */
 
-public interface BDI_FieldMapping {
+public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMapping {
 
     /*******************************************************************************************************
     * @description For the provided fields (in the form DIObject.developerfieldname) and target object, 
@@ -45,9 +45,15 @@ public interface BDI_FieldMapping {
     * @param targetObjectName the underlying object the bdi object is (ie, Contact, Account, etc)
     * @param dataImportFields the DataImport fields to consider
     * @return Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
-    */ 
-    Map<String,String> getFieldMap(String dataImportObjectName, 
-            String targetObjectName, 
-            List<String> dataImportFields);
+    *
+    * TODO: Impliment this method
+    */
 
+    public Map<String,String> getFieldMap(String dataImportObjectName, 
+        String targetObjectName, List<String> dataImportFields) {
+
+        // TODO: Map fields based on CMT here
+
+        return new Map<String,String>();
+    }
 }

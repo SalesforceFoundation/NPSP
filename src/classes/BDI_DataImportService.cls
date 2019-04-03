@@ -787,11 +787,11 @@ global with sharing class BDI_DataImportService {
     /*******************************************************************************************************
     * @description returns a map of fields from the DataImport to fields for the given 'object',
     * from the list of DataImport Fields, which have the form DIObject.developerfieldname in the field's help text property.
+    *
     * @param dataImportObjectName the bdi object we care about (Contact1, Contact2, Account1, etc)
     * @param targetObjectName the underlying object the bdi object is (ie, Contact, Account, etc)
     * @param dataImportFields the DataImport fields to consider
     * @return Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
-    *
     */
     public Map<String, String> mapDataImportFields(String dataImportObjectName, 
                 String targetObjectName, 

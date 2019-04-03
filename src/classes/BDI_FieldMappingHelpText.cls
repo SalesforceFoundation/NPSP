@@ -32,20 +32,27 @@
 * @date 2019
 * @group Batch Data Import
 * @group-content ../../ApexDocContent/BatchDataImport.htm
-* @description define behaviors of field mapping classes
+* @description Implement field mapping behavior for help text mapping scheme
 */
 
 public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
 
     /*******************************************************************************************************
     * @description flag to allow us to test out field level security exception
+    *
+    * TODO: refactor tests to make this unneccessary
     */
     public Boolean failFieldLevelSecurity = false;
 
-
-    public BDI_FieldMappingHelpText() {
-
-    }
+    /*******************************************************************************************************
+    * @description For the provided fields (in the form DIObject.developerfieldname) and target object, 
+    * return a map of DI field (key) to mapped field name on the destination record (value). 
+    *
+    * @param dataImportObjectName the bdi object we care about (Contact1, Contact2, Account1, etc)
+    * @param targetObjectName the underlying object the bdi object is (ie, Contact, Account, etc)
+    * @param dataImportFields the DataImport fields to consider
+    * @return Map<String, String> a map of DataImport fields to underlying object fields (eg, Donation_Amount__c => Amount)
+    */ 
 
     public Map<String,String> getFieldMap(String dataImportObjectName, 
         String targetObjectName, List<String> dataImportFields) {
@@ -79,6 +86,7 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
 
                     // make sure they have permissions to modify the target field
                     // we can't do this in all tests, because many profiles won't have FLS set for all our new fields!
+                    // TODO: Remove the need for test context / fail boolean, perhaps by using a mock to set test behavior
                     if (!Test.isRunningTest() || failFieldLevelSecurity) {
                         fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, fieldName);
                         Set<String> setAuditFields = new Set<String>{
