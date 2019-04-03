@@ -81,8 +81,8 @@ private class CRLP_ApiService_TEST {
             }
             System.assertNotEquals(null, actualException,
                     'An exception should be thrown for invalid param: ' + param);
-            System.assert(actualException.getMessage().containsIgnoreCase(CallableApiParameters.PARAM_ROLLUP_TYPE),
-                    'Message should contain "' + CallableApiParameters.PARAM_ROLLUP_TYPE + '" param: ' + actualException.getMessage());
+            System.assert(actualException.getMessage().containsIgnoreCase(CRLP_ApiService.PARAM_ROLLUPTYPE),
+                    'Message should contain "' + CRLP_ApiService.PARAM_ROLLUPTYPE + '" param: ' + actualException.getMessage());
         }
     }
 

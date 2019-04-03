@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -174,8 +174,8 @@
         <members>CRLP_RollupProcessingOptions</members>
         <members>CRLP_RollupProcessor</members>
         <members>CRLP_RollupProcessor_SVC</members>
-        <members>CRLP_RollupQueueable</members>
         <members>CRLP_RollupQueryBuilder</members>
+        <members>CRLP_RollupQueueable</members>
         <members>CRLP_RollupRD_SVC</members>
         <members>CRLP_RollupRecurringDonation_TEST</members>
         <members>CRLP_RollupScheduler_TEST</members>
@@ -193,8 +193,6 @@
         <members>CRLP_VRollupHandler</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
-        <members>CallableApiParameters</members>
-        <members>CallableApiParameters_TEST</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
@@ -1783,9 +1781,9 @@
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>
         <members>pscManageSoftCreditsAmountMissing</members>
-        <members>pscManageSoftCreditsContactMissing</members>
         <members>pscManageSoftCreditsAmountOrPercent</members>
         <members>pscManageSoftCreditsCantChangeCurrency</members>
+        <members>pscManageSoftCreditsContactMissing</members>
         <members>pscManageSoftCreditsFull</members>
         <members>pscManageSoftCreditsInvalidContact</members>
         <members>pscManageSoftCreditsNoRoles</members>

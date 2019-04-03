@@ -36,6 +36,9 @@
 */
 public inherited sharing class CRLP_ApiService {
 
+    public static final String PARAM_ROLLUPTYPE = 'RollupType';
+    public static final String PARAM_ROLLUPDEFS = 'RollupDefinitions';
+
 
     /**
     * @description Generates the list of Rollup Definitions for the specified rollup type
@@ -54,10 +57,7 @@ public inherited sharing class CRLP_ApiService {
         } catch (Exception ex) { }
 
         if (rollupType == null) {
-            throw new ApiException(String.format( System.Label.CallableApiParameterError,
-                    new List<String>{ CallableApiParameters.PARAM_ROLLUP_TYPE
-                    }
-            ));
+            throw new ApiException(String.format( System.Label.CallableApiParameterError, new List<String>{PARAM_ROLLUPTYPE} ));
         }
 
         CRLP_VRollupHandler handler = new CRLP_VRollupHandler();
@@ -66,44 +66,9 @@ public inherited sharing class CRLP_ApiService {
         return handler.getRollupsList();
     }
 
-    public List<CRLP_Rollup> executeRollups(String rollupTypeName, List<CRLP_Rollup> rollupDefs, Map<Id, Map<String, List<SObject>>> rollupData) {
-
-        // Convert the Rollup Type into an Enum
-        CRLP_RollupProcessingOptions.RollupType rollupType;
-        try {
-            rollupType = CRLP_RollupProcessingOptions.rollupTypeByName.get((String) rollupTypeName.toLowerCase());
-        } catch (Exception ex) { }
-
-        if (rollupType == null) {
-            throwApiException(CallableApiParameters.PARAM_ROLLUP_TYPE, 'No matching RollupType');
-        }
-
-        // Ensure the Rollup Definitions are populated
-        if (rollupDefs == null || rollupDefs.size() == 0) {
-            throwApiException(CallableApiParameters.PARAM_ROLLUP_DEFS, 'Empty Rollup Definitions Collection');
-        }
-
-        // Convert the Rollup Data into ?
-        if (rollupData == null || rollupData.size() == 0) {
-            throwApiException(CallableApiParameters.PARAM_ROLLUP_DATA, 'Empty Rollup Data Collection');
-        }
-
-        CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
-
-        return rollupDefs;
-    }
-
     /**
-     * @description Throw a custom exception when api call cannot be completed
-     */
-    private void throwApiException(String paramName, String errMessage) {
-        throw new ApiException(String.format( System.Label.CallableApiParameterError,
-                new List<String>{ paramName, errMessage } ));
-    }
-
-
-    /**
-    * @description Exception class
+    * @description Exception class for Parameter Parsing
     */
-    private class ApiException extends Exception {}
+    public class ApiException extends Exception {}
+
 }
