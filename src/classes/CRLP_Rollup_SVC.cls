@@ -178,7 +178,7 @@ public class CRLP_Rollup_SVC {
      * @param SObjectType
      * @return True or False
      */
-    public static Boolean hasActiveRollupsForSObject(SObjectType sObj) {
+    public static Boolean hasActiveRollups(SObjectType sObj) {
         try {
             for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(sObj)) {
                 if (r.Active__c == true) {
@@ -187,6 +187,37 @@ public class CRLP_Rollup_SVC {
             }
         } catch (Exception ex){ }
         return false;
+    }
+
+    /**
+    * @description Are there active Rollup__mdt records for the specified rollup job type
+    * @param rollupType
+    * @return True if there are active Rollup__mdt records for the current job type
+    */
+    public static Boolean hasActiveRollups(CRLP_RollupProcessingOptions.RollupType rollupType) {
+        Boolean hasActiveRollups = false;
+        if (rollupType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+            hasActiveRollups = hasActiveRollups(General_Accounting_Unit__c.SObjectType);
+
+        } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
+            hasActiveRollups = hasActiveRollups(Account.SObjectType);
+
+        } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            hasActiveRollups = hasActiveAccountSoftCreditRollupsForSObject(Account.SObjectType);
+
+        } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+            hasActiveRollups = hasActiveRollups(Contact.SObjectType);
+
+        } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+            hasActiveRollups = hasActivePartialSoftCreditRollupsForSObject(Contact.SObjectType);
+
+        } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+            hasActiveRollups = hasActivePartialSoftCreditRollupsForSObject(Account.SObjectType);
+
+        } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+            hasActiveRollups = hasActiveRollups(npe03__Recurring_Donation__c.SObjectType);
+        }
+        return hasActiveRollups;
     }
 
     /**

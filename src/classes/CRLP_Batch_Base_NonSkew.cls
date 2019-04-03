@@ -119,8 +119,9 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     * the start() method of the individual batch jobs that extend this class.
     * @return database.Querylocator
     */
-    public Database.Querylocator start(Database.BatchableContext bc) {
+    public Database.QueryLocator start(Database.BatchableContext bc) {
         try {
+            // TODO Refactor to use the new CRLP_QueryBuilder class
             String query = getBatchStartQuery(
                     lastIdProcessed,
                     batchSizeChunkLimit,
@@ -159,7 +160,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                     .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
                     .withOrderBy(CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType));
 
-            if (hasActivePaymentRollupsForThisJob()) {
+            if (CRLP_Rollup_SVC.hasActiveRollups(jobType)) {
                 queryBuilder.includePaymentRecords();
             }
 
@@ -174,54 +175,11 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 detailRecords = buildPartialSoftCreditRecordsFromOCRs(detailRecords);
             }
 
-            String parentObjectField;
-            String parentKeyField = CRLP_Rollup_SVC.getParentRelationshipFieldForProcessingJob(jobType);
-
-            // The parentKeyField field may be have dot-notation (ex: Contact__r.AccountId)
-            // If this is the case, need to parse out the two components to use
-            if (parentKeyField.contains('.')) {
-                parentObjectField = parentKeyField.split('\\.')[0];
-                parentKeyField = parentKeyField.split('\\.')[1];
-            }
-
-            // Strip out summary records where there are no detail records to process.
-            Set<Id> parentIdHasDetailRecords = new Set<Id>(); // which parent records have details
-            for (Integer n=0, listSize=detailRecords.size(); n<listSize; n++) {
-                if (parentObjectField == null) {
-                    parentIdHasDetailRecords.add((String)detailRecords[n].get(parentKeyField));
-                } else {
-                    SObject dtlRecord = detailRecords[n].getSObject(parentObjectField);
-                    parentIdHasDetailRecords.add((String)dtlRecord.get(parentKeyField));
-                }
-            }
-
-            List<SObject> newSummaryRecords = new List<SObject>();
-            for (Integer n=0, listSize=summaryRecords.size(); n<listSize; n++) {
-                if (parentIdHasDetailRecords.contains(summaryRecords[n].Id)) {
-                    newSummaryRecords.add(summaryRecords[n]);
-                } else if (this.summaryObjectType == Contact.SObjectType || this.summaryObjectType == Account.SObjectType) {
-                    // If the Account and Contact is the Summary record, and there are no detail records, but the object
-                    // has a value in any of these key rollup fields, then we need to include it so the values can be
-                    // updated (reset) as necessary
-                    for (String f : fieldsToCheckForNonZero) {
-                        Object val = summaryRecords[n].get(f);
-                        if (val != null && val != 0) {
-                            newSummaryRecords.add(summaryRecords[n]);
-                            break;
-                        }
-                    }
-                }
-
-            }
-            summaryRecords = newSummaryRecords;
+            summaryRecords = cleanseSummaryRecordsList(summaryRecords, detailRecords);
 
             // Are there any summary records left to process?
             if (summaryRecords.size() > 0) {
-
-                Map<Id, List<SObject>> paymentsByOpp = new Map<Id, List<SObject>>();
-                if (hasActivePaymentRollupsForThisJob() && (this.summaryObjectType == Account.SObjectType || this.summaryObjectType == Contact.SObjectType) && this.detailObjectType != Account_Soft_Credit__c.SObjectType) {
-                    paymentsByOpp = CRLP_RollupProcessor_SVC.splitChildRecordsInMapByParentId(detailRecords, 'npe01__OppPayment__r');
-                }
+                Map<Id, List<SObject>> paymentsByOpp = getRelatedPayments(detailRecords);
 
                 // Need to pass in the Rollup Type, Rollup Defnitions if they're available along
                 // with the Summary Record(s), Detail Record(s) and any Related Records.
@@ -256,15 +214,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     public void finish(Database.BatchableContext bc) {
         // In debug mode, write a summary of the job to the error log
         if (CRLP_Debug_UTIL.isDebuggingEnabled) {
-            Error__c logEntry = new Error__c(
-                    Context_Type__c = ERR_Handler_API.Context.CRLP.name() + ': ' + this.jobType.name() + ' ' + this.jobMode.name(),
-                    Error_Type__c = 'DEBUG LOG',
-                    Full_Message__c = ('Total Batch Iterations: ' + this.batchIteration + '\n' +
-                            'Total DML Operations: ' + this.totalCommits + '\n' +
-                            'Total Records Updates: ' + this.totalRecordsModified + '\n' +
-                            'Rollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState()).left(32768)
-            );
-            insert logEntry;
+            logDebugInfo((isChunkModeEnabled ? 'LastIdProcessed: ' + lastIdProcessed : ''));
         }
 
         // If chunk mode is enabled and there are more records to process,
@@ -272,6 +222,72 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         if (isChunkModeEnabled && hasAdditionalRecordsToProcess(lastIdProcessed)) {
             submitBatchableJobForNextChunk();
         }
+    }
+
+    /**
+     * @description Loop through the Summary records and remove any that do not have Detail Objects to be rolled up
+     * @param summaryRecords
+     * @param detailRecords
+     * @return a cleaned list of summary records
+     */
+    private List<SObject> cleanseSummaryRecordsList(List<SObject> summaryRecords, List<SObject> detailRecords) {
+        String parentObjectField;
+        String parentKeyField = CRLP_Rollup_SVC.getParentRelationshipFieldForProcessingJob(jobType);
+
+        // The parentKeyField field may be have dot-notation (ex: Contact__r.AccountId)
+        // If this is the case, need to parse out the two components to use
+        if (parentKeyField.contains('.')) {
+            parentObjectField = parentKeyField.split('\\.')[0];
+            parentKeyField = parentKeyField.split('\\.')[1];
+        }
+
+        // Strip out summary records where there are no detail records to process.
+        Set<Id> parentIdHasDetailRecords = new Set<Id>(); // which parent records have details
+        for (Integer n=0, listSize=detailRecords.size(); n<listSize; n++) {
+            if (parentObjectField == null) {
+                parentIdHasDetailRecords.add((String)detailRecords[n].get(parentKeyField));
+            } else {
+                SObject dtlRecord = detailRecords[n].getSObject(parentObjectField);
+                parentIdHasDetailRecords.add((String)dtlRecord.get(parentKeyField));
+            }
+        }
+
+        List<SObject> newSummaryRecords = new List<SObject>();
+        for (Integer n=0, listSize=summaryRecords.size(); n<listSize; n++) {
+            if (parentIdHasDetailRecords.contains(summaryRecords[n].Id)) {
+                newSummaryRecords.add(summaryRecords[n]);
+            } else if (this.summaryObjectType == Contact.SObjectType || this.summaryObjectType == Account.SObjectType) {
+                // If the Account and Contact is the Summary record, and there are no detail records, but the object
+                // has a value in any of these key rollup fields, then we need to include it so the values can be
+                // updated (reset) as necessary
+                for (String f : fieldsToCheckForNonZero) {
+                    Object val = summaryRecords[n].get(f);
+                    if (val != null && val != 0) {
+                        newSummaryRecords.add(summaryRecords[n]);
+                        break;
+                    }
+                }
+            }
+
+        }
+
+        return newSummaryRecords;
+    }
+
+    /**
+     * @description Retrieve a map of related Payments for each Detail record, but only if Payment Rollups are active
+     * for the given rollup type
+     * @param detailRecords
+     * @return Map<Id, List<SObject>>
+     */
+    private Map<Id, List<SObject>> getRelatedPayments(List<SObject> detailRecords) {
+        Map<Id, List<SObject>> paymentsByOpp = new Map<Id, List<SObject>>();
+        if (hasActivePaymentRollupsForThisJob() && this.detailObjectType != Account_Soft_Credit__c.SObjectType
+                && (this.summaryObjectType == Account.SObjectType || this.summaryObjectType == Contact.SObjectType)
+                ) {
+            paymentsByOpp = CRLP_RollupProcessor_SVC.splitChildRecordsInMapByParentId(detailRecords, 'npe01__OppPayment__r');
+        }
+        return paymentsByOpp;
     }
 
     /**

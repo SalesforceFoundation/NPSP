@@ -101,90 +101,10 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     * the start() method of the individual batch jobs that extend this class.
     * @return database.Querylocator
     */
-    public database.Querylocator start(Database.BatchableContext bc) {
+    public Database.QueryLocator start(Database.BatchableContext bc) {
         try {
-            // Not including OppPayment as the child object because including the sub-query in an LDV org
-            // may cause a cpu time out issue.
-            String query = CRLP_Query_SEL.buildDetailObjectQueryForRollup(detailObjectType, new List<SObjectType>());
 
-            npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-
-            // If there active rollups for this job type
-            if (hasActiveRollupsForThisJob()) {
-
-                List<String> whereClauses = new List<String>();
-
-                String keyFieldOverrideForQuery = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType);
-
-                // Add necessary filters to limit the LDV batch job to only the records that should be processed as LDV
-                if (this.recordIds != null && this.recordIds.size() > 0) {
-                    whereClauses.add(keyFieldOverrideForQuery + ' IN :recordIds');
-                } else {
-                    // When querying detail rows and trying to filer on a field in the parent, need to get the
-                    // relationship name to use for that parent query.
-                    String parentRelationshipPrefix = '';
-                    if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-                        parentRelationshipPrefix = 'Account.';
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                        parentRelationshipPrefix = Opportunity.fields.Primary_Contact__c.getDescribe().getName().replace('__c', '__r') + '.';
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                        parentRelationshipPrefix = 'Contact.';
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                        parentRelationshipPrefix = 'Contact.Account.';
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                        parentRelationshipPrefix = Account_Soft_Credit__c.fields.Account__c.getDescribe().getName().replace('__c', '__r') + '.';
-                    }
-
-                    String skewClause = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType,
-                            CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, parentRelationshipPrefix);
-                    if (!String.isEmpty(skewClause)) {
-                        whereClauses.add(skewClause);
-                    }
-                }
-
-                // Exclude Organization Donations (where Opp.Account.SYSTEM_IsIndividual=false) from Contact Hard Credit rollups
-                // Depending on the npo02__Always_Rollup_to_Primary_Contact__c custom setting
-                if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false &&
-                        this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                    whereClauses.add('Account.npe01__SYSTEMIsIndividual__c = True');
-
-                } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false &&
-                        (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                        this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit)) {
-                    whereClauses.add('(IsPrimary = False OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = False)');
-
-                } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == True &&
-                        (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                        this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit)) {
-                    whereClauses.add('IsPrimary = False');
-                }
-
-                // Identify a common filter that can be applied to the main query to reduce the number of records queried
-                String addlFilter;
-                if (detailObjectType == Opportunity.SObjectType) {
-                    addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, detailObjectType,
-                            this.statefulCacheOfRollupsToBeProcessed);
-                } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                    addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Contact.SObjectType, Partial_Soft_Credit__c.SObjectType);
-                } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                    addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Account.SObjectType, Partial_Soft_Credit__c.SObjectType);
-                } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                    addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, this.detailObjectType);
-                }
-                if (!String.isEmpty(addlFilter)) {
-                    whereClauses.add(addlFilter);
-                }
-
-                if (!whereClauses.isEmpty()) {
-                    query += ' WHERE ' + String.join(whereClauses, ' AND ');
-                }
-                query += ' ORDER BY ' + keyFieldOverrideForQuery + ', CreatedDate ASC';
-
-            } else {
-                // If there are no active rollups for the object type, then force the query to return zero records.
-                // This is needed because can't return null as a valid iterator.
-                query += ' LIMIT 0';
-            }
+            String query = buildQueryLocatorAsSOQL();
 
             UTIL_Debug.debug(LoggingLevel.WARN, '>> Batch Query =' + query);
 
@@ -217,18 +137,6 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
 
             String parentObjectField, parentKeyField = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType);
 
-            // Soft Credit rollup functions by first querying the OpportunityContactRole object and then
-            // creating virtual Partial_Soft_Credit__c records to use for the actual rollup logic. As a result,
-            // the parentKeyField used for the initial logic to split out the OCR's is different than the
-            // parentKeyField needed for the rollup logic.
-            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                parentKeyField = 'ContactId';
-            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                parentKeyField = 'Contact.AccountId';
-            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                parentKeyField = 'Account__c';
-            }
-
             // The parentKeyField field may be have dot-notation (ex: Contact__r.Account__c)
             // If this is the case, need to parse out the two components to use
             if (parentKeyField.contains('.')) {
@@ -257,7 +165,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             // If the detail object is Opportunity AND there are payment rollups for the parent object
             // these need to be queried outside of the main batch job query due to a current known issue with
             // sub-queries on large objects.
-            if (hasActivePaymentRollupsForThisJob() && !detailRecords.isEmpty() && detailObjectType == Opportunity.SObjectType) {
+            if (CRLP_Rollup_SVC.hasActiveRollups(jobType) && !detailRecords.isEmpty() && detailObjectType == Opportunity.SObjectType) {
 
                 // build a list of all the detail record Id's to use for retrieving the child payment records
                 // for each Opportunity (detail).
@@ -266,7 +174,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 String paymentsQuery = CRLP_Query_SEL.buildObjectQueryForRollup(npe01__OppPayment__c.SObjectType) +
                         ' WHERE npe01__Opportunity__c IN :detailIds ORDER BY npe01__Opportunity__c, CreatedDate ASC';
 
-                for (npe01__OppPayment__c pmt : database.query(paymentsQuery)) {
+                for (npe01__OppPayment__c pmt : Database.query(paymentsQuery)) {
                     if (!paymentsByOpp.containsKey(pmt.npe01__Opportunity__c)) {
                         paymentsByOpp.put(pmt.npe01__Opportunity__c, new List<npe01__OppPayment__c>());
                     }
@@ -355,43 +263,10 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     public void finish(Database.BatchableContext bc) {
 
         try {
-
             // Handle the final parent record in the LDV job
             if (parentIdsNotCommittedWithBatch != null && !parentIdsNotCommittedWithBatch.isEmpty()) {
-
-                // Get the Summary (target) records for the final record to be processed
-                List<Id> parentIds = new List<Id>(parentIdsNotCommittedWithBatch.keySet());
-                String soql = CRLP_Query_SEL.buildObjectQueryForRollup(summaryObjectType) + ' WHERE Id IN :parentIds';
-                List<SObject> parents = Database.query(soql);
-
-                CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
-                        .withRollupType(jobType)
-                        .withBatchJobMode(jobMode)
-                        .withDetailRecords(new List<SObject>())
-                        .withRelatedRecords(new Map<Id, List<SObject>>())
-                        .withPreviouslyProcessedOppIdsMap(statefulMapOfOppIdsByParentId)
-                        .withRollupDefinitions(statefulRollupsById);
-
-                // Call the method to do the actual rollup on this last remaining record, which is basically
-                // just to return the updated record
-                List<SObject> updatedRecords = new List<SObject>();
-                for (SObject parent : parents) {
-
-                    SObject updatedRecord = processor.withSummaryRecord(parent).completeRollupForSingleSummaryRecord(parent);
-                    if (updatedRecord != null) {
-                        updatedRecords.add(updatedRecord);
-                    }
-                }
-
-                // Handle dml on the records to be updated
-                if (!updatedRecords.isEmpty()) {
-                    CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords, jobType);
-                    totalRecordsModified += updatedRecords.size();
-                    totalCommits++;
-                }
-
+                completeRollupsForBatchIteration();
             }
-
         } catch (Exception ex) {
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
         }
@@ -404,20 +279,96 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
 
         // In debug mode, write a summary of the job to the error log
         if (CRLP_Debug_UTIL.isDebuggingEnabled) {
-            Error__c logEntry = new Error__c(
-                    Context_Type__c = ERR_Handler_API.Context.CRLP.name() + ': ' + this.jobType.name() + ' ' + this.jobMode.name(),
-                    Error_Type__c = 'DEBUG LOG',
-                    Full_Message__c = ('Total Batch Iterations: ' + this.batchIteration + '\n' +
-                            'Total DML Operations: ' + this.totalCommits + '\n' +
-                            'Total Records Updates: ' + this.totalRecordsModified + '\n' +
-                            'Parent Ids Commited in Finish: ' + (this.parentIdsNotCommittedWithBatch !=  null ?
-                                '(' + this.parentIdsNotCommittedWithBatch.size() + ')\n' +
-                                        JSON.serializePretty(this.parentIdsNotCommittedWithBatch) : 'none') + '\n' +
-                            'Rollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState()).left(32768)
-            );
-            insert logEntry;
+            String additionalInfo = 'Parent Ids Commited in Finish: ' + (this.parentIdsNotCommittedWithBatch !=  null ?
+                    '(' + this.parentIdsNotCommittedWithBatch.size() + ')\n' +
+                            JSON.serializePretty(this.parentIdsNotCommittedWithBatch) : 'none');
+            logDebugInfo(additionalInfo);
         }
 
+    }
+
+    /**
+     * @description Build the Skew Mode Query string for the current job
+     * @return SOQL
+     */
+    private String buildQueryLocatorAsSOQL() {
+        // TODO Refactor this to use the CRLP_QueryBuilder class
+        // Not including OppPayment as the child object because including the sub-query in an LDV org
+        // may cause a cpu time out issue.
+        String query = CRLP_Query_SEL.buildDetailObjectQueryForRollup(detailObjectType, new List<SObjectType>());
+
+        npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+
+        // If there active rollups for this job type
+        if (CRLP_Rollup_SVC.hasActiveRollups(jobType)) {
+
+            List<String> whereClauses = new List<String>();
+
+            String keyFieldOverrideForQuery = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType);
+
+            // Add necessary filters to limit the LDV batch job to only the records that should be processed as LDV
+            if (this.recordIds != null && this.recordIds.size() > 0) {
+                whereClauses.add(keyFieldOverrideForQuery + ' IN :recordIds');
+
+            } else {
+                // When querying detail rows and trying to filer on a field in the parent, need to get the
+                // relationship name to use for that parent query.
+                String parentRelationshipPrefix = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType).replace('__c', '__r') + '.';
+
+                String skewClause = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType,
+                        CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, parentRelationshipPrefix);
+
+                if (!String.isEmpty(skewClause)) {
+                    whereClauses.add(skewClause);
+                }
+            }
+
+            // Exclude Organization Donations (where Opp.Account.SYSTEM_IsIndividual=false) from Contact Hard Credit rollups
+            // Depending on the npo02__Always_Rollup_to_Primary_Contact__c custom setting
+            if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false &&
+                    this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+                whereClauses.add('Account.npe01__SYSTEMIsIndividual__c = True');
+
+            } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false &&
+                    (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
+                            this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit)) {
+                whereClauses.add('(IsPrimary = False OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = False)');
+
+            } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == True &&
+                    (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
+                            this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit)) {
+                whereClauses.add('IsPrimary = False');
+            }
+
+            // Identify a common filter that can be applied to the main query to reduce the number of records queried
+            String addlFilter;
+            if (detailObjectType == Opportunity.SObjectType) {
+                addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, detailObjectType,
+                        this.statefulCacheOfRollupsToBeProcessed);
+            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Contact.SObjectType, Partial_Soft_Credit__c.SObjectType);
+            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+                addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Account.SObjectType, Partial_Soft_Credit__c.SObjectType);
+            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, this.detailObjectType);
+            }
+            if (!String.isEmpty(addlFilter)) {
+                whereClauses.add(addlFilter);
+            }
+
+            if (!whereClauses.isEmpty()) {
+                query += ' WHERE ' + String.join(whereClauses, ' AND ');
+            }
+
+            query += ' ORDER BY ' + keyFieldOverrideForQuery + ', CreatedDate ASC';
+
+        } else {
+            // If there are no active rollups for the object type, then force the query to return zero records.
+            // This is needed because can't return null as a valid iterator.
+            query += ' LIMIT 0';
+        }
+
+        return query;
     }
 
     /**
@@ -492,5 +443,44 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             reorderedSummaryRecords.add(mapOfSummaryRecords.get(parentId));
         }
         return reorderedSummaryRecords;
+    }
+
+    /**
+     * @description In skew mode, the lack of properly sequenced batches when ORDER BY is used requires the batch
+     * job to hold the first and last summary record id data stateful until the end in case there are additional
+     * detail records to be rolled up. This method is called in the finish() process to complete any pending rollups
+     * for those parent records held stateful throughout the life of the batch job.
+     */
+    private void completeRollupsForBatchIteration() {
+        // Get the Summary (target) records for the final record to be processed
+        List<Id> parentIds = new List<Id>(parentIdsNotCommittedWithBatch.keySet());
+        String query = CRLP_Query_SEL.buildObjectQueryForRollup(summaryObjectType) + ' WHERE Id IN :parentIds';
+        List<SObject> parents = Database.query(query);
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+                .withRollupType(jobType)
+                .withBatchJobMode(jobMode)
+                .withDetailRecords(new List<SObject>())
+                .withRelatedRecords(new Map<Id, List<SObject>>())
+                .withPreviouslyProcessedOppIdsMap(statefulMapOfOppIdsByParentId)
+                .withRollupDefinitions(statefulRollupsById);
+
+        // Call the method to do the actual rollup on this last remaining record, which is basically
+        // just to return the updated record
+        List<SObject> updatedRecords = new List<SObject>();
+        for (SObject parent : parents) {
+
+            SObject updatedRecord = processor.withSummaryRecord(parent).completeRollupForSingleSummaryRecord(parent);
+            if (updatedRecord != null) {
+                updatedRecords.add(updatedRecord);
+            }
+        }
+
+        // Handle dml on the records to be updated
+        if (!updatedRecords.isEmpty()) {
+            CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords, jobType);
+            totalRecordsModified += updatedRecords.size();
+            totalCommits++;
+        }
     }
 }

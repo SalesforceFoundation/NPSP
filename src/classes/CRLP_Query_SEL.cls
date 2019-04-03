@@ -162,12 +162,11 @@ public inherited sharing class CRLP_Query_SEL {
 
             // always include these two extra fields for Opportunity queries
             mainSoql += ', Account.npe01__SYSTEMIsIndividual__c';
-
         }
 
         // Append the main object back to the query and return it
         mainSoql += ' FROM ' + detailObject.getDescribe().getName();
-        UTIL_Debug.debug('SOQL=' + mainSoql);
+        UTIL_Debug.debug(LoggingLevel.WARN, 'SOQL=' + mainSoql);
         return mainSoql;
     }
 

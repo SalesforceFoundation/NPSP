@@ -180,36 +180,6 @@ public abstract class CRLP_Batch_Base {
         return parentIds;
     }
 
-    /**
-     * @description Are there active Rollup__mdt records for the job type?
-     * @return True if there are active Rollup__mdt records for the current job type
-     */
-    protected Boolean hasActiveRollupsForThisJob() {
-        Boolean hasActiveRollups = false;
-        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-            hasActiveRollups = CRLP_Rollup_SVC.hasActiveRollupsForSObject(General_Accounting_Unit__c.SObjectType);
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-            hasActiveRollups = CRLP_Rollup_SVC.hasActiveRollupsForSObject(Account.SObjectType);
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-            hasActiveRollups = CRLP_Rollup_SVC.hasActiveAccountSoftCreditRollupsForSObject(Account.SObjectType);
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-            hasActiveRollups = CRLP_Rollup_SVC.hasActiveRollupsForSObject(Contact.SObjectType);
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-            hasActiveRollups = CRLP_Rollup_SVC.hasActivePartialSoftCreditRollupsForSObject(Contact.SObjectType);
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-            hasActiveRollups = CRLP_Rollup_SVC.hasActivePartialSoftCreditRollupsForSObject(Account.SObjectType);
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-            hasActiveRollups = CRLP_Rollup_SVC.hasActiveRollupsForSObject(npe03__Recurring_Donation__c.SObjectType);
-        }
-        return hasActiveRollups;
-    }
-
     /** @description Are there Payment rollups to execute? */
     private Boolean hasPaymentRollups = null;
     public Boolean hasActivePaymentRollupsForThisJob() {
@@ -229,48 +199,63 @@ public abstract class CRLP_Batch_Base {
      * @return List<Partial_Soft_Credit__c>
      */
     protected List<Partial_Soft_Credit__c> buildPartialSoftCreditRecordsFromOCRs(List<OpportunityContactRole> detailRecords) {
+        // These are both referenced in the SOQL created by buildDetailObjectQueryForRollup().
         List<Id> oppIds = getParentIdsFromDetailRecords(detailRecords, 'OpportunityId');
         List<Id> contactIds = getParentIdsFromDetailRecords(detailRecords, 'ContactId');
 
         String oppQuery = CRLP_Query_SEL.buildDetailObjectQueryForRollup(Opportunity.SObjectType,
                 new List<SObjectType>{ OpportunityContactRole.SObjectType, Partial_Soft_Credit__c.SObjectType }) +
                 ' WHERE Id IN :oppIds';
-        Map<Id, Opportunity> oppsMapById = new Map<Id, Opportunity>((List<Opportunity>)database.query(oppQuery));
+
+        Map<Id, Opportunity> oppsMapById = new Map<Id, Opportunity>((List<Opportunity>)Database.query(oppQuery));
 
         List<Partial_Soft_Credit__c> pscDetailRecords = new List<Partial_Soft_Credit__c>();
-
         for (OpportunityContactRole ocr : detailRecords) {
             Opportunity opp = oppsMapById.get(ocr.OpportunityId);
 
-            // Find the matching PartialSoftCredit record for the OCR record; if there is one
-            Partial_Soft_Credit__c matchedPSC;
-            for (Partial_Soft_Credit__c psc : opp.Partial_Soft_Credits__r) {
-                if (psc.Contact__c == ocr.ContactId) {
-                    matchedPSC = psc.clone(true, true, true, true);
-                    matchedPSC.Opportunity__r = opp;
-                    break;
-                }
-            }
-            if (matchedPSC == null) {
-                // If there is no matched PartialSoftCredit record for this OCR, create a new one (not committed)
-                // and set the Amount to the full Amount value from the Opportunity record.
-                matchedPSC = new Partial_Soft_Credit__c(
-                        Opportunity__c = opp.Id,
-                        Opportunity__r = opp,
-                        Contact__r = ocr.Contact,
-                        Contact__c = ocr.ContactId,
-                        Contact_Role_ID__c = ocr.Id,
-                        Role_Name__c = ocr.Role,
-                        Amount__c = opp.Amount
-                );
-                if (UserInfo.isMultiCurrencyOrganization()) {
-                    matchedPSC.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
-                }
-            }
+            Partial_Soft_Credit__c matchedPSC = matchOrCreatePartialSoftCredit(opp, ocr);
+
             pscDetailRecords.add(matchedPSC);
         }
 
         return pscDetailRecords;
+    }
+
+    /**
+     * @description For the given Opportunity and OpportunityContactRole, either match the OCR to an existing
+     * partialSoftCredit record or create a new 'dummy' one that can be used for the Soft Credit Rollup job.
+     * @param opp Opportunity
+     * @param ocr OpportunityContactRole
+     * @return Partial_Soft_Credit__c
+     */
+    private Partial_Soft_Credit__c matchOrCreatePartialSoftCredit(Opportunity opp, OpportunityContactRole ocr) {
+        // Find the matching PartialSoftCredit record for the OCR record; if there is one
+        Partial_Soft_Credit__c matchedPSC;
+        for (Partial_Soft_Credit__c psc : opp.Partial_Soft_Credits__r) {
+            if (psc.Contact__c == ocr.ContactId) {
+                matchedPSC = psc.clone(true, true, true, true);
+                matchedPSC.Opportunity__r = opp;
+                break;
+            }
+        }
+        if (matchedPSC == null) {
+            // If there is no matched PartialSoftCredit record for this OCR, create a new one (not committed)
+            // and set the Amount to the full Amount value from the Opportunity record.
+            matchedPSC = new Partial_Soft_Credit__c(
+                    Opportunity__c = opp.Id,
+                    Opportunity__r = opp,
+                    Contact__r = ocr.Contact,
+                    Contact__c = ocr.ContactId,
+                    Contact_Role_ID__c = ocr.Id,
+                    Role_Name__c = ocr.Role,
+                    Amount__c = opp.Amount
+            );
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                matchedPSC.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
+            }
+        }
+
+        return matchedPSC;
     }
 
     /******************************** Helper Methods *****************************/
@@ -299,7 +284,7 @@ public abstract class CRLP_Batch_Base {
         return builder.buildQuery();
     }
 
-    /**
+    /** TODO Merge this with the new CRLP_QueryBuilder class
      * @description Inner Class used to build the start method query.
      */
     public class BatchQueryBuilder {
@@ -387,7 +372,7 @@ public abstract class CRLP_Batch_Base {
             }
 
             // If there are no active rollups for the object type, then force the query to return zero records.
-            if (base.hasActiveRollupsForThisJob() == false) {
+            if (CRLP_Rollup_SVC.hasActiveRollups(base.jobType) == false) {
                 // This is needed because can't return null as a valid iterator.
                 query += ' LIMIT 0';
             } else if (base.recordIds == null) {
@@ -665,11 +650,29 @@ public abstract class CRLP_Batch_Base {
      * the previous job hadn't yet completed
      * @param className The name of the skipped batch class to be used in the error message
      */
-    public void logDuplicateBatchError(String className) {
+    protected void logDuplicateBatchError(String className) {
 
         CRLPBatchException ex = new CRLPBatchException();
         ex.setMessage(String.format(Label.CRLP_BatchSkipped, new List<String>{className}));
         ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
 
+    }
+
+    /**
+     * @description Only called by the Finish() method if debug logging is enabled to log state
+     * @param String addlLogData
+     */
+    protected void logDebugInfo(String addlLogData) {
+        Error__c logEntry = new Error__c(
+                Context_Type__c = ERR_Handler_API.Context.CRLP.name() + ': ' + this.jobType.name() + ' ' + this.jobMode.name(),
+                Error_Type__c = 'DEBUG LOG',
+                Full_Message__c = (
+                        'Total Batch Iterations: ' + this.batchIteration +
+                        '\nTotal DML Operations: ' + this.totalCommits +
+                        '\nTotal Records Updates: ' + this.totalRecordsModified +
+                        addlLogData + '\n' +
+                        '\nRollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState()).left(32768)
+        );
+        insert logEntry;
     }
 }
