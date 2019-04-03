@@ -115,10 +115,6 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 List<String> whereClauses = new List<String>();
 
                 String keyFieldOverrideForQuery = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType);
-                /*if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit
-                        || jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                    keyFieldOverrideForQuery = CRLP_Rollup_SVC.getParentRelationshipFieldForSoftCredit(Partial_Soft_Credit__c.SObjectType);
-                }*/
 
                 // Add necessary filters to limit the LDV batch job to only the records that should be processed as LDV
                 if (this.recordIds != null && this.recordIds.size() > 0) {

@@ -163,31 +163,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 queryBuilder.includePaymentRecords();
             }
 
-            // Get the detail records for the current set of Summary Records
-            // This could be Opportunity or OCR records
-            /*List<SObject> detailRecords;
-            if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations
-            ) {
-
-                if (hasActivePaymentRollupsForThisJob()) {
-                    queryBuilder.includePaymentRecords();
-                }
-
-
-                detailRecords = Database.query(query);
-
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit
-            ) {
-
-                String query = queryBuilder.getDetailsQueryAsSOQL();
-
-            }*/
-
-
             String query = queryBuilder.getDetailsQueryAsSOQL();
             UTIL_Debug.debug(LoggingLevel.ERROR, '>> NonSkew Batch Query =' + query);
 
