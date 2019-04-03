@@ -39,13 +39,13 @@
 */
 global with sharing class BDI_DataImportService {
 
-    private BDI_FieldMapping_BASE fieldMapper;
+    private BDI_FieldMapping fieldMapper;
 
     /*******************************************************************************************************
     * @description constructor
     * @param isDryRun whether to run in Dry Run mode or commit records.
     */
-    public BDI_DataImportService(Boolean isDryRun, BDI_FieldMapping_BASE fieldMapper) {
+    public BDI_DataImportService(Boolean isDryRun, BDI_FieldMapping fieldMapper) {
         contactService = new BDI_ContactService(this);
         this.isDryRun = isDryRun;
 
@@ -470,7 +470,7 @@ global with sharing class BDI_DataImportService {
     public static void execute(Id apexJobId, Data_Import_Settings__c dataImportSettings, List<DataImport__c> dataImports,
         Boolean isDryRun) {
 
-        BDI_DataImportService dataImportService = new BDI_DataImportService(isDryRun, BDI_FieldMapping_BASE.getInstance());
+        BDI_DataImportService dataImportService = new BDI_DataImportService(isDryRun, BDI_FieldMapping.getInstance());
         dataImportService.process(apexJobId, dataImportSettings, dataImports);
     }
 
