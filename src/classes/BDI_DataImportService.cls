@@ -470,7 +470,10 @@ global with sharing class BDI_DataImportService {
     public static void execute(Id apexJobId, Data_Import_Settings__c dataImportSettings, List<DataImport__c> dataImports,
         Boolean isDryRun) {
 
-        BDI_DataImportService dataImportService = new BDI_DataImportService(isDryRun, BDI_FieldMapping.getInstance());
+        // TODO: read settings to instantiate correct field mapping class
+        BDI_FieldMapping fieldMapper = new BDI_FieldMappingHelpText();
+
+        BDI_DataImportService dataImportService = new BDI_DataImportService(isDryRun, fieldMapper);
         dataImportService.process(apexJobId, dataImportSettings, dataImports);
     }
 

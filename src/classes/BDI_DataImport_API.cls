@@ -119,7 +119,7 @@ global with sharing class BDI_DataImport_API {
     * @return void
     */
     global static void processDataImportRecords(Data_Import_Settings__c diSettings, List<DataImport__c> listDI, Boolean isDryRun) {
-        BDI_DataImportService bdi = new BDI_DataImportService(isDryRun, BDI_FieldMapping.getInstance());
+        BDI_DataImportService bdi = new BDI_DataImportService(isDryRun, new BDI_FieldMappingHelpText());
         bdi.process(null, diSettings, listDI);
     }
 

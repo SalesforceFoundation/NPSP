@@ -35,40 +35,10 @@
 * @description define behaviors of field mapping classes
 */
 
-public abstract class BDI_FieldMapping {
+public interface BDI_FieldMapping {
 
-    /** @description The batch data import custom settings */
-    protected Data_Import_Settings__c BDISettings;
-
-    public static BDI_FieldMapping mappingInstance = null;
-
-    /*******************************************************************************************************
-    * @description flag to allow us to test out field level security exception
-    */
-    public Boolean failFieldLevelSecurity = false;
-
-
-    public BDI_FieldMapping() {
-
-    }
-
-    public static BDI_FieldMapping getInstance() {
-        //if(Data_Import_Settings.getInstance().Use_Custom_Metadata_Mapping__c) {
-        //    mappingInstance = new BDI_FieldMapping_CustomMetadata();
-        //} else {
-        mappingInstance = new BDI_FieldMappingHelpText();
-        //}
-        return mappingInstance;
-    }
-
-    public abstract Map<String,String> getFieldMap(String dataImportObjectName, 
+    Map<String,String> getFieldMap(String dataImportObjectName, 
             String targetObjectName, 
             List<String> dataImportFields);
-
-    /*******************************************************************************************************
-    * @description our exception object for Field Level Security errors.
-    */
-    public class FLSException extends Exception {}
-
 
 }

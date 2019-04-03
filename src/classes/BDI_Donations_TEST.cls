@@ -109,7 +109,10 @@ public with sharing class BDI_Donations_TEST {
         diSettings.Run_Opportunity_Rollups_while_Processing__c = true;
 
         // manually insert checkbox field mapping
-        Map<String,String> oppFieldsByDIFields = BDI_Donations.dataImportFieldToOpportunityField;
+        BDI_Donations donationImportHandler = 
+            new BDI_Donations(new BDI_DataImportService(true, new BDI_FieldMappingHelpText()));
+
+        Map<String,String> oppFieldsByDIFields = donationImportHandler.dataImportFieldToOpportunityField;
         oppFieldsByDIFields.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c'),
                 'IsPrivate');
 
@@ -195,7 +198,10 @@ public with sharing class BDI_Donations_TEST {
         diSettings.Run_Opportunity_Rollups_while_Processing__c = true;
 
         // manually insert checkbox field mapping
-        Map<String,String> oppFieldsByDIFields = BDI_Donations.dataImportFieldToOpportunityField;
+        BDI_Donations donationImportHandler = 
+            new BDI_Donations(new BDI_DataImportService(true,new BDI_FieldMappingHelpText()));
+
+        Map<String,String> oppFieldsByDIFields = donationImportHandler.dataImportFieldToOpportunityField;        
         oppFieldsByDIFields.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c'),
                 'IsPrivate');
 

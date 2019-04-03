@@ -35,14 +35,20 @@
 * @description define behaviors of field mapping classes
 */
 
-public with sharing class BDI_FieldMappingHelpText extends BDI_FieldMapping {
-    
+public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
+
+    /*******************************************************************************************************
+    * @description flag to allow us to test out field level security exception
+    */
+    public Boolean failFieldLevelSecurity = false;
+
 
     public BDI_FieldMappingHelpText() {
 
     }
 
-    public override Map<String,String> getFieldMap(String dataImportObjectName, String targetObjectName, List<String> dataImportFields) {
+    public Map<String,String> getFieldMap(String dataImportObjectName, 
+        String targetObjectName, List<String> dataImportFields) {
 
         Map<String, String> dataImportFieldToTargetField = new Map<String, String>();
 
@@ -124,5 +130,10 @@ public with sharing class BDI_FieldMappingHelpText extends BDI_FieldMapping {
     public Boolean isCurrencyMapped(String objectName) {
         return objectName.equalsIgnoreCase('Opportunity');
     }
+
+    /*******************************************************************************************************
+    * @description our exception object for Field Level Security errors.
+    */
+    public class FLSException extends Exception {}
 
 }
