@@ -200,7 +200,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             }
 
         } catch (Exception ex) {
-            // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
             ex.setMessage(ex.getMessage() + '\n\nRollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState());
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP + '.' + this.jobType.name());
         }

@@ -83,31 +83,17 @@ public class CRLP_SkewDispatcher_BATCH implements Database.Batchable<SObject>, D
     /**
      * @description Query records to be rolled up using Skew Mode
      */
-    public database.Querylocator start(Database.BatchableContext bc) {
+    public Database.QueryLocator start(Database.BatchableContext bc) {
         String query;
         try {
-            Boolean hasActiveRollups = false;
+
+            Boolean hasActiveRollups = CRLP_Rollup_SVC.hasActiveRollups(jobType);
 
             // Build a query string of the target Summary object.
             query = 'SELECT Id FROM ' + this.summaryObjectType.getDescribe().getName();
             String skewFilter = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
             if (!String.isEmpty(skewFilter)) {
                 query += ' WHERE ' + skewFilter;
-            }
-
-            // If the Summary Object is the Account, then filter on Accounts that have at least a single
-            // Opportunity attached. This is helpful to reduce the overall query size.
-            // To handle a scenario where an attached Oppportunity was deleted, but the record not recalculated
-            // also include any records where the TotalGifts or TotalMemberships fields are not zero
-            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-                hasActiveRollups = CRLP_Rollup_SVC.hasActiveRollups(this.summaryObjectType);
-
-            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                hasActiveRollups = CRLP_Rollup_SVC.hasActivePartialSoftCreditRollupsForSObject(this.summaryObjectType);
-
-            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-                hasActiveRollups = CRLP_Rollup_SVC.hasActiveRollups(this.summaryObjectType);
             }
 
             if (hasActiveRollups == true) {

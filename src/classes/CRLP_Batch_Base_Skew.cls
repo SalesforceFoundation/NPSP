@@ -133,9 +133,8 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                         this.statefulCacheOfRollupsToBeProcessed);
             }
 
-            Id lastParentIdProcessed = null; // reset the value
-
-            String parentObjectField, parentKeyField = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType);
+            String parentKeyField = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType);
+            String parentObjectField;
 
             // The parentKeyField field may be have dot-notation (ex: Contact__r.Account__c)
             // If this is the case, need to parse out the two components to use
@@ -160,27 +159,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
 
             // Map of Payment Child details by parent Opportunity (this job only handles Opportunity or Allocation
             // as the primary queryLocator).
-            Map<Id, List<npe01__OppPayment__c>> paymentsByOpp = new Map<Id, List<npe01__OppPayment__c>>();
-
-            // If the detail object is Opportunity AND there are payment rollups for the parent object
-            // these need to be queried outside of the main batch job query due to a current known issue with
-            // sub-queries on large objects.
-            if (CRLP_Rollup_SVC.hasActiveRollups(jobType) && !detailRecords.isEmpty() && detailObjectType == Opportunity.SObjectType) {
-
-                // build a list of all the detail record Id's to use for retrieving the child payment records
-                // for each Opportunity (detail).
-                Set<Id> detailIds = new Map<Id,SObject>(detailRecords).keySet();
-
-                String paymentsQuery = CRLP_Query_SEL.buildObjectQueryForRollup(npe01__OppPayment__c.SObjectType) +
-                        ' WHERE npe01__Opportunity__c IN :detailIds ORDER BY npe01__Opportunity__c, CreatedDate ASC';
-
-                for (npe01__OppPayment__c pmt : Database.query(paymentsQuery)) {
-                    if (!paymentsByOpp.containsKey(pmt.npe01__Opportunity__c)) {
-                        paymentsByOpp.put(pmt.npe01__Opportunity__c, new List<npe01__OppPayment__c>());
-                    }
-                    paymentsByOpp.get(pmt.npe01__Opportunity__c).add(pmt);
-                }
-            }
+            Map<Id, List<npe01__OppPayment__c>> paymentsByOpp = getRelatedPayments(detailRecords);
 
             // Get all parent records to be processed by this batch iteration
             List<Id> parentIds = getUniqueParentIds(this.summaryObjectType, detailRecords,
@@ -214,26 +193,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
 
             List<SObject> updatedRecords = processor.startRollupProcessing();
 
-            // Save Rollups collection and the last parent record id processed in stateful vars
-            lastParentIdProcessed = processor.getLastParentIdProcessed();
-            if (processor.getRollupDefsForParent(firstParentId) != null) {
-                this.statefulRollupsById.put(firstParentId, processor.getRollupDefsForParent(firstParentId));
-            }
-            if (processor.getRollupDefsForParent(lastParentId) != null) {
-                this.statefulRollupsById.put(lastParentId, processor.getRollupDefsForParent(lastParentId));
-            }
-            if (lastParentIdProcessed != null && processor.getRollupDefsForParent(lastParentIdProcessed) != null) {
-                this.statefulRollupsById.put(lastParentIdProcessed, processor.getRollupDefsForParent(lastParentIdProcessed));
-                if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit || 
-                        this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                    this.statefulMapOfOppIdsByParentId.put(lastParentIdProcessed, processor.getPreviouslyProcessedOppIds(lastParentIdProcessed));
-                }
-            }
-
-            // Remember which batch iteration this parent was last NOT updated
-            if (processor.lastParentIdRemovedFromUpdatesList == true) {
-                this.parentIdsNotCommittedWithBatch.put(lastParentIdProcessed, this.batchIteration);
-            }
+            saveFirstAndLastParentIdData(processor, firstParentId, lastParentId);
 
             // Handle dml on the records to be updated
             if (updatedRecords != null && !updatedRecords.isEmpty()) {
@@ -428,6 +388,38 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     }
 
     /**
+     * @description Retrieve a map of related Payments for each Detail record, but only if Payment Rollups are active
+     * for the given rollup type
+     * @param detailRecords
+     * @return Map<Id, List<SObject>>
+     */
+    private Map<Id, List<SObject>> getRelatedPayments(List<SObject> detailRecords) {
+        Map<Id, List<SObject>> paymentsByOpp = new Map<Id, List<SObject>>();
+
+        // If the detail object is Opportunity AND there are payment rollups for the parent object
+        // these need to be queried outside of the main batch job query due to a current known issue with
+        // sub-queries on large objects.
+        if (hasActivePaymentRollupsForThisJob() && !detailRecords.isEmpty() && detailObjectType == Opportunity.SObjectType) {
+
+            // build a list of all the detail record Id's to use for retrieving the child payment records
+            // for each Opportunity (detail).
+            Set<Id> detailIds = new Map<Id,SObject>(detailRecords).keySet();
+
+            String paymentsQuery = CRLP_Query_SEL.buildObjectQueryForRollup(npe01__OppPayment__c.SObjectType) +
+                    ' WHERE npe01__Opportunity__c IN :detailIds ORDER BY npe01__Opportunity__c, CreatedDate ASC';
+
+            for (npe01__OppPayment__c pmt : Database.query(paymentsQuery)) {
+                if (!paymentsByOpp.containsKey(pmt.npe01__Opportunity__c)) {
+                    paymentsByOpp.put(pmt.npe01__Opportunity__c, new List<npe01__OppPayment__c>());
+                }
+                paymentsByOpp.get(pmt.npe01__Opportunity__c).add(pmt);
+            }
+        }
+
+        return paymentsByOpp;
+    }
+
+    /**
      * @description Resequence the Parent (Summary) records to be in the exact order of the detail records
      * using the defined parent Id
      * @param parentIds
@@ -443,6 +435,36 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             reorderedSummaryRecords.add(mapOfSummaryRecords.get(parentId));
         }
         return reorderedSummaryRecords;
+    }
+
+    /**
+     * @description Save Rollups collection and the last parent record id processed in stateful vars
+     * @param processor
+     * @param firstParentId
+     * @param lastParentId
+     */
+    private void saveFirstAndLastParentIdData(CRLP_RollupProcessor processor, Id firstParentId, Id lastParentId) {
+        Id lastParentIdProcessed = processor.getLastParentIdProcessed();
+
+        if (processor.getRollupDefsForParent(firstParentId) != null) {
+            this.statefulRollupsById.put(firstParentId, processor.getRollupDefsForParent(firstParentId));
+        }
+        if (processor.getRollupDefsForParent(lastParentId) != null) {
+            this.statefulRollupsById.put(lastParentId, processor.getRollupDefsForParent(lastParentId));
+        }
+        if (lastParentIdProcessed != null && processor.getRollupDefsForParent(lastParentIdProcessed) != null) {
+            this.statefulRollupsById.put(lastParentIdProcessed, processor.getRollupDefsForParent(lastParentIdProcessed));
+
+            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+                    this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                this.statefulMapOfOppIdsByParentId.put(lastParentIdProcessed, processor.getPreviouslyProcessedOppIds(lastParentIdProcessed));
+            }
+        }
+
+        // Remember which batch iteration this parent was last NOT updated
+        if (processor.lastParentIdRemovedFromUpdatesList == true) {
+            this.parentIdsNotCommittedWithBatch.put(lastParentIdProcessed, this.batchIteration);
+        }
     }
 
     /**
