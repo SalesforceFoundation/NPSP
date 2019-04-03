@@ -1,8 +1,42 @@
-/**
- * Created by smithmichael on 2019-04-01.
- */
+/*
+    Copyright (c) 2019, Salesforce.org
+    All rights reserved.
 
-public class CRLP_RollupQueryBuilder {
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.org
+* @date 2019
+* @group Rollups
+* @group-content ../../ApexDocContent/Rollups2.htm
+* @description Query Builder class for Customizable Rollups. This is a work-in-progress. For now it only implements
+* query building for Detail objects. Batch level QueryLocator queries will be in a future refactor.
+*
+*/
+public without sharing class CRLP_RollupQueryBuilder {
 
     /** @description Type of rollup being performed */
     private CRLP_RollupProcessingOptions.RollupType rollupType;
@@ -30,15 +64,6 @@ public class CRLP_RollupQueryBuilder {
         return this;
     }
 
-    public CRLP_RollupQueryBuilder withIncrementalMode() {
-        this.useIncrementalMode = true;
-        return this;
-    }
-
-    public CRLP_RollupQueryBuilder withIncrementalMode(Boolean isIncremental) {
-        this.useIncrementalMode = isIncremental;
-        return this;
-    }
 
     public CRLP_RollupQueryBuilder withSummaryRecordIds(Set<Id> summaryRecordIds) {
         this.summaryRecordIds = summaryRecordIds;
@@ -109,18 +134,6 @@ public class CRLP_RollupQueryBuilder {
         }
     }
 
-
-    /**
-     * @description Returns the SOQL string for a QueryLocator query for the specified Job Type (Skew or NonSkew)
-     * and RollupType. If there are SummaryRecordId's present, the query is filtered for those specified Id's.
-     * @return SOQL String
-     */
-    public String getQueryLocatorAsSOQL() {
-        String query = '';
-
-        return query;
-    }
-
     /**
      * @description Returns the SOQL string for a Query against the details object. This is used for a NonSkew job
      * or for the Queueable rollup operation.
@@ -129,6 +142,8 @@ public class CRLP_RollupQueryBuilder {
      */
     public String getDetailsQueryAsSOQL() {
         String query = '';
+        List<String> whereClauses = new List<String>();
+        List<String> orderByFields = new List<String>();
 
         SObjectType detailobjectType = CRLP_Rollup_SVC.getDetailObjectType(rollupType);
         SObjectType summaryObjectType = CRLP_Rollup_SVC.getSummaryObjectType(rollupType);
@@ -141,7 +156,6 @@ public class CRLP_RollupQueryBuilder {
 
             String keyFieldOverrideForQuery = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(rollupType);
 
-            List<String> whereClauses = new List<String>();
             whereClauses.add(keyFieldOverrideForQuery + ' IN : summaryRecords');
 
             String addlFilter;
@@ -162,33 +176,19 @@ public class CRLP_RollupQueryBuilder {
                 }
             }
 
-            if (!whereClauses.isEmpty()) {
-                query += ' WHERE ' + String.join(whereClauses, ' AND ');
-            }
-            if (customWhereClauses != null && !customWhereClauses.isEmpty()) {
-                query += ' WHERE ' + String.join(customWhereClauses, ' AND ');
-            }
-
-            // Note that the ORDER BY here doesn't guarantee that the records will actually be in this order
-            query += ' ORDER BY ' + keyFieldOverrideForQuery;
-
-            String createdDateClause;
+            orderByFields.add(keyFieldOverrideForQuery);
             if (rollupType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                createdDateClause = ', Opportunity.CreatedDate ASC ';
+                orderByFields.add('Opportunity.CreatedDate ASC');
             } else {
-                createdDateClause = ', Opportunity__r.CreatedDate ASC ';
+                orderByFields.add('Opportunity__r.CreatedDate ASC ');
             }
-            query += createdDateClause;
 
         } else {
             // Hard Credit Rollups
             query = buildFullDetailsQueryForSummaryRecords();
 
-            String orderByClause;
-            List<String> whereClauses = new List<String>();
-
             if (query.containsIgnoreCase('ORDER BY ')) {
-                orderByClause = query.split('ORDER BY')[1];
+                orderByFields.add(query.split('ORDER BY')[1]);
                 query = query.split('ORDER BY')[0];
             }
 
@@ -212,24 +212,20 @@ public class CRLP_RollupQueryBuilder {
                 whereClauses.add('Account.npe01__SYSTEMIsIndividual__c = True');
             }
 
-            if (!whereClauses.isEmpty()) {
-                query += ' WHERE ' + String.join(whereClauses, ' AND ');
-            }
-
-            // Sort the records by the parent key field
-
-            if (orderByClause == null) {
-                orderByClause = orderByField;
-            }
-
             // Force the details query to sort by Ascending CreatedDate so that the records are process
             // in the order in which they were created in the database. Thus the 'first' is truly the first
             // and the last is truly the last.
-            if (orderByClause != null) {
-                query += ' ORDER BY ' + orderByClause + ', CreatedDate ASC';
-            } else {
-                query += ' ORDER BY CreatedDate ASC';
-            }
+            orderByFields.add('CreatedDate ASC');
+        }
+
+        if (!whereClauses.isEmpty()) {
+            query += ' WHERE ' + String.join(whereClauses, ' AND ');
+        }
+        if (customWhereClauses != null && !customWhereClauses.isEmpty()) {
+            query += ' WHERE ' + String.join(customWhereClauses, ' AND ');
+        }
+        if (!orderByFields.isEmpty()) {
+            query += ' ORDER BY ' + String.join(orderByFields, ', ');
         }
 
         return query;
@@ -246,6 +242,17 @@ public class CRLP_RollupQueryBuilder {
 
         return query;
     }
+
+    /**
+     * @description Returns the SOQL string for a QueryLocator query for the specified Job Type (Skew or NonSkew)
+     * and RollupType. If there are SummaryRecordId's present, the query is filtered for those specified Id's.
+     * @return SOQL String
+     */
+    /*public String getQueryLocatorAsSOQL() {
+        String query = '';
+
+        return query;
+    }*/
 
     /**
      * @description Build a complete SOQL query string from a set of Summary Record Ids, including the requried

@@ -36,7 +36,7 @@
 * summary object, detail object, related objects. Returns an updated SObject if there are changed fields.
 *
 */
-public class CRLP_RollupProcessor {
+public inherited sharing class CRLP_RollupProcessor {
 
     /** @description Type of rollup being performed */
     public CRLP_RollupProcessingOptions.RollupType rollupType;
