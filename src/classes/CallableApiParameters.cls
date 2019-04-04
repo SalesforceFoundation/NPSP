@@ -37,6 +37,7 @@
 */
 public class CallableApiParameters {
 
+    public static final String PARAM_ROLLUP_PARENTID = 'ParentId';
     public static final String PARAM_ROLLUP_TYPE = 'RollupType';
     public static final String PARAM_ROLLUP_DEFS = 'RollupDefinitions';
     public static final String PARAM_ROLLUP_DATA = 'RollupData';

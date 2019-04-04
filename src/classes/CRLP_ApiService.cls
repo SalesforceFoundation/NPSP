@@ -66,7 +66,16 @@ public inherited sharing class CRLP_ApiService {
         return handler.getRollupsList();
     }
 
-    public List<CRLP_Rollup> executeRollups(String rollupTypeName, List<CRLP_Rollup> rollupDefs, Map<Id, Map<String, List<SObject>>> rollupData) {
+    /**
+     * @description Entry point for external packages to call the Customizable Rollups API
+     * @param parentId
+     * @param rollupTypeName
+     * @param rollupDefs
+     * @param rollupData
+     * @return Updated Rollup Definitions
+     */
+    public List<CRLP_Rollup> executeRollups(Id parentId, String rollupTypeName, List<CRLP_Rollup> rollupDefs,
+            Map<Id, Map<String, List<SObject>>> rollupData) {
 
         // Convert the Rollup Type into an Enum
         CRLP_RollupProcessingOptions.RollupType rollupType;
@@ -75,32 +84,55 @@ public inherited sharing class CRLP_ApiService {
         } catch (Exception ex) { }
 
         if (rollupType == null) {
-            throwApiException(CallableApiParameters.PARAM_ROLLUP_TYPE, 'No matching RollupType');
+            throwParameterException(CallableApiParameters.PARAM_ROLLUP_TYPE, 'No matching RollupType');
+        }
+
+        // If there are no active rollups, just return the same content passed initially
+        if (!CRLP_Rollup_SVC.hasActiveRollups(rollupType)) {
+            return rollupDefs;
         }
 
         // Ensure the Rollup Definitions are populated
         if (rollupDefs == null || rollupDefs.size() == 0) {
-            throwApiException(CallableApiParameters.PARAM_ROLLUP_DEFS, 'Empty Rollup Definitions Collection');
+            throwParameterException(CallableApiParameters.PARAM_ROLLUP_DEFS, 'Empty Rollup Definitions Collection');
         }
 
-        // Convert the Rollup Data into ?
+        // Ensure there is data to rollup for the parent record
         if (rollupData == null || rollupData.size() == 0) {
-            throwApiException(CallableApiParameters.PARAM_ROLLUP_DATA, 'Empty Rollup Data Collection');
+            throwParameterException(CallableApiParameters.PARAM_ROLLUP_DATA, 'Empty Rollup Data Collection');
         }
 
-        CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
+        try {
+            CRLP_ApiExecuteRollups rollupTransformationApi = new CRLP_ApiExecuteRollups()
+                    .withRollupType(rollupType)
+                    .withParentId(parentId)
+                    .withRollupData(rollupData)
+                    .withRollupDefs(rollupDefs);
 
+            rollupDefs = rollupTransformationApi.executeRollups();
+        } catch (Exception ex) {
+            // TODO Refactor this to use a different custom label
+            throwAPIException('CRLP_ApiExecuteRollups', ex.getMessage());
+        }
         return rollupDefs;
+    }
+
+
+    /**
+     * @description Throw a custom exception there is an error parsing the parameter
+     */
+    private void throwParameterException(String paramName, String errMessage) {
+        throw new ApiException(String.format( System.Label.CallableApiParameterError,
+                new List<String>{ paramName, errMessage } ));
     }
 
     /**
      * @description Throw a custom exception when api call cannot be completed
      */
-    private void throwApiException(String paramName, String errMessage) {
+    private void throwAPIException(String paramName, String errMessage) {
         throw new ApiException(String.format( System.Label.CallableApiParameterError,
                 new List<String>{ paramName, errMessage } ));
     }
-
 
     /**
     * @description Exception class

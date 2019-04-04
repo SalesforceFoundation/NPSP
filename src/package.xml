@@ -132,6 +132,7 @@
         <members>CRLP_Account_AccSoftCredit_BATCH</members>
         <members>CRLP_Account_BATCH</members>
         <members>CRLP_Account_SoftCredit_BATCH</members>
+        <members>CRLP_ApiExecuteRollups</members>
         <members>CRLP_ApiService</members>
         <members>CRLP_ApiService_TEST</members>
         <members>CRLP_Batch_Base</members>
