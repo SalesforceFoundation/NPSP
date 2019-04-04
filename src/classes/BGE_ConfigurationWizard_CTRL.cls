@@ -206,12 +206,14 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
 
             String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(dfr.getName());
 
-            Boolean fieldAllowed = (allowedObjects.contains(dataImportFieldMappedObject)
+            Boolean fieldAllowed = (
+                UTIL_Permissions.canUpdate(dfr, false)
+                && ((allowedObjects.contains(dataImportFieldMappedObject)
                 && allowedDataTypes.contains(dfr.type)
                 && !bannedFields.contains(dataImportFieldApiName)
-                && dfr.getInlineHelpText() != null
-                && UTIL_Permissions.canUpdate(dfr, false))
-                || allowedFields.contains(dataImportFieldApiName);
+                && dfr.getInlineHelpText() != null)
+                || allowedFields.contains(dataImportFieldApiName))
+            );
 
             if (fieldAllowed) {
                 filteredDFRMap.put(dfr.label, dfr);
