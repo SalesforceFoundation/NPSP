@@ -200,6 +200,7 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         };
 
         // looping through the fields on DataImport__c and remove unsupported data types
+        // Remove fields user doesn't have permission to update unless whitelisted
         for (Schema.DescribeFieldResult dfr : allFieldsMap.values()) {
             String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.getName());
 
@@ -208,7 +209,8 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             Boolean fieldAllowed = (allowedObjects.contains(dataImportFieldMappedObject)
                 && allowedDataTypes.contains(dfr.type)
                 && !bannedFields.contains(dataImportFieldApiName)
-                && dfr.getInlineHelpText() != null)
+                && dfr.getInlineHelpText() != null
+                && UTIL_Permissions.canUpdate(dfr, false))
                 || allowedFields.contains(dataImportFieldApiName);
 
             if (fieldAllowed) {
