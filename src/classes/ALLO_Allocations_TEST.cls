@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2014, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -32,11 +32,11 @@
 * @date 2014
 * @group Allocations
 * @group-content ../../ApexDocContent/Allocations.htm
-* @description Tests specific to Allocations trigger based functionality. 
+* @description Tests specific to Allocations trigger based functionality.
 */
 @isTest
 private with sharing class ALLO_Allocations_TEST {
-    
+
     /*******************************************************************************************************
     * @description Setup of allocations settings.
     * @param alloset An instance of Allocations_Settings__c custom setting. Calling this method with a null
@@ -44,22 +44,22 @@ private with sharing class ALLO_Allocations_TEST {
     * @return void Modifies settings, returns nothing.
     ********************************************************************************************************/
     private static void setupSettings (Allocations_Settings__c alloset) {
-        //set running user to avoid dml issue            
+        //set running user to avoid dml issue
         System.runAs(new User(id = UserInfo.getUserId())){
             if (alloset!=null)
                 UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(alloset);
-            else 
+            else
                 UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c());
 
         }
     }
 
     /*******************************************************************************************************
-    * @description When changing the amount of an Opportunity with Allocations: 
+    * @description When changing the amount of an Opportunity with Allocations:
     * Increasing the amount will adjust the percentage allocations.
-    * Decreasing the amount so that the total allocation amount is below the opportunity amount will adjust 
+    * Decreasing the amount so that the total allocation amount is below the opportunity amount will adjust
     * the percentage allocations.
-    * Decreasing the amount so that the total allocation amount is greater than the opportunity amount, an 
+    * Decreasing the amount so that the total allocation amount is greater than the opportunity amount, an
     * error is thrown and the opportunity update is blocked.
     ********************************************************************************************************/
     static testMethod void oppAmountChange() {
@@ -85,16 +85,16 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(50, queryAllo[1].Percent__c, 'The percentage allocation should be 50%.');
         system.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the percentage allocation should be calculated based on the Opportunity amount.');
         system.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be 4.');
-        
+
         opp.Amount = 10;
         Test.startTest();
         update opp;
         Test.stopTest();
-        
+
         queryAllo = getAllocationsOrderByPercent();
         system.assertEquals(5, queryAllo[1].Amount__c, 'The amount of the percentage allocation should increase proportionately with the Opportunity amount.');
         system.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
-        
+
         opp.Amount = 8;
         update opp;
 
@@ -103,7 +103,7 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
 
         opp.Amount = 1;
-        
+
         Exception ex = null;
         try {
             update opp;
@@ -119,11 +119,11 @@ private with sharing class ALLO_Allocations_TEST {
 
 
     /*******************************************************************************************************
-    * @description When changing the amount of a Payment with Allocations: 
+    * @description When changing the amount of a Payment with Allocations:
     * Increasing the amount will adjust the percentage allocations.
-    * Decreasing the amount so that the total allocation amount is below the payment amount will adjust 
+    * Decreasing the amount so that the total allocation amount is below the payment amount will adjust
     * the percentage allocations.
-    * Decreasing the amount so that the total allocation amount is greater than the payment amount, an 
+    * Decreasing the amount so that the total allocation amount is greater than the payment amount, an
     * error is thrown and the payment update is blocked.
     ********************************************************************************************************/
     static testMethod void pmtAmountChange() {
@@ -144,6 +144,19 @@ private with sharing class ALLO_Allocations_TEST {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='GAU-pmtAmountChange');
         insert gau;
 
+       List<Allocation__c> queryAllo = getAllocationsOrderByPercent();
+        for(Allocation__c alloc : queryAllo) {
+            System.debug ('OPP Id:' + alloc.Opportunity__c +
+                          ', PMT Id:' + alloc.Payment__c +
+                          ', GAU Name: ' + alloc.General_Accounting_Unit__r.Name +
+                          ', ' + alloc.Percent__c +
+                          '%, $' + alloc.Amount__c +
+                          'CreatedDate: ' + alloc.CreatedDate +
+                          'LastModifiedDate: ' + alloc.LastModifiedDate
+                          );
+        }
+
+
         //resetting these manually as a test is considered a single context for static variables
         List<Allocation__c> alloForInsert = new List<Allocation__c>();
 
@@ -153,20 +166,30 @@ private with sharing class ALLO_Allocations_TEST {
         alloForInsert.add(amountAllo);
         insert alloForInsert;
 
-        List<Allocation__c> queryAllo = getAllocationsOrderByPercent();
-        System.assertEquals(50, queryAllo[3].Percent__c, 'The percentage allocation should be 50%.');
-        System.assertEquals(4, queryAllo[3].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
-        System.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the standard number allocation should be 4.');
-        
+        queryAllo = getAllocationsOrderByPercent();
+        for(Allocation__c alloc : queryAllo) {
+            System.debug ('OPP Id:' + alloc.Opportunity__c +
+                          ', PMT Id:' + alloc.Payment__c +
+                          ', GAU Name: ' + alloc.General_Accounting_Unit__r.Name +
+                          ', ' + alloc.Percent__c +
+                          '%, $' + alloc.Amount__c +
+                          'CreatedDate: ' + alloc.CreatedDate +
+                          'LastModifiedDate: ' + alloc.LastModifiedDate
+                          );
+        }
+        System.assertEquals(50, queryAllo[4].Percent__c, 'The percentage allocation should be 50%.');
+        System.assertEquals(4, queryAllo[4].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
+        System.assertEquals(4, queryAllo[2].Amount__c, 'The amount of the standard number allocation should be 4.');
+
         pmt.npe01__Payment_Amount__c = 10;
         Test.startTest();
         update pmt;
         Test.stopTest();
-        
+
         queryAllo = getAllocationsOrderByPercent();
         System.assertEquals(5, queryAllo[4].Amount__c, 'The amount of the percentage allocation should increase proportionately with the Payment amount.');
         System.assertEquals(4, queryAllo[2].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
-        
+
         pmt.npe01__Payment_Amount__c = 8;
         update pmt;
 
@@ -175,7 +198,7 @@ private with sharing class ALLO_Allocations_TEST {
         System.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
 
         pmt.npe01__Payment_Amount__c = 1;
-        
+
         try {
             update pmt;
             System.assert(false, 'An exception should be caught.');
@@ -188,9 +211,9 @@ private with sharing class ALLO_Allocations_TEST {
     }
 
     /*******************************************************************************************************
-    * @description When working with negative amount Payments: 
+    * @description When working with negative amount Payments:
     * Updating the amount will adjust the percentage allocations.
-    * Changing the amount sign from positive to negative and vice versa also flips the sign on the allocations 
+    * Changing the amount sign from positive to negative and vice versa also flips the sign on the allocations
     * Decreasing the amount so that the total allocation amount (absolute value) is greater than the payment
     * amount, an error is thrown and the payment update is blocked.
     ********************************************************************************************************/
@@ -225,17 +248,17 @@ private with sharing class ALLO_Allocations_TEST {
         System.assertEquals(50, queryAllo[0].Percent__c, 'The percentage allocation should be 50%.');
         System.assertEquals(-4, queryAllo[0].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
         System.assertEquals(-4, queryAllo[1].Amount__c, 'The amount of the standard number allocation should be -4.');
-        
+
         pmt.npe01__Payment_Amount__c = 20;
         Test.startTest();
         update pmt;
         Test.stopTest();
-        
+
         queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c WHERE Payment__c = :pmt.id]; ///getAllocationsOrderByPercent();
         System.assertEquals(10, queryAllo[0].Amount__c, 'The calculated amount of the % allocation should be positive in order to match the Payment.');
         System.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the standard number allocation should be 4.');
         System.assertEquals(6, queryAllo[2].Amount__c, 'The amount of the default allocation should be to 6.');
-        
+
         pmt.npe01__Payment_Amount__c = -10;
         update pmt;
 
@@ -245,7 +268,7 @@ private with sharing class ALLO_Allocations_TEST {
         System.assertEquals(-1, queryAllo[2].Amount__c, 'The amount of the default allocation should be -1.');
 
         pmt.npe01__Payment_Amount__c = -1;
-        
+
         try {
             update pmt;
             System.assert(false, 'An exception should be caught.');
@@ -258,7 +281,7 @@ private with sharing class ALLO_Allocations_TEST {
     }
 
     /*******************************************************************************************************
-    * @description With default General Accounting Units enabled, creating an Opportunity automatically 
+    * @description With default General Accounting Units enabled, creating an Opportunity automatically
     * creates a default allocation for the full amount of the opportunity.
     * Creating a new allocation for that opportunity decreases the default fund allocation.
     * Creating an allocation for the total amount deletes the default allocation.
@@ -301,7 +324,7 @@ private with sharing class ALLO_Allocations_TEST {
     * @description Campaign Allocations test:
     * Opportunity created with campaign allocation: allocations are created, default allocation covers the
     * remainder.
-    * Opportunity created where campaign allocations exceed opp amount: exception thrown, only default 
+    * Opportunity created where campaign allocations exceed opp amount: exception thrown, only default
     * allocation created
     ********************************************************************************************************/
     static testMethod void campaignAllocations() {
@@ -351,21 +374,21 @@ private with sharing class ALLO_Allocations_TEST {
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Test Allocation on an Opportunity has the same GAU as the linked Campaign Allocation when
         NPSP Settings Default Allocations are enabled.
     verify:
-        - The Campaign Allocation Amount covers Opportunity Amount 
-        (the Campaign Allocation Amount must be <= Opportunity Amount) 
-        - The Amount reminder is covered by the NPSP Default Allocation. 
-    **********************************************************************************************************/ 
+        - The Campaign Allocation Amount covers Opportunity Amount
+        (the Campaign Allocation Amount must be <= Opportunity Amount)
+        - The Amount reminder is covered by the NPSP Default Allocation.
+    **********************************************************************************************************/
     private static testMethod void testOppAllocationGauMatchesCampaignGau() {
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name = 'Default');
         General_Accounting_Unit__c campaignGau = new General_Accounting_Unit__c(Name = 'Campaign');
         insert new General_Accounting_Unit__c[] {
             defaultGau, campaignGau
         };
-        
+
         setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
 
         Campaign campaign = new Campaign(Name = 'TestCampaign', IsActive = true);
@@ -380,7 +403,7 @@ private with sharing class ALLO_Allocations_TEST {
         insert acc;
 
         Opportunity opp = new Opportunity(
-            Name = 'InitOppWithNullAmount', AccountID = acc.id, 
+            Name = 'InitOppWithNullAmount', AccountID = acc.id,
             CampaignId = campaign.Id, Amount = null,
             CloseDate = System.today(), StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
         );
@@ -388,14 +411,14 @@ private with sharing class ALLO_Allocations_TEST {
 
         List<Allocation__c> oppAllocations = getAllocationsOrderByAmount(opp.Id);
         System.assertEquals(0, oppAllocations.size(), 'No Allocation should be created for an Opportunity without Amount: ' + oppAllocations);
-        
+
         Decimal remainder = 25;
         opp.Amount = campaignAllocation.Amount__c + remainder;
 
         Test.startTest();
         update opp;
         Test.stopTest();
-        
+
         oppAllocations = getAllocationsOrderByAmount(opp.Id);
         System.assertEquals(2, oppAllocations.size(), 'Allocations should be created for the Opportunity that now has an Amount: ' + oppAllocations);
 
@@ -409,12 +432,12 @@ private with sharing class ALLO_Allocations_TEST {
     /*******************************************************************************************************
     * @description Recurring Donation Allocations test:
     * Create recurring donation. Pledged opportunity is generated automatically with a default allocation.
-    * Create allocations for the recurring donation, verify opp allocations are created, default opp 
+    * Create allocations for the recurring donation, verify opp allocations are created, default opp
     * allocation is deleted.
-    * Set opp to closed/won, modify recurring donation allocations: closed opportunity's allocations are 
+    * Set opp to closed/won, modify recurring donation allocations: closed opportunity's allocations are
     * unchanged.
     * Create new opportunity for the recurring donation schedule: RD allocations are created.
-    * Create a recurring donation allocation to exceed the opportunity amount: open opportunity only gets 
+    * Create a recurring donation allocation to exceed the opportunity amount: open opportunity only gets
     * percent based allocations.
     * Remove allocation that exceed's opportunity amount: all RD allocations are created.
     * Delete a recurring donation allocation: corresponding opportunity allocation is also deleted.
@@ -430,10 +453,10 @@ private with sharing class ALLO_Allocations_TEST {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'foo');
         insert gau;
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-            Name = 'foo', 
-            npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly, 
-            npe03__Date_Established__c= system.today(),  
-            npe03__Organization__c = acc.id, 
+            Name = 'foo',
+            npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly,
+            npe03__Date_Established__c= system.today(),
+            npe03__Organization__c = acc.id,
             npe03__Amount__c = 20,
             npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
             npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus
@@ -443,7 +466,7 @@ private with sharing class ALLO_Allocations_TEST {
         Test.startTest();
         insert rd;
         Test.stopTest();
-        
+
         //query for the opportunity automatically created by the schedule
         list<Opportunity> queryOpp = [SELECT Id, npe03__Recurring_Donation__c, Amount, CloseDate, StageName FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.id];
         system.assertEquals(1,queryOpp.size(),'A single opportunity should be created.');
@@ -452,7 +475,7 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(1,queryAllo.size(),'A single default allocation should be created.');
         system.assertEquals(defaultgau.id,queryAllo[0].General_Accounting_Unit__c,'The allocation should be assigned to the default General Accounting Unit.');
         system.assertEquals(20,queryAllo[0].Amount__c,'The default allocation should be for the total amount of the Opportunity.');
-        
+
         list<Allocation__c> alloForInsert = new list<Allocation__c>();
         Allocation__c percentAllo = new Allocation__c(Recurring_Donation__c = rd.id, Percent__c = 50, General_Accounting_Unit__c = gau.id);
         alloForInsert.add(percentAllo);
@@ -483,7 +506,7 @@ private with sharing class ALLO_Allocations_TEST {
 
         Allocation__c exceedAllo = new Allocation__c(Recurring_Donation__c = rd.id, Amount__c = 10, General_Accounting_Unit__c = gau.id);
         insert exceedAllo;
-        
+
         queryAllo = getAllocationsOrderByPercent(opp.id);
         system.assertEquals(2,queryAllo.size(), 'Only percent based Opportunity Allocation should exist: ' + queryAllo);
         system.assertEquals(16,queryAllo[0].Amount__c, 'The percentage based allocation amount should be set based on the opportunity amount: ' + queryAllo);
@@ -499,7 +522,7 @@ private with sharing class ALLO_Allocations_TEST {
         system.assertEquals(2,queryAllo.size(), 'Opportunity Allocation should be deleted along with the Recurring Donation allocation.');
         system.assertEquals(16,queryAllo[0].Amount__c, 'The percentage based allocation amount should be set based on the opportunity amount.');
     }
-    
+
     /*******************************************************************************************************
     * @description Create a campaign with an allocation, and 100 opportunities, half of which are attributed
     * to the campaign. Verifies that default allocations and campaign allocations are created.
@@ -547,7 +570,7 @@ private with sharing class ALLO_Allocations_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Inserts opportunities which excluded types and record types. Verifies no default 
+    * @description Inserts opportunities which excluded types and record types. Verifies no default
     * allocations are created.
     ********************************************************************************************************/
     static testMethod void testExcludedOpps() {
@@ -577,7 +600,7 @@ private with sharing class ALLO_Allocations_TEST {
 
     /*******************************************************************************************************
     * @description Inserts an opportunity with a null amount, verifies no default allocation is created.
-    * Updates the amount, verifies default allocation was created. Nulls out the amount, verifies the 
+    * Updates the amount, verifies default allocation was created. Nulls out the amount, verifies the
     * default allocation was deleted.
     ********************************************************************************************************/
     static testMethod void testOppNullAmount() {
@@ -612,7 +635,7 @@ private with sharing class ALLO_Allocations_TEST {
     /*******************************************************************************************************
     * @description Creates a campaign allocation, marks that allocation's GAU as inactive. Insert an
     * opportunity assigned to the campaign, verify only default allocation is created and no error is
-    * thrown. Deactivates the opportunity allocation's GAU, updates the opportunity amount, verifies the 
+    * thrown. Deactivates the opportunity allocation's GAU, updates the opportunity amount, verifies the
     * allocation to the inactive GAU isn't modified.
     ********************************************************************************************************/
     static testMethod void testInactiveGAU() {
@@ -663,7 +686,7 @@ private with sharing class ALLO_Allocations_TEST {
         //ensure the allocations are not changed.
         queryAllo = getAllocationsOrderByAmount(opp.id);
         system.assertEquals(4,queryAllo[0].Amount__c, 'Allocation to inactive GAU should not be modified.');
-        
+
     }
 
     /*******************************************************************************************************
@@ -677,7 +700,7 @@ private with sharing class ALLO_Allocations_TEST {
 
         General_Accounting_Unit__c otherGau = new General_Accounting_Unit__c(Name='Other');
         insert otherGau;
-        
+
         setupSettings(new Allocations_Settings__c(Default_Allocations_Enabled__c = true, Default__c = defaultGau.id));
 
         // disable the allocations trigger to prevent allocations from being created at all
@@ -714,7 +737,7 @@ private with sharing class ALLO_Allocations_TEST {
 
     /*********************************************************************************************************
     * @description Get all Allocations ordered by Amount
-    * @return List<Allocation__c> A list of all Allocations 
+    * @return List<Allocation__c> A list of all Allocations
     **********************************************************************************************************/
     private static List<Allocation__c> getAllocationsOrderByAmount() {
         return Database.query(getAllocationsQuery().build() + ' ORDER BY Amount__c');
@@ -722,7 +745,7 @@ private with sharing class ALLO_Allocations_TEST {
 
     /*********************************************************************************************************
     * @description Get all Allocations ordered by Percent
-    * @return List<Allocation__c> A list of all Allocations 
+    * @return List<Allocation__c> A list of all Allocations
     **********************************************************************************************************/
     private static List<Allocation__c> getAllocationsOrderByPercent() {
         return Database.query(getAllocationsQuery().build() + ' ORDER BY Percent__c');
@@ -762,10 +785,14 @@ private with sharing class ALLO_Allocations_TEST {
     private static UTIL_Query getAllocationsQuery() {
         return new UTIL_Query()
             .withSelectFields(new String[]{
-                'General_Accounting_Unit__c', 
-                'General_Accounting_Unit__r.Name', 
-                'Amount__c', 
-                'Percent__c' 
+                'Opportunity__c',
+                'Payment__c',
+                'General_Accounting_Unit__c',
+                'General_Accounting_Unit__r.Name',
+                'Amount__c',
+                'Percent__c',
+                'CreatedDate',
+                'LastModifiedDate'
             })
             .withFrom('Allocation__c');
     }
