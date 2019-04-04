@@ -585,7 +585,6 @@ private with sharing  class ALLO_PaymentSync_TEST {
         System.assertEquals(-50, allocations[2].Amount__c, 'Allocation Amount for GAU 1');
         System.assertEquals(gaus[0].Id, allocations[2].General_Accounting_Unit__c, 'GAU 1');
     }
-    // End incoming 2
 
     /*******************************************************************************************************
     * @description Prevent creating or modifying Opportunity and Payment Allocations for the same Opportunity
@@ -622,13 +621,11 @@ private with sharing  class ALLO_PaymentSync_TEST {
             )
         );
     }
-    
     /*** Helpers ***/
 
     private static void makePayments(Decimal totalAmount, Integer numberOfPayments) {
         defaultGau = [SELECT Id FROM General_Accounting_Unit__c WHERE Name = 'Default GAU' LIMIT 1];
         opportunity = [SELECT Id, Name, Amount FROM Opportunity LIMIT 1];
-
 
         for (Integer i=0; i<numberOfPayments; i++) {
             payments.add(new npe01__OppPayment__c(
