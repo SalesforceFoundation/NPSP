@@ -106,14 +106,14 @@ private class CallableApiParameters_TEST {
                     FROM Opportunity];
 
         Test.startTest();
-        Map<Id, Map<String, List<SObject>>> data = new Map<Id, Map<String, List<SObject>>>();
+        Map<Id, Map<SObjectType, List<SObject>>> data = new Map<Id, Map<SObjectType, List<SObject>>>();
         for (Opportunity opp : testOpps) {
-            Map<String, List<SObject>> dataMap = new Map<String, List<SObject>>{
-                    Opportunity.SObjectType.getDescribe().getName() => new List<SObject>{ opp }
+            Map<SObjectType, List<SObject>> dataMap = new Map<SObjectType, List<SObject>>{
+                    Opportunity.SObjectType => new List<SObject>{ opp }
             };
 
-            dataMap.put( 'OpportunityContactRoles', opp.OpportunityContactRoles );
-            dataMap.put( 'npe01__OppPayment__r', opp.npe01__OppPayment__r );
+            dataMap.put( OpportunityContactRole.SObjectType, opp.OpportunityContactRoles );
+            dataMap.put( npe01__OppPayment__c.SObjectType, opp.npe01__OppPayment__r );
 
             data.put(opp.Id, dataMap );
         }
@@ -123,17 +123,20 @@ private class CallableApiParameters_TEST {
         };
 
         CallableApiParameters service = new CallableApiParameters(params);
-        Map<Id, Map<String, List<SObject>>> returnedData = service.getRollupDataMap(CallableApiParameters.PARAM_ROLLUP_DATA);
+        Map<Id, Map<SObjectType, List<SObject>>> returnedData = service.getRollupDataMap(CallableApiParameters.PARAM_ROLLUP_DATA);
 
         System.assertEquals(data.size(), returnedData.size(),
             'The returned size of the data map should match the original');
+
         System.assertEquals(data, returnedData,
-            'The two maps should be equivelent');
-        System.assertEquals(data.get(testOpps[0].Id).get('Opportunity')[0].get('Id'),
-                returnedData.get(testOpps[0].Id).get('Opportunity')[0].get('Id'),
+            'The two maps should be equivalent');
+
+        System.assertEquals(data.get(testOpps[0].Id).get(Opportunity.SObjectType)[0].get('Id'),
+                returnedData.get(testOpps[0].Id).get(Opportunity.SObjectType)[0].get('Id'),
             'The first Opportunity Id should match');
-        System.assertEquals(data.get(testOpps[1].Id).get('npe01__OppPayment__r').size(),
-                returnedData.get(testOpps[1].Id).get('npe01__OppPayment__r').size(),
+
+        System.assertEquals(data.get(testOpps[1].Id).get(npe01__OppPayment__c.SObjectType).size(),
+                returnedData.get(testOpps[1].Id).get(npe01__OppPayment__c.SObjectType).size(),
             'The size of the Payments Related List on the second Opportunity should match');
     }
 

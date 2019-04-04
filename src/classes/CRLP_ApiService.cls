@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Service methods for the Customizable Rollups API
 */
-public inherited sharing class CRLP_ApiService {
+public without sharing class CRLP_ApiService {
 
 
     /**
@@ -55,7 +55,7 @@ public inherited sharing class CRLP_ApiService {
 
         if (rollupType == null) {
             throw new ApiException(String.format( System.Label.CallableApiParameterError,
-                    new List<String>{ CallableApiParameters.PARAM_ROLLUP_TYPE
+                    new List<String>{ CallableApiParameters.PARAM_ROLLUP_TYPE, 'Unable to Match'
                     }
             ));
         }
@@ -75,13 +75,14 @@ public inherited sharing class CRLP_ApiService {
      * @return Updated Rollup Definitions
      */
     public List<CRLP_Rollup> executeRollups(Id parentId, String rollupTypeName, List<CRLP_Rollup> rollupDefs,
-            Map<Id, Map<String, List<SObject>>> rollupData) {
+            Map<Id, Map<SObjectType, List<SObject>>> rollupData) {
 
         // Convert the Rollup Type into an Enum
         CRLP_RollupProcessingOptions.RollupType rollupType;
         try {
             rollupType = CRLP_RollupProcessingOptions.rollupTypeByName.get((String) rollupTypeName.toLowerCase());
-        } catch (Exception ex) { }
+        } catch (Exception ex) {
+        }
 
         if (rollupType == null) {
             throwParameterException(CallableApiParameters.PARAM_ROLLUP_TYPE, 'No matching RollupType');
@@ -102,17 +103,26 @@ public inherited sharing class CRLP_ApiService {
             throwParameterException(CallableApiParameters.PARAM_ROLLUP_DATA, 'Empty Rollup Data Collection');
         }
 
+        // Ensure the specified ParentId is both not null and refers to an existing record.
+        if (parentId == null) {
+            throwParameterException(CallableApiParameters.PARAM_ROLLUP_PARENTID, 'A valid Parent record Id is required');
+        }
+        String countQuery = 'SELECT COUNT() FROM ' + parentId.getSobjectType().getDescribe().getName() +
+                'WHERE Id = :parentId LIMIT 1';
+        if (Database.countQuery(countQuery) != 1) {
+            throwParameterException(CallableApiParameters.PARAM_ROLLUP_PARENTID, 'A existing Parent record is required');
+        }
+
         try {
             CRLP_ApiExecuteRollups rollupTransformationApi = new CRLP_ApiExecuteRollups()
-                    .withRollupType(rollupType)
                     .withParentId(parentId)
+                    .withRollupType(rollupType)
                     .withRollupData(rollupData)
                     .withRollupDefs(rollupDefs);
 
             rollupDefs = rollupTransformationApi.executeRollups();
         } catch (Exception ex) {
-            // TODO Refactor this to use a different custom label
-            throwAPIException('CRLP_ApiExecuteRollups', ex.getMessage());
+            throwAPIException('CRLP.ExecuteRollups', '\n' + ex.getMessage() + '\n' + ex.getStackTraceString());
         }
         return rollupDefs;
     }
@@ -129,9 +139,9 @@ public inherited sharing class CRLP_ApiService {
     /**
      * @description Throw a custom exception when api call cannot be completed
      */
-    private void throwAPIException(String paramName, String errMessage) {
-        throw new ApiException(String.format( System.Label.CallableApiParameterError,
-                new List<String>{ paramName, errMessage } ));
+    private void throwAPIException(String apiName, String errMessage) {
+        throw new ApiException(String.format( System.Label.CallableApiProcessingError,
+                new List<String>{ apiName, errMessage } ));
     }
 
     /**

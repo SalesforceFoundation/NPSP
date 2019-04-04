@@ -1248,6 +1248,7 @@
         <members>CRLP_SoftCredit</members>
         <members>CallableApiMethodNotImplemented</members>
         <members>CallableApiParameterError</members>
+        <members>CallableApiProcessingError</members>
         <members>CampaignMemberStatusOmit</members>
         <members>CascadeDeletionError</members>
         <members>CascadeDeletionErrorLightning</members>

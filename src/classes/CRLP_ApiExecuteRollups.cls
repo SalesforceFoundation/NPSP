@@ -32,7 +32,9 @@
 * @date 2019
 * @group API
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description TODO
+* @description Handle executing the rollups for a specified set of Sobject data, even if that data is not actually
+* commited to the Salesforce database. The parentId refers to the target Account, Contact, GAU or RD record - which
+* must exist in the database for the rollup to complete.
 */
 public without sharing class CRLP_ApiExecuteRollups {
 
@@ -42,6 +44,7 @@ public without sharing class CRLP_ApiExecuteRollups {
     private SObject summaryRecord;
     private List<SObject> detailRecords;
     private Map<Id, List<SObject>> relatedRecords;
+    private Map<Id, Contact> contactsForParentAccount;
 
     private SObjectType summaryObjectType;
 
@@ -62,11 +65,16 @@ public without sharing class CRLP_ApiExecuteRollups {
         this.rollupDefs = rollupDefs;
         return this;
     }
-    public CRLP_ApiExecuteRollups withRollupData(Map<Id, Map<String, List<SObject>>> rollupData) {
+    public CRLP_ApiExecuteRollups withRollupData(Map<Id, Map<SObjectType, List<SObject>>> rollupData) {
         convertData(rollupData);
         return this;
     }
 
+    /**
+     * @description Use the details passed in the configuration methods to execute rollups and return the updated
+     * collection of CRLP_Rollup instances. No DML will occur during this process.
+     * @return List<CRLP_Rollup> updated rollup defs
+     */
     public List<CRLP_Rollup> executeRollups() {
 
         CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
@@ -84,48 +92,101 @@ public without sharing class CRLP_ApiExecuteRollups {
         return processor.getRollupDefsForParent(parentId);
     }
 
-    private void convertData(Map<Id, Map<String, List<SObject>>> rollupData) {
-        String detailObject = CRLP_Rollup_SVC.getDetailObjectType(rollupType).getDescribe().getName();
-        String paymentObject = npe01__OppPayment__c.SObjectType.getDescribe().getName();
-        String ocrObject = OpportunityContactRole.SObjectType.getDescribe().getName();
-        String pscObject = Partial_Soft_Credit__c.SObjectType.getDescribe().getName();
-        String ascObject = Account_Soft_Credit__c.SObjectType.getDescribe().getName();
+    /**
+     * @description Convert the rollup data received through the API into a format that can be used by the
+     * rollup engine. The result is to populate the following properties:
+     * - List<SObject> detailRecords (Opportunities, Allocations or AccountSoftCredits depending on Rollup Type)
+     * - Map<Id, List<SObject>> relatedRecords (PartialSoftCredits or Payments depending on Rollup Type)
+     * @param rollupData Map<Id, Map<SObjectType, List<SObject>>>
+     */
+    private void convertData(Map<Id, Map<SObjectType, List<SObject>>> rollupData) {
+        SObjectType detailObjectType = CRLP_Rollup_SVC.getDetailObjectType(rollupType);
 
-        String parentKey = CRLP_Rollup_SVC.getParentRelationshipFieldForProcessingJob(rollupType);
+        if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+            getContactIdsForParentAccount();
+        }
 
-        Boolean hasPaymentRollups = CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(summaryObjectType);
+        for (Id oppId : rollupData.keySet()) {
+            Opportunity oppRecord = (Opportunity)rollupData.get(oppId).get(Opportunity.SObjectType)[0];
 
-        for (Id key : rollupData.keySet()) {
-            SObject detailRecord = rollupData.get(key).get(detailObject)[0];
-            detailRecords.add(detailRecord);
-            switch on rollupType {
-                when AccountHardCredit, ContactHardCredit {
-                    if (hasPaymentRollups) {
-                        relatedRecords.put((Id)detailRecord.get('Id'), rollupData.get(key).get(paymentObject));
-                    }
+            if (detailObjectType == Opportunity.SObjectType) {
+
+                // When Opportunity as the Detail Object, the only possible Related object is Payments
+                detailRecords.add(oppRecord);
+                List<SObject> related = getRelatedRecords(oppRecord, rollupData.get(oppId));
+                if (related != null && !related.isEmpty()) {
+                    relatedRecords.put(oppId, related);
                 }
-                when ContactSoftCredit, AccountContactSoftCredit {
-                    // TODO Convert OCR's to PartialSoftCredit records
-                    // TODO STrip out OCR's not related to the parent Contact or Account
-                    List<OpportunityContactRole> ocrRecords = rollupData.get(key).get(ocrObject);
-                    List<Partial_Soft_Credit__c> partialSoftCreditRecords = rollupData.get(key).get(pscObject);
-                    List<SObject> pscDetails = buildPartialSoftCreditRecordsFromOCRs(parentId,
-                            (Opportunity)detailRecord, ocrRecords, partialSoftCreditRecords);
-                    relatedRecords.put((Id)detailRecord.get('Id'), pscDetails);
-                }
-                when AccountSoftCredit {
-                    // TODO STrip out AccountSoftCredit records not related to the parent Account
-                    relatedRecords.put((Id)detailRecord.get('Id'), rollupData.get(key).get(ascObject));
-                }
-                when GAU {
-                    // TODO Get Allocation records and strip out anything not for the specified GAU ParentId
-                }
+
+            } else {
+
+                // WHen the detail object is Allocation, OpportunityContactRole or Account_Soft_Credit__c
+                // retrieve those converted records and set as the Detail. There are no related records for these.
+                detailRecords.addAll(getRelatedRecords(oppRecord, rollupData.get(oppId)));
             }
         }
 
     }
 
-    /********************************************************************************************************
+    /**
+     * @description Convert the Map of child data recieved into the api to the appropriate set of
+     * related records needed for the specified rollup operation.
+     * @param oppRecord
+     * @param rollupChildData
+     * @return List<SObject>
+     */
+    private List<SObject> getRelatedRecords(Opportunity oppRecord, Map<SObjectType, List<SObject>> rollupChildData) {
+        Boolean hasPaymentRollups = CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(summaryObjectType);
+
+        switch on rollupType {
+            when AccountHardCredit, ContactHardCredit {
+                if (hasPaymentRollups) {
+                    return rollupChildData.get(npe01__OppPayment__c.SObjectType);
+                }
+            }
+            when ContactSoftCredit, AccountContactSoftCredit {
+                List<SObject> ocrRecords = rollupChildData.get(OpportunityContactRole.SObjectType);
+                List<SObject> partialSoftCreditRecords = rollupChildData.get(Partial_Soft_Credit__c.SObjectType);
+
+                List<Partial_Soft_Credit__c> pscDetailsForRollup = buildPartialSoftCreditRecordsFromOCRs(
+                        oppRecord, ocrRecords, partialSoftCreditRecords);
+
+                return pscDetailsForRollup;
+            }
+            when AccountSoftCredit {
+                List<SObject> accountSoftCredits = new List<SObject>();
+                for (Account_Soft_Credit__c accSC : (List<Account_Soft_Credit__c>)rollupChildData.get(Account_Soft_Credit__c.SObjectType)) {
+                    if (accSC.Account__c == parentId) {
+                        accountSoftCredits.add(accSC);
+                    }
+                }
+
+                return accountSoftCredits;
+            }
+            when GAU {
+                // Convert the Related Allocation records in new Allocation records with a foreign key to the Opportunity
+                List<SObject> allocations = new List<SObject>();
+                for (Allocation__c alloc : (List<Allocation__c>)rollupChildData.get(Allocation__c.SObjectType)) {
+                    if (alloc.General_Accounting_Unit__c == parentId) {
+                        Allocation__c newAlloc = new Allocation__c(
+                                Opportunity__c = oppRecord.Id,
+                                Opportunity__r = oppRecord,
+                                Amount__c = alloc.Amount__c,
+                                General_Accounting_Unit__c = alloc.General_Accounting_Unit__c,
+                                Percent__c = alloc.Percent__c
+                        );
+                        allocations.add(newAlloc);
+                    }
+                }
+
+                return allocations;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @description Soft Credit roll-ups work by querying the OCR object as the main object, but sending
      * PartialSoftCredit records as the detail records for the rollups. This is because PSC has a custom field
      * for Amount and generally the rule is that every Donation has an OCR record, but may or may not have a PSC
@@ -137,13 +198,29 @@ public without sharing class CRLP_ApiExecuteRollups {
      * @param partialSoftCreditRecords PartialSoftCredit records for the Opp
      * @return List<Partial_Soft_Credit__c>
      */
-    private List<Partial_Soft_Credit__c> buildPartialSoftCreditRecordsFromOCRs(Id parentId, Opportunity opp,
-            List<OpportunityContactRole> ocrRecords, List<Partial_Soft_Credit__c> partialSoftCreditRecords) {
+    private List<Partial_Soft_Credit__c> buildPartialSoftCreditRecordsFromOCRs(Opportunity opp,
+            List<SObject> ocrRecords, List<SObject> partialSoftCreditRecords) {
+
+        if (ocrRecords == null || partialSoftCreditRecords == null || ocrRecords.isEmpty()) {
+            return null;
+        }
 
         List<Partial_Soft_Credit__c> pscDetailRecords = new List<Partial_Soft_Credit__c>();
-        for (OpportunityContactRole ocr : ocrRecords) {
+        for (OpportunityContactRole ocr : (List<OpportunityContactRole>)ocrRecords) {
             Partial_Soft_Credit__c matchedPSC = matchOrCreatePartialSoftCredit(opp, ocr, partialSoftCreditRecords);
-            pscDetailRecords.add(matchedPSC);
+            switch on rollupType {
+                when ContactSoftCredit {
+                    if (ocr.ContactId == parentId) {
+                        pscDetailRecords.add(matchedPSC);
+                    }
+                }
+                when AccountContactSoftCredit {
+                    // Is the ContactId is attached to the target (Summary) Parent Account for this rollup
+                    if (contactsForParentAccount.containsKey(ocr.ContactId)) {
+                        pscDetailRecords.add(matchedPSC);
+                    }
+                }
+            }
         }
 
         return pscDetailRecords;
@@ -175,7 +252,7 @@ public without sharing class CRLP_ApiExecuteRollups {
             matchedPSC = new Partial_Soft_Credit__c(
                     Opportunity__c = opp.Id,
                     Opportunity__r = opp,
-                    Contact__r = ocrRecord.Contact, // TODO This may need to an additional query to get Contact.AccountId
+                    /*Contact__r = ocrRecord.Contact, */ // TODO This may need to an additional query to get Contact.AccountId
                     Contact__c = ocrRecord.ContactId,
                     Contact_Role_ID__c = ocrRecord.Id,
                     Role_Name__c = ocrRecord.Role,
@@ -189,4 +266,12 @@ public without sharing class CRLP_ApiExecuteRollups {
         return matchedPSC;
     }
 
+    /**
+     * @description AccountContactSoftCredits use the AccountId associated with the Contact on the OCR record
+     * That may not be visible in data passed through the api. To address this, query the list of Contacts
+     * on the target parent account and store those Id's in a map that can be validated against later on.
+     */
+    private void getContactIdsForParentAccount() {
+        contactsForParentAccount = new Map<Id, Contact>([SELECT Id FROM Contact WHERE AccountId = :parentId]);
+    }
 }

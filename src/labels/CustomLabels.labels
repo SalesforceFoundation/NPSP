@@ -3035,7 +3035,15 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error parsing/type casting a parameter</shortDescription>
-        <value>Error parsing {0} parameter</value>
+        <value>Error parsing {0} parameter: {1}</value>
+    </labels>
+    <labels>
+        <fullName>CallableApiProcessingError</fullName>
+        <categories>API</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error completing the specified API call</shortDescription>
+        <value>Error completing the {0} api: {1}</value>
     </labels>
     <labels>
         <fullName>conFailedAccountCreate</fullName>

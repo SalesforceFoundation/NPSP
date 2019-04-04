@@ -137,13 +137,13 @@ public class CallableApiParameters {
      * id (i.e., Opportunity), and the inner map is each related SObjectName where the first SObject Name is "Opportunity".
      * value to be a JSON String. This method will deserialize and return as the appropriate data type.
      * @param paramName
-     * @return Map<Id, Map<String, List<SObject>>>
+     * @return Map<Id, Map<SObjectType, List<SObject>>>
      */
-    public Map<Id, Map<String, List<SObject>>> getRollupDataMap(String paramName) {
+    public Map<Id, Map<SObjectType, List<SObject>>> getRollupDataMap(String paramName) {
         try {
-            return (Map<Id, Map<String, List<SObject>>>)params.get(paramName);
+            return (Map<Id, Map<SObjectType, List<SObject>>>)params.get(paramName);
         } catch (Exception ex) {
-            throwParameterException('Map<Id, Map<String, List<SObject>>>', paramName);
+            throwParameterException('Map<Id, Map<SObjectType, List<SObject>>>', paramName);
         }
         return null;
     }
@@ -153,7 +153,7 @@ public class CallableApiParameters {
      */
     private void throwParameterException(String dataType, String paramName) {
         throw new ParameterException(String.format( System.Label.CallableApiParameterError,
-                new List<String>{ '[' + dataType + '] ' + paramName} ));
+                new List<String>{ dataType, paramName} ));
     }
 
     /**
