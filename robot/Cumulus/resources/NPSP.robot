@@ -245,7 +245,7 @@ Create Opportunities
     Click Link    link=${stage}
     Populate Lookup Field    Account Name    ${hh_name}
     Open Date Picker    Close Date
-    Pick Date    10
+    Pick Date    Today
     Select Lightning Checkbox    Do Not Automatically Create Payment
     Click Modal Button        Save
 
