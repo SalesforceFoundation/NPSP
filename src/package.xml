@@ -869,7 +869,16 @@
         <members>DataImport__c.Donation_Stage__c</members>
         <members>DataImport__c.Donation_Type__c</members>
         <members>DataImport__c.FailureInformation__c</members>
-        <members>DataImport__c.HomeAddressImportStatus__c</members>
+        <members>DataImport__c.GAU_Allocation_1_Amount__c</members>
+        <members>DataImport__c.GAU_Allocation_1_GAU__c</members>
+        <members>DataImport__c.GAU_Allocation_1_Import_Status__c</members>
+        <members>DataImport__c.GAU_Allocation_1_Imported__c</members>
+        <members>DataImport__c.GAU_Allocation_1_Percent__c</members>
+        <members>DataImport__c.GAU_Allocation_2_Amount__c</members>
+        <members>DataImport__c.GAU_Allocation_2_GAU__c</members>
+        <members>DataImport__c.GAU_Allocation_2_Import_Status__c</members>
+        <members>DataImport__c.GAU_Allocation_2_Imported__c</members>
+        <members>DataImport__c.GAU_Allocation_2_Percent__c</members>
         <members>DataImport__c.HomeAddressImported__c</members>
         <members>DataImport__c.Home_City__c</members>
         <members>DataImport__c.Home_Country__c</members>
@@ -880,23 +889,44 @@
         <members>DataImport__c.Household_Phone__c</members>
         <members>DataImport__c.ImportedDate__c</members>
         <members>DataImport__c.NPSP_Data_Import_Batch__c</members>
+        <members>DataImport__c.Opportunity_Contact_Role_1_Imported__c</members>
+        <members>DataImport__c.Opportunity_Contact_Role_1_ImportStatus__c</members>
+        <members>DataImport__c.Opportunity_Contact_Role_1_Role__c</members>
+        <members>DataImport__c.Opportunity_Contact_Role_2_Imported__c</members>
+        <members>DataImport__c.Opportunity_Contact_Role_2_ImportStatus__c</members>
+        <members>DataImport__c.Opportunity_Contact_Role_2_Role__c</members>
         <members>DataImport__c.PaymentImportStatus__c</members>
         <members>DataImport__c.PaymentImported__c</members>
         <members>DataImport__c.Payment_Check_Reference_Number__c</members>
         <members>DataImport__c.Payment_Method__c</members>
         <members>DataImport__c.Payment_Possible_Matches__c</members>
         <members>DataImport__c.Status__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Data_Import_Field_Mapping_Set__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Required__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Source_Field_API_Name__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Target_Field_API_Name__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Target_Object_Mapping__c</members>
+        <members>Data_Import_Field_Mapping_Set__mdt.Data_Import_Object_Mapping_Set__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Data_Import_Object_Mapping_Set__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Imported_Record_Field_Name__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Imported_Record_Status_Field_Name__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Object_API_Name__c </members>
+        <members>Data_Import_Object_Mapping__mdt.Predecessor__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Relationship_Field__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Relationship_To_Predecessor__c</members>
         <members>Data_Import_Settings__c.Account_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Account_Matching_Rule__c</members>
         <members>Data_Import_Settings__c.Batch_Size__c</members>
         <members>Data_Import_Settings__c.Contact_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Contact_Matching_Rule__c</members>
+        <members>Data_Import_Settings__c.Default_Data_Import_Field_Mapping_Set__c</members>
         <members>Data_Import_Settings__c.Donation_Date_Range__c</members>
         <members>Data_Import_Settings__c.Donation_Matching_Behavior__c</members>
         <members>Data_Import_Settings__c.Donation_Matching_Implementing_Class__c</members>
         <members>Data_Import_Settings__c.Donation_Matching_Rule__c</members>
         <members>Data_Import_Settings__c.Post_Process_Implementing_Class__c</members>
         <members>Data_Import_Settings__c.Run_Opportunity_Rollups_while_Processing__c</members>
+        <members>Data_Import_Settings__c.Use_Advanced_Mapping__c</members>
         <members>Engagement_Plan_Task__c.Assigned_To__c</members>
         <members>Engagement_Plan_Task__c.Comments__c</members>
         <members>Engagement_Plan_Task__c.Days_After__c</members>
@@ -2149,6 +2179,10 @@
         <members>Customizable_Rollup_Settings__c</members>
         <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
+        <members>Data_Import_Field_Mapping__mdt</members>
+        <members>Data_Import_Field_Mapping_Set__mdt</members>
+        <members>Data_Import_Object_Mapping__mdt</members>
+        <members>Data_Import_Object_Mapping_Set__mdt</members>
         <members>Data_Import_Settings__c</members>
         <members>Engagement_Plan_Task__c</members>
         <members>Engagement_Plan_Template__c</members>

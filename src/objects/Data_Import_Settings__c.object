@@ -66,6 +66,18 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Default_Data_Import_Field_Mapping_Set__c</fullName>
+        <description>The custom metadata api name of the Data Import Field Mapping Set record that should be used by default.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The custom metadata api name of the Data Import Field Mapping Set record that should be used by default.</inlineHelpText>
+        <label>Default Data Import Field Mapping Set</label>
+        <length>100</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Donation_Date_Range__c</fullName>
         <defaultValue>0</defaultValue>
         <description>Enter the number of days from the Donation Date that the Data Importer should consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opportunity or Payment whose date falls within the number of days AND is closest to the Donation Date.</description>
@@ -136,6 +148,16 @@
         <externalId>false</externalId>
         <inlineHelpText>When checked, NPSP calculates donor statistics when donations are processed. If unchecked, donor statistics are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.</inlineHelpText>
         <label>Calculate Donation Rollups with Batch</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Use_Advanced_Mapping__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>If checked, then Data Import will use the Data Import Field Mapping custom metadata type instead of help text for field mapping.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>If checked, then Data Import will use the Data Import Field Mapping custom metadata type instead of help text for field mapping.</inlineHelpText>
+        <label>Use Advanced Mapping</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
