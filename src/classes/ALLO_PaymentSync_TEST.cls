@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2019, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -32,7 +32,7 @@
 * @date 2019
 * @group Allocations
 * @group-content ../../ApexDocContent/Allocations.htm
-* @description Tests specific to Allocations trigger based functionality. 
+* @description Tests specific to Allocations trigger based functionality.
 */
 @isTest
 private with sharing  class ALLO_PaymentSync_TEST {
@@ -43,7 +43,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
     static Opportunity opportunity;
     static List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c>();
 
-    @testSetup 
+    @testSetup
     static void setup() {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='Default GAU');
         insert gau;
@@ -52,10 +52,10 @@ private with sharing  class ALLO_PaymentSync_TEST {
         insert account;
 
         Opportunity opportunity = new Opportunity(
-            Name = 'Opp', 
-            Amount = 1000, 
-            AccountID = account.Id, 
-            CloseDate = System.today(), 
+            Name = 'Opp',
+            Amount = 1000,
+            AccountID = account.Id,
+            CloseDate = System.today(),
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
             npe01__Do_Not_Automatically_Create_Payment__c = true
         );
@@ -64,15 +64,16 @@ private with sharing  class ALLO_PaymentSync_TEST {
     }
 
     /*******************************************************************************************************
-    * @description When changing the amount of a Payment with Allocations: 
+    * @description When changing the amount of a Payment with Allocations:
     * Increasing the amount will adjust the percentage allocations.
-    * Decreasing the amount so that the total allocation amount is below the payment amount will adjust 
+    * Decreasing the amount so that the total allocation amount is below the payment amount will adjust
     * the percentage allocations.
-    * Decreasing the amount so that the total allocation amount is greater than the payment amount, an 
+    * Decreasing the amount so that the total allocation amount is greater than the payment amount, an
     * error is thrown and the payment update is blocked.
     ********************************************************************************************************/
     @isTest
     static void syncPaymentToOpportunity() {
+        setupForTests();
         makePayments(1000, 1);
         makeGAUs(2);
 
@@ -100,13 +101,14 @@ private with sharing  class ALLO_PaymentSync_TEST {
     /*******************************************************************************************************
     * @description When changing the Allocation amount of an Opportunity with Payments:
     * Increasing the amount will adjust the percentage allocations.
-    * Decreasing the amount so that the total allocation amount is below the payment amount will adjust 
+    * Decreasing the amount so that the total allocation amount is below the payment amount will adjust
     * the percentage allocations.
-    * Decreasing the amount so that the total allocation amount is greater than the payment amount, an 
+    * Decreasing the amount so that the total allocation amount is greater than the payment amount, an
     * error is thrown and the payment update is blocked.
     ********************************************************************************************************/
     @isTest
     static void syncOpportunityToPayment() {
+        setupForTests();
         makePayments(1000, 1);
         makeGAUs(2);
 
@@ -132,13 +134,14 @@ private with sharing  class ALLO_PaymentSync_TEST {
     * @description When changing the Allocation amount of an Opportunity with overscheduled Payments:
     * (i.e. the sum of unpaid and paid payments exceeds the opportunity amount)
     * Increasing the amount will adjust the percentage allocations.
-    * Decreasing the amount so that the total allocation amount is below the payment amount will adjust 
+    * Decreasing the amount so that the total allocation amount is below the payment amount will adjust
     * the percentage allocations.
-    * Decreasing the amount so that the total allocation amount is greater than the payment amount, an 
+    * Decreasing the amount so that the total allocation amount is greater than the payment amount, an
     * error is thrown and the payment update is blocked.
     ********************************************************************************************************/
     @isTest
     static void syncOpportunityToOverscheduledPayments() {
+        setupForTests();
         makePayments(1100, 2);
         makeGAUs(2);
 
@@ -185,13 +188,14 @@ private with sharing  class ALLO_PaymentSync_TEST {
     /*******************************************************************************************************
     * @description When changing the Allocation amount of an Opportunity with Payments:
     * Increasing the amount will adjust the percentage allocations.
-    * Decreasing the amount so that the total allocation amount is below the payment amount will adjust 
+    * Decreasing the amount so that the total allocation amount is below the payment amount will adjust
     * the percentage allocations.
-    * Decreasing the amount so that the total allocation amount is greater than the payment amount, an 
+    * Decreasing the amount so that the total allocation amount is greater than the payment amount, an
     * error is thrown and the payment update is blocked.
     ********************************************************************************************************/
     @isTest
     static void syncOpportunityToPaymentsWithWriteoffs() {
+        setupForTests();
         makePayments(1000, 2);
         makeGAUs(2);
 
@@ -257,7 +261,6 @@ private with sharing  class ALLO_PaymentSync_TEST {
         assertAllocation(queryAllocations[1], 300, gaus[1].Id, false);
         assertAllocation(queryAllocations[2], 500, gaus[0].Id, false);
     }
-
 
     /*******************************************************************************************************
     * @description When changing the amount of Opportunity allocations connected to paid payments
@@ -355,9 +358,234 @@ private with sharing  class ALLO_PaymentSync_TEST {
             'Failure message should contain '+System.Label.alloPaidPmtsExceedsOpp);
     }
 
-//TODO updating paid payment allocations does update opportunity allocations
-//TODO null and zero amounts for both opps and payments
-//TODO negative payment amounts 
+    /*******************************************************************************************************
+    * @description Updating paid Payment Allocations updates Opportunity Allocations
+    ********************************************************************************************************/
+    @isTest
+    private static void validateUpdatingPmtAllocUpdatesOppAllocs() {
+        setupForTests();
+        makePayments(1000, 1);
+        makeGAUs(2);
+
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Amount__c = 500, General_Accounting_Unit__c = gaus[0].Id));
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].Id));
+        insert alloForInsert;
+
+        List<Allocation__c> allocations = getAllocationsOrderByAmount();
+        System.assertEquals(6, allocations.size(), '6 allocations should exist.');
+
+        List<Allocation__c> pmtAllocs = new List<Allocation__c>();
+
+        for (Allocation__c alloc : allocations) {
+            if (alloc.Payment__c != null) {
+                pmtAllocs.add(alloc);
+            }
+        }
+
+        pmtAllocs[1].Amount__c= 350;
+        pmtAllocs[1].Percent__c = 35;
+        pmtAllocs[2].Amount__c = 450;
+        pmtAllocs[2].Percent__c = 45;
+
+        update pmtAllocs;
+
+        allocations = getAllocationsOrderByAmount();
+
+        assertAllocation(allocations[0], 200, defaultGau.Id, true);
+        assertAllocation(allocations[1], 350, gaus[1].Id, true);
+        assertAllocation(allocations[2], 450, gaus[0].Id, true);
+
+}
+
+    /*******************************************************************************************************
+    * @description Validate null and zero amount Opportunities have proper allocations
+    ********************************************************************************************************/
+     @isTest
+    private static void validateNullAndZeroAmountsForOpps() {
+        setupForTests();
+
+        Account acct = [select  Id
+                        from Account];
+
+        List<Opportunity> opps = new List<Opportunity>();
+
+        Opportunity opp = new Opportunity(
+            Name = 'Opp',
+            Amount = 0,
+            AccountID = acct.Id,
+            CloseDate = System.today(),
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            npe01__Do_Not_Automatically_Create_Payment__c = false
+        );
+
+        opps.add (opp);
+        Opportunity opp2 = new Opportunity(
+            Name = 'Opp2',
+            Amount = null,
+            AccountID = acct.Id,
+            CloseDate = System.today(),
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            npe01__Do_Not_Automatically_Create_Payment__c = false
+        );
+        opps.add(opp2);
+
+        insert opps;
+
+        Set<Id> oppIds = new Set<Id>();
+        for (Opportunity anOpp : opps) {
+            oppIds.add(anOpp.id);
+        }
+
+        List<Allocation__c> allocs = [select    Id,
+                                                Opportunity__c,
+                                                Payment__c,
+                                                General_Accounting_Unit__c,
+                                                General_Accounting_Unit__r.Name,
+                                                Amount__c,
+                                                Percent__c
+                                        from Allocation__c
+                                        where Opportunity__c in :oppIds
+        ];
+
+        System.assertEquals(0, allocs.size(), 'No allocations should be present.');
+
+        for (Integer i = 0; i < opps.size(); i++) {
+            opps[i].Amount = 1000;
+        }
+        update opps;
+
+        allocs = [select    Id,
+                            Opportunity__c,
+                            Payment__c,
+                            General_Accounting_Unit__c,
+                            General_Accounting_Unit__r.Name,
+                            Amount__c,
+                            Percent__c
+                  from Allocation__c
+                  where Opportunity__c in :oppIds
+        ];
+
+        System.assertEquals (2, allocs.size(), 'Default Allocs for Opportunity should now be present.');
+
+        opps[0].Amount = 0;
+        opps[1].Amount = null;
+        update opps;
+
+        allocs = [select    Id,
+                            Opportunity__c,
+                            Payment__c,
+                            General_Accounting_Unit__c,
+                            General_Accounting_Unit__r.Name,
+                            Amount__c,
+                            Percent__c
+                  from Allocation__c
+                  where Opportunity__c in :oppIds
+        ];
+
+        System.assertEquals(0, allocs.size(), 'No allocations should be present');
+
+    }
+
+    /*******************************************************************************************************
+    * @description Validate null and zero amount payments have proper payment allocations
+    * Should test insertion, as well as updates to and from null and negative values
+    ********************************************************************************************************/
+    @isTest
+    private static void validateNullAndZeroAmountsForPayments() {
+        setupForTests();
+        makePayments(1000, 1);
+        makeGAUs(2);
+
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Amount__c = 500, General_Accounting_Unit__c = gaus[0].Id));
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].Id));
+        insert alloForInsert;
+
+        List<Allocation__c> allocations = getAllocationsOrderByAmount();
+        System.assertEquals(6, allocations.size(), '6 allocations should exist.');
+
+        npe01__OppPayment__c payment = [select Id, npe01__Payment_Amount__c from npe01__OppPayment__c where npe01__Opportunity__c = :opportunity.Id];
+
+        payment.npe01__Payment_Amount__c = null;
+        update payment;
+        allocations = [select Id from Allocation__c where Payment__c=:payment.Id];
+        System.assertEquals (0, allocations.size(), 'No payment allocations should exist');
+
+        payment.npe01__Payment_Amount__c = 1000;
+        update payment;
+        allocations = [select Id from Allocation__c where Payment__c=:payment.Id];
+        System.assertEquals (3, allocations.size(), 'Three payment allocations should exist');
+    }
+
+    /*******************************************************************************************************
+    * @description Validate Payments with negative amounts inserted, or updated to negative
+    * amount creates the proper allocations
+    ********************************************************************************************************/
+    @isTest
+    private static void validateNegativePaymentAmounts() {
+        setupForTests();
+        makeGAUs(2);
+
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+        opportunity = [SELECT Id, Name, Amount FROM Opportunity LIMIT 1];
+
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Amount__c = 500, General_Accounting_Unit__c = gaus[0].Id));
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].Id));
+        insert alloForInsert;
+
+        List<Allocation__c> allocations = getAllocationsOrderByAmount();
+
+        makePayments(-1000, 1);
+
+        npe01__OppPayment__c payment = [select Id, npe01__Payment_Amount__c from npe01__OppPayment__c where npe01__Opportunity__c = :opportunity.Id];
+
+        allocations = [select   Id,
+                                Opportunity__c,
+                                Payment__c,
+                                General_Accounting_Unit__c,
+                                General_Accounting_Unit__r.Name,
+                                Amount__c,
+                                Percent__c
+                       from Allocation__c
+                       where Payment__c = :payment.Id
+                       order by Amount__c DESC];
+
+        System.assertEquals(3, allocations.size());
+        System.assertEquals(-200, allocations[0].Amount__c, 'Allocation Amount for Default GAU');
+        System.assertEquals(defaultGAU.Id, allocations[0].General_Accounting_Unit__c, 'Default GAU');
+        System.assertEquals(-300, allocations[1].Amount__c, 'Allocation Amount for GAU 2');
+        System.assertEquals(gaus[1].Id, allocations[1].General_Accounting_Unit__c, 'GAU 2');
+        System.assertEquals(-500, allocations[2].Amount__c, 'Allocation Amount for GAU 1');
+        System.assertEquals(gaus[0].Id, allocations[2].General_Accounting_Unit__c, 'GAU 1');
+
+        // Confirm payment allocations for update to negative payment are correct
+        payment.npe01__Payment_Amount__c = -100;
+        update payment;
+
+        allocations = [select   Id,
+                                Opportunity__c,
+                                Payment__c,
+                                General_Accounting_Unit__c,
+                                General_Accounting_Unit__r.Name,
+                                Amount__c,
+                                Percent__c
+                       from Allocation__c
+                       where Payment__c = :payment.Id
+                       order by Amount__c DESC];
+
+        System.assertEquals(3, allocations.size());
+
+        System.assertEquals(-20, allocations[0].Amount__c, 'Allocation Amount for Default GAU');
+        System.assertEquals(defaultGAU.Id, allocations[0].General_Accounting_Unit__c, 'Default GAU');
+        System.assertEquals(-30, allocations[1].Amount__c, 'Allocation Amount for GAU 2');
+        System.assertEquals(gaus[1].Id, allocations[1].General_Accounting_Unit__c, 'GAU 2');
+        System.assertEquals(-50, allocations[2].Amount__c, 'Allocation Amount for GAU 1');
+        System.assertEquals(gaus[0].Id, allocations[2].General_Accounting_Unit__c, 'GAU 1');
+    }
+    // End incoming 2
 
     /*******************************************************************************************************
     * @description Prevent creating or modifying Opportunity and Payment Allocations for the same Opportunity
@@ -365,6 +593,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
     ********************************************************************************************************/
     @isTest
     private static void validateOverlappingChanges() {
+        setupForTests();
         makePayments(1000, 1);
         makeGAUs(2);
 
@@ -372,23 +601,19 @@ private with sharing  class ALLO_PaymentSync_TEST {
 
         alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Percent__c = 50, General_Accounting_Unit__c = gaus[0].Id));
         alloForInsert.add(new Allocation__c(Payment__c=payments[0].Id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].Id));
-        
+
         String error;
         try {
             insert alloForInsert;
         } catch (Exception ex) {
             error = ex.getMessage();
         }
-        System.assert(error != null && error.contains(System.Label.alloPmtOppSingleTransaction), 
+        System.assert(error != null && error.contains(System.Label.alloPmtOppSingleTransaction),
             'Inserting or updating opportunity and payment allocations for the same opportunity failed to cause the expected exception.');
     }
 
-    /*** Helpers ***/
-
-    private static void makePayments(Decimal totalAmount, Integer numberOfPayments) {
+    private static void setupForTests() {
         defaultGau = [SELECT Id FROM General_Accounting_Unit__c WHERE Name = 'Default GAU' LIMIT 1];
-        opportunity = [SELECT Id, Name, Amount FROM Opportunity LIMIT 1];
-
         UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(
             new Allocations_Settings__c(
                 Payment_Allocations_Enabled__c = true,
@@ -396,16 +621,24 @@ private with sharing  class ALLO_PaymentSync_TEST {
                 Default__c = defaultGau.Id
             )
         );
+    }
+    
+    /*** Helpers ***/
+
+    private static void makePayments(Decimal totalAmount, Integer numberOfPayments) {
+        defaultGau = [SELECT Id FROM General_Accounting_Unit__c WHERE Name = 'Default GAU' LIMIT 1];
+        opportunity = [SELECT Id, Name, Amount FROM Opportunity LIMIT 1];
+
 
         for (Integer i=0; i<numberOfPayments; i++) {
             payments.add(new npe01__OppPayment__c(
-                npe01__Payment_Amount__c = totalAmount / numberOfPayments, 
+                npe01__Payment_Amount__c = totalAmount / numberOfPayments,
                 npe01__Opportunity__c = opportunity.Id,
                 npe01__Payment_Date__c = System.today()
             ));
         }
         insert payments;
-    } 
+    }
 
     private static void makeGAUs(Integer numberOfGAUs) {
         for (Integer i=0; i<numberOfGAUs; i++) {
@@ -422,7 +655,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
 
     /*********************************************************************************************************
     * @description Get all Allocations ordered by Amount
-    * @return List<Allocation__c> A list of all Allocations 
+    * @return List<Allocation__c> A list of all Allocations
     **********************************************************************************************************/
     private static List<Allocation__c> getAllocationsOrderByAmount() {
         return Database.query(getAllocationsQuery().build() + ' ORDER BY Opportunity__c NULLS LAST, Amount__c, General_Accounting_Unit__c');
@@ -437,10 +670,10 @@ private with sharing  class ALLO_PaymentSync_TEST {
             .withSelectFields(new String[]{
                 'Opportunity__c',
                 'Payment__c',
-                'General_Accounting_Unit__c', 
-                'General_Accounting_Unit__r.Name', 
-                'Amount__c', 
-                'Percent__c' 
+                'General_Accounting_Unit__c',
+                'General_Accounting_Unit__r.Name',
+                'Amount__c',
+                'Percent__c'
             })
             .withFrom('Allocation__c');
     }
