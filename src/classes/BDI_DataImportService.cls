@@ -490,7 +490,7 @@ global with sharing class BDI_DataImportService {
             this.diSettings = dataImportSettings;
 
             // list of populated data import fields
-            Set<String> populatedDataImportFieldsSet = new Set<String>();
+            Set<String> populatedDataImportFieldSet = new Set<String>();
 
             // first set a clean state for each DI
             for (DataImport__c dataImport : dataImports) {
@@ -501,11 +501,21 @@ global with sharing class BDI_DataImportService {
 
                 // collect populated DI fields to use for later mapping
                 Map<String, Object> populatedFieldsMap = dataImport.getPopulatedFieldsAsMap();
-                populatedDataImportFieldsSet.addAll(new List<String>(populatedFieldsMap.keySet()));
+                populatedDataImportFieldSet.addAll(new List<String>(populatedFieldsMap.keySet()));
             }
 
-            if (populatedDataImportFieldsSet != null && populatedDataImportFieldsSet.size() > 0) {
-                relevantDataImportFields = new List<String>(populatedDataImportFieldsSet);
+            if (populatedDataImportFieldSet != null && populatedDataImportFieldSet.size() > 0) {
+                List<String> populatedDataImportFieldList = new List<String>(populatedDataImportFieldSet);
+
+                for (Integer i = 0; i < populatedDataImportFieldList.size(); i++) {
+                    String field = populatedDataImportFieldList[i];
+
+                    if (field.contains('__r')) {
+                        field = field.substringBefore('__r') + '__c';
+                    }
+                }
+
+                relevantDataImportFields = populatedDataImportFieldList;
             }
 
             // do any performance optimizations to avoid unnecessary code

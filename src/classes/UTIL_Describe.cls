@@ -276,10 +276,6 @@ public class UTIL_Describe {
     * @return Schema.DescribeFieldResult the describe field result for the given field
     */
     public static Schema.DescribeFieldResult getFieldDescribe(String objectName, String fieldName) {
-        if(fieldName.contains('__r')) {
-            fieldName = fieldName.substringBefore('__r') + '__c';
-        }
-
         // make sure we have this field's schema mapped
         if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName)) {
             fillFieldMapsForObject(objectName, fieldName);
