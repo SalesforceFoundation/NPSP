@@ -466,9 +466,11 @@ global with sharing class BDI_DataImportService {
     * @param listDI a list of Data Import records to import
     * @param isDryRun whether to run in Dry Run mode or commit records.
     * @return void
-    */
-    public static void execute(Id apexJobId, Data_Import_Settings__c dataImportSettings, List<DataImport__c> dataImports,
-        Boolean isDryRun) {
+
+    public void execute(Id apexJobId, 
+            Data_Import_Settings__c dataImportSettings, 
+            List<DataImport__c> dataImports,
+            Boolean isDryRun) {
 
         // TODO: read settings to instantiate correct field mapping class
         BDI_FieldMapping fieldMapper = new BDI_FieldMappingHelpText();
@@ -476,6 +478,7 @@ global with sharing class BDI_DataImportService {
         BDI_DataImportService dataImportService = new BDI_DataImportService(isDryRun, fieldMapper);
         dataImportService.process(apexJobId, dataImportSettings, dataImports);
     }
+    ****/
 
     /*******************************************************************************************************
     * @description The real work gets done here! Given a list of data import records, process them.
@@ -670,7 +673,7 @@ global with sharing class BDI_DataImportService {
     * @description Copies the specific error into the provide dataImport.
     * @param di the DataImport record
     * @param strError the error message
-    * @param strStatusField the developer name of an additional status field to save the error message in
+    * @param dataImportServicetatusField the developer name of an additional status field to save the error message in
     * @return void
     */
     public void LogBDIError(DataImport__c dataImport, String errorMessage, String statusField) {

@@ -108,17 +108,21 @@ public with sharing class BDI_Donations_TEST {
         diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.RequireNoMatch;
         diSettings.Run_Opportunity_Rollups_while_Processing__c = true;
 
+        BDI_FieldMappingHelpText fieldMapper = BDI_FieldMappingHelpText.getInstance();
+
         // manually insert checkbox field mapping
-        BDI_Donations donationImportHandler = 
-            new BDI_Donations(new BDI_DataImportService(true, new BDI_FieldMappingHelpText()));
+        fieldMapper.addMappedField('Opportunity', 
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c'),
+                'IsPrivate');
+        BDI_DataImportService dataImportService = new BDI_DataImportService(false, fieldMapper);
+
+        BDI_Donations donationImportHandler = new BDI_Donations(dataImportService);
 
         Map<String,String> oppFieldsByDIFields = donationImportHandler.dataImportFieldToOpportunityField;
-        oppFieldsByDIFields.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c'),
-                'IsPrivate');
 
         //run batch data import
-        Test.StartTest();
-        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        Test.startTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
 
@@ -199,7 +203,7 @@ public with sharing class BDI_Donations_TEST {
 
         // manually insert checkbox field mapping
         BDI_Donations donationImportHandler = 
-            new BDI_Donations(new BDI_DataImportService(true,new BDI_FieldMappingHelpText()));
+            new BDI_Donations(new BDI_DataImportService(true, BDI_FieldMappingHelpText.getInstance()));
 
         Map<String,String> oppFieldsByDIFields = donationImportHandler.dataImportFieldToOpportunityField;        
         oppFieldsByDIFields.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c'),

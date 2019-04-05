@@ -37,6 +37,38 @@
 
 public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
 
+
+    private static BDI_FieldMappingHelpText fieldMappingInstance = null;
+
+    /*******************************************************************************************************
+    * @description manually specified mappings addition to those specified in help text
+    */
+    private Map<String,Map<String,String>> additionalFieldMappings = new Map<String,Map<String,String>>();
+
+    /*******************************************************************************************************
+    * @description return singleton instance of the class
+    */
+    public static BDI_FieldMappingHelpText getInstance() {
+        if(fieldMappingInstance == null) {
+            fieldMappingInstance = new BDI_FieldMappingHelpText();
+        }
+        return fieldMappingInstance;
+    }
+
+    /*******************************************************************************************************
+    * @description Manually add a mapping
+    *
+    * @param targetObjectName the underlying object the bdi object is (ie, Contact, Account, etc)
+    * @param sourceFieldName field name on the DI  object
+    * @Param destinationFieldName  field name on the destination record
+    */
+    public void addMappedField(String targetObjectName, String sourceFieldName, String destinationFieldName) {
+        if(!additionalFieldMappings.containsKey(targetObjectName)) {
+            additionalFieldMappings.put(targetObjectName, new Map<String,String>());
+        }
+        additionalFieldMappings.get(targetObjectName).put(sourceFieldName, destinationFieldName);
+    }
+
     /*******************************************************************************************************
     * @description flag to allow us to test out field level security exception
     *
@@ -56,7 +88,7 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
 
     public Map<String,String> getFieldMap(String dataImportObjectName, 
         String targetObjectName, List<String> dataImportFields) {
-
+        
         Map<String, String> dataImportFieldToTargetField = new Map<String, String>();
 
         for (String dataImportField : dataImportFields) {
@@ -111,6 +143,12 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
 
         if (isCurrencyMapped(targetObjectName)) {
             addCurrencyIsoCode(dataImportFieldToTargetField);
+        }
+
+        if(additionalFieldMappings.containsKey(targetObjectName)) {
+            for(String diField: additionalFieldMappings.get(targetObjectName).keySet()) {
+                dataImportFieldToTargetField.put(diField, additionalFieldMappings.get(targetObjectName).get(diField));
+            }
         }
 
         return dataImportFieldToTargetField;
