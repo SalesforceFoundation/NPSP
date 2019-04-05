@@ -225,18 +225,16 @@ public with sharing class PMT_PaymentWizard_CTRL {
             return;
         }
 
-            currentOpp = o[0];
+        currentOpp = o[0];
+        setupPaymentAmounts(currentOpp);
 
-            setupPaymentAmounts(currentOpp);
-
-            haveAmount = (getAmountOutstanding() > 0);
-            isClosedLost = currentOpp.isClosed && !currentOpp.isWon;
-            samplePayment = new npe01__OppPayment__c();
-            samplePayment.npe01__Scheduled_Date__c = System.today();
-            numberOfPayments = 12;
-            interval = 1;
-            intervalUnit = 'Month';
-        
+        haveAmount = (getAmountOutstanding() > 0);
+        isClosedLost = currentOpp.isClosed && !currentOpp.isWon;
+        samplePayment = new npe01__OppPayment__c();
+        samplePayment.npe01__Scheduled_Date__c = System.today();
+        numberOfPayments = 12;
+        interval = 1;
+        intervalUnit = 'Month';
 
     }
     
@@ -260,7 +258,6 @@ public with sharing class PMT_PaymentWizard_CTRL {
         currentOpp = o[0];
         setupPaymentAmounts(currentOpp);
 
-        //outstanding_payments = payments.size();
         haveAmount = (getAmountOutstanding() > 0);
         writeoffPayment = new npe01__OppPayment__c();
         writeoffPayment.npe01__Payment_Amount__c = getAmountOutstanding();
@@ -379,7 +376,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
                     nextDate = nextDate.addMonths(interval); 
                 } else if (intervalUnit == 'Year') {
                     nextDate = nextDate.addYears(interval);
-                } 
+                }
             }
             
         }
@@ -555,13 +552,23 @@ public with sharing class PMT_PaymentWizard_CTRL {
     	Savepoint sp = Database.setSavepoint();
         try {
 	        // first delete unpaid payments
-	        npe01__oppPayment__c[] old = [SELECT Id FROM npe01__oppPayment__c WHERE npe01__opportunity__c = :currentOpp.id AND npe01__paid__c = false];
+	        npe01__oppPayment__c[] old = [
+                SELECT Id 
+                FROM npe01__oppPayment__c 
+                WHERE npe01__opportunity__c = :currentOpp.id 
+                AND npe01__paid__c = false
+            ];
 	        if (!old.isEmpty()) {
                 delete old;
             }
 	        
 	        // If deleting paid Payments, delete paid payments
-	        npe01__oppPayment__c[] oldPaid = [SELECT Id FROM npe01__oppPayment__c WHERE npe01__opportunity__c = :currentOpp.id AND npe01__paid__c = true];
+	        npe01__oppPayment__c[] oldPaid = [
+                SELECT Id 
+                FROM npe01__oppPayment__c 
+                WHERE npe01__opportunity__c = :currentOpp.id 
+                AND npe01__paid__c = true
+            ];
 	        if (!oldPaid.isEmpty() && removePaidPayments == true) {
                 delete oldPaid;
             }
@@ -664,8 +671,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
 
     /*******************************************************************************************************
     * @description Returns the formatted text of the amount written off
-    * track this.
-    * @return String total paid payments
+    * @return String total written off payments
     */
     public String getTotalWrittenOff() {
         return formatCurrency(amountWrittenOff);
