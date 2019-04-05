@@ -508,10 +508,8 @@ global with sharing class BDI_DataImportService {
                 List<String> populatedDataImportFieldList = new List<String>(populatedDataImportFieldSet);
 
                 for (Integer i = 0; i < populatedDataImportFieldList.size(); i++) {
-                    String field = populatedDataImportFieldList[i];
-
-                    if (field.contains('__r')) {
-                        field = field.substringBefore('__r') + '__c';
+                    if (populatedDataImportFieldList[i].contains('__r')) {
+                        populatedDataImportFieldList[i] = populatedDataImportFieldList[i].substringBefore('__r') + '__c';
                     }
                 }
 
