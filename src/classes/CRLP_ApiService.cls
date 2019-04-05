@@ -75,7 +75,7 @@ public without sharing class CRLP_ApiService {
      * @return Updated Rollup Definitions
      */
     public List<CRLP_Rollup> executeRollups(Id parentId, String rollupTypeName, List<CRLP_Rollup> rollupDefs,
-            Map<Id, Map<SObjectType, List<SObject>>> rollupData) {
+            Map<Id, Map<SObjectType, List<SObject>>> rollupData, Boolean commitToDatabase) {
 
         // Convert the Rollup Type into an Enum
         CRLP_RollupProcessingOptions.RollupType rollupType;
@@ -114,13 +114,14 @@ public without sharing class CRLP_ApiService {
         }
 
         try {
-            CRLP_ApiExecuteRollups rollupTransformationApi = new CRLP_ApiExecuteRollups()
+            CRLP_ApiExecuteRollups rollupApiProcess = new CRLP_ApiExecuteRollups()
                     .withRollupType(rollupType)
                     .withParentId(parentId)
                     .withRollupData(rollupData)
-                    .withRollupDefs(rollupDefs);
+                    .withRollupDefs(rollupDefs)
+                    .withCommitToDatabase(commitToDatabase);
 
-            rollupDefs = rollupTransformationApi.executeRollups();
+            rollupDefs = rollupApiProcess.executeRollups();
         } catch (Exception ex) {
             throwAPIException('CRLP.ExecuteRollups', '\n' + ex.getMessage() + '\n' + ex.getStackTraceString());
         }

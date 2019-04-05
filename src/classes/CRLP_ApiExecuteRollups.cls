@@ -41,10 +41,12 @@ public without sharing class CRLP_ApiExecuteRollups {
     private CRLP_RollupProcessingOptions.RollupType rollupType;
     private Id parentId;
     private List<CRLP_Rollup> rollupDefs;
+    private Map<Id, Map<SObjectType, List<SObject>>> rollupData;
     private SObject summaryRecord;
     private List<SObject> detailRecords;
     private Map<Id, List<SObject>> relatedRecords;
     private Map<Id, Contact> contactsForParentAccount;
+    private Boolean commitToDb = false;
 
     private SObjectType summaryObjectType;
 
@@ -56,8 +58,6 @@ public without sharing class CRLP_ApiExecuteRollups {
         return this;
     }
     public CRLP_ApiExecuteRollups withParentId(Id parentId) {
-        String parentQuery = CRLP_Query_SEL.buildObjectQueryForRollup(summaryObjectType) + ' WHERE Id = :parentId LIMIT 1';
-        this.summaryRecord = Database.query(parentQuery);
         this.parentId = parentId;
         return this;
     }
@@ -66,7 +66,11 @@ public without sharing class CRLP_ApiExecuteRollups {
         return this;
     }
     public CRLP_ApiExecuteRollups withRollupData(Map<Id, Map<SObjectType, List<SObject>>> rollupData) {
-        convertData(rollupData);
+        this.rollupData = rollupData;
+        return this;
+    }
+    public CRLP_ApiExecuteRollups withCommitToDatabase(Boolean commitToDb) {
+        this.commitToDb = commitToDb;
         return this;
     }
 
@@ -77,18 +81,29 @@ public without sharing class CRLP_ApiExecuteRollups {
      */
     public List<CRLP_Rollup> executeRollups() {
 
+        String parentQuery = CRLP_Query_SEL.buildObjectQueryForRollup(summaryObjectType) + ' WHERE Id = :parentId LIMIT 1';
+        summaryRecord = Database.query(parentQuery);
+
+        // Converts the single Map of rollup data into detail and related objects
+        convertRollupDataIntoDetailAndRelatedData(rollupData);
+
         CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
-        options.doSummaryObjectComparison = false;
+        options.doSummaryObjectComparison = commitToDb;
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
                 .withRollupType(rollupType)
+                .withUseRollupDefsByParentIdMap(true)
                 .withSummaryRecord(summaryRecord)
                 .withRollupDefinitions(rollupDefs)
                 .withDetailRecords(detailRecords)
                 .withRelatedRecords(relatedRecords)
                 .withJobOptions(options);
 
-        processor.startRollupProcessing();
+        List<SObject> updatedRecords = processor.startRollupProcessing();
+
+        if (commitToDb == true && updatedRecords != null) {
+            Database.update(updatedRecords);
+        }
         return processor.getRollupDefsForParent(parentId);
     }
 
@@ -99,7 +114,7 @@ public without sharing class CRLP_ApiExecuteRollups {
      * - Map<Id, List<SObject>> relatedRecords (PartialSoftCredits or Payments depending on Rollup Type)
      * @param rollupData Map<Id, Map<SObjectType, List<SObject>>>
      */
-    private void convertData(Map<Id, Map<SObjectType, List<SObject>>> rollupData) {
+    private void convertRollupDataIntoDetailAndRelatedData(Map<Id, Map<SObjectType, List<SObject>>> rollupData) {
         SObjectType detailObjectType = CRLP_Rollup_SVC.getDetailObjectType(rollupType);
 
         detailRecords = new List<SObject>();
@@ -157,9 +172,11 @@ public without sharing class CRLP_ApiExecuteRollups {
             }
             when AccountSoftCredit {
                 List<SObject> accountSoftCredits = new List<SObject>();
-                for (Account_Soft_Credit__c accSC : (List<Account_Soft_Credit__c>)rollupChildData.get(Account_Soft_Credit__c.SObjectType)) {
-                    if (accSC.Account__c == parentId) {
-                        accountSoftCredits.add(accSC);
+                if (rollupChildData.get(Account_Soft_Credit__c.SObjectType) != null) {
+                    for (Account_Soft_Credit__c accSC : (List<Account_Soft_Credit__c>) rollupChildData.get(Account_Soft_Credit__c.SObjectType)) {
+                        if (accSC.Account__c == parentId) {
+                            accountSoftCredits.add(accSC);
+                        }
                     }
                 }
 
@@ -168,16 +185,13 @@ public without sharing class CRLP_ApiExecuteRollups {
             when GAU {
                 // Convert the Related Allocation records in new Allocation records with a foreign key to the Opportunity
                 List<SObject> allocations = new List<SObject>();
-                for (Allocation__c alloc : (List<Allocation__c>)rollupChildData.get(Allocation__c.SObjectType)) {
-                    if (alloc.General_Accounting_Unit__c == parentId) {
-                        Allocation__c newAlloc = new Allocation__c(
-                                Opportunity__c = oppRecord.Id,
-                                Opportunity__r = oppRecord,
-                                Amount__c = alloc.Amount__c,
-                                General_Accounting_Unit__c = alloc.General_Accounting_Unit__c,
-                                Percent__c = alloc.Percent__c
-                        );
-                        allocations.add(newAlloc);
+                if (rollupChildData.get(Allocation__c.SObjectType) != null) {
+                    for (Allocation__c alloc : (List<Allocation__c>) rollupChildData.get(Allocation__c.SObjectType)) {
+                        if (alloc.General_Accounting_Unit__c == parentId) {
+                            Allocation__c newAlloc = alloc.clone(true, true, true, true);
+                            newAlloc.Opportunity__r = oppRecord;
+                            allocations.add(newAlloc);
+                        }
                     }
                 }
 
@@ -203,11 +217,16 @@ public without sharing class CRLP_ApiExecuteRollups {
     private List<Partial_Soft_Credit__c> buildPartialSoftCreditRecordsFromOCRs(Opportunity opp,
             List<SObject> ocrRecords, List<SObject> partialSoftCreditRecords) {
 
-        if (ocrRecords == null || partialSoftCreditRecords == null || ocrRecords.isEmpty()) {
-            return null;
+        List<Partial_Soft_Credit__c> pscDetailRecords = new List<Partial_Soft_Credit__c>();
+
+        if (ocrRecords == null || ocrRecords.isEmpty()) {
+            return pscDetailRecords;
         }
 
-        List<Partial_Soft_Credit__c> pscDetailRecords = new List<Partial_Soft_Credit__c>();
+        if (partialSoftCreditRecords == null) {
+            partialSoftCreditRecords = new List<SObject>();
+        }
+
         for (OpportunityContactRole ocr : (List<OpportunityContactRole>)ocrRecords) {
             Partial_Soft_Credit__c matchedPSC = matchOrCreatePartialSoftCredit(opp, ocr, partialSoftCreditRecords);
             switch on rollupType {

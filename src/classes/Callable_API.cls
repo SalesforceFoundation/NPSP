@@ -74,10 +74,11 @@ global with sharing class Callable_API implements System.Callable {
                 Id parentId = paramService.getString(CallableApiParameters.PARAM_ROLLUP_PARENTID);
                 String rollupType = paramService.getString(CallableApiParameters.PARAM_ROLLUP_TYPE);
                 List<CRLP_Rollup> rollupDefs = paramService.getRollupDefinitions(CallableApiParameters.PARAM_ROLLUP_DEFS);
+                Boolean commitToDb = paramService.getBoolean(CallableApiParameters.PARAM_ROLLUP_COMMIT, false);
                 Map<Id, Map<SObjectType, List<SObject>>> rollupData = paramService.getRollupDataMap(CallableApiParameters.PARAM_ROLLUP_DATA);
 
                 CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
-                rollupDefs = crlpApiSvc.executeRollups(parentId, rollupType, rollupDefs, rollupData);
+                rollupDefs = crlpApiSvc.executeRollups(parentId, rollupType, rollupDefs, rollupData, commitToDb);
 
                 return JSON.serialize(rollupDefs,false);
 

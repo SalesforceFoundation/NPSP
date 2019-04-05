@@ -41,11 +41,13 @@ public class CallableApiParameters {
     public static final String PARAM_ROLLUP_TYPE = 'RollupType';
     public static final String PARAM_ROLLUP_DEFS = 'RollupDefinitions';
     public static final String PARAM_ROLLUP_DATA = 'RollupData';
+    public static final String PARAM_ROLLUP_COMMIT = 'CommitToDatabase';
     public static final String PARAM_OPPORTUNITY_STAGE = 'OpportunityStage';
 
     private Map<String, Object> params;
 
-    /** @description Constructor
+    /**
+     * @description Constructor
      * @param params Map<String,Object> parameters list from the CallableApi.call() method
      */
     public CallableApiParameters(Map<String, Object> params) {
@@ -76,6 +78,16 @@ public class CallableApiParameters {
             throwParameterException('Boolean', paramName);
         }
         return null;
+    }
+    public Boolean getBoolean(String paramName, Boolean defaultValue) {
+        try {
+            if (params.get(paramName) != null) {
+                return (Boolean) params.get(paramName);
+            }
+        } catch (Exception ex) {
+            throwParameterException('Boolean', paramName);
+        }
+        return defaultValue;
     }
 
     /**

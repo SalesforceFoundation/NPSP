@@ -103,7 +103,6 @@ public class CMT_MetadataAPI {
         // Add all queued up metadata updates to the deployment container
         Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
         for (Metadata.CustomMetadata md: mtToDeploy) {
-            system.debug('deployMetadata > ' + md.fullName);
             mdContainer.addMetadata(md);
         }
 

@@ -70,32 +70,37 @@ public inherited sharing class CRLP_RollupProcessor {
     @TestVisible
     private Map<Id, List<SObject>> relatedRecordsByDetailId;
 
+    /** @description This is set to true when the Map of RollupDefinitions by ParentId is used to both retrieve
+    * Rollup Definitions and to store the Rollup Definitions when done. Optional. The default is false.
+    */
+    private Boolean useRollupDefsByParentIdMap = false;
+
     /** @description Rollup Definition Collections grouped by ParentId. Only injected if needed for a 'starting' point */
     @TestVisible
     private Map<Id, List<CRLP_Rollup>> rollupsDefsByParentId = new Map<Id, List<CRLP_Rollup>>();
 
     /**
-     * @description used to receive and return the last Parent record id processed by startRollupProcessing().
-     * The value is saved as a stateful var in the calling batch process
-     */
+    * @description used to receive and return the last Parent record id processed by startRollupProcessing().
+    * The value is saved as a stateful var in the calling batch process
+    */
     private Id lastParentIdProcessed;
 
     /**
-     * @description Used to return a true to the calling LDV class when the last parent Id was removed from
-     * the list of updated SObjects
-     */
+    * @description Used to return a true to the calling LDV class when the last parent Id was removed from
+    * the list of updated SObjects
+    */
     public Boolean lastParentIdRemovedFromUpdatesList = false;
 
     /**
-     * @description When working with Account Soft Credit Rollups, this var is used to hold a list
-     * of Opportunity Id's that have been rolled up to a given Account. The data is retained in a stateful var
-     * in the batch job to support scenarios where a given Account's rollups straddle multiple batch operations
-     */
+    * @description When working with Account Soft Credit Rollups, this var is used to hold a list
+    * of Opportunity Id's that have been rolled up to a given Account. The data is retained in a stateful var
+    * in the batch job to support scenarios where a given Account's rollups straddle multiple batch operations
+    */
     private Map<Id,Set<Id>> previouslyProcessedOppIdsByParentId = new Map<Id,Set<Id>>();
 
-    /**
-     * @description Constructor
-     */
+    /** *************************************************************************************************************
+    * @description Constructor
+    */
     public CRLP_RollupProcessor() { }
 
     /**
@@ -104,6 +109,16 @@ public inherited sharing class CRLP_RollupProcessor {
      */
     public CRLP_RollupProcessor withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode jobMode) {
         this.mode = jobMode;
+        return this;
+    }
+
+    /**
+     * @description This is set to true when the Map of RollupDefinitions by ParentId is used to both retrieve
+     * Rollup Definitions and to store the Rollup Definitions when done. Optional. The default is false.
+     * @param Boolean.
+     */
+    public CRLP_RollupProcessor withUseRollupDefsByParentIdMap(Boolean useRollupDefsByParentIdMap) {
+        this.useRollupDefsByParentIdMap = useRollupDefsByParentIdMap;
         return this;
     }
 
@@ -189,6 +204,7 @@ public inherited sharing class CRLP_RollupProcessor {
 
     /**
      * @description Inject a previously defined set of RollupIds for a single Parent Id. Optional
+     * Requires that the withSummaryRecord() method be called first to set the parent record Id.
      */
     public CRLP_RollupProcessor withRollupDefinitions(List<CRLP_Rollup> rollupDefs) {
         return withRollupDefinitions(new Map<Id, List<CRLP_Rollup>>{
@@ -232,7 +248,7 @@ public inherited sharing class CRLP_RollupProcessor {
 
     // ================================================================================================
 
-    /**
+    /** *************************************************************************************************************
     * @description Returns the Parent Object Field by parsing the parentKeyFieldFull property
     */
     private String parentObjectField {
@@ -306,7 +322,7 @@ public inherited sharing class CRLP_RollupProcessor {
         }
     }
 
-    /**
+    /** *************************************************************************************************************
      * @description The main work engine for roll-up activities. This method is called from both batch jobs
      * as well as from queuable jobs (via a trigger operation).
      * @return List<SObject> Records that require updating.
@@ -480,7 +496,7 @@ public inherited sharing class CRLP_RollupProcessor {
             lastParentIdProcessed = parentId;
 
             // Save the rollup data from the Handler instance into the processing options instance
-            if (isSkewMode) {
+            if (useRollupDefsByParentIdMap == true) {
                 rollupsDefsByParentId.put(parentId, CRLP_RollupProcessor_SVC.fullyCloneList(handler.getRollupsList()));
             }
         }
@@ -500,7 +516,7 @@ public inherited sharing class CRLP_RollupProcessor {
     /**
      * @description Instantiate and configure the Rollup Handler class as appropriate for the rollup type.
      * @param parent SObject
-     * @return Instantiated handlr
+     * @return Instantiated handler
      */
     private CRLP_VRollupHandler initHandlerClass(SObject parent) {
         Id parentId = parent.Id;
@@ -523,7 +539,7 @@ public inherited sharing class CRLP_RollupProcessor {
 
         // If the map of Rollups by Parent Id contains this parentId, use that List<CRLP_Rollup> rather than
         // create a new fresh list.
-        if (isSkewMode) {
+        if (useRollupDefsByParentIdMap == true) {
             List<CRLP_Rollup> rollupDefs = getRollupDefsForParent(parentId);
             if (!rollupDefs.isEmpty()) {
                 CRLP_Debug_UTIL.setCurrentRollupState('Set stateful rollups collection in Handler Class');
