@@ -231,6 +231,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
     ********************************************************************************************************/
     @isTest
     static void doNotSyncWrittenOffPaymentToOpportunity() {
+        setupForTests();
         makePayments(1000, 1);
         for(npe01__OppPayment__c payment: payments) {
             payment.npe01__Written_Off__c = true;
@@ -268,6 +269,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
     ********************************************************************************************************/
     @isTest
     static void doNotUpdatePaidPaymentsWithOpportunityChanges() {
+        setupForTests();
         makePayments(1000, 1);
         makeGAUs(2);
         
@@ -311,6 +313,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
     ********************************************************************************************************/
     @isTest
     static void doNotAllowLowerOrDeleteOfOpportunityAllocationWithPaidPayments() {
+        setupForTests();
         makePayments(1000, 1);
         makeGAUs(2);
 
