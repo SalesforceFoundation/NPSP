@@ -32,7 +32,7 @@
 * @date 2019
 * @group Allocations
 * @group-content ../../ApexDocContent/Allocations.htm
-* @description Service syncs changes between Opportunity and Payment 
+* @description Service syncs changes between Opportunity and Payment
 *              Allocations.
 */
 public class ALLO_PaymentSync_SVC {
@@ -46,6 +46,10 @@ public class ALLO_PaymentSync_SVC {
     private class SynchronizationContext {
         Opportunity opportunity;
         Map<Id, npe01__OppPayment__c> payments = new Map<Id, npe01__OppPayment__c>();
+
+        //Orig allocations from trigger context, arranged by gau Id
+        //This is needed for deletes, where deleted allocation is not available in other context vars
+        Map<Id, Allocation__c> triggerAllocationsByGAUId = new Map<Id, Allocation__c>();
 
         //list of allocations by GAU
         Map<Id, List<Allocation__c>> opportunityAllocationsByGAU = new Map<Id, List<Allocation__c>>();
@@ -62,17 +66,27 @@ public class ALLO_PaymentSync_SVC {
     }
 
     public ALLO_PaymentSync_SVC(List<Allocation__c> allocations) {
+
         Set<Id> paymentIds = new Set<Id>();
         Set<Id> opportunityIds = new Set<Id>();
         Map<Id, List<npe01__OppPayment__c>> paymentsByOpportunityId = new Map<Id, List<npe01__OppPayment__c>>();
+        Map<Id, Map<Id, Allocation__c>> triggerAllocationsByGAUByParentId = new Map<Id, Map<Id, Allocation__c>>();
 
         for (Allocation__c allocation : allocations) {
+            Map<Id, Allocation__c> allocationsByGAUId = new Map<Id, Allocation__c>();
             if (allocation.Opportunity__c != null) {
                 paymentsByOpportunityId.put(allocation.Opportunity__c, new List<npe01__OppPayment__c>());
+                if(!triggerAllocationsByGAUByParentId.containsKey(allocation.Opportunity__c)) {
+                    triggerAllocationsByGAUByParentId.put(allocation.Opportunity__c, allocationsByGAUId);
+                }
             }
             if (allocation.Payment__c != null) {
                 paymentIds.add(allocation.Payment__c);
+                if(!triggerAllocationsByGAUByParentId.containsKey(allocation.Payment__c)) {
+                    triggerAllocationsByGAUByParentId.put(allocation.Payment__c, allocationsByGAUId);
+                }            
             }
+            allocationsByGAUId.put(allocation.General_Accounting_Unit__c, allocation);
         }
 
         //unfortunately, we need to first gather the opportunity IDs of all payment allocations changes in order to query for all child payments
@@ -113,6 +127,12 @@ public class ALLO_PaymentSync_SVC {
         for (Opportunity opportunity : opportunitiesWithAllocations.values()) {
             SynchronizationContext context = new SynchronizationContext();
             context.opportunity = opportunity;
+
+            if(triggerAllocationsByGAUByParentId.containsKey(opportunity.Id)) {
+                context.triggerAllocationsByGAUId = triggerAllocationsByGAUByParentId.get(opportunity.Id);
+            } else {
+                context.triggerAllocationsByGAUId = new Map<Id, Allocation__c>();
+            }
 
             for (Allocation__c oppAllocation : opportunity.Allocations__r) {
                 Id gau = oppAllocation.General_Accounting_Unit__c;
@@ -184,7 +204,6 @@ public class ALLO_PaymentSync_SVC {
             }
 
             contextByOpportunity.put(context.opportunity.id, context);
-            System.debug('context' + json.serializePretty(context));
         }
     }
 
@@ -199,14 +218,11 @@ public class ALLO_PaymentSync_SVC {
                 Decimal totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
                 Decimal adjustedTotalPaymentAllocations = totalPaymentAllocations * context.scheduleRatio;
                 
-                System.debug('njjc totalOpportunityAllocations ' + totalOpportunityAllocations + ' adjustedTotalPaymentAllocations ' + adjustedTotalPaymentAllocations);
-
                 //check if they need updating
                 if (adjustedTotalPaymentAllocations != totalOpportunityAllocations) {
                     for (Allocation__c oppAllocation : context.opportunityAllocationsByGAU.get(gau)) {
                         //we want to keep the ratios amongst duplicate opportunity allocations
                         Decimal duplicateAllocationPaidUnpaidAmountRatio = oppAllocation.Amount__c / totalOpportunityAllocations;
-                        System.debug('njjc duplicateAllocationPaidUnpaidAmountRatio ' + duplicateAllocationPaidUnpaidAmountRatio + ' calculatedAmount ' + totalPaymentAllocations * duplicateAllocationpaidUnpaidAmountRatio);
 
                         oppAllocation.Amount__c = totalPaymentAllocations * duplicateAllocationpaidUnpaidAmountRatio;
                         if (oppAllocation.Percent__c != null) {
@@ -234,15 +250,13 @@ public class ALLO_PaymentSync_SVC {
         }
     }
 
-
-
     public void syncOpportunityAllocationsToPayments(Id opportunityId) {
         SynchronizationContext context = contextByOpportunity.get(opportunityId);
         for (Id gau : context.opportunityAllocationsByGAU.keySet()) {
             Decimal totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
             Decimal newTotalPaymentAllocations = totalOpportunityAllocations * context.scheduleRatio;
 
-            //if we have payment allocations for this GAU
+            //if we have payment allocations for this GAU 
             if (context.paymentAllocationsByGAU.containsKey(gau)) {
                 Decimal currentTotalPaymentAllocations = context.totalPaymentAllocationsByGAU.get(gau);
                 Decimal totalPaidPaymentAllocations = 0;
@@ -250,10 +264,13 @@ public class ALLO_PaymentSync_SVC {
                     totalPaidPaymentAllocations = context.totalPaidPaymentAllocationsByGAU.get(gau);
                 }
 
-                //validation: if the total of payment allocations already paid is greater than the opportunity allocations for that GAU, we can't sync and must throw an error
-                if (totalPaidPaymentAllocations > newTotalPaymentAllocations) {
-                    for (Allocation__c allocation : context.opportunityAllocationsByGAU.get(gau)) {
-                        allocation.addError(System.Label.alloPaidPmtsExceedsOpp);
+                //validation: if the total of payment allocations already paid is greater than the opportunity 
+                //allocations for that GAU, we can't sync and must throw an error
+                if (totalPaidPaymentAllocations > newTotalPaymentAllocations || 
+                    totalPaidPaymentAllocations > totalOpportunityAllocations) {
+                    
+                    if(context.triggerAllocationsByGAUId.containsKey(gau)) {
+                        context.triggerAllocationsByGAUId.get(gau).addError(System.Label.alloPaidPmtsExceedsOpp);
                     }
                     continue;
                 }
@@ -290,7 +307,7 @@ public class ALLO_PaymentSync_SVC {
                     }
                 }
             //no payment allocations for this GAU; create them
-            } else {
+            } else if (context.totalUnpaidPayments > 0) {
                 for (npe01__OppPayment__c payment : context.payments.values()) {
                     Decimal paymentRatio = payment.npe01__Payment_Amount__c / context.totalUnpaidPayments;
                     Allocation__c newAllocation = new Allocation__c(
@@ -316,10 +333,10 @@ public class ALLO_PaymentSync_SVC {
                     npe01__OppPayment__c payment = context.payments.get(paymentAllocation.Payment__c);
                     //since we can't delete paid payment allocations
                     //add error to opportunity allocation if we have paid payment allocations for this GAU
-                    if (payment.npe01__Paid__c) {
-                        for (Allocation__c opportunityAllocation : context.opportunityAllocationsByGAU.get(gau)) {
-                            opportunityAllocation.addError(System.Label.alloRemoveOppWithPmt);
-                        }
+                    if (payment.npe01__Paid__c && context.triggerAllocationsByGAUId.containsKey(gau)) {
+                        // flag the allocation we are attempting to delete with an error; this record is
+                        // not available in the opportunityAllocationsByGAU map
+                        context.triggerAllocationsByGAUId.get(gau).addError(System.Label.alloRemoveOppWithPmt);
                     } else {
                         allocationsChanges.objectsToDelete.add(paymentAllocation);
                     }
