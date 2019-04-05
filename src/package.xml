@@ -2600,6 +2600,10 @@
         <members>Contact-Contact Layout</members>
         <members>DataImportBatch__c-NPSP Data Import Batch Layout</members>
         <members>DataImport__c-Data Import Layout</members>
+        <members>Data_Import_Field_Mapping__mdt-Data Import Field Mapping Layout</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-Data Import Field Mapping Set Layout</members>
+        <members>Data_Import_Object_Mapping__mdt-Data Import Object Mapping Layout</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-Data Import Object Mapping Set Layout</members>
         <members>Engagement_Plan_Task__c-Engagement Plan Task Layout</members>
         <members>Engagement_Plan_Template__c-Engagement Plan Template Layout</members>
         <members>Engagement_Plan__c-Engagement Plan Layout</members>
