@@ -460,27 +460,6 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
-    * @description The real work gets done here! Given a list of di records, process them.
-    * @param apexJobId the apexJob that this is executing under
-    * @param diSettings the settings to control processing behavior
-    * @param listDI a list of Data Import records to import
-    * @param isDryRun whether to run in Dry Run mode or commit records.
-    * @return void
-
-    public void execute(Id apexJobId, 
-            Data_Import_Settings__c dataImportSettings, 
-            List<DataImport__c> dataImports,
-            Boolean isDryRun) {
-
-        // TODO: read settings to instantiate correct field mapping class
-        BDI_FieldMapping fieldMapper = new BDI_FieldMappingHelpText();
-
-        BDI_DataImportService dataImportService = new BDI_DataImportService(isDryRun, fieldMapper);
-        dataImportService.process(apexJobId, dataImportSettings, dataImports);
-    }
-    ****/
-
-    /*******************************************************************************************************
     * @description The real work gets done here! Given a list of data import records, process them.
     * @param apexJobId the apexJob that this is executing under
     * @param diSettings the settings to control processing behavior
