@@ -81,9 +81,9 @@ public without sharing class CRLP_ApiExecuteRollups {
         options.doSummaryObjectComparison = false;
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
-                .withRollupDefinitions(rollupDefs)
                 .withRollupType(rollupType)
                 .withSummaryRecord(summaryRecord)
+                .withRollupDefinitions(rollupDefs)
                 .withDetailRecords(detailRecords)
                 .withRelatedRecords(relatedRecords)
                 .withJobOptions(options);
@@ -101,6 +101,9 @@ public without sharing class CRLP_ApiExecuteRollups {
      */
     private void convertData(Map<Id, Map<SObjectType, List<SObject>>> rollupData) {
         SObjectType detailObjectType = CRLP_Rollup_SVC.getDetailObjectType(rollupType);
+
+        detailRecords = new List<SObject>();
+        relatedRecords = new Map<Id, List<SObject>>();
 
         if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
             getContactIdsForParentAccount();
@@ -125,7 +128,6 @@ public without sharing class CRLP_ApiExecuteRollups {
                 detailRecords.addAll(getRelatedRecords(oppRecord, rollupData.get(oppId)));
             }
         }
-
     }
 
     /**

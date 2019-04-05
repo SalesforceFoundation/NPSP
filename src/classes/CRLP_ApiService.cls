@@ -108,15 +108,15 @@ public without sharing class CRLP_ApiService {
             throwParameterException(CallableApiParameters.PARAM_ROLLUP_PARENTID, 'A valid Parent record Id is required');
         }
         String countQuery = 'SELECT COUNT() FROM ' + parentId.getSobjectType().getDescribe().getName() +
-                'WHERE Id = :parentId LIMIT 1';
+                ' WHERE Id = :parentId LIMIT 1';
         if (Database.countQuery(countQuery) != 1) {
             throwParameterException(CallableApiParameters.PARAM_ROLLUP_PARENTID, 'A existing Parent record is required');
         }
 
         try {
             CRLP_ApiExecuteRollups rollupTransformationApi = new CRLP_ApiExecuteRollups()
-                    .withParentId(parentId)
                     .withRollupType(rollupType)
+                    .withParentId(parentId)
                     .withRollupData(rollupData)
                     .withRollupDefs(rollupDefs);
 
