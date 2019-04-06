@@ -133,7 +133,7 @@ public with sharing class BDI_SettingsUI_CTRL {
                 listSOAccountUniqueID = listSOForObject('Account');
             }
             return listSOAccountUniqueID;
-        }   
+        }
         private set;
     }
 

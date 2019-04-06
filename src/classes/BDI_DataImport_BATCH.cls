@@ -60,11 +60,6 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     public Id batchId;
 
     /*******************************************************************************************************
-    * @description whether to process the batch in Dry Run mode
-    */
-    public Boolean isDryRun;
-
-    /*******************************************************************************************************
     * @description constructor, which sets up our initial soql
     */
     public BDI_DataImport_BATCH() {

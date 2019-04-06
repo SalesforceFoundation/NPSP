@@ -114,6 +114,7 @@ public with sharing class BDI_Donations_TEST {
         fieldMapper.addMappedField('Opportunity', 
                 UTIL_Namespace.StrTokenNSPrefix('Donation_Membership_Origin__c'),
                 'IsPrivate');
+                
         BDI_DataImportService dataImportService = new BDI_DataImportService(false, fieldMapper);
 
         BDI_Donations donationImportHandler = new BDI_Donations(dataImportService);
