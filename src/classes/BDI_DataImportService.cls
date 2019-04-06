@@ -505,6 +505,7 @@ global with sharing class BDI_DataImportService {
             }
 
             if (populatedDataImportFieldSet != null && populatedDataImportFieldSet.size() > 0) {
+                populatedDataImportFieldSet.addAll(relevantDataImportFields);
                 List<String> populatedDataImportFieldList = new List<String>(populatedDataImportFieldSet);
 
                 for (Integer i = 0; i < populatedDataImportFieldList.size(); i++) {
@@ -704,6 +705,19 @@ global with sharing class BDI_DataImportService {
             if (relevantDataImportFields == null || relevantDataImportFields.isEmpty()) {
                 return listStrDataImportFields;
             } else {
+                // Collect non nillable fields
+                Map<String, Schema.SObjectField> mapS = Schema.SObjectType.DataImport__c.fields.getMap();
+                for(String fieldName : mapS.keySet()) {
+                    Schema.DescribeFieldResult field = mapS.get(fieldName).getDescribe();
+                    if(field.isNillable() == false) {
+                        relevantDataImportFields.add(field.Name);
+                    }
+                }
+                // Remove potential duplicates
+                Set<String> uniqueRelevantDataImportFields = new Set<String>();
+                uniqueRelevantDataImportFields.addAll(relevantDataImportFields);
+                relevantDataImportFields = new List<String>(uniqueRelevantDataImportFields);
+
                 return relevantDataImportFields;
             }
         }
