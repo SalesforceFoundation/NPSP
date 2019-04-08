@@ -50,7 +50,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         get {
             if (mapDIFieldToOppField == null) {
                 mapDIFieldToOppField = BDI_DataImportService.mapFieldsForDIObject('Opportunity', 'Opportunity', 
-                    BDI_DataImportService.relevantDataImportFields);
+                    BDI_DataImportService.listStrDataImportFields);
             }
             return mapDIFieldToOppField;
         }
@@ -64,7 +64,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         get {
             if (mapDIFieldToPmtField == null) {
                 mapDIFieldToPmtField = BDI_DataImportService.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c', 
-                    BDI_DataImportService.relevantDataImportFields);
+                    BDI_DataImportService.listStrDataImportFields);
                 // special case Donation fields we defaultly map to Opp fields, but we will use with Payments too!
                 // note that these two work for matching rules.  
                 mapDIFieldToPmtField.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase(), 'npe01__Payment_Amount__c');
