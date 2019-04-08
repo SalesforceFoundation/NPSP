@@ -84,14 +84,14 @@ public inherited sharing class CRLP_RollupProcessor {
      * @description Used to return a true to the calling LDV class when the last parent Id was removed from
      * the list of updated SObjects
      */
-    public Boolean lastParentIdRemovedFromUpdatesList = false;
+    private Boolean lastParentIdRemovedFromUpdatesList = false;
 
     /**
      * @description When working with Account Soft Credit Rollups, this var is used to hold a list
      * of Opportunity Id's that have been rolled up to a given Account. The data is retained in a stateful var
      * in the batch job to support scenarios where a given Account's rollups straddle multiple batch operations
      */
-    private Map<Id,Set<Id>> previouslyProcessedOppIdsByParentId = new Map<Id,Set<Id>>();
+    private Map<Id,Set<Id>> processedOppIdsByParentId = new Map<Id,Set<Id>>();
 
     /**
      * @description Constructor
@@ -148,12 +148,7 @@ public inherited sharing class CRLP_RollupProcessor {
         detailRecordsByParentId = new Map<Id, List<SObject>>();
 
         for (SObject dtl : detailRecords) {
-            SObject dtlRecord = dtl;
-            if (parentObjectField != null) {
-                dtlRecord = dtl.getSObject(parentObjectField);
-            }
-
-            Id parentId = (Id) dtlRecord.get(parentKeyField);
+            Id parentId = CRLP_Rollup_SVC.getParentIdFromRecord(dtl, parentKeyField, parentRelationshipObject);
             if (!detailRecordsByParentId.containsKey(parentId)) {
                 detailRecordsByParentId.put(parentId, new List<SObject>());
             }
@@ -202,7 +197,7 @@ public inherited sharing class CRLP_RollupProcessor {
      * This is needed in SkewMode to support rollups that span multiple batch iterations.
      */
     public CRLP_RollupProcessor withPreviouslyProcessedOppIdsMap(Map<Id,Set<Id>> processedOppIdsByParentId) {
-        previouslyProcessedOppIdsByParentId = processedOppIdsByParentId;
+        processedOppIdsByParentId = processedOppIdsByParentId;
         return this;
     }
 
@@ -223,7 +218,7 @@ public inherited sharing class CRLP_RollupProcessor {
      */
     private String parentRelationshipField {
         get {
-            if (parentRelationshipField == null) {
+            if (String.isBlank(parentRelationshipField)) {
                 parentRelationshipField = CRLP_Rollup_SVC.getParentRelationshipFieldForProcessingJob(rollupType);
             }
             return parentRelationshipField;
@@ -235,17 +230,16 @@ public inherited sharing class CRLP_RollupProcessor {
     /**
     * @description Returns the Parent Object Field by parsing the parentKeyFieldFull property
     */
-    private String parentObjectField {
+    private String parentRelationshipObject {
         get {
-            if (parentObjectField == null) {
+            if (String.isBlank(parentRelationshipObject)) {
                 // The parentKeyField field may be have dot-notation (ex: Contact__r.AccountId)
                 // If this is the case, need to parse out the two components to use
-                String keyField = parentRelationshipField;
-                if (keyField.contains('.')) {
-                    parentObjectField = keyField.split('\\.')[0];
+                if (parentRelationshipField.contains('.')) {
+                    parentRelationshipObject = parentRelationshipField.split('\\.')[0];
                 }
             }
-            return parentObjectField;
+            return parentRelationshipObject;
         } set;
     }
 
@@ -254,7 +248,7 @@ public inherited sharing class CRLP_RollupProcessor {
     **/
     private String parentKeyField {
         get {
-            if (parentKeyField == null) {
+            if (String.isBlank(parentKeyField)) {
                 // The parentKeyField field may be have dot-notation (ex: Contact__r.AccountId)
                 // If this is the case, need to parse out the two components to use
                 parentKeyField = parentRelationshipField;
@@ -287,7 +281,14 @@ public inherited sharing class CRLP_RollupProcessor {
      * @description Returns the last parent id processed by the RollupsProcessor logic for the given execution scope
      */
     public Set<Id> getPreviouslyProcessedOppIds(Id parentId) {
-        return previouslyProcessedOppIdsByParentId.get(parentId);
+        return processedOppIdsByParentId.get(parentId);
+    }
+
+    /**
+     * @description Returns the last parent id processed by the RollupsProcessor logic for the given execution scope
+     */
+    public Boolean hasLastParentIdCompleted() {
+        return lastParentIdRemovedFromUpdatesList;
     }
 
     /**
@@ -319,8 +320,8 @@ public inherited sharing class CRLP_RollupProcessor {
         Map<Id, SObject> recordsToUpdate = new Map<Id, SObject>();
         Id previousParentIdProcessed = null;
 
-        for (Integer itemNum = 0, parentListSize = parentRecords.size(); itemNum < parentListSize; itemNum++) {
-            Id parentId = parentRecords[itemNum].Id;
+        for (Integer n = 0, parentListSize = parentRecords.size(); n < parentListSize; n++) {
+            Id parentId = parentRecords[n].Id;
 
             List<SObject> detailsForParent = detailRecordsByParentId.get(parentId);
 
@@ -332,7 +333,7 @@ public inherited sharing class CRLP_RollupProcessor {
             // collection of CRLP_Rollup instances in the stateful options var. The completeRollupForParent()
             // methods stores everything in this var because it's not sure of which is the first or last.
             // The block below removes everything from this map that is not the first summary record id.
-            if (itemNum > 1 && previousParentIdProcessed != null) {
+            if (n > 1 && previousParentIdProcessed != null) {
                 rollupsDefsByParentId.remove(previousParentIdProcessed);
             }
 
@@ -341,7 +342,7 @@ public inherited sharing class CRLP_RollupProcessor {
             // The options.rollups collection will contain the list of CRLP_Rollup records
             // that were processed for this rollup operation. This is needed to determine if the
             // resulting record requires an update.
-            SObject updatedRecord = completeRollupForSingleSummaryRecord(parentRecords[itemNum]);
+            SObject updatedRecord = completeRollupForSingleSummaryRecord(parentRecords[n]);
 
             // Does the resulting record require an update?
             if (updatedRecord != null) {
@@ -381,8 +382,8 @@ public inherited sharing class CRLP_RollupProcessor {
     */
     private List<SObject> cleanDetailOppsListForSoftCreditMode(Id parentId, List<SObject> detailsForParent) {
         List<SObject> oppsToRollup = new List<SObject>();
-        for (Integer itemNum = 0, detailListSize = detailsForParent.size(); itemNum < detailListSize; itemNum++) {
-            SObject detail = detailsForParent[itemNum];
+        for (Integer n = 0, detailListSize = detailsForParent.size(); n < detailListSize; n++) {
+            SObject detail = detailsForParent[n];
 
             Id oppId = (Id)detail.get(Partial_Soft_Credit__c.Opportunity__c);
             if (!isOppAlreadyProcessedForParent(parentId, oppId)) {
@@ -409,8 +410,8 @@ public inherited sharing class CRLP_RollupProcessor {
      */
     @TestVisible
     private Boolean isOppAlreadyProcessedForParent(Id parentId, Id oppId) {
-        return !previouslyProcessedOppIdsByParentId.containsKey(parentId) ||
-                !previouslyProcessedOppIdsByParentId.get(parentId).contains(oppId);
+        return !processedOppIdsByParentId.containsKey(parentId) ||
+                !processedOppIdsByParentId.get(parentId).contains(oppId);
     }
 
     /**
@@ -473,7 +474,7 @@ public inherited sharing class CRLP_RollupProcessor {
 
             if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
                     rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                previouslyProcessedOppIdsByParentId.put(parentId, handler.getListOfOppIdsThatWereRolledUp());
+                processedOppIdsByParentId.put(parentId, handler.getListOfOppIdsThatWereRolledUp());
             }
 
             // only set the lastParentId when there are actually detail records
@@ -507,7 +508,7 @@ public inherited sharing class CRLP_RollupProcessor {
 
         CRLP_VRollupHandler handler = cachedHandlerInstanceByRollupType.get(rollupType);
         if (handler == null) {
-            Type handlerClassType = CRLP_RollupProcessor_SVC.getHanderClassType(rollupType);
+            Type handlerClassType = CRLP_RollupProcessor_SVC.getHandlerClassType(rollupType);
             CRLP_Debug_UTIL.setCurrentRollupState('Instantiate Handler Class: ' + handlerClassType.getName() + ' for ' + parentId);
             handler = (CRLP_VRollupHandler) handlerClassType.newInstance();
             cachedHandlerInstanceByRollupType.put(rollupType, handler);

@@ -374,5 +374,22 @@ public class CRLP_Rollup_SVC {
 
     }
 
+    /**
+     * @description Retrieve an Id field from a SObject using the specified Parent Field in that record or in a
+     * related object.
+     * @param record
+     * @param parentKeyField
+     * @param relationshipName
+     * @return Id
+     */
+    public static Id getParentIdFromRecord(SObject record, String parentKeyField, String relationshipName) {
+        SObject dtlRecord = record;
+        if (relationshipName != null) {
+            dtlRecord = record.getSObject(relationshipName);
+        }
+
+        return (Id)dtlRecord.get(parentKeyField);
+    }
+
     public class CRLP_Exception extends Exception {}
 }

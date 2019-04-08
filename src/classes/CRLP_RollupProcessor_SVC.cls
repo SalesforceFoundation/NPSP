@@ -43,7 +43,7 @@ public class CRLP_RollupProcessor_SVC {
      * @param rollupType Rollup Type
      * @return ApexClassType
      */
-    public static Type getHanderClassType(CRLP_RollupProcessingOptions.RollupType rollupType) {
+    public static Type getHandlerClassType(CRLP_RollupProcessingOptions.RollupType rollupType) {
         Type handlerClass;
         switch on (rollupType) {
             when ContactSoftCredit, AccountContactSoftCredit {
