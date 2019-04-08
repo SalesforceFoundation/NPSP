@@ -220,8 +220,6 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
             }
         }
 
-        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(filteredDFRMap.values());
-
         List<String> sortedFieldLabels = new List<String>(filteredDFRMap.keySet());
         sortedFieldLabels.sort();
 
