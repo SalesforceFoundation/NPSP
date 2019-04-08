@@ -35,7 +35,8 @@
   @description Component used to select an open donation for a given donor in Batch Gift Entry.
 -->
 
-<aura:component controller="BGE_DataImportBatchEntry_CTRL">
+<aura:component controller="BGE_DataImportBatchEntry_CTRL"
+                access="global">
     <!--Public Attributes-->
     <aura:attribute name="selectedDonation" type="SObject" description="Stored selected open donation object. Can also be null or empty." access="public" />
     <aura:attribute name="unpaidPayments" type="List" description="List of unpaid Payments" access="public" />
