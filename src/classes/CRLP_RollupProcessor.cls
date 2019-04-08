@@ -70,11 +70,6 @@ public inherited sharing class CRLP_RollupProcessor {
     @TestVisible
     private Map<Id, List<SObject>> relatedRecordsByDetailId;
 
-    /** @description This is set to true when the Map of RollupDefinitions by ParentId is used to both retrieve
-    * Rollup Definitions and to store the Rollup Definitions when done. Optional. The default is false.
-    */
-    private Boolean useRollupDefsByParentIdMap = false;
-
     /** @description Rollup Definition Collections grouped by ParentId. Only injected if needed for a 'starting' point */
     @TestVisible
     private Map<Id, List<CRLP_Rollup>> rollupsDefsByParentId = new Map<Id, List<CRLP_Rollup>>();
@@ -109,16 +104,6 @@ public inherited sharing class CRLP_RollupProcessor {
      */
     public CRLP_RollupProcessor withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode jobMode) {
         this.mode = jobMode;
-        return this;
-    }
-
-    /**
-     * @description This is set to true when the Map of RollupDefinitions by ParentId is used to both retrieve
-     * Rollup Definitions and to store the Rollup Definitions when done. Optional. The default is false.
-     * @param Boolean.
-     */
-    public CRLP_RollupProcessor withUseRollupDefsByParentIdMap(Boolean useRollupDefsByParentIdMap) {
-        this.useRollupDefsByParentIdMap = useRollupDefsByParentIdMap;
         return this;
     }
 
@@ -496,7 +481,7 @@ public inherited sharing class CRLP_RollupProcessor {
             lastParentIdProcessed = parentId;
 
             // Save the rollup data from the Handler instance into the processing options instance
-            if (useRollupDefsByParentIdMap == true) {
+            if (options.useRollupDefsByParentIdMap == true) {
                 rollupsDefsByParentId.put(parentId, CRLP_RollupProcessor_SVC.fullyCloneList(handler.getRollupsList()));
             }
         }
@@ -539,7 +524,7 @@ public inherited sharing class CRLP_RollupProcessor {
 
         // If the map of Rollups by Parent Id contains this parentId, use that List<CRLP_Rollup> rather than
         // create a new fresh list.
-        if (useRollupDefsByParentIdMap == true) {
+        if (options.useRollupDefsByParentIdMap == true) {
             List<CRLP_Rollup> rollupDefs = getRollupDefsForParent(parentId);
             if (!rollupDefs.isEmpty()) {
                 CRLP_Debug_UTIL.setCurrentRollupState('Set stateful rollups collection in Handler Class');

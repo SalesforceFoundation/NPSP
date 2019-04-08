@@ -180,17 +180,20 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 detailRecords = buildPartialSoftCreditRecordsFromOCRs(detailRecords);
             }
 
+            CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
+            options.useRollupDefsByParentIdMap = true;
+
             // Need to pass in the Rollup Type, Rollup Defnitions if they're available along
             // with the Summary Record(s), Detail Record(s) and any Related Records.
             CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
                     .withRollupType(jobType)
                     .withBatchJobMode(jobMode)
-                    .withUseRollupDefsByParentIdMap(true)
                     .withSummaryRecords(summaryRecords)
                     .withDetailRecords(detailRecords)
                     .withRelatedRecords(paymentsByOpp)
                     .withPreviouslyProcessedOppIdsMap(this.statefulMapOfOppIdsByParentId)
-                    .withRollupDefinitions(this.statefulRollupsById);
+                    .withRollupDefinitions(this.statefulRollupsById)
+                    .withJobOptions(options);
 
             List<SObject> updatedRecords = processor.startRollupProcessing();
 
@@ -480,14 +483,17 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         String query = CRLP_Query_SEL.buildObjectQueryForRollup(summaryObjectType) + ' WHERE Id IN :parentIds';
         List<SObject> parents = Database.query(query);
 
+        CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
+        options.useRollupDefsByParentIdMap = true;
+
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
                 .withRollupType(jobType)
                 .withBatchJobMode(jobMode)
-                .withUseRollupDefsByParentIdMap(true)
                 .withDetailRecords(new List<SObject>())
                 .withRelatedRecords(new Map<Id, List<SObject>>())
                 .withPreviouslyProcessedOppIdsMap(statefulMapOfOppIdsByParentId)
-                .withRollupDefinitions(statefulRollupsById);
+                .withRollupDefinitions(statefulRollupsById)
+                .withJobOptions(options);
 
         // Call the method to do the actual rollup on this last remaining record, which is basically
         // just to return the updated record

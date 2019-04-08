@@ -89,10 +89,10 @@ public without sharing class CRLP_ApiExecuteRollups {
 
         CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
         options.doSummaryObjectComparison = commitToDb;
+        options.useRollupDefsByParentIdMap = true;
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
                 .withRollupType(rollupType)
-                .withUseRollupDefsByParentIdMap(true)
                 .withSummaryRecord(summaryRecord)
                 .withRollupDefinitions(rollupDefs)
                 .withDetailRecords(detailRecords)
@@ -146,7 +146,7 @@ public without sharing class CRLP_ApiExecuteRollups {
     }
 
     /**
-     * @description Convert the Map of child data recieved into the api to the appropriate set of
+     * @description Convert the Map of child data received into the api to the appropriate set of
      * related records needed for the specified rollup operation.
      * @param oppRecord
      * @param rollupChildData
