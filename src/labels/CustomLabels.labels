@@ -5035,7 +5035,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pmtWizardBtnRemovePaidPayments</shortDescription>
-        <value>Remove Paid Payments</value>
+        <value>Remove Paid and Written Off Payments</value>
     </labels>
     <labels>
         <fullName>pmtWizardClosedLost</fullName>
