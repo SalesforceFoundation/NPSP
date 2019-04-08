@@ -130,6 +130,18 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Field_Mapping_Method__c</fullName>
+        <description>Defines the way in which fields on the Data Import record are mapped to other objects in Salesforce. See documentation for valid values.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Defines the way in which fields on the Data Import record are mapped to other objects in Salesforce. See documentation for valid values.</inlineHelpText>
+        <label>Field Mapping Method</label>
+        <length>40</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Post_Process_Implementing_Class__c</fullName>
         <description>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records.</description>
         <externalId>false</externalId>
@@ -148,16 +160,6 @@
         <externalId>false</externalId>
         <inlineHelpText>When checked, NPSP calculates donor statistics when donations are processed. If unchecked, donor statistics are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.</inlineHelpText>
         <label>Calculate Donation Rollups with Batch</label>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
-    </fields>
-    <fields>
-        <fullName>Use_Advanced_Mapping__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>If checked, then Data Import will use the Data Import Field Mapping custom metadata type instead of help text for field mapping.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>If checked, then Data Import will use the Data Import Field Mapping custom metadata type instead of help text for field mapping.</inlineHelpText>
-        <label>Use Advanced Mapping</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>

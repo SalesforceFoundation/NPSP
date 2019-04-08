@@ -907,6 +907,7 @@
         <members>Data_Import_Settings__c.Batch_Size__c</members>
         <members>Data_Import_Settings__c.Contact_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Contact_Matching_Rule__c</members>
+        <members>Data_Import_Settings__c.Field_Mapping_Method__c</members>
         <members>Data_Import_Settings__c.Default_Data_Import_Field_Mapping_Set__c</members>
         <members>Data_Import_Settings__c.Donation_Date_Range__c</members>
         <members>Data_Import_Settings__c.Donation_Matching_Behavior__c</members>
@@ -914,7 +915,6 @@
         <members>Data_Import_Settings__c.Donation_Matching_Rule__c</members>
         <members>Data_Import_Settings__c.Post_Process_Implementing_Class__c</members>
         <members>Data_Import_Settings__c.Run_Opportunity_Rollups_while_Processing__c</members>
-        <members>Data_Import_Settings__c.Use_Advanced_Mapping__c</members>
         <members>Engagement_Plan_Task__c.Assigned_To__c</members>
         <members>Engagement_Plan_Task__c.Comments__c</members>
         <members>Engagement_Plan_Task__c.Days_After__c</members>
