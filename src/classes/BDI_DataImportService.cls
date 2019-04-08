@@ -505,6 +505,9 @@ global with sharing class BDI_DataImportService {
             }
 
             populatedDataImportFields = new List<String>(populatedDataImportFieldSet);
+            for(Integer i = 0; i < populatedDataImportFields.size(); i++) {
+                populatedDataImportFields[i] = populatedDataImportFields[i].toLowerCase();
+            }
 
             // do any performance optimizations to avoid unnecessary code
             disableAllOppRollups();
@@ -686,7 +689,7 @@ global with sharing class BDI_DataImportService {
     /*******************************************************************************************************
     * @description holds list of populated Data Import fields for Data Import records in current Batch
     */
-    public static List<String> populatedDataImportFields { get; set; }
+    public static List<String> populatedDataImportFields = new List<String>();
 
     /*******************************************************************************************************
     * @description list of all the fields in the Data Import object
@@ -823,11 +826,14 @@ global with sharing class BDI_DataImportService {
                             'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'
                         };
                         Boolean isAuditField = setAuditFields.contains(fieldName.toLowerCase());
+                        Boolean isCreatable = fieldDescribe.isCreateable();
+                        Boolean isUpdateable = fieldDescribe.isUpdateable();
+                        Boolean isPopulated = populatedDataImportFields.contains(dataImportField);
 
                         if (failFieldLevelSecurity ||
                             fieldDescribe == null ||
-                            (!fieldDescribe.isCreateable() && populatedDataImportFields.contains(dataImportField)) ||
-                            (!isAuditField && !fieldDescribe.isUpdateable() && populatedDataImportFields.contains(dataImportField))) {
+                            (!isCreatable && isPopulated) ||
+                            (!isAuditField && !isUpdateable && isPopulated)) {
                                 throw (new FLSException(
                                     String.format(System.Label.flsError, new List<String>{ targetObjectName + '.' + fieldName }
                                 )));
