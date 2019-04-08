@@ -879,6 +879,7 @@
         <members>DataImport__c.GAU_Allocation_2_Import_Status__c</members>
         <members>DataImport__c.GAU_Allocation_2_Imported__c</members>
         <members>DataImport__c.GAU_Allocation_2_Percent__c</members>
+        <members>DataImport__c.HomeAddressImportStatus__c</members>
         <members>DataImport__c.HomeAddressImported__c</members>
         <members>DataImport__c.Home_City__c</members>
         <members>DataImport__c.Home_Country__c</members>
@@ -889,11 +890,11 @@
         <members>DataImport__c.Household_Phone__c</members>
         <members>DataImport__c.ImportedDate__c</members>
         <members>DataImport__c.NPSP_Data_Import_Batch__c</members>
-        <members>DataImport__c.Opportunity_Contact_Role_1_Imported__c</members>
         <members>DataImport__c.Opportunity_Contact_Role_1_ImportStatus__c</members>
+        <members>DataImport__c.Opportunity_Contact_Role_1_Imported__c</members>
         <members>DataImport__c.Opportunity_Contact_Role_1_Role__c</members>
-        <members>DataImport__c.Opportunity_Contact_Role_2_Imported__c</members>
         <members>DataImport__c.Opportunity_Contact_Role_2_ImportStatus__c</members>
+        <members>DataImport__c.Opportunity_Contact_Role_2_Imported__c</members>
         <members>DataImport__c.Opportunity_Contact_Role_2_Role__c</members>
         <members>DataImport__c.PaymentImportStatus__c</members>
         <members>DataImport__c.PaymentImported__c</members>
@@ -901,19 +902,6 @@
         <members>DataImport__c.Payment_Method__c</members>
         <members>DataImport__c.Payment_Possible_Matches__c</members>
         <members>DataImport__c.Status__c</members>
-        <members>Data_Import_Field_Mapping__mdt.Data_Import_Field_Mapping_Set__c</members>
-        <members>Data_Import_Field_Mapping__mdt.Required__c</members>
-        <members>Data_Import_Field_Mapping__mdt.Source_Field_API_Name__c</members>
-        <members>Data_Import_Field_Mapping__mdt.Target_Field_API_Name__c</members>
-        <members>Data_Import_Field_Mapping__mdt.Target_Object_Mapping__c</members>
-        <members>Data_Import_Field_Mapping_Set__mdt.Data_Import_Object_Mapping_Set__c</members>
-        <members>Data_Import_Object_Mapping__mdt.Data_Import_Object_Mapping_Set__c</members>
-        <members>Data_Import_Object_Mapping__mdt.Imported_Record_Field_Name__c</members>
-        <members>Data_Import_Object_Mapping__mdt.Imported_Record_Status_Field_Name__c</members>
-        <members>Data_Import_Object_Mapping__mdt.Object_API_Name__c </members>
-        <members>Data_Import_Object_Mapping__mdt.Predecessor__c</members>
-        <members>Data_Import_Object_Mapping__mdt.Relationship_Field__c</members>
-        <members>Data_Import_Object_Mapping__mdt.Relationship_To_Predecessor__c</members>
         <members>Data_Import_Settings__c.Account_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Account_Matching_Rule__c</members>
         <members>Data_Import_Settings__c.Batch_Size__c</members>
@@ -1081,6 +1069,19 @@
         <members>Trigger_Handler__c.Trigger_Action__c</members>
         <members>Trigger_Handler__c.User_Managed__c</members>
         <members>Trigger_Handler__c.Usernames_to_Exclude__c</members>
+        <members>Data_Import_Field_Mapping_Set__mdt.Data_Import_Object_Mapping_Set__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Data_Import_Field_Mapping_Set__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Required__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Source_Field_API_Name__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Target_Field_API_Name__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Target_Object_Mapping__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Data_Import_Object_Mapping_Set__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Imported_Record_Field_Name__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Imported_Record_Status_Field_Name__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Object_API_Name__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Predecessor__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Relationship_Field__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Relationship_To_Predecessor__c</members>
         <members>Filter_Group__mdt.Description__c</members>
         <members>Filter_Group__mdt.Is_Deleted__c</members>
         <members>Filter_Rule__mdt.Constant__c</members>
@@ -1809,9 +1810,9 @@
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>
         <members>pscManageSoftCreditsAmountMissing</members>
-        <members>pscManageSoftCreditsContactMissing</members>
         <members>pscManageSoftCreditsAmountOrPercent</members>
         <members>pscManageSoftCreditsCantChangeCurrency</members>
+        <members>pscManageSoftCreditsContactMissing</members>
         <members>pscManageSoftCreditsFull</members>
         <members>pscManageSoftCreditsInvalidContact</members>
         <members>pscManageSoftCreditsNoRoles</members>
@@ -2168,6 +2169,104 @@
         <name>CustomLabels</name>
     </types>
     <types>
+        <members>Data_Import_Field_Mapping.Account_1_City</members>
+        <members>Data_Import_Field_Mapping.Account_1_Country</members>
+        <members>Data_Import_Field_Mapping.Account_1_Name</members>
+        <members>Data_Import_Field_Mapping.Account_1_Phone</members>
+        <members>Data_Import_Field_Mapping.Account_1_State_Province</members>
+        <members>Data_Import_Field_Mapping.Account_1_Street</members>
+        <members>Data_Import_Field_Mapping.Account_1_Website</members>
+        <members>Data_Import_Field_Mapping.Account_1_Zip_Postal_Code</members>
+        <members>Data_Import_Field_Mapping.Account_2_City</members>
+        <members>Data_Import_Field_Mapping.Account_2_Country</members>
+        <members>Data_Import_Field_Mapping.Account_2_Name</members>
+        <members>Data_Import_Field_Mapping.Account_2_Phone</members>
+        <members>Data_Import_Field_Mapping.Account_2_State_Province</members>
+        <members>Data_Import_Field_Mapping.Account_2_Street</members>
+        <members>Data_Import_Field_Mapping.Account_2_Website</members>
+        <members>Data_Import_Field_Mapping.Account_2_Zip_Postal_Code</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Alternate_Email</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Birthdate</members>
+        <members>Data_Import_Field_Mapping.Contact_1_First_Name</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Home_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Last_Name</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Mobile_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Other_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Personal_Email</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Preferred_Email</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Preferred_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Salutation</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Title</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Work_Email</members>
+        <members>Data_Import_Field_Mapping.Contact_1_Work_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Alternate_Email</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Birthdate</members>
+        <members>Data_Import_Field_Mapping.Contact_2_First_Name</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Home_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Last_Name</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Mobile_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Other_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Personal_Email</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Preferred_Email</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Preferred_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Salutation</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Title</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Work_Email</members>
+        <members>Data_Import_Field_Mapping.Contact_2_Work_Phone</members>
+        <members>Data_Import_Field_Mapping.Donation_Amount</members>
+        <members>Data_Import_Field_Mapping.Donation_Date</members>
+        <members>Data_Import_Field_Mapping.Donation_Description</members>
+        <members>Data_Import_Field_Mapping.Donation_Member_Level</members>
+        <members>Data_Import_Field_Mapping.Donation_Membership_End_Date</members>
+        <members>Data_Import_Field_Mapping.Donation_Membership_Origin</members>
+        <members>Data_Import_Field_Mapping.Donation_Membership_Start_Date</members>
+        <members>Data_Import_Field_Mapping.Donation_Name</members>
+        <members>Data_Import_Field_Mapping.Donation_Record_Type_Name</members>
+        <members>Data_Import_Field_Mapping.Donation_Stage</members>
+        <members>Data_Import_Field_Mapping.Donation_Type</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_1_Amount</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_1_Campaign</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_1_GAU</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_1_Opportunity</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_1_Payment</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_1_Percent</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_2_Amount</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_2_Campaign</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_2_GAU</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_2_Opportunity</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_2_Payment</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_2_Percent</members>
+        <members>Data_Import_Field_Mapping.Home_City</members>
+        <members>Data_Import_Field_Mapping.Home_Country</members>
+        <members>Data_Import_Field_Mapping.Home_State_Province</members>
+        <members>Data_Import_Field_Mapping.Home_Street</members>
+        <members>Data_Import_Field_Mapping.Home_Zip_Postal_Code</members>
+        <members>Data_Import_Field_Mapping.Household_Phone</members>
+        <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_1_Contact</members>
+        <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_1_Opportunity</members>
+        <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_1_Role</members>
+        <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_2_Contact</members>
+        <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_2_Opportunity</members>
+        <members>Data_Import_Field_Mapping.Opportunity_Contact_Role_2_Role</members>
+        <members>Data_Import_Field_Mapping.Payment_Check_Reference_Number</members>
+        <members>Data_Import_Field_Mapping.Payment_Method</members>
+        <members>Data_Import_Field_Mapping_Set.Default_Field_Mapping_Set</members>
+        <members>Data_Import_Object_Mapping.Account_1</members>
+        <members>Data_Import_Object_Mapping.Account_2</members>
+        <members>Data_Import_Object_Mapping.Address</members>
+        <members>Data_Import_Object_Mapping.Contact_1</members>
+        <members>Data_Import_Object_Mapping.Contact_2</members>
+        <members>Data_Import_Object_Mapping.Donation</members>
+        <members>Data_Import_Object_Mapping.GAU_Allocation_1</members>
+        <members>Data_Import_Object_Mapping.GAU_Allocation_2</members>
+        <members>Data_Import_Object_Mapping.Household</members>
+        <members>Data_Import_Object_Mapping.Opportunity_Contact_Role_1</members>
+        <members>Data_Import_Object_Mapping.Opportunity_Contact_Role_2</members>
+        <members>Data_Import_Object_Mapping.Payment</members>
+        <members>Data_Import_Object_Mapping_Set.Default_Object_Mapping_Set</members>
+        <name>CustomMetadata</name>
+    </types>
+    <types>
         <members>Account_Soft_Credit__c</members>
         <members>Addr_Verification_Settings__c</members>
         <members>Address_Verification_Settings__c</members>
@@ -2179,10 +2278,6 @@
         <members>Customizable_Rollup_Settings__c</members>
         <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
-        <members>Data_Import_Field_Mapping__mdt</members>
-        <members>Data_Import_Field_Mapping_Set__mdt</members>
-        <members>Data_Import_Object_Mapping__mdt</members>
-        <members>Data_Import_Object_Mapping_Set__mdt</members>
         <members>Data_Import_Settings__c</members>
         <members>Engagement_Plan_Task__c</members>
         <members>Engagement_Plan_Template__c</members>
@@ -2201,6 +2296,10 @@
         <members>Relationship_Sync_Excluded_Fields__c</members>
         <members>Schedulable__c</members>
         <members>Trigger_Handler__c</members>
+        <members>Data_Import_Field_Mapping_Set__mdt</members>
+        <members>Data_Import_Field_Mapping__mdt</members>
+        <members>Data_Import_Object_Mapping_Set__mdt</members>
+        <members>Data_Import_Object_Mapping__mdt</members>
         <members>Filter_Group__mdt</members>
         <members>Filter_Rule__mdt</members>
         <members>Rollup__mdt</members>
@@ -2600,10 +2699,6 @@
         <members>Contact-Contact Layout</members>
         <members>DataImportBatch__c-NPSP Data Import Batch Layout</members>
         <members>DataImport__c-Data Import Layout</members>
-        <members>Data_Import_Field_Mapping__mdt-Data Import Field Mapping Layout</members>
-        <members>Data_Import_Field_Mapping_Set__mdt-Data Import Field Mapping Set Layout</members>
-        <members>Data_Import_Object_Mapping__mdt-Data Import Object Mapping Layout</members>
-        <members>Data_Import_Object_Mapping_Set__mdt-Data Import Object Mapping Set Layout</members>
         <members>Engagement_Plan_Task__c-Engagement Plan Task Layout</members>
         <members>Engagement_Plan_Template__c-Engagement Plan Template Layout</members>
         <members>Engagement_Plan__c-Engagement Plan Layout</members>
@@ -2621,6 +2716,10 @@
         <members>Partial_Soft_Credit__c-Partial Soft Credit Layout</members>
         <members>Schedulable__c-Schedulable Layout</members>
         <members>Trigger_Handler__c-Trigger Handler Layout</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-Data Import Field Mapping Set Layout</members>
+        <members>Data_Import_Field_Mapping__mdt-Data Import Field Mapping Layout</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-Data Import Object Mapping Set Layout</members>
+        <members>Data_Import_Object_Mapping__mdt-Data Import Object Mapping Layout</members>
         <members>Filter_Group__mdt-Filter Group Layout</members>
         <members>Filter_Rule__mdt-Filter Rule Layout</members>
         <members>Rollup__mdt-Rollup Layout</members>
