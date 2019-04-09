@@ -238,8 +238,8 @@ flows:
             8:
                 task: test_data_relationships
 
-    config_acctsc_rollups:
-        description: 'Deploys custom fields and rollups for testing account soft credits.'
+    deploy_rollup_testing:
+        description: 'Deploys custom fields and rollup definitions for testing Customizable Rollups using the Apex Anon testing script'
         steps:
             1:
                 task: enable_customizable_rollups
@@ -248,6 +248,10 @@ flows:
                 options:
                     path: unpackaged/config/acctsc_rollups
             3:
+                task: deploy
+                options:
+                    path: unpackaged/config/payment_rollups
+            4:
                 task: update_admin_profile
 
     release_beta:

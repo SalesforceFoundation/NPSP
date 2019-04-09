@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>Account.AccConSC_Last_SC_AMt__c</members>
+        <members>Account.AccConSC_Count__c</members>
         <members>Account.AccConSC_Total_SCs__c</members>
         <members>Account.AccConSC__c</members>
         <members>Account.Largest_SC_Amount__c</members>
@@ -19,7 +19,7 @@
     </types>
     <types>
         <members>Rollup.NPSP_AcctAccConSCAvgSCAmt</members>
-        <members>Rollup.NPSP_AcctAccConSCLastSCAmt</members>
+        <members>Rollup.NPSP_AcctAccConSCCount</members>
         <members>Rollup.NPSP_AcctAccConSCTotalSC</members>
         <members>Rollup.NPSP_AcctSCAvgSCAmt</members>
         <members>Rollup.NPSP_AcctSCLargestSCAmount</members>
@@ -34,5 +34,5 @@
         <members>Rollup.NPSP_ConFirstSoftCreditAmount</members>
         <name>CustomMetadata</name>
     </types>
-    <version>43.0</version>
+    <version>45.0</version>
 </Package>
