@@ -141,7 +141,7 @@ public abstract class CRLP_Batch_Base {
         this.customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
 
         this.detailObjectType = CRLP_Rollup_SVC.getDetailObjectType(jobType);
-        this.keyField = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType);
+        this.keyField = CRLP_Rollup_SVC.getParentFieldNameForQuery(jobType);
     }
 
 
@@ -195,40 +195,42 @@ public abstract class CRLP_Batch_Base {
      * for Amount and generally the rule is that every Donation has an OCR record, but may or may not have a PSC
      * record. This method creates non-committed PartialSoftCredit records where one doesn't already exist to
      * use for the rollups process.
-     * @param detailRecords List<OpportunityContactRole>
+     * @param ocrs List<OpportunityContactRole>
      * @return List<Partial_Soft_Credit__c>
      */
-    protected List<Partial_Soft_Credit__c> buildPartialSoftCreditRecordsFromOCRs(List<OpportunityContactRole> detailRecords) {
+    protected List<Partial_Soft_Credit__c> convertContactRolesToPartialSoftCredits(List<OpportunityContactRole> ocrs) {
         // These are both referenced in the SOQL created by buildDetailObjectQueryForRollup().
-        List<Id> oppIds = getParentIdsFromDetailRecords(detailRecords, 'OpportunityId');
-        List<Id> contactIds = getParentIdsFromDetailRecords(detailRecords, 'ContactId');
+        List<Id> oppIds = getParentIdsFromDetailRecords(ocrs, 'OpportunityId');
+        List<Id> contactIds = getParentIdsFromDetailRecords(ocrs, 'ContactId');
 
-        String oppQuery = CRLP_Query_SEL.buildDetailObjectQueryForRollup(Opportunity.SObjectType,
-                new List<SObjectType>{ OpportunityContactRole.SObjectType, Partial_Soft_Credit__c.SObjectType }) +
-                ' WHERE Id IN :oppIds';
+        String oppQuery = CRLP_Query_SEL.buildDetailObjectQueryForRollup(
+                Opportunity.SObjectType,
+                new List<SObjectType>{ OpportunityContactRole.SObjectType, Partial_Soft_Credit__c.SObjectType }
+            );
+        oppQuery += ' WHERE Id IN :oppIds';
 
-        Map<Id, Opportunity> oppsMapById = new Map<Id, Opportunity>((List<Opportunity>)Database.query(oppQuery));
+        Map<Id, Opportunity> oppById = new Map<Id, Opportunity>((List<Opportunity>)Database.query(oppQuery));
 
-        List<Partial_Soft_Credit__c> pscDetailRecords = new List<Partial_Soft_Credit__c>();
-        for (OpportunityContactRole ocr : detailRecords) {
-            Opportunity opp = oppsMapById.get(ocr.OpportunityId);
+        List<Partial_Soft_Credit__c> partialSoftCredits = new List<Partial_Soft_Credit__c>();
+        for (OpportunityContactRole ocr : ocrs) {
+            Opportunity opp = oppById.get(ocr.OpportunityId);
 
-            Partial_Soft_Credit__c matchedPSC = matchOrCreatePartialSoftCredit(opp, ocr);
+            Partial_Soft_Credit__c matchedPSC = matchOrBuildPartialSoftCredit(opp, ocr);
 
-            pscDetailRecords.add(matchedPSC);
+            partialSoftCredits.add(matchedPSC);
         }
 
-        return pscDetailRecords;
+        return partialSoftCredits;
     }
 
     /**
      * @description For the given Opportunity and OpportunityContactRole, either match the OCR to an existing
-     * partialSoftCredit record or create a new 'dummy' one that can be used for the Soft Credit Rollup job.
+     * partialSoftCredit record or instantiate a new 'dummy' one that can be used for the Soft Credit Rollup job.
      * @param opp Opportunity
      * @param ocr OpportunityContactRole
      * @return Partial_Soft_Credit__c
      */
-    private Partial_Soft_Credit__c matchOrCreatePartialSoftCredit(Opportunity opp, OpportunityContactRole ocr) {
+    private Partial_Soft_Credit__c matchOrBuildPartialSoftCredit(Opportunity opp, OpportunityContactRole ocr) {
         // Find the matching PartialSoftCredit record for the OCR record; if there is one
         Partial_Soft_Credit__c matchedPSC;
         for (Partial_Soft_Credit__c psc : opp.Partial_Soft_Credits__r) {
@@ -664,14 +666,15 @@ public abstract class CRLP_Batch_Base {
      */
     protected void logDebugInfo(String addlLogData) {
         Error__c logEntry = new Error__c(
-                Context_Type__c = ERR_Handler_API.Context.CRLP.name() + ': ' + this.jobType.name() + ' ' + this.jobMode.name(),
-                Error_Type__c = 'DEBUG LOG',
-                Full_Message__c = (
-                        'Total Batch Iterations: ' + this.batchIteration +
-                        '\nTotal DML Operations: ' + this.totalCommits +
-                        '\nTotal Records Updates: ' + this.totalRecordsModified +
-                        addlLogData + '\n' +
-                        '\nRollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState()).left(32768)
+            Context_Type__c = ERR_Handler_API.Context.CRLP.name() + ': ' + this.jobType.name() + ' ' + this.jobMode.name(),
+            Error_Type__c = 'DEBUG LOG',
+            Full_Message__c = (
+                'Total Batch Iterations: ' + this.batchIteration +
+                '\nTotal DML Operations: ' + this.totalCommits +
+                '\nTotal Records Updates: ' + this.totalRecordsModified +
+                addlLogData + '\n' +
+                '\nRollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState()
+            ).left(32768)
         );
         insert logEntry;
     }

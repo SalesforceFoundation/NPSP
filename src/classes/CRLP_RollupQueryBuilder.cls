@@ -46,7 +46,6 @@ public without sharing class CRLP_RollupQueryBuilder {
 
     private Set<Id> summaryRecordIds;
     private Set<Id> detailRecordIds;
-    private List<String> customWhereClauses;
     private String summaryRecordsIdVar;
     private String orderByField;
     private Boolean includePaymentRecords = false;
@@ -77,14 +76,6 @@ public without sharing class CRLP_RollupQueryBuilder {
 
     public CRLP_RollupQueryBuilder withSummaryRecordIdsVar(String summaryRecordIdVar) {
         this.summaryRecordsIdVar = summaryRecordIdVar;
-        return this;
-    }
-
-    public CRLP_RollupQueryBuilder withCustomWhereClause(String whereClause) {
-        if (customWhereClauses == null) {
-            customWhereClauses = new List<String>();
-        }
-        this.customWhereClauses.add(whereClause);
         return this;
     }
 
@@ -140,89 +131,114 @@ public without sharing class CRLP_RollupQueryBuilder {
      * SummaryRecordId's are required to generate this query.
      * @return SOQL String
      */
-    public String getDetailsQueryAsSOQL() {
-        String query = '';
+    public String buildDetailsQuery() {
+        if (isSoftCreditRollup) {
+            return buildDetailsQuerySoftCredits();
+        } else {
+            return buildDetailsQueryHardCredits();
+        }
+    }
+
+    /**
+     * @description Returns the SOQL string for a Query against the details object for the NonSkew HardCredit Rollup.
+     * SummaryRecordId's are required to generate this query.
+     * @return SOQL String
+     */
+    private String buildDetailsQueryHardCredits() {
         List<String> whereClauses = new List<String>();
         List<String> orderByFields = new List<String>();
 
-        SObjectType detailobjectType = CRLP_Rollup_SVC.getDetailObjectType(rollupType);
-        SObjectType summaryObjectType = CRLP_Rollup_SVC.getSummaryObjectType(rollupType);
-
         npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
-        if (isSoftCreditRollup) {
+        SObjectType summaryObjectType = CRLP_Rollup_SVC.getSummaryObjectType(rollupType);
 
-            query = CRLP_Query_SEL.buildDetailObjectQueryForRollup(detailObjectType, new List<SObjectType>());
+        String query = buildFullDetailsQueryForSummaryRecords();
 
-            String keyFieldOverrideForQuery = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(rollupType);
-
-            whereClauses.add(keyFieldOverrideForQuery + ' IN : summaryRecords');
-
-            String addlFilter;
-            if (rollupType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(summaryObjectType, Partial_Soft_Credit__c.SObjectType);
-            } else {
-                addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(summaryObjectType, detailObjectType);
-            }
-            if (!String.isEmpty(addlFilter)) {
-                whereClauses.add(addlFilter);
-            }
-
-            if (rollupType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false) {
-                    whereClauses.add('(IsPrimary = False OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = False)');
-                } else {
-                    whereClauses.add('IsPrimary = False');
-                }
-            }
-
-            orderByFields.add(keyFieldOverrideForQuery);
-            if (rollupType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                orderByFields.add('Opportunity.CreatedDate ASC');
-            } else {
-                orderByFields.add('Opportunity__r.CreatedDate ASC ');
-            }
-
-        } else {
-            // Hard Credit Rollups
-            query = buildFullDetailsQueryForSummaryRecords();
-
-            if (query.containsIgnoreCase('ORDER BY ')) {
-                orderByFields.add(query.split('ORDER BY')[1]);
-                query = query.split('ORDER BY')[0];
-            }
-
-            if (query.containsIgnoreCase(' WHERE ')) {
-                whereClauses.add(query.split(' WHERE ')[1]);
-                query = query.split(' WHERE ')[0];
-            }
-
-            if (rollupType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                // Identify a common filter that can be applied to the main query to reduce the number of records queried
-                String addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(summaryObjectType,
-                        Opportunity.SObjectType, CRLP_Rollup_SEL.getRollupDefinitionsToUse(rollupType, CRLP_RollupProcessingOptions.RollupTypeFilter.All));
-                if (!String.isEmpty(addlFilter)) {
-                    whereClauses.add(addlFilter);
-                }
-            }
-
-            // Exclude Organization Donations from Contact Hard Credit rollups (where Opp.Account.SYSTEM_IsIndividual=false)
-            // When the npo02__Always_Rollup_to_Primary_Contact__c is field is unchecked.
-            if (summaryObjectType == Contact.SObjectType && householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false) {
-                whereClauses.add('Account.npe01__SYSTEMIsIndividual__c = True');
-            }
-
-            // Force the details query to sort by Ascending CreatedDate so that the records are process
-            // in the order in which they were created in the database. Thus the 'first' is truly the first
-            // and the last is truly the last.
-            orderByFields.add('CreatedDate ASC');
+        if (query.containsIgnoreCase('ORDER BY ')) {
+            orderByFields.add(query.split('ORDER BY')[1]);
+            query = query.split('ORDER BY')[0];
         }
+
+        if (query.containsIgnoreCase(' WHERE ')) {
+            whereClauses.add(query.split(' WHERE ')[1]);
+            query = query.split(' WHERE ')[0];
+        }
+
+        // Identify a common filter that can be applied to the main query to reduce the number of records queried
+        String addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(summaryObjectType,
+                Opportunity.SObjectType, CRLP_Rollup_SEL.getRollupDefinitionsToUse(rollupType, CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        if (!String.isEmpty(addlFilter)) {
+            whereClauses.add(addlFilter);
+        }
+
+        // Exclude Organization Donations from Contact Hard Credit rollups (where Opp.Account.SYSTEM_IsIndividual=false)
+        // When the npo02__Always_Rollup_to_Primary_Contact__c is field is unchecked.
+        if (summaryObjectType == Contact.SObjectType && householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false) {
+            whereClauses.add('Account.npe01__SYSTEMIsIndividual__c = True');
+        }
+
+        // Force the details query to sort by Ascending CreatedDate so that the records are process
+        // in the order in which they were created in the database. Thus the 'first' is truly the first
+        // and the last is truly the last.
+        orderByFields.add('CreatedDate ASC');
 
         if (!whereClauses.isEmpty()) {
             query += ' WHERE ' + String.join(whereClauses, ' AND ');
         }
-        if (customWhereClauses != null && !customWhereClauses.isEmpty()) {
-            query += ' WHERE ' + String.join(customWhereClauses, ' AND ');
+        if (!orderByFields.isEmpty()) {
+            query += ' ORDER BY ' + String.join(orderByFields, ', ');
+        }
+
+        return query;
+    }
+
+    /**
+     * @description Returns the SOQL string for a Query against the details object for the NonSkew SoftCredit Rollup.
+     * SummaryRecordId's are required to generate this query.
+     * @return SOQL String
+     */
+    private String buildDetailsQuerySoftCredits() {
+        List<String> whereClauses = new List<String>();
+        List<String> orderByFields = new List<String>();
+
+        npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+
+        SObjectType detailObjectType = CRLP_Rollup_SVC.getDetailObjectType(rollupType);
+        SObjectType summaryObjectType = CRLP_Rollup_SVC.getSummaryObjectType(rollupType);
+
+        String query = CRLP_Query_SEL.buildDetailObjectQueryForRollup(detailObjectType, new List<SObjectType>());
+
+        String keyFieldOverrideForQuery = CRLP_Rollup_SVC.getParentFieldNameForQuery(rollupType);
+
+        whereClauses.add(keyFieldOverrideForQuery + ' IN : summaryRecords');
+
+        String addlFilter;
+        if (rollupType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(summaryObjectType, Partial_Soft_Credit__c.SObjectType);
+        } else {
+            addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(summaryObjectType, detailObjectType);
+        }
+        if (!String.isEmpty(addlFilter)) {
+            whereClauses.add(addlFilter);
+        }
+
+        if (rollupType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false) {
+                whereClauses.add('(IsPrimary = False OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = False)');
+            } else {
+                whereClauses.add('IsPrimary = False');
+            }
+        }
+
+        orderByFields.add(keyFieldOverrideForQuery);
+        if (rollupType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            orderByFields.add('Opportunity.CreatedDate ASC');
+        } else {
+            orderByFields.add('Opportunity__r.CreatedDate ASC ');
+        }
+
+        if (!whereClauses.isEmpty()) {
+            query += ' WHERE ' + String.join(whereClauses, ' AND ');
         }
         if (!orderByFields.isEmpty()) {
             query += ' ORDER BY ' + String.join(orderByFields, ', ');
@@ -255,7 +271,7 @@ public without sharing class CRLP_RollupQueryBuilder {
     }*/
 
     /**
-     * @description Build a complete SOQL query string from a set of Summary Record Ids, including the requried
+     * @description Build a complete SOQL query string from a set of Summary Record Ids, including the required
      * child objects and filtered by the parent record id's
      * @return SOQL
      */
@@ -269,21 +285,13 @@ public without sharing class CRLP_RollupQueryBuilder {
         // The specific set of 'detail' records is fixed based on the target summary object.
         if (summaryObjectType == Account.SObjectType) {
 
-            if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
-                || rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit
-            ) {
+            if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
 
                 // Opportunity and Payment to Account
                 if (includePaymentRecords == true) {
                     childObjects.add(npe01__OppPayment__c.SObjectType);
                 }
                 detailKeyField = SObjectType.Opportunity.fields.AccountId.getName();
-
-            } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-
-                // Account Soft Credit to Account
-                mainObject = Account_Soft_Credit__c.SObjectType;
-                detailKeyField = SObjectType.Account_Soft_Credit__c.fields.Account__c.getName();
             }
 
         } else if (summaryObjectType == Contact.SObjectType) {

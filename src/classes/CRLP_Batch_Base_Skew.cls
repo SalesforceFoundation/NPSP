@@ -133,7 +133,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                         this.statefulCacheOfRollupsToBeProcessed);
             }
 
-            String parentKeyField = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType);
+            String parentKeyField = CRLP_Rollup_SVC.getParentFieldNameForQuery(jobType);
             String parentObjectField;
 
             // The parentKeyField field may be have dot-notation (ex: Contact__r.Account__c)
@@ -175,9 +175,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             // Contact-level Account Soft Credit rollups require changing the detail object type to PartialSoftCredit
             if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
                     this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                // Convert the list of OpportunityContactRole detail records into a list of PartialSoftCredit
-                // records complete with the parent Opportunity details (CloseDate, Amount, ec.)
-                detailRecords = buildPartialSoftCreditRecordsFromOCRs(detailRecords);
+                detailRecords = convertContactRolesToPartialSoftCredits(detailRecords);
             }
 
             CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
@@ -243,9 +241,11 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
 
         // In debug mode, write a summary of the job to the error log
         if (CRLP_Debug_UTIL.isDebuggingEnabled) {
-            String additionalInfo = 'Parent Ids Commited in Finish: ' + (this.parentIdsNotCommittedWithBatch !=  null ?
-                    '(' + this.parentIdsNotCommittedWithBatch.size() + ')\n' +
-                            JSON.serializePretty(this.parentIdsNotCommittedWithBatch) : 'none');
+            String additionalInfo = 'Parent Ids Committed in Finish: ' +
+                (this.parentIdsNotCommittedWithBatch !=  null
+                    ? '(' + this.parentIdsNotCommittedWithBatch.size() + ')\n' + JSON.serializePretty(this.parentIdsNotCommittedWithBatch)
+                    : 'none'
+                );
             logDebugInfo(additionalInfo);
         }
 
@@ -263,74 +263,72 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
 
         npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
-        // If there active rollups for this job type
-        if (CRLP_Rollup_SVC.hasActiveRollups(jobType)) {
-
-            List<String> whereClauses = new List<String>();
-
-            String keyFieldOverrideForQuery = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType);
-
-            // Add necessary filters to limit the LDV batch job to only the records that should be processed as LDV
-            if (this.recordIds != null && this.recordIds.size() > 0) {
-                whereClauses.add(keyFieldOverrideForQuery + ' IN :recordIds');
-
-            } else {
-                // When querying detail rows and trying to filer on a field in the parent, need to get the
-                // relationship name to use for that parent query.
-                String parentRelationshipPrefix = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType).replace('__c', '__r') + '.';
-
-                String skewClause = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType,
-                        CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, parentRelationshipPrefix);
-
-                if (!String.isEmpty(skewClause)) {
-                    whereClauses.add(skewClause);
-                }
-            }
-
-            // Exclude Organization Donations (where Opp.Account.SYSTEM_IsIndividual=false) from Contact Hard Credit rollups
-            // Depending on the npo02__Always_Rollup_to_Primary_Contact__c custom setting
-            if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false &&
-                    this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                whereClauses.add('Account.npe01__SYSTEMIsIndividual__c = True');
-
-            } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false &&
-                    (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                            this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit)) {
-                whereClauses.add('(IsPrimary = False OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = False)');
-
-            } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == True &&
-                    (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                            this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit)) {
-                whereClauses.add('IsPrimary = False');
-            }
-
-            // Identify a common filter that can be applied to the main query to reduce the number of records queried
-            String addlFilter;
-            if (detailObjectType == Opportunity.SObjectType) {
-                addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, detailObjectType,
-                        this.statefulCacheOfRollupsToBeProcessed);
-            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Contact.SObjectType, Partial_Soft_Credit__c.SObjectType);
-            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Account.SObjectType, Partial_Soft_Credit__c.SObjectType);
-            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, this.detailObjectType);
-            }
-            if (!String.isEmpty(addlFilter)) {
-                whereClauses.add(addlFilter);
-            }
-
-            if (!whereClauses.isEmpty()) {
-                query += ' WHERE ' + String.join(whereClauses, ' AND ');
-            }
-
-            query += ' ORDER BY ' + keyFieldOverrideForQuery + ', CreatedDate ASC';
-
-        } else {
+        if (!CRLP_Rollup_SVC.hasActiveRollups(jobType)) {
             // If there are no active rollups for the object type, then force the query to return zero records.
             // This is needed because can't return null as a valid iterator.
             query += ' LIMIT 0';
+            return query;
         }
+
+        List<String> whereClauses = new List<String>();
+
+        String keyFieldOverrideForQuery = CRLP_Rollup_SVC.getParentFieldNameForQuery(jobType);
+
+        // Add necessary filters to limit the LDV batch job to only the records that should be processed as LDV
+        if (this.recordIds != null && this.recordIds.size() > 0) {
+            whereClauses.add(keyFieldOverrideForQuery + ' IN :recordIds');
+
+        } else {
+            // When querying detail rows and trying to filer on a field in the parent, need to get the
+            // relationship name to use for that parent query.
+            String parentRelationshipPrefix = CRLP_Rollup_SVC.getParentFieldNameForQuery(jobType).replace('__c', '__r') + '.';
+
+            String skewClause = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType,
+                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, parentRelationshipPrefix);
+
+            if (!String.isEmpty(skewClause)) {
+                whereClauses.add(skewClause);
+            }
+        }
+
+        // Exclude Organization Donations (where Opp.Account.SYSTEM_IsIndividual=false) from Contact Hard Credit rollups
+        // Depending on the npo02__Always_Rollup_to_Primary_Contact__c custom setting
+        if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false &&
+                this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+            whereClauses.add('Account.npe01__SYSTEMIsIndividual__c = True');
+
+        } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false &&
+                (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
+                        this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit)) {
+            whereClauses.add('(IsPrimary = False OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = False)');
+
+        } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == True &&
+                (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
+                        this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit)) {
+            whereClauses.add('IsPrimary = False');
+        }
+
+        // Identify a common filter that can be applied to the main query to reduce the number of records queried
+        String addlFilter;
+        if (detailObjectType == Opportunity.SObjectType) {
+            addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, detailObjectType,
+                    this.statefulCacheOfRollupsToBeProcessed);
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+            addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Contact.SObjectType, Partial_Soft_Credit__c.SObjectType);
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+            addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Account.SObjectType, Partial_Soft_Credit__c.SObjectType);
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, this.detailObjectType);
+        }
+        if (!String.isEmpty(addlFilter)) {
+            whereClauses.add(addlFilter);
+        }
+
+        if (!whereClauses.isEmpty()) {
+            query += ' WHERE ' + String.join(whereClauses, ' AND ');
+        }
+
+        query += ' ORDER BY ' + keyFieldOverrideForQuery + ', CreatedDate ASC';
 
         return query;
     }
@@ -466,7 +464,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         }
 
         // Remember which batch iteration this parent was last NOT updated
-        if (processor.lastParentIdRemovedFromUpdatesList == true) {
+        if (processor.hasLastParentIdCompleted()) {
             this.parentIdsNotCommittedWithBatch.put(lastParentIdProcessed, this.batchIteration);
         }
     }

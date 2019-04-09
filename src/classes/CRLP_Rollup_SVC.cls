@@ -331,7 +331,7 @@ public class CRLP_Rollup_SVC {
      * @param rollupType
      * @return String
      */
-    public static String getParentRelationshipFieldForQueryReference(CRLP_RollupProcessingOptions.RollupType rollupType) {
+    public static String getParentFieldNameForQuery(CRLP_RollupProcessingOptions.RollupType rollupType) {
         String fieldName;
         switch on (rollupType) {
             when AccountHardCredit {
@@ -365,7 +365,7 @@ public class CRLP_Rollup_SVC {
      * @param rollupType
      * @return String
      */
-    public static String getParentRelationshipFieldForProcessingJob(CRLP_RollupProcessingOptions.RollupType rollupType) {
+    public static String getParentFieldNameForProcessing(CRLP_RollupProcessingOptions.RollupType rollupType) {
         String fieldName;
         switch on (rollupType) {
             when ContactSoftCredit {
@@ -375,11 +375,28 @@ public class CRLP_Rollup_SVC {
                 fieldName = SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getName().replace('__c', '__r') + '.AccountId';
             }
             when else {
-                fieldName = getParentRelationshipFieldForQueryReference(rollupType);
+                fieldName = getParentFieldNameForQuery(rollupType);
             }
         }
         return fieldName;
 
+    }
+
+    /**
+     * @description Retrieve an Id field from a SObject using the specified Parent Field in that record or in a
+     * related object.
+     * @param record
+     * @param parentKeyField
+     * @param relationshipName
+     * @return Id
+     */
+    public static Id getParentIdFromRecord(SObject record, String parentKeyField, String relationshipName) {
+        SObject dtlRecord = record;
+        if (relationshipName != null) {
+            dtlRecord = record.getSObject(relationshipName);
+        }
+
+        return (Id)dtlRecord.get(parentKeyField);
     }
 
     public class CRLP_Exception extends Exception {}
