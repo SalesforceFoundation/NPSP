@@ -1,45 +1,43 @@
 /**
- // Created by Michael Smith on 1/26/18.
- //
- // - Deploy this using the "deploy_rollup_testing" CCI flow. That will create the necessary target fields
- //   on the Account object for Account-Contact Soft Credit, Account Soft Credit, and Payment Rollup testing.
- //   It will also deploy this class into the org.
- //
- // - The most common issue with testing in this class is Membership Exclusion. Be sure to review the Legacy
- //   and CustomizableRollups Filter Groups to ensure that either Membership Opps are include or excluded to
- //   match the ROLLUPS_INCLUDES_MEMBERSHIP var setting below.
- // - Specifically, in a new Scratch Org the "Membership" record type is not often set properly in Custom
- //   Settings so when the Membership Filter Group is created there is no filter rule to limit Membership
- //   Rollups to the Membership RT only. This will lead to the validateRollups() failing for the
- //   Membership rollup in Customizable Rollups. The fix is to simply edit the Membership-Won Filter Group
- //   to create a rule for Opportunity.RecordType=Membership.
- //
- // - ALL TESTS ARE CONDUCTED USING EXECUTE ANONYMOUS; EXECUTING ONE METHOD AT A TIME IN THE FOLLOWING ORDER:
- // - The entire block below can be pasted into the ExecuteAnonymous window of DevConsole and then each task
- //   run individually by highlighting the command and clicking [Execute Highlighted].
- //
- //
- //   // STEP 1:
- //   // Initial Setup - delete any existing test data and recreate the data. Wait for the @Future job to finish.
- //   CRLP_TEST_VALIDATE_ROLLUPS.deleteTestData();
- //   CRLP_TEST_VALIDATE_ROLLUPS.createTestDataASync();
- //
- //   // STEP 2:
- //   // ExecuteLegacyRollups will complete synchronously.
- //   CRLP_TEST_VALIDATE_ROLLUPS.executeLegacyRollups();
- //   // ValidateRollups will either throw an exception with errors or succeed. Click [Debug] in the Log View for details
- //   CRLP_TEST_VALIDATE_ROLLUPS.validateRollups();
- //
- //   // STEP 3:
- //   // executeCustomizableRollups needs to execute batch jobs, so monitor the ApexJobs page after executing this
- //   CRLP_TEST_VALIDATE_ROLLUPS.executeCustomizableRollups();
- //   // ValidateRollups will either throw an exception with errors or succeed. Click [Debug] in the Log View for details
- //   CRLP_TEST_VALIDATE_ROLLUPS.validateRollups();
- //
- //   // STEP 4:
- //   // Optional: Delete the test data when done
- //   CRLP_TEST_VALIDATE_ROLLUPS.deleteTestData();
- */
+// Created by Michael Smith on 01/26/2018.
+// Last Modified on 04/09/2019 to include in the deploy_rollup_testing cci flow
+//
+// - Deploy this using the "deploy_rollup_testing" CCI flow. That will create the necessary target fields
+//   on the Account object for Account-Contact Soft Credit, Account Soft Credit, and Payment Rollup testing.
+//   It will also deploy this class into the org.
+//
+// - The most common issue with testing in this class is Membership Exclusion. Be sure to review the Legacy
+//   and CustomizableRollups Filter Groups to ensure that either Membership Opps are include or excluded to
+//   match the ROLLUPS_INCLUDES_MEMBERSHIP var setting below.
+// - Specifically, in a new Scratch Org the "Membership" record type is not often set properly in Custom
+//   Settings so when the Membership Filter Group is created there is no filter rule to limit Membership
+//   Rollups to the Membership RT only. This will lead to the validateRollups() failing for the
+//   Membership rollup in Customizable Rollups. The fix is to simply edit the Membership-Won Filter Group
+//   to create a rule for Opportunity.RecordType=Membership.
+//
+// - ALL TESTS ARE CONDUCTED USING EXECUTE ANONYMOUS; EXECUTING ONE METHOD AT A TIME IN THE FOLLOWING ORDER:
+// - The entire block below can be pasted into the ExecuteAnonymous window of DevConsole and then each task
+//   run individually by highlighting the command and clicking [Execute Highlighted].
+//
+//
+//   - STEP 1: Initial Setup - Delete any existing test data and recreate the data.
+//   - NOTE: WAIT for the @Future job to finish before moving onto Step 2
+//   CRLP_TEST_VALIDATE_ROLLUPS.deleteTestData();
+//   CRLP_TEST_VALIDATE_ROLLUPS.createTestDataASync();
+//
+//   - STEP 2: ExecuteLegacyRollups will complete synchronously.
+//   CRLP_TEST_VALIDATE_ROLLUPS.executeLegacyRollups();
+//   - ValidateRollups will either throw an exception with errors or succeed. Click [Debug] in the Log View for details
+//   CRLP_TEST_VALIDATE_ROLLUPS.validateRollups();
+//
+//   - STEP 3: ExecuteCustomizableRollups starts asynchronous batch jobs to complete the rollups.
+//   - NOTE: WAIT for all the CRLP batch jobs to finish before running the validateRollups() method.
+//   CRLP_TEST_VALIDATE_ROLLUPS.executeCustomizableRollups();
+//   CRLP_TEST_VALIDATE_ROLLUPS.validateRollups();
+//
+//   - STEP 4: Optional: Delete the test data when done
+//   CRLP_TEST_VALIDATE_ROLLUPS.deleteTestData();
+*/
 public class CRLP_TEST_VALIDATE_ROLLUPS {
 
     // THE FOLLOWING CAN BE ADJUSTED BY THE RUNNING USER DURING THE TESTING TO ADJUST FOR ORG CONFIGURATION
