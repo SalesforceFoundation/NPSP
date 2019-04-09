@@ -28,7 +28,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
     // THE FOLLOWING CAN BE ADJUSTED BY THE RUNNING USER DURING THE TESTING TO ADJUST FOR ORG CONFIGURATION
     private static final Boolean ROLLUPS_INCLUDES_MEMBERSHIP = false;
     private static final Boolean ALLOC_INCLUDES_MEMBERSHIP = true;
-    private static final Boolean TEST_ACCOUNT_SOFT_CREDITS = true;
+    private static final Boolean TEST_ACCOUNT_SOFT_CREDITS = false;
 
     private static final Integer BASE_YEAR = Date.today().year()-3;
 
@@ -689,20 +689,10 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         CRLP_RollupCMT.FilterRule filterRulePaid = new CRLP_RollupCMT.FilterRule(filterGroupPayments.recordName, 'TEMP: Is Paid');
         filterRulePaid.recordName = 'NPSP_TEMP_Payments_Rule_Paid';
         filterRulePaid.objectName = npe01__OppPayment__c.SObjectType.getDescribe().getName();
-        filterRulePaid.operationName = CMT_FilterRule.FilterOperation.Equals.name();
+        filterRulePaid.operationName = CMT_FilterRule.FilterOperation.EQUALS.name();
         filterRulePaid.fieldName = 'npe01__Paid__c';
         filterRulePaid.value = 'true';
         filterGroupPayments.rules.add(filterRulePaid);
-
-        if (ROLLUPS_INCLUDES_MEMBERSHIP == false) {
-            CRLP_RollupCMT.FilterRule filterRuleNoMembership = new CRLP_RollupCMT.FilterRule(filterGroupPayments.recordName, 'TEMP: Paid Not Membership');
-            filterRuleNoMembership.recordName = 'NPSP_TEMP_Paid_Exclude_Membership';
-            filterRuleNoMembership.objectName = Opportunity.SObjectType.getDescribe().getName();
-            filterRuleNoMembership.operationName = CMT_FilterRule.FilterOperation.Not_Equals.name();
-            filterRuleNoMembership.fieldName = 'RecordTypeId';
-            filterRuleNoMembership.value = 'Membership';
-            filterGroupPayments.rules.add(filterRuleNoMembership);
-        }
 
         CRLP_RollupCMT.FilterGroup filterGroupWrittenOff = new CRLP_RollupCMT.FilterGroup('TEMP: All WriteOffs');
         filterGroupWrittenOff.recordName = 'NPSP_TEMP_Payments_WrittenOff';
@@ -711,20 +701,10 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         CRLP_RollupCMT.FilterRule filterRuleWrittenOff = new CRLP_RollupCMT.FilterRule(filterGroupWrittenOff.recordName, 'TEMP: Is Writeoff');
         filterRuleWrittenOff.recordName = 'NPSP_TEMP_Payments_Rule_WrittenOff';
         filterRuleWrittenOff.objectName = npe01__OppPayment__c.SObjectType.getDescribe().getName();
-        filterRuleWrittenOff.operationName = CMT_FilterRule.FilterOperation.Equals.name();
+        filterRuleWrittenOff.operationName = CMT_FilterRule.FilterOperation.EQUALS.name();
         filterRuleWrittenOff.fieldName = 'npe01__Written_Off__c';
         filterRuleWrittenOff.value = 'true';
         filterGroupWrittenOff.rules.add(filterRuleWrittenOff);
-
-        if (ROLLUPS_INCLUDES_MEMBERSHIP == false) {
-            CRLP_RollupCMT.FilterRule filterRuleNoMembership = new CRLP_RollupCMT.FilterRule(filterGroupPayments.recordName, 'TEMP: written Off Not Membership');
-            filterRuleNoMembership.recordName = 'NPSP_TEMP_WrittenOff_Exclude_Membership';
-            filterRuleNoMembership.objectName = Opportunity.SObjectType.getDescribe().getName();
-            filterRuleNoMembership.operationName = CMT_FilterRule.FilterOperation.Not_Equals.name();
-            filterRuleNoMembership.fieldName = 'RecordTypeId';
-            filterRuleNoMembership.value = 'Membership';
-            filterGroupWrittenOff.rules.add(filterRuleNoMembership);
-        }
 
         CRLP_RollupCMT.Rollup rollupTotalPaid = new CRLP_RollupCMT.Rollup('UDR: Amount to Account.TotalPayments');
         rollupTotalPaid.recordName = 'NPSP_TEMP_Total_Payments_to_Account';
@@ -737,7 +717,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         rollupTotalPaid.amountField = 'npe01__Payment_Amount__c';
         rollupTotalPaid.dateObject = npe01__OppPayment__c.SObjectType.getDescribe().getName();
         rollupTotalPaid.dateField = 'npe01__Payment_Date__c';
-        rollupTotalPaid.operation = CRLP_Operation.RollupType.Sum.name();
+        rollupTotalPaid.operation = CRLP_Operation.RollupType.SUM.name();
         rollupTotalPaid.isActive = true;
 
         CRLP_RollupCMT.Rollup rollupTotalWrittenOff = new CRLP_RollupCMT.Rollup('UDR: Amount to Account.TotalWriteOffs');
@@ -751,7 +731,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         rollupTotalWrittenOff.amountField = 'npe01__Payment_Amount__c';
         rollupTotalWrittenOff.dateObject = npe01__OppPayment__c.SObjectType.getDescribe().getName();
         rollupTotalWrittenOff.dateField = 'npe01__Payment_Date__c';
-        rollupTotalWrittenOff.operation = CRLP_Operation.RollupType.Sum.name();
+        rollupTotalWrittenOff.operation = CRLP_Operation.RollupType.SUM.name();
         rollupTotalWrittenOff.isActive = true;
 
 
@@ -764,9 +744,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
                 rollupTotalWrittenOff};
 
         if (TEST_ACCOUNT_SOFT_CREDITS) {
-            // ============================================
-            // Account-Contact Soft Credit Rollup (uses standard SC filter group)
-            // ============================================
+            // Account-Level Contact Soft Credits
             CRLP_RollupCMT.Rollup rollupContactSoftCreditsToAccount = new CRLP_RollupCMT.Rollup('UDR: Contact Soft Credit Total to Account');
             rollupContactSoftCreditsToAccount.recordName = 'NPSP_TEMP_Total_ConSoftCredits_Account';
             rollupContactSoftCreditsToAccount.filterGroupRecordName = 'NPSP_ClosedWon_Opps_SC';
@@ -778,37 +756,23 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
             rollupContactSoftCreditsToAccount.amountField = 'Amount__c';
             rollupContactSoftCreditsToAccount.dateObject = Opportunity.SObjectType.getDescribe().getName();
             rollupContactSoftCreditsToAccount.dateField = 'CloseDate';
-            rollupContactSoftCreditsToAccount.operation = CRLP_Operation.RollupType.Sum.name();
+            rollupContactSoftCreditsToAccount.operation = CRLP_Operation.RollupType.SUM.name();
             rollupContactSoftCreditsToAccount.isActive = true;
-
-            // ============================================
-            // Account Soft Credits
-            // ============================================
 
             //Filter Group/Rule for Account Soft Credits
             CRLP_RollupCMT.FilterGroup filterGroupInfluencerAccSC = new CRLP_RollupCMT.FilterGroup('TEMP: Account Soft Credits Group');
-            filterGroupInfluencerAccSC.description = 'AccountSoftCredit Role(s)';
+            filterGroupInfluencerAccSC.description = 'All Paid Payments regardless of Record Type';
             filterGroupInfluencerAccSC.recordName = 'NPSP_TEMP_AccSC_Group_Influencer';
 
-            CRLP_RollupCMT.FilterRule filterRuleAcctSCRole = new CRLP_RollupCMT.FilterRule(filterGroupPayments.recordName, 'TEMP: ' + ACCOUNT_SOFT_CREDIT_ROLE_B);
-            filterRuleAcctSCRole.recordName = 'NPSP_TEMP_AccSC_Influencer';
-            filterRuleAcctSCRole.objectName = Account_Soft_Credit__c.SObjectType.getDescribe().getName();
-            filterRuleAcctSCRole.operationName = CMT_FilterRule.FilterOperation.In_List.name();
-            filterRuleAcctSCRole.fieldName = 'Role__c';
-            filterRuleAcctSCRole.value = ACCOUNT_SOFT_CREDIT_ROLE_A + ';' + ACCOUNT_SOFT_CREDIT_ROLE_B;
-            filterGroupInfluencerAccSC.rules.add(filterRuleAcctSCRole);
+            CRLP_RollupCMT.FilterRule filterRuleInfluencer = new CRLP_RollupCMT.FilterRule(filterGroupPayments.recordName, 'TEMP: Influencer');
+            filterRuleInfluencer.recordName = 'NPSP_TEMP_AccSC_Influencer';
+            filterRuleInfluencer.objectName = Account_Soft_Credit__c.SObjectType.getDescribe().getName();
+            filterRuleInfluencer.operationName = CMT_FilterRule.FilterOperation.EQUALS.name();
+            filterRuleInfluencer.fieldName = 'Role__c';
+            filterRuleInfluencer.value = ACCOUNT_SOFT_CREDIT_ROLE_A;
+            filterGroupInfluencerAccSC.rules.add(filterRuleInfluencer);
 
-            if (ROLLUPS_INCLUDES_MEMBERSHIP == false) {
-                CRLP_RollupCMT.FilterRule filterRuleNoMembership = new CRLP_RollupCMT.FilterRule(filterGroupPayments.recordName, 'TEMP: AcctSoftCredit Not Membership');
-                filterRuleNoMembership.recordName = 'NPSP_TEMP_AccSC_Exclude_Membership';
-                filterRuleNoMembership.objectName = Opportunity.SObjectType.getDescribe().getName();
-                filterRuleNoMembership.operationName = CMT_FilterRule.FilterOperation.Not_Equals.name();
-                filterRuleNoMembership.fieldName = 'RecordTypeId';
-                filterRuleNoMembership.value = 'Membership';
-                filterGroupInfluencerAccSC.rules.add(filterRuleNoMembership);
-            }
-
-            // Account Soft Credit Rollup
+            // Account Soft Credits
             CRLP_RollupCMT.Rollup rollupAccountSoftCreditSum = new CRLP_RollupCMT.Rollup('UDR: Account Soft Credit Sum');
             rollupAccountSoftCreditSum.recordName = 'NPSP_TEMP_Total_AccSoftCredits_Account';
             rollupAccountSoftCreditSum.filterGroupRecordName = filterGroupInfluencerAccSC.recordName;
@@ -820,10 +784,10 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
             rollupAccountSoftCreditSum.amountField = 'Amount__c';
             rollupAccountSoftCreditSum.dateObject = Opportunity.SObjectType.getDescribe().getName();
             rollupAccountSoftCreditSum.dateField = 'CloseDate';
-            rollupAccountSoftCreditSum.operation = CRLP_Operation.RollupType.Sum.name();
+            rollupAccountSoftCreditSum.operation = CRLP_Operation.RollupType.SUM.name();
             rollupAccountSoftCreditSum.isActive = true;
 
-            // Account Soft Credit Rollup
+            // Account Soft Credits
             CRLP_RollupCMT.Rollup rollupAccountSoftCreditLargest = new CRLP_RollupCMT.Rollup('UDR: Account Soft Credit Largest Amount');
             rollupAccountSoftCreditLargest.recordName = 'NPSP_TEMP_Last_AccSoftCredits_Account';
             rollupAccountSoftCreditLargest.filterGroupRecordName = filterGroupInfluencerAccSC.recordName;
@@ -835,7 +799,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
             rollupAccountSoftCreditLargest.amountField = 'Amount__c';
             rollupAccountSoftCreditLargest.dateObject = Opportunity.SObjectType.getDescribe().getName();
             rollupAccountSoftCreditLargest.dateField = 'CloseDate';
-            rollupAccountSoftCreditLargest.operation = CRLP_Operation.RollupType.Largest.name();
+            rollupAccountSoftCreditLargest.operation = CRLP_Operation.RollupType.LARGEST.name();
             rollupAccountSoftCreditLargest.isActive = true;
 
             filterGroups.add(filterGroupInfluencerAccSC);
