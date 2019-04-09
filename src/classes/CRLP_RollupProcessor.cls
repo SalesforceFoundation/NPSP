@@ -326,7 +326,7 @@ public inherited sharing class CRLP_RollupProcessor {
 
             List<SObject> detailsForParent = detailRecordsByParentId.get(parentId);
 
-            if (detailsForParent != null && isSoftCreditRollup) {
+            if (detailsForParent != null && isOppContactRoleSoftCreditRollup) {
                 detailsForParent = cleanDetailOppsListForSoftCreditMode(parentId, detailsForParent);
             }
 
@@ -398,7 +398,7 @@ public inherited sharing class CRLP_RollupProcessor {
      * @description Returns true if executing a SoftCredit rollup type
      */
     @TestVisible
-    private Boolean isSoftCreditRollup {
+    private Boolean isOppContactRoleSoftCreditRollup {
         get {
             return rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
                     rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
@@ -411,8 +411,8 @@ public inherited sharing class CRLP_RollupProcessor {
      */
     @TestVisible
     private Boolean isOppAlreadyProcessedForParent(Id parentId, Id oppId) {
-        return !processedOppIdsByParentId.containsKey(parentId) ||
-                !processedOppIdsByParentId.get(parentId).contains(oppId);
+        return processedOppIdsByParentId.containsKey(parentId) &&
+                processedOppIdsByParentId.get(parentId).contains(oppId);
     }
 
     /**
@@ -473,8 +473,7 @@ public inherited sharing class CRLP_RollupProcessor {
 
             handler.processRollups(detailRecords, relatedRecordsByDetailId);
 
-            if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                    rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+            if (isOppContactRoleSoftCreditRollup) {
                 processedOppIdsByParentId.put(parentId, handler.getListOfOppIdsThatWereRolledUp());
             }
 
