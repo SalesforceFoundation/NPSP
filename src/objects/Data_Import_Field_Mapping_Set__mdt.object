@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>A collection of Data Import Field Mappings that are used for a Data import batch</description>
+    <fields>
+        <fullName>Data_Import_Object_Mapping_Set__c</fullName>
+        <description>References the Data Import Object Mapping Set that must be used by all of the child Data Import Field Mappings in this set.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>References the Data Import Object Mapping Set that must be used by all of the child Data Import Field Mappings in this set.</inlineHelpText>
+        <label>Data Import Object Mapping Set</label>
+        <referenceTo>Data_Import_Object_Mapping_Set__mdt</referenceTo>
+        <relationshipLabel>Data Import Field Mapping Sets</relationshipLabel>
+        <relationshipName>Data_Import_Field_Mapping_Sets</relationshipName>
+        <required>true</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <label>Data Import Field Mapping Set</label>
+    <pluralLabel>Data Import Field Mapping Sets</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

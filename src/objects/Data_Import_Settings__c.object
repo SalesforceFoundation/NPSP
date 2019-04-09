@@ -66,6 +66,18 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Default_Data_Import_Field_Mapping_Set__c</fullName>
+        <description>The custom metadata api name of the Data Import Field Mapping Set record that should be used by default.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The custom metadata api name of the Data Import Field Mapping Set record that should be used by default.</inlineHelpText>
+        <label>Default Data Import Field Mapping Set</label>
+        <length>100</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Donation_Date_Range__c</fullName>
         <defaultValue>0</defaultValue>
         <description>Enter the number of days from the Donation Date that the Data Importer should consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opportunity or Payment whose date falls within the number of days AND is closest to the Donation Date.</description>
@@ -112,6 +124,18 @@
         <inlineHelpText>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field.</inlineHelpText>
         <label>Donation Matching Rule</label>
         <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Field_Mapping_Method__c</fullName>
+        <description>Defines the way in which fields on the Data Import record are mapped to other objects in Salesforce. See documentation for valid values.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Defines the way in which fields on the Data Import record are mapped to other objects in Salesforce. See documentation for valid values.</inlineHelpText>
+        <label>Field Mapping Method</label>
+        <length>40</length>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>
