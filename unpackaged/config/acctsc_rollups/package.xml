@@ -32,6 +32,7 @@
         <members>Rollup.NPSP_AcctSCTotalAmtSCs2YrsAgo</members>
         <members>Rollup.NPSP_AcctSCTotalAmtSC</members>
         <members>Rollup.NPSP_ConFirstSoftCreditAmount</members>
+        <members>Filter_Rule.NPSP_MembershipRT</members>
         <name>CustomMetadata</name>
     </types>
     <version>45.0</version>
