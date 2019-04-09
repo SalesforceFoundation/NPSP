@@ -191,26 +191,31 @@ public with sharing class PMT_PaymentWizard_CTRL {
     */
     private void setupPaymentAmounts(Opportunity opp) {
 
-        if (opp.Amount == null || opp.Amount == 0) {
-            isScheduleWizard = false;
-            isWriteoffWizard = false;
-            // Add warning message that there is no amount to schedule
-        }
 
         this.outstanding_payments = 0;
         this.amountWrittenOff = 0;
+        Integer invalidPaymentRecordCount = 0;
 
         for (npe01__OppPayment__c payment : opp.npe01__OppPayment__r) {
-            if (payment.npe01__Paid__c) {
+
+            if (payment.npe01__Paid__c == true) {
+                if (payment.npe01__Written_Off__c == true) {
+                    invalidPaymentRecordCount++;
+                }
                 continue;
             } 
             
-            if (payment.npe01__Written_Off__c) {
+            if (payment.npe01__Written_Off__c == true) {
                 amountWrittenOff += payment.npe01__Payment_Amount__c;
                 continue;
             }
             
             outstanding_payments++;
+        }
+
+        if (opp.Amount == null || opp.Amount == 0 || invalidPaymentRecordCount > 0) {
+            isScheduleWizard = false;
+            isWriteoffWizard = false;
         }
     }
 
