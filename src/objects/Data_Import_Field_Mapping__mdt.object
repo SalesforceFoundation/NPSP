@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>A mapping of a source field on the Data Import object to a target field on a standard or custom object.</description>
+    <fields>
+        <fullName>Data_Import_Field_Mapping_Set__c</fullName>
+        <description>The field mapping set that this record is a part of.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>The field mapping set that this record is a part of.</inlineHelpText>
+        <label>Data Import Field Mapping Set</label>
+        <referenceTo>Data_Import_Field_Mapping_Set__mdt</referenceTo>
+        <relationshipLabel>Data Import Field Mappings</relationshipLabel>
+        <relationshipName>Data_Import_Field_Mappings</relationshipName>
+        <required>true</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Required__c</fullName>
+        <description>Indicates whether the source field is required to have a non-null value in order to save a record for the Target Object.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>Indicates whether the source field is required to have a non-null value in order to save a record for the Target Object.</inlineHelpText>
+        <label>Required?</label>
+        <required>false</required>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Yes</fullName>
+                    <default>true</default>
+                    <label>Yes</label>
+                </value>
+                <value>
+                    <fullName>No</fullName>
+                    <default>false</default>
+                    <label>No</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>Source_Field_API_Name__c</fullName>
+        <description>The API name of the Data Import record field that the value will be mapped from.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>The API name of the Data Import record field that the value will be mapped from.</inlineHelpText>
+        <label>Source Field API Name</label>
+        <length>255</length>
+        <required>true</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Target_Field_API_Name__c</fullName>
+        <description>The API name of the field to be populated on the standard or custom target object.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>The API name of the field to be populated on the standard or custom target object.</inlineHelpText>
+        <label>Target Field API Name</label>
+        <length>255</length>
+        <required>true</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Target_Object_Mapping__c</fullName>
+        <description>The Data Import Object Mapping that represents the target object instance for this field mapping.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>The Data Import Object Mapping that represents the target object instance for this field mapping.</inlineHelpText>
+        <label>Target Object Mapping</label>
+        <referenceTo>Data_Import_Object_Mapping__mdt</referenceTo>
+        <relationshipLabel>Data Import Field Mappings</relationshipLabel>
+        <relationshipName>Data_Import_Field_Mappings</relationshipName>
+        <required>true</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <label>Data Import Field Mapping</label>
+    <pluralLabel>Data Import Field Mappings</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

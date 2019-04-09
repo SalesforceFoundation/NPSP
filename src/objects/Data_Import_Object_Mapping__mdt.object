@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Represents a a specific instance of an object to be used for data import, and how it is related to its predecessors.</description>
+    <fields>
+        <fullName>Data_Import_Object_Mapping_Set__c</fullName>
+        <description>The Data Import Object Mapping Set that this record is a part of.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>The Data Import Object Mapping Set that this record is a part of.</inlineHelpText>
+        <label>Data Import Object Mapping Set</label>
+        <referenceTo>Data_Import_Object_Mapping_Set__mdt</referenceTo>
+        <relationshipLabel>Data Import Object Mappings</relationshipLabel>
+        <relationshipName>Data_Import_Object_Mappings</relationshipName>
+        <required>false</required>
+        <type>MetadataRelationship</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Imported_Record_Field_Name__c</fullName>
+        <description>This is the API name of field on the Data Import object where the Id for the imported record will be placed if successful.  It is also where the code will check to see if this record has already been imported/matched.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>This is the API name of field on the Data Import object where the Id for the imported record will be placed if successful.  It is also where the code will check to see if this record has already been imported/matched.</inlineHelpText>
+        <label>Imported Record Field Name</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Imported_Record_Status_Field_Name__c</fullName>
+        <description>The API name of the field where the success/failure of the import of this Data Import Object Mapping will be recorded on the Data Import object.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>The API name of the field where the success/failure of the import of this Data Import Object Mapping will be recorded on the Data Import object.</inlineHelpText>
+        <label>Imported Record Status Field Name</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Object_API_Name__c</fullName>
+        <description>The API name of the object that this Data Import Object Mapping is based on.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>The API name of the object that this Data Import Object Mapping is based on.</inlineHelpText>
+        <label>Object API Name</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Predecessor__c</fullName>
+        <description>The Custom Metadata Record Name of the Data Import Object Mapping that should be created before this object (either Parent or Child).</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>The Custom Metadata Record Name of the Data Import Object Mapping that should be created before this object (either Parent or Child).</inlineHelpText>
+        <label>Predecessor</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Relationship_Field__c</fullName>
+        <description>If this Data Import Mapping Object is a child of the predecessor then this should be the lookup field to the parent.  If parent to the predecessor, this should be the lookup field on the child to this record.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>If this Data Import Mapping Object is a child of the predecessor then this should be the lookup field to the parent.  If parent to the predecessor, this should be the lookup field on the child to this record.</inlineHelpText>
+        <label>Relationship Field</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Relationship_To_Predecessor__c</fullName>
+        <description>This indicates if this object is a parent or child of the predecessor.</description>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <inlineHelpText>This indicates if this object is a parent or child of the predecessor.</inlineHelpText>
+        <label>Relationship To Predecessor</label>
+        <required>false</required>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Parent</fullName>
+                    <default>true</default>
+                    <label>Parent</label>
+                </value>
+                <value>
+                    <fullName>Child</fullName>
+                    <default>false</default>
+                    <label>Child</label>
+                </value>
+                <value>
+                    <fullName>No Predecessor</fullName>
+                    <default>false</default>
+                    <label>No Predecessor</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <label>Data Import Object Mapping</label>
+    <pluralLabel>Data Import Object Mappings</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>
