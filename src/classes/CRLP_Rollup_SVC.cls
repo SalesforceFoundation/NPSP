@@ -323,7 +323,7 @@ public class CRLP_Rollup_SVC {
      * @param rollupType
      * @return String
      */
-    public static String getParentRelationshipFieldForQueryReference(CRLP_RollupProcessingOptions.RollupType rollupType) {
+    public static String getParentFieldNameForQuery(CRLP_RollupProcessingOptions.RollupType rollupType) {
         String fieldName;
         switch on (rollupType) {
             when AccountHardCredit {
@@ -357,7 +357,7 @@ public class CRLP_Rollup_SVC {
      * @param rollupType
      * @return String
      */
-    public static String getParentRelationshipFieldForProcessingJob(CRLP_RollupProcessingOptions.RollupType rollupType) {
+    public static String getParentFieldNameForProcessing(CRLP_RollupProcessingOptions.RollupType rollupType) {
         String fieldName;
         switch on (rollupType) {
             when ContactSoftCredit {
@@ -367,7 +367,7 @@ public class CRLP_Rollup_SVC {
                 fieldName = SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getName().replace('__c', '__r') + '.AccountId';
             }
             when else {
-                fieldName = getParentRelationshipFieldForQueryReference(rollupType);
+                fieldName = getParentFieldNameForQuery(rollupType);
             }
         }
         return fieldName;

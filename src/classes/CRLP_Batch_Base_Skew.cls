@@ -133,7 +133,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                         this.statefulCacheOfRollupsToBeProcessed);
             }
 
-            String parentKeyField = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType);
+            String parentKeyField = CRLP_Rollup_SVC.getParentFieldNameForQuery(jobType);
             String parentObjectField;
 
             // The parentKeyField field may be have dot-notation (ex: Contact__r.Account__c)
@@ -268,7 +268,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
 
         List<String> whereClauses = new List<String>();
 
-        String keyFieldOverrideForQuery = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType);
+        String keyFieldOverrideForQuery = CRLP_Rollup_SVC.getParentFieldNameForQuery(jobType);
 
         // Add necessary filters to limit the LDV batch job to only the records that should be processed as LDV
         if (this.recordIds != null && this.recordIds.size() > 0) {
@@ -277,7 +277,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         } else {
             // When querying detail rows and trying to filer on a field in the parent, need to get the
             // relationship name to use for that parent query.
-            String parentRelationshipPrefix = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType).replace('__c', '__r') + '.';
+            String parentRelationshipPrefix = CRLP_Rollup_SVC.getParentFieldNameForQuery(jobType).replace('__c', '__r') + '.';
 
             String skewClause = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType,
                     CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, parentRelationshipPrefix);

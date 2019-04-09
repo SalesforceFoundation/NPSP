@@ -141,7 +141,7 @@ public abstract class CRLP_Batch_Base {
         this.customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
 
         this.detailObjectType = CRLP_Rollup_SVC.getDetailObjectType(jobType);
-        this.keyField = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType);
+        this.keyField = CRLP_Rollup_SVC.getParentFieldNameForQuery(jobType);
     }
 
 

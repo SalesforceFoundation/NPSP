@@ -208,7 +208,7 @@ public without sharing class CRLP_RollupQueryBuilder {
 
         String query = CRLP_Query_SEL.buildDetailObjectQueryForRollup(detailObjectType, new List<SObjectType>());
 
-        String keyFieldOverrideForQuery = CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(rollupType);
+        String keyFieldOverrideForQuery = CRLP_Rollup_SVC.getParentFieldNameForQuery(rollupType);
 
         whereClauses.add(keyFieldOverrideForQuery + ' IN : summaryRecords');
 

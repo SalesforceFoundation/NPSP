@@ -146,11 +146,11 @@ public class CRLP_RollupQueueable implements System.Queueable {
                     .withSummaryRecords(summaryRecords)
                     .withRollupType(rollupType)
                     .withSummaryRecordIdsVar('summaryRecordIds')
-                    .withOrderBy(CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(rollupType));
+                    .withOrderBy(CRLP_Rollup_SVC.getParentFieldNameForQuery(rollupType));
             if (includeChildPayments) {
                 queryBuilder.includePaymentRecords();
             }
-            String detailsQuery = queryBuilder.getDetailsQueryAsSOQL();
+            String detailsQuery = queryBuilder.buildDetailsQuery();
             List<SObject> detailRecords = Database.query(detailsQuery);
 
 

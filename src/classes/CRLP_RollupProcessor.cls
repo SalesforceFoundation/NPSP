@@ -219,7 +219,7 @@ public inherited sharing class CRLP_RollupProcessor {
     private String parentRelationshipField {
         get {
             if (String.isBlank(parentRelationshipField)) {
-                parentRelationshipField = CRLP_Rollup_SVC.getParentRelationshipFieldForProcessingJob(rollupType);
+                parentRelationshipField = CRLP_Rollup_SVC.getParentFieldNameForProcessing(rollupType);
             }
             return parentRelationshipField;
         } set;

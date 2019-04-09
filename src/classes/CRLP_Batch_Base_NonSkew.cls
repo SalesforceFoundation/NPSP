@@ -158,7 +158,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                     .withSummaryRecords(summaryRecords)
                     .withSummaryRecordIdsVar('summaryRecords')
                     .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
-                    .withOrderBy(CRLP_Rollup_SVC.getParentRelationshipFieldForQueryReference(jobType));
+                    .withOrderBy(CRLP_Rollup_SVC.getParentFieldNameForQuery(jobType));
 
             if (CRLP_Rollup_SVC.hasActiveRollups(jobType)) {
                 queryBuilder.includePaymentRecords();
@@ -229,7 +229,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      */
     private List<SObject> excludeSummaryWithMissingDetailRecords(List<SObject> summaryRecords, List<SObject> detailRecords) {
         String relationshipName;
-        String parentKeyField = CRLP_Rollup_SVC.getParentRelationshipFieldForProcessingJob(jobType);
+        String parentKeyField = CRLP_Rollup_SVC.getParentFieldNameForProcessing(jobType);
 
         // If keyField field has dot-notation (ex: Contact__r.AccountId), need to parse out the two components
         if (parentKeyField.contains('.')) {
