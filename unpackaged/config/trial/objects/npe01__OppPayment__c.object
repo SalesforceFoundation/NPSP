@@ -9,6 +9,7 @@
         <type>Flexipage</type>
     </actionOverrides>
     <enableEnhancedLookup>false</enableEnhancedLookup>
+    <enableReports>true</enableReports>
     <fields>
         <fullName>Payment_Status__c</fullName>
         <externalId>false</externalId>
