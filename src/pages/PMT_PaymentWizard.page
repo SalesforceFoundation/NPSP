@@ -327,7 +327,7 @@
                                         <div class="slds-form__item" role="listitem">
                                             <div class="slds-text-title_bold" role="alert">
                                                 <apex:outputText value="{!$Label.pmtWizardWriteoffMessage}">
-                                                    <apex:param value="{!outstanding_payments}"/>
+                                                    <apex:param value="{!writeoffPaymentCount}"/>
                                                     <apex:param value="{!amountOutstandingText}"/>
                                                 </apex:outputText>
                                             </div>

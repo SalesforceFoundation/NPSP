@@ -109,9 +109,9 @@ public with sharing class PMT_PaymentWizard_CTRL {
     public npe01__oppPayment__c writeoffPayment { get; set; }
     
     /*******************************************************************************************************
-    * @description number of outstanding payments for the opp
+    * @description number of payments to write off for the opp
     */ 
-    public Integer outstanding_payments { get; set; }
+    public Integer writeoffPaymentCount { get; set; }
     
     /*******************************************************************************************************
     * @description decimal for amount float
@@ -201,10 +201,12 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description initialize payment amounts and make sure the 
     */
     private void setupPaymentAmounts(Opportunity opp) {
-
-        this.outstanding_payments = 0;
+        // Set default values 
+        this.writeoffPaymentCount = 1;
         this.amountWrittenOff = 0;
         this.invalidPaymentRecordCount = 0;
+
+        Integer outstandingPaymentCount = 0;
 
         for (npe01__OppPayment__c payment : opp.npe01__OppPayment__r) {
 
@@ -220,7 +222,13 @@ public with sharing class PMT_PaymentWizard_CTRL {
                 continue;
             }
             
-            outstanding_payments++;
+            outstandingPaymentCount++;
+        }
+
+        // if there are no payments outstanding then we set the count to 1 as 
+        // we will create a single payment for the new write off amount
+        if (outstandingPaymentCount>0) {
+            writeoffPaymentCount = outstandingPaymentCount;
         }
     }
 
@@ -246,6 +254,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
         setupPaymentAmounts(currentOpp);
 
         haveAmount = (getAmountOutstanding() > 0);
+        
         isClosedLost = currentOpp.isClosed && !currentOpp.isWon;
         samplePayment = new npe01__OppPayment__c();
         samplePayment.npe01__Scheduled_Date__c = System.today();
