@@ -160,7 +160,10 @@ private class CallableApiParameters_TEST {
         String rtnString = service.getString('String');
         System.assertEquals('String', rtnString);
 
-        Boolean rtnBoolean = service.getBoolean('BooleanTrue');
+        Boolean rtnBoolean = service.getBoolean('NonExistantParm', true);
+        System.assertEquals(true, rtnBoolean);
+
+        rtnBoolean = service.getBoolean('BooleanTrue');
         System.assertEquals(true, rtnBoolean);
 
         rtnBoolean = service.getBoolean('BooleanFalse');
@@ -178,6 +181,53 @@ private class CallableApiParameters_TEST {
         System.assertEquals(1, rtnListSObject.size());
         System.assertEquals(Opportunity.SObjectType, rtnListSObject[0].getSObjectType());
         System.assertEquals('Opportunity', rtnListSObject[0].get('Name'));
+    }
+
+    /**
+     * @description Validate that each of the service methods throws an exception if parameter is invalid
+     */
+    @IsTest
+    private static void shouldThrowExceptionOnInvalidDataType() {
+
+        Map<String, Object> badParams = new Map<String, Object>{
+                'String' => True,
+                'Boolean' => 'XYZ',
+                'ListString' => new Set<SObject>{ new Opportunity() },
+                'SetString' => 23,
+                'ListSObject' => new Map<String, String>{ 'X' => 'Y' },
+                'RollupData' => new Account()
+        };
+
+        CallableApiParameters service = new CallableApiParameters(badParams);
+
+        for (String dataType : badParams.keySet()) {
+            try {
+                switch on dataType {
+                    when 'String' {
+                        service.getString(dataType);
+                    }
+                    when 'Boolean' {
+                        service.getBoolean(dataType);
+                    }
+                    when 'ListString' {
+                        service.getListString(dataType);
+                    }
+                    when 'SetString' {
+                        service.getSetString(dataType);
+                    }
+                    when 'ListSObject' {
+                        service.getSObjects(dataType);
+                    }
+                    when 'RollupData' {
+                        service.getRollupDataMap(dataType);
+                    }
+                }
+                System.assert(false, 'An exception should have been thrown for an invalid data type');
+            } catch (Exception ex) {
+                System.assert(ex.getMessage().containsIgnoreCase(dataType),
+                        'Message should contain "' + dataType + '" term' + ex.getMessage());
+            }
+        }
     }
 
 }

@@ -54,10 +54,7 @@ public without sharing class CRLP_ApiService {
         } catch (Exception ex) { }
 
         if (rollupType == null) {
-            throw new ApiException(String.format( System.Label.CallableApiParameterError,
-                    new List<String>{ CallableApiParameters.PARAM_ROLLUP_TYPE, 'Unable to Match'
-                    }
-            ));
+            throwParameterException(CallableApiParameters.PARAM_ROLLUP_TYPE, 'Unable to Match');
         }
 
         CRLP_VRollupHandler handler = new CRLP_VRollupHandler();
@@ -88,9 +85,9 @@ public without sharing class CRLP_ApiService {
             throwParameterException(CallableApiParameters.PARAM_ROLLUP_TYPE, 'No matching RollupType');
         }
 
-        // If there are no active rollups, just return the same content passed initially
+        // If there are no active rollups, just return an empty collection
         if (!CRLP_Rollup_SVC.hasActiveRollups(rollupType)) {
-            return rollupDefs;
+            return new List<CRLP_Rollup>();
         }
 
         // Ensure the Rollup Definitions are populated
