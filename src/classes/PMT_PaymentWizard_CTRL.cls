@@ -111,7 +111,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     /*******************************************************************************************************
     * @description number of outstanding payments for the opp
     */ 
-    public integer outstanding_payments { get; set; }
+    public Integer outstanding_payments { get; set; }
     
     /*******************************************************************************************************
     * @description decimal for amount float
@@ -157,6 +157,16 @@ public with sharing class PMT_PaymentWizard_CTRL {
     */ 
     private Decimal amountWrittenOff { get; set; }
 
+
+    /*******************************************************************************************************
+    * @description Integer for count of invalid payment records
+    */ 
+    private Integer invalidPaymentRecordCount { get; set; }
+
+    /*******************************************************************************************************
+    * @description String wizard Type
+    */ 
+    public String wizardType { get; set; }
     
     /*******************************************************************************************************
     * @description gets the payment related settings
@@ -175,26 +185,26 @@ public with sharing class PMT_PaymentWizard_CTRL {
     */ 
     public PMT_PaymentWizard_CTRL() {
         this.redirect = this.removePaidPayments = false;
+        this.wizardType = ApexPages.currentPage().getParameters().get('wtype');
 
-        if (ApexPages.currentPage().getParameters().get('wtype') == 'writeoff'){
+        if (wizardType == 'writeoff'){
             setupWriteoffWizard();
             
-        } else if (ApexPages.currentPage().getParameters().get('wtype') == 'payment'){
+        } else if (wizardType == 'payment'){
             setupPaymentWizard();
         }
 
         getPageValidationMessages();
     }
 
-    /*****************************
-    * @description initialize paymentFigures
+    /*******************************************************************************************************
+    * @description initialize payment amounts and make sure the 
     */
     private void setupPaymentAmounts(Opportunity opp) {
 
-
         this.outstanding_payments = 0;
         this.amountWrittenOff = 0;
-        Integer invalidPaymentRecordCount = 0;
+        this.invalidPaymentRecordCount = 0;
 
         for (npe01__OppPayment__c payment : opp.npe01__OppPayment__r) {
 
@@ -211,11 +221,6 @@ public with sharing class PMT_PaymentWizard_CTRL {
             }
             
             outstanding_payments++;
-        }
-
-        if (opp.Amount == null || opp.Amount == 0 || invalidPaymentRecordCount > 0) {
-            isScheduleWizard = false;
-            isWriteoffWizard = false;
         }
     }
 
@@ -454,6 +459,22 @@ public with sharing class PMT_PaymentWizard_CTRL {
             return;
         } 
         
+        if (currentOpp.Amount == null || currentOpp.Amount == 0) {
+            if (isScheduleWizard) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardScheduleNoAmount));
+            } else if (isWriteoffWizard) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardWriteOffNoAmount));
+            }
+            isScheduleWizard = false;
+            isWriteoffWizard = false;
+            return;
+        }
+
+        if (invalidPaymentRecordCount > 0) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardInvalidRecords));
+            return;
+        }
+
         if (isClosedLost == true) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardClosedLost));
         }
@@ -463,6 +484,9 @@ public with sharing class PMT_PaymentWizard_CTRL {
         } else if (!removePaidPayments && isWriteoffWizard == true && haveAmount == false) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardNoWriteoffAmount));
         }
+
+
+
     }
 
     /*******************************************************************************************************

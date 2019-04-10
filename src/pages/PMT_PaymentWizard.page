@@ -33,7 +33,7 @@
             <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="Opportunity"
                                parentAction="/006" parentRecordName="{!currentOpp.Name}"
                                parentRecordAction="{!If (NOT(ISNULL(currentOpp)), URLFOR($Action.Opportunity.View, currentOpp.Id), '')}"
-                               header="{!IF( NOT(isWriteoffWizard), $Label.pmtWizardSubtitle, $Label.pmtWizardSectionWriteoff)}"
+                               header="{!IF(wizardType=='payment', $Label.pmtWizardSubtitle, $Label.pmtWizardSectionWriteoff)}"
                                icon="opportunity" iconCategory="standard"
                                showSaveBtn="false" showCancelBtn="false" />
 
