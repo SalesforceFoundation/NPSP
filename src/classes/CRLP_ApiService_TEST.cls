@@ -111,7 +111,7 @@ private class CRLP_ApiService_TEST {
 
         List<CRLP_Rollup> rollupDefs = new List<CRLP_Rollup>();
         String rollupType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name();
-        Id parentId = (Id)'001000000000001';
+        Id parentId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
         Map<Id, Map<SObjectType, List<SObject>>> rollupData = null;
 
         Account acct = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null)[0];
@@ -152,7 +152,7 @@ private class CRLP_ApiService_TEST {
         }
 
         // Create a single dummy data set with one instantiated Opportunity
-        Id oppId = (Id)'006000000000001';
+        Id oppId = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType);
         rollupData = new Map<Id, Map<SObjectType, List<SObject>>>{
             oppId => new Map<SObjectType, List<SObject>>{
                 Opportunity.SObjectType => new List<SObject>{
@@ -198,7 +198,7 @@ private class CRLP_ApiService_TEST {
 
         final String rollupType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name();
         final Double oppAmount = 100;
-        final Id oppId = (Id)'006000000000001';
+        final Id oppId = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType);
 
         Account acct = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null)[0];
         insert acct;
@@ -241,7 +241,7 @@ private class CRLP_ApiService_TEST {
     /**
      * @description Mock the Rollup__mdt records for use within this unit test class
      */
-    static void mockRollupDefinitions() {
+    private static void mockRollupDefinitions() {
 
         String filterGroupId = null;
 
