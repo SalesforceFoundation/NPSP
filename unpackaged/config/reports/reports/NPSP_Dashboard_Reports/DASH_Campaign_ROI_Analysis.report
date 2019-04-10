@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report xmlns="http://soap.sforce.com/2006/04/metadata">
+    <aggregates>
+        <calculatedFormula>ACTUAL_COST:SUM / NUM_CONTACTS:SUM</calculatedFormula>
+        <datatype>currency</datatype>
+        <description>Cost Per Donor (CPD)</description>
+        <developerName>FORMULA1</developerName>
+        <isActive>true</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>Cost Per Donor (CPD)</masterLabel>
+        <scale>2</scale>
+    </aggregates>
+    <aggregates>
+        <calculatedFormula>ACTUAL_COST:SUM / AMOUNT_WON:SUM</calculatedFormula>
+        <datatype>currency</datatype>
+        <description>Actual Cost / Total Value of Won Opps</description>
+        <developerName>FORMULA2</developerName>
+        <isActive>true</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>Cost Per Dollar Raised</masterLabel>
+        <scale>2</scale>
+    </aggregates>
+    <aggregates>
+        <calculatedFormula>(AMOUNT_WON:SUM - ACTUAL_COST:SUM ) / NUM_CONTACTS:SUM</calculatedFormula>
+        <datatype>currency</datatype>
+        <description>(Total income minus total costs)/number of donors</description>
+        <developerName>FORMULA3</developerName>
+        <isActive>true</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>Net Per Donor (NPD)</masterLabel>
+        <scale>2</scale>
+    </aggregates>
+    <aggregates>
+        <calculatedFormula>AMOUNT_WON:SUM - ACTUAL_COST:SUM</calculatedFormula>
+        <datatype>currency</datatype>
+        <description>Total Value of Won Opps minus Actual Cost</description>
+        <developerName>FORMULA4</developerName>
+        <isActive>true</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>Return on Initial Investment (ROII)</masterLabel>
+        <scale>2</scale>
+    </aggregates>
+    <aggregates>
+        <calculatedFormula>AMOUNT_WON:SUM / NUM_WON_OPPORTUNITIES:SUM</calculatedFormula>
+        <datatype>currency</datatype>
+        <description>Average donation</description>
+        <developerName>FORMULA5</developerName>
+        <isActive>true</isActive>
+        <isCrossBlock>false</isCrossBlock>
+        <masterLabel>Average Donation</masterLabel>
+        <scale>2</scale>
+    </aggregates>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>ACTUAL_COST</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>AMOUNT_WON</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Sum</aggregateTypes>
+        <field>NUM_WON_OPPORTUNITIES</field>
+    </columns>
+    <columns>
+        <field>NUM_CONTACTS</field>
+    </columns>
+    <columns>
+        <aggregateTypes>Average</aggregateTypes>
+        <field>ROI</field>
+    </columns>
+    <description>DASHBOARD Report - Do Not Edit</description>
+    <filter>
+        <criteriaItems>
+            <column>ACTUAL_COST</column>
+            <isUnlocked>false</isUnlocked>
+            <operator>greaterThan</operator>
+            <value>0</value>
+        </criteriaItems>
+
+    </filter>
+    <format>Summary</format>
+    <groupingsDown>
+        <dateGranularity>Day</dateGranularity>
+        <field>CAMPAIGN_NAME</field>
+        <sortOrder>Asc</sortOrder>
+    </groupingsDown>
+    <name>DASH: Campaign ROI Analysis</name>
+    <params>
+        <name>scopeid</name>
+        <value></value>
+    </params>
+    <params>
+        <name>co</name>
+        <value>1</value>
+    </params>
+    <reportType>CampaignList</reportType>
+    <scope>orgAll</scope>
+    <showDetails>false</showDetails>
+</Report>
