@@ -37,11 +37,11 @@
 
 <aura:component controller="BGE_DataImportBatchEntry_CTRL"
                 access="global">
-    <!--Public Attributes-->
-    <aura:attribute name="selectedDonation" type="SObject" description="Stored selected open donation object. Can also be null or empty." access="public" />
-    <aura:attribute name="unpaidPayments" type="List" description="List of unpaid Payments" access="public" />
-    <aura:attribute name="openOpportunities" type="List" description="List of open Opportunities" access="public" />
-    <aura:attribute name="labels" type="Map" description="Labels retrieved in Apex related to Schema information." access="public"/>
+    <!--Global Attributes-->
+    <aura:attribute name="selectedDonation" type="SObject" description="Stored selected open donation object. Can also be null or empty." access="global" />
+    <aura:attribute name="unpaidPayments" type="List" description="List of unpaid Payments" access="global" />
+    <aura:attribute name="openOpportunities" type="List" description="List of open Opportunities" access="global" />
+    <aura:attribute name="labels" type="Map" description="Labels retrieved in Apex related to Schema information." access="global"/>
 
     <!--Markup-->
     <lightning:overlayLibrary aura:id="overlayLibSelector"/>
