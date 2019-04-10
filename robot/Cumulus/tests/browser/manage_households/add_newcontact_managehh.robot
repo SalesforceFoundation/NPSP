@@ -14,7 +14,7 @@ Add New Contact to Existing Household
     # Click Link    link=Show more actions
     Click Link    link=Manage Household    
     Sleep     5     Input-textbox-notloaded-properly    
-    Select Frame With Title   Manage Household
+    Choose Frame   Manage Household
     ${first_name} =           Generate Random String
     ${last_name} =            Generate Random String
     Populate Field By Placeholder    Find a Contact or add a new Contact to the Household    ${first_name} ${last_name}

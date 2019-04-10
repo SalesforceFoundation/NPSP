@@ -24,7 +24,7 @@ Create Donation from a Contact
     Load Related List    Payments
     Click Special Related List Button  Payments    Schedule Payments
     Wait For Locator    frame    Create one or more Payments for this Opportunity
-    Select Frame with Title    Create one or more Payments for this Opportunity
+    Choose Frame    Create one or more Payments for this Opportunity
     Enter Payment Schedule    ${No_of_payments}    ${intervel}    ${frequency}
     ${loc}    Get NPSP Locator    id    inputX
     Input Text    ${loc}    8/15/2018
