@@ -174,7 +174,7 @@ private class PMT_PaymentWizard_TEST {
         
         // set values
         controller.writeoffPayment.npe01__payment_date__c = Date.newInstance(2001,12,12);
-        System.assertEquals(6, controller.outstanding_payments, 'There should be 6 payments to writeoff');
+        System.assertEquals(6, controller.writeoffPaymentCount, 'There should be 6 payments to writeoff');
         PageReference ref = controller.writeoff();
 
         Test.stopTest();
