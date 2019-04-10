@@ -130,7 +130,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
                     // If the Opp Amount is greater than zero and the Opp is not currently closed
                     // and the amount paid is equal to the total opportunity amount
                     Decimal paidAmount = PMT_PaymentCreator.getPaymentsMade(opp);
-                    if (opp.Amount > 0 && paidAmount == opp.Amount && !opp.isClosed && !opp.IsWon) {
+                    if (opp.Amount > 0 && paidAmount >= opp.Amount && !opp.isClosed && !opp.IsWon) {
                         opp.StageName = closedStageName;
                         dmlWrapper.objectsToUpdate.add(opp);
                     }
