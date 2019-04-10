@@ -350,10 +350,10 @@ Open NPSP Settings
     Wait For Locator    frame    Nonprofit Success Pack Settings
     Choose Frame    Nonprofit Success Pack Settings
     Wait Until Element Is Visible  text:${topmenu}
-    Click Link With Text    text:${topmenu}
+    Click Link With Text    text=${topmenu}
     Sleep  1
     Wait Until Element Is Visible  text:${submenu}
-    Click Link With Text    text:${submenu}
+    Click Link With Text    text=${submenu}
     Sleep  1
     
 Click Data Import Button
