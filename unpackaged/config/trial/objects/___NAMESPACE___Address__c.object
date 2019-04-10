@@ -31,6 +31,7 @@
         <type>AutoNumber</type>
     </nameField>
     <deploymentStatus>Deployed</deploymentStatus>
+    <enableReports>true</enableReports>
     <sharingModel>ControlledByParent</sharingModel>
     <description>Custom object for storing additional addresses for Household Accounts in the Nonprofit Success Pack.</description>
     <fields>

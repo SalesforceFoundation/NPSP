@@ -12,4 +12,6 @@
         <protected>false</protected>
         <url>/apex/%%%NAMESPACE%%%ADDR_CopyAddrHHObjBTN?id={!npo02__Household__c.Id}</url>
     </webLinks>
+    <enableActivities>true</enableActivities>
+    <enableReports>true</enableReports>
 </CustomObject>
