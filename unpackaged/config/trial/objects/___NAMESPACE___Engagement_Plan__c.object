@@ -26,6 +26,8 @@
         <type>AutoNumber</type>
     </nameField>
     <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>true</enableActivities>
+    <enableReports>true</enableReports>
     <sharingModel>ControlledByParent</sharingModel>
     <description>An Engagement Plan is a set of tasks that helps you engage with your constituents.</description>
     <fields>
