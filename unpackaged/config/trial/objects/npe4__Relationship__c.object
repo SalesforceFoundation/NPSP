@@ -8,4 +8,5 @@
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>Flexipage</type>
     </actionOverrides>
+    <enableReports>true</enableReports>
 </CustomObject>
