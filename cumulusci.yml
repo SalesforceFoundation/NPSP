@@ -61,6 +61,13 @@ tasks:
             path: unpackaged/config/qa
             namespace_inject: $project_config.project__package__namespace
 
+    deploy_reports:
+        description: Deploys reports & dashboards
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/reports
+            namespace_inject: $project_config.project__package__namespace
+
     deploy_dev_config_delete:
         description: Deploys the metadata deletions for the post-install DE org config
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -237,6 +244,8 @@ flows:
                 task: update_admin_profile
             8:
                 task: test_data_relationships
+            9:
+                task: deploy_reports
 
     deploy_rollup_testing:
         description: 'Deploys custom fields and rollup definitions for testing Customizable Rollups using the Apex Anon testing script'
@@ -275,6 +284,10 @@ flows:
                     managed: true
             5:
                 task: test_data_relationships
+            6:
+                task: deploy_reports
+                options:
+                    unmanaged: False
 
     install_regression:
         steps:
@@ -381,6 +394,8 @@ plans:
                 task: install_managed
             3:
                 task: deploy_post
+                options:
+                    unmanaged: False
                 ui_options:
                     first:
                         name: NPSP Config for Salesforce Mobile App
@@ -403,3 +418,31 @@ plans:
                 task: install_managed
             3:
                 flow: config_managed
+                options:
+                    deploy_reports:
+                        unmanaged: False
+                ui_options:
+                    deploy_post:
+                        first:
+                            name: NPSP Config for Salesforce Mobile App
+                    deploy_dev_config_delete:
+                        name: Delete Developer Edition Sample Profiles
+                        description: This deletes sample page layouts and profiles intended for Sales, Marketing, and Support use cases.
+                        is_required: False
+                    deploy_trial_config:
+                        name: NPSP Trial Experience
+                    deploy_reports:
+                        name: NPSP Reports & Dashboards
+                        is_required: False
+    reports:
+        slug: reports
+        title: Install Reports & Dashboards
+        tier: additional
+        is_listed: True
+        steps:
+            1:
+                task: deploy_reports
+                options:
+                    unmanaged: False
+                ui_options:
+                    name: NPSP Reports & Dashboards

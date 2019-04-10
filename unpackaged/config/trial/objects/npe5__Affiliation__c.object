@@ -8,6 +8,7 @@
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>Flexipage</type>
     </actionOverrides>
+    <enableReports>true</enableReports>
     <fields>
         <fullName>Contact_Link__c</fullName>
         <description>Detects if User is in Lightning vs. Classic and creates link to Contact</description>

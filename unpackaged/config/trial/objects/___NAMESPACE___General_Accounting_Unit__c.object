@@ -17,7 +17,6 @@
         <fields>%%%NAMESPACE%%%Total_Number_of_Allocations__c</fields>
         <label>NPSP General Accounting Unit</label>
     </compactLayouts>
-    <enableActivities>true</enableActivities>
 
     <label>General Accounting Unit</label>
     <pluralLabel>General Accounting Units</pluralLabel>
@@ -27,6 +26,8 @@
         <type>Text</type>
     </nameField>
     <deploymentStatus>Deployed</deploymentStatus>
+    <enableActivities>true</enableActivities>
+    <enableReports>true</enableReports>
     <sharingModel>ReadWrite</sharingModel>
     <description>Accounting units used for allocating Opportunities.</description>
 </CustomObject>
