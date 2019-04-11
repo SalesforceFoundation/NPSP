@@ -33,7 +33,7 @@
             <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="Opportunity"
                                parentAction="/006" parentRecordName="{!currentOpp.Name}"
                                parentRecordAction="{!If (NOT(ISNULL(currentOpp)), URLFOR($Action.Opportunity.View, currentOpp.Id), '')}"
-                               header="{!IF(wizardType=='payment', $Label.pmtWizardSubtitle, $Label.pmtWizardSectionWriteoff)}"
+                               header="{!IF(NOT(isWriteoffWizard), $Label.pmtWizardSubtitle, $Label.pmtWizardSectionWriteoff)}"
                                icon="opportunity" iconCategory="standard"
                                showSaveBtn="false" showCancelBtn="false" />
 
@@ -43,7 +43,7 @@
             </apex:outputPanel>
 
             <!--Custom buttons/links depending on specific page conditions-->
-            <apex:outputPanel rendered="{!AND(hasPaymentAccess, NOT(ISNULL(CurrentOpp)),NOT(haveAmount), NOT(isClosedLost), paymentsSettings.npe01__Payments_Enabled__c, NOT(removePaidPayments), isScheduleWizard)}">
+            <apex:outputPanel rendered="{!AND(hasPaymentAccess, NOT(ISNULL(CurrentOpp)),NOT(haveAmount), NOT(isClosedLost), paymentsSettings.npe01__Payments_Enabled__c, NOT(removePaidPayments), isScheduleWizard, isWizardEnabled)}">
                 <div class="slds-grid">
                     <div class="slds-col slds-m-top_medium slds-m-left_small">
                         <apex:commandButton action="{!RemovePaidPayments}" value="{!$Label.pmtWizardBtnRemovePaidPayments}"
@@ -172,7 +172,7 @@
 
                 <apex:outputText rendered="{!AND(hasPaymentAccess, NOT(ISNULL(paymentsSettings)), paymentsSettings.npe01__Payments_Enabled__c == true, isScheduleWizard == true)}">
 
-                    <apex:outputText value="{!$Label.pmtWizardMsgNoOppFound}"  rendered="{!ISNULL(CurrentOpp)}" 
+                    <apex:outputText value="{!$Label.pmtWizardMsgNoOppFound}"  rendered="{!ISNULL(currentOpp)}" 
                                     styleClass="slds-notify slds-notify_alert slds-theme_inverse-text slds-theme_alert-texture"/>
 
                     <!-- Create payment schedule -->
@@ -249,7 +249,8 @@
                         <div class="slds-col">
                             <apex:commandButton action="{!calculate}"
                                                 value="{!$Label.pmtWizardBtnCalcPayments}"
-                                                rendered="{!AND(hasPaymentAccess, NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isScheduleWizard == true, NOT(isClosedLost), OR(haveAmount, removePaidPayments))}" styleClass="slds-button slds-button_brand slds-m-around_medium" reRender="vfForm"/>
+                                                rendered="{!AND(hasPaymentAccess, NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isScheduleWizard == true, NOT(isClosedLost), OR(haveAmount, removePaidPayments), isWizardEnabled)}" 
+                                                styleClass="slds-button slds-button_brand slds-m-around_medium" reRender="vfForm"/>
                         </div>
                     </div>
                     <!-- Show Payments to be Created -->
@@ -308,9 +309,9 @@
                 </div>
 
                 <!-- START PAYMENT WRITEOFF  -->
-                <apex:outputText rendered="{!AND(hasPaymentAccess, NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isWriteoffWizard == true)}">
+                <apex:outputText rendered="{!AND(hasPaymentAccess, NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true, isWriteoffWizard == true, isWizardEnabled)}">
 
-                    <apex:outputText rendered="{!AND(NOT(ISNULL(CurrentOpp)), haveAmount, NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true)}" 
+                    <apex:outputText rendered="{!AND(NOT(ISNULL(currentOpp)), haveAmount, NOT(ISNULL(PaymentsSettings)), PaymentsSettings.npe01__Payments_Enabled__c == true)}" 
                                      styleClass="slds-p-around_medium">
                         <div class="slds-section slds-is-open" id="writeoffPmtsTitle">
                             <h3 class="slds-section__title slds-theme_shade">

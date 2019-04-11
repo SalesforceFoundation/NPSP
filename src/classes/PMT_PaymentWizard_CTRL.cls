@@ -164,9 +164,9 @@ public with sharing class PMT_PaymentWizard_CTRL {
     private Integer invalidPaymentRecordCount { get; set; }
 
     /*******************************************************************************************************
-    * @description String wizard Type
+    * @description Boolean to indicate if the wizard page should be enabled
     */ 
-    public String wizardType { get; set; }
+    public Boolean isWizardEnabled { get; set; }
     
     /*******************************************************************************************************
     * @description gets the payment related settings
@@ -185,7 +185,8 @@ public with sharing class PMT_PaymentWizard_CTRL {
     */ 
     public PMT_PaymentWizard_CTRL() {
         this.redirect = this.removePaidPayments = false;
-        this.wizardType = ApexPages.currentPage().getParameters().get('wtype');
+        this.isWizardEnabled = true;
+        String wizardType = ApexPages.currentPage().getParameters().get('wtype');
 
         if (wizardType == 'writeoff'){
             setupWriteoffWizard();
@@ -206,6 +207,10 @@ public with sharing class PMT_PaymentWizard_CTRL {
         this.amountWrittenOff = 0;
         this.invalidPaymentRecordCount = 0;
 
+        if (opp.Amount == null || opp.Amount == 0) {
+            isWizardEnabled = false;
+        }
+
         Integer outstandingPaymentCount = 0;
 
         for (npe01__OppPayment__c payment : opp.npe01__OppPayment__r) {
@@ -218,7 +223,9 @@ public with sharing class PMT_PaymentWizard_CTRL {
             } 
             
             if (payment.npe01__Written_Off__c == true) {
-                amountWrittenOff += payment.npe01__Payment_Amount__c;
+                if (payment.npe01__Written_Off__c != null) {
+                    amountWrittenOff += payment.npe01__Payment_Amount__c;
+                }
                 continue;
             }
             
@@ -230,6 +237,8 @@ public with sharing class PMT_PaymentWizard_CTRL {
         if (outstandingPaymentCount>0) {
             writeoffPaymentCount = outstandingPaymentCount;
         }
+
+        
     }
 
     
@@ -474,8 +483,6 @@ public with sharing class PMT_PaymentWizard_CTRL {
             } else if (isWriteoffWizard) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardWriteOffNoAmount));
             }
-            isScheduleWizard = false;
-            isWriteoffWizard = false;
             return;
         }
 
@@ -601,13 +608,13 @@ public with sharing class PMT_PaymentWizard_CTRL {
         try {
             List<npe01__oppPayment__c> paymentsToDelete = new List<npe01__OppPayment__c>(); 
             List<npe01__OppPayment__c> existingPayments = [
-                SELECT Id, npe01__Paid__c
+                SELECT Id, npe01__Paid__c, npe01__Written_Off__c
                 FROM npe01__OppPayment__c
                 WHERE npe01__Opportunity__c = :currentOpp.Id
             ];
 
             for (npe01__OppPayment__c payment : existingPayments) {
-                if (payment.npe01__Paid__c == false) {
+                if (payment.npe01__Paid__c == false && payment.npe01__Written_Off__c == false) {
                     paymentsToDelete.add(payment);
                     continue;
                 }
