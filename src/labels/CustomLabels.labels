@@ -5113,7 +5113,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>pmtWizardScheduleNoAmount</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>pmtWizardNoAmount</shortDescription>
         <value>NOTE: This Opportunity has no amount. You must enter an Amount before you can schedule Payments.</value>
     </labels>
@@ -5121,7 +5121,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>pmtWizardWriteOffNoAmount</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>pmtWizardNoAmount</shortDescription>
         <value>NOTE: This Opportunity has no amount. You must enter an Amount before you can write off Payments.</value>
     </labels>
@@ -5129,7 +5129,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>pmtWizardNoUnpaidAmount</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>pmtWizardNoUnpaidAmount</shortDescription>
         <value>All Payments for this Opportunity are either paid or written off. To create a new Payment schedule, click Delete Paid and Written Off Payments.</value>
     </labels>
@@ -5137,7 +5137,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>pmtWizardNoWriteoffAmount</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>pmtWizardNoWriteoffAmount</shortDescription>
         <value>All Payments for this Opportunity are either paid or written off. If you need to make changes to the Payment records, edit them directly.</value>
     </labels>
