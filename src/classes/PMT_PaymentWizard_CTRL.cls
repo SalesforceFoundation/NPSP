@@ -199,7 +199,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description initialize payment amounts and make sure the 
+    * @description initialize payment figures and make sure the opportunity has valid amounts
     */
     private void setupPaymentAmounts(Opportunity opp) {
         // Set default values 
