@@ -5249,7 +5249,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>pmtWizardWriteoffMessage</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>pmtWizardWriteoffMessage</shortDescription>
         <value>You are preparing to write off {0} Payment(s) totaling {1}</value>
     </labels>
