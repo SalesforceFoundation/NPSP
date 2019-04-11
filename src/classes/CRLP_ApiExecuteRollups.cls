@@ -214,6 +214,7 @@ public without sharing class CRLP_ApiExecuteRollups {
      * @param partialSoftCreditRecords PartialSoftCredit records for the Opp
      * @return List<Partial_Soft_Credit__c>
      */
+    @TestVisible
     private List<Partial_Soft_Credit__c> buildPartialSoftCreditRecordsFromOCRs(Opportunity opp,
             List<SObject> ocrRecords, List<SObject> partialSoftCreditRecords) {
 

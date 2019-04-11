@@ -39,89 +39,12 @@ public class CRLP_Rollup_SEL_TEST {
     private static Integer rollupMdtCount = 0;
 
     /**
-     * @description Because unit tests cannot actually insert Custom Metadata Types and there's no real way to know
-     * exactly what's in the CMT objects, we can use this method to mock the contents of the cached MDT queries
-     * for the unit tests
-     */
-    public static void mockRollupCMTValues() {
-
-        // Create a single Filter Group (no need for filter rules here)
-        String filterGroupId = CMT_UnitTestData_TEST.getNewRecordId();
-        String filterGroupsJSON = '[' + CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId, 'TestFilterGroup') + ']';
-        CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(filterGroupsJSON, List<Filter_Group__mdt>.class);
-
-        // Create a series of Rollups that each specify a different Opp field in for the Rollup__mdt Detail and Amount
-        // fields that should never be included when building the Opportunity Query. This is defined in the Map
-        // in CRLP_Rollup_SEL.UNSUPPORTED_OPERATIONS_BY_ROLLUP_FIELD.
-        String rollupsJSON = '[' +
-
-            // Sum operation. Ignores the Detail field reference
-            CMT_UnitTestData_TEST.createRollupRecord('Household Total Donations', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                    'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Acknowledgment_Date__c', 'Amount')  + ',' +
-
-            // Count operation. Ignores the Detail and Amount field references
-            CMT_UnitTestData_TEST.createRollupRecord('Household Donations Count', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                    'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'In_Kind_Type__c', 'Is_Grant_Renewal__c') + ',' +
-
-            // Average operation. Ignores the Detail field references
-            CMT_UnitTestData_TEST.createRollupRecord('Average Total Donations All Time', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                    'npo02__AverageAmount__c', CRLP_Operation.RollupType.Average, 'npe01__Amount_Outstanding__c', 'Fair_Market_Value__c') + ',' +
-
-            // Largest operation. Does not ignore any of the fields!
-            CMT_UnitTestData_TEST.createRollupRecord('Largest Donation All Time', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                    'npo02__LargestAmount__c', CRLP_Operation.RollupType.Largest, 'Amount', 'Fair_Market_Value__c') + ',' +
-
-            // Smallest operation. Does not ignore any of the fields!
-            CMT_UnitTestData_TEST.createRollupRecord('Smallest Donation All Time', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                    'npo02__SmallestAmount__c', CRLP_Operation.RollupType.Smallest, 'Amount', 'Fair_Market_Value__c') + ',' +
-
-            // YearsDonated operation. Ignores the Detail reference
-            CMT_UnitTestData_TEST.createRollupRecord('Years Donated', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                    'Description', CRLP_Operation.RollupType.Years_Donated, 'Notification_Preference__c', 'Amount') + ',' +
-
-            // DonorStreak operation. Ignores the Detail reference
-            CMT_UnitTestData_TEST.createRollupRecord('Current Donation Streak', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                    'npo02__NumberOfMembershipOpps__c', CRLP_Operation.RollupType.Donor_Streak, 'npe01__Membership_Start_Date__c', 'Amount') + ',' +
-
-            // BestYear operation. Ignores the Detail reference
-            CMT_UnitTestData_TEST.createRollupRecord('Best Year', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                    'npo02__Best_Gift_Year__c', CRLP_Operation.RollupType.Best_Year, 'npe01__Membership_End_Date__c', 'Amount') + ',' +
-
-            // Last operation. Ignores the Amount reference
-            CMT_UnitTestData_TEST.createRollupRecord('Last Gift Date', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                    'npo02__LastCloseDate__c', CRLP_Operation.RollupType.Last, 'CloseDate', 'Matching_Gift_Status__c') + ',' +
-
-            // First operation. Ignores the Amount reference
-            CMT_UnitTestData_TEST.createRollupRecord('First Gift Date', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                    'npo02__FirstCloseDate__c', CRLP_Operation.RollupType.First, 'CloseDate', 'npe01__Member_Level__c')
-
-            + ']';
-
-        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(
-            rollupsJSON, 
-            List<Rollup__mdt>.class
-        );
-
-        rollupMdtCount = CRLP_Rollup_SEL.cachedRollups.size();
-    }
-
-    /**
      * @description Verify that the getReferencedFieldsByObject() method returns the expected fields to be
      * queried, including validating that fields that shouldn't be queried aren't included.
      */
     @IsTest
     private static void shouldReturnExpectedFieldsToQuery() {
-        mockRollupCMTValues();
+        CMT_UnitTestData_TEST.mockRollupCmtForAccountHC();
 
         Set<String> expectedFields = new Set<String>{
                 'AccountId', 'CloseDate', 'Amount',
@@ -160,7 +83,7 @@ public class CRLP_Rollup_SEL_TEST {
     @IsTest
     static void validateRollupSelectorGetterMethodResults() {
 
-        mockRollupCMTValues();
+        rollupMdtCount = CMT_UnitTestData_TEST.mockRollupCmtForAccountHC();
 
         String devName = CRLP_Rollup_SEL.getRollupDefinitions()[0].DeveloperName;
         String mdtId = CRLP_Rollup_SEL.getRollupDefinitions()[0].Id;
@@ -251,7 +174,7 @@ public class CRLP_Rollup_SEL_TEST {
      */
     @IsTest
     private static void shouldReturnExpectedRollupDefinitions() {
-        mockRollupCMTValues();
+        rollupMdtCount = CMT_UnitTestData_TEST.mockRollupCmtForAccountHC();
 
         List<Rollup__mdt> rollupsAccountHC = CRLP_Rollup_SEL.getRollupDefinitionsToUse(
             CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,

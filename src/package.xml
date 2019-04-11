@@ -133,6 +133,7 @@
         <members>CRLP_Account_BATCH</members>
         <members>CRLP_Account_SoftCredit_BATCH</members>
         <members>CRLP_ApiExecuteRollups</members>
+        <members>CRLP_ApiExecuteRollups_TEST</members>
         <members>CRLP_ApiService</members>
         <members>CRLP_ApiService_TEST</members>
         <members>CRLP_Batch_Base</members>
@@ -175,6 +176,7 @@
         <members>CRLP_RollupProcessingOptions</members>
         <members>CRLP_RollupProcessor</members>
         <members>CRLP_RollupProcessor_SVC</members>
+        <members>CRLP_RollupProcessor_TEST</members>
         <members>CRLP_RollupQueryBuilder</members>
         <members>CRLP_RollupQueryBuilder_TEST</members>
         <members>CRLP_RollupQueueable</members>

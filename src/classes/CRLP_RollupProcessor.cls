@@ -64,7 +64,7 @@ public inherited sharing class CRLP_RollupProcessor {
 
     /** @description List of detail records being rolled up to the Parent Summary record grouped by Parent.Id */
     @TestVisible
-    private Map<Id, List<SObject>> detailRecordsByParentId;
+    private Map<Id, List<SObject>> detailRecordsByParentId = new Map<Id, List<SObject>>();
 
     /** @description List of detail related records grouped by the Detail Id */
     @TestVisible
@@ -145,14 +145,14 @@ public inherited sharing class CRLP_RollupProcessor {
      * @description Inject the collection of Detail records to roll up for the Parent record. Required.
      */
     public CRLP_RollupProcessor withDetailRecords(List<SObject> detailRecords) {
-        detailRecordsByParentId = new Map<Id, List<SObject>>();
+        this.detailRecordsByParentId = new Map<Id, List<SObject>>();
 
         for (SObject dtl : detailRecords) {
             Id parentId = CRLP_Rollup_SVC.getParentIdFromRecord(dtl, parentKeyField, parentRelationshipObject);
-            if (!detailRecordsByParentId.containsKey(parentId)) {
-                detailRecordsByParentId.put(parentId, new List<SObject>());
+            if (!this.detailRecordsByParentId.containsKey(parentId)) {
+                this.detailRecordsByParentId.put(parentId, new List<SObject>());
             }
-            detailRecordsByParentId.get(parentId).add(dtl);
+            this.detailRecordsByParentId.get(parentId).add(dtl);
         }
         return this;
     }
@@ -161,7 +161,7 @@ public inherited sharing class CRLP_RollupProcessor {
      * @description Inject the map of related record linked to each Detail record. Optional.
      */
     public CRLP_RollupProcessor withRelatedRecords(Map<Id, List<SObject>> relatedRecords) {
-        relatedRecordsByDetailId = relatedRecords;
+        this.relatedRecordsByDetailId = relatedRecords;
         return this;
     }
 
@@ -198,13 +198,14 @@ public inherited sharing class CRLP_RollupProcessor {
      * This is needed in SkewMode to support rollups that span multiple batch iterations.
      */
     public CRLP_RollupProcessor withPreviouslyProcessedOppIdsMap(Map<Id,Set<Id>> processedOppIdsByParentId) {
-        processedOppIdsByParentId = processedOppIdsByParentId;
+        this.processedOppIdsByParentId = processedOppIdsByParentId;
         return this;
     }
 
     /**
      * @description Determine the SObjectType of the Detail Records based on the current rollup type
      */
+    @TestVisible
     private SObjectType detailObjectType {
         get {
             if (detailObjectType == null) {
@@ -217,6 +218,7 @@ public inherited sharing class CRLP_RollupProcessor {
     /**
      * @description Determine the SObjectType of the Detail Records based on the current rollup type
      */
+    @TestVisible
     private String parentRelationshipField {
         get {
             if (String.isBlank(parentRelationshipField)) {
@@ -231,6 +233,7 @@ public inherited sharing class CRLP_RollupProcessor {
     /** *************************************************************************************************************
     * @description Returns the Parent Object Field by parsing the parentKeyFieldFull property
     */
+    @TestVisible
     private String parentRelationshipObject {
         get {
             if (String.isBlank(parentRelationshipObject)) {
@@ -247,6 +250,7 @@ public inherited sharing class CRLP_RollupProcessor {
     /**
     * @description Returns the Parent Key Field portion by parsing the parentKeyFieldFull property
     **/
+    @TestVisible
     private String parentKeyField {
         get {
             if (String.isBlank(parentKeyField)) {
@@ -295,6 +299,7 @@ public inherited sharing class CRLP_RollupProcessor {
     /**
      * @description Validate that any required properties have been configured in this class before starting the operation
      */
+    @TestVisible
     private void validateProcessSettingsBeforeStarting() {
         List<String> errors = new List<String>();
         if (rollupType == null) {
@@ -381,6 +386,7 @@ public inherited sharing class CRLP_RollupProcessor {
     * prevent an Account from both getting soft credit for the same opportunity more than one - when there is more than
     * one Household Contact that got soft credit for that Opportunity.
     */
+    @TestVisible
     private List<SObject> cleanDetailOppsListForSoftCreditMode(Id parentId, List<SObject> detailsForParent) {
         List<SObject> oppsToRollup = new List<SObject>();
         for (Integer n = 0, detailListSize = detailsForParent.size(); n < detailListSize; n++) {

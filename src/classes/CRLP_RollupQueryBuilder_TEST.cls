@@ -1,5 +1,4 @@
 /*
-/*
 Copyright (c) 2019, Salesforce.org
 All rights reserved.
 
@@ -32,45 +31,62 @@ POSSIBILITY OF SUCH DAMAGE.
 * @author Salesforce.org
 * @date 2019
 * @group Customizable Rollups Operations Services
-* @description Unit Test for the Query Builder Class
+* @description Unit Tests for the Query Builder Class
 */
-@IsTest(IsParallel=True)
+@IsTest(IsParallel=true)
 private class CRLP_RollupQueryBuilder_TEST {
 
     static final List<Id> accountIds = UTIL_UnitTestData_TEST.mockIds(Account.SObjectType, 3);
     static final List<Id> contactIds = UTIL_UnitTestData_TEST.mockIds(Contact.SObjectType, 3);
     static final List<Id> rdIds = UTIL_UnitTestData_TEST.mockIds(npe03__Recurring_Donation__c.SObjectType, 3);
 
+    /** @description Test the Details Query Builder for an AccountHardCredit NonSkew rollup */
     @IsTest
     private static void shouldReturnQueryForSummaryRecordListAccountHardCredit() {
         assertQueryBuildResults(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
     }
 
+    /** @description Test the Details Query Builder for an AccountSoftCredit NonSkew rollup */
     @IsTest
     private static void shouldReturnQueryForSummaryRecordIdsAccountSoftCredit() {
         assertQueryBuildResults(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit);
     }
 
+    /** @description Test the Details Query Builder for an AccountContactSoftCredit NonSkew rollup */
     @IsTest
     private static void shouldReturnQueryForSummaryRecordIdsAccountContactSoftCredit() {
         assertQueryBuildResults(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit);
     }
 
+    /** @description Test the Details Query Builder for a ContactHardCredit NonSkew rollup */
     @IsTest
     private static void shouldReturnQueryForSummaryRecordListContactHardCredit() {
         assertQueryBuildResults(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit);
     }
 
+    /** @description Test the Details Query Builder for a ContactSoftCredit NonSkew rollup */
     @IsTest
     private static void shouldReturnQueryForSummaryRecordListContactSoftCredit() {
         assertQueryBuildResults(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit);
     }
 
+    /** @description Test the Details Query Builder for a RecurringDonation NonSkew rollup */
     @IsTest
     private static void shouldReturnQueryForSummaryRecordListRD() {
         assertQueryBuildResults(CRLP_RollupProcessingOptions.RollupType.RecurringDonations);
     }
 
+    /**
+     * @description Validates the QueryBuilder functionality specifically to build a Details Query
+     * for the specified Rollup Type. Note that currently the QueryBuilder only handles building the
+     * details query in a NonSKew job. Skew Mode batch jobs operate in differently, such that the
+     * query against the detail object is actually the batch QueryLocator. Builds of that query are
+     * handled elsewhere currently.
+     * This method validates that the query is built properly - querying the expected object
+     * with the expected sub-queries, order by, and filters.
+     * @param rollupType
+     * @return Resulting Query String
+     */
     private static String assertQueryBuildResults(CRLP_RollupProcessingOptions.RollupType rollupType) {
         String detailObject = CRLP_Rollup_SVC.getDetailObjectType(rollupType).getDescribe().getName();
         String orderBy = CRLP_Rollup_SVC.getParentFieldNameForQuery(rollupType);
@@ -79,9 +95,10 @@ private class CRLP_RollupQueryBuilder_TEST {
         Boolean useWithSummaryRecordIds = false;
         String varName = summaryObjectType.getDescribe().getName() + 'Ids';
 
+        // Additional variations for the QueryBuilder testing
         switch on (rollupType) {
             when AccountHardCredit, ContactHardCredit {
-                includePayments = false;
+                includePayments = true;
             }
             when RecurringDonations {
                 varName = 'rdIds';
@@ -91,6 +108,7 @@ private class CRLP_RollupQueryBuilder_TEST {
             }
         }
 
+        // Instantiates 3 summary record SObjects and mocks Rollup__mdt records
         List<SObject> summaryRecords = setupTestingData(summaryObjectType);
 
         Test.startTest();
@@ -111,20 +129,19 @@ private class CRLP_RollupQueryBuilder_TEST {
         }
 
         String detailsQuery = queryBuilder.buildDetailsQuery();
-        System.assert(detailsQuery.containsIgnoreCase('FROM ' + detailObject),
+        System.assert(detailsQuery.containsIgnoreCase(' FROM ' + detailObject),
                 'The query should query the expected "' + detailObject + '" object: ' + detailsQuery);
-        System.assert(detailsQuery.containsIgnoreCase(varName),
+        System.assert(detailsQuery.containsIgnoreCase(':' + varName),
                 'The query should include the referenced "' + varName + '" var: ' + detailsQuery);
-        System.assert(detailsQuery.containsIgnoreCase('ORDER BY ' + orderBy),
+        System.assert(detailsQuery.containsIgnoreCase(' ORDER BY ' + orderBy),
                 'The query should include the specified Order By: ' + detailsQuery);
         if (includePayments) {
-            System.assert(detailsQuery.containsIgnoreCase(' FROM npe01__OppPayment__r'),
+            System.assert(detailsQuery.containsIgnoreCase(' FROM npe01__OppPayment__r)'),
                     'The query should include a child query on Payments: ' + detailsQuery);
-
         }
 
         List<SObject> detailRecords = Database.query(detailsQuery);
-        System.assert(true, 'The query should have succeeded: ' + detailsQuery);
+        System.assertEquals(0, detailRecords.size(), 'The query should have succeeded and returned zero records');
 
         return detailsQuery;
     }
@@ -141,117 +158,33 @@ private class CRLP_RollupQueryBuilder_TEST {
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true
         ));
-        mockRollupDefinitions();
+
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
 
         List<SObject> summaryRecords;
         if (objType == Account.SObjectType) {
             summaryRecords = new List<SObject>{
                 new Account(Id = accountIds[0], Name = 'Account 1'),
-                new Account(Id = accountIds[0], Name = 'Account 2'),
-                new Account(Id = accountIds[0], Name = 'Account 3')
+                new Account(Id = accountIds[1], Name = 'Account 2'),
+                new Account(Id = accountIds[2], Name = 'Account 3')
             };
 
         } else if (objType == Contact.SObjectType) {
             summaryRecords = new List<SObject>{
                     new Contact(Id = contactIds[0], LastName = 'LastName 1'),
-                    new Contact(Id = contactIds[0], LastName = 'LastName 2'),
-                    new Contact(Id = contactIds[0], LastName = 'LastName 3')
+                    new Contact(Id = contactIds[1], LastName = 'LastName 2'),
+                    new Contact(Id = contactIds[2], LastName = 'LastName 3')
             };
 
         } else if (objType == npe03__Recurring_Donation__c.SObjectType) {
             summaryRecords = new List<SObject>{
                     new npe03__Recurring_Donation__c(Id = rdIds[0], Name = 'GAU 1'),
-                    new npe03__Recurring_Donation__c(Id = rdIds[0], Name = 'GAU 2'),
-                    new npe03__Recurring_Donation__c(Id = rdIds[0], Name = 'GAU 3')
+                    new npe03__Recurring_Donation__c(Id = rdIds[1], Name = 'GAU 2'),
+                    new npe03__Recurring_Donation__c(Id = rdIds[2], Name = 'GAU 3')
             };
 
         }
 
         return summaryRecords;
-    }
-
-    /**
-     * @description Mock the Rollup__mdt records for use within this unit test class
-     */
-    private static void mockRollupDefinitions() {
-
-        String filterGroupId = null;
-
-        // Create two Rollup Definition per Rollup Type that will be grouped into a single CRLP_Rollup instance.
-        // The FilterGroup itself doesn't need to exist for this test
-        String rollupsJSON = '[' +
-
-                // Contact Hard Credit
-                CMT_UnitTestData_TEST.createRollupRecord('Total Donations All Time', filterGroupId,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
-                        'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Amount') + ',' +
-
-                CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
-                        'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
-
-                // Account Hard Credit
-                CMT_UnitTestData_TEST.createRollupRecord('Total Donations All Time', filterGroupId,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                        'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Amount') + ',' +
-
-                CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                        'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
-
-                // Account Contact Soft Credit
-                CMT_UnitTestData_TEST.createRollupRecord('Account: Soft Credits - Total', filterGroupId,
-                        CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
-                        'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Amount__c') + ',' +
-
-                CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
-                        CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
-                        'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
-
-                // Account Soft Credit
-                CMT_UnitTestData_TEST.createRollupRecord('Total Account Soft Credits', filterGroupId,
-                        CMT_UnitTestData_TEST.RollupRecordType.AccountSoftCreditToAccount, 'Matching_Gift_Amount_Max__c',
-                        CRLP_Operation.RollupType.Sum, 'Amount__c') + ',' +
-
-                CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
-                        CMT_UnitTestData_TEST.RollupRecordType.AccountSoftCreditToAccount,
-                        'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
-
-                // Contact Soft Credit
-                CMT_UnitTestData_TEST.createRollupRecord('Contact: Soft Credits - Total', filterGroupId,
-                        CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToContact,
-                        'npo02__Soft_Credit_Total__c', CRLP_Operation.RollupType.Sum, 'Amount__c') + ',' +
-
-                CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
-                        CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToContact,
-                        'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
-
-                // GAU
-                CMT_UnitTestData_TEST.createRollupRecord('Total Allocations All Time', filterGroupId,
-                        CMT_UnitTestData_TEST.RollupRecordType.GAU,
-                        'Total_Allocations__c', CRLP_Operation.RollupType.Sum, 'Amount__c',
-                        CRLP_Operation.TimeBoundOperationType.All_Time, 0) + ',' +
-
-                CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
-                        CMT_UnitTestData_TEST.RollupRecordType.GAU,
-                        'Total_Number_of_Allocations__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
-
-                // Recurring Donations
-                CMT_UnitTestData_TEST.createRollupRecord('RD Next Payment Date', filterGroupId,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
-                        'npe03__Next_Payment_Date__c', CRLP_Operation.RollupType.First, 'CloseDate') + ',' +
-
-                CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
-                        'npe03__Total_Paid_Installments__c', CRLP_Operation.RollupType.Count, 'Amount') +
-
-                ']';
-
-        // Deserialize the rollups to use for testing
-        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
-        // Clear any cached collections as well
-        CRLP_Rollup_SEL.rollupsBySummaryType = null;
-        CRLP_Rollup_SEL.rollupsByDetailType = null;
-        CRLP_Rollup_SEL.rollupsByFilterGroup = null;
     }
 }

@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2019
 * @group API
-* @description Unit Tests for the Customizable Rollups Api Service class
+* @description Unit Tests for the Customizable Rollups Api Service classes
 */
 @IsTest(IsParallel=true)
 private class CRLP_ApiService_TEST {
@@ -42,7 +42,7 @@ private class CRLP_ApiService_TEST {
      */
     @IsTest
     private static void shouldReturnRollupDefinitionsWhenParameterIsValid() {
-        mockRollupDefinitions();
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
 
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
             Customizable_Rollups_Enabled__c = true
@@ -137,7 +137,8 @@ private class CRLP_ApiService_TEST {
         System.assert(service.executeRollups(parentId, rollupType, rollupDefs, null, false).isEmpty(),
                 'The call should have succeeded, even with missing data, but returned an empty collection because there are no active rollups for this type.');
 
-        mockRollupDefinitions();
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
         rollupDefs = service.getRollupDefinitions(rollupType);
         System.assertEquals(1, rollupDefs.size(), 'There should be rollup definitions now');
         System.assertEquals(2, rollupDefs[0].rollupsMdt.size(), 'There should be rollup definitions now');
@@ -194,11 +195,11 @@ private class CRLP_ApiService_TEST {
                 Customizable_Rollups_Enabled__c = true
         ));
 
-        mockRollupDefinitions();
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
 
-        final String rollupType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name();
-        final Double oppAmount = 100;
-        final Id oppId = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType);
+        String rollupType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name();
+        Double oppAmount = 100;
+        Id oppId = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType);
 
         Account acct = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null)[0];
         insert acct;
@@ -234,92 +235,5 @@ private class CRLP_ApiService_TEST {
         acct = [SELECT npo02__NumberOfClosedOpps__c FROM Account WHERE Id = :acct.Id LIMIT 1];
         System.assertEquals(acctCountOfOppsValue, acct.npo02__NumberOfClosedOpps__c,
                 'The Parent Account should not have been updated');
-    }
-
-    // **************************** HELPER METHODS ****************************
-
-    /**
-     * @description Mock the Rollup__mdt records for use within this unit test class
-     */
-    private static void mockRollupDefinitions() {
-
-        String filterGroupId = null;
-
-        // Create two Rollup Definition per Rollup Type that will be grouped into a single CRLP_Rollup instance.
-        // The FilterGroup itself doesn't need to exist for this test
-        String rollupsJSON = '[' +
-
-            // Contact Hard Credit
-            CMT_UnitTestData_TEST.createRollupRecord('Total Donations All Time', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
-                    'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Amount') + ',' +
-
-            CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
-                    'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
-
-            // Account Hard Credit
-            CMT_UnitTestData_TEST.createRollupRecord('Total Donations All Time', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                    'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Amount') + ',' +
-
-            CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                    'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
-
-            // Account Contact Soft Credit
-            CMT_UnitTestData_TEST.createRollupRecord('Account: Soft Credits - Total', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
-                    'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Amount__c') + ',' +
-
-            CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
-                    'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
-
-            // Account Soft Credit
-            CMT_UnitTestData_TEST.createRollupRecord('Total Account Soft Credits', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.AccountSoftCreditToAccount, 'Matching_Gift_Amount_Max__c',
-                    CRLP_Operation.RollupType.Sum, 'Amount__c') + ',' +
-
-            CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.AccountSoftCreditToAccount,
-                    'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
-
-            // Contact Soft Credit
-            CMT_UnitTestData_TEST.createRollupRecord('Contact: Soft Credits - Total', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToContact,
-                    'npo02__Soft_Credit_Total__c', CRLP_Operation.RollupType.Sum, 'Amount__c') + ',' +
-
-            CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToContact,
-                    'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
-
-            // GAU
-            CMT_UnitTestData_TEST.createRollupRecord('Total Allocations All Time', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.GAU,
-                    'Total_Allocations__c', CRLP_Operation.RollupType.Sum, 'Amount__c',
-                    CRLP_Operation.TimeBoundOperationType.All_Time, 0) + ',' +
-
-            CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.GAU,
-                    'Total_Number_of_Allocations__c', CRLP_Operation.RollupType.Count, 'Amount') + ',' +
-
-            // Recurring Donations
-            CMT_UnitTestData_TEST.createRollupRecord('RD Next Payment Date', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
-                    'npe03__Next_Payment_Date__c', CRLP_Operation.RollupType.First, 'CloseDate') + ',' +
-
-            CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.OppToRD,
-                    'npe03__Total_Paid_Installments__c', CRLP_Operation.RollupType.Count, 'Amount') +
-
-            ']';
-
-        // Deserialize the rollups to use for testing
-        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
-        // Clear any cached collections as well
-        CRLP_Rollup_SEL.rollupsBySummaryType = null;
-        CRLP_Rollup_SEL.rollupsByDetailType = null;
-        CRLP_Rollup_SEL.rollupsByFilterGroup = null;
     }
 }
