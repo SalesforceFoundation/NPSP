@@ -223,7 +223,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
             } 
             
             if (payment.npe01__Written_Off__c == true) {
-                if (payment.npe01__Written_Off__c != null) {
+                if (payment.npe01__Payment_Amount__c != null) {
                     amountWrittenOff += payment.npe01__Payment_Amount__c;
                 }
                 continue;

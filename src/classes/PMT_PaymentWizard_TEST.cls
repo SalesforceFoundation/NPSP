@@ -213,6 +213,93 @@ private class PMT_PaymentWizard_TEST {
         System.assertEquals(900, writtenOffAmount, 'There should be 900 in written off payments');
         
     }
+
+    /*********************************************************************************************************
+    * @description Verifies creation of payments does not remove existing written off payments unless the remove
+    *   paid payments is checked off
+    */
+    @isTest
+    private static void generatedPaymentScheduleShouldNotDeleteWrittenOffPayments() {
+        Opportunity opp = createPledgedOpportunity(1000);
+
+        npe01__OppPayment__c[] pmts = new npe01__OppPayment__c[0];
+        pmts.add(new npe01__OppPayment__c(
+            npe01__Opportunity__c = opp.id,
+            npe01__payment_amount__c = 100,
+            npe01__Paid__c = true)
+        );
+        pmts.add(new npe01__OppPayment__c(
+            npe01__Opportunity__c = opp.id,
+            npe01__payment_amount__c = 100,
+            npe01__Paid__c = false,
+            npe01__Written_Off__c = true)
+        );
+        insert pmts;
+         
+        Test.startTest();
+
+        PageReference pageRef = Page.PMT_PaymentWizard; 
+        Test.setCurrentPage(pageRef); 
+
+        ApexPages.currentPage().getParameters().put(PARAM_ID, opp.id);
+        ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);
+        
+        PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
+        
+        List<SelectOption> l = controller.getItems();
+        l = controller.getIntervals();
+        l = controller.getIntervalUnits();
+        
+        // set values
+        controller.samplePayment.npe01__payment_method__c = 'Stock';
+        controller.intervalUnit = 'Month';
+        controller.numberOfPayments = 8;
+        controller.samplePayment.npe01__Scheduled_Date__c = Date.newInstance(2001,12,12);
+        
+        PageReference ref = controller.calculate();
+        PageReference savePage = controller.createPayments();
+                
+        // look for the data
+        Decimal totalPaid = 0;
+        Decimal totalWrittenOff = 0;
+        Decimal totalUnPaid = 0;
+        Integer writtenOffCount = 0;
+        Integer paidCount = 0;
+        Integer unpaidCount = 0;
+
+        npe01__OppPayment__c[] payments = getPayments(opp.Id);
+        for (npe01__OppPayment__c payment : payments) {
+            if (payment.npe01__Paid__c == true) {
+                paidCount++;
+                totalPaid += payment.npe01__Payment_Amount__c;
+            } else if (payment.npe01__Written_Off__c == true) {
+                writtenOffCount++;
+                totalWrittenOff += payment.npe01__Payment_Amount__c;
+            } else {
+                unpaidCount++;
+                totalUnPaid += payment.npe01__Payment_Amount__c;
+            }
+        }
+
+        System.assertEquals(1, paidCount);
+        System.assertEquals(100, totalPaid);
+        System.assertEquals(1, writtenOffCount);
+        System.assertEquals(100, totalWrittenOff);
+        System.assertEquals(8, unpaidCount);
+        System.assertEquals(800, totalUnPaid);
+
+        Opportunity oppAfterPayments = [
+            SELECT Amount, npe01__Payments_Made__c, npe01__Amount_Written_Off__c, npe01__Amount_Outstanding__c
+            FROM Opportunity
+            WHERE Id = :opp.Id
+        ];
+
+        System.assertEquals(totalPaid, oppAfterPayments.npe01__Payments_Made__c);
+        System.assertEquals(totalWrittenOff, oppAfterPayments.npe01__Amount_Written_Off__c);
+        System.assertEquals(totalUnPaid, oppAfterPayments.npe01__Amount_Outstanding__c);
+        
+
+    }
     
     /*********************************************************************************************************
     * @description Verifies creation of payments for monthly intervals 
