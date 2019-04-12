@@ -29,8 +29,7 @@ public class TDTM_RunnableMutableExample_TEST extends TDTM_RunnableMutable {
 
         // retrieve a collection of these Accounts, update a field
         for (Account account : [
-            SELECT Id,
-                NumberOfEmployees
+            SELECT Id, NumberOfEmployees
             FROM Account
             WHERE Id IN :accountIds
         ]) {
