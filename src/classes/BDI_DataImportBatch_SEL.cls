@@ -45,6 +45,7 @@ public with sharing class BDI_DataImportBatch_SEL {
         return [SELECT Id,
                     Name,
                     Account_Custom_Unique_ID__c,
+                    Active_Fields__c,
                     Batch_Description__c,
                     Batch_Process_Size__c,
                     Contact_Custom_Unique_ID__c,
@@ -53,13 +54,13 @@ public with sharing class BDI_DataImportBatch_SEL {
                     Donation_Matching_Implementing_Class__c,
                     Donation_Matching_Rule__c,
                     Donation_Date_Range__c,
-                    Process_Using_Scheduled_Job__c,
+                    GiftBatch__c,
                     Last_Processed_On__c,
+                    Process_Using_Scheduled_Job__c,
                     Records_Failed__c,
                     Records_Successfully_Processed__c,
                     Post_Process_Implementing_Class__c,
-                    Run_Opportunity_Rollups_while_Processing__c,
-                    GiftBatch__c
+                    Run_Opportunity_Rollups_while_Processing__c
             FROM DataImportBatch__c
             WHERE Id in :setBatchId];
     }

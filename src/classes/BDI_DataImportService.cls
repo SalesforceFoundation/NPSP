@@ -78,10 +78,10 @@ global with sharing class BDI_DataImportService {
     * @return DataImportBatch__c
     */
     private static DataImportBatch__c loadBatch(Id batchId) {
-
         List<DataImportBatch__c> dataImportBatches = BDI_DataImportBatch_SEL.selectByIds(new Set<Id>{ batchId });
         if (dataImportBatches.size() == 1) {
-            return dataImportBatches[0];
+            DataImportBatch__c currentBatch = dataImportBatches[0];
+            return currentBatch;
         } else {
             throw(new BDIException(String.format(Label.bdiInvalidBatchId, new List<String>{ batchId })));
         }
@@ -489,12 +489,24 @@ global with sharing class BDI_DataImportService {
             this.listDI = dataImports;
             this.diSettings = dataImportSettings;
 
+            // list of populated data import fields
+            Set<String> populatedDataImportFieldSet = new Set<String>();
+
             // first set a clean state for each DI
             for (DataImport__c dataImport : dataImports) {
                 dataImport.Status__c = null;
                 dataImport.ImportedDate__c = null;
                 dataImport.ApexJobId__c = null;
                 dataImport.FailureInformation__c = null;
+
+                // collect populated DI fields to use for later mapping
+                Map<String, Object> populatedFieldsMap = dataImport.getPopulatedFieldsAsMap();
+                populatedDataImportFieldSet.addAll(new List<String>(populatedFieldsMap.keySet()));
+            }
+
+            populatedDataImportFields = new List<String>(populatedDataImportFieldSet);
+            for(Integer i = 0; i < populatedDataImportFields.size(); i++) {
+                populatedDataImportFields[i] = populatedDataImportFields[i].toLowerCase();
             }
 
             // do any performance optimizations to avoid unnecessary code
@@ -675,6 +687,11 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
+    * @description holds list of populated Data Import fields for Data Import records in current Batch
+    */
+    public static List<String> populatedDataImportFields = new List<String>();
+
+    /*******************************************************************************************************
     * @description list of all the fields in the Data Import object
     */
     global static List<String> listStrDataImportFields {
@@ -809,11 +826,14 @@ global with sharing class BDI_DataImportService {
                             'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'
                         };
                         Boolean isAuditField = setAuditFields.contains(fieldName.toLowerCase());
+                        Boolean isCreatable = fieldDescribe.isCreateable();
+                        Boolean isUpdateable = fieldDescribe.isUpdateable();
+                        Boolean isPopulated = populatedDataImportFields.contains(dataImportField);
 
                         if (failFieldLevelSecurity ||
                             fieldDescribe == null ||
-                            !fieldDescribe.isCreateable() ||
-                            (!isAuditField && !fieldDescribe.isUpdateable())) {
+                            (!isCreatable && isPopulated) ||
+                            (!isAuditField && !isUpdateable && isPopulated)) {
                                 throw (new FLSException(
                                     String.format(System.Label.flsError, new List<String>{ targetObjectName + '.' + fieldName }
                                 )));
@@ -1564,6 +1584,7 @@ global with sharing class BDI_DataImportService {
 
         Map<String, String> mapDIFieldToAddrField =
             mapFieldsForDIObject('Address', UTIL_Namespace.StrTokenNSPrefix('Address__c'), listStrDataImportFields);
+
         List<Address__c> addressesToInsert = new List<Address__c>();
         List<DataImport__c> dataImportsToInsert = new List<DataImport__c>();
         Map<String, Address__c> mapHHAddrKeyToAddrNew = new Map<String, Address__c>();
