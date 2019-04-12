@@ -64,16 +64,6 @@
         <type>Checkbox</type>
     </fields>
     <fields>
-        <fullName>AllowMutationofRecordsforDML__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>Indicates whether the class to run will have access to the global collection of records that will be inserted, updated, and deleted based on classes that ran prior.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Indicates whether the class to run will have access to the global collection of records that will be inserted, updated, and deleted based on classes that ran prior.</inlineHelpText>
-        <label>Allow Mutation of Records for DML</label>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
-    </fields>
-    <fields>
         <fullName>Asynchronous__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Indicates whether this class should run asynchronously in this transaction, for any of its After events.</description>

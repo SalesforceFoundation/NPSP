@@ -19,8 +19,7 @@ private with sharing class TDTM_RunnableMutable_TEST {
 
     /*************************************************************************** 
     * @description Verifies that when calling the same Trigger Handler multiple
-    * times, there is no exception thrown if that Trigger Handler is marked as 
-    * AllowMutationofRecordsforDML__c = true.
+    * times where that class implements TDTM_RunnableMutable
     **/
     @isTest
     private static void testAllowMutation()
@@ -36,7 +35,6 @@ private with sharing class TDTM_RunnableMutable_TEST {
         for (Integer i = 0; i < numberOfIterations; i += 1) {
             Trigger_Handler__c triggerHandler = new Trigger_Handler__c();
             triggerHandler.Active__c = true;
-            triggerHandler.AllowMutationofRecordsforDML__c = true;
             triggerHandler.Asynchronous__c = false;
             triggerHandler.Class__c = 'TDTM_RunnableMutableExample_TEST';
             triggerHandler.Load_Order__c = i;

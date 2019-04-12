@@ -45,10 +45,6 @@
                 <behavior>Edit</behavior>
                 <field>User_Managed__c</field>
             </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>AllowMutationofRecordsforDML__c</field>
-            </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
     </layoutSections>
