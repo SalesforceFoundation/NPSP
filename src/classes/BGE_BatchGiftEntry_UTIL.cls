@@ -37,6 +37,108 @@
 public with sharing class BGE_BatchGiftEntry_UTIL {
 
     /*******************************************************************************************************
+    * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
+    * @param batchId the batch for which to get all fields for soql
+    * @return List<String> list of DataImport__c field api names
+    */
+    public static List<String> getDataImportFields(Id batchId) {
+        return getDataImportFields(batchId, true);
+    }
+
+    /*******************************************************************************************************
+    * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
+    * @param batchId the batch for which to get all fields for soql
+    * @param includeRelationshipFields whether to include relationship fields in the returned list
+    * @return List<String> list of DataImport__c field api names
+    */
+    public static List<String> getDataImportFields(Id batchId, Boolean includeRelationshipFields) {
+
+        List<String> fields = getCoreDataImportFields(includeRelationshipFields);
+        fields.addAll(getActiveFieldNamesFromBatch(batchId));
+
+        return fields;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the subset of DataImport__c fields that are part of every batch
+    * @param includeRelationshipFields whether to include relationship fields in the returned list
+    * @return list of DataImport__c field api names
+    */
+    private static List<String> getCoreDataImportFields(Boolean includeRelationshipFields) {
+        List<String> fields = new List<String> {
+            'Id',
+            'Account1Imported__c',
+            'Contact1Imported__c',
+            'Donation_Donor__c',
+            'DonationImported__c',
+            'DonationImportStatus__c',
+            'FailureInformation__c',
+            'NPSP_Data_Import_Batch__c',
+            'PaymentImported__c',
+            'PaymentImportStatus__c',
+            'Status__c'
+        };
+
+        if (includeRelationshipFields) {
+            fields.addAll(new List<String> {
+                'Account1Imported__r.Name',
+                'Contact1Imported__r.Name',
+                'DonationImported__r.Name',
+                'PaymentImported__r.Name'
+            });
+        }
+
+        // Maybe create new method in UTIL_Namespace for lists
+        List<String> namespacedFields = new List<String>();
+        for(String fieldName : fields) {
+            namespacedFields.add(UTIL_Namespace.StrAllNSPrefix(fieldName));
+        }
+
+        return namespacedFields;
+    }
+
+     /*******************************************************************************************************
+    * @description parses Active_Fields__c for the list of user-defined fields included in the batch config
+    * @param batchId: ID of the NPSP_Data_Import_Batch__c
+    * @return list of field api names
+    */
+    public static List<String> getActiveFieldNamesFromBatch(Id batchId) {
+        DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
+        String activeFieldsJSON = batch.Active_Fields__c;
+        List<String> activeFieldNames = new List<String>();
+
+        if (activeFieldsJSON != null) {
+            List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields =
+                (List<BGE_ConfigurationWizard_CTRL.BGEField>)JSON.deserialize(
+                    activeFieldsJSON,
+                    List<BGE_ConfigurationWizard_CTRL.BGEField>.class
+                );
+            for (BGE_ConfigurationWizard_CTRL.BGEField field : activeFields) {
+                activeFieldNames.add(field.name);
+                if (field.type == 'reference') {
+                    DescribeFieldResult lookupDFR = UTIL_Describe.getFieldDescribe(
+                        UTIL_Namespace.StrTokenNSPrefix('DataImport__c'),
+                        field.name.toLowerCase()
+                    );
+                    String referencedObjectName = lookupDFR.getReferenceTo()[0].getDescribe().name;
+                    activeFieldNames.add(field.name.substringBefore('__c') + '__r.' + UTIL_Describe.getNameField(referencedObjectName));
+                }
+            }
+        }
+
+        return activeFieldNames;
+    }
+
+    /*******************************************************************************************************
+    * @description checks for read, create, and edit FLS for a given field
+    * @param dfr DescribeFieldResult of the field to check
+    * @return Boolean
+    */
+    public static Boolean canUpdateField(DescribeFieldResult dfr) {
+        return dfr.isCreateable() && dfr.isUpdateable();
+    }
+
+    /*******************************************************************************************************
     * @description Returns the relevant Batch fields for soql
     * @return list of field API names
     */
