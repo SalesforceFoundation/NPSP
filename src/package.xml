@@ -74,6 +74,9 @@
         <members>BDI_Donations</members>
         <members>BDI_Donations_TEST</members>
         <members>BDI_DryRun_TEST</members>
+        <members>BDI_FieldMapping</members>
+        <members>BDI_FieldMappingCustomMetadata</members>
+        <members>BDI_FieldMappingHelpText</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
         <members>BDI_MatchDonations</members>

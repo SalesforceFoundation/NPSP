@@ -1345,8 +1345,10 @@ public with sharing class BDI_DataImport_TEST {
 
         //run batch data import
         Test.StartTest();
-        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
-        bdi.isDryRun = true;
+        BDI_DataImportService dataImportService = 
+            new BDI_DataImportService(true, BDI_FieldMappingHelpText.getInstance());
+
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
 
@@ -1452,8 +1454,10 @@ public with sharing class BDI_DataImport_TEST {
 
         //run batch data import
         Test.StartTest();
-        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
-        bdi.isDryRun = true;
+        BDI_DataImportService dataImportService = 
+            new BDI_DataImportService(true, BDI_FieldMappingHelpText.getInstance());
+
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
 
@@ -1496,19 +1500,36 @@ public with sharing class BDI_DataImport_TEST {
 
         //run batch data import
         Test.StartTest();
-        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
-        bdi.isDryRun = true;
+
+        // create import service for dry run
+        BDI_DataImportService dataImportService = 
+            new BDI_DataImportService(true, BDI_FieldMappingHelpText.getInstance());
+
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
         ID ApexJobId = Database.executeBatch(bdi, 10);
-        bdi.isDryRun = false;
+        
+        // create import service without dry run
+        dataImportService = new BDI_DataImportService(false, BDI_FieldMappingHelpText.getInstance());
+        bdi = new BDI_DataImport_BATCH(dataImportService);
         ID ApexJobId2 = Database.executeBatch(bdi, 10);
         Test.stopTest();
 
         //verify dry run statuses and import fields
         dataImports = getDataImports();
-        System.assertEquals(System.Label.bdiMatchedId, dataImports[0].DonationCampaignImportStatus__c);
-        System.assertEquals(campaigns[0].Id, dataImports[0].DonationCampaignImported__c);
-        System.assertEquals(System.Label.bdiMatched, dataImports[1].DonationCampaignImportStatus__c);
-        System.assertEquals(campaigns[1].Id, dataImports[1].DonationCampaignImported__c);
+
+        Map<Id, DataImport__c> dataImportsByCampaignId = new Map<Id, DataImport__c>();
+        dataImportsByCampaignId.put(dataImports[0].DonationCampaignImported__c, dataImports[0]);
+        dataImportsByCampaignId.put(dataImports[1].DonationCampaignImported__c, dataImports[1]);
+
+        System.assert(dataImportsByCampaignId.containsKey(campaigns[0].Id), 
+            'A data import should have matched '+campaigns[0].Name);
+        System.assert(dataImportsByCampaignId.containsKey(campaigns[1].Id), 
+            'A data import should have matched '+campaigns[1].Name);
+
+        System.assertEquals(System.Label.bdiMatchedId, 
+            dataImportsByCampaignId.get(campaigns[0].Id).DonationCampaignImportStatus__c);
+        System.assertEquals(System.Label.bdiMatched, 
+            dataImportsByCampaignId.get(campaigns[1].Id).DonationCampaignImportStatus__c);
     }
 
     /*********************************************************************************************************

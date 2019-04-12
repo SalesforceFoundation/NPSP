@@ -46,10 +46,10 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     /*******************************************************************************************************
     * @description the map of DI Donation Fields to Opportunity Fields
     */
-    private static map<String, String> mapDIFieldToOppField {
+    private map<String, String> mapDIFieldToOppField {
         get {
             if (mapDIFieldToOppField == null) {
-                mapDIFieldToOppField = BDI_DataImportService.mapFieldsForDIObject('Opportunity', 'Opportunity', 
+                mapDIFieldToOppField = bdi.mapDataImportFields('Opportunity', 'Opportunity', 
                     BDI_DataImportService.listStrDataImportFields);
             }
             return mapDIFieldToOppField;
@@ -60,10 +60,10 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     /*******************************************************************************************************
     * @description the map of DI Donation Fields to Payment Fields
     */
-    private static map<string, string> mapDIFieldToPmtField { 
+    private map<string, string> mapDIFieldToPmtField { 
         get {
             if (mapDIFieldToPmtField == null) {
-                mapDIFieldToPmtField = BDI_DataImportService.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c', 
+                mapDIFieldToPmtField = bdi.mapDataImportFields('Payment', 'npe01__OppPayment__c', 
                     BDI_DataImportService.listStrDataImportFields);
                 // special case Donation fields we defaultly map to Opp fields, but we will use with Payments too!
                 // note that these two work for matching rules.  

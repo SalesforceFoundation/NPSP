@@ -40,6 +40,11 @@
 public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
 
     /*******************************************************************************************************
+    * @description instance of the data import service 
+    */
+    private BDI_DataImportService dataImportService;
+
+    /*******************************************************************************************************
     * @description the soql string of DataImport records for the entire batch to run against
     */
     private String strSoql;
@@ -55,15 +60,19 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     public Id batchId;
 
     /*******************************************************************************************************
-    * @description whether to process the batch in Dry Run mode
-    */
-    public Boolean isDryRun;
-
-    /*******************************************************************************************************
     * @description constructor, which sets up our initial soql
     */
     public BDI_DataImport_BATCH() {
         this(null, false);
+    }
+
+    /*******************************************************************************************************
+    * @description constructor that sets the bdi service instance.
+    * @param batchId the specific batch to process
+    * @param dataImportService instance of data import service that will process the batches
+    */
+    public BDI_DataImport_BATCH(BDI_DataImportService dataImportService) {
+        this(null, dataImportService);
     }
 
     /*******************************************************************************************************
@@ -73,10 +82,21 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     * @param isDryRun whether to run in Dry Run mode or commit records.
     */
     public BDI_DataImport_BATCH(ID batchId, Boolean isDryRun) {
+        this(batchId, new BDI_DataImportService(isDryRun, BDI_FieldMappingHelpText.getInstance()));
+    }
+
+    /*******************************************************************************************************
+    * @description constructor that takes a specific batch, which sets up our initial soql
+    * and loads the appropriate data import settings, and also sets the bdi service instance.
+    * @param batchId the specific batch to process
+    * @param isDryRun whether to run in Dry Run mode or commit records.
+    * @param dataImportService instance of data import service that will process the batches
+    */
+    public BDI_DataImport_BATCH(ID batchId, BDI_DataImportService dataImportService) {
         // remember our batchId
         this.batchId = batchId;
-
-        this.isDryRun = isDryRun;
+        // set the bdi service
+        this.dataImportService = dataImportService;
 
         // now load our settings
         diSettings = BDI_DataImportService.loadSettings(batchId);
@@ -102,7 +122,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     * @return void
     */
     public void execute(Database.BatchableContext bc, List<DataImport__c> listDI) {
-        BDI_DataImportService.execute(bc.getJobId(), diSettings, listDI, isDryRun);
+        dataImportService.process(bc.getJobId(), diSettings, listDI);
     }
 
     /*******************************************************************************************************
@@ -111,7 +131,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     * @return void
     */
     public void finish(Database.BatchableContext bc) {
-        if (!isDryRun) {
+        if (!dataImportService.isDryRun) {
             BDI_DataImportService.updateDIBatchStatistics(bc.getJobId(), batchId);
         }
     }
