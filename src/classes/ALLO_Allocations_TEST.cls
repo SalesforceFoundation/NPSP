@@ -144,19 +144,6 @@ private with sharing class ALLO_Allocations_TEST {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='GAU-pmtAmountChange');
         insert gau;
 
-       List<Allocation__c> queryAllo = getAllocationsOrderByPercent();
-        for(Allocation__c alloc : queryAllo) {
-            System.debug ('OPP Id:' + alloc.Opportunity__c +
-                          ', PMT Id:' + alloc.Payment__c +
-                          ', GAU Name: ' + alloc.General_Accounting_Unit__r.Name +
-                          ', ' + alloc.Percent__c +
-                          '%, $' + alloc.Amount__c +
-                          'CreatedDate: ' + alloc.CreatedDate +
-                          'LastModifiedDate: ' + alloc.LastModifiedDate
-                          );
-        }
-
-
         //resetting these manually as a test is considered a single context for static variables
         List<Allocation__c> alloForInsert = new List<Allocation__c>();
 
@@ -166,36 +153,27 @@ private with sharing class ALLO_Allocations_TEST {
         alloForInsert.add(amountAllo);
         insert alloForInsert;
 
-        queryAllo = getAllocationsOrderByPercent();
-        for(Allocation__c alloc : queryAllo) {
-            System.debug ('OPP Id:' + alloc.Opportunity__c +
-                          ', PMT Id:' + alloc.Payment__c +
-                          ', GAU Name: ' + alloc.General_Accounting_Unit__r.Name +
-                          ', ' + alloc.Percent__c +
-                          '%, $' + alloc.Amount__c +
-                          'CreatedDate: ' + alloc.CreatedDate +
-                          'LastModifiedDate: ' + alloc.LastModifiedDate
-                          );
-        }
-        System.assertEquals(50, queryAllo[4].Percent__c, 'The percentage allocation should be 50%.');
-        System.assertEquals(4, queryAllo[4].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
-        System.assertEquals(4, queryAllo[2].Amount__c, 'The amount of the standard number allocation should be 4.');
+        List<Allocation__c> queryAllo = getAllocationsOrderByPercent(pmt.id, gau.Id);
+
+        System.assertEquals(50, queryAllo[1].Percent__c, 'The percentage allocation should be 50%.');
+        System.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
+        System.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be 4.');
 
         pmt.npe01__Payment_Amount__c = 10;
         Test.startTest();
         update pmt;
         Test.stopTest();
 
-        queryAllo = getAllocationsOrderByPercent();
-        System.assertEquals(5, queryAllo[4].Amount__c, 'The amount of the percentage allocation should increase proportionately with the Payment amount.');
-        System.assertEquals(4, queryAllo[2].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
+        queryAllo = getAllocationsOrderByPercent(pmt.id, gau.Id);
+        System.assertEquals(5, queryAllo[1].Amount__c, 'The amount of the percentage allocation should increase proportionately with the Payment amount.');
+        System.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
 
         pmt.npe01__Payment_Amount__c = 8;
         update pmt;
 
-        queryAllo = getAllocationsOrderByPercent();
-        System.assertEquals(4, queryAllo[3].Amount__c, 'The amount of the percentage allocation should decrease proportionately with the Payment amount.');
-        System.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
+        queryAllo = getAllocationsOrderByPercent(pmt.id, gau.Id);
+        System.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the percentage allocation should decrease proportionately with the Payment amount.');
+        System.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
 
         pmt.npe01__Payment_Amount__c = 1;
 
@@ -770,13 +748,38 @@ private with sharing class ALLO_Allocations_TEST {
     }
 
     /*********************************************************************************************************
+    * @description Get Allocations for the Payment and GAU ordered by Percent
+    * @param paymentId A npe01__OppPayment__c Id
+    * @param gauId A General_Accounting_Unit__c Id
+    * @return List<Allocation__c> A list of Allocations assigned to the Opportunity
+    **********************************************************************************************************/
+    private static List<Allocation__c> getAllocationsOrderByPercent(Id paymentId, Id gauId) {
+        return Database.query(getAllocationsQuery(paymentId, gauId).build() + ' ORDER BY Percent__c');
+    }
+
+    /*********************************************************************************************************
     * @description Build query to retrieve Allocations for the Opportunity
+    * @param oppId An Opportunity Id
     * @return UTIL_Query Allocation SOQL
     **********************************************************************************************************/
     private static UTIL_Query getAllocationsQuery(Id oppId) {
         return getAllocationsQuery()
             .withWhere(String.format('Opportunity__c = \'\'{0}\'\'', new String[] { oppId }));
     }
+
+    /*********************************************************************************************************
+    * @description Build query to retrieve Allocation by payment Id and GAU
+    * @param paymentId A npe01__OppPayment__c Id
+    * @param gauId A General_Accounting_Unit__c Id
+    * @return UTIL_Query Allocation SOQL
+    **********************************************************************************************************/
+    private static UTIL_Query getAllocationsQuery(Id paymentId, Id gauId) {
+        return getAllocationsQuery()
+            .withWhere(String.format('Payment__c = \'\'{0}\'\'', new String[] { paymentId }))
+            .withWhere(String.format('General_Accounting_Unit__c = \'\'{0}\'\'', new String[] { gauId }));
+    }
+
+
 
     /*********************************************************************************************************
     * @description Build query to retrieve all Allocations
