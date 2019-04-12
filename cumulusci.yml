@@ -247,15 +247,17 @@ flows:
             9:
                 task: deploy_reports
 
-    config_acctsc_rollups:
-        description: 'Deploys custom fields and rollups for testing account soft credits.'
+    deploy_rollup_testing:
+        description: 'Deploys custom fields and rollup definitions for testing Customizable Rollups using the Apex Anon testing script. >>> NOTE: Customizable Rollups needs to be successfully enabled before deploy_rollup_testing can be run <<<'
         steps:
             1:
-                task: enable_customizable_rollups
-            2:
                 task: deploy
                 options:
                     path: unpackaged/config/acctsc_rollups
+            2:
+                task: deploy
+                options:
+                    path: unpackaged/config/payment_rollups
             3:
                 task: update_admin_profile
 
