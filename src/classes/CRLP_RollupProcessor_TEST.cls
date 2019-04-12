@@ -137,8 +137,8 @@ private class CRLP_RollupProcessor_TEST {
                 .withJobOptions(options);
 
         System.assertEquals(OpportunityContactRole.SObjectType, processor.detailObjectType);
-        System.assertEquals('Contact__c', processor.parentKeyField);
-        System.assertEquals('Contact__c', processor.parentRelationshipField);
+        System.assertEquals(UTIL_Namespace.StrAllNSPrefix('Contact__c'), processor.parentKeyField);
+        System.assertEquals(UTIL_Namespace.StrAllNSPrefix('Contact__c'), processor.parentRelationshipField);
         System.assertEquals(null, processor.parentRelationshipObject);
 
         System.assertEquals(1, processor.detailRecordsByParentId.get(contact.Id).size());
