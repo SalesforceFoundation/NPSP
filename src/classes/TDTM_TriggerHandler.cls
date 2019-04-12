@@ -102,7 +102,7 @@ public class TDTM_TriggerHandler {
                 TDTM_Runnable.DmlWrapper dmlWrapperLocal = new TDTM_Runnable.DmlWrapper();
 
                 try {
-                    dmlWrapperLocal = runClass(classToCall, newList, OldList, thisAction, describeObj);
+                    dmlWrapperLocal = runClass(classToCall, newList, OldList, thisAction, describeObj, dmlWrapper);
                 } catch (Exception ex) {
                     //use the correct list
                     List<SObject> populatedList = newList == null || newList.isEmpty() ? oldList : newList;
@@ -154,7 +154,7 @@ public class TDTM_TriggerHandler {
     }
 
     private static TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord, List<Sobject> newList, List<Sobject> oldList, 
-    TDTM_Runnable.Action thisAction, Schema.DescribeSobjectResult describeObj) {
+    TDTM_Runnable.Action thisAction, Schema.DescribeSobjectResult describeObj, TDTM_Runnable.DmlWrapper dmlWrapper) {
     	        
         if(classToRunRecord != null) {
 	        String classToRunName = String.valueOf(classToRunRecord.get('Class__c'));
@@ -182,7 +182,19 @@ public class TDTM_TriggerHandler {
                                 describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
                         return classToRun.run(newlist, oldlist, thisAction, describeObj);
                     }
-	        	} else {
+	        	} else if(classInstance instanceof TDTM_RunnableMutable) {
+                    // alternatively, objects created dynamically can implement the TDTM_RunnableMutable
+                    // interface if the class intends to directly modify the global DmlWrappper
+                    TDTM_RunnableMutable classToRun = (TDTM_RunnableMutable) classInstance;
+                    UTIL_Debug.debugWithInfo('****Calling synchronously: ' + classToRunName + ' for ' +
+                        describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
+
+                    // we do not check whether class is identified as Asynchronous__c because the
+                    // underlying assumption to mutating DmlWrapper is that the class modifies
+                    // the collection directly, and TDTM_TriggerHandler.run will perform DML on
+                    // whatever exists in the collection after iterating through all classes to run
+                    classToRun.run(newList, oldList, thisAction, describeObj, dmlWrapper);
+                } else {
 	        		UTIL_Debug.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
 	        	}
 	        } else {
