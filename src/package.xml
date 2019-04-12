@@ -463,6 +463,8 @@
 		<members>UTIL_Where_TEST</members>
 		<members>UTIL_iSoqlListViewConsumer</members>
 		<members>TDTM_RunnableMutable</members>
+		<members>TDTM_RunnableMutable_TEST</members>
+		<members>TDTM_RunnableMutableExample_TEST</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
