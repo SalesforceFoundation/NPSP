@@ -118,4 +118,18 @@
             </valueSetDefinition>
         </valueSet>
     </fields>
+    <validationRules>
+        <fullName>Require_Pay_Date_on_Paid_Payments</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND( $Setup.npe01__Contacts_And_Orgs_Settings__c.Enforce_Accounting_Rules__c,  npe01__Paid__c,  ISNULL( npe01__Payment_Date__c )  )</errorConditionFormula>
+        <errorDisplayField>npe01__Payment_Date__c</errorDisplayField>
+        <errorMessage>A paid payment must have a payment date.</errorMessage>
+    </validationRules>
+    <validationRules>
+        <fullName>Require_Scheduled_Date_on_Unpaid_Payment</fullName>
+        <active>true</active>
+        <errorConditionFormula>AND( $Setup.npe01__Contacts_And_Orgs_Settings__c.Enforce_Accounting_Rules__c,  NOT(npe01__Paid__c),  ISNULL(  npe01__Scheduled_Date__c )  )</errorConditionFormula>
+        <errorDisplayField>npe01__Scheduled_Date__c</errorDisplayField>
+        <errorMessage>An unpaid payment must have a scheduled date.</errorMessage>
+    </validationRules>
 </CustomObject>
