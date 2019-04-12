@@ -200,23 +200,25 @@ public with sharing class BGE_ConfigurationWizard_CTRL {
         };
 
         // looping through the fields on DataImport__c and remove unsupported data types
+        // Remove fields user doesn't have permission to update unless whitelisted
         for (Schema.DescribeFieldResult dfr : allFieldsMap.values()) {
             String dataImportFieldApiName = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.getName());
 
             String dataImportFieldMappedObject = BDI_DataImportService.getTargetObject(dfr.getName());
 
-            Boolean fieldAllowed = (allowedObjects.contains(dataImportFieldMappedObject)
+            Boolean fieldAllowed = (
+                UTIL_Permissions.canUpdate(dfr, false)
+                && ((allowedObjects.contains(dataImportFieldMappedObject)
                 && allowedDataTypes.contains(dfr.type)
                 && !bannedFields.contains(dataImportFieldApiName)
                 && dfr.getInlineHelpText() != null)
-                || allowedFields.contains(dataImportFieldApiName);
+                || allowedFields.contains(dataImportFieldApiName))
+            );
 
             if (fieldAllowed) {
                 filteredDFRMap.put(dfr.label, dfr);
             }
         }
-
-        BGE_BatchGiftEntry_UTIL.checkFieldPermissions(filteredDFRMap.values());
 
         List<String> sortedFieldLabels = new List<String>(filteredDFRMap.keySet());
         sortedFieldLabels.sort();
