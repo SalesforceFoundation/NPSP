@@ -187,26 +187,57 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         List<Id> contactIds = new List<Id>((new Map<Id, Contact>(contacts)).keySet());
 
         // Executes Account, Contact and RD roll-ups real-time
-        asyncExecuteCustomizableRollups(acctIds, contactIds);
+        System.enqueueJob(new asyncExecuteCustomizableRollupsQ(acctIds, contactIds));
 
         // Executes the following Skew & Non-Skew Mode async batch jobs
         CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.GAU,
                 CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{ gau.Id }, null);
         CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
                 CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, contactIds, null);
-        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
-                CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, acctIds, null);
-        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
-                CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, acctIds, null);
     }
 
-    /** @description Move the rollup of Account & Contacts to an async process just to avoid governor limit issues */
-    @future
-    private static void asyncExecuteCustomizableRollups(List<Id> acctIds, List<Id> contactIds) {
-        CRLP_RollupQueueable.runRollupsForIds(acctIds);
-        CRLP_RollupQueueable.runRollupsForIds(contactIds);
-        npe03__Recurring_Donation__c rd = [SELECT Id FROM npe03__Recurring_Donation__c WHERE Name = :RD_NAME LIMIT 1];
-        CRLP_RollupQueueable.runRollupsForIds(new List<Id>{rd.Id});
+    /** 
+    * @description Move the rollup of Account & Contacts to an async process just to avoid governor 
+    * limit issues. Plus, to avoid lock errors on the Account object because of the two Account Soft
+    * Credit jobs, these are split into chained Queueables 
+    */
+    private class AsyncExecuteCustomizableRollupsQ implements System.Queueable {
+        List<Id> acctIds;
+        List<Id> contactIds;
+        Boolean executeNextJob = false;
+
+        public AsyncExecuteCustomizableRollupsQ(List<Id> acctIds, List<Id> contactIds) {
+            this.acctIds = acctIds;
+            this.contactIds = contactIds;
+            this.executeNextJob = false;
+        }
+
+        public AsyncExecuteCustomizableRollupsQ(List<Id> acctIds) {
+            this.acctIds = acctIds;
+            this.executeNextJob = true;
+        }
+
+        public void execute(QueueableContext qc) {
+            if (executeNextJob == false) {
+                CRLP_RollupQueueable.runRollupsForIds(acctIds);
+
+                // Move this into the ASync process so it runs after the other Account job to avoid a Lock Error
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
+                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, acctIds, null);
+
+                CRLP_RollupQueueable.runRollupsForIds(contactIds);
+
+                npe03__Recurring_Donation__c rd = [SELECT Id FROM npe03__Recurring_Donation__c WHERE Name = :RD_NAME LIMIT 1];
+                CRLP_RollupQueueable.runRollupsForIds(new List<Id>{rd.Id});
+
+                // Re-queue this same job so it can run th eother Account Soft Credit type rollup
+                System.enqueueJob(new asyncExecuteCustomizableRollupsQ(acctIds));
+
+            } else {
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
+                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, acctIds, null);
+            }
+        }
     }
 
     /** *****************************************************************************************
@@ -268,7 +299,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
                     if (TEST_ACCOUNT_SOFT_CREDITS) {
                         if (a.Id != orgContactSC.AccountId) {
                             assertValue(ROLLUP_TOTAL_WON_AMOUNT, (Double) a.get('AccConSC_Total_SCs__c'), a.Id + ' Acccount.AccConSC_Total_SCs__c should be');
-                            assertValue(ROLLUP_TOTAL_WON_COUNT, (Double) a.get('AccConSC_Count__c'), a.Id + ' Org Acccount.AccConSC_Count__c should be');
+                            assertValue(ROLLUP_TOTAL_WON_COUNT, (Double) a.get('AccConSC_Count__c'), a.Id + ' Acccount.AccConSC_Count__c should be');
                         } else {
                             assertValue(ROLLUP_TOTAL_WON_AMOUNT + ORG_DONATION_AMT, (Double) a.get('AccConSC_Total_SCs__c'), a.Id + ' Org Acccount.AccConSC_Total_SCs__c should be');
                             assertValue(ROLLUP_TOTAL_WON_COUNT + 1, (Double) a.get('AccConSC_Count__c'), a.Id + ' Org Acccount.AccConSC_Count__c should be');
@@ -553,7 +584,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
 
         Account orgAcct = [SELECT Id, Name FROM Account
                             WHERE npe01__SYSTEMIsIndividual__c = false
-                            AND Site = :TEST_SITE_NAME LIMIT 1];
+                            AND Name = :ACCOUNT_NAME_ORG LIMIT 1];
         Contact orgContactSC = [SELECT Id FROM Contact
                             WHERE FirstName = :ORG_CONTACT_NAME LIMIT 1];
 
