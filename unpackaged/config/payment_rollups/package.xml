@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>CRLP_TEST_VALIDATE_ROLLUPS</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>Account.Rollup_Total_Payments__c</members>
+        <members>Account.Rollup_Total_Writeoffs__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Rollup.NPSP_Acct_Payments_Paid</members>
+        <members>Rollup.NPSP_Acct_Payments_WrittenOff</members>
+        <name>CustomMetadata</name>
+    </types>
+    <version>45.0</version>
+</Package>

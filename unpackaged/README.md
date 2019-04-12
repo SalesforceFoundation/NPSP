@@ -13,7 +13,7 @@ This folder contains various sets of _unpackaged_ metadata which can be used to 
 
 * `config`: 
 
-  * `acctsc_rollups`: Deploys some sample customizable rollups for account soft credits. Used by the `config_acctsc_rollups` flow which can be run manually when desired.
+  * `deploy_rollup_testing`: Deploys Customizable Rollups and target fields for Account-Contact Soft Credit, Account Soft Credit, and Payment Rollups to the Account. Included is the `CRLP_TEST_VALIDATE_ROLLUPS` apex class used to manually (and fully) test all rollup types. Instructions for using this class can be found at the top of the apex class.
 
   * `delete`: Deletes standard Salesforce Sales/Marketing/Support layouts and profiles. Used by all of the config flows.
 
