@@ -731,4 +731,12 @@ public with sharing class PMT_PaymentWizard_CTRL {
     public String getTotalWrittenOff() {
         return formatCurrency(amountWrittenOff);
     }
+
+    /*******************************************************************************************************
+    * @description Returns the formatted text of the amount Opportunity
+    * @return String opportunity amount
+    */
+    public String getOppAmount() {
+        return formatCurrency(currentOpp.Amount);
+    }
 }

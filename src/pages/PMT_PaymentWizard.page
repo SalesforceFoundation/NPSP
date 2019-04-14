@@ -122,7 +122,7 @@
                                             <label class="slds-form-element__label" for="oppAmount">{!$ObjectType.Opportunity.Fields.Amount.Label}</label>
                                             <div class="slds-form-element__control">
                                                 <span class="slds-form-element__static">
-                                                    <apex:outputField value="{!currentOpp.Amount}" id="oppAmount" />
+                                                    <apex:outputText value="{!oppAmount}" id="oppAmount" />
                                                 </span>
                                             </div>
                                         </div>
