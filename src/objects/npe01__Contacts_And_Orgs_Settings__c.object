@@ -119,7 +119,7 @@
         <fullName>Opp_RecTypes_Excluded_for_Payments__c</fullName>
         <description>Salesforce won&apos;t automatically create Payments for the selected Opportunity record types. Control or Command click to select more than one record type.</description>
         <externalId>false</externalId>
-        <inlineHelpText>NPSP automatically creates Payment records for Opportunities of all record types. Select any record types here that you don&apos;t want Payment records automatically created for. Control or Command click to select more than one record type.</inlineHelpText>
+        <inlineHelpText>NPSP automatically creates Payment records for Opportunities of all record types. Select any record types here that you don't want Payment records automatically created for. Control or Command click to select more than one record type.</inlineHelpText>
         <label>Excluded Opp Record Types</label>
         <length>255</length>
         <required>false</required>
@@ -131,7 +131,7 @@
         <fullName>Opp_Types_Excluded_for_Payments__c</fullName>
         <description>Salesforce won&apos;t automatically create Payments for Opportunities that have this value in the Type picklist.</description>
         <externalId>false</externalId>
-        <inlineHelpText>NPSP automatically creates Payment records for Opportunities with any value in the Type picklist. Select any Types here that you don&apos;t want Payment records automatically created for. Control or Command click to select more than one Type.</inlineHelpText>
+        <inlineHelpText>NPSP automatically creates Payment records for Opportunities with any value in the Type picklist. Select any Types here that you don't want Payment records automatically created for. Control or Command click to select more than one Type.</inlineHelpText>
         <label>Excluded Opp Types</label>
         <length>255</length>
         <required>false</required>
@@ -151,9 +151,9 @@
     </fields>
     <fields>
         <fullName>Payments_Auto_Close_Stage_Name__c</fullName>
-        <description>Salesforce automatically sets an Opportunity&apos;s Stage to this value when the Payment Amount Received is equal to the Opportunity Amount. If no stage is selected, the Opportunity Stage won&apos;t change when payments are complete.</description>
+        <description>Salesforce automatically sets an Opportunity's Stage to this value when the Payment Amount Received is equal to the Opportunity Amount. If no stage is selected, the Opportunity Stage won&apos;t change when payments are complete.</description>
         <externalId>false</externalId>
-        <inlineHelpText>NPSP automatically sets an Opportunity&apos;s stage to this value when the Payment Amount Received is equal to the Opportunity Amount. If no stage is selected, the Opportunity Stage won&apos;t change when payments are complete.</inlineHelpText>
+        <inlineHelpText>NPSP automatically sets an Opportunity's stage to this value when the Payment Amount Received is equal to the Opportunity Amount. If no stage is selected, the Opportunity Stage won&apos;t change when payments are complete.</inlineHelpText>
         <label>Opportunity Stage for When Fully Paid</label>
         <length>255</length>
         <required>false</required>
