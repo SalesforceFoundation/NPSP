@@ -118,23 +118,27 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
 
                     // make sure they have permissions to modify the target field
                     // we can't do this in all tests, because many profiles won't have FLS set for all our new fields!
-                    // TODO: Remove the need for test context / fail boolean, perhaps by using a mock to set test behavior
+                    /**
                     if (!Test.isRunningTest() || failFieldLevelSecurity) {
                         fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, fieldName);
                         Set<String> setAuditFields = new Set<String>{
                             'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'
                         };
                         Boolean isAuditField = setAuditFields.contains(fieldName.toLowerCase());
+                        Boolean isCreatable = fieldDescribe.isCreateable();
+                        Boolean isUpdateable = fieldDescribe.isUpdateable();
+                        Boolean isPopulated = populatedDataImportFields.contains(dataImportField);
 
                         if (failFieldLevelSecurity ||
                             fieldDescribe == null ||
-                            !fieldDescribe.isCreateable() ||
-                            (!isAuditField && !fieldDescribe.isUpdateable())) {
+                            (!isCreatable && isPopulated) ||
+                            (!isAuditField && !isUpdateable && isPopulated)) {
                                 throw (new FLSException(
                                     String.format(System.Label.flsError, new List<String>{ targetObjectName + '.' + fieldName }
                                 )));
                         }
                     }
+                    **/
 
                     dataImportFieldToTargetField.put(dataImportField, fieldName);
                 }
@@ -143,12 +147,6 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
 
         if (isCurrencyMapped(targetObjectName)) {
             addCurrencyIsoCode(dataImportFieldToTargetField);
-        }
-
-        if(additionalFieldMappings.containsKey(targetObjectName)) {
-            for(String diField: additionalFieldMappings.get(targetObjectName).keySet()) {
-                dataImportFieldToTargetField.put(diField, additionalFieldMappings.get(targetObjectName).get(diField));
-            }
         }
 
         return dataImportFieldToTargetField;
@@ -176,10 +174,4 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
     public Boolean isCurrencyMapped(String objectName) {
         return objectName.equalsIgnoreCase('Opportunity');
     }
-
-    /*******************************************************************************************************
-    * @description our exception object for Field Level Security errors.
-    */
-    public class FLSException extends Exception {}
-
 }

@@ -82,12 +82,12 @@ global with sharing class BDI_DataImportService {
     * @return DataImportBatch__c
     */
     private static DataImportBatch__c loadBatch(Id batchId) {
-
         List<DataImportBatch__c> dataImportBatches = BDI_DataImportBatch_SEL.selectByIds(new Set<Id>{ batchId });
         if (dataImportBatches.size() == 1) {
-            return dataImportBatches[0];
+            DataImportBatch__c currentBatch = dataImportBatches[0];
+            return currentBatch;
         } else {
-            throw(new BDIException(String.format(Label.bdiInvalidBatchId, new List<String>{ batchId })));
+            throw(new BDIException(String.format(Label.bdiInvalidBatchId, new List<String>{ batchId })));   
         }
     }
 
@@ -478,12 +478,24 @@ global with sharing class BDI_DataImportService {
             this.listDI = dataImports;
             this.diSettings = dataImportSettings;
 
+            // list of populated data import fields
+            Set<String> populatedDataImportFieldSet = new Set<String>();
+
             // first set a clean state for each DI
             for (DataImport__c dataImport : dataImports) {
                 dataImport.Status__c = null;
                 dataImport.ImportedDate__c = null;
                 dataImport.ApexJobId__c = null;
                 dataImport.FailureInformation__c = null;
+
+                // collect populated DI fields to use for later mapping
+                Map<String, Object> populatedFieldsMap = dataImport.getPopulatedFieldsAsMap();
+                populatedDataImportFieldSet.addAll(new List<String>(populatedFieldsMap.keySet()));
+            }
+
+            populatedDataImportFields = new List<String>(populatedDataImportFieldSet);
+            for(Integer i = 0; i < populatedDataImportFields.size(); i++) {
+                populatedDataImportFields[i] = populatedDataImportFields[i].toLowerCase();
             }
 
             // do any performance optimizations to avoid unnecessary code
@@ -545,7 +557,8 @@ global with sharing class BDI_DataImportService {
                 dataImportErrors.add(new DataImport__c(
                     Id = dataImport.Id,
                     Status__c = statusDIFailed(),
-                    FailureInformation__c = dataImport.Status__c == statusDIFailed() ? dataImport.FailureInformation__c : e.getMessage(),
+                    FailureInformation__c = dataImport.Status__c == statusDIFailed() ? 
+                        dataImport.FailureInformation__c : e.getMessage(),
                     ApexJobId__c = apexJobId
                 ));
             }
@@ -664,6 +677,11 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
+    * @description holds list of populated Data Import fields for Data Import records in current Batch
+    */
+    public /* static */ List<String> populatedDataImportFields = new List<String>();
+
+    /*******************************************************************************************************
     * @description list of all the fields in the Data Import object
     */
     global static List<String> listStrDataImportFields {
@@ -778,7 +796,35 @@ global with sharing class BDI_DataImportService {
                 String targetObjectName, 
                 List<String> dataImportFields) {
         
-        return fieldMapper.getFieldMap(dataImportObjectName, targetObjectName, dataImportFields);
+        Map<String, String> targetFieldByDIField = fieldMapper.getFieldMap(dataImportObjectName, targetObjectName, dataImportFields);
+
+        // verify that the user has correct FLS access to target field
+        // TODO: Move to it's own method?                     
+        for(String dataImportFieldName: targetFieldByDIField.keySet()) {  
+            String targetFieldName = targetFieldByDIField.get(dataImportFieldName);
+
+            if (!Test.isRunningTest() || failFieldLevelSecurity) {
+                DescribeFieldResult fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, targetFieldName);
+                Set<String> setAuditFields = new Set<String>{
+                    'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'
+                };
+                Boolean isAuditField = setAuditFields.contains(targetFieldName.toLowerCase());
+                Boolean isCreatable = fieldDescribe.isCreateable();
+                Boolean isUpdateable = fieldDescribe.isUpdateable();
+                Boolean isPopulated = populatedDataImportFields.contains(dataImportFieldName);
+
+                if (failFieldLevelSecurity ||
+                    fieldDescribe == null ||
+                    (!isCreatable && isPopulated) ||
+                    (!isAuditField && !isUpdateable && isPopulated)) {
+                        throw (new FLSException(
+                            String.format(System.Label.flsError, new List<String>{ targetObjectName + '.' + targetFieldName }
+                        )));
+                }
+            }
+        }
+
+        return targetFieldByDIField;
     }    
 
     /*******************************************************************************************************
@@ -790,7 +836,9 @@ global with sharing class BDI_DataImportService {
     * @param mapDIFieldToDstField The field map from a DI field to the destination field
     * @return boolean True if copied, False is not copied.
     */
-    public static Boolean isCopiedDIField(DataImport__c dataImport, String dataImportField, SObject destinationRecord,
+    public static Boolean copyDIFieldToDestinationRecord(DataImport__c dataImport, 
+        String dataImportField, 
+        SObject destinationRecord,
         Map<String, String> mapDIFieldToDstField) {
 
         Object value = dataImport.get(dataImportField);
@@ -891,7 +939,7 @@ global with sharing class BDI_DataImportService {
             Boolean isModified = false;
             Account household = new Account(Id = dataImport.HouseholdAccountImported__c);
             for (String dataImportField : mapDIFieldToHHField.keySet()) {
-                if (isCopiedDIField(dataImport, dataImportField, household, mapDIFieldToHHField)) {
+                if (copyDIFieldToDestinationRecord(dataImport, dataImportField, household, mapDIFieldToHHField)) {
                     isModified = true;
                 }
             }
@@ -1026,7 +1074,7 @@ global with sharing class BDI_DataImportService {
 
             Boolean isModified = false;
             for (String strDIField : mapDIFieldToA1Field.keySet()) {
-                if (isCopiedDIField(dataImport, strDIField, acc, mapDIFieldToA1Field)) {
+                if (copyDIFieldToDestinationRecord(dataImport, strDIField, acc, mapDIFieldToA1Field)) {
                     isModified = true;
                 }
             }
@@ -1097,7 +1145,7 @@ global with sharing class BDI_DataImportService {
 
             Boolean isModified = false;
             for (String strDIField : mapDIFieldToA2Field.keySet()) {
-                if (isCopiedDIField(dataImport, strDIField, acc, mapDIFieldToA2Field)) {
+                if (copyDIFieldToDestinationRecord(dataImport, strDIField, acc, mapDIFieldToA2Field)) {
                     isModified = true;
                 }
             }
@@ -1506,7 +1554,7 @@ global with sharing class BDI_DataImportService {
             address.Household_Account__c = (con != null ? con.AccountId : null);
             Boolean isEmpty = true;
             for (String dataImportField : mapDIFieldToAddrField.keySet()) {
-                if (isCopiedDIField(dataImport, dataImportField, address, mapDIFieldToAddrField)) {
+                if (copyDIFieldToDestinationRecord(dataImport, dataImportField, address, mapDIFieldToAddrField)) {
                     isEmpty = false;
                 }
             }
@@ -1895,5 +1943,10 @@ global with sharing class BDI_DataImportService {
         // process dmls for CMs
         TDTM_TriggerHandler.processDML(newCmWrapper);
     }
+    
+    /*******************************************************************************************************
+    * @description our exception object for Field Level Security errors.
+    */
+    public class FLSException extends Exception {}
 
 }

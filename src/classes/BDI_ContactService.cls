@@ -202,7 +202,7 @@ public with sharing class BDI_ContactService {
             // copy over all fields with data
             Map<String, String> mapDIFieldToConField = (strCx == 'Contact1') ? mapDIFieldToC1Field : mapDIFieldToC2Field;
             for (String strDIField : mapDIFieldToConField.keySet()) {
-                if (BDI_DataImportService.isCopiedDIField(di, strDIField, con, mapDIFieldToConField)) {
+                if (BDI_DataImportService.copyDIFieldToDestinationRecord(di, strDIField, con, mapDIFieldToConField)) {
                     isModified = true;
                 }
             }

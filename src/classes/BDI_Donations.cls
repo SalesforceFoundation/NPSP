@@ -464,7 +464,10 @@ public class BDI_Donations {
             if (dataImportField == 'CurrencyIsoCode' && useCustomMappingInsteadOfCurrencyIsoCode) {
                 continue;
             }
-            BDI_DataImportService.isCopiedDIField(dataImport, dataImportField, opp, dataImportFieldToOpportunityField);
+            BDI_DataImportService.copyDIFieldToDestinationRecord(dataImport, 
+                    dataImportField, 
+                    opp, 
+                    dataImportFieldToOpportunityField);
         }
 
         // the Opp is ready!
@@ -624,7 +627,7 @@ public class BDI_Donations {
                 if (payment != null) {
                     Integer numberOfCopiedFields = 0;
                     for (String dataImportField : dataImportFieldToPaymentField.keySet()) {
-                        if (BDI_DataImportService.isCopiedDIField(dataImport, dataImportField, payment, dataImportFieldToPaymentField)) {
+                        if (BDI_DataImportService.copyDIFieldToDestinationRecord(dataImport, dataImportField, payment, dataImportFieldToPaymentField)) {
                             numberOfCopiedFields++;
                         }
                     }
