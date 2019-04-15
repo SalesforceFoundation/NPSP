@@ -5115,7 +5115,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>pmtWizardNoAmount</shortDescription>
-        <value>NOTE: This Opportunity has no amount. You must enter an Amount before you can schedule Payments.</value>
+        <value>NOTE: This Opportunity has no Amount. You must enter an Amount before you can schedule Payments.</value>
     </labels>
     <labels>
         <fullName>pmtWizardWriteOffNoAmount</fullName>
@@ -5123,7 +5123,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>pmtWizardNoAmount</shortDescription>
-        <value>NOTE: This Opportunity has no amount. You must enter an Amount before you can write off Payments.</value>
+        <value>NOTE: This Opportunity has no Amount. You must enter an Amount before you can write off Payments.</value>
     </labels>
     <labels>
         <fullName>pmtWizardNoUnpaidAmount</fullName>
