@@ -364,7 +364,7 @@
                 </apex:outputText>
 
 
-                <footer class="slds-docked-composer__footer">
+                <footer class="slds-docked-form-footer">
                     <div class="slds-align_absolute-center">
                         
                         <apex:commandButton id="cancelBTN" styleClass="slds-button slds-button_neutral" 
