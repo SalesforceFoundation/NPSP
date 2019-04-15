@@ -737,6 +737,9 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @return String opportunity amount
     */
     public String getOppAmount() {
-        return formatCurrency(currentOpp.Amount);
+        if (currentOpp.Amount != null) {
+            return formatCurrency(currentOpp.Amount);
+        }
+        return '';
     }
 }
