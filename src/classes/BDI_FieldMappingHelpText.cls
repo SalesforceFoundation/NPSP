@@ -116,30 +116,6 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
                         }
                     }
 
-                    // make sure they have permissions to modify the target field
-                    // we can't do this in all tests, because many profiles won't have FLS set for all our new fields!
-                    /**
-                    if (!Test.isRunningTest() || failFieldLevelSecurity) {
-                        fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, fieldName);
-                        Set<String> setAuditFields = new Set<String>{
-                            'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'
-                        };
-                        Boolean isAuditField = setAuditFields.contains(fieldName.toLowerCase());
-                        Boolean isCreatable = fieldDescribe.isCreateable();
-                        Boolean isUpdateable = fieldDescribe.isUpdateable();
-                        Boolean isPopulated = populatedDataImportFields.contains(dataImportField);
-
-                        if (failFieldLevelSecurity ||
-                            fieldDescribe == null ||
-                            (!isCreatable && isPopulated) ||
-                            (!isAuditField && !isUpdateable && isPopulated)) {
-                                throw (new FLSException(
-                                    String.format(System.Label.flsError, new List<String>{ targetObjectName + '.' + fieldName }
-                                )));
-                        }
-                    }
-                    **/
-
                     dataImportFieldToTargetField.put(dataImportField, fieldName);
                 }
             }
