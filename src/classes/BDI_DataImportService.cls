@@ -780,7 +780,8 @@ global with sharing class BDI_DataImportService {
                 String targetObjectName, 
                 List<String> dataImportFields) {
         
-        return new Map<String,String>();
+        BDI_DataImportService bdi = new BDI_DataImportService(true, BDI_FieldMappingHelpText.getInstance());
+        return bdi.mapDataImportFields(dataImportObjectName, targetObjectName, dataImportFields);
     }
 
     /*******************************************************************************************************
@@ -799,7 +800,7 @@ global with sharing class BDI_DataImportService {
         Map<String, String> targetFieldByDIField = fieldMapper.getFieldMap(dataImportObjectName, targetObjectName, dataImportFields);
 
         // verify that the user has correct FLS access to target field
-        // TODO: Move to it's own method?                     
+        // TODO: Move to its own method?                     
         for(String dataImportFieldName: targetFieldByDIField.keySet()) {  
             String targetFieldName = targetFieldByDIField.get(dataImportFieldName);
 
@@ -1943,7 +1944,7 @@ global with sharing class BDI_DataImportService {
         // process dmls for CMs
         TDTM_TriggerHandler.processDML(newCmWrapper);
     }
-    
+
     /*******************************************************************************************************
     * @description our exception object for Field Level Security errors.
     */
