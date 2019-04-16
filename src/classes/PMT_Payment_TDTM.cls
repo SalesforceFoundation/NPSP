@@ -34,17 +34,17 @@
 * @group-content ../../ApexDocContent/Payments.htm
 * @description trigger handler on Payment and Opportunity objects for supporting Payments
 */
-public class PMT_Payment_TDTM extends TDTM_Runnable {
+public with sharing class PMT_Payment_TDTM extends TDTM_Runnable {
 
     /** @description Retrieve and cache the household settings the first time this class is loaded only */
     private static final npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
     /*******************************************************************************************************
-    * @description Trigger Handler on on Opportunity or Payment related to the Paymetn object
-    * @param newlist the list of Opportunity or Payments from trigger new.
-    * @param oldlist the list of Opportunity or Payments from trigger old.
-    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
-    * @param objResult the describe for related object
+    * @description          Trigger Handler on on Opportunity or Payment related to the Payment object
+    * @param newlist        the list of Opportunity or Payments from trigger new.
+    * @param oldlist        the list of Opportunity or Payments from trigger old.
+    * @param triggerAction  which trigger event (BeforeInsert, AfterInsert, etc.).
+    * @param objResult      the describe for related object
     * @return dmlWrapper.
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist,
@@ -61,81 +61,24 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description Trigger Handler on Payment for managing Payments.
-    * @param newlist the list of Payments from trigger new.
-    * @param oldlist the list of Payments from trigger old.
-    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
-    * @return dmlWrapper.
+    * @description          Trigger Handler on Payment for managing Payments.
+    * @param newlist        The list of Payments from trigger new.
+    * @param oldlist        The list of Payments from trigger old.
+    * @param triggerAction  Which trigger event (BeforeInsert, AfterInsert, etc.).
+    * @return dmlWrapper    Returns a dmlWrapper object if there were opportunity records modified 
+    *                       otherwise returns null
     ********************************************************************************************************/
-    public static DmlWrapper runForPayments(List<npe01__OppPayment__c> newlist, List<npe01__OppPayment__c> oldlist,
-            TDTM_Runnable.Action triggerAction) {
+    public DmlWrapper runForPayments(
+        List<npe01__OppPayment__c> newlist, 
+        List<npe01__OppPayment__c> oldlist,
+        TDTM_Runnable.Action triggerAction) {
 
-        if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
-            return null;
-        }
+        DmlWrapper dmlWrapper = null;
 
-        DmlWrapper dmlWrapper = new DmlWrapper();
+        validatePayment(newList, oldList, triggerAction, dmlWrapper);
 
-        Set<Id> oppIds = new Set<Id>();
-        for (npe01__OppPayment__c pmt : newlist) {
-            oppIds.add(pmt.npe01__Opportunity__c);
-        }
-
-        // Query the Opportunity with a sub-query on Payments
-        String soql = 'SELECT Id, Amount, IsClosed, IsWon, StageName, ';
-        if (UserInfo.isMultiCurrencyOrganization()) {
-            soql += 'CurrencyIsoCode, ';
-        }
-        soql += ' (SELECT id, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Date__c, npe01__Written_Off__c ' +
-                ' FROM Opportunity.npe01__OppPayment__r)' +
-                ' FROM Opportunity WHERE Id IN :oppIds';
-        Map<Id, Opportunity> mapOfOpps = new Map<Id, Opportunity>((List<Opportunity>)database.query(soql));
-
-        // Validation and default the CurrencyIsoCode for new records for Before Insert/update
-        if (UserInfo.isMultiCurrencyOrganization() && (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
-            for (integer i = 0; i < newlist.size(); i++) {
-                npe01__OppPayment__c pmt = newlist[i];
-
-                String oppCurrency = (String) mapOfOpps.get(pmt.npe01__Opportunity__c).get('CurrencyIsoCode');
-                String pmtCurrency = (String) pmt.get('CurrencyIsoCode');
-                String oldPmtCurrency = (oldList != null ? (String) oldlist[i].get('CurrencyIsoCode') : null);
-
-                // Prevent the Payment CurrencyCode from being modified directly
-                if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && pmtCurrency != oldPmtCurrency && pmtCurrency != oppCurrency) {
-                    pmt.addError(Label.pmtModifyCurrency);
-
-                } else if (triggerAction == TDTM_Runnable.Action.BeforeInsert && pmtCurrency != oppCurrency && pmtCurrency != null) {
-                    // If the User is attempting to set the Payment Currency to something different than the Opp currency
-                    pmt.addError(Label.pmtModifyCurrency);
-
-                } else if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-                    // Otherwise default the Payment CurrencyIsoCode to the value from the parent Opportunity
-                    pmt.put('CurrencyIsoCode', oppCurrency);
-                }
-            }
-        }
-
-        // For an After Insert/Update Payment action, when Advanced Curr Mgt is enabled and there is a defined
-        // Closed stage name in settings, roll up the total paynents and compare to the Opp.Amount. If the
-        // two values are equal then close the Opportunity by setting the stage name.
-        if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-
-            npe01__Contacts_And_Orgs_Settings__c ContactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
-            String closedStageName = ContactSettings.Payments_Auto_Close_Stage_Name__c;
-
-            Boolean isACMEnabled = UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled();
-            if (isACMEnabled && !String.isEmpty(closedStageName)) {
-                // Loop through all the queried Opps with the subquery on payments
-                for (Opportunity opp : mapOfOpps.values()) {
-                    // If the Opp Amount is greater than zero and the Opp is not currently closed
-                    // and the amount paid is equal to the total opportunity amount
-                    Decimal paidAmount = PMT_PaymentCreator.getPaymentsMade(opp);
-                    if (opp.Amount > 0 && paidAmount == opp.Amount && !opp.isClosed && !opp.IsWon) {
-                        opp.StageName = closedStageName;
-                        dmlWrapper.objectsToUpdate.add(opp);
-                    }
-                }
-            }
+        if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+            return handleMultiCurrencyPayments(newlist, oldlist, triggerAction, dmlWrapper);
         }
 
         return dmlWrapper;
@@ -201,4 +144,120 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         }
     }
 
+    /*******************************************************************************************************
+    * @description          For multicurrency orgs, validate the currencies and set the appropriate stages
+    *                       and currency fields
+    * @param newlist        The list of Payments from trigger new.
+    * @param oldlist        The list of Payments from trigger old.
+    * @param triggerAction  Which trigger event (BeforeInsert, AfterInsert, etc.).
+    * @return dmlWrapper    This method modifies dmlWrapper and returns it
+    ********************************************************************************************************/
+    private DmlWrapper handleMultiCurrencyPayments(
+        List<npe01__OppPayment__c> newlist, 
+        List<npe01__OppPayment__c> oldlist,
+        TDTM_Runnable.Action triggerAction, 
+        DmlWrapper dmlWrapper) {
+
+        if (dmlWrapper == null) {
+            dmlWrapper = new DmlWrapper();
+        }
+
+        Set<Id> oppIds = new Set<Id>();
+        for (npe01__OppPayment__c pmt : newlist) {
+            oppIds.add(pmt.npe01__Opportunity__c);
+        }
+
+        // Query the Opportunity with a sub-query on Payments
+        String soql = 'SELECT Id, Amount, IsClosed, IsWon, StageName, CurrencyIsoCode, ' +
+            ' (SELECT id, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Date__c, npe01__Written_Off__c ' +
+            ' FROM Opportunity.npe01__OppPayment__r)' +
+            ' FROM Opportunity WHERE Id IN :oppIds';
+        Map<Id, Opportunity> mapOfOpps = new Map<Id, Opportunity>((List<Opportunity>)Database.query(soql));
+
+        // Validation and default the CurrencyIsoCode for new records for Before Insert/update
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            for (Integer i = 0; i < newlist.size(); i++) {
+                npe01__OppPayment__c pmt = newlist[i];
+                String oldPmtCurrency = (oldList != null ? (String) oldlist[i].get('CurrencyIsoCode') : null);
+                setPaymentCurrency(mapOfOpps, pmt, oldPmtCurrency, triggerAction);
+            }
+        }
+
+        // For an After Insert/Update Payment action, when Advanced Curr Mgt is enabled and there is a defined
+        // Closed stage name in settings, roll up the total paynents and compare to the Opp.Amount. If the
+        // two values are equal then close the Opportunity by setting the stage name.
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+
+            npe01__Contacts_And_Orgs_Settings__c ContactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
+            String closedStageName = ContactSettings.Payments_Auto_Close_Stage_Name__c;
+
+            Boolean isACMEnabled = UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled();
+            if (isACMEnabled && String.isNotEmpty(closedStageName)) {
+                // Loop through all the queried Opps with the subquery on payments
+                for (Opportunity opp : mapOfOpps.values()) {
+                   handleAdvancedCurrencyPayments(opp, closedStageName, dmlWrapper);
+                }
+            }
+        }
+        return dmlWrapper;
+    }
+
+    /*******************************************************************************************************
+    * @description              For multicurrency orgs, set the currency of the payment to the currency of 
+    *                           the opportunity and make sure that the payment currency was not modified
+    * @param mapOfOpps          Map of Opportunities
+    * @param pmt                Payment Object
+    * @param oldPmtCurrency     String of old Payment Currency
+    * @param triggerAction      Action that triggered this execution
+    * @return void              Does not return anything
+    ********************************************************************************************************/
+    private void setPaymentCurrency(Map<Id, Opportunity> mapOfOpps, npe01__OppPayment__c pmt, String oldPmtCurrency, TDTM_Runnable.Action triggerAction) {
+        String oppCurrency = (String) mapOfOpps.get(pmt.npe01__Opportunity__c).get('CurrencyIsoCode');
+        String pmtCurrency = (String) pmt.get('CurrencyIsoCode');
+
+        // Prevent the Payment CurrencyCode from being modified directly
+        if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && pmtCurrency != oldPmtCurrency && pmtCurrency != oppCurrency) {
+            pmt.addError(System.Label.pmtModifyCurrency);
+
+        } else if (triggerAction == TDTM_Runnable.Action.BeforeInsert && pmtCurrency != oppCurrency && pmtCurrency != null) {
+            // If the User is attempting to set the Payment Currency to something different than the Opp currency
+            pmt.addError(System.Label.pmtModifyCurrency);
+
+        } else if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+            // Otherwise default the Payment CurrencyIsoCode to the value from the parent Opportunity
+            pmt.put('CurrencyIsoCode', oppCurrency);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description              For multicurrency orgs with advanced currency management enabled, 
+    *                           Set the stageName if the amount is equal payments made and opp is not closed
+    * @param opp                Opportunity object
+    * @param closedStageName    String of the stageName
+    * @param dmlWrapper         DmlWrapper Object
+    * @return void              Does not return anything
+    ********************************************************************************************************/
+    private void handleAdvancedCurrencyPayments(Opportunity opp, String closedStageName, DmlWrapper dmlWrapper) {
+        Decimal paidAmount = PMT_PaymentCreator.getPaymentsMade(opp);
+
+        if (opp.Amount > 0 && paidAmount == opp.Amount && !opp.isClosed && !opp.IsWon) {
+            opp.StageName = closedStageName;
+            dmlWrapper.objectsToUpdate.add(opp);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description          Validate that the payment has the appropriate values
+    * @param newlist        The list of Payments from trigger new.
+    * @param oldlist        The list of Payments from trigger old.
+    * @param triggerAction  Which trigger event (BeforeInsert, AfterInsert, etc.).
+    * @return void          Does not return anything
+    ********************************************************************************************************/
+    private void validatePayment(
+        List<npe01__OppPayment__c> newlist, 
+        List<npe01__OppPayment__c> oldlist,
+        TDTM_Runnable.Action triggerAction, 
+        DmlWrapper dmlWrapper) {
+
+    }
 }
