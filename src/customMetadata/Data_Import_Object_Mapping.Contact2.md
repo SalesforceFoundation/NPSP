@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <label>Account 2</label>
+    <label>Contact 2</label>
     <protected>false</protected>
     <values>
         <field>Data_Import_Object_Mapping_Set__c</field>
@@ -8,15 +8,15 @@
     </values>
     <values>
         <field>Imported_Record_Field_Name__c</field>
-        <value xsi:type="xsd:string">Account2Imported__c</value>
+        <value xsi:type="xsd:string">npsp__Contact2Imported__c</value>
     </values>
     <values>
         <field>Imported_Record_Status_Field_Name__c</field>
-        <value xsi:type="xsd:string">Account2ImportStatus__c</value>
+        <value xsi:type="xsd:string">npsp__Contact2ImportStatus__c</value>
     </values>
     <values>
         <field>Object_API_Name__c</field>
-        <value xsi:type="xsd:string">Account</value>
+        <value xsi:type="xsd:string">Contact</value>
     </values>
     <values>
         <field>Predecessor__c</field>
@@ -28,6 +28,6 @@
     </values>
     <values>
         <field>Relationship_To_Predecessor__c</field>
-        <value xsi:type="xsd:string">No Predecessor</value>
+        <value xsi:nil="true"/>
     </values>
 </CustomMetadata>

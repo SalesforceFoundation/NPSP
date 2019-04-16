@@ -12,7 +12,7 @@
     </values>
     <values>
         <field>Source_Field_API_Name__c</field>
-        <value xsi:type="xsd:string">Donation_Member_Level__c</value>
+        <value xsi:type="xsd:string">npsp__Donation_Member_Level__c</value>
     </values>
     <values>
         <field>Target_Field_API_Name__c</field>
@@ -20,6 +20,6 @@
     </values>
     <values>
         <field>Target_Object_Mapping__c</field>
-        <value xsi:type="xsd:string">Donation</value>
+        <value xsi:type="xsd:string">Opportunity</value>
     </values>
 </CustomMetadata>
