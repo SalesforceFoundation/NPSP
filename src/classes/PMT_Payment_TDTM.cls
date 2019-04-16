@@ -162,20 +162,26 @@ public with sharing class PMT_Payment_TDTM extends TDTM_Runnable {
             dmlWrapper = new DmlWrapper();
         }
 
+        // This is needed because the of the test class that sets the util_currency is multi currency to true
+        Boolean isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
+
         Set<Id> oppIds = new Set<Id>();
         for (npe01__OppPayment__c pmt : newlist) {
             oppIds.add(pmt.npe01__Opportunity__c);
         }
 
         // Query the Opportunity with a sub-query on Payments
-        String soql = 'SELECT Id, Amount, IsClosed, IsWon, StageName, CurrencyIsoCode, ' +
-            ' (SELECT id, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Date__c, npe01__Written_Off__c ' +
-            ' FROM Opportunity.npe01__OppPayment__r)' +
-            ' FROM Opportunity WHERE Id IN :oppIds';
+        String soql = 'SELECT Id, Amount, IsClosed, IsWon, StageName, ';
+        if (isMultiCurrencyEnabled) {
+            soql += 'CurrencyIsoCode, ';
+        }
+        soql += ' (SELECT id, npe01__Paid__c, npe01__Payment_Amount__c, npe01__Payment_Date__c, npe01__Written_Off__c ' +
+                ' FROM Opportunity.npe01__OppPayment__r)' +
+                ' FROM Opportunity WHERE Id IN :oppIds';
         Map<Id, Opportunity> mapOfOpps = new Map<Id, Opportunity>((List<Opportunity>)Database.query(soql));
 
         // Validation and default the CurrencyIsoCode for new records for Before Insert/update
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+        if (isMultiCurrencyEnabled && (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
             for (Integer i = 0; i < newlist.size(); i++) {
                 npe01__OppPayment__c pmt = newlist[i];
                 String oldPmtCurrency = (oldList != null ? (String) oldlist[i].get('CurrencyIsoCode') : null);
@@ -259,5 +265,12 @@ public with sharing class PMT_Payment_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, 
         DmlWrapper dmlWrapper) {
 
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            for (npe01__OppPayment__c payment : newlist) {
+                if (payment.npe01__Paid__c == true && payment.npe01__Written_Off__c == true) {
+                    payment.addError(System.Label.pmtPaidAndWrittenOff);
+                }
+            }
+        }
     }
 }
