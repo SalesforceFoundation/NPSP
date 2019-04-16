@@ -27,7 +27,7 @@ ${contact_id}
     Click Link    link=Show more actions
     Click Link    link=Edit
     Wait For Locator    frame    Levels
-    Select Frame With Title    Levels
+    Choose Frame    Levels
     Enter Level Dd Values    Source Field    Smallest Gift
     Enter Level Values
     ...            Minimum Amount=0.01
@@ -62,7 +62,7 @@ ${contact_id}
     # Open NPSP Settings and run the Levels batch job
     # --------------------------------
     Open NPSP Settings      Bulk Data Processes         Level Assignment Batch
-    Click Element           //input[contains(@class, 'stg-run-level-batch')]
+    Click Settings Button    idPanelLvlAssignBatch    Run Batch
     Wait for Locator        npsp_settings.completed
     # --------------------------------
     # Return to the Contact to validate the updated Level field
@@ -84,7 +84,7 @@ ${contact_id}
     # Open NPSP Settings and run the Levels batch job
     # --------------------------------
     Open NPSP Settings      Bulk Data Processes         Level Assignment Batch
-    Click Element           //input[contains(@class, 'stg-run-level-batch')]
+    Click Element With Locator    npsp_settings.batch-button    idPanelLvlAssignBatch    Run Batch
     Wait for Locator        npsp_settings.completed
     # --------------------------------
     # Return to the Contact to validate the updated Level field

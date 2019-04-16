@@ -29,6 +29,7 @@ npsp_lex_locators={
     "alert": "//span[contains(@class,'toastMessage')]/a",
     'popup': "//div[contains(@class, 'uiPopupTarget')][contains(@class, 'visible')]",
     'test':'/html/body/div[6]/table/tbody/tr[23]/td[1]/a',
+    'frame_new':'//iframe[contains(@name, "{}") or contains(@title, "{}")]',
     'frame':'//iframe[@title= "{}"]',
     'frame_by_name': "//iframe[contains(@name, '${}')]",
     'id':'//*[contains(@id,"{}")]',
@@ -127,6 +128,7 @@ npsp_lex_locators={
         'status':'//div[contains(@class,"slds-tile__title")][.//span[text()="{}"]]/div[contains(@class,"slds-col")]//span[text()="{}"]',
         'button':'//form[.//h1[contains(text(),"{}")]]//input[contains(@value,"{}")]',
         'completed':'//span[contains(@class, \'slds-theme_success\')]',
+        'batch-button':'//div[@id="{}"]//child::input[@value="{}"]'
         },
     'data_imports':{
         'status':'//div[contains(@class,"slds-tile__title")][./p[text()="BDI_DataImport_BATCH"]]/div[contains(@class,"slds-col")]/span[text()="{}"]',
