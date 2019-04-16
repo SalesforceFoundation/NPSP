@@ -17,7 +17,7 @@ Assign GAU to Opportunity
     Select Tab    Related
     Click Special Related List Button    GAU Allocations    Manage Allocations
     Wait For Locator    frame    Manage Allocations
-    Select Frame With Title    Manage Allocations
+    Choose Frame    Manage Allocations
     Select Search    General Accounting Unit 0    &{gau1}[Name]
     Add GAU Allocation    Percent 0    50
     Click Link    Add Row    

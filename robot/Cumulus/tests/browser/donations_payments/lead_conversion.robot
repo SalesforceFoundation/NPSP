@@ -29,9 +29,10 @@ Convert Lead To Account
     Go To Object Home         Lead
     Click Link                link=${first_name} ${last_name}
     Click Link                link=Convert
+    Click Lead Button    vfFrameId    button    Convert
     #Sleep    2
-    Select Frame with Name      vfFrameId
-    Click Element             //input[@value="Convert"]
+    # Select Frame with Name      vfFrameId
+    # Click Element             //input[@value="Convert"]
     #Sleep    2
     Go To Object Home         Contact
     Reload Page
@@ -40,3 +41,8 @@ Convert Lead To Account
     Reload Page
     Page Should Contain Link    ${last_name} Household
     Page Should Contain Link    ${company}
+
+*** Keywords ***
+Click Lead Button
+    [Arguments]       ${frame_name}    ${ele_path}     @{others}
+    Select Frame And Click Element    ${frame_name}    ${ele_path}     @{others}

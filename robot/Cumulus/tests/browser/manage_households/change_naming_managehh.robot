@@ -19,7 +19,7 @@ Change Naming on Manage Household Page
     # Click Link    link=Show more actions
     Click Link    link=Manage Household    
     Wait For Locator    frame    Manage Household       
-    Select Frame With Title   Manage Household
+    Choose Frame   Manage Household
     ${loc}    Validate Checkbox    &{contact1}[FirstName] &{contact1}[LastName]    Informal Greeting
     Double Click Element    ${loc}
     ${loc}    Validate Checkbox    &{contact2}[FirstName] &{contact2}[LastName]    Formal Greeting
