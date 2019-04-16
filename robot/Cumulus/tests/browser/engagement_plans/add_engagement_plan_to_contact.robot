@@ -10,6 +10,7 @@ Create a Contact and Add Engagement Plan
     [tags]  unstable
     ${plan_name}     ${task1_1}    ${sub_task1_1}     ${task2_1}     Create Engagement Plan
     &{contact} =  API Create Contact    MailingStreet=50 Fremont Street    MailingCity=San Francisco    MailingPostalCode=95320    MailingState=CA    MailingCountry=USA
+    Store Session Record    Account    &{contact}[AccountId]
     Go To Record Home  &{contact}[Id]
     Select Tab  Related
     Click Related List Button  Engagement Plans    New

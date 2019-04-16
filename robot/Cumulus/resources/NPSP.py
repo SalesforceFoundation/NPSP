@@ -706,8 +706,23 @@ class NPSP(object):
         self.selenium.set_focus_to_element(locator)       
         self.selenium.select_from_list_by_label(loc,*args) 
         
+    def choose_frame(self, value):
+        """Returns the first displayed iframe on the page with the given name or title"""
+        locator = npsp_lex_locators['frame_new'].format(value,value)
+        frames = self.selenium.get_webelements(locator)
+        for frame in frames:
+            if frame.is_displayed():
+                self.selenium.select_frame(frame)
+                return frame
+        raise Exception('unable to find visible iframe with title "{}"'.format(value))
 
-
+    def select_frame_and_click_element(self,iframe,path, *args, **kwargs):
+        """Selects the first displayed frame with given name or title and scrolls to element identified by locator and clicks """
+        self.choose_frame(iframe)
+        loc = self.get_npsp_locator(path, *args, **kwargs)
+        self.selenium.wait_until_element_is_visible(loc, timeout=60)
+        self.selenium.scroll_element_into_view(loc)
+        self.selenium.click_element(loc)
         
         
     def get_npsp_locator(self, path, *args, **kwargs):
@@ -736,10 +751,10 @@ class NPSP(object):
         locator=npsp_lex_locators['npsp_settings']['panel_sub_link'].format(title)
         self.selenium.get_webelement(locator).click()
      
-    def click_settings_button (self,page,title):  
-        """clicks on the buttons on npsp settings page"""      
-        locator=npsp_lex_locators['npsp_settings']['button'].format(page,title)
-        self.selenium.get_webelement(locator).click()   
+    def click_settings_button (self,panel_id,btn_value):  
+        """clicks on the buttons on npsp settings object using panel id and button value"""      
+        locator=npsp_lex_locators['npsp_settings']['batch-button'].format(panel_id,btn_value)
+        self.selenium.click_element(locator)   
         
  
     
