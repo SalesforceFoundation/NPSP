@@ -27,6 +27,7 @@ npsp_lex_locators={
          },
     },
     "alert": "//span[contains(@class,'toastMessage')]/a",
+    "alert-text":"//span[contains(@class,'toastMessage')]",
     'popup': "//div[contains(@class, 'uiPopupTarget')][contains(@class, 'visible')]",
     'test':'/html/body/div[6]/table/tbody/tr[23]/td[1]/a',
     'frame':'//iframe[@title= "{}"]',
