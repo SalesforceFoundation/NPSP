@@ -8,15 +8,15 @@
     </values>
     <values>
         <field>Imported_Record_Field_Name__c</field>
-        <value xsi:type="xsd:string">HomeAddressImported__c</value>
+        <value xsi:type="xsd:string">npsp__HomeAddressImported__c</value>
     </values>
     <values>
         <field>Imported_Record_Status_Field_Name__c</field>
-        <value xsi:type="xsd:string">HomeAddressImportStatus__c</value>
+        <value xsi:type="xsd:string">npsp__HomeAddressImportStatus__c</value>
     </values>
     <values>
         <field>Object_API_Name__c</field>
-        <value xsi:type="xsd:string">Address__c</value>
+        <value xsi:type="xsd:string">npsp__Address__c</value>
     </values>
     <values>
         <field>Predecessor__c</field>

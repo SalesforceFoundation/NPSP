@@ -8,7 +8,7 @@
     </values>
     <values>
         <field>Imported_Record_Field_Name__c</field>
-        <value xsi:type="xsd:string">HouseholdAccountImported__c</value>
+        <value xsi:type="xsd:string">npsp__HouseholdAccountImported__c</value>
     </values>
     <values>
         <field>Imported_Record_Status_Field_Name__c</field>
