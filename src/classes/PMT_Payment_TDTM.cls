@@ -265,12 +265,6 @@ public with sharing class PMT_Payment_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, 
         DmlWrapper dmlWrapper) {
 
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            for (npe01__OppPayment__c payment : newlist) {
-                if (payment.npe01__Paid__c == true && payment.npe01__Written_Off__c == true) {
-                    payment.addError(System.Label.pmtPaidAndWrittenOff);
-                }
-            }
-        }
+
     }
 }
