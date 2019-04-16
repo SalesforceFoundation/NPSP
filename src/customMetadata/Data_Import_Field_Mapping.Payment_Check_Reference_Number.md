@@ -12,7 +12,7 @@
     </values>
     <values>
         <field>Source_Field_API_Name__c</field>
-        <value xsi:type="xsd:string">Payment_Check_Reference_Number__c</value>
+        <value xsi:type="xsd:string">npsp__Payment_Check_Reference_Number__c</value>
     </values>
     <values>
         <field>Target_Field_API_Name__c</field>

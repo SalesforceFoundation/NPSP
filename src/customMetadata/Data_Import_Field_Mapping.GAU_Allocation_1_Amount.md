@@ -12,11 +12,11 @@
     </values>
     <values>
         <field>Source_Field_API_Name__c</field>
-        <value xsi:type="xsd:string">GAU_Allocation_1_Amount__c</value>
+        <value xsi:type="xsd:string">npsp__GAU_Allocation_1_Amount__c</value>
     </values>
     <values>
         <field>Target_Field_API_Name__c</field>
-        <value xsi:type="xsd:string">Amount__c</value>
+        <value xsi:type="xsd:string">npsp__Amount__c</value>
     </values>
     <values>
         <field>Target_Object_Mapping__c</field>

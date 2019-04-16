@@ -8,11 +8,11 @@
     </values>
     <values>
         <field>Imported_Record_Field_Name__c</field>
-        <value xsi:type="xsd:string">Opportunity_Contact_Role_1_Imported__c</value>
+        <value xsi:type="xsd:string">npsp__Opportunity_Contact_Role_1_Imported__c</value>
     </values>
     <values>
         <field>Imported_Record_Status_Field_Name__c</field>
-        <value xsi:type="xsd:string">Opportunity_Contact_Role_1_ImportStatus__c</value>
+        <value xsi:type="xsd:string">npsp__Opportunity_Contact_Role_1_ImportStatus__c</value>
     </values>
     <values>
         <field>Object_API_Name__c</field>

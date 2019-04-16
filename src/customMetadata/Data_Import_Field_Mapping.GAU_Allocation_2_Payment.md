@@ -12,11 +12,11 @@
     </values>
     <values>
         <field>Source_Field_API_Name__c</field>
-        <value xsi:type="xsd:string">PaymentImported__c</value>
+        <value xsi:type="xsd:string">npsp__PaymentImported__c</value>
     </values>
     <values>
         <field>Target_Field_API_Name__c</field>
-        <value xsi:type="xsd:string">Payment__c</value>
+        <value xsi:type="xsd:string">npsp__Payment__c</value>
     </values>
     <values>
         <field>Target_Object_Mapping__c</field>

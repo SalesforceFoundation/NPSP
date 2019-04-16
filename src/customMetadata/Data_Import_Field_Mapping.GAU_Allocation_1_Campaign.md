@@ -12,11 +12,11 @@
     </values>
     <values>
         <field>Source_Field_API_Name__c</field>
-        <value xsi:type="xsd:string">DonationCampaignImported__c</value>
+        <value xsi:type="xsd:string">npsp__DonationCampaignImported__c</value>
     </values>
     <values>
         <field>Target_Field_API_Name__c</field>
-        <value xsi:type="xsd:string">Campaign__c</value>
+        <value xsi:type="xsd:string">npsp__Campaign__c</value>
     </values>
     <values>
         <field>Target_Object_Mapping__c</field>
