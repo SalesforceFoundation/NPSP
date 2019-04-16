@@ -56,8 +56,9 @@ Create a new opportunity for a contact with open donations
     Click Managehh Button    Donation Date
     Page Should Not Contain Link    &{opportunity2}[Name]
     Click BGE Button       Process Batch
-    Select Frame With Title    NPSP Data Import
-    Click Button With Value   Begin Data Import Process
+    # Select Frame With Title    NPSP Data Import
+    # Click Button With Value   Begin Data Import Process
+    Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Locator    data_imports.status    Completed
     Click Button With Value   Close
     &{existing_opp} =  Salesforce Get    Opportunity    &{opportunity2}[Id]

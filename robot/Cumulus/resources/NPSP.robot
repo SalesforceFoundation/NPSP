@@ -254,8 +254,9 @@ Create Engagement Plan
     Select App Launcher Tab  Engagement Plan Templates
     Click Special Object Button       New
     Wait For Locator    frame    Manage Engagement Plan Template
-    Select Frame With Title    Manage Engagement Plan Template
-    Wait For Locator    id    idName
+    # Choose Frame    Manage Engagement Plan Template
+    # Wait For Locator    id    idName
+    Select Frame And Click Element    Manage Engagement Plan Template    id    idName
     Enter Eng Plan Values    idName    ${plan_name}
     Enter Eng Plan Values    idDesc    This plan is created via Automation  
     Click Button    Add Task
@@ -268,13 +269,16 @@ Create Engagement Plan
     Enter Task Id and Subject    Task 2    ${task2}
     Page Scroll To Locator    button    Save
     Click Button    Save
+    ${ns} =  Get NPSP Namespace Prefix
+    ${eng_id} =           Get Current Record Id
+    Store Session Record    ${ns}Engagement_Plan_Template__c    ${eng_id}
     [Return]    ${plan_name}    ${task1}    ${sub_task}     ${task2}
     
 Create Level
     ${level_name}=    Generate Random String
     Select App Launcher Tab  Levels
     Click Special Object Button       New
-    Select Frame With Title    Levels
+    Choose Frame    Levels
     Enter Level Values
     ...            Level Name=${level_name}
     ...            Minimum Amount=0.1
@@ -312,7 +316,7 @@ Create GAU
 
 Run Donations Batch Process
     Open NPSP Settings  Bulk Data Processes  Rollup Donations Batch
-    Click Button With Value    Run Batch
+    Click Settings Button    idPanelOppBatch    Run Batch
     # Wait For Locator    npsp_settings.status    CRLP_Account_SoftCredit_BATCH    Completed
     # Wait For Locator    npsp_settings.status    CRLP_RD_BATCH    Completed
     # Wait For Locator    npsp_settings.status    CRLP_Account_AccSoftCredit_BATCH    Completed
@@ -324,17 +328,17 @@ Run Donations Batch Process
     Wait For Locator    npsp_settings.status    RLLP_OppHouseholdRollup_BATCH    Completed
     Wait For Locator    npsp_settings.status    RLLP_OppSoftCreditRollup_BATCH    Completed
     
-Choose Frame
-    [Arguments]    ${frame}
-    Select Frame    //iframe[contains(@title,'${frame}')]
+# Choose Frame
+    # [Arguments]    ${frame}
+    # Select Frame    //iframe[contains(@title,'${frame}')]
     
-Select Frame with Name
-    [Arguments]    ${name}
-    Select Frame    //iframe[contains(@name, '${name}')]
+# Select Frame with Name
+    # [Arguments]    ${name}
+    # Select Frame    //iframe[contains(@name, '${name}')]
 
-Select Frame With Title
-    [Arguments]    ${name}
-    Select Frame    //iframe[@title= '${name}']    
+# Select Frame With Title
+    # [Arguments]    ${name}
+    # Select Frame    //iframe[@title= '${name}']    
     
 Scroll Page To Location
     [Arguments]    ${x_location}    ${y_location}
@@ -344,10 +348,14 @@ Open NPSP Settings
     [Arguments]    ${topmenu}    ${submenu}
     Select App Launcher Tab      NPSP Settings
     Wait For Locator    frame    Nonprofit Success Pack Settings
-    Select Frame With Title    Nonprofit Success Pack Settings
+    Choose Frame    Nonprofit Success Pack Settings
     Wait Until Element Is Visible  text:${topmenu}
-    Click Link    text:${topmenu}
+    Click Link With Text    text=${topmenu}
     Sleep  1
     Wait Until Element Is Visible  text:${submenu}
-    Click Link    text:${submenu}
+    Click Link With Text    text=${submenu}
     Sleep  1
+    
+Click Data Import Button
+    [Arguments]       ${frame_name}    ${ele_path}     @{others}
+    Select Frame And Click Element    ${frame_name}    ${ele_path}     @{others}
