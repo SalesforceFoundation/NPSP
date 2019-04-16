@@ -52,8 +52,9 @@ Enter a donation for an account with exact payment match
     Wait For Locator    bge.edit_button    Donation Amount
     Sleep    2
     Click BGE Button       Process Batch
-    Select Frame With Title    NPSP Data Import
-    Click Button With Value   Begin Data Import Process
+    # Select Frame With Title    NPSP Data Import
+    # Click Button With Value   Begin Data Import Process
+    Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Locator    data_imports.status    Completed
     Click Button With Value   Close
     Sleep    2
