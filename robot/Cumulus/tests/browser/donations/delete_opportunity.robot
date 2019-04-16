@@ -14,10 +14,8 @@ Create Donation from a Contact and Delete Opportunity
     ${donation_name}    Get Main Header
     Go To Object Home         Opportunity
     Select Row    ${donation_name}
-    #Sleep    5
     Click Link    link=Delete
     Click Modal Button        Delete
-    #Sleep    5 
     Page Contains Record    ${donation_name}
     Go To Record Home  &{contact}[AccountId]
     Select Tab    Details
