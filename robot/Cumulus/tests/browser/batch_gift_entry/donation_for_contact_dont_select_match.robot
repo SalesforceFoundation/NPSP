@@ -49,8 +49,9 @@ Dont select match for contact new donation with grid changes
     Wait Until Element Is Not Visible    //span[contains(@class,'toastMessage')]
     Page Should Not Contain Link    &{opportunity}[Name]
     Click BGE Button       Process Batch
-    Select Frame With Title    NPSP Data Import
-    Click Button With Value   Begin Data Import Process
+    # Select Frame With Title    NPSP Data Import
+    # Click Button With Value   Begin Data Import Process
+    Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Locator    data_imports.status    Completed
     Click Button With Value   Close
     &{existing_opp} =  Salesforce Get    Opportunity    &{opportunity}[Id]
