@@ -52,8 +52,9 @@ Select a payment for a contact make grid changes and process it
     Wait For Locator    bge.edit_field   
     Populate BGE Edit Field    Donation Amount    20
     Click BGE Button       Process Batch
-    Select Frame With Title    NPSP Data Import
-    Click Button With Value   Begin Data Import Process
+    # Select Frame With Title    NPSP Data Import
+    # Click Button With Value   Begin Data Import Process
+    Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Locator    data_imports.status    Completed
     Click Button With Value   Close
     ${value}    Return Locator Value    bge.value    Donation

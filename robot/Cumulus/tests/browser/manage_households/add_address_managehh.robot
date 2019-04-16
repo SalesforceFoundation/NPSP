@@ -13,9 +13,10 @@ Add New Address to Household
     # Click Link    link=Show more actions
     Click Link    link=Manage Household 
     Wait For Locator    frame    Manage Household   
-    Select Frame With Title   Manage Household
-    Wait For Locator    span_button    Change Address
-    Click Button    Change Address
+    # Select Frame With Title   Manage Household
+    # Wait For Locator    span_button    Change Address
+    # Click Button    Change Address
+    Select Frame And Click Element    Manage Household    span_button    Change Address    
     Click ManageHH Link     Enter a new address
     Fill Address Form
     ...                       Street=123 Dummy Street
@@ -27,12 +28,14 @@ Add New Address to Household
     Click Button       title=Save
     Unselect Frame
     Go To Record Home    &{contact1}[Id]
-    Scroll Page To Location    0    1200
+    Scroll Element Into View    text:Mailing Address
+    #Scroll Page To Location    0    1200
     ${status}    Verify Details Address    Mailing Address    123 Dummy Street     Tracy, CA 99999     US
     Should Be Equal as Strings    ${status}    pass
     Go To Object Home          Account
     Click Link    link=&{contact1}[LastName] Household
     Select Tab  Details
-    Scroll Page To Location    0    300
+    Scroll Element Into View    text:Billing Address
+    #Scroll Page To Location    0    300
     ${status}    Verify Details Address    Billing Address    123 Dummy Street     Tracy, CA 99999     US
     Should Be Equal as Strings    ${status}    pass
