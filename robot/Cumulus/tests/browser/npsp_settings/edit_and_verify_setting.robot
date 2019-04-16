@@ -11,16 +11,16 @@ Make Changes to Settings and Verify Changes
     Select App Launcher Tab  NPSP Settings
     #Sleep    3
     Wait For Locator    frame    Nonprofit Success Pack Settings
-    Select Frame With Title    Nonprofit Success Pack Settings
+    Choose Frame    Nonprofit Success Pack Settings
     Click Link    link=People
     Click Link    link=Account Model
-    Click Button With Value    Edit
-    Wait For Locator    button    Save
+    Click Settings Button    idPanelCon    Edit
+    Wait For Locator    npsp_settings.batch-button    idPanelCon    Save
     Select Value From List     Household Account Record Type       Organization
-    Click Button With Value    Save
+    Click Settings Button   idPanelCon    Save
     Wait For Locator     npsp_settings.list_val       Household Account Record Type    Organization
-    Click Button With Value    Edit
-    Wait For Locator    button    Save
+    Click Settings Button    idPanelCon    Edit
+    Wait For Locator    npsp_settings.batch-button    idPanelCon    Save
     Select Value From List     Household Account Record Type    Household Account
-    Click Button With Value    Save
+    Click Settings Button    idPanelCon    Save
     Wait For Locator    npsp_settings.list_val    Household Account Record Type    Household Account
