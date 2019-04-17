@@ -8,15 +8,15 @@
     </values>
     <values>
         <field>Imported_Record_Field_Name__c</field>
-        <value xsi:type="xsd:string">PaymentImported__c</value>
+        <value xsi:type="xsd:string">npsp__PaymentImported__c</value>
     </values>
     <values>
         <field>Imported_Record_Status_Field_Name__c</field>
-        <value xsi:type="xsd:string">PaymentImportStatus__c</value>
+        <value xsi:type="xsd:string">npsp__PaymentImportStatus__c</value>
     </values>
     <values>
         <field>Object_API_Name__c</field>
-        <value xsi:type="xsd:string">Opportunity</value>
+        <value xsi:type="xsd:string">npe01__OppPayment__c</value>
     </values>
     <values>
         <field>Predecessor__c</field>

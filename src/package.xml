@@ -910,12 +910,12 @@
         <members>Data_Import_Settings__c.Batch_Size__c</members>
         <members>Data_Import_Settings__c.Contact_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Contact_Matching_Rule__c</members>
-        <members>Data_Import_Settings__c.Field_Mapping_Method__c</members>
         <members>Data_Import_Settings__c.Default_Data_Import_Field_Mapping_Set__c</members>
         <members>Data_Import_Settings__c.Donation_Date_Range__c</members>
         <members>Data_Import_Settings__c.Donation_Matching_Behavior__c</members>
         <members>Data_Import_Settings__c.Donation_Matching_Implementing_Class__c</members>
         <members>Data_Import_Settings__c.Donation_Matching_Rule__c</members>
+        <members>Data_Import_Settings__c.Field_Mapping_Method__c</members>
         <members>Data_Import_Settings__c.Post_Process_Implementing_Class__c</members>
         <members>Data_Import_Settings__c.Run_Opportunity_Rollups_while_Processing__c</members>
         <members>Engagement_Plan_Task__c.Assigned_To__c</members>
@@ -1789,6 +1789,7 @@
         <members>pmtWizardInterval</members>
         <members>pmtWizardIntervalNumber</members>
         <members>pmtWizardIntervalPeriod</members>
+        <members>pmtWizardInvalidRecords</members>
         <members>pmtWizardMonth</members>
         <members>pmtWizardMsgNoOppFound</members>
         <members>pmtWizardNoUnpaidAmount</members>
@@ -1798,6 +1799,7 @@
         <members>pmtWizardPaymentsDisabled</members>
         <members>pmtWizardPaymentsDisabledTitle</members>
         <members>pmtWizardPaymentsNoAccessMessage</members>
+        <members>pmtWizardScheduleNoAmount</members>
         <members>pmtWizardSectionTitle</members>
         <members>pmtWizardSectionWriteoff</members>
         <members>pmtWizardSectionWriteoffPayments</members>
@@ -1808,6 +1810,7 @@
         <members>pmtWizardWriteoffDate</members>
         <members>pmtWizardWriteoffMessage</members>
         <members>pmtWizardWriteoffNoAccessMessage</members>
+        <members>pmtWizardWriteOffNoAmount</members>
         <members>pmtWizardYear</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
@@ -2254,15 +2257,15 @@
         <members>Data_Import_Field_Mapping.Payment_Check_Reference_Number</members>
         <members>Data_Import_Field_Mapping.Payment_Method</members>
         <members>Data_Import_Field_Mapping_Set.Default_Field_Mapping_Set</members>
-        <members>Data_Import_Object_Mapping.Account_1</members>
-        <members>Data_Import_Object_Mapping.Account_2</members>
+        <members>Data_Import_Object_Mapping.Account1</members>
+        <members>Data_Import_Object_Mapping.Account2</members>
         <members>Data_Import_Object_Mapping.Address</members>
-        <members>Data_Import_Object_Mapping.Contact_1</members>
-        <members>Data_Import_Object_Mapping.Contact_2</members>
-        <members>Data_Import_Object_Mapping.Donation</members>
+        <members>Data_Import_Object_Mapping.Contact1</members>
+        <members>Data_Import_Object_Mapping.Contact2</members>
         <members>Data_Import_Object_Mapping.GAU_Allocation_1</members>
         <members>Data_Import_Object_Mapping.GAU_Allocation_2</members>
         <members>Data_Import_Object_Mapping.Household</members>
+        <members>Data_Import_Object_Mapping.Opportunity</members>
         <members>Data_Import_Object_Mapping.Opportunity_Contact_Role_1</members>
         <members>Data_Import_Object_Mapping.Opportunity_Contact_Role_2</members>
         <members>Data_Import_Object_Mapping.Payment</members>
