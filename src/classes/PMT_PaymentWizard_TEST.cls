@@ -44,7 +44,7 @@ private class PMT_PaymentWizard_TEST {
     * @description Verifies payments write off
     */
     @isTest
-    private static void testPaymentsEnabledWhenWriteOff() {        
+    private static void testPaymentsEnabledWhenWriteOff() {
         npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = true)
         );
@@ -108,7 +108,197 @@ private class PMT_PaymentWizard_TEST {
             FROM npe01__OppPayment__c 
             WHERE npe01__Opportunity__c = :opp.Id AND npe01__Paid__c = false AND npe01__Written_Off__c = true];
         System.assertEquals(1, opmtWrittenOff.size());
-        System.assertEquals(100, opmtWrittenOff[0].npe01__payment_amount__c);       
+        System.assertEquals(100, opmtWrittenOff[0].npe01__payment_amount__c);
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies multi-payment writeoff combines the records
+    */
+    @isTest
+    private static void verifyPaymentsAreCombinedAfterWiteOff() {
+        npe01__Contacts_And_Orgs_Settings__c PaymentsSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = true)
+        );
+        
+        Opportunity opp = createClosedWonOpportunity(1200);
+
+        // Create 11 additional payments (for a total of 12)
+        // And mark 2 of them as paid and 3 of them as written off
+        // The resulting payments should be (3 paid / 3 written off / 6 open)
+        List<npe01__OppPayment__c> newPayments = new List<npe01__OppPayment__c>();
+        
+        Boolean isPaid = true;
+        Boolean isWrittenOff = false;
+
+        for (Integer paymentNum=1; paymentNum<12; paymentNum++) {
+            
+            if (paymentNum>2) {
+                isPaid = false;
+                isWrittenOff = true;
+            } 
+
+            if (paymentNum>5) {
+                isWrittenOff = false;
+            }
+
+            npe01__OppPayment__c newOppPayment = new npe01__OppPayment__c(
+                npe01__Opportunity__c = opp.id,
+                npe01__Payment_Amount__c = 100,
+                npe01__Paid__c = isPaid,
+                npe01__Written_Off__c = isWrittenOff,
+                npe01__Payment_Date__c = Date.newInstance(2001,paymentNum,12)
+            );
+            newPayments.add(newOppPayment);
+
+        }
+
+        // Add auto generated payment
+        List<npe01__OppPayment__c> opmtUpdate = getPayments(opp.Id);
+        opmtUpdate[0].npe01__payment_amount__c = 100;
+        newPayments.add(opmtUpdate[0]); 
+
+        upsert newPayments;
+        
+        Test.startTest();
+        
+        List<npe01__OppPayment__c> allPayments = getPayments(opp.Id);
+        System.assertEquals(12, allPayments.size(), 'There should be 12 payments associated with the Oppportunity');
+
+        PageReference pageRef = Page.PMT_PaymentWizard; 
+        Test.setCurrentPage(pageRef);
+
+        ApexPages.currentPage().getParameters().put(PARAM_ID, opp.id);
+        ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_WRITEOFF);
+        
+        PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
+        
+        // set values
+        controller.writeoffPayment.npe01__payment_date__c = Date.newInstance(2001,12,12);
+        System.assertEquals(6, controller.writeoffPaymentCount, 'There should be 6 payments to writeoff');
+        PageReference ref = controller.writeoff();
+
+        Test.stopTest();
+        
+        // should be seven payments - 3 paid, 3 written off (previously), 1 new combined written off
+        allPayments = getPayments(opp.Id);
+        System.assertEquals(7, allPayments.size(), 'There should be 7 total payments after write off');
+
+        // loop through and get counts as well as totals
+        Integer openCount = allPayments.size();
+        Integer paidCount = 0;
+        Integer writtenOffCount = 0;
+        Decimal paidAmount = 0;
+        Decimal writtenOffAmount = 0;
+
+        for (npe01__OppPayment__c payment : allPayments) {
+
+            if (payment.npe01__Paid__c) {
+                paidCount++;
+                paidAmount += payment.npe01__Payment_Amount__c;
+                openCount--;
+            }
+
+            if (payment.npe01__Written_Off__c) {
+                writtenOffCount++;
+                writtenOffAmount += payment.npe01__Payment_Amount__c;
+                openCount--;
+            }
+        }
+        
+        // there should be no open payments left
+        System.assertEquals(0, openCount, 'There should be no open payments');
+        System.assertEquals(3, paidCount, 'There should be 3 paid payments');
+        System.assertEquals(300, paidAmount, 'There should be 300 in paid payments');
+        System.assertEquals(4, writtenOffCount, 'There should be 4 written off payments');
+        System.assertEquals(900, writtenOffAmount, 'There should be 900 in written off payments');
+        
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies creation of payments does not remove existing written off payments unless the remove
+    *   paid payments is checked off
+    */
+    @isTest
+    private static void generatedPaymentScheduleShouldNotDeleteWrittenOffPayments() {
+        Opportunity opp = createPledgedOpportunity(1000);
+
+        npe01__OppPayment__c[] pmts = new npe01__OppPayment__c[0];
+        pmts.add(new npe01__OppPayment__c(
+            npe01__Opportunity__c = opp.id,
+            npe01__payment_amount__c = 100,
+            npe01__Paid__c = true)
+        );
+        pmts.add(new npe01__OppPayment__c(
+            npe01__Opportunity__c = opp.id,
+            npe01__payment_amount__c = 100,
+            npe01__Paid__c = false,
+            npe01__Written_Off__c = true)
+        );
+        insert pmts;
+         
+        Test.startTest();
+
+        PageReference pageRef = Page.PMT_PaymentWizard; 
+        Test.setCurrentPage(pageRef); 
+
+        ApexPages.currentPage().getParameters().put(PARAM_ID, opp.id);
+        ApexPages.currentPage().getParameters().put(PARAM_WTYPE, PARAM_PAYMENT);
+        
+        PMT_PaymentWizard_CTRL controller = new PMT_PaymentWizard_CTRL();
+        
+        List<SelectOption> l = controller.getItems();
+        l = controller.getIntervals();
+        l = controller.getIntervalUnits();
+        
+        // set values
+        controller.samplePayment.npe01__payment_method__c = 'Stock';
+        controller.intervalUnit = 'Month';
+        controller.numberOfPayments = 8;
+        controller.samplePayment.npe01__Scheduled_Date__c = Date.newInstance(2001,12,12);
+        
+        PageReference ref = controller.calculate();
+        PageReference savePage = controller.createPayments();
+                
+        // look for the data
+        Decimal totalPaid = 0;
+        Decimal totalWrittenOff = 0;
+        Decimal totalUnPaid = 0;
+        Integer writtenOffCount = 0;
+        Integer paidCount = 0;
+        Integer unpaidCount = 0;
+
+        npe01__OppPayment__c[] payments = getPayments(opp.Id);
+        for (npe01__OppPayment__c payment : payments) {
+            if (payment.npe01__Paid__c == true) {
+                paidCount++;
+                totalPaid += payment.npe01__Payment_Amount__c;
+            } else if (payment.npe01__Written_Off__c == true) {
+                writtenOffCount++;
+                totalWrittenOff += payment.npe01__Payment_Amount__c;
+            } else {
+                unpaidCount++;
+                totalUnPaid += payment.npe01__Payment_Amount__c;
+            }
+        }
+
+        System.assertEquals(1, paidCount);
+        System.assertEquals(100, totalPaid);
+        System.assertEquals(1, writtenOffCount);
+        System.assertEquals(100, totalWrittenOff);
+        System.assertEquals(8, unpaidCount);
+        System.assertEquals(800, totalUnPaid);
+
+        Opportunity oppAfterPayments = [
+            SELECT Amount, npe01__Payments_Made__c, npe01__Amount_Written_Off__c, npe01__Amount_Outstanding__c
+            FROM Opportunity
+            WHERE Id = :opp.Id
+        ];
+
+        System.assertEquals(totalPaid, oppAfterPayments.npe01__Payments_Made__c);
+        System.assertEquals(totalWrittenOff, oppAfterPayments.npe01__Amount_Written_Off__c);
+        System.assertEquals(totalUnPaid, oppAfterPayments.npe01__Amount_Outstanding__c);
+        
+
     }
     
     /*********************************************************************************************************
@@ -536,7 +726,8 @@ private class PMT_PaymentWizard_TEST {
                 npe01__Scheduled_Date__c,
                 npe01__Custom_Payment_Field__c,
                 npe01__Paid__c, 
-                npe01__Written_Off__c
+                npe01__Written_Off__c,
+                npe01__Payment_Date__c
             FROM npe01__OppPayment__c 
             WHERE npe01__Opportunity__c = :oppId
         ];
