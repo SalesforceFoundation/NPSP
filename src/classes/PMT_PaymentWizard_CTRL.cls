@@ -109,9 +109,9 @@ public with sharing class PMT_PaymentWizard_CTRL {
     public npe01__oppPayment__c writeoffPayment { get; set; }
     
     /*******************************************************************************************************
-    * @description number of outstanding payments for the opp
+    * @description number of payments to write off for the opp
     */ 
-    public integer outstanding_payments { get; set; }
+    public Integer writeoffPaymentCount { get; set; }
     
     /*******************************************************************************************************
     * @description decimal for amount float
@@ -151,6 +151,22 @@ public with sharing class PMT_PaymentWizard_CTRL {
         }
         set;
     }
+
+    /*******************************************************************************************************
+    * @description decimal for amount already written off
+    */ 
+    private Decimal amountWrittenOff { get; set; }
+
+
+    /*******************************************************************************************************
+    * @description Integer for count of invalid payment records
+    */ 
+    private Integer invalidPaymentRecordCount { get; set; }
+
+    /*******************************************************************************************************
+    * @description Boolean to indicate if the wizard page should be enabled
+    */ 
+    public Boolean isWizardEnabled { get; set; }
     
     /*******************************************************************************************************
     * @description gets the payment related settings
@@ -169,16 +185,62 @@ public with sharing class PMT_PaymentWizard_CTRL {
     */ 
     public PMT_PaymentWizard_CTRL() {
         this.redirect = this.removePaidPayments = false;
+        this.isWizardEnabled = true;
+        String wizardType = ApexPages.currentPage().getParameters().get('wtype');
 
-        if (ApexPages.currentPage().getParameters().get('wtype') == 'writeoff'){
+        if (wizardType == 'writeoff'){
             setupWriteoffWizard();
             
-        } else if (ApexPages.currentPage().getParameters().get('wtype') == 'payment'){
+        } else if (wizardType == 'payment'){
             setupPaymentWizard();
         }
 
         getPageValidationMessages();
     }
+
+    /*******************************************************************************************************
+    * @description initialize payment figures and make sure the opportunity has valid amounts
+    */
+    private void setupPaymentAmounts(Opportunity opp) {
+        // Set default values 
+        this.writeoffPaymentCount = 1;
+        this.amountWrittenOff = 0;
+        this.invalidPaymentRecordCount = 0;
+
+        if (opp.Amount == null || opp.Amount == 0) {
+            isWizardEnabled = false;
+        }
+
+        Integer outstandingPaymentCount = 0;
+
+        for (npe01__OppPayment__c payment : opp.npe01__OppPayment__r) {
+
+            if (payment.npe01__Paid__c == true) {
+                if (payment.npe01__Written_Off__c == true) {
+                    invalidPaymentRecordCount++;
+                }
+                continue;
+            } 
+            
+            if (payment.npe01__Written_Off__c == true) {
+                if (payment.npe01__Payment_Amount__c != null) {
+                    amountWrittenOff += payment.npe01__Payment_Amount__c;
+                }
+                continue;
+            }
+            
+            outstandingPaymentCount++;
+        }
+
+        // if there are no payments outstanding then we set the count to 1 as 
+        // we will create a single payment for the new write off amount
+        if (outstandingPaymentCount>0) {
+            writeoffPaymentCount = outstandingPaymentCount;
+        }
+
+        
+    }
+
     
     /*******************************************************************************************************
     * @description initializes data for the Payment wizard
@@ -189,21 +251,26 @@ public with sharing class PMT_PaymentWizard_CTRL {
         String id = ApexPages.currentPage().getParameters().get('id');
         Opportunity[] o = Database.query(makeOppQuery() + ' WHERE Id = :id');
 
-        if (o.isEmpty()) {
-            haveAmount = false;
-        } else {
-            currentOpp = o[0];
-            haveAmount = (getAmountOutstanding() > 0);
-            isClosedLost = currentOpp.isClosed && !currentOpp.isWon;
-            samplePayment = new npe01__OppPayment__c();
-            samplePayment.npe01__Scheduled_Date__c = System.today();
-            numberOfPayments = 12;
-            interval = 1;
-            intervalUnit = 'Month';
-        }
-
         isWriteoffWizard = false;
         isScheduleWizard = true;
+        
+        if (o.isEmpty()) {
+            haveAmount = false;
+            return;
+        }
+
+        currentOpp = o[0];
+        setupPaymentAmounts(currentOpp);
+
+        haveAmount = (getAmountOutstanding() > 0);
+        
+        isClosedLost = currentOpp.isClosed && !currentOpp.isWon;
+        samplePayment = new npe01__OppPayment__c();
+        samplePayment.npe01__Scheduled_Date__c = System.today();
+        numberOfPayments = 12;
+        interval = 1;
+        intervalUnit = 'Month';
+
     }
     
     /*******************************************************************************************************
@@ -215,24 +282,28 @@ public with sharing class PMT_PaymentWizard_CTRL {
         String id = ApexPages.currentPage().getParameters().get('id');
         Opportunity[] o = Database.query(makeOppQuery() + ' WHERE Id = :id');
 
-        if (o.isEmpty()) {
-            haveAmount = false;
-        } else {
-            currentOpp = o[0];
-            Integer paymentcount = 0;
-            paymentcount = [SELECT count() FROM npe01__OppPayment__c WHERE npe01__Opportunity__c = :o[0].id AND npe01__Paid__c != true];
-            
-            outstanding_payments = paymentcount;
-            haveAmount = (getAmountOutstanding() > 0);
-            writeoffPayment = new npe01__OppPayment__c();
-            writeoffPayment.npe01__Payment_Amount__c = getAmountOutstanding();
-            writeoffPayment.npe01__Written_Off__c = true;
-            writeoffPayment.npe01__Opportunity__c = currentOpp.Id;
-            writeoffPayment.npe01__Payment_Date__c = System.today();
-        }
-
         isWriteoffWizard = true;
         isScheduleWizard = false;
+
+        if (o.isEmpty()) {
+            haveAmount = false;
+            return;
+        }
+         
+        currentOpp = o[0];
+        setupPaymentAmounts(currentOpp);
+
+        haveAmount = (getAmountOutstanding() > 0);
+        writeoffPayment = new npe01__OppPayment__c();
+        writeoffPayment.npe01__Payment_Amount__c = getAmountOutstanding();
+        writeoffPayment.npe01__Written_Off__c = true;
+        writeoffPayment.npe01__Opportunity__c = currentOpp.Id;
+        writeoffPayment.npe01__Payment_Date__c = System.today();
+        
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            writeoffPayment.put('CurrencyIsoCode', (String) currentOpp.get('CurrencyIsoCode'));
+        }
+        
     }
 
     /*******************************************************************************************************
@@ -247,11 +318,11 @@ public with sharing class PMT_PaymentWizard_CTRL {
         for (String s : PMT_PaymentCreator.paymentMappings.keyset()) {
             npe01__Payment_Field_Mapping_Settings__c pfms = PMT_PaymentCreator.paymentMappings.get(s);
 
-            if (!query.contains(pfms.npe01__Opportunity_Field__c.toLowerCase())) {               
+            if (!query.contains(pfms.npe01__Opportunity_Field__c.toLowerCase())) {
                 query += ', ' + pfms.npe01__Opportunity_Field__c;
             }   
         }
-        query += ', (SELECT Id, npe01__Payment_Amount__c, npe01__Written_Off__c, npe01__Paid__c FROM  npe01__OppPayment__r)';
+        query += ', (SELECT Id, npe01__Payment_Amount__c, npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__r)';
         
         //if currencyiso field exists add it to query for use later
         if (Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode') != null) {
@@ -298,7 +369,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
             
             for (Integer i=1; i <= numberOfPayments; i++) {
 
-                // create the payment record    
+                // create the payment record
                 Payment thisPayment = new Payment(i);
                 // set values on the oppPayment object
                 thisPayment.oppPayment.npe01__Opportunity__c = currentOpp.id;
@@ -340,7 +411,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
                     nextDate = nextDate.addMonths(interval); 
                 } else if (intervalUnit == 'Year') {
                     nextDate = nextDate.addYears(interval);
-                } 
+                }
             }
             
         }
@@ -358,18 +429,18 @@ public with sharing class PMT_PaymentWizard_CTRL {
     	Savepoint sp = Database.setSavepoint();
     	try {
 	        List<npe01__OppPayment__c> paymentsToDelete = new List<npe01__OppPayment__c>();
-	        npe01__OppPayment__c[] delPymnts = [SELECT Id, npe01__Paid__c FROM npe01__OppPayment__c WHERE npe01__OppPayment__c.npe01__Opportunity__c = :currentOpp.Id];
 	        
-	        for (npe01__OppPayment__c thisPayment : delPymnts){
-	            if (thisPayment.npe01__Paid__c == false){
+	        for (npe01__OppPayment__c thisPayment : currentOpp.npe01__OppPayment__r){
+	            if (thisPayment.npe01__Paid__c == false && thisPayment.npe01__Written_Off__c == false) {
 	                paymentsToDelete.add(thisPayment);
 	            }
 	        }
+
 	        if (!paymentsToDelete.isEmpty()) {
                 delete paymentsToDelete;
             }
-
-	        insert writeoffPayment;
+            
+            insert writeoffPayment;
 
 	        redirect = true;
 
@@ -393,20 +464,45 @@ public with sharing class PMT_PaymentWizard_CTRL {
         getPaymentsSettings();
 
         if (paymentsSettings == null || paymentsSettings.npe01__Payments_Enabled__c == false) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardPaymentsDisabledTitle, System.Label.pmtWizardPaymentsDisabled));
-        } else {
-            if (!removePaidPayments && isScheduleWizard == true && currentOpp != null && haveAmount == false && isClosedLost == false) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardNoUnpaidAmount));
-            } else if (!removePaidPayments && isWriteoffWizard == true && currentOpp != null && haveAmount == false) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardNoWriteoffAmount));
-            }
-        }
-        if (currentOpp != null && isClosedLost == true) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardClosedLost));
-        }
+            ApexPages.addMessage(new ApexPages.Message(
+                ApexPages.Severity.WARNING, 
+                System.Label.pmtWizardPaymentsDisabledTitle, 
+                System.Label.pmtWizardPaymentsDisabled)
+            );
+            return;
+        } 
+        
         if (currentOpp == null) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardMsgNoOppFound));
+            return;
+        } 
+        
+        if (currentOpp.Amount == null || currentOpp.Amount == 0) {
+            if (isScheduleWizard) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardScheduleNoAmount));
+            } else if (isWriteoffWizard) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardWriteOffNoAmount));
+            }
+            return;
         }
+
+        if (invalidPaymentRecordCount > 0) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardInvalidRecords));
+            return;
+        }
+
+        if (isClosedLost == true) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardClosedLost));
+        }
+        
+        if (!removePaidPayments && isScheduleWizard == true && haveAmount == false && isClosedLost == false) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardNoUnpaidAmount));
+        } else if (!removePaidPayments && isWriteoffWizard == true && haveAmount == false) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardNoWriteoffAmount));
+        }
+
+
+
     }
 
     /*******************************************************************************************************
@@ -510,16 +606,25 @@ public with sharing class PMT_PaymentWizard_CTRL {
     public PageReference createPayments() {
     	Savepoint sp = Database.setSavepoint();
         try {
-	        // first delete unpaid payments
-	        npe01__oppPayment__c[] old = [SELECT Id FROM npe01__oppPayment__c WHERE npe01__opportunity__c = :currentOpp.id AND npe01__paid__c = false];
-	        if (!old.isEmpty()) {
-                delete old;
+            List<npe01__oppPayment__c> paymentsToDelete = new List<npe01__OppPayment__c>(); 
+            List<npe01__OppPayment__c> existingPayments = [
+                SELECT Id, npe01__Paid__c, npe01__Written_Off__c
+                FROM npe01__OppPayment__c
+                WHERE npe01__Opportunity__c = :currentOpp.Id
+            ];
+
+            for (npe01__OppPayment__c payment : existingPayments) {
+                if (payment.npe01__Paid__c == false && payment.npe01__Written_Off__c == false) {
+                    paymentsToDelete.add(payment);
+                    continue;
+                }
+                if (removePaidPayments) {
+                    paymentsToDelete.add(payment);
+                }
             }
-	        
-	        // If deleting paid Payments, delete paid payments
-	        npe01__oppPayment__c[] oldPaid = [SELECT Id FROM npe01__oppPayment__c WHERE npe01__opportunity__c = :currentOpp.id AND npe01__paid__c = true];
-	        if (!oldPaid.isEmpty() && removePaidPayments == true) {
-                delete oldPaid;
+
+            if (!paymentsToDelete.isEmpty()) {
+                delete paymentsToDelete;
             }
 	        
 	        // get the new payments into a list
@@ -562,9 +667,31 @@ public with sharing class PMT_PaymentWizard_CTRL {
      */
     public String getCurrencySymbol() {
         if (currencySymbol == null) {
-            currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(currentOpp.Id);
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                currencySymbol = (String) currentOpp.get('CurrencyIsoCode') + ' ';
+            } else {
+                currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(UserInfo.getDefaultCurrency());
+            }
         }
         return currencySymbol;
+    }
+
+
+     /**
+     * @description Given an amount return the formatted currency String for that amount based on the User's locale
+     * @param amount to format in Decimal
+     * @return formatted String
+     */
+    @TestVisible
+    private String formatCurrency(Decimal amount) {
+        // Decimal.format is locale aware but it will truncate the decimals for .00 amounts
+        // Adding thousandths of a cent to keep the decimal and then remove it before returning the result
+        Decimal currencyAmt = Decimal.valueOf(Math.roundToLong(amount * 100)) / 100;
+        String formattedCurrency = (currencyAmt.setScale(2) + (currencyAmt >= 0 ? 0.001 : -0.001)).format();
+        formattedCurrency = formattedCurrency.left(formattedCurrency.length() - 1);
+
+        return getCurrencySymbol() + formattedCurrency;
+     
     }
 
     /*******************************************************************************************************
@@ -579,13 +706,40 @@ public with sharing class PMT_PaymentWizard_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description Returns a formatted text of the outstanding amount based on the user locale
+    * @return String amount outstanding
+    */
+    public String getAmountOutstandingText() {
+        return formatCurrency(getAmountOutstanding());
+    }
+
+    /*******************************************************************************************************
     * @description When Advanced Currency Management is enabled in an org, the packaged rollups and formula
     * from the Payment object will not work. This method will detect that scenario and return either the
     * value from the formula or calculate the Amount Outstanding from the payment records
     * track this.
-    * @return Decimal total paid payments
+    * @return String total paid payments
     */
-    public Decimal getTotalPaymentsMade() {
-        return PMT_PaymentCreator.getPaymentsMade(this.currentOpp);
+    public String getTotalPaymentsMade() {
+        return formatCurrency(PMT_PaymentCreator.getPaymentsMade(this.currentOpp));
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the formatted text of the amount written off
+    * @return String total written off payments
+    */
+    public String getTotalWrittenOff() {
+        return formatCurrency(amountWrittenOff);
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the formatted text of the amount Opportunity
+    * @return String opportunity amount
+    */
+    public String getOppAmount() {
+        if (currentOpp.Amount != null) {
+            return formatCurrency(currentOpp.Amount);
+        }
+        return '';
     }
 }
