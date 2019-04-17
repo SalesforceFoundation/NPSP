@@ -1761,6 +1761,7 @@
         <members>pmtWizardInterval</members>
         <members>pmtWizardIntervalNumber</members>
         <members>pmtWizardIntervalPeriod</members>
+        <members>pmtWizardInvalidRecords</members>
         <members>pmtWizardMonth</members>
         <members>pmtWizardMsgNoOppFound</members>
         <members>pmtWizardNoUnpaidAmount</members>
@@ -1770,6 +1771,7 @@
         <members>pmtWizardPaymentsDisabled</members>
         <members>pmtWizardPaymentsDisabledTitle</members>
         <members>pmtWizardPaymentsNoAccessMessage</members>
+        <members>pmtWizardScheduleNoAmount</members>
         <members>pmtWizardSectionTitle</members>
         <members>pmtWizardSectionWriteoff</members>
         <members>pmtWizardSectionWriteoffPayments</members>
@@ -1780,14 +1782,15 @@
         <members>pmtWizardWriteoffDate</members>
         <members>pmtWizardWriteoffMessage</members>
         <members>pmtWizardWriteoffNoAccessMessage</members>
+        <members>pmtWizardWriteOffNoAmount</members>
         <members>pmtWizardYear</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>
         <members>pscManageSoftCreditsAmountMissing</members>
-        <members>pscManageSoftCreditsContactMissing</members>
         <members>pscManageSoftCreditsAmountOrPercent</members>
         <members>pscManageSoftCreditsCantChangeCurrency</members>
+        <members>pscManageSoftCreditsContactMissing</members>
         <members>pscManageSoftCreditsFull</members>
         <members>pscManageSoftCreditsInvalidContact</members>
         <members>pscManageSoftCreditsNoRoles</members>
