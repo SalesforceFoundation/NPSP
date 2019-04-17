@@ -1395,7 +1395,7 @@ private with sharing class BDI_DataImport_TEST2 {
         //run batch data import
         Test.StartTest();
         BDI_FieldMappingHelpText fieldMapper = BDI_FieldMappingHelpText.getInstance();
-        fieldMapper.failFieldLevelSecurity = true;
+        BDI_DataImportService.failFieldLevelSecurity = true;
         BDI_DataImportService dataImportService = 
             new BDI_DataImportService(false, fieldMapper);
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(dataImportService);
