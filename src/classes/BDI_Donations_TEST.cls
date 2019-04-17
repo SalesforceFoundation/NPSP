@@ -62,13 +62,7 @@ public with sharing class BDI_Donations_TEST {
         insert listOppT;
     }
 
-    /*********************************************************************************************************
-    * @description  operation
-    *       map to checkbox field and manually match to exiting opp
-    * verify: 
-    *       checkbox field is updated by Data Import
-    */
-    /*********************************************************************************************************
+   /*********************************************************************************************************
     * @description  operation
     *       map to checkbox field and manually match to exiting opp
     * verify: 
