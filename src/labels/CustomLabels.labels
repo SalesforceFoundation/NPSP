@@ -5043,7 +5043,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pmtWizardBtnRemovePaidPayments</shortDescription>
-        <value>Remove Paid Payments</value>
+        <value>Remove Paid and Written Off Payments</value>
     </labels>
     <labels>
         <fullName>pmtWizardClosedLost</fullName>
@@ -5110,12 +5110,36 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>No opportunity found.</value>
     </labels>
     <labels>
+        <fullName>pmtWizardInvalidRecords</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWizardInvalidRecords</shortDescription>
+        <value>NOTE: This Opportunity has payment record(s) that are both Paid and Written Off. You must deselect one or both checkboxes.</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardScheduleNoAmount</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWizardNoAmount</shortDescription>
+        <value>NOTE: This Opportunity has no Amount. You must enter an Amount before you can schedule Payments.</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardWriteOffNoAmount</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWizardNoAmount</shortDescription>
+        <value>NOTE: This Opportunity has no Amount. You must enter an Amount before you can write off Payments.</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardNoUnpaidAmount</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pmtWizardNoUnpaidAmount</shortDescription>
-        <value>NOTE: This Opportunity has no unpaid amount. To create Payments, first edit the Opportunity record and enter an amount, or click Remove Paid Payments to delete existing Payments. If the Opportunity's stage is closed, you may need to change it to an open stage.</value>
+        <value>All Payments for this Opportunity are either paid or written off. To create a new Payment schedule, click Delete Paid and Written Off Payments.</value>
     </labels>
     <labels>
         <fullName>pmtWizardNoWriteoffAmount</fullName>
@@ -5123,7 +5147,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pmtWizardNoWriteoffAmount</shortDescription>
-        <value>NOTE: This Opportunity has no unpaid amount. To write off Payments, first edit the Opportunity record and enter an amount, or delete existing Payments.</value>
+        <value>All Payments for this Opportunity are either paid or written off. If you need to make changes to the Payment records, edit them directly.</value>
     </labels>
     <labels>
         <fullName>pmtWizardNumberOfPayments</fullName>
@@ -5235,7 +5259,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pmtWizardWriteoffMessage</shortDescription>
-        <value>You are preparing to write off {0} Payment(s) totaling {1}.</value>
+        <value>You are preparing to write off {0} Payment(s) totaling {1}</value>
     </labels>
     <labels>
         <fullName>pmtWizardWriteoffNoAccessMessage</fullName>

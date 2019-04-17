@@ -1764,6 +1764,7 @@
         <members>pmtWizardInterval</members>
         <members>pmtWizardIntervalNumber</members>
         <members>pmtWizardIntervalPeriod</members>
+        <members>pmtWizardInvalidRecords</members>
         <members>pmtWizardMonth</members>
         <members>pmtWizardMsgNoOppFound</members>
         <members>pmtWizardNoUnpaidAmount</members>
@@ -1773,6 +1774,7 @@
         <members>pmtWizardPaymentsDisabled</members>
         <members>pmtWizardPaymentsDisabledTitle</members>
         <members>pmtWizardPaymentsNoAccessMessage</members>
+        <members>pmtWizardScheduleNoAmount</members>
         <members>pmtWizardSectionTitle</members>
         <members>pmtWizardSectionWriteoff</members>
         <members>pmtWizardSectionWriteoffPayments</members>
@@ -1783,6 +1785,7 @@
         <members>pmtWizardWriteoffDate</members>
         <members>pmtWizardWriteoffMessage</members>
         <members>pmtWizardWriteoffNoAccessMessage</members>
+        <members>pmtWizardWriteOffNoAmount</members>
         <members>pmtWizardYear</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
