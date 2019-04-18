@@ -267,7 +267,7 @@ private class PMT_Payment_TEST {
 
         Opportunity opp = new Opportunity(
             Name = 'success',
-            Amount = 100,
+            Amount = 400,
             AccountID = acc.id,
             CloseDate = System.today(),
             StageName = UTIL_UnitTestData_TEST.getOpenStage()
@@ -277,25 +277,42 @@ private class PMT_Payment_TEST {
 
         npe01__OppPayment__c payment = getPaymentRecord(opp.Id);
 
-
         Test.startTest();
-        // Attempt to update an existing system
-        payment.npe01__Paid__c = true;
-        payment.npe01__Written_Off__c = true;
         try {
+            // Attempt to update an existing system
+            payment.npe01__Paid__c = true;
+            payment.npe01__Written_Off__c = true;
+            
             update payment;
-            System.Assert(False, 'Updating an existing payment with both written off and paid checked should fail');
+            System.Assert(false, 'Updating an existing payment with both written off and paid checked should fail');
         } catch (Exception ex) {
             System.Assert(ex.getMessage().contains(System.Label.pmtWriteOffPaidPayment), 'Error message should contain "' +
                 System.Label.pmtWriteOffPaidPayment + '"');
         }
 
+        try {
+            payment.npe01__Paid__c = false;
+            payment.npe01__Written_Off__c = false;
+            update payment;
+
+            payment.npe01__Paid__c = true;
+            payment.npe01__Written_Off__c = false;
+            update payment;
+
+            payment.npe01__Paid__c = false;
+            payment.npe01__Written_Off__c = true;
+            update payment;
+
+        } catch (Exception ex) {
+            System.Assert(false, 'Updating an existing payment with valid values should succeed');
+        }
+
         // Attempt to create a new payment with both fields set to true
         npe01__OppPayment__c newPayment = new npe01__OppPayment__c();
         newPayment.npe01__Opportunity__c = opp.Id;
-        newPayment.npe01__Payment_Amount__c = 100;
+        newPayment.npe01__Payment_Amount__c = 400;
         newPayment.npe01__Payment_Date__c = System.today();
-        newPayment.npe01__Scheduled_Date__c = system.today();
+        newPayment.npe01__Scheduled_Date__c = System.today();
         newPayment.npe01__Paid__c = true;
         newPayment.npe01__Written_Off__c = true;
 
@@ -306,6 +323,33 @@ private class PMT_Payment_TEST {
             System.Assert(ex.getMessage().contains(System.Label.pmtWriteOffPaidPayment), 'Error message should contain "' +
                 System.Label.pmtWriteOffPaidPayment + '"');
         }
+
+        // You should still be able to insert new payments without paid or written off
+        List<npe01__OppPayment__c> newPayments = new List<npe01__OppPayment__c>();
+        newPayment.npe01__Written_Off__c = false;
+        newPayment.npe01__Paid__c = false;
+        newPayment.npe01__Payment_Amount__c = 100;
+        newPayments.add(newPayment);
+
+        npe01__OppPayment__c p2 = newPayment.clone();
+        p2.npe01__Paid__c = false;
+        p2.npe01__Written_Off__c = true;
+        p2.npe01__Payment_Amount__c = 200;
+        newPayments.add(p2);
+
+        npe01__OppPayment__c p3 = newPayment.clone();
+        p3.npe01__Paid__c = true;
+        p3.npe01__Written_Off__c = false;
+        p3.npe01__Payment_Amount__c = 300;
+        newPayments.add(p3);
+        
+        insert newPayments;
+
+        List<npe01__OppPayment__c> insertedPayments = [
+            SELECT Id, Name, npe01__Paid__c, npe01__Written_Off__c, npe01__Payment_Amount__c 
+            FROM npe01__OppPayment__c];
+
+        System.assertEquals(insertedPayments.size(), 4, 'Valid payment records should be created');
 
         Test.stopTest();
 
