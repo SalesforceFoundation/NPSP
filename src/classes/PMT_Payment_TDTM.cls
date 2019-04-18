@@ -53,11 +53,11 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
 
     /*******************************************************************************************************
-    * @description          Trigger Handler on on Opportunity or Payment related to the Payment object
-    * @param newlist        the list of Opportunity or Payments from trigger new.
-    * @param oldlist        the list of Opportunity or Payments from trigger old.
+    * @description Trigger Handler on on Opportunity or Payment related to the Payment object
+    * @param newlist the list of Opportunity or Payments from trigger new.
+    * @param oldlist the list of Opportunity or Payments from trigger old.
     * @param triggerAction  which trigger event (BeforeInsert, AfterInsert, etc.).
-    * @param objResult      the describe for related object
+    * @param objResult the describe for related object
     * @return dmlWrapper.
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist,
@@ -74,12 +74,12 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description          Trigger Handler on Payment for managing Payments.
-    * @param newlist        The list of Payments from trigger new.
-    * @param oldlist        The list of Payments from trigger old.
-    * @param triggerAction  Which trigger event (BeforeInsert, AfterInsert, etc.).
-    * @return dmlWrapper    Returns a dmlWrapper object if there were opportunity records modified 
-    *                       otherwise returns null
+    * @description Trigger Handler on Payment for managing Payments.
+    * @param newlist The list of Payments from trigger new.
+    * @param oldlist The list of Payments from trigger old.
+    * @param triggerAction Which trigger event (BeforeInsert, AfterInsert, etc.).
+    * @return dmlWrapper Returns a dmlWrapper object if there were opportunity records modified 
+    *  otherwise returns null
     ********************************************************************************************************/
     public DmlWrapper runForPayments(
         List<npe01__OppPayment__c> newlist, 
@@ -88,7 +88,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
         DmlWrapper dmlWrapper = null;
 
-        validatePayment(newList, oldList, triggerAction, dmlWrapper);
+        validatePayments(newList, oldList, triggerAction, dmlWrapper);
 
         if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
             return handleMultiCurrencyPayments(newlist, oldlist, triggerAction, dmlWrapper);
@@ -98,11 +98,11 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description          Trigger Handler on Opportunities for managing Payments
-    * @param newlist        the list of Opps from trigger new. 
-    * @param oldlist        the list of Opps from trigger old. 
-    * @param triggerAction  which trigger event (BeforeInsert, AfterInsert, etc.). 
-    * @return dmlWrapper    Returns a dmlWrapper object if there were opportunity records modified.
+    * @description Trigger Handler on Opportunities for managing Payments
+    * @param newlist the list of Opps from trigger new. 
+    * @param oldlist the list of Opps from trigger old. 
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @return dmlWrapper Returns a dmlWrapper object if there were opportunity records modified.
     ********************************************************************************************************/
     public DmlWrapper runForOpportunities(
         List<Opportunity> newlist, 
@@ -163,9 +163,9 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description          Retrieve a Id Map of Opportunties related to a Set of Ids
-    * @param oppIds         Set of Opportunity Ids to retrieve
-    * @return Map<Id, Opp>  This method returns a map of Id to opportunity
+    * @description Retrieve a Id Map of Opportunties related to a Set of Ids
+    * @param oppIds Set of Opportunity Ids to retrieve
+    * @return Map<Id, Opp> This method returns a map of Id to opportunity
     ********************************************************************************************************/
     private Map<Id, Opportunity> getPaymentOpportunities(Set<Id> oppIds) {
         String soql = 'SELECT Id, Amount, IsClosed, IsWon, StageName, ';
@@ -180,12 +180,12 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description          For multicurrency orgs, validate the currencies and set the appropriate stages
-    *                       and currency fields
-    * @param newlist        The list of Payments from trigger new.
-    * @param oldlist        The list of Payments from trigger old.
-    * @param triggerAction  Which trigger event (BeforeInsert, AfterInsert, etc.).
-    * @return dmlWrapper    This method modifies dmlWrapper and returns it
+    * @description For multicurrency orgs, validate the currencies and set the appropriate stages
+    *  and currency fields
+    * @param newlist The list of Payments from trigger new.
+    * @param oldlist The list of Payments from trigger old.
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
+    * @return dmlWrapper this method modifies dmlWrapper and returns it
     ********************************************************************************************************/
     private DmlWrapper handleMultiCurrencyPayments(
         List<npe01__OppPayment__c> newlist, 
@@ -202,14 +202,14 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
             oppIds.add(pmt.npe01__Opportunity__c);
         }
 
-        Map<Id, Opportunity> mapOfOpps = getPaymentOpportunities(oppIds);
+        Map<Id, Opportunity> oppsById = getPaymentOpportunities(oppIds);
         
         // Validation and default the CurrencyIsoCode for new records for Before Insert/update
         if (isCurrencyFieldAvailable && (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
             for (Integer i = 0; i < newlist.size(); i++) {
                 npe01__OppPayment__c pmt = newlist[i];
                 String oldPmtCurrency = (oldList != null ? (String) oldlist[i].get('CurrencyIsoCode') : null);
-                setPaymentCurrency(mapOfOpps, pmt, oldPmtCurrency, triggerAction);
+                validateAndSetPaymentCurrency(oppsById, pmt, oldPmtCurrency, triggerAction);
             }
         }
 
@@ -224,8 +224,8 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
             Boolean isACMEnabled = UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled();
             if (isACMEnabled && String.isNotEmpty(closedStageName)) {
                 // Loop through all the queried Opps with the subquery on payments
-                for (Opportunity opp : mapOfOpps.values()) {
-                   handleAdvancedCurrencyPayments(opp, closedStageName, dmlWrapper);
+                for (Opportunity opp : oppsById.values()) {
+                   handleOppPaymentWithAdvancedCurrency(opp, closedStageName, dmlWrapper);
                 }
             }
         }
@@ -233,16 +233,16 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description              For multicurrency orgs, set the currency of the payment to the currency of 
-    *                           the opportunity and make sure that the payment currency was not modified
-    * @param mapOfOpps          Map of Opportunities
-    * @param pmt                Payment Object
-    * @param oldPmtCurrency     String of old Payment Currency
-    * @param triggerAction      Action that triggered this execution
-    * @return void              Does not return anything
+    * @description  For multicurrency orgs, set the currency of the payment to the currency of 
+    *  the opportunity and make sure that the payment currency was not modified
+    * @param oppsById Map of Opportunities
+    * @param pmt Payment Object
+    * @param oldPmtCurrency String of old Payment Currency
+    * @param triggerAction Action that triggered this execution
+    * @return void Does not return anything
     ********************************************************************************************************/
-    private void setPaymentCurrency(Map<Id, Opportunity> mapOfOpps, npe01__OppPayment__c pmt, String oldPmtCurrency, TDTM_Runnable.Action triggerAction) {
-        String oppCurrency = (String) mapOfOpps.get(pmt.npe01__Opportunity__c).get('CurrencyIsoCode');
+    private void validateAndSetPaymentCurrency(Map<Id, Opportunity> oppsById, npe01__OppPayment__c pmt, String oldPmtCurrency, TDTM_Runnable.Action triggerAction) {
+        String oppCurrency = (String) oppsById.get(pmt.npe01__Opportunity__c).get('CurrencyIsoCode');
         String pmtCurrency = (String) pmt.get('CurrencyIsoCode');
 
         // Prevent the Payment CurrencyCode from being modified directly
@@ -260,14 +260,14 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description              For multicurrency orgs with advanced currency management enabled, 
-    *                           Set the stageName if the amount is equal payments made and opp is not closed
-    * @param opp                Opportunity object
-    * @param closedStageName    String of the stageName
-    * @param dmlWrapper         DmlWrapper Object
-    * @return void              Does not return anything
+    * @description For multicurrency orgs with advanced currency management enabled, 
+    * Set the stageName if the amount is equal payments made and opp is not closed.  
+    * @param opp Opportunity object
+    * @param closedStageName String of the stageName
+    * @param dmlWrapper DmlWrapper Object
+    * @return void Does not return anything
     ********************************************************************************************************/
-    private void handleAdvancedCurrencyPayments(Opportunity opp, String closedStageName, DmlWrapper dmlWrapper) {
+    private void handleOppPaymentWithAdvancedCurrency(Opportunity opp, String closedStageName, DmlWrapper dmlWrapper) {
         Decimal paidAmount = PMT_PaymentCreator.getPaymentsMade(opp);
 
         if (opp.Amount > 0 && paidAmount == opp.Amount && !opp.isClosed && !opp.IsWon) {
@@ -277,13 +277,14 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description          Validate that the payment has the appropriate values
-    * @param newlist        The list of Payments from trigger new.
-    * @param oldlist        The list of Payments from trigger old.
+    * @description Validate that the payment has the appropriate values. Currency Code validation is handled
+    * in a different function
+    * @param newlist The list of Payments from trigger new.
+    * @param oldlist The list of Payments from trigger old.
     * @param triggerAction  Which trigger event (BeforeInsert, AfterInsert, etc.).
-    * @return void          Does not return anything
+    * @return void Does not return anything
     ********************************************************************************************************/
-    private void validatePayment(
+    private void validatePayments(
         List<npe01__OppPayment__c> newlist, 
         List<npe01__OppPayment__c> oldlist,
         TDTM_Runnable.Action triggerAction, 
