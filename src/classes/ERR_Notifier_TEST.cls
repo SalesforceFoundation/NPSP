@@ -42,7 +42,8 @@ private class ERR_Notifier_TEST {
     ***************************************************************************************************************************/   
     private static testMethod void testGetSystemAdminEmails() {
         Test.startTest();
-        Set<String> recipientEmails = new Set<String>(ERR_Notifier.getSystemAdminEmails());
+        ERR_Notifier notifierService = new ERR_Notifier();
+        Set<String> recipientEmails = new Set<String>(notifierService.getSystemAdminEmails());
         Test.stopTest();
 
         Set<String> expectedEmails = getSystemAdminEmails();
