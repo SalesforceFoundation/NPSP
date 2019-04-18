@@ -319,8 +319,12 @@ private class PMT_Payment_TEST {
      * @description Reusable utility method to retrieve a specific payment record for an Opportunity
      */
     private static npe01__OppPayment__c getPaymentRecord(Id oppId) {
-        String soql = 'SELECT Id, CurrencyIsoCode, npe01__Payment_Amount__c ' +
-                ' FROM npe01__OppPayment__c WHERE npe01__Opportunity__c = \'' + oppId + '\' LIMIT 1';
+        
+        String soql = 'SELECT Id, npe01__Payment_Amount__c ';
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            soql += ', CurrencyIsoCode ';
+        }
+        soql += ' FROM npe01__OppPayment__c WHERE npe01__Opportunity__c = \'' + oppId + '\' LIMIT 1';
         return (npe01__OppPayment__c)database.query(soql);
     }
 }
