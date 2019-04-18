@@ -5860,6 +5860,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Only System Administrators can enable or disable Customizable Rollups.</value>
     </labels>
     <labels>
+        <fullName>stgDIFMNonAdminError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgDIFMNonAdminError</shortDescription>
+        <value>Only System Administrators can enable or disable Data Import Field Mapping.</value>
+    </labels>
+    <labels>
         <fullName>stgCRLPGoToSetup</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

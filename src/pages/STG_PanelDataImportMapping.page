@@ -1,0 +1,58 @@
+<apex:page controller="STG_PanelDataImportMapping_CTRL" docType="html-5.0" standardStylesheets="false">
+
+    <apex:slds/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}" />
+
+    <div class="slds-scope">
+        <apex:form id="form" styleClass="slds-m-around_x-large">
+            <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="Data Import Field Mapping" />
+
+            <c:UTIL_PageMessages allowClose="false" id="messages" />
+            <c:UTIL_PageMessageInfo isRendered="{!NOT(isAdmin)}" message="{!$Label.stgDIFMNonAdminError}" />
+
+            <!-- BEGIN INTRO TEXT AND TOGGLE -->
+            <div class="slds-grid">
+                <apex:outputPanel>
+                    <div class="slds-m-vertical_medium">
+                        <c:UTIL_HtmlOutput html="Placeholder Text" hasLink="true" styleClass="slds-text-body_small" />
+                    </div>
+
+                    <label class="slds-checkbox_toggle slds-grid slds-m-vertical_small">
+                        <span class="slds-form-element__label slds-m-bottom_none">Data Import Field Mapping</span>
+                        <apex:inputCheckbox onClick="toggle(); return false;"
+                                            id="enableDIFMToggle"
+                                            html-name="checkbox-toggle-2"
+                                            value="{!isDataImportFieldMapping}"
+                                            html-aria-describedby="checkbox-toggle-2" />
+                        <span class="slds-checkbox_faux_container" aria-live="assertive">
+                            <span class="slds-checkbox_faux"></span>
+                            <span class="slds-checkbox_on">Enabled</span>
+                            <span class="slds-checkbox_off">Disabled</span>
+                        </span>
+                    </label>
+                </apex:outputPanel>
+            </div>
+            <!-- END -->
+
+            <apex:actionFunction name="enableDataImportFieldMapping" action="{!enableDataImportFieldMapping}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
+                status="statusLoad" />
+            <apex:actionFunction name="disableDataImportFieldMapping" action="{!disableDataImportFieldMapping}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
+                status="statusLoad" />
+
+        </apex:form>
+
+        <script type="text/javascript">
+            function toggle() {
+                console.log('onToggle()');
+                if (document.getElementById('{!$Component.form.enableDIFMToggle}').checked) {
+                    console.log('Attempting to enable data import field mapping');
+                    enableDataImportFieldMapping();
+                } else {
+                    disableDataImportFieldMapping();
+                }
+            }
+        </script>
+
+    </div>
+
+</apex:page>
