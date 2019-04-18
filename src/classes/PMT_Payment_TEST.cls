@@ -43,10 +43,10 @@ private class PMT_Payment_TEST {
         insert acc;
     }
 
-    /**
+    /*******************************************************************************************************
      * @description Validate that new payment records created with an opportunity get the CurrencyIsoCode set
      * properly to the Opportunities currency code
-     */
+     *******************************************************************************************************/
     static testMethod void test_newPaymentCurrencyMatchesOpportunity() {
 
         //only run test in multicurrency orgs
@@ -257,6 +257,64 @@ private class PMT_Payment_TEST {
         System.assertEquals(closedWonStage, opp.StageName);
     }
 
+
+    /*******************************************************************************************************
+     * @description     Validate that payment records are not both paid and written off
+     *******************************************************************************************************/
+    @isTest
+    private static void verifyPaymentsAreNotBothPaidAndWrittenOff() {
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        Opportunity opp = new Opportunity(
+            Name = 'success',
+            Amount = 100,
+            AccountID = acc.id,
+            CloseDate = System.today(),
+            StageName = UTIL_UnitTestData_TEST.getOpenStage()
+        );
+
+        insert opp;
+
+        npe01__OppPayment__c payment = getPaymentRecord(opp.Id);
+
+
+        Test.startTest();
+        // Attempt to update an existing system
+        payment.npe01__Paid__c = true;
+        payment.npe01__Written_Off__c = true;
+        try {
+            update payment;
+            System.Assert(False, 'Updating an existing payment with both written off and paid checked should fail');
+        } catch (Exception ex) {
+            System.Assert(ex.getMessage().contains(System.Label.pmtWriteOffPaidPayment), 'Error message should contain "' +
+                System.Label.pmtWriteOffPaidPayment + '"');
+        }
+
+        // Attempt to create a new payment with both fields set to true
+        npe01__OppPayment__c newPayment = new npe01__OppPayment__c();
+        newPayment.npe01__Opportunity__c = opp.Id;
+        newPayment.npe01__Payment_Amount__c = 100;
+        newPayment.npe01__Payment_Date__c = System.today();
+        newPayment.npe01__Scheduled_Date__c = system.today();
+        newPayment.npe01__Paid__c = true;
+        newPayment.npe01__Written_Off__c = true;
+
+        try {
+            insert newPayment;
+            System.Assert(False, 'Inserting an existing payment with both written off and paid checked should fail');
+        } catch (Exception ex) {
+            System.Assert(ex.getMessage().contains(System.Label.pmtWriteOffPaidPayment), 'Error message should contain "' +
+                System.Label.pmtWriteOffPaidPayment + '"');
+        }
+
+        Test.stopTest();
+
+    }
+
+
+    /*******************************************************************************************************
+     * HELPER FUNCTIONS
+     *******************************************************************************************************/
     /**
      * @description Reusable utility method to retrieve a specific payment record for an Opportunity
      */

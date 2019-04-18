@@ -5014,6 +5014,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You can't modify Payment currencies directly. Update the parent Opportunity's currency, and NPSP will automatically update the currency of all related Payment records.</value>
     </labels>
     <labels>
+        <fullName>pmtWriteOffPaidPayment</fullName>
+        <categories>Payment, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWriteOffPaidPayment</shortDescription>
+        <value>A Payment can't be both paid and written off. You must deselect one or both checkboxes.</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardBtnCalcPayments</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
