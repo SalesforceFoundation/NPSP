@@ -92,10 +92,11 @@ public class BDI_MigrationMappingUtility {
             BDI_HelpTextCMT.DataImportFieldMapping fieldMapping = new BDI_HelpTextCMT.DataImportFieldMapping(key, listHelpTextFieldDetails.get(key));
             //System.debug(fieldMapping);
             Data_Import_Object_Mapping__mdt existingDefaultObjectMapping = existingObjectMappings.get(fieldMapping.dataImportObjectName);
+            //System.debug('existing: ' + existingDefaultObjectMapping);
             Boolean foundDefaultObjectMapping = (existingDefaultObjectMapping != null);
-            System.debug(existingDefaultObjectMapping.Label);
 
             if (foundDefaultObjectMapping) {
+                System.debug(existingDefaultObjectMapping.Label);
                 //System.debug('Found Default Object Mapping MDT');
                 //TODO If found object mapping, check values and repair if needed.
                 Data_Import_Field_Mapping__mdt existingDefaultFieldMapping = existingFieldMappings.get(fieldMapping.sourceFieldAPIName);
@@ -113,7 +114,10 @@ public class BDI_MigrationMappingUtility {
                         fieldMapping.targetObjectMappingRecordName = existingDefaultObjectMapping.DeveloperName;
                         fieldMapping.dataImportFieldMappingSetLabel = defaultFieldMappingSet.Label;
                         fieldMapping.dataImportFieldMappingSetRecordName = defaultFieldMappingSet.DeveloperName;
-                        pendingFieldMappings.add(fieldMapping.getMetadataRecord());
+                        //pendingFieldMappings.add(fieldMapping.getMetadataRecord());
+                        //if (existingDefaultObjectMapping.DeveloperName == 'Account1') {
+                            pendingFieldMappings.add(fieldMapping.getMetadataRecord());
+                        //}
                     }
                     //newFieldMappings.add(existingDefaultFieldMapping);
                 } else {
@@ -126,7 +130,9 @@ public class BDI_MigrationMappingUtility {
 
                     //System.debug(fieldMapping);
                     System.debug(fieldMapping.getMetadataRecord());
-                    pendingFieldMappings.add(fieldMapping.getMetadataRecord());
+                    //if (existingDefaultObjectMapping.DeveloperName == 'Account1') {
+                        pendingFieldMappings.add(fieldMapping.getMetadataRecord());
+                    //}
                 }
             } else {
                 //TODO New Default Object Mapping records needed
@@ -263,7 +269,7 @@ public class BDI_MigrationMappingUtility {
         Map<String, Data_Import_Object_Mapping__mdt> diObjectNameToObjectMappingMap = new Map<String, Data_Import_Object_Mapping__mdt>();
 
         for(Data_Import_Object_Mapping__mdt objectMapping : existingObjectMappings) {
-            diObjectNameToObjectMappingMap.put(objectMapping.Label, objectMapping);
+            diObjectNameToObjectMappingMap.put(objectMapping.DeveloperName, objectMapping);
         }
 
         return diObjectNameToObjectMappingMap;
