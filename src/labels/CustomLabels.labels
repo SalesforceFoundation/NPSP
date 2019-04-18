@@ -2058,6 +2058,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Created</value>
     </labels>
     <labels>
+        <fullName>bdiCustomObjectMappingSummary</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Custom Object Mapping Summary</shortDescription>
+        <value>Data Import Field Mapping</value>
+    </labels>
+    <labels>
         <fullName>bdiDataImporterConfigTitle</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -5884,14 +5892,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Only System Administrators can enable or disable Customizable Rollups.</value>
     </labels>
     <labels>
-        <fullName>stgDIFMNonAdminError</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgDIFMNonAdminError</shortDescription>
-        <value>Only System Administrators can enable or disable Data Import Field Mapping.</value>
-    </labels>
-    <labels>
         <fullName>stgCRLPGoToSetup</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -5914,6 +5914,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>stgDefaultValue</shortDescription>
         <value>Default Value</value>
+    </labels>
+    <labels>
+        <fullName>stgDIFMNonAdminError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgDIFMNonAdminError</shortDescription>
+        <value>Only System Administrators can enable or disable Data Import Field Mapping.</value>
     </labels>
     <labels>
         <fullName>stgDocumentation</fullName>
@@ -6081,6 +6089,16 @@ When you enable Payment Allocations, existing rollups remain the same. We do not
         <protected>false</protected>
         <shortDescription>stgHelpBDEOppNaming</shortDescription>
         <value>When selected, NPSP uses the default naming convention for batch-entered Opportunities, regardless of the value you enter in the Name field of the batch entry screen. NOTE: This setting has no effect if custom Opportunity Names are configured.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpBDICustomObjectMappingEnable</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpBDICustomObjectMappingEnable</shortDescription>
+        <value>
+            You can find complete Data Import Field Mapping documentation &lt;a href=&quot;https://powerofus.force.com/&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.
+        </value>
     </labels>
     <labels>
         <fullName>stgHelpBatchAlloRollup</fullName>
