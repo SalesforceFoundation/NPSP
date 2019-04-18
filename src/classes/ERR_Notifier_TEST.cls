@@ -35,12 +35,13 @@
 */
 @isTest
 private class ERR_Notifier_TEST {
-	
-    /**************************************************************************************************************************
-    @description Test retrieval of System Administrator Users' Emails
-    verify: Emails of System Administrator Users are retrieved
-    ***************************************************************************************************************************/   
-    private static testMethod void testGetSystemAdminEmails() {
+
+    /**********************************************************************************************
+    * @description Test retrieval of System Administrator Users' Emails
+    * verify: Emails of System Administrator Users are retrieved
+    */
+    @IsTest
+    private static void shouldMatchSystemAdminEmailList() {
         Test.startTest();
         ERR_Notifier notifierService = new ERR_Notifier();
         Set<String> recipientEmails = new Set<String>(notifierService.getSystemAdminEmails());
@@ -52,10 +53,109 @@ private class ERR_Notifier_TEST {
         System.assert(expectedEmails.containsAll(recipientEmails), 'Expected and retrieved emails should be the same');
     }
 
+    /**********************************************************************************************
+    * @description Confirm that the method to retrieve Error log record pending notification
+    * only retrieve records created in the last 48 hours.
+    */
+    @IsTest
+    private static void shouldOnlyRetrieveRecentErrorLogEntries() {
+
+        ERR_Notifier.MAX_AGE_FOR_ERRORS = Datetime.now().addDays(-3);
+        ERR_Notifier.MAX_RECORDS = 10;
+
+        List<Error__c> errors = new List<Error__c>();
+        // The oldest error will be 80 days old
+        Datetime dt=Datetime.now().addDays(80).addHours(-1);
+        // Create one error per day for up to 100 total records.
+        for (Integer n=0; n<100; n++) {
+            errors.add(createError(dt));
+            dt = dt.addDays(1);
+        }
+        insert errors;
+
+        Test.startTest();
+        ERR_Notifier notifierService = new ERR_Notifier();
+        errors = notifierService.getErrorsPendingNotification();
+        Test.stopTest();
+
+        System.assertEquals(ERR_Notifier.MAX_RECORDS, errors.size(), 'There should only be ten errors returned.');
+
+        for (Error__c err : errors) {
+            System.assert(err.Datetime__c >= ERR_Notifier.MAX_AGE_FOR_ERRORS,
+                'All returned errors should be newer than one day');
+        }
+    }
+
+    /**********************************************************************************************
+    * @description Confirm that send error notification process retrieves all errors created
+    * that meet the criteria and sends an email for them.
+    */
+    @IsTest
+    private static void shouldSendEmailsToCurrentUser() {
+        UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(
+                Error_Notifications_On__c = True,
+                Error_Notifications_To__c = UserInfo.getUserId()
+        ));
+
+        List<Error__c> errors = new List<Error__c>();
+        for (Integer n=0; n<100; n++) {
+            errors.add(createError(Datetime.now()));
+        }
+        insert errors;
+
+        Test.startTest();
+        ERR_Notifier.sendErrorNotifications(null);
+        Test.stopTest();
+
+        ERR_Notifier notifierService = new ERR_Notifier();
+        for (Error__c err : notifierService.getErrorsPendingNotification()) {
+            System.assert(err.Email_Sent__c,
+                    'All emails pending notification should be marked as having an email sent');
+        }
+    }
+
+    /**********************************************************************************************
+    * @description Confirm that send error notification process retrieves all errors created
+    * that meet the criteria and sends an email for them.
+    */
+    @IsTest
+    private static void shouldPostEmailsToChatter() {
+
+        if (!Schema.SObjectType.User.isFeedEnabled()) {
+            return;
+        }
+
+        SObject chatterGroup = (SObject)System.Type.forName('CollaborationGroup').newInstance();
+        chatterGroup.put('Name', 'ChatterTestGroup');
+        chatterGroup.put('CollaborationType', 'Private');
+        insert chatterGroup;
+
+        UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(
+            Error_Notifications_On__c = True,
+            Error_Notifications_To__c = chatterGroup.Id
+        ));
+
+        List<Error__c> errors = new List<Error__c>();
+        for (Integer n=0; n<100; n++) {
+            errors.add(createError(Datetime.now()));
+        }
+        insert errors;
+
+        Test.startTest();
+        ERR_Notifier.sendErrorNotifications(null);
+        Test.stopTest();
+
+        ERR_Notifier notifierService = new ERR_Notifier();
+        for (Error__c err : notifierService.getErrorsPendingNotification()) {
+            System.assert(err.Posted_in_Chatter__c,
+                    'All emails pending notification should be marked as being posted to chatter');
+        }
+    }
+
     // Helpers
     ////////////
 
-    /*********************************************************************************************************
+    /**********************************************************************************************
     * @description Get System Administrator User emails
     * @return Set<String> Emails
     */
@@ -66,11 +166,27 @@ private class ERR_Notifier_TEST {
                 SELECT Email
                 FROM User
                 WHERE Profile.Name = :UTIL_Profile.SYSTEM_ADMINISTRATOR
-                AND IsActive = true
+                AND IsActive = TRUE
         ]) {
             result.add(usr.Email);
         }
 
         return result;
+    }
+
+    /**********************************************************************************************
+    * @description Create an instance of an Error__c record
+    * @return Error__c instance
+    */
+    private static Error__c createError(Datetime dt) {
+        return new Error__c(
+            Error_Type__c = 'TEST',
+            Datetime__c = dt,
+            Full_Message__c = 'TEST',
+            Context_Type__c = 'TEST',
+            Stack_Trace__c = 'TEST',
+            Posted_in_Chatter__c = False,
+            Email_Sent__c = False
+        );
     }
 }

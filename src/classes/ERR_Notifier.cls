@@ -37,8 +37,15 @@
 public class ERR_Notifier {
 
     /** @description Filtering options to reduce the number of records processed during the notify job */
-    private static final Integer MAX_RECORDS = 5000;
-    private static final Datetime MAX_AGE_FOR_ERRORS = System.now().addHours(-48);
+    @TestVisible
+    private static Integer MAX_RECORDS = 5000;
+    @TestVisible
+    private static Datetime MAX_AGE_FOR_ERRORS = System.now().addHours(-48);
+
+    /** @description Global error notification settings used in NPSP Settings and here */
+    public static final String ERROR_NOTIFICATION_USER_PREFIX = USER_UserService.OBJECT_ID_PREFIX_USER;
+    public static final String ERROR_NOTIFICATION_CHATTER_PREFIX = CollaborationGroup.SObjectType.getDescribe().getKeyPrefix();
+    public static final String ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS = 'All Sys Admins';
 
     /** @description Global email constants used for all outbound (system) emails */
     public static final String EMAIL_SYSTEM_ERRORS_TO = 'errors@salesforce.org';
@@ -48,21 +55,7 @@ public class ERR_Notifier {
     /** @description the subject for errors sent out of this service only */
     private static final String EMAIL_SUBJECT = 'Salesforce Error';
 
-    public static final String ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS = 'All Sys Admins';
-
-    public static NotificationOptions notificationOptions = new NotificationOptions();
-    
-    /*******************************************************ø************************************************
-    * @description Inner class with the 3 types of notification options: user, chatter group, and all system
-    * administrators.
-    */
-    public class NotificationOptions {
-        public final String sysAdmins = ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS;
-        public final String userPrefix = USER_UserService.OBJECT_ID_PREFIX_USER;
-        public final String chatterGroup = CollaborationGroup.SObjectType.getDescribe().getKeyPrefix();
-    }
-
-    /*******************************************************************************************************
+    /**********************************************************************************************
     * @description Sends error notifications to the receivers specified in the settings, if error
     * notifications are enabled, with all the existing error records that have not been included in
     * previous error notifications.
@@ -79,7 +72,7 @@ public class ERR_Notifier {
             ERR_Notifier notifierService = new ERR_Notifier();
 
             Boolean isChatterGroup = errorNotifRecipient instanceof Id
-                    && errorNotifRecipient.startsWith(notificationOptions.chatterGroup);
+                    && errorNotifRecipient.startsWith(ERROR_NOTIFICATION_CHATTER_PREFIX);
 
             if (isChatterGroup && Schema.SObjectType.User.isFeedEnabled()) {
 
@@ -99,7 +92,7 @@ public class ERR_Notifier {
     @TestVisible
     private ERR_Notifier() {}
 
-    /**
+    /**********************************************************************************************
      * @description Using the provided error notification user id (or 'All System Admins') or gets
      * all system admin email addresses
      * @param errorNotifRecipient Id or Null
@@ -107,7 +100,8 @@ public class ERR_Notifier {
      */
     private List<String> getErrorEmailRecipients(String errorNotifRecipient) {
         List<String> recipientsList = new List<String>();
-        Boolean isUserId = errorNotifRecipient instanceof Id && errorNotifRecipient.startsWith(notificationOptions.userPrefix);
+        Boolean isUserId = errorNotifRecipient instanceof Id
+                && errorNotifRecipient.startsWith(ERROR_NOTIFICATION_USER_PREFIX);
 
         if (isUserId) {
             List<User> users = [SELECT Email FROM User WHERE Id = :errorNotifRecipient AND IsActive = TRUE LIMIT 1];
@@ -115,14 +109,14 @@ public class ERR_Notifier {
                 recipientsList.add(users[0].Email);
             }
 
-        } else if (errorNotifRecipient == notificationOptions.sysAdmins) {
+        } else if (errorNotifRecipient == ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS) {
             recipientsList.addAll(getSystemAdminEmails());
         }
 
         return recipientsList;
     }
 
-    /*******************************************************************************************************
+    /**********************************************************************************************
     * @description Get the active System Administrators' emails.
     * @return List<String> Emails
     */
@@ -145,7 +139,7 @@ public class ERR_Notifier {
         return new List<String>(emails);
     }
 
-    /*******************************************************************************************************
+    /**********************************************************************************************
     * @description Sends error email notifications.
     * @param context The context that triggered the error notification
     * @param recipientsList The list of email addresses to send notifications to.
@@ -161,7 +155,7 @@ public class ERR_Notifier {
         }
     }
 
-    /*******************************************************************************************************
+    /**********************************************************************************************
     * @description Sends error email notifications in a future (asynchronously). It will send an email
     * with all the existing error records not already sent in a notification.
     * @param context The context that triggered the error notification.
@@ -174,7 +168,7 @@ public class ERR_Notifier {
         notifierService.sendErrorQueueEmailNotification(null, recipientsList);
     }
 
-    /*******************************************************************************************************
+    /**********************************************************************************************
     * @description Sends error email notifications synchronously. It will send an email with all the
     * existing error records not already sent in a notification.
     * @param context The context that triggered the error notification.
@@ -199,7 +193,7 @@ public class ERR_Notifier {
         }
     }
 
-    /*******************************************************************************************************
+    /**********************************************************************************************
     * @description Creates the email message to send as error notification.
     * @param context The context that triggered the error notification.
     * @param errorList The list of errors to include in the email.
@@ -235,7 +229,7 @@ public class ERR_Notifier {
         return mail;        
     }
 
-    /*******************************************************************************************************
+    /**********************************************************************************************
     * @description Post a message to Chatter with information about all the existing error records
     * that were not already posted.
     * @param chatterGroupId The ID of the Chatter group to post to.
@@ -272,7 +266,7 @@ public class ERR_Notifier {
         }
     }
 
-    /**
+    /**********************************************************************************************
      * @description Create a chatter post for a specific Error__c log record
      * @param error
      * @param groupId
@@ -289,7 +283,7 @@ public class ERR_Notifier {
         return post;
     }
 
-    /*******************************************************************************************************
+    /**********************************************************************************************
     * @description Creates the body of the error message for a specific error record.
     * @param error The error record to create the message String from.
     * @return String The String representing the error record.
@@ -313,7 +307,7 @@ public class ERR_Notifier {
         return body;
     }
 
-    /**
+    /**********************************************************************************************
      * @description Return a list of errors pending notification (email or chatter). Limits the list to
      * the defined maximum number of records, and only those created in the defined period of time
      * @return List<Error__c>
