@@ -2182,50 +2182,50 @@
         <name>CustomLabels</name>
     </types>
     <types>
-        <members>Data_Import_Field_Mapping.Account_1_City</members>
-        <members>Data_Import_Field_Mapping.Account_1_Country</members>
-        <members>Data_Import_Field_Mapping.Account_1_Name</members>
-        <members>Data_Import_Field_Mapping.Account_1_Phone</members>
-        <members>Data_Import_Field_Mapping.Account_1_State_Province</members>
-        <members>Data_Import_Field_Mapping.Account_1_Street</members>
-        <members>Data_Import_Field_Mapping.Account_1_Website</members>
-        <members>Data_Import_Field_Mapping.Account_1_Zip_Postal_Code</members>
-        <members>Data_Import_Field_Mapping.Account_2_City</members>
-        <members>Data_Import_Field_Mapping.Account_2_Country</members>
-        <members>Data_Import_Field_Mapping.Account_2_Name</members>
-        <members>Data_Import_Field_Mapping.Account_2_Phone</members>
-        <members>Data_Import_Field_Mapping.Account_2_State_Province</members>
-        <members>Data_Import_Field_Mapping.Account_2_Street</members>
-        <members>Data_Import_Field_Mapping.Account_2_Website</members>
-        <members>Data_Import_Field_Mapping.Account_2_Zip_Postal_Code</members>
-        <members>Data_Import_Field_Mapping.Contact_1_Alternate_Email</members>
-        <members>Data_Import_Field_Mapping.Contact_1_Birthdate</members>
-        <members>Data_Import_Field_Mapping.Contact_1_First_Name</members>
-        <members>Data_Import_Field_Mapping.Contact_1_Home_Phone</members>
-        <members>Data_Import_Field_Mapping.Contact_1_Last_Name</members>
-        <members>Data_Import_Field_Mapping.Contact_1_Mobile_Phone</members>
-        <members>Data_Import_Field_Mapping.Contact_1_Other_Phone</members>
-        <members>Data_Import_Field_Mapping.Contact_1_Personal_Email</members>
-        <members>Data_Import_Field_Mapping.Contact_1_Preferred_Email</members>
-        <members>Data_Import_Field_Mapping.Contact_1_Preferred_Phone</members>
-        <members>Data_Import_Field_Mapping.Contact_1_Salutation</members>
-        <members>Data_Import_Field_Mapping.Contact_1_Title</members>
-        <members>Data_Import_Field_Mapping.Contact_1_Work_Email</members>
-        <members>Data_Import_Field_Mapping.Contact_1_Work_Phone</members>
-        <members>Data_Import_Field_Mapping.Contact_2_Alternate_Email</members>
-        <members>Data_Import_Field_Mapping.Contact_2_Birthdate</members>
-        <members>Data_Import_Field_Mapping.Contact_2_First_Name</members>
-        <members>Data_Import_Field_Mapping.Contact_2_Home_Phone</members>
-        <members>Data_Import_Field_Mapping.Contact_2_Last_Name</members>
-        <members>Data_Import_Field_Mapping.Contact_2_Mobile_Phone</members>
-        <members>Data_Import_Field_Mapping.Contact_2_Other_Phone</members>
-        <members>Data_Import_Field_Mapping.Contact_2_Personal_Email</members>
-        <members>Data_Import_Field_Mapping.Contact_2_Preferred_Email</members>
-        <members>Data_Import_Field_Mapping.Contact_2_Preferred_Phone</members>
-        <members>Data_Import_Field_Mapping.Contact_2_Salutation</members>
-        <members>Data_Import_Field_Mapping.Contact_2_Title</members>
-        <members>Data_Import_Field_Mapping.Contact_2_Work_Email</members>
-        <members>Data_Import_Field_Mapping.Contact_2_Work_Phone</members>
+        <members>Data_Import_Field_Mapping.Account1_City</members>
+        <members>Data_Import_Field_Mapping.Account1_Country</members>
+        <members>Data_Import_Field_Mapping.Account1_Name</members>
+        <members>Data_Import_Field_Mapping.Account1_Phone</members>
+        <members>Data_Import_Field_Mapping.Account1_State_Province</members>
+        <members>Data_Import_Field_Mapping.Account1_Street</members>
+        <members>Data_Import_Field_Mapping.Account1_Website</members>
+        <members>Data_Import_Field_Mapping.Account1_Zip_Postal_Code</members>
+        <members>Data_Import_Field_Mapping.Account2_City</members>
+        <members>Data_Import_Field_Mapping.Account2_Country</members>
+        <members>Data_Import_Field_Mapping.Account2_Name</members>
+        <members>Data_Import_Field_Mapping.Account2_Phone</members>
+        <members>Data_Import_Field_Mapping.Account2_State_Province</members>
+        <members>Data_Import_Field_Mapping.Account2_Street</members>
+        <members>Data_Import_Field_Mapping.Account2_Website</members>
+        <members>Data_Import_Field_Mapping.Account2_Zip_Postal_Code</members>
+        <members>Data_Import_Field_Mapping.Contact1_Alternate_Email</members>
+        <members>Data_Import_Field_Mapping.Contact1_Birthdate</members>
+        <members>Data_Import_Field_Mapping.Contact1_First_Name</members>
+        <members>Data_Import_Field_Mapping.Contact1_Home_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact1_Lastname</members>
+        <members>Data_Import_Field_Mapping.Contact1_Mobile_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact1_Other_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact1_Personal_Email</members>
+        <members>Data_Import_Field_Mapping.Contact1_Preferred_Email</members>
+        <members>Data_Import_Field_Mapping.Contact1_Preferred_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact1_Salutation</members>
+        <members>Data_Import_Field_Mapping.Contact1_Title</members>
+        <members>Data_Import_Field_Mapping.Contact1_Work_Email</members>
+        <members>Data_Import_Field_Mapping.Contact1_Work_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact2_Alternate_Email</members>
+        <members>Data_Import_Field_Mapping.Contact2_Birthdate</members>
+        <members>Data_Import_Field_Mapping.Contact2_First_Name</members>
+        <members>Data_Import_Field_Mapping.Contact2_Home_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact2_Lastname</members>
+        <members>Data_Import_Field_Mapping.Contact2_Mobile_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact2_Other_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact2_Personal_Email</members>
+        <members>Data_Import_Field_Mapping.Contact2_Preferred_Email</members>
+        <members>Data_Import_Field_Mapping.Contact2_Preferred_Phone</members>
+        <members>Data_Import_Field_Mapping.Contact2_Salutation</members>
+        <members>Data_Import_Field_Mapping.Contact2_Title</members>
+        <members>Data_Import_Field_Mapping.Contact2_Work_Email</members>
+        <members>Data_Import_Field_Mapping.Contact2_Work_Phone</members>
         <members>Data_Import_Field_Mapping.Donation_Amount</members>
         <members>Data_Import_Field_Mapping.Donation_Date</members>
         <members>Data_Import_Field_Mapping.Donation_Description</members>
@@ -2269,6 +2269,7 @@
         <members>Data_Import_Object_Mapping.Address</members>
         <members>Data_Import_Object_Mapping.Contact1</members>
         <members>Data_Import_Object_Mapping.Contact2</members>
+        <members>Data_Import_Object_Mapping.Donation</members>
         <members>Data_Import_Object_Mapping.GAU_Allocation_1</members>
         <members>Data_Import_Object_Mapping.GAU_Allocation_2</members>
         <members>Data_Import_Object_Mapping.Household</members>

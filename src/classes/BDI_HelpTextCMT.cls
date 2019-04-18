@@ -195,7 +195,7 @@ public class BDI_HelpTextCMT {
     }
 
     private static String generateRecordName(String name, Boolean makeUnique) {
-        name = name.replaceAll('[^\\w]+', '_').replaceAll('_', '');
+        name = name.replaceAll('[^\\w]+', '_').replaceAll('_{2,}', '_');//.replaceAll('_', '');
 
         if (name.length() > 30) {
             String firstFifteen = name.substring(0, 15);
@@ -208,7 +208,7 @@ public class BDI_HelpTextCMT {
             Blob b = Crypto.GenerateAESKey(128);
             String h = EncodingUtil.ConvertTohex(b);
             // force everything to have a 10-char random string at the end
-            name = name.left(30) + '_' + h.left(9);
+            name = name.left(30).removeEnd('_') + '_' + h.left(9);
         } else {
             name = name.left(40);
         }
