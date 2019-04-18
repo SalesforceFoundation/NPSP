@@ -29,11 +29,11 @@
 */
 /**
 * @author Salesforce.org
-* @date 2018
+* @date 2019
 * @group Rollups
-* @group-content ../../ApexDocContent/Rollups2.htm
+* @group-content ../../ApexDocContent/BatchDataImport.htm
 * @description Wrapper classes for the Help Text CustomMetadataType objects used to create the
-* default CMT data as well as for updates through the Customizable Rollups UI.
+* default Custom Metadata records
 */
 public class BDI_HelpTextCMT {
 
@@ -51,7 +51,7 @@ public class BDI_HelpTextCMT {
     private static final Boolean IS_PROTECTED = false;
 
     /**
-     * Wrapper class for Help Text CustomMetadataType objects used to create
+     * Wrapper class for Data_Import_Field_Mapping__mdt used to create
      * the default CMT data as well as for use in the Custom UI.
      */
     public class DataImportFieldMapping {
@@ -91,8 +91,7 @@ public class BDI_HelpTextCMT {
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
             customMd.label = this.label.left(40);
             customMd.protected_x = IS_PROTECTED;
-            
-            // TODO: Maybe create method to take in list for nulling out entity reference fields
+
             // Convert an empty string ('') value into null for the entity reference to save properly.
             if (String.isEmpty(this.dataImportFieldMappingSetRecordName)) {
                 this.dataImportFieldMappingSetRecordName = null;
@@ -122,6 +121,9 @@ public class BDI_HelpTextCMT {
         }
     }
 
+    /**
+     * Wrapper class for import status and lookup fields
+     */
     public class ImportStatusAndLookupParts {
         public String objectName;
         public String importStatusFieldName;
@@ -155,6 +157,9 @@ public class BDI_HelpTextCMT {
         }
     }
 
+    /**
+     * Wrapper class for help text field
+     */
     public class HelpTextParts {
         public String objectName;
         public String fieldName;
@@ -172,6 +177,9 @@ public class BDI_HelpTextCMT {
         }
     }
 
+    /**
+     * Intermediary wrapper class for Data_Import_Field_Mapping__mdt; Probably scrub later and use DataImportFieldMapping directly.
+     */
     public class MappingDetail {
         public String dataImportObjectName;
         public String targetObjectName;
@@ -194,8 +202,15 @@ public class BDI_HelpTextCMT {
         }
     }
 
+    /**
+     * @description Utility to convert a name into a valid 'DeveloperName' quality value (or unique GUID)
+     * for the CMT record
+     * @param name String
+     * @param makeUnique Boolean
+     * @return DeveloperName format string
+     */
     private static String generateRecordName(String name, Boolean makeUnique) {
-        name = name.replaceAll('[^\\w]+', '_').replaceAll('_{2,}', '_');//.replaceAll('_', '');
+        name = name.replaceAll('[^\\w]+', '_').replaceAll('_{2,}', '_');
 
         if (name.length() > 30) {
             String firstFifteen = name.substring(0, 15);
@@ -216,6 +231,7 @@ public class BDI_HelpTextCMT {
         return name;
     }
 
+    /** @description Map of object names from the data import help text field to actual object names */
     private static final Map<String, String> diObjectMap = new Map<String, String>{
         'Account1' => 'Account',
         'Account2' => 'Account',
