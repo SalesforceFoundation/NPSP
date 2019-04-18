@@ -77,9 +77,11 @@
         <members>BDI_FieldMapping</members>
         <members>BDI_FieldMappingCustomMetadata</members>
         <members>BDI_FieldMappingHelpText</members>
+        <members>BDI_HelpTextCMT</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
         <members>BDI_MatchDonations</members>
+        <members>BDI_MigrationMappingUtility</members>
         <members>BDI_PerfLogger</members>
         <members>BDI_PerfLogger_TEST</members>
         <members>BDI_PostProcess_TEST</members>
@@ -351,6 +353,7 @@
         <members>STG_PanelContacts_CTRL</members>
         <members>STG_PanelCreatePayments_CTRL</members>
         <members>STG_PanelCustomizableRollup_CTRL</members>
+        <members>STG_PanelDataImportMapping_CTRL</members>
         <members>STG_PanelERR_CTRL</members>
         <members>STG_PanelErrorLog_CTRL</members>
         <members>STG_PanelHealthCheck_CTRL</members>
@@ -532,6 +535,7 @@
         <members>STG_PanelContacts</members>
         <members>STG_PanelCreatePayments</members>
         <members>STG_PanelCustomizableRollup</members>
+        <members>STG_PanelDataImportMapping</members>
         <members>STG_PanelERR</members>
         <members>STG_PanelErrorLog</members>
         <members>STG_PanelHealthCheck</members>
@@ -1890,6 +1894,7 @@
         <members>stgClearErrors</members>
         <members>stgCountOf</members>
         <members>stgCreatedBy</members>
+        <members>stgDIFMNonAdminError</members>
         <members>stgDefaultValue</members>
         <members>stgDeploymentInProgress</members>
         <members>stgDeploymentTryAgain</members>
