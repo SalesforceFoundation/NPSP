@@ -117,6 +117,29 @@ public class CMT_MetadataAPI {
     }
 
     /**
+     * @description Initiate a deployment of custom metadata type records.
+     * @param jobId Unique string to act as a "jobId" when writing the final deployment status to the Custom Settings
+     * @param mtToDeploy List of CustomMetadata objects to deploy
+     */
+    public static void deployMetadata(String jobId, Boolean isHelpTextRelated, List<Metadata.CustomMetadata> mtToDeploy) {
+
+        // Add all queued up metadata updates to the deployment container
+        Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
+        for (Metadata.CustomMetadata md: mtToDeploy) {
+            system.debug('deployMetadata > ' + md.fullName);
+            mdContainer.addMetadata(md);
+        }
+
+        // Setup deploy callback
+        MetadataCallBack callback = new MetadataCallBack(jobId, isHelpTextRelated);
+
+        // Enqueue custom metadata deployment and return the Job Id
+        if (!Test.isRunningTest()) {
+            Metadata.Operations.enqueueDeployment(mdContainer, callback);
+        }
+    }
+
+    /**
      * @description Inserting or Updating CMT's through the Apex Metadata API is an asynchronous process. This callback
      * class is used to handle the async response from the call to Metadata.Operations.enqueueDeployment().
      * If the call is not successfull, the Customizable_Rollup_Settings__c  record is updated
@@ -125,6 +148,8 @@ public class CMT_MetadataAPI {
     public class MetadataCallBack implements Metadata.DeployCallBack {
 
         private String jobId;
+        // Maybe a string 'source' instead of a boolean?
+        private Boolean isHelpTextRelated;
 
         /**
          * @description Constructor for Callback Class
@@ -135,10 +160,24 @@ public class CMT_MetadataAPI {
         }
 
         /**
+         * @description Constructor for Callback Class
+         * @param jobId Some unique string value to use when writing the deployment status to the Custom Settings object
+         * @param source 
+         */
+        public MetadataCallBack(String jobId, Boolean isHelpTextRelated) {
+            this.jobId = jobId;
+            this.isHelpTextRelated = isHelpTextRelated;
+        }
+
+        /**
          * @description Method called by salesforce with the result of the Metadata deployment operation status.
          * This will write the status of the deployment to a CustomSettings object
          */
         public void handleResult(Metadata.DeployResult result, Metadata.DeployCallbackContext context) {
+            System.debug('handleResult');
+            System.debug('JOB ID: ' + this.jobId);
+            System.debug('isHelpTextRelated: ' + this.isHelpTextRelated);
+
 
             Boolean isSuccess = (result != null ? result.status == Metadata.DeployStatus.Succeeded : false);
             Map<String, String> statusMap = new Map<String, String>{ this.jobId => (result != null ? result.status.name() : 'Unknown') };
@@ -155,13 +194,26 @@ public class CMT_MetadataAPI {
                 isSuccess = false;
             }
 
-            // Write the deployment status to the custom settings object
-            Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-            crlpSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
-            // THIS WILL NEED TO BE REFACTORED IF THIS CMT DEPLOYMENT CODE IS USED BY SOMETHING OTHER THAN ROLLUPS
-            crlpSettings.Customizable_Rollups_Enabled__c = (isSuccess || crlpSettings.Customizable_Rollups_Enabled__c == true);
-            if (!Test.isRunningTest()) {
-                upsert crlpSettings;
+            System.debug('ISSUCCESS:' + isSuccess);
+
+            if (isHelpTextRelated) {
+                // Write the deployment status to the custom settings object
+                Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+                dataImportSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
+
+                dataImportSettings.Field_Mapping_Method__c = (isSuccess ? 'Data Import Field Mapping' : 'Help Text');
+                if (!Test.isRunningTest()) {
+                    upsert dataImportSettings;
+                }
+            } else {
+                // Write the deployment status to the custom settings object
+                Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+                crlpSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
+                // THIS WILL NEED TO BE REFACTORED IF THIS CMT DEPLOYMENT CODE IS USED BY SOMETHING OTHER THAN ROLLUPS
+                crlpSettings.Customizable_Rollups_Enabled__c = (isSuccess || crlpSettings.Customizable_Rollups_Enabled__c == true);
+                if (!Test.isRunningTest()) {
+                    upsert crlpSettings;
+                }
             }
             if (isSuccess) {
                 UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();

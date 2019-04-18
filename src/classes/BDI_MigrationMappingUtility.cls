@@ -48,15 +48,24 @@ public class BDI_MigrationMappingUtility {
      */
     public String convertLegacyHelpTextToCustomMetadata(Boolean deployIt) {
         System.debug('convertLegacyHelpTextToCustomMetadata()');
+
         buildCustomMetadataRecordsFromHelpText();
 
         if (queuedMetadataTypesForDeploy.size() > 0) {
             String jobId = getUniqueJobId();
             // deployIt just debugging purposes when called from anon window, didn't want to constantly delete CMTs
             if (deployIt) {
-                CMT_MetadataAPI.deployMetadata(jobId, queuedMetadataTypesForDeploy.clone());
+                CMT_MetadataAPI.deployMetadata(jobId, true, queuedMetadataTypesForDeploy.clone());
             }
             return jobId;
+        }
+
+        // Queue is empty, but we still need to update Data Import settings
+        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dataImportSettings.Field_Mapping_Method__c = 'Data Import Field Mapping';
+
+        if (!Test.isRunningTest()) {
+            upsert dataImportSettings;
         }
 
         return 'Queue is empty';
