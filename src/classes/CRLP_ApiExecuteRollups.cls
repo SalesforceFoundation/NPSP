@@ -50,25 +50,57 @@ public without sharing class CRLP_ApiExecuteRollups {
 
     private SObjectType summaryObjectType;
 
-    public CRLP_ApiExecuteRollups() {}
-
+    /**
+     * @description Define the RollupType the execution process will be operating on. Required.
+     * @param rollupType Enum
+     */
     public CRLP_ApiExecuteRollups withRollupType(CRLP_RollupProcessingOptions.RollupType rollupType) {
         this.rollupType = rollupType;
         this.summaryObjectType = CRLP_Rollup_SVC.getSummaryObjectType(rollupType);
         return this;
     }
+
+    /**
+     * @description Define the ParentId the execution process will rolling up "to". Required.
+     * @param Id Id of an Account, Contact, GAU or Recurring Donation record
+     */
     public CRLP_ApiExecuteRollups withParentId(Id parentId) {
         this.parentId = parentId;
         return this;
     }
+
+    /**
+     * @description Define the Rollup Definitions to be used during the execution process. When passed as
+     * a single collection, it's expected that these refer to a single Prent Id. Optional. If not included
+     * the rollup handler service will retrieve these from the CMT data.
+     * @param List<CRLP_Rollup>
+     */
     public CRLP_ApiExecuteRollups withRollupDefs(List<CRLP_Rollup> rollupDefs) {
         this.rollupDefs = rollupDefs;
         return this;
     }
+
+    /**
+     * @description The full set of data the rollups will operate on. Data in this map is in the following
+     * format:
+     *      Id => OpportunityId
+     *          SObjectType => Opportunity, OpportunityContactRole, OppPayment,
+     *                          Allocation, PartialSoftCredit or AccountSoftCredit
+     *          List<SObject> => Detail Records for the specified SObjectType.
+     * @param Map<Id, Map<SObjectType, List<SObject>>> rollupData
+     */
     public CRLP_ApiExecuteRollups withRollupData(Map<Id, Map<SObjectType, List<SObject>>> rollupData) {
         this.rollupData = rollupData;
         return this;
     }
+
+    /**
+     * @description When passed with a True parameter, this tells the ApiExecuteRollups service to
+     * update the target (parent) object with the result of the rollup. This is primarily used for testing
+     * and validation. It should not be set to true when calling the ApiExecuteRollups service multiple times
+     * for the same parent id to avoid updating the same parent record multiple times.
+     * @param Boolean commitToDb
+     */
     public CRLP_ApiExecuteRollups withCommitToDatabase(Boolean commitToDb) {
         this.commitToDb = commitToDb;
         return this;

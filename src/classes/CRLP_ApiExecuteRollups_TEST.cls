@@ -38,7 +38,7 @@ private class CRLP_ApiExecuteRollups_TEST {
 
     /**
      * @description Verify that the call to executeRollups() successfully completes a ContactSoftCredit
-     * rolup and the target (summary) record is not updated as a result.
+     * rollup and the target (summary) record is not updated as a result.
      */
     @IsTest
     private static void shouldCompleteExecuteRollupsForContactSoftCredit() {
@@ -125,7 +125,7 @@ private class CRLP_ApiExecuteRollups_TEST {
 
     /**
      * @description Verify that the call to executeRollups() successfully completes a GAU
-     * rolup and the target (summary) record is not updated as a result.
+     * rollup and the target (summary) record is not updated as a result.
      */
     @IsTest
     private static void shouldCompleteExecuteRollupsForGAU() {
