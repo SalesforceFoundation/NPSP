@@ -78,7 +78,6 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
             BDI_MigrationMappingUtility migrationMappingUtility = new BDI_MigrationMappingUtility();
             jobId = migrationMappingUtility.convertLegacyHelpTextToCustomMetadata(true);
 
-            dataImportSettings.Field_Mapping_Method__c = 'Data Import Field Mapping';
             if (Test.isRunningTest()) {
                 jobId = '123';
             }
