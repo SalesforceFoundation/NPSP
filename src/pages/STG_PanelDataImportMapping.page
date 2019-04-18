@@ -5,7 +5,7 @@
 
     <div class="slds-scope">
         <apex:form id="form" styleClass="slds-m-around_x-large">
-            <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="Data Import Field Mapping" />
+            <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.bdiCustomObjectMappingSummary}" />
 
             <c:UTIL_PageMessages allowClose="false" id="messages" />
             <c:UTIL_PageMessageInfo isRendered="{!NOT(isAdmin)}" message="{!$Label.stgDIFMNonAdminError}" />
@@ -14,11 +14,11 @@
             <div class="slds-grid">
                 <apex:outputPanel>
                     <div class="slds-m-vertical_medium">
-                        <c:UTIL_HtmlOutput html="Placeholder Text" hasLink="true" styleClass="slds-text-body_small" />
+                        <c:UTIL_HtmlOutput html="{!$Label.stgHelpBDICustomObjectMappingEnable}" hasLink="true" styleClass="slds-text-body_small" />
                     </div>
 
                     <label class="slds-checkbox_toggle slds-grid slds-m-vertical_small">
-                        <span class="slds-form-element__label slds-m-bottom_none">Data Import Field Mapping</span>
+                        <span class="slds-form-element__label slds-m-bottom_none">{!$Label.bdiCustomObjectMappingSummary}</span>
                         <apex:inputCheckbox onClick="toggle(); return false;"
                                             id="enableDIFMToggle"
                                             html-name="checkbox-toggle-2"
