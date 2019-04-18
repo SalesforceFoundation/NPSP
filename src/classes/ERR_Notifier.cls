@@ -49,7 +49,7 @@ public class ERR_Notifier {
 
     /** @description Global email constants used for all outbound (system) emails */
     public static final String EMAIL_SYSTEM_ERRORS_TO = 'errors@salesforce.org';
-    public static final String EMAIL_REPLYTO = 'donotreply@salesforce.org';
+    public static final String EMAIL_REPLY_TO = 'donotreply@salesforce.org';
     public static final String EMAIL_SENDER_NAME = 'Nonprofit Success Pack';
 
     /** @description the subject for errors sent out of this service only */
@@ -86,11 +86,11 @@ public class ERR_Notifier {
         }
     }
 
-    // ====================== HELPER METHODS FOR ERROR NOTIFICATION SERVICE =========================
-
     /** @description Private constructor so the class cannot be instantiated outside of this class */
     @TestVisible
     private ERR_Notifier() {}
+
+    // ====================== HELPER METHODS FOR ERROR NOTIFICATION SERVICE =========================
 
     /**********************************************************************************************
      * @description Using the provided error notification user id (or 'All System Admins') or gets
@@ -203,7 +203,7 @@ public class ERR_Notifier {
     private Messaging.SingleEmailMessage createEmailMessage(String context, List<Error__c> errorList, List<String> recipientsList) {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setUseSignature(false);
-        mail.setReplyTo(EMAIL_REPLYTO);
+        mail.setReplyTo(EMAIL_REPLY_TO);
         mail.setSenderDisplayName(EMAIL_SENDER_NAME);
         mail.setSubject(EMAIL_SUBJECT);
 

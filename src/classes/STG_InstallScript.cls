@@ -407,7 +407,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
             try {
                 Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
                 mail.setUseSignature(false);
-                mail.setReplyTo(ERR_Notifier.EMAIL_REPLYTO);
+                mail.setReplyTo(ERR_Notifier.EMAIL_REPLY_TO);
                 mail.setSenderDisplayName(ERR_Notifier.EMAIL_SENDER_NAME);
                 mail.setSubject('NPSP Install Errors');
 
