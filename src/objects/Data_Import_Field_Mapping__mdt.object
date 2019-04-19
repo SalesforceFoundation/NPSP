@@ -16,6 +16,14 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Is_Deleted__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>IsDeleted</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Required__c</fullName>
         <description>Indicates whether the source field is required to have a non-null value in order to save a record for the Target Object.</description>
         <externalId>false</externalId>

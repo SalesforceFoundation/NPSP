@@ -912,6 +912,7 @@
         <members>Data_Import_Settings__c.Account_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Account_Matching_Rule__c</members>
         <members>Data_Import_Settings__c.Batch_Size__c</members>
+        <members>Data_Import_Settings__c.CMT_API_Status__c</members>
         <members>Data_Import_Settings__c.Contact_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Contact_Matching_Rule__c</members>
         <members>Data_Import_Settings__c.Default_Data_Import_Field_Mapping_Set__c</members>
@@ -1078,6 +1079,7 @@
         <members>Trigger_Handler__c.Usernames_to_Exclude__c</members>
         <members>Data_Import_Field_Mapping_Set__mdt.Data_Import_Object_Mapping_Set__c</members>
         <members>Data_Import_Field_Mapping__mdt.Data_Import_Field_Mapping_Set__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Is_Deleted__c</members>
         <members>Data_Import_Field_Mapping__mdt.Required__c</members>
         <members>Data_Import_Field_Mapping__mdt.Source_Field_API_Name__c</members>
         <members>Data_Import_Field_Mapping__mdt.Target_Field_API_Name__c</members>
@@ -1085,6 +1087,7 @@
         <members>Data_Import_Object_Mapping__mdt.Data_Import_Object_Mapping_Set__c</members>
         <members>Data_Import_Object_Mapping__mdt.Imported_Record_Field_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Imported_Record_Status_Field_Name__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Is_Deleted__c</members>
         <members>Data_Import_Object_Mapping__mdt.Object_API_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Predecessor__c</members>
         <members>Data_Import_Object_Mapping__mdt.Relationship_Field__c</members>
