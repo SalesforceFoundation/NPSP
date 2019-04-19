@@ -36,7 +36,6 @@
 */
 public without sharing class CRLP_ApiService {
 
-
     /**
     * @description Generates the list of Rollup Definitions for the specified rollup type
     * @param rollupTypeName String representation of the Rollup Type enum
@@ -64,13 +63,13 @@ public without sharing class CRLP_ApiService {
     }
 
     /**
-     * @description Entry point for external packages to call the Customizable Rollups API
-     * @param parentId
-     * @param rollupTypeName
-     * @param rollupDefs
-     * @param rollupData
-     * @return Updated Rollup Definitions
-     */
+    * @description Entry point for external packages to call the Customizable Rollups API
+    * @param parentId
+    * @param rollupTypeName
+    * @param rollupDefs
+    * @param rollupData
+    * @return Updated Rollup Definitions
+    */
     public List<CRLP_Rollup> executeRollups(Id parentId, String rollupTypeName, List<CRLP_Rollup> rollupDefs,
             Map<Id, Map<SObjectType, List<SObject>>> rollupData, Boolean commitToDatabase) {
 
@@ -104,19 +103,20 @@ public without sharing class CRLP_ApiService {
         if (parentId == null) {
             throwParameterException(CallableApiParameters.PARAM_ROLLUP_PARENTID, 'A valid Parent record Id is required');
         }
-        String countQuery = 'SELECT COUNT() FROM ' + parentId.getSobjectType().getDescribe().getName() +
-                ' WHERE Id = :parentId LIMIT 1';
-        if (Database.countQuery(countQuery) != 1) {
+        String validateParentSoql =
+            'SELECT COUNT() FROM ' + parentId.getSobjectType().getDescribe().getName() +
+            ' WHERE Id = :parentId LIMIT 1';
+        if (Database.countQuery(validateParentSoql) != 1) {
             throwParameterException(CallableApiParameters.PARAM_ROLLUP_PARENTID, 'A existing Parent record is required');
         }
 
         try {
             CRLP_ApiExecuteRollups rollupApiProcess = new CRLP_ApiExecuteRollups()
-                    .withRollupType(rollupType)
-                    .withParentId(parentId)
-                    .withRollupData(rollupData)
-                    .withRollupDefs(rollupDefs)
-                    .withCommitToDatabase(commitToDatabase);
+                .withRollupType(rollupType)
+                .withParentId(parentId)
+                .withRollupData(rollupData)
+                .withRollupDefs(rollupDefs)
+                .withCommitToDatabase(commitToDatabase);
 
             rollupDefs = rollupApiProcess.executeRollups();
         } catch (Exception ex) {
@@ -127,19 +127,21 @@ public without sharing class CRLP_ApiService {
 
 
     /**
-     * @description Throw a custom exception there is an error parsing the parameter
-     */
+    * @description Throw a custom exception there is an error parsing the parameter
+    */
     private void throwParameterException(String paramName, String errMessage) {
-        throw new ApiException(String.format( System.Label.CallableApiParameterError,
-                new List<String>{ paramName, errMessage } ));
+        throw new ApiException(
+            String.format( System.Label.CallableApiParameterError,
+            new List<String>{ paramName, errMessage } ));
     }
 
     /**
-     * @description Throw a custom exception when api call cannot be completed
-     */
+    * @description Throw a custom exception when api call cannot be completed
+    */
     private void throwAPIException(String apiName, String errMessage) {
-        throw new ApiException(String.format( System.Label.CallableApiProcessingError,
-                new List<String>{ apiName, errMessage } ));
+        throw new ApiException(
+            String.format( System.Label.CallableApiProcessingError,
+            new List<String>{ apiName, errMessage } ));
     }
 
     /**

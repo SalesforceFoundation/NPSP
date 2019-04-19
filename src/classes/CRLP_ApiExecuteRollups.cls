@@ -71,7 +71,7 @@ public without sharing class CRLP_ApiExecuteRollups {
 
     /**
      * @description Define the Rollup Definitions to be used during the execution process. When passed as
-     * a single collection, it's expected that these refer to a single Prent Id. Optional. If not included
+     * a single collection, it's expected that these refer to a single Parent Id. Optional. If not included
      * the rollup handler service will retrieve these from the CMT data.
      * @param List<CRLP_Rollup>
      */
@@ -144,9 +144,9 @@ public without sharing class CRLP_ApiExecuteRollups {
      * rollup engine. The result is to populate the following properties:
      * - List<SObject> detailRecords (Opportunities, Allocations or AccountSoftCredits depending on Rollup Type)
      * - Map<Id, List<SObject>> relatedRecords (PartialSoftCredits or Payments depending on Rollup Type)
-     * @param rollupData Map<Id, Map<SObjectType, List<SObject>>>
+     * @param data Map<Id, Map<SObjectType, List<SObject>>>
      */
-    private void convertRollupDataIntoDetailAndRelatedData(Map<Id, Map<SObjectType, List<SObject>>> rollupData) {
+    private void convertRollupDataIntoDetailAndRelatedData(Map<Id, Map<SObjectType, List<SObject>>> data) {
         SObjectType detailObjectType = CRLP_Rollup_SVC.getDetailObjectType(rollupType);
 
         detailRecords = new List<SObject>();
@@ -156,14 +156,14 @@ public without sharing class CRLP_ApiExecuteRollups {
             getContactIdsForParentAccount();
         }
 
-        for (Id oppId : rollupData.keySet()) {
-            Opportunity oppRecord = (Opportunity)rollupData.get(oppId).get(Opportunity.SObjectType)[0];
+        for (Id oppId : data.keySet()) {
+            Opportunity oppRecord = (Opportunity) data.get(oppId).get(Opportunity.SObjectType)[0];
 
             if (detailObjectType == Opportunity.SObjectType) {
 
                 // When Opportunity as the Detail Object, the only possible Related object is Payments
                 detailRecords.add(oppRecord);
-                List<SObject> related = getRelatedRecords(oppRecord, rollupData.get(oppId));
+                List<SObject> related = getRelatedRecords(oppRecord, data.get(oppId));
                 if (related != null && !related.isEmpty()) {
                     relatedRecords.put(oppId, related);
                 }
@@ -172,7 +172,7 @@ public without sharing class CRLP_ApiExecuteRollups {
 
                 // WHen the detail object is Allocation, OpportunityContactRole or Account_Soft_Credit__c
                 // retrieve those converted records and set as the Detail. There are no related records for these.
-                detailRecords.addAll(getRelatedRecords(oppRecord, rollupData.get(oppId)));
+                detailRecords.addAll(getRelatedRecords(oppRecord, data.get(oppId)));
             }
         }
     }
@@ -181,21 +181,21 @@ public without sharing class CRLP_ApiExecuteRollups {
      * @description Convert the Map of child data received into the api to the appropriate set of
      * related records needed for the specified rollup operation.
      * @param oppRecord
-     * @param rollupChildData
+     * @param relatedRecordsByType
      * @return List<SObject>
      */
-    private List<SObject> getRelatedRecords(Opportunity oppRecord, Map<SObjectType, List<SObject>> rollupChildData) {
+    private List<SObject> getRelatedRecords(Opportunity oppRecord, Map<SObjectType, List<SObject>> relatedRecordsByType) {
         Boolean hasPaymentRollups = CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(summaryObjectType);
 
         switch on rollupType {
             when AccountHardCredit, ContactHardCredit {
                 if (hasPaymentRollups) {
-                    return rollupChildData.get(npe01__OppPayment__c.SObjectType);
+                    return relatedRecordsByType.get(npe01__OppPayment__c.SObjectType);
                 }
             }
             when ContactSoftCredit, AccountContactSoftCredit {
-                List<SObject> ocrRecords = rollupChildData.get(OpportunityContactRole.SObjectType);
-                List<SObject> partialSoftCreditRecords = rollupChildData.get(Partial_Soft_Credit__c.SObjectType);
+                List<SObject> ocrRecords = relatedRecordsByType.get(OpportunityContactRole.SObjectType);
+                List<SObject> partialSoftCreditRecords = relatedRecordsByType.get(Partial_Soft_Credit__c.SObjectType);
 
                 List<Partial_Soft_Credit__c> pscDetailsForRollup = buildPartialSoftCreditRecordsFromOCRs(
                         oppRecord, ocrRecords, partialSoftCreditRecords);
@@ -204,8 +204,8 @@ public without sharing class CRLP_ApiExecuteRollups {
             }
             when AccountSoftCredit {
                 List<SObject> accountSoftCredits = new List<SObject>();
-                if (rollupChildData.get(Account_Soft_Credit__c.SObjectType) != null) {
-                    for (Account_Soft_Credit__c accSC : (List<Account_Soft_Credit__c>) rollupChildData.get(Account_Soft_Credit__c.SObjectType)) {
+                if (relatedRecordsByType.get(Account_Soft_Credit__c.SObjectType) != null) {
+                    for (Account_Soft_Credit__c accSC : (List<Account_Soft_Credit__c>) relatedRecordsByType.get(Account_Soft_Credit__c.SObjectType)) {
                         if (accSC.Account__c == parentId) {
                             accountSoftCredits.add(accSC);
                         }
@@ -217,8 +217,8 @@ public without sharing class CRLP_ApiExecuteRollups {
             when GAU {
                 // Convert the Related Allocation records in new Allocation records with a foreign key to the Opportunity
                 List<SObject> allocations = new List<SObject>();
-                if (rollupChildData.get(Allocation__c.SObjectType) != null) {
-                    for (Allocation__c alloc : (List<Allocation__c>) rollupChildData.get(Allocation__c.SObjectType)) {
+                if (relatedRecordsByType.get(Allocation__c.SObjectType) != null) {
+                    for (Allocation__c alloc : (List<Allocation__c>) relatedRecordsByType.get(Allocation__c.SObjectType)) {
                         if (alloc.General_Accounting_Unit__c == parentId) {
                             Allocation__c newAlloc = alloc.clone(true, true, true, true);
                             newAlloc.Opportunity__r = oppRecord;

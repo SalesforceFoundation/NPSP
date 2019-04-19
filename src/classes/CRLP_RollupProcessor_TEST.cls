@@ -43,21 +43,10 @@ private class CRLP_RollupProcessor_TEST {
     private static void shouldHandleAccountHardCreditNonSkew() {
         CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
 
-        Account account = new Account(
-            Id = UTIL_UnitTestData_TEST.mockId(Account.SObjectType),
-            Name = 'TestAccount',
-            npo02__TotalOppAmount__c = null,
-            npo02__NumberOfClosedOpps__c = null
-        );
-        List<SObject> opps = new List<SObject>{
-            new Opportunity(
-                Id = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType),
-                AccountId = account.Id,
-                Amount = 100,
-                CloseDate = Date.today(),
-                StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
-            )
-        };
+        Account account = buildMockAccount();
+        List<SObject> opps = new List<SObject>{ buildMockOpportunity(account.Id, 100) };
+
+        Test.startTest();
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
                 .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
@@ -87,47 +76,16 @@ private class CRLP_RollupProcessor_TEST {
     private static void shouldHandleContactSoftCreditSkewMode() {
         CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
 
-        Account account = new Account(
-                Id = UTIL_UnitTestData_TEST.mockId(Account.SObjectType),
-                Name = 'TestAccount'
-        );
-        Contact contact = new Contact(
-                Id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType),
-                LastName = 'TestAccount',
-                AccountId = account.Id,
-                npo02__Soft_Credit_Total__c = null,
-                Number_of_Soft_Credits__c = null
-        );
-
-        Opportunity opp = new Opportunity(
-                Id = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType),
-                AccountId = account.Id,
-                Amount = 100,
-                CloseDate = Date.today(),
-                StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
-        );
-
-        OpportunityContactRole ocr1 = new OpportunityContactRole(
-                Id = UTIL_UnitTestData_TEST.mockId(OpportunityContactRole.SObjectType),
-                OpportunityId = opp.Id,
-                ContactId = contact.Id,
-                Role = UTIL_CustomSettingsFacade.DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR,
-                IsPrimary = false
-        );
-
-        Partial_Soft_Credit__c psc = new Partial_Soft_Credit__c(
-                Id = UTIL_UnitTestData_TEST.mockId(Partial_Soft_Credit__c.SObjectType),
-                Opportunity__c = opp.Id,
-                Opportunity__r = opp,
-                Contact__c = contact.Id,
-                Contact__r = contact,
-                Role_Name__c = UTIL_CustomSettingsFacade.DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR,
-                Contact_Role_Id__c = ocr1.Id,
-                Amount__c = opp.Amount
-        );
+        Account account = buildMockAccount();
+        Contact contact = buildMockContact(account.Id);
+        Opportunity opp = buildMockOpportunity(account.Id, 100);
+        OpportunityContactRole ocr = buildMockContactRoles(opp, new List<Contact>{ contact })[0];
+        Partial_Soft_Credit__c psc = buildMockPartialSoftCredit(opp, ocr, contact, opp.Amount);
 
         CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
         options.useRollupDefsByParentIdMap = true;
+
+        Test.startTest();
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
                 .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
@@ -206,6 +164,8 @@ private class CRLP_RollupProcessor_TEST {
             accountId => new Set<Id>{ oppId1 }
         };
 
+        Test.startTest();
+
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor();
 
         System.assertEquals(false, processor.isOppAlreadyProcessedForParent(accountId, oppId1));
@@ -226,10 +186,9 @@ private class CRLP_RollupProcessor_TEST {
     private static void shouldHandleRequiredParameterValidation() {
         CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
 
-        Account account = new Account(
-                Id = UTIL_UnitTestData_TEST.mockId(Account.SObjectType),
-                Name = 'TestAccount'
-        );
+        Account account = buildMockAccount();
+
+        Test.startTest();
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
                 .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
@@ -268,47 +227,120 @@ private class CRLP_RollupProcessor_TEST {
     @IsTest
     private static void shouldRemoveSummaryRecordWithNoDetailRecords() {
 
-        List<Contact> contacts = new List<Contact>{
-            new Contact(Id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType)),
-            new Contact(Id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType)),
-            new Contact(Id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType))
-        };
-        List<Id> oppIds = UTIL_UnitTestData_TEST.mockIds(Opportunity.SObjectType, 3);
+        Account account = buildMockAccount();
+        List<Contact> contacts = new List<Contact>();
+        List<Opportunity> opps = new List<Opportunity>();
+
+        for (Integer n=0; n<3; n++) {
+            contacts.add(buildMockContact(account.Id));
+            opps.add(buildMockOpportunity(account.Id, 100));
+        }
+        List<OpportunityContactRole> ocrs = buildMockContactRoles(opps[0], contacts);
 
         // Create same set of 3 PSC records for each Contact and Opportunity
         List<Partial_Soft_Credit__c> detailRecords = new List<Partial_Soft_Credit__c>();
-        for (Integer ncon =0; ncon<3; ncon++) {
-            for (Integer nopp=0; nopp<3; nopp++) {
-                detailRecords.add(
-                    new Partial_Soft_Credit__c(
-                        Id = UTIL_UnitTestData_TEST.mockId(Partial_Soft_Credit__c.SObjectType),
-                        Opportunity__c = oppIds[nopp],
-                        Contact__c = contacts[ncon].Id,
-                        Role_Name__c = UTIL_CustomSettingsFacade.DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR
-                    ));
+        for (Integer numContact =0; numContact <3; numContact++) {
+            for (Integer numOpp =0; numOpp <3; numOpp++) {
+                detailRecords.add(buildMockPartialSoftCredit(opps[numOpp], ocrs[numOpp], contacts[numContact], 100));
             }
         }
 
         // Define the set of Previously processed data such that Contact0 will have 0 records not previously processeed
         Map<Id, Set<Id>> previouslyProcessedOpps = new Map<Id, Set<Id>>{
-            contacts[0].Id => new Set<Id>{ oppIds[0], oppIds[1], oppIds[2] },
-            contacts[1].Id => new Set<Id>{ oppIds[0], oppIds[1] },
-            contacts[2].Id => new Set<Id>{ oppIds[0] }
+            contacts[0].Id => new Set<Id>{ opps[0].Id, opps[1].Id, opps[2].Id },
+            contacts[1].Id => new Set<Id>{ opps[0].Id, opps[1].Id },
+            contacts[2].Id => new Set<Id>{ opps[0].Id }
         };
 
+        Test.startTest();
+
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
-                .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
-                .withRollupType(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit)
-                .withSummaryRecords(contacts)
-                .withDetailRecords(detailRecords)
-                .withPreviouslyProcessedOppIdsMap(previouslyProcessedOpps);
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit)
+            .withSummaryRecords(contacts)
+            .withDetailRecords(detailRecords)
+            .withPreviouslyProcessedOppIdsMap(previouslyProcessedOpps);
 
         for (Integer n=0; n < contacts.size(); n++) {
             List<SObject> pscDetails = processor.detailRecordsByParentId.get(contacts[n].Id);
             System.assertEquals(n, processor.cleanDetailOppsListForSoftCreditMode(contacts[n].Id, pscDetails).size(),
-                    String.format('The cleans process should return {0} Detail records for Contact {0}',
-                            new List<String>{ n.format() })
+                String.format('The cleans process should return {0} Detail records for Contact {0}',
+                new List<String>{ n.format() })
             );
         }
+    }
+
+    // **************************** HELPER METHODS ****************************
+
+    /**
+     * @description Instantiate a single mock account that will not be inserted
+     */
+    private static Account buildMockAccount() {
+        return new Account(
+            Id = UTIL_UnitTestData_TEST.mockId(Account.SObjectType),
+            Name = 'TestAccount',
+            npo02__TotalOppAmount__c = null,
+            npo02__NumberOfClosedOpps__c = null
+        );
+    }
+
+    private static Contact buildMockContact(Id acctId) {
+        return new Contact(
+            Id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType),
+            AccountId = acctId,
+            LastName = 'TestContact',
+            Number_of_Soft_Credits__c = null,
+            npo02__Soft_Credit_Total__c = null
+        );
+    }
+
+    /**
+     * @description Instantiate a single mock Opportunity that will not be inserted
+     */
+    private static Opportunity buildMockOpportunity(Id accountId, Double amt) {
+        return new Opportunity(
+            Id = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType),
+            AccountId = accountId,
+            Amount = amt,
+            CloseDate = Date.today(),
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        );
+    }
+
+    /**
+     * @description Instantiate mock OpportunityContactRole records for each Contact
+     */
+    private static List<OpportunityContactRole> buildMockContactRoles(Opportunity opp, List<Contact> contacts) {
+        final String donorRole = UTIL_CustomSettingsFacade.DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR;
+        List<OpportunityContactRole> ocrs = new List<OpportunityContactRole>();
+
+        for (Contact c : contacts) {
+            ocrs.add(new OpportunityContactRole(
+                Id = UTIL_UnitTestData_TEST.mockId(OpportunityContactRole.SObjectType),
+                OpportunityId = opp.Id,
+                ContactId = c.Id,
+                Role = donorRole,
+                IsPrimary = false
+            ));
+        }
+        return ocrs;
+    }
+
+    /**
+     * @description Instantiate a mock PartialSoftCredit records for passed OCR and Contact
+     */
+    private static Partial_Soft_Credit__c buildMockPartialSoftCredit(Opportunity opp,
+            OpportunityContactRole ocr, Contact con, Decimal amt
+    ) {
+        return new Partial_Soft_Credit__c(
+            Id = UTIL_UnitTestData_TEST.mockId(Partial_Soft_Credit__c.SObjectType),
+            Opportunity__c = opp.Id,
+            Opportunity__r = opp,
+            Contact__c = con.Id,
+            Contact__r = con,
+            Role_Name__c = UTIL_CustomSettingsFacade.DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR,
+            Contact_Role_Id__c = ocr.Id,
+            Amount__c = amt
+        );
     }
 }

@@ -37,9 +37,9 @@
 private class CRLP_ApiService_TEST {
 
     /**
-     * @description Validate the getRollupDefinitions returns the expected collection of CRLP_Rollup instances.
-     * Calls the mocking utilities to build a bunch of rollup definitions and filter groups/rules fo
-     */
+    * @description Validate the getRollupDefinitions returns the expected collection of CRLP_Rollup instances.
+    * Calls the mocking utilities to build a bunch of rollup definitions and filter groups/rules fo
+    */
     @IsTest
     private static void shouldReturnRollupDefinitionsWhenParameterIsValid() {
         CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
@@ -54,15 +54,15 @@ private class CRLP_ApiService_TEST {
         for (CRLP_RollupProcessingOptions.RollupType rollupType : CRLP_RollupProcessingOptions.RollupType.values()) {
             List<CRLP_Rollup> rollups = service.getRollupDefinitions(rollupType.name());
             System.assertEquals(1, rollups.size(),
-                    'The collection of returned rollups should contain exactly 1 instance for ' + rollupType.name());
+                'The collection of returned rollups should contain exactly 1 instance for ' + rollupType.name());
             System.assertEquals(2, rollups[0].rollupsMdt.size(),
-                    'There should be two Rollup__mdt records associated with the CRLP_Rollup instance');
+                'There should be two Rollup__mdt records associated with the CRLP_Rollup instance');
         }
     }
 
     /**
-     * @description Validate the getRollupDefinitions returns an exception if the RollupType is null or invalid
-     */
+    * @description Validate the getRollupDefinitions returns an exception if the RollupType is null or invalid
+    */
     @IsTest
     private static void shouldThrowExceptionWhenParameterIsInvalid() {
         CRLP_ApiService service = new CRLP_ApiService();
@@ -80,42 +80,36 @@ private class CRLP_ApiService_TEST {
                 actualException = e;
             }
             System.assertNotEquals(null, actualException,
-                    'An exception should be thrown for invalid param: ' + param);
+                'An exception should be thrown for invalid param: ' + param);
             System.assert(actualException.getMessage().containsIgnoreCase(CallableApiParameters.PARAM_ROLLUP_TYPE),
-                    'Message should contain "' + CallableApiParameters.PARAM_ROLLUP_TYPE + '" param: ' + actualException.getMessage());
+                'Message should contain "' + CallableApiParameters.PARAM_ROLLUP_TYPE + '" param: ' + actualException.getMessage());
         }
     }
 
     /**
-     * @description Validate the getRollupDefinitions returns an empty list<> when CRLP is not enabled
-     */
+    * @description Validate the getRollupDefinitions returns an empty list<> when CRLP is not enabled
+    */
     @IsTest
     private static void shouldReturnEmptyListWhenCRLPNotEnabled() {
         CRLP_ApiService service = new CRLP_ApiService();
 
         System.assert(service.getRollupDefinitions(null).isEmpty(),
-                'When CRLP is disabled, then call to getRollupDefinitions should return an empty list');
+            'When CRLP is disabled, then call to getRollupDefinitions should return an empty list');
     }
 
     /**
-     * @description Validate that the call to executeRollups() properly validates each parameter
-     * value and throws an appropriate exception for invalid values.
-     */
+    * @description Validate that the ExecuteRollups() call throws an exception if the RollupType
+    * parameter is null
+    */
     @IsTest
-    private static void shouldThrowExceptionOnInvalidParmsForExecuteRollups() {
+    private static void shouldThrowExceptionOnInvalidMissingRollupType() {
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true
+            Customizable_Rollups_Enabled__c = true
         ));
-
         CRLP_Rollup_SEL.cachedRollups = new List<Rollup__mdt>(); // be sure this is clear
 
-        List<CRLP_Rollup> rollupDefs = new List<CRLP_Rollup>();
         String rollupType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name();
         Id parentId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
-        Map<Id, Map<SObjectType, List<SObject>>> rollupData = null;
-
-        Account acct = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null)[0];
-        insert acct;
 
         Test.startTest();
 
@@ -127,15 +121,33 @@ private class CRLP_ApiService_TEST {
             System.assert(false, 'An exception should have been thrown for invalid parameters');
         } catch (Exception ex) {
             System.assert(ex.getMessage().containsIgnoreCase(CallableApiParameters.PARAM_ROLLUP_TYPE),
-                    'Message should contain "' + CallableApiParameters.PARAM_ROLLUP_TYPE + '" param: ' + ex.getMessage());
+                'Message should contain "' + CallableApiParameters.PARAM_ROLLUP_TYPE + '" param: ' + ex.getMessage());
         }
 
         // Should succeed, but return an empty collection because no active rollups
         // Even though the Rollup Definitions are null or Empty.
         System.assert(service.executeRollups(parentId, rollupType, null, null, false).isEmpty(),
-                'The call should have succeeded, even with missing data, but returned an empty collection because there are no active rollups for this type.');
-        System.assert(service.executeRollups(parentId, rollupType, rollupDefs, null, false).isEmpty(),
-                'The call should have succeeded, even with missing data, but returned an empty collection because there are no active rollups for this type.');
+            'The call should have succeeded, even with missing data, but returned an empty collection because there are no active rollups for this type.');
+    }
+
+    /**
+    * @description Validate that the ExecuteRollups() call throws an exception if the RollupData
+    * parameter is null or empty
+    */
+    @IsTest
+    private static void shouldThrowExceptionOnMissingRollupData() {
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            Customizable_Rollups_Enabled__c = true
+        ));
+        CRLP_Rollup_SEL.cachedRollups = new List<Rollup__mdt>(); // be sure this is clear
+
+        List<CRLP_Rollup> rollupDefs = new List<CRLP_Rollup>();
+        String rollupType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name();
+        Id parentId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
+
+        Test.startTest();
+
+        CRLP_ApiService service = new CRLP_ApiService();
 
         CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
 
@@ -149,22 +161,41 @@ private class CRLP_ApiService_TEST {
             System.assert(false, 'An exception should have been thrown for invalid parameters');
         } catch (Exception ex) {
             System.assert(ex.getMessage().containsIgnoreCase(CallableApiParameters.PARAM_ROLLUP_DATA),
-                    'Message should contain "' + CallableApiParameters.PARAM_ROLLUP_DATA + '" param: ' + ex.getMessage());
+                'Message should contain "' + CallableApiParameters.PARAM_ROLLUP_DATA + '" param: ' + ex.getMessage());
         }
 
-        // Create a single dummy data set with one instantiated Opportunity
-        Id oppId = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType);
-        rollupData = new Map<Id, Map<SObjectType, List<SObject>>>{
-            oppId => new Map<SObjectType, List<SObject>>{
-                Opportunity.SObjectType => new List<SObject>{
-                    new Opportunity(Id = oppId,
-                        AccountId = parentId,
-                        Name = 'XYZ',
-                        Amount = 100,
-                        CloseDate=Date.today())
-                }
-            }
-        };
+        // Should fail for an empty RollupData collection
+        Map<Id, Map<SObjectType, List<SObject>>> rollupData = new Map<Id, Map<SObjectType, List<SObject>>>();
+        try {
+            service.executeRollups(parentId, rollupType, rollupDefs, rollupData, false);
+            System.assert(false, 'An exception should have been thrown for invalid parameters');
+        } catch (Exception ex) {
+            System.assert(ex.getMessage().containsIgnoreCase(CallableApiParameters.PARAM_ROLLUP_DATA),
+                'Message should contain "' + CallableApiParameters.PARAM_ROLLUP_DATA + '" param: ' + ex.getMessage());
+        }
+    }
+
+    /**
+    * @description Validate that the ExecuteRollups() call throws an exception if the ParentId
+    * parameter is not provided or the matching record cannot be queried
+    */
+    @IsTest
+    private static void shouldThrowExceptionOnInvalidParentId() {
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            Customizable_Rollups_Enabled__c = true
+        ));
+
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
+        String rollupType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name();
+        Id parentId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
+        Map<Id, Map<SObjectType, List<SObject>>> rollupData = buildMockRollupData(parentId, 100);
+
+        Test.startTest();
+
+        CRLP_ApiService service = new CRLP_ApiService();
+
+        List<CRLP_Rollup> rollupDefs = service.getRollupDefinitions(rollupType);
 
         // Should fail for a null parentId
         try {
@@ -172,23 +203,23 @@ private class CRLP_ApiService_TEST {
             System.assert(false, 'An exception should have been thrown for invalid parameters');
         } catch (Exception ex) {
             System.assert(ex.getMessage().containsIgnoreCase(CallableApiParameters.PARAM_ROLLUP_PARENTID),
-                    'Message should contain "' + CallableApiParameters.PARAM_ROLLUP_PARENTID + '" param: ' + ex.getMessage());
+                'Message should contain "' + CallableApiParameters.PARAM_ROLLUP_PARENTID + '" param: ' + ex.getMessage());
         }
 
-        // Should fail for an invalid parentId
+        // Should fail because the specified ParentId cannot be queried
         try {
             service.executeRollups(parentId, rollupType, rollupDefs, rollupData, false);
             System.assert(false, 'An exception should have been thrown for invalid parameters');
         } catch (Exception ex) {
             System.assert(ex.getMessage().containsIgnoreCase(CallableApiParameters.PARAM_ROLLUP_PARENTID),
-                    'Message should contain "' + CallableApiParameters.PARAM_ROLLUP_PARENTID + '" param: ' + ex.getMessage());
+                'Message should contain "' + CallableApiParameters.PARAM_ROLLUP_PARENTID + '" param: ' + ex.getMessage());
         }
     }
 
     /**
-     * @description Verify that the call to executeRollups() successfully completes a rollup and that
-     * the target (summary) record is not updated as a result.
-     */
+    * @description Verify that the call to executeRollups() successfully completes a rollup and that
+    * the target (summary) record is not updated as a result.
+    */
     @IsTest
     private static void shouldCompleteExecuteRollupsForAccount() {
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
@@ -199,25 +230,13 @@ private class CRLP_ApiService_TEST {
 
         String rollupType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name();
         Double oppAmount = 100;
-        Id oppId = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType);
 
         Account acct = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null)[0];
         insert acct;
-        acct = [SELECT npo02__NumberOfClosedOpps__c FROM Account WHERE Id = :acct.Id LIMIT 1];
+        acct = (Account)getRecord(acct.Id, Account.SObjectType, 'npo02__NumberOfClosedOpps__c');
         Double acctCountOfOppsValue = acct.npo02__NumberOfClosedOpps__c;
 
-        Map<Id, Map<SObjectType, List<SObject>>> rollupData = new Map<Id, Map<SObjectType, List<SObject>>>{
-            oppId => new Map<SObjectType, List<SObject>>{
-                Opportunity.SObjectType => new List<SObject>{
-                    new Opportunity(Id = oppId,
-                        AccountId = acct.Id,
-                        Name = 'XYZ',
-                        Amount = oppAmount,
-                        CloseDate=Date.today())
-                }
-            }
-        };
-
+        Map<Id, Map<SObjectType, List<SObject>>> rollupData = buildMockRollupData(acct.Id, oppAmount);
 
         Test.startTest();
 
@@ -228,12 +247,45 @@ private class CRLP_ApiService_TEST {
         rollupDefs = service.executeRollups(acct.Id, rollupType, rollupDefs, rollupData, false);
 
         System.assertEquals(1, rollupDefs[0].theCount,
-                'The Rollup Definition counter var should be set to 1');
+            'The Rollup Definition counter var should be set to 1');
         System.assertEquals(oppAmount, rollupDefs[0].theSum,
-                'The Rollup Definition sum var should be set to ' + oppAmount);
+            'The Rollup Definition sum var should be set to ' + oppAmount);
 
-        acct = [SELECT npo02__NumberOfClosedOpps__c FROM Account WHERE Id = :acct.Id LIMIT 1];
+        acct = (Account)getRecord(acct.Id, Account.SObjectType, 'npo02__NumberOfClosedOpps__c');
         System.assertEquals(acctCountOfOppsValue, acct.npo02__NumberOfClosedOpps__c,
-                'The Parent Account should not have been updated');
+            'The Parent Account should not have been updated');
+    }
+
+    // **************************** HELPER METHODS ****************************
+
+    /**
+    * @description Build a mock RollupData Map with a single Opportunity and no related records to use
+    * for in test methods.
+    * @return Map<Id, Map<SObjectType, List<SObject>>>
+    */
+    private static Map<Id, Map<SObjectType, List<SObject>>> buildMockRollupData(Id parentId, Decimal amt) {
+        Id oppId = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType);
+        return new Map<Id, Map<SObjectType, List<SObject>>>{
+            oppId => new Map<SObjectType, List<SObject>>{
+                Opportunity.SObjectType => new List<SObject>{
+                    new Opportunity(Id = oppId,
+                        AccountId = parentId,
+                        Name = 'XYZ',
+                        Amount = amt,
+                        CloseDate=Date.today())
+                }
+            }
+        };
+    }
+
+    /**
+    * @description Queries a single record with the specified field
+    */
+    private static SObject getRecord(Id recordId, SObjectType objType, String field) {
+        String soql = 'SELECT Id, ' + field +
+            ' FROM ' + objType.getDescribe().getName() +
+            ' WHERE Id = :recordId' +
+            ' LIMIT 1';
+        return Database.query(soql);
     }
 }

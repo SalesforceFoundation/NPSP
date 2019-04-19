@@ -37,8 +37,8 @@
 private class CallableApiParameters_TEST {
 
     /**
-     * @description Validate that a deserialized set of rollup definitions is returned
-     */
+    * @description Validate that a deserialized set of rollup definitions is returned
+    */
     @IsTest
     private static void shouldReturnListRollupDefinitions() {
         List<CRLP_Rollup> rollups = new List<CRLP_Rollup>{ new CRLP_Rollup( new Rollup__mdt() ) };
@@ -46,7 +46,7 @@ private class CallableApiParameters_TEST {
         String rollupJson = JSON.serialize(rollups);
 
         Map<String, Object> params = new Map<String, Object>{
-                CallableApiParameters.PARAM_ROLLUP_DEFS => rollupJson
+            CallableApiParameters.PARAM_ROLLUP_DEFS => rollupJson
         };
 
         CallableApiParameters service = new CallableApiParameters(params);
@@ -54,14 +54,14 @@ private class CallableApiParameters_TEST {
     }
 
     /**
-     * @description Validate that an invalid rollups defintions json throws an exception
-     */
+    * @description Validate that an invalid rollups defintions json throws an exception
+    */
     @IsTest
     private static void shouldThrowExceptionOnBadRollupDefsJson() {
         String rollupJson = JSON.serialize( new List<String>{ 'StringList' });
 
         Map<String, Object> params = new Map<String, Object>{
-                CallableApiParameters.PARAM_ROLLUP_DEFS => rollupJson
+            CallableApiParameters.PARAM_ROLLUP_DEFS => rollupJson
         };
 
         CallableApiParameters service = new CallableApiParameters(params);
@@ -70,46 +70,50 @@ private class CallableApiParameters_TEST {
             System.assert(false, 'An exception should have been thrown');
         } catch (Exception ex) {
             System.assert(ex.getMessage().contains(CallableApiParameters.PARAM_ROLLUP_DEFS),
-                'An exception should have been thrown referencing the rollup defintions');
+            'An exception should have been thrown referencing the rollup defintions');
         }
     }
 
     /**
-     * @description Validate that a proper map of SObjects is returned
-     */
+    * @description Validate that a proper map of SObjects is returned
+    */
     @IsTest
     private static void shouldReturnMapOfSobjectData() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_And_Orgs_Settings__c(
-                        npe01__Payments_Enabled__c = true,
-                        npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
-                        npe01__Opportunity_Contact_Role_Default_role__c = UTIL_CustomSettingsFacade.DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR,
-                        Contact_Role_for_Organizational_Opps__c = UTIL_CustomSettingsFacade.DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT
-                )
+            new npe01__Contacts_And_Orgs_Settings__c(
+                npe01__Payments_Enabled__c = true,
+                npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
+                npe01__Opportunity_Contact_Role_Default_role__c = UTIL_CustomSettingsFacade.DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR,
+                Contact_Role_for_Organizational_Opps__c = UTIL_CustomSettingsFacade.DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT
+            )
         );
 
         List<Contact> contacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
         insert contacts;
+
         List<Opportunity> testOpps = UTIL_UnitTestData_TEST.OppsForContactList (
-                contacts, null, UTIL_UnitTestData_TEST.getclosedWonStage(), System.today(), 100, null, null);
+            contacts, null, UTIL_UnitTestData_TEST.getclosedWonStage(), System.today(), 100, null, null
+        );
         insert testOpps;
 
-        testOpps = [SELECT Id, Name, Amount, CloseDate, StageName, RecordTypeId,
-                        CampaignId, Description, Type, Tribute_Type__c, Primary_Contact__c,
-                        npe03__Recurring_Donation__c, Honoree_Contact__c, Honoree_Name__c,
-                        Notification_Recipient_Contact__c, Notification_Recipient_Name__c,
-                       (SELECT Id, ContactId, Role FROM OpportunityContactRoles),
-                       (SELECT Id, npe01__Opportunity__c, npe01__Payment_Amount__c,
-                               npe01__Payment_Date__c, npe01__Payment_Method__c,
-                               npe01__Paid__c, npe01__Written_Off__c
-                       FROM npe01__OppPayment__r)
-                    FROM Opportunity];
+        testOpps = [
+            SELECT Id, Name, Amount, CloseDate, StageName, RecordTypeId,
+                CampaignId, Description, Type, Tribute_Type__c, Primary_Contact__c,
+                npe03__Recurring_Donation__c, Honoree_Contact__c, Honoree_Name__c,
+                Notification_Recipient_Contact__c, Notification_Recipient_Name__c,
+               (SELECT Id, ContactId, Role FROM OpportunityContactRoles),
+               (SELECT Id, npe01__Opportunity__c, npe01__Payment_Amount__c,
+                   npe01__Payment_Date__c, npe01__Payment_Method__c,
+                   npe01__Paid__c, npe01__Written_Off__c
+                FROM npe01__OppPayment__r)
+            FROM Opportunity
+        ];
 
         Test.startTest();
         Map<Id, Map<SObjectType, List<SObject>>> data = new Map<Id, Map<SObjectType, List<SObject>>>();
         for (Opportunity opp : testOpps) {
             Map<SObjectType, List<SObject>> dataMap = new Map<SObjectType, List<SObject>>{
-                    Opportunity.SObjectType => new List<SObject>{ opp }
+                Opportunity.SObjectType => new List<SObject>{ opp }
             };
 
             dataMap.put( OpportunityContactRole.SObjectType, opp.OpportunityContactRoles );
@@ -119,7 +123,7 @@ private class CallableApiParameters_TEST {
         }
 
         Map<String, Object> params = new Map<String, Object>{
-                CallableApiParameters.PARAM_ROLLUP_DATA => data
+            CallableApiParameters.PARAM_ROLLUP_DATA => data
         };
 
         CallableApiParameters service = new CallableApiParameters(params);
@@ -132,28 +136,28 @@ private class CallableApiParameters_TEST {
             'The two maps should be equivalent');
 
         System.assertEquals(data.get(testOpps[0].Id).get(Opportunity.SObjectType)[0].get('Id'),
-                returnedData.get(testOpps[0].Id).get(Opportunity.SObjectType)[0].get('Id'),
+            returnedData.get(testOpps[0].Id).get(Opportunity.SObjectType)[0].get('Id'),
             'The first Opportunity Id should match');
 
         System.assertEquals(data.get(testOpps[1].Id).get(npe01__OppPayment__c.SObjectType).size(),
-                returnedData.get(testOpps[1].Id).get(npe01__OppPayment__c.SObjectType).size(),
+            returnedData.get(testOpps[1].Id).get(npe01__OppPayment__c.SObjectType).size(),
             'The size of the Payments Related List on the second Opportunity should match');
     }
 
 
     /**
-     * @description Validate that each of the service methods returns the expected data type
-     */
+    * @description Validate that each of the service methods returns the expected data type
+    */
     @IsTest
     private static void shouldCastParametersAsSpecifiedDataTypes() {
 
         Map<String, Object> params = new Map<String, Object>{
-                'String' => 'String',
-                'BooleanTrue' => true,
-                'BooleanFalse' => false,
-                'ListString' => new List<String>{ 'Value1' },
-                'SetString' => new Set<String>{ 'Value1' },
-                'ListSObject' => new List<SObject>{ new Opportunity(Name = 'Opportunity') }
+            'String' => 'String',
+            'BooleanTrue' => true,
+            'BooleanFalse' => false,
+            'ListString' => new List<String>{ 'Value1' },
+            'SetString' => new Set<String>{ 'Value1' },
+            'ListSObject' => new List<SObject>{ new Opportunity(Name = 'Opportunity') }
         };
 
         CallableApiParameters service = new CallableApiParameters(params);
@@ -184,18 +188,18 @@ private class CallableApiParameters_TEST {
     }
 
     /**
-     * @description Validate that each of the service methods throws an exception if parameter is invalid
-     */
+    * @description Validate that each of the service methods throws an exception if parameter is invalid
+    */
     @IsTest
     private static void shouldThrowExceptionOnInvalidDataType() {
 
         Map<String, Object> badParams = new Map<String, Object>{
-                'String' => True,
-                'Boolean' => 'XYZ',
-                'ListString' => new Set<SObject>{ new Opportunity() },
-                'SetString' => 23,
-                'ListSObject' => new Map<String, String>{ 'X' => 'Y' },
-                'RollupData' => new Account()
+            'String' => True,
+            'Boolean' => 'XYZ',
+            'ListString' => new Set<SObject>{ new Opportunity() },
+            'SetString' => 23,
+            'ListSObject' => new Map<String, String>{ 'X' => 'Y' },
+            'RollupData' => new Account()
         };
 
         CallableApiParameters service = new CallableApiParameters(badParams);
@@ -225,7 +229,7 @@ private class CallableApiParameters_TEST {
                 System.assert(false, 'An exception should have been thrown for an invalid data type');
             } catch (Exception ex) {
                 System.assert(ex.getMessage().containsIgnoreCase(dataType),
-                        'Message should contain "' + dataType + '" term' + ex.getMessage());
+                    'Message should contain "' + dataType + '" term' + ex.getMessage());
             }
         }
     }
