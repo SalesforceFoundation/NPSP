@@ -44,7 +44,19 @@ public class ERR_Notifier {
 
     /** @description Global error notification settings used in NPSP Settings and here */
     public static final String ERROR_NOTIFICATION_USER_PREFIX = USER_UserService.OBJECT_ID_PREFIX_USER;
-    public static final String ERROR_NOTIFICATION_CHATTER_PREFIX = CollaborationGroup.SObjectType.getDescribe().getKeyPrefix();
+    public static final String ERROR_NOTIFICATION_CHATTER_PREFIX {
+        get {
+            if (ERROR_NOTIFICATION_CHATTER_PREFIX == null) {
+                try {
+                    ERROR_NOTIFICATION_CHATTER_PREFIX =
+                            UTIL_Describe.getObjectDescribe('CollaborationGroup').getKeyPrefix();
+                } catch (Exception ex) {
+                    ERROR_NOTIFICATION_CHATTER_PREFIX = '0F9';
+                }
+            }
+            return ERROR_NOTIFICATION_CHATTER_PREFIX;
+        } private set;
+    }
     public static final String ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS = 'All Sys Admins';
 
     /** @description Global email constants used for all outbound (system) emails */
