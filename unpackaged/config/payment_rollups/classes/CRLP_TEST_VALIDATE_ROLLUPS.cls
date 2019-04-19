@@ -54,7 +54,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
     private static final String ACCOUNT_NAME_ORG = 'CRLP TEST ORG ACCOUNT 4';
     private static final String ACCOUNT_NAME_ASC = 'CRLP TEST ASC ACCOUNT';
     private static final String TEST_SITE_NAME = 'TEST_DATA';
-    private static final String ORG_CONTACT_NAME = 'CRLPTEST-ORG-DONATION';
+    private static final String ORG_CONTACT_NAME = 'CRLPTEST-ORG-DONATION'; // Household Contact that is Primary Contact on an Org Donation
     private static final String GAU_NAME = 'CRLP Default GAU';
     private static final String RD_NAME = 'CRLP TEST RD';
     private static final String ACCOUNT_SOFT_CREDIT_ROLE_A = 'Influencer';
@@ -172,9 +172,9 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
     public static void executeCustomizableRollups() {
         Customizable_Rollup_Settings__c cs = Customizable_Rollup_Settings__c.getOrgDefaults();
         cs.Customizable_Rollups_Enabled__c = true;
-        cs.Rollups_Contact_SkewMode_Batch_Size__c = 500;
-        cs.Rollups_Account_SkewMode_Batch_Size__c = 500;
-        cs.Rollups_GAU_Batch_Size__c = 500;
+        cs.Rollups_Contact_SkewMode_Batch_Size__c = 200;
+        cs.Rollups_Account_SkewMode_Batch_Size__c = 200;
+        cs.Rollups_GAU_Batch_Size__c = 200;
         update cs;
 
         clearTargetRecords();
@@ -187,19 +187,19 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         List<Id> contactIds = new List<Id>((new Map<Id, Contact>(contacts)).keySet());
 
         // Executes Account, Contact and RD roll-ups real-time
-        System.enqueueJob(new asyncExecuteCustomizableRollupsQ(acctIds, contactIds));
+        System.enqueueJob(new AsyncExecuteCustomizableRollupsQ(acctIds, contactIds));
 
         // Executes the following Skew & Non-Skew Mode async batch jobs
         CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.GAU,
                 CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{ gau.Id }, null);
         CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
-                CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, contactIds, null);
+                CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, contactIds, null);
     }
 
-    /** 
-    * @description Move the rollup of Account & Contacts to an async process just to avoid governor 
+    /**
+    * @description Move the rollup of Account & Contacts to an async process just to avoid governor
     * limit issues. Plus, to avoid lock errors on the Account object because of the two Account Soft
-    * Credit jobs, these are split into chained Queueables 
+    * Credit jobs, these are split into chained Queueables
     */
     private class AsyncExecuteCustomizableRollupsQ implements System.Queueable {
         List<Id> acctIds;
@@ -219,23 +219,30 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
 
         public void execute(QueueableContext qc) {
             if (executeNextJob == false) {
-                CRLP_RollupQueueable.runRollupsForIds(acctIds);
+
+                npe03__Recurring_Donation__c rd = [SELECT Id FROM npe03__Recurring_Donation__c WHERE Name = :RD_NAME LIMIT 1];
 
                 // Move this into the ASync process so it runs after the other Account job to avoid a Lock Error
                 CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
-                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, acctIds, null);
+                        CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, acctIds, null);
 
+                CRLP_RollupQueueable.runRollupsForIds(acctIds);
                 CRLP_RollupQueueable.runRollupsForIds(contactIds);
-
-                npe03__Recurring_Donation__c rd = [SELECT Id FROM npe03__Recurring_Donation__c WHERE Name = :RD_NAME LIMIT 1];
                 CRLP_RollupQueueable.runRollupsForIds(new List<Id>{rd.Id});
+                /* - alternatively run the Account, Contact and RD hard credit rollups as SkewMode batch jobs
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                        CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, contactIds, null);
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                        CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, acctIds, null);
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.RecurringDonations,
+                        CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{rd.Id}, null);*/
 
-                // Re-queue this same job so it can run th eother Account Soft Credit type rollup
+                // Re-queue this same job so it can run the other Account Soft Credit type rollup
                 System.enqueueJob(new asyncExecuteCustomizableRollupsQ(acctIds));
 
             } else {
                 CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
-                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, acctIds, null);
+                        CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, acctIds, null);
             }
         }
     }
@@ -246,23 +253,28 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
     public static void validateRollups() {
         Customizable_Rollup_Settings__c cs = Customizable_Rollup_Settings__c.getOrgDefaults();
 
-        String acctSOQL = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType);
-        acctSOQL += ' WHERE Site = :TEST_SITE_NAME';
+        String acctSOQL = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Site = :TEST_SITE_NAME';
         acctSOQL = acctSOQL.replace('Id,', 'Id,Name,');
         accounts = Database.query(acctSOQL);
 
-        Account orgAcct = [SELECT Id, Name FROM Account WHERE npe01__SYSTEMIsIndividual__c = false
-        AND Site = :TEST_SITE_NAME AND Name != :ACCOUNT_NAME_ASC LIMIT 1];
+        Account orgAcct = [SELECT Id, Name FROM Account
+        WHERE npe01__SYSTEMIsIndividual__c = false
+        AND Site = :TEST_SITE_NAME
+        AND Name = :ACCOUNT_NAME_ORG LIMIT 1];
         Id orgAcctId = orgAcct.Id;
-        Contact orgContactSC = [SELECT Id, AccountId FROM Contact WHERE FirstName = :ORG_CONTACT_NAME LIMIT 1];
-        Integer countAccts = [SELECT Count()
-        FROM Account
+
+        // Household Contact that is the Primary Contact on an Org Donation.
+        Contact orgContactSC = [SELECT Id, AccountId FROM Contact
+        WHERE FirstName = :ORG_CONTACT_NAME LIMIT 1];
+
+        Integer countAccts = [SELECT Count() FROM Account
         WHERE Site = :TEST_SITE_NAME
         AND Id != :orgAcctId
         AND Name != :ACCOUNT_NAME_ASC
         AND Name != :ACCOUNT_NAME_RD];
 
         for (Account a : accounts) {
+
             // The organization account will only have a single donation
             if (a.Name == ACCOUNT_NAME_RD) {
                 // No need to validate rollups on the Recurring Donations Account
@@ -295,22 +307,30 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
 
                 // CUSTOM ROLL-UP TESTING ONLY FOR THE NEW ROLLUPS ENGINE
                 if (cs.Customizable_Rollups_Enabled__c == true) {
-                    // Validate Account-Contact Soft Credits (via OpportunityContactRole.Contact.AccountId)
-                    if (TEST_ACCOUNT_SOFT_CREDITS) {
-                        if (a.Id != orgContactSC.AccountId) {
-                            assertValue(ROLLUP_TOTAL_WON_AMOUNT, (Double) a.get('AccConSC_Total_SCs__c'), a.Id + ' Acccount.AccConSC_Total_SCs__c should be');
-                            assertValue(ROLLUP_TOTAL_WON_COUNT, (Double) a.get('AccConSC_Count__c'), a.Id + ' Acccount.AccConSC_Count__c should be');
-                        } else {
-                            assertValue(ROLLUP_TOTAL_WON_AMOUNT + ORG_DONATION_AMT, (Double) a.get('AccConSC_Total_SCs__c'), a.Id + ' Org Acccount.AccConSC_Total_SCs__c should be');
-                            assertValue(ROLLUP_TOTAL_WON_COUNT + 1, (Double) a.get('AccConSC_Count__c'), a.Id + ' Org Acccount.AccConSC_Count__c should be');
-                        }
-                    }
+
                     // Total Payments and Total Write-Offs
                     assertValue(ROLLUP_TOTAL_PAYMENT_AMOUNT, (Double) a.get('Rollup_Total_Payments__c'), a.Id + ' Acccount.Rollup_Total_Payments__c should be');
                     assertValue(ROLLUP_TOTAL_WRITEOFF_AMOUNT, (Double) a.get('Rollup_Total_Writeoffs__c'), a.Id + ' Acccount.Rollup_Total_Writeoffs__c should be');
 
+                    // Validate Account-Contact Soft Credits (via OpportunityContactRole.Contact.AccountId)
+                    if (TEST_ACCOUNT_SOFT_CREDITS) {
+
+                        if (a.Id == orgContactSC.AccountId) {
+                            // This Account has a Contact that is referenced on an Org Donation
+                            assertValue(ROLLUP_TOTAL_WON_AMOUNT + ORG_DONATION_AMT, (Double) a.get('AccConSC_Total_SCs__c'), a.Id + ' OrgCon Acccount.AccConSC_Total_SCs__c should be');
+                            assertValue(ROLLUP_TOTAL_WON_COUNT + 1, (Double) a.get('AccConSC_Count__c'), a.Id + ' OrgCon Acccount.AccConSC_Count__c should be');
+
+                        } else {
+
+                            assertValue(ROLLUP_TOTAL_WON_AMOUNT, (Double) a.get('AccConSC_Total_SCs__c'), a.Id + ' Acccount.AccConSC_Total_SCs__c should be');
+                            assertValue(ROLLUP_TOTAL_WON_COUNT, (Double) a.get('AccConSC_Count__c'), a.Id + ' Acccount.AccConSC_Count__c should be');
+                        }
+
+                    }
+
                 }
             } else if (a.Id == orgAcct.Id) {
+
                 // Organization Account Rollup
                 assertValue(ORG_DONATION_AMT, a.npo02__TotalOppAmount__c, a.Id + ' Org Account.npo02__TotalOppAmount__c should be');
                 assertValue(1, a.npo02__NumberOfClosedOpps__c, a.Id + ' Org Account.npo02__TotalOppAmount__c should be');
@@ -425,32 +445,32 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
 
     private static void createAccountsAndContacts() {
         Account a1 =  new Account(
-                Name = 'CRLP TEST ACCOUNT 1',
-                Site = TEST_SITE_NAME,
-                RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Account.SObjectType, 'Household Account')
+            Name = 'CRLP TEST HOUSEHOLD 1',
+            Site = TEST_SITE_NAME,
+            RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Account.SObjectType, 'Household Account')
         );
         Account a2 =  new Account(
-                Name = 'CRLP TEST ACCOUNT 2',
-                Site = TEST_SITE_NAME,
-                RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Account.SObjectType, 'Household Account')
+            Name = 'CRLP TEST HOUSEHOLD 2',
+            Site = TEST_SITE_NAME,
+            RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Account.SObjectType, 'Household Account')
         );
 
         Account a3 =  new Account(
-                Name = ACCOUNT_NAME_RD,
-                Site = TEST_SITE_NAME,
-                RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Account.SObjectType, 'Household Account')
+            Name = ACCOUNT_NAME_RD,
+            Site = TEST_SITE_NAME,
+            RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Account.SObjectType, 'Household Account')
         );
 
         Account a4 =  new Account(
-                Name = ACCOUNT_NAME_ORG,
-                Site = TEST_SITE_NAME,
-                RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Account.SObjectType, 'Organization')
+            Name = ACCOUNT_NAME_ORG,
+            Site = TEST_SITE_NAME,
+            RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Account.SObjectType, 'Organization')
         );
 
         Account a5 =  new Account(
-                Name = ACCOUNT_NAME_ASC,
-                Site = TEST_SITE_NAME,
-                RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Account.SObjectType, 'Organization')
+            Name = ACCOUNT_NAME_ASC,
+            Site = TEST_SITE_NAME,
+            RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Account.SObjectType, 'Organization')
         );
 
         insert new List<Account>{a1, a2, a3, a4, a5};
@@ -458,37 +478,38 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
 
         // Two Contacts on Household 1
         Contact c1 = new Contact(
-                FirstName = 'CRLPTEST-1',
-                LastName = 'Household1',
-                AccountId = a1.Id
+            FirstName = 'CRLPTEST-1',
+            LastName = 'Household1',
+            AccountId = a1.Id
         );
         Contact c2 = new Contact(
-                FirstName = 'CRLPTEST-2',
-                LastName = 'Household1',
-                AccountId = a1.Id
+            FirstName = 'CRLPTEST-2',
+            LastName = 'Household1',
+            AccountId = a1.Id
         );
+
         // Three Contacts on Household 2
         Contact c3 = new Contact(
-                FirstName = 'CRLPTEST-1',
-                LastName = 'Household2',
-                AccountId = a2.Id
+            FirstName = 'CRLPTEST-1',
+            LastName = 'Household2',
+            AccountId = a2.Id
         );
         Contact c4 = new Contact(
-                FirstName = 'CRLPTEST-2',
-                LastName = 'Household2',
-                AccountId = a2.Id
+            FirstName = 'CRLPTEST-2',
+            LastName = 'Household2',
+            AccountId = a2.Id
         );
         Contact c5 = new Contact(
-                FirstName = ORG_CONTACT_NAME,
-                LastName = 'Household2',
-                AccountId = a2.Id
+            FirstName = ORG_CONTACT_NAME,   // This Household Contact will be the Primary Contact on an Org Donation
+            LastName = 'Household2',
+            AccountId = a2.Id
         );
 
         // One Contacts on the RD Household Accouunt
         Contact c6 = new Contact(
-                FirstName = 'CRLPTEST-1',
-                LastName = 'RDHousehold',
-                AccountId = a3.Id
+            FirstName = 'CRLPTEST-1',
+            LastName = 'RDHousehold',
+            AccountId = a3.Id
         );
 
         insert new List<Contact>{c1, c2, c3, c4, c5, c6};
@@ -539,12 +560,12 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
             Map<Integer, Integer> countByYear = new Map<Integer, Integer>();
             for (Integer num = 0; num < OPP_COUNT_PER_ACCT; num++) {
                 Opportunity opp = new Opportunity(
-                        Name = 'CRLP TEST OPP ' + num,
-                        AccountId = accounts[na].Id,
-                        Amount = OPPORTUNITY_AMOUNT,
-                        RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Opportunity.SObjectType, 'Donation'),
-                        StageName = (num < CLOSED_OPP_COUNT_PER_ACCT ? closedWonStage : closedLostStage),
-                        CloseDate = nextDate
+                    Name = 'CRLP TEST OPP ' + num,
+                    AccountId = accounts[na].Id,
+                    Amount = OPPORTUNITY_AMOUNT,
+                    RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Opportunity.SObjectType, 'Donation'),
+                    StageName = (num < CLOSED_OPP_COUNT_PER_ACCT ? closedWonStage : closedLostStage),
+                    CloseDate = nextDate
                 );
                 if (UserInfo.isMultiCurrencyOrganization()) {
                     opp.put('CurrencyIsoCode', 'CAD');
@@ -566,16 +587,16 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
             nextDate = MEMBERSHIP_FIRST_DATE;
             for (Integer num =0; num < MEMBERSHIP_COUNT; num++) {
                 Opportunity opp = new Opportunity(
-                        Name = 'Membership Test' + num,
-                        AccountId = accounts[na].Id,
-                        Amount = MEMBERSHIP_AMOUNT,
-                        RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Opportunity.SObjectType, 'Membership'),
-                        StageName = closedWonStage,
-                        CloseDate = nextDate,
-                        npe01__Member_Level__c = 'Bronze',
-                        npe01__Membership_Origin__c = 'New',
-                        npe01__Membership_Start_Date__c = nextDate,
-                        npe01__Membership_End_Date__c = nextDate.addYears(1).addDays(-1)
+                    Name = 'Membership Test' + num,
+                    AccountId = accounts[na].Id,
+                    Amount = MEMBERSHIP_AMOUNT,
+                    RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Opportunity.SObjectType, 'Membership'),
+                    StageName = closedWonStage,
+                    CloseDate = nextDate,
+                    npe01__Member_Level__c = 'Bronze',
+                    npe01__Membership_Origin__c = 'New',
+                    npe01__Membership_Start_Date__c = nextDate,
+                    npe01__Membership_End_Date__c = nextDate.addYears(1).addDays(-1)
                 );
                 opps.add(opp);
                 nextDate = nextDate.addYears(1);
@@ -583,22 +604,22 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         }
 
         Account orgAcct = [SELECT Id, Name FROM Account
-                            WHERE npe01__SYSTEMIsIndividual__c = false
-                            AND Name = :ACCOUNT_NAME_ORG LIMIT 1];
+        WHERE npe01__SYSTEMIsIndividual__c = false
+        AND Name = :ACCOUNT_NAME_ORG LIMIT 1];
         Contact orgContactSC = [SELECT Id FROM Contact
-                            WHERE FirstName = :ORG_CONTACT_NAME LIMIT 1];
+        WHERE FirstName = :ORG_CONTACT_NAME LIMIT 1];
 
         // create one closed won Organization opportunity to ensure it's not included in the Contact Hard Credit rollups
         Date orgDonationDate = Date.Today().addDays(-30);
         opps.add(new Opportunity (
-                Name = 'Test Org Opp',
-                AccountId = orgAcct.Id,
-                Amount = ORG_DONATION_AMT,
-                CloseDate = orgDonationDate,
-                StageName = closedWonStage,
-                Primary_Contact__c = orgContactSC.Id,
-                RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Opportunity.SObjectType, 'Donation'),
-                npe01__Do_Not_Automatically_Create_Payment__c = true
+            Name = 'Test Org Opp',
+            AccountId = orgAcct.Id,
+            Amount = ORG_DONATION_AMT,
+            CloseDate = orgDonationDate,
+            StageName = closedWonStage,
+            Primary_Contact__c = orgContactSC.Id,
+            RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Opportunity.SObjectType, 'Donation'),
+            npe01__Do_Not_Automatically_Create_Payment__c = true
         ));
 
         TDTM_Config_API.disableAllRollupTriggers();
@@ -606,8 +627,8 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
 
         // Change the OCR Role on the org donation so that it will roll up as a soft credit.
         OpportunityContactRole orgOCR = [SELECT Id, Role FROM OpportunityContactRole
-                                        WHERE Opportunity.AccountId = :orgAcct.Id
-                                        AND IsPrimary = True LIMIT 1];
+        WHERE Opportunity.AccountId = :orgAcct.Id
+        AND IsPrimary = True LIMIT 1];
         orgOCR.Role = 'Soft Credit';    // force to this because it's a good common value that should be in the filters
         update orgOCR;
 
@@ -615,9 +636,9 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         for (Opportunity opp : opps) {
             if (opp.AccountId != orgAcct.Id) {
                 Allocation__c alloc = new Allocation__c(
-                        General_Accounting_Unit__c = gau.Id,
-                        Opportunity__c = opp.Id,
-                        Amount__c = opp.Amount
+                    General_Accounting_Unit__c = gau.Id,
+                    Opportunity__c = opp.Id,
+                    Amount__c = opp.Amount
                 );
                 if (UserInfo.isMultiCurrencyOrganization()) {
                     alloc.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
@@ -634,12 +655,13 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
             Opportunity opp = opps[i];
             if (opp.AccountId != orgAcct.Id
                     && opp.RecordTypeId != membershipRTId
-                    && opp.StageName == closedWonStage) {
+                    && opp.StageName == closedWonStage
+            ) {
                 Account_Soft_Credit__c accSC = new Account_Soft_Credit__c(
-                        Account__c = accForSoftCredits.Id,
-                        Opportunity__c = opp.Id,
-                        Amount__c = ACCOUNT_SOFT_CREDIT_AMOUNT,
-                        Role__c = ACCOUNT_SOFT_CREDIT_ROLE_A
+                    Account__c = accForSoftCredits.Id,
+                    Opportunity__c = opp.Id,
+                    Amount__c = ACCOUNT_SOFT_CREDIT_AMOUNT,
+                    Role__c = ACCOUNT_SOFT_CREDIT_ROLE_A
                 );
                 if (UserInfo.isMultiCurrencyOrganization()) {
                     accSC.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
@@ -658,14 +680,14 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
 
         Contact rdContact = [SELECT Id, AccountId FROM Contact WHERE Account.Name = :ACCOUNT_NAME_RD LIMIT 1];
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-                Name = RD_NAME,
-                npe03__Installments__c = 12,
-                npe03__Contact__c = rdContact.Id,
-                /*npe03__Organization__c = rdContact.AccountId,*/
-                npe03__Amount__c = RD_AMOUNT_USD,
-                npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
-                npe03__Date_Established__c = Date.Today().addMonths(-12),
-                npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
+            Name = RD_NAME,
+            npe03__Installments__c = 12,
+            npe03__Contact__c = rdContact.Id,
+            /*npe03__Organization__c = rdContact.AccountId,*/
+            npe03__Amount__c = RD_AMOUNT_USD,
+            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
+            npe03__Date_Established__c = Date.Today().addMonths(-12),
+            npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
                 npe03__Open_Ended_Status__c = 'Open'
         );
         insert rd;
@@ -732,7 +754,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         rd.npe03__Next_Payment_Date__c = null;
         update rd;
     }
-    
+
     /** Utility Methods copied from the Unit Test Data Builder class **/
 
     private static String closedWonStage {
