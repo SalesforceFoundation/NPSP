@@ -37,7 +37,7 @@
 public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
 
     /*********************************************************************************************************
-    * @description Returns the string Id of the Recurring Donations panel.
+    * @description Returns the string Id of the Data Import Mapping panel
     */
     public override string idPanel() { return 'idPanelDataImportMapping'; }
 
@@ -51,32 +51,23 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
     }
 
     /*******************************************************************************************************
-    * @description is the running user an admin
-    */
-    public Boolean isAdmin {
-        get {
-            return STG_Panel.runningUserIsAdmin();
-        }
-        set;
-    }
-
-    /*******************************************************************************************************
     * @description the jobId of the deployment
     */
     public String jobId { get; private set; }
 
     /*******************************************************************************************************
-    * @description Overridden Action Method to put the current page into Edit mode and cache the existing setting
+    * @description Action Method to enable CMDT mapping, save custom setting
     * @return null
     */
     public PageReference enableDataImportFieldMapping() {
-        System.debug('enableDataImportFieldMapping');
-
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
+
         Savepoint sp = Database.setSavepoint();
         try {
             BDI_MigrationMappingUtility migrationMappingUtility = new BDI_MigrationMappingUtility();
             jobId = migrationMappingUtility.convertLegacyHelpTextToCustomMetadata(true);
+
+            dataImportSettings.Field_Mapping_Method__c = 'Data Import Field Mapping';
 
             if (Test.isRunningTest()) {
                 jobId = '123';
@@ -90,34 +81,20 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
     }
 
     /*******************************************************************************************************
-    * @description Action Method to disable CMDTs, save custom setting,
-    * and reschedule Scheduled Jobs
+    * @description Action Method to disable CMDT mapping, save custom setting
     * @return void
     */
     public PageReference disableDataImportFieldMapping() {
-
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
 
-        Savepoint sp = Database.setSavepoint();
         try {
             // Disable Data Import Field Mapping;
             dataImportSettings.Field_Mapping_Method__c = 'Help Text';
             update dataImportSettings;
         } catch (Exception e) {
-            Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
         return null;
-    }
-
-    /*******************************************************************************************************
-    * @description Action Method to navigate to separate VF page that contains custom CMDT UI in Lightning Components
-    * @return void
-    */
-    public PageReference navigate(){
-        PageReference rollupGrid = new PageReference('/apex/CRLP_RollupSetup');
-        rollupGrid.setRedirect(true);
-        return rollupGrid;
     }
 }

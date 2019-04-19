@@ -99,21 +99,7 @@ public class CMT_MetadataAPI {
      * @param mtToDeploy List of CustomMetadata objects to deploy
      */
     public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy) {
-
-        // Add all queued up metadata updates to the deployment container
-        Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
-        for (Metadata.CustomMetadata md: mtToDeploy) {
-            system.debug('deployMetadata > ' + md.fullName);
-            mdContainer.addMetadata(md);
-        }
-
-        // Setup deploy callback
-        MetadataCallBack callback = new MetadataCallBack(jobId);
-
-        // Enqueue custom metadata deployment and return the Job Id
-        if (!Test.isRunningTest()) {
-            Metadata.Operations.enqueueDeployment(mdContainer, callback);
-        }
+        deployMetadata(jobId, mtToDeploy, null);
     }
 
     /**
@@ -121,7 +107,7 @@ public class CMT_MetadataAPI {
      * @param jobId Unique string to act as a "jobId" when writing the final deployment status to the Custom Settings
      * @param mtToDeploy List of CustomMetadata objects to deploy
      */
-    public static void deployMetadata(String jobId, Boolean isHelpTextRelated, List<Metadata.CustomMetadata> mtToDeploy) {
+    public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy, Boolean isHelpTextRelated) {
 
         // Add all queued up metadata updates to the deployment container
         Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
@@ -174,10 +160,6 @@ public class CMT_MetadataAPI {
          * This will write the status of the deployment to a CustomSettings object
          */
         public void handleResult(Metadata.DeployResult result, Metadata.DeployCallbackContext context) {
-            System.debug('handleResult');
-            System.debug('JOB ID: ' + this.jobId);
-            System.debug('isHelpTextRelated: ' + this.isHelpTextRelated);
-
 
             Boolean isSuccess = (result != null ? result.status == Metadata.DeployStatus.Succeeded : false);
             Map<String, String> statusMap = new Map<String, String>{ this.jobId => (result != null ? result.status.name() : 'Unknown') };
@@ -188,13 +170,11 @@ public class CMT_MetadataAPI {
                     errMsg += (n > 0 ? '\n' : '') + '* ' + result.details.componentFailures[n].fullName +
                             '> ' + result.details.componentFailures[n].problem;
                 }
-                System.debug(errMsg);
+
                 // The custom settings field is a max of 255 characters, but need space for the serialized json overhead
                 statusMap.put(this.jobId, errMsg.left(220));
                 isSuccess = false;
             }
-
-            System.debug('ISSUCCESS:' + isSuccess);
 
             if (isHelpTextRelated) {
                 // Write the deployment status to the custom settings object

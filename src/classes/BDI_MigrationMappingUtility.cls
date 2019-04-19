@@ -40,22 +40,22 @@ public class BDI_MigrationMappingUtility {
     public static List<Metadata.CustomMetadata> queuedMetadataTypesForDeploy = new List<Metadata.CustomMetadata>();
 
     /**
-     * @description Calls method for converting help text to custom metadata
+     * @description Calls method for building custom metadata mapping from help text mapping
      * @param  deployIt Boolean
      * @return A unique jobId. This value is used when writing the final status to the Data_Import_Settings__c
      * object and is needed to ensure that the status retrieved from that custom settings object is for this
      * particular deployment and not a previous one.
      */
     public String convertLegacyHelpTextToCustomMetadata(Boolean deployIt) {
-        System.debug('convertLegacyHelpTextToCustomMetadata()');
 
         buildCustomMetadataRecordsFromHelpText();
 
         if (queuedMetadataTypesForDeploy.size() > 0) {
             String jobId = getUniqueJobId();
+
             // deployIt just debugging purposes when called from anon window, didn't want to constantly delete CMTs
             if (deployIt) {
-                CMT_MetadataAPI.deployMetadata(jobId, true, queuedMetadataTypesForDeploy.clone());
+                CMT_MetadataAPI.deployMetadata(jobId, queuedMetadataTypesForDeploy.clone(), true);
             }
             return jobId;
         }
@@ -76,16 +76,11 @@ public class BDI_MigrationMappingUtility {
      * reserve all non-standard NPSP Help Text mappings. What to do with reserved list of Help Text mappings TBD.
      */
     public void buildCustomMetadataRecordsFromHelpText() {
-        System.debug('buildObjectMappingMetadataRecords');
         List<Metadata.CustomMetadata> pendingFieldMappings = new List<Metadata.CustomMetadata>();
 
         Map<String, BDI_HelpTextCMT.MappingDetail> listHelpTextFieldDetails = getAllMappedHelpTextFields();
         Map<String, Data_Import_Object_Mapping__mdt> existingObjectMappings = getDefaultObjectMappings(defaultObjectMappingSet.Id);
         Map<String, Data_Import_Field_Mapping__mdt> existingFieldMappings = getDefaultFieldMappings(defaultFieldMappingSet.Id);
-
-        System.debug(defaultObjectMappingSet);
-        System.debug(defaultFieldMappingSet);
-        System.debug('Existing Field Mappings Count: ' + existingFieldMappings.size());
 
         for(String key : listHelpTextFieldDetails.keySet()) {
             BDI_HelpTextCMT.DataImportFieldMapping fieldMapping = new BDI_HelpTextCMT.DataImportFieldMapping(key, listHelpTextFieldDetails.get(key));
@@ -117,18 +112,14 @@ public class BDI_MigrationMappingUtility {
                     fieldMapping.dataImportFieldMappingSetLabel = defaultFieldMappingSet.Label;
                     fieldMapping.dataImportFieldMappingSetRecordName = defaultFieldMappingSet.DeveloperName;
 
-                    System.debug(fieldMapping.getMetadataRecord());
+                    // Park custom help text mappings
                     pendingFieldMappings.add(fieldMapping.getMetadataRecord());
                 }
             }
         }
 
-        queuedMetadataTypesForDeploy.addAll(pendingFieldMappings);
-
-        System.debug('Pending Insert Field Mappings Count: ' + pendingFieldMappings.size());
-        for(Metadata.CustomMetadata cmt : pendingFieldMappings) {
-            System.debug('= ' + cmt.label);
-        }
+        // Don't enqueue custom help text mappings
+        //queuedMetadataTypesForDeploy.addAll(pendingFieldMappings);
     }
 
     /**
@@ -156,7 +147,6 @@ public class BDI_MigrationMappingUtility {
      * the corresponding Metadata Type record (i.e. Source Object Name, Target Object Name, Target Field API Name, etc)
      */
     public Map<String, BDI_HelpTextCMT.MappingDetail> getAllMappedHelpTextFields() {
-        System.debug('getAllMappedHelpTextFields');
         Map<String, BDI_HelpTextCMT.MappingDetail> helpTextFieldMap = new Map<String, BDI_HelpTextCMT.MappingDetail>();
         Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts> importStatusAndLookupMap = new Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts>();
         Map<String, Schema.DescribeFieldResult> allDFRs = UTIL_Describe.getAllFieldsDescribe('npsp__DataImport__c');
@@ -201,7 +191,6 @@ public class BDI_MigrationMappingUtility {
             setImportStatusAndLookupFields(mappingDetail, importStatusAndLookupMap);
         }
 
-        System.debug('Help Text Field Map Size: ' + helpTextFieldMap.size());
         return helpTextFieldMap;
     }
 
