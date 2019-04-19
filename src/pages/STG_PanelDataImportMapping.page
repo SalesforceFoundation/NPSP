@@ -43,9 +43,7 @@
 
         <script type="text/javascript">
             function toggle() {
-                console.log('onToggle()');
                 if (document.getElementById('{!$Component.form.enableDIFMToggle}').checked) {
-                    console.log('Attempting to enable data import field mapping');
                     enableDataImportFieldMapping();
                 } else {
                     disableDataImportFieldMapping();
