@@ -78,9 +78,21 @@ private class CRLP_RollupProcessor_TEST {
 
         Account account = buildMockAccount();
         Contact contact = buildMockContact(account.Id);
+
         Opportunity opp = buildMockOpportunity(account.Id, 100);
         OpportunityContactRole ocr = buildMockContactRoles(opp, new List<Contact>{ contact })[0];
-        Partial_Soft_Credit__c psc = buildMockPartialSoftCredit(opp, ocr, contact, opp.Amount);
+
+        Opportunity oppToIgnore = buildMockOpportunity(account.Id, 500);
+        OpportunityContactRole ocrToIgnore = buildMockContactRoles(oppToIgnore, new List<Contact>{ contact })[0];
+
+        List<Partial_Soft_Credit__c> pscRecords = new List<Partial_Soft_Credit__c>{
+            buildMockPartialSoftCredit(opp, ocr, contact, opp.Amount),
+            buildMockPartialSoftCredit(oppToIgnore, ocrToIgnore, contact, oppToIgnore.Amount)
+        };
+
+        Map<Id, Set<Id>> previouslyProcessedOpps = new Map<Id, Set<Id>>{
+            contact.Id => new Set<Id>{ oppToIgnore.Id }
+        };
 
         CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
         options.useRollupDefsByParentIdMap = true;
@@ -88,18 +100,19 @@ private class CRLP_RollupProcessor_TEST {
         Test.startTest();
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
-                .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
-                .withRollupType(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit)
-                .withSummaryRecord(contact)
-                .withDetailRecords(new List<SObject> { psc })
-                .withJobOptions(options);
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit)
+            .withPreviouslyProcessedOppIdsMap(previouslyProcessedOpps)
+            .withSummaryRecord(contact)
+            .withDetailRecords(pscRecords)
+            .withJobOptions(options);
 
         System.assertEquals(OpportunityContactRole.SObjectType, processor.detailObjectType);
         System.assertEquals(UTIL_Namespace.StrAllNSPrefix('Contact__c'), processor.parentKeyField);
         System.assertEquals(UTIL_Namespace.StrAllNSPrefix('Contact__c'), processor.parentRelationshipField);
         System.assertEquals(null, processor.parentRelationshipObject);
 
-        System.assertEquals(1, processor.detailRecordsByParentId.get(contact.Id).size());
+        System.assertEquals(2, processor.detailRecordsByParentId.get(contact.Id).size());
 
         System.assertEquals(true, processor.isSkewMode);
         System.assertEquals(true, processor.isOppContactRoleSoftCreditRollup);
@@ -117,12 +130,13 @@ private class CRLP_RollupProcessor_TEST {
         // In Skew Mode, the last Contact processed has to be sent back through the
         // completeRollupForSingleSummaryRecord() method.
         processor = new CRLP_RollupProcessor()
-                .withRollupType(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit)
-                .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
-                .withSummaryRecord(contact)
-                .withDetailRecords(new List<SObject>())
-                .withRollupDefinitions(previousRollupDefs)
-                .withJobOptions(options);
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit)
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
+            .withPreviouslyProcessedOppIdsMap(previouslyProcessedOpps)
+            .withSummaryRecord(contact)
+            .withDetailRecords(new List<SObject>())
+            .withRollupDefinitions(previousRollupDefs)
+            .withJobOptions(options);
 
         Contact updatedContact = (Contact)processor.completeRollupForSingleSummaryRecord(contact);
 
@@ -155,28 +169,46 @@ private class CRLP_RollupProcessor_TEST {
     * @description Validate the PreviouslyProcessed Map in the process properly sets and retrieves values.
     */
     @IsTest
-    private static void shouldHandleAlreadyProcessedMap() {
-        Id accountId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
-        Id oppId1 = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType);
-        Id oppId2 = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType);
+    private static void shouldHandleAlreadyProcessedOpportunities() {
+        Account account = buildMockAccount();
+        Contact contact = buildMockContact(account.Id);
+
+        Opportunity opp = buildMockOpportunity(account.Id, 100);
+        OpportunityContactRole ocr = buildMockContactRoles(opp, new List<Contact>{ contact })[0];
+
+        Opportunity oppToIgnore = buildMockOpportunity(account.Id, 500);
+        OpportunityContactRole ocrToIgnore = buildMockContactRoles(oppToIgnore, new List<Contact>{ contact })[0];
+
+        List<Partial_Soft_Credit__c> pscRecords = new List<Partial_Soft_Credit__c>{
+            buildMockPartialSoftCredit(opp, ocr, contact, opp.Amount),
+            buildMockPartialSoftCredit(oppToIgnore, ocrToIgnore, contact, oppToIgnore.Amount)
+        };
 
         Map<Id, Set<Id>> previouslyProcessedOpps = new Map<Id, Set<Id>>{
-            accountId => new Set<Id>{ oppId1 }
+            contact.Id => new Set<Id>{ oppToIgnore.Id }
         };
+
 
         Test.startTest();
 
-        CRLP_RollupProcessor processor = new CRLP_RollupProcessor();
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit)
+            .withSummaryRecord(contact)
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
+            .withDetailRecords(pscRecords);
 
-        System.assertEquals(false, processor.isOppAlreadyProcessedForParent(accountId, oppId1));
-        System.assertEquals(false, processor.isOppAlreadyProcessedForParent(accountId, oppId2));
-        System.assertEquals(null, processor.getPreviouslyProcessedOppIds(accountId));
+        System.assertEquals(false, processor.isOppAlreadyProcessedForParent(contact.Id, opp.Id));
+        System.assertEquals(false, processor.isOppAlreadyProcessedForParent(contact.Id, oppToIgnore.Id));
+        System.assertEquals(null, processor.getPreviouslyProcessedOppIds(contact.Id));
 
         processor.withPreviouslyProcessedOppIdsMap(previouslyProcessedOpps);
 
-        System.assertEquals(true, processor.isOppAlreadyProcessedForParent(accountId, oppId1));
-        System.assertEquals(false, processor.isOppAlreadyProcessedForParent(accountId, oppId2));
-        System.assertEquals(1, processor.getPreviouslyProcessedOppIds(accountId).size());
+        System.assertEquals(false, processor.isOppAlreadyProcessedForParent(contact.Id, opp.Id));
+        System.assertEquals(true, processor.isOppAlreadyProcessedForParent(contact.Id, oppToIgnore.Id));
+        System.assertEquals(1, processor.getPreviouslyProcessedOppIds(contact.Id).size());
+
+        List<SObject> updatedDetailRecords = processor.cleanDetailOppsListForSoftCreditMode(contact.Id, pscRecords);
+        System.assertEquals(1, updatedDetailRecords.size());
     }
 
     /**
