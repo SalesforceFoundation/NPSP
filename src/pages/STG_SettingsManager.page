@@ -136,6 +136,8 @@
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRelNav"><a href="#" onclick="ShowPanel('idPanelRel');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRelationships}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRelReciprocalNav"><a href="#" onclick="ShowPanel('idPanelRelReciprocal');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRelReciprocal}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRelAutoNav"><a href="#" onclick="ShowPanel('idPanelRelAuto');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRelAutoCreate}</a></li>
+                                <!-- HELP TEXT MAPPING -->
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelDataImportMappingNav"><a href="#" onclick="ShowPanel('idPanelDataImportMapping');return false;" class="slds-grow slds-m-left_large">Data Import Mapping</a></li>
                             </ul>
                             <!-- Donations -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelDonationsNav">
@@ -272,6 +274,10 @@
 
                 <div class="panel noborder" id="idPanelRelAuto" style="display:none" >
                     <apex:include pageName="STG_PanelRelAuto" />
+                </div>
+
+                <div class="panel noborder" id="idPanelDataImportMapping" style="display:none" >
+                    <apex:include pageName="STG_PanelDataImportMapping" />
                 </div>
 
                 <!-- Donations -->

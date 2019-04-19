@@ -99,6 +99,15 @@ public class CMT_MetadataAPI {
      * @param mtToDeploy List of CustomMetadata objects to deploy
      */
     public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy) {
+        deployMetadata(jobId, mtToDeploy, null);
+    }
+
+    /**
+     * @description Initiate a deployment of custom metadata type records.
+     * @param jobId Unique string to act as a "jobId" when writing the final deployment status to the Custom Settings
+     * @param mtToDeploy List of CustomMetadata objects to deploy
+     */
+    public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy, Boolean isHelpTextRelated) {
 
         // Add all queued up metadata updates to the deployment container
         Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
@@ -108,7 +117,7 @@ public class CMT_MetadataAPI {
         }
 
         // Setup deploy callback
-        MetadataCallBack callback = new MetadataCallBack(jobId);
+        MetadataCallBack callback = new MetadataCallBack(jobId, isHelpTextRelated);
 
         // Enqueue custom metadata deployment and return the Job Id
         if (!Test.isRunningTest()) {
@@ -125,6 +134,8 @@ public class CMT_MetadataAPI {
     public class MetadataCallBack implements Metadata.DeployCallBack {
 
         private String jobId;
+        // Maybe a string 'source' instead of a boolean?
+        private Boolean isHelpTextRelated;
 
         /**
          * @description Constructor for Callback Class
@@ -132,6 +143,16 @@ public class CMT_MetadataAPI {
          */
         public MetadataCallBack(String jobId) {
             this.jobId = jobId;
+        }
+
+        /**
+         * @description Constructor for Callback Class
+         * @param jobId Some unique string value to use when writing the deployment status to the Custom Settings object
+         * @param source
+         */
+        public MetadataCallBack(String jobId, Boolean isHelpTextRelated) {
+            this.jobId = jobId;
+            this.isHelpTextRelated = isHelpTextRelated;
         }
 
         /**
@@ -149,18 +170,30 @@ public class CMT_MetadataAPI {
                     errMsg += (n > 0 ? '\n' : '') + '* ' + result.details.componentFailures[n].fullName +
                             '> ' + result.details.componentFailures[n].problem;
                 }
+
                 // The custom settings field is a max of 255 characters, but need space for the serialized json overhead
                 statusMap.put(this.jobId, errMsg.left(220));
                 isSuccess = false;
             }
 
-            // Write the deployment status to the custom settings object
-            Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-            crlpSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
-            // THIS WILL NEED TO BE REFACTORED IF THIS CMT DEPLOYMENT CODE IS USED BY SOMETHING OTHER THAN ROLLUPS
-            crlpSettings.Customizable_Rollups_Enabled__c = (isSuccess || crlpSettings.Customizable_Rollups_Enabled__c == true);
-            if (!Test.isRunningTest()) {
-                upsert crlpSettings;
+            if (isHelpTextRelated != null && isHelpTextRelated == true) {
+                // Write the deployment status to the custom settings object
+                Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+                dataImportSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
+
+                dataImportSettings.Field_Mapping_Method__c = (isSuccess ? 'Data Import Field Mapping' : 'Help Text');
+                if (!Test.isRunningTest()) {
+                    upsert dataImportSettings;
+                }
+            } else {
+                // Write the deployment status to the custom settings object
+                Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+                crlpSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
+                // THIS WILL NEED TO BE REFACTORED IF THIS CMT DEPLOYMENT CODE IS USED BY SOMETHING OTHER THAN ROLLUPS
+                crlpSettings.Customizable_Rollups_Enabled__c = (isSuccess || crlpSettings.Customizable_Rollups_Enabled__c == true);
+                if (!Test.isRunningTest()) {
+                    upsert crlpSettings;
+                }
             }
             if (isSuccess) {
                 UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
