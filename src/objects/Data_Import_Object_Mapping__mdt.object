@@ -40,6 +40,14 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Is_Deleted__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <fieldManageability>SubscriberControlled</fieldManageability>
+        <label>IsDeleted</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Object_API_Name__c</fullName>
         <description>The API name of the object that this Data Import Object Mapping is based on.</description>
         <externalId>false</externalId>
