@@ -41,11 +41,27 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
     */
     public override string idPanel() { return 'idPanelDataImportMapping'; }
 
+    /*******************************************************************************************************
+    * @description Get custom data import settings
+    */
     public Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
 
+    /*******************************************************************************************************
+    * @description Return boolean for the current field mapping method
+    */
     public Boolean isDataImportFieldMapping {
         get {
             return dataImportSettings.Field_Mapping_Method__c == 'Data Import Field Mapping' ? true : false;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
+    * @description is the running user an admin
+    */
+    public Boolean isAdmin {
+        get {
+            return STG_Panel.runningUserIsAdmin();
         }
         set;
     }
@@ -65,7 +81,7 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
         Savepoint sp = Database.setSavepoint();
         try {
             BDI_MigrationMappingUtility migrationMappingUtility = new BDI_MigrationMappingUtility();
-            jobId = migrationMappingUtility.convertLegacyHelpTextToCustomMetadata(true);
+            jobId = migrationMappingUtility.convertLegacyHelpTextToCustomMetadata();
 
             dataImportSettings.Field_Mapping_Method__c = 'Data Import Field Mapping';
 
