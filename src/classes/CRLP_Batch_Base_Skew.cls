@@ -449,23 +449,33 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         Id lastParentIdProcessed = processor.getLastParentIdProcessed();
 
         if (processor.getRollupDefsForParent(firstParentId) != null) {
-            this.statefulRollupsById.put(firstParentId, processor.getRollupDefsForParent(firstParentId));
+            updateStatefulCollections(processor, firstParentId);
         }
         if (processor.getRollupDefsForParent(lastParentId) != null) {
-            this.statefulRollupsById.put(lastParentId, processor.getRollupDefsForParent(lastParentId));
+            updateStatefulCollections(processor, lastParentId);
         }
         if (lastParentIdProcessed != null && processor.getRollupDefsForParent(lastParentIdProcessed) != null) {
-            this.statefulRollupsById.put(lastParentIdProcessed, processor.getRollupDefsForParent(lastParentIdProcessed));
-
-            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                    this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                this.statefulMapOfOppIdsByParentId.put(lastParentIdProcessed, processor.getPreviouslyProcessedOppIds(lastParentIdProcessed));
-            }
+            updateStatefulCollections(processor, lastParentIdProcessed);
         }
 
         // Remember which batch iteration this parent was last NOT updated
         if (processor.hasLastParentIdCompleted()) {
             this.parentIdsNotCommittedWithBatch.put(lastParentIdProcessed, this.batchIteration);
+        }
+    }
+
+    /**
+     * @description Update the stateful collection for statefulRollupsById and statefulMapOfOppIdsByParentId for the
+     * specified record Ids.
+     * @param processor
+     * @param recordId
+     */
+    private void updateStatefulCollections(CRLP_RollupProcessor processor, Id recordId) {
+        this.statefulRollupsById.put(recordId, processor.getRollupDefsForParent(recordId));
+
+        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+            this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+            this.statefulMapOfOppIdsByParentId.put(recordId, processor.getPreviouslyProcessedOppIds(recordId));
         }
     }
 

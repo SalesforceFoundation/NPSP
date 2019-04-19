@@ -333,6 +333,7 @@ public inherited sharing class CRLP_RollupProcessor {
 
             if (detailsForParent != null && isOppContactRoleSoftCreditRollup) {
                 detailsForParent = cleanDetailOppsListForSoftCreditMode(parentId, detailsForParent);
+                detailRecordsByParentId.put(parentId, detailsForParent);
             }
 
             // Heap size is precious. There's no need to keep anything other than the first and last
