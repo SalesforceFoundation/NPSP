@@ -176,7 +176,7 @@ public class CMT_MetadataAPI {
                 isSuccess = false;
             }
 
-            if (isHelpTextRelated) {
+            if (isHelpTextRelated != null) {
                 // Write the deployment status to the custom settings object
                 Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
                 dataImportSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
