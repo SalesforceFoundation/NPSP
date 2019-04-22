@@ -70,13 +70,6 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
     }
 
     /*******************************************************************************************************
-    * @description flag to allow us to test out field level security exception
-    *
-    * TODO: refactor tests to make this unneccessary
-    */
-    public Boolean failFieldLevelSecurity = false;
-
-    /*******************************************************************************************************
     * @description For the provided fields (in the form DIObject.developerfieldname) and target object, 
     * return a map of DI field (key) to mapped field name on the destination record (value). 
     *
@@ -123,6 +116,13 @@ public with sharing class BDI_FieldMappingHelpText implements BDI_FieldMapping {
 
         if (isCurrencyMapped(targetObjectName)) {
             addCurrencyIsoCode(dataImportFieldToTargetField);
+        }
+
+        if(additionalFieldMappings.containsKey(targetObjectName)) {
+            for(String diField: additionalFieldMappings.get(targetObjectName).keySet()) {
+                dataImportFieldToTargetField.put(diField, 
+                    additionalFieldMappings.get(targetObjectName).get(diField));
+            }
         }
 
         return dataImportFieldToTargetField;

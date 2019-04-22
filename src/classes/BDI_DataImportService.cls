@@ -698,7 +698,7 @@ global with sharing class BDI_DataImportService {
     /*******************************************************************************************************
     * @description holds list of populated Data Import fields for Data Import records in current Batch
     */
-    public /* static */ List<String> populatedDataImportFields = new List<String>();
+    public List<String> populatedDataImportFields = new List<String>();
 
     /*******************************************************************************************************
     * @description list of all the fields in the Data Import object
