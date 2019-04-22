@@ -108,13 +108,13 @@ public class BDI_MigrationMappingUtility {
                     pendingFieldMappings.add(fieldMapping.getMetadataRecord());
                 } else if (foundDefaultFieldMapping) {
                     // Existing Field Mapping, check if CMTs field values match Help Text field values
-                    Boolean invalidFieldMapping = foundDefaultFieldMappingMismatch(fieldMapping, existingDefaultFieldMapping, existingDefaultObjectMapping);
+                    /*Boolean invalidFieldMapping = foundDefaultFieldMappingMismatch(fieldMapping, existingDefaultFieldMapping, existingDefaultObjectMapping);
 
                     // Overwrite CMT field values to match Help Text
                     if (invalidFieldMapping) {
                         setFieldMappingValues(fieldMapping, existingDefaultObjectMapping, existingDefaultFieldMapping);
                         pendingFieldMappings.add(fieldMapping.getMetadataRecord());
-                    }
+                    }*/
                 }
             }
         }
