@@ -53,23 +53,6 @@
                 </div>
             </div>
         </div>
-        <div class="slds-section">
-            <div class="slds-section-title_divider" >{!$Label.stgLabelAllocationBehaviorSettings}</div>
-        </div>
-        <div class="slds-form_horizontal">
-            <div class="slds-form-element">
-                <apex:outputLabel value="{!$Label.stgAllocationLevel}" for="idAL" styleClass="slds-form-element__label" />
-                <div class="slds-form-element__control">
-                    <apex:outputText value="{!strAllocationLevel}" rendered="{!NOT(isEditMode)}" styleClass="slds-form-element__static"/>
-                    <apex:selectList value="{!strAllocationLevel}" multiselect="false" size="1" rendered="{!isEditMode}" id="idAL" styleClass="slds-select">
-                        <apex:selectOptions value="{!listSOAllocationLevels}"/>
-                    </apex:selectList>
-                    <apex:outputPanel id="idALHelp" layout="block">
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpAllocationLevel}" escape="false" />
-                    </apex:outputPanel>
-                </div>
-            </div>
-        </div>
         <div style="{!IF(!stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:block', 'display:none')}">
             <div class="slds-section">
                 <div class="slds-section-title_divider" style="margin-top:0;">{!$Label.stgLabelAllocationsRollupSettings}</div>
