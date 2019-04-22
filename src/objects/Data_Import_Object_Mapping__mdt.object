@@ -44,7 +44,7 @@
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <label>IsDeleted</label>
+        <label>Is Deleted</label>
         <type>Checkbox</type>
     </fields>
     <fields>
