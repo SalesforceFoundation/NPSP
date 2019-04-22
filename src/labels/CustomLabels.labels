@@ -2683,7 +2683,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Used as field help text since help text is not upgradeable.</shortDescription>
         <value>When checked, NPSP calculates donor rollups when donations are processed. If unchecked, donor rollups are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.</value>
-    </labels>  
+    </labels>
     <labels>
         <fullName>bgeBatchOverview</fullName>
         <language>en_US</language>
@@ -5484,7 +5484,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>sendAcknowledgmentFailedStatus</shortDescription>
         <value>Email Acknowledgment Not Sent</value>
-    </labels>  
+    </labels>
     <labels>
         <fullName>sendAcknowledgmentFailureReasons</fullName>
         <categories>Send Acknowledgment Button</categories>
@@ -5532,7 +5532,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>sendAcknowledgmentNumberAlreadySent</shortDescription>
         <value>{0} acknowledgment(s) already sent.</value>
-    </labels>    
+    </labels>
     <labels>
         <fullName>sendAcknowledgmentPageTitle</fullName>
         <categories>Send Acknowledgment Button</categories>
@@ -5620,14 +5620,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Permission Denied on Address Verification Panel</shortDescription>
         <value>You do not have permissions to manage Address settings. Please contact your system administrator for more information.</value>
-    </labels>
-    <labels>
-        <fullName>stgAllocationLevel</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgAllocationLevel</shortDescription>
-        <value>Allocation Type</value>
     </labels>
     <labels>
         <fullName>stgBtnBack</fullName>
@@ -5962,13 +5954,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>stgDontAutoScheduleHelpText</shortDescription>
         <value>NPSP has a number of Scheduled Jobs that calculate rollups, update Recurring Donations and Seasonal Addresses, and perform error handling.
-&lt;br/&gt; 
-&lt;br/&gt; 
+&lt;br/&gt;
+&lt;br/&gt;
 When Don't Auto Schedule Default NPSP Jobs is not selected, whenever you load the NPSP Settings page, NPSP checks that all the default NPSP Jobs are scheduled. If they're not scheduled, NPSP reschedules them. NPSP will reschedule only missing NPSP Jobs; it will not overwrite Jobs that have been updated.
-&lt;br/&gt; 
-&lt;br/&gt; 
+&lt;br/&gt;
+&lt;br/&gt;
 To view these Jobs, search for Scheduled Jobs in Salesforce Setup.
-&lt;br/&gt; 
+&lt;br/&gt;
 &lt;br/&gt;
 Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or reschedule the default Jobs.</value>
     </labels>
@@ -6027,20 +6019,6 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
         <protected>false</protected>
         <shortDescription>stgHelpAlloNDayValue</shortDescription>
         <value>Sets the value for 'N day' rollups, where 'N' is the number of days from today into the past. This value defaults to roll up GAU Allocations over the past 365 days.</value>
-    </labels>
-    <labels>
-        <fullName>stgHelpAllocationLevel</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgHelpAllocationLevel</shortDescription>
-        <value>An allocation is the specific amount of a gift that goes to a designated General Accounting Unit (GAU). This setting determines whether funds are allocated based on the Amount on the Opportunity or the Amount on the Payment.&lt;br/&gt;&lt;br/&gt;
-
-&lt;b&gt;WARNING:&lt;/b&gt; Choosing to use Payment Allocations changes the way Opportunity Allocations work in your org. It's important that you understand these changes and the additional requirements that exist before enabling them.&lt;br/&gt;&lt;br/&gt;
-
-If you enable and start using Payment Allocations and then disable them, you will need to manually reconcile your data and update Opportunity Allocation records to reflect the information previously assigned in Payment Allocations. Review the Payment Allocations documentation to better understand the potential impact.&lt;br/&gt;&lt;br/&gt;
-
-When you enable Payment Allocations, existing rollups remain the same. We do not modify rollups or create new Custom Rollups. You can create new rollups based only on Payments, if you want to.</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoAffil</fullName>
@@ -6155,7 +6133,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate batch Opportunity renaming, and refresh all Opportunity Names according to the formats you've chosen. Salesforce will rename every Opportunity in your organization except those Opportunities whose Opportunity Name Formats you've specified as &quot;Do Not Rename.&quot;&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;This is an irreversible process.&lt;/b&gt;
-Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities: 
+Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities:
 &lt;br/&gt;
 &lt;br/&gt;
 ● Custom Validation Rules&lt;br/&gt;
@@ -6197,23 +6175,23 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <shortDescription>stgHelpCreateMissingPayments</shortDescription>
         <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate batch Payment creation. NPSP will create a Payment for each Opportunity without Payments that:
 &lt;br/&gt;
-&lt;br/&gt; 
-● has an amount greater than zero&lt;br/&gt; 
-● is not marked Do Not Automatically Create Payment&lt;br/&gt; 
-● is not excluded in the Donations | Payments settings&lt;br/&gt; 
-&lt;br/&gt; 
-
-&lt;b&gt;This is an irreversible process.&lt;/b&gt; 
-Before starting this process, we recommend disabling the following when they affect Payments: 
 &lt;br/&gt;
-&lt;br/&gt; 
-● Custom Validation Rules&lt;br/&gt; 
-● Workflow Rules&lt;br/&gt; 
-● Process Builder&lt;br/&gt; 
-● Visual Workflows&lt;br/&gt; 
-● Custom Triggers&lt;br/&gt; 
+● has an amount greater than zero&lt;br/&gt;
+● is not marked Do Not Automatically Create Payment&lt;br/&gt;
+● is not excluded in the Donations | Payments settings&lt;br/&gt;
+&lt;br/&gt;
 
-&lt;br/&gt; 
+&lt;b&gt;This is an irreversible process.&lt;/b&gt;
+Before starting this process, we recommend disabling the following when they affect Payments:
+&lt;br/&gt;
+&lt;br/&gt;
+● Custom Validation Rules&lt;br/&gt;
+● Workflow Rules&lt;br/&gt;
+● Process Builder&lt;br/&gt;
+● Visual Workflows&lt;br/&gt;
+● Custom Triggers&lt;br/&gt;
+
+&lt;br/&gt;
 Once the process is 100% complete, you can safely leave or refresh this page.</value>
     </labels>
     <labels>
@@ -6685,7 +6663,7 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate a batch Opportunity update to refresh the Primary Contact field. Salesforce will update Opportunity records where the Primary Contact field isn&apos;t the same value as the  Opportunity Contact Role record marked Primary.&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;This is an irreversible process.&lt;/b&gt;
-This change updates Opportunity records. Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities: 
+This change updates Opportunity records. Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities:
 &lt;br/&gt;
 &lt;br/&gt;
 ● Custom Validation Rules&lt;br/&gt;
@@ -6730,7 +6708,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <shortDescription>stgHelpRDBatch</shortDescription>
         <value>This utility runs a batch process for all open-ended Recurring Donations, and based on the number of Opportunity Forecast Months:
 &lt;br/&gt;
-&lt;br/&gt; 
+&lt;br/&gt;
 ● creates new opportunities&lt;br/&gt;
 ● updates the number of Installments and Paid Amount&lt;br/&gt;
 &lt;br/&gt;
@@ -7217,14 +7195,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelAlloBatchProgress</shortDescription>
         <value>Rollup Allocations Batch Progress</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelAllocationBehaviorSettings</fullName>
-        <categories>Allocation, Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgLabelAllocationsRollupSettings</shortDescription>
-        <value>Allocation Behavior Settings</value>
     </labels>
     <labels>
         <fullName>stgLabelAllocationsRollupSettings</fullName>
