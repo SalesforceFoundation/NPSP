@@ -70,10 +70,10 @@ public class BDI_HelpTextCMT {
 
         public DataImportFieldMapping(String sourceFieldAPIName, MappingDetail detail) {
             this.label = detail.dataImportFieldLabel;
-            this.recordName = generateRecordName(this.label, true);
-            this.sourceFieldAPIName = UTIL_Namespace.StrTokenRemoveNSPrefix(sourceFieldAPIName);
+            this.sourceFieldAPIName = sourceFieldAPIName;
             this.targetFieldAPIName = detail.targetFieldAPIName;
             this.dataImportObjectName = detail.dataImportObjectName;
+            this.recordName = generateRecordName(this.label, true, null, this.dataImportObjectName);
             this.isRequired = 'No';
             this.isDeleted = false;
         }
@@ -85,6 +85,7 @@ public class BDI_HelpTextCMT {
 
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
+            this.recordName = generateRecordName(this.label, true, this.targetObjectMappingLabel, this.dataImportObjectName);
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
             customMd.label = this.label.left(40);
             customMd.protected_x = IS_PROTECTED;
@@ -152,6 +153,7 @@ public class BDI_HelpTextCMT {
                 }
             }
         }
+
     }
 
     /**
@@ -172,6 +174,7 @@ public class BDI_HelpTextCMT {
                 this.objectAPIName = DI_OBJECT_MAP.get(this.objectName);
             }
         }
+
     }
 
     /**
@@ -187,16 +190,14 @@ public class BDI_HelpTextCMT {
 
         public MappingDetail(String dataImportObjectName, String dataImportFieldLabel, String targetObjectName,
                              String targetFieldAPIName, String importedRecordField, String importedRecordStatusField) {
-            // Potential special case for 'Donation' object mapping record
-            // Help Text object name is Opportunity rather than Donation, unlike the other standard help text fields
-            // i.e. (Account1 => Account, Contact2 => Contact, etc) but for Opportunity it is (Opportunity => Opportunity)
-            this.dataImportObjectName = dataImportObjectName == 'Opportunity' ? 'Donation' : dataImportObjectName;
+            this.dataImportObjectName = dataImportObjectName;
             this.dataImportFieldLabel = dataImportFieldLabel;
             this.targetObjectName = targetObjectName;
             this.targetFieldAPIName = targetFieldAPIName;
             this.importedRecordField = importedRecordField;
             this.importedRecordStatusField = importedRecordStatusField;
         }
+
     }
 
     /**
@@ -206,8 +207,13 @@ public class BDI_HelpTextCMT {
      * @param makeUnique Boolean
      * @return DeveloperName format string
      */
-    private static String generateRecordName(String name, Boolean makeUnique) {
+    private static String generateRecordName(String name, Boolean makeUnique, String objectLabel, String objectAPIName) {
         name = name.replaceAll('[^\\w]+', '_').replaceAll('_{2,}', '_');
+
+        if (String.isNotBlank(objectLabel)) {
+            objectLabel = objectLabel.replace(' ', '_');
+            name = name.replace(objectAPIName, objectLabel);
+        }
 
         if (name.length() > 30) {
             String firstFifteen = name.substring(0, 15);
@@ -219,7 +225,7 @@ public class BDI_HelpTextCMT {
             // Create a GUID format unique string
             Blob b = Crypto.GenerateAESKey(128);
             String h = EncodingUtil.ConvertTohex(b);
-            // force everything to have a 10-char random string at the end
+            // force everything to have a 9-char random string at the end
             name = name.left(30).removeEnd('_') + '_' + h.left(9);
         } else {
             name = name.left(40);

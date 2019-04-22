@@ -48,19 +48,17 @@ public class BDI_MigrationMappingUtility {
      */
     public String convertLegacyHelpTextToCustomMetadata() {
 
+        String jobId = getUniqueJobId();
         buildCustomMetadataRecordsFromHelpText();
 
         if (!queuedMetadataTypesForDeploy.isEmpty()) {
-            String jobId = getUniqueJobId();
             CMT_MetadataAPI.deployMetadata(jobId, queuedMetadataTypesForDeploy.clone(), true);
-
-            return jobId;
+        } else {
+            // Queue is empty, but we still need to update Data Import settings
+            updateCustomDataImportSettings(Label.bdiCustomObjectMappingSummary);
         }
 
-        // Queue is empty, but we still need to update Data Import settings
-        updateCustomDataImportSettings('Data Import Field Mapping');
-
-        return 'Queue is empty';
+        return jobId;
     }
 
     /**
@@ -98,7 +96,8 @@ public class BDI_MigrationMappingUtility {
             if (foundDefaultObjectMapping) {
 
                 //TODO If found object mapping, check values and repair if needed.
-                Data_Import_Field_Mapping__mdt existingDefaultFieldMapping = existingFieldMappings.get(UTIL_Namespace.StrTokenNSPrefix(fieldMapping.sourceFieldAPIName));
+                Data_Import_Field_Mapping__mdt existingDefaultFieldMapping = existingFieldMappings.get(fieldMapping.sourceFieldAPIName);
+
                 Boolean foundDefaultFieldMapping = (existingDefaultFieldMapping != null);
 
                 if (!foundDefaultFieldMapping) {
@@ -107,18 +106,21 @@ public class BDI_MigrationMappingUtility {
 
                     // Park custom help text mappings
                     pendingFieldMappings.add(fieldMapping.getMetadataRecord());
+                } else if (foundDefaultFieldMapping) {
+                    // Existing Field Mapping, check if CMTs field values match Help Text field values
+                    Boolean invalidFieldMapping = foundDefaultFieldMappingMismatch(fieldMapping, existingDefaultFieldMapping, existingDefaultObjectMapping);
+
+                    // Overwrite CMT field values to match Help Text
+                    if (invalidFieldMapping) {
+                        setFieldMappingValues(fieldMapping, existingDefaultObjectMapping, existingDefaultFieldMapping);
+                        pendingFieldMappings.add(fieldMapping.getMetadataRecord());
+                    }
                 }
             }
         }
 
         // Don't enqueue custom help text mappings
-        //queuedMetadataTypesForDeploy.addAll(pendingFieldMappings);
-
-        // Debugging
-        System.debug(pendingFieldMappings.size());
-        for (Metadata.CustomMetadata cmt : pendingFieldMappings) {
-            System.debug(cmt);
-        }
+        queuedMetadataTypesForDeploy.addAll(pendingFieldMappings);
     }
 
     /**
@@ -143,6 +145,7 @@ public class BDI_MigrationMappingUtility {
 
     /**
      * @description Check if Field Mapping Metadata Type field values are out of sync with default values
+     * This method isn't currently used anywhere.
      * @return Boolean
      */
     private Boolean foundDefaultFieldMappingMismatch(BDI_HelpTextCMT.DataImportFieldMapping newFieldMapping,
@@ -177,6 +180,7 @@ public class BDI_MigrationMappingUtility {
             Boolean isImportLookup = dataImportFieldName.contains('imported');
 
             if (isImportStatus || isImportLookup) {
+                // Pass help text values to a new instance of ImportStatusAndLookupParts wrapper class
                 BDI_HelpTextCMT.ImportStatusAndLookupParts importRelatedField = getImportStatusAndLookupParts(dataImportFieldName, importStatusAndLookupMap);
                 importStatusAndLookupMap.put(importRelatedField.objectName, importRelatedField);
 
@@ -193,7 +197,10 @@ public class BDI_MigrationMappingUtility {
                 Boolean fieldNameIsUsable = String.isNotBlank(parts.fieldName);
                 Boolean objectNameIsUsable = String.isNotBlank(parts.objectName);
 
+                // Check if the current help text mapping's object and field name are usable
                 if (fieldNameIsUsable && objectNameIsUsable) {
+
+                    // Pass help text values to a new instance of MappingDetail wrapper class
                     BDI_HelpTextCMT.MappingDetail newMappingDetail = new BDI_HelpTextCMT.MappingDetail(parts.objectName, sourceField.Label, parts.objectAPIName,
                                                                                                        parts.fieldName, null, null);
                     helpTextFieldMap.put(sourceField.Name, newMappingDetail);
