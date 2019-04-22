@@ -42,7 +42,7 @@ private class CRLP_Query_SEL_TEST {
      */
     private static testMethod void test_ResultsQueryBuilder() {
         // Create mock instances of the CMT objects to use for the tests
-        CRLP_Rollup_SEL_TEST.mockRollupCMTValues();
+        CMT_UnitTestData_TEST.mockRollupCmtForAccountHC();
 
         Test.startTest();
 
@@ -92,7 +92,7 @@ private class CRLP_Query_SEL_TEST {
      * associated to a filter group.
      */
     private static testMethod void test_buildCommonQueryFilterOnOpportunity_NoFilterGroups() {
-        CRLP_Rollup_SEL_TEST.mockRollupCMTValues();
+        CMT_UnitTestData_TEST.mockRollupCmtForAccountHC();
         Id filterGroupId = CMT_FilterRule_SEL.cachedFilterGroups[0].Id;
 
         cacheFilterRule(filterGroupId, 'IsClosed', 'Equals', 'False');
@@ -114,7 +114,7 @@ private class CRLP_Query_SEL_TEST {
      * objects.
      */
     private static testMethod void test_buildCommonQueryFilterOnOpportunity_BuildsValidWhereClause() {
-        CRLP_Rollup_SEL_TEST.mockRollupCMTValues();
+        CMT_UnitTestData_TEST.mockRollupCmtForAccountHC();
         Id filterGroupId = CMT_FilterRule_SEL.cachedFilterGroups[0].Id;
 
         List<Id> recordTypeIds = new List<Id>();

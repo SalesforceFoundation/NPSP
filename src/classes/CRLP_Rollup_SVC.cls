@@ -119,16 +119,20 @@ public class CRLP_Rollup_SVC {
      */
     public static Boolean resultsNeedUpdate(SObject originalObject, SObject updatedObject,
                 List<CRLP_Rollup> rollups) {
+
         Boolean hasValueChanged = false;
         for (CRLP_Rollup rollup : rollups) {
             for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
+
                 CRLP_Rollup.Rollupmdt r = rollup.rollupsMdt[ns];
                 Schema.DescribeFieldResult summaryField = getSObjectFieldDescribe(r.summaryObject, r.summaryField);
                 SoapType summaryFieldType = summaryField.getSoapType();
                 Object origValue = originalObject.get(summaryField.getName());
                 Object newValue = updatedObject.get(summaryField.getName());
+
                 if (summaryFieldType == SoapType.STRING && (origValue != null || newValue != null)) {
-                    // Handle an empty string as null to prevent unecessary DML updates
+
+                    // Handle an empty string as null to prevent unnecessary DML updates
                     String origString = (origValue != null ? (String)origValue : null);
                     String newString = (newValue != null ? (String)newValue : null);
                     origString = (String.isEmpty(origString) ? null : origString);
@@ -136,7 +140,9 @@ public class CRLP_Rollup_SVC {
                     if (origString != newString) {
                         hasValueChanged = true;
                     }
+
                 } else if (DO_NOT_UPDATE_NULL_TO_ZERO == false && summaryFieldType == SoapType.DOUBLE) {
+
                     // If the value in the object is null and the updated value is something other than null or zero,
                     // then the record has been changed. Otherwise, don't update a NULL value to zero or vice-versa.
                     Double origNumber = (origValue != null ? (Double)origValue : 0);
@@ -144,9 +150,11 @@ public class CRLP_Rollup_SVC {
                     if (origNumber != newNumber) {
                         hasValueChanged = true;
                     }
+
                 } else if (origValue != newValue) {
                     hasValueChanged = true;
                 }
+
                 if (hasValueChanged) {
                     break;
                 }

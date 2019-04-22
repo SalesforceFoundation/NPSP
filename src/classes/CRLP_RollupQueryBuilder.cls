@@ -147,6 +147,9 @@ public without sharing class CRLP_RollupQueryBuilder {
     private String buildDetailsQueryHardCredits() {
         List<String> whereClauses = new List<String>();
         List<String> orderByFields = new List<String>();
+        if (orderByField != null) {
+            orderByFields.add(orderByField);
+        }
 
         npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
@@ -155,7 +158,10 @@ public without sharing class CRLP_RollupQueryBuilder {
         String query = buildFullDetailsQueryForSummaryRecords();
 
         if (query.containsIgnoreCase('ORDER BY ')) {
-            orderByFields.add(query.split('ORDER BY')[1]);
+            String originalOrderBy = query.split('ORDER BY')[1];
+            if (!orderByFields.contains(originalOrderBy)) {
+                orderByFields.add(originalOrderBy);
+            }
             query = query.split('ORDER BY')[0];
         }
 
@@ -200,6 +206,9 @@ public without sharing class CRLP_RollupQueryBuilder {
     private String buildDetailsQuerySoftCredits() {
         List<String> whereClauses = new List<String>();
         List<String> orderByFields = new List<String>();
+        if (orderByField != null) {
+            orderByFields.add(orderByField);
+        }
 
         npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
@@ -210,7 +219,7 @@ public without sharing class CRLP_RollupQueryBuilder {
 
         String keyFieldOverrideForQuery = CRLP_Rollup_SVC.getParentFieldNameForQuery(rollupType);
 
-        whereClauses.add(keyFieldOverrideForQuery + ' IN : summaryRecords');
+        whereClauses.add(keyFieldOverrideForQuery + ' IN :' + summaryRecordsIdVar);
 
         String addlFilter;
         if (rollupType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
@@ -230,7 +239,9 @@ public without sharing class CRLP_RollupQueryBuilder {
             }
         }
 
-        orderByFields.add(keyFieldOverrideForQuery);
+        if (!orderByFields.contains(keyFieldOverrideForQuery)) {
+            orderByFields.add(keyFieldOverrideForQuery);
+        }
         if (rollupType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
             orderByFields.add('Opportunity.CreatedDate ASC');
         } else {
@@ -253,11 +264,11 @@ public without sharing class CRLP_RollupQueryBuilder {
      * DetailRecordId's are required to generate this query.
      * @return SOQL String
      */
-    public String getRelatedRecordsQueryAsSOQL() {
+   /* public String getRelatedRecordsQueryAsSOQL() {
         String query = '';
 
         return query;
-    }
+    }*/
 
     /**
      * @description Returns the SOQL string for a QueryLocator query for the specified Job Type (Skew or NonSkew)

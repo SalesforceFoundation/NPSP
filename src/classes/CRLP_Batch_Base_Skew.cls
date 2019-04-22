@@ -178,6 +178,9 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 detailRecords = convertContactRolesToPartialSoftCredits(detailRecords);
             }
 
+            CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
+            options.useRollupDefsByParentIdMap = true;
+
             // Need to pass in the Rollup Type, Rollup Defnitions if they're available along
             // with the Summary Record(s), Detail Record(s) and any Related Records.
             CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
@@ -187,7 +190,8 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                     .withDetailRecords(detailRecords)
                     .withRelatedRecords(paymentsByOpp)
                     .withPreviouslyProcessedOppIdsMap(this.statefulMapOfOppIdsByParentId)
-                    .withRollupDefinitions(this.statefulRollupsById);
+                    .withRollupDefinitions(this.statefulRollupsById)
+                    .withJobOptions(options);
 
             List<SObject> updatedRecords = processor.startRollupProcessing();
 
@@ -445,23 +449,33 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         Id lastParentIdProcessed = processor.getLastParentIdProcessed();
 
         if (processor.getRollupDefsForParent(firstParentId) != null) {
-            this.statefulRollupsById.put(firstParentId, processor.getRollupDefsForParent(firstParentId));
+            updateStatefulCollections(processor, firstParentId);
         }
         if (processor.getRollupDefsForParent(lastParentId) != null) {
-            this.statefulRollupsById.put(lastParentId, processor.getRollupDefsForParent(lastParentId));
+            updateStatefulCollections(processor, lastParentId);
         }
         if (lastParentIdProcessed != null && processor.getRollupDefsForParent(lastParentIdProcessed) != null) {
-            this.statefulRollupsById.put(lastParentIdProcessed, processor.getRollupDefsForParent(lastParentIdProcessed));
-
-            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                    this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                this.statefulMapOfOppIdsByParentId.put(lastParentIdProcessed, processor.getPreviouslyProcessedOppIds(lastParentIdProcessed));
-            }
+            updateStatefulCollections(processor, lastParentIdProcessed);
         }
 
         // Remember which batch iteration this parent was last NOT updated
         if (processor.hasLastParentIdCompleted()) {
             this.parentIdsNotCommittedWithBatch.put(lastParentIdProcessed, this.batchIteration);
+        }
+    }
+
+    /**
+     * @description Update the stateful collection for statefulRollupsById and statefulMapOfOppIdsByParentId for the
+     * specified record Ids.
+     * @param processor
+     * @param recordId
+     */
+    private void updateStatefulCollections(CRLP_RollupProcessor processor, Id recordId) {
+        this.statefulRollupsById.put(recordId, processor.getRollupDefsForParent(recordId));
+
+        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+            this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+            this.statefulMapOfOppIdsByParentId.put(recordId, processor.getPreviouslyProcessedOppIds(recordId));
         }
     }
 
@@ -477,13 +491,17 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         String query = CRLP_Query_SEL.buildObjectQueryForRollup(summaryObjectType) + ' WHERE Id IN :parentIds';
         List<SObject> parents = Database.query(query);
 
+        CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
+        options.useRollupDefsByParentIdMap = true;
+
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
                 .withRollupType(jobType)
                 .withBatchJobMode(jobMode)
                 .withDetailRecords(new List<SObject>())
                 .withRelatedRecords(new Map<Id, List<SObject>>())
                 .withPreviouslyProcessedOppIdsMap(statefulMapOfOppIdsByParentId)
-                .withRollupDefinitions(statefulRollupsById);
+                .withRollupDefinitions(statefulRollupsById)
+                .withJobOptions(options);
 
         // Call the method to do the actual rollup on this last remaining record, which is basically
         // just to return the updated record

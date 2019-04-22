@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -132,6 +132,8 @@
         <members>CRLP_Account_AccSoftCredit_BATCH</members>
         <members>CRLP_Account_BATCH</members>
         <members>CRLP_Account_SoftCredit_BATCH</members>
+        <members>CRLP_ApiExecuteRollups</members>
+        <members>CRLP_ApiExecuteRollups_TEST</members>
         <members>CRLP_ApiService</members>
         <members>CRLP_ApiService_TEST</members>
         <members>CRLP_Batch_Base</members>
@@ -174,7 +176,9 @@
         <members>CRLP_RollupProcessingOptions</members>
         <members>CRLP_RollupProcessor</members>
         <members>CRLP_RollupProcessor_SVC</members>
+        <members>CRLP_RollupProcessor_TEST</members>
         <members>CRLP_RollupQueryBuilder</members>
+        <members>CRLP_RollupQueryBuilder_TEST</members>
         <members>CRLP_RollupQueueable</members>
         <members>CRLP_RollupRD_SVC</members>
         <members>CRLP_RollupRecurringDonation_TEST</members>
@@ -191,6 +195,8 @@
         <members>CRLP_Rollup_TDTM</members>
         <members>CRLP_SkewDispatcher_BATCH</members>
         <members>CRLP_VRollupHandler</members>
+        <members>CallableApiParameters</members>
+        <members>CallableApiParameters_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
@@ -1245,6 +1251,7 @@
         <members>CRLP_SoftCredit</members>
         <members>CallableApiMethodNotImplemented</members>
         <members>CallableApiParameterError</members>
+        <members>CallableApiProcessingError</members>
         <members>CampaignMemberStatusOmit</members>
         <members>CascadeDeletionError</members>
         <members>CascadeDeletionErrorLightning</members>
