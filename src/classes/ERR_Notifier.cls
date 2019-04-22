@@ -106,22 +106,27 @@ public class ERR_Notifier {
 
     /**********************************************************************************************
      * @description Using the provided error notification user id (or 'All System Admins') or gets
-     * all system admin email addresses
+     * all system admin email addresses. If the specified user is inactive, send the notification
+     * to all System Admins
      * @param errorNotifRecipient Id or Null
      * @return List<Email>
      */
+    @TestVisible
     private List<String> getErrorEmailRecipients(String errorNotifRecipient) {
         List<String> recipientsList = new List<String>();
         Boolean isUserId = errorNotifRecipient instanceof Id
                 && errorNotifRecipient.startsWith(ERROR_NOTIFICATION_USER_PREFIX);
 
         if (isUserId) {
-            List<User> users = [SELECT Email FROM User WHERE Id = :errorNotifRecipient AND IsActive = TRUE LIMIT 1];
-            if (!users.isEmpty()) {
-                recipientsList.add(users[0].Email);
+            String userEmail = getUserEmail(errorNotifRecipient);
+            if (userEmail != null) {
+                recipientsList.add(userEmail);
+            } else {
+                errorNotifRecipient = ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS;
             }
+        }
 
-        } else if (errorNotifRecipient == ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS) {
+        if (errorNotifRecipient == ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS) {
             recipientsList.addAll(getSystemAdminEmails());
         }
 
@@ -212,7 +217,11 @@ public class ERR_Notifier {
     * @param recipientsList The list of email recipients.
     * @return 
     */
+    @TestVisible
     private Messaging.SingleEmailMessage createEmailMessage(String context, List<Error__c> errorList, List<String> recipientsList) {
+        Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
+        String errorNotifRecipient = errorSettings.Error_Notifications_To__c;
+
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setUseSignature(false);
         mail.setReplyTo(EMAIL_REPLY_TO);
@@ -234,6 +243,11 @@ public class ERR_Notifier {
         for (Error__c error : errorList) {
             bodyString += '\n\n----------\n Error #' + i + ': \n' + buildErrorMessageBody(error);
             i++;
+        }
+
+        if (errorNotifRecipient != ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS) {
+            bodyString += '\n\nNOTE: The specified Error Recipient UserId (' + errorNotifRecipient + ') is not an ' +
+                'active User in this Salesforce org';
         }
 
         mail.setPlainTextBody(bodyString);
@@ -340,5 +354,13 @@ public class ERR_Notifier {
                 ORDER BY CreatedDate ASC
                 LIMIT :MAX_RECORDS
             ];
+    }
+
+    private String getUserEmail(Id userId) {
+        List<User> users = [SELECT Email FROM User WHERE Id = :userId AND IsActive = TRUE LIMIT 1];
+        if (!users.isEmpty()) {
+            return users[0].Email;
+        }
+        return null;
     }
 }

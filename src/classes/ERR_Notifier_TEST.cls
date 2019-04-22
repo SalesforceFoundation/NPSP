@@ -65,9 +65,9 @@ private class ERR_Notifier_TEST {
 
         List<Error__c> errors = new List<Error__c>();
         // The oldest error will be 80 days old
-        Datetime dt=Datetime.now().addDays(80).addHours(-1);
+        Datetime dt = Datetime.now().addDays(80).addHours(-1);
         // Create one error per day for up to 100 total records.
-        for (Integer n=0; n<100; n++) {
+        for (Integer n = 0; n < 100; n++) {
             errors.add(createError(dt));
             dt = dt.addDays(1);
         }
@@ -98,7 +98,7 @@ private class ERR_Notifier_TEST {
         ));
 
         List<Error__c> errors = new List<Error__c>();
-        for (Integer n=0; n<100; n++) {
+        for (Integer n = 0; n < 100; n++) {
             errors.add(createError(Datetime.now()));
         }
         insert errors;
@@ -112,6 +112,62 @@ private class ERR_Notifier_TEST {
             System.assert(err.Email_Sent__c,
                     'All emails pending notification should be marked as having an email sent');
         }
+    }
+
+    /**********************************************************************************************
+    * @description Verify that if the specified Error Notification User is inactive (or doesn't exist), that the
+    * returned list of email recipients consists of all System Admin users
+    */
+    @IsTest
+    private static void shouldReturnAllSystemAdminsEmailsIfErrorUserIsInactive() {
+        // Create a System Admin User
+        User tempUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        tempUser.IsActive = true;
+        insert tempUser;
+
+        Id fakeUserId = UTIL_UnitTestData_TEST.mockId(User.SObjectType);
+        Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettingsForTests(
+            new Error_Settings__c(
+                Error_Notifications_On__c = True,
+                Error_Notifications_To__c = fakeUserId
+            )
+        );
+        String errorNotifRecipient = errorSettings.Error_Notifications_To__c;
+
+        Set<String> expectedEmails = getSystemAdminEmails();
+
+        Test.startTest();
+        ERR_Notifier notifierService = new ERR_Notifier();
+        List<String> errorRecipients = notifierService.getErrorEmailRecipients(errorNotifRecipient);
+        Test.stopTest();
+
+        System.assert(errorRecipients.size() > 1, 'There should be more than one System Admin user listed');
+        System.assert(expectedEmails.containsAll(errorRecipients), 'All System Admins should be set as recipients');
+    }
+
+    /**********************************************************************************************
+    * @description Verify that if the specified Error Notification User is inactive (or doesn't exist), that the
+    * generated email includes a note about it.
+    */
+    @IsTest
+    private static void shouldIncludeNoteAboutInactiveNotificationUserInEmail() {
+        Id fakeUserId = UTIL_UnitTestData_TEST.mockId(User.SObjectType);
+        Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettingsForTests(
+            new Error_Settings__c(
+                Error_Notifications_On__c = True,
+                Error_Notifications_To__c = fakeUserId
+            )
+        );
+        String errorNotifRecipient = errorSettings.Error_Notifications_To__c;
+
+        Test.startTest();
+        ERR_Notifier notifierService = new ERR_Notifier();
+        List<String> errorRecipients = notifierService.getErrorEmailRecipients(errorNotifRecipient);
+        Messaging.SingleEmailMessage emailMessage = notifierService.createEmailMessage(null, new List<Error__c>(), errorRecipients);
+        Test.stopTest();
+
+        System.assert(emailMessage.getPlainTextBody().containsIgnoreCase('not an active user'));
+        System.assert(emailMessage.getPlainTextBody().containsIgnoreCase(errorNotifRecipient));
     }
 
     /**********************************************************************************************
@@ -136,7 +192,7 @@ private class ERR_Notifier_TEST {
         ));
 
         List<Error__c> errors = new List<Error__c>();
-        for (Integer n=0; n<100; n++) {
+        for (Integer n = 0; n < 100; n++) {
             errors.add(createError(Datetime.now()));
         }
         insert errors;
