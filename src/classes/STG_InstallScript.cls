@@ -317,7 +317,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
     * added
     */
     private void createNewDefaultCustomSettingRecords() {
-        UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings();
+        updateDefaultRollupSettings();
         updateDefaultOrgContactsSettings();
     }
 
@@ -331,6 +331,30 @@ global without sharing class STG_InstallScript implements InstallHandler {
             npe01Settings.Contact_Role_for_Organizational_Opps__c = UTIL_CustomSettingsFacade.DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT;
             update npe01Settings;
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Ensure that any default Org Rollup Settigns are updated for custom settings 
+    * objects accordingly.
+    */
+    public static void updateDefaultRollupSettings() {
+        Customizable_Rollup_Settings__c rollupSettings = UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings();
+        Boolean isUpdateNeeded = false;
+
+        if (rollupSettings.Rollups_AccSoftCredit_Skew_Batch_Size__c == null) {
+            rollupSettings.Rollups_AccSoftCredit_Skew_Batch_Size__c = UTIL_CustomSettingsFacade.DEFAULT_ROLLUP_SKEW_MODE_BATCH_SIZE;
+            isUpdateNeeded = true;
+        }
+
+        if (rollupSettings.Rollups_AccSoftCredit_Batch_Size__c == null) {
+            rollupSettings.Rollups_AccSoftCredit_Batch_Size__c = UTIL_CustomSettingsFacade.DEFAULT_ROLLUP_BATCH_SIZE;
+            isUpdateNeeded = true;
+        }
+        
+        if (isUpdateNeeded) {
+            update rollupSettings;
+        }
+        
     }
 
     /*******************************************************************************************************

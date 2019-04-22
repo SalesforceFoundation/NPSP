@@ -116,6 +116,34 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Rollups_AccSoftCredit_Batch_Size__c</fullName>
+        <defaultValue>200</defaultValue>
+        <description>Only used by the new Customizable Rollups engine</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Number of records per batch to process when recalculating soft credit donor rollups to the Account object.</inlineHelpText>
+        <label>Account Soft Credit Batch Size</label>
+        <precision>6</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Rollups_AccSoftCredit_Skew_Batch_Size__c</fullName>
+        <defaultValue>1000</defaultValue>
+        <description>Only used by the new Customizable Rollups engine</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Number of records per batch to process when recalculating soft credit donor rollups to the Account object.</inlineHelpText>
+        <label>Account Soft Credit Skew Mode Batch Size</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Number</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Rollups_Contact_Batch_Size__c</fullName>
         <defaultValue>200</defaultValue>
         <description>Used by the old and new Rollups engine</description>

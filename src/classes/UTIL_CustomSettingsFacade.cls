@@ -38,6 +38,9 @@ public without sharing class UTIL_CustomSettingsFacade {
     private static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR = 'Donor';
     public static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT = 'Soft Credit';
 
+    public static final Integer DEFAULT_ROLLUP_SKEW_MODE_BATCH_SIZE = 1000;
+    public static final Integer DEFAULT_ROLLUP_BATCH_SIZE = 200;
+
     //storing user-level custom settings in-memory to avoid trying to isert/update them
     //twice and thus trigger the "duplicate OwnerId" error
     static npe01__Contacts_And_Orgs_Settings__c contactsSettings;
@@ -870,13 +873,15 @@ public without sharing class UTIL_CustomSettingsFacade {
     private static void configRollupSettings(Customizable_Rollup_Settings__c crs) {
         // New default settings for the Customizable Rollups engine
         crs.Customizable_Rollups_Enabled__c = false;
-        crs.Rollups_Account_Batch_Size__c = 200;
-        crs.Rollups_Contact_Batch_Size__c = 200;
-        crs.Rollups_Account_SkewMode_Batch_Size__c = 1000;
-        crs.Rollups_Contact_SkewMode_Batch_Size__c = 1000;
-        crs.Rollups_Account_Soft_Credit_Batch_Size__c = 200;
-        crs.Rollups_Contact_Soft_Credit_Batch_Size__c = 200;
-        crs.Rollups_GAU_Batch_Size__c = 1000;
+        crs.Rollups_Account_Batch_Size__c = DEFAULT_ROLLUP_BATCH_SIZE;
+        crs.Rollups_Contact_Batch_Size__c = DEFAULT_ROLLUP_BATCH_SIZE;
+        crs.Rollups_Account_SkewMode_Batch_Size__c = DEFAULT_ROLLUP_SKEW_MODE_BATCH_SIZE;
+        crs.Rollups_Contact_SkewMode_Batch_Size__c = DEFAULT_ROLLUP_SKEW_MODE_BATCH_SIZE;
+        crs.Rollups_Account_Soft_Credit_Batch_Size__c = DEFAULT_ROLLUP_BATCH_SIZE;
+        crs.Rollups_Contact_Soft_Credit_Batch_Size__c = DEFAULT_ROLLUP_BATCH_SIZE;
+        crs.Rollups_AccSoftCredit_Batch_Size__c = DEFAULT_ROLLUP_BATCH_SIZE;
+        crs.Rollups_AccSoftCredit_Skew_Batch_Size__c = DEFAULT_ROLLUP_SKEW_MODE_BATCH_SIZE;
+        crs.Rollups_GAU_Batch_Size__c = DEFAULT_ROLLUP_SKEW_MODE_BATCH_SIZE;
         crs.Rollups_Skew_Dispatcher_Batch_Size__c = 300;
         crs.Rollups_Limit_on_Attached_Opps_for_Skew__c = 250;
         crs.Disable_Related_Records_Filter__c = false;
