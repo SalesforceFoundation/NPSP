@@ -52,7 +52,7 @@ public class BDI_MigrationMappingUtility {
         buildCustomMetadataRecordsFromHelpText();
 
         if (!queuedMetadataTypesForDeploy.isEmpty()) {
-            CMT_MetadataAPI.deployMetadata(jobId, queuedMetadataTypesForDeploy.clone(), true);
+            CMT_MetadataAPI.deployMetadata(jobId, queuedMetadataTypesForDeploy.clone(), CMT_MetadataAPI.Source.HELP_TEXT_MIGRATION);
         } else {
             // Queue is empty, but we still need to update Data Import settings
             updateCustomDataImportSettings(Label.bdiCustomObjectMappingSummary);
