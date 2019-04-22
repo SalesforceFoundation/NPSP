@@ -76,6 +76,7 @@
         <members>BDI_DryRun_TEST</members>
         <members>BDI_FieldMapping</members>
         <members>BDI_FieldMappingCustomMetadata</members>
+        <members>BDI_FieldMappingCustomMetadataTest</members>
         <members>BDI_FieldMappingHelpText</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>

@@ -37,6 +37,27 @@
 
 public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMapping {
 
+    public static final String DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME = 'Default_Field_Mapping_Set';
+
+    private static BDI_FieldMappingCustomMetadata fieldMappingInstance = null;
+    /*******************************************************************************************************
+    * @description flag to allow us to test out field level security exception
+    *
+    * TODO: refactor tests to make this unneccessary
+    */
+    public Boolean failFieldLevelSecurity = false;
+
+
+    /*******************************************************************************************************
+    * @description return singleton instance of the class
+    */
+    public static BDI_FieldMappingCustomMetadata getInstance() {
+        if(fieldMappingInstance == null) {
+            fieldMappingInstance = new BDI_FieldMappingCustomMetadata();
+        }
+        return fieldMappingInstance;
+    }
+
     /*******************************************************************************************************
     * @description For the provided fields (in the form DIObject.developerfieldname) and target object, 
     * return a map of DI field (key) to mapped field name on the destination record (value). 
@@ -49,11 +70,74 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
     * TODO: Implement this method
     */
 
-    public Map<String,String> getFieldMap(String dataImportObjectName, 
-        String targetObjectName, List<String> dataImportFields) {
+    public Map<String,String> getFieldMap(String dataImportObjectName, String targetObjectName, List<String> dataImportFields) {
+        System.debug('mapFieldsForDIObject ===> dataImportObjectName is: ' + dataImportObjectName );
+        System.debug('mapFieldsForDIObject ===> targetObjectName is: ' + targetObjectName );
 
-        // TODO: Map fields based on CMT here
+        Map<String,String> dataImportFieldToTargetField = new Map<String,String>();
 
-        return new Map<String,String>();
+        String ns = UTIL_Namespace.getNamespace();
+        //Retreive the Data Import Settings to determine the default field mapping set.
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+
+        String fieldMappingSetName = dis.Default_Data_Import_Field_Mapping_Set__c;
+        Data_Import_Field_Mapping_Set__mdt diFieldMappingSet;
+        Data_Import_Field_Mapping__mdt[]  diFieldMappings;
+        Data_Import_Object_Mapping__mdt diObjectMapping;
+
+        System.debug('mapFieldsForDIObject ===> fieldMappingSetName is: ' + fieldMappingSetName );
+
+        if(fieldMappingSetName != null){
+            diFieldMappingSet = [SELECT id, DeveloperName, 
+                                    Data_Import_Object_Mapping_Set__c,
+                                    Data_Import_Object_Mapping_Set__r.DeveloperName    
+                                FROM Data_Import_Field_Mapping_Set__mdt
+                                WHERE DeveloperName =: fieldMappingSetName LIMIT 1];
+            System.debug('mapFieldsForDIObject ===> diFieldMappingSet is: ' + diFieldMappingSet );
+            if(diFieldMappingSet != null && diFieldMappingSet.Data_Import_Object_Mapping_Set__c != null){
+                
+                diFieldMappings = [SELECT DeveloperName,
+                                        Data_Import_Field_Mapping_Set__c,
+                                        Required__c,
+                                        Source_Field_API_Name__c,
+                                        Target_Field_API_Name__c,
+                                        Target_Object_Mapping__c,
+                                        Target_Object_Mapping__r.Object_API_Name__c
+                            FROM Data_Import_Field_Mapping__mdt
+                            WHERE Target_Object_Mapping__r.Data_Import_Object_Mapping_Set__r.DeveloperName =: diFieldMappingSet.Data_Import_Object_Mapping_Set__r.DeveloperName
+                                AND Target_Object_Mapping__r.DeveloperName =: dataImportObjectName];
+
+                System.debug('mapFieldsForDIObject ===> diFieldMappings are: ' + diFieldMappings );
+
+                if(diFieldMappings != null){
+                    for(Data_Import_Field_Mapping__mdt difm : diFieldMappings){
+                        System.debug('mapFieldsForDIObject ===> DI field mapping is: ' + difm );
+                        String sourceFN = difm.Source_Field_API_Name__c;
+                        String targetFN = difm.Target_Field_API_Name__c;
+
+                        //Overwriting whatever was passed in for the object api name from the cmt record
+                        targetObjectName = difm.Target_Object_Mapping__r.Object_API_Name__c;
+
+
+                        System.debug('mapFieldsForDIObject ===> targetObjectName is: ' + targetObjectName );
+
+                        //If we are not in the npsp namespace then remove the namespace from all relevant field references
+                        if(ns != 'npsp'){
+                            sourceFN = UTIL_Namespace.StrTokenRemoveNSPrefixNpspOnly(sourceFN);
+                            targetFN = UTIL_Namespace.StrTokenRemoveNSPrefixNpspOnly(targetFN);
+                        }
+
+                        dataImportFieldToTargetField.put(sourceFN,targetFN);
+                    }
+                }
+            } 
+        }
+
+        return dataImportFieldToTargetField;
     }
+
+    /*******************************************************************************************************
+    * @description our exception object for Field Level Security errors.
+    */
+    public class FLSException extends Exception {}
 }

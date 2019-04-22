@@ -38,6 +38,8 @@
 *
 */
 global with sharing class BDI_DataImportService {
+    public static final String FM_HELP_TEXT = 'Help Text';
+    public static final String FM_DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
 
     private BDI_FieldMapping fieldMapper;
 
@@ -48,8 +50,25 @@ global with sharing class BDI_DataImportService {
     public BDI_DataImportService(Boolean isDryRun, BDI_FieldMapping fieldMapper) {
         contactService = new BDI_ContactService(this);
         this.isDryRun = isDryRun;
-
         this.fieldMapper = fieldMapper;
+    }
+
+    /*******************************************************************************************************
+    * @description queries the Data Import Settings custom setting to determine what type of field mapping to
+    * use.
+    */
+    public static BDI_FieldMapping getDefaultFieldMapping(){
+        System.debug('BDI_DataImportService getDefaultFieldMapping');
+        BDI_FieldMapping bdiFm;
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        if(dis.Field_Mapping_Method__c == 'Help Text'){
+            System.debug('BDI_DataImportService getDefaultFieldMapping ===> Help Text mapping chosen.');
+            bdiFm = BDI_FieldMappingHelpText.getInstance();
+        }else if(dis.Field_Mapping_Method__c == 'Data Import Field Mapping'){
+            System.debug('BDI_DataImportService getDefaultFieldMapping ===> CMT field mapping chosen.');
+            bdiFm = BDI_FieldMappingCustomMetadata.getInstance();
+        }
+        return bdiFm;
     }
 
     /*******************************************************************************************************
@@ -780,7 +799,7 @@ global with sharing class BDI_DataImportService {
                 String targetObjectName, 
                 List<String> dataImportFields) {
         
-        BDI_DataImportService bdi = new BDI_DataImportService(true, BDI_FieldMappingHelpText.getInstance());
+        BDI_DataImportService bdi = new BDI_DataImportService(true, BDI_DataImportService.getDefaultFieldMapping());
         return bdi.mapDataImportFields(dataImportObjectName, targetObjectName, dataImportFields);
     }
 

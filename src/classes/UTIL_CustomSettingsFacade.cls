@@ -285,8 +285,9 @@ public without sharing class UTIL_CustomSettingsFacade {
             dataImportSettings = new Data_Import_Settings__c();
         } else if (dataImportSettings == null) {
             dataImportSettings = Data_Import_Settings__c.getInstance();
-            if (dataImportSettings.Id == null)
+            if (dataImportSettings.Id == null){
                 dataImportSettings = getOrgDataImportSettings();
+            }
         }
         // always call config, to deal with new settings we've added
         // we'll only config those setting that are null
@@ -640,6 +641,12 @@ public without sharing class UTIL_CustomSettingsFacade {
         if (dis.Donation_Date_Range__c == null) {
             dis.Donation_Date_Range__c = 0;
         }
+        if (dis.Default_Data_Import_Field_Mapping_Set__c == null){
+            dis.Default_Data_Import_Field_Mapping_Set__c = BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        }
+        if (dis.Field_Mapping_Method__c  == null){
+            dis.Field_Mapping_Method__c  = BDI_DataImportService.FM_HELP_TEXT;
+        }
     }
 
     /*******************************************************************************************************
@@ -960,5 +967,14 @@ public without sharing class UTIL_CustomSettingsFacade {
     private static void configLevelsSettings(Levels_settings__c ls) {
         // New default settings for the Levels Assignment engine
         ls.Level_Assignment_Batch_Size__c = 200;
+    }
+
+    /*******************************************************************************************************
+    * @description Sets data import settings for a test or in case they have been updated during processing.
+    * @param Data_Import_Settings__c
+    */
+    public static void setDataImportSettings(Data_Import_Settings__c dis) {
+        // New default settings for the Levels Assignment engine
+        dataImportSettings = dis;
     }
 }
