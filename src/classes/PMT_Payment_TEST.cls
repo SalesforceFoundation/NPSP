@@ -259,10 +259,10 @@ private class PMT_Payment_TEST {
 
 
     /*******************************************************************************************************
-     * @description     Validate that payment records are not both paid and written off
+     * @description     Validate that payment records are not both paid and written off on Update
      *******************************************************************************************************/
     @isTest
-    private static void verifyPaymentsAreNotBothPaidAndWrittenOff() {
+    private static void verifyPaymentsAreNotBothPaidAndWrittenOffOnUpdate() {
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
         Opportunity opp = new Opportunity(
@@ -284,9 +284,9 @@ private class PMT_Payment_TEST {
             payment.npe01__Written_Off__c = true;
             
             update payment;
-            System.Assert(false, 'Updating an existing payment with both written off and paid checked should fail');
+            System.assert(false, 'Updating an existing payment with both written off and paid checked should fail');
         } catch (Exception ex) {
-            System.Assert(ex.getMessage().contains(System.Label.pmtWriteOffPaidPayment), 'Error message should contain "' +
+            System.assert(ex.getMessage().contains(System.Label.pmtWriteOffPaidPayment), 'Error message should contain "' +
                 System.Label.pmtWriteOffPaidPayment + '"');
         }
 
@@ -304,8 +304,29 @@ private class PMT_Payment_TEST {
             update payment;
 
         } catch (Exception ex) {
-            System.Assert(false, 'Updating an existing payment with valid values should succeed');
+            System.assert(false, 'Updating an existing payment with valid values should succeed');
         }
+        Test.stopTest();
+
+    }
+
+
+    /*******************************************************************************************************
+     * @description     Validate that payment records are not both paid and written off on Insert
+     *******************************************************************************************************/
+    @isTest
+    private static void verifyPaymentsAreNotBothPaidAndWrittenOffOnInsert() {
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        Opportunity opp = new Opportunity(
+            Name = 'success',
+            Amount = 400,
+            AccountID = acc.id,
+            CloseDate = System.today(),
+            StageName = UTIL_UnitTestData_TEST.getOpenStage()
+        );
+
+        insert opp;
 
         // Attempt to create a new payment with both fields set to true
         npe01__OppPayment__c newPayment = new npe01__OppPayment__c();
@@ -316,11 +337,12 @@ private class PMT_Payment_TEST {
         newPayment.npe01__Paid__c = true;
         newPayment.npe01__Written_Off__c = true;
 
+        Test.startTest();
         try {
             insert newPayment;
-            System.Assert(False, 'Inserting an existing payment with both written off and paid checked should fail');
+            System.assert(False, 'Inserting an existing payment with both written off and paid checked should fail');
         } catch (Exception ex) {
-            System.Assert(ex.getMessage().contains(System.Label.pmtWriteOffPaidPayment), 'Error message should contain "' +
+            System.assert(ex.getMessage().contains(System.Label.pmtWriteOffPaidPayment), 'Error message should contain "' +
                 System.Label.pmtWriteOffPaidPayment + '"');
         }
 
@@ -369,6 +391,6 @@ private class PMT_Payment_TEST {
             soql += ', CurrencyIsoCode ';
         }
         soql += ' FROM npe01__OppPayment__c WHERE npe01__Opportunity__c = \'' + oppId + '\' LIMIT 1';
-        return (npe01__OppPayment__c)database.query(soql);
+        return (npe01__OppPayment__c)Database.query(soql);
     }
 }
