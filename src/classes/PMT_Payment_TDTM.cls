@@ -289,6 +289,33 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         List<npe01__OppPayment__c> oldlist,
         TDTM_Runnable.Action triggerAction, 
         DmlWrapper dmlWrapper) {
+        if ((triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
+            enforceAccountingRules(newList);
+        }
+    }
 
+    /*******************************************************************************************************
+    * @description If the custom setting to enforce account rules is enabled, it will validate that paid payments
+    * have a payment date and unpaid payments have a scheduled date. 
+    * @param newlist the list of Opportunity or Payments from trigger new.
+    * @return Boolean This returns if the records abide by accounting rules, if applicable.
+    ********************************************************************************************************/
+    private Boolean enforceAccountingRules(List<npe01__OppPayment__c> newList) {
+        Boolean isValid = true;
+        Boolean enforceAccountingRuleCustomSetting = UTIL_CustomSettingsFacade.getContactsSettings().Enforce_Accounting_Rules__c;
+
+        if (enforceAccountingRuleCustomSetting == true) {
+            for (npe01__OppPayment__c newRecord : newList) {
+                if (newRecord.npe01__Paid__c == true && newRecord.npe01__Payment_Date__c == null) {
+                    isValid = false;
+                    newRecord.npe01__Payment_Date__c.addError('A paid payment must have a payment date.');
+                } else if (newRecord.npe01__Paid__c == false && newRecord.npe01__Scheduled_Date__c == null) {
+                    isValid = false;
+                    newRecord.npe01__Scheduled_Date__c.addError('An unpaid payment must have a scheduled date.');
+                }
+            }
+        }
+
+        return isValid;
     }
 }

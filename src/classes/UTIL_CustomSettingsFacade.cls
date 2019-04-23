@@ -672,6 +672,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         contactsSettings.Payments_Auto_Close_Stage_Name__c = mySettings.Payments_Auto_Close_Stage_Name__c;
         contactsSettings.Honoree_Opportunity_Contact_Role__c = mySettings.Honoree_Opportunity_Contact_Role__c;
         contactsSettings.Notification_Recipient_Opp_Contact_Role__c = mySettings.Notification_Recipient_Opp_Contact_Role__c;
+        contactsSettings.Enforce_Accounting_Rules__c = mySettings.Enforce_Accounting_Rules__c;
         orgContactsSettings = contactsSettings;
         return contactsSettings;
     }

@@ -60,6 +60,14 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Enforce_Accounting_Rules__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Enforce Accounting Rules</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Honoree_Opportunity_Contact_Role__c</fullName>
         <description>Populating this setting will automatically create a Contact Role for Opportunities with an honoree Contact. Leaving this field blank will disable automatic Contact Role creation for the honoree.</description>
         <externalId>false</externalId>
