@@ -71,8 +71,6 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
     */
 
     public Map<String,String> getFieldMap(String dataImportObjectName, String targetObjectName, List<String> dataImportFields) {
-        System.debug('mapFieldsForDIObject ===> dataImportObjectName is: ' + dataImportObjectName );
-        System.debug('mapFieldsForDIObject ===> targetObjectName is: ' + targetObjectName );
 
         Map<String,String> dataImportFieldToTargetField = new Map<String,String>();
 
@@ -85,15 +83,13 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
         Data_Import_Field_Mapping__mdt[]  diFieldMappings;
         Data_Import_Object_Mapping__mdt diObjectMapping;
 
-        System.debug('mapFieldsForDIObject ===> fieldMappingSetName is: ' + fieldMappingSetName );
-
         if(fieldMappingSetName != null){
             diFieldMappingSet = [SELECT id, DeveloperName, 
                                     Data_Import_Object_Mapping_Set__c,
                                     Data_Import_Object_Mapping_Set__r.DeveloperName    
                                 FROM Data_Import_Field_Mapping_Set__mdt
                                 WHERE DeveloperName =: fieldMappingSetName LIMIT 1];
-            System.debug('mapFieldsForDIObject ===> diFieldMappingSet is: ' + diFieldMappingSet );
+
             if(diFieldMappingSet != null && diFieldMappingSet.Data_Import_Object_Mapping_Set__c != null){
                 
                 diFieldMappings = [SELECT DeveloperName,
@@ -107,19 +103,14 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
                             WHERE Target_Object_Mapping__r.Data_Import_Object_Mapping_Set__r.DeveloperName =: diFieldMappingSet.Data_Import_Object_Mapping_Set__r.DeveloperName
                                 AND Target_Object_Mapping__r.DeveloperName =: dataImportObjectName];
 
-                System.debug('mapFieldsForDIObject ===> diFieldMappings are: ' + diFieldMappings );
-
                 if(diFieldMappings != null){
                     for(Data_Import_Field_Mapping__mdt difm : diFieldMappings){
-                        System.debug('mapFieldsForDIObject ===> DI field mapping is: ' + difm );
+
                         String sourceFN = difm.Source_Field_API_Name__c;
                         String targetFN = difm.Target_Field_API_Name__c;
 
                         //Overwriting whatever was passed in for the object api name from the cmt record
                         targetObjectName = difm.Target_Object_Mapping__r.Object_API_Name__c;
-
-
-                        System.debug('mapFieldsForDIObject ===> targetObjectName is: ' + targetObjectName );
 
                         //If we are not in the npsp namespace then remove the namespace from all relevant field references
                         if(ns != 'npsp'){

@@ -58,14 +58,11 @@ global with sharing class BDI_DataImportService {
     * use.
     */
     public static BDI_FieldMapping getDefaultFieldMapping(){
-        System.debug('BDI_DataImportService getDefaultFieldMapping');
         BDI_FieldMapping bdiFm;
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
-        if(dis.Field_Mapping_Method__c == 'Help Text'){
-            System.debug('BDI_DataImportService getDefaultFieldMapping ===> Help Text mapping chosen.');
+        if(dis.Field_Mapping_Method__c == FM_HELP_TEXT){
             bdiFm = BDI_FieldMappingHelpText.getInstance();
-        }else if(dis.Field_Mapping_Method__c == 'Data Import Field Mapping'){
-            System.debug('BDI_DataImportService getDefaultFieldMapping ===> CMT field mapping chosen.');
+        }else if(dis.Field_Mapping_Method__c == FM_DATA_IMPORT_FIELD_MAPPING){
             bdiFm = BDI_FieldMappingCustomMetadata.getInstance();
         }
         return bdiFm;

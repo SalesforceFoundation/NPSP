@@ -59,7 +59,7 @@ private class BDI_FieldMappingCustomMetadataTest {
 		System.assertNotEquals(null,accountFieldMapping);
 		//Confirm that there are at least 8 records
 		System.assert(accountFieldMapping.size() >= 8);
-		System.debug('accountFieldMapping is: ' + accountFieldMapping);
+
 		String nameSpace = UTIL_Namespace.getNamespace();
 		String sampleField = 'npsp__Account1_City__c';
 		if(nameSpace != 'npsp'){
