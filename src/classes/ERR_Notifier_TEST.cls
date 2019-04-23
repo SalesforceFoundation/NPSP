@@ -171,6 +171,30 @@ private class ERR_Notifier_TEST {
     }
 
     /**********************************************************************************************
+    * @description Verify that if the specified Error Notification User is inactive (or doesn't exist), that the
+    * generated email includes a note about it.
+    */
+    @IsTest
+    private static void shouldNotIncludeNoteAboutInactiveNotificationUserInEmail() {
+        Id fakeUserId = UTIL_UnitTestData_TEST.mockId(User.SObjectType);
+        Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettingsForTests(
+            new Error_Settings__c(
+                Error_Notifications_On__c = True,
+                Error_Notifications_To__c = UserInfo.getUserId()
+            )
+        );
+        String errorNotifRecipient = errorSettings.Error_Notifications_To__c;
+
+        Test.startTest();
+        ERR_Notifier notifierService = new ERR_Notifier();
+        List<String> errorRecipients = notifierService.getErrorEmailRecipients(errorNotifRecipient);
+        Messaging.SingleEmailMessage emailMessage = notifierService.createEmailMessage(null, new List<Error__c>(), errorRecipients);
+        Test.stopTest();
+
+        System.assert(!emailMessage.getPlainTextBody().containsIgnoreCase('not an active user'));
+    }
+
+    /**********************************************************************************************
     * @description Confirm that send error notification process retrieves all errors created
     * that meet the criteria and sends an email for them.
     */

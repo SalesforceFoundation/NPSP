@@ -246,8 +246,11 @@ public class ERR_Notifier {
         }
 
         if (errorNotifRecipient != ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS) {
-            bodyString += '\n\nNOTE: The specified Error Recipient UserId (' + errorNotifRecipient + ') is not an ' +
-                'active User in this Salesforce org';
+            String userEmail = getUserEmail(errorNotifRecipient);
+            if (userEmail == null) {
+                bodyString += '\n\nNOTE: The specified Error Recipient UserId (' + errorNotifRecipient + ') is not an ' +
+                    'active User in this Salesforce org';
+            }
         }
 
         mail.setPlainTextBody(bodyString);
