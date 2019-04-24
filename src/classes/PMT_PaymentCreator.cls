@@ -406,7 +406,7 @@ public class PMT_PaymentCreator {
             Integer decimalPlaces = UTIL_CurrencyCache.getInstance().getCurrDecimalPlaces(oppCurrency);
             isAmountEqualOrGreaterPaymentReceived = isEqualOrGreaterWhenRounded(totalPaymentAmount, newOpp.Amount, decimalPlaces);
         } else {
-            isAmountEqualOrGreaterPaymentReceived = (newOpp.Amount <= totalPaymentAmount);
+            isAmountEqualOrGreaterPaymentReceived = (totalPaymentAmount >= newOpp.Amount);
         }
 
         Boolean stageNameSpecified = !String.isEmpty(closedStageName);
