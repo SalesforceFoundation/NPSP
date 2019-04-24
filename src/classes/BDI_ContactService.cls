@@ -597,11 +597,11 @@ public with sharing class BDI_ContactService {
         setContactFields.addAll(mapDIFieldToC1Field.values());
         setContactFields.addAll(mapDIFieldToC2Field.values());
 
-        Set<String> uniqueContFields = new Set<String>();
-        for(String s : setContactFields){
-            uniqueContFields.add(s.toLowerCase());
+        Set<String> uniqueContactFields = new Set<String>();
+        for (String s : setContactFields) {
+            uniqueContactFields.add(s.toLowerCase());
         }
-        return 'SELECT ' + String.join(new List<String>(uniqueContFields), ',') + ' FROM Contact ';
+        return 'SELECT ' + String.join(new List<String>(uniqueContactFields), ',') + ' FROM Contact ';
     }
 
     /*******************************************************************************************************

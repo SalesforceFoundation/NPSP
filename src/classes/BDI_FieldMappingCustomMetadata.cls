@@ -52,7 +52,7 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
     * @description return singleton instance of the class
     */
     public static BDI_FieldMappingCustomMetadata getInstance() {
-        if(fieldMappingInstance == null) {
+        if (fieldMappingInstance == null) {
             fieldMappingInstance = new BDI_FieldMappingCustomMetadata();
         }
         return fieldMappingInstance;
@@ -74,7 +74,7 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
 
         Map<String,String> dataImportFieldToTargetField = new Map<String,String>();
 
-        String ns = UTIL_Namespace.getNamespace();
+        String namespace = UTIL_Namespace.getNamespace();
         //Retreive the Data Import Settings to determine the default field mapping set.
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
 
@@ -83,14 +83,14 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
         Data_Import_Field_Mapping__mdt[]  diFieldMappings;
         Data_Import_Object_Mapping__mdt diObjectMapping;
 
-        if(fieldMappingSetName != null){
+        if (fieldMappingSetName != null) {
             diFieldMappingSet = [SELECT id, DeveloperName, 
                                     Data_Import_Object_Mapping_Set__c,
                                     Data_Import_Object_Mapping_Set__r.DeveloperName    
                                 FROM Data_Import_Field_Mapping_Set__mdt
                                 WHERE DeveloperName =: fieldMappingSetName LIMIT 1];
 
-            if(diFieldMappingSet != null && diFieldMappingSet.Data_Import_Object_Mapping_Set__c != null){
+            if (diFieldMappingSet != null && diFieldMappingSet.Data_Import_Object_Mapping_Set__c != null) {
                 
                 diFieldMappings = [SELECT DeveloperName,
                                         Data_Import_Field_Mapping_Set__c,
@@ -103,22 +103,19 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
                             WHERE Target_Object_Mapping__r.Data_Import_Object_Mapping_Set__r.DeveloperName =: diFieldMappingSet.Data_Import_Object_Mapping_Set__r.DeveloperName
                                 AND Target_Object_Mapping__r.DeveloperName =: dataImportObjectName];
 
-                if(diFieldMappings != null){
-                    for(Data_Import_Field_Mapping__mdt difm : diFieldMappings){
+                if (diFieldMappings != null) {
+                    for (Data_Import_Field_Mapping__mdt difm : diFieldMappings) {
 
-                        String sourceFN = difm.Source_Field_API_Name__c;
-                        String targetFN = difm.Target_Field_API_Name__c;
-
-                        //Overwriting whatever was passed in for the object api name from the cmt record
-                        targetObjectName = difm.Target_Object_Mapping__r.Object_API_Name__c;
+                        String sourceFieldName = difm.Source_Field_API_Name__c;
+                        String targetFieldName = difm.Target_Field_API_Name__c;
 
                         //If we are not in the npsp namespace then remove the namespace from all relevant field references
-                        if(ns != 'npsp'){
-                            sourceFN = UTIL_Namespace.StrTokenRemoveNSPrefixNpspOnly(sourceFN);
-                            targetFN = UTIL_Namespace.StrTokenRemoveNSPrefixNpspOnly(targetFN);
+                        if(namespace != 'npsp'){
+                            sourceFieldName = UTIL_Namespace.removeNSPrefixNpspOnly(sourceFieldName);
+                            targetFieldName = UTIL_Namespace.removeNSPrefixNpspOnly(targetFieldName);
                         }
 
-                        dataImportFieldToTargetField.put(sourceFN,targetFN);
+                        dataImportFieldToTargetField.put(sourceFieldName,targetFieldName);
                     }
                 }
             } 
@@ -126,9 +123,4 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
 
         return dataImportFieldToTargetField;
     }
-
-    /*******************************************************************************************************
-    * @description our exception object for Field Level Security errors.
-    */
-    public class FLSException extends Exception {}
 }
