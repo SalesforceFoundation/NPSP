@@ -43,7 +43,6 @@ Create Donation from a Contact
     ${value}    Verify Occurrence Payments    Payments
     Should not be equal as strings    ${value}    0
     Click ViewAll Related List    Payments
-    Reload Page
     ${flag}     Verify payment    
     should be equal as strings     ${flag}    pass
     
