@@ -1080,6 +1080,7 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Non_Responded_Status__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Responded_Status__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Contact_Role_for_Organizational_Opps__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.Enforce_Accounting_Data_Consistency__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Honoree_Opportunity_Contact_Role__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Household_Account_Addresses_Disabled__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Max_Payments__c</members>
