@@ -302,7 +302,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     private Boolean enforceAccountingRules(List<npe01__OppPayment__c> newList) {
         Boolean isValid = true;
-        Boolean enforceAccountingRuleCustomSetting = UTIL_CustomSettingsFacade.getContactsSettings().Enforce_Accounting_Rules__c;
+        Boolean enforceAccountingRuleCustomSetting = UTIL_CustomSettingsFacade.getContactsSettings().Enforce_Accounting_Data_Consistency__c;
 
         if (enforceAccountingRuleCustomSetting == true) {
             for (npe01__OppPayment__c newRecord : newList) {

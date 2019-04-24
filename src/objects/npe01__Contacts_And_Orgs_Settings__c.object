@@ -60,10 +60,12 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Enforce_Accounting_Rules__c</fullName>
+        <fullName>Enforce_Accounting_Data_Consistency__c</fullName>
         <defaultValue>false</defaultValue>
+        <description>Enables rules and automation that enforce consistency in accounting data.</description>
         <externalId>false</externalId>
-        <label>Enforce Accounting Rules</label>
+        <inlineHelpText>Enables multiple rules and automations on payments and opportunities to ensure that accounting data is complete and consistent.</inlineHelpText>
+        <label>Enforce Accounting Data Consistency</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
