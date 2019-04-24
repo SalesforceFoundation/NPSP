@@ -126,6 +126,13 @@ tasks:
             database_url: 'sqlite:///testdata/100k/test_data.db'
             mapping: 'testdata/mapping.yml'
 
+    test_data_bdi:
+        description: 'Test data for BDI benchmarks'
+        class_path: cumulusci.tasks.bulkdata.LoadData
+        options:
+            database_url: 'sqlite:///testdata/bdi_benchmark/test_data.db'
+            mapping: 'testdata/bdi_benchmark/mapping.yml'
+
     test_data_delete:
         description: 'WARNING: Deletes all data in the objects specified in the objects option.'
         class_path: cumulusci.tasks.bulkdata.DeleteData
@@ -338,6 +345,14 @@ flows:
                 task: test_data_delete
             2:
                 task: test_data_1k
+
+    test_data_bdi:
+        description: 'WARNING: This flow deletes all data first, then loads test data for BDI benchmarks.'
+        steps:
+            1:
+                task: test_data_delete
+            2:
+                task: test_data_bdi
 
     ldv_tests:
         description: 'Deploys and runs LDV tests'

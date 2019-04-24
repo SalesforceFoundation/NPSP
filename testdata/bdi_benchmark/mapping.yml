@@ -1,0 +1,38 @@
+Accounts:
+    sf_object: Account
+    table: accounts
+    fields:
+        Name: name
+    static:
+        npe01__SYSTEM_AccountType__c: Household Account
+    record_type: HH_Account
+Contacts:
+    sf_object: Contact
+    table: contacts
+    fields:
+        LastName: name
+Opportunities:
+    sf_object: Opportunity
+    table: opportunities
+    fields:
+        Name: name
+        Amount: amount
+        StageName: stage_name
+        CloseDate: close_date
+    static:
+        npe01__Do_Not_Automatically_Create_Payment__c: True
+    lookups:
+        AccountId:
+            table: accounts
+        Primary_Contact__c:
+            table: contacts
+Payments:
+    sf_object: npe01__OppPayment__c
+    table: payments
+    fields:
+        npe01__Payment_Amount__c: amount
+        npe01__Payment_Date__c: payment_date
+        npe01__Paid__c: paid
+    lookups:
+        npe01__Opportunity__c:
+            table: opportunities
