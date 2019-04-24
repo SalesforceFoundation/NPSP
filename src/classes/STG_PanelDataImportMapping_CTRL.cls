@@ -95,6 +95,17 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
     */
     public String jobId { get; private set; }
 
+    public List<BDI_HelpTextCMT.DataImportFieldMapping> parkedCMTs {
+        get {
+            if (parkedCMTs == null) {
+                return new List<BDI_HelpTextCMT.DataImportFieldMapping>();
+            } else {
+                return parkedCMTs;
+            }
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description Action Method to enable CMDT mapping, save custom setting
     * @return null
@@ -107,10 +118,20 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
             isPolling = true;
 
             BDI_MigrationMappingUtility migrationMappingUtility = new BDI_MigrationMappingUtility();
-            jobId = migrationMappingUtility.convertLegacyHelpTextToCustomMetadata();
 
-            dataImportSettings.Field_Mapping_Method__c = 'Data Import Field Mapping';
-            dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = 'Default_Field_Mapping_Set';
+            // Check to see if we have any existing help text mappings that conflict with our default cmt mappings
+            migrationMappingUtility.buildCustomMetadataRecordsFromHelpText();
+
+            if (!migrationMappingUtility.parkedCMTs.isEmpty()) {
+                isPolling = false;
+                parkedCMTs = migrationMappingUtility.parkedCMTs;
+                // Placeholder warning message
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'We\'ve found some conflicts. Please resolve them before proceeding.'));
+            } else {
+                jobId = migrationMappingUtility.convertLegacyHelpTextToCustomMetadata();
+                dataImportSettings.Field_Mapping_Method__c = 'Data Import Field Mapping';
+                dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = 'Default_Field_Mapping_Set';
+            }
 
             if (Test.isRunningTest()) {
                 jobId = '123';
