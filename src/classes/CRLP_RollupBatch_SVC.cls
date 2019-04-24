@@ -271,13 +271,13 @@ public class CRLP_RollupBatch_SVC {
                                     batchSize = customizableRollupSettings.Rollups_Contact_Batch_Size__c;
                                 }
                                 when AccountContactSoftCredit {
-                                    batchSize = customizableRollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c;
+                                    batchSize = customizableRollupSettings.Rollups_AcctContactSoftCredit_Batch_Size__c;
                                 }
                                 when ContactSoftCredit {
                                     batchSize = customizableRollupSettings.Rollups_Contact_Soft_Credit_Batch_Size__c;
                                 }
                                 when AccountSoftCredit {
-                                    batchSize = customizableRollupSettings.Rollups_AccSoftCredit_Batch_Size__c;
+                                    batchSize = customizableRollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c;
                                 }
                             }
                         }
@@ -296,7 +296,7 @@ public class CRLP_RollupBatch_SVC {
                                     batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c;
                                 }
                                 when AccountSoftCredit {
-                                    batchSize = customizableRollupSettings.Rollups_AccSoftCredit_Skew_Batch_Size__c;
+                                    batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c;
                                 }
                             }
                         }

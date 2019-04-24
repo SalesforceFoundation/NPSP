@@ -335,19 +335,20 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
     /*******************************************************************************************************
     * @description Ensure that any default Org Rollup Settigns are updated for custom settings 
-    * objects accordingly.
+    * objects accordingly.  There was a swap of custom setting fields to get the account soft credit settings
+    * pointed to the corresponding setting
     */
     public static void updateDefaultRollupSettings() {
         Customizable_Rollup_Settings__c rollupSettings = UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings();
         Boolean isUpdateNeeded = false;
+        Decimal currentAccountSoftCreditBatchSize = UTIL_CustomSettingsFacade.DEFAULT_ROLLUP_BATCH_SIZE;
 
-        if (rollupSettings.Rollups_AccSoftCredit_Skew_Batch_Size__c == null) {
-            rollupSettings.Rollups_AccSoftCredit_Skew_Batch_Size__c = UTIL_CustomSettingsFacade.DEFAULT_ROLLUP_SKEW_MODE_BATCH_SIZE;
-            isUpdateNeeded = true;
+        if (rollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c != null) {
+            currentAccountSoftCreditBatchSize = rollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c;
         }
 
-        if (rollupSettings.Rollups_AccSoftCredit_Batch_Size__c == null) {
-            rollupSettings.Rollups_AccSoftCredit_Batch_Size__c = UTIL_CustomSettingsFacade.DEFAULT_ROLLUP_BATCH_SIZE;
+        if (rollupSettings.Rollups_AcctContactSoftCredit_Batch_Size__c == null) {
+            rollupSettings.Rollups_AcctContactSoftCredit_Batch_Size__c = currentAccountSoftCreditBatchSize;
             isUpdateNeeded = true;
         }
         

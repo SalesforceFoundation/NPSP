@@ -52,10 +52,10 @@
             <div class="slds-grid slds-gutters_small">
                 <div class="slds-col slds-has-flexi-truncate slds-grid" role="listitem">
                     <div class="slds-form-element">
-                        <apex:outputLabel value="{!$ObjectType.Customizable_Rollup_Settings__c.Fields.Rollups_Account_Soft_Credit_Batch_Size__c.Label}" for="tbxAccContactSoft" styleClass="slds-form-element__label" />
+                        <apex:outputLabel value="{!$ObjectType.Customizable_Rollup_Settings__c.Fields.Rollups_AcctContactSoftCredit_Batch_Size__c.Label}" for="tbxAccContactSoft" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
-                            <apex:outputField value="{!stgService.stgCRLP.Rollups_Account_Soft_Credit_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                            <apex:inputField value="{!stgService.stgCRLP.Rollups_Account_Soft_Credit_Batch_Size__c}" rendered="{!isEditMode}" id="tbxAccContactSoft" styleClass="slds-input" />
+                            <apex:outputField value="{!stgService.stgCRLP.Rollups_AcctContactSoftCredit_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                            <apex:inputField value="{!stgService.stgCRLP.Rollups_AcctContactSoftCredit_Batch_Size__c}" rendered="{!isEditMode}" id="tbxAccContactSoft" styleClass="slds-input" />
                         </div>
                     </div>
                 </div>
@@ -64,10 +64,10 @@
             <div class="slds-grid slds-gutters_small">
                 <div class="slds-col slds-has-flexi-truncate slds-grid" role="listitem">
                     <div class="slds-form-element">
-                        <apex:outputLabel value="{!$ObjectType.Customizable_Rollup_Settings__c.Fields.Rollups_AccSoftCredit_Batch_Size__c.Label}" for="tbxAccSoft" styleClass="slds-form-element__label" />
+                        <apex:outputLabel value="{!$ObjectType.Customizable_Rollup_Settings__c.Fields.Rollups_Account_Soft_Credit_Batch_Size__c.Label}" for="tbxAccSoft" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
-                            <apex:outputField value="{!stgService.stgCRLP.Rollups_AccSoftCredit_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                            <apex:inputField value="{!stgService.stgCRLP.Rollups_AccSoftCredit_Batch_Size__c}" rendered="{!isEditMode}" id="tbxAccSoft" styleClass="slds-input" />
+                            <apex:outputField value="{!stgService.stgCRLP.Rollups_Account_Soft_Credit_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                            <apex:inputField value="{!stgService.stgCRLP.Rollups_Account_Soft_Credit_Batch_Size__c}" rendered="{!isEditMode}" id="tbxAccSoft" styleClass="slds-input" />
                         </div>
                     </div>
                 </div>
@@ -151,17 +151,6 @@
                             <div class="slds-form-element__control">
                                 <apex:outputField value="{!stgService.stgCRLP.Rollups_Account_SkewMode_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                                 <apex:inputField value="{!stgService.stgCRLP.Rollups_Account_SkewMode_Batch_Size__c}" rendered="{!isEditMode}" id="tbxAccSkew" html-aria-describedby="{!$Component.tbxAccSkewHelp}" styleClass="slds-input" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="slds-grid slds-gutters_small">
-                    <div class="slds-col slds-has-flexi-truncate slds-grid" role="listitem">
-                        <div class="slds-form-element">
-                            <apex:outputLabel value="{!$ObjectType.Customizable_Rollup_Settings__c.Fields.Rollups_AccSoftCredit_Skew_Batch_Size__c.Label}" for="tbxAccSoftSkew" styleClass="slds-form-element__label" />
-                            <div class="slds-form-element__control">
-                                <apex:outputField value="{!stgService.stgCRLP.Rollups_AccSoftCredit_Skew_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                                <apex:inputField value="{!stgService.stgCRLP.Rollups_AccSoftCredit_Skew_Batch_Size__c}" rendered="{!isEditMode}" id="tbxAccSoftSkew" html-aria-describedby="{!$Component.tbxAccSoftSkewHelp}" styleClass="slds-input" />
                             </div>
                         </div>
                     </div>
