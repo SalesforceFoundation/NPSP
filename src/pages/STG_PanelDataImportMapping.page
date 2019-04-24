@@ -11,7 +11,7 @@
             <c:UTIL_PageMessageInfo isRendered="{!NOT(isAdmin)}" message="{!$Label.stgDIFMNonAdminError}" />
 
             <!-- BEGIN INTRO TEXT AND TOGGLE -->
-            <div class="slds-grid">
+            <div class="slds-grid {!IF(!isPolling, '', 'slds-hide')}">
                 <apex:outputPanel>
                     <div class="slds-m-vertical_medium">
                         <c:UTIL_HtmlOutput html="{!$Label.stgHelpBDICustomObjectMappingEnable}" hasLink="true" styleClass="slds-text-body_small" />
@@ -33,6 +33,18 @@
                 </apex:outputPanel>
             </div>
             <!-- END -->
+
+            <!-- BEGIN POLLING MESSAGE -->
+            <div class="slds-card slds-m-top_medium {!IF(isPolling,'','slds-hide')}">
+                <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
+                    <p class="slds-text-body_small slds-m-top_x-small">
+                        <apex:outputText rendered="{!isPolling}" value="{!$Label.stgDeploymentInProgress}" />
+                    </p>
+                </div>
+            </div>
+            <!-- END POLLING MESSAGE -->
+
+            <apex:actionPoller action="{!checkDeploymentStatus}" enabled="{!isPolling}" reRender="form" interval="5" status="deploymentStatus"/>
 
             <apex:actionFunction name="enableDataImportFieldMapping" action="{!enableDataImportFieldMapping}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
                 status="statusLoad" />

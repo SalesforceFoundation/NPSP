@@ -1900,7 +1900,10 @@
         <members>stgCreatedBy</members>
         <members>stgDIFMNonAdminError</members>
         <members>stgDefaultValue</members>
+        <members>stgDeploymentCustomMetadataMappingEnabled</members>
+        <members>stgDeploymentHelpTextMappingEnabled</members>
         <members>stgDeploymentInProgress</members>
+        <members>stgDeploymentTimedOut</members>
         <members>stgDeploymentTryAgain</members>
         <members>stgDocumentation</members>
         <members>stgDontAutoScheduleHelpText</members>

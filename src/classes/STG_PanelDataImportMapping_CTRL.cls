@@ -42,6 +42,30 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
     public override string idPanel() { return 'idPanelDataImportMapping'; }
 
     /*******************************************************************************************************
+    * @description is the panel currently Polling for deployment results
+    */
+    public Boolean isPolling {
+        get {
+            if (isPolling == null) {
+                return false;
+            } else {
+                return isPolling;
+            }
+        }
+        private set;
+    }
+
+    /*******************************************************************************************************
+    * @description Maximum timeout for page polling, 12 = 1 minute
+    */
+    private static final Integer MAX_TIME_OUT = 12;
+
+    /*******************************************************************************************************
+    * @description ActionPoller count
+    */
+    private Integer timeoutCount = 0;
+
+    /*******************************************************************************************************
     * @description Get custom data import settings
     */
     public Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
@@ -80,6 +104,8 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
 
         Savepoint sp = Database.setSavepoint();
         try {
+            isPolling = true;
+
             BDI_MigrationMappingUtility migrationMappingUtility = new BDI_MigrationMappingUtility();
             jobId = migrationMappingUtility.convertLegacyHelpTextToCustomMetadata();
 
@@ -105,6 +131,7 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
 
         try {
+            isPolling = true;
             // Disable Data Import Field Mapping;
             dataImportSettings.Field_Mapping_Method__c = 'Help Text';
             dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = '';
@@ -115,6 +142,39 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
+        return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Action Method used by Poller to check status of CMDT deployment
+    * @return void
+    */
+    public PageReference checkDeploymentStatus() {
+        timeoutCount++;
+
+        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        String newStatus = dataImportSettings.CMT_API_Status__c;
+
+        if (timeoutCount > MAX_TIME_OUT) {
+            isPolling = false;
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.stgDeploymentTimedOut + ' ' + Label.stgDeploymentTryAgain));
+            return null;
+        }
+
+        if (newStatus != null && !String.isEmpty(newStatus)) {
+            isPolling = false;
+
+            if (newStatus.contains('Succeeded') || newStatus.contains('empty')) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled));
+            } else if (newStatus.contains('Disabled')) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.CONFIRM, Label.stgDeploymentHelpTextMappingEnabled));
+            } else {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, newStatus +' '+ Label.stgDeploymentTryAgain));
+            }
+
+            return null;
+        }
+
         return null;
     }
 }

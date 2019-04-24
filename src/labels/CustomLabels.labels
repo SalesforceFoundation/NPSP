@@ -5932,12 +5932,36 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Documentation</value>
     </labels>
     <labels>
+        <fullName>stgDeploymentCustomMetadataMappingEnabled</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgDeploymentInProgress</shortDescription>
+        <value>Custom Metadata mapping is enabled.</value>
+    </labels>
+    <labels>
+        <fullName>stgDeploymentHelpTextMappingEnabled</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgDeploymentInProgress</shortDescription>
+        <value>Help Text mapping is enabled.</value>
+    </labels>
+    <labels>
         <fullName>stgDeploymentInProgress</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgDeploymentInProgress</shortDescription>
         <value>Deployment in progress. You can leave this page. The page will reload when deployment is finished.</value>
+    </labels>
+    <labels>
+        <fullName>stgDeploymentTimedOut</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgDeploymentInProgress</shortDescription>
+        <value>Page timed out.</value>
     </labels>
     <labels>
         <fullName>stgDeploymentTryAgain</fullName>
