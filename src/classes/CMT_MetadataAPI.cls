@@ -206,6 +206,8 @@ public class CMT_MetadataAPI {
             dataImportSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
 
             dataImportSettings.Field_Mapping_Method__c = (isSuccess ? 'Data Import Field Mapping' : 'Help Text');
+            dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = (isSuccess ? 'Default_Field_Mapping_Set' : '');
+
             if (!Test.isRunningTest()) {
                 upsert dataImportSettings;
             }

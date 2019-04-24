@@ -83,9 +83,9 @@ public class BDI_HelpTextCMT {
 
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
+            customMd.label = this.label.replace(this.dataImportObjectName, this.targetObjectMappingLabel).left(40);
             this.recordName = generateRecordName(this.label, true, this.targetObjectMappingLabel, this.dataImportObjectName);
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
-            customMd.label = this.label.left(40);
             customMd.protected_x = IS_PROTECTED;
 
             // Convert an empty string ('') value into null for the entity reference to save properly.
@@ -115,6 +115,7 @@ public class BDI_HelpTextCMT {
 
             return customMd;
         }
+
     }
 
     /**

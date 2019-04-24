@@ -84,6 +84,7 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
             jobId = migrationMappingUtility.convertLegacyHelpTextToCustomMetadata();
 
             dataImportSettings.Field_Mapping_Method__c = 'Data Import Field Mapping';
+            dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = 'Default_Field_Mapping_Set';
 
             if (Test.isRunningTest()) {
                 jobId = '123';
@@ -106,6 +107,9 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
         try {
             // Disable Data Import Field Mapping;
             dataImportSettings.Field_Mapping_Method__c = 'Help Text';
+            dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = '';
+            dataImportSettings.CMT_API_Status__c = 'Data Import Field Mapping Disabled';
+
             update dataImportSettings;
         } catch (Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);

@@ -69,6 +69,8 @@ public class BDI_MigrationMappingUtility {
 
         Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         dataImportSettings.Field_Mapping_Method__c = fieldMappingMethod;
+        dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = DEFAULT_FIELD_MAPPING_SET_RECORD_NAME;
+        dataImportSettings.CMT_API_Status__c = 'Queue was empty';
 
         if (!Test.isRunningTest()) {
             upsert dataImportSettings;
@@ -311,15 +313,21 @@ public class BDI_MigrationMappingUtility {
     /** @description Metadata queued up for deployment */
     private static final String DATA_IMPORT_OBJECT_NAME = 'DataImport__c';
 
-    /** @description Default Packaged Object Mapping Set Metadata Record */
+    /** @description Name of default packaged Object Mapping Set */
+    private static final String DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME = 'Default_Object_Mapping_Set';
+
+    /** @description Name of default packaged Field Mapping Set */
+    private static final String DEFAULT_FIELD_MAPPING_SET_RECORD_NAME = 'Default_Field_Mapping_Set';
+
+    /** @description Default packaged Object Mapping Set metadata record */
     private static final Data_Import_Object_Mapping_Set__mdt DEFAULT_OBJECT_MAPPING_SET = [SELECT Id, DeveloperName, Label
                                                                                            FROM Data_Import_Object_Mapping_Set__mdt
-                                                                                           WHERE DeveloperName = 'Default_Object_Mapping_Set'];
+                                                                                           WHERE DeveloperName = :DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME];
 
-    /** @description Default Packaged Field Mapping Set Metadata Record */
+    /** @description Default packaged Field Mapping Set metadata record */
     private static final Data_Import_Field_Mapping_Set__mdt DEFAULT_FIELD_MAPPING_SET = [SELECT Id, DeveloperName, Label
                                                                                            FROM Data_Import_Field_Mapping_Set__mdt
-                                                                                           WHERE DeveloperName = 'Default_Field_Mapping_Set'];
+                                                                                           WHERE DeveloperName = :DEFAULT_FIELD_MAPPING_SET_RECORD_NAME];
 
     /**
      * @return A 10 character unique 'jobId' to use for
