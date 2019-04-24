@@ -79,8 +79,6 @@ public class BDI_HelpTextCMT {
         }
 
         public Metadata.CustomMetadata getMetadataRecord() {
-            Metadata.CustomMetadata md = new Metadata.CustomMetadata();
-
             String mdTypeName = UTIL_Namespace.StrTokenNSPrefix(BDI_HelpTextCMT.MetadataObject.Data_Import_Field_Mapping.Name() + '__mdt');
 
             // Setup custom metadata to be created or updated in the subscriber org.
@@ -113,9 +111,9 @@ public class BDI_HelpTextCMT {
             } else {
                 fieldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted };
             }
-            md = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fieldValues);
+            customMd = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fieldValues);
 
-            return md;
+            return customMd;
         }
     }
 

@@ -84,10 +84,10 @@ public class BDI_MigrationMappingUtility {
         List<Metadata.CustomMetadata> pendingFieldMappings = new List<Metadata.CustomMetadata>();
 
         Map<String, BDI_HelpTextCMT.MappingDetail> listHelpTextFieldDetails = getAllMappedHelpTextFields();
-        Map<String, Data_Import_Object_Mapping__mdt> existingObjectMappings = getDefaultObjectMappings(defaultObjectMappingSet.Id);
-        Map<String, Data_Import_Field_Mapping__mdt> existingFieldMappings = getDefaultFieldMappings(defaultFieldMappingSet.Id);
+        Map<String, Data_Import_Object_Mapping__mdt> existingObjectMappings = getDefaultObjectMappings(DEFAULT_OBJECT_MAPPING_SET.Id);
+        Map<String, Data_Import_Field_Mapping__mdt> existingFieldMappings = getDefaultFieldMappings(DEFAULT_FIELD_MAPPING_SET.Id);
 
-        for(String key : listHelpTextFieldDetails.keySet()) {
+        for (String key : listHelpTextFieldDetails.keySet()) {
 
             BDI_HelpTextCMT.DataImportFieldMapping fieldMapping = new BDI_HelpTextCMT.DataImportFieldMapping(key, listHelpTextFieldDetails.get(key));
             Data_Import_Object_Mapping__mdt existingDefaultObjectMapping = existingObjectMappings.get(fieldMapping.dataImportObjectName);
@@ -135,8 +135,8 @@ public class BDI_MigrationMappingUtility {
 
         fieldMapping.targetObjectMappingLabel = existingDefaultObjectMapping.Label;
         fieldMapping.targetObjectMappingRecordName = existingDefaultObjectMapping.DeveloperName;
-        fieldMapping.dataImportFieldMappingSetLabel = defaultFieldMappingSet.Label;
-        fieldMapping.dataImportFieldMappingSetRecordName = defaultFieldMappingSet.DeveloperName;
+        fieldMapping.dataImportFieldMappingSetLabel = DEFAULT_FIELD_MAPPING_SET.Label;
+        fieldMapping.dataImportFieldMappingSetRecordName = DEFAULT_FIELD_MAPPING_SET.DeveloperName;
 
         if (existingDefaultFieldMapping != null) {
             fieldMapping.recordName = existingDefaultFieldMapping.DeveloperName;
@@ -152,7 +152,7 @@ public class BDI_MigrationMappingUtility {
                                                      Data_Import_Field_Mapping__mdt existingFieldMapping,
                                                      Data_Import_Object_Mapping__mdt existingDefaultObjectMapping) {
 
-        Boolean badMappingSetId = (existingFieldMapping.Data_Import_Field_Mapping_Set__c != defaultFieldMappingSet.Id);
+        Boolean badMappingSetId = (existingFieldMapping.Data_Import_Field_Mapping_Set__c != DEFAULT_FIELD_MAPPING_SET.Id);
         Boolean badRequiredField = (existingFieldMapping.Required__c != 'No');
         Boolean badSourceFieldAPIName = (existingFieldMapping.Source_Field_API_Name__c != newFieldMapping.sourceFieldAPIName);
         Boolean badTargetFieldAPIName = (existingFieldMapping.Target_Field_API_Name__c != newFieldMapping.targetFieldAPIName);
@@ -171,7 +171,7 @@ public class BDI_MigrationMappingUtility {
     public Map<String, BDI_HelpTextCMT.MappingDetail> getAllMappedHelpTextFields() {
         Map<String, BDI_HelpTextCMT.MappingDetail> helpTextFieldMap = new Map<String, BDI_HelpTextCMT.MappingDetail>();
         Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts> importStatusAndLookupMap = new Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts>();
-        Map<String, Schema.DescribeFieldResult> allDFRs = UTIL_Describe.getAllFieldsDescribe('npsp__DataImport__c');
+        Map<String, Schema.DescribeFieldResult> allDFRs = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix(DATA_IMPORT_OBJECT_NAME));
 
         for (String dataImportFieldName : allDFRs.keySet()) {
 
@@ -274,7 +274,7 @@ public class BDI_MigrationMappingUtility {
                                                                         WHERE Data_Import_Object_Mapping_Set__c = :objectMappingSetId];
         Map<String, Data_Import_Object_Mapping__mdt> diObjectNameToObjectMappingMap = new Map<String, Data_Import_Object_Mapping__mdt>();
 
-        for(Data_Import_Object_Mapping__mdt objectMapping : existingObjectMappings) {
+        for (Data_Import_Object_Mapping__mdt objectMapping : existingObjectMappings) {
             diObjectNameToObjectMappingMap.put(objectMapping.DeveloperName, objectMapping);
         }
 
@@ -289,54 +289,37 @@ public class BDI_MigrationMappingUtility {
      */
     private Map<String, Data_Import_Field_Mapping__mdt> getDefaultFieldMappings(Id fieldMappingSetId) {
         List<Data_Import_Field_Mapping__mdt> existingFieldMappings = [SELECT Id,
-                                                                            Label,
-                                                                            DeveloperName,
-                                                                            Data_Import_Field_Mapping_Set__c,
-                                                                            Required__c,
-                                                                            Source_Field_API_Name__c,
-                                                                            Target_Field_API_Name__c,
-                                                                            Target_Object_Mapping__c,
-                                                                            Is_Deleted__c
-                                                                        FROM Data_Import_Field_Mapping__mdt
-                                                                        WHERE Data_Import_Field_Mapping_Set__c = :fieldMappingSetId];
+                                                                        Label,
+                                                                        DeveloperName,
+                                                                        Data_Import_Field_Mapping_Set__c,
+                                                                        Required__c,
+                                                                        Source_Field_API_Name__c,
+                                                                        Target_Field_API_Name__c,
+                                                                        Target_Object_Mapping__c,
+                                                                        Is_Deleted__c
+                                                                      FROM Data_Import_Field_Mapping__mdt
+                                                                      WHERE Data_Import_Field_Mapping_Set__c = :fieldMappingSetId];
         Map<String, Data_Import_Field_Mapping__mdt> diFieldNameToFieldMappingMap = new Map<String, Data_Import_Field_Mapping__mdt>();
 
-        for(Data_Import_Field_Mapping__mdt fieldMapping : existingFieldMappings) {
+        for (Data_Import_Field_Mapping__mdt fieldMapping : existingFieldMappings) {
             diFieldNameToFieldMappingMap.put(fieldMapping.Source_Field_API_Name__c, fieldMapping);
         }
 
         return diFieldNameToFieldMappingMap;
     }
 
-    /** @description Default Object Mapping Set record */
-    public static Data_Import_Object_Mapping_Set__mdt defaultObjectMappingSet {
-        get {
-            if(defaultObjectMappingSet == null) {
-                return getDefaultObjectMappingSet();
-            }
-            return defaultObjectMappingSet;
-        } private set;
-    }
+    /** @description Metadata queued up for deployment */
+    private static final String DATA_IMPORT_OBJECT_NAME = 'DataImport__c';
 
-    /** @description Default Field Mapping Set record */
-    public static Data_Import_Field_Mapping_Set__mdt defaultFieldMappingSet {
-        get {
-            if(defaultFieldMappingSet == null) {
-                return getDefaultFieldMappingSet();
-            }
-            return defaultFieldMappingSet;
-        } private set;
-    }
+    /** @description Default Packaged Object Mapping Set Metadata Record */
+    private static final Data_Import_Object_Mapping_Set__mdt DEFAULT_OBJECT_MAPPING_SET = [SELECT Id, DeveloperName, Label
+                                                                                           FROM Data_Import_Object_Mapping_Set__mdt
+                                                                                           WHERE DeveloperName = 'Default_Object_Mapping_Set'];
 
-    /** @description Queries for default Object Mapping Set, assume existence */
-    private static Data_Import_Object_Mapping_Set__mdt getDefaultObjectMappingSet() {
-        return [SELECT Id, DeveloperName, Label FROM Data_Import_Object_Mapping_Set__mdt WHERE DeveloperName = 'Default_Object_Mapping_Set'];
-    }
-
-    /** @description Queries for default Field Mapping Set, assume existence */
-    private static Data_Import_Field_Mapping_Set__mdt getDefaultFieldMappingSet() {
-        return [SELECT Id, DeveloperName, Label FROM Data_Import_Field_Mapping_Set__mdt WHERE DeveloperName = 'Default_Field_Mapping_Set'];
-    }
+    /** @description Default Packaged Field Mapping Set Metadata Record */
+    private static final Data_Import_Field_Mapping_Set__mdt DEFAULT_FIELD_MAPPING_SET = [SELECT Id, DeveloperName, Label
+                                                                                           FROM Data_Import_Field_Mapping_Set__mdt
+                                                                                           WHERE DeveloperName = 'Default_Field_Mapping_Set'];
 
     /**
      * @return A 10 character unique 'jobId' to use for
