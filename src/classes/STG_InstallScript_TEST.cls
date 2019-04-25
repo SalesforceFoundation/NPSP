@@ -36,6 +36,8 @@
 @isTest
 public with sharing class STG_InstallScript_TEST {
 
+    private static final Integer ROLLUP_BATCH_SIZE = 333;
+
     /*******************************************************************************************************
     * @description A test exception class 
     */
@@ -84,12 +86,16 @@ public with sharing class STG_InstallScript_TEST {
     public testmethod static void push() {
         //Create some of the default settings
         createSomeDefaultSettings();
+        Customizable_Rollup_Settings__c expectedConfig = buildRollupSettingsWithPartialValues();
         
         //Run the install script               
         Test.testInstall(new STG_InstallScript(), new Version(1,0), true);
         
         //Verify all settings created
         verifyAllSettingsCreated();
+
+        // Verify rollup Settings
+        assertRollupSettingsEqual(expectedConfig);
     }
     
     public testmethod static void upgrade() {
@@ -425,6 +431,32 @@ public with sharing class STG_InstallScript_TEST {
         }
     }
 
+    /*********************************************************************************************************
+    @description 
+        Verify that the Customizable Rollup Settings matches the expected Configuration
+    **********************************************************************************************************/ 
+    private static void assertRollupSettingsEqual(Customizable_Rollup_Settings__c expectedConfig) {
+        
+        Customizable_Rollup_Settings__c afterScriptConfig = UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings();
+
+        System.assertEquals(expectedConfig.Customizable_Rollups_Enabled__c, afterScriptConfig.Customizable_Rollups_Enabled__c, 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_Account_Batch_Size__c, afterScriptConfig.Rollups_Account_Batch_Size__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_Contact_Batch_Size__c, afterScriptConfig.Rollups_Contact_Batch_Size__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_Account_SkewMode_Batch_Size__c, afterScriptConfig.Rollups_Account_SkewMode_Batch_Size__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_Contact_SkewMode_Batch_Size__c, afterScriptConfig.Rollups_Contact_SkewMode_Batch_Size__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_Account_Soft_Credit_Batch_Size__c, afterScriptConfig.Rollups_Account_Soft_Credit_Batch_Size__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_Contact_Soft_Credit_Batch_Size__c, afterScriptConfig.Rollups_Contact_Soft_Credit_Batch_Size__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_AcctContactSoftCredit_Batch_Size__c, afterScriptConfig.Rollups_AcctContactSoftCredit_Batch_Size__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_GAU_Batch_Size__c, afterScriptConfig.Rollups_GAU_Batch_Size__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_Skew_Dispatcher_Batch_Size__c, afterScriptConfig.Rollups_Skew_Dispatcher_Batch_Size__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_Limit_on_Attached_Opps_for_Skew__c, afterScriptConfig.Rollups_Limit_on_Attached_Opps_for_Skew__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Disable_Related_Records_Filter__c, afterScriptConfig.Disable_Related_Records_Filter__c , 'The settings should match');
+        System.assertEquals(expectedConfig.AccountHardCreditNonSkew_Incremental__c, afterScriptConfig.AccountHardCreditNonSkew_Incremental__c , 'The settings should match');
+        System.assertEquals(expectedConfig.ContactHardCreditNonSkew_Incremental__c, afterScriptConfig.ContactHardCreditNonSkew_Incremental__c , 'The settings should match');
+
+        System.assertEquals(ROLLUP_BATCH_SIZE, afterScriptConfig.Rollups_AcctContactSoftCredit_Batch_Size__c, 'The setting should be set to the batch size');
+    }
+
     private static void setAllNpspFlags(Boolean flagValue) {
         npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
         npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c = flagValue;
@@ -519,7 +551,7 @@ public with sharing class STG_InstallScript_TEST {
         insert handlers;
     }
     
-    public static void verifyAllSettingsCreated() {        
+    public static void verifyAllSettingsCreated() {
         assertTriggerHandlersEqual(getTriggerHandlers(), TDTM_DefaultConfig.getDefaultRecords());
     }
 
@@ -530,6 +562,26 @@ public with sharing class STG_InstallScript_TEST {
                 Load_Order__c, Object__c, Trigger_Action__c 
             FROM Trigger_Handler__c
         ];
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Create a new Rollup With Partial Values Set 
+    **********************************************************************************************************/ 
+    private static Customizable_Rollup_Settings__c buildRollupSettingsWithPartialValues() {
+        return UTIL_CustomSettingsFacade.getRollupSettingsForTests(
+            new Customizable_Rollup_Settings__c (
+                Customizable_Rollups_Enabled__c = true,
+                Rollups_Limit_on_Attached_Opps_for_Skew__c = 150,
+                Rollups_Account_Batch_Size__c = 20,
+                Rollups_GAU_Batch_Size__c = 400,
+                Rollups_Account_SkewMode_Batch_Size__c = 100,
+                Rollups_Contact_SkewMode_Batch_Size__c = 100,
+                Rollups_Contact_Soft_Credit_Batch_Size__c = 100,
+                Rollups_Account_Soft_Credit_Batch_Size__c = ROLLUP_BATCH_SIZE,
+                Rollups_AcctContactSoftCredit_Batch_Size__c = null
+            )
+        );
     }
 
     private static npe03__Recurring_Donation__c createRecurringDonation() {
