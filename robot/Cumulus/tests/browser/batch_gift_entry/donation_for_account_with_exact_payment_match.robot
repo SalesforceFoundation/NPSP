@@ -41,6 +41,7 @@ Enter a donation for an account with exact payment match
     Log To Console    ${pay_no}
     Page Should Contain    &{opportunity}[Name]
     Click Button    title:Close this window
+    Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
     ...                       Donation Amount=100
     Click Element With Locator    bge.field-input    Donation Date

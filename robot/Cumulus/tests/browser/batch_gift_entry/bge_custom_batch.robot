@@ -12,6 +12,9 @@ BGE Batch With Custom Values
     #Create a BGE batch with custom values (count/amount, new fields, new defaults, different settings)
     [tags]  unstable
     Set Window Size    1024    768
+    # --------------------------------
+    # Create Custom Batch 
+    # --------------------------------
     ${batch} =           Generate Random String
     ${ns} =  Get NPSP Namespace Prefix
     Select App Launcher Tab   Batch Gift Entry
@@ -47,6 +50,9 @@ BGE Batch With Custom Values
     Click BGE Button        Save
     Wait For Locator    bge.title    Batch Gift Entry
     ${batch_id}    Get Current Record Id
+    # --------------------------------
+    # Verify Batch Values
+    # --------------------------------
     Verify Title    Batch Gift Entry    ${batch}
     ${field}    Get NPSP Locator    bge.field-input    Donation Name
     Page Should Contain Element    ${field}
@@ -64,3 +70,5 @@ BGE Batch With Custom Values
     ...    Post_Process_Implementing_Class__c=None
     ...    RequireTotalMatch__c=False
     ...    Run_Opportunity_Rollups_while_Processing__c=True
+
+
