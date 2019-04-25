@@ -350,7 +350,7 @@ flows:
         description: 'WARNING: This flow deletes all data first, then loads test data for BDI benchmarks.'
         steps:
             1:
-                task: test_data_delete
+                task: test_data_delete_managed
             2:
                 task: test_data_bdi
 

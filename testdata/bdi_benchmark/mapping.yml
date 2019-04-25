@@ -24,7 +24,7 @@ Opportunities:
     lookups:
         AccountId:
             table: accounts
-        Primary_Contact__c:
+        npsp__Primary_Contact__c:
             table: contacts
 Payments:
     sf_object: npe01__OppPayment__c
