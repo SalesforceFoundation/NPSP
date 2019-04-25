@@ -26,6 +26,7 @@ Opportunities:
             table: accounts
         npsp__Primary_Contact__c:
             table: contacts
+            key_field: primary_contact__c
 Payments:
     sf_object: npe01__OppPayment__c
     table: payments
@@ -36,3 +37,4 @@ Payments:
     lookups:
         npe01__Opportunity__c:
             table: opportunities
+            key_field: npe01__opportunity__c
