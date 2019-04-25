@@ -154,16 +154,16 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 lastParentId = (Id)dtlRecord.get(parentKeyField);
             }
 
+            // Get all parent records to be processed by this batch iteration
+            List<Id> parentIds = getUniqueParentIds(this.summaryObjectType, detailRecords,
+                (parentObjectField != null ? parentObjectField + '.' : '') + parentKeyField);
+
             // If there is any post-query filtering that needs to be applied, do it here
             detailRecords = applyPostQueryLocatorFilters(detailRecords);
 
             // Map of Payment Child details by parent Opportunity (this job only handles Opportunity or Allocation
             // as the primary queryLocator).
             Map<Id, List<npe01__OppPayment__c>> paymentsByOpp = getRelatedPayments(detailRecords);
-
-            // Get all parent records to be processed by this batch iteration
-            List<Id> parentIds = getUniqueParentIds(this.summaryObjectType, detailRecords,
-                    (parentObjectField != null ? parentObjectField + '.' : '') + parentKeyField);
 
             // Get the Summary (target) records for the current set of Detail Records
             String soql = CRLP_Query_SEL.buildObjectQueryForRollup(summaryObjectType) + ' WHERE Id IN :parentIds ORDER BY Id';
