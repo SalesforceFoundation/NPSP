@@ -35,7 +35,7 @@
 */
 public abstract with sharing class UTIL_IntegrationConfig {
     @TestVisible
-    private static final String DEFAULT_NPSP_DSO_BRIDGE_NAMESPACE = 'dso_npsp';
+    private static final String DEFAULT_ARCHIVE_BRIDGE_NAMESPACE = 'dso_npsp';
 
     @TestVisible
     protected Boolean isInstalled {
@@ -118,12 +118,12 @@ public abstract with sharing class UTIL_IntegrationConfig {
         return namespace + '__' + entity;
     }
 
-    public class DsoNpspPackage extends UTIL_IntegrationConfig {
+    public class ArchiveBridgePackage extends UTIL_IntegrationConfig {
         /**********************************************************************************************************
         * @description Constructor
         */
-        public DsoNpspPackage() {
-            callableApiClassName = 'BridgeCallable_API';
+        public ArchiveBridgePackage() {
+            callableApiClassName = 'BridgeCallableAPI';
         }
 
         /**********************************************************************************************************
@@ -137,8 +137,10 @@ public abstract with sharing class UTIL_IntegrationConfig {
         * @description Determines the package namespace
         */
         protected override String initNamespace() {
-            if (System.Type.forName(DEFAULT_NPSP_DSO_BRIDGE_NAMESPACE + '__ArchiveRollupSummary__b') != null) {
-                return DEFAULT_NPSP_DSO_BRIDGE_NAMESPACE;
+            final String NAMESPACED_ARCHIVE_SUMMARY = DEFAULT_ARCHIVE_BRIDGE_NAMESPACE + '__ArchiveRollupSummary__b';
+
+            if (System.Type.forName(NAMESPACED_ARCHIVE_SUMMARY) != null) {
+                return DEFAULT_ARCHIVE_BRIDGE_NAMESPACE;
             } else {
                 return '';
             }

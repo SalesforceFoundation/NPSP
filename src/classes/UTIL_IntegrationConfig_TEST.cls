@@ -64,7 +64,7 @@ public with sharing class UTIL_IntegrationConfig_TEST {
     */
     @isTest
     private static void shouldReturnDSOBridgeCallableApiIfInstalled() {
-        UTIL_IntegrationConfig.DsoNpspPackage dsoBridgePackage = new UTIL_IntegrationConfig.DsoNpspPackage();
+        UTIL_IntegrationConfig.ArchiveBridgePackage dsoBridgePackage = new UTIL_IntegrationConfig.ArchiveBridgePackage();
         dsoBridgePackage.namespace = '';
         dsoBridgePackage.isInstalled = true;
 
@@ -80,7 +80,7 @@ public with sharing class UTIL_IntegrationConfig_TEST {
     */
     @isTest
     private static void shouldReturnNullIfDSOBridgeIsNotInstalled() {
-        UTIL_IntegrationConfig.DsoNpspPackage dsoBridgePackage = new UTIL_IntegrationConfig.DsoNpspPackage();
+        UTIL_IntegrationConfig.ArchiveBridgePackage dsoBridgePackage = new UTIL_IntegrationConfig.ArchiveBridgePackage();
         System.Callable callableApi = dsoBridgePackage.getCallableApi();
         System.assertEquals(null, callableApi, 'Callable API should not be instantiated');
     }
@@ -90,7 +90,7 @@ public with sharing class UTIL_IntegrationConfig_TEST {
     */
     @isTest
     private static void shouldConfirmThatBridgePackageIsInstalled() {
-        UTIL_IntegrationConfig.DsoNpspPackage dsoBridgePackage = new UTIL_IntegrationConfig.DsoNpspPackage();
+        UTIL_IntegrationConfig.ArchiveBridgePackage dsoBridgePackage = new UTIL_IntegrationConfig.ArchiveBridgePackage();
         dsoBridgePackage.isInstalled = true;
         System.assertEquals(true, dsoBridgePackage.isInstalled(), 'Package should be installed for the correct namespace');
 

@@ -88,7 +88,7 @@ private with sharing class Integration_API_TEST {
 
         Test.stopTest();
 
-        System.assertEquals(Integration_API.DSO_BRIDGE_GET_ROLLUP_STATE_ACTION, callableMock.actionCalled,
+        System.assertEquals(Integration_API.ACTION_ARCHIVE_BRIDGE_GET_ROLLUP_STATE, callableMock.actionCalled,
             'The correct action should be called');
 
         System.assert(callableMock.providedParams.containsKey('RecordIds'),
@@ -111,7 +111,27 @@ private with sharing class Integration_API_TEST {
     }
 
     /**
-     * @description Confirms that getBaseRollupStateForRecords calls Bridge callable with correct action and params
+     * @description Confirms that getBaseRollupStateForRecords returns an empty map if not installed
+     */
+    @isTest
+    private static void getBaseRollupStateForRecordsShouldReturnAnEmptyMapIfNotIntsalled() {
+        setupMockIntegration();
+        mockPackage.isInstalled = false;
+
+        Test.startTest();
+        Map<Id, List<CRLP_Rollup>> actualRollupsByReferenceId =
+            integrationApi.getBaseRollupStateForRecords(
+                new Set<Id>(),
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
+            );
+        Test.stopTest();
+
+        System.assertEquals(null, callableMock.actionCalled, 'The callabled action should not be called');
+        System.assert(actualRollupsByReferenceId.isEmpty(), 'An empty map should be returned');
+    }
+
+    /**
+     * @description Confirms that getBaseRollupStateForRecords returns a CRLPRollupMap with the requested data
      */
     @isTest
     private static void getBaseRollupStateForRecordsShouldBuildCRLPRollupMap() {
@@ -137,7 +157,13 @@ private with sharing class Integration_API_TEST {
             );
         Test.stopTest();
 
-        System.assertEquals(expectedReferenceIds, actualRollupsByReferenceId.keySet());
+        System.assertEquals(expectedReferenceIds, actualRollupsByReferenceId.keySet(),
+            'The requested Ids should be keys in the CRLP rollup map');
+
+        for (Id referenceId : actualRollupsByReferenceId.keySet()) {
+            System.assertEquals(2, actualRollupsByReferenceId.get(referenceId).size(),
+                'The correct number of rollups should be returned for each reference Id');
+        }
     }
 
     /**
@@ -149,12 +175,12 @@ private with sharing class Integration_API_TEST {
         String rollupsJSON = '[' +
 
             CMT_UnitTestData_TEST.createRollupRecord('Total Donations All Time', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                    'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Amount') + ',' +
+                CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Amount') + ',' +
 
             CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
-                    CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                    'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') +
+                CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') +
         ']';
 
         List<Rollup__mdt> rollupMetadata = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
@@ -180,7 +206,7 @@ private with sharing class Integration_API_TEST {
         mockPackage.callableApi = callableMock;
 
         integrationApi = new Integration_API();
-        integrationApi.dsoNpspPackage = mockPackage;
+        integrationApi.archiveBridgePackage = mockPackage;
     }
 
     /**
@@ -193,7 +219,7 @@ private with sharing class Integration_API_TEST {
 
         /**
          * @description Sets return value for callable
-        */
+         */
         private MockCallable withReturnValue(Object returnValue) {
             this.returnValue = returnValue;
             return this;
@@ -201,7 +227,7 @@ private with sharing class Integration_API_TEST {
 
         /**
          * @description Mocks the call method, tracks the action called, the provided params
-        */
+         */
         public Object call(String action, Map<String, Object> params) {
             providedParams = params;
             actionCalled = action;

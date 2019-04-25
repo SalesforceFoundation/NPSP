@@ -36,15 +36,15 @@
 */
 public with sharing class Integration_API {
     @TestVisible
-    private static final String DSO_BRIDGE_GET_ROLLUP_STATE_ACTION = 'dso.getRollupStateForRecords';
+    private static final String ACTION_ARCHIVE_BRIDGE_GET_ROLLUP_STATE = 'dso.getRollupStateForRecords';
 
     @TestVisible
-    private UTIL_IntegrationConfig dsoNpspPackage {
+    private UTIL_IntegrationConfig archiveBridgePackage {
         get {
-            if (dsoNpspPackage == null) {
-                dsoNpspPackage = new UTIL_IntegrationConfig.DsoNpspPackage();
+            if (archiveBridgePackage == null) {
+                archiveBridgePackage = new UTIL_IntegrationConfig.ArchiveBridgePackage();
             }
-            return dsoNpspPackage;
+            return archiveBridgePackage;
         }
         set;
     }
@@ -54,7 +54,7 @@ public with sharing class Integration_API {
     * @return Boolean
     */
     public Boolean isRollupStateEnabled() {
-        return dsoNpspPackage.isInstalled();
+        return archiveBridgePackage.isInstalled();
     }
 
     /**
@@ -64,8 +64,12 @@ public with sharing class Integration_API {
     * @return Map<Id, List<CRLP_Rollup>> List of CRLP_Rollup data for each specified record Id
     */
     public Map<Id, List<CRLP_Rollup>> getBaseRollupStateForRecords(Set<Id> recordIds, CRLP_RollupProcessingOptions.RollupType rollupType) {
-        String result = (String) dsoNpspPackage.getCallableApi().call(
-            DSO_BRIDGE_GET_ROLLUP_STATE_ACTION,
+        if (!isRollupStateEnabled()) {
+            return new Map<Id, List<CRLP_Rollup>>();
+        }
+
+        String result = (String) archiveBridgePackage.getCallableApi().call(
+            ACTION_ARCHIVE_BRIDGE_GET_ROLLUP_STATE,
             new Map<String, Object> {
                 'RecordIds' => recordIds,
                 'RollupType' => rollupType.name()
