@@ -262,7 +262,7 @@ private class PMT_Payment_TEST {
      * If it is an unpaid payment, it must have a scheduled date. 
      * down the Payment records.
      */
-    static testMethod void test_EnforceAccountingRules() {
+    static testMethod void test_EnforceAccountingDataConsistency() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true, Enforce_Accounting_Data_Consistency__c = true));
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
@@ -367,7 +367,7 @@ private class PMT_Payment_TEST {
     /**
      * @description Validate that the Accounting rules are not enforced if the custom setting is not enabled. 
      */
-    static testMethod void test_EnforceAccountingRulesTurnedOff() {
+    static testMethod void test_EnforceAccountingDataConsistencyTurnedOff() {
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
 
@@ -402,7 +402,7 @@ private class PMT_Payment_TEST {
     }
 
     /**
-     * @description Helper function to help set the payment attributes as necessary for testing that accounting rules are enforced. 
+     * @description Helper function to help set the payment attributes as necessary for testing that accounting data consistency is enforced. 
      */
     private static npe01__OppPayment__c updatePaymentForTesting(npe01__OppPayment__c payment, Boolean isPaid, Boolean hasPaymentDate, Boolean hasScheduledDate) {
         payment.npe01__Paid__c = isPaid;
