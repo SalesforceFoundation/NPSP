@@ -3,9 +3,7 @@ Accounts:
     table: accounts
     fields:
         Name: name
-    static:
-        npe01__SYSTEM_AccountType__c: Household Account
-    record_type: HH_Account
+    record_type: Organization
 Contacts:
     sf_object: Contact
     table: contacts
