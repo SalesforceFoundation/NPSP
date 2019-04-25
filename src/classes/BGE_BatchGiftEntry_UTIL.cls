@@ -193,8 +193,8 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                 fieldName = fieldName.substringBefore('__r') + '__c';
             }
 
-                DescribeFieldResult fieldResult =
-                    UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrAllNSPrefix(objectName), fieldName);
+            DescribeFieldResult fieldResult =
+                UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrAllNSPrefix(objectName), fieldName);
 
             if (fieldName != 'Id' && !fieldResults.contains(fieldResult)) {
                 fieldResults.add(fieldResult);
@@ -288,7 +288,6 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     */
     public static List<Map<String, String>> getPicklistOptions(String dataImportField){
         List<Map<String, String>> options = new List<Map<String, String>>();
-
 
         String dataImportObject = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
 
