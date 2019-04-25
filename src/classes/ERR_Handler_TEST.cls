@@ -34,7 +34,7 @@
 * @group ErrorHandling
 */
 @isTest
-public class ERR_Handler_TEST {
+private class ERR_Handler_TEST {
     
     private static Id chatterGroupId;
 
@@ -63,6 +63,7 @@ public class ERR_Handler_TEST {
             Error_Notifications_To__c = null, Store_Errors_On__c = true, Respect_Duplicate_Rule_Settings__c = true));
         }
     }
+
     /*******************************************************************************************************
     * @description test setup of error notifications via email
     */
@@ -85,13 +86,15 @@ public class ERR_Handler_TEST {
      * ERR_Handler.processError() and verify that the error was posted to
      * Chatter.
      */
-    private static testMethod void errorsStoredInDbTdtmCustomConfigPostToChatter() {
+    @IsTest
+    private static void errorsStoredInDbTdtmCustomConfigPostToChatter() {
         setupWithChatterNotifications();
 
         StringException testException = new StringException('Test Exception');
         ERR_Handler.processError(testException, ERR_Handler_API.Context.TDTM);
 
-        List<Error__c> errors = [SELECT Id, Full_Message__c, Stack_Trace__c, Posted_in_Chatter__c FROM Error__c];
+        List<Error__c> errors = getErrors();
+
         System.assertEquals(1, errors.size());
         UTIL_Debug.debug('****Errors: ' + JSON.serializePretty(errors));
         
@@ -110,7 +113,8 @@ public class ERR_Handler_TEST {
      * @description Trigger error notification processing by calling
      * ERR_Handler.processError() and verify that the error was emailed
      */
-    private static testMethod void errorsStoredInDbTdtmCustomConfigEmailErrors() {
+    @IsTest
+    private static void errorsStoredInDbTdtmCustomConfigEmailErrors() {
         setupWithEmailNotifications();
 
         Test.startTest();
@@ -120,12 +124,13 @@ public class ERR_Handler_TEST {
 
         Test.stopTest();
 
-        List<Error__c> errors = [SELECT Id, Full_Message__c, Stack_Trace__c, Email_Sent__c FROM Error__c];
+        List<Error__c> errors = getErrors();
         System.assertEquals(1, errors.size());
         
         //Verify error was emailed
         for(Error__c error : errors) {
             System.assertEquals(true, error.Email_Sent__c);
+            System.assertEquals(ERR_Handler_API.Context.TDTM.name(), error.Context_Type__c);
         }
     }
 
@@ -133,7 +138,8 @@ public class ERR_Handler_TEST {
     * @description This is the same test called testErrorRecordCreation in the REL_Relationships_TEST class,
     * but using simple insert instead of Database.insert
     */
-    private static testMethod void errorStoredInDatabaseFromInsert() {
+    @IsTest
+    private static void errorStoredInDatabaseFromInsert() {
         setupWithChatterNotifications();
         
         Contact contact1 = new Contact(FirstName = 'test', LastName = 'testerson1', Title = 'VP1');
@@ -170,7 +176,8 @@ public class ERR_Handler_TEST {
     * @description Testing that DML changes are properly rolled back in a controller that adheres to our
     * error-handling design, and that the error is properly stored.
     */
-    private static testMethod void controllerWithManualRollback() {
+    @IsTest
+    private static void controllerWithManualRollback() {
         setupWithChatterNotifications();
         
         ERR_Handler_CTRL_TEST controller = new ERR_Handler_CTRL_TEST();
@@ -192,7 +199,8 @@ public class ERR_Handler_TEST {
     /*******************************************************************************************************
     * @description Test that error email are still sent to other system admins if the assigned user is not active 
     */
-    private static testMethod void shouldStillSendEmailsForInactiveUser() {
+    @IsTest
+    private static void shouldStillSendEmailsForInactiveUser() {
         String un = System.now().getTime() + '@testerson.com';
         User u = UTIL_UnitTestData_TEST.createNewInactiveUserForTests(un);
 
@@ -209,12 +217,30 @@ public class ERR_Handler_TEST {
 
         Test.stopTest();
 
-        List<Error__c> errors = [SELECT Id, Full_Message__c, Stack_Trace__c, Email_Sent__c FROM Error__c];
+        List<Error__c> errors = getErrors();
         System.assertEquals(1, errors.size());
 
         //Verify error was NOT emailed
         for(Error__c error : errors) {
             System.assertEquals(true, error.Email_Sent__c);
+            System.assertEquals(ERR_Handler_API.Context.TDTM.name(), error.Context_Type__c);
         }
+    }
+
+    // Helpers
+    ////////////
+
+    /**
+     * @description Helper method to retrieve all error records
+     */
+    private static List<Error__c> getErrors() {
+        return [SELECT Id,
+                Full_Message__c,
+                Stack_Trace__c,
+                Email_Sent__c,
+                Posted_in_Chatter__c,
+                Context_Type__c
+            FROM Error__c
+        ];
     }
 }
