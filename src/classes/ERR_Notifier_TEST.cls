@@ -146,8 +146,8 @@ private class ERR_Notifier_TEST {
     }
 
     /**********************************************************************************************
-    * @description Verify that if the specified Error Notification User is inactive (or doesn't exist), that the
-    * generated email includes a note about it.
+    * @description Verify that if the specified Error Notification User is inactive (or doesn't exist),
+    * that the generated email includes a note about it.
     */
     @IsTest
     private static void shouldIncludeNoteAboutInactiveNotificationUserInEmail() {
@@ -171,12 +171,11 @@ private class ERR_Notifier_TEST {
     }
 
     /**********************************************************************************************
-    * @description Verify that if the specified Error Notification User is inactive (or doesn't exist), that the
-    * generated email includes a note about it.
+    * @description Verify that if the specified Error Notification User is active, that the
+    * generated email does not state that the specified user is inactive.
     */
     @IsTest
     private static void shouldNotIncludeNoteAboutInactiveNotificationUserInEmail() {
-        Id fakeUserId = UTIL_UnitTestData_TEST.mockId(User.SObjectType);
         Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettingsForTests(
             new Error_Settings__c(
                 Error_Notifications_On__c = True,
