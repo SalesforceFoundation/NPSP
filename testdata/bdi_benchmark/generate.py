@@ -43,6 +43,8 @@ def generate_data():
         date = START_DATE
         for i in range(start, end + 1):
             parent = model(name=f"{name} {i}")
+            if model is Account:
+                parent.record_type = 'Organization'
             session.add(parent)
             session.flush()
             kw = {
