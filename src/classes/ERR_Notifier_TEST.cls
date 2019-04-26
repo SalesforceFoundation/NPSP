@@ -108,7 +108,7 @@ private class ERR_Notifier_TEST {
         Test.stopTest();
 
         ERR_Notifier notifierService = new ERR_Notifier();
-        for (Error__c err : notifierService.getErrorsPendingNotification()) {
+        for (Error__c err : getErrors()) {
             System.assert(err.Email_Sent__c,
                     'All emails pending notification should be marked as having an email sent');
         }
@@ -198,7 +198,7 @@ private class ERR_Notifier_TEST {
     * that meet the criteria and sends an email for them.
     */
     @IsTest
-    private static void shouldPostEmailsToChatter() {
+    private static void shouldPostErrorsToChatter() {
 
         if (!Schema.SObjectType.User.isFeedEnabled()) {
             return;
@@ -225,14 +225,95 @@ private class ERR_Notifier_TEST {
         Test.stopTest();
 
         ERR_Notifier notifierService = new ERR_Notifier();
-        for (Error__c err : notifierService.getErrorsPendingNotification()) {
+        for (Error__c err : getErrors()) {
             System.assert(err.Posted_in_Chatter__c,
-                    'All emails pending notification should be marked as being posted to chatter');
+                    'All errors pending notification should be marked as being posted to chatter');
         }
     }
 
+    /**********************************************************************************************
+    * @description Confirm that errors are not posted to Chatter if the heap size limit has been reached
+    */
+    @IsTest
+    private static void shouldNotPostErrorsToChatterWithHeapLimit() {
+
+        if (!Schema.SObjectType.User.isFeedEnabled()) {
+            return;
+        }
+
+        SObject chatterGroup = (SObject)System.Type.forName('CollaborationGroup').newInstance();
+        chatterGroup.put('Name', 'ChatterTestGroup');
+        chatterGroup.put('CollaborationType', 'Private');
+        insert chatterGroup;
+
+        UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(
+            Error_Notifications_On__c = True,
+            Error_Notifications_To__c = chatterGroup.Id
+        ));
+
+        List<Error__c> errors = new List<Error__c>();
+        for (Integer n = 0; n < 100; n++) {
+            errors.add(createError(Datetime.now()));
+        }
+        insert errors;
+
+        Test.startTest();
+        ERR_Notifier.MAX_HEAP_LIMIT = Limits.getHeapSize()+1;
+        ERR_Notifier.sendErrorNotifications(null);
+        Test.stopTest();
+
+        ERR_Notifier notifierService = new ERR_Notifier();
+        for (Error__c err : getErrors()) {
+            System.assertEquals(false, err.Posted_in_Chatter__c,
+                'All errors pending notification should NOT have been posted to chatter because over heap size limit');
+        }
+    }
+
+    /**********************************************************************************************
+    * @description Confirm that errors are not posted to Chatter if the heap size limit has been reached
+    */
+    @IsTest
+    private static void shouldNotEmailErrorsWithHeapLimit() {
+        UTIL_CustomSettingsFacade.getErrorSettingsForTests(new Error_Settings__c(
+            Error_Notifications_On__c = True,
+            Error_Notifications_To__c = UserInfo.getUserId()
+        ));
+
+        List<Error__c> errors = new List<Error__c>();
+        for (Integer n = 0; n < 100; n++) {
+            errors.add(createError(Datetime.now()));
+        }
+        insert errors;
+
+        Test.startTest();
+        ERR_Notifier.MAX_HEAP_LIMIT = Limits.getHeapSize()+1;
+        ERR_Notifier.sendErrorNotifications(null);
+        Test.stopTest();
+
+        ERR_Notifier notifierService = new ERR_Notifier();
+        for (Error__c err : getErrors()) {
+            System.assertEquals(false, err.Email_Sent__c,
+                'All errors pending notification should NOT have been emailed because over heap size limit');
+        }
+    }
+
+
     // Helpers
     ////////////
+
+    /**
+     * @description Helper method to retrieve all error records
+     */
+    private static List<Error__c> getErrors() {
+        return [SELECT Id,
+            Full_Message__c,
+            Stack_Trace__c,
+            Email_Sent__c,
+            Posted_in_Chatter__c,
+            Context_Type__c
+        FROM Error__c
+        ];
+    }
 
     /**********************************************************************************************
     * @description Get System Administrator User emails

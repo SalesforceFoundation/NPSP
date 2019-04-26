@@ -43,7 +43,8 @@ public class ERR_Notifier {
     private static Datetime MAX_AGE_FOR_ERRORS = System.now().addHours(-48);
 
     /** @description Maximum Heap Storage that will be used to build the message/post body */
-    private Decimal MAX_HEAP_LIMIT {
+    @TestVisible
+    private static Decimal MAX_HEAP_LIMIT {
         get {
             if (MAX_HEAP_LIMIT == null) {
                 MAX_HEAP_LIMIT = (Limits.getLimitHeapSize() * 0.95);
@@ -212,16 +213,13 @@ public class ERR_Notifier {
             } catch (Exception ex) {
                 // Swallow any errors generating the email
             }
-
-            for (Error__c error : errors) {
-                error.Email_Sent__c = true;
-            }
             update errors;
         }
     }
 
     /**********************************************************************************************
-    * @description Creates the email message to send as error notification.
+    * @description Creates the email message to send as error notification and marks each Error__c
+    * record with Email_Sent=true
     * @param context The context that triggered the error notification.
     * @param errorList The list of errors to include in the email.
     * @param recipientsList The list of email recipients.
@@ -249,13 +247,13 @@ public class ERR_Notifier {
         }
 
         bodyString += '\n\nErrors:';
-        Integer i = 1;
+        Integer i = 0;
         for (Error__c error : errorList) {
             if (isNearHeapLimit()) {
                 break;
             }
-            bodyString += '\n\n----------\n Error #' + i + ': \n' + buildErrorMessageBody(error);
-            i++;
+            bodyString += '\n\n----------\n Error #' + (++i) + ': \n' + buildErrorMessageBody(error);
+            error.Email_Sent__c = true;
         }
 
         if (errorNotifRecipient != ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS) {
