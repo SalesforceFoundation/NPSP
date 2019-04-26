@@ -5,7 +5,7 @@
 
     <div class="slds-scope">
         <apex:form id="form" styleClass="slds-m-around_x-large">
-            <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.bdiCustomObjectMappingSummary}" />
+            <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.bdiCustomObjectMappingSummary}" />
 
             <c:UTIL_PageMessages allowClose="false" id="messages" />
             <c:UTIL_PageMessageInfo isRendered="{!NOT(isAdmin)}" message="{!$Label.stgDIFMNonAdminError}" />
@@ -17,7 +17,7 @@
                         <c:UTIL_HtmlOutput html="{!$Label.stgHelpBDICustomObjectMappingEnable}" hasLink="true" styleClass="slds-text-body_small" />
                     </div>
 
-                    <label class="slds-checkbox_toggle slds-grid slds-m-vertical_small">
+                    <label class="slds-checkbox_toggle slds-grid slds-m-vertical_small" style="width: fit-content;">
                         <span class="slds-form-element__label slds-m-bottom_none">{!$Label.bdiCustomObjectMappingSummary}</span>
                         <apex:inputCheckbox onClick="toggle(); return false;"
                                             id="enableDIFMToggle"
@@ -43,6 +43,78 @@
                 </div>
             </div>
             <!-- END POLLING MESSAGE -->
+
+            <!-- CONFLICTS DATATABLE -->
+            <div class="slds-grid slds-wrap slds-m-top_large {!IF(isPolling,'slds-hide','')}">
+                <div class="slds-size_1-of-1 {!IF(conflictingCMTs.size > 0,'','slds-hide')}">
+                    <div class="slds-text-heading_medium slds-p-bottom_medium">Conflicting Existing Mappings</div>
+
+                    <table class="slds-card slds-table slds-table_cell-buffer slds-table_bordered">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Data Import Field Label">Data Import Field Label</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Expected">Expected Help Text Field Value</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Found">Found Help Text Field Value</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <apex:repeat value="{!conflictingCMTs}" var="cmt">
+                                <tr class="slds-hint-parent">
+                                    <th data-label="{!cmt.label}" scope="row">
+                                        <div class="slds-truncate" title="{!cmt.label}">{!cmt.label}</div>
+                                    </th>
+                                    <td data-label="{!IF(cmt.expectedHelpTextValue == 'New Mapping', 'New Mapping' ,cmt.dataImportObjectName + '.' + cmt.expectedHelpTextValue)}">
+                                        <div class="slds-truncate" title="{!IF(cmt.expectedHelpTextValue == 'New Mapping', 'New Mapping' ,cmt.dataImportObjectName + '.' + cmt.expectedHelpTextValue)}">{!IF(cmt.expectedHelpTextValue == 'New Mapping', 'New Mapping' ,cmt.dataImportObjectName + '.' + cmt.expectedHelpTextValue)}</div>
+                                    </td>
+                                    <td data-label="{!cmt.dataImportObjectName + '.' + cmt.targetFieldAPIName}">
+                                        <div class="slds-truncate" title="{!cmt.dataImportObjectName + '.' + cmt.targetFieldAPIName}">{!cmt.dataImportObjectName + '.' + cmt.targetFieldAPIName}</div>
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END CONFLICTS DATATABLE -->
+
+            <!-- PENDING DATATABLE -->
+            <div class="slds-grid slds-wrap slds-m-top_large {!IF(isPolling,'slds-hide','')}">
+                <div class="slds-size_1-of-1 {!IF(pendingCMTs.size > 0,'','slds-hide')}">
+                    <div class="slds-text-heading_medium slds-p-bottom_medium">Pending New Custom Mappings</div>
+
+                    <table class="slds-card slds-table slds-table_cell-buffer slds-table_bordered">
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Data Import Field Label">Data Import Field Label</div>
+                                </th>
+                                <th class="" scope="col">
+                                    <div class="slds-truncate" title="Expected">Found Help Text Field Value</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <apex:repeat value="{!pendingCMTs}" var="cmt">
+                                <tr class="slds-hint-parent">
+                                    <th data-label="{!cmt.label}" scope="row">
+                                        <div class="slds-truncate" title="{!cmt.label}">{!cmt.label}</div>
+                                    </th>
+                                    <td data-label="{!cmt.dataImportObjectName + '.' + cmt.targetFieldAPIName}">
+                                        <div class="slds-truncate" title="{!cmt.dataImportObjectName + '.' + cmt.targetFieldAPIName}">{!cmt.dataImportObjectName + '.' + cmt.targetFieldAPIName}</div>
+                                    </td>
+                                </tr>
+                            </apex:repeat>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- END PENDING DATATABLE -->
 
             <apex:actionPoller action="{!checkDeploymentStatus}" enabled="{!isPolling}" reRender="form" interval="5" status="deploymentStatus"/>
 
