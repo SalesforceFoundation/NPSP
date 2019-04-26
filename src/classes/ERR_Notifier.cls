@@ -38,9 +38,19 @@ public class ERR_Notifier {
 
     /** @description Filtering options to reduce the number of records processed during the notify job */
     @TestVisible
-    private static Integer MAX_RECORDS = 5000;
+    private static Integer MAX_RECORDS = 500;
     @TestVisible
     private static Datetime MAX_AGE_FOR_ERRORS = System.now().addHours(-48);
+
+    /** @description Maximum Heap Storage that will be used to build the message/post body */
+    private Decimal MAX_HEAP_LIMIT {
+        get {
+            if (MAX_HEAP_LIMIT == null) {
+                MAX_HEAP_LIMIT = (Limits.getLimitHeapSize() * 0.95);
+            }
+            return MAX_HEAP_LIMIT;
+        } set;
+    }
 
     /** @description Global error notification settings used in NPSP Settings and here */
     public static final String ERROR_NOTIFICATION_USER_PREFIX = USER_UserService.OBJECT_ID_PREFIX_USER;
@@ -241,6 +251,9 @@ public class ERR_Notifier {
         bodyString += '\n\nErrors:';
         Integer i = 1;
         for (Error__c error : errorList) {
+            if (isNearHeapLimit()) {
+                break;
+            }
             bodyString += '\n\n----------\n Error #' + i + ': \n' + buildErrorMessageBody(error);
             i++;
         }
@@ -259,8 +272,8 @@ public class ERR_Notifier {
     }
 
     /**********************************************************************************************
-    * @description Post a message to Chatter with information about all the existing error records
-    * that were not already posted.
+    * @description Post one message per error to Chatter with all details on the error message.
+    * error records that were not already posted.
     * @param chatterGroupId The ID of the Chatter group to post to.
     * @return void
     */
@@ -281,6 +294,9 @@ public class ERR_Notifier {
 
             List<SObject> postsToInsert = new List<SObject>();
             for (Error__c error : errors) {
+                if (isNearHeapLimit()) {
+                    break;
+                }
                 postsToInsert.add(createChatterPost(error, collaborationGroup.Id));
                 error.Posted_in_Chatter__c = true;
             }
@@ -359,11 +375,27 @@ public class ERR_Notifier {
             ];
     }
 
+    /**
+     * @description Retrieve the specified email for the notification User. Returns NULL if the
+     * user is not active
+     * @param userId
+     * @return Email (or null)
+     */
     private String getUserEmail(Id userId) {
         List<User> users = [SELECT Email FROM User WHERE Id = :userId AND IsActive = TRUE LIMIT 1];
         if (!users.isEmpty()) {
             return users[0].Email;
         }
         return null;
+    }
+
+    /**
+    * @description Just in case the size of the Error__c records (LOB fields) plus the size of
+    * the created Email Message Body or Chatter Post Body is within 95% of the total heap available
+    * stop building the message/post body and send/post with the content as is. This avoids an
+    * untrappable limit exception.
+    */
+    private Boolean isNearHeapLimit() {
+        return (Limits.getHeapSize() >= MAX_HEAP_LIMIT);
     }
 }
