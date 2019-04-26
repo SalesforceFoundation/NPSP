@@ -17,6 +17,7 @@ Opportunities:
         Amount: amount
         StageName: stage_name
         CloseDate: close_date
+        npsp__Qualified_Date__c: qualified_date
     static:
         npe01__Do_Not_Automatically_Create_Payment__c: True
     lookups:

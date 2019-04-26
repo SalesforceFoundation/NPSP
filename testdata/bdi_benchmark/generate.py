@@ -27,7 +27,7 @@ def generate_data():
     Payment = base.classes.payments
 
     def make_opportunity(amount, date, paid, payment_amount, **kw):
-        opp = Opportunity(amount=amount, stage_name='Closed Won', close_date=date, **kw)
+        opp = Opportunity(amount=amount, stage_name='Prospecting', close_date=date, **kw)
         session.add(opp)
         session.flush()
         if payment_amount:
