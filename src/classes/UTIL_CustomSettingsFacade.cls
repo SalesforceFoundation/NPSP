@@ -40,6 +40,9 @@ public without sharing class UTIL_CustomSettingsFacade {
 
     public static final Integer DEFAULT_ROLLUP_SKEW_MODE_BATCH_SIZE = 1000;
     public static final Integer DEFAULT_ROLLUP_BATCH_SIZE = 200;
+    public static final Integer DEFAULT_ROLLUP_SKEW_DISPATCHER_SIZE = 300;
+    public static final Integer DEFAULT_ROLLUP_ATTACHED_OPP_SKEW_LIMIT  = 250;
+
 
     //storing user-level custom settings in-memory to avoid trying to isert/update them
     //twice and thus trigger the "duplicate OwnerId" error
@@ -881,8 +884,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         crs.Rollups_Contact_Soft_Credit_Batch_Size__c = DEFAULT_ROLLUP_BATCH_SIZE;
         crs.Rollups_AcctContactSoftCredit_Batch_Size__c = DEFAULT_ROLLUP_BATCH_SIZE;
         crs.Rollups_GAU_Batch_Size__c = DEFAULT_ROLLUP_SKEW_MODE_BATCH_SIZE;
-        crs.Rollups_Skew_Dispatcher_Batch_Size__c = 300;
-        crs.Rollups_Limit_on_Attached_Opps_for_Skew__c = 250;
+        crs.Rollups_Skew_Dispatcher_Batch_Size__c = DEFAULT_ROLLUP_SKEW_DISPATCHER_SIZE;
+        crs.Rollups_Limit_on_Attached_Opps_for_Skew__c = DEFAULT_ROLLUP_ATTACHED_OPP_SKEW_LIMIT;
         crs.Disable_Related_Records_Filter__c = false;
         crs.AccountHardCreditNonSkew_Incremental__c = true;
         crs.ContactHardCreditNonSkew_Incremental__c = true;
