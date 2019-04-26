@@ -34,6 +34,10 @@
 * @description Config for external packages
 */
 public abstract with sharing class UTIL_IntegrationConfig {
+    public Enum Integration {
+        ArchiveBridge
+    }
+
     @TestVisible
     private static final String DEFAULT_ARCHIVE_BRIDGE_NAMESPACE = 'dso_npsp';
 
@@ -118,11 +122,29 @@ public abstract with sharing class UTIL_IntegrationConfig {
         return namespace + '__' + entity;
     }
 
-    public class ArchiveBridgePackage extends UTIL_IntegrationConfig {
+    /**********************************************************************************************************
+    * @description Builds an instance of UTIL_IntegrationConfig based on the passed in Enum
+    * @param Integration enum for desired packag
+    * @returns UTIL_IntegrationConfig
+    */
+    public static UTIL_IntegrationConfig getConfig(Integration integrationPackage) {
+        switch on integrationPackage {
+
+            when ArchiveBridge {
+                return new ArchiveBridgeConfig();
+            }
+
+            when else {
+                return null;
+            }
+        }
+    }
+
+    public class ArchiveBridgeConfig extends UTIL_IntegrationConfig {
         /**********************************************************************************************************
         * @description Constructor
         */
-        public ArchiveBridgePackage() {
+        public ArchiveBridgeConfig() {
             callableApiClassName = 'BridgeCallableAPI';
         }
 
@@ -130,7 +152,20 @@ public abstract with sharing class UTIL_IntegrationConfig {
         * @description Checks if the package is installed
         */
         protected override Boolean initIsInstalled() {
-            return System.Type.forName(prefixNamespace('ArchiveRollupSummary__b')) != null;
+            Schema.SObjectType archiveRollupSummaryType =
+                Schema.getGlobalDescribe().get(prefixNamespace('ArchiveRollupSummary__b'));
+
+            if (archiveRollupSummaryType == null) {
+                return false;
+            }
+
+            Schema.SObjectField rollupTypeField = archiveRollupSummaryType
+                .getDescribe()
+                .fields 
+                .getMap()
+                .get(prefixNamespace('RollupType__c'));
+
+            return rollupTypeField != null;
         }
 
         /**********************************************************************************************************

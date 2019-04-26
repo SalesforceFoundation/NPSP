@@ -39,6 +39,19 @@ public inherited sharing class CRLP_ApiService {
     public static final String PARAM_ROLLUPTYPE = 'RollupType';
     public static final String PARAM_ROLLUPDEFS = 'RollupDefinitions';
 
+    @TestVisible
+    private static final String ACTION_ARCHIVE_BRIDGE_GET_ROLLUP_STATE = 'dso.getRollupStateForRecords';
+
+    @TestVisible
+    private UTIL_IntegrationConfig archiveBridgeConfig {
+        get {
+            if (archiveBridgeConfig == null) {
+                archiveBridgeConfig = UTIL_IntegrationConfig.getConfig(UTIL_IntegrationConfig.Integration.ArchiveBridge);
+            }
+            return archiveBridgeConfig;
+        }
+        set;
+    }
 
     /**
     * @description Generates the list of Rollup Definitions for the specified rollup type
@@ -64,6 +77,36 @@ public inherited sharing class CRLP_ApiService {
         handler.buildGroupedRollups(rollupType);
 
         return handler.getRollupsList();
+    }
+
+
+    /**
+    * @description Confirms if Rollup State is enabled by checking if the DSO-NPSP bridge is installed
+    * @return Boolean
+    */
+    public Boolean isRollupStateEnabled() {
+        return archiveBridgeConfig.isInstalled();
+    }
+
+    /**
+    * @description Confirms if Rollup State is enabled by checking if the DSO-NPSP bridge is installed
+    * @param recordIds Ids of records that you want to retrieve archived rollup data for
+    * @param rollupType The rollup type that you want to retrieve archived rollup data for
+    * @return Map<Id, List<CRLP_Rollup>> List of CRLP_Rollup data for each specified record Id
+    */
+    public Map<Id, List<CRLP_Rollup>> getBaseRollupStateForRecords(Set<Id> recordIds, CRLP_RollupProcessingOptions.RollupType rollupType) {
+        if (!isRollupStateEnabled()) {
+            return new Map<Id, List<CRLP_Rollup>>();
+        }
+
+        String result = (String) archiveBridgeConfig.getCallableApi().call(
+            ACTION_ARCHIVE_BRIDGE_GET_ROLLUP_STATE,
+            new Map<String, Object> {
+                'RecordIds' => recordIds,
+                'RollupType' => rollupType.name()
+            }
+        );
+        return (Map<Id, List<CRLP_Rollup>>) JSON.deserialize(result, Map<Id, List<CRLP_Rollup>>.class);
     }
 
     /**

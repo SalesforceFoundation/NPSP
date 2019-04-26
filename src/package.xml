@@ -240,8 +240,6 @@
         <members>HH_NameSpec_TEST</members>
         <members>HH_OppContactRoles_TDTM</members>
         <members>HH_OppContactRoles_TEST</members>
-        <members>Integration_API</members>
-        <members>Integration_API_TEST</members>
         <members>LD_LeadConvertOverride_CTRL</members>
         <members>LD_LeadConvertOverride_TEST</members>
         <members>LVL_LevelAssignBATCH_TEST</members>

@@ -64,14 +64,14 @@ public with sharing class UTIL_IntegrationConfig_TEST {
     */
     @isTest
     private static void shouldReturnDSOBridgeCallableApiIfInstalled() {
-        UTIL_IntegrationConfig.ArchiveBridgePackage dsoBridgePackage = new UTIL_IntegrationConfig.ArchiveBridgePackage();
-        dsoBridgePackage.namespace = '';
-        dsoBridgePackage.isInstalled = true;
+        UTIL_IntegrationConfig.ArchiveBridgeConfig archiveBridgeConfig = new UTIL_IntegrationConfig.ArchiveBridgeConfig();
+        archiveBridgeConfig.namespace = '';
+        archiveBridgeConfig.isInstalled = true;
 
         //Using an existing callable class to mock bridge callable class
-        dsoBridgePackage.callableApiClassName = 'Callable_API';
+        archiveBridgeConfig.callableApiClassName = 'Callable_API';
 
-        System.Callable callableApi = dsoBridgePackage.getCallableApi();
+        System.Callable callableApi = archiveBridgeConfig.getCallableApi();
         System.assertNotEquals(null, callableApi, 'Callable API should be instantiated');
     }
 
@@ -80,8 +80,8 @@ public with sharing class UTIL_IntegrationConfig_TEST {
     */
     @isTest
     private static void shouldReturnNullIfDSOBridgeIsNotInstalled() {
-        UTIL_IntegrationConfig.ArchiveBridgePackage dsoBridgePackage = new UTIL_IntegrationConfig.ArchiveBridgePackage();
-        System.Callable callableApi = dsoBridgePackage.getCallableApi();
+        UTIL_IntegrationConfig.ArchiveBridgeConfig archiveBridgeConfig = new UTIL_IntegrationConfig.ArchiveBridgeConfig();
+        System.Callable callableApi = archiveBridgeConfig.getCallableApi();
         System.assertEquals(null, callableApi, 'Callable API should not be instantiated');
     }
 
@@ -90,13 +90,36 @@ public with sharing class UTIL_IntegrationConfig_TEST {
     */
     @isTest
     private static void shouldConfirmThatBridgePackageIsInstalled() {
-        UTIL_IntegrationConfig.ArchiveBridgePackage dsoBridgePackage = new UTIL_IntegrationConfig.ArchiveBridgePackage();
-        dsoBridgePackage.isInstalled = true;
-        System.assertEquals(true, dsoBridgePackage.isInstalled(), 'Package should be installed for the correct namespace');
+        UTIL_IntegrationConfig.ArchiveBridgeConfig archiveBridgeConfig = new UTIL_IntegrationConfig.ArchiveBridgeConfig();
+        archiveBridgeConfig.isInstalled = true;
+        System.assertEquals(true, archiveBridgeConfig.isInstalled(), 'Package should be installed for the correct namespace');
 
-        dsoBridgePackage.namespace = 'foo';
-        dsoBridgePackage.isInstalled = null;//reset the flag so it is recalculated
-        System.assertEquals(false, dsoBridgePackage.isInstalled(), 'Package should be not be installed for invalid namespace');
+        archiveBridgeConfig.namespace = 'foo';
+        archiveBridgeConfig.isInstalled = null;//reset the flag so it is recalculated
+        System.assertEquals(false, archiveBridgeConfig.isInstalled(), 'Package should be not be installed for invalid namespace');
+    }
+
+    /**********************************************************************************************************
+    * @description Confirms a UTIL_IntegrationConfig.ArchiveBridgeConfig instance is returned by getConfig
+    */
+    @isTest
+    private static void shouldGetSpecifiedIntegrationConfig() {
+        UTIL_IntegrationConfig archiveBridgeConfig =
+            UTIL_IntegrationConfig.getConfig(UTIL_IntegrationConfig.Integration.ArchiveBridge);
+
+        System.assert(archiveBridgeConfig instanceof UTIL_IntegrationConfig.ArchiveBridgeConfig,
+            'The correct UTIL_IntegrationConfig extension should be returned'
+        );
+    }
+
+    /**********************************************************************************************************
+    * @description Confirms null is returned by getConfig if given a null parameter
+    */
+    @isTest
+    private static void shouldReturnANullIntegrationConfig() {
+        UTIL_IntegrationConfig nullPackage = UTIL_IntegrationConfig.getConfig(null);
+
+        System.assertEquals(null, nullPackage, 'Null should have been returned if passed null');
     }
 
     /**********************************************************************************************************
