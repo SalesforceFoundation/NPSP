@@ -40,12 +40,6 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
     public static final String DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME = 'Default_Field_Mapping_Set';
 
     private static BDI_FieldMappingCustomMetadata fieldMappingInstance = null;
-    /*******************************************************************************************************
-    * @description flag to allow us to test out field level security exception
-    *
-    * TODO: refactor tests to make this unneccessary
-    */
-    public Boolean failFieldLevelSecurity = false;
 
 
     /*******************************************************************************************************
@@ -110,7 +104,7 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
                         String targetFieldName = difm.Target_Field_API_Name__c;
 
                         //If we are not in the npsp namespace then remove the namespace from all relevant field references
-                        if(namespace != 'npsp'){
+                        if (namespace != 'npsp') {
                             sourceFieldName = UTIL_Namespace.removeNSPrefixNpspOnly(sourceFieldName);
                             targetFieldName = UTIL_Namespace.removeNSPrefixNpspOnly(targetFieldName);
                         }

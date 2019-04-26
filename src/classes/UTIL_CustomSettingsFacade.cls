@@ -641,10 +641,10 @@ public without sharing class UTIL_CustomSettingsFacade {
         if (dis.Donation_Date_Range__c == null) {
             dis.Donation_Date_Range__c = 0;
         }
-        if (dis.Default_Data_Import_Field_Mapping_Set__c == null){
+        if (dis.Default_Data_Import_Field_Mapping_Set__c == null) {
             dis.Default_Data_Import_Field_Mapping_Set__c = BDI_FieldMappingCustomMetadata.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
         }
-        if (dis.Field_Mapping_Method__c  == null){
+        if (dis.Field_Mapping_Method__c  == null) {
             dis.Field_Mapping_Method__c  = BDI_DataImportService.FM_HELP_TEXT;
         }
     }

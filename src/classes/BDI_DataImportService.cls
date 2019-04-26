@@ -57,12 +57,12 @@ global with sharing class BDI_DataImportService {
     * @description queries the Data Import Settings custom setting to determine what type of field mapping to
     * use.
     */
-    public static BDI_FieldMapping getDefaultFieldMapping(){
+    public static BDI_FieldMapping getDefaultFieldMapping() {
         BDI_FieldMapping bdiFm;
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
-        if(dis.Field_Mapping_Method__c == FM_HELP_TEXT){
+        if (dis.Field_Mapping_Method__c == FM_HELP_TEXT) {
             bdiFm = BDI_FieldMappingHelpText.getInstance();
-        }else if(dis.Field_Mapping_Method__c == FM_DATA_IMPORT_FIELD_MAPPING){
+        }else if (dis.Field_Mapping_Method__c == FM_DATA_IMPORT_FIELD_MAPPING) {
             bdiFm = BDI_FieldMappingCustomMetadata.getInstance();
         }
         return bdiFm;

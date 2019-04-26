@@ -74,7 +74,7 @@ private class BDI_FieldMappingCustomMetadataTest {
 	/*******************************************************************************************************
 	* @description Tests that the UTIL_CustomSettingsFacade correctly sets the defaults for the Data Import Settings.
 	*/
-	@isTest static void shouldReturnCorrectDefaultsForDISCustSetting(){
+	@isTest static void shouldReturnCorrectDefaultsForDISCustSetting() {
 		//Confirm that the defaults for the fields are null.
 		Data_Import_Settings__c dis1 = Data_Import_Settings__c.getInstance();
 		System.assertEquals(null,dis1.Field_Mapping_Method__c);
