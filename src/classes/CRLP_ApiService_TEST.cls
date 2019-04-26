@@ -38,6 +38,8 @@ private class CRLP_ApiService_TEST {
     private static UTIL_IntegrationConfig_TEST.MockPackage mockPackage;
     private static MockCallable callableMock;
 
+    private static final String ROLLUP_DEFINITIONS = '[{"useFiscalYear":false,"timeBoundOperation":"All_Time","theSum":0,"theCount":0,"textValue":[null,null,null,null],"summaryObject":"General_Accounting_Unit__c","sumByYear":{}}]';
+
     /**
      * @description Validate the getRollupDefinitions returns the expected collection of CRLP_Rollup instances.
      * Calls the mocking utilities to build a bunch of rollup definitions and filter groups/rules fo
@@ -201,17 +203,13 @@ private class CRLP_ApiService_TEST {
         CRLP_ApiService service = new CRLP_ApiService();
         setupMockIntegration(service);
 
-        List<CRLP_Rollup> rollups = buildMockRollups();
-
-        Map<Id, List<CRLP_Rollup>> expectedRollupsByReferenceId = new Map<Id, List<CRLP_Rollup>>();
+        Map<Id, String> expectedRollupsByReferenceId = new Map<Id, String>();
         Set<Id> expectedReferenceIds = new Set<Id>(UTIL_UnitTestData_Test.mockIds(Account.SObjectType, 3));
         for (Id referenceId : expectedReferenceIds) {
-            expectedRollupsByReferenceId.put(referenceId, rollups.clone());
+            expectedRollupsByReferenceId.put(referenceId, ROLLUP_DEFINITIONS);
         }
 
-        callableMock.withReturnValue(
-            JSON.serialize(expectedRollupsByReferenceId)
-        );
+        callableMock.withReturnValue(expectedRollupsByReferenceId);
 
         Test.startTest();
         Map<Id, List<CRLP_Rollup>> actualRollupsByReferenceId =
@@ -225,37 +223,9 @@ private class CRLP_ApiService_TEST {
             'The requested Ids should be keys in the CRLP rollup map');
 
         for (Id referenceId : actualRollupsByReferenceId.keySet()) {
-            System.assertEquals(2, actualRollupsByReferenceId.get(referenceId).size(),
+            System.assertEquals(1, actualRollupsByReferenceId.get(referenceId).size(),
                 'The correct number of rollups should be returned for each reference Id');
         }
-    }
-
-    /**
-     * @description Builds mock rollups
-     */
-    private static List<CRLP_Rollup> buildMockRollups() {
-        String filterGroupId = CMT_UnitTestData_TEST.getNewRecordId();
-
-        String rollupsJSON = '[' +
-
-            CMT_UnitTestData_TEST.createRollupRecord('Total Donations All Time', filterGroupId,
-                CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.Sum, 'Amount') + ',' +
-
-            CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId,
-                CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.Count, 'Amount') +
-        ']';
-
-        List<Rollup__mdt> rollupMetadata = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
-
-        List<CRLP_Rollup> rollups = new List<CRLP_Rollup>();
-
-        for (Rollup__mdt r : rollupMetadata) {
-            rollups.add(new CRLP_Rollup(r));
-        }
-
-        return rollups;
     }
 
     // Helpers
@@ -378,7 +348,7 @@ private class CRLP_ApiService_TEST {
         public Object call(String action, Map<String, Object> params) {
             providedParams = params;
             actionCalled = action;
-            return returnValue == null ? JSON.serialize(new Map<Id, List<CRLP_Rollup>>()) : returnValue;
+            return returnValue == null ? new Map<Id, String>() : returnValue;
         }
     }
 

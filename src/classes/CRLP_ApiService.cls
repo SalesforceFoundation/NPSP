@@ -99,14 +99,20 @@ public inherited sharing class CRLP_ApiService {
             return new Map<Id, List<CRLP_Rollup>>();
         }
 
-        String result = (String) archiveBridgeConfig.getCallableApi().call(
+        Map<Id, String> result = (Map<Id, String>) archiveBridgeConfig.getCallableApi().call(
             ACTION_ARCHIVE_BRIDGE_GET_ROLLUP_STATE,
             new Map<String, Object> {
                 'RecordIds' => recordIds,
                 'RollupType' => rollupType.name()
             }
         );
-        return (Map<Id, List<CRLP_Rollup>>) JSON.deserialize(result, Map<Id, List<CRLP_Rollup>>.class);
+
+        Map<Id, List<CRLP_Rollup>> rollupStatesById = new Map<Id, List<CRLP_Rollup>>();
+        for (Id referenceId : result.keySet()) {
+            String rollupData = result.get(referenceId);
+            rollupStatesById.put(referenceId, (List<CRLP_Rollup>) JSON.deserialize(rollupData, List<CRLP_Rollup>.class));
+        }
+        return rollupStatesById;
     }
 
     /**
