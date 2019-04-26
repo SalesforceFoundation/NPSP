@@ -114,7 +114,7 @@ private with sharing class Integration_API_TEST {
      * @description Confirms that getBaseRollupStateForRecords returns an empty map if not installed
      */
     @isTest
-    private static void getBaseRollupStateForRecordsShouldReturnAnEmptyMapIfNotIntsalled() {
+    private static void getBaseRollupStateForRecordsShouldReturnAnEmptyMapIfNotInstalled() {
         setupMockIntegration();
         mockPackage.isInstalled = false;
 
