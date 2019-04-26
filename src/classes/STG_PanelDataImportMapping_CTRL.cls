@@ -129,8 +129,7 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'We\'ve found some conflicts. Please resolve them before proceeding.'));
             } else {
                 jobId = migrationMappingUtility.convertLegacyHelpTextToCustomMetadata();
-                dataImportSettings.Field_Mapping_Method__c = 'Data Import Field Mapping';
-                dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = 'Default_Field_Mapping_Set';
+                dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
             }
 
             if (Test.isRunningTest()) {
@@ -154,11 +153,12 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
         try {
             isPolling = true;
             // Disable Data Import Field Mapping;
-            dataImportSettings.Field_Mapping_Method__c = 'Help Text';
-            dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = '';
-            dataImportSettings.CMT_API_Status__c = 'Data Import Field Mapping Disabled';
 
-            update dataImportSettings;
+            BDI_MigrationMappingUtility migrationMappingUtility = new BDI_MigrationMappingUtility();
+
+            Map<String, String> statusMap = new Map<String, String>{migrationMappingUtility.jobId => 'Data Import Field Mapping Disabled'};
+            dataImportSettings = CMT_MetadataAPI.setHelpTextMigrationSettings(statusMap, false);
+
         } catch (Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));

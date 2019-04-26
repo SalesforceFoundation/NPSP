@@ -188,6 +188,9 @@ public class CMT_MetadataAPI {
             }
         }
 
+        /**
+        * @description Method that parses the Metadata deployment result into a map, job id => status
+        */
         private void setStatusMap(Metadata.DeployResult result, Map<String, String> statusMap, Boolean isSuccess) {
             String errMsg = '';
             for (Integer n=0; n < result.details.componentFailures.size(); n++) {
@@ -200,28 +203,36 @@ public class CMT_MetadataAPI {
             isSuccess = false;
         }
 
-        private void setHelpTextMigrationSettings(Map<String, String> statusMap, Boolean isSuccess) {
-            // Write the deployment status to the custom settings object
-            Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-            dataImportSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
-
-            dataImportSettings.Field_Mapping_Method__c = (isSuccess ? 'Data Import Field Mapping' : 'Help Text');
-            dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = (isSuccess ? 'Default_Field_Mapping_Set' : '');
-
-            if (!Test.isRunningTest()) {
-                upsert dataImportSettings;
-            }
-        }
-
+        /**
+        * @description Update Customizable Rollups Settings
+        */
         private void setCustomizableRollupsSettings(Map<String, String> statusMap, Boolean isSuccess) {
             // Write the deployment status to the custom settings object
             Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
             crlpSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
-            // THIS WILL NEED TO BE REFACTORED IF THIS CMT DEPLOYMENT CODE IS USED BY SOMETHING OTHER THAN ROLLUPS
+
             crlpSettings.Customizable_Rollups_Enabled__c = (isSuccess || crlpSettings.Customizable_Rollups_Enabled__c == true);
             if (!Test.isRunningTest()) {
                 upsert crlpSettings;
             }
         }
+    }
+
+    /**
+     * @description Update Data Import Custom Settings
+     */
+    public static Data_Import_Settings__c setHelpTextMigrationSettings(Map<String, String> statusMap, Boolean isSuccess) {
+        // Write the deployment status to the custom settings object
+        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dataImportSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
+
+        dataImportSettings.Field_Mapping_Method__c = (isSuccess ? 'Data Import Field Mapping' : 'Help Text');
+        dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = (isSuccess ? 'Default_Field_Mapping_Set' : '');
+
+        if (!Test.isRunningTest()) {
+            upsert dataImportSettings;
+        }
+
+        return dataImportSettings;
     }
 }

@@ -42,6 +42,9 @@ public class BDI_MigrationMappingUtility {
     /** @description Metadata parked due to conflicts with our default cmt records */
     public List<BDI_HelpTextCMT.DataImportFieldMapping> parkedCMTs = new List<BDI_HelpTextCMT.DataImportFieldMapping>();
 
+    /** @description Unique job id for Custom Settings */
+    public String jobId = getUniqueJobId();
+
     /**
      * @description Calls method for building custom metadata mapping from help text mapping
      * @param  deployIt Boolean
@@ -51,13 +54,11 @@ public class BDI_MigrationMappingUtility {
      */
     public String convertLegacyHelpTextToCustomMetadata() {
 
-        String jobId = getUniqueJobId();
-
         if (!queuedMetadataTypesForDeploy.isEmpty()) {
             CMT_MetadataAPI.deployMetadata(jobId, queuedMetadataTypesForDeploy.clone(), CMT_MetadataAPI.Source.HELP_TEXT_MIGRATION);
         } else {
             // Queue is empty, but we still need to update Data Import settings
-            updateCustomDataImportSettings(Label.bdiCustomObjectMappingSummary);
+            updateCustomDataImportSettings(jobId, Label.bdiCustomObjectMappingSummary);
         }
 
         return jobId;
@@ -67,16 +68,9 @@ public class BDI_MigrationMappingUtility {
      * @description Update the custom data import settings field mapping method field
      * @param fieldMappingMethod String
      */
-    private void updateCustomDataImportSettings(String fieldMappingMethod) {
-
-        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        dataImportSettings.Field_Mapping_Method__c = fieldMappingMethod;
-        dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = DEFAULT_FIELD_MAPPING_SET_RECORD_NAME;
-        dataImportSettings.CMT_API_Status__c = 'Queue was empty';
-
-        if (!Test.isRunningTest()) {
-            upsert dataImportSettings;
-        }
+    private void updateCustomDataImportSettings(String jobId, String fieldMappingMethod) {
+        Map<String, String> statusMap = new Map<String, String>{jobId => 'Queue was empty'};
+        CMT_MetadataAPI.setHelpTextMigrationSettings(statusMap, true);
     }
 
     /**
