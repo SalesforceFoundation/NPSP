@@ -314,7 +314,8 @@ private class CRLP_ApiService_TEST {
     }
 
     /**
-     * @description Instantiates Integration_API with mock packages so tests can run without the Bridge being installed
+     * @description Sets up mock package and callable api on the provided CRLP_ApiService instance
+     * so tests can run without the Bridge being installed
      */
     private static void setupMockIntegration(CRLP_ApiService service) {
         mockPackage = new UTIL_IntegrationConfig_TEST.MockPackage();
