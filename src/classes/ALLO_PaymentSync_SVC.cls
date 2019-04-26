@@ -320,19 +320,21 @@ public class ALLO_PaymentSync_SVC {
             //no payment allocations for this GAU; create them
             } else if (context.totalUnpaidPayments > 0) {
                 for (npe01__OppPayment__c payment : context.payments.values()) {
-                    Decimal paymentRatio = payment.npe01__Payment_Amount__c / context.totalUnpaidPayments;
-                    Allocation__c newAllocation = new Allocation__c(
-                        Payment__c = payment.Id,
-                        General_Accounting_Unit__c = gau,
-                        Amount__c = newTotalPaymentAllocations * paymentRatio // * context.scheduleRatio  <- is that needed, since it's already included in the newTotalPaymentAllocations?
-                    );
+                    if (!payment.npe01__Paid__c) { // Only process unpaid payments...
+                        Decimal paymentRatio = payment.npe01__Payment_Amount__c / context.totalUnpaidPayments;
+                        Allocation__c newAllocation = new Allocation__c(
+                            Payment__c = payment.Id,
+                            General_Accounting_Unit__c = gau,
+                            Amount__c = newTotalPaymentAllocations * paymentRatio // * context.scheduleRatio  <- is that needed, since it's already included in the newTotalPaymentAllocations?
+                        );
 
-                    //only add the percent for non-default
-                    if (gau != UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
-                        newAllocation.Percent__c = newAllocation.Amount__c / payment.npe01__Payment_Amount__c * 100;
+                        //only add the percent for non-default
+                        if (gau != UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
+                            newAllocation.Percent__c = newAllocation.Amount__c / payment.npe01__Payment_Amount__c * 100;
+                        }
+
+                        allocationsChanges.objectsToInsert.add(newAllocation);
                     }
-
-                    allocationsChanges.objectsToInsert.add(newAllocation);
                 }
             }
         }
