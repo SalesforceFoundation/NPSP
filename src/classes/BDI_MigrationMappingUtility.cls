@@ -37,10 +37,13 @@
 public class BDI_MigrationMappingUtility {
 
     /** @description Metadata queued up for deployment */
-    public static List<Metadata.CustomMetadata> queuedMetadataTypesForDeploy = new List<Metadata.CustomMetadata>();
+    public List<Metadata.CustomMetadata> queuedMetadataTypesForDeploy = new List<Metadata.CustomMetadata>();
 
     /** @description Metadata parked due to conflicts with our default cmt records */
-    public List<BDI_HelpTextCMT.DataImportFieldMapping> parkedCMTs = new List<BDI_HelpTextCMT.DataImportFieldMapping>();
+    public List<BDI_HelpTextCMT.DataImportFieldMapping> conflictingCMTs = new List<BDI_HelpTextCMT.DataImportFieldMapping>();
+
+    /** @description Metadata parked due to conflicts with our default cmt records */
+    public List<BDI_HelpTextCMT.DataImportFieldMapping> pendingCMTs = new List<BDI_HelpTextCMT.DataImportFieldMapping>();
 
     /** @description Unique job id for Custom Settings */
     public String jobId = getUniqueJobId();
@@ -79,8 +82,6 @@ public class BDI_MigrationMappingUtility {
      */
     public void buildCustomMetadataRecordsFromHelpText() {
 
-        List<Metadata.CustomMetadata> pendingFieldMappings = new List<Metadata.CustomMetadata>();
-
         Map<String, BDI_HelpTextCMT.MappingDetail> listHelpTextFieldDetails = getAllMappedHelpTextFields();
         Map<String, Data_Import_Object_Mapping__mdt> existingObjectMappings = getDefaultObjectMappings(DEFAULT_OBJECT_MAPPING_SET.Id);
         Map<String, Data_Import_Field_Mapping__mdt> existingFieldMappings = getDefaultFieldMappings(DEFAULT_FIELD_MAPPING_SET.Id);
@@ -102,11 +103,8 @@ public class BDI_MigrationMappingUtility {
                     setFieldMappingValues(fieldMapping, existingDefaultObjectMapping, null);
 
                     // Add metadata record to queue for deployment
-                    pendingFieldMappings.add(fieldMapping.getMetadataRecord());
-
-                    // Park any new mappings
-                    fieldMapping.expectedHelpTextValue = 'New Mapping';
-                    parkedCMTs.add(fieldMapping);
+                    queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
+                    pendingCMTs.add(fieldMapping);
                 } else if (foundDefaultFieldMapping) {
                     // Existing Field Mapping, check if CMTs field values match Help Text field values
                     Boolean invalidFieldMapping = foundDefaultFieldMappingMismatch(fieldMapping, existingDefaultFieldMapping, existingDefaultObjectMapping);
@@ -114,18 +112,14 @@ public class BDI_MigrationMappingUtility {
                     if (invalidFieldMapping) {
                         // Add metadata record to queue for deployment
                         setFieldMappingValues(fieldMapping, existingDefaultObjectMapping, existingDefaultFieldMapping);
-                        pendingFieldMappings.add(fieldMapping.getMetadataRecord());
 
                         // If existing help text mapping doesn't match our packaged cmt record, park the mapping
                         fieldMapping.expectedHelpTextValue = existingDefaultFieldMapping.Target_Field_API_Name__c;
-                        parkedCMTs.add(fieldMapping);
+                        conflictingCMTs.add(fieldMapping);
                     }
                 }
             }
         }
-
-        // Don't enqueue custom help text mappings
-        //queuedMetadataTypesForDeploy.addAll(pendingFieldMappings);
     }
 
     /**

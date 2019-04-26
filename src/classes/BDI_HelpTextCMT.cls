@@ -53,17 +53,17 @@ public class BDI_HelpTextCMT {
      */
     public class DataImportFieldMapping {
         public String recordName;
-        public String label;
-        public String dataImportObjectName;
+        public String label {get; set;}
+        public String dataImportObjectName {get; set;}
         public String dataImportFieldMappingSetRecordName;
         public String dataImportFieldMappingSetLabel;
         public String sourceFieldAPIName;
-        public String targetFieldAPIName;
+        public String targetFieldAPIName {get; set;}
         public String targetObjectMappingRecordName;
         public String targetObjectMappingLabel;
         public String isRequired;
         public Boolean isDeleted;
-        public String expectedHelpTextValue;
+        public String expectedHelpTextValue {get; set;}
 
         public DataImportFieldMapping(String label) {
             this.label = label.trim();

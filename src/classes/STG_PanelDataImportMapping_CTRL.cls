@@ -95,12 +95,29 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
     */
     public String jobId { get; private set; }
 
-    public List<BDI_HelpTextCMT.DataImportFieldMapping> parkedCMTs {
+    /*******************************************************************************************************
+    * @description List of help text mappings that conflicts with our packaged default custom metatadata type mappings
+    */
+    public List<BDI_HelpTextCMT.DataImportFieldMapping> conflictingCMTs {
         get {
-            if (parkedCMTs == null) {
+            if (conflictingCMTs == null) {
                 return new List<BDI_HelpTextCMT.DataImportFieldMapping>();
             } else {
-                return parkedCMTs;
+                return conflictingCMTs;
+            }
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
+    * @description List of custom metatadata type mappings pending deployment
+    */
+    public List<BDI_HelpTextCMT.DataImportFieldMapping> pendingCMTs {
+        get {
+            if (pendingCMTs == null) {
+                return new List<BDI_HelpTextCMT.DataImportFieldMapping>();
+            } else {
+                return pendingCMTs;
             }
         }
         set;
@@ -116,20 +133,22 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
         Savepoint sp = Database.setSavepoint();
         try {
             isPolling = true;
+            conflictingCMTs.clear();
+            pendingCMTs.clear();
 
             BDI_MigrationMappingUtility migrationMappingUtility = new BDI_MigrationMappingUtility();
 
             // Check to see if we have any existing help text mappings that conflict with our default cmt mappings
             migrationMappingUtility.buildCustomMetadataRecordsFromHelpText();
 
-            if (!migrationMappingUtility.parkedCMTs.isEmpty()) {
+            if (!migrationMappingUtility.conflictingCMTs.isEmpty()) {
                 isPolling = false;
-                parkedCMTs = migrationMappingUtility.parkedCMTs;
-                // Placeholder warning message
+                conflictingCMTs = migrationMappingUtility.conflictingCMTs;
+                pendingCMTs = migrationMappingUtility.pendingCMTs;
+                // TODO turn into custom label, placeholder warning message
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'We\'ve found some conflicts. Please resolve them before proceeding.'));
             } else {
                 jobId = migrationMappingUtility.convertLegacyHelpTextToCustomMetadata();
-                dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
             }
 
             if (Test.isRunningTest()) {
@@ -152,7 +171,8 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
 
         try {
             isPolling = true;
-            // Disable Data Import Field Mapping;
+            conflictingCMTs.clear();
+            pendingCMTs.clear();
 
             BDI_MigrationMappingUtility migrationMappingUtility = new BDI_MigrationMappingUtility();
 
@@ -173,7 +193,7 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
     public PageReference checkDeploymentStatus() {
         timeoutCount++;
 
-        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         String newStatus = dataImportSettings.CMT_API_Status__c;
 
         if (timeoutCount > MAX_TIME_OUT) {
