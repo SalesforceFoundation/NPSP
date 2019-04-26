@@ -270,7 +270,7 @@ private class ERR_Notifier_TEST {
     }
 
     /**********************************************************************************************
-    * @description Confirm that errors are not posted to Chatter if the heap size limit has been reached
+    * @description Confirm that errors are not emailed if the heap size limit has been reached
     */
     @IsTest
     private static void shouldNotEmailErrorsWithHeapLimit() {
