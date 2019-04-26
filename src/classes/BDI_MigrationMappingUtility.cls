@@ -259,18 +259,13 @@ public class BDI_MigrationMappingUtility {
      * @return Collection of Object Mapping DeveloperName to Object Mapping record
      */
     private Map<String, Data_Import_Object_Mapping__mdt> getDefaultObjectMappings(Id objectMappingSetId) {
-        List<Data_Import_Object_Mapping__mdt> existingObjectMappings = [SELECT Id,
-                                                                            Label,
-                                                                            DeveloperName,
-                                                                            Imported_Record_Field_Name__c,
-                                                                            Imported_Record_Status_Field_Name__c,
-                                                                            Object_API_Name__c,
-                                                                            Predecessor__c,
-                                                                            Relationship_Field__c,
-                                                                            Relationship_To_Predecessor__c,
-                                                                            Is_Deleted__c
-                                                                        FROM Data_Import_Object_Mapping__mdt
-                                                                        WHERE Data_Import_Object_Mapping_Set__c = :objectMappingSetId];
+        List<Data_Import_Object_Mapping__mdt> existingObjectMappings = [
+            SELECT Id, Label, DeveloperName, Imported_Record_Field_Name__c,
+                Imported_Record_Status_Field_Name__c, Object_API_Name__c, Predecessor__c,
+                Relationship_Field__c, Relationship_To_Predecessor__c, Is_Deleted__c
+            FROM Data_Import_Object_Mapping__mdt
+            WHERE Data_Import_Object_Mapping_Set__c = :objectMappingSetId
+        ];
         Map<String, Data_Import_Object_Mapping__mdt> diObjectNameToObjectMappingMap = new Map<String, Data_Import_Object_Mapping__mdt>();
 
         for (Data_Import_Object_Mapping__mdt objectMapping : existingObjectMappings) {
@@ -287,17 +282,13 @@ public class BDI_MigrationMappingUtility {
      * @return Collection of Field Mapping DeveloperName to Field Mapping record
      */
     private Map<String, Data_Import_Field_Mapping__mdt> getDefaultFieldMappings(Id fieldMappingSetId) {
-        List<Data_Import_Field_Mapping__mdt> existingFieldMappings = [SELECT Id,
-                                                                        Label,
-                                                                        DeveloperName,
-                                                                        Data_Import_Field_Mapping_Set__c,
-                                                                        Required__c,
-                                                                        Source_Field_API_Name__c,
-                                                                        Target_Field_API_Name__c,
-                                                                        Target_Object_Mapping__c,
-                                                                        Is_Deleted__c
-                                                                      FROM Data_Import_Field_Mapping__mdt
-                                                                      WHERE Data_Import_Field_Mapping_Set__c = :fieldMappingSetId];
+        List<Data_Import_Field_Mapping__mdt> existingFieldMappings = [
+            SELECT Id, Label, DeveloperName, Data_Import_Field_Mapping_Set__c,
+                Required__c, Source_Field_API_Name__c, Target_Field_API_Name__c, Target_Object_Mapping__c,
+                Is_Deleted__c
+            FROM Data_Import_Field_Mapping__mdt
+            WHERE Data_Import_Field_Mapping_Set__c = :fieldMappingSetId
+        ];
         Map<String, Data_Import_Field_Mapping__mdt> diFieldNameToFieldMappingMap = new Map<String, Data_Import_Field_Mapping__mdt>();
 
         for (Data_Import_Field_Mapping__mdt fieldMapping : existingFieldMappings) {
@@ -317,14 +308,18 @@ public class BDI_MigrationMappingUtility {
     private static final String DEFAULT_FIELD_MAPPING_SET_RECORD_NAME = 'Default_Field_Mapping_Set';
 
     /** @description Default packaged Object Mapping Set metadata record */
-    private static final Data_Import_Object_Mapping_Set__mdt DEFAULT_OBJECT_MAPPING_SET = [SELECT Id, DeveloperName, Label
-                                                                                           FROM Data_Import_Object_Mapping_Set__mdt
-                                                                                           WHERE DeveloperName = :DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME];
+    private static final Data_Import_Object_Mapping_Set__mdt DEFAULT_OBJECT_MAPPING_SET = [
+        SELECT Id, DeveloperName, Label
+        FROM Data_Import_Object_Mapping_Set__mdt
+        WHERE DeveloperName = :DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME
+    ];
 
     /** @description Default packaged Field Mapping Set metadata record */
-    private static final Data_Import_Field_Mapping_Set__mdt DEFAULT_FIELD_MAPPING_SET = [SELECT Id, DeveloperName, Label
-                                                                                           FROM Data_Import_Field_Mapping_Set__mdt
-                                                                                           WHERE DeveloperName = :DEFAULT_FIELD_MAPPING_SET_RECORD_NAME];
+    private static final Data_Import_Field_Mapping_Set__mdt DEFAULT_FIELD_MAPPING_SET = [
+        SELECT Id, DeveloperName, Label
+        FROM Data_Import_Field_Mapping_Set__mdt
+        WHERE DeveloperName = :DEFAULT_FIELD_MAPPING_SET_RECORD_NAME
+    ];
 
     /**
      * @return A 10 character unique 'jobId' to use for
