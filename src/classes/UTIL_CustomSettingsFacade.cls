@@ -592,7 +592,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     private static void configErrorSettings(Error_Settings__c es, String notificationsTo) {
         es.Store_Errors_On__c = true;
         es.Error_Notifications_On__c = true;
-        es.Error_Notifications_To__c = ERR_Notifier.NotificationOptions.sysAdmins;
+        es.Error_Notifications_To__c = ERR_Notifier.ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS;
         es.Disable_Error_Handling__c = false;
         es.Enable_Debug__c = false;
         es.Respect_Duplicate_Rule_Settings__c = false;
