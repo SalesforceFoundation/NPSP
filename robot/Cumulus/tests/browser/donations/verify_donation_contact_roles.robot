@@ -7,6 +7,7 @@ Suite Teardown  Delete Records and Close Browser
 *** Test Cases ***
 
 Create Donation from Contact and Verify Contact Roles on Opportunity Page
+    ${ns} =  Get NPSP Namespace Prefix
     &{contact1} =  API Create Contact    Email=skristem@robot.com
     Store Session Record    Account    &{contact1}[AccountId]
     &{contact2} =  API Create Contact    AccountId=&{contact1}[AccountId]
@@ -20,7 +21,7 @@ Create Donation from Contact and Verify Contact Roles on Opportunity Page
     ...                     &{contact2}[FirstName] &{contact2}[LastName]=Household Member  
     &{opportunity2} =  API Create Opportunity    &{Contact2}[AccountId]    Donation    
     ...            Name=Rollup test $50 donation    
-    ...            Primary_Contact__c=&{contact2}[Id]
+    ...            ${ns}Primary_Contact__c=&{contact2}[Id]
     ...            Amount=50
     Go To Record Home  &{contact1}[AccountId]
     Select Tab    Details
