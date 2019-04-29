@@ -1184,11 +1184,11 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>ErrorEmailMessage</shortDescription>
-        <value>Salesforce reported the below errors as NPSP was attempting to execute its batch jobs, or at a time when it was unable to display error messages directly to a user. It’s likely that NPSP was attempting to update summary fields on Accounts and Contacts, but was unable to save certain records. This failure might have been caused by a variety of issues unrelated to NPSP, such as custom code or validation rules.
+        <value>Salesforce reported the below errors as NPSP was attempting to execute its batch jobs, or at a time when it was unable to display error messages directly to a user. It&apos;s likely that NPSP was attempting to update summary fields on Accounts and Contacts, but was unable to save certain records. This failure might have been caused by a variety of issues unrelated to NPSP, such as custom code or validation rules.
 
 Read this article on the Power of Us Hub to learn how these Scheduled Jobs work: https://powerofus.force.com/NPSP_Scheduled_Jobs
 
-If you’re not sure how to resolve these errors, post a message in the Nonprofit Success Pack group in the Power of Us Hub: https://powerofus.force.com/HUB_NPSP_Group</value>
+If you&apos;re not sure how to resolve these errors, post a message in the Nonprofit Success Pack group in the Power of Us Hub: https://powerofus.force.com/HUB_NPSP_Group</value>
     </labels>
     <labels>
         <fullName>HiddenForSecurity</fullName>
