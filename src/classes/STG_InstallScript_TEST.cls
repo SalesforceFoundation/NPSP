@@ -234,7 +234,7 @@ public with sharing class STG_InstallScript_TEST {
         
         System.assertEquals(true, errorSettings.Store_Errors_On__c);
         System.assertEquals(true, errorSettings.Error_Notifications_On__c);
-        System.assertEquals(ERR_Notifier.NotificationOptions.sysAdmins, errorSettings.Error_Notifications_To__c);
+        System.assertEquals(ERR_Notifier.ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS, errorSettings.Error_Notifications_To__c);
 
         System.assertEquals(false, addrVerificationSetgs.Enable_Automatic_Verification__c);
         System.assertEquals(false, addrVerificationSetgs.Reject_Ambiguous_Addresses__c);
