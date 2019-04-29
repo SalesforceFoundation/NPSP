@@ -179,7 +179,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         STG_PanelOppRollups_CTRL.verifyFiscalYearRollups(this);
         STG_PanelOpps_CTRL.verifyOpportunityStageForPaymentAutoCloseIsActiveClosedWon(this);
         verifyScheduledJobs();
-        ERR_Notifier.verifyErrorSettings(this);
+        STG_PanelERR_CTRL.verifyErrorSettings(this);
         verifyOppContactRoles();
         verifyOppContactRolesSettings();
         verifyTriggerHandlers();
