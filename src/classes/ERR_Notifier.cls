@@ -36,21 +36,52 @@
 */
 public class ERR_Notifier {
 
-    public static NotificationOptions notificationOptions = new NotificationOptions();
-    
-    /*******************************************************************************************************
-    * @description Inner class with the 3 types of notification options: user, chatter group, and all system
-    *              administrators.
-    */
-    public class NotificationOptions {
-        public final String sysAdmins = 'All Sys Admins';
-        public final String user = '005';  //specific user (should be a system admin)
-        public final String chatterGroup = '0F9'; //chatter group
+    /** @description Filtering options to reduce the number of records processed during the notify job */
+    @TestVisible
+    private static Integer MAX_RECORDS = 500;
+    @TestVisible
+    private static Datetime MAX_AGE_FOR_ERRORS = System.now().addHours(-48);
+
+    /** @description Maximum Heap Storage that will be used to build the message/post body */
+    @TestVisible
+    private static Decimal MAX_HEAP_LIMIT {
+        get {
+            if (MAX_HEAP_LIMIT == null) {
+                MAX_HEAP_LIMIT = (Limits.getLimitHeapSize() * 0.95);
+            }
+            return MAX_HEAP_LIMIT;
+        } set;
     }
 
-    /*******************************************************************************************************
-    * @description Sends error notifications to the receivers specified in the settings, if error notifications are enabled, with
-    *              all the existing error records that have not been included in previous error notifications.
+    /** @description Global error notification settings used in NPSP Settings and here */
+    public static final String ERROR_NOTIFICATION_USER_PREFIX = USER_UserService.OBJECT_ID_PREFIX_USER;
+    public static final String ERROR_NOTIFICATION_CHATTER_PREFIX {
+        get {
+            if (ERROR_NOTIFICATION_CHATTER_PREFIX == null) {
+                try {
+                    ERROR_NOTIFICATION_CHATTER_PREFIX =
+                            UTIL_Describe.getObjectDescribe('CollaborationGroup').getKeyPrefix();
+                } catch (Exception ex) {
+                    ERROR_NOTIFICATION_CHATTER_PREFIX = '0F9';
+                }
+            }
+            return ERROR_NOTIFICATION_CHATTER_PREFIX;
+        } private set;
+    }
+    public static final String ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS = 'All Sys Admins';
+
+    /** @description Global email constants used for all outbound (system) emails */
+    public static final String EMAIL_SYSTEM_ERRORS_TO = 'errors@salesforce.org';
+    public static final String EMAIL_REPLY_TO = 'donotreply@salesforce.org';
+    public static final String EMAIL_SENDER_NAME = 'Nonprofit Success Pack';
+
+    /** @description the subject for errors sent out of this service only */
+    private static final String EMAIL_SUBJECT = 'Salesforce Error';
+
+    /**********************************************************************************************
+    * @description Sends error notifications to the receivers specified in the settings, if error
+    * notifications are enabled, with all the existing error records that have not been included in
+    * previous error notifications.
     * @param context The context that triggered the error notification.
     * @return void
     */
@@ -61,33 +92,64 @@ public class ERR_Notifier {
 
         if (errorSettings.Error_Notifications_On__c == true && errorNotifRecipient != null) {
 
-            //We will post to chatter, if enabled
-            if(errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.chatterGroup) 
-            && Schema.SObjectType.User.isFeedEnabled()) {
-                postErrorsToChatter(errorNotifRecipient);
-            //We will send email
-            } else {
-                List<String> sendList = new List<String>();
-                if (errorNotifRecipient instanceof id && errorNotifRecipient.startsWith(NotificationOptions.user)) {
-                    List<User> useremaillist = new List<User>();
-                    useremaillist = [SELECT email FROM User WHERE id = :errorNotifRecipient AND isActive = true];
-                    for (User u : useremaillist)
-                        sendList.add(u.email);
-                } else if(errorNotifRecipient == NotificationOptions.sysAdmins) {
-                    sendList.addAll(getSystemAdminEmails());
-                }
+            ERR_Notifier notifierService = new ERR_Notifier();
 
-                sendEmailNotifications(context, sendList);
+            Boolean isChatterGroup = errorNotifRecipient instanceof Id
+                    && errorNotifRecipient.startsWith(ERROR_NOTIFICATION_CHATTER_PREFIX);
+
+            if (isChatterGroup && Schema.SObjectType.User.isFeedEnabled()) {
+
+                notifierService.postErrorsToChatter(errorNotifRecipient);
+
+            } else {
+
+                notifierService.sendEmailNotifications(context,
+                        notifierService.getErrorEmailRecipients(errorNotifRecipient));
             }
         }
     }
 
-    /*******************************************************************************************************
+    /** @description Private constructor so the class cannot be instantiated outside of this class */
+    @TestVisible
+    private ERR_Notifier() {}
+
+    // ====================== HELPER METHODS FOR ERROR NOTIFICATION SERVICE =========================
+
+    /**********************************************************************************************
+     * @description Using the provided error notification user id (or 'All System Admins') or gets
+     * all system admin email addresses. If the specified user is inactive, send the notification
+     * to all System Admins
+     * @param errorNotifRecipient Id or Null
+     * @return List<Email>
+     */
+    @TestVisible
+    private List<String> getErrorEmailRecipients(String errorNotifRecipient) {
+        List<String> recipientsList = new List<String>();
+        Boolean isUserId = errorNotifRecipient instanceof Id
+                && errorNotifRecipient.startsWith(ERROR_NOTIFICATION_USER_PREFIX);
+
+        if (isUserId) {
+            String userEmail = getUserEmail(errorNotifRecipient);
+            if (userEmail != null) {
+                recipientsList.add(userEmail);
+            } else {
+                errorNotifRecipient = ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS;
+            }
+        }
+
+        if (errorNotifRecipient == ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS) {
+            recipientsList.addAll(getSystemAdminEmails());
+        }
+
+        return recipientsList;
+    }
+
+    /**********************************************************************************************
     * @description Get the active System Administrators' emails.
     * @return List<String> Emails
     */
     @TestVisible
-    private static List<String> getSystemAdminEmails() {
+    private List<String> getSystemAdminEmails() {
         Set<String> emails = new Set<String>();
         List<Id> sysAdminProfileIds = UTIL_Profile.getInstance().getProfileIds(UTIL_Profile.SYSTEM_ADMINISTRATOR);
 
@@ -105,179 +167,233 @@ public class ERR_Notifier {
         return new List<String>(emails);
     }
 
-    /*******************************************************************************************************
+    /**********************************************************************************************
     * @description Sends error email notifications.
     * @param context The context that triggered the error notification
-    * @param sendList The list of email addresses to send notifications to.
+    * @param recipientsList The list of email addresses to send notifications to.
     * @return void
     */
-    private static void sendEmailNotifications(String context, List<String> sendList) {
-        if (!system.isBatch() && !system.isFuture() && Limits.getAsyncCalls() < Limits.getLimitAsyncCalls()) {
-            //We cannot pass the context, because only primitive types can be passed to future methods.
-            sendErrorQueueEmailNotificationFuture(sendList);
-        } else if (system.isFuture()) {
-            sendErrorQueueEmailNotification(context, sendList);
+    private void sendEmailNotifications(String context, List<String> recipientsList) {
+
+        if (!System.isBatch() && !System.isFuture() && Limits.getAsyncCalls() < Limits.getLimitAsyncCalls()) {
+            sendErrorQueueEmailNotificationFuture(recipientsList);
+
+        } else if (System.isFuture()) {
+            sendErrorQueueEmailNotification(context, recipientsList);
         }
     }
 
-    /*******************************************************************************************************
-    * @description Sends error email notifications in a future (asynchronously). It will send an email with all the 
-    *              existing error records not already sent in a notification.
+    /**********************************************************************************************
+    * @description Sends error email notifications in a future (asynchronously). It will send an email
+    * with all the existing error records not already sent in a notification.
     * @param context The context that triggered the error notification.
-    * @param sendList The list of email addresses to send notifications to.
+    * @param recipientsList The list of email addresses to send notifications to.
     * @return void
     */
     @future
-    private static void sendErrorQueueEmailNotificationFuture(List<String> sendList) {
-        sendErrorQueueEmailNotification(null, sendList);
+    private static void sendErrorQueueEmailNotificationFuture(List<String> recipientsList) {
+        ERR_Notifier notifierService = new ERR_Notifier();
+        notifierService.sendErrorQueueEmailNotification(null, recipientsList);
     }
 
-    /*******************************************************************************************************
-    * @description Sends error email notifications synchronously. It will send an email with all the existing error
-    *              records not already sent in a notification.
+    /**********************************************************************************************
+    * @description Sends error email notifications synchronously. It will send an email with all the
+    * existing error records not already sent in a notification.
     * @param context The context that triggered the error notification.
-    * @param sendList The list of email addresses to send notifications to.
+    * @param recipientsList The list of email addresses to send notifications to.
     * @return void
     */
-    private static void sendErrorQueueEmailNotification(String context, List<String> sendList) {
-        List<Error__c> errors = [select Id, Error_Type__c, Datetime__c, Full_Message__c, Record_URL__c, Context_Type__c,
-                                        Stack_Trace__c from Error__c where Email_Sent__c = false];
+    private void sendErrorQueueEmailNotification(String context, List<String> recipientsList) {
+        List<Error__c> errors = getErrorsPendingNotification();
 
-        if (!errors.isEmpty() && !sendList.isEmpty()) {
-            Messaging.SingleEmailMessage sme = createEmailMessage(context, errors, sendList);
-            Messaging.sendEmail(new Messaging.SingleEmailMessage[]{sme});
-
-            for(Error__c error : errors)
-                error.Email_Sent__c = true;
-
+        if (!errors.isEmpty() && !recipientsList.isEmpty()) {
+            try {
+                Messaging.SingleEmailMessage email = createEmailMessage(context, errors, recipientsList);
+                Messaging.sendEmail(new Messaging.SingleEmailMessage[]{ email });
+            } catch (Exception ex) {
+                // Swallow any errors generating the email
+            }
             update errors;
         }
     }
 
-    /*******************************************************************************************************
-    * @description Creates the email message to send as error notification.
+    /**********************************************************************************************
+    * @description Creates the email message to send as error notification and marks each Error__c
+    * record with Email_Sent=true
     * @param context The context that triggered the error notification.
     * @param errorList The list of errors to include in the email.
-    * @param sendList The list of email recipients.
+    * @param recipientsList The list of email recipients.
     * @return 
     */
-    private static Messaging.SingleEmailMessage createEmailMessage(String context, List<Error__c> errorList, List<String> sendList) {
+    @TestVisible
+    private Messaging.SingleEmailMessage createEmailMessage(String context, List<Error__c> errorList, List<String> recipientsList) {
+        Error_Settings__c errorSettings = UTIL_CustomSettingsFacade.getErrorSettings();
+        String errorNotifRecipient = errorSettings.Error_Notifications_To__c;
+
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setUseSignature(false);
-        mail.setReplyTo('donotreply@salesforce.org');
-        mail.setSenderDisplayName('Nonprofit Success Pack');
-        mail.setSubject('Salesforce Error');
-        string bodyString = 'Organization: ' + UserInfo.getOrganizationName() + '(' + UserInfo.getOrganizationId() + ')\n';
-        bodyString += 'User: ' + UserInfo.getUserName() + '(' + UserInfo.getUserId() + ')\n\n';
-        bodyString += Label.ErrorEmailMessage + '\n';
-        if (context == ERR_Handler_API.Context.RD.name())
-            bodyString += system.label.npe03.RecurringDonationErrorEmailBody;
-        bodyString += '\n\nErrors:';
-        Integer i = 1;
-        for (Error__c error : errorList){
-            bodystring += '\n\n----------\n Error #' + i + ': \n' + getErrorMessageBody(error);
-            i++;
+        mail.setReplyTo(EMAIL_REPLY_TO);
+        mail.setSenderDisplayName(EMAIL_SENDER_NAME);
+        mail.setSubject(EMAIL_SUBJECT);
+
+        String bodyStringTemplate = 'Organization: {0} ({1})\nUser: {2} ({3})\n\n';
+        String bodyString = String.format(bodyStringTemplate, new List<String>{
+                UserInfo.getOrganizationName(), UserInfo.getOrganizationId(), UserInfo.getUserName(), UserInfo.getUserId()
+        });
+
+        bodyString += System.Label.ErrorEmailMessage + '\n';
+        if (context == ERR_Handler_API.Context.RD.name()) {
+            bodyString += System.Label.npe03.RecurringDonationErrorEmailBody;
         }
+
+        bodyString += '\n\nErrors:';
+        Integer i = 0;
+        for (Error__c error : errorList) {
+            if (isNearHeapLimit()) {
+                break;
+            }
+            bodyString += '\n\n----------\n Error #' + (++i) + ': \n' + buildErrorMessageBody(error);
+            error.Email_Sent__c = true;
+        }
+
+        if (errorNotifRecipient != ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS) {
+            String userEmail = getUserEmail(errorNotifRecipient);
+            if (userEmail == null) {
+                bodyString += '\n\nNOTE: The specified Error Recipient UserId (' + errorNotifRecipient + ') is not an ' +
+                    'active User in this Salesforce org';
+            }
+        }
+
         mail.setPlainTextBody(bodyString);
-        mail.setToAddresses(sendList); 
+        mail.setToAddresses(recipientsList); 
         return mail;        
     }
 
-    /*******************************************************************************************************
-    * @description Post a message to Chatter with information about all the existing error records that were not already posted.
+    /**********************************************************************************************
+    * @description Post one message per error to Chatter with all details on the error message.
+    * error records that were not already posted.
     * @param chatterGroupId The ID of the Chatter group to post to.
     * @return void
     */
-    public static void postErrorsToChatter(String chatterGroupId) {
+    private void postErrorsToChatter(String chatterGroupId) {
 
-        if(chatterGroupId instanceof Id) {
-            SObject collaborationGroup = Database.query('select Id, Name from CollaborationGroup where id = :chatterGroupId');
-            List<Error__c> errors = [select Id, Error_Type__c, Datetime__c, Full_Message__c, Record_URL__c, Context_Type__c,
-                                        Stack_Trace__c from Error__c where Posted_in_Chatter__c = false];    
+        if (!(chatterGroupId instanceof Id)) {
+            return;
+        }
 
-            if (!errors.isEmpty()) {
-                List<SObject> postsToInsert = new List<SObject>();
-                for(Error__c error : errors) {
-                    SObject post = (SObject)System.Type.forName('FeedItem').newInstance();
-                    post.put('Title', 'Salesforce Error');
-                    String body = getErrorMessageBody(error);
-                    post.put('Body', body);
-                    post.put('ParentId', collaborationGroup.Id);
-                    postsToInsert.add(post);
-                    error.Posted_in_Chatter__c = true;
+        SObject collaborationGroup = Database.query('SELECT Id, Name' +
+                ' FROM CollaborationGroup' +
+                ' WHERE Id = :chatterGroupId' +
+                ' LIMIT 1');
+
+        List<Error__c> errors = getErrorsPendingNotification();
+
+        if (!errors.isEmpty()) {
+
+            List<SObject> postsToInsert = new List<SObject>();
+            for (Error__c error : errors) {
+                if (isNearHeapLimit()) {
+                    break;
                 }
-                insert postsToInsert;
-                update errors; //we don't want to post the same errors again    
+                postsToInsert.add(createChatterPost(error, collaborationGroup.Id));
+                error.Posted_in_Chatter__c = true;
             }
+
+            try {
+                insert postsToInsert;
+            } catch (Exception ex) {
+                // swallow any errors posting the errors to chatter
+            }
+
+            update errors; //we don't want to post the same errors again
         }
     }
 
-    /*******************************************************************************************************
+    /**********************************************************************************************
+     * @description Create a chatter post for a specific Error__c log record
+     * @param error
+     * @param groupId
+     * @return FeedItem
+     */
+    private SObject createChatterPost(Error__c error, Id groupId) {
+        String body = buildErrorMessageBody(error);
+
+        SObject post = (SObject)System.Type.forName('FeedItem').newInstance();
+        post.put('Title', 'Salesforce Error');
+        post.put('Body', body);
+        post.put('ParentId', groupId);
+
+        return post;
+    }
+
+    /**********************************************************************************************
     * @description Creates the body of the error message for a specific error record.
-    * @param error The error record to create the message string from.
-    * @return String The string representing the error record.
+    * @param error The error record to create the message String from.
+    * @return String The String representing the error record.
     */
-    private static String getErrorMessageBody(Error__c error) {
+    private String buildErrorMessageBody(Error__c error) {
+
         String body = '\nError Type: ' + error.Error_Type__c;
         body += '\nError Date: ' + error.Datetime__c;
         body += '\nMessage: "' + error.Full_Message__c + '"';
-        if(error.Record_URL__c != null)
+
+        if (error.Record_URL__c != null) {
             body += '\n' + error.Record_URL__c;
-        if(error.Context_Type__c != null)
+        }
+
+        if (error.Context_Type__c != null) {
             body += '\nContext: ' + error.Context_Type__c;
+        }
+
         body += '\n\nStack Trace:\n ' + error.Stack_Trace__c;
+
         return body;
     }
-     
-    /*******************************************************************************************************
-    * @description Verifies error settings are still valid.
-    * @param ctrl The controller that calls the method.
-    * @return void
-    */
-    public static void verifyErrorSettings(STG_PanelHealthCheck_CTRL ctrl) {
-        
-        Error_Settings__c es = UTIL_CustomSettingsFacade.getErrorSettings();
-        String errorNotifRecipient = es.Error_Notifications_To__c;
-        string strSetting;
-        strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Error_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Error_Notifications_To__c'));
 
-        if (es.Error_Notifications_On__c && errorNotifRecipient != null) {
-            if (errorNotifRecipient != NotificationOptions.sysAdmins) {
-                if (!(errorNotifRecipient instanceof id)) {
-                    ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, label.healthDetailsInvalidErrorRecipient, 
-                        string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
-                    return;
-                }
-                if (errorNotifRecipient.startsWith(NotificationOptions.chatterGroup) && Schema.SObjectType.User.isFeedEnabled()) {
-                    // verify chatter group exists
-                    list<SObject> listCG = Database.query('select Id, Name from CollaborationGroup where id = :errorNotifRecipient');
-                    if (listCG.size() == 0) {
-                        ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
-                            string.format(label.healthDetailsInvalidErrorChatterGroup, new string[]{errorNotifRecipient}),
-                            string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
-                        return;
-                    }
-                } else {
-                    if (errorNotifRecipient.startsWith(NotificationOptions.user)) {
-                        // verify user exists and is active
-                        list<User> listUser = [select name, email, isActive from User where id = :errorNotifRecipient and isActive = true];
-                        if (listUser.size() == 0) {
-                            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
-                                string.format(label.healthDetailsInvalidErrorUser, new string[]{errorNotifRecipient}),
-                                string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
-                            return;    
-                        }
-                        if (listUser[0].isActive == false) { 
-                            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, 
-                                string.format(label.healthDetailsInvalidErrorUser, new string[]{listUser[0].name}),
-                                string.format(label.healthSolutionEditSetting, new string[]{strSetting, Label.stgNavSystem, Label.stgNavErrorNotify}));
-                            return; 
-                        }
-                    }
-                }
-            }
-        // settings ok.
-        ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusSuccess, null, label.healthLabelErrorRecipientValid);
+    /**********************************************************************************************
+     * @description Return a list of errors pending notification (email or chatter). Limits the list to
+     * the defined maximum number of records, and only those created in the defined period of time
+     * @return List<Error__c>
+     */
+    @TestVisible
+    private List<Error__c> getErrorsPendingNotification() {
+        return [SELECT  Id, 
+                        Error_Type__c, 
+                        Datetime__c, 
+                        Full_Message__c,
+                        Record_URL__c, 
+                        Context_Type__c, 
+                        Stack_Trace__c
+                FROM Error__c
+                WHERE Email_Sent__c = FALSE
+                    AND Posted_in_Chatter__c = FALSE
+                    AND Datetime__c >= :MAX_AGE_FOR_ERRORS
+                ORDER BY CreatedDate ASC
+                LIMIT :MAX_RECORDS
+            ];
+    }
+
+    /**
+     * @description Retrieve the specified email for the notification User. Returns NULL if the
+     * user is not active
+     * @param userId
+     * @return Email (or null)
+     */
+    private String getUserEmail(Id userId) {
+        List<User> users = [SELECT Email FROM User WHERE Id = :userId AND IsActive = TRUE LIMIT 1];
+        if (!users.isEmpty()) {
+            return users[0].Email;
         }
+        return null;
+    }
+
+    /**
+    * @description Just in case the size of the Error__c records (LOB fields) plus the size of
+    * the created Email Message Body or Chatter Post Body is within 95% of the total heap available
+    * stop building the message/post body and send/post with the content as is. This avoids an
+    * untrappable limit exception.
+    */
+    private Boolean isNearHeapLimit() {
+        return (Limits.getHeapSize() >= MAX_HEAP_LIMIT);
     }
 }

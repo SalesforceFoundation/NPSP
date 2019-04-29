@@ -399,7 +399,7 @@ private with sharing class RD_RecurringDonations_TEST2 {
     @isTest
     private static void testErrorHandlingAllSysAdmins() {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c(
-            npe03__Error_Email_Notifications__c ='All Sys Admins',
+            npe03__Error_Email_Notifications__c = ERR_Notifier.ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS,
             npe03__Opportunity_Forecast_Months__c = 12                
         ));         
         
