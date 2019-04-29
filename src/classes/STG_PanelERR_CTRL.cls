@@ -58,7 +58,7 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     * @description Class constructor that set error notifications recipient to the one stored in the settings.
     */
     public STG_PanelERR_CTRL() {
-    	notificationToDropDown = STG_SettingsService.stgService.stgErr.Error_Notifications_To__c;
+        notificationToDropDown = STG_SettingsService.stgService.stgErr.Error_Notifications_To__c;
     }
     
     /*******************************************************************************************************
@@ -67,13 +67,20 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     public List<SelectOption> listSOERRNotifOptions {
         get {
             if (listSOERRNotifOptions == null) {
-                listSOERRNotifOptions = new list<SelectOption>();
+                listSOERRNotifOptions = new List<SelectOption>();
                 listSOERRNotifOptions.add(new SelectOption('None', 'None'));
-                if(Schema.SObjectType.User.isFeedEnabled())
-                    listSOERRNotifOptions.add(new SelectOption(ERR_Notifier.NotificationOptions.chatterGroup, 'Chatter Group'));
-                listSOERRNotifOptions.add(new SelectOption(ERR_Notifier.NotificationOptions.sysAdmins, 'All Sys Admins'));
-                for (User u : [select Name, id from User where User.Profile.Name = 'System Administrator']) {
-                    listSOERRNotifOptions.add(new SelectOption(u.id, 'User: ' + u.Name));
+
+                if (Schema.SObjectType.User.isFeedEnabled()) {
+                    listSOERRNotifOptions.add(new SelectOption(ERR_Notifier.ERROR_NOTIFICATION_CHATTER_PREFIX, 'Chatter Group'));
+                }
+
+                listSOERRNotifOptions.add(new SelectOption(
+                        ERR_Notifier.ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS,
+                        ERR_Notifier.ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS)
+                );
+
+                for (User u : [SELECT Name, Id FROM User WHERE User.Profile.Name = :UTIL_Profile.SYSTEM_ADMINISTRATOR]) {
+                    listSOERRNotifOptions.add(new SelectOption(u.Id, 'User: ' + u.Name));
                 }
             }
             return listSOERRNotifOptions;
@@ -87,24 +94,32 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     //Displays the Error Notification Recipients (View Mode only)
     public String strErrorNotifDisplayName {
         get {
-        	String errorNotifRecipient = UTIL_CustomSettingsFacade.getErrorSettings().Error_Notifications_To__c; 
-        	
+            String errorNotifRecipient = UTIL_CustomSettingsFacade.getErrorSettings().Error_Notifications_To__c;
+
             if (errorNotifRecipient != null) {
-                if (errorNotifRecipient.startsWith(ERR_Notifier.NotificationOptions.chatterGroup) && Schema.SObjectType.User.isFeedEnabled()) {
+                if (errorNotifRecipient.startsWith(ERR_Notifier.ERROR_NOTIFICATION_CHATTER_PREFIX)
+                        && Schema.SObjectType.User.isFeedEnabled()
+                ) {
                    strErrorNotifDisplayName = 'Group: ';
-                   List<SObject> chatterGroupsNotif = Database.query('select Id, Name from CollaborationGroup where id = :errorNotifRecipient');
-                   if(chatterGroupsNotif.size() > 0) 
+                   List<SObject> chatterGroupsNotif = Database.query(
+                           'SELECT Id, Name FROM CollaborationGroup WHERE Id = :errorNotifRecipient');
+                   if (chatterGroupsNotif.size() > 0) {
                        strErrorNotifDisplayName += chatterGroupsNotif[0].get('Name');
-                } else if (errorNotifRecipient.startsWith(ERR_Notifier.NotificationOptions.user)) {
+                   }
+
+                } else if (errorNotifRecipient.startsWith(ERR_Notifier.ERROR_NOTIFICATION_USER_PREFIX)) {
                    strErrorNotifDisplayName = 'User: ';
-                   List<User> usersNotif = [select Name from User where id = :errorNotifRecipient];
-                   if(usersNotif.size() > 0)
-                       strErrorNotifDisplayName += usersNotif[0].Name;              
+                   List<User> usersNotif = [SELECT Name FROM User WHERE Id = :errorNotifRecipient];
+                   if (usersNotif.size() > 0) {
+                       strErrorNotifDisplayName += usersNotif[0].Name;
+                   }
+
                 } else {
                    strErrorNotifDisplayName = errorNotifRecipient;
                 }
+
             } else {
-            	strErrorNotifDisplayName = '';
+                strErrorNotifDisplayName = '';
             }
             return strErrorNotifDisplayName;
         }
@@ -118,10 +133,10 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     public override PageReference saveSettings() {
         UTIL_Debug.debug('****notification to drop down: ' + notificationToDropDown);
         UTIL_Debug.debug('****group ID: ' + groupId);
-        if(notificationToDropDown == ERR_Notifier.NotificationOptions.chatterGroup && String.isBlank(groupId)) { 
+        if(notificationToDropDown == ERR_Notifier.ERROR_NOTIFICATION_CHATTER_PREFIX && String.isBlank(groupId)) {
             saveErrorMessage = 'Please enter valid Chatter group name.';
             return null;
-        } else if(notificationToDropDown == ERR_Notifier.NotificationOptions.chatterGroup && !String.isBlank(groupId)) { 
+        } else if(notificationToDropDown == ERR_Notifier.ERROR_NOTIFICATION_CHATTER_PREFIX && !String.isBlank(groupId)) {
            STG_SettingsService.stgService.stgErr.Error_Notifications_To__c = groupId;
            saveErrorMessage = null;
         } else {
@@ -136,8 +151,8 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     * @return PageReference The page to redirect to, if any.
     */
     public override PageReference cancelEdit() {
-    	saveErrorMessage = null;
-    	return super.cancelEdit();
+        saveErrorMessage = null;
+        return super.cancelEdit();
     }
     
     /*******************************************************************************************************
@@ -145,10 +160,68 @@ public with sharing class STG_PanelERR_CTRL extends STG_Panel {
     * @return PageReference The page to redirect to, if any.
     */
     public override PageReference editSettings() {
-    	if((STG_SettingsService.stgService.stgErr.Error_Notifications_To__c).startsWith(ERR_Notifier.NotificationOptions.chatterGroup)) {
-    		notificationToDropDown = ERR_Notifier.NotificationOptions.chatterGroup;
-    	}
-    	
-    	return super.editSettings();
+        if((STG_SettingsService.stgService.stgErr.Error_Notifications_To__c).startsWith(ERR_Notifier.ERROR_NOTIFICATION_CHATTER_PREFIX)) {
+            notificationToDropDown = ERR_Notifier.ERROR_NOTIFICATION_CHATTER_PREFIX;
+        }
+
+        return super.editSettings();
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies error settings are still valid for the Health Check page
+    * @param ctrl The controller that calls the method.
+    * @return void
+    */
+    public static void verifyErrorSettings(STG_PanelHealthCheck_CTRL ctrl) {
+
+        Error_Settings__c es = UTIL_CustomSettingsFacade.getErrorSettings();
+        String errorNotifRecipient = es.Error_Notifications_To__c;
+        String strSetting = UTIL_Describe.getFieldLabel(UTIL_Namespace.StrTokenNSPrefix('Error_Settings__c'),
+                UTIL_Namespace.StrTokenNSPrefix('Error_Notifications_To__c'));
+
+        if (es.Error_Notifications_On__c && errorNotifRecipient != null) {
+            if (errorNotifRecipient != ERR_Notifier.ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS) {
+                if (!(errorNotifRecipient instanceof Id)) {
+                    ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError, System.Label.healthDetailsInvalidErrorRecipient,
+                            String.format(System.Label.healthSolutionEditSetting, new String[]{strSetting, System.Label.stgNavSystem, System.Label.stgNavErrorNotify}));
+                    return;
+                }
+
+                if (errorNotifRecipient.startsWith(ERR_Notifier.ERROR_NOTIFICATION_CHATTER_PREFIX) && Schema.SObjectType.User.isFeedEnabled()) {
+
+                    // verify chatter group exists
+                    List<SObject> listCG = Database.query('SELECT Id, Name FROM CollaborationGroup WHERE Id = :errorNotifRecipient');
+                    if (listCG.size() == 0) {
+                        ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError,
+                                String.format(System.Label.healthDetailsInvalidErrorChatterGroup, new String[]{errorNotifRecipient}),
+                                String.format(System.Label.healthSolutionEditSetting, new String[]{strSetting, System.Label.stgNavSystem, System.Label.stgNavErrorNotify}));
+                        return;
+                    }
+
+                } else {
+
+                    if (errorNotifRecipient.startsWith(ERR_Notifier.ERROR_NOTIFICATION_USER_PREFIX)) {
+                        // verify user exists and is active
+                        List<User> listUser = [SELECT Name, Email, IsActive FROM User WHERE Id = :errorNotifRecipient AND IsActive = True];
+
+                        if (listUser.size() == 0) {
+                            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError,
+                                    String.format(System.Label.healthDetailsInvalidErrorUser, new String[]{errorNotifRecipient}),
+                                    String.format(System.Label.healthSolutionEditSetting, new String[]{strSetting, System.Label.stgNavSystem, System.Label.stgNavErrorNotify}));
+                            return;
+                        }
+
+                        if (listUser[0].IsActive == false) {
+                            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusError,
+                                    String.format(System.Label.healthDetailsInvalidErrorUser, new String[]{listUser[0].Name}),
+                                    String.format(System.Label.healthSolutionEditSetting, new String[]{strSetting, System.Label.stgNavSystem, System.Label.stgNavErrorNotify}));
+                            return;
+                        }
+                    }
+                }
+            }
+            // settings ok.
+            ctrl.createDR(strSetting, STG_PanelHealthCheck_CTRL.statusSuccess, null, System.Label.healthLabelErrorRecipientValid);
+        }
     }
 }
