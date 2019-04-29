@@ -5123,7 +5123,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>pmtWizardScheduleInvalidRecords</shortDescription>
-        <value>One or more Payment records are both paid and written off. To create a new Payment schedule, you must first deselect one or both checkboxes for these Payments.</value>
+        <value>One or more existing Payment records are both paid and written off. To create a new Payment schedule, you must first deselect one or both checkboxes for these Payments.</value>
     </labels>
     <labels>
         <fullName>pmtWizardScheduleNoAmount</fullName>
@@ -5147,7 +5147,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>pmtWizardWriteOffInvalidRecords</shortDescription>
-        <value>One or more Payment records are both paid and written off. To write off Payments, you must first deselect one or both checkboxes for these Payments.</value>
+        <value>One or more existing Payment records are both paid and written off. To write off Payments, you must first deselect one or both checkboxes for these Payments.</value>
     </labels>    
     <labels>
         <fullName>pmtWizardNoUnpaidAmount</fullName>
