@@ -238,7 +238,9 @@ public with sharing class PMT_PaymentWizard_CTRL {
             writeoffPaymentCount = outstandingPaymentCount;
         }
 
-        
+        if (invalidPaymentRecordCount > 0) {
+            isWizardEnabled = false;
+        }
     }
 
     
