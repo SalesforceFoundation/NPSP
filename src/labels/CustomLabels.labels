@@ -5028,6 +5028,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>pmtUnpaidPaymentScheduledDateRequired</shortDescription>
         <value>An unpaid payment must have a scheduled date.</value>
+    </labels>
     <labels>
         <fullName>pmtWriteOffPaidPayment</fullName>
         <categories>Payment, Error</categories>
