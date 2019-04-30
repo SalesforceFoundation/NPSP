@@ -278,7 +278,8 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description Validate that the payment has the appropriate values. Currency Code validation is handled
-    * in a different function
+    * in a different function.  We are using after trigger validation to ensure that other before triggers
+    * do not change the values.
     * @param newlist The list of Payments from trigger new.
     * @param oldlist The list of Payments from trigger old.
     * @param triggerAction  Which trigger event (BeforeInsert, AfterInsert, etc.).
@@ -290,32 +291,31 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, 
         DmlWrapper dmlWrapper) {
         if ((triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate)) {
-            enforceAccountingDataConsistency(newList);
+            for (npe01__OppPayment__c payment : newlist) {
+                enforceAccountingDataConsistency(payment);
+
+                if (payment.npe01__Paid__c == true && payment.npe01__Written_Off__c == true) {
+                    payment.addError(System.Label.pmtWriteOffPaidPayment);
+                }
+            }
         }
     }
 
     /*******************************************************************************************************
     * @description If the custom setting to enforce account rules is enabled, it will validate that paid payments
     * have a payment date and unpaid payments have a scheduled date. 
-    * @param newlist the list of Opportunity or Payments from trigger new.
-    * @return Boolean This returns if the records abide by accounting rules, if applicable.
+    * @param payment the Payment from trigger new.
+    * @return void Does not return anything
     ********************************************************************************************************/
-    private Boolean enforceAccountingDataConsistency(List<npe01__OppPayment__c> newList) {
-        Boolean isValid = true;
+    private void enforceAccountingDataConsistency(npe01__OppPayment__c payment) {
         Boolean enforceAccountingDataConsistencyCustomSetting = UTIL_CustomSettingsFacade.getContactsSettings().Enforce_Accounting_Data_Consistency__c;
 
         if (enforceAccountingDataConsistencyCustomSetting == true) {
-            for (npe01__OppPayment__c newRecord : newList) {
-                if (newRecord.npe01__Paid__c == true && newRecord.npe01__Payment_Date__c == null) {
-                    isValid = false;
-                    newRecord.npe01__Payment_Date__c.addError(System.Label.pmtPaidPaymentDateRequired);
-                } else if (newRecord.npe01__Paid__c == false && newRecord.npe01__Scheduled_Date__c == null) {
-                    isValid = false;
-                    newRecord.npe01__Scheduled_Date__c.addError(System.Label.pmtUnpaidPaymentScheduledDateRequired);
-                }
+            if (payment.npe01__Paid__c == true && payment.npe01__Payment_Date__c == null) {
+                payment.npe01__Payment_Date__c.addError(System.Label.pmtPaidPaymentDateRequired);
+            } else if (payment.npe01__Paid__c == false && payment.npe01__Scheduled_Date__c == null) {
+                payment.npe01__Scheduled_Date__c.addError(System.Label.pmtUnpaidPaymentScheduledDateRequired);
             }
         }
-
-        return isValid;
     }
 }

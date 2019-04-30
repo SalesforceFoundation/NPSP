@@ -43,10 +43,10 @@ private class PMT_Payment_TEST {
         insert acc;
     }
 
-    /**
+    /*******************************************************************************************************
      * @description Validate that new payment records created with an opportunity get the CurrencyIsoCode set
      * properly to the Opportunities currency code
-     */
+     *******************************************************************************************************/
     static testMethod void test_newPaymentCurrencyMatchesOpportunity() {
 
         //only run test in multicurrency orgs
@@ -257,6 +257,130 @@ private class PMT_Payment_TEST {
         System.assertEquals(closedWonStage, opp.StageName);
     }
 
+
+    /*******************************************************************************************************
+     * @description     Validate that payment records are not both paid and written off on Update
+     *******************************************************************************************************/
+    @isTest
+    private static void verifyPaymentsAreNotBothPaidAndWrittenOffOnUpdate() {
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        Opportunity opp = new Opportunity(
+            Name = 'success',
+            Amount = 400,
+            AccountID = acc.id,
+            CloseDate = System.today(),
+            StageName = UTIL_UnitTestData_TEST.getOpenStage()
+        );
+
+        insert opp;
+
+        npe01__OppPayment__c payment = getPaymentRecord(opp.Id);
+
+        Test.startTest();
+        try {
+            // Attempt to update an existing system
+            payment.npe01__Paid__c = true;
+            payment.npe01__Written_Off__c = true;
+            
+            update payment;
+            System.assert(false, 'Updating an existing payment with both written off and paid checked should fail');
+        } catch (Exception ex) {
+            System.assert(ex.getMessage().contains(System.Label.pmtWriteOffPaidPayment), 'Error message should contain "' +
+                System.Label.pmtWriteOffPaidPayment + '"');
+        }
+
+        try {
+            payment.npe01__Paid__c = false;
+            payment.npe01__Written_Off__c = false;
+            update payment;
+
+            payment.npe01__Paid__c = true;
+            payment.npe01__Written_Off__c = false;
+            update payment;
+
+            payment.npe01__Paid__c = false;
+            payment.npe01__Written_Off__c = true;
+            update payment;
+
+        } catch (Exception ex) {
+            System.assert(false, 'Updating an existing payment with valid values should succeed');
+        }
+        Test.stopTest();
+
+    }
+
+
+    /*******************************************************************************************************
+     * @description     Validate that payment records are not both paid and written off on Insert
+     *******************************************************************************************************/
+    @isTest
+    private static void verifyPaymentsAreNotBothPaidAndWrittenOffOnInsert() {
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        Opportunity opp = new Opportunity(
+            Name = 'success',
+            Amount = 400,
+            AccountID = acc.id,
+            CloseDate = System.today(),
+            StageName = UTIL_UnitTestData_TEST.getOpenStage()
+        );
+
+        insert opp;
+
+        // Attempt to create a new payment with both fields set to true
+        npe01__OppPayment__c newPayment = new npe01__OppPayment__c();
+        newPayment.npe01__Opportunity__c = opp.Id;
+        newPayment.npe01__Payment_Amount__c = 400;
+        newPayment.npe01__Payment_Date__c = System.today();
+        newPayment.npe01__Scheduled_Date__c = System.today();
+        newPayment.npe01__Paid__c = true;
+        newPayment.npe01__Written_Off__c = true;
+
+        Test.startTest();
+        try {
+            insert newPayment;
+            System.assert(False, 'Inserting an existing payment with both written off and paid checked should fail');
+        } catch (Exception ex) {
+            System.assert(ex.getMessage().contains(System.Label.pmtWriteOffPaidPayment), 'Error message should contain "' +
+                System.Label.pmtWriteOffPaidPayment + '"');
+        }
+
+        // You should still be able to insert new payments without paid or written off
+        List<npe01__OppPayment__c> newPayments = new List<npe01__OppPayment__c>();
+        newPayment.npe01__Written_Off__c = false;
+        newPayment.npe01__Paid__c = false;
+        newPayment.npe01__Payment_Amount__c = 100;
+        newPayments.add(newPayment);
+
+        npe01__OppPayment__c p2 = newPayment.clone();
+        p2.npe01__Paid__c = false;
+        p2.npe01__Written_Off__c = true;
+        p2.npe01__Payment_Amount__c = 200;
+        newPayments.add(p2);
+
+        npe01__OppPayment__c p3 = newPayment.clone();
+        p3.npe01__Paid__c = true;
+        p3.npe01__Written_Off__c = false;
+        p3.npe01__Payment_Amount__c = 300;
+        newPayments.add(p3);
+        
+        insert newPayments;
+
+        List<npe01__OppPayment__c> insertedPayments = [
+            SELECT Id, Name, npe01__Paid__c, npe01__Written_Off__c, npe01__Payment_Amount__c 
+            FROM npe01__OppPayment__c];
+
+        System.assertEquals(insertedPayments.size(), 4, 'Valid payment records should be created');
+
+        Test.stopTest();
+
+    }
+
+
+    /*******************************************************************************************************
+     * HELPER FUNCTIONS
+     *******************************************************************************************************/
     /**
      * @description Validate that the accounting rules are enforced properly. If there is a paid payment, it must have a payment date.
      * If it is an unpaid payment, it must have a scheduled date. 
@@ -445,8 +569,12 @@ private class PMT_Payment_TEST {
      * @description Reusable utility method to retrieve a specific payment record for an Opportunity
      */
     private static npe01__OppPayment__c getPaymentRecord(Id oppId) {
-        String soql = 'SELECT Id, CurrencyIsoCode, npe01__Payment_Amount__c ' +
-                ' FROM npe01__OppPayment__c WHERE npe01__Opportunity__c = \'' + oppId + '\' LIMIT 1';
-        return (npe01__OppPayment__c)database.query(soql);
+        
+        String soql = 'SELECT Id, npe01__Payment_Amount__c ';
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            soql += ', CurrencyIsoCode ';
+        }
+        soql += ' FROM npe01__OppPayment__c WHERE npe01__Opportunity__c = \'' + oppId + '\' LIMIT 1';
+        return (npe01__OppPayment__c)Database.query(soql);
     }
 }
