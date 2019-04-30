@@ -278,7 +278,8 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description Validate that the payment has the appropriate values. Currency Code validation is handled
-    * in a different function
+    * in a different function.  We are using after trigger validation to ensure that other before triggers
+    * do not change the values.
     * @param newlist The list of Payments from trigger new.
     * @param oldlist The list of Payments from trigger old.
     * @param triggerAction  Which trigger event (BeforeInsert, AfterInsert, etc.).
@@ -289,6 +290,12 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         List<npe01__OppPayment__c> oldlist,
         TDTM_Runnable.Action triggerAction, 
         DmlWrapper dmlWrapper) {
-
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+            for (npe01__OppPayment__c payment : newlist) {
+                if (payment.npe01__Paid__c == true && payment.npe01__Written_Off__c == true) {
+                    payment.addError(System.Label.pmtWriteOffPaidPayment);
+                }
+            }
+        }
     }
 }
