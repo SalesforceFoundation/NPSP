@@ -22,8 +22,7 @@ private with sharing class TDTM_RunnableMutable_TEST {
     * times where that class implements TDTM_RunnableMutable
     **/
     @isTest
-    private static void testAllowMutation()
-    {
+    private static void testAllowMutation() {
         // we will run the same class this many times, and based on the sample
         // implementation of TDTM_RunnableMutable, this will be the value
         // of the NumberOfEmployees field on each Account 
