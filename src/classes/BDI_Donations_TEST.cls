@@ -2370,9 +2370,11 @@ public with sharing class BDI_Donations_TEST {
     *    import donations using different matching rules: Date, Amount, matching opps payment was written off
     *    but opp left open. 
     * verify: 
+    *    The import should fail as the payment is written off and the matching donations code will try to 
+    *    mark it as paid.
     *    no new donation created
     *    error reported on bdi
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void donationMatchRules17() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
@@ -2706,10 +2708,33 @@ public with sharing class BDI_Donations_TEST {
         system.assertEquals(1, listDI.size());
         system.assertEquals(expectedStatus, listDI[0].DonationImportStatus__c);
         system.assertEquals(hasMultiMatches, listDI[0].Donation_Possible_Matches__c != null || listDI[0].Payment_Possible_Matches__c != null);
-        if (imatch >= 0) {                
-            system.assertEquals(BDI_DataImport_API.bdiImported, listDI[0].Status__c);
-            system.assertEquals(listOpp[imatch].Id, listDI[0].DonationImported__c);
-            if (imatch != 6 && imatch != 7) {
+        
+        if (imatch >= 0) {
+
+            Boolean shouldImportFail = false;
+            Boolean shouldAssertImportedPayment = true;
+
+            // There's special logic for specific donation match tests
+            switch on imatch {
+                when 6, 7 {
+                    shouldAssertImportedPayment = false;
+                }
+                when 11 {
+                    shouldImportFail = true;
+                    shouldAssertImportedPayment = false;
+                }
+            }
+
+            if (shouldImportFail) {
+                // the payment was marked as written off - but matched a payment and an attempt was made to marked as paid)
+                System.assertEquals(BDI_DataImport_API.bdiFailed, listDI[0].Status__c);
+            } else {
+                System.assertEquals(BDI_DataImport_API.bdiImported, listDI[0].Status__c);
+            }
+
+            System.assertEquals(listOpp[imatch].Id, listDI[0].DonationImported__c);
+
+            if (shouldAssertImportedPayment) {
                 system.assertNotEquals(null, listDI[0].PaymentImported__c);
                 system.assertEquals(expectedStatusPmt, listDI[0].PaymentImportStatus__c);
                 npe01__OppPayment__c pmt = [select Id, npe01__Payment_Method__c from npe01__OppPayment__c
