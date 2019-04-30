@@ -4,7 +4,7 @@
         <fullName>NPSP_Household_Account</fullName>
         <fields>Name</fields>
         <fields>npo02__TotalOppAmount__c</fields>
-        <fields>%%%NAMESPACE%%%Number_of_Household_Members__c</fields>
+        <fields>npsp__Number_of_Household_Members__c</fields>
         <label>NPSP Household Account</label>
     </compactLayouts>
     <compactLayouts>
