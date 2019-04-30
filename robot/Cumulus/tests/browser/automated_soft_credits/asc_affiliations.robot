@@ -25,6 +25,8 @@ Create ASC for Affiliated Contact
     ...                     &{contact}[FirstName] &{contact}[LastName]=Soft Credit
     Go To Record Home    &{contact}[Id]
     Select Tab    Related
+    Reload Page
+    Select Tab    Related
     Load Related List    Opportunities
     Check Record Related Item    Opportunities    &{opportunity}[Name]
     Run Donations Batch Process

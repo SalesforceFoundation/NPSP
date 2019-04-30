@@ -18,9 +18,11 @@ from email.mime import text
 
 from locators_44 import npsp_lex_locators as locators_44
 from locators_45 import npsp_lex_locators as locators_45
+from locators_46 import npsp_lex_locators as locators_46
 locators_by_api_version = {
     44.0: locators_44,  # Winter '19
     45.0: locators_45,  # Spring '19
+    46.0: locators_46,  # Summer '19
 }
 # will get populated in _init_locators
 npsp_lex_locators = {}

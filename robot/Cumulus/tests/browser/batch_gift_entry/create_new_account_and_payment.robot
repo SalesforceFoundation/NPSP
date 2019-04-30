@@ -3,7 +3,7 @@
 Resource        robot/Cumulus/resources/NPSP.robot
 Library           DateTime
 Suite Setup     Open Test Browser
-Suite Teardown  Delete Records and Close Browser
+#Suite Teardown  Delete Records and Close Browser
 
 *** Test Cases ***
 
@@ -56,6 +56,7 @@ Create a new account and enter payment information
     ${value}    Return Locator Value    bge.value    Donation
     # Click Link    ${value}
     Click Link With Text    ${value}
+    Select Window    ${value} | Salesforce    5
     ${opp_name}    Return Locator Value    check_field    Opportunity
     Click Link    ${opp_name}
     ${opp_id} =           Get Current Record Id

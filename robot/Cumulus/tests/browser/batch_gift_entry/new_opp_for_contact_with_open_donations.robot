@@ -69,6 +69,7 @@ Create a new opportunity for a contact with open donations
     ${value}    Return Locator Value    bge.value    Donation
     #Click Link    text:${value}
     Click Link With Text    ${value}
+    Select Window    ${value} | Salesforce    5
     #Select Window     New
     ${opp_name}    Return Locator Value    check_field    Opportunity
     Click Link    ${opp_name}

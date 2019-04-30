@@ -16,7 +16,7 @@ Create Engagement Plan and Edit to Add New Task
     Unselect Frame
     Select App Launcher Tab  Engagement Plan Templates
     Click Link    link=${plan_name}
-    Click Link    link=Show more actions
+    Click Link    link=Show 7 more actions
     Click Link    link=Edit
     Click New Task Button   Manage Engagement Plan Template    button    Add Task
     Enter Task Id and Subject    Task 3    ${task3_1}

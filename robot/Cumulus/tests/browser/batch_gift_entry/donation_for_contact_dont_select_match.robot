@@ -32,6 +32,7 @@ Dont select match for contact new donation with grid changes
     Populate Field By Placeholder    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
     Click Link    &{contact}[FirstName] &{contact}[LastName]
     Page Should Contain Link    Review Donations
+    Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
     ...                       Donation Amount=100
     Click Element With Locator    bge.field-input    Donation Date
@@ -57,10 +58,11 @@ Dont select match for contact new donation with grid changes
     &{existing_opp} =  Salesforce Get    Opportunity    &{opportunity}[Id]
     Should Be Equal As Strings    &{existing_opp}[Amount]    100.0
     Should Be Equal As Strings    &{existing_opp}[CloseDate]    ${date}
-    Should Be Equal As Strings    &{existing_opp}[StageName]    Prospecting 
+    Should Be Equal As Strings    &{existing_opp}[StageName]    Prospecting     
     ${value}    Return Locator Value    bge.value    Donation
     # Click Link    ${value}
     Click Link With Text    ${value}
+    Select Window    ${value} | Salesforce    5
     ${opp_name}    Return Locator Value    check_field    Opportunity
     Click Link    ${opp_name}
     ${newopp_id}    Get Current Record ID
