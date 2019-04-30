@@ -61,6 +61,13 @@ tasks:
             path: unpackaged/config/qa
             namespace_inject: $project_config.project__package__namespace
 
+    deploy_bdi_qa_config:
+        description: Deploys additional fields used for QA purposes on BDI only
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: unpackaged/config/bdi
+            namespace_inject: $project_config.project__package__namespace
+
     deploy_reports:
         description: Deploys reports & dashboards
         class_path: cumulusci.tasks.salesforce.Deploy
