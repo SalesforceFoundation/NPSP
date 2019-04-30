@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customButtons>Email_Acknowledgment</customButtons>
+    <customButtons>%%%NAMESPACE%%%Email_Acknowledgment</customButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
         <customLabel>true</customLabel>
@@ -18,7 +18,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Primary_Contact__c</field>
+                <field>%%%NAMESPACE%%%Primary_Contact__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -84,11 +84,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Acknowledgment_Status__c</field>
+                <field>%%%NAMESPACE%%%Acknowledgment_Status__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Acknowledgment_Date__c</field>
+                <field>%%%NAMESPACE%%%Acknowledgment_Date__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -101,19 +101,19 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Fair_Market_Value__c</field>
+                <field>%%%NAMESPACE%%%Fair_Market_Value__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>In_Kind_Donor_Declared_Value__c</field>
+                <field>%%%NAMESPACE%%%In_Kind_Donor_Declared_Value__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>In_Kind_Type__c</field>
+                <field>%%%NAMESPACE%%%In_Kind_Type__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>In_Kind_Description__c</field>
+                <field>%%%NAMESPACE%%%In_Kind_Description__c</field>
             </layoutItems>
         </layoutColumns>
         <style>OneColumn</style>
@@ -126,37 +126,37 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Tribute_Type__c</field>
+                <field>%%%NAMESPACE%%%Tribute_Type__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Honoree_Contact__c</field>
+                <field>%%%NAMESPACE%%%Honoree_Contact__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Honoree_Name__c</field>
+                <field>%%%NAMESPACE%%%Honoree_Name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Notification_Message__c</field>
+                <field>%%%NAMESPACE%%%Notification_Message__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Notification_Preference__c</field>
+                <field>%%%NAMESPACE%%%Notification_Preference__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Notification_Recipient_Contact__c</field>
+                <field>%%%NAMESPACE%%%Notification_Recipient_Contact__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Notification_Recipient_Name__c</field>
+                <field>%%%NAMESPACE%%%Notification_Recipient_Name__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Notification_Recipient_Information__c</field>
+                <field>%%%NAMESPACE%%%Notification_Recipient_Information__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -220,7 +220,7 @@
             <quickActionName>FeedItem.TextPost</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>Opportunity.Quick_Update</quickActionName>
+            <quickActionName>Opportunity.%%%NAMESPACE%%%Quick_Update</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
             <quickActionName>NewContact</quickActionName>
@@ -251,10 +251,10 @@
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>Account__c</fields>
-        <fields>Amount__c</fields>
-        <fields>Role__c</fields>
-        <relatedList>Account_Soft_Credit__c.Opportunity__c</relatedList>
+        <fields>%%%NAMESPACE%%%Account__c</fields>
+        <fields>%%%NAMESPACE%%%Amount__c</fields>
+        <fields>%%%NAMESPACE%%%Role__c</fields>
+        <relatedList>%%%NAMESPACE%%%Account_Soft_Credit__c.%%%NAMESPACE%%%Opportunity__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>TASK.SUBJECT</fields>

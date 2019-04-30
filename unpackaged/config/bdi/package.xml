@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>%%%NAMESPACE%%%DataImport__c.custom_campaign__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.custom_currency__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.custom_date__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.custom_email__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.custom_multipick__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.custom_number__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.custom_phone__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.custom_text__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.custom_textarea__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.custom_url__c</members>
+        <members>%%%NAMESPACE%%%DataImport__c.custom_picklist__c</members>
+        <members>Opportunity.custom_currency__c</members>
+        <members>Opportunity.custom_date__c</members>
+        <members>Opportunity.custom_lookup__c</members>
+        <members>Opportunity.custom_number__c</members>
+        <members>Opportunity.custom_picklist__c</members>
+        <members>Opportunity.custom_text__c</members>
+        <members>Opportunity.custom_textarea__c</members>
+        <members>npe01__OppPayment__c.custom_email__c</members>
+        <members>npe01__OppPayment__c.custom_multipick__c</members>
+        <members>npe01__OppPayment__c.custom_phone__c</members>
+        <members>npe01__OppPayment__c.custom_url__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>%%%NAMESPACE%%%DataImport__c-Data Import Layout</members>
+        <members>Opportunity-%%%NAMESPACE%%%Donation Layout</members>
+        <members>Opportunity-%%%NAMESPACE%%%Grant Layout</members>
+        <members>Opportunity-%%%NAMESPACE%%%In-Kind Gift Layout</members>
+        <members>Opportunity-%%%NAMESPACE%%%Major Gift Layout</members>
+        <members>Opportunity-%%%NAMESPACE%%%Matching Gift Layout</members>
+        <members>Opportunity-%%%NAMESPACE%%%Membership Layout</members>
+        <name>Layout</name>
+    </types>
+    <version>45.0</version>
+</Package>

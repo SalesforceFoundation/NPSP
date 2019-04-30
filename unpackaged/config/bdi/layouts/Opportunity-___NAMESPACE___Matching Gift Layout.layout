@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customButtons>Refresh_Name</customButtons>
-    <customButtons>Email_Acknowledgment</customButtons>
+    <customButtons>%%%NAMESPACE%%%Email_Acknowledgment</customButtons>
+    <customButtons>%%%NAMESPACE%%%Find_Matched_Gifts</customButtons>
+    <customButtons>%%%NAMESPACE%%%Manage_Soft_Credits</customButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
         <customLabel>true</customLabel>
@@ -19,7 +20,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Primary_Contact__c</field>
+                <field>%%%NAMESPACE%%%Primary_Contact__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -28,6 +29,14 @@
             <layoutItems>
                 <behavior>Required</behavior>
                 <field>CloseDate</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>LeadSource</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Type</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -65,7 +74,15 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
+                <field>IsPrivate</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
                 <field>CampaignId</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>npe03__Recurring_Donation__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
@@ -77,66 +94,15 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Type</field>
+                <field>%%%NAMESPACE%%%Batch__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Acknowledgment_Status__c</field>
+                <field>%%%NAMESPACE%%%Acknowledgment_Status__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Acknowledgment_Date__c</field>
-            </layoutItems>
-        </layoutColumns>
-        <style>TwoColumnsLeftToRight</style>
-    </layoutSections>
-    <layoutSections>
-        <customLabel>true</customLabel>
-        <detailHeading>true</detailHeading>
-        <editHeading>true</editHeading>
-        <label>Grant Information</label>
-        <layoutColumns>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Requested_Amount__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Grant_Requirements_Website__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Grant_Contract_Number__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Grant_Program_Area_s__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Previous_Grant_Opportunity__c</field>
-            </layoutItems>
-        </layoutColumns>
-        <layoutColumns>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Grant_Contract_Date__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Grant_Period_Start_Date__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Grant_Period_End_Date__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Readonly</behavior>
-                <field>Next_Grant_Deadline_Due_Date__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Is_Grant_Renewal__c</field>
+                <field>%%%NAMESPACE%%%Acknowledgment_Date__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -231,13 +197,13 @@
             <quickActionName>FeedItem.TextPost</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>Opportunity.Quick_Update</quickActionName>
+            <quickActionName>Opportunity.%%%NAMESPACE%%%Quick_Update</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>Opportunity.New_Payment</quickActionName>
+            <quickActionName>Opportunity.%%%NAMESPACE%%%New_Payment</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
-            <quickActionName>New_Recurring_Donation</quickActionName>
+            <quickActionName>%%%NAMESPACE%%%New_Recurring_Donation</quickActionName>
         </quickActionListItems>
         <quickActionListItems>
             <quickActionName>NewContact</quickActionName>
@@ -270,59 +236,49 @@
         <relatedList>RelatedContactRoleList</relatedList>
     </relatedLists>
     <relatedLists>
-        <fields>NAME</fields>
-        <fields>Account__c</fields>
-        <fields>Amount__c</fields>
-        <fields>Role__c</fields>
-        <relatedList>Account_Soft_Credit__c.Opportunity__c</relatedList>
+        <customButtons>%%%NAMESPACE%%%Manage_Soft_Credits</customButtons>
+        <excludeButtons>New</excludeButtons>
+        <fields>%%%NAMESPACE%%%Contact_Name__c</fields>
+        <fields>Account.ACC_NAME</fields>
+        <fields>%%%NAMESPACE%%%Role_Name__c</fields>
+        <fields>%%%NAMESPACE%%%Amount__c</fields>
+        <relatedList>%%%NAMESPACE%%%Partial_Soft_Credit__c.%%%NAMESPACE%%%Opportunity__c</relatedList>
     </relatedLists>
     <relatedLists>
-        <customButtons>Schedule_Payments</customButtons>
-        <customButtons>Writeoff_Payments</customButtons>
+        <fields>NAME</fields>
+        <fields>%%%NAMESPACE%%%Account__c</fields>
+        <fields>%%%NAMESPACE%%%Amount__c</fields>
+        <fields>%%%NAMESPACE%%%Role__c</fields>
+        <relatedList>%%%NAMESPACE%%%Account_Soft_Credit__c.%%%NAMESPACE%%%Opportunity__c</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <excludeButtons>New</excludeButtons>
+        <fields>OPPORTUNITY.NAME</fields>
+        <fields>%%%NAMESPACE%%%Primary_Contact__c</fields>
+        <fields>ACCOUNT.NAME</fields>
+        <fields>OPPORTUNITY.AMOUNT</fields>
+        <fields>OPPORTUNITY.CLOSE_DATE</fields>
+        <fields>OPPORTUNITY.STAGE_NAME</fields>
+        <relatedList>Opportunity.%%%NAMESPACE%%%Matching_Gift__c</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <customButtons>%%%NAMESPACE%%%Manage_Allocations</customButtons>
+        <excludeButtons>New</excludeButtons>
+        <fields>NAME</fields>
+        <fields>%%%NAMESPACE%%%General_Accounting_Unit__c</fields>
+        <fields>%%%NAMESPACE%%%Amount__c</fields>
+        <fields>%%%NAMESPACE%%%Percent__c</fields>
+        <relatedList>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%Opportunity__c</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <customButtons>npe01__Schedule_Payments</customButtons>
+        <customButtons>npe01__Writeoff_Payments</customButtons>
         <fields>NAME</fields>
         <fields>npe01__Payment_Amount__c</fields>
         <fields>Payment_Status__c</fields>
         <fields>npe01__Payment_Date__c</fields>
         <fields>npe01__Payment_Method__c</fields>
         <relatedList>npe01__OppPayment__c.npe01__Opportunity__c</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <fields>NAME</fields>
-        <fields>Grant_Deadline_Due_Date__c</fields>
-        <fields>Grant_Deliverable_Close_Date__c</fields>
-        <fields>Grant_Deliverable_Requirements__c</fields>
-        <relatedList>Grant_Deadline__c.Opportunity__c</relatedList>
-        <sortField>Grant_Deadline_Due_Date__c</sortField>
-        <sortOrder>Asc</sortOrder>
-    </relatedLists>
-    <relatedLists>
-        <fields>OPPORTUNITY.NAME</fields>
-        <fields>ACCOUNT.NAME</fields>
-        <fields>OPPORTUNITY.CLOSE_DATE</fields>
-        <fields>OPPORTUNITY.AMOUNT</fields>
-        <relatedList>Opportunity.Previous_Grant_Opportunity__c</relatedList>
-        <sortField>OPPORTUNITY.CLOSE_DATE</sortField>
-        <sortOrder>Desc</sortOrder>
-    </relatedLists>
-    <relatedLists>
-        <customButtons>Manage_Allocations</customButtons>
-        <excludeButtons>New</excludeButtons>
-        <fields>NAME</fields>
-        <fields>General_Accounting_Unit__c</fields>
-        <fields>Amount__c</fields>
-        <fields>Percent__c</fields>
-        <relatedList>Allocation__c.Opportunity__c</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <fields>NAME</fields>
-        <fields>Engagement_Plan_Template__c</fields>
-        <fields>Status__c</fields>
-        <fields>CREATEDBY_USER</fields>
-        <fields>CREATED_DATE</fields>
-        <fields>LAST_UPDATE</fields>
-        <relatedList>Engagement_Plan__c.Opportunity__c</relatedList>
-        <sortField>CREATED_DATE</sortField>
-        <sortOrder>Desc</sortOrder>
     </relatedLists>
     <relatedLists>
         <fields>TASK.SUBJECT</fields>
@@ -359,7 +315,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h1I000004CCU2</masterLabel>
+        <masterLabel>00h1I000004CCU3</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
