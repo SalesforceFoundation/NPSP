@@ -262,7 +262,8 @@ private class PMT_Payment_TEST {
      * If it is an unpaid payment, it must have a scheduled date. 
      * down the Payment records.
      */
-    static testMethod void test_EnforceAccountingDataConsistency() {
+     @isTest
+    static void test_EnforceAccountingDataConsistency() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true, Enforce_Accounting_Data_Consistency__c = true));
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
@@ -283,7 +284,7 @@ private class PMT_Payment_TEST {
         try {
             insert invalidPaidPayment;
         } catch (Exception e) {
-            System.assert(e.getMessage().contains('A paid payment must have a payment date.'), 'The error message is not expected, actual: ' + e.getMessage());
+            System.assert(e.getMessage().contains(System.Label.pmtPaidPaymentDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
         }
 
         // Test the invalid unpaid insertion case
@@ -292,7 +293,7 @@ private class PMT_Payment_TEST {
         try {
             insert invalidUnpaidPayment;
         } catch (Exception e) {
-            System.assert(e.getMessage().contains('An unpaid payment must have a scheduled date.'), 'The error message is not expected, actual: ' + e.getMessage());
+            System.assert(e.getMessage().contains(System.Label.pmtUnpaidPaymentScheduledDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
         }
 
         // Test the valid paid paymennt insertion case
@@ -326,7 +327,7 @@ private class PMT_Payment_TEST {
         try {
             update pmt;
         } catch (Exception e) {
-            System.assert(e.getMessage().contains('A paid payment must have a payment date.'), 'The error message is not expected, actual: ' + e.getMessage());
+            System.assert(e.getMessage().contains(System.Label.pmtPaidPaymentDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
         }
 
         // Test the valid paid payment update case
@@ -346,7 +347,7 @@ private class PMT_Payment_TEST {
         try {
             update pmt;
         } catch (Exception e) {
-            System.assert(e.getMessage().contains('An unpaid payment must have a scheduled date.'), 'The error message is not expected, actual: ' + e.getMessage());
+            System.assert(e.getMessage().contains(System.Label.pmtUnpaidPaymentScheduledDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
         }
         
 
@@ -367,7 +368,8 @@ private class PMT_Payment_TEST {
     /**
      * @description Validate that the Accounting rules are not enforced if the custom setting is not enabled. 
      */
-    static testMethod void test_EnforceAccountingDataConsistencyTurnedOff() {
+     @isTest
+    static void test_EnforceAccountingDataConsistencyTurnedOff() {
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
 

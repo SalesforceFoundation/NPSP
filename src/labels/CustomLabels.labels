@@ -5014,6 +5014,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You can't modify Payment currencies directly. Update the parent Opportunity's currency, and NPSP will automatically update the currency of all related Payment records.</value>
     </labels>
     <labels>
+        <fullName>pmtPaidPaymentDateRequired</fullName>
+        <categories>pmtAccountingDataConsistency</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtPaidPaymentDateRequired</shortDescription>
+        <value>A paid payment must have a payment date.</value>
+    </labels>
+    <labels>
+        <fullName>pmtUnpaidPaymentScheduledDateRequired</fullName>
+        <categories>pmtAccountingDataConsistency</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtUnpaidPaymentScheduledDateRequired</shortDescription>
+        <value>An unpaid payment must have a scheduled date.</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardBtnCalcPayments</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>

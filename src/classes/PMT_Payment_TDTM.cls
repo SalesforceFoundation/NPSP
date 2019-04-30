@@ -308,10 +308,10 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
             for (npe01__OppPayment__c newRecord : newList) {
                 if (newRecord.npe01__Paid__c == true && newRecord.npe01__Payment_Date__c == null) {
                     isValid = false;
-                    newRecord.npe01__Payment_Date__c.addError('A paid payment must have a payment date.');
+                    newRecord.npe01__Payment_Date__c.addError(System.Label.pmtPaidPaymentDateRequired);
                 } else if (newRecord.npe01__Paid__c == false && newRecord.npe01__Scheduled_Date__c == null) {
                     isValid = false;
-                    newRecord.npe01__Scheduled_Date__c.addError('An unpaid payment must have a scheduled date.');
+                    newRecord.npe01__Scheduled_Date__c.addError(System.Label.pmtUnpaidPaymentScheduledDateRequired);
                 }
             }
         }
