@@ -78,24 +78,30 @@ public class BDI_MigrationMappingUtility {
     }
 
     /**
-     * @description Collect all Help Text field mappings and compare against default Field Mapping Metadata Type records
-     * reserve all non-standard NPSP Help Text mappings. What to do with reserved list of Help Text mappings TBD.
+     * @description Collect all Help Text field mappings and compare against default Field Mapping Metadata 
+     * Type records reserve all non-standard NPSP Help Text mappings. What to do with reserved list of Help 
+     * Text mappings TBD.
      */
     public void buildCustomMetadataRecordsFromHelpText() {
 
         Map<String, BDI_HelpTextCMT.MappingDetail> listHelpTextFieldDetails = getAllMappedHelpTextFields();
-        Map<String, Data_Import_Object_Mapping__mdt> existingObjectMappings = getDefaultObjectMappings(DEFAULT_OBJECT_MAPPING_SET.Id);
-        Map<String, Data_Import_Field_Mapping__mdt> existingFieldMappings = getDefaultFieldMappings(DEFAULT_FIELD_MAPPING_SET.Id);
+        Map<String, Data_Import_Object_Mapping__mdt> existingObjectMappings = 
+            getDefaultObjectMappings(DEFAULT_OBJECT_MAPPING_SET.Id);
+        Map<String, Data_Import_Field_Mapping__mdt> existingFieldMappings = 
+            getDefaultFieldMappings(DEFAULT_FIELD_MAPPING_SET.Id);
 
         for (String key : listHelpTextFieldDetails.keySet()) {
 
-            BDI_HelpTextCMT.DataImportFieldMapping fieldMapping = new BDI_HelpTextCMT.DataImportFieldMapping(key, listHelpTextFieldDetails.get(key));
-            Data_Import_Object_Mapping__mdt existingDefaultObjectMapping = existingObjectMappings.get(fieldMapping.dataImportObjectName);
+            BDI_HelpTextCMT.DataImportFieldMapping fieldMapping = 
+                new BDI_HelpTextCMT.DataImportFieldMapping(key, listHelpTextFieldDetails.get(key));
+            Data_Import_Object_Mapping__mdt existingDefaultObjectMapping = 
+                existingObjectMappings.get(fieldMapping.dataImportObjectName);
             Boolean foundDefaultObjectMapping = (existingDefaultObjectMapping != null);
 
             if (foundDefaultObjectMapping) {
 
-                Data_Import_Field_Mapping__mdt existingDefaultFieldMapping = existingFieldMappings.get(fieldMapping.sourceFieldAPIName);
+                Data_Import_Field_Mapping__mdt existingDefaultFieldMapping = 
+                    existingFieldMappings.get(fieldMapping.sourceFieldAPIName);
 
                 Boolean foundDefaultFieldMapping = (existingDefaultFieldMapping != null);
 
@@ -114,7 +120,9 @@ public class BDI_MigrationMappingUtility {
 
                     if (invalidFieldMapping) {
                         // Add metadata record to queue for deployment
-                        setFieldMappingValues(fieldMapping, existingDefaultObjectMapping, existingDefaultFieldMapping);
+                        setFieldMappingValues(fieldMapping, 
+                            existingDefaultObjectMapping, 
+                            existingDefaultFieldMapping);
 
                         // If existing help text mapping doesn't match our packaged cmt record, park the mapping
                         fieldMapping.expectedHelpTextValue = existingDefaultFieldMapping.Target_Field_API_Name__c;
@@ -154,11 +162,15 @@ public class BDI_MigrationMappingUtility {
                                                      Data_Import_Field_Mapping__mdt existingFieldMapping,
                                                      Data_Import_Object_Mapping__mdt existingDefaultObjectMapping) {
 
-        Boolean badMappingSetId = (existingFieldMapping.Data_Import_Field_Mapping_Set__c != DEFAULT_FIELD_MAPPING_SET.Id);
+        Boolean badMappingSetId = (existingFieldMapping.Data_Import_Field_Mapping_Set__c != 
+            DEFAULT_FIELD_MAPPING_SET.Id);
         Boolean badRequiredField = (existingFieldMapping.Required__c != 'No');
-        Boolean badSourceFieldAPIName = (existingFieldMapping.Source_Field_API_Name__c != newFieldMapping.sourceFieldAPIName);
-        Boolean badTargetFieldAPIName = (existingFieldMapping.Target_Field_API_Name__c != newFieldMapping.targetFieldAPIName);
-        Boolean badTargetObjectMappingId = (existingFieldMapping.Target_Object_Mapping__c != existingDefaultObjectMapping.Id);
+        Boolean badSourceFieldAPIName = (existingFieldMapping.Source_Field_API_Name__c != 
+            newFieldMapping.sourceFieldAPIName);
+        Boolean badTargetFieldAPIName = (existingFieldMapping.Target_Field_API_Name__c != 
+            newFieldMapping.targetFieldAPIName);
+        Boolean badTargetObjectMappingId = (existingFieldMapping.Target_Object_Mapping__c != 
+            existingDefaultObjectMapping.Id);
         Boolean badIsDeletedField = (existingFieldMapping.Is_Deleted__c != false);
         Boolean foundMismatch = badMappingSetId || 
                 badRequiredField || 
@@ -176,7 +188,8 @@ public class BDI_MigrationMappingUtility {
      * the corresponding Metadata Type record (i.e. Source Object Name, Target Object Name, Target Field API Name, etc)
      */
     public Map<String, BDI_HelpTextCMT.MappingDetail> getAllMappedHelpTextFields() {
-        Map<String, BDI_HelpTextCMT.MappingDetail> helpTextFieldMap = new Map<String, BDI_HelpTextCMT.MappingDetail>();
+        Map<String, BDI_HelpTextCMT.MappingDetail> helpTextFieldMap = 
+            new Map<String, BDI_HelpTextCMT.MappingDetail>();
         Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts> importStatusAndLookupMap = 
             new Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts>();
 
@@ -251,7 +264,8 @@ public class BDI_MigrationMappingUtility {
     }
 
     /**
-     * @description Builds an instance of ImportStatusAndLookupParts which holds an object name, ImportedLookup__c and ImportStatus__c field names
+     * @description Builds an instance of ImportStatusAndLookupParts which holds an object name, 
+     *              ImportedLookup__c and ImportStatus__c field names
      * @param dataImportFieldName Name of a Data Import field
      * @param importStatusAndLookupMap List of ImportStatusAndLookupParts instances
      * @return instance of ImportStatusAndLookupParts
@@ -264,7 +278,8 @@ public class BDI_MigrationMappingUtility {
             new BDI_HelpTextCMT.ImportStatusAndLookupParts(dataImportFieldName);
 
         // Check if there is already an existing and matching instance of ImportStatusAndLookupParts
-        BDI_HelpTextCMT.ImportStatusAndLookupParts exists = importStatusAndLookupMap.get(importRelatedField.objectName);
+        BDI_HelpTextCMT.ImportStatusAndLookupParts exists = 
+            importStatusAndLookupMap.get(importRelatedField.objectName);
 
         // If one exists, reset instance with newly added field
         if (exists != null) {
