@@ -221,10 +221,10 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 i += 1;
             }
             
-            if (mergedWinningContact.size() > 0) {
+            /*if (mergedWinningContact.size() > 0) {
             	// this fires off opp rollups, which we aren't going to move to dmlWrapper!
                 contactMergeUpdate(mergedWinningContact);        
-            }
+            }*/
             
             if(!blankHHDeletes.isEmpty()) {
                 //Database.delete(blankHHDeletes);
@@ -317,12 +317,14 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         
         for (OpportunityContactRole ocr : ocrlist)
             oppIds.add(ocr.OpportunityId);
-                
+        }
+
         if(!oppIDs.isEmpty()) {
-            if (system.isFuture() || system.isBatch())
-                RLLP_OppRollup.rollupContactsandHouseholdsForTrigger(oppIds);                        
-            else            
-                RLLP_OppRollup.rollupContactsandHouseholdsForTriggerFuture(oppIds);                        
+            if (System.isFuture() || System.isBatch()) {
+                RLLP_OppRollup.rollupContactsandHouseholdsForTrigger(oppIds);
+            } else {
+                RLLP_OppRollup.rollupContactsandHouseholdsForTriggerFuture(oppIds);
+            }
         }            
     }
     

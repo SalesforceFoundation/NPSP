@@ -254,7 +254,7 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
             system.assertEquals(1, cOCRCon0);
             system.assertEquals(3, cOCRConWinner);
             system.assertEquals(3, cOCRCon2);
-            system.assertEquals(1, accLoser.npo02__NumberOfClosedOpps__c);            
+            system.assertEquals(1, accLoser.npo02__NumberOfClosedOpps__c);
             system.assertEquals(3, accWinner.npo02__NumberOfClosedOpps__c);            
         }
         else if (accTypeLoser == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE && accTypeWinner == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
@@ -314,25 +314,38 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     }
 
     /*******************************************************************************************************
-    * @description Verifies rollup is calculted on merge
+    * @description Verifies rollup is calculated on merge using Customizable Rollups
     */
     @isTest
-    private static void contactMergeShouldRecalculateRollup() {
+    private static void contactMergeShouldRecalculateWithCustomizableRollups() {
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            Customizable_Rollups_Enabled__c = true
+        ));
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
         List<Contact> contactsToMerge = buildContactsWithOppsForAccount();
 
         Test.startTest();
+        List<Contact> contacts = [SELECT npo02__NumberOfClosedOpps__c FROM Contact];
+        System.assertEquals(0, contacts[0].npo02__NumberOfClosedOpps__c, 'There should be no calculated rollups at this point');
+        System.assertEquals(0, contacts[1].npo02__NumberOfClosedOpps__c, 'There should be no calculated rollups at this point');
         merge contactsToMerge[0] contactsToMerge[1];
         Test.stopTest();
 
-        List<Contact> contacts = [SELECT npo02__NumberOfClosedOpps__c FROM Contact];
+        contacts = [SELECT npo02__NumberOfClosedOpps__c FROM Contact];
         System.assertEquals(1, contacts.size(), 'There should only be one contact after merge');
-        System.assertEquals(2, contacts[0].npo02__NumberOfClosedOpps__c, 'The rollup should have been calculated');
+        System.assertEquals(2, contacts[0].npo02__NumberOfClosedOpps__c, 'The rollup should have been calculated on the remaining contact');
     }
 
     /*******************************************************************************************************************
     * @description Builds and inserts contacts with one opportunity each for a single account
     */
     private static List<Contact> buildContactsWithOppsForAccount() {
+
+        // Disable all rollup triggers before creating test data
+        UTIL_UnitTestData_TEST.disableRollupTriggers();
+        UTIL_UnitTestData_TEST.disableCustomizableRollupTriggers();
+
         UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.HH_ACCOUNT_TYPE, 1, 2, uniqueCounter);
         List<Contact> contacts = UTIL_UnitTestData_TEST.listConT;
 
@@ -347,6 +360,14 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
         );
 
         insert listOpp;
+
+        // Re-enable Legacy Rollup Triggers
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'RLLP_OppRollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Task', 'EP_TaskRollup_TDTM', false);
+
+        // Re-enable CRLP Rollup Triggers
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'CRLP_Rollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'CRLP_Rollup_TDTM', false);
 
         return contacts;
     }
