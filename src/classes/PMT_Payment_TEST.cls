@@ -258,6 +258,141 @@ private class PMT_Payment_TEST {
     }
 
     /**
+     * @description Test that when Advanced Currency Management (ACM) is enabled, the logic that determines
+     * when an Opportunity should be auto-closed still executes properly for overpaid opportunities. In this scenario, the roll-ups from
+     * Payment to the Opportunity object do not work, so a trigger on the Payment object is used instead.
+     * This test validates that logic by setting mock to pretend that ACM is enabled.
+     */
+    private static testMethod void testOverpaidOpportunityWillAutoCloseWithACMEnabled() {
+
+        // Pretend the advanced multi-currency is enabled
+        // Note: Trigger methods need to use UserInfo.isMultiCurrencyOrganization() to determine if the
+        // CurrencyIsoCode should be queried to avoid an error when multi-currency is actually enabled
+        // in an organization.
+        UTIL_Currency_TEST.UtilCurrencyMock mock = new UTIL_Currency_TEST.UtilCurrencyMock();
+        mock.getCurrencySymbolReturn = 'USD';
+        mock.isMultiCurrencyOrganizationReturn = true;
+        mock.isAdvancedCurrencyManagementEnabledReturn = true;
+        UTIL_Currency.instance = mock;
+
+        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
+        String openStage = UTIL_UnitTestData_TEST.getOpenStage();
+
+        if (String.isEmpty(closedWonStage) || String.isEmpty(openStage)) {
+            System.debug(
+                    System.LoggingLevel.ERROR,
+                    'Organization settings do not contain the necessary opportunity stages to run this test. Not running test.'
+            );
+            return;
+        }
+
+        // Disable auto payment creation fro this test
+        UTIL_CustomSettingsFacade.getContactsSettings().npe01__Payments_Enabled__c = false;
+        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = closedWonStage;
+
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        Opportunity opp = new Opportunity(
+                Name='success',
+                Amount = 500,
+                AccountID=acc.id,
+                CloseDate=system.today(),
+                StageName=openStage);
+        insert opp;
+
+        List<npe01__OppPayment__c> pmts = new List<npe01__OppPayment__c>{
+                new npe01__OppPayment__c(
+                        npe01__Paid__c = true,
+                        npe01__Payment_Amount__c = 250,
+                        npe01__Opportunity__c = opp.Id
+                ),
+                new npe01__OppPayment__c(
+                        npe01__Paid__c = false,
+                        npe01__Payment_Amount__c = 250,
+                        npe01__Opportunity__c = opp.Id
+                )
+        };
+
+        Test.startTest();
+
+        insert pmts;
+
+        opp = [SELECT Name, Amount, StageName, IsClosed, IsWon FROM Opportunity WHERE Id = :opp.Id LIMIT 1];
+        System.assertEquals(openStage, opp.StageName, 'The Opportunity should still be in an open state');
+
+        // Mark the payment as Paid
+        pmts[1].npe01__Payment_Amount__c = 500;
+        pmts[1].npe01__Paid__c = true;
+        update pmts;
+
+        Test.stopTest();
+
+        // Verify that the Opportunity is now closed
+        /*opp = [SELECT Name, Amount, StageName, IsClosed, IsWon, npe01__Number_Of_Payments__c,
+                npe01__Amount_Outstanding__c, npe01__Payments_Made__c,
+                (SELECT npe01__Paid__c, npe01__Payment_Amount__c, npe01__Written_Off__c FROM npe01__OppPayment__r)
+                FROM Opportunity
+                WHERE Id = :opp.Id LIMIT 1];*/
+        opp = [SELECT Name, Amount, StageName, IsClosed, IsWon FROM Opportunity WHERE Id = :opp.Id LIMIT 1];
+        System.assertEquals(closedWonStage, opp.StageName);
+    }
+
+    /**
+     * @description Test that the logic that determines when an Opportunity should be auto-closed still executes 
+     * properly for overpaid opportunities. In this scenario, the roll-ups from
+     * Payment to the Opportunity object do not work, so a trigger on the Payment object is used instead.
+     */
+    private static testMethod void testOverpaidOpportunityWillAutoClose() {
+
+        String closedWonStage = UTIL_UnitTestData_TEST.getClosedWonStage();
+        String openStage = UTIL_UnitTestData_TEST.getOpenStage();
+
+        if (String.isEmpty(closedWonStage) || String.isEmpty(openStage)) {
+            System.debug(
+                    System.LoggingLevel.ERROR,
+                    'Organization settings do not contain the necessary opportunity stages to run this test. Not running test.'
+            );
+            return;
+        }
+
+        // Disable auto payment creation for this test
+        UTIL_CustomSettingsFacade.getContactsSettings().Payments_Auto_Close_Stage_Name__c = closedWonStage;
+
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        Opportunity opp = new Opportunity(
+                Name='success',
+                Amount = 500,
+                AccountID=acc.id,
+                CloseDate=system.today(),
+                StageName=openStage);
+        insert opp;
+
+        List<npe01__OppPayment__c> pmts = [Select Id from npe01__oppPayment__c Where npe01__Opportunity__c =: opp.Id];
+
+        Test.startTest();
+
+        opp = [SELECT Name, Amount, StageName, IsClosed, IsWon FROM Opportunity WHERE Id = :opp.Id LIMIT 1];
+        System.assertEquals(openStage, opp.StageName, 'The Opportunity should still be in an open state');
+
+        // Mark the payment as Paid
+        pmts[0].npe01__Payment_Amount__c = 1000;
+        pmts[0].npe01__Paid__c = true;
+        update pmts;
+
+        Test.stopTest();
+
+        // Verify that the Opportunity is now closed
+        /*opp = [SELECT Name, Amount, StageName, IsClosed, IsWon, npe01__Number_Of_Payments__c,
+                npe01__Amount_Outstanding__c, npe01__Payments_Made__c,
+                (SELECT npe01__Paid__c, npe01__Payment_Amount__c, npe01__Written_Off__c FROM npe01__OppPayment__r)
+                FROM Opportunity
+                WHERE Id = :opp.Id LIMIT 1];*/
+        opp = [SELECT Name, Amount, StageName, IsClosed, IsWon FROM Opportunity WHERE Id = :opp.Id LIMIT 1];
+        System.assertEquals(closedWonStage, opp.StageName);
+    }
+
+    /**
      * @description Reusable utility method to retrieve a specific payment record for an Opportunity
      */
     private static npe01__OppPayment__c getPaymentRecord(Id oppId) {
