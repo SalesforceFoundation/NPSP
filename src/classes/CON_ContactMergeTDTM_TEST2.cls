@@ -337,8 +337,35 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
         System.assertEquals(2, contacts[0].npo02__NumberOfClosedOpps__c, 'The rollup should have been calculated on the remaining contact');
     }
 
+    /*******************************************************************************************************
+    * @description Verifies rollup is calculated on merge using Legacy Rollups
+    */
+    @isTest
+    private static void contactMergeShouldRecalculateWithLegacyRollups() {
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            Customizable_Rollups_Enabled__c = false
+        ));
+
+        List<Contact> contactsToMerge = buildContactsWithOppsForAccount();
+
+        Test.startTest();
+        List<Contact> contacts = [SELECT npo02__NumberOfClosedOpps__c FROM Contact];
+        System.assertEquals(0, contacts[0].npo02__NumberOfClosedOpps__c, 'There should be no calculated rollups at this point');
+        System.assertEquals(0, contacts[1].npo02__NumberOfClosedOpps__c, 'There should be no calculated rollups at this point');
+        merge contactsToMerge[0] contactsToMerge[1];
+        Test.stopTest();
+
+        contacts = [SELECT npo02__NumberOfClosedOpps__c FROM Contact];
+        System.assertEquals(1, contacts.size(), 'There should only be one contact after merge');
+        System.assertEquals(2, contacts[0].npo02__NumberOfClosedOpps__c, 'The rollup should have been calculated on the remaining contact');
+    }
+
     /*******************************************************************************************************************
-    * @description Builds and inserts contacts with one opportunity each for a single account
+    * @description Builds and inserts contacts with one opportunity each for a single account; disables all Rollup
+    * related triggers prior to inserting the test data. This is needed more to prevent any async methods from being
+    * queued/executed during insert that might impact other async methods that are supposed to be executed during
+    * the merge. For purposes of these tests, we're more interested in ensuring the rollups execute after the
+    * merge completes as opposed to when test records are inserted.
     */
     private static List<Contact> buildContactsWithOppsForAccount() {
 
@@ -362,12 +389,12 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
         insert listOpp;
 
         // Re-enable Legacy Rollup Triggers
-        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'RLLP_OppRollup_TDTM', false);
-        TDTM_ProcessControl.toggleTriggerState('Task', 'EP_TaskRollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'RLLP_OppRollup_TDTM', true);
+        TDTM_ProcessControl.toggleTriggerState('Task', 'EP_TaskRollup_TDTM', true);
 
         // Re-enable CRLP Rollup Triggers
-        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'CRLP_Rollup_TDTM', false);
-        TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'CRLP_Rollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'CRLP_Rollup_TDTM', true);
+        TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'CRLP_Rollup_TDTM', true);
 
         return contacts;
     }

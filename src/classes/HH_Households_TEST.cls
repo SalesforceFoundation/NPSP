@@ -575,44 +575,56 @@ public with sharing class HH_Households_TEST {
     }
     
     /*********************************************************************************************************
-    * @description Tests merging a contact into a Household updates rollups on the Household
+    * @description Tests merging a contact into a Household updates rollups on the Household when usin gthe
+    * One-to-One Account Model
     */
-    static testMethod void testMergeRollupSupport(){
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR, npe01__Enable_Opportunity_Contact_Role_Trigger__c = true));
-        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Advanced_Household_Naming__c = true, npo02__Enable_Opp_Rollup_Triggers__c = false));
-         
+    /*static testMethod void testMergeRollupSupport(){
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,
+            npe01__Enable_Opportunity_Contact_Role_Trigger__c = true
+        ));
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
+            npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+            npo02__Advanced_Household_Naming__c = true,
+            npo02__Enable_Opp_Rollup_Triggers__c = false
+        ));
+
         Contact c1 = new Contact(
-            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS, 
+            FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
             npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
             npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS            
-        );            
-        insert c1;  
-        
-        id rtid = UTIL_RecordTypes.GetRecordTypeId (Opportunity.sObjectType,UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType));
-        Opportunity newOpp = New Opportunity (
-                Name = 'Test Opp ',
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        insert c1;
+
+        Id rtid = UTIL_RecordTypes.getRecordTypeId (Opportunity.SObjectType,
+            UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.SObjectType));
+
+        Opportunity newOpp = new Opportunity (
+                Name = 'Test Opp for Merge',
                 Amount = 100,
-                CloseDate = system.today(),
+                CloseDate = System.today(),
                 StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
                 Primary_Contact__c = c1.Id
-            );  
-        if(rtid != null)
-            newOpp.put('RecordTypeId',rtid);
-        
+            );
+        if (rtid != null) {
+            newOpp.put('RecordTypeId', rtid);
+        }
+
         insert newOpp;
 
-        system.assertEquals(1, [select count() from OpportunityContactRole where isPrimary = true and ContactId = :c1.id]);
-                
-        Test.startTest();        
-        HH_Households_TDTM.contactMergeUpdate(new Set<Id>{c1.Id});  
+        System.assertEquals(1, [SELECT Count() FROM OpportunityContactRole WHERE IsPrimary = True AND ContactId = :c1.Id]);
+
+        Test.startTest();
+        HH_Households_TDTM.contactMergeUpdate(new Set<Id>{c1.Id});
         Test.stopTest();
-        c1 = [select npo02__TotalOppAmount__c, npo02__Household__r.npo02__TotalOppAmount__c from Contact where Id = :c1.id];
-        system.assertEquals(100, c1.npo02__TotalOppAmount__c);
-        system.assertEquals(100, c1.npo02__Household__r.npo02__TotalOppAmount__c);
-    }
+
+        c1 = [SELECT npo02__TotalOppAmount__c, npo02__Household__r.npo02__TotalOppAmount__c FROM Contact WHERE Id = :c1.Id];
+        System.assertEquals(100, c1.npo02__TotalOppAmount__c);
+        System.assertEquals(100, c1.npo02__Household__r.npo02__TotalOppAmount__c);
+    }*/
 
     /*********************************************************************************************************
     * @description Tests creating many contacts get a Household object.

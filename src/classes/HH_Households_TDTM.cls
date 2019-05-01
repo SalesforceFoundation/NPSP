@@ -223,9 +223,9 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             
             /*if (mergedWinningContact.size() > 0) {
             	// this fires off opp rollups, which we aren't going to move to dmlWrapper!
-                contactMergeUpdate(mergedWinningContact);        
+                contactMergeUpdate(mergedWinningContact);
             }*/
-            
+
             if(!blankHHDeletes.isEmpty()) {
                 //Database.delete(blankHHDeletes);
                 dmlWrapper.objectsToDelete.addAll(blankHHDeletes);
@@ -307,13 +307,13 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description kicks off Opportunity Rollups after contacts have been merged.
-    * @param winningContacts Set of Contact Id's 
+    * @param winningContacts Set of Contact Id's
     * @return void
     ********************************************************************************************************/
-    public static void contactMergeUpdate(Set<Id> winningContacts){     
+    /*public static void contactMergeUpdate(Set<Id> winningContacts){
         Set<Id> oppIDs = new Set<Id>();
         List<OpportunityContactRole> ocrlist = new List<OpportunityContactRole>();
-        ocrlist = [select OpportunityId from OpportunityContactRole where ContactId IN :winningContacts and isPrimary = true];      
+        ocrlist = [select OpportunityId from OpportunityContactRole where ContactId IN :winningContacts and isPrimary = true];
 
         for (OpportunityContactRole ocr : ocrlist) {
             oppIds.add(ocr.OpportunityId);
@@ -325,9 +325,9 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             } else {
                 RLLP_OppRollup.rollupContactsandHouseholdsForTriggerFuture(oppIds);
             }
-        }            
-    }
-    
+        }
+    }*/
+
     /*******************************************************************************************************
     * @description Creates a new Household Object for each contact, unless excluded by recordType
     * @param contacts List of Contacts 
