@@ -1,79 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
-        <fullName>UniqueId__c</fullName>
-        <description>The unique id used for matching external data.</description>
-        <externalId>true</externalId>
-        <label>Unique Id</label>
-        <length>255</length>
+        <fullName>custom_campaign__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <inlineHelpText>Opportunity.custom_lookup__c</inlineHelpText>
+        <label>custom_campaign</label>
+        <referenceTo>Campaign</referenceTo>
+        <relationshipLabel>NPSP Data Imports (custom_campaign)</relationshipLabel>
+        <relationshipName>NPSP_Data_Imports</relationshipName>
         <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
-        <type>Text</type>
-        <unique>true</unique>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
     </fields>
     <fields>
-        <fullName>A_User_Defined_Rollup_Field__c</fullName>
-        <description>Field for testing user defined rollups</description>
-        <externalId>false</externalId>
-        <label>A User Defined Rollup Field</label>
-        <precision>18</precision>
-        <required>false</required>
-        <scale>2</scale>
-        <trackFeedHistory>false</trackFeedHistory>
-        <trackTrending>false</trackTrending>
-        <type>Currency</type>
-    </fields>
-     <fields>
         <fullName>custom_currency__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Opportunity.custom_currency__c</inlineHelpText>
         <label>custom_currency</label>
         <precision>18</precision>
         <required>false</required>
         <scale>0</scale>
-        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Currency</type>
     </fields>
     <fields>
         <fullName>custom_date__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Opportunity.custom_date__c</inlineHelpText>
         <label>custom_date</label>
         <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Date</type>
     </fields>
     <fields>
-        <fullName>custom_lookup__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
+        <fullName>custom_email__c</fullName>
         <externalId>false</externalId>
-        <label>custom_lookup</label>
-        <referenceTo>Campaign</referenceTo>
-        <relationshipLabel>Opportunities</relationshipLabel>
-        <relationshipName>Opportunities</relationshipName>
+        <inlineHelpText>Payment.custom_email__c</inlineHelpText>
+        <label>custom_email</label>
         <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
-        <type>Lookup</type>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>custom_multipick__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Payment.custom_multipick__c</inlineHelpText>
+        <label>custom_multipick</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>MultiselectPicklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>1</fullName>
+                    <default>false</default>
+                    <label>1</label>
+                </value>
+                <value>
+                    <fullName>2</fullName>
+                    <default>false</default>
+                    <label>2</label>
+                </value>
+                <value>
+                    <fullName>3</fullName>
+                    <default>false</default>
+                    <label>3</label>
+                </value>
+                <value>
+                    <fullName>4</fullName>
+                    <default>false</default>
+                    <label>4</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+        <visibleLines>4</visibleLines>
     </fields>
     <fields>
         <fullName>custom_number__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Opportunity.custom_number__c</inlineHelpText>
         <label>custom_number</label>
         <precision>18</precision>
         <required>false</required>
         <scale>0</scale>
-        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Number</type>
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>custom_phone__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Payment.custom_phone__c</inlineHelpText>
+        <label>custom_phone</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Phone</type>
+    </fields>
+    <fields>
         <fullName>custom_picklist__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Opportunity.custom_picklist__c</inlineHelpText>
         <label>custom_picklist</label>
         <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
         <valueSet>
@@ -106,10 +138,10 @@
     <fields>
         <fullName>custom_text__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Opportunity.custom_text__c</inlineHelpText>
         <label>custom_text</label>
         <length>255</length>
         <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
@@ -117,10 +149,19 @@
     <fields>
         <fullName>custom_textarea__c</fullName>
         <externalId>false</externalId>
+        <inlineHelpText>Opportunity.custom_textarea__c</inlineHelpText>
         <label>custom_textarea</label>
         <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>custom_url__c</fullName>
+        <externalId>false</externalId>
+        <inlineHelpText>Payment.custom_url__c</inlineHelpText>
+        <label>custom_url</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Url</type>
     </fields>
 </CustomObject>
