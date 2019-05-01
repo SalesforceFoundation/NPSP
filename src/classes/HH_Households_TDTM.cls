@@ -314,8 +314,8 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
         Set<Id> oppIDs = new Set<Id>();
         List<OpportunityContactRole> ocrlist = new List<OpportunityContactRole>();
         ocrlist = [select OpportunityId from OpportunityContactRole where ContactId IN :winningContacts and isPrimary = true];      
-        
-        for (OpportunityContactRole ocr : ocrlist)
+
+        for (OpportunityContactRole ocr : ocrlist) {
             oppIds.add(ocr.OpportunityId);
         }
 
