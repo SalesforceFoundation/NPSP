@@ -61,13 +61,6 @@ tasks:
             path: unpackaged/config/qa
             namespace_inject: $project_config.project__package__namespace
 
-    deploy_bdi_qa_config:
-        description: Deploys additional fields used for QA purposes on BDI only
-        class_path: cumulusci.tasks.salesforce.Deploy
-        options:
-            path: unpackaged/config/bdi
-            namespace_inject: $project_config.project__package__namespace
-
     deploy_reports:
         description: Deploys reports & dashboards
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -254,14 +247,6 @@ flows:
             9:
                 task: deploy_reports
     
-    config_bdi_qa:
-        description: 'Deploys custom fields and metadata for testing BDI'
-        steps:
-            1:
-                task: deploy_bdi_qa_config
-            2:
-                task: update_admin_profile
-
     deploy_rollup_testing:
         description: 'Deploys custom fields and rollup definitions for testing Customizable Rollups using the Apex Anon testing script. >>> NOTE: Customizable Rollups needs to be successfully enabled before deploy_rollup_testing can be run <<<'
         steps:
