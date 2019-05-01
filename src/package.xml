@@ -771,6 +771,7 @@
         <members>Customizable_Rollup_Settings__c.Rollups_Account_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_SkewMode_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_Soft_Credit_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_AcctContactSoftCredit_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_SkewMode_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_Soft_Credit_Batch_Size__c</members>
