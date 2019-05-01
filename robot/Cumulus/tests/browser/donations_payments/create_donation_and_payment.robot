@@ -25,20 +25,24 @@ Create Donation from a Contact
     Click Special Related List Button  Payments    Schedule Payments
     Wait For Locator    frame    Create one or more Payments for this Opportunity
     Choose Frame    Create one or more Payments for this Opportunity
-    Enter Payment Schedule    ${No_of_payments}    ${intervel}    ${frequency}
     ${loc}    Get NPSP Locator    id    inputX
     Input Text    ${loc}    8/15/2018
+    Enter Payment Schedule    ${No_of_payments}    ${intervel}    ${frequency}
+    ${xpath}    Get NPSP Locator    button    Calculate Payments
+    Execute JavaScript    window.document.evaluate('${xpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
+    #Page Scroll To Locator    button    Calculate Payments
     Click Button With Value    Calculate Payments
     ${value}     Verify Payment Split   100    ${No_of_payments}
     Should be equal as strings    ${value}    ${No_of_payments}
     Verify Date Split    8/15/2018    ${No_of_payments}    ${intervel}
+    ${xpath}    Get NPSP Locator    button    Create Payments
+    Execute JavaScript    window.document.evaluate('${xpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)    
     Click Button with Value    Create Payments
     Select Window
     Page Scroll To Locator    payments.check_occurrence    Payments
     ${value}    Verify Occurrence Payments    Payments
     Should not be equal as strings    ${value}    0
     Click ViewAll Related List    Payments
-    Reload Page
     ${flag}     Verify payment    
     should be equal as strings     ${flag}    pass
     
