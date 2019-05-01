@@ -32,6 +32,7 @@ Dont select match for contact new donation with grid changes
     Populate Field By Placeholder    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
     Click Link    &{contact}[FirstName] &{contact}[LastName]
     Page Should Contain Link    Review Donations
+    Click Element With Locator    bge.field-input    Donation Amount
     Fill BGE Form
     ...                       Donation Amount=100
     Click Element With Locator    bge.field-input    Donation Date
