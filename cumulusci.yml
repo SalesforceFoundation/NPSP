@@ -253,6 +253,14 @@ flows:
                 task: test_data_relationships
             9:
                 task: deploy_reports
+    
+    config_bdi_qa:
+        description: 'Deploys custom fields and metadata for testing BDI'
+        steps:
+            1:
+                task: deploy_bdi_qa_config
+            2:
+                task: update_admin_profile
 
     deploy_rollup_testing:
         description: 'Deploys custom fields and rollup definitions for testing Customizable Rollups using the Apex Anon testing script. >>> NOTE: Customizable Rollups needs to be successfully enabled before deploy_rollup_testing can be run <<<'
