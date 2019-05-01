@@ -5022,6 +5022,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You can't modify Payment currencies directly. Update the parent Opportunity's currency, and NPSP will automatically update the currency of all related Payment records.</value>
     </labels>
     <labels>
+        <fullName>pmtWriteOffPaidPayment</fullName>
+        <categories>Payment, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWriteOffPaidPayment</shortDescription>
+        <value>A Payment can't be both paid and written off. You must deselect one or both checkboxes.</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardBtnCalcPayments</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
@@ -5118,6 +5126,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>NOTE: This Opportunity has payment record(s) that are both Paid and Written Off. You must deselect one or both checkboxes.</value>
     </labels>
     <labels>
+        <fullName>pmtWizardScheduleInvalidRecords</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWizardScheduleInvalidRecords</shortDescription>
+        <value>One or more existing Payment records are both paid and written off. To create a new Payment schedule, you must first deselect one or both checkboxes for these Payments.</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardScheduleNoAmount</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
@@ -5133,6 +5149,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <shortDescription>pmtWizardNoAmount</shortDescription>
         <value>NOTE: This Opportunity has no Amount. You must enter an Amount before you can write off Payments.</value>
     </labels>
+    <labels>
+        <fullName>pmtWizardWriteOffInvalidRecords</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWizardWriteOffInvalidRecords</shortDescription>
+        <value>One or more existing Payment records are both paid and written off. To write off Payments, you must first deselect one or both checkboxes for these Payments.</value>
+    </labels>    
     <labels>
         <fullName>pmtWizardNoUnpaidAmount</fullName>
         <categories>Payment Wizard</categories>

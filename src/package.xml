@@ -775,6 +775,7 @@
         <members>Customizable_Rollup_Settings__c.Rollups_Account_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_SkewMode_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_Soft_Credit_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_AcctContactSoftCredit_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_SkewMode_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_Soft_Credit_Batch_Size__c</members>
@@ -1788,6 +1789,7 @@
         <members>oppNamingIndividual</members>
         <members>oppNamingOrganizational</members>
         <members>pmtModifyCurrency</members>
+        <members>pmtWriteOffPaidPayment</members>
         <members>pmtWizardBtnCalcPayments</members>
         <members>pmtWizardBtnCreatePayments</members>
         <members>pmtWizardBtnRemovePaidPayments</members>
@@ -1807,6 +1809,7 @@
         <members>pmtWizardPaymentsDisabled</members>
         <members>pmtWizardPaymentsDisabledTitle</members>
         <members>pmtWizardPaymentsNoAccessMessage</members>
+        <members>pmtWizardScheduleInvalidRecords</members>
         <members>pmtWizardScheduleNoAmount</members>
         <members>pmtWizardSectionTitle</members>
         <members>pmtWizardSectionWriteoff</members>
@@ -1819,6 +1822,11 @@
         <members>pmtWizardWriteoffDate</members>
         <members>pmtWizardWriteoffMessage</members>
         <members>pmtWizardWriteoffNoAccessMessage</members>
+<<<<<<< HEAD
+=======
+        <members>pmtWizardWriteOffInvalidRecords</members>
+        <members>pmtWizardWriteOffNoAmount</members>
+>>>>>>> origin/feature/BDI-CO
         <members>pmtWizardYear</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
