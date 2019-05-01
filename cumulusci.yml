@@ -261,13 +261,6 @@ flows:
             3:
                 task: update_admin_profile
 
-    release_beta:
-        steps:
-            5:
-                task: mrbelvedere_publish
-                options:
-                    tag: ^^github_release.tag_name
-
     config_managed:
         steps:
             2:
