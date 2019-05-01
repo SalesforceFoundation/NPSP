@@ -58,7 +58,8 @@ public class BDI_MigrationMappingUtility {
     public String convertLegacyHelpTextToCustomMetadata() {
 
         if (!queuedMetadataTypesForDeploy.isEmpty()) {
-            CMT_MetadataAPI.deployMetadata(jobId, queuedMetadataTypesForDeploy.clone(), CMT_MetadataAPI.Source.HELP_TEXT_MIGRATION);
+            CMT_MetadataAPI.deployMetadata(jobId, queuedMetadataTypesForDeploy.clone(), 
+                CMT_MetadataAPI.Source.HELP_TEXT_MIGRATION);
         } else {
             // Queue is empty, but we still need to update Data Import settings
             updateCustomDataImportSettings(jobId, Label.bdiCustomObjectMappingSummary);
@@ -107,7 +108,9 @@ public class BDI_MigrationMappingUtility {
                     pendingCMTs.add(fieldMapping);
                 } else if (foundDefaultFieldMapping) {
                     // Existing Field Mapping, check if CMTs field values match Help Text field values
-                    Boolean invalidFieldMapping = foundDefaultFieldMappingMismatch(fieldMapping, existingDefaultFieldMapping, existingDefaultObjectMapping);
+                    Boolean invalidFieldMapping = foundDefaultFieldMappingMismatch(fieldMapping, 
+                            existingDefaultFieldMapping, 
+                            existingDefaultObjectMapping);
 
                     if (invalidFieldMapping) {
                         // Add metadata record to queue for deployment
@@ -157,7 +160,12 @@ public class BDI_MigrationMappingUtility {
         Boolean badTargetFieldAPIName = (existingFieldMapping.Target_Field_API_Name__c != newFieldMapping.targetFieldAPIName);
         Boolean badTargetObjectMappingId = (existingFieldMapping.Target_Object_Mapping__c != existingDefaultObjectMapping.Id);
         Boolean badIsDeletedField = (existingFieldMapping.Is_Deleted__c != false);
-        Boolean foundMismatch = badMappingSetId || badRequiredField || badSourceFieldAPIName || badTargetFieldAPIName || badTargetObjectMappingId || badIsDeletedField;
+        Boolean foundMismatch = badMappingSetId || 
+                badRequiredField || 
+                badSourceFieldAPIName || 
+                badTargetFieldAPIName || 
+                badTargetObjectMappingId || 
+                badIsDeletedField;
 
         return foundMismatch;
     }
@@ -169,8 +177,11 @@ public class BDI_MigrationMappingUtility {
      */
     public Map<String, BDI_HelpTextCMT.MappingDetail> getAllMappedHelpTextFields() {
         Map<String, BDI_HelpTextCMT.MappingDetail> helpTextFieldMap = new Map<String, BDI_HelpTextCMT.MappingDetail>();
-        Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts> importStatusAndLookupMap = new Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts>();
-        Map<String, Schema.DescribeFieldResult> allDFRs = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix(DATA_IMPORT_OBJECT_NAME));
+        Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts> importStatusAndLookupMap = 
+            new Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts>();
+
+        Map<String, Schema.DescribeFieldResult> allDFRs = 
+            UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix(DATA_IMPORT_OBJECT_NAME));
 
         for (String dataImportFieldName : allDFRs.keySet()) {
 
@@ -180,7 +191,9 @@ public class BDI_MigrationMappingUtility {
 
             if (isImportStatus || isImportLookup) {
                 // Pass help text values to a new instance of ImportStatusAndLookupParts wrapper class
-                BDI_HelpTextCMT.ImportStatusAndLookupParts importRelatedField = getImportStatusAndLookupParts(dataImportFieldName, importStatusAndLookupMap);
+                BDI_HelpTextCMT.ImportStatusAndLookupParts importRelatedField = 
+                    getImportStatusAndLookupParts(dataImportFieldName, importStatusAndLookupMap);
+
                 importStatusAndLookupMap.put(importRelatedField.objectName, importRelatedField);
 
                 // Found an import status or import lookup field, no help text value so continue
@@ -200,8 +213,11 @@ public class BDI_MigrationMappingUtility {
                 if (fieldNameIsUsable && objectNameIsUsable) {
 
                     // Pass help text values to a new instance of MappingDetail wrapper class
-                    BDI_HelpTextCMT.MappingDetail newMappingDetail = new BDI_HelpTextCMT.MappingDetail(parts.objectName, sourceField.Label, parts.objectAPIName,
-                                                                                                       parts.fieldName, null, null);
+                    BDI_HelpTextCMT.MappingDetail newMappingDetail = 
+                        new BDI_HelpTextCMT.MappingDetail(parts.objectName, 
+                                sourceField.Label, 
+                                parts.objectAPIName,parts.fieldName, null, null);
+
                     helpTextFieldMap.put(sourceField.Name, newMappingDetail);
 
                     // Remove from map once mapped
@@ -224,8 +240,11 @@ public class BDI_MigrationMappingUtility {
      * @param  mappingDetail Instance of MappingDetail where fields are to be set
      * @param  importStatusAndLookupMap Map holding the field values to be set to MappingDetail
      */
-    private void setImportStatusAndLookupFields(BDI_HelpTextCMT.MappingDetail mappingDetail, Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts> importStatusAndLookupMap) {
-        BDI_HelpTextCMT.ImportStatusAndLookupParts importStatusAndLookupParts = importStatusAndLookupMap.get(mappingDetail.dataImportObjectName);
+    private void setImportStatusAndLookupFields(BDI_HelpTextCMT.MappingDetail mappingDetail, 
+        Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts> importStatusAndLookupMap) {
+
+        BDI_HelpTextCMT.ImportStatusAndLookupParts importStatusAndLookupParts = 
+                importStatusAndLookupMap.get(mappingDetail.dataImportObjectName);
 
         mappingDetail.importedRecordField = importStatusAndLookupParts.importLookupFieldName;
         mappingDetail.importedRecordStatusField = importStatusAndLookupParts.importStatusFieldName;
@@ -237,9 +256,12 @@ public class BDI_MigrationMappingUtility {
      * @param importStatusAndLookupMap List of ImportStatusAndLookupParts instances
      * @return instance of ImportStatusAndLookupParts
      */
-    private BDI_HelpTextCMT.ImportStatusAndLookupParts getImportStatusAndLookupParts(String dataImportFieldName, Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts> importStatusAndLookupMap) {
+    private BDI_HelpTextCMT.ImportStatusAndLookupParts getImportStatusAndLookupParts(String dataImportFieldName, 
+            Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts> importStatusAndLookupMap) {
+
         // Create new instance of ImportStatusAndLookupParts
-        BDI_HelpTextCMT.ImportStatusAndLookupParts importRelatedField = new BDI_HelpTextCMT.ImportStatusAndLookupParts(dataImportFieldName);
+        BDI_HelpTextCMT.ImportStatusAndLookupParts importRelatedField = 
+            new BDI_HelpTextCMT.ImportStatusAndLookupParts(dataImportFieldName);
 
         // Check if there is already an existing and matching instance of ImportStatusAndLookupParts
         BDI_HelpTextCMT.ImportStatusAndLookupParts exists = importStatusAndLookupMap.get(importRelatedField.objectName);
@@ -259,14 +281,22 @@ public class BDI_MigrationMappingUtility {
      * @return Collection of Object Mapping DeveloperName to Object Mapping record
      */
     private Map<String, Data_Import_Object_Mapping__mdt> getDefaultObjectMappings(Id objectMappingSetId) {
-        List<Data_Import_Object_Mapping__mdt> existingObjectMappings = [
-            SELECT Id, Label, DeveloperName, Imported_Record_Field_Name__c,
-                Imported_Record_Status_Field_Name__c, Object_API_Name__c, Predecessor__c,
-                Relationship_Field__c, Relationship_To_Predecessor__c, Is_Deleted__c
+        List<Data_Import_Object_Mapping__mdt> existingObjectMappings = [SELECT 
+                    Id, 
+                    Label, 
+                    DeveloperName, 
+                    Imported_Record_Field_Name__c,
+                    Imported_Record_Status_Field_Name__c, 
+                    Object_API_Name__c, 
+                    Predecessor__c,
+                    Relationship_Field__c, 
+                    Relationship_To_Predecessor__c, 
+                    Is_Deleted__c
             FROM Data_Import_Object_Mapping__mdt
-            WHERE Data_Import_Object_Mapping_Set__c = :objectMappingSetId
-        ];
-        Map<String, Data_Import_Object_Mapping__mdt> diObjectNameToObjectMappingMap = new Map<String, Data_Import_Object_Mapping__mdt>();
+            WHERE Data_Import_Object_Mapping_Set__c = :objectMappingSetId];
+
+        Map<String, Data_Import_Object_Mapping__mdt> diObjectNameToObjectMappingMap = 
+            new Map<String, Data_Import_Object_Mapping__mdt>();
 
         for (Data_Import_Object_Mapping__mdt objectMapping : existingObjectMappings) {
             diObjectNameToObjectMappingMap.put(objectMapping.DeveloperName, objectMapping);
@@ -282,14 +312,21 @@ public class BDI_MigrationMappingUtility {
      * @return Collection of Field Mapping DeveloperName to Field Mapping record
      */
     private Map<String, Data_Import_Field_Mapping__mdt> getDefaultFieldMappings(Id fieldMappingSetId) {
-        List<Data_Import_Field_Mapping__mdt> existingFieldMappings = [
-            SELECT Id, Label, DeveloperName, Data_Import_Field_Mapping_Set__c,
-                Required__c, Source_Field_API_Name__c, Target_Field_API_Name__c, Target_Object_Mapping__c,
-                Is_Deleted__c
+        List<Data_Import_Field_Mapping__mdt> existingFieldMappings = [SELECT 
+                    Id, 
+                    Label, 
+                    DeveloperName, 
+                    Data_Import_Field_Mapping_Set__c,
+                    Required__c, 
+                    Source_Field_API_Name__c, 
+                    Target_Field_API_Name__c, 
+                    Target_Object_Mapping__c,
+                    Is_Deleted__c
             FROM Data_Import_Field_Mapping__mdt
-            WHERE Data_Import_Field_Mapping_Set__c = :fieldMappingSetId
-        ];
-        Map<String, Data_Import_Field_Mapping__mdt> diFieldNameToFieldMappingMap = new Map<String, Data_Import_Field_Mapping__mdt>();
+            WHERE Data_Import_Field_Mapping_Set__c = :fieldMappingSetId];
+
+        Map<String, Data_Import_Field_Mapping__mdt> diFieldNameToFieldMappingMap = 
+            new Map<String, Data_Import_Field_Mapping__mdt>();
 
         for (Data_Import_Field_Mapping__mdt fieldMapping : existingFieldMappings) {
             diFieldNameToFieldMappingMap.put(fieldMapping.Source_Field_API_Name__c, fieldMapping);
@@ -308,18 +345,20 @@ public class BDI_MigrationMappingUtility {
     private static final String DEFAULT_FIELD_MAPPING_SET_RECORD_NAME = 'Default_Field_Mapping_Set';
 
     /** @description Default packaged Object Mapping Set metadata record */
-    private static final Data_Import_Object_Mapping_Set__mdt DEFAULT_OBJECT_MAPPING_SET = [
-        SELECT Id, DeveloperName, Label
+    private static final Data_Import_Object_Mapping_Set__mdt DEFAULT_OBJECT_MAPPING_SET = [SELECT 
+                Id, 
+                DeveloperName, 
+                Label
         FROM Data_Import_Object_Mapping_Set__mdt
-        WHERE DeveloperName = :DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME
-    ];
+        WHERE DeveloperName = :DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME];
 
     /** @description Default packaged Field Mapping Set metadata record */
-    private static final Data_Import_Field_Mapping_Set__mdt DEFAULT_FIELD_MAPPING_SET = [
-        SELECT Id, DeveloperName, Label
+    private static final Data_Import_Field_Mapping_Set__mdt DEFAULT_FIELD_MAPPING_SET = [SELECT 
+                Id, 
+                DeveloperName, 
+                Label
         FROM Data_Import_Field_Mapping_Set__mdt
-        WHERE DeveloperName = :DEFAULT_FIELD_MAPPING_SET_RECORD_NAME
-    ];
+        WHERE DeveloperName = :DEFAULT_FIELD_MAPPING_SET_RECORD_NAME];
 
     /**
      * @return A 10 character unique 'jobId' to use for
