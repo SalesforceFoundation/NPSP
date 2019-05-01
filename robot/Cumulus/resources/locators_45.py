@@ -110,7 +110,7 @@ npsp_lex_locators={
     },
     'payments':{
         'date_loc':"//*[@id='pmtTable']/tbody/tr/td[3]/div//input",       
-        'no_payments':'//tbody/tr/td[3]',
+        'no_payments':'//tbody/tr[./th//a[contains(@title,"PMT")]]/td[3]',
         'pay_amount':'//tbody/tr[{}]/td[3]/span/span[text()="{}"]',
         'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span',
         'text':'//*[@id="j_id0:vfForm:j_id76:util_formfield:inputx:util_inputfield:inputX"]',
