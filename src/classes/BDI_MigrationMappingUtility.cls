@@ -184,8 +184,10 @@ public class BDI_MigrationMappingUtility {
 
     /**
      * @description Go through all fields in Data Import object and collect relevant help text mappings
-     * @return A collection of help text field names mapped to an instance of MappingDetail which holds relevant values for building
-     * the corresponding Metadata Type record (i.e. Source Object Name, Target Object Name, Target Field API Name, etc)
+     * @return A collection of help text field names mapped to an instance of MappingDetail which holds 
+     * relevant values for building
+     * the corresponding Metadata Type record (i.e. Source Object Name, Target Object Name, Target Field 
+     * API Name, etc)
      */
     public Map<String, BDI_HelpTextCMT.MappingDetail> getAllMappedHelpTextFields() {
         Map<String, BDI_HelpTextCMT.MappingDetail> helpTextFieldMap = 
