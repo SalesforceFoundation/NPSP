@@ -420,7 +420,15 @@ private class PMT_Payment_TEST {
             System.assert(e.getMessage().contains(System.Label.pmtUnpaidPaymentScheduledDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
         }
 
-        // Test the valid paid paymennt insertion case
+        // Test the invalid written off insertion case
+        npe01__OppPayment__c invalidWrittenOffPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Written_Off__c = true);
+        try {
+            insert invalidWrittenOffPayment;
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains(System.Label.pmtWrittenOffPaymentDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
+        }
+
+        // Test the valid paid payment insertion case
         npe01__OppPayment__c validPaidPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Paid__c = true, npe01__Payment_Date__c = Date.today());
         insert validPaidPayment;
 
@@ -438,15 +446,24 @@ private class PMT_Payment_TEST {
         System.assertEquals(false, validUnpaidPayment.npe01__Paid__c, 'Paid should be false, but it is actually: ' + validUnpaidPayment.npe01__Paid__c);
         System.assertEquals(Date.Today(), validUnpaidPayment.npe01__Scheduled_Date__c, 'The payment date should be today, but it is actually: ' + validUnpaidPayment.npe01__Scheduled_Date__c);
 
-        Integer validPaymentsCount = [Select Count() from npe01__OppPayment__c Where Id =: validPaidPayment.Id OR Id =: validUnpaidPayment.Id];
-        System.assertEquals(2, validPaymentsCount, 'There is an incorrect number of payments');
+         // Test the valid written off payment insertion case
+        npe01__OppPayment__c validWrittenOffPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Written_Off__c = true, npe01__Payment_Date__c = Date.today());
+        insert validWrittenOffPayment;
+
+        validWrittenOffPayment = queryForPaymentForTesting(validWrittenOffPayment.Id);
+
+        System.assertEquals(true, validWrittenOffPayment.npe01__Written_Off__c, 'Paid should be true, but it is actually: ' + validWrittenOffPayment.npe01__Written_Off__c);
+        System.assertEquals(Date.Today(), validWrittenOffPayment.npe01__Payment_Date__c, 'The payment date should be today, but it is actually: ' + validWrittenOffPayment.npe01__Payment_Date__c);
+      
+        Integer validPaymentsCount = [Select Count() from npe01__OppPayment__c Where Id =: validPaidPayment.Id OR Id =: validUnpaidPayment.Id OR Id =: validWrittenOffPayment.Id];
+        System.assertEquals(3, validPaymentsCount, 'There is an incorrect number of payments');
 
         // *************************** Test Update *******************************
 
         npe01__OppPayment__c pmt = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Paid__c = true, npe01__Payment_Date__c = Date.Today());
         insert pmt;
         // Test the invalid paid payment update case 
-        pmt = updatePaymentForTesting(pmt, true, false, false);
+        pmt = updatePaymentForTesting(pmt, true, false, false, false);
 
         try {
             update pmt;
@@ -455,7 +472,7 @@ private class PMT_Payment_TEST {
         }
 
         // Test the valid paid payment update case
-        pmt = updatePaymentForTesting(pmt, true, true, false);
+        pmt = updatePaymentForTesting(pmt, true, false, true, false);
         update pmt;
 
         pmt = queryForPaymentForTesting(pmt.Id);
@@ -465,7 +482,7 @@ private class PMT_Payment_TEST {
 
 
         // Test the invalid unpaid payment update case 
-        pmt = updatePaymentForTesting(pmt, false, false, false);
+        pmt = updatePaymentForTesting(pmt, false, false, false, false);
 
 
         try {
@@ -476,7 +493,7 @@ private class PMT_Payment_TEST {
         
 
         // Test the valid unpaid payment update case 
-        pmt = updatePaymentForTesting(pmt, false, false, true);
+        pmt = updatePaymentForTesting(pmt, false, false, false, true);
         update pmt;
 
         pmt = queryForPaymentForTesting(pmt.Id);
@@ -484,6 +501,23 @@ private class PMT_Payment_TEST {
         System.assertEquals(false, pmt.npe01__Paid__c, 'Paid should be false, but it is actually: ' + pmt.npe01__Paid__c);
         System.assertEquals(Date.Today(), pmt.npe01__Scheduled_Date__c, 'The scheduled date should be today, but it is actually: ' + pmt.npe01__Scheduled_Date__c);
 
+        // Test the invalid written off payment update case
+        pmt = updatePaymentForTesting(pmt, false, true, false, false);
+
+        try {
+            update pmt;
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains(System.Label.pmtWrittenOffPaymentDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
+        }
+
+        // Test the valid written off payment update case
+        pmt = updatePaymentForTesting(pmt, false, true, true, false);
+        update pmt;
+
+        pmt = queryForPaymentForTesting(pmt.Id);
+
+        System.assertEquals(true, pmt.npe01__Written_Off__c, 'Written Off should be true, but it is actually: ' + pmt.npe01__Written_Off__c);
+        System.assertEquals(Date.Today(), pmt.npe01__Payment_Date__c, 'The payment date should be today, but it is actually: ' + pmt.npe01__Payment_Date__c);
 
         Test.stopTest();
     }
@@ -525,13 +559,23 @@ private class PMT_Payment_TEST {
         System.assertEquals(false, invalidUnpaidPayment.npe01__Paid__c, 'Paid should be false, but it is actually: ' + invalidUnpaidPayment.npe01__Paid__c);
         System.assertEquals(null, invalidUnpaidPayment.npe01__Scheduled_Date__c, 'The payment date should be null, but it is actually: ' + invalidUnpaidPayment.npe01__Scheduled_Date__c);
 
+        // Test the invalid written off insertion case
+        npe01__OppPayment__c invalidWrittenOffPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Written_Off__c = true);
+        insert invalidWrittenOffPayment;
+
+        invalidWrittenOffPayment = queryForPaymentForTesting(invalidWrittenOffPayment.Id);
+
+        System.assertEquals(true, invalidWrittenOffPayment.npe01__Written_Off__c, 'Paid should be true, but it is actually: ' + invalidWrittenOffPayment.npe01__Written_Off__c);
+        System.assertEquals(null, invalidWrittenOffPayment.npe01__Payment_Date__c, 'The payment date should be today, but it is actually: ' + invalidWrittenOffPayment.npe01__Payment_Date__c);
+
     }
 
     /**
      * @description Helper function to help set the payment attributes as necessary for testing that accounting data consistency is enforced. 
      */
-    private static npe01__OppPayment__c updatePaymentForTesting(npe01__OppPayment__c payment, Boolean isPaid, Boolean hasPaymentDate, Boolean hasScheduledDate) {
+    private static npe01__OppPayment__c updatePaymentForTesting(npe01__OppPayment__c payment, Boolean isPaid, Boolean isWrittenOff, Boolean hasPaymentDate, Boolean hasScheduledDate) {
         payment.npe01__Paid__c = isPaid;
+        payment.npe01__Written_Off__c = isWrittenOff;
 
         if (hasPaymentDate == true) {
             payment.npe01__Payment_Date__c = Date.today();
@@ -552,7 +596,7 @@ private class PMT_Payment_TEST {
      * @description Helper function to query for payments given a specific ID. 
      */
     private static npe01__OppPayment__c queryForPaymentForTesting(Id paymentId) {
-        List<npe01__OppPayment__c> paymentList = [SELECT Id, npe01__Paid__c, npe01__Payment_Date__c, npe01__Scheduled_Date__c 
+        List<npe01__OppPayment__c> paymentList = [SELECT Id, npe01__Paid__c, npe01__Written_Off__c, npe01__Payment_Date__c, npe01__Scheduled_Date__c 
                                                     FROM npe01__OppPayment__c
                                                     WHERE Id =: paymentId];
 

@@ -1751,6 +1751,7 @@
         <members>pmtPaidPaymentDateRequired</members>
         <members>pmtUnpaidPaymentScheduledDateRequired</members>
         <members>pmtWriteOffPaidPayment</members>
+        <members>pmtWrittenOffPaymentDateRequired</members>
         <members>pmtWizardBtnCalcPayments</members>
         <members>pmtWizardBtnCreatePayments</members>
         <members>pmtWizardBtnRemovePaidPayments</members>

@@ -311,9 +311,14 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         Boolean enforceAccountingDataConsistencyCustomSetting = UTIL_CustomSettingsFacade.getContactsSettings().Enforce_Accounting_Data_Consistency__c;
 
         if (enforceAccountingDataConsistencyCustomSetting == true) {
-            if (payment.npe01__Paid__c == true && payment.npe01__Payment_Date__c == null) {
-                payment.npe01__Payment_Date__c.addError(System.Label.pmtPaidPaymentDateRequired);
-            } else if (payment.npe01__Paid__c == false && payment.npe01__Scheduled_Date__c == null) {
+            if ((payment.npe01__Paid__c == true || payment.npe01__Written_Off__c == true) && payment.npe01__Payment_Date__c == null) {
+
+                if (payment.npe01__Paid__c == true) {
+                    payment.npe01__Payment_Date__c.addError(System.Label.pmtPaidPaymentDateRequired);
+                } else {
+                    payment.npe01__Payment_Date__c.addError(System.Label.pmtWrittenOffPaymentDateRequired);
+                }
+            } else if (payment.npe01__Paid__c == false && payment.npe01__Written_Off__c == false && payment.npe01__Scheduled_Date__c == null) {
                 payment.npe01__Scheduled_Date__c.addError(System.Label.pmtUnpaidPaymentScheduledDateRequired);
             }
         }
