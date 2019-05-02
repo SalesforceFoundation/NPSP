@@ -919,4 +919,9 @@ class NPSP(object):
             except ElementNotFound:
                 time.sleep(0.2)
                         
-               
+    def select_multiple_values_from_duellist(self,list_name,section,*args): 
+        """Pass the list name and values to be selected from the dropdown. Please note that this doesn't unselect the existing values"""
+        for i in args:
+            locator = npsp_lex_locators['bge']['duellist'].format(list_name,section,i)
+            #self.selenium.execute_javascript("window.document.evaluate(locator, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)")
+            self.selenium.click_element(locator,modifier='COMMAND')
