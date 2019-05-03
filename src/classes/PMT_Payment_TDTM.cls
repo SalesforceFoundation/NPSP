@@ -290,7 +290,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         List<npe01__OppPayment__c> oldlist,
         TDTM_Runnable.Action triggerAction, 
         DmlWrapper dmlWrapper) {
-        if ((triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate)) {
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             for (npe01__OppPayment__c payment : newlist) {
                 enforceAccountingDataConsistency(payment);
 
