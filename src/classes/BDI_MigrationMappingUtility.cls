@@ -125,7 +125,11 @@ public class BDI_MigrationMappingUtility {
                             existingDefaultFieldMapping);
 
                         // If existing help text mapping doesn't match our packaged cmt record, park the mapping
-                        fieldMapping.expectedHelpTextValue = existingDefaultFieldMapping.Target_Field_API_Name__c;
+                        fieldMapping.expectedHelpTextValue =
+                            existingDefaultFieldMapping.Target_Object_Mapping__r.Object_API_Name__c
+                            + '.'
+                            + existingDefaultFieldMapping.Target_Field_API_Name__c;
+
                         conflictingCMTs.add(fieldMapping);
                     }
                 }
@@ -338,6 +342,7 @@ public class BDI_MigrationMappingUtility {
                     Source_Field_API_Name__c, 
                     Target_Field_API_Name__c, 
                     Target_Object_Mapping__c,
+                    Target_Object_Mapping__r.Object_API_Name__c,
                     Is_Deleted__c
             FROM Data_Import_Field_Mapping__mdt
             WHERE Data_Import_Field_Mapping_Set__c = :fieldMappingSetId];
