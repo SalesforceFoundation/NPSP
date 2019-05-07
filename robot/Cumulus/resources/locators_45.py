@@ -139,8 +139,10 @@ npsp_lex_locators={
         'list':'//div[./label[text()="{}"]]/div//select',
         'field-duellist':'//label[text()="{}"]/following-sibling::lightning-dual-listbox//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
         'duellist':'//h3[./span[text()="{}"]]/following-sibling::div//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
+        'duellist2':'//div/div[text()="{}"]/following-sibling::div//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
         'field-select-button':'//label[text()="{}"]/following-sibling::lightning-dual-listbox//div[contains(@class,"slds-dueling-list__column")]//button[@title="{}"]',
         'select-button':'//h3[./span[text()="{}"]]/following-sibling::div//div[contains(@class,"slds-dueling-list__column")]//button[@title="{}"]',
+        'select-button2':'//div/div[text()="{}"]/following-sibling::div//div[contains(@class,"slds-dueling-list__column")]//button[@title="{}"]',
         'title':'//p[text()="{}"]/following-sibling::h1',
         'field-input':'//label[text()="{}"]/following-sibling::div/input',
         'field-text':'//label[text()="{}"]/following-sibling::div/textarea',
@@ -157,6 +159,13 @@ npsp_lex_locators={
         'locate_dropdown':'//tbody/tr[{}]/td[6]//div//button[./span[text()="Show actions"]]/lightning-primitive-icon',
         'gift-amount':'//div[./label[text()="{}"]]',
         },    
+    'bge-lists':{
+        'list1':"//div[./label[text()='{}']]/div//select",
+        'list2':"//div[contains(@class,'slds-grid')]/div[contains(@class,'slds-text-align_left')]/span[text()='{}']/../following-sibling::div//select",
+        'list3':"//div[./label/span[text()='{}']]/div//select",
+        
+        },
+
     'object_manager':{
         'button':'//input[@title="{}"]',
         }

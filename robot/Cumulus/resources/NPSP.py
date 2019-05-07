@@ -314,12 +314,14 @@ class NPSP(object):
                 
     def fill_bge_form(self, **kwargs):
         for label, value in kwargs.items():
-            if label=="Batch Description":
-                locator= npsp_lex_locators['bge']['field-text'].format(label,value)  
+            if label=="Batch Description" or label == "custom_textarea":
+                locator= npsp_lex_locators['bge']['field-text'].format(label,value)
+                self.selenium.click_element(locator)  
                 self.salesforce._populate_field(locator, value)              
 
             else:
                 locator= npsp_lex_locators['bge']['field-input'].format(label,value)
+                self.selenium.click_element(locator)
                 self.salesforce._populate_field(locator, value)
      
          
@@ -686,19 +688,38 @@ class NPSP(object):
         self.selenium.set_focus_to_element(locator)       
         self.selenium.select_from_list_by_label(loc,value) 
         
-    def select_value_from_bge_dd(self,list_name,value):
-        """Pass the list name and value to be selected from the dropdown"""
-        if list_name == 'Payment Method': 
-            locator = npsp_lex_locators['bge']['dd'].format(list_name)
-            loc = self.selenium.get_webelement(locator)
-            self.selenium.set_focus_to_element(locator)       
-            self.selenium.select_from_list_by_label(loc,value) 
-        else:
-            locator = npsp_lex_locators['bge']['list'].format(list_name)
-            loc = self.selenium.get_webelement(locator)
-            self.selenium.set_focus_to_element(locator)       
-            self.selenium.select_from_list_by_label(loc,value)  
+#     def select_value_from_bge_dd(self,list_name,value):
+#         """Pass the list name and value to be selected from the dropdown"""
+#         if list_name == 'Payment Method': 
+#             locator = npsp_lex_locators['bge']['dd'].format(list_name)
+#             loc = self.selenium.get_webelement(locator)
+#             self.selenium.set_focus_to_element(locator)       
+#             self.selenium.select_from_list_by_label(loc,value) 
+#         else:
+#             locator = npsp_lex_locators['bge']['list'].format(list_name)
+#             loc = self.selenium.get_webelement(locator)
+#             self.selenium.set_focus_to_element(locator)       
+#             self.selenium.select_from_list_by_label(loc,value)  
         
+    def select_value_from_bge_dd(self, list_name,value):
+        list_found = False
+        locators = npsp_lex_locators["bge-lists"].values()
+
+        for i in locators:
+            locator = i.format(list_name)
+            if self.check_if_element_exists(locator):
+                loc=self.selenium.get_webelement(locator)
+                self.selenium.set_focus_to_element(locator)       
+                self.selenium.select_from_list_by_label(loc,value)
+                list_found = True
+                break
+
+        assert list_found, "Dropdown with the provided locator not found"
+
+    def check_if_element_exists(self, xpath):
+        elements = int(self.selenium.get_matching_xpath_count(xpath))
+        return True if elements > 0 else False
+    
     def select_multiple_values_from_list(self,list_name,*args): 
         """Pass the list name and values to be selected from the dropdown. Please note that this doesn't unselect the existing values"""
         locator = npsp_lex_locators['npsp_settings']['multi_list'].format(list_name)
@@ -919,9 +940,17 @@ class NPSP(object):
             except ElementNotFound:
                 time.sleep(0.2)
                         
-    def select_multiple_values_from_duellist(self,list_name,section,*args): 
-        """Pass the list name and values to be selected from the dropdown. Please note that this doesn't unselect the existing values"""
+    def select_multiple_values_from_duellist(self,path,list_name,section,*args): 
+        """Pass the list name and values to be selected from the dropdown. """
+        main_loc = npsp_lex_locators
+        for key in path.split('.'):
+            main_loc = main_loc[key]
         for i in args:
-            locator = npsp_lex_locators['bge']['duellist'].format(list_name,section,i)
-            #self.selenium.execute_javascript("window.document.evaluate(locator, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)")
-            self.selenium.click_element(locator,modifier='COMMAND')
+            locator = main_loc.format(list_name,section,i)
+            if (i =="custom_campaign") or (i =="custom_email") or (i == "1"):
+                self.selenium.click_element(locator)
+            else:
+                self.selenium.click_element(locator,'COMMAND')
+                
+                
+            
