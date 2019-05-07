@@ -350,7 +350,12 @@ public class BDI_MigrationMappingUtility {
         Map<String, Data_Import_Field_Mapping__mdt> diFieldNameToFieldMappingMap = 
             new Map<String, Data_Import_Field_Mapping__mdt>();
 
+        String namespace = UTIL_Namespace.getNamespace();
+
         for (Data_Import_Field_Mapping__mdt fieldMapping : existingFieldMappings) {
+            if (namespace != 'npsp') {
+                fieldMapping.Source_Field_API_Name__c = UTIL_Namespace.removeNSPrefixNpspOnly(fieldMapping.Source_Field_API_Name__c);
+            }
             diFieldNameToFieldMappingMap.put(fieldMapping.Source_Field_API_Name__c, fieldMapping);
         }
 
