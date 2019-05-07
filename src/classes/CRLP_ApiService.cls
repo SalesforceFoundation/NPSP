@@ -37,10 +37,12 @@
 public inherited sharing class CRLP_ApiService {
 
     public static final String PARAM_ROLLUPTYPE = 'RollupType';
+    public static final String PARAM_ROLLUP_TYPES = 'RollupTypes';
     public static final String PARAM_ROLLUPDEFS = 'RollupDefinitions';
 
     @TestVisible
     private static final String ACTION_ARCHIVE_BRIDGE_GET_ROLLUP_STATE = 'dso.getRollupStateForRecords';
+    private static final String ACTION_ARCHIVE_BRIDGE_SET_STALE_ROLLUPS = 'dso.setRollupStateAsStale';
 
     @TestVisible
     private UTIL_IntegrationConfig archiveBridgeConfig {
@@ -103,7 +105,7 @@ public inherited sharing class CRLP_ApiService {
             ACTION_ARCHIVE_BRIDGE_GET_ROLLUP_STATE,
             new Map<String, Object> {
                 'RecordIds' => recordIds,
-                'RollupType' => rollupType.name()
+                PARAM_ROLLUPTYPE => rollupType.name()
             }
         );
 
@@ -113,6 +115,21 @@ public inherited sharing class CRLP_ApiService {
             rollupStatesById.put(referenceId, (List<CRLP_Rollup>) JSON.deserialize(rollupData, List<CRLP_Rollup>.class));
         }
         return rollupStatesById;
+    }
+
+    /**************************************************************************************************************
+    * @description set the rollup state as stale
+    * @param set of rollup type names
+    **************************************************************************************************************/
+    public void setRollupStateAsStale(Set<String> rollups) {
+        
+        archiveBridgeConfig.getCallableApi().call(
+            ACTION_ARCHIVE_BRIDGE_SET_STALE_ROLLUPS,
+            new Map<String, Object> {
+                PARAM_ROLLUP_TYPES => rollups
+            }
+        );
+        
     }
 
     /**

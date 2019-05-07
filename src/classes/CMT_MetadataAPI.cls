@@ -93,22 +93,19 @@ public class CMT_MetadataAPI {
         });
     }
 
-    /**
+    /******************************************************************************************************************
      * @description Initiate a deployment of custom metadata type records.
      * @param jobId Unique string to act as a "jobId" when writing the final deployment status to the Custom Settings
      * @param mtToDeploy List of CustomMetadata objects to deploy
-     */
-    public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy) {
+     * @param callback a MetadataCallBack to handle the deployment result
+     *****************************************************************************************************************/
+    public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy, MetadataCallBack callback) {
 
         // Add all queued up metadata updates to the deployment container
         Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
         for (Metadata.CustomMetadata md: mtToDeploy) {
-            system.debug('deployMetadata > ' + md.fullName);
             mdContainer.addMetadata(md);
         }
-
-        // Setup deploy callback
-        MetadataCallBack callback = new MetadataCallBack(jobId);
 
         // Enqueue custom metadata deployment and return the Job Id
         if (!Test.isRunningTest()) {
@@ -116,15 +113,39 @@ public class CMT_MetadataAPI {
         }
     }
 
-    /**
+    /******************************************************************************************************************
+     * @description Initiate a deployment of custom metadata type records.
+     * @param jobId Unique string to act as a "jobId" when writing the final deployment status to the Custom Settings
+     * @param mtToDeploy List of CustomMetadata objects to deploy
+     *****************************************************************************************************************/
+      public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy) {
+          deployMetadata(jobId, mtToDeploy, new MetadataCallBack(jobId));
+      }
+
+
+    /******************************************************************************************************************
+     * @description Interface for Metadata Callback Handler
+     * Is used to allow metadata deployments to have customized on result handlers
+     *****************************************************************************************************************/
+    public interface MetadataCallbackHandler {
+        void performSuccessHandler(Map<String, Object> params);
+    }
+
+    /******************************************************************************************************************
      * @description Inserting or Updating CMT's through the Apex Metadata API is an asynchronous process. This callback
      * class is used to handle the async response from the call to Metadata.Operations.enqueueDeployment().
      * If the call is not successfull, the Customizable_Rollup_Settings__c  record is updated
      * with the result status.
-     */
+     *****************************************************************************************************************/
     public class MetadataCallBack implements Metadata.DeployCallBack {
 
         private String jobId;
+
+        /**
+         * @description  Handler to allow for calling functions to have customized result handling with parameters
+         */
+        public MetadataCallbackHandler callbackHandler { get; set; }
+        public Map<String, Object> callbackParams {get; set;}
 
         /**
          * @description Constructor for Callback Class
@@ -159,11 +180,17 @@ public class CMT_MetadataAPI {
             crlpSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
             // THIS WILL NEED TO BE REFACTORED IF THIS CMT DEPLOYMENT CODE IS USED BY SOMETHING OTHER THAN ROLLUPS
             crlpSettings.Customizable_Rollups_Enabled__c = (isSuccess || crlpSettings.Customizable_Rollups_Enabled__c == true);
-            if (!Test.isRunningTest()) {
-                upsert crlpSettings;
-            }
+
+            upsert crlpSettings;
+
             if (isSuccess) {
-                UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
+                if (!Test.isRunningTest()) {
+                    UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
+                }
+
+                if (callbackHandler != null) {
+                    callbackHandler.performSuccessHandler(callbackParams);
+                }
             }
         }
     }

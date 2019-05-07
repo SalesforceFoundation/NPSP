@@ -122,6 +122,34 @@ public class CRLP_RollupCMT {
             }
             return rulesMDT;
         }
+
+    /******************************************************************************************************************
+     * @description Determines if a Filter Group is computationally different from another Filter Group
+     * changes in name or label or description are not considered different
+     * @param otherFilterGroup FilterGroup to compare against
+     * @return boolean to indicate of the filter group is different 
+     *****************************************************************************************************************/
+        public Boolean isDifferent(FilterGroup otherFilterGroup) {
+            if (this.rules.size() != otherFilterGroup.rules.size()) {
+                return true;
+            }
+
+            Map<String, FilterRule> rulesByHash = new Map<String, FilterRule>();
+
+            for (Integer otherIndex=0; otherIndex < otherFilterGroup.rules.size(); otherIndex++) {
+                FilterRule otherRule = otherFilterGroup.rules[otherIndex];
+                rulesByHash.put(otherRule.generateHash(), otherFilterGroup.rules[otherIndex]);
+            }
+
+            for (Integer currentIndex=0; currentIndex < this.rules.size(); currentIndex++) {
+                FilterRule currentRule = this.rules[currentIndex];
+                if (!rulesByHash.containsKey(currentRule.generateHash())) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 
     /** ***************************************************************************************************
@@ -246,6 +274,18 @@ public class CRLP_RollupCMT {
 
             return md;
         }
+
+    /******************************************************************************************************************
+     * @description Generates a string as the concatenation of the important fields of the rule
+     * @return string generated hash
+     *****************************************************************************************************************/
+        private String generateHash() {
+            return this.objectName + '__' 
+                + this.fieldName + '__' + 
+                + this.operationName + '__' + 
+                + this.value;
+        }
+
     }
 
     /** ***************************************************************************************************
@@ -407,6 +447,127 @@ public class CRLP_RollupCMT {
             md = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fldValues);
 
             return md;
+        }
+
+        /**************************************************************************************************************
+        * @description Determines if a Rollup is computationally different from another Rollup
+        * changes in name or label or description are not considered different
+        * @param otherRollupMdt Rollup Mdt to compare against
+        * @return boolean to indicate of the rollup is different 
+        **************************************************************************************************************/
+        public Boolean isDifferent(Rollup__mdt otherRollupMdt) {
+            CRLP_RollupCMT.Rollup otherRollup = new CRLP_RollupCMT.Rollup(otherRollupMdt);
+            return isDifferent(otherRollup);
+        }
+
+
+        /**************************************************************************************************************
+        * @description Determines if a Rollup is computationally different from another Rollup
+        * changes in name or label or description are not considered different
+        * @param otherRollup Rollup to compare against
+        * @return boolean to indicate of the rollup is different 
+        **************************************************************************************************************/
+        public Boolean isDifferent(CRLP_RollupCMT.Rollup otherRollup) {
+
+            if (otherRollup.filterGroupRecordName != this.filterGroupRecordName) {
+                return true;
+            }
+            if (otherRollup.operation != this.operation) {
+                return true;
+            }
+            if (otherRollup.timeBoundOperationType != this.timeBoundOperationType) {
+                return true;
+            }
+            if (otherRollup.summaryObject != this.summaryObject) {
+                return true;
+            }
+            if (otherRollup.summaryField != this.summaryField) {
+                return true;
+            }
+            if (otherRollup.detailObject != this.detailObject) {
+                return true;
+            }
+            if (otherRollup.detailField != this.detailField) {
+                return true;
+            }
+            if (otherRollup.amountObject != this.amountObject) {
+                return true;
+            }
+            if (otherRollup.amountField != this.amountField) {
+                return true;
+            }
+            if (otherRollup.dateObject != this.dateObject) {
+                return true;
+            }
+            if (otherRollup.dateField != this.dateField) {
+                return true;
+            }
+            if (otherRollup.isActive != this.isActive) {
+                return true;
+            }
+            if (otherRollup.isDeleted != this.isDeleted) {
+                return true;
+            }
+            if (otherRollup.useFiscalYear != this.useFiscalYear) {
+                return true;
+            }
+            if (otherRollup.intValue != this.intValue) {
+                return true;
+            }
+
+            return false;
+        }
+
+        /**************************************************************************************************************
+        * @description Return the rollup type for a given rollup definition
+        * @param Rollup__mdt CMT Record
+        * @return CRLP_RollupProcessingOptions.RollupType
+        **************************************************************************************************************/
+        public CRLP_RollupProcessingOptions.RollupType getRollupType() {
+
+            String accountApiName = UTIL_Describe.getObjectDescribe('Account').getName();
+            String contactApiName = UTIL_Describe.getObjectDescribe('Contact').getName();
+            String opportunityApiName = UTIL_Describe.getObjectDescribe('Opportunity').getName();
+            String paymentApiName = UTIL_Describe.getObjectDescribe('npe01__OppPayment__c').getName();
+            String recurringDonationsApiName = UTIL_Describe.getObjectDescribe('npe03__Recurring_Donation__c').getName();
+            String allocationApiName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Allocation__c')).getName();
+            String partialSoftCreditApiName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')).getName();
+            String accountSoftCreditApiName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c')).getName();
+
+            // work down from most specific
+            if (this.summaryObject == recurringDonationsApiName) {
+                return CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
+            }
+
+            if (this.summaryObject == allocationApiName) {
+                return CRLP_RollupProcessingOptions.RollupType.GAU;
+            }
+
+            if (this.amountObject == partialSoftCreditApiName) {
+                if (this.summaryObject == accountApiName) {
+                    return CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit;
+                }
+                if (this.summaryObject == contactApiName) {
+                    return CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
+                }
+            }
+
+            if (this.amountObject == accountSoftCreditApiName) {
+                if (this.detailObject == opportunityApiName || this.detailObject == accountSoftCreditApiName) {
+                    return CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit;
+                }
+            }
+
+            if (this.detailObject == opportunityApiName || this.detailObject == paymentApiName) {
+                if (this.summaryObject == accountApiName) {
+                    return CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+                }
+                if (this.summaryObject == contactApiName) {
+                    return CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+                }
+            }
+
+            return null;
         }
     }
 

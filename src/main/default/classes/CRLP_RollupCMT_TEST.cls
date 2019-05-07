@@ -1,0 +1,229 @@
+/*
+    Copyright (c) 2019, Salesforce.org
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.org
+* @date 2019
+* @group Customizable Rollups Operations Services
+* @description Unit Test for the Rollups Metadata
+*/
+
+@isTest(IsParallel=true)
+private with sharing class CRLP_RollupCMT_TEST {
+    
+    /******************************************************************************************************************
+     * @description verifies that similar rollups are not marked as different
+     *****************************************************************************************************************/
+    @isTest
+    private static void similarRollupsAreMarkedAsEqual() {
+
+        CRLP_RollupCMT.Rollup newRollup = generateRollup('1');
+        CRLP_RollupCMT.Rollup existingRollup = generateRollup('2');
+
+        System.assertEquals(false, newRollup.isDifferent(existingRollup), 'Similiar Rollups are marked as as equal');
+    }
+
+    /******************************************************************************************************************
+     * @description verifies that different rollups are marked as different
+     *****************************************************************************************************************/
+    @isTest
+    private static void differentRollupsAreMarkedAsDifferent() {
+
+        CRLP_RollupCMT.Rollup newRollup = generateRollup('1');
+        CRLP_RollupCMT.Rollup existingRollup = generateRollup('2');
+        newRollup.operation = 'Count';
+
+        System.assertEquals(true, newRollup.isDifferent(existingRollup), 'Different Rollups are marked as different');
+    }
+    
+
+    /******************************************************************************************************************
+     * @description verifies that similar filter groups are not marked as different
+     *****************************************************************************************************************/
+    @isTest
+    private static void similarFilterGroupsAreMarkedAsEqual() {
+
+        CRLP_RollupCMT.FilterGroup newFilterGroup = generateFilterGroup('1');
+        CRLP_RollupCMT.FilterGroup existingFilterGroup = generateFilterGroup('2');
+        newFilterGroup.description = 'new description';
+
+        System.assertEquals(false, newFilterGroup.isDifferent(existingFilterGroup), 'Similiar Filter Groups are marked as equal');
+    }
+
+    /******************************************************************************************************************
+     * @description verifies that different filter groups are marked as different
+     *****************************************************************************************************************/
+    @isTest
+    private static void differentFilterGroupsAreMarkedAsDifferent() {
+
+        CRLP_RollupCMT.FilterGroup newFilterGroup = generateFilterGroup('1');
+        CRLP_RollupCMT.FilterGroup existingFilterGroup = generateFilterGroup('2');
+        newFilterGroup.rules[0].value = 'false';
+
+        System.assertEquals(true, newFilterGroup.isDifferent(existingFilterGroup), 'Different Filter Groups are marked as different');
+    }
+    
+
+
+
+    /******************************************************************************************************************
+     * @description verifies that account hard credit rollups are returned as account hard credit
+     *****************************************************************************************************************/
+    @isTest
+    private static void accountHardCreditRollupIdentifiedAsHardCreditType() {
+
+        CRLP_RollupCMT.Rollup newRollup = generateRollup('1');
+        CRLP_RollupProcessingOptions.RollupType returnType = newRollup.getRollupType();
+
+        System.assertEquals(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, returnType, 
+          'Account Hard Credit should be identified.');
+    }
+
+    /******************************************************************************************************************
+     * @description verifies that account soft credit rollups are returned as account soft credit
+     *****************************************************************************************************************/
+    @isTest
+    private static void accountSoftCreditRollupIdentifiedAsSoftCreditType() {
+
+        String accountSoftCredit = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c')).getName();
+        CRLP_RollupCMT.Rollup newRollup = generateRollup('1');
+        newRollup.amountObject = accountSoftCredit;
+        newRollup.detailObject = 'Opportunity';
+        CRLP_RollupProcessingOptions.RollupType returnType = newRollup.getRollupType();
+
+        System.assertEquals(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit, returnType, 
+          'Account Soft Credit should be identified.');
+    }
+
+    /******************************************************************************************************************
+     * @description verifies that contact soft credit rollups are returned as contact soft credit
+     *****************************************************************************************************************/
+    @isTest
+    private static void contactSoftCreditRollupIdentifiedAsSoftCreditType() {
+
+        String partialSoftCredit = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')).getName();
+        CRLP_RollupCMT.Rollup newRollup = generateRollup('1');
+        newRollup.summaryObject = 'Contact';
+        newRollup.amountObject = partialSoftCredit;
+        CRLP_RollupProcessingOptions.RollupType returnType = newRollup.getRollupType();
+
+        System.assertEquals(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit, returnType, 
+          'Contact Soft Credit should be identified.');
+    }
+
+    /******************************************************************************************************************
+     * @description verifies that GAU rollups are returned as GAU
+     *****************************************************************************************************************/
+    @isTest
+    private static void gauRollupIdentifiedAsGAUType() {
+
+        String allocations = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Allocation__c')).getName();
+        CRLP_RollupCMT.Rollup newRollup = generateRollup('1');
+        newRollup.summaryObject = allocations;
+
+        CRLP_RollupProcessingOptions.RollupType returnType = newRollup.getRollupType();
+
+        System.assertEquals(CRLP_RollupProcessingOptions.RollupType.GAU, returnType, 
+          'GAU should be identified.');
+    }
+
+    /******************************************************************************************************************
+     * @description verifies that RD rollups are returned as RD
+     *****************************************************************************************************************/
+    @isTest
+    private static void rdRollupIdentifiedAsRDType() {
+
+        String recurringDonations = UTIL_Describe.getObjectDescribe('npe03__Recurring_Donation__c').getName();
+        CRLP_RollupCMT.Rollup newRollup = generateRollup('1');
+        newRollup.summaryObject = recurringDonations;
+
+        CRLP_RollupProcessingOptions.RollupType returnType = newRollup.getRollupType();
+
+        System.assertEquals(CRLP_RollupProcessingOptions.RollupType.RecurringDonations, returnType, 
+          'RecurringDonations should be identified.');
+    }
+
+    /******************************************************************************************************************
+     * HELPER FUNCTIONS
+     *****************************************************************************************************************/
+
+
+    /******************************************************************************************************************
+     * @description provides a sample Rollup object for Test 
+     *****************************************************************************************************************/
+    public static CRLP_RollupCMT.Rollup generateRollup(String name) {
+
+        CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(name);
+        rollup.recordName = 'rollup' + name;
+        rollup.label = name;
+        rollup.filterGroupRecordName = 'filterGroupDevName';
+        rollup.summaryObject = 'Account';
+        rollup.summaryField = 'CustomerPriority__c';
+        rollup.summaryObjectLabel = 'Account';
+        rollup.detailObject = 'Opportunity';
+        rollup.detailField = 'npe01__Member_Level__c';
+        rollup.amountField = 'Amount';
+        rollup.dateField = 'CloseDate';
+        rollup.operation = 'Smallest';
+        rollup.timeBoundOperationType = 'All_Time';
+        rollup.detailObjectLabel = 'Opportunity';
+        rollup.dateObjectLabel = 'Opportunity';
+        rollup.dateObject = 'Opportunity';
+        rollup.summaryFieldlabel = 'Customer Priority';
+        rollup.detailFieldLabel = 'Member Level';
+
+        return rollup;
+    }
+
+    /******************************************************************************************************************
+     * @description provides a sample Filter Group for Testing
+     *****************************************************************************************************************/
+    private static CRLP_RollupCMT.FilterGroup generateFilterGroup(String name) {
+
+        CRLP_RollupCMT.FilterGroup newFilterGroup = new CRLP_RollupCMT.FilterGroup(name);
+        newFilterGroup.recordName = 'filterGroup' + name;
+        newFilterGroup.label = name;
+        
+        CRLP_RollupCMT.FilterRule rule1 = new CRLP_RollupCMT.FilterRule(newFilterGroup.recordName, 'rule1');
+        rule1.objectName = 'Opportunity';
+        rule1.fieldName = 'Won';
+        rule1.operationName = 'Equals';
+        rule1.value = 'true';
+        newFilterGroup.rules.add(rule1);
+
+        CRLP_RollupCMT.FilterRule rule2 = new CRLP_RollupCMT.FilterRule(newFilterGroup.recordName, 'rule2');
+        rule2.objectName = 'Opportunity';
+        rule2.fieldName = 'Amount';
+        rule2.operationName = 'Not Equals';
+        newFilterGroup.rules.add(rule2);
+
+        return newFilterGroup;
+    }
+
+}

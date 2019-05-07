@@ -228,6 +228,32 @@ private class CRLP_ApiService_TEST {
         }
     }
 
+     /**
+     * @description Confirms that mark records as stale calls Bridge callable with correct action and params
+     */
+    @isTest
+    private static void markRollupStateAsStaleShouldCallBridgeCallable() {
+        CRLP_ApiService service = new CRLP_ApiService();
+        setupMockIntegration(service);
+
+        Set<String> expectedRollupTypes = new Set<String> { 
+            CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name(),
+            CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit.name()
+        };
+
+        Test.startTest();
+        service.setRollupStateAsStale(expectedRollupTypes);
+        Test.stopTest();
+
+        System.assertNotEquals(
+            null, 
+            callableMock.actionCalled, 
+            'The callabled action should be called'
+        );
+    }
+
+
+
     // Helpers
     ////////////
 

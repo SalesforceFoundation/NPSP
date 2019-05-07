@@ -693,7 +693,7 @@ public with sharing class CRLP_RollupUI_SVC {
     }
 
     /*******************************************************************************************************
-     * @description Handle the save (insert/update) of a Rollup__mdt record
+     * @description Handle the save (insert/update/delete) of a Rollup__mdt record
      * @param rollupCMT Stringified structure of a CRLP_RollupCMT.Rollup wrapper class
      * @return {JobId}-{DeveloperName} - ASync Job Id - Developer name of the newly inserted or updated
      * record; or an error message. The {DeveloperName} value can be used by the JS to retrieve the record after
@@ -706,6 +706,12 @@ public with sharing class CRLP_RollupUI_SVC {
             // CMT data will generate a unique RecordName to use for the new record.
             CRLP_RollupCMT.Rollup rollupCMTObj = (CRLP_RollupCMT.Rollup) JSON.deserialize(rollupCMT, CRLP_RollupCMT.Rollup.class);
 
+            Boolean isRollupStateEnabled = new CRLP_ApiService().isRollupStateEnabled();
+            System.debug('Running : ' + isRollupStateEnabled);
+            Boolean isRollupStale = false;
+            Boolean isNewRollup = String.isBlank(rollupCMTObj.recordName);
+            CRLP_RollupProcessingOptions.RollupType previousRollupType = null;
+
             // Check for duplicate Target fields on active Rollups
             for (Rollup__mdt rlp : CRLP_Rollup_SEL.cachedRollups) {
                 if (rlp.DeveloperName != rollupCMTObj.recordName
@@ -715,13 +721,34 @@ public with sharing class CRLP_RollupUI_SVC {
                         && !Test.isRunningTest()) {
                     throw new RollupException(Label.CRLP_DuplicateTargetField);
                 }
+
+                if (isRollupStateEnabled && rlp.DeveloperName == rollupCMTObj.recordName) {
+                    isRollupStale = rollupCMTObj.isDifferent(rlp);
+                    if (isRollupStale) {
+                        previousRollupType = new CRLP_RollupCMT.Rollup(rlp).getRollupType();
+                    }
+                    break;
+                }
             }
 
             // Queue up the deployment
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.Rollup>{rollupCMTObj});
+            String jobId;
 
             // Trigger the asynchronous deployment process
-            String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
+            if (isRollupStateEnabled && (isRollupStale || isNewRollup)) {
+                System.debug('Calling deploy');
+                RollupMetadataHandler metadataSuccessHandler = new RollupMetadataHandler();
+                System.debug('handler');
+                if (previousRollupType == null) {
+                    previousRollupType = rollupCMTObj.getRollupType();
+                }
+                Map<String, Object> params = buildModifiedRollupMap(new Set<String> { rollupCMTObj.getRollupType().name(), previousRollupType.name() });
+                
+                jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(metadataSuccessHandler, params);
+            } else {
+                jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
+            }
 
             // Return the unique record DeveloperName value of the Rollup__mdt record
             return jobId + '-' + rollupCMTObj.recordName;
@@ -758,8 +785,23 @@ public with sharing class CRLP_RollupUI_SVC {
             // Queue up the deployment
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.FilterGroup>{filterGroupCMTObj});
 
-            // Trigger the asynchronous deployment process
-            String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
+            Boolean isRollupStateEnabled = new CRLP_ApiService().isRollupStateEnabled();
+            String jobId;
+
+            if (isRollupStateEnabled) {
+                RollupMetadataHandler metadataSuccessHandler = null;
+                Map<String, Object> params = null;
+
+                Set<String> modifiedRollupNames = buildModifiedRollupSet(filterGroupCMTObj);
+                if (!modifiedRollupNames.isEmpty()) {
+                    metadataSuccessHandler = new RollupMetadataHandler();
+                    params = buildModifiedRollupMap(modifiedRollupNames);
+                }
+
+                jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes(metadataSuccessHandler, params);
+            } else {
+                jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
+            }
 
             // Return the unique record DeveloperName value of the FilterGroup__mdt record
             return jobId + '-' + filterGroupCMTObj.recordName;
@@ -927,12 +969,12 @@ public with sharing class CRLP_RollupUI_SVC {
         return fieldObjectList;
     }
 
-    /*******************************************************************************************************
+    /******************************************************************************************************************
     * @description Checks that a given field is allowed as a target field
     * @param objectName the name of the object
     * @param dfr the DescribeFieldResult of the field
     * @return Boolean
-    */
+    /*****************************************************************************************************************/
     public static Boolean isTargetFieldAllowed(String objectName, Schema.DescribeFieldResult dfr) {
 
         if(!dfr.isUpdateable()
@@ -970,6 +1012,91 @@ public with sharing class CRLP_RollupUI_SVC {
 
     }
 
+    /******************************************************************************************************************
+    * @description Checks that a given field is allowed as a target field
+    * @param objectName the name of the object
+    * @param dfr the DescribeFieldResult of the field
+    * @return Boolean
+    /*****************************************************************************************************************/
+    private static Map<String, Object> buildModifiedRollupMap(Set<String> rollups) {
+        return new Map<String, Object> {
+            CRLP_ApiService.PARAM_ROLLUP_TYPES => rollups
+        };
+    } 
+
+    /******************************************************************************************************************
+    * @description Checks that a given field is allowed as a target field
+    * @param objectName the name of the object
+    * @param dfr the DescribeFieldResult of the field
+    * @return Boolean
+    /*****************************************************************************************************************/
+    private static Set<String> buildModifiedRollupSet(CRLP_RollupCMT.FilterGroup newFilterGroup) {
+        
+        List<Filter_Group__mdt> existingFilterGroupsMdt = CMT_FilterRule_SEL.getFilterGroups();
+        Map<Id, List<Rollup__mdt>> rollupsByFilterGroup = CRLP_Rollup_SEL.getRollupsByFilterGroup();
+        Set<String> modifiedRollupNames = new Set<String>();
+
+        for (Filter_Group__mdt existingFilterGroupMdt : existingFilterGroupsMdt) {
+            CRLP_RollupCMT.FilterGroup existingFilterGroup = new CRLP_RollupCMT.FilterGroup(existingFilterGroupMdt);
+            if (newFilterGroup.recordId == existingFilterGroup.recordId) {
+
+                if (newFilterGroup.isDifferent(existingFilterGroup)) {
+                    List<Rollup__mdt> rollupsForFilterGroup = rollupsByFilterGroup.get(newFilterGroup.recordId);
+                    if (rollupsForFilterGroup != null) {
+                        for (Rollup__mdt modifiedRollupMdt : rollupsForFilterGroup) {
+                            CRLP_RollupCMT.Rollup modifiedRollup = new CRLP_RollupCMT.Rollup(modifiedRollupMdt);
+                            CRLP_RollupProcessingOptions.RollupType modifiedRollupType = modifiedRollup.getRollupType();
+                            if (modifiedRollupType != null) {
+                                modifiedRollupNames.add(modifiedRollupType.name());
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+        }
+
+        return modifiedRollupNames;
+    }
+
+
     public class RollupException extends Exception {}
+
+
+    /******************************************************************************************************************
+    * @description Checks that a given field is allowed as a target field
+    * @param objectName the name of the object
+    * @param dfr the DescribeFieldResult of the field
+    * @return Boolean
+    /*****************************************************************************************************************/
+    public class RollupMetadataHandler implements CMT_MetadataAPI.MetadataCallbackHandler {
+
+        public void performSuccessHandler(Map<String, Object> params) {
+            System.debug('Perform Success Handler');
+            if (params == null || params.isEmpty()) {
+                return;
+            }
+
+            Set<String> rollupTypeNames = (Set<String>)params.get(CRLP_ApiService.PARAM_ROLLUP_TYPES);
+            try {
+                new CRLP_ApiService().setRollupStateAsStale(rollupTypeNames);
+            } catch (Exception ex) {
+                logError(ex);
+            }
+        }
+
+        private void logError(Exception ex) {
+            Error__c rollupHandlerError = new Error__c(
+                Error_Type__c = 'Rollup Metadata Handler Error',
+                Object_Type__c = 'CustomMetadata',
+                Datetime__c = System.now(), 
+                Full_Message__c = ex.getMessage()
+            );
+
+            Database.insert(rollupHandlerError, true);
+        }
+    }
+
+
 
 }
