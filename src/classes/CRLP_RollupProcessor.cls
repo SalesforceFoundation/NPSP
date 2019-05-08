@@ -93,6 +93,19 @@ public inherited sharing class CRLP_RollupProcessor {
      */
     private Map<Id,Set<Id>> processedOppIdsByParentId = new Map<Id,Set<Id>>();
 
+    private Boolean shouldFetchExternalData = true;
+
+    @TestVisible
+    private CRLP_ApiService apiService {
+        get {
+            if (apiService == null) {
+                apiService = new CRLP_ApiService();
+            }
+            return apiService;
+        }
+        set;
+    }
+
     /** *************************************************************************************************************
     * @description Constructor
     */
@@ -169,9 +182,14 @@ public inherited sharing class CRLP_RollupProcessor {
      * @description Inject a previously defined set of RollupIds for a collection of Parent Ids. Optional
      * Note that this method completely clones the rollup definitions so that the updated references
      * do not overwrite the original references, which can create issues when there are multiple instances
-     * of these collections for multiple parent records.
+     * of these collections for multiple parent records. When called with a non-empty map, also turns of fetching
+     * of external data to prevent external data from overriding this injection
      */
     public CRLP_RollupProcessor withRollupDefinitions(Map<Id, List<CRLP_Rollup>> rollupDefsByParentId) {
+        if (hasExistingRollups(rollupDefsByParentId)) {
+            this.shouldFetchExternalData = false;
+        }
+
         this.rollupsDefsByParentId = new Map<Id, List<CRLP_Rollup>>();
         for (Id parentId : rollupDefsByParentId.keySet()) {
             if (rollupDefsByParentId.get(parentId) != null) {
@@ -183,15 +201,31 @@ public inherited sharing class CRLP_RollupProcessor {
     }
 
     /**
+     * @description Determines if existing rollup data is present in the passed in map
+     */
+    private Boolean hasExistingRollups(Map<Id, List<CRLP_Rollup>> rollupDefsByParentId) {
+        if (rollupDefsByParentId == null || rollupDefsByParentId.isEmpty()) {
+            return false;
+        }
+
+        for (Id parentId : rollupDefsByParentId.keySet()) {
+            if (rollupDefsByParentId.get(parentId) != null && !rollupDefsByParentId.get(parentId).isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @description Inject a previously defined set of RollupIds for a single Parent Id. Optional
      * Requires that the withSummaryRecord() method be called first to set the parent record Id.
      */
     public CRLP_RollupProcessor withRollupDefinitions(List<CRLP_Rollup> rollupDefs) {
         return withRollupDefinitions(new Map<Id, List<CRLP_Rollup>>{
-                parentRecords[0].Id => rollupDefs
+            parentRecords[0].Id => rollupDefs
         });
     }
-
 
     /**
      * @description Inject a map of previously processed Opportunity Id's by Parent Id. Optional
@@ -199,6 +233,15 @@ public inherited sharing class CRLP_RollupProcessor {
      */
     public CRLP_RollupProcessor withPreviouslyProcessedOppIdsMap(Map<Id,Set<Id>> processedOppIdsByParentId) {
         this.processedOppIdsByParentId = processedOppIdsByParentId;
+        return this;
+    }
+
+    /**
+     * @description Specifies that external data should not be used at all with this processor. Necessary when
+     * external package is using this processor to calculate rollups in order to not recursively include external data
+     */
+    public CRLP_RollupProcessor withExcludeExternalData() {
+        shouldFetchExternalData = false;
         return this;
     }
 
@@ -321,6 +364,8 @@ public inherited sharing class CRLP_RollupProcessor {
     public List<SObject> startRollupProcessing() {
 
         validateProcessSettingsBeforeStarting();
+
+        initializeExternalData();
 
         // Loop through each of the detail records and call the appropriate handler processing method
         Map<Id, SObject> recordsToUpdate = new Map<Id, SObject>();
@@ -449,7 +494,6 @@ public inherited sharing class CRLP_RollupProcessor {
         CRLP_VRollupHandler handler = initHandlerClass(parent);
 
         List<CRLP_Rollup> rollupDefs = doFinalRollup(handler, parentId);
-
         if (options.doSummaryObjectComparison == false) {
             return null;
         }
@@ -531,7 +575,7 @@ public inherited sharing class CRLP_RollupProcessor {
 
         // If the map of Rollups by Parent Id contains this parentId, use that List<CRLP_Rollup> rather than
         // create a new fresh list.
-        if (options.useRollupDefsByParentIdMap == true) {
+        if (options.useRollupDefsByParentIdMap == true || shouldFetchExternalData) {
             List<CRLP_Rollup> rollupDefs = getRollupDefsForParent(parentId);
             if (!rollupDefs.isEmpty()) {
                 CRLP_Debug_UTIL.setCurrentRollupState('Set stateful rollups collection in Handler Class');
@@ -540,6 +584,22 @@ public inherited sharing class CRLP_RollupProcessor {
         }
 
         return handler;
+    }
+
+    /**
+     * @description Initializes rollupsDefsByParentId with external rollup data
+     */
+    private void initializeExternalData() {
+        if (!shouldFetchExternalData) {
+            return;
+        }
+
+        Set<Id> recordIds = new Set<Id>();
+        for (SObject parentRecord : parentRecords) {
+            recordIds.add(parentRecord.Id);
+        }
+
+        rollupsDefsByParentId = apiService.getBaseRollupStateForRecords(recordIds, rollupType);
     }
 
     private class CRLP_RollupException extends Exception {}

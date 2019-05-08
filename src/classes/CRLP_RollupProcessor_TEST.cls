@@ -302,6 +302,218 @@ private class CRLP_RollupProcessor_TEST {
         }
     }
 
+    /**
+     * @description Confirms external rollup data is retrieved by default
+     */
+    @isTest
+    private static void shouldRetrieveExternalRollups() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
+        Account account = buildMockAccount();
+        List<SObject> opps = new List<SObject>{ buildMockOpportunity(account.Id, 100) };
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withSummaryRecord(account)
+            .withDetailRecords(opps);
+
+        CRLP_ApiService_TEST.Stub apiServiceStub = new CRLP_ApiService_TEST.Stub();
+        processor.apiService = (CRLP_ApiService) Test.createStub(CRLP_ApiService.class, apiServiceStub);
+
+        Test.startTest();
+        processor.startRollupProcessing();
+        Test.stopTest();
+
+        System.assert(apiServiceStub.calledMethods.contains('getBaseRollupStateForRecords'),
+            'Should have attempted to get external rollups'
+        );
+    }
+
+    /**
+     * @description Confirms external rollup data is not retrieved when processor is built
+     * using withExcludeExternalData()
+     */
+    @isTest
+    private static void shouldNotRetrieveExternalRollupsWhenExcluded() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
+        Account account = buildMockAccount();
+        List<SObject> opps = new List<SObject>{ buildMockOpportunity(account.Id, 100) };
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withExcludeExternalData()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withSummaryRecord(account)
+            .withDetailRecords(opps);
+
+        CRLP_ApiService_TEST.Stub apiServiceStub = new CRLP_ApiService_TEST.Stub();
+        processor.apiService = (CRLP_ApiService) Test.createStub(CRLP_ApiService.class, apiServiceStub);
+
+        Test.startTest();
+        processor.startRollupProcessing();
+        Test.stopTest();
+
+        System.assert(!apiServiceStub.calledMethods.contains('getBaseRollupStateForRecords'),
+            'Should NOT have attempted to get external rollups'
+        );
+    }
+
+    /**
+     * @description Confirms external rollup data is retrieved when empty stateful rollups are injected
+     * into the processor
+     */
+    @isTest
+    private static void shouldRetrieveExternalRollupsWhenStatefulRollupsAreEmpty() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
+        Account account = buildMockAccount();
+        List<SObject> opps = new List<SObject>{ buildMockOpportunity(account.Id, 100) };
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withSummaryRecord(account)
+            .withDetailRecords(opps)
+            .withRollupDefinitions(new List<CRLP_Rollup>());
+
+        CRLP_ApiService_TEST.Stub apiServiceStub = new CRLP_ApiService_TEST.Stub();
+        processor.apiService = (CRLP_ApiService) Test.createStub(CRLP_ApiService.class, apiServiceStub);
+
+        Test.startTest();
+        processor.startRollupProcessing();
+        Test.stopTest();
+
+        System.assert(apiServiceStub.calledMethods.contains('getBaseRollupStateForRecords'),
+            'Should have attempted to get external rollups'
+        );
+    }
+
+    /**
+     * @description Confirms external rollup data is not retrieved when stateful rollups are injected into the processor
+     */
+    @isTest
+    private static void shouldNotRetrieveExternalRollupsWhenThereAreStatefulRollups() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
+        Account account = buildMockAccount();
+        List<SObject> opps = new List<SObject>{ buildMockOpportunity(account.Id, 100) };
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withSummaryRecord(account)
+            .withDetailRecords(opps)
+            .withRollupDefinitions(new List<CRLP_Rollup>{ new CRLP_Rollup( new Rollup__mdt() ) });
+
+        CRLP_ApiService_TEST.Stub apiServiceStub = new CRLP_ApiService_TEST.Stub();
+        processor.apiService = (CRLP_ApiService) Test.createStub(CRLP_ApiService.class, apiServiceStub);
+
+        Test.startTest();
+        processor.startRollupProcessing();
+        Test.stopTest();
+
+        System.assert(!apiServiceStub.calledMethods.contains('getBaseRollupStateForRecords'),
+            'Should NOT have attempted to get external rollups'
+        );
+    }
+
+    /**
+     * @description Confirms external rollup data is included in calculations
+     */
+    @isTest
+    private static void shouldIncludeExternalRollupDataInCalculations() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
+        Account account = buildMockAccount();
+        List<SObject> opps = new List<SObject>{ buildMockOpportunity(account.Id, 100) };
+
+        Test.startTest();
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withSummaryRecord(account)
+            .withDetailRecords(opps);
+
+        Map<Id, List<CRLP_Rollup>> mockRollupsByParentId = new Map<Id, List<CRLP_Rollup>>{
+            account.Id => buildMockCRLPRollup()
+        };
+
+        CRLP_ApiService_TEST.Stub apiServiceStub = new CRLP_ApiService_TEST.Stub();
+        apiServiceStub.withReturnValue('getBaseRollupStateForRecords', mockRollupsByParentId);
+
+        processor.apiService = (CRLP_ApiService) Test.createStub(CRLP_ApiService.class, apiServiceStub);
+
+        Account updatedAcct = (Account)processor.startRollupProcessing()[0];
+        System.assertEquals(11, updatedAcct.npo02__NumberOfClosedOpps__c,
+            'The number of closed opportunities for this Account should be 11, which includes the 10 from external data');
+        System.assertEquals(1100, updatedAcct.npo02__TotalOppAmount__c,
+            'The total of closed opportunities for this Account should be 1100, which includes the 1000 from external data');
+    }
+
+    /**
+     * @description Builds a mock List<CRLP_Rollup> to be used as for external rollup data
+     */
+    private static List<CRLP_Rollup> buildMockCRLPRollup() {
+        String mockRollupJSON =
+            '['
+            +'    {'
+            +'        "useFiscalYear": false,'
+            +'        "theSum": 1000,'
+            +'        "theCount": 10,'
+            +'        "summaryObject": "Account",'
+            +'        "sumByYear": {"2019": 1000},'
+            +'        "rollupsMdt": ['
+            +'            {'
+            +'                "timeBoundOperationType": "All_Time",'
+            +'                "summaryObject": "Account",'
+            +'                "summaryField": "npo02__TotalOppAmount__c",'
+            +'                "operation": "Sum",'
+            +'                "detailObject": "Opportunity",'
+            +'                "detailField": "Amount",'
+            +'                "dateObject": "Opportunity",'
+            +'                "dateField": "CloseDate",'
+            +'                "amountObject": "Opportunity",'
+            +'                "amountField": "Amount"'
+            +'            },'
+            +'            {'
+            +'                "timeBoundOperationType": "All_Time",'
+            +'                "summaryObject": "Account",'
+            +'                "summaryField": "npo02__NumberOfClosedOpps__c",'
+            +'                "operation": "Count",'
+            +'                "detailObject": "Opportunity",'
+            +'                "detailField": "Amount",'
+            +'                "dateObject": "Opportunity",'
+            +'                "dateField": "CloseDate",'
+            +'                "amountObject": "Opportunity",'
+            +'                "amountField": "Amount"'
+            +'            }'
+            +'        ],'
+            +'        "resultFieldType": "DOUBLE",'
+            +'        "resultFieldName": "Amount",'
+            +'        "resultFieldDisplaytype": "CURRENCY",'
+            +'        "minValue": 1000,'
+            +'        "minDate": "2019-01-08",'
+            +'        "minByYear": {"2019": 1000},'
+            +'        "maxValue": 100,'
+            +'        "maxDate": "2019-05-08",'
+            +'        "maxByYear": {"2019": 100},'
+            +'        "isYearsAgoSingleResult": false,'
+            +'        "detailObject": "Opportunity",'
+            +'        "dateObject": "Opportunity",'
+            +'        "dateFieldType": "DATE",'
+            +'        "dateFieldName": "CloseDate",'
+            +'        "countByYear": {"2019": 10},'
+            +'        "amountObject": "Opportunity",'
+            +'        "amountFieldName": "Amount"'
+            +'    }'
+            +']';
+
+        return (List<CRLP_Rollup>) JSON.deserialize(mockRollupJSON, List<CRLP_Rollup>.class);
+    }
+
     // **************************** HELPER METHODS ****************************
 
     /**
