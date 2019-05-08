@@ -249,6 +249,7 @@ public class ALLO_PaymentSync_SVC {
                     }
                 }
             //no corresponding opportunity allocation to payment allocations, insert one
+            // It will be inserted as a percentage based allocation so it scales properly if the opportunity amount is changed
             } else {
                 Allocation__c newOppAllocation = new Allocation__c(
                     General_Accounting_Unit__c = gau,
