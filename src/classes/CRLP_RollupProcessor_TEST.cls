@@ -49,10 +49,10 @@ private class CRLP_RollupProcessor_TEST {
         Test.startTest();
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
-                .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
-                .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
-                .withSummaryRecord(account)
-                .withDetailRecords(opps);
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withSummaryRecord(account)
+            .withDetailRecords(opps);
 
         System.assertEquals(Opportunity.SObjectType, processor.detailObjectType);
         System.assertEquals('AccountId', processor.parentKeyField);
@@ -141,9 +141,9 @@ private class CRLP_RollupProcessor_TEST {
         Contact updatedContact = (Contact)processor.completeRollupForSingleSummaryRecord(contact);
 
         System.assertEquals(1, updatedContact.Number_of_Soft_Credits__c,
-                'The number of closed opportunities for this Account should be 1');
+            'The number of closed opportunities for this Account should be 1');
         System.assertEquals(100, updatedContact.npo02__Soft_Credit_Total__c,
-                'The total of closed opportunities for this Account should be 100');
+            'The total of closed opportunities for this Account should be 100');
     }
 
     /**
@@ -223,8 +223,8 @@ private class CRLP_RollupProcessor_TEST {
         Test.startTest();
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
-                .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
-                .withSummaryRecords(new List<Account>{ account });
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withSummaryRecords(new List<Account>{ account });
 
         // Test with a missing Rollup Type
         try {
@@ -232,7 +232,7 @@ private class CRLP_RollupProcessor_TEST {
             System.assert(false, 'An exception should not have been thrown');
         } catch (Exception ex) {
             System.assert(ex.getMessage().containsIgnoreCase('RollupType'),
-                    'A CRLP_RollupException exception should have been thrown: ' + ex.getMessage());
+                'A CRLP_RollupException exception should have been thrown: ' + ex.getMessage());
         }
 
         // Test with a missing Parent (Summary) record
@@ -243,7 +243,7 @@ private class CRLP_RollupProcessor_TEST {
             System.assert(false, 'An exception should not have been thrown');
         } catch (Exception ex) {
             System.assert(ex.getMessage().containsIgnoreCase('Summary'),
-                    'A CRLP_RollupException exception should have been thrown: ' + ex.getMessage());
+                'A CRLP_RollupException exception should have been thrown: ' + ex.getMessage());
         }
 
         // Test with both required parameters provided.
