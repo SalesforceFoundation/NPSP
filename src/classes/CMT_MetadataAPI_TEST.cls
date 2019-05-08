@@ -39,11 +39,10 @@ private class CMT_MetadataAPI_TEST {
     private static final String SUCCESS_HANDLER_EXECUTED = 'SuccessHandlerExecuted';
 
     /******************************************************************************************************************
-     * @description DeployCallbackContext subclass for testing that returns myJobId
-     * Implements the call back handler to make sure that 
+     * @description verify that the metadata deploy calls the callback handler when provided
      *****************************************************************************************************************/
     @isTest
-    private static void metadataApiShouldDeployWithCallbackHandler() {
+    private static void metadataDeployExecutesCallbackHandler() {
         CMT_MetadataAPI.upsertCustomMetadata(CRLP_RollupCMT.MetadataObject.Filter_Rule, 'Rule_1', 'Rule 1: OCR.Role',
                 new Map<String,Object>{
                         'Filter_Group__c' => 'm016A000000YXdG',
@@ -94,7 +93,7 @@ private class CMT_MetadataAPI_TEST {
      *****************************************************************************************************************/
     public class TestingCallbackHandler implements CMT_MetadataAPI.MetadataCallbackHandler {
         public void performSuccessHandler(Map<String, Object> params) {
-            Account newAccount = new Account( name = 'SuccessHandlerExecuted' );
+            Account newAccount = new Account( name = SUCCESS_HANDLER_EXECUTED );
             insert newAccount;
         }
     }

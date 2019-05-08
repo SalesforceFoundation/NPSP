@@ -736,9 +736,8 @@ public with sharing class CRLP_RollupUI_SVC {
 
             // Trigger the asynchronous deployment process
             if (isRollupStateEnabled && (isRollupStale || isNewRollup)) {
-                System.debug('Calling deploy');
                 RollupMetadataHandler metadataSuccessHandler = new RollupMetadataHandler();
-                System.debug('handler');
+
                 if (previousRollupType == null) {
                     previousRollupType = rollupCMTObj.getRollupType();
                 }
@@ -1068,13 +1067,13 @@ public with sharing class CRLP_RollupUI_SVC {
 
 
     /******************************************************************************************************************
-    * @description Checks that a given field is allowed as a target field
-    * @param objectName the name of the object
-    * @param dfr the DescribeFieldResult of the field
-    * @return Boolean
+    * @description Metadata Call back handler class to execute actions when the metadata has successfully been deployed
     /*****************************************************************************************************************/
     public class RollupMetadataHandler implements CMT_MetadataAPI.MetadataCallbackHandler {
 
+        /**************************************************************************************************************
+        * @description success handler - will call the ApiService to set rollus as stale 
+        /*************************************************************************************************************/
         public void performSuccessHandler(Map<String, Object> params) {
             if (params == null || params.isEmpty()) {
                 return;
