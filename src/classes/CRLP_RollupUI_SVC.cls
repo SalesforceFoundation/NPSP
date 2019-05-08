@@ -1012,10 +1012,9 @@ public with sharing class CRLP_RollupUI_SVC {
     }
 
     /******************************************************************************************************************
-    * @description Checks that a given field is allowed as a target field
-    * @param objectName the name of the object
-    * @param dfr the DescribeFieldResult of the field
-    * @return Boolean
+    * @description builds a map of rollups that have changed
+    * @param rollups a set of rollups
+    * @return Map<String, Object> map of rollup of set of strings
     /*****************************************************************************************************************/
     private static Map<String, Object> buildModifiedRollupMap(Set<String> rollups) {
         return new Map<String, Object> {
@@ -1024,27 +1023,33 @@ public with sharing class CRLP_RollupUI_SVC {
     } 
 
     /******************************************************************************************************************
-    * @description Checks that a given field is allowed as a target field
-    * @param objectName the name of the object
-    * @param dfr the DescribeFieldResult of the field
-    * @return Boolean
+    * @description builds a set of rollup types that have changed for a filtergroup
+    * @param newFilterGroup FilterGroup object that we want to check for modifications
+    * @return Set<String> of rollup types
     /*****************************************************************************************************************/
     private static Set<String> buildModifiedRollupSet(CRLP_RollupCMT.FilterGroup newFilterGroup) {
         
-        List<Filter_Group__mdt> existingFilterGroupsMdt = CMT_FilterRule_SEL.getFilterGroups();
+        List<Filter_Group__mdt> allFilterGroupsMdt = CMT_FilterRule_SEL.getFilterGroups();
+        Map<Id, List<Filter_Rule__mdt>> rulesByGroup = CMT_FilterRule_SEL.getFilterRulesByGroup();
         Map<Id, List<Rollup__mdt>> rollupsByFilterGroup = CRLP_Rollup_SEL.getRollupsByFilterGroup();
+
         Set<String> modifiedRollupNames = new Set<String>();
 
-        for (Filter_Group__mdt existingFilterGroupMdt : existingFilterGroupsMdt) {
+        for (Filter_Group__mdt existingFilterGroupMdt : allFilterGroupsMdt) {
             CRLP_RollupCMT.FilterGroup existingFilterGroup = new CRLP_RollupCMT.FilterGroup(existingFilterGroupMdt);
+            
             if (newFilterGroup.recordId == existingFilterGroup.recordId) {
+                Boolean isFilterGroupStale = newFilterGroup.isDifferent(
+                    existingFilterGroup.withRules(rulesByGroup.get(existingFilterGroup.recordId))
+                );
 
-                if (newFilterGroup.isDifferent(existingFilterGroup)) {
+                if (isFilterGroupStale) {
                     List<Rollup__mdt> rollupsForFilterGroup = rollupsByFilterGroup.get(newFilterGroup.recordId);
                     if (rollupsForFilterGroup != null) {
+
                         for (Rollup__mdt modifiedRollupMdt : rollupsForFilterGroup) {
-                            CRLP_RollupCMT.Rollup modifiedRollup = new CRLP_RollupCMT.Rollup(modifiedRollupMdt);
-                            CRLP_RollupProcessingOptions.RollupType modifiedRollupType = modifiedRollup.getRollupType();
+                            CRLP_RollupProcessingOptions.RollupType modifiedRollupType = 
+                                (new CRLP_RollupCMT.Rollup(modifiedRollupMdt)).getRollupType();
                             if (modifiedRollupType != null) {
                                 modifiedRollupNames.add(modifiedRollupType.name());
                             }
@@ -1054,7 +1059,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 break;
             }
         }
-
+        
         return modifiedRollupNames;
     }
 
@@ -1071,7 +1076,6 @@ public with sharing class CRLP_RollupUI_SVC {
     public class RollupMetadataHandler implements CMT_MetadataAPI.MetadataCallbackHandler {
 
         public void performSuccessHandler(Map<String, Object> params) {
-            System.debug('Perform Success Handler');
             if (params == null || params.isEmpty()) {
                 return;
             }

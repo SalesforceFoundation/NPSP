@@ -77,6 +77,18 @@ public class CRLP_RollupCMT {
             } catch (Exception ex) {}
         }
 
+
+        /******************************************************************************************************************
+        * @description Adds rules to the Filter Group
+        ******************************************************************************************************************/
+        public FilterGroup withRules(List<Filter_Rule__mdt> ruleMdts) {
+            for (Filter_Rule__mdt ruleMdt : ruleMdts) {
+                FilterRule rule = new FilterRule(ruleMdt);
+                this.rules.add(rule);
+            }
+            return this;
+        }
+
         /**
          * @description Convert the wrapper class instance into a valid Metadata.CustomMetadata
          * instance for the Filter_Group.
@@ -126,6 +138,7 @@ public class CRLP_RollupCMT {
     /******************************************************************************************************************
      * @description Determines if a Filter Group is computationally different from another Filter Group
      * changes in name or label or description are not considered different
+     * filter rules are hashed because the sort order of the list is not guaranteed
      * @param otherFilterGroup FilterGroup to compare against
      * @return boolean to indicate of the filter group is different 
      *****************************************************************************************************************/
@@ -143,6 +156,7 @@ public class CRLP_RollupCMT {
 
             for (Integer currentIndex=0; currentIndex < this.rules.size(); currentIndex++) {
                 FilterRule currentRule = this.rules[currentIndex];
+
                 if (!rulesByHash.containsKey(currentRule.generateHash())) {
                     return true;
                 }
