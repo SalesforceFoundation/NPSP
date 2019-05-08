@@ -35,7 +35,7 @@
 */
 
 @isTest(IsParallel=true)
-private with sharing class CRLP_RollupCMT_TEST {
+public with sharing class CRLP_RollupCMT_TEST {
     
     /******************************************************************************************************************
      * @description verifies that similar rollups are not marked as different
