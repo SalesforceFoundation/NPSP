@@ -97,7 +97,6 @@ public class CRLP_RollupUI_TEST {
     @isTest
     private static void setupRollupDetailGeneratesTheJsonModel() {
         mockRollupCMTValues();
-
         Rollup__mdt rollup = CRLP_Rollup_SEL.cachedRollups[0];
 
         List<String> targetObjectNames = new List<String>{'Account','Contact'};
@@ -113,7 +112,6 @@ public class CRLP_RollupUI_TEST {
     @isTest
     private static void saveRollupReturnsDeploymentJob() {
         CRLP_RollupCMT.Rollup rollup = CRLP_RollupCMT_Test.generateRollup('test');
-        
         String rollupString = JSON.serialize(rollup);
        
         Test.startTest();
@@ -141,9 +139,7 @@ public class CRLP_RollupUI_TEST {
         rule.operationName = 'Equals';
         rule.value = '1';
         rules.add(rule);
-
         filterGroup.rules = rules;
-
         String filterGroupString = JSON.serialize(filterGroup);
 
         Test.startTest();

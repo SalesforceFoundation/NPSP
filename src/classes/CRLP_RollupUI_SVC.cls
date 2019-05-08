@@ -707,7 +707,6 @@ public with sharing class CRLP_RollupUI_SVC {
             CRLP_RollupCMT.Rollup rollupCMTObj = (CRLP_RollupCMT.Rollup) JSON.deserialize(rollupCMT, CRLP_RollupCMT.Rollup.class);
 
             Boolean isRollupStateEnabled = new CRLP_ApiService().isRollupStateEnabled();
-            System.debug('Running : ' + isRollupStateEnabled);
             Boolean isRollupStale = false;
             Boolean isNewRollup = String.isBlank(rollupCMTObj.recordName);
             CRLP_RollupProcessingOptions.RollupType previousRollupType = null;
