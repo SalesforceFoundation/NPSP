@@ -131,6 +131,7 @@
         <members>LeadSource</members>
         <members>OpportunityStage</members>
         <members>OpportunityType</members>
+        <members>Salutation</members>
         <name>StandardValueSet</name>
     </types>
     <types>
