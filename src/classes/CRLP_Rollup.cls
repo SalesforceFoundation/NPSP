@@ -209,7 +209,7 @@ public class CRLP_Rollup {
         // things like First/Last/Largest/Smallest are unique to that timeframe
         // Will also need to update the Operations service to exit out before the
         // full aggregation when there is a YearsAgoSingleResult operation
-        Boolean isThisYearsAgo = isSingleResultRollup(otherMdtRollup)
+        Boolean isThisYearsAgo = CRLP_Rollup_SVC.isSingleResultRollup(otherMdtRollup)
             && otherMdtRollup.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name();
         if (this.isYearsAgoSingleResult != isThisYearsAgo) {
             return false;
@@ -501,7 +501,7 @@ public class CRLP_Rollup {
                 this.resultFieldDisplayType = resultField.getType();
             }
 
-            this.singleResultRollupType = isSingleResultRollup(rlp);
+            this.singleResultRollupType = CRLP_Rollup_SVC.isSingleResultRollup(rlp);
 
             // Special logic for YearsAgo rollup types
             if (rlp.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()) {
@@ -509,14 +509,5 @@ public class CRLP_Rollup {
                 this.isYearsAgoSingleResult = this.singleResultRollupType;
             }
         }
-    }
-
-    private static Boolean isSingleResultRollup(Rollup__mdt rlp) {
-        return (
-            rlp.Operation__c == CRLP_Operation.RollupType.Largest.name()
-            || rlp.Operation__c == CRLP_Operation.RollupType.Smallest.name()
-            || rlp.Operation__c == CRLP_Operation.RollupType.First.name()
-            || rlp.Operation__c == CRLP_Operation.RollupType.Last.name()
-        );
     }
 }

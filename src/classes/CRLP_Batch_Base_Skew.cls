@@ -175,8 +175,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             List<SObject> summaryRecords = queryAndSequenceSummaryRecords(parentIds, soql);
 
             // Contact-level Account Soft Credit rollups require changing the detail object type to PartialSoftCredit
-            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+            if (CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(this.jobType)) {
                 detailRecords = convertContactRolesToPartialSoftCredits(detailRecords);
             }
 
@@ -295,18 +294,18 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
 
         // Exclude Organization Donations (where Opp.Account.SYSTEM_IsIndividual=false) from Contact Hard Credit rollups
         // Depending on the npo02__Always_Rollup_to_Primary_Contact__c custom setting
-        if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false &&
-                this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+        if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false
+                && this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
             whereClauses.add('Account.npe01__SYSTEMIsIndividual__c = True');
 
-        } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false &&
-                (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                        this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit)) {
+        } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false
+                && CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(this.jobType)
+        ) {
             whereClauses.add('(IsPrimary = False OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = False)');
 
-        } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == True &&
-                (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                        this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit)) {
+        } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == true
+                && CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(this.jobType)
+        ) {
             whereClauses.add('IsPrimary = False');
         }
 
@@ -315,10 +314,10 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         if (detailObjectType == Opportunity.SObjectType) {
             addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, detailObjectType,
                     this.statefulCacheOfRollupsToBeProcessed);
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+
+        } else if (CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(this.jobType)) {
             addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Contact.SObjectType, Partial_Soft_Credit__c.SObjectType);
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-            addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Account.SObjectType, Partial_Soft_Credit__c.SObjectType);
+
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
             addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, this.detailObjectType);
         }
@@ -475,9 +474,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     private void updateStatefulCollections(CRLP_RollupProcessor processor, Id recordId) {
         this.statefulRollupsById.put(recordId, processor.getRollupDefsForParent(recordId));
 
-        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit
-            || this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit
-        ) {
+        if (CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(this.jobType)) {
             this.statefulMapOfOppIdsByParentId.put(recordId, processor.getPreviouslyProcessedOppIds(recordId));
         }
     }
