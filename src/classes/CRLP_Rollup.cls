@@ -496,8 +496,10 @@ public class CRLP_Rollup {
             } else {
                 resultField = CRLP_Rollup_SVC.getSObjectFieldDescribe(this.summaryObject, this.summaryField);
             }
-            this.resultFieldType = resultField.getSoapType();
-            this.resultFieldDisplayType = resultField.getType();
+            if (resultField != null) {
+                this.resultFieldType = resultField.getSoapType();
+                this.resultFieldDisplayType = resultField.getType();
+            }
 
             this.singleResultRollupType = isSingleResultRollup(rlp);
 
