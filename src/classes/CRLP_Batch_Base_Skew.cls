@@ -102,14 +102,16 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     * @return database.Querylocator
     */
     public Database.QueryLocator start(Database.BatchableContext bc) {
+        String query;
         try {
 
-            String query = buildQueryLocatorAsSOQL();
+            query = buildQueryLocatorAsSOQL();
 
             UTIL_Debug.debug(LoggingLevel.WARN, '>> Batch Query =' + query);
 
             return Database.getQueryLocator(query);
         } catch (Exception ex) {
+            ex.setMessage(ex.getMessage() + '\n\n' + query);
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP + '.' + this.jobType.name());
             return Database.getQueryLocator([SELECT Id FROM Account LIMIT 0]);
         }
@@ -130,7 +132,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             // so that the list never changes throughout the life of the batch job
             if (this.statefulCacheOfRollupsToBeProcessed != null) {
                 CRLP_Rollup_SEL.addRollupsToCache(this.jobType, this.jobFilter,
-                        this.statefulCacheOfRollupsToBeProcessed);
+                    this.statefulCacheOfRollupsToBeProcessed);
             }
 
             String parentKeyField = CRLP_Rollup_SVC.getParentFieldNameForQuery(jobType);
@@ -174,7 +176,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
 
             // Contact-level Account Soft Credit rollups require changing the detail object type to PartialSoftCredit
             if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+                this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                 detailRecords = convertContactRolesToPartialSoftCredits(detailRecords);
             }
 
@@ -184,14 +186,14 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             // Need to pass in the Rollup Type, Rollup Defnitions if they're available along
             // with the Summary Record(s), Detail Record(s) and any Related Records.
             CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
-                    .withRollupType(jobType)
-                    .withBatchJobMode(jobMode)
-                    .withSummaryRecords(summaryRecords)
-                    .withDetailRecords(detailRecords)
-                    .withRelatedRecords(paymentsByOpp)
-                    .withPreviouslyProcessedOppIdsMap(this.statefulMapOfOppIdsByParentId)
-                    .withRollupDefinitions(this.statefulRollupsById)
-                    .withJobOptions(options);
+                .withRollupType(jobType)
+                .withBatchJobMode(jobMode)
+                .withSummaryRecords(summaryRecords)
+                .withDetailRecords(detailRecords)
+                .withRelatedRecords(paymentsByOpp)
+                .withPreviouslyProcessedOppIdsMap(this.statefulMapOfOppIdsByParentId)
+                .withRollupDefinitions(this.statefulRollupsById)
+                .withJobOptions(options);
 
             List<SObject> updatedRecords = processor.startRollupProcessing();
 
@@ -451,10 +453,10 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         if (processor.getRollupDefsForParent(firstParentId) != null) {
             updateStatefulCollections(processor, firstParentId);
         }
-        if (processor.getRollupDefsForParent(lastParentId) != null) {
+        if (lastParentId != firstParentId && processor.getRollupDefsForParent(lastParentId) != null) {
             updateStatefulCollections(processor, lastParentId);
         }
-        if (lastParentIdProcessed != null && processor.getRollupDefsForParent(lastParentIdProcessed) != null) {
+        if (lastParentIdProcessed != lastParentId && lastParentIdProcessed != null && processor.getRollupDefsForParent(lastParentIdProcessed) != null) {
             updateStatefulCollections(processor, lastParentIdProcessed);
         }
 
@@ -473,8 +475,9 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     private void updateStatefulCollections(CRLP_RollupProcessor processor, Id recordId) {
         this.statefulRollupsById.put(recordId, processor.getRollupDefsForParent(recordId));
 
-        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-            this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit
+            || this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit
+        ) {
             this.statefulMapOfOppIdsByParentId.put(recordId, processor.getPreviouslyProcessedOppIds(recordId));
         }
     }

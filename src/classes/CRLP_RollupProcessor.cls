@@ -481,7 +481,12 @@ public inherited sharing class CRLP_RollupProcessor {
             handler.processRollups(detailRecords, relatedRecordsByDetailId);
 
             if (isOppContactRoleSoftCreditRollup) {
-                processedOppIdsByParentId.put(parentId, handler.getListOfOppIdsThatWereRolledUp());
+                Set<Id> previousIds = processedOppIdsByParentId.get(parentId);
+                if (previousIds == null) {
+                    previousIds = new Set<Id>();
+                }
+                previousIds.addAll(handler.getListOfOppIdsThatWereRolledUp());
+                processedOppIdsByParentId.put(parentId, previousIds);
             }
 
             // only set the lastParentId when there are actually detail records
