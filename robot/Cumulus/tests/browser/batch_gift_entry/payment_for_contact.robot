@@ -40,8 +40,7 @@ Select a payment for a contact make grid changes and process it
     Click BGE Button    Update this Payment
     Fill BGE Form
     ...                       Donation Amount=10
-    Click Element With Locator    bge.field-input    Donation Date
-    Click BGE Button    Today
+    Click Field And Select Date    Donation Date    Today
     Click BGE Button       Save
     Reload Page
     Verify Row Count    1
@@ -62,10 +61,14 @@ Select a payment for a contact make grid changes and process it
     Click Link With Text    ${value}
     ${pay_id}    Get Current Record ID
     Store Session Record      npe01__OppPayment__c  ${pay_id}
-    &{payment} =     Salesforce Get  npe01__OppPayment__c  ${pay_id}
-    Should Be Equal As Strings    &{payment}[npe01__Payment_Amount__c]    20.0
-    Should Be Equal As Strings    &{payment}[npe01__Payment_Date__c]    ${date}
-    Should Be Equal As Strings    &{payment}[npe01__Paid__c]    True
+    Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
+    ...    npe01__Payment_Amount__c=20.0
+    ...    npe01__Payment_Date__c=${date}
+    ...    npe01__Paid__c=True
+    # &{payment} =     Salesforce Get  npe01__OppPayment__c  ${pay_id}
+    # Should Be Equal As Strings    &{payment}[npe01__Payment_Amount__c]    20.0
+    # Should Be Equal As Strings    &{payment}[npe01__Payment_Date__c]    ${date}
+    # Should Be Equal As Strings    &{payment}[npe01__Paid__c]    True
     Go To Record Home    &{opportunity}[Id]
     Confirm Value    Amount    $100.00    Y 
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y
@@ -73,3 +76,8 @@ Select a payment for a contact make grid changes and process it
     Confirm Value    Stage    Prospecting    Y 
     Store Session Record      Account    &{contact}[AccountId] 
     
+***Keywords***
+Click Field And Select Date
+    [Arguments]    ${field}    ${date}
+    Click Element With Locator    bge.field-input    ${field}    
+    Click BGE Button    ${date}

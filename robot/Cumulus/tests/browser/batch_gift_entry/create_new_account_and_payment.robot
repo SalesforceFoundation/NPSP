@@ -42,7 +42,7 @@ Create a new account and enter payment information
     Click BGE Button    Today
     Click BGE Button       Save
     Wait For Locator    bge.title    Batch Gift Entry
-    Reload Page
+    #Reload Page
     Verify Row Count    1 
     Wait For Locator    bge.edit_button    Donation Amount
     SeleniumLibrary.Element Text Should Be    //td[@data-label="Donation"]//lightning-formatted-url    ${Empty}

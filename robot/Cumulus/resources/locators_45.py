@@ -136,7 +136,6 @@ npsp_lex_locators={
         },
     'bge':{
         'checkbox':'//label/span[text()="{}"]//parent::label/span[@class="slds-checkbox_faux"]',
-        'list':'//div[./label[text()="{}"]]/div//select',
         'field-duellist':'//label[text()="{}"]/following-sibling::lightning-dual-listbox//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
         'duellist':'//h3[./span[text()="{}"]]/following-sibling::div//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
         'duellist2':'//div/div[text()="{}"]/following-sibling::div//div[contains(@class,"slds-dueling-list__column")][./span[text()="{}"]]//div[contains(@class,"slds-dueling-list__options")]/ul/li//span[text()="{}"]',
@@ -147,16 +146,15 @@ npsp_lex_locators={
         'field-input':'//label[text()="{}"]/following-sibling::div/input',
         'field-text':'//label[text()="{}"]/following-sibling::div/textarea',
         'button':'//button[text()="{}"]',
-        'dd':"//div[contains(@class,'slds-grid')]/div[contains(@class,'slds-text-align_left')]/span[text()='{}']/../following-sibling::div//select",
         'month':"//div[@class='slds-align-middle']//button[@title='{}']",
         'date':"//div[contains(@class,'slds-datepicker')]/table[@class='slds-datepicker__month']//span[text()='{}']",
         'card-header':'//article[./div[@class="slds-card__body"]//lightning-formatted-text[text()="{}"]]/header',
         'edit_button':'//td[@data-label="{}"]//button',
         'edit_field':'//lightning-primitive-datatable-iedit-panel//input',
-        'count':'//tbody/tr/td[1]',
+        'count':'//div[contains(@class,"cBGE_DataImportBatchEntry")]//tbody/tr',
         'value':'//td[@data-label="{}"]//a',
-        'name':'//tbody/tr/th//a',
-        'locate_dropdown':'//tbody/tr[{}]/td[6]//div//button[./span[text()="Show actions"]]/lightning-primitive-icon',
+        'name':'//div[contains(@class,"cBGE_DataImportBatchEntry")]//tbody/tr/th//a',
+        'locate_dropdown':'//div[contains(@class,"cBGE_DataImportBatchEntry")]//tbody/tr[{}]/td[6]//div//button[./span[text()="Show actions"]]/lightning-primitive-icon',
         'gift-amount':'//div[./label[text()="{}"]]',
         },    
     'bge-lists':{
@@ -164,6 +162,11 @@ npsp_lex_locators={
         'list2':"//div[contains(@class,'slds-grid')]/div[contains(@class,'slds-text-align_left')]/span[text()='{}']/../following-sibling::div//select",
         'list3':"//div[./label/span[text()='{}']]/div//select",
         
+        },
+    'bge-duellist-btn':{
+        'select-button':'//h3[./span[text()="{}"]]/following-sibling::div//div[contains(@class,"slds-dueling-list__column")]//button[@title="{}"]',
+        'select-button2':'//div/div[text()="{}"]/following-sibling::div//div[contains(@class,"slds-dueling-list__column")]//button[@title="{}"]',
+        'field-select-button':'//label[text()="{}"]/following-sibling::lightning-dual-listbox//div[contains(@class,"slds-dueling-list__column")]//button[@title="{}"]',
         },
 
     'object_manager':{

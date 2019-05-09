@@ -38,7 +38,7 @@ Select an opportunity for an account make grid changes and process it
     Click Element With Locator    bge.field-input    Donation Date
     Click BGE Button    Today
     Click BGE Button       Save
-    Reload Page
+    # Reload Page
     Sleep    2
     Verify Row Count    1
     Page Should Contain Link    &{opportunity}[Name]

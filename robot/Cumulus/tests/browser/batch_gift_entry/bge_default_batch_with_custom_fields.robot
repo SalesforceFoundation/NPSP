@@ -2,7 +2,7 @@
 
 Resource        robot/Cumulus/resources/NPSP.robot
 Suite Setup     Open Test Browser
-#Suite Teardown  Delete Records and Close Browser
+Suite Teardown  Delete Records and Close Browser
 
 *** Variables ***
 ${ns}
@@ -26,10 +26,10 @@ Create BGE Batch With Custom Fields
     ...                       Batch Description=This batch is created by Robot.
     Click BGE Button        Next
     Select Multiple Values From Duellist    bge.duellist    Opportunity    Available Fields    custom_campaign    custom_currency    custom_date    custom_number    custom_picklist    custom_text    custom_textarea    
-    Click Element With Locator    bge.select-button    Opportunity    Move selection to Selected Fields
+    Click Duellist Button    Opportunity    Move selection to Selected Fields
     Execute JavaScript    document.getElementsByClassName('wideListbox slds-form-element')[1].scrollIntoView()
     Select Multiple Values From Duellist    bge.duellist    Payment    Available Fields    custom_email    custom_multipick    custom_phone    custom_url
-    Click Element With Locator    bge.select-button    Payment    Move selection to Selected Fields
+    Click Duellist Button    Payment    Move selection to Selected Fields
     Click BGE Button        Next
     Click BGE Button        Next
     Click BGE Button        Save
@@ -59,25 +59,26 @@ Create New gift and process batch and validate
     Populate Field By Placeholder    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
     Click Link    &{contact}[FirstName] &{contact}[LastName]
     Fill BGE Form
-    ...                       Donation Amount=100
-    ...                       custom_currency=20
-    ...                       custom_number=123
-    ...                       custom_text=Robot
-    ...                       custom_email=automation@robot.com
-    ...                       custom_phone=1234567890
-    ...                       custom_url=automation.com
-    ...                       custom_textarea=this is custom batch
+    ...    Donation Amount=100
+    ...    custom_currency=20
+    ...    custom_number=123
+    ...    custom_text=Robot
+    ...    custom_email=automation@robot.com
+    ...    custom_phone=1234567890
+    ...    custom_url=automation.com
+    ...    custom_textarea=this is custom batch
     Populate Field By Placeholder    Search Campaigns    ${campaign}[Name]
     Click Field And Select Date    Donation Date    Today
     Click Field And Select Date    custom_date    Today
     Select Value From BGE DD    custom_picklist    2
     Select Multiple Values From Duellist    bge.duellist2    custom_multipick    Available    1    2    3
-    Click Element With Locator    bge.select-button2    custom_multipick    Move selection to Chosen
+    Click Duellist Button    custom_multipick    Move selection to Chosen
     Click BGE Button       Save
     Click BGE Button       Process Batch
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Locator    data_imports.status    Completed
     Click Button With Value   Close
+    Verify Row Count    1
     
     
 Verify Custom Fields on Payment and Donation 
@@ -87,28 +88,29 @@ Verify Custom Fields on Payment and Donation
     ${pay_id}    Get Current Record ID
     Store Session Record      npe01__OppPayment__c  ${pay_id}
     &{payment} =     Salesforce Get  npe01__OppPayment__c  ${pay_id}
-    Should Be Equal As Strings    &{payment}[npe01__Payment_Amount__c]    100.0
-    Should Be Equal As Strings    &{payment}[npe01__Payment_Date__c]    ${date}
-    Should Be Equal As Strings    &{payment}[npe01__Paid__c]    True
-    Should Be Equal As Strings    &{payment}[${ns}custom_email__c]    automation@robot.com
-    Should Be Equal As Strings    &{payment}[${ns}custom_multipick__c]    1;2;3
-    Should Be Equal As Strings    &{payment}[${ns}custom_phone__c]    1234567890
-    Should Be Equal As Strings    &{payment}[${ns}custom_url__c]    automation.com
-    &{opportunity} =     Salesforce Get  Opportunity  &{payment}[npe01__Opportunity__c]
-    Should Be Equal As Strings    &{opportunity}[Amount]    100.0
-    Should Be Equal As Strings    &{opportunity}[CloseDate]    ${date}
-    Should Be Equal As Strings    &{opportunity}[StageName]    Closed Won
-    Should Be Equal As Strings    &{opportunity}[${ns}custom_currency__c]    20.0
-    Should Be Equal As Strings    &{opportunity}[${ns}custom_date__c]    ${date}
-    Should Be Equal As Strings    &{opportunity}[${ns}custom_lookup__c]    ${camp_id}    
-    Should Be Equal As Strings    &{opportunity}[${ns}custom_number__c]    123.0
-    Should Be Equal As Strings    &{opportunity}[${ns}custom_picklist__c]    2
-    Should Be Equal As Strings    &{opportunity}[${ns}custom_textarea__c]    this is custom batch    
-    Should Be Equal As Strings    &{opportunity}[${ns}custom_text__c]    Robot
+    Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
+    ...    npe01__Payment_Amount__c=100.0
+    ...    npe01__Payment_Date__c=${date}
+    ...    npe01__Paid__c=True
+    ...    ${ns}custom_email__c=automation@robot.com
+    ...    ${ns}custom_multipick__c=1;2;3
+    ...    ${ns}custom_phone__c=1234567890
+    ...    ${ns}custom_url__c=automation.com
+    Verify Expected Values    nonns    Opportunity    &{payment}[npe01__Opportunity__c]
+    ...    Amount=100.0
+    ...    CloseDate=${date}
+    ...    StageName=Closed Won
+    ...    ${ns}custom_currency__c=20.0
+    ...    ${ns}custom_date__c=${date}
+    ...    ${ns}custom_lookup__c=${camp_id}
+    ...    ${ns}custom_number__c=123.0
+    ...    ${ns}custom_picklist__c=2
+    ...    ${ns}custom_textarea__c=this is custom batch
+    ...    ${ns}custom_text__c=Robot
     
 ***Keywords***
 Click Field And Select Date
     [Arguments]    ${field}    ${date}
-    Click Element With Locator    bge.field-input    ${field}
+    Click Element With Locator    bge.field-input    ${field}    
     Click BGE Button    ${date}
          
