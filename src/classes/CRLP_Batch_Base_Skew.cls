@@ -451,10 +451,10 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         if (processor.getRollupDefsForParent(firstParentId) != null) {
             updateStatefulCollections(processor, firstParentId);
         }
-        if (processor.getRollupDefsForParent(lastParentId) != null) {
+        if (lastParentId != firstParentId && processor.getRollupDefsForParent(lastParentId) != null) {
             updateStatefulCollections(processor, lastParentId);
         }
-        if (lastParentIdProcessed != null && processor.getRollupDefsForParent(lastParentIdProcessed) != null) {
+        if (lastParentIdProcessed != lastParentId && lastParentIdProcessed != null && processor.getRollupDefsForParent(lastParentIdProcessed) != null) {
             updateStatefulCollections(processor, lastParentIdProcessed);
         }
 
