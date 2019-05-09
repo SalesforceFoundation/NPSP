@@ -55,11 +55,55 @@ public with sharing class CRLP_RollupCMT_TEST {
     @isTest
     private static void differentRollupsAreMarkedAsDifferent() {
 
-        CRLP_RollupCMT.Rollup newRollup = generateRollup('1');
-        CRLP_RollupCMT.Rollup existingRollup = generateRollup('2');
-        newRollup.operation = 'Count';
+        CRLP_RollupCMT.Rollup newRollup1 = generateRollup('1');
+        CRLP_RollupCMT.Rollup newRollup2 = generateRollup('2');
+        CRLP_RollupCMT.Rollup newRollup3 = generateRollup('3');
+        CRLP_RollupCMT.Rollup newRollup4 = generateRollup('4');
+        CRLP_RollupCMT.Rollup newRollup5 = generateRollup('5');
+        CRLP_RollupCMT.Rollup newRollup6 = generateRollup('6');
+        CRLP_RollupCMT.Rollup newRollup7 = generateRollup('7');
+        CRLP_RollupCMT.Rollup newRollup8 = generateRollup('8');
+        CRLP_RollupCMT.Rollup newRollup9 = generateRollup('9');
+        CRLP_RollupCMT.Rollup newRollup10 = generateRollup('10');
+        CRLP_RollupCMT.Rollup newRollup11 = generateRollup('11');
+        CRLP_RollupCMT.Rollup newRollup12 = generateRollup('12');
+        CRLP_RollupCMT.Rollup newRollup13 = generateRollup('13');
+        CRLP_RollupCMT.Rollup newRollup14 = generateRollup('14');
+        CRLP_RollupCMT.Rollup existingRollup = generateRollup('20');
 
-        System.assertEquals(true, newRollup.isDifferent(existingRollup), 'Different Rollups are marked as different');
+        newRollup1.filterGroupRecordName = 'Different';
+        newRollup2.operation = 'Different';
+        newRollup3.timeBoundOperationType = 'Different';
+        newRollup4.summaryObject = 'Count';
+        newRollup5.summaryField = 'Count';
+        newRollup6.detailObject = 'Count';
+        newRollup7.detailField = 'Count';
+        newRollup8.amountObject = 'Count';
+        newRollup9.amountField = 'Count';
+        newRollup10.dateObject = 'Count';
+        newRollup11.dateField = 'Count';
+        newRollup12.isActive = false;
+        newRollup13.isDeleted = true;
+        newRollup14.intValue = 0;
+
+
+        System.assertEquals(true, newRollup1.isDifferent(existingRollup), 'Different Rollups are marked as different for filterGroupRecordName');
+        System.assertEquals(true, newRollup2.isDifferent(existingRollup), 'Different Rollups are marked as different for operation');
+        System.assertEquals(true, newRollup3.isDifferent(existingRollup), 'Different Rollups are marked as different for timeBoundOperationType');
+        System.assertEquals(true, newRollup4.isDifferent(existingRollup), 'Different Rollups are marked as different for summaryObject');
+        System.assertEquals(true, newRollup5.isDifferent(existingRollup), 'Different Rollups are marked as different for summaryField');
+        System.assertEquals(true, newRollup6.isDifferent(existingRollup), 'Different Rollups are marked as different for detailObject');
+        System.assertEquals(true, newRollup7.isDifferent(existingRollup), 'Different Rollups are marked as different for detailField');
+        System.assertEquals(true, newRollup8.isDifferent(existingRollup), 'Different Rollups are marked as different for amountObject');
+        System.assertEquals(true, newRollup9.isDifferent(existingRollup), 'Different Rollups are marked as different for amountField');
+        System.assertEquals(true, newRollup10.isDifferent(existingRollup), 'Different Rollups are marked as different for dateObject');
+        System.assertEquals(true, newRollup11.isDifferent(existingRollup), 'Different Rollups are marked as different for dateField');
+        System.assertEquals(true, newRollup12.isDifferent(existingRollup), 'Different Rollups are marked as different for isActive');
+        System.assertEquals(true, newRollup13.isDifferent(existingRollup), 'Different Rollups are marked as different for isDeleted');
+        System.assertEquals(true, newRollup14.isDifferent(existingRollup), 'Different Rollups are marked as different for intValue');
+
+
+
     }
     
 

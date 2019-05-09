@@ -95,11 +95,10 @@ public class CMT_MetadataAPI {
 
     /******************************************************************************************************************
      * @description Initiate a deployment of custom metadata type records.
-     * @param jobId Unique string to act as a "jobId" when writing the final deployment status to the Custom Settings
      * @param mtToDeploy List of CustomMetadata objects to deploy
      * @param callback a MetadataCallBack to handle the deployment result
      *****************************************************************************************************************/
-    public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy, MetadataCallBack callback) {
+    public static void deployMetadata(List<Metadata.CustomMetadata> mtToDeploy, MetadataCallBack callback) {
 
         // Add all queued up metadata updates to the deployment container
         Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
@@ -118,9 +117,9 @@ public class CMT_MetadataAPI {
      * @param jobId Unique string to act as a "jobId" when writing the final deployment status to the Custom Settings
      * @param mtToDeploy List of CustomMetadata objects to deploy
      *****************************************************************************************************************/
-      public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy) {
-          deployMetadata(jobId, mtToDeploy, new MetadataCallBack(jobId));
-      }
+    public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy) {
+        deployMetadata(mtToDeploy, new MetadataCallBack(jobId));
+    }
 
 
     /******************************************************************************************************************

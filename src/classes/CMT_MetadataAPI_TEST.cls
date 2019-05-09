@@ -66,16 +66,16 @@ private class CMT_MetadataAPI_TEST {
         // Call the handleResult() method of our main Callback with our dummy context var
         callback.handleResult(null, context);
 
-        List<Account> accounts = [SELECT Id, Name FROM Account WHERE name = :SUCCESS_HANDLER_EXECUTED];
-        System.assertEquals(accounts.size(), 0, 'No accounts should be created.');
+        List<Account> accounts = [SELECT Id, Name FROM Account WHERE Name = :SUCCESS_HANDLER_EXECUTED];
+        System.assertEquals(0, accounts.size(), 'No accounts should be created.');
 
         Metadata.DeployResult result = new Metadata.DeployResult();
         result.status = Metadata.DeployStatus.Succeeded;
 
         callback.handleResult(result, context);
 
-        accounts = [SELECT Id, Name FROM Account WHERE name = :SUCCESS_HANDLER_EXECUTED];
-        System.assertEquals(accounts.size(), 1, 'A single accounts should be created.');
+        accounts = [SELECT Id, Name FROM Account WHERE Name = :SUCCESS_HANDLER_EXECUTED];
+        System.assertEquals(1, accounts.size(), 'A single accounts should be created.');
  
     }
 
@@ -93,7 +93,7 @@ private class CMT_MetadataAPI_TEST {
      *****************************************************************************************************************/
     public class TestingCallbackHandler implements CMT_MetadataAPI.MetadataCallbackHandler {
         public void performSuccessHandler(Map<String, Object> params) {
-            Account newAccount = new Account( name = SUCCESS_HANDLER_EXECUTED );
+            Account newAccount = new Account(Name = SUCCESS_HANDLER_EXECUTED);
             insert newAccount;
         }
     }

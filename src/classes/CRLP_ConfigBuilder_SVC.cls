@@ -131,7 +131,7 @@ public class CRLP_ConfigBuilder_SVC {
             callback.callbackParams = params;
         }
 
-        CMT_MetadataAPI.deployMetadata(jobId, queuedMetadataTypes.clone(), callback);
+        CMT_MetadataAPI.deployMetadata(queuedMetadataTypes.clone(), callback);
         return jobId;
     }
 

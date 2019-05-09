@@ -149,12 +149,12 @@ public class CRLP_RollupCMT {
 
             Map<String, FilterRule> rulesByHash = new Map<String, FilterRule>();
 
-            for (Integer otherIndex=0; otherIndex < otherFilterGroup.rules.size(); otherIndex++) {
+            for (Integer otherIndex = 0; otherIndex < otherFilterGroup.rules.size(); otherIndex++) {
                 FilterRule otherRule = otherFilterGroup.rules[otherIndex];
                 rulesByHash.put(otherRule.generateHash(), otherFilterGroup.rules[otherIndex]);
             }
 
-            for (Integer currentIndex=0; currentIndex < this.rules.size(); currentIndex++) {
+            for (Integer currentIndex = 0; currentIndex < this.rules.size(); currentIndex++) {
                 FilterRule currentRule = this.rules[currentIndex];
 
                 if (!rulesByHash.containsKey(currentRule.generateHash())) {
