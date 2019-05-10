@@ -86,28 +86,20 @@ public class BDI_MigrationMappingUtility {
 
         Map<String, BDI_HelpTextCMT.MappingDetail> listHelpTextFieldDetails =
                 helper.getAllMappedHelpTextFields();
-        System.debug(LoggingLevel.ERROR, '*** variable value listHelpTextFieldDetails: ' + listHelpTextFieldDetails);
 
         Map<String, Data_Import_Object_Mapping__mdt> existingObjectMappings =
                 helper.getDefaultObjectMappings(DEFAULT_OBJECT_MAPPING_SET.Id);
-        System.debug(LoggingLevel.ERROR, '*** variable value existingObjectMappings: ' + existingObjectMappings);
 
         Map<String, Data_Import_Field_Mapping__mdt> existingFieldMappings =
                 helper.getDefaultFieldMappings(DEFAULT_FIELD_MAPPING_SET.Id);
-        System.debug(LoggingLevel.ERROR, '*** variable value existingFieldMappings: ' + existingFieldMappings);
 
-        System.debug(LoggingLevel.ERROR, '*** START MAIN LOOP ***');
         for (String key : listHelpTextFieldDetails.keySet()) {
-            System.debug('===========================');
-            System.debug('KEY: ' + key);
 
             BDI_HelpTextCMT.DataImportFieldMapping fieldMapping = 
                 new BDI_HelpTextCMT.DataImportFieldMapping(key, listHelpTextFieldDetails.get(key));
-            System.debug('DataImportFieldMapping: ' + fieldMapping);
 
             Data_Import_Object_Mapping__mdt existingDefaultObjectMapping = 
                 existingObjectMappings.get(fieldMapping.dataImportObjectName);
-            System.debug('ExistingDefaultObjectMapping: ' + existingDefaultObjectMapping);
 
             Boolean foundDefaultObjectMapping = (existingDefaultObjectMapping != null);
 
@@ -115,12 +107,10 @@ public class BDI_MigrationMappingUtility {
 
                 Data_Import_Field_Mapping__mdt existingDefaultFieldMapping = 
                     existingFieldMappings.get(fieldMapping.sourceFieldAPIName);
-                System.debug('ExistingDefaultFieldMapping: ' + existingDefaultFieldMapping);
 
                 Boolean foundDefaultFieldMapping = (existingDefaultFieldMapping != null);
 
                 if (!foundDefaultFieldMapping) {
-                    System.debug('New Mapping');
                     // New Field Mapping, not part of our initial config
                     setFieldMappingValues(fieldMapping, existingDefaultObjectMapping, null);
 
@@ -128,7 +118,6 @@ public class BDI_MigrationMappingUtility {
                     queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
                     pendingCMTs.add(fieldMapping);
                 } else if (foundDefaultFieldMapping) {
-                    System.debug('Existing Mapping');
                     // Existing Field Mapping, check if CMTs field values match Help Text field values
                     Boolean invalidFieldMapping = foundDefaultFieldMappingMismatch(fieldMapping, 
                             existingDefaultFieldMapping, 

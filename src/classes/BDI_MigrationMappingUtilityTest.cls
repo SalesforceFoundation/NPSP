@@ -1,77 +1,95 @@
+/*
+    Copyright (c) 2014 Salesforce.org
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+ 
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    POSSIBILITY OF SUCH DAMAGE.
+*/
 /**
- * Created by kenneth.lewis on 2019-05-08.
- */
+* @author Salesforce.org
+* @date 2019
+* @group Batch Data Import
+* @group-content ../../ApexDocContent/BatchDataImport.htm
+* @description Unit Test for the Migration Mapping Utility
+*/
 
 @IsTest
-private class BDI_MigrationMappingUtility_TEST {
+private class BDI_MigrationMappingUtilityTest {
 
     @IsTest
     static void migrationUtilityCreatesCustomMetadataRecordsFromHelpText() {
-        //1. Set the mock
-        // Create a mock version of the BDI_MigrationUtilityHelper class.
+        // Create a mock version of the BDI_MigrationUtilityHelper class
         BDI_MigrationMappingHelper mock_BDI_MigrationMappingHelper =
                 (BDI_MigrationMappingHelper) Test.createStub(
                         BDI_MigrationMappingHelper.class,
                         new BDI_MigrationMappingHelperMock());
 
-        //2. Call the method
+        // Call build method
         BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility();
         util.buildCustomMetadataRecordsFromHelpText(mock_BDI_MigrationMappingHelper);
 
-        //3. Verify results - if we were doing regular DML for the net new (pending) mappings, we might do this to verify:
-
-        //But since we are deploying the metadata, we'll probably need to simply inspect the property of the instance
-        System.debug(LoggingLevel.ERROR, '*** variable value: ' + util.pendingCMTs);
-        //Confirm that "pendingCMTs" now contains the mocked mappings that will be deployed...
-
-        //Confirm that we have two pending data import field mappings
+        // Confirm that we have a new pending data import field mapping waiting to be deployed
         System.assertEquals(1, util.pendingCMTs.size());
 
-        //Confirm that we can get custom metadata from "pendingCMTs"
+        // Confirm that we can get custom metadata from "pendingCMTs"
         Metadata.CustomMetadata cmt = util.pendingCMTs[0].getMetadataRecord();
         System.assertEquals('New Mapping', cmt.label);
     }
 
     @IsTest
     static void migrationUtilityDeploysWithMetadata() {
-        //1. Set the mock
         // Create a mock version of the BDI_MigrationUtilityHelper class.
         BDI_MigrationMappingHelper mock_BDI_MigrationMappingHelper =
                 (BDI_MigrationMappingHelper) Test.createStub(
                         BDI_MigrationMappingHelper.class,
                         new BDI_MigrationMappingHelperMock());
 
-        //2. Call the method
+        // Call the method
         BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility();
         util.buildCustomMetadataRecordsFromHelpText(mock_BDI_MigrationMappingHelper);
-
-        //3. Verify results - if we were doing regular DML for the net new (pending) mappings, we might do this to verify:
-
-        //But since we are deploying the metadata, we'll probably need to simply inspect the property of the instance
-        System.debug(LoggingLevel.ERROR, '*** variable value: ' + util.pendingCMTs);
-        //Confirm that "pendingCMTs" now contains the mocked mappings that will be deployed...
 
         Test.startTest();
 
         // Convert mappings to Custom Metadata and start deployment
         String jobId = util.convertLegacyHelpTextToCustomMetadata();
-        System.debug('JOB ID: ' + jobId);
 
-        //Confirm custom settings updated accordingly
+        // Confirm custom settings updated accordingly
         CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack(jobId, CMT_MetadataAPI.Source.HELP_TEXT_MIGRATION);
 
-        //Construct a dummy Context
+        // Construct a dummy Context
         TestingDeployCallbackContext context = new TestingDeployCallbackContext();
 
-        //Call the handleResult() method of our main Callback with our dummy context var
+        // Call the handleResult() method of our main Callback with our dummy context var
         callback.handleResult(null, context);
 
         Test.stopTest();
 
-        //Confirm that we've updated the CMT API Status field in Data Import Settings
+        // Confirm that we've updated the CMT API Status field in Data Import Settings
         Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         Map<String,String> result = (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
-        System.debug(dataImportSettings);
+
         System.assertNotEquals(null, result.get(jobId), result);
     }
 
@@ -82,23 +100,22 @@ private class BDI_MigrationMappingUtility_TEST {
         Test.startTest();
         // Convert mappings to Custom Metadata and start deployment
         String jobId = util.convertLegacyHelpTextToCustomMetadata();
-        System.debug('JOB ID: ' + jobId);
 
-        //Confirm custom settings updated accordingly
+        // Confirm custom settings updated accordingly
         CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack(jobId, CMT_MetadataAPI.Source.HELP_TEXT_MIGRATION);
 
-        //Construct a dummy Context
+        // Construct a dummy Context
         TestingDeployCallbackContext context = new TestingDeployCallbackContext();
 
-        //Call the handleResult() method of our main Callback with our dummy context var
+        // Call the handleResult() method of our main Callback with our dummy context var
         callback.handleResult(null, context);
 
         Test.stopTest();
 
-        //Confirm that we've updated the CMT API Status field in Data Import Settings
+        // Confirm that we've updated the CMT API Status field in Data Import Settings
         Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         Map<String,String> result = (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
-        System.debug(dataImportSettings);
+
         System.assertNotEquals(null, result.get(jobId), result);
     }
 
@@ -107,9 +124,6 @@ private class BDI_MigrationMappingUtility_TEST {
         public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
                 Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
                 List<Object> listOfArgs) {
-
-            System.debug(LoggingLevel.ERROR, '*** ##### in handleMethodCall ######');
-            System.debug(LoggingLevel.ERROR, '*** variable value stubbedMethodName: ' + stubbedMethodName);
 
             if (stubbedMethodName == 'getAllMappedHelpTextFields') {
                 BDI_HelpTextCMT.MappingDetail mapping1 = new BDI_HelpTextCMT.MappingDetail(
@@ -192,7 +206,7 @@ private class BDI_MigrationMappingUtility_TEST {
         }
     }
 
-    // DeployCallbackContext subclass for testing that returns myJobId
+    // DeployCallbackContext subclass for testing that returns jobId
     public class TestingDeployCallbackContext extends Metadata.DeployCallbackContext {
         public override Id getCallbackJobId() {
             return '000000000122345';

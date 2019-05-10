@@ -105,7 +105,6 @@ public class BDI_MigrationMappingHelper {
             setImportStatusAndLookupFields(mappingDetail, importStatusAndLookupMap);
         }
 
-        System.debug(LoggingLevel.ERROR, '*** variable value helpTextFieldMap: ' + helpTextFieldMap);
         return helpTextFieldMap;
     }
 
