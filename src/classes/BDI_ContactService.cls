@@ -593,9 +593,15 @@ public with sharing class BDI_ContactService {
             UTIL_Namespace.StrTokenNSPrefix('Primary_Affiliation__c'),
             'Email', 'npe01__AlternateEmail__c', 'npe01__HomeEmail__c', 'npe01__WorkEmail__c',
             'Phone', 'HomePhone', 'MobilePhone', 'OtherPhone', 'npo02__Formula_HouseholdPhone__c', 'npe01__WorkPhone__c' };
+
         setContactFields.addAll(mapDIFieldToC1Field.values());
         setContactFields.addAll(mapDIFieldToC2Field.values());
-        return 'SELECT ' + String.join(new List<String>(setContactFields), ',') + ' FROM Contact ';
+
+        Set<String> uniqueContactFields = new Set<String>();
+        for (String s : setContactFields) {
+            uniqueContactFields.add(s.toLowerCase());
+        }
+        return 'SELECT ' + String.join(new List<String>(uniqueContactFields), ',') + ' FROM Contact ';
     }
 
     /*******************************************************************************************************

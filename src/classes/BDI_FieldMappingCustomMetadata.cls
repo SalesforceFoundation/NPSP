@@ -37,6 +37,21 @@
 
 public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMapping {
 
+    public static final String DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME = 'Default_Field_Mapping_Set';
+
+    private static BDI_FieldMappingCustomMetadata fieldMappingInstance = null;
+
+
+    /*******************************************************************************************************
+    * @description return singleton instance of the class
+    */
+    public static BDI_FieldMappingCustomMetadata getInstance() {
+        if (fieldMappingInstance == null) {
+            fieldMappingInstance = new BDI_FieldMappingCustomMetadata();
+        }
+        return fieldMappingInstance;
+    }
+
     /*******************************************************************************************************
     * @description For the provided fields (in the form DIObject.developerfieldname) and target object, 
     * return a map of DI field (key) to mapped field name on the destination record (value). 
@@ -49,11 +64,57 @@ public with sharing class BDI_FieldMappingCustomMetadata implements BDI_FieldMap
     * TODO: Implement this method
     */
 
-    public Map<String,String> getFieldMap(String dataImportObjectName, 
-        String targetObjectName, List<String> dataImportFields) {
+    public Map<String,String> getFieldMap(String dataImportObjectName, String targetObjectName, List<String> dataImportFields) {
 
-        // TODO: Map fields based on CMT here
+        Map<String,String> dataImportFieldToTargetField = new Map<String,String>();
 
-        return new Map<String,String>();
+        String namespace = UTIL_Namespace.getNamespace();
+        //Retreive the Data Import Settings to determine the default field mapping set.
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+
+        String fieldMappingSetName = dis.Default_Data_Import_Field_Mapping_Set__c;
+        Data_Import_Field_Mapping_Set__mdt diFieldMappingSet;
+        Data_Import_Field_Mapping__mdt[]  diFieldMappings;
+        Data_Import_Object_Mapping__mdt diObjectMapping;
+
+        if (fieldMappingSetName != null) {
+            diFieldMappingSet = [SELECT id, DeveloperName, 
+                                    Data_Import_Object_Mapping_Set__c,
+                                    Data_Import_Object_Mapping_Set__r.DeveloperName    
+                                FROM Data_Import_Field_Mapping_Set__mdt
+                                WHERE DeveloperName =: fieldMappingSetName LIMIT 1];
+
+            if (diFieldMappingSet != null && diFieldMappingSet.Data_Import_Object_Mapping_Set__c != null) {
+                
+                diFieldMappings = [SELECT DeveloperName,
+                                        Data_Import_Field_Mapping_Set__c,
+                                        Required__c,
+                                        Source_Field_API_Name__c,
+                                        Target_Field_API_Name__c,
+                                        Target_Object_Mapping__c,
+                                        Target_Object_Mapping__r.Object_API_Name__c
+                            FROM Data_Import_Field_Mapping__mdt
+                            WHERE Target_Object_Mapping__r.Data_Import_Object_Mapping_Set__r.DeveloperName =: diFieldMappingSet.Data_Import_Object_Mapping_Set__r.DeveloperName
+                                AND Target_Object_Mapping__r.DeveloperName =: dataImportObjectName];
+
+                if (diFieldMappings != null) {
+                    for (Data_Import_Field_Mapping__mdt difm : diFieldMappings) {
+
+                        String sourceFieldName = difm.Source_Field_API_Name__c;
+                        String targetFieldName = difm.Target_Field_API_Name__c;
+
+                        //If we are not in the npsp namespace then remove the namespace from all relevant field references
+                        if (namespace != 'npsp') {
+                            sourceFieldName = UTIL_Namespace.removeNSPrefixNpspOnly(sourceFieldName);
+                            targetFieldName = UTIL_Namespace.removeNSPrefixNpspOnly(targetFieldName);
+                        }
+
+                        dataImportFieldToTargetField.put(sourceFieldName,targetFieldName);
+                    }
+                }
+            } 
+        }
+
+        return dataImportFieldToTargetField;
     }
 }

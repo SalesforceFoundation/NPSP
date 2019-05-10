@@ -82,7 +82,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     * @param isDryRun whether to run in Dry Run mode or commit records.
     */
     public BDI_DataImport_BATCH(ID batchId, Boolean isDryRun) {
-        this(batchId, new BDI_DataImportService(isDryRun, BDI_FieldMappingHelpText.getInstance()));
+        this(batchId, new BDI_DataImportService(isDryRun, BDI_DataImportService.getDefaultFieldMapping()));
     }
 
     /*******************************************************************************************************
