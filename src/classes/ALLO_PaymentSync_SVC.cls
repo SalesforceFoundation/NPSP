@@ -668,5 +668,71 @@ public class ALLO_PaymentSync_SVC {
         return defaultAllo;
     }
 
+    private void recalcDefaultAllocsForOppToPmt (SynchronizationContext context) {
 
+        Id defaultGAU = UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c;
+
+        for (npe01__OppPayment__c payment : context.payments.values()) {
+            Decimal allocAmt = (allocatedAmountByPayment.containsKey(payment.Id)) ? allocatedAmountByPayment.get(payment.Id) : 0;
+            Decimal paymentAmt = (payment.npe01__Payment_Amount__c != null) ? payment.npe01__Payment_Amount__c : 0;
+            Decimal remainder = paymentAmt - allocAmt;
+
+            List<Allocation__c> defaultAllocs = defaultAllocsByPayment.get(payment.Id);
+            Allocation__c defaultAlloc = null;
+            if ((defaultAllocs != null) && (defaultAllocs.size() > 0)) {
+                defaultAlloc = defaultAllocs.get(0);
+                for (Integer i = 1; i < defaultAllocs.size(); i++) { // Remove any duplicates
+                    allocationsChanges.objectsToDelete.add(defaultAllocs.get(i));
+                }
+            }
+
+            if ((paymentAmt > 0 && remainder > 0) || (paymentAmt < 0 && remainder < 0)) { // Default Allocation is needed with this amount
+                if (defaultAlloc == null) {
+                    defaultAlloc = makeAmountBasedAllocation(payment, defaultGAU, remainder);
+                    allocationsChanges.objectsToInsert.add(defaultAlloc);
+                } else if (defaultAlloc.Amount__c != remainder || (UserInfo.isMultiCurrencyOrganization() && defaultAlloc.get('CurrencyIsoCode') != payment.get('CurrencyIsoCode'))) {
+                    defaultAlloc.Amount__c = remainder;
+                    if (UserInfo.isMultiCurrencyOrganization()) {
+                        defaultAlloc.put('CurrencyIsoCode', payment.get('CurrencyIsoCode'));
+                    }
+                    allocationsChanges.objectsToUpdate.add(defaultAlloc);
+                }
+            } else if (remainder == 0) { // Default Allocation should be removed
+                if (defaultAlloc != null)
+                    allocationsChanges.objectsToDelete.add(defaultAlloc);
+            } else { // Payment is overallocated...should never occur...generate an error.
+                //TODO: Add Error Here...
+            }
+
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Creates an amount based allocation for the specified Opportunity/Payment using the specified gau
+    * @param SObject parentSObj An Opportunity or Payment.
+    * @param Id gau The Id of the GAU to use when creating the allocation
+    * @return Allocation__c An allocation for the amount of the Opportunity/Payment.
+    ********************************************************************************************************/
+    public static Allocation__c makeAmountBasedAllocation(SObject parentSObj, Id gau, Decimal amount) {
+
+        Allocation__c defaultAllo = new Allocation__c(
+            General_Accounting_Unit__c = gau
+        );
+
+        if (parentSObj instanceof npe01__OppPayment__c) {
+            defaultAllo.Payment__c = parentSObj.Id;
+        }
+
+        if (parentSObj instanceof Opportunity) {
+            defaultAllo.Opportunity__c = parentSObj.Id;
+        }
+
+        defaultAllo.Amount__c = (Decimal) amount;
+
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            defaultAllo.put('CurrencyIsoCode', parentSObj.get('CurrencyIsoCode'));
+        }
+
+        return defaultAllo;
+    }
 }
