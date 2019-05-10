@@ -416,7 +416,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
 
         if (!setPmtIds.isEmpty()) {
-            String pmtQuery = 'SELECT Id, npe01__Payment_Amount__c, npe01__Opportunity__c';
+            String pmtQuery = 'SELECT Id, npe01__Payment_Amount__c, npe01__Paid__c, npe01__Written_Off__c, npe01__Opportunity__c';
             if (UserInfo.isMultiCurrencyOrganization()) {
                 pmtQuery += ', CurrencyIsoCode';
             }
@@ -431,6 +431,11 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             //if we have any Payment allocations and default handling is enabled, adjust the payments' default allocation
             if (!setPmtIds.isEmpty()) {
                 for (npe01__OppPayment__c pmt : listPmts) {
+
+                    if (pmt.npe01__Written_Off__c) {
+                        continue;
+                    }
+
                     //we have allocations for this payment
                     if (setPmtIds.contains(pmt.Id)) {
                         //this pmt has allocations, check for default cases
@@ -440,8 +445,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                             Decimal amountDifferential = pmt.npe01__Payment_Amount__c - pmtWrap.totalAmount;
 
                             //no remainder: delete default allocation
-                            if (amountDifferential == 0 && pmtWrap.defaultAllo!=null) {
-                                dmlWrapper.objectsToDelete.add(pmtWrap.defaultAllo);
+                            if (amountDifferential == 0 && pmtWrap.defaultAllo != null) {
+                                    dmlWrapper.objectsToDelete.add(pmtWrap.defaultAllo);
                             } else if ((pmt.npe01__Payment_Amount__c >= 0 && amountDifferential > 0)
                                     ||(pmt.npe01__Payment_Amount__c < 0 && amountDifferential < 0)) {
                                 //create a default allocation if we don't have one
@@ -450,8 +455,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                                     pmtWrap.defaultAllo.Amount__c = amountDifferential;
                                     dmlWrapper.objectsToInsert.add(pmtWrap.defaultAllo);
                                 } else if (pmtWrap.defaultAllo.Amount__c != amountDifferential) {
-                                    pmtWrap.defaultAllo.Amount__c = amountDifferential;
-                                    dmlWrapper.objectsToUpdate.add(pmtWrap.defaultAllo);
+                                        pmtWrap.defaultAllo.Amount__c = amountDifferential;
+                                        dmlWrapper.objectsToUpdate.add(pmtWrap.defaultAllo);
                                 }
                             }
                             //delete duplicate default GAU allocations
@@ -505,8 +510,9 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     } else listRecDonOpps.add(opp);
                 }
             //no opportunity default cases, just copy the list over
-            } else listRecDonOpps = listOpps;
-
+            } else {
+                listRecDonOpps = listOpps;
+            }
             //after insert/update/delete of Recurring Donation allocations: delete and recreate all open opportunities' allocations
             if (!listRecDonOpps.isEmpty()) {
 
@@ -852,7 +858,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
         //fill wrapper with all allocations for this opportunity
         //getting payment and opportunity info here to avoid excess queries
-        for (Allocation__c allo : [SELECT Id, Payment__c, Payment__r.npe01__Payment_Amount__c, Opportunity__c, Opportunity__r.Amount, Amount__c, Percent__c, General_Accounting_Unit__c, Recurring_Donation__c, Campaign__c FROM Allocation__c
+        for (Allocation__c allo : [SELECT Id, Payment__c, Payment__r.npe01__Payment_Amount__c,  Payment__r.npe01__Paid__c, Payment__r.npe01__Written_Off__c, Opportunity__c, Opportunity__r.Amount, Amount__c, Percent__c, General_Accounting_Unit__c, Recurring_Donation__c, Campaign__c FROM Allocation__c
                 WHERE (Payment__c IN :setParentId OR Opportunity__c IN :setParentId OR Recurring_Donation__c IN :setParentId OR Campaign__c IN :setParentId)
                 AND Id NOT IN :setExistingAlloId]) {
 
@@ -913,7 +919,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
         //we have payments we need to query for a parent amount
         if (!setPmtIds.isEmpty()) {
-            for (npe01__OppPayment__c pmt : [SELECT Id, npe01__Payment_Amount__c FROM npe01__OppPayment__c WHERE Id IN :setPmtIds]) {
+            for (npe01__OppPayment__c pmt : [SELECT Id, npe01__Payment_Amount__c, npe01__Paid__c,
+                 npe01__Written_Off__c  FROM npe01__OppPayment__c WHERE Id IN :setPmtIds]) {
                 mapWrapper.get(pmt.Id).parentAmount = pmt.npe01__Payment_Amount__c;
             }
         }
@@ -943,7 +950,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     * @param listOpps A list of GAU Allocations.
     * @return void This method modifies class variables and doesn't return anything.
     ********************************************************************************************************/
-    public void fillMapWrapper (List<SObject> parentList) {
+    private void fillMapWrapper (List<SObject> parentList) {
         if (parentList == null || parentList.isEmpty()) {
             return;
         }
@@ -960,7 +967,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             setParentId.add(parent.id);
         }
 
-        String alloQueryString = 'SELECT Id, Payment__c, Payment__r.npe01__Payment_Amount__c, Opportunity__c, Opportunity__r.Amount, Campaign__c, Recurring_Donation__c, ' +
+        String alloQueryString = 'SELECT Id, Payment__c, Payment__r.npe01__Payment_Amount__c, Payment__r.npe01__Paid__c, ' +
+        'Payment__r.npe01__Written_Off__c, Opportunity__c, Opportunity__r.Amount, Campaign__c, Recurring_Donation__c, ' +
             'Amount__c, Percent__c, General_Accounting_Unit__c, General_Accounting_Unit__r.Active__c';
 
         //query for multicurrency string if multicurrency org
