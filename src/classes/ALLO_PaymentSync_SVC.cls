@@ -40,8 +40,12 @@ public class ALLO_PaymentSync_SVC {
     public TDTM_Runnable.DmlWrapper allocationsChanges = new TDTM_Runnable.DmlWrapper();
 
     public Map<Id, Id> opportunityIdByPaymentId = new Map<Id, Id>();
-
     private Map<Id, SynchronizationContext> contextByOpportunity = new Map<Id, SynchronizationContext>();
+
+    // Does not include default GAU
+    private Map<Id, Decimal> allocatedAmountByPayment = new Map<Id, Decimal>();
+        // Need to keep track of default allocation(s) by Payment
+    private Map<Id, List<Allocation__c>> defaultAllocsByPayment = new Map<Id, List<Allocation__c>>();
 
     private class SynchronizationContext {
         Opportunity opportunity;
@@ -66,12 +70,27 @@ public class ALLO_PaymentSync_SVC {
         Decimal totalPaidUnpaidPayments = 0;
     }
 
+    private void addAllocationAmountToPayment(Id paymentId, Decimal allocAmount) {
+        Decimal amt = allocatedAmountByPayment.containsKey(paymentId) ? allocatedAmountByPayment.get(paymentId) : 0;
+        amt += ((allocAmount != null) ? allocAmount : 0);
+        allocatedAmountByPayment.put (paymentId, amt);
+    }
+
+    private void removeAllocationAmountFromPayment(Id paymentId, Decimal allocAmount) {
+        Decimal amt = allocatedAmountByPayment.containsKey(paymentId) ? allocatedAmountByPayment.get(paymentId) : 0;
+        amt -= ((allocAmount != null) ? allocAmount : 0);
+        allocatedAmountByPayment.put (paymentId, amt);
+    }
+
     public ALLO_PaymentSync_SVC(List<Allocation__c> allocations) {
 
         Set<Id> paymentIds = new Set<Id>();
         Set<Id> opportunityIds = new Set<Id>();
         Map<Id, List<npe01__OppPayment__c>> paymentsByOpportunityId = new Map<Id, List<npe01__OppPayment__c>>();
         Map<Id, Map<Id, Allocation__c>> triggerAllocationsByGAUByParentId = new Map<Id, Map<Id, Allocation__c>>();
+
+        // Just so we are not repeatedly retrieving it in loops.  It is cached, but still..
+        Id defaultGAU = UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c;
 
         for (Allocation__c allocation : allocations) {
             Map<Id, Allocation__c> allocationsByGAUId = null;
@@ -107,13 +126,8 @@ public class ALLO_PaymentSync_SVC {
             paymentsByOpportunityId.put(payment.npe01__Opportunity__c, new List<npe01__OppPayment__c>());
         }
 
-        Map<Id, npe01__OppPayment__c> paymentsWithAllocations = new Map<Id, npe01__OppPayment__c>([
-            SELECT Id, npe01__Opportunity__c, npe01__Payment_Amount__c, npe01__Paid__c, npe01__Written_Off__c,
-                (SELECT Id, Amount__c, Percent__c, Opportunity__c, Payment__c, General_Accounting_Unit__c FROM Allocations__r)
-            FROM npe01__OppPayment__c
-            WHERE Id IN :paymentIds OR npe01__Opportunity__c IN :paymentsByOpportunityId.keySet()
-            ORDER BY npe01__Opportunity__c
-        ]);
+        // Retrieve all payments, with associated allocations
+        Map<Id, npe01__OppPayment__c> paymentsWithAllocations = retrievePaymentsWithAllocations(paymentIds, paymentsByOpportunityId.keySet());
 
         for (npe01__OppPayment__c payment : paymentsWithAllocations.values()) {
             opportunityIdByPaymentId.put(payment.Id, payment.npe01__Opportunity__c);
@@ -123,13 +137,14 @@ public class ALLO_PaymentSync_SVC {
             } else {
                 paymentsByOpportunityId.put(payment.npe01__Opportunity__c, new List<npe01__OppPayment__c>{payment});
             }
+            // Update Map of Default Allocations
+            defaultAllocsByPayment.put (payment.Id, filterByGAU(payment.Allocations__r, defaultGAU));
+            // Create Initial Total of Allocations by Payment, excluding the default amount
+            allocatedAmountByPayment.put (payment.Id, calculateTotalAllocationAmountExcludingDefaultGAU(payment.Allocations__r, defaultGAU));
         }
 
-        Map<Id, Opportunity> opportunitiesWithAllocations = new Map<Id, Opportunity>([
-            SELECT Id, Amount,
-                (SELECT Id, Amount__c, Percent__c, Opportunity__c, Payment__c, General_Accounting_Unit__c FROM Allocations__r)
-            FROM Opportunity WHERE Id IN :paymentsByOpportunityId.keySet()
-        ]);
+        // Retrieve all opportunities, with associated allocations
+        Map<Id, Opportunity> opportunitiesWithAllocations = retrieveOpportunitiesWithAllocations(paymentsByOpportunityId.keySet());
 
         for (Opportunity opportunity : opportunitiesWithAllocations.values()) {
             SynchronizationContext context = new SynchronizationContext();
@@ -201,7 +216,6 @@ public class ALLO_PaymentSync_SVC {
                         } else {
                             context.totalPaidPaymentAllocationsByGAU.put(gau, pmtAllocation.Amount__c);
                         }
-
                     }
                 }
             }
@@ -216,6 +230,110 @@ public class ALLO_PaymentSync_SVC {
 
             contextByOpportunity.put(context.opportunity.id, context);
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Given a set of Payment Ids, and a set of Opportunity Ids, this method
+    * returns the Payments associated with them, as well as any associated Allocations.
+    * @param Set<Id> paymentIds A set of Payment Ids
+    * @param Set<Id> opportunityIds A set of Opportunity Ids
+    * @return Map<Id, npe01__OppPayment__c> map of Payments with Payment Allocations by Payment Id
+    ********************************************************************************************************/
+    @testVisible Map<Id, npe01__OppPayment__c> retrievePaymentsWithAllocations(Set<Id> paymentIds, Set<Id> opportunityIds) {
+        Boolean multiCurrencyOrg = UserInfo.isMultiCurrencyOrganization();
+        String queryString = 'SELECT    Id, ' +
+                                        'npe01__Opportunity__c, ' +
+                                        'npe01__Payment_Amount__c, '+
+                                        'npe01__Paid__c, ' +
+                                        'npe01__Written_Off__c, ' +
+                                        (multiCurrencyOrg ? 'CurrencyIsoCode, ' : '') +
+                                        '(SELECT    Id, ' +
+                                                    (multiCurrencyOrg ? 'CurrencyIsoCode, ' : '') +
+                                                    'Amount__c, ' +
+                                                    'Percent__c, ' +
+                                                    'Opportunity__c, ' +
+                                                    'Payment__c, ' +
+                                                    'General_Accounting_Unit__c ' +
+                                        ' FROM Allocations__r) ' +
+                                'FROM npe01__OppPayment__c ' +
+                                'WHERE  Id IN :paymentIds OR ' +
+                                        'npe01__Opportunity__c IN : opportunityIds';
+
+        Map<Id, npe01__OppPayment__c> pmts = new Map<Id, npe01__OppPayment__c>();
+        List<SObject> sobjs = Database.query(queryString);
+
+        for (SObject sobj :sobjs) {
+            pmts.put (sobj.Id, (npe01__OppPayment__c)sobj);
+        }
+
+        return pmts;
+    }
+
+    /*******************************************************************************************************
+    * @description Given a set of a set of Opportunity Ids, this method returns the Opportunities
+    * associated with them, as well as any associated Allocations.
+    * @param Set<Id> opportunityIds A set of Opportunity Ids
+    * @return Map<Id, npe01__OppPayment__c> map of Opportunities with Opportunity Allocations by Opportunity Id
+    ********************************************************************************************************/
+    @testVisible Map<Id, Opportunity> retrieveOpportunitiesWithAllocations(Set<Id> opportunityIds) {
+        Boolean multiCurrencyOrg = UserInfo.isMultiCurrencyOrganization();
+        String queryString = 'SELECT    Id, ' +
+                                        'Amount, ' +
+                                        (multiCurrencyOrg ? 'CurrencyIsoCode, ' : '') +
+                                        '(SELECT    Id, ' +
+                                                    (multiCurrencyOrg ? 'CurrencyIsoCode, ' : '') +
+                                                    'Amount__c, ' +
+                                                    'Percent__c, ' +
+                                                    'Opportunity__c, ' +
+                                                    'Payment__c, ' +
+                                                    'General_Accounting_Unit__c ' +
+                                        ' FROM Allocations__r) ' +
+                             'FROM Opportunity ' +
+                             'WHERE     Id IN :opportunityIds';
+
+        Map<Id, Opportunity> opps = new Map<Id, Opportunity>();
+        List<SObject> sobjs = Database.query(queryString);
+
+        for (SObject sobj :sobjs) {
+            opps.put(sobj.Id, (Opportunity)sobj);
+        }
+
+        return opps;
+    }
+
+    /*******************************************************************************************************
+    * @description Takes a list of allocations, and the Id of the default GAU, and sums the allocation
+    * amounts, excluding any that are for the default allocation.
+    * @param List<Allocation__c> allocs The list of allocations to sum
+    * @param Id defaultGAU The id of the default GAU
+    * @return Decimal total amount of the allocations, excluding ones for the default GAU
+    ********************************************************************************************************/
+    @testVisible private Decimal calculateTotalAllocationAmountExcludingDefaultGAU(List<Allocation__c> allocs, Id defaultGAU) {
+        Decimal totalAllocationAmount = 0;
+
+        for (Allocation__c alloc : allocs) {
+            if (alloc.General_Accounting_Unit__c != defaultGAU) {
+                totalAllocationAmount += alloc.Amount__c;
+            }
+        }
+
+        return totalAllocationAmount;
+    }
+
+    /*******************************************************************************************************
+    * @description Takes a list of allocations, and returns a list of ones that match the specified gau
+    * @param List<Allocation__c> allocs The list of allocations to filter
+    * @param Id gau The id of the GAU
+    * @return List<Allocation__c> the filtered list of allocations
+    ********************************************************************************************************/
+    @testVisible private List<Allocation__c> filterByGAU(List<Allocation__c> allocs, Id gau) {
+        List<Allocation__c> fallocs = new List<Allocation__c>();
+        for (Allocation__c alloc : allocs) {
+            if (alloc.General_Accounting_Unit__c == gau) {
+                fallocs.add(alloc);
+            }
+        }
+        return fallocs;
     }
 
     public void syncPaymentAllocationsToOpportunity(Id opportunityId) {
@@ -242,13 +360,19 @@ public class ALLO_PaymentSync_SVC {
 
                         oppAllocation.Amount__c = newGAUAmtForOpp * duplicateAllocationpaidUnpaidAmountRatio;
                         if (oppAllocation.Percent__c != null) {
-                            oppAllocation.Percent__c = (context.Opportunity.Amount != 0) ? oppAllocation.Amount__c / context.Opportunity.Amount * 100 : 0;
+                            oppAllocation.Percent__c = (context.Opportunity.Amount != 0) ? oppAllocation.Amount__c / context.opportunity.Amount * 100 : 0;
                         }
+
+                        // Assumption: Opportunity Allocations should be maintained with Currency Type from Opportunity Record
+                        if (UserInfo.isMultiCurrencyOrganization()) {
+                            oppAllocation.put('CurrencyIsoCode', context.opportunity.get('CurrencyIsoCode'));
+                        }
+
                         //add to update
                         allocationsChanges.objectsToUpdate.add(oppAllocation);
                     }
                 }
-            //no corresponding opportunity allocation to payment allocations, insert one
+            //No corresponding opportunity allocation to payment allocations, insert one
             // It will be inserted as a percentage based allocation so it scales properly if the opportunity amount is changed
             } else {
                 Allocation__c newOppAllocation = new Allocation__c(
@@ -257,6 +381,11 @@ public class ALLO_PaymentSync_SVC {
                     Amount__c = newGAUAmtForOpp,
                     Percent__c = (context.Opportunity.Amount != 0) ? newGAUAmtFOrOpp / context.Opportunity.Amount * 100 : 0
                 );
+
+                // Assumption: Opportunity Allocations should be maintained with Currency Type from Opportunity Record
+                if (UserInfo.isMultiCurrencyOrganization()) {
+                    newOppAllocation.put('CurrencyIsoCode', context.opportunity.get('CurrencyIsoCode'));
+                }
                 allocationsChanges.objectsToInsert.add(newOppAllocation);
             }
         }
@@ -274,6 +403,10 @@ public class ALLO_PaymentSync_SVC {
         for (Id gau : context.opportunityAllocationsByGAU.keySet()) {
             Decimal totalOpportunityAllocations = context.totalOpportunityAllocationsByGAU.get(gau);
             Decimal newTotalPaymentAllocations = totalOpportunityAllocations * context.scheduleRatio;
+            // Default Allocation will be handled outside of this loop
+            if (gau == UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
+                continue;
+            }
 
             //if we have payment allocations for this GAU
             if (context.paymentAllocationsByGAU.containsKey(gau)) {
@@ -300,6 +433,7 @@ public class ALLO_PaymentSync_SVC {
                         npe01__OppPayment__c payment = context.payments.get(paymentAllocation.Payment__c);
                         if (!payment.npe01__Paid__c) {
                             allocationsChanges.objectsToDelete.add(paymentAllocation);
+                            removeAllocationAmountFromPayment(payment.Id, paymentAllocation.Amount__c);
                         }
                     }
                 }
@@ -314,11 +448,22 @@ public class ALLO_PaymentSync_SVC {
                             Decimal unpaidAllocationAmount = newTotalPaymentAllocations - totalPaidPaymentAllocations;
                             Decimal paymentRatio =  context.totalUnpaidPayments / payment.npe01__Payment_Amount__c;
 
+                            // Remove current allocation amount from total as it is changing
+                            removeAllocationAmountFromPayment(payment.Id, paymentAllocation.Amount__c);
+
                             paymentAllocation.Amount__c = unpaidAllocationAmount / (paymentRatio * context.scheduleRatio);// * context.scheduleRatio; <- is that needed, since it's already included in the newTotalPaymentAllocations?
 
-                            //only add the percent for non-default
+                             //only add the percent for non-default
                             if (gau != UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
                                 paymentAllocation.Percent__c = paymentAllocation.Amount__c / payment.npe01__Payment_Amount__c * 100;
+                            }
+
+                            // Add updated allocation amount to total
+                            addAllocationAmountToPayment(payment.Id, paymentAllocation.Amount__c);
+
+                            // Assumption: Payment Allocations should be maintained with Currency Type from Payment Record
+                            if (UserInfo.isMultiCurrencyOrganization()) {
+                                paymentAllocation.put('CurrencyIsoCode', payment.get('CurrencyIsoCode'));
                             }
 
                             allocationsChanges.objectsToUpdate.add(paymentAllocation);
@@ -342,6 +487,14 @@ public class ALLO_PaymentSync_SVC {
                             newAllocation.Percent__c = newAllocation.Amount__c / payment.npe01__Payment_Amount__c * 100;
                         }
 
+                        // Update the total with the newly added allocation amount
+                        addAllocationAmountToPayment(payment.Id, newAllocation.Amount__c);
+
+                        // Assumption: Payment Allocations should be maintained with Currency Type from Payment Record
+                        if (UserInfo.isMultiCurrencyOrganization()) {
+                            newAllocation.put('CurrencyIsoCode', payment.get('CurrencyIsoCode'));
+                        }
+
                         allocationsChanges.objectsToInsert.add(newAllocation);
                     }
                 }
@@ -350,7 +503,7 @@ public class ALLO_PaymentSync_SVC {
 
         //handle payment allocations for deleted opportunity allocations
         for (Id gau : context.paymentAllocationsByGAU.keySet()) {
-            if (!context.opportunityAllocationsByGAU.containsKey(gau)) {
+            if (!context.opportunityAllocationsByGAU.containsKey(gau) && gau != UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
 
                  for (Allocation__c paymentAllocation : context.paymentAllocationsByGAU.get(gau)) {
                     npe01__OppPayment__c payment = context.payments.get(paymentAllocation.Payment__c);
@@ -364,13 +517,81 @@ public class ALLO_PaymentSync_SVC {
                             context.triggerAllocationsByGAUId.get(gau).addError(System.Label.alloRemoveOppWithPmt);
                     } else {
                         if (!payment.npe01__Paid__c) {
+                            removeAllocationAmountFromPayment(payment.Id, paymentAllocation.Amount__c);
                             allocationsChanges.objectsToDelete.add(paymentAllocation);
                         }
                     }
                 }
             }
         }
+        recalcDefaultAllocsForOppToPmt(context);
     }
 
+    private void recalcDefaultAllocsForOppToPmt (SynchronizationContext context) {
 
+        Id defaultGAU = UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c;
+
+        for (npe01__OppPayment__c payment : context.payments.values()) {
+            Decimal allocAmt = (allocatedAmountByPayment.containsKey(payment.Id)) ? allocatedAmountByPayment.get(payment.Id) : 0;
+            Decimal paymentAmt = (payment.npe01__Payment_Amount__c != null) ? payment.npe01__Payment_Amount__c : 0;
+            Decimal remainder = paymentAmt - allocAmt;
+
+            List<Allocation__c> defaultAllocs = defaultAllocsByPayment.get(payment.Id);
+            Allocation__c defaultAlloc = null;
+            if ((defaultAllocs != null) && (defaultAllocs.size() > 0)) {
+                defaultAlloc = defaultAllocs.get(0);
+                for (Integer i = 1; i < defaultAllocs.size(); i++) { // Remove any duplicates
+                    allocationsChanges.objectsToDelete.add(defaultAllocs.get(i));
+                }
+            }
+
+            if ((paymentAmt > 0 && remainder > 0) || (paymentAmt < 0 && remainder < 0)) { // Default Allocation is needed with this amount
+                if (defaultAlloc == null) {
+                    defaultAlloc = makeAmountBasedAllocation(payment, defaultGAU, remainder);
+                    allocationsChanges.objectsToInsert.add(defaultAlloc);
+                } else if (defaultAlloc.Amount__c != remainder || (UserInfo.isMultiCurrencyOrganization() && defaultAlloc.get('CurrencyIsoCode') != payment.get('CurrencyIsoCode'))) {
+                    defaultAlloc.Amount__c = remainder;
+                    if (UserInfo.isMultiCurrencyOrganization()) {
+                        defaultAlloc.put('CurrencyIsoCode', payment.get('CurrencyIsoCode'));
+                    }
+                    allocationsChanges.objectsToUpdate.add(defaultAlloc);
+                }
+            } else if (remainder == 0) { // Default Allocation should be removed
+                if (defaultAlloc != null)
+                    allocationsChanges.objectsToDelete.add(defaultAlloc);
+            } else { // Payment is overallocated...should never occur...generate an error.
+                //TODO: Add Error Here...
+            }
+
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Creates an amount based allocation for the specified Opportunity/Payment using the specified gau
+    * @param SObject parentSObj An Opportunity or Payment.
+    * @param Id gau The Id of the GAU to use when creating the allocation
+    * @return Allocation__c An allocation for the amount of the Opportunity/Payment.
+    ********************************************************************************************************/
+    public static Allocation__c makeAmountBasedAllocation(SObject parentSObj, Id gau, Decimal amount) {
+
+        Allocation__c defaultAllo = new Allocation__c(
+            General_Accounting_Unit__c = gau
+        );
+
+        if (parentSObj instanceof npe01__OppPayment__c) {
+            defaultAllo.Payment__c = parentSObj.Id;
+        }
+
+        if (parentSObj instanceof Opportunity) {
+            defaultAllo.Opportunity__c = parentSObj.Id;
+        }
+
+        defaultAllo.Amount__c = (Decimal) amount;
+
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            defaultAllo.put('CurrencyIsoCode', parentSObj.get('CurrencyIsoCode'));
+        }
+
+        return defaultAllo;
+    }
 }
