@@ -82,7 +82,6 @@
         <members>BDI_IPostProcess</members>
         <members>BDI_MatchDonations</members>
         <members>BDI_MigrationMappingHelper</members>
-        <members>BDI_MigrationMappingHelperMock</members>
         <members>BDI_MigrationMappingUtility</members>
         <members>BDI_MigrationMappingUtility_TEST</members>
         <members>BDI_PerfLogger</members>
