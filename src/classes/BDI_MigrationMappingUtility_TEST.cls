@@ -32,6 +32,76 @@ private class BDI_MigrationMappingUtility_TEST {
         System.assertEquals('New Mapping', cmt.label);
     }
 
+    @IsTest
+    static void migrationUtilityDeploysWithMetadata() {
+        //1. Set the mock
+        // Create a mock version of the BDI_MigrationUtilityHelper class.
+        BDI_MigrationMappingHelper mock_BDI_MigrationMappingHelper =
+                (BDI_MigrationMappingHelper) Test.createStub(
+                        BDI_MigrationMappingHelper.class,
+                        new BDI_MigrationMappingHelperMock());
+
+        //2. Call the method
+        BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility();
+        util.buildCustomMetadataRecordsFromHelpText(mock_BDI_MigrationMappingHelper);
+
+        //3. Verify results - if we were doing regular DML for the net new (pending) mappings, we might do this to verify:
+
+        //But since we are deploying the metadata, we'll probably need to simply inspect the property of the instance
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + util.pendingCMTs);
+        //Confirm that "pendingCMTs" now contains the mocked mappings that will be deployed...
+
+        Test.startTest();
+
+        // Convert mappings to Custom Metadata and start deployment
+        String jobId = util.convertLegacyHelpTextToCustomMetadata();
+        System.debug('JOB ID: ' + jobId);
+
+        //Confirm custom settings updated accordingly
+        CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack(jobId, CMT_MetadataAPI.Source.HELP_TEXT_MIGRATION);
+
+        //Construct a dummy Context
+        TestingDeployCallbackContext context = new TestingDeployCallbackContext();
+
+        //Call the handleResult() method of our main Callback with our dummy context var
+        callback.handleResult(null, context);
+
+        Test.stopTest();
+
+        //Confirm that we've updated the CMT API Status field in Data Import Settings
+        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        Map<String,String> result = (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
+        System.debug(dataImportSettings);
+        System.assertNotEquals(null, result.get(jobId), result);
+    }
+
+    @IsTest
+    static void migrationUtilityDeploysWithoutMetadata() {
+        BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility();
+
+        Test.startTest();
+        // Convert mappings to Custom Metadata and start deployment
+        String jobId = util.convertLegacyHelpTextToCustomMetadata();
+        System.debug('JOB ID: ' + jobId);
+
+        //Confirm custom settings updated accordingly
+        CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack(jobId, CMT_MetadataAPI.Source.HELP_TEXT_MIGRATION);
+
+        //Construct a dummy Context
+        TestingDeployCallbackContext context = new TestingDeployCallbackContext();
+
+        //Call the handleResult() method of our main Callback with our dummy context var
+        callback.handleResult(null, context);
+
+        Test.stopTest();
+
+        //Confirm that we've updated the CMT API Status field in Data Import Settings
+        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        Map<String,String> result = (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
+        System.debug(dataImportSettings);
+        System.assertNotEquals(null, result.get(jobId), result);
+    }
+
     private class BDI_MigrationMappingHelperMock implements System.StubProvider {
 
         public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
@@ -119,6 +189,13 @@ private class BDI_MigrationMappingUtility_TEST {
             }
 
             return null;
+        }
+    }
+
+    // DeployCallbackContext subclass for testing that returns myJobId
+    public class TestingDeployCallbackContext extends Metadata.DeployCallbackContext {
+        public override Id getCallbackJobId() {
+            return '000000000122345';
         }
     }
 }

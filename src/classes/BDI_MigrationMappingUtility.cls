@@ -115,10 +115,12 @@ public class BDI_MigrationMappingUtility {
 
                 Data_Import_Field_Mapping__mdt existingDefaultFieldMapping = 
                     existingFieldMappings.get(fieldMapping.sourceFieldAPIName);
+                System.debug('ExistingDefaultFieldMapping: ' + existingDefaultFieldMapping);
 
                 Boolean foundDefaultFieldMapping = (existingDefaultFieldMapping != null);
 
                 if (!foundDefaultFieldMapping) {
+                    System.debug('New Mapping');
                     // New Field Mapping, not part of our initial config
                     setFieldMappingValues(fieldMapping, existingDefaultObjectMapping, null);
 
@@ -126,6 +128,7 @@ public class BDI_MigrationMappingUtility {
                     queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
                     pendingCMTs.add(fieldMapping);
                 } else if (foundDefaultFieldMapping) {
+                    System.debug('Existing Mapping');
                     // Existing Field Mapping, check if CMTs field values match Help Text field values
                     Boolean invalidFieldMapping = foundDefaultFieldMappingMismatch(fieldMapping, 
                             existingDefaultFieldMapping, 
