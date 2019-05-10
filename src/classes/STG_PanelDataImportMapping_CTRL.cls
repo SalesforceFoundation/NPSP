@@ -139,7 +139,7 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
             BDI_MigrationMappingUtility migrationMappingUtility = new BDI_MigrationMappingUtility();
 
             // Check to see if we have any existing help text mappings that conflict with our default cmt mappings
-            migrationMappingUtility.buildCustomMetadataRecordsFromHelpText();
+            migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(new BDI_MigrationMappingHelper());
 
             if (!migrationMappingUtility.conflictingCMTs.isEmpty()) {
                 isPolling = false;
