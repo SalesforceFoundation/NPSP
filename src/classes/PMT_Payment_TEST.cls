@@ -39,7 +39,7 @@ private class PMT_Payment_TEST {
     @TestSetup
     static void test_createTestData() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
-        Account acc = new Account(Name='foo');
+        Account acc = new Account(Name = 'foo');
         insert acc;
     }
 
@@ -282,7 +282,7 @@ private class PMT_Payment_TEST {
             // Attempt to update an existing system
             payment.npe01__Paid__c = true;
             payment.npe01__Written_Off__c = true;
-            
+
             update payment;
             System.assert(false, 'Updating an existing payment with both written off and paid checked should fail');
         } catch (Exception ex) {
@@ -364,214 +364,253 @@ private class PMT_Payment_TEST {
         p3.npe01__Written_Off__c = false;
         p3.npe01__Payment_Amount__c = 300;
         newPayments.add(p3);
-        
+
         insert newPayments;
 
         List<npe01__OppPayment__c> insertedPayments = [
-            SELECT Id, Name, npe01__Paid__c, npe01__Written_Off__c, npe01__Payment_Amount__c 
+            SELECT Id, Name, npe01__Paid__c, npe01__Written_Off__c, npe01__Payment_Amount__c
             FROM npe01__OppPayment__c];
 
         System.assertEquals(insertedPayments.size(), 4, 'Valid payment records should be created');
 
         Test.stopTest();
+    }
 
+    /**
+     * @description Validate that the accounting rules are enforced properly.
+     * If there is a paid or written off payment, it must have a payment date.
+     */
+     @isTest
+    static void test_shouldPreventMissingPaymentDateWhenEnforceAccting() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true, Enforce_Accounting_Data_Consistency__c = true));
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        Opportunity opp = new Opportunity(
+                Name = 'PreventMissingPaymentDateTest',
+                Amount = 10,
+                AccountID = acc.id,
+                CloseDate = System.today(),
+                StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp;
+
+        Test.startTest();
+
+        // Test the invalid paid insertion case
+        npe01__OppPayment__c invalidPaidPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Paid__c = true);
+        try {
+            insert invalidPaidPayment;
+            System.assert(false, 'Inserting a paid payment without a paid date will fail');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains(System.Label.pmtPaidPaymentDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
+        }
+
+        // Test the valid paid payment insertion case
+        npe01__OppPayment__c validPaidPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Paid__c = true, npe01__Payment_Date__c = Date.today());
+        insert validPaidPayment;
+        assertDataForPayment('Accounting enforced, Insert Paid Payment with payment date', validPaidPayment.Id, true, false, System.today(), null);
+
+        // Test the invalid paid payment update case
+        invalidPaidPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Paid__c = true, npe01__Payment_Date__c = Date.Today());
+        insert invalidPaidPayment;
+
+        invalidPaidPayment = updatePaymentForTesting(invalidPaidPayment, true, false, false, false);
+        try {
+            update invalidPaidPayment;
+            System.assert(false, 'Updating a payment to paid without a paid date will fail');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains(System.Label.pmtPaidPaymentDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
+        }
+
+        // Test the valid paid payment update case
+        validPaidPayment = updatePaymentForTesting(validPaidPayment, true, false, true, false);
+        update validPaidPayment;
+        assertDataForPayment('Accounting enforced, Update Paid Payment with payment date', validPaidPayment.Id, true, false, System.today(), null);
+
+        // Test the invalid written off insertion case
+        npe01__OppPayment__c invalidWrittenOffPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Written_Off__c = true);
+        try {
+            insert invalidWrittenOffPayment;
+            System.assert(false, 'Inserting a written off payment without a paid date will fail');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains(System.Label.pmtWrittenOffPaymentDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
+        }
+
+         // Test the valid written off payment insertion case
+        npe01__OppPayment__c validWrittenOffPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Written_Off__c = true, npe01__Payment_Date__c = Date.today());
+        insert validWrittenOffPayment;
+        assertDataForPayment('Accounting enforced, Insert Written Off Payment with payment date', validWrittenOffPayment.Id, false, true, System.today(), null);
+
+        invalidWrittenOffPayment = new npe01__OppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Written_Off__c = true, npe01__Payment_Date__c = Date.today());
+        insert invalidWrittenOffPayment;
+
+        // Test the invalid written off payment update case
+        invalidWrittenOffPayment = updatePaymentForTesting(invalidWrittenOffPayment, false, true, false, false);
+
+        try {
+            update invalidWrittenOffPayment;
+            System.assert(false, 'Updating a payment to written off without a paid date will fail');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains(System.Label.pmtWrittenOffPaymentDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
+        }
+
+        // Test the valid written off payment update case
+        validWrittenOffPayment = updatePaymentForTesting(validWrittenOffPayment, false, true, true, false);
+        update validWrittenOffPayment;
+        assertDataForPayment('Accounting enforced, Update Written Off Payment with payment date', validWrittenOffPayment.Id, false, true, System.today(), null);
+
+        Test.stopTest();
+    }
+
+    /**
+     * @description Validate that the accounting rules are enforced properly.
+     * If it is an unpaid payment, it must have a scheduled date.
+     */
+     @isTest
+    static void test_shouldPreventMissingScheduledDateWhenEnforceAccting() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true, Enforce_Accounting_Data_Consistency__c = true));
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        Opportunity opp = new Opportunity(
+                Name = 'PreventMissingScheduledDateTest',
+                Amount = 10,
+                AccountID = acc.id,
+                CloseDate = system.today(),
+                StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp;
+
+        Test.startTest();
+
+        // Test the invalid unpaid insertion case
+        npe01__OppPayment__c invalidUnpaidPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Paid__c = false);
+        try {
+            insert invalidUnpaidPayment;
+            System.assert(false, 'Inserting a scheduled payment without a scheduled date will fail');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains(System.Label.pmtUnpaidPaymentScheduledDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
+        }
+
+       // Test the valid unpaid payment insertion case
+        npe01__OppPayment__c validUnpaidPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Paid__c = false, npe01__Scheduled_Date__c = Date.today());
+        insert validUnpaidPayment;
+        assertDataForPayment('Accounting enforced, Insert Unpaid Payment with scheduled date', validUnpaidPayment.Id, false, false, null, System.today());
+
+        // Test the invalid unpaid payment update case
+        validUnpaidPayment = updatePaymentForTesting(validUnpaidPayment, false, false, false, false);
+        try {
+            update validUnpaidPayment;
+            System.assert(false, 'Updating a scheduled payment without a scheduled date will fail');
+        } catch (Exception e) {
+            System.assert(e.getMessage().contains(System.Label.pmtUnpaidPaymentScheduledDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
+        }
+
+        // Test the valid unpaid payment update case
+        validUnpaidPayment = updatePaymentForTesting(validUnpaidPayment, false, false, false, true);
+        update validUnpaidPayment;
+        assertDataForPayment('Accounting enforced, Update Unpaid Payment with scheduled date', validUnpaidPayment.Id, false, false, null, System.today());
+
+        Test.stopTest();
+    }
+
+    /**
+     * @description Validate that the accounting rules are not enforced
+     * when Enforce Accounting Data Consistency is not checked.
+     * If there is a paid or written off payment, nothing additional is enforced.
+     */
+     @isTest
+    static void test_shouldAllowMissingPaymentDateWhenNotEnforceAccting() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        Opportunity opp = new Opportunity(
+                Name = 'AllowMissingPaymentDateTest',
+                Amount = 10,
+                AccountID = acc.id,
+                CloseDate = system.today(),
+                StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp;
+
+        Test.startTest();
+
+        // Test the invalid paid insertion case
+        npe01__OppPayment__c invalidPaidPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Paid__c = true);
+        insert invalidPaidPayment;
+        assertDataForPayment('Accounting not enforced, Insert Paid Payment without payment date', invalidPaidPayment.Id, true, false, null, null);
+
+        // Test the invalid written off insertion case
+        npe01__OppPayment__c invalidWrittenOffPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Written_Off__c = true);
+        insert invalidWrittenOffPayment;
+        assertDataForPayment('Accounting not enforced, Insert Written Off Payment without payment date', invalidWrittenOffPayment.Id, false, true, null, null);
+
+       // Test the invalid paid payment update case
+        invalidPaidPayment = updatePaymentForTesting(invalidPaidPayment, true, false, false, false);
+        update invalidPaidPayment;
+        assertDataForPayment('Accounting not enforced, Update Paid Payment without payment date', invalidPaidPayment.Id, true, false, null, null);
+
+       // Test the invalid written off payment update case
+        invalidWrittenOffPayment = updatePaymentForTesting(invalidWrittenOffPayment, false, true, false, false);
+        update invalidWrittenOffPayment;
+        assertDataForPayment('Accounting not enforced, Update Written Off Payment without payment date', invalidWrittenOffPayment.Id, false, true, null, null);
+
+        Test.stopTest();
+    }
+
+    /**
+     * @description Validate that the accounting rules are not enforced
+     * when Enforce Accounting Data Consistency is not checked.
+     * If there is a scheduled payment, nothing additional is enforced
+     */
+     @isTest
+    static void test_shouldAllowMissingScheduledDateWhenNotEnforceAccting() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+
+        Opportunity opp = new Opportunity(
+                Name = 'AllowMissingScheduledDateTest',
+                Amount = 10,
+                AccountID = acc.id,
+                CloseDate = system.today(),
+                StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp;
+
+        Test.startTest();
+
+        // Test the invalid unpaid insertion case
+        npe01__OppPayment__c invalidUnpaidPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Paid__c = false);
+        insert invalidUnpaidPayment;
+        invalidUnpaidPayment = getPaymentRecordByPaymentId(invalidUnpaidPayment.Id);
+        assertDataForPayment('Accounting not enforced, Insert Unpaid without schedule date', invalidUnpaidPayment.Id, false, false, null, null);
+
+        // Test the invalid unpaid update case
+        invalidUnpaidPayment = updatePaymentForTesting(invalidUnpaidPayment, false, false, false, false);
+        update invalidUnpaidPayment;
+        assertDataForPayment('Accounting not enforced, Update Unpaid without schedule date', invalidUnpaidPayment.Id, false, false, null, null);
     }
 
 
     /*******************************************************************************************************
      * HELPER FUNCTIONS
      *******************************************************************************************************/
-    /**
-     * @description Validate that the accounting rules are enforced properly. If there is a paid payment, it must have a payment date.
-     * If it is an unpaid payment, it must have a scheduled date. 
-     * down the Payment records.
-     */
-     @isTest
-    static void test_EnforceAccountingDataConsistency() {
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true, Enforce_Accounting_Data_Consistency__c = true));
-        Account acc = [SELECT Id FROM Account LIMIT 1];
 
-
-        Opportunity opp = new Opportunity(
-                Name = 'success',
-                Amount = 10,
-                AccountID = acc.id,
-                CloseDate = system.today(),
-                StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
-        insert opp;
-
-        Test.startTest();
-
-        // ****************** Test Insertion *******************************
-        // Test the invalid paid insertion case 
-        npe01__OppPayment__c invalidPaidPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Paid__c = true);
-        try {
-            insert invalidPaidPayment;
-        } catch (Exception e) {
-            System.assert(e.getMessage().contains(System.Label.pmtPaidPaymentDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
-        }
-
-        // Test the invalid unpaid insertion case
-        npe01__OppPayment__c invalidUnpaidPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Paid__c = false);
-
-        try {
-            insert invalidUnpaidPayment;
-        } catch (Exception e) {
-            System.assert(e.getMessage().contains(System.Label.pmtUnpaidPaymentScheduledDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
-        }
-
-        // Test the invalid written off insertion case
-        npe01__OppPayment__c invalidWrittenOffPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Written_Off__c = true);
-        try {
-            insert invalidWrittenOffPayment;
-        } catch (Exception e) {
-            System.assert(e.getMessage().contains(System.Label.pmtWrittenOffPaymentDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
-        }
-
-        // Test the valid paid payment insertion case
-        npe01__OppPayment__c validPaidPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Paid__c = true, npe01__Payment_Date__c = Date.today());
-        insert validPaidPayment;
-
-        validPaidPayment = queryForPaymentForTesting(validPaidPayment.Id);
-
-        System.assertEquals(true, validPaidPayment.npe01__Paid__c, 'Paid should be true, but it is actually: ' + validPaidPayment.npe01__Paid__c);
-        System.assertEquals(Date.Today(), validPaidPayment.npe01__Payment_Date__c, 'The payment date should be today, but it is actually: ' + validPaidPayment.npe01__Payment_Date__c);
-
-        // Test the valid unpaid payment insertion case
-        npe01__OppPayment__c validUnpaidPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Paid__c = false, npe01__Scheduled_Date__c = Date.today());
-        insert validUnpaidPayment;
-
-        validUnpaidPayment = queryForPaymentForTesting(validUnpaidPayment.Id);
-
-        System.assertEquals(false, validUnpaidPayment.npe01__Paid__c, 'Paid should be false, but it is actually: ' + validUnpaidPayment.npe01__Paid__c);
-        System.assertEquals(Date.Today(), validUnpaidPayment.npe01__Scheduled_Date__c, 'The payment date should be today, but it is actually: ' + validUnpaidPayment.npe01__Scheduled_Date__c);
-
-         // Test the valid written off payment insertion case
-        npe01__OppPayment__c validWrittenOffPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Written_Off__c = true, npe01__Payment_Date__c = Date.today());
-        insert validWrittenOffPayment;
-
-        validWrittenOffPayment = queryForPaymentForTesting(validWrittenOffPayment.Id);
-
-        System.assertEquals(true, validWrittenOffPayment.npe01__Written_Off__c, 'Paid should be true, but it is actually: ' + validWrittenOffPayment.npe01__Written_Off__c);
-        System.assertEquals(Date.Today(), validWrittenOffPayment.npe01__Payment_Date__c, 'The payment date should be today, but it is actually: ' + validWrittenOffPayment.npe01__Payment_Date__c);
-      
-        Integer validPaymentsCount = [Select Count() from npe01__OppPayment__c Where Id =: validPaidPayment.Id OR Id =: validUnpaidPayment.Id OR Id =: validWrittenOffPayment.Id];
-        System.assertEquals(3, validPaymentsCount, 'There is an incorrect number of payments');
-
-        // *************************** Test Update *******************************
-
-        npe01__OppPayment__c pmt = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Paid__c = true, npe01__Payment_Date__c = Date.Today());
-        insert pmt;
-        // Test the invalid paid payment update case 
-        pmt = updatePaymentForTesting(pmt, true, false, false, false);
-
-        try {
-            update pmt;
-        } catch (Exception e) {
-            System.assert(e.getMessage().contains(System.Label.pmtPaidPaymentDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
-        }
-
-        // Test the valid paid payment update case
-        pmt = updatePaymentForTesting(pmt, true, false, true, false);
-        update pmt;
-
-        pmt = queryForPaymentForTesting(pmt.Id);
-
-        System.assertEquals(true, pmt.npe01__Paid__c, 'Paid should be true, but it is actually: ' + pmt.npe01__Paid__c);
-        System.assertEquals(Date.Today(), pmt.npe01__Payment_Date__c, 'The payment date should be today, but it is actually: ' + pmt.npe01__Payment_Date__c);
-
-
-        // Test the invalid unpaid payment update case 
-        pmt = updatePaymentForTesting(pmt, false, false, false, false);
-
-
-        try {
-            update pmt;
-        } catch (Exception e) {
-            System.assert(e.getMessage().contains(System.Label.pmtUnpaidPaymentScheduledDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
-        }
-        
-
-        // Test the valid unpaid payment update case 
-        pmt = updatePaymentForTesting(pmt, false, false, false, true);
-        update pmt;
-
-        pmt = queryForPaymentForTesting(pmt.Id);
-
-        System.assertEquals(false, pmt.npe01__Paid__c, 'Paid should be false, but it is actually: ' + pmt.npe01__Paid__c);
-        System.assertEquals(Date.Today(), pmt.npe01__Scheduled_Date__c, 'The scheduled date should be today, but it is actually: ' + pmt.npe01__Scheduled_Date__c);
-
-        // Test the invalid written off payment update case
-        pmt = updatePaymentForTesting(pmt, false, true, false, false);
-
-        try {
-            update pmt;
-        } catch (Exception e) {
-            System.assert(e.getMessage().contains(System.Label.pmtWrittenOffPaymentDateRequired), 'The error message is not expected, actual: ' + e.getMessage());
-        }
-
-        // Test the valid written off payment update case
-        pmt = updatePaymentForTesting(pmt, false, true, true, false);
-        update pmt;
-
-        pmt = queryForPaymentForTesting(pmt.Id);
-
-        System.assertEquals(true, pmt.npe01__Written_Off__c, 'Written Off should be true, but it is actually: ' + pmt.npe01__Written_Off__c);
-        System.assertEquals(Date.Today(), pmt.npe01__Payment_Date__c, 'The payment date should be today, but it is actually: ' + pmt.npe01__Payment_Date__c);
-
-        Test.stopTest();
-    }
-
-
-    /**
-     * @description Validate that the Accounting rules are not enforced if the custom setting is not enabled. 
-     */
-     @isTest
-    static void test_EnforceAccountingDataConsistencyTurnedOff() {
-        Account acc = [SELECT Id FROM Account LIMIT 1];
-
-
-        Opportunity opp = new Opportunity(
-                Name = 'success',
-                Amount = 10,
-                AccountID = acc.id,
-                CloseDate = system.today(),
-                StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
-        insert opp;
-
-        Test.startTest();
-
-        // Test the invalid paid insertion case 
-        npe01__OppPayment__c invalidPaidPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Paid__c = true);
-        insert invalidPaidPayment;
-
-        invalidPaidPayment = queryForPaymentForTesting(invalidPaidPayment.Id);
-
-        System.assertEquals(true, invalidPaidPayment.npe01__Paid__c, 'Paid should be true, but it is actually: ' + invalidPaidPayment.npe01__Paid__c);
-        System.assertEquals(null, invalidPaidPayment.npe01__Payment_Date__c, 'The payment date should be today, but it is actually: ' + invalidPaidPayment.npe01__Payment_Date__c);
-
-        // Test the invalid unpaid insertion case
-        npe01__OppPayment__c invalidUnpaidPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Paid__c = false);
-        insert invalidUnpaidPayment;
-
-        invalidUnpaidPayment = queryForPaymentForTesting(invalidUnpaidPayment.Id);
-
-        System.assertEquals(false, invalidUnpaidPayment.npe01__Paid__c, 'Paid should be false, but it is actually: ' + invalidUnpaidPayment.npe01__Paid__c);
-        System.assertEquals(null, invalidUnpaidPayment.npe01__Scheduled_Date__c, 'The payment date should be null, but it is actually: ' + invalidUnpaidPayment.npe01__Scheduled_Date__c);
-
-        // Test the invalid written off insertion case
-        npe01__OppPayment__c invalidWrittenOffPayment = new npe01__oppPayment__c(npe01__Opportunity__c = opp.Id, npe01__Written_Off__c = true);
-        insert invalidWrittenOffPayment;
-
-        invalidWrittenOffPayment = queryForPaymentForTesting(invalidWrittenOffPayment.Id);
-
-        System.assertEquals(true, invalidWrittenOffPayment.npe01__Written_Off__c, 'Paid should be true, but it is actually: ' + invalidWrittenOffPayment.npe01__Written_Off__c);
-        System.assertEquals(null, invalidWrittenOffPayment.npe01__Payment_Date__c, 'The payment date should be today, but it is actually: ' + invalidWrittenOffPayment.npe01__Payment_Date__c);
-
+    /*******************************************************************************************************
+    * @description Retrieves payment and asserts key date for Payment concerning accounting and payment dates
+    * @param String testName Used as part of the assertion text that will display if the assertion fails
+    * @param Id paymentId Payment Id to check
+    * @param Boolean isPaid value to assert against npe01__Paid__c
+    * @param Boolean isWrittenOff value to assert against npe01__Written_Off__c
+    * @param Date paidDate value to assert against npe01__Payment_Date__c
+    * @param Date scheduledDate value to assert against npe01__Scheduled_Date__c
+    * @return void Does not return anything
+    ********************************************************************************************************/
+    private static void assertDataForPayment(String testName, Id paymentId, Boolean isPaid, Boolean isWrittenOff, Date paidDate, Date scheduledDate) {
+        npe01__OppPayment__c pmt = getPaymentRecordByPaymentId(paymentId);
+        System.assertEquals (isPaid, pmt.npe01__Paid__c, testName + ': Paid');
+        System.assertEquals (isWrittenOff, pmt.npe01__Written_Off__c, testName + ': Written Off');
+        System.assertEquals (paidDate, pmt.npe01__Payment_Date__c, testName + ': Payment Date');
+        System.assertEquals (scheduledDate, pmt.npe01__Scheduled_Date__c, testName + ': Scheduled Date');
     }
 
     /**
-     * @description Helper function to help set the payment attributes as necessary for testing that accounting data consistency is enforced. 
+     * @description Helper function to help set the payment attributes as necessary for testing that accounting data consistency is enforced.
      */
     private static npe01__OppPayment__c updatePaymentForTesting(npe01__OppPayment__c payment, Boolean isPaid, Boolean isWrittenOff, Boolean hasPaymentDate, Boolean hasScheduledDate) {
         payment.npe01__Paid__c = isPaid;
@@ -593,27 +632,23 @@ private class PMT_Payment_TEST {
     }
 
     /**
-     * @description Helper function to query for payments given a specific ID. 
+     * @description Reusable utility method to retrieve a specific payment record using the payments Id.
      */
-    private static npe01__OppPayment__c queryForPaymentForTesting(Id paymentId) {
-        List<npe01__OppPayment__c> paymentList = [SELECT Id, npe01__Paid__c, npe01__Written_Off__c, npe01__Payment_Date__c, npe01__Scheduled_Date__c 
-                                                    FROM npe01__OppPayment__c
-                                                    WHERE Id =: paymentId];
+    private static npe01__OppPayment__c getPaymentRecordByPaymentId(Id paymentId) {
 
-        npe01__oppPayment__c payment;
-
-        if (!paymentList.isEmpty()) {
-            payment = paymentList.get(0);
+        String soql = 'SELECT Id, npe01__Payment_Amount__c, npe01__Paid__c, npe01__Written_Off__c, npe01__Payment_Date__c, npe01__Scheduled_Date__c ';
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            soql += ', CurrencyIsoCode ';
         }
-
-        return payment;
+        soql += ' FROM npe01__OppPayment__c WHERE Id = \'' + paymentId + '\' LIMIT 1';
+        return (npe01__OppPayment__c)Database.query(soql);
     }
 
     /**
      * @description Reusable utility method to retrieve a specific payment record for an Opportunity
      */
     private static npe01__OppPayment__c getPaymentRecord(Id oppId) {
-        
+
         String soql = 'SELECT Id, npe01__Payment_Amount__c ';
         if (UserInfo.isMultiCurrencyOrganization()) {
             soql += ', CurrencyIsoCode ';

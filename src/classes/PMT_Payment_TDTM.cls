@@ -39,6 +39,16 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     /** @description Retrieve and cache the household settings the first time this class is loaded only */
     private static final npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
+    /** @description Identifies if the Custom Setting Enforce Accounting Data Consistency is enforced */
+    private Boolean isEnforceAccountingDataConsistency {
+        get {
+            if (isEnforceAccountingDataConsistency == null) {
+                isEnforceAccountingDataConsistency = UTIL_CustomSettingsFacade.getContactsSettings().Enforce_Accounting_Data_Consistency__c;
+            }
+            return isEnforceAccountingDataConsistency;
+        }
+        set;
+    }
 
     /** @description  Identifies if the org has the CurrencyIsoField */
     private Boolean isCurrencyFieldAvailable {
@@ -292,7 +302,9 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         DmlWrapper dmlWrapper) {
         if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             for (npe01__OppPayment__c payment : newlist) {
-                enforceAccountingDataConsistency(payment);
+                if (isEnforceAccountingDataConsistency) {
+                    enforceAccountingDataConsistency(payment);
+                }
 
                 if (payment.npe01__Paid__c == true && payment.npe01__Written_Off__c == true) {
                     payment.addError(System.Label.pmtWriteOffPaidPayment);
@@ -308,19 +320,15 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     * @return void Does not return anything
     ********************************************************************************************************/
     private void enforceAccountingDataConsistency(npe01__OppPayment__c payment) {
-        Boolean enforceAccountingDataConsistencyCustomSetting = UTIL_CustomSettingsFacade.getContactsSettings().Enforce_Accounting_Data_Consistency__c;
+        if ((payment.npe01__Paid__c == true || payment.npe01__Written_Off__c == true) && payment.npe01__Payment_Date__c == null) {
 
-        if (enforceAccountingDataConsistencyCustomSetting == true) {
-            if ((payment.npe01__Paid__c == true || payment.npe01__Written_Off__c == true) && payment.npe01__Payment_Date__c == null) {
-
-                if (payment.npe01__Paid__c == true) {
-                    payment.addError(System.Label.pmtPaidPaymentDateRequired);
-                } else {
-                    payment.addError(System.Label.pmtWrittenOffPaymentDateRequired);
-                }
-            } else if (payment.npe01__Paid__c == false && payment.npe01__Written_Off__c == false && payment.npe01__Scheduled_Date__c == null) {
-                payment.addError(System.Label.pmtUnpaidPaymentScheduledDateRequired);
+            if (payment.npe01__Paid__c == true) {
+                payment.addError(System.Label.pmtPaidPaymentDateRequired);
+            } else {
+                payment.addError(System.Label.pmtWrittenOffPaymentDateRequired);
             }
+        } else if (payment.npe01__Paid__c == false && payment.npe01__Written_Off__c == false && payment.npe01__Scheduled_Date__c == null) {
+            payment.addError(System.Label.pmtUnpaidPaymentScheduledDateRequired);
         }
     }
 }
