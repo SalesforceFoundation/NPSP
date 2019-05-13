@@ -89,10 +89,10 @@ class NPSP(object):
         """
         xpath = npsp_lex_locators["placeholder"].format(loc)
         field = self.selenium.get_webelement(xpath)
-        self.salesforce._populate_field(xpath, value)
+#         self.salesforce._populate_field(xpath, value)
         
-#         field.send_keys(value)
-#         time.sleep(1)
+        field.send_keys(value)
+        time.sleep(1)
 # #         if loc == ("Search Contacts" or "Search Accounts"):
 #         field.send_keys(Keys.ENTER)
 # #             field.send_keys(Keys.ARROW_DOWN)
