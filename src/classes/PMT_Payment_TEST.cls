@@ -381,7 +381,7 @@ private class PMT_Payment_TEST {
      * If there is a paid or written off payment, it must have a payment date.
      */
      @isTest
-    static void test_shouldPreventMissingPaymentDateWhenEnforceAccting() {
+    static void shouldPreventMissingPaymentDateWhenEnforceAccting() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true, Enforce_Accounting_Data_Consistency__c = true));
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
@@ -466,7 +466,7 @@ private class PMT_Payment_TEST {
      * If it is an unpaid payment, it must have a scheduled date.
      */
      @isTest
-    static void test_shouldPreventMissingScheduledDateWhenEnforceAccting() {
+    static void shouldPreventMissingScheduledDateWhenEnforceAccting() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true, Enforce_Accounting_Data_Consistency__c = true));
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
@@ -517,7 +517,7 @@ private class PMT_Payment_TEST {
      * If there is a paid or written off payment, nothing additional is enforced.
      */
      @isTest
-    static void test_shouldAllowMissingPaymentDateWhenNotEnforceAccting() {
+    static void shouldAllowMissingPaymentDateWhenNotEnforceAccting() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
@@ -560,7 +560,7 @@ private class PMT_Payment_TEST {
      * If there is a scheduled payment, nothing additional is enforced
      */
      @isTest
-    static void test_shouldAllowMissingScheduledDateWhenNotEnforceAccting() {
+    static void shouldAllowMissingScheduledDateWhenNotEnforceAccting() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
