@@ -199,6 +199,8 @@
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDBatchNav"><a href="#" onclick="ShowPanel('idPanelRDBatch');return false;" class="slds-grow slds-m-left_large">{!$Label.stgNavRDBatch}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelLvlAssignBatchNav"><a href="#" onclick="ShowPanel('idPanelLvlAssignBatch');return false;" class="slds-grow slds-m-left_large">{!$Label.stgLabelLvlAssignBatchTitle}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelPrimaryContactRoleMergeNav"><a href="#" onclick="ShowPanel('idPanelPrimaryContactRoleMergeBatch');return false;" class="slds-grow slds-m-left_large">{!$Label.stgLabelPrimaryContactRoleMergeBatch}</a></li>
+                                <!-- HELP TEXT MAPPING -->
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelDataImportMappingNav"><a href="#" onclick="ShowPanel('idPanelDataImportMapping');return false;" class="slds-grow slds-m-left_large">Data Import Mapping</a></li>
                             </ul>
                             <!-- System Tools -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelSystemNav">
@@ -272,6 +274,10 @@
 
                 <div class="panel noborder" id="idPanelRelAuto" style="display:none" >
                     <apex:include pageName="STG_PanelRelAuto" />
+                </div>
+
+                <div class="panel noborder" id="idPanelDataImportMapping" style="display:none" >
+                    <apex:include pageName="STG_PanelDataImportMapping" />
                 </div>
 
                 <!-- Donations -->

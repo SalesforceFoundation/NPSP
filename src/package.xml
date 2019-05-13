@@ -78,9 +78,13 @@
         <members>BDI_FieldMappingCustomMetadata</members>
         <members>BDI_FieldMappingCustomMetadataTest</members>
         <members>BDI_FieldMappingHelpText</members>
+        <members>BDI_HelpTextCMT</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
         <members>BDI_MatchDonations</members>
+        <members>BDI_MigrationMappingHelper</members>
+        <members>BDI_MigrationMappingUtility</members>
+        <members>BDI_MigrationMappingUtilityTest</members>
         <members>BDI_PerfLogger</members>
         <members>BDI_PerfLogger_TEST</members>
         <members>BDI_PostProcess_TEST</members>
@@ -352,6 +356,7 @@
         <members>STG_PanelContacts_CTRL</members>
         <members>STG_PanelCreatePayments_CTRL</members>
         <members>STG_PanelCustomizableRollup_CTRL</members>
+        <members>STG_PanelDataImportMapping_CTRL</members>
         <members>STG_PanelERR_CTRL</members>
         <members>STG_PanelErrorLog_CTRL</members>
         <members>STG_PanelHealthCheck_CTRL</members>
@@ -533,6 +538,7 @@
         <members>STG_PanelContacts</members>
         <members>STG_PanelCreatePayments</members>
         <members>STG_PanelCustomizableRollup</members>
+        <members>STG_PanelDataImportMapping</members>
         <members>STG_PanelERR</members>
         <members>STG_PanelErrorLog</members>
         <members>STG_PanelHealthCheck</members>
@@ -910,6 +916,7 @@
         <members>Data_Import_Settings__c.Account_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Account_Matching_Rule__c</members>
         <members>Data_Import_Settings__c.Batch_Size__c</members>
+        <members>Data_Import_Settings__c.CMT_API_Status__c</members>
         <members>Data_Import_Settings__c.Contact_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Contact_Matching_Rule__c</members>
         <members>Data_Import_Settings__c.Default_Data_Import_Field_Mapping_Set__c</members>
@@ -1076,6 +1083,7 @@
         <members>Trigger_Handler__c.Usernames_to_Exclude__c</members>
         <members>Data_Import_Field_Mapping_Set__mdt.Data_Import_Object_Mapping_Set__c</members>
         <members>Data_Import_Field_Mapping__mdt.Data_Import_Field_Mapping_Set__c</members>
+        <members>Data_Import_Field_Mapping__mdt.Is_Deleted__c</members>
         <members>Data_Import_Field_Mapping__mdt.Required__c</members>
         <members>Data_Import_Field_Mapping__mdt.Source_Field_API_Name__c</members>
         <members>Data_Import_Field_Mapping__mdt.Target_Field_API_Name__c</members>
@@ -1083,6 +1091,7 @@
         <members>Data_Import_Object_Mapping__mdt.Data_Import_Object_Mapping_Set__c</members>
         <members>Data_Import_Object_Mapping__mdt.Imported_Record_Field_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Imported_Record_Status_Field_Name__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Is_Deleted__c</members>
         <members>Data_Import_Object_Mapping__mdt.Object_API_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Predecessor__c</members>
         <members>Data_Import_Object_Mapping__mdt.Relationship_Field__c</members>
@@ -1406,6 +1415,7 @@
         <members>bdiContactMatchFnameLnamePhone</members>
         <members>bdiContactMatchLnameEmail</members>
         <members>bdiCreated</members>
+        <members>bdiCustomObjectMappingSummary</members>
         <members>bdiDataImporterConfigTitle</members>
         <members>bdiDataImporterDescription</members>
         <members>bdiDataImporterInfoLine1</members>
@@ -1782,7 +1792,6 @@
         <members>oppNamingIndividual</members>
         <members>oppNamingOrganizational</members>
         <members>pmtModifyCurrency</members>
-        <members>pmtWriteOffPaidPayment</members>
         <members>pmtWizardBtnCalcPayments</members>
         <members>pmtWizardBtnCreatePayments</members>
         <members>pmtWizardBtnRemovePaidPayments</members>
@@ -1811,12 +1820,13 @@
         <members>pmtWizardToBeCreated</members>
         <members>pmtWizardWarning</members>
         <members>pmtWizardWeek</members>
+        <members>pmtWizardWriteOffInvalidRecords</members>
+        <members>pmtWizardWriteOffNoAmount</members>
         <members>pmtWizardWriteoffDate</members>
         <members>pmtWizardWriteoffMessage</members>
         <members>pmtWizardWriteoffNoAccessMessage</members>
-        <members>pmtWizardWriteOffInvalidRecords</members>
-        <members>pmtWizardWriteOffNoAmount</members>
         <members>pmtWizardYear</members>
+        <members>pmtWriteOffPaidPayment</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>
@@ -1895,8 +1905,12 @@
         <members>stgClearErrors</members>
         <members>stgCountOf</members>
         <members>stgCreatedBy</members>
+        <members>stgDIFMNonAdminError</members>
         <members>stgDefaultValue</members>
+        <members>stgDeploymentCustomMetadataMappingEnabled</members>
+        <members>stgDeploymentHelpTextMappingEnabled</members>
         <members>stgDeploymentInProgress</members>
+        <members>stgDeploymentTimedOut</members>
         <members>stgDeploymentTryAgain</members>
         <members>stgDocumentation</members>
         <members>stgDontAutoScheduleHelpText</members>
@@ -1915,6 +1929,7 @@
         <members>stgHelpAutoRelType</members>
         <members>stgHelpBDEAllowBlankOppNames</members>
         <members>stgHelpBDEOppNaming</members>
+        <members>stgHelpBDICustomObjectMappingEnable</members>
         <members>stgHelpBatchAlloRollup</members>
         <members>stgHelpBatchCreateDefault</members>
         <members>stgHelpBatchOppRollup</members>

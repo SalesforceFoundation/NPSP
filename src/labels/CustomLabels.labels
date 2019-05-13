@@ -2058,6 +2058,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Created</value>
     </labels>
     <labels>
+        <fullName>bdiCustomObjectMappingSummary</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Custom Object Mapping Summary</shortDescription>
+        <value>Data Import Field Mapping</value>
+    </labels>
+    <labels>
         <fullName>bdiDataImporterConfigTitle</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -5932,6 +5940,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Default Value</value>
     </labels>
     <labels>
+        <fullName>stgDIFMNonAdminError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgDIFMNonAdminError</shortDescription>
+        <value>Only System Administrators can enable or disable Data Import Field Mapping.</value>
+    </labels>
+    <labels>
         <fullName>stgDocumentation</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -5940,12 +5956,36 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Documentation</value>
     </labels>
     <labels>
+        <fullName>stgDeploymentCustomMetadataMappingEnabled</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgDeploymentInProgress</shortDescription>
+        <value>Custom Metadata mapping is enabled.</value>
+    </labels>
+    <labels>
+        <fullName>stgDeploymentHelpTextMappingEnabled</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgDeploymentInProgress</shortDescription>
+        <value>Help Text mapping is enabled.</value>
+    </labels>
+    <labels>
         <fullName>stgDeploymentInProgress</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgDeploymentInProgress</shortDescription>
         <value>Deployment in progress. You can leave this page. The page will reload when deployment is finished.</value>
+    </labels>
+    <labels>
+        <fullName>stgDeploymentTimedOut</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgDeploymentInProgress</shortDescription>
+        <value>Page timed out.</value>
     </labels>
     <labels>
         <fullName>stgDeploymentTryAgain</fullName>
@@ -6097,6 +6137,16 @@ When you enable Payment Allocations, existing rollups remain the same. We do not
         <protected>false</protected>
         <shortDescription>stgHelpBDEOppNaming</shortDescription>
         <value>When selected, NPSP uses the default naming convention for batch-entered Opportunities, regardless of the value you enter in the Name field of the batch entry screen. NOTE: This setting has no effect if custom Opportunity Names are configured.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpBDICustomObjectMappingEnable</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpBDICustomObjectMappingEnable</shortDescription>
+        <value>
+            You can find complete Data Import Field Mapping documentation &lt;a href=&quot;https://powerofus.force.com/&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.
+        </value>
     </labels>
     <labels>
         <fullName>stgHelpBatchAlloRollup</fullName>
