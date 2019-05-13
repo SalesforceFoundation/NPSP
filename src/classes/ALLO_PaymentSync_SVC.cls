@@ -701,7 +701,7 @@ public class ALLO_PaymentSync_SVC {
                 if (defaultAlloc != null)
                     allocationsChanges.objectsToDelete.add(defaultAlloc);
             } else { // Payment is overallocated...should never occur...generate an error.
-                //TODO: Add Error Here...
+                throw new PaymentSyncException(String.format(Label.alloPaymentOverAllocatedError, new String[] {context.Opportunity.Name, context.Opportunity.Id}));
             }
 
         }
