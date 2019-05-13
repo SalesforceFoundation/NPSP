@@ -1792,7 +1792,6 @@
         <members>oppNamingIndividual</members>
         <members>oppNamingOrganizational</members>
         <members>pmtModifyCurrency</members>
-        <members>pmtWriteOffPaidPayment</members>
         <members>pmtWizardBtnCalcPayments</members>
         <members>pmtWizardBtnCreatePayments</members>
         <members>pmtWizardBtnRemovePaidPayments</members>
@@ -1821,16 +1820,13 @@
         <members>pmtWizardToBeCreated</members>
         <members>pmtWizardWarning</members>
         <members>pmtWizardWeek</members>
+        <members>pmtWizardWriteOffInvalidRecords</members>
         <members>pmtWizardWriteOffNoAmount</members>
         <members>pmtWizardWriteoffDate</members>
         <members>pmtWizardWriteoffMessage</members>
         <members>pmtWizardWriteoffNoAccessMessage</members>
-<<<<<<< HEAD
-=======
-        <members>pmtWizardWriteOffInvalidRecords</members>
-        <members>pmtWizardWriteOffNoAmount</members>
->>>>>>> origin/feature/BDI-CO
         <members>pmtWizardYear</members>
+        <members>pmtWriteOffPaidPayment</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
         <members>pscManageSoftCreditsAmount</members>
