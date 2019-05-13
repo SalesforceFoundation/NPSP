@@ -184,7 +184,7 @@ public with sharing class CRLP_RollupCMT_TEST {
     @isTest
     private static void gauRollupIdentifiedAsGAUType() {
 
-        String allocations = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Allocation__c')).getName();
+        String allocations = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c')).getName();
         CRLP_RollupCMT.Rollup newRollup = generateRollup('1');
         newRollup.summaryObject = allocations;
 

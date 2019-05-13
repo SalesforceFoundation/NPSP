@@ -514,7 +514,7 @@ public class CRLP_RollupCMT {
             String opportunityApiName = String.valueOf(Opportunity.getSObjectType());
             String paymentApiName = 'npe01__OppPayment__c';
             String recurringDonationsApiName = 'npe03__Recurring_Donation__c';
-            String allocationApiName = UTIL_Namespace.StrAllNSPrefix('Allocation__c');
+            String allocationApiName = UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c');
             String partialSoftCreditApiName = UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c');
             String accountSoftCreditApiName = UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c');
 
