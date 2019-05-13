@@ -37,7 +37,7 @@
 private class PMT_Payment_TEST {
 
     @TestSetup
-    static void test_createTestData() {
+    static void createTestData() {
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true));
         Account acc = new Account(Name = 'foo');
         insert acc;
@@ -47,7 +47,7 @@ private class PMT_Payment_TEST {
      * @description Validate that new payment records created with an opportunity get the CurrencyIsoCode set
      * properly to the Opportunities currency code
      *******************************************************************************************************/
-    static testMethod void test_newPaymentCurrencyMatchesOpportunity() {
+    static testMethod void shouldVerifyThatNewPaymentCurrencyMatchesOpportunity() {
 
         //only run test in multicurrency orgs
         if (!userInfo.isMultiCurrencyOrganization()) {
@@ -85,7 +85,7 @@ private class PMT_Payment_TEST {
      * @description Validate that a change to the CurrencyIsoCode on the Opportunity record is copied
      * down the Payment records.
      */
-    static testMethod void test_UpdatePaymentCurrencyFromOpportunity() {
+    static testMethod void shouldVerifyThatPaymentCurrencyUpdatesFromOpportunity() {
 
         //only run test in multicurrency orgs
         if (!userInfo.isMultiCurrencyOrganization()) {
@@ -125,7 +125,7 @@ private class PMT_Payment_TEST {
      * @description Validate that an error is thrown when the CurrencyIsoCode is modified on Payment record directly
      * or when a new payment is added with a different currency code than the parent opportunity.
      */
-    static testMethod void test_BlockPaymentCurrencyChange() {
+    static testMethod void shouldVerifyThatPaymentCurrencyChangesAreBlocked() {
 
         //only run test in multicurrency orgs
         if (!userInfo.isMultiCurrencyOrganization()) {
@@ -184,7 +184,7 @@ private class PMT_Payment_TEST {
      * Payment to the Opportunity object do not work, so a trigger on the Payment object is used instead.
      * This test validates that logic by setting mock to pretend that ACM is enabled.
      */
-    private static testMethod void testOpportunityWillAutoCloseWithACMEnabled() {
+    private static testMethod void shouldVerifyThatOpportunityWillAutoCloseWithACMEnabled() {
 
         // Pretend the advanced multi-currency is enabled
         // Note: Trigger methods need to use UserInfo.isMultiCurrencyOrganization() to determine if the
@@ -262,7 +262,7 @@ private class PMT_Payment_TEST {
      * @description     Validate that payment records are not both paid and written off on Update
      *******************************************************************************************************/
     @isTest
-    private static void verifyPaymentsAreNotBothPaidAndWrittenOffOnUpdate() {
+    private static void shouldVerifyPaymentsAreNotBothPaidAndWrittenOffOnUpdate() {
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
         Opportunity opp = new Opportunity(
@@ -307,15 +307,13 @@ private class PMT_Payment_TEST {
             System.assert(false, 'Updating an existing payment with valid values should succeed');
         }
         Test.stopTest();
-
     }
-
 
     /*******************************************************************************************************
      * @description     Validate that payment records are not both paid and written off on Insert
      *******************************************************************************************************/
     @isTest
-    private static void verifyPaymentsAreNotBothPaidAndWrittenOffOnInsert() {
+    private static void shouldVerifyPaymentsAreNotBothPaidAndWrittenOffOnInsert() {
         Account acc = [SELECT Id FROM Account LIMIT 1];
 
         Opportunity opp = new Opportunity(
@@ -584,6 +582,7 @@ private class PMT_Payment_TEST {
         invalidUnpaidPayment = updatePaymentForTesting(invalidUnpaidPayment, false, false, false, false);
         update invalidUnpaidPayment;
         assertDataForPayment('Accounting not enforced, Update Unpaid without schedule date', invalidUnpaidPayment.Id, false, false, null, null);
+        Test.stopTest();
     }
 
 
