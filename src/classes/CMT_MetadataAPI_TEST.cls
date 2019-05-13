@@ -57,7 +57,7 @@ private class CMT_MetadataAPI_TEST {
 
         // Construct our callback class
         CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack('Test');
-        TestingCallbackHandler callbackHandler = new TestingCallbackHandler();
+        MockCallbackHandler callbackHandler = new MockCallbackHandler();
 
         // Construct a dummy Context
         TestingDeployCallbackContext context = new TestingDeployCallbackContext();
@@ -91,7 +91,7 @@ private class CMT_MetadataAPI_TEST {
     /******************************************************************************************************************
      * @description Callback Handler to test the result callback
      *****************************************************************************************************************/
-    public class TestingCallbackHandler implements CMT_MetadataAPI.MetadataCallbackHandler {
+    public class MockCallbackHandler implements CMT_MetadataAPI.MetadataCallbackHandler {
         public void performSuccessHandler(Map<String, Object> params) {
             Account newAccount = new Account(Name = SUCCESS_HANDLER_EXECUTED);
             insert newAccount;

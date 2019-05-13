@@ -122,6 +122,10 @@ public inherited sharing class CRLP_ApiService {
     * @param set of rollup type names
     **************************************************************************************************************/
     public void setRollupStateAsStale(Set<String> rollups) {
+
+        if (!isRollupStateEnabled()) {
+            return;
+        }
         
         archiveBridgeConfig.getCallableApi().call(
             ACTION_ARCHIVE_BRIDGE_SET_STALE_ROLLUPS,

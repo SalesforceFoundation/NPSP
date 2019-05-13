@@ -252,7 +252,30 @@ private class CRLP_ApiService_TEST {
         );
     }
 
+     /**
+     * @description Confirms that mark records as stale does not thrown an exception when the 
+     * bridge is not installed
+     */
+    @isTest
+    private static void markRollupStateAsStaleWillNotThrowExceptionWhenNoBridgeInstalled() {
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            Customizable_Rollups_Enabled__c = true
+        ));
 
+        CRLP_ApiService service = new CRLP_ApiService();
+        setupMockIntegration(service);
+        
+        Set<String> expectedRollupTypes = new Set<String> { 
+            CRLP_RollupProcessingOptions.RollupType.AccountHardCredit.name(),
+            CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit.name()
+        };
+
+        Test.startTest();
+        service.setRollupStateAsStale(expectedRollupTypes);
+        System.assert(true, 'No exception is thrown when the bridge is not installed.');
+        Test.stopTest();
+
+    }
 
     // Helpers
     ////////////

@@ -86,7 +86,6 @@ public with sharing class CRLP_RollupCMT_TEST {
         newRollup13.isDeleted = true;
         newRollup14.intValue = 0;
 
-
         System.assertEquals(true, newRollup1.isDifferent(existingRollup), 'Different Rollups are marked as different for filterGroupRecordName');
         System.assertEquals(true, newRollup2.isDifferent(existingRollup), 'Different Rollups are marked as different for operation');
         System.assertEquals(true, newRollup3.isDifferent(existingRollup), 'Different Rollups are marked as different for timeBoundOperationType');
@@ -101,8 +100,6 @@ public with sharing class CRLP_RollupCMT_TEST {
         System.assertEquals(true, newRollup12.isDifferent(existingRollup), 'Different Rollups are marked as different for isActive');
         System.assertEquals(true, newRollup13.isDifferent(existingRollup), 'Different Rollups are marked as different for isDeleted');
         System.assertEquals(true, newRollup14.isDifferent(existingRollup), 'Different Rollups are marked as different for intValue');
-
-
 
     }
     
