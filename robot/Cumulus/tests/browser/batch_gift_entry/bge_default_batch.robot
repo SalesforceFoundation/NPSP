@@ -37,6 +37,7 @@ BGE Batch With Default Values
     ...    RequireTotalMatch__c=False
     ...    Run_Opportunity_Rollups_while_Processing__c=True
 Create New gift and process batch and validate
+    [tags]  unstable
     &{contact} =     API Create Contact
     Select Value From BGE DD    Donor Type    Contact
     Populate Field By Placeholder    Search Contacts    &{contact}[FirstName] &{contact}[LastName]

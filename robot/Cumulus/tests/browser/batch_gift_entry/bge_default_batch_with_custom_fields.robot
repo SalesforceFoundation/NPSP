@@ -52,6 +52,7 @@ Create BGE Batch With Custom Fields
     ...    Run_Opportunity_Rollups_while_Processing__c=True
 
 Create New gift and process batch and validate
+    [tags]  unstable
     &{contact} =     API Create Contact
     &{campaign} =    API Create Campaign
     Set Global Variable     ${camp_id}       &{campaign}[Id]
@@ -81,7 +82,8 @@ Create New gift and process batch and validate
     Verify Row Count    1
     
     
-Verify Custom Fields on Payment and Donation 
+Verify Custom Fields on Payment and Donation
+    [tags]  unstable 
     ${date} =     Get Current Date    result_format=%Y-%m-%d       
     ${value}    Return Locator Value    bge.value    Donation
     Click Link With Text    ${value}
