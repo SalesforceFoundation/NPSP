@@ -700,11 +700,11 @@ public with sharing class CRLP_RollupUI_SVC {
      * the insert (deployment) completes.
      */
     @AuraEnabled
-    public static String saveRollup(String rollupCMT) {
+    public static String saveRollup(String jsonRollup) {
         try {
             // For new records, the RecordName property will be null by default. The process of deploying the
             // CMT data will generate a unique RecordName to use for the new record.
-            CRLP_RollupCMT.Rollup cmtRollup = (CRLP_RollupCMT.Rollup) JSON.deserialize(rollupCMT, CRLP_RollupCMT.Rollup.class);
+            CRLP_RollupCMT.Rollup cmtRollup = (CRLP_RollupCMT.Rollup) JSON.deserialize(jsonRollup, CRLP_RollupCMT.Rollup.class);
             RollupUtil util = new RollupUtil(cmtRollup);
 
             for (Rollup__mdt rlp : CRLP_Rollup_SEL.cachedRollups) {
@@ -734,17 +734,17 @@ public with sharing class CRLP_RollupUI_SVC {
 
     /*******************************************************************************************************
      * @description Handle the save (insert/update) of a Rollup__mdt record
-     * @param rollupCMT Stringified structure of a CRLP_RollupCMT.Rollup wrapper class
+     * @param filterGroupCMT Stringified structure of a CRLP_RollupCMT.FilterGroup wrapper class
      * @return {JobId}-{DeveloperName} - ASync Job Id - Developer name of the newly inserted or updated
      * record; or an error message. The {DeveloperName} value can be used by the JS to retrieve the record after
      * the insert (deployment) completes.
      */
     @AuraEnabled
-    public static String saveFilterGroupAndRules(String filterGroupCMT) {
+    public static String saveFilterGroupAndRules(String jsonFilterGroup) {
         try {
             // For new records, the RecordName property will be null by default. The process of deploying the
             // CMT data will generate a unique RecordName to use for the new record.
-            CRLP_RollupCMT.FilterGroup cmtFilterGroup = (CRLP_RollupCMT.FilterGroup) JSON.deserialize(filterGroupCMT, CRLP_RollupCMT.FilterGroup.class);
+            CRLP_RollupCMT.FilterGroup cmtFilterGroup = (CRLP_RollupCMT.FilterGroup) JSON.deserialize(jsonFilterGroup, CRLP_RollupCMT.FilterGroup.class);
 
             if (cmtFilterGroup.isDeleted == true) {
                 Map<Id, List<Rollup__mdt>> rollupsByFilterGroup = CRLP_Rollup_SEL.getRollupsByFilterGroup();
