@@ -149,8 +149,8 @@ public class UTIL_Namespace {
 
     /*******************************************************************************************************
     * @description Only remove npsp prefix, don't attempt to remove others
-    *
-    * @param str token name
+    * 
+    * @param str token name 
     * @return token name, with namespace prefix removed, if present.
     ********************************************************************************************************/
     public static string removeNSPrefixNpspOnly(string str) {
