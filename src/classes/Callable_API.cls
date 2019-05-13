@@ -61,7 +61,7 @@ global with sharing class Callable_API implements System.Callable {
 
             } when 'crlp.getdefinitionsforrolluptype' {
                 CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
-                List<CRLP_Rollup> response = crlpApiSvc.getRollupDefinitions((String) params.get(CRLP_ApiService.PARAM_ROLLUPTYPE));
+                List<CRLP_Rollup> response = crlpApiSvc.getRollupDefinitions((String) params.get(CRLP_ApiService.PARAM_ROLLUP_TYPE));
                 return JSON.serialize(response, true);
 
             } when 'crlp.executerollups' {  // PLACEHOLDER CODE ONLY

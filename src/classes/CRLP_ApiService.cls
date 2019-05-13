@@ -36,7 +36,7 @@
 */
 public inherited sharing class CRLP_ApiService {
 
-    public static final String PARAM_ROLLUPTYPE = 'RollupType';
+    public static final String PARAM_ROLLUP_TYPE = 'RollupType';
     public static final String PARAM_ROLLUP_TYPES = 'RollupTypes';
     public static final String PARAM_ROLLUPDEFS = 'RollupDefinitions';
 
@@ -72,7 +72,7 @@ public inherited sharing class CRLP_ApiService {
         } catch (Exception ex) { }
 
         if (rollupType == null) {
-            throw new ApiException(String.format( System.Label.CallableApiParameterError, new List<String>{PARAM_ROLLUPTYPE} ));
+            throw new ApiException(String.format( System.Label.CallableApiParameterError, new List<String>{PARAM_ROLLUP_TYPE} ));
         }
 
         CRLP_VRollupHandler handler = new CRLP_VRollupHandler();
@@ -105,7 +105,7 @@ public inherited sharing class CRLP_ApiService {
             ACTION_ARCHIVE_BRIDGE_GET_ROLLUP_STATE,
             new Map<String, Object> {
                 'RecordIds' => recordIds,
-                PARAM_ROLLUPTYPE => rollupType.name()
+                PARAM_ROLLUP_TYPE => rollupType.name()
             }
         );
 
