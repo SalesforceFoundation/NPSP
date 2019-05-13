@@ -37,6 +37,8 @@
 */
 public class ALLO_PaymentSync_SVC {
 
+    public class PaymentSyncException extends Exception {}
+
     public TDTM_Runnable.DmlWrapper allocationsChanges = new TDTM_Runnable.DmlWrapper();
 
     public Map<Id, Id> opportunityIdByPaymentId = new Map<Id, Id>();
@@ -242,12 +244,14 @@ public class ALLO_PaymentSync_SVC {
     @testVisible Map<Id, npe01__OppPayment__c> retrievePaymentsWithAllocations(Set<Id> paymentIds, Set<Id> opportunityIds) {
         Boolean multiCurrencyOrg = UserInfo.isMultiCurrencyOrganization();
         String queryString = 'SELECT    Id, ' +
+                                        'Name, ' +
                                         'npe01__Opportunity__c, ' +
                                         'npe01__Payment_Amount__c, '+
                                         'npe01__Paid__c, ' +
                                         'npe01__Written_Off__c, ' +
                                         (multiCurrencyOrg ? 'CurrencyIsoCode, ' : '') +
                                         '(SELECT    Id, ' +
+                                                    'Name, ' +
                                                     (multiCurrencyOrg ? 'CurrencyIsoCode, ' : '') +
                                                     'Amount__c, ' +
                                                     'Percent__c, ' +
@@ -278,9 +282,11 @@ public class ALLO_PaymentSync_SVC {
     @testVisible Map<Id, Opportunity> retrieveOpportunitiesWithAllocations(Set<Id> opportunityIds) {
         Boolean multiCurrencyOrg = UserInfo.isMultiCurrencyOrganization();
         String queryString = 'SELECT    Id, ' +
+                                        'Name, ' +
                                         'Amount, ' +
                                         (multiCurrencyOrg ? 'CurrencyIsoCode, ' : '') +
                                         '(SELECT    Id, ' +
+                                                    'Name, ' +
                                                     (multiCurrencyOrg ? 'CurrencyIsoCode, ' : '') +
                                                     'Amount__c, ' +
                                                     'Percent__c, ' +
@@ -422,7 +428,9 @@ public class ALLO_PaymentSync_SVC {
                     totalPaidPaymentAllocations > totalOpportunityAllocations) {
 
                     if(context.triggerAllocationsByGAUId.containsKey(gau)) {
-                        context.triggerAllocationsByGAUId.get(gau).addError(System.Label.alloPaidPmtsExceedsOpp);
+                        String gauName = context.triggerAllocationsByGAUId.get(gau).Name;
+                        String gauId = context.triggerAllocationsByGAUId.get(gau).Id;
+                        throw new PaymentSyncException(String.format(Label.alloPaidPmtsExceedsOpp, new String[] {context.Opportunity.Name, context.Opportunity.Id, gauName, gauId}));
                     }
                     continue;
                 }
@@ -514,7 +522,9 @@ public class ALLO_PaymentSync_SVC {
                         context.triggerAllocationsByGAUId.containsKey(gau)) {
                         // flag the allocation we are attempting to delete with an error;
                         // this record is not available in the opportunityAllocationsByGAU map
-                            context.triggerAllocationsByGAUId.get(gau).addError(System.Label.alloRemoveOppWithPmt);
+                        String gauName = context.triggerAllocationsByGAUId.get(gau).Name;
+                        String gauId = context.triggerAllocationsByGAUId.get(gau).Id;
+                        throw new PaymentSyncException(String.format(Label.alloRemoveOppWithPmt, new String[] {context.Opportunity.Name, context.Opportunity.Id, gauName, gauId}));
                     } else {
                         if (!payment.npe01__Paid__c) {
                             removeAllocationAmountFromPayment(payment.Id, paymentAllocation.Amount__c);
@@ -560,7 +570,7 @@ public class ALLO_PaymentSync_SVC {
                 if (defaultAlloc != null)
                     allocationsChanges.objectsToDelete.add(defaultAlloc);
             } else { // Payment is overallocated...should never occur...generate an error.
-                //TODO: Add Error Here...
+                throw new PaymentSyncException(String.format(Label.alloPaymentOverAllocatedError, new String[] {context.Opportunity.Name, context.Opportunity.Id}));
             }
 
         }
