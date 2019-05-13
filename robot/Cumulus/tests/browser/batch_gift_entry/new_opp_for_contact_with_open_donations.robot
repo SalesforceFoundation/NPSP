@@ -54,6 +54,7 @@ Create a new opportunity for a contact with open donations
     Populate BGE Edit Field    Donation Amount    100
     Click Managehh Button    Donation Date
     Page Should Not Contain Link    &{opportunity2}[Name]
+    Scroll Page To Location    0    0
     Click BGE Button       Process Batch
     # Select Frame With Title    NPSP Data Import
     # Click Button With Value   Begin Data Import Process
@@ -63,11 +64,7 @@ Create a new opportunity for a contact with open donations
     Verify Expected Values    nonns    Opportunity    &{opportunity2}[Id]
     ...    Amount=100.0
     ...    CloseDate=${date}
-    ...    StageName=Prospecting
-    # &{existing_opp} =  Salesforce Get    Opportunity    &{opportunity2}[Id]
-    # Should Be Equal As Strings    &{existing_opp}[Amount]    100.0
-    # Should Be Equal As Strings    &{existing_opp}[CloseDate]    ${date}
-    # Should Be Equal As Strings    &{existing_opp}[StageName]    Prospecting 
+    ...    StageName=Prospecting 
     Sleep    2
     ${value}    Return Locator Value    bge.value    Donation
     #Click Link    text:${value}

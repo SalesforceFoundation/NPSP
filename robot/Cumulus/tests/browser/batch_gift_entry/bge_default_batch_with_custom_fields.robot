@@ -13,7 +13,6 @@ ${camp_id}
 Create BGE Batch With Custom Fields
     #Create a BGE batch with default values and selecting different types of custom fields for Donation and Payment
     [tags]  unstable
-    #Set Selenium Speed    1
     Set Window Size    1024    768
     # --------------------------------
     # Create Batch With Custom Fields

@@ -42,7 +42,6 @@ Select a payment for a contact make grid changes and process it
     ...                       Donation Amount=10
     Click Field And Select Date    Donation Date    Today
     Click BGE Button       Save
-    Reload Page
     Verify Row Count    1
     Page Should Contain Link    ${pay_no}
     Sleep    2
@@ -50,9 +49,8 @@ Select a payment for a contact make grid changes and process it
     Click BGE Edit Button    Donation Amount  
     Wait For Locator    bge.edit_field   
     Populate BGE Edit Field    Donation Amount    20
+    Scroll Page To Location    0    0
     Click BGE Button       Process Batch
-    # Select Frame With Title    NPSP Data Import
-    # Click Button With Value   Begin Data Import Process
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Locator    data_imports.status    Completed
     Click Button With Value   Close
@@ -65,10 +63,6 @@ Select a payment for a contact make grid changes and process it
     ...    npe01__Payment_Amount__c=20.0
     ...    npe01__Payment_Date__c=${date}
     ...    npe01__Paid__c=True
-    # &{payment} =     Salesforce Get  npe01__OppPayment__c  ${pay_id}
-    # Should Be Equal As Strings    &{payment}[npe01__Payment_Amount__c]    20.0
-    # Should Be Equal As Strings    &{payment}[npe01__Payment_Date__c]    ${date}
-    # Should Be Equal As Strings    &{payment}[npe01__Paid__c]    True
     Go To Record Home    &{opportunity}[Id]
     Confirm Value    Amount    $100.00    Y 
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y

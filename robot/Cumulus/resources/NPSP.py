@@ -92,7 +92,7 @@ class NPSP(object):
 #         self.salesforce._populate_field(xpath, value)
         
         field.send_keys(value)
-        time.sleep(1)
+        time.sleep(2)
 # #         if loc == ("Search Contacts" or "Search Accounts"):
 #         field.send_keys(Keys.ENTER)
 # #             field.send_keys(Keys.ARROW_DOWN)

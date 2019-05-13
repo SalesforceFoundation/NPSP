@@ -37,7 +37,6 @@ Dont select match for contact new donation with grid changes
     ...                       Donation Amount=100
     Click Field And Select Date    Donation Date    Today
     Click BGE Button       Save
-    #Reload Page
     Sleep    2
     Verify Row Count    1
     Page Should Contain Link    &{opportunity}[Name]
@@ -49,8 +48,6 @@ Dont select match for contact new donation with grid changes
     Wait Until Element Is Not Visible    //span[contains(@class,'toastMessage')]
     Page Should Not Contain Link    &{opportunity}[Name]
     Click BGE Button       Process Batch
-    # Select Frame With Title    NPSP Data Import
-    # Click Button With Value   Begin Data Import Process
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Locator    data_imports.status    Completed
     Click Button With Value   Close
@@ -58,10 +55,6 @@ Dont select match for contact new donation with grid changes
     ...    Amount=100.0
     ...    CloseDate=${date}
     ...    StageName=Prospecting
-    # &{existing_opp} =  Salesforce Get    Opportunity    &{opportunity}[Id]
-    # Should Be Equal As Strings    &{existing_opp}[Amount]    100.0
-    # Should Be Equal As Strings    &{existing_opp}[CloseDate]    ${date}
-    # Should Be Equal As Strings    &{existing_opp}[StageName]    Prospecting 
     ${value}    Return Locator Value    bge.value    Donation
     # Click Link    ${value}
     Click Link With Text    ${value}
@@ -73,10 +66,6 @@ Dont select match for contact new donation with grid changes
     ...    Amount=20.0
     ...    CloseDate=${date}
     ...    StageName=Closed Won
-    # &{new_opp} =  Salesforce Get    Opportunity    ${newopp_id}
-    # Should Be Equal As Strings    &{new_opp}[Amount]    20.0
-    # Should Be Equal As Strings    &{new_opp}[CloseDate]    ${date}
-    # Should Be Equal As Strings    &{new_opp}[StageName]    Closed Won
     Go To Record Home    &{contact}[Id]
     Select Tab    Related
     Load Related List    Opportunities
