@@ -40,7 +40,7 @@ tasks:
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
             path: ldv_tests/src
-        
+
     deploy_dev_config:
         description: Deploys the post-install configuration for an unmanaged DE org
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -84,7 +84,7 @@ tasks:
         options:
             path: robot/Cumulus/resources/NPSP.py,robot/Cumulus/resources/NPSP.robot
             output: robot/Cumulus/doc/Keywords.html
-            
+
     update_admin_profile:
         options:
             package_xml: lib/admin_profile.xml
@@ -127,11 +127,11 @@ tasks:
             mapping: 'testdata/mapping.yml'
 
     test_data_bdi:
-        description: 'Test data for BDI benchmarks'
-        class_path: cumulusci.tasks.bulkdata.LoadData
+        description: 'Generate and load a test data for BDI benchmarks into an org'
+        class_path: tasks.generate_bdi_data.GenerateBDIData
         options:
-            database_url: 'sqlite:///testdata/bdi_benchmark/test_data.db'
             mapping: 'testdata/bdi_benchmark/mapping.yml'
+            num_records: 2500
 
     test_data_delete:
         description: 'WARNING: Deletes all data in the objects specified in the objects option.'
@@ -190,6 +190,15 @@ tasks:
                 - npsp__Allocation__c
                 - npsp__General_Accounting_Unit__c
                 - Campaign
+
+    test_bdi_import:
+        description: Runs a Robot Framework test to do a BDI import
+        class_path: cumulusci.tasks.robotframework.Robot
+        group: bdi
+        options:
+            suites: robot/Cumulus/perf/BDITest.robot
+            options:
+                outputdir: robot/Cumulus/results/perf
 
     npsp_default_settings:
         description: Configure the default NPSP Settings including Membership RecordType
@@ -253,7 +262,7 @@ flows:
                 task: test_data_relationships
             9:
                 task: deploy_reports
-    
+
     deploy_rollup_testing:
         description: 'Deploys custom fields and rollup definitions for testing Customizable Rollups using the Apex Anon testing script. >>> NOTE: Customizable Rollups needs to be successfully enabled before deploy_rollup_testing can be run <<<'
         steps:
@@ -358,6 +367,16 @@ flows:
                 task: run_tests
                 options:
                     test_name_match: LDV_%
+
+    performance_tests:
+        description: 'WARNING: This flow deletes all data first, then loads test data for BDI benchmarks.'
+        steps:
+            1:
+                task: test_data_delete_managed
+            2:
+                task: test_data_bdi
+            3:
+                task: test_bdi_import
 
 orgs:
     scratch:
