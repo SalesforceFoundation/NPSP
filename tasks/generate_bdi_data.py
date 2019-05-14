@@ -5,7 +5,7 @@ import math
 from cumulusci.tasks.salesforce import BaseSalesforceApiTask
 from cumulusci.tasks.bulkdata import LoadData
 from cumulusci.core.utils import ordered_yaml_load
-from cumulusci.utils import convert_to_snake_case, log_progress, os_friendly_path
+from cumulusci.utils import convert_to_snake_case
 from cumulusci.core.config import TaskConfig
 from datetime import date
 from datetime import timedelta
@@ -19,7 +19,6 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import create_session
 
 START_DATE = date(2019, 1, 1)
-STEP_HACK = 100
 
 
 class GenerateBDIData(BaseSalesforceApiTask):
@@ -28,8 +27,8 @@ class GenerateBDIData(BaseSalesforceApiTask):
         try:
             sqlite_path = os.path.join(self.tempdir, "generated_data.db")
             url = "sqlite:///" + sqlite_path
-            batch_size = math.floor(self.options["num_records"] / 5)
-            generate_data(url, self.options["mapping"], batch_size)
+            batch_size = math.floor(self.options["num_records"] / 10)
+            self.generate_data(url, self.options["mapping"], batch_size)
             subtask_config = TaskConfig(
                 {"options": {"database_url": url, "mapping": self.options["mapping"]}}
             )
@@ -45,166 +44,175 @@ class GenerateBDIData(BaseSalesforceApiTask):
         finally:
             shutil.rmtree(self.tempdir)
 
+    def generate_data(self, db_url, mapping_file_path, batch_size):
+        with open(mapping_file_path, "r") as f:
+            mappings = ordered_yaml_load(f)
 
-def generate_data(db_url, mapping_file_path, batch_size):
-    with open(mapping_file_path, "r") as f:
-        mappings = ordered_yaml_load(f)
+        self.session, base = init_db(db_url, mappings)
+        self.make_all_records(batch_size, base)
+        self.generate_bdi_denormalized_table(2)
+        self.session.commit()
 
-    session, base = init_db(db_url, mappings)
-    Account = base.classes.accounts
-    Contact = base.classes.contacts
-    Opportunity = base.classes.opportunities
-    Payment = base.classes.payments
-
-    def make_opportunity(amount, date, paid, payment_amount, **kw):
-        opp = Opportunity(
+    def make_opportunity(self, amount, date, paid, payment_amount, **kw):
+        opp = self.Opportunity(
             amount=amount, stage_name="Prospecting", close_date=date, **kw
         )
-        session.add(opp)
-        session.flush()
+        self.session.add(opp)
+        self.session.flush()
         if payment_amount:
-            payment = Payment(
+            payment = self.Payment(
                 npe01__opportunity__c=opp.id,
                 amount=payment_amount,
                 payment_date=date,
                 paid=paid,
             )
-            session.add(payment)
+            self.session.add(payment)
 
-    def make_records(model, name, key_field, start, end, amount, paid, payment_amount):
+    def make_records(
+        self, model, name, key_field, start, end, amount, paid, payment_amount
+    ):
         date = START_DATE
-        for i in range(start, end + 1, STEP_HACK):
-            parent = model(name=f"{name} {i}")
-            if model is Account:
+        for i in range(start + 1, end + 1):
+            parent = model(name=name + " " + str(i))
+            print(name + " " + str(i))
+            if model is self.Account:
                 parent.record_type = "Organization"
-            session.add(parent)
-            session.flush()
+            self.session.add(parent)
+            self.session.flush()
             kw = {key_field: parent.id, "name": f"{name} {i} Donation"}
-            make_opportunity(amount, date, paid, payment_amount, **kw)
+            self.make_opportunity(amount, date, paid, payment_amount, **kw)
             date = date + timedelta(days=1)
 
-    class Adder:
-        x = 0
+    def make_all_records(self, batch_size, base):
+        class Adder:
+            x = 0
 
-        def __call__(self, value):
-            self.x += value
-            return self.x
+            def __call__(self, value):
+                self.x += value
+                return self.x
 
-    account_adder = Adder()
+        Account = self.Account = base.classes.accounts
+        Contact = self.Contact = base.classes.contacts
+        self.Opportunity = base.classes.opportunities
+        self.Payment = base.classes.payments
+        account_adder = Adder()
 
-    make_records(
-        Account,
-        "Account",
-        "account_id",
-        account_adder(1),
-        account_adder(batch_size),
-        amount=100,
-        paid=False,
-        payment_amount=100,
-    )
-    make_records(
-        Account,
-        "Account",
-        "account_id",
-        account_adder(1),
-        account_adder(batch_size),
-        amount=200,
-        paid=False,
-        payment_amount=200,
-    )
-    make_records(
-        Account,
-        "Account",
-        "account_id",
-        account_adder(1),
-        account_adder(batch_size),
-        amount=300,
-        paid=False,
-        payment_amount=50,
-    )
-    make_records(
-        Account,
-        "Account",
-        "account_id",
-        account_adder(1),
-        account_adder(batch_size),
-        amount=400,
-        paid=True,
-        payment_amount=50,
-    )
-    make_records(
-        Account,
-        "Account",
-        "account_id",
-        account_adder(1),
-        account_adder(batch_size),
-        amount=500,
-        paid=False,
-        payment_amount=None,
-    )
+        self.make_records(
+            Account,
+            "Account",
+            "account_id",
+            account_adder(0),
+            account_adder(batch_size),
+            amount=100,
+            paid=False,
+            payment_amount=100,
+        )
+        self.make_records(
+            Account,
+            "Account",
+            "account_id",
+            account_adder(0),
+            account_adder(batch_size),
+            amount=200,
+            paid=False,
+            payment_amount=200,
+        )
+        self.make_records(
+            Account,
+            "Account",
+            "account_id",
+            account_adder(0),
+            account_adder(batch_size),
+            amount=300,
+            paid=False,
+            payment_amount=50,
+        )
+        self.make_records(
+            Account,
+            "Account",
+            "account_id",
+            account_adder(0),
+            account_adder(batch_size),
+            amount=400,
+            paid=True,
+            payment_amount=50,
+        )
+        self.make_records(
+            Account,
+            "Account",
+            "account_id",
+            account_adder(0),
+            account_adder(batch_size),
+            amount=500,
+            paid=False,
+            payment_amount=None,
+        )
 
-    contacts_adder = Adder()
-    make_records(
-        Contact,
-        "Contact",
-        "primary_contact__c",
-        contacts_adder(1),
-        contacts_adder(batch_size),
-        amount=600,
-        paid=False,
-        payment_amount=600,
-    )
-    make_records(
-        Contact,
-        "Contact",
-        "primary_contact__c",
-        contacts_adder(1),
-        contacts_adder(batch_size),
-        amount=700,
-        paid=False,
-        payment_amount=700,
-    )
-    make_records(
-        Contact,
-        "Contact",
-        "primary_contact__c",
-        contacts_adder(1),
-        contacts_adder(batch_size),
-        amount=800,
-        paid=False,
-        payment_amount=50,
-    )
-    make_records(
-        Contact,
-        "Contact",
-        "primary_contact__c",
-        contacts_adder(1),
-        contacts_adder(batch_size),
-        amount=900,
-        paid=True,
-        payment_amount=50,
-    )
-    make_records(
-        Contact,
-        "Contact",
-        "primary_contact__c",
-        contacts_adder(1),
-        contacts_adder(batch_size),
-        amount=1000,
-        paid=False,
-        payment_amount=None,
-    )
+        contacts_adder = Adder()
+        self.make_records(
+            Contact,
+            "Contact",
+            "primary_contact__c",
+            contacts_adder(0),
+            contacts_adder(batch_size),
+            amount=600,
+            paid=False,
+            payment_amount=600,
+        )
+        self.make_records(
+            Contact,
+            "Contact",
+            "primary_contact__c",
+            contacts_adder(0),
+            contacts_adder(batch_size),
+            amount=700,
+            paid=False,
+            payment_amount=700,
+        )
+        self.make_records(
+            Contact,
+            "Contact",
+            "primary_contact__c",
+            contacts_adder(0),
+            contacts_adder(batch_size),
+            amount=800,
+            paid=False,
+            payment_amount=50,
+        )
+        self.make_records(
+            Contact,
+            "Contact",
+            "primary_contact__c",
+            contacts_adder(0),
+            contacts_adder(batch_size),
+            amount=900,
+            paid=True,
+            payment_amount=50,
+        )
+        self.make_records(
+            Contact,
+            "Contact",
+            "primary_contact__c",
+            contacts_adder(0),
+            contacts_adder(batch_size),
+            amount=1000,
+            paid=False,
+            payment_amount=None,
+        )
 
-    generate_bdi_denormalized_table(session, (2500 // STEP_HACK) // 2)
-    session.commit()
+    def generate_bdi_denormalized_table(self, fraction):
+        self.generate_matching_records(fraction)
+        self.generate_unmatched_records(fraction)
 
-
-def generate_bdi_denormalized_table(session, limit):
-    session.execute(
-        """
-    INSERT INTO npsp__DataImport__c
-        SELECT
-            payments.Id as Id, -- unique id
+    def generate_matching_records(self, fraction):
+        """Generate records that match what's already "in" the org by
+           copying the records from the tables that will be populated in the
+           org. """
+        self.session.execute(
+            """
+        INSERT INTO npsp__DataImport__c
+            SELECT
+                payments.Id as Id, -- unique id
             accounts.name, -- account_name -> npe01__Account1_Name__c
             contacts.name, -- contact1_lastname -> npe01__Contact1_Lastname__c
             opportunities.name, -- donation_name ->  npe01__Donation_Name__c
@@ -213,14 +221,32 @@ def generate_bdi_denormalized_table(session, limit):
             opportunities.close_date -- donation_date -> npe01__Donation_Date__c
         -- disabled   FALSE -- do_not_automatically_create_payment -> npe01__Do_Not_Automatically_Create_Payment__c
         FROM payments
-        left join opportunities ON npe01__opportunity__c=opportunities.Id
-        left join contacts on primary_contact__c=contacts.Id
-        left join accounts on opportunities.account_id=accounts.Id
-        WHERE payments.Id %% 2  -- only half of the records
-        LIMIT %s;
-        """
-        % limit
-    )
+            LEFT JOIN opportunities ON npe01__opportunity__c=opportunities.Id
+            LEFT JOIN contacts on primary_contact__c=contacts.Id
+            LEFT JOIN accounts on opportunities.account_id=accounts.Id
+        WHERE payments.Id %% %(fraction)s  -- only half of the records
+            """
+            % {"fraction": fraction}
+        )
+
+    def generate_unmatched_records(self, fraction):
+        """Make a dummy record for every real record in the npsp__DataImport__c
+           table so that we test the process of failing to match records."""
+        self.session.execute(
+            """
+        INSERT INTO npsp__DataImport__c
+            SELECT
+                Id + (SELECT MAX(Id) from npsp__DataImport__c), -- unique id
+                lower(hex(randomblob(16))), -- account_name -> npe01__Account1_Name__c
+                lower(hex(randomblob(16))), -- contact1_lastname -> npe01__Contact1_Lastname__c
+                lower(hex(randomblob(16))), -- donation_name ->  npe01__Donation_Name__c
+                donation_stage, -- donation_stage -> npe01__Donation_Stage__c
+                donation_amount, -- donation_amount -> npe01__Donation_Amount__c
+                donation_date -- donation_date -> npe01__Donation_Date__c
+        -- disabled   FALSE -- do_not_automatically_create_payment -> npe01__Do_Not_Automatically_Create_Payment__c
+        FROM npsp__DataImport__c
+            """
+        )
 
 
 # Note: code below here is taken from cumulusci.tasks.bulkdata.QueryData,
@@ -228,7 +254,6 @@ def generate_bdi_denormalized_table(session, limit):
 
 
 def init_db(db_url, mappings):
-    models = {}
     engine = create_engine(db_url)
     metadata = MetaData()
     metadata.bind = engine
@@ -242,7 +267,6 @@ def init_db(db_url, mappings):
 
 
 def create_table(mapping, metadata):
-    model_name = "{}Model".format(mapping["table"])
     table_kwargs = {}
 
     # Provide support for legacy mappings which used the OID as the pk but
