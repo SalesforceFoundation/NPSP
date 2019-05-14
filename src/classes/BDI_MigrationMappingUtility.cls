@@ -36,16 +36,65 @@
 */
 public class BDI_MigrationMappingUtility {
 
-    /** @description Metadata queued up for deployment */
-    public List<Metadata.CustomMetadata> queuedMetadataTypesForDeploy = new List<Metadata.CustomMetadata>();
+    /**
+    * @description Metadata queued up for deployment
+    */
+    public List<Metadata.CustomMetadata> queuedMetadataTypesForDeploy =
+        new List<Metadata.CustomMetadata>();
 
-    /** @description Metadata parked due to conflicts with our default cmt records */
-    public List<BDI_HelpTextCMT.DataImportFieldMapping> conflictingCMTs = new List<BDI_HelpTextCMT.DataImportFieldMapping>();
+    /**
+    * @description Metadata parked due to conflicts with our default cmt records
+    */
+    public List<BDI_HelpTextCMT.DataImportFieldMapping> conflictingCMTs =
+        new List<BDI_HelpTextCMT.DataImportFieldMapping>();
 
-    /** @description Metadata parked due to conflicts with our default cmt records */
-    public List<BDI_HelpTextCMT.DataImportFieldMapping> pendingCMTs = new List<BDI_HelpTextCMT.DataImportFieldMapping>();
+    /**
+    * @description Metadata parked due to conflicts with our default cmt records
+    */
+    public List<BDI_HelpTextCMT.DataImportFieldMapping> pendingCMTs =
+        new List<BDI_HelpTextCMT.DataImportFieldMapping>();
 
-    /** @description Unique job id for Custom Settings */
+    /**
+    * @description List of standard mappings
+    */
+    public List<BDI_HelpTextCMT.DataImportFieldMapping> pendingStandardMappings =
+        new List<BDI_HelpTextCMT.DataImportFieldMapping>();
+
+    /**
+    * @description Name of default packaged Object Mapping Set
+    */
+    private static final String DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME =
+        'Default_Object_Mapping_Set';
+
+    /**
+    * @description Name of default packaged Field Mapping Set
+    */
+    private static final String DEFAULT_FIELD_MAPPING_SET_RECORD_NAME =
+        'Default_Field_Mapping_Set';
+
+    /**
+    * @description Default packaged Object Mapping Set metadata record
+    */
+    private static final Data_Import_Object_Mapping_Set__mdt DEFAULT_OBJECT_MAPPING_SET = [SELECT
+                Id,
+                DeveloperName,
+                Labe
+        FROM Data_Import_Object_Mapping_Set__mdt
+        WHERE DeveloperName = :DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME];
+
+    /**
+    * @description Default packaged Field Mapping Set metadata record
+    */
+    private static final Data_Import_Field_Mapping_Set__mdt DEFAULT_FIELD_MAPPING_SET = [SELECT
+                Id,
+                DeveloperName,
+                Label
+        FROM Data_Import_Field_Mapping_Set__mdt
+        WHERE DeveloperName = :DEFAULT_FIELD_MAPPING_SET_RECORD_NAME];
+
+    /**
+    * @description Unique job id for Custom Settings
+    */
     public String jobId = getUniqueJobId();
 
     /**
@@ -190,28 +239,6 @@ public class BDI_MigrationMappingUtility {
 
         return foundMismatch;
     }
-
-    /** @description Name of default packaged Object Mapping Set */
-    private static final String DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME = 'Default_Object_Mapping_Set';
-
-    /** @description Name of default packaged Field Mapping Set */
-    private static final String DEFAULT_FIELD_MAPPING_SET_RECORD_NAME = 'Default_Field_Mapping_Set';
-
-    /** @description Default packaged Object Mapping Set metadata record */
-    private static final Data_Import_Object_Mapping_Set__mdt DEFAULT_OBJECT_MAPPING_SET = [SELECT 
-                Id, 
-                DeveloperName, 
-                Label
-        FROM Data_Import_Object_Mapping_Set__mdt
-        WHERE DeveloperName = :DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME];
-
-    /** @description Default packaged Field Mapping Set metadata record */
-    private static final Data_Import_Field_Mapping_Set__mdt DEFAULT_FIELD_MAPPING_SET = [SELECT 
-                Id, 
-                DeveloperName, 
-                Label
-        FROM Data_Import_Field_Mapping_Set__mdt
-        WHERE DeveloperName = :DEFAULT_FIELD_MAPPING_SET_RECORD_NAME];
 
     /**
      * @return A 10 character unique 'jobId' to use for
