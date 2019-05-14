@@ -98,6 +98,7 @@ public inherited sharing class CRLP_Rollup_SEL {
      * @description Return a map of Rollup Definitions with a key of the Summary object 
      * and a list of all rollups for each Summary object
      */
+    @TestVisible
     private static Map<Schema.SObjectType, List<Rollup__mdt>> rollupsBySummaryType;
     public static Map<Schema.SObjectType, List<Rollup__mdt>> getRollupsBySummaryType() {
         if (rollupsBySummaryType == null) {
@@ -117,6 +118,7 @@ public inherited sharing class CRLP_Rollup_SEL {
      * @description Return a map of Rollup Definitions with a key of the Detail object and a list of
      * all rollups for each Detail object
      */
+    @TestVisible
     private static Map<Schema.SObjectType, List<Rollup__mdt>> rollupsByDetailType;
     public static Map<Schema.SObjectType, List<Rollup__mdt>> getRollupsByDetailType() {
         if (rollupsByDetailType == null) {
@@ -136,6 +138,7 @@ public inherited sharing class CRLP_Rollup_SEL {
      * @description Return a map of Rollup Definitions with a key of the FilterGroup Id and a list of
      * all rollups for each FilterGroup
      */
+    @TestVisible
     private static Map<Id, List<Rollup__mdt>> rollupsByFilterGroup;
     public static Map<Id, List<Rollup__mdt>> getRollupsByFilterGroup() {
         if (rollupsByFilterGroup == null) {
