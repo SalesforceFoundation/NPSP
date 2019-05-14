@@ -1357,7 +1357,6 @@
         <members>alloNegativeAmount</members>
         <members>alloNegativePercent</members>
         <members>alloObjectUnsupported</members>
-        <members>alloPaymentOverallocatedError</members>
         <members>alloPaidPmtsExceedsOpp</members>
         <members>alloPaymentNotEnabled</members>
         <members>alloPaymentOverallocatedError</members>

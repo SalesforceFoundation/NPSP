@@ -708,6 +708,32 @@ public class ALLO_PaymentSync_SVC {
     }
 
     /*******************************************************************************************************
+    * @description Determines if a scale is necessary for the allocations, and if so what it is.
+    * If Opportunity Amount is null/0, the total payment Amount is null/0 or the paymentAmount is < than the Opportunity Amount a scale is
+    * considered unnecessary, and a scale of 1 (meaning no scale is returned).  Otherwise, it will return the
+    * a percentage to upscale the allocations by, dividing the unsigned value of the total payment amount by the
+    * unsigned value of the opportunity amount
+    * @param Decimal totalPaymentAmount Decimal Amount of the Payment Total (paid and unpaid)
+    * @param Decimal opportunityAmount Decimal Amount of the Opportunity
+    * @return Decimal ratio to upscale the allocation by, or 1
+    ********************************************************************************************************/
+    @testVisible private static Decimal computePaymentScale(Decimal totalPaymentAmount, Decimal opportunityAmount) {
+        if (opportunityAmount == null || opportunityAmount == 0 || totalPaymentAmount == 0 || totalPaymentAmount == null) {
+            return 1;
+        }
+
+        Decimal unsignedOpportunityAmount = Math.abs(opportunityAmount);
+        Decimal unsignedTotalPaymentAmount = Math.abs(totalPaymentAmount);
+
+        if (unsignedTotalPaymentAmount <= unsignedOpportunityAmount) {
+            return 1;
+        }
+
+        return unsignedTotalPaymentAmount / unsignedOpportunityAmount;
+
+    }
+
+    /*******************************************************************************************************
     * @description Creates an amount based allocation for the specified Opportunity/Payment using the specified gau
     * @param SObject parentSObj An Opportunity or Payment.
     * @param Id gau The Id of the GAU to use when creating the allocation
