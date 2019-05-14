@@ -62,11 +62,11 @@
                                 </header>
                             </div>
                             <div class="slds-card__body slds-card__body_inner">
-                                <p>Would you like to keep or discard your help text mapping customizations?</p>
+                                <p>Would you like to keep or discard your help text mapping conflicts?</p>
                             </div>
                             <footer class="slds-card__footer">
-                                <button class="slds-button slds-button_neutral" onclick="handleKeepCustomizations();return false;">Keep Customizations</button>
-                                <button class="slds-button slds-button_destructive" onclick="handleDiscardCustomizations();return false;">Discard Customizations</button>
+                                <button class="slds-button slds-button_neutral" onclick="handleKeepConflicts();return false;">Keep Conflicts</button>
+                                <button class="slds-button slds-button_destructive" onclick="handleDiscardConflicts();return false;">Discard Conflicts</button>
                             </footer>
                         </article>
                     </div>
@@ -189,9 +189,9 @@
                 status="statusLoad" />
             <apex:actionFunction name="disableDataImportFieldMapping" action="{!disableDataImportFieldMapping}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
                 status="statusLoad" />
-            <apex:actionFunction name="keepCustomizations" action="{!keepCustomizations}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
+            <apex:actionFunction name="keepConflicts" action="{!keepConflicts}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
                 status="statusLoad" />
-            <apex:actionFunction name="discardCustomizations" action="{!discardCustomizations}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
+            <apex:actionFunction name="discardConflicts" action="{!discardConflicts}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"
                 status="statusLoad" />
 
         </apex:form>
@@ -205,14 +205,14 @@
                 }
             }
 
-            function handleDiscardCustomizations() {
-                console.log('Attempting to discard customizations');
-                discardCustomizations();
+            function handleDiscardConflicts() {
+                console.log('Attempting to discard Conflicts');
+                discardConflicts();
             }
 
-            function handleKeepCustomizations() {
-                console.log('Attempting to keep customizations');
-                keepCustomizations();
+            function handleKeepConflicts() {
+                console.log('Attempting to keep Conflicts');
+                keepConflicts();
             }
         </script>
 

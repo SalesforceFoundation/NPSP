@@ -184,10 +184,8 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
                 isPolling = false;
                 conflictingMappings = migrationMappingUtility.conflictingMappings;
                 pendingMappings = migrationMappingUtility.pendingMappings;
-                // TODO turn into custom label, placeholder warning message
-                //ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'Standard Help Text Mappings have been changed in your org.'));
             } else {
-                jobId = migrationMappingUtility.convertLegacyHelpTextToCustomMetadata(false);
+                jobId = migrationMappingUtility.convertLegacyHelpTextToCustomMetadata();
             }
 
             if (Test.isRunningTest()) {
@@ -215,7 +213,8 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
             pendingMappings.clear();
 
             Map<String, String> statusMap = new Map<String, String>{migrationMappingUtility.jobId => 'Data Import Field Mapping Disabled'};
-            dataImportSettings = CMT_MetadataAPI.setHelpTextMigrationSettings(statusMap, false, null);
+            dataImportSettings = BDI_MigrationMappingUtility.updateDataImportCustomSettings(statusMap, false, null);
+            jobId = migrationMappingUtility.jobId;
 
         } catch (Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
@@ -225,11 +224,11 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
     }
 
     /*******************************************************************************************************
-    * @description Action Method to discard help text customizations and continue to deploy
+    * @description Action Method to discard help text Conflicts and continue to deploy
     * @return void
     */
-    public PageReference keepCustomizations() {
-        System.debug('keepCustomizations');
+    public PageReference keepConflicts() {
+        System.debug('VFP keepConflicts');
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
 
         Savepoint sp = Database.setSavepoint();
@@ -238,65 +237,8 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
             isPolling = true;
 
             createdMappings.clear();
-            migrationMappingUtility.queuedMetadataTypesForDeploy.clear();
-            migrationMappingUtility.conflictingMappings.clear();
-            migrationMappingUtility.pendingMappings.clear();
-            migrationMappingUtility.pendingStandardMappings.clear();
 
-            migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(migrationMappingHelper, MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME);
-
-            System.debug('PM: ' + migrationMappingUtility.pendingMappings.size());
-            System.debug('PSM: ' + migrationMappingUtility.pendingStandardMappings.size());
-            System.debug('CM: ' + migrationMappingUtility.conflictingMappings.size());
-
-            List<Metadata.CustomMetadata> pendingCMTs = new List<Metadata.CustomMetadata>();
-            List<BDI_HelpTextCMT.DataImportFieldMapping> allMappings =
-                new List<BDI_HelpTextCMT.DataImportFieldMapping>();
-
-            if (migrationMappingUtility.pendingMappings.size() > 0) {
-                allMappings.addAll(migrationMappingUtility.pendingMappings);
-            }
-
-            if (migrationMappingUtility.pendingStandardMappings.size() > 0) {
-                allMappings.addAll(migrationMappingUtility.pendingStandardMappings);
-            }
-
-            if (allMappings.size() > 0) {
-                Metadata.CustomMetadata fieldMappingSet =
-                    migrationMappingHelper.createNewFieldMappingSet(MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME);
-
-                pendingCMTs.add(fieldMappingSet);
-
-                for (BDI_HelpTextCMT.DataImportFieldMapping dataImportFieldMapping : allMappings) {
-                    if (dataImportFieldMapping.dataImportObjectName == 'Payment') {
-                        System.debug(dataImportFieldMapping.targetFieldAPIName);
-
-                        dataImportFieldMapping.dataImportFieldMappingSetRecordName = MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME;
-                        dataImportFieldMapping = dataImportFieldMapping;
-                        pendingCMTs.add(dataImportFieldMapping.getMetadataRecord());
-                    }
-                }
-
-                migrationMappingUtility.queuedMetadataTypesForDeploy = pendingCMTs;
-                System.debug('PCMTS: ' + pendingCMTs.size());
-            }
-
-            if (migrationMappingUtility.conflictingMappings.size() > 0) {
-                //allMappings.addAll(migrationMappingUtility.conflictingMappings);
-                for (BDI_HelpTextCMT.DataImportFieldMapping dataImportFieldMapping : migrationMappingUtility.conflictingMappings) {
-                    dataImportFieldMapping.dataImportFieldMappingSetRecordName = MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME;
-                    dataImportFieldMapping = dataImportFieldMapping;
-                }
-                List<Metadata.CustomMetadata> updatedCMTs = migrationMappingUtility.updateCustomMetadataRecords(
-                    MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME,
-                    migrationMappingUtility.conflictingMappings,
-                    migrationMappingHelper
-                );
-
-                pendingCMTs.addAll(updatedCMTs);
-            }
-
-            jobId = migrationMappingUtility.convertLegacyHelpTextToCustomMetadata(true);
+            jobId = migrationMappingUtility.keepConflicts(migrationMappingHelper);
 
             if (Test.isRunningTest()) {
                 jobId = '123';
@@ -311,31 +253,19 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
     }
 
     /*******************************************************************************************************
-    * @description Action Method to discard help text customizations and continue to deploy
+    * @description Action Method to discard help text Conflicts and continue to deploy
     * @return void
     */
-    public PageReference discardCustomizations() {
+    public PageReference discardConflicts() {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
 
         Savepoint sp = Database.setSavepoint();
         try {
             conflictingMappings.clear();
-            migrationMappingUtility.queuedMetadataTypesForDeploy.clear();
             isConflict = false;
             isPolling = true;
 
-            // Keep any net new custom help text mappings to be added to our standard defaults
-            if (pendingMappings.size() > 0) {
-                List<Metadata.CustomMetadata> pendingCMTs = new List<Metadata.CustomMetadata>();
-                for (BDI_HelpTextCMT.DataImportFieldMapping dataImportFieldMapping : pendingMappings) {
-                    pendingCMTs.add(dataImportFieldMapping.getMetadataRecord());
-                }
-
-                migrationMappingUtility.queuedMetadataTypesForDeploy = pendingCMTs;
-                pendingMappings.clear();
-            }
-
-            jobId = migrationMappingUtility.convertLegacyHelpTextToCustomMetadata(false);
+            jobId = migrationMappingUtility.discardConflicts();
 
             if (Test.isRunningTest()) {
                 jobId = '123';
@@ -353,18 +283,25 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
     * @return void
     */
     public PageReference checkDeploymentStatus() {
+        System.debug('VFP checkDeploymentStatus');
+        System.debug('VFP jobId: ' + jobId);
         timeoutCount++;
 
         dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         String newStatus = dataImportSettings.CMT_API_Status__c;
+        System.debug(newStatus);
 
         if (timeoutCount > MAX_TIME_OUT) {
+            createdMappings.clear();
+            conflictingMappings.clear();
+            pendingMappings.clear();
+
             isPolling = false;
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.stgDeploymentTimedOut + ' ' + Label.stgDeploymentTryAgain));
             return null;
         }
 
-        if (newStatus != null && !String.isEmpty(newStatus)) {
+        if (newStatus != null && !String.isEmpty(newStatus) && jobId != null && newStatus.contains(jobId)) {
             isPolling = false;
 
             if (newStatus.contains('Succeeded') || newStatus.contains('empty')) {
