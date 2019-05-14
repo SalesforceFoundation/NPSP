@@ -448,11 +448,12 @@ public class ALLO_PaymentSync_SVC {
 
                 //if desired end amounts are out of sync, update them
                 if (currentTotalPaymentAllocations != newTotalPaymentAllocations) {
-
+                    Set<Id> paymentsWithExistingGAU = new Set<Id>();
                     for (Allocation__c paymentAllocation : context.paymentAllocationsByGAU.get(gau)) {
                         npe01__OppPayment__c payment = context.payments.get(paymentAllocation.Payment__c);
 
                         if (!payment.npe01__Paid__c && payment.npe01__Payment_Amount__c != 0) {
+                            paymentsWithExistingGAU.add(payment.Id);
                             Decimal unpaidAllocationAmount = newTotalPaymentAllocations - totalPaidPaymentAllocations;
                             Decimal paymentRatio =  context.totalUnpaidPayments / payment.npe01__Payment_Amount__c;
 
@@ -477,11 +478,40 @@ public class ALLO_PaymentSync_SVC {
                             allocationsChanges.objectsToUpdate.add(paymentAllocation);
                         }
                     }
+                    // Now do a second pass looking for ones that did not have this allocation...
+                    for (npe01__OppPayment__c payment : context.payments.values()) {
+                        if (!payment.npe01__Paid__c && payment.npe01__Payment_Amount__c != 0 && !paymentsWithExistingGAU.contains(payment.Id)) {
+
+                            Decimal paymentRatio = context.totalUnpaidPayments / payment.npe01__Payment_Amount__c;
+
+                            Allocation__c newAllocation = new Allocation__c(
+                                Payment__c = payment.Id,
+                                General_Accounting_Unit__c = gau,
+                                Amount__c = newTotalPaymentAllocations / (paymentRatio * context.scheduleRatio) // * context.scheduleRatio  <- is that needed, since it's already included in the newTotalPaymentAllocations?
+                            );
+
+                            //only add the percent for non-default
+                            if (gau != UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
+                                newAllocation.Percent__c = newAllocation.Amount__c / payment.npe01__Payment_Amount__c * 100;
+                            }
+
+                            // Update the total with the newly added allocation amount
+                            addAllocationAmountToPayment(payment.Id, newAllocation.Amount__c);
+
+                            // Assumption: Payment Allocations should be maintained with Currency Type from Payment Record
+                            if (UserInfo.isMultiCurrencyOrganization()) {
+                                newAllocation.put('CurrencyIsoCode', payment.get('CurrencyIsoCode'));
+                            }
+
+                            allocationsChanges.objectsToInsert.add(newAllocation);
+                        }
+                    }
+
                 }
             //no payment allocations for this GAU; create them
             } else if (context.totalUnpaidPayments > 0) {
                 for (npe01__OppPayment__c payment : context.payments.values()) {
-                    if (!payment.npe01__Paid__c) { // Only process unpaid payments...
+                    if (!payment.npe01__Paid__c && payment.npe01__Payment_Amount__c != 0) { // Only process unpaid payments...
                         Decimal paymentRatio = context.totalUnpaidPayments / payment.npe01__Payment_Amount__c;
 
                         Allocation__c newAllocation = new Allocation__c(
