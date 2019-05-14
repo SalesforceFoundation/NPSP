@@ -67,6 +67,7 @@ global with sharing class Callable_API implements System.Callable {
 
                 CRLP_ApiService crlpApiSvc = new CRLP_ApiService();
                 List<CRLP_Rollup> response = crlpApiSvc.getRollupDefinitions(rollupType);
+
                 return JSON.serialize(response, true);
 
             } when 'crlp.executerollups' {

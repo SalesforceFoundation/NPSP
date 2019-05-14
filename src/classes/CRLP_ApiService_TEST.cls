@@ -272,15 +272,65 @@ private class CRLP_ApiService_TEST {
             CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit.name()
         };
 
+        Exception actualException = null;
         Test.startTest();
-        service.setRollupStateAsStale(expectedRollupTypes);
-        System.assert(true, 'No exception is thrown when the bridge is not installed.');
+        try {
+            service.setRollupStateAsStale(expectedRollupTypes);
+        } catch (Exception ex) {
+            actualException = ex;
+        }
         Test.stopTest();
-
+        System.assertEquals(null, actualException, 'Should get rollup state successfully.');
     }
 
-    // Helpers
-    ////////////
+    /**
+    * @description changed rollups should generate a callback
+    */
+
+    @isTest
+    private static void changedRollupsShouldGenerateCallback() {
+         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            Customizable_Rollups_Enabled__c = true
+        ));
+
+        CRLP_ApiService service = new CRLP_ApiService();
+        setupMockIntegration(service);
+
+        CRLP_RollupCMT.Rollup rollup1 = CRLP_RollupCMT_Test.generateRollup('1');
+        rollup1.recordName = null;
+        Test.startTest();
+        CRLP_ApiService.RollupMetadataHandler callback = service.sendChangeEvent(new List<CRLP_RollupCMT.Rollup> { rollup1} );
+        Test.stopTest();
+
+        System.assertNotEquals(null, callback, 'Should get a callback handler for new rollups');
+    }
+
+
+    /**
+    * @description unchanged filter groups should not generate a callback
+    */
+
+    @isTest
+    private static void unChangedFilterGroupsShouldNotGenerateCallback() {
+         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+            Customizable_Rollups_Enabled__c = true
+        ));
+
+        CRLP_ApiService service = new CRLP_ApiService();
+        setupMockIntegration(service);
+
+        CRLP_RollupCMT.FilterGroup newFilterGroup = CRLP_RollupCMT_Test.generateFilterGroup('1');
+        CRLP_RollupCMT.FilterGroup existingFilterGroup = CRLP_RollupCMT_Test.generateFilterGroup('2');
+
+        Test.startTest();
+        CRLP_ApiService.RollupMetadataHandler callback = service.sendChangeEvent(
+            new List<CRLP_RollupCMT.FilterGroup> { newFilterGroup, existingFilterGroup } 
+        );
+        Test.stopTest();
+
+        System.assertEquals(null, callback, 'No callback handler for unmodified filter groups');
+    }
+
 
     /**
     * @description Validate that the ExecuteRollups() call throws an exception if the RollupType

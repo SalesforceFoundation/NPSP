@@ -152,7 +152,7 @@ public with sharing class CRLP_RollupCMT_TEST {
     @isTest
     private static void accountSoftCreditRollupIdentifiedAsSoftCreditType() {
 
-        String accountSoftCredit = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c')).getName();
+        String accountSoftCredit = UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c');
         CRLP_RollupCMT.Rollup newRollup = generateRollup('1');
         newRollup.amountObject = accountSoftCredit;
         newRollup.detailObject = 'Opportunity';
@@ -168,7 +168,7 @@ public with sharing class CRLP_RollupCMT_TEST {
     @isTest
     private static void contactSoftCreditRollupIdentifiedAsSoftCreditType() {
 
-        String partialSoftCredit = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')).getName();
+        String partialSoftCredit = UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c');
         CRLP_RollupCMT.Rollup newRollup = generateRollup('1');
         newRollup.summaryObject = 'Contact';
         newRollup.amountObject = partialSoftCredit;
@@ -184,9 +184,9 @@ public with sharing class CRLP_RollupCMT_TEST {
     @isTest
     private static void gauRollupIdentifiedAsGAUType() {
 
-        String allocations = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c')).getName();
+        String gaus = UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c');
         CRLP_RollupCMT.Rollup newRollup = generateRollup('1');
-        newRollup.summaryObject = allocations;
+        newRollup.summaryObject = gaus;
 
         CRLP_RollupProcessingOptions.RollupType returnType = newRollup.getRollupType();
 
@@ -200,7 +200,7 @@ public with sharing class CRLP_RollupCMT_TEST {
     @isTest
     private static void rdRollupIdentifiedAsRDType() {
 
-        String recurringDonations = UTIL_Describe.getObjectDescribe('npe03__Recurring_Donation__c').getName();
+        String recurringDonations = 'npe03__Recurring_Donation__c';
         CRLP_RollupCMT.Rollup newRollup = generateRollup('1');
         newRollup.summaryObject = recurringDonations;
 
@@ -245,7 +245,7 @@ public with sharing class CRLP_RollupCMT_TEST {
     /******************************************************************************************************************
      * @description provides a sample Filter Group for Testing
      *****************************************************************************************************************/
-    private static CRLP_RollupCMT.FilterGroup generateFilterGroup(String name) {
+    public static CRLP_RollupCMT.FilterGroup generateFilterGroup(String name) {
 
         CRLP_RollupCMT.FilterGroup newFilterGroup = new CRLP_RollupCMT.FilterGroup(name);
         newFilterGroup.recordName = 'filterGroup' + name;

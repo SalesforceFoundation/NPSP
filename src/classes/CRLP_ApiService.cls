@@ -35,6 +35,9 @@
 * @description Service methods for the Customizable Rollups API
 */
 public without sharing class CRLP_ApiService {
+
+    public static final String PARAM_CHANGED_ROLLUPS = 'Rollup';
+    public static final String PARAM_CHANGED_FILTER_GROUPS = 'FilterGroup';
     public static final String PARAM_ROLLUP_TYPE = 'RollupType';
     public static final String PARAM_ROLLUP_TYPES = 'RollupTypes';
     public static final String PARAM_ROLLUPDEFS = 'RollupDefinitions';
@@ -217,8 +220,250 @@ public without sharing class CRLP_ApiService {
             new List<String>{ apiName, errMessage } ));
     }
 
+
+    /*
+    * @description build a deployment handler based on the changed rollup types 
+    * @param changedRollupTypes is a set of rollup Type strings
+    * @return a MetadataHandler that can be used for deployment callbacks or null
+    */
+    private RollupMetadataHandler getRollupHandler(Set<String> changedRollupTypes) {
+        RollupMetadataHandler callback = null;
+
+         if (!changedRollupTypes.isEmpty()) {
+            callback = new RollupMetadataHandler();
+            callback.params = new Map<String, Set<String>> { 
+                PARAM_CHANGED_ROLLUPS => changedRollupTypes
+            };
+        }
+
+        return callback;
+    }
+
+
+    /*
+    * @description handle changes to customizable rollups and send back a callback handler if 
+    * there is processing that needs to be executed after deloyment
+    * @param rollups is a List of Rollups
+    * @return a MetadataHandler that can be used for deployment callbacks or null
+    */
+    public RollupMetadataHandler sendChangeEvent(List<CRLP_RollupCMT.Rollup> rollups) {
+        if (!isRollupStateEnabled()) {
+            return null;
+        }
+
+        Set<String> changedRollupTypes = new Set<String>();
+
+        for (CRLP_RollupCMT.Rollup cmtRollup : rollups) {
+            RollupUtil util = new RollupUtil(cmtRollup);
+            for (Rollup__mdt rlp : CRLP_Rollup_SEL.cachedRollups) {
+                if (util.hasChanged(rlp)) {
+                    changedRollupTypes.addAll(util.getChangedRollupTypes());
+                }
+            }
+        }
+
+       return getRollupHandler(changedRollupTypes);
+    }
+
+
+    /*
+    * @description handle changes to customizable filter groups and send back a callback handler if
+    * there is processing that needs to be executed after deployment
+    * @param filterGroups is a list of filtergroups
+    * @return a MetadataHandler that can be used for deployment callbacks or null
+    */
+    public RollupMetadataHandler sendChangeEvent(List<CRLP_RollupCMT.FilterGroup> filterGroups) {
+        if (!isRollupStateEnabled()) {
+            return null;
+        }
+
+        Set<String> changedRollupTypes = new Set<String>();
+
+        for (CRLP_RollupCMT.FilterGroup cmtFilterGroup : filterGroups) {
+            FilterGroupUtil util = new FilterGroupUtil();
+            if (util.hasChanged(cmtFilterGroup)) {
+                changedRollupTypes.addAll(util.getRollupTypes(cmtFilterGroup.recordId));
+            }
+        }
+
+        return getRollupHandler(changedRollupTypes);
+    }
+
+
+
+    /*******************************************************************************************************
+    * @description Utility class for a CMT rollup
+    */
+    public class RollupUtil {
+        CRLP_RollupCMT.Rollup cmtRollup;
+        private CRLP_RollupProcessingOptions.RollupType oldRollupType = null;
+
+        private CRLP_RollupProcessingOptions.RollupType rollupType {
+            get {
+                if (rollupType == null) {
+                    rollupType = cmtRollup.getRollupType();
+                }
+                return rollupType;
+            }
+            set;
+        }
+
+        private Boolean isNew {
+            get {
+                if (isNew == null) {
+                    isNew = String.isBlank(cmtRollup.recordName);
+                }
+                return isNew;
+            }
+            set;
+        }
+
+        /*******************************************************************************************************
+         * @description Constructor
+         */
+        public RollupUtil(CRLP_RollupCMT.Rollup cmtRollup) {
+            this.cmtRollup = cmtRollup;
+        }
+
+        /*******************************************************************************************************
+         * @description If the archive bridge needs to be notified about rollup type change, compare rollups.
+         */
+        public Boolean hasChanged(Rollup__mdt rlp) {
+            if (isNew) {
+                return true;
+            }
+
+            if (cmtRollup.recordName == rlp.DeveloperName) {
+                if (cmtRollup.isDifferent(rlp)) {
+                    oldRollupType = new CRLP_RollupCMT.Rollup(rlp).getRollupType();
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
+        /*******************************************************************************************************
+         * @description Builds a set of rollup types that have changed
+         * @return Set<String> Set of rollup types 
+         */
+        public Set<String> getChangedRollupTypes() {
+            if (oldRollupType == null) {
+                oldRollupType = rollupType;
+            }
+
+            return new Set<String> { rollupType.name(), oldRollupType.name() };
+        }
+    }
+
+    /******************************************************************************************************************
+    * @description Utility class for Filter Group processing
+    */
+    public class FilterGroupUtil {
+
+        private Map<Id, List<Filter_Rule__mdt>> rulesByGroupId {
+            get {
+                if (rulesByGroupId == null) {
+                    rulesByGroupId = CMT_FilterRule_SEL.getFilterRulesByGroup();
+                }
+                return rulesByGroupId;
+            }
+            set;
+        }
+
+        /******************************************************************************************************************
+        * @description Determines if the filter group has changed
+        */
+        public Boolean hasChanged(CRLP_RollupCMT.FilterGroup cmtFilterGroup) {
+            List<Filter_Group__mdt> allGroups = CMT_FilterRule_SEL.getFilterGroups();
+            Boolean hasChanged  = false;
+
+            for (Filter_Group__mdt filterGroup : allGroups) {
+                CRLP_RollupCMT.FilterGroup existingGroup = new CRLP_RollupCMT.FilterGroup(filterGroup);
+                
+                if (cmtFilterGroup.recordId != existingGroup.recordId) {
+                    continue;
+                }
+
+                if (cmtFilterGroup.isDifferent(
+                    existingGroup.withRules(rulesByGroupId.get(existingGroup.recordId))
+                )) {
+                    hasChanged = true;
+                }
+
+                break;
+            }
+            
+            return hasChanged;
+        }
+
+        /******************************************************************************************************************
+        * @description Returns rollup types in the filter group
+        */
+        public Set<String> getRollupTypes(Id groupId) {
+            Set<String> rollypTypes = new Set<String>();
+
+            List<Rollup__mdt> rollups = CRLP_Rollup_SEL.getRollupsByFilterGroup().get(groupId);
+            if (rollups == null) {
+                return rollypTypes;
+            }
+            
+            for (Rollup__mdt rlp : rollups) {
+                CRLP_RollupProcessingOptions.RollupType rollupType = (new CRLP_RollupCMT.Rollup(rlp)).getRollupType();
+
+                if (rollupType != null) {
+                    rollypTypes.add(rollupType.name());
+                }
+            }
+            return rollypTypes;
+        }
+    }
+  
+
     /**
     * @description Exception class
     */
     private class ApiException extends Exception {}
+
+
+    /******************************************************************************************************************
+    * @description Metadata Call back handler class to execute actions when the metadata has successfully been deployed
+    /*****************************************************************************************************************/
+    public class RollupMetadataHandler implements CMT_MetadataAPI.MetadataCallbackHandler {
+
+        public Map<String, Object> params;
+
+
+        /**************************************************************************************************************
+        * @description success handler - will call the ApiService to set rollus as stale 
+        /*************************************************************************************************************/
+        public void performSuccessHandler(Map<String, Object> params) {
+            if (params == null || params.isEmpty()) {
+                return;
+            }
+
+            try {
+                for (String changedCMT : params.keySet()) {
+                    new CRLP_ApiService().setRollupStateAsStale( (Set<String>)params.get(changedCMT) );
+                }
+            } catch (Exception ex) {
+                logError(ex);
+            }
+        }
+
+        private void logError(Exception ex) {
+            Error__c rollupHandlerError = new Error__c(
+                Error_Type__c = 'Rollup Metadata Handler Error',
+                Object_Type__c = 'CustomMetadata',
+                Datetime__c = System.now(), 
+                Full_Message__c = ex.getMessage()
+            );
+
+            Database.insert(rollupHandlerError, true);
+        }
+    }
+
+
+
 }

@@ -146,6 +146,7 @@ public class CRLP_RollupCMT {
             if (this.rules.size() != other.rules.size()) {
                 return true;
             }
+            System.debug('same size');
 
             Map<String, FilterRule> rulesByHash = new Map<String, FilterRule>();
 
@@ -156,12 +157,14 @@ public class CRLP_RollupCMT {
 
             for (Integer i = 0; i < this.rules.size(); i++) {
                 FilterRule currentRule = this.rules[i];
-
+                System.debug(' currentRule  ' + currentRule);
                 if (!rulesByHash.containsKey(currentRule.generateHash())) {
+                    System.debug(' different rule : ');
                     return true;
                 }
             }
 
+            
             return false;
         }
     }
@@ -502,6 +505,22 @@ public class CRLP_RollupCMT {
         
         }
 
+
+        /*******************************************************************************************************
+        * @description Determines if the target rollup is a duplicate
+        */
+        public Boolean isDuplicate(Rollup__mdt rlp) {
+            if (rlp.DeveloperName != this.recordName
+                && rlp.Active__c
+                && this.summaryObject == rlp.Summary_Object__r.QualifiedApiName
+                && this.summaryField == rlp.Summary_Field__r.QualifiedApiName
+                && !Test.isRunningTest()
+            ) {
+                return true;
+            }
+            return false;
+        }
+
         /**************************************************************************************************************
         * @description Return the rollup type for a given rollup definition
         * @param Rollup__mdt CMT Record
@@ -514,7 +533,7 @@ public class CRLP_RollupCMT {
             String opportunityApiName = String.valueOf(Opportunity.getSObjectType());
             String paymentApiName = 'npe01__OppPayment__c';
             String recurringDonationsApiName = 'npe03__Recurring_Donation__c';
-            String allocationApiName = UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c');
+            String gauApiName = UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c');
             String partialSoftCreditApiName = UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c');
             String accountSoftCreditApiName = UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c');
 
@@ -523,7 +542,7 @@ public class CRLP_RollupCMT {
                 return CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
             }
 
-            if (this.summaryObject == allocationApiName) {
+            if (this.summaryObject == gauApiName) {
                 return CRLP_RollupProcessingOptions.RollupType.GAU;
             }
 
@@ -537,9 +556,7 @@ public class CRLP_RollupCMT {
             }
 
             if (this.detailObject == accountSoftCreditApiName ||  this.amountObject == accountSoftCreditApiName) {
-                if (this.detailObject == opportunityApiName || this.detailObject == accountSoftCreditApiName) {
-                    return CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit;
-                }
+                return CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit;
             }
 
             if (this.detailObject == opportunityApiName || this.detailObject == paymentApiName) {
@@ -619,6 +636,7 @@ public class CRLP_RollupCMT {
      */
     private static String abbreviateForSpace(String txt, Boolean forDeveloperName) {
 
+        // TODO Talk to Beth about LowerCase().
         txt = txt.replace('General Accounting Unit', 'GAU').
                 replace('Recurring Donation', 'RD').
                 replace('Opportunity', 'Opp').
