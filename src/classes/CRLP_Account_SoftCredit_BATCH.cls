@@ -32,7 +32,7 @@
 * @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Account Soft Credit Rollup Batch Job
+* @description Account-Contact Soft Credit Rollup Batch Job
 */
 public class CRLP_Account_SoftCredit_BATCH extends CRLP_Batch_Base_NonSkew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 
