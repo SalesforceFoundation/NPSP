@@ -1,3 +1,4 @@
+minimum_cumulusci_version: 2.4.4
 project:
     name: Cumulus
     package:
@@ -73,6 +74,15 @@ tasks:
         class_path: cumulusci.tasks.salesforce.Deploy
         options:
             path: unpackaged/config/delete
+    
+    ensure_record_type:
+        name: Ensure Opportunity Record Types
+        description: This will ensure Record Types are enabled for the Opportunity object in your org before installing NPSP. If there are no Opportunity record types yet, it will create one called NPSP Default.
+        class_path: cumulusci.tasks.salesforce.EnsureRecordTypes
+        options:
+            record_type_label: NPSP Default
+            record_type_developer_name: NPSP_Default
+            sobject: Opportunity
 
     robot:
         options:
@@ -343,6 +353,16 @@ flows:
                 task: run_tests
                 options:
                     test_name_match: LDV_%
+
+    dependencies:
+        steps:
+            3:
+                task: ensure_record_type
+    
+    beta_dependencies:
+        steps:
+            3:
+                task: ensure_record_type
 
 orgs:
     scratch:
