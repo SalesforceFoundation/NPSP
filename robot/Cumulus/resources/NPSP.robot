@@ -12,7 +12,12 @@ ${task2}     Make a Phone Call2
 
 *** Keywords ***
 
-API Create Contact
+ Capture Screenshot and Delete Records and Close Browser
+    Capture Page Screenshot
+    Close Browser
+    Delete Session Records
+    
+ API Create Contact
     [Arguments]      &{fields}
     ${first_name} =  Generate Random String
     ${last_name} =   Generate Random String
@@ -33,6 +38,15 @@ API Modify Contact
     &{contact} =  Get From List  ${records}  0
     [return]         &{contact}
 
+API Create Campaign
+    [Arguments]      &{fields}
+    ${name} =   Generate Random String
+    ${campaign_id} =  Salesforce Insert  Campaign
+    ...                  Name=${name}
+    ...                  &{fields}  
+    &{campaign} =     Salesforce Get  Campaign  ${campaign_id}
+    [return]         &{campaign}
+    
 API Create Opportunity
     [Arguments]      ${account_id}    ${opp_type}      &{fields} 
     ${rt_id} =       Get Record Type Id  Opportunity  ${opp_type}
@@ -327,19 +341,7 @@ Run Donations Batch Process
     Wait For Locator    npsp_settings.status    RLLP_OppContactRollup_BATCH    Completed
     Wait For Locator    npsp_settings.status    RLLP_OppHouseholdRollup_BATCH    Completed
     Wait For Locator    npsp_settings.status    RLLP_OppSoftCreditRollup_BATCH    Completed
-    
-# Choose Frame
-    # [Arguments]    ${frame}
-    # Select Frame    //iframe[contains(@title,'${frame}')]
-    
-# Select Frame with Name
-    # [Arguments]    ${name}
-    # Select Frame    //iframe[contains(@name, '${name}')]
-
-# Select Frame With Title
-    # [Arguments]    ${name}
-    # Select Frame    //iframe[@title= '${name}']    
-    
+     
 Scroll Page To Location
     [Arguments]    ${x_location}    ${y_location}
     Execute JavaScript    window.scrollTo(${x_location},${y_location}) 
@@ -359,3 +361,8 @@ Open NPSP Settings
 Click Data Import Button
     [Arguments]       ${frame_name}    ${ele_path}     @{others}
     Select Frame And Click Element    ${frame_name}    ${ele_path}     @{others}
+    
+Click Field And Select Date
+    [Arguments]    ${field}    ${date}
+    Click Element With Locator    bge.field-input    ${field}    
+    Click BGE Button    ${date}    
