@@ -51,10 +51,10 @@ private class BDI_MigrationMappingUtilityTest {
         util.buildCustomMetadataRecordsFromHelpText(mock_BDI_MigrationMappingHelper);
 
         // Confirm that we have a new pending data import field mapping waiting to be deployed
-        System.assertEquals(1, util.pendingCMTs.size());
+        System.assertEquals(1, util.pendingMappings.size());
 
-        // Confirm that we can get custom metadata from "pendingCMTs"
-        Metadata.CustomMetadata cmt = util.pendingCMTs[0].getMetadataRecord();
+        // Confirm that we can get custom metadata from "pendingMappings"
+        Metadata.CustomMetadata cmt = util.pendingMappings[0].getMetadataRecord();
         System.assertEquals('New Mapping', cmt.label);
     }
 

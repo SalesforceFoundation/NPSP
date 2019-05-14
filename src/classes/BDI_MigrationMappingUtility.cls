@@ -45,13 +45,13 @@ public class BDI_MigrationMappingUtility {
     /**
     * @description Metadata parked due to conflicts with our default cmt records
     */
-    public List<BDI_HelpTextCMT.DataImportFieldMapping> conflictingCMTs =
+    public List<BDI_HelpTextCMT.DataImportFieldMapping> conflictingMappings =
         new List<BDI_HelpTextCMT.DataImportFieldMapping>();
 
     /**
     * @description Metadata parked due to conflicts with our default cmt records
     */
-    public List<BDI_HelpTextCMT.DataImportFieldMapping> pendingCMTs =
+    public List<BDI_HelpTextCMT.DataImportFieldMapping> pendingMappings =
         new List<BDI_HelpTextCMT.DataImportFieldMapping>();
 
     /**
@@ -73,12 +73,18 @@ public class BDI_MigrationMappingUtility {
         'Default_Field_Mapping_Set';
 
     /**
+    * @description Name of custom Field Mapping Set
+    */
+    private static final String MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME =
+        'Migrated_Custom_Mapping_Set';
+
+    /**
     * @description Default packaged Object Mapping Set metadata record
     */
     private static final Data_Import_Object_Mapping_Set__mdt DEFAULT_OBJECT_MAPPING_SET = [SELECT
                 Id,
                 DeveloperName,
-                Labe
+                Label
         FROM Data_Import_Object_Mapping_Set__mdt
         WHERE DeveloperName = :DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME];
 
@@ -104,11 +110,14 @@ public class BDI_MigrationMappingUtility {
      * object and is needed to ensure that the status retrieved from that custom settings object is for this
      * particular deployment and not a previous one.
      */
-    public String convertLegacyHelpTextToCustomMetadata() {
+    public String convertLegacyHelpTextToCustomMetadata(Boolean keepCustomizations) {
 
         if (!queuedMetadataTypesForDeploy.isEmpty()) {
+            CMT_MetadataAPI.Source source =
+                (keepCustomizations ? CMT_MetadataAPI.Source.CUSTOM_HELP_TEXT_MIGRATION : CMT_MetadataAPI.Source.HELP_TEXT_MIGRATION);
+
             CMT_MetadataAPI.deployMetadata(jobId, queuedMetadataTypesForDeploy.clone(), 
-                CMT_MetadataAPI.Source.HELP_TEXT_MIGRATION);
+                source);
         } else {
             // Queue is empty, but we still need to update Data Import settings
             updateCustomDataImportSettings(jobId, Label.bdiCustomObjectMappingSummary);
@@ -123,7 +132,31 @@ public class BDI_MigrationMappingUtility {
      */
     private void updateCustomDataImportSettings(String jobId, String fieldMappingMethod) {
         Map<String, String> statusMap = new Map<String, String>{jobId => 'Queue was empty'};
-        CMT_MetadataAPI.setHelpTextMigrationSettings(statusMap, true);
+        CMT_MetadataAPI.setHelpTextMigrationSettings(statusMap, true, CMT_MetadataAPI.Source.HELP_TEXT_MIGRATION);
+    }
+
+    public List<Metadata.CustomMetadata> updateCustomMetadataRecords(String fieldMappingSetName,
+                                                                     List<BDI_HelpTextCMT.DataImportFieldMapping> fieldMappings,
+                                                                     BDI_MigrationMappingHelper helper) {
+        System.debug('updateCustomMetadataRecords');
+        Map<String, Data_Import_Field_Mapping__mdt> existingFieldMappings =
+            helper.getFieldMappingsByDeveloperName(fieldMappingSetName);
+        List<Metadata.CustomMetadata> updatedCMTs = new List<Metadata.CustomMetadata>();
+
+        for (BDI_HelpTextCMT.DataImportFieldMapping fieldMapping : fieldMappings) {
+            Data_Import_Field_Mapping__mdt existingDefaultFieldMapping =
+                    existingFieldMappings.get(fieldMapping.sourceFieldAPIName);
+            System.debug('==========================');
+            System.debug(existingDefaultFieldMapping);
+            Metadata.CustomMetadata updatedCMT = fieldMapping.getMetadataRecord();
+            System.debug(updatedCMT);
+            List<String> nameParts = updatedCMT.fullName.split('\\.', 2);
+            System.debug(nameParts);
+            updatedCMT.fullName = nameParts[0] + '.' + existingDefaultFieldMapping.DeveloperName;
+            updatedCMTs.add(updatedCMT);
+        }
+
+        return updatedCMTs;
     }
 
     /**
@@ -131,7 +164,7 @@ public class BDI_MigrationMappingUtility {
      * Type records reserve all non-standard NPSP Help Text mappings. What to do with reserved list of Help 
      * Text mappings TBD.
      */
-    public void buildCustomMetadataRecordsFromHelpText(BDI_MigrationMappingHelper helper) {
+    public void buildCustomMetadataRecordsFromHelpText(BDI_MigrationMappingHelper helper, String fieldMappingSetName) {
 
         Map<String, BDI_HelpTextCMT.MappingDetail> listHelpTextFieldDetails =
                 helper.getAllMappedHelpTextFields();
@@ -140,7 +173,7 @@ public class BDI_MigrationMappingUtility {
                 helper.getDefaultObjectMappings(DEFAULT_OBJECT_MAPPING_SET.Id);
 
         Map<String, Data_Import_Field_Mapping__mdt> existingFieldMappings =
-                helper.getDefaultFieldMappings(DEFAULT_FIELD_MAPPING_SET.Id);
+                helper.getFieldMappingsByDeveloperName(fieldMappingSetName);
 
         for (String key : listHelpTextFieldDetails.keySet()) {
 
@@ -165,7 +198,7 @@ public class BDI_MigrationMappingUtility {
 
                     // Add metadata record to queue for deployment
                     queuedMetadataTypesForDeploy.add(fieldMapping.getMetadataRecord());
-                    pendingCMTs.add(fieldMapping);
+                    pendingMappings.add(fieldMapping);
                 } else if (foundDefaultFieldMapping) {
                     // Existing Field Mapping, check if CMTs field values match Help Text field values
                     Boolean invalidFieldMapping = foundDefaultFieldMappingMismatch(fieldMapping, 
@@ -184,7 +217,7 @@ public class BDI_MigrationMappingUtility {
                             + '.'
                             + existingDefaultFieldMapping.Target_Field_API_Name__c;
 
-                        conflictingCMTs.add(fieldMapping);
+                        conflictingMappings.add(fieldMapping);
                     }
                 }
             }

@@ -38,7 +38,8 @@ public class CMT_MetadataAPI {
      */
     public enum Source {
         CUSTOMIZABLE_ROLLUPS,
-        HELP_TEXT_MIGRATION
+        HELP_TEXT_MIGRATION,
+        CUSTOM_HELP_TEXT_MIGRATION
     }
 
     /**
@@ -177,8 +178,9 @@ public class CMT_MetadataAPI {
                 setStatusMap(result, statusMap, isSuccess);
             }
 
-            if (source == CMT_MetadataAPI.Source.HELP_TEXT_MIGRATION) {
-                setHelpTextMigrationSettings(statusMap, isSuccess);
+            if (source == CMT_MetadataAPI.Source.HELP_TEXT_MIGRATION
+                || source == CMT_MetadataAPI.Source.CUSTOM_HELP_TEXT_MIGRATION) {
+                setHelpTextMigrationSettings(statusMap, isSuccess, source);
             } else {
                 setCustomizableRollupsSettings(statusMap, isSuccess);
             }
@@ -221,13 +223,21 @@ public class CMT_MetadataAPI {
     /**
      * @description Update Data Import Custom Settings
      */
-    public static Data_Import_Settings__c setHelpTextMigrationSettings(Map<String, String> statusMap, Boolean isSuccess) {
+    public static Data_Import_Settings__c setHelpTextMigrationSettings(Map<String, String> statusMap, Boolean isSuccess, Source source) {
         // Write the deployment status to the custom settings object
         Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         dataImportSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
 
         dataImportSettings.Field_Mapping_Method__c = (isSuccess ? 'Data Import Field Mapping' : 'Help Text');
-        dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = (isSuccess ? 'Default_Field_Mapping_Set' : '');
+        if (isSuccess && source != null) {
+            if (source == CMT_MetadataAPI.Source.HELP_TEXT_MIGRATION) {
+                dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = 'Default_Field_Mapping_Set';
+            } else {
+                dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = 'Migrated_Custom_Mapping_Set';
+            }
+        } else {
+            dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = '';
+        }
 
         if (!Test.isRunningTest()) {
             upsert dataImportSettings;

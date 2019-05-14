@@ -48,6 +48,39 @@ public class BDI_HelpTextCMT {
     private static final Boolean IS_PROTECTED = false;
 
     /**
+     * Wrapper class for Data_Import_Field_Mapping_Set__mdt used to create
+     * the custom CMT data as well as for use in the Custom UI.
+     */
+    public class DataImportFieldMappingSet {
+        public String recordName;
+        public String label;
+        public String dataImportObjectMappingSetRecordName;
+
+        public DataImportFieldMappingSet(String label, String dataImportObjectMappingSetRecordName) {
+            this.label = label.trim();
+            this.dataImportObjectMappingSetRecordName = dataImportObjectMappingSetRecordName;
+        }
+
+        public Metadata.CustomMetadata getMetadataRecord() {
+            String mdTypeName = UTIL_Namespace.StrTokenNSPrefix(BDI_HelpTextCMT.MetadataObject.Data_Import_Field_Mapping_Set.Name() + '__mdt');
+
+            // Setup custom metadata to be created or updated in the subscriber org.
+            Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
+            customMd.label = this.label.left(40);
+            this.recordName = generateRecordName(this.label, false, '', '');
+            customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
+            customMd.protected_x = IS_PROTECTED;
+
+            Map<String, Object> fieldValues = new Map<String, Object>{
+                'Data_Import_Object_Mapping_Set__c' => this.dataImportObjectMappingSetRecordName
+            };
+            customMd = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fieldValues);
+
+            return customMd;
+        }
+    }
+
+    /**
      * Wrapper class for Data_Import_Field_Mapping__mdt used to create
      * the default CMT data as well as for use in the Custom UI.
      */
@@ -116,7 +149,6 @@ public class BDI_HelpTextCMT {
 
             return customMd;
         }
-
     }
 
     /**
@@ -153,7 +185,6 @@ public class BDI_HelpTextCMT {
                 }
             }
         }
-
     }
 
     /**
@@ -174,7 +205,6 @@ public class BDI_HelpTextCMT {
                 this.objectAPIName = DI_OBJECT_MAP.get(this.objectName);
             }
         }
-
     }
 
     /**
@@ -197,7 +227,6 @@ public class BDI_HelpTextCMT {
             this.importedRecordField = importedRecordField;
             this.importedRecordStatusField = importedRecordStatusField;
         }
-
     }
 
     /**

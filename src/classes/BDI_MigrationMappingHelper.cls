@@ -38,6 +38,34 @@
 public class BDI_MigrationMappingHelper {
 
     /**
+    * @description Name of default packaged Object Mapping Set
+    */
+    private static final String DATA_IMPORT_OBJECT_NAME =
+        'DataImport__c';
+
+    /**
+    * @description Name of default packaged Object Mapping Set
+    */
+    private static final String DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME =
+        'Default_Object_Mapping_Set';
+
+    /**
+     * @description Creates a new Field Mapping Set to be used as the new set when migration utility
+     * encounters a help text mapping customization and user opts to keep their customization
+     * @return Data_Import_Field_Mapping_Set__mdt
+     */
+    public Metadata.CustomMetadata createNewFieldMappingSet(String fieldMappingName) {
+        System.debug('createNewFieldMappingSet');
+
+        BDI_HelpTextCMT.DataImportFieldMappingSet fieldMappingSet =
+            new BDI_HelpTextCMT.DataImportFieldMappingSet(fieldMappingName, DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME);
+
+        System.debug(fieldMappingSet.getMetadataRecord());
+
+        return fieldMappingSet.getMetadataRecord();
+    }
+
+    /**
      * @description Go through all fields in Data Import object and collect relevant help text mappings
      * @return A collection of help text field names mapped to an instance of MappingDetail which holds
      * relevant values for building
@@ -53,7 +81,7 @@ public class BDI_MigrationMappingHelper {
                 new Map<String, BDI_HelpTextCMT.ImportStatusAndLookupParts>();
 
         Map<String, Schema.DescribeFieldResult> allDFRs =
-                UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix('DataImport__c'));
+                UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrAllNSPrefix(DATA_IMPORT_OBJECT_NAME));
 
 
         for (String dataImportFieldName : allDFRs.keySet()) {
@@ -186,7 +214,7 @@ public class BDI_MigrationMappingHelper {
      * @param fieldMappingSetId Id of the default Field Mapping Set
      * @return Collection of Field Mapping DeveloperName to Field Mapping record
      */
-    public Map<String, Data_Import_Field_Mapping__mdt> getDefaultFieldMappings(Id fieldMappingSetId) {
+    public Map<String, Data_Import_Field_Mapping__mdt> getFieldMappingsByDeveloperName(String developerName) {
         List<Data_Import_Field_Mapping__mdt> existingFieldMappings = [SELECT 
                     Id, 
                     Label, 
@@ -199,7 +227,7 @@ public class BDI_MigrationMappingHelper {
                     Target_Object_Mapping__r.Object_API_Name__c,
                     Is_Deleted__c
             FROM Data_Import_Field_Mapping__mdt
-            WHERE Data_Import_Field_Mapping_Set__c = :fieldMappingSetId];
+            WHERE Data_Import_Field_Mapping_Set__r.DeveloperName = :developerName];
 
         Map<String, Data_Import_Field_Mapping__mdt> diFieldNameToFieldMappingMap = 
             new Map<String, Data_Import_Field_Mapping__mdt>();
