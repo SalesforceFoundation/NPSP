@@ -226,7 +226,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
     }
 
     /*******************************************************************************************************
-    * @description When changing the amount of a Written off Payment with Allocations: 
+    * @description When changing the amount of a Written off Payment with Allocations:
     * Changes to the payment values will not change the opportunity allocations
     ********************************************************************************************************/
     @isTest
@@ -239,7 +239,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
         update payments;
         makeGAUs(2);
 
-        System.assert(UTIL_CustomSettingsFacade.getAllocationsSettings().Payment_Allocations_Enabled__c, 
+        System.assert(UTIL_CustomSettingsFacade.getAllocationsSettings().Payment_Allocations_Enabled__c,
             UTIL_CustomSettingsFacade.getAllocationsSettings());
 
         //resetting these manually as a test is considered a single context for static variables
@@ -249,6 +249,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
         alloForInsert.add(new Allocation__c(Payment__c=payments[0].Id, Amount__c = 300, General_Accounting_Unit__c = gaus[1].Id));
         insert alloForInsert;
 
+        // The default allocation will not go away or shrink because it stops being updated once it is marked "Written Off"
         List<Allocation__c> queryAllocations = getAllocationsOrderByAmount();
         System.assertEquals(3, queryAllocations.size(), 'Three allocations should exist.');
 
@@ -258,9 +259,8 @@ private with sharing  class ALLO_PaymentSync_TEST {
         System.assertEquals(null, queryAllocations[2].Opportunity__c, 'Only Payment allocations should have been created');
 
         //original payment allocations
-        assertAllocation(queryAllocations[0], 200, defaultGau.Id, false);
-        assertAllocation(queryAllocations[1], 300, gaus[1].Id, false);
-        assertAllocation(queryAllocations[2], 500, gaus[0].Id, false);
+        assertAllocation(queryAllocations[0], 300, gaus[1].Id, false);
+        assertAllocation(queryAllocations[1], 500, gaus[0].Id, false);
     }
 
     /*******************************************************************************************************
@@ -272,14 +272,14 @@ private with sharing  class ALLO_PaymentSync_TEST {
         setupForTests();
         makePayments(1000, 1);
         makeGAUs(2);
-        
+
         // mark payments as paid
         for(npe01__OppPayment__c payment: payments) {
             payment.npe01__Paid__c = true;
         }
         update payments;
 
-        System.assert(UTIL_CustomSettingsFacade.getAllocationsSettings().Payment_Allocations_Enabled__c, 
+        System.assert(UTIL_CustomSettingsFacade.getAllocationsSettings().Payment_Allocations_Enabled__c,
             UTIL_CustomSettingsFacade.getAllocationsSettings());
 
         List<Allocation__c> queryAllocations = getAllocationsOrderByAmount();
@@ -346,8 +346,10 @@ private with sharing  class ALLO_PaymentSync_TEST {
         } catch (Exception e) {
             errMessage = e.getMessage();
         }
-        System.Assert(errMessage.contains(System.Label.alloRemoveOppWithPmt), 
-            'Failure message should contain '+System.Label.alloRemoveOppWithPmt);
+
+        String labelMsg = String.format(System.Label.alloRemoveOppWithPmt, new String[] {opportunity.Name, opportunity.Id, queryAllocations[1].Name, queryAllocations[1].Id});
+        System.assert(errMessage.contains(labelMsg),
+            'Failure message should contain ' + labelMsg);
 
         errMessage = '';
         try {
@@ -357,8 +359,11 @@ private with sharing  class ALLO_PaymentSync_TEST {
         } catch (Exception e) {
             errMessage = e.getMessage();
         }
-        System.Assert(errMessage.contains(System.Label.alloPaidPmtsExceedsOpp), 
-            'Failure message should contain '+System.Label.alloPaidPmtsExceedsOpp);
+
+        labelMsg = String.format(System.Label.alloPaidPmtsExceedsOpp, new String[] {opportunity.Name, opportunity.Id, queryAllocations[2].Name, queryAllocations[2].Id});
+
+        System.Assert(errMessage.contains(labelMsg),
+            'Failure message should contain ' + labelMsg);
     }
 
     /*******************************************************************************************************
@@ -668,6 +673,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
     private static UTIL_Query getAllocationsQuery() {
         return new UTIL_Query()
             .withSelectFields(new String[]{
+                'Name',
                 'Opportunity__c',
                 'Payment__c',
                 'General_Accounting_Unit__c',
