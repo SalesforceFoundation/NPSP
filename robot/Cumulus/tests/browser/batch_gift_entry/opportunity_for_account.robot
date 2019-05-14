@@ -38,7 +38,6 @@ Select an opportunity for an account make grid changes and process it
     Click Element With Locator    bge.field-input    Donation Date
     Click BGE Button    Today
     Click BGE Button       Save
-    Reload Page
     Sleep    2
     Verify Row Count    1
     Page Should Contain Link    &{opportunity}[Name]
@@ -46,9 +45,8 @@ Select an opportunity for an account make grid changes and process it
     Click BGE Edit Button    Donation Amount   
     Wait For Locator    bge.edit_field  
     Populate BGE Edit Field    Donation Amount    10
+    Scroll Page To Location    0    0
     Click BGE Button       Process Batch
-    # Select Frame With Title    NPSP Data Import
-    # Click Button With Value   Begin Data Import Process
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Locator    data_imports.status    Completed
     Click Button With Value   Close
