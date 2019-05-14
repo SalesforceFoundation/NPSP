@@ -109,9 +109,4 @@ Verify Custom Fields on Payment and Donation
     ...    ${ns}custom_textarea__c=this is custom batch
     ...    ${ns}custom_text__c=Robot
     
-***Keywords***
-Click Field And Select Date
-    [Arguments]    ${field}    ${date}
-    Click Element With Locator    bge.field-input    ${field}    
-    Click BGE Button    ${date}
          

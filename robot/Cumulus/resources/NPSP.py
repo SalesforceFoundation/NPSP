@@ -707,7 +707,7 @@ class NPSP(object):
         assert list_found, "Dropdown with the provided locator not found"
 
     def check_if_element_exists(self, xpath):
-        elements = int(self.selenium.get_matching_xpath_count(xpath))
+        elements =self.selenium.get_element_count(xpath)
         return True if elements > 0 else False
     
     def select_multiple_values_from_list(self,list_name,*args): 

@@ -83,9 +83,3 @@ Create a new opportunity for a contact with open donations
     Load Related List    Opportunities
     Verify Occurrence    Opportunities    2
     Store Session Record      Account    &{contact}[AccountId]  
-
-***Keywords***
-Click Field And Select Date
-    [Arguments]    ${field}    ${date}
-    Click Element With Locator    bge.field-input    ${field}    
-    Click BGE Button    ${date}

@@ -361,3 +361,8 @@ Open NPSP Settings
 Click Data Import Button
     [Arguments]       ${frame_name}    ${ele_path}     @{others}
     Select Frame And Click Element    ${frame_name}    ${ele_path}     @{others}
+    
+Click Field And Select Date
+    [Arguments]    ${field}    ${date}
+    Click Element With Locator    bge.field-input    ${field}    
+    Click BGE Button    ${date}    

@@ -69,9 +69,3 @@ Select a payment for a contact make grid changes and process it
     Confirm Value    Close Date    ${opp_date}    Y 
     Confirm Value    Stage    Prospecting    Y 
     Store Session Record      Account    &{contact}[AccountId] 
-    
-***Keywords***
-Click Field And Select Date
-    [Arguments]    ${field}    ${date}
-    Click Element With Locator    bge.field-input    ${field}    
-    Click BGE Button    ${date}

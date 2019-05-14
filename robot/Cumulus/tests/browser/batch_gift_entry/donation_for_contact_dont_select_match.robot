@@ -71,9 +71,4 @@ Dont select match for contact new donation with grid changes
     Load Related List    Opportunities
     Verify Occurrence    Opportunities    2
     Store Session Record      Account    &{contact}[AccountId]
-    
-***Keywords***
-Click Field And Select Date
-    [Arguments]    ${field}    ${date}
-    Click Element With Locator    bge.field-input    ${field}    
-    Click BGE Button    ${date}    
+   

@@ -52,9 +52,4 @@ Create New gift and process batch and validate
     Verify Row Count    1
     Page Should Contain    PMT-
     
-***Keywords***
-Click Field And Select Date
-    [Arguments]    ${field}    ${date}
-    Click Element With Locator    bge.field-input    ${field}    
-    Click BGE Button    ${date}
              
