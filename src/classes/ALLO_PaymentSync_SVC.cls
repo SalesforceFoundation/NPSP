@@ -456,11 +456,12 @@ public class ALLO_PaymentSync_SVC {
                             paymentsWithExistingGAU.add(payment.Id);
                             Decimal unpaidAllocationAmount = newTotalPaymentAllocations - totalPaidPaymentAllocations;
                             Decimal paymentRatio =  context.totalUnpaidPayments / payment.npe01__Payment_Amount__c;
+                            Decimal paymentScale = computePaymentScale(context.totalPaidUnpaidPayments, context.opportunity.Amount);
 
                             // Remove current allocation amount from total as it is changing
                             removeAllocationAmountFromPayment(payment.Id, paymentAllocation.Amount__c);
 
-                            paymentAllocation.Amount__c = unpaidAllocationAmount / (paymentRatio * context.scheduleRatio);// * context.scheduleRatio; <- is that needed, since it's already included in the newTotalPaymentAllocations?
+                            paymentAllocation.Amount__c = (unpaidAllocationAmount * paymentScale) / (paymentRatio * context.scheduleRatio);// * context.scheduleRatio; <- is that needed, since it's already included in the newTotalPaymentAllocations?
 
                              //only add the percent for non-default
                             if (gau != UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c) {
@@ -481,13 +482,13 @@ public class ALLO_PaymentSync_SVC {
                     // Now do a second pass looking for ones that did not have this allocation...
                     for (npe01__OppPayment__c payment : context.payments.values()) {
                         if (!payment.npe01__Paid__c && payment.npe01__Payment_Amount__c != 0 && !paymentsWithExistingGAU.contains(payment.Id)) {
-
                             Decimal paymentRatio = context.totalUnpaidPayments / payment.npe01__Payment_Amount__c;
+                            Decimal paymentScale = computePaymentScale(context.totalPaidUnpaidPayments, context.opportunity.Amount);
 
                             Allocation__c newAllocation = new Allocation__c(
                                 Payment__c = payment.Id,
                                 General_Accounting_Unit__c = gau,
-                                Amount__c = newTotalPaymentAllocations / (paymentRatio * context.scheduleRatio) // * context.scheduleRatio  <- is that needed, since it's already included in the newTotalPaymentAllocations?
+                                Amount__c = (newTotalPaymentAllocations * paymentScale) / (paymentRatio * context.scheduleRatio) // * context.scheduleRatio  <- is that needed, since it's already included in the newTotalPaymentAllocations?
                             );
 
                             //only add the percent for non-default
@@ -513,11 +514,12 @@ public class ALLO_PaymentSync_SVC {
                 for (npe01__OppPayment__c payment : context.payments.values()) {
                     if (!payment.npe01__Paid__c && payment.npe01__Payment_Amount__c != 0) { // Only process unpaid payments...
                         Decimal paymentRatio = context.totalUnpaidPayments / payment.npe01__Payment_Amount__c;
+                        Decimal paymentScale = computePaymentScale(context.totalPaidUnpaidPayments, context.opportunity.Amount);
 
                         Allocation__c newAllocation = new Allocation__c(
                             Payment__c = payment.Id,
                             General_Accounting_Unit__c = gau,
-                            Amount__c = newTotalPaymentAllocations / (paymentRatio * context.scheduleRatio) // * context.scheduleRatio  <- is that needed, since it's already included in the newTotalPaymentAllocations?
+                            Amount__c = (newTotalPaymentAllocations * paymentScale) / (paymentRatio * context.scheduleRatio) // * context.scheduleRatio  <- is that needed, since it's already included in the newTotalPaymentAllocations?
                         );
 
                         //only add the percent for non-default
@@ -567,6 +569,11 @@ public class ALLO_PaymentSync_SVC {
         recalcDefaultAllocsForOppToPmt(context);
     }
 
+    /*******************************************************************************************************
+    * @description Iterates over the payments associated with a context, updating/adding/removing the
+    * Default GAU as necessary
+    * @param SynchronizationContext context - The context of the current Opportunity, Allocations and Payments to work with
+    ********************************************************************************************************/
     private void recalcDefaultAllocsForOppToPmt (SynchronizationContext context) {
 
         Id defaultGAU = UTIL_CustomSettingsFacade.getAllocationsSettings().Default__c;
@@ -604,6 +611,32 @@ public class ALLO_PaymentSync_SVC {
             }
 
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Determines if a scale is necessary for the allocations, and if so what it is.
+    * If Opportunity Amount is null/0, the total payment Amount is null/0 or the paymentAmount is < than the Opportunity Amount a scale is
+    * considered unnecessary, and a scale of 1 (meaning no scale is returned).  Otherwise, it will return the
+    * a percentage to upscale the allocations by, dividing the unsigned value of the total payment amount by the
+    * unsigned value of the opportunity amount
+    * @param Decimal totalPaymentAmount Decimal Amount of the Payment Total (paid and unpaid)
+    * @param Decimal opportunityAmount Decimal Amount of the Opportunity
+    * @return Decimal ratio to upscale the allocation by, or 1
+    ********************************************************************************************************/
+    @testVisible private static Decimal computePaymentScale(Decimal totalPaymentAmount, Decimal opportunityAmount) {
+        if (opportunityAmount == null || opportunityAmount == 0 || totalPaymentAmount == 0 || totalPaymentAmount == null) {
+            return 1;
+        }
+
+        Decimal unsignedOpportunityAmount = Math.abs(opportunityAmount);
+        Decimal unsignedTotalPaymentAmount = Math.abs(totalPaymentAmount);
+
+        if (unsignedTotalPaymentAmount <= unsignedOpportunityAmount) {
+            return 1;
+        }
+
+        return unsignedTotalPaymentAmount / unsignedOpportunityAmount;
+
     }
 
     /*******************************************************************************************************
