@@ -162,66 +162,12 @@ public inherited sharing class CRLP_Query_SEL {
 
             // always include these two extra fields for Opportunity queries
             mainSoql += ', Account.npe01__SYSTEMIsIndividual__c';
-
         }
 
         // Append the main object back to the query and return it
         mainSoql += ' FROM ' + detailObject.getDescribe().getName();
-        UTIL_Debug.debug('SOQL=' + mainSoql);
+        UTIL_Debug.debug(LoggingLevel.WARN, 'SOQL=' + mainSoql);
         return mainSoql;
-    }
-
-    /**
-     * @description Build a complete SOQL query string from a set of Summary Record Ids, including the requried
-     * child objects and filtered by the parent record id's
-     * @param summaryRecordIds Set<Id>
-     * @param includeChildPayments True if npe01__OppPayment__c child records should be included in the query
-     * @return SOQL
-     */
-    public static String buildFullDetailsQueryForSummaryRecords(Set<Id> summaryRecordIds, Boolean includeChildPayments,
-            CRLP_RollupProcessingOptions.ProcessingOptions options) {
-        SObjectType objType = (new List<Id>(summaryRecordIds))[0].getSobjectType();
-        SObjectType mainObject;
-        String detailKeyField;
-        List<SObjectType> childObjects = new List<SObjectType>();
-
-        // The specific set of 'detail' records is fixed based on the target summary object.
-        if (objType == Account.SObjectType) {
-
-            if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                    options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-
-                // Opportunity and Payment to Account
-                mainObject = Opportunity.SObjectType;
-                if (includeChildPayments == true) {
-                    childObjects.add(npe01__OppPayment__c.SObjectType);
-                }
-                detailKeyField = SObjectType.Opportunity.fields.AccountId.getName();
-            } else if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                // Account Soft Credit to Account
-                mainObject = Account_Soft_Credit__c.SObjectType;
-                detailKeyField = SObjectType.Account_Soft_Credit__c.fields.Account__c.getName();
-            }
-
-        } else if (objType == Contact.SObjectType) {
-            // Opportunity and Payment to Contact
-            mainObject = Opportunity.SObjectType;
-            if (includeChildPayments == true) {
-                childObjects.add(npe01__OppPayment__c.SObjectType);
-            }
-            detailKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-        } else if (objType == npe03__Recurring_Donation__c.SObjectType) {
-            mainObject = Opportunity.SObjectType;
-            detailKeyField = SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getName();
-        }
-
-        // Get the base query
-        String detailsQuery = CRLP_Query_SEL.buildDetailObjectQueryForRollup(mainObject, childObjects);
-
-        // Add the appropriate filtering
-        detailsQuery += ' WHERE ' + detailKeyField + ' IN :summaryRecordIds';
-
-        return detailsQuery;
     }
 
     /**

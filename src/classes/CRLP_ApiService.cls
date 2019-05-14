@@ -34,12 +34,11 @@
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Service methods for the Customizable Rollups API
 */
-public inherited sharing class CRLP_ApiService {
-
+public without sharing class CRLP_ApiService {
     public static final String PARAM_ROLLUP_TYPE = 'RollupType';
     public static final String PARAM_ROLLUP_TYPES = 'RollupTypes';
     public static final String PARAM_ROLLUPDEFS = 'RollupDefinitions';
-
+    
     @TestVisible
     private static final String ACTION_ARCHIVE_BRIDGE_GET_ROLLUP_STATE = 'dso.getRollupStateForRecords';
     private static final String ACTION_ARCHIVE_BRIDGE_SET_STALE_ROLLUPS = 'dso.setRollupStateAsStale';
@@ -72,7 +71,7 @@ public inherited sharing class CRLP_ApiService {
         } catch (Exception ex) { }
 
         if (rollupType == null) {
-            throw new ApiException(String.format( System.Label.CallableApiParameterError, new List<String>{PARAM_ROLLUP_TYPE} ));
+            throwParameterException(CallableApiParameters.PARAM_ROLLUP_TYPE, 'Unable to Match');
         }
 
         CRLP_VRollupHandler handler = new CRLP_VRollupHandler();
@@ -137,8 +136,89 @@ public inherited sharing class CRLP_ApiService {
     }
 
     /**
-    * @description Exception class for Parameter Parsing
+    * @description Entry point for external packages to call the Customizable Rollups API
+    * @param parentId
+    * @param rollupTypeName
+    * @param rollupDefs
+    * @param rollupData
+    * @return Updated Rollup Definitions
     */
-    public class ApiException extends Exception {}
+    public List<CRLP_Rollup> executeRollups(Id parentId, String rollupTypeName, List<CRLP_Rollup> rollupDefs,
+            Map<Id, Map<SObjectType, List<SObject>>> rollupData, Boolean commitToDatabase) {
 
+        // Convert the Rollup Type into an Enum
+        CRLP_RollupProcessingOptions.RollupType rollupType;
+        try {
+            rollupType = CRLP_RollupProcessingOptions.rollupTypeByName.get((String) rollupTypeName.toLowerCase());
+        } catch (Exception ex) {
+        }
+
+        if (rollupType == null) {
+            throwParameterException(CallableApiParameters.PARAM_ROLLUP_TYPE, 'No matching RollupType');
+        }
+
+        // If there are no active rollups, just return an empty collection
+        if (!CRLP_Rollup_SVC.hasActiveRollups(rollupType)) {
+            return new List<CRLP_Rollup>();
+        }
+
+        // Ensure the Rollup Definitions are populated
+        if (rollupDefs == null || rollupDefs.size() == 0) {
+            throwParameterException(CallableApiParameters.PARAM_ROLLUP_DEFS, 'Empty Rollup Definitions Collection');
+        }
+
+        // Ensure there is data to rollup for the parent record
+        if (rollupData == null || rollupData.size() == 0) {
+            throwParameterException(CallableApiParameters.PARAM_ROLLUP_DATA, 'Empty Rollup Data Collection');
+        }
+
+        // Ensure the specified ParentId is both not null and refers to an existing record.
+        if (parentId == null) {
+            throwParameterException(CallableApiParameters.PARAM_ROLLUP_PARENTID, 'A valid Parent record Id is required');
+        }
+        String validateParentSoql =
+            'SELECT COUNT() FROM ' + parentId.getSobjectType().getDescribe().getName() +
+            ' WHERE Id = :parentId LIMIT 1';
+        if (Database.countQuery(validateParentSoql) != 1) {
+            throwParameterException(CallableApiParameters.PARAM_ROLLUP_PARENTID, 'A existing Parent record is required');
+        }
+
+        try {
+            CRLP_ApiExecuteRollups rollupApiProcess = new CRLP_ApiExecuteRollups()
+                .withRollupType(rollupType)
+                .withParentId(parentId)
+                .withRollupData(rollupData)
+                .withRollupDefs(rollupDefs)
+                .withCommitToDatabase(commitToDatabase);
+
+            rollupDefs = rollupApiProcess.executeRollups();
+        } catch (Exception ex) {
+            throwAPIException('CRLP.ExecuteRollups', '\n' + ex.getMessage() + '\n' + ex.getStackTraceString());
+        }
+        return rollupDefs;
+    }
+
+
+    /**
+    * @description Throw a custom exception there is an error parsing the parameter
+    */
+    private void throwParameterException(String paramName, String errMessage) {
+        throw new ApiException(
+            String.format( System.Label.CallableApiParameterError,
+            new List<String>{ paramName, errMessage } ));
+    }
+
+    /**
+    * @description Throw a custom exception when api call cannot be completed
+    */
+    private void throwAPIException(String apiName, String errMessage) {
+        throw new ApiException(
+            String.format( System.Label.CallableApiProcessingError,
+            new List<String>{ apiName, errMessage } ));
+    }
+
+    /**
+    * @description Exception class
+    */
+    private class ApiException extends Exception {}
 }
