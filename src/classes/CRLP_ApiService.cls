@@ -36,9 +36,6 @@
 */
 public without sharing class CRLP_ApiService {
 
-    public static final String PARAM_ROLLUPTYPE = 'RollupType';
-    public static final String PARAM_ROLLUPDEFS = 'RollupDefinitions';
-
     @TestVisible
     private static final String ACTION_ARCHIVE_BRIDGE_GET_ROLLUP_STATE = 'dso.getRollupStateForRecords';
 
