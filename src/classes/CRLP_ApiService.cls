@@ -36,8 +36,6 @@
 */
 public without sharing class CRLP_ApiService {
 
-    public static final String PARAM_CHANGED_ROLLUPS = 'Rollup';
-    public static final String PARAM_CHANGED_FILTER_GROUPS = 'FilterGroup';
     public static final String PARAM_ROLLUP_TYPE = 'RollupType';
     public static final String PARAM_ROLLUP_TYPES = 'RollupTypes';
     public static final String PARAM_ROLLUPDEFS = 'RollupDefinitions';
@@ -232,7 +230,7 @@ public without sharing class CRLP_ApiService {
          if (!changedRollupTypes.isEmpty()) {
             callback = new RollupMetadataHandler();
             callback.params = new Map<String, Set<String>> { 
-                PARAM_CHANGED_ROLLUPS => changedRollupTypes
+                PARAM_ROLLUP_TYPES => changedRollupTypes
             };
         }
 
