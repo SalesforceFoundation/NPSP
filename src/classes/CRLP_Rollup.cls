@@ -20,7 +20,7 @@
     FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
     COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
     INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OSTG_PanelERR_CTRLR SERVICES;
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
     CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
@@ -488,34 +488,35 @@ public class CRLP_Rollup {
         private Decimal resultValue;
 
         public Rollupmdt(Rollup__mdt rlp) {
-            this.operation = rlp.Operation__c;
-            this.timeBoundOperationType = (rlp.Time_Bound_Operation_Type__c != null ? rlp.Time_Bound_Operation_Type__c :
+            operation = rlp.Operation__c;
+            timeBoundOperationType = (rlp.Time_Bound_Operation_Type__c != null ? rlp.Time_Bound_Operation_Type__c :
                     CRLP_Operation.TimeBoundOperationType.All_Time.name());
-            this.summaryObject = rlp.Summary_Object__r.QualifiedApiName;
-            this.summaryField = rlp.Summary_Field__r.QualifiedApiName;
-            this.detailObject = rlp.Detail_Object__r.QualifiedApiName;
-            this.detailField = rlp.Detail_Field__r.QualifiedApiName;
+            summaryObject = rlp.Summary_Object__r.QualifiedApiName;
+            summaryField = rlp.Summary_Field__r.QualifiedApiName;
+            detailObject = rlp.Detail_Object__r.QualifiedApiName;
+            detailField = rlp.Detail_Field__r.QualifiedApiName;
 
-            DescribeFieldResult summaryFieldDescribe = CRLP_Rollup_SVC.getSObjectFieldDescribe(this.summaryObject, this.summaryField);
+            DescribeFieldResult summaryFieldDescribe = CRLP_Rollup_SVC.getSObjectFieldDescribe(summaryObject, summaryField);
             if (summaryFieldDescribe != null) {
-                this.summaryFieldDisplayType = summaryFieldDescribe.getType();
-            }
-            DescribeFieldResult resultFieldDescribe;
-            if (this.detailField != null) {
-                resultFieldDescribe = CRLP_Rollup_SVC.getSObjectFieldDescribe(this.detailObject, this.detailField);
-            } else {
-                resultFieldDescribe = CRLP_Rollup_SVC.getSObjectFieldDescribe(this.summaryObject, this.summaryField);
+                summaryFieldDisplayType = summaryFieldDescribe.getType();
             }
 
-            this.singleResultRollupType = CRLP_Rollup_SVC.isSingleResultRollup(rlp);
-            if (resultFieldDescribe != null) {
-                this.resultFieldDisplayType = resultFieldDescribe.getType();
+            DescribeFieldResult resultFieldDescribe;
+            if (detailField != null) {
+                resultFieldDescribe = CRLP_Rollup_SVC.getSObjectFieldDescribe(detailObject, detailField);
+            } else {
+                resultFieldDescribe = CRLP_Rollup_SVC.getSObjectFieldDescribe(summaryObject, summaryField);
             }
+            if (resultFieldDescribe != null) {
+                resultFieldDisplayType = resultFieldDescribe.getType();
+            }
+
+            singleResultRollupType = CRLP_Rollup_SVC.isSingleResultRollup(rlp);
 
             // Special logic for YearsAgo rollup types
             if (rlp.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()) {
-                this.yearsAgo = Integer.valueOf(rlp.Integer__c);
-                this.isYearsAgoSingleResult = this.singleResultRollupType;
+                yearsAgo = Integer.valueOf(rlp.Integer__c);
+                isYearsAgoSingleResult = singleResultRollupType;
             }
         }
 
