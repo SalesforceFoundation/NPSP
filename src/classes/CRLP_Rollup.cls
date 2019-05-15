@@ -20,7 +20,7 @@
     FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
     COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
     INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OSTG_PanelERR_CTRLR SERVICES;
     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
     CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
@@ -165,6 +165,9 @@ public class CRLP_Rollup {
 
         for (Rollupmdt r : rollupsMdt) {
             r.resultValue = null;
+            r.resultDate = null;
+            r.resultDatetime = null;
+            r.resultString = null;
         }
     }
 
@@ -340,7 +343,7 @@ public class CRLP_Rollup {
         // This could be an Id or pretty much any other field that can be stored as 'text'
         // ================================================================
         if (operation == CRLP_Operation.RollupType.First || operation == CRLP_Operation.RollupType.Last) {
-            resultValue = r.resultValue;
+            resultValue = r.getResultValue();
         }
 
         // ================================================================
@@ -444,7 +447,7 @@ public class CRLP_Rollup {
         // Largest/Smallest for other types
         // ================================================================
         if (operation == CRLP_Operation.RollupType.Largest || operation == CRLP_Operation.RollupType.Smallest) {
-            resultValue = r.resultValue;
+            resultValue = r.getResultValue();
         }
 
         // abbreviate strings that are too long for the target field
@@ -469,6 +472,7 @@ public class CRLP_Rollup {
         public String timeBoundOperationType;
         public String summaryObject;
         public String summaryField;
+        public DisplayType summaryFieldDisplayType;
         public Integer yearsAgo;
 
         public Boolean isYearsAgoSingleResult = false;
@@ -476,10 +480,12 @@ public class CRLP_Rollup {
 
         public String detailObject;
         public String detailField;
-        public SoapType resultFieldType;
         public DisplayType resultFieldDisplayType;
 
-        public Object resultValue;
+        private String resultString;
+        private Date resultDate;
+        private Datetime resultDatetime;
+        private Decimal resultValue;
 
         public Rollupmdt(Rollup__mdt rlp) {
             this.operation = rlp.Operation__c;
@@ -490,24 +496,77 @@ public class CRLP_Rollup {
             this.detailObject = rlp.Detail_Object__r.QualifiedApiName;
             this.detailField = rlp.Detail_Field__r.QualifiedApiName;
 
-            DescribeFieldResult resultField;
-            if (this.detailField != null) {
-                resultField = CRLP_Rollup_SVC.getSObjectFieldDescribe(this.detailObject, this.detailField);
-            } else {
-                resultField = CRLP_Rollup_SVC.getSObjectFieldDescribe(this.summaryObject, this.summaryField);
+            DescribeFieldResult summaryFieldDescribe = CRLP_Rollup_SVC.getSObjectFieldDescribe(this.summaryObject, this.summaryField);
+            if (summaryFieldDescribe != null) {
+                this.summaryFieldDisplayType = summaryFieldDescribe.getType();
             }
-            if (resultField != null) {
-                this.resultFieldType = resultField.getSoapType();
-                this.resultFieldDisplayType = resultField.getType();
+            DescribeFieldResult resultFieldDescribe;
+            if (this.detailField != null) {
+                resultFieldDescribe = CRLP_Rollup_SVC.getSObjectFieldDescribe(this.detailObject, this.detailField);
+            } else {
+                resultFieldDescribe = CRLP_Rollup_SVC.getSObjectFieldDescribe(this.summaryObject, this.summaryField);
             }
 
             this.singleResultRollupType = CRLP_Rollup_SVC.isSingleResultRollup(rlp);
+            if (resultFieldDescribe != null) {
+                this.resultFieldDisplayType = resultFieldDescribe.getType();
+            }
 
             // Special logic for YearsAgo rollup types
             if (rlp.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()) {
                 this.yearsAgo = Integer.valueOf(rlp.Integer__c);
                 this.isYearsAgoSingleResult = this.singleResultRollupType;
             }
+        }
+
+        /**
+         * @description Because it's not possible to use an 'Object' type var in this class (because Objects
+         * cannot be serialized into json), the individual target data types have to independent vars.
+         * This method retrieves the appropriate value based on the type of the target (summary) field.
+         * @return object
+         */
+        public Object getResultValue() {
+            switch on (summaryFieldDisplayType) {
+                when DOUBLE, INTEGER, CURRENCY, LONG {
+                    return resultValue;
+                }
+                when DATE {
+                    return resultDate;
+                }
+                when DATETIME {
+                    return resultDatetime;
+                }
+                when else {
+                    return resultString;
+                }
+            }
+        }
+
+        /**
+         * @description Because it's not possible to use an 'Object' type var in this class (because Objects
+         * cannot be serialized into json), the individual target data types have to independent vars.
+         * This method retrieves the appropriate value based on the type of the target (summary) field.
+         * @param val The value to be saved into one of the four concrete-type specific fields
+         */
+        public void setResultValue(Object val) {
+            if (val == null) {
+                return;
+            }
+            switch on (summaryFieldDisplayType) {
+                when DOUBLE, INTEGER, CURRENCY, LONG {
+                    resultValue = Double.valueOf(val);
+                }
+                when DATE {
+                    resultDate = Date.valueOf(val);
+                }
+                when DATETIME {
+                    resultDatetime = Datetime.valueOf(val);
+                }
+                when else {
+                    resultString = String.valueOf(val);
+                }
+            }
+
         }
     }
 }

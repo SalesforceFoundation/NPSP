@@ -216,7 +216,7 @@ public class CRLP_Operation_SVC {
             CRLP_Rollup.Rollupmdt r = rollup.rollupsMdt[ns];
 
             // if this isn't a single result operation rollup, just skip the loop
-            if (!r.singleResultRollupType || r.resultFieldType == null) {
+            if (!r.singleResultRollupType || r.resultFieldDisplayType == null) {
                 continue;
             }
 
@@ -247,7 +247,7 @@ public class CRLP_Operation_SVC {
                 // Operation = FIRST (always based on a date)
                 // Only want to use < as the operator for the date comparison so it only retrieves the first
                 // record that meets the minimum date.
-                r.resultValue = resultVal;
+                r.setResultValue(resultVal);
 
             } else if (dateTimeValue != null && operation == CRLP_Operation.RollupType.Last
                     && (dateTimeValue >= rollup.maxDateTime || rollup.maxDateTime == null)
@@ -255,7 +255,7 @@ public class CRLP_Operation_SVC {
                 // Operation = LAST (always based on a date)
                 // Use >= because Opps are sorted by CreatedDate ASC, meaning that we want to keep getting the
                 // result value from whatever record makes up the 'last' record' by date
-                r.resultValue = resultVal;
+                r.setResultValue(resultVal);
 
             }
 
@@ -266,7 +266,7 @@ public class CRLP_Operation_SVC {
                 // Operation = FIRST (always based on a date)
                 // Only want to use < as the operator for the date comparison so it only retrieves the first
                 // record that meets the minimum date.
-                r.resultValue = resultVal;
+                r.setResultValue(resultVal);
 
             } else if (dateTimeValue == null && dateValue != null && operation == CRLP_Operation.RollupType.Last
                 && (dateValue >= rollup.maxDate || rollup.maxDate == null)
@@ -274,21 +274,21 @@ public class CRLP_Operation_SVC {
                 // Operation = LAST (always based on a date)
                 // Use >= because Opps are sorted by CreatedDate ASC, meaning that we want to keep getting the
                 // result value from whatever record makes up the 'last' record' by date
-                r.resultValue = resultVal;
+                r.setResultValue(resultVal);
 
             } else if (amountValue != null && operation == CRLP_Operation.RollupType.Smallest
                 && (amountValue < rollup.minValue || rollup.minValue == 0)
             ) {
                 // Operation = SMALLEST (always based on an amount, but the result field might actually be a date)
                 // This should get the first Opp with the smallest amount (in case there is more than one with the same amount)
-                r.resultValue = resultVal;
+                r.setResultValue(resultVal);
 
             } else if (amountValue != null && operation == CRLP_Operation.RollupType.Largest
                 && (amountValue >= rollup.maxValue || rollup.maxValue == 0)
             ) {
                 // Operation = LARGEST (always based on an amount, but the result field might actually be a date)
                 // This should get the last Opp with the largest amount (in case there is more than one with the same amount)
-                r.resultValue = resultVal;
+                r.setResultValue(resultVal);
 
             }
         }

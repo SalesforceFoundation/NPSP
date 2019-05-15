@@ -139,8 +139,8 @@ public class CRLP_Debug_UTIL {
                 (rlp.isDaysAgoOperation ? '\n* DaysAgoOperation=' + rlp.daysBack : '') +
                 (rlp.isYearsAgoSingleResult ? '\n* YearsAgoSingleResult=' + rlp.yearsAgo : '');
             for (CRLP_Rollup.Rollupmdt r : rlp.rollupsMdt) {
-                debugText += '\n   -- ' + r.summaryObject + '.' + r.summaryField + ' [' + r.resultFieldType + ']'
-                    + (r.singleResultRollupType ? '[SingleResult]=' + r.resultValue : '');
+                debugText += '\n   -- ' + r.summaryObject + '.' + r.summaryField + ' [' + r.resultFieldDisplayType + ']'
+                    + (r.singleResultRollupType ? '[SingleResult]=' + r.getResultValue() : '');
             }
             debugText += '\n==================================';
         }
