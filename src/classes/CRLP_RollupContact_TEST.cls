@@ -503,15 +503,13 @@ public class CRLP_RollupContact_TEST {
         System.assertEquals(baseAmt, c.npo02__LastMembershipAmount__c, 'The Amount written off does not match');
         System.assertEquals(donationYears.size(), c.npo02__NumberOfMembershipOpps__c, 'The current streak should be all the years');
         System.assertEquals(donationYears.size(), c.Description.split(';').size(), 'The list of donated years should match');
-
+        System.assertEquals(42, c4.npo02__SmallestAmount__c);
         System.assertEquals(4, c4.Number_of_Soft_Credits_Last_N_Days__c);
         System.assertEquals(56, c4.Number_of_Soft_Credits_Last_Year__c);
         System.assertEquals(314, c4.Number_of_Soft_Credits_This_Year__c);
         System.assertEquals(4, c4.Number_of_Soft_Credits_Two_Years_Ago__c);
         System.assertEquals(42, c4.npo02__Household_Naming_Order__c);
 
-        // This is failing on a SingleResult operation (Smallest) for "1 Year Ago"
-        System.assertEquals(42, c4.npo02__SmallestAmount__c);
 
         // THe batch process will query all Contacts, but these 2 are special circumstances to validate
         if (tt == TestType.TestBatch) {
