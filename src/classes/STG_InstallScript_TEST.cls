@@ -36,93 +36,119 @@
 @isTest
 public with sharing class STG_InstallScript_TEST {
 
+    private static final Integer ROLLUP_BATCH_SIZE = 333;
+
     /*******************************************************************************************************
     * @description A test exception class 
     */
     private class STG_InstallException extends Exception {}
     
-    /** NPSP to TDTM test - to verify no exception is thrown if the custom settings don't exist **/
-    public testmethod static void mappingsTest_runScriptNoCustomSettings() {
-        //Don't create NPSP custom settings
-        
-        //Run the install script
+    /*********************************************************************************************************
+    @description 
+        Test install on a new org populates the default settings and 
+        no exception is thrown if the custom settings don't exist
+    verify:
+        Settings match the expected defaults.
+    **********************************************************************************************************/ 
+    @isTest
+    public static void newInstallCreatesDefaultSettings() {
         Test.testInstall(new STG_InstallScript(), null);
-        
-        //Verify all settings created
         verifyAllSettingsCreated();
     }
     
-    /** Tests that missing trigger handlers get created **/
-    public static testmethod void missingSettingsCreated() {
-        //Create some of the default settings
+    /*********************************************************************************************************
+    @description 
+        Test install on org with some partial settings will still populate the default settings and 
+        no exception is thrown if the custom settings don't exist
+    verify:
+        Settings match the expected defaults.
+    **********************************************************************************************************/
+    @isTest
+    public static void newInstallPopulatesMissingSettings() {
         createSomeDefaultSettings();
-        
-        //Run the install script               
         Test.testInstall(new STG_InstallScript(), null);
-        
-        //Verify all settings created
         verifyAllSettingsCreated();
     }
 
-    /** Tests that deleted class trigger handlers get deleted **/
-    public static testmethod void deletedHandlers() {
-        //Create some of the default settings
+    /*********************************************************************************************************
+    @description 
+        Test install on org with some deprecated settings will still populate the default settings and 
+        remove the deprecated setting
+        no exception is thrown if the custom settings don't exist
+    verify:
+        Settings match the expected defaults.
+    **********************************************************************************************************/
+    @isTest
+    public static void newInstallRemovesDeprecatedSettings() {
         createSomeDefaultSettings();
 
-        // HH Object contact trigger support
         insert new Trigger_Handler__c(Active__c = true, Asynchronous__c = false, 
               Class__c = 'OPP_OpportunityNaming_TDTM', Load_Order__c = 0, Object__c = 'Opportunity', 
-              Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete');        
+              Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete');
 
-        //Run the install script               
         Test.testInstall(new STG_InstallScript(), null);
-        
-        //Verify all settings created
         verifyAllSettingsCreated();
     }
     
-    public testmethod static void push() {
-        //Create some of the default settings
+    /*********************************************************************************************************
+    @description 
+        Test a push install will create the default settings and update any partial settings 
+        no exception is thrown if the custom settings don't exist
+    verify:
+        Settings match the expected defaults
+    **********************************************************************************************************/
+    @isTest
+    public static void pushInstallCreatesDefaultSettingsAndPopulatesPartialSettings() {
         createSomeDefaultSettings();
-        
-        //Run the install script               
+        Customizable_Rollup_Settings__c expectedConfig = buildRollupSettingsWithPartialValues();
         Test.testInstall(new STG_InstallScript(), new Version(1,0), true);
-        
-        //Verify all settings created
         verifyAllSettingsCreated();
+        assertRollupSettingsEqual(expectedConfig);
     }
     
-    public testmethod static void upgrade() {
-        //Create some of the default settings
+    /*********************************************************************************************************
+    @description 
+        Test a manual upgrade install will create the default settings and update any partial settings 
+        no exception is thrown if the custom settings don't exist
+    verify:
+        Settings match the expected defaults
+    **********************************************************************************************************/
+    @isTest
+    public static void upgradeInstallCreatesDefaultSettingsAndPopulatesPartialSettings() {
         createSomeDefaultSettings();
-        
-        //Run the install script               
+        Customizable_Rollup_Settings__c expectedConfig = buildRollupSettingsWithPartialValues();
         Test.testInstall(new STG_InstallScript(), new Version(1,0), false);
-        
-        //Verify all settings created
         verifyAllSettingsCreated();
+        assertRollupSettingsEqual(expectedConfig);
     }
     
-    /** NPSP to TDTM test - If it's the first time we install Cumulus and there was no custom DISABLE flag enabled **/
-    public testmethod static void mappingsTest_runScriptNoCustomConfigOnInstall() {
-        //Create NPSP custom settings with all disable flags off
+    /*********************************************************************************************************
+    @description 
+        Test new install with flags all disable flags off will still create all the default settings
+        no exception is thrown if the custom settings don't exist
+    verify:
+        Settings match the expected defaults
+    **********************************************************************************************************/
+    @isTest
+    public static void newInstallWithDisableFlagsOffCreatesDefaultSettings() {
         setAllNpspFlags(false);
-               
-        Test.testInstall(new STG_InstallScript(), null);        
-        
+        Test.testInstall(new STG_InstallScript(), null);
         verifyAllSettingsCreated();
     }
     
-    /** NPSP to TDTM test - If it's the first time we install Cumulus and all the custom DISABLE flag were enabled **/
-    public testmethod static void mappingsTest_runScriptCustomConfigOnInstallAllFlags() {
-        //Create NPSP custom settings with all disable flags on
+    /*********************************************************************************************************
+    @description 
+        Test new install with flags all disable flags on will still create all the default settings
+        no exception is thrown if the custom settings don't exist
+    verify:
+        Settings match the expected defaults
+    **********************************************************************************************************/
+    @isTest
+    public static void newInstallWithDisableFlagsEnabledCreatesDefaultSettings() {
         setAllNpspFlags(true);
-
         Test.testInstall(new STG_InstallScript(), null);
         
-        //Get the TDTM classes that map to the NPSP flags
         List<String> tdtmClasses = TDTM_DefaultConfig.getNpspToCumulusMap().values();
-        //Remove empty values
         Set<String> tdtmClassesWithValues = new Set<String>();
         for(String tdtmClass : tdtmClasses) {
             if(!String.isBlank(tdtmClass)) {
@@ -140,12 +166,18 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals(tdtmClassesWithValues.size(), afterScriptConfigClassNames.size(),
                 'The number of inactive handler classes does not match the expected value');
 
-        //Assert old flags have been properly disabled
         assertNpspFlagsDeactivated();
     }
     
-     /** NPSP to TDTM test - If it's the first time we install Cumulus and some the custom DISABLE flag were enabled **/
-    public testmethod static void mappingsTest_runScriptCustomConfigOnInstallSomeFlags() {
+    /*********************************************************************************************************
+    @description 
+        Test new install with flags some disable flags on will still create all the default settings
+        no exception is thrown if the custom settings don't exist
+    verify:
+        Settings match the expected defaults
+    **********************************************************************************************************/
+    @isTest
+    public static void newInstallWithSomeDisableFlagsEnabledCreatesDefaultSettings() {
         //Create NPSP custom settings with some disable flags on
         List<SObject> settingsToUpdate = new List<SObject>();
         
@@ -171,8 +203,15 @@ public with sharing class STG_InstallScript_TEST {
         assertNpspFlagsDeactivated();
     }
 
-    public static testmethod void defaultSettingsCreated() {
-        //Clear all custom settings
+    /*********************************************************************************************************
+    @description 
+        Test new install with custom settings explicitly deleted will still create the default settings
+        no exception is thrown if the custom settings don't exist
+    verify:
+        Settings match the expected defaults
+    **********************************************************************************************************/
+    @isTest
+    public static void newInstallWithDeletedCustomSettingsCreatesDefaultSettings() {
         deleteAllCustomSettings();
                        
         Test.testInstall(new STG_InstallScript(), null);
@@ -255,8 +294,10 @@ public with sharing class STG_InstallScript_TEST {
     verify:
         Successful install actions are applied if another install action results in an error 
     **********************************************************************************************************/ 
-    private static testMethod void testInstallActionsAreIndependent() {
-        UTIL_RecordTypeSettingsUpdate_TEST.UpdateSettingsMock mockUpdateSettings = new UTIL_RecordTypeSettingsUpdate_TEST.UpdateSettingsMock().throwException();
+    @isTest
+    private static void testInstallActionsAreIndependent() {
+        UTIL_RecordTypeSettingsUpdate_TEST.UpdateSettingsMock mockUpdateSettings = 
+        new UTIL_RecordTypeSettingsUpdate_TEST.UpdateSettingsMock().throwException();
         UTIL_RecordTypeSettingsUpdate.instance = mockUpdateSettings;
 
         List<Trigger_Handler__c> triggerHandlers = getTriggerHandlers();
@@ -278,7 +319,8 @@ public with sharing class STG_InstallScript_TEST {
     verify:
         Opportunities' Recurring Donation Installment Number is populated.
     **********************************************************************************************************/ 
-    private static testMethod void testNewInstallSetsRecurringDonationInstallmentNumber() {
+    @isTest
+    private static void testNewInstallSetsRecurringDonationInstallmentNumber() {
         npe03__Recurring_Donation__c rd = createRecurringDonation();
         List<Opportunity> opps = getRecurringDonationOpportunities(rd.Id);
         System.assertEquals(false, opps.isEmpty(), 'At least one Opportunity should be created for the Recurring Donation');
@@ -312,7 +354,8 @@ public with sharing class STG_InstallScript_TEST {
     verify:
         hasErrors() returns true
     **********************************************************************************************************/ 
-    private static testMethod void testErrorLoggerHasErrorsReturnsTrue() {
+    @isTest
+    private static void testErrorLoggerHasErrorsReturnsTrue() {
         STG_InstallScript.ErrorLogger logger = new STG_InstallScript.ErrorLogger(null, ERR_Handler_API.Context.STTG);
 
         logger.add(new STG_InstallException('Test Exception'));
@@ -326,7 +369,8 @@ public with sharing class STG_InstallScript_TEST {
     verify:
         hasErrors() returns false
     **********************************************************************************************************/ 
-    private static testMethod void testErrorLoggerHasErrorsReturnsFalse() {
+    @isTest
+    private static void testErrorLoggerHasErrorsReturnsFalse() {
         STG_InstallScript.ErrorLogger logger = new STG_InstallScript.ErrorLogger(null, ERR_Handler_API.Context.STTG);
 
         System.assert(!logger.hasErrors(), 'Logger should return false since it contains no exception');
@@ -338,7 +382,8 @@ public with sharing class STG_InstallScript_TEST {
     verify:
         The email body contains exception message and stack trace
     **********************************************************************************************************/ 
-    private static testMethod void testErrorLoggerCorrectlyBuildsEmailBody() {
+    @isTest
+    private static void testErrorLoggerCorrectlyBuildsEmailBody() {
         STG_InstallScript.ErrorLogger logger = new STG_InstallScript.ErrorLogger(null, ERR_Handler_API.Context.STTG);
 
         logger.add(new STG_InstallException('Test Exception 1'));
@@ -361,7 +406,8 @@ public with sharing class STG_InstallScript_TEST {
         - Exceptions are emailed.
         - Exception is stored as the error sObject record.
     **********************************************************************************************************/ 
-    private static testMethod void testExceptionsAreEmailedAndLogged() {
+    @isTest
+    private static void testExceptionsAreEmailedAndLogged() {
         Integer emailInvocations = Limits.getEmailInvocations();
 
         UTIL_RecordTypeSettingsUpdate_TEST.UpdateSettingsMock mockUpdateSettings = new UTIL_RecordTypeSettingsUpdate_TEST.UpdateSettingsMock().throwException();
@@ -386,7 +432,8 @@ public with sharing class STG_InstallScript_TEST {
         - No email is sent.
         - No exception is stored as the error sObject record.
     **********************************************************************************************************/ 
-    private static testMethod void testNoEmailIsSentOrErrorLoggedOnSuccessfulInstall() {
+    @isTest
+    private static void testNoEmailIsSentOrErrorLoggedOnSuccessfulInstall() {
         Integer emailInvocations = Limits.getEmailInvocations();
 
         UTIL_RecordTypeSettingsUpdate.instance = new UTIL_RecordTypeSettingsUpdate_TEST.UpdateSettingsMock();
@@ -402,8 +449,9 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals(emailInvocations, actualEmailInvocations, 'Email Invocations should not increase');
     }
     
-    // Helpers
-    ////////////
+    /*********************************************************************************************************
+     * Helpers
+    **********************************************************************************************************/ 
 
     private static void assertTriggerHandlersEqual(List<Trigger_Handler__c> afterScriptConfig, List<Trigger_Handler__c> defaultConfig) {
         afterScriptConfig.sort();
@@ -425,6 +473,35 @@ public with sharing class STG_InstallScript_TEST {
         }
     }
 
+    /*********************************************************************************************************
+    @description 
+        Verify that the Customizable Rollup Settings matches the expected Configuration
+    **********************************************************************************************************/ 
+    private static void assertRollupSettingsEqual(Customizable_Rollup_Settings__c expectedConfig) {
+        
+        Customizable_Rollup_Settings__c afterScriptConfig = UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings();
+
+        System.assertEquals(expectedConfig.Customizable_Rollups_Enabled__c, afterScriptConfig.Customizable_Rollups_Enabled__c, 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_Account_Batch_Size__c, afterScriptConfig.Rollups_Account_Batch_Size__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_Contact_Batch_Size__c, afterScriptConfig.Rollups_Contact_Batch_Size__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_Account_SkewMode_Batch_Size__c, afterScriptConfig.Rollups_Account_SkewMode_Batch_Size__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_Contact_SkewMode_Batch_Size__c, afterScriptConfig.Rollups_Contact_SkewMode_Batch_Size__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_Account_Soft_Credit_Batch_Size__c, afterScriptConfig.Rollups_Account_Soft_Credit_Batch_Size__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_Contact_Soft_Credit_Batch_Size__c, afterScriptConfig.Rollups_Contact_Soft_Credit_Batch_Size__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_AcctContactSoftCredit_Batch_Size__c, afterScriptConfig.Rollups_AcctContactSoftCredit_Batch_Size__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_GAU_Batch_Size__c, afterScriptConfig.Rollups_GAU_Batch_Size__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_Skew_Dispatcher_Batch_Size__c, afterScriptConfig.Rollups_Skew_Dispatcher_Batch_Size__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Rollups_Limit_on_Attached_Opps_for_Skew__c, afterScriptConfig.Rollups_Limit_on_Attached_Opps_for_Skew__c , 'The settings should match');
+        System.assertEquals(expectedConfig.Disable_Related_Records_Filter__c, afterScriptConfig.Disable_Related_Records_Filter__c , 'The settings should match');
+        System.assertEquals(expectedConfig.AccountHardCreditNonSkew_Incremental__c, afterScriptConfig.AccountHardCreditNonSkew_Incremental__c , 'The settings should match');
+        System.assertEquals(expectedConfig.ContactHardCreditNonSkew_Incremental__c, afterScriptConfig.ContactHardCreditNonSkew_Incremental__c , 'The settings should match');
+
+        System.assertEquals(ROLLUP_BATCH_SIZE, afterScriptConfig.Rollups_AcctContactSoftCredit_Batch_Size__c, 'The setting should be set to the batch size');
+    }
+
+    /*********************************************************************************************************
+    @description Enables or disables all NPSP flag settings based on the flag value
+    **********************************************************************************************************/ 
     private static void setAllNpspFlags(Boolean flagValue) {
         npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
         npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c = flagValue;
@@ -488,6 +565,7 @@ public with sharing class STG_InstallScript_TEST {
         if(errorSettings.Id != null) delete errorSettings;
     }
     
+
     public static void createSomeDefaultSettings() {
         List<Trigger_Handler__c> handlers = new List<Trigger_Handler__c>();
         
@@ -519,7 +597,7 @@ public with sharing class STG_InstallScript_TEST {
         insert handlers;
     }
     
-    public static void verifyAllSettingsCreated() {        
+    public static void verifyAllSettingsCreated() {
         assertTriggerHandlersEqual(getTriggerHandlers(), TDTM_DefaultConfig.getDefaultRecords());
     }
 
@@ -530,6 +608,26 @@ public with sharing class STG_InstallScript_TEST {
                 Load_Order__c, Object__c, Trigger_Action__c 
             FROM Trigger_Handler__c
         ];
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Create a new Rollup With Partial Values Set 
+    **********************************************************************************************************/ 
+    private static Customizable_Rollup_Settings__c buildRollupSettingsWithPartialValues() {
+        return UTIL_CustomSettingsFacade.getRollupSettingsForTests(
+            new Customizable_Rollup_Settings__c (
+                Customizable_Rollups_Enabled__c = true,
+                Rollups_Limit_on_Attached_Opps_for_Skew__c = 150,
+                Rollups_Account_Batch_Size__c = 20,
+                Rollups_GAU_Batch_Size__c = 400,
+                Rollups_Account_SkewMode_Batch_Size__c = 100,
+                Rollups_Contact_SkewMode_Batch_Size__c = 100,
+                Rollups_Contact_Soft_Credit_Batch_Size__c = 100,
+                Rollups_Account_Soft_Credit_Batch_Size__c = ROLLUP_BATCH_SIZE,
+                Rollups_AcctContactSoftCredit_Batch_Size__c = null
+            )
+        );
     }
 
     private static npe03__Recurring_Donation__c createRecurringDonation() {
@@ -550,6 +648,10 @@ public with sharing class STG_InstallScript_TEST {
         return rd;
     }
 
+    /*******************************************************************************************************
+    * @description Gets errors.
+    * @return List<Error__c> The List of errors.
+    ********************************************************************************************************/
     private static List<Opportunity> getRecurringDonationOpportunities(Id rdId) {
         return [
             SELECT Id, Recurring_Donation_Installment_Number__c 

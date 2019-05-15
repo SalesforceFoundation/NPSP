@@ -135,6 +135,8 @@
         <members>CRLP_Account_AccSoftCredit_BATCH</members>
         <members>CRLP_Account_BATCH</members>
         <members>CRLP_Account_SoftCredit_BATCH</members>
+        <members>CRLP_ApiExecuteRollups</members>
+        <members>CRLP_ApiExecuteRollups_TEST</members>
         <members>CRLP_ApiService</members>
         <members>CRLP_ApiService_TEST</members>
         <members>CRLP_Batch_Base</members>
@@ -175,7 +177,11 @@
         <members>CRLP_RollupGAU_SVC</members>
         <members>CRLP_RollupGAU_TEST</members>
         <members>CRLP_RollupProcessingOptions</members>
+        <members>CRLP_RollupProcessor</members>
         <members>CRLP_RollupProcessor_SVC</members>
+        <members>CRLP_RollupProcessor_TEST</members>
+        <members>CRLP_RollupQueryBuilder</members>
+        <members>CRLP_RollupQueryBuilder_TEST</members>
         <members>CRLP_RollupQueueable</members>
         <members>CRLP_RollupRD_SVC</members>
         <members>CRLP_RollupRecurringDonation_TEST</members>
@@ -192,6 +198,8 @@
         <members>CRLP_Rollup_TDTM</members>
         <members>CRLP_SkewDispatcher_BATCH</members>
         <members>CRLP_VRollupHandler</members>
+        <members>CallableApiParameters</members>
+        <members>CallableApiParameters_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
@@ -771,6 +779,7 @@
         <members>Customizable_Rollup_Settings__c.Rollups_Account_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_SkewMode_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_Soft_Credit_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_AcctContactSoftCredit_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_SkewMode_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_Soft_Credit_Batch_Size__c</members>
@@ -1246,6 +1255,7 @@
         <members>CRLP_SoftCredit</members>
         <members>CallableApiMethodNotImplemented</members>
         <members>CallableApiParameterError</members>
+        <members>CallableApiProcessingError</members>
         <members>CampaignMemberStatusOmit</members>
         <members>CascadeDeletionError</members>
         <members>CascadeDeletionErrorLightning</members>
@@ -1752,6 +1762,7 @@
         <members>oppNamingIndividual</members>
         <members>oppNamingOrganizational</members>
         <members>pmtModifyCurrency</members>
+        <members>pmtWriteOffPaidPayment</members>
         <members>pmtWizardBtnCalcPayments</members>
         <members>pmtWizardBtnCreatePayments</members>
         <members>pmtWizardBtnRemovePaidPayments</members>
@@ -1771,6 +1782,7 @@
         <members>pmtWizardPaymentsDisabled</members>
         <members>pmtWizardPaymentsDisabledTitle</members>
         <members>pmtWizardPaymentsNoAccessMessage</members>
+        <members>pmtWizardScheduleInvalidRecords</members>
         <members>pmtWizardScheduleNoAmount</members>
         <members>pmtWizardSectionTitle</members>
         <members>pmtWizardSectionWriteoff</members>
@@ -1783,6 +1795,8 @@
         <members>pmtWizardWriteoffDate</members>
         <members>pmtWizardWriteoffMessage</members>
         <members>pmtWizardWriteoffNoAccessMessage</members>
+        <members>pmtWizardWriteOffInvalidRecords</members>
+        <members>pmtWizardWriteOffNoAmount</members>
         <members>pmtWizardYear</members>
         <members>pscDeleteRow</members>
         <members>pscManageSoftCreditsAdd</members>
