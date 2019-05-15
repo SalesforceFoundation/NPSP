@@ -253,10 +253,8 @@ public without sharing class CRLP_ApiService {
 
         for (CRLP_RollupCMT.Rollup cmtRollup : rollups) {
             RollupUtil util = new RollupUtil(cmtRollup);
-            for (Rollup__mdt rlp : CRLP_Rollup_SEL.cachedRollups) {
-                if (util.hasChanged(rlp)) {
-                    changedRollupTypes.addAll(util.getChangedRollupTypes());
-                }
+            if (util.hasChanged()) {
+                changedRollupTypes.addAll(util.getRollupTypes());
             }
         }
 
@@ -277,8 +275,8 @@ public without sharing class CRLP_ApiService {
 
         Set<String> changedRollupTypes = new Set<String>();
 
+        FilterGroupUtil util = new FilterGroupUtil();
         for (CRLP_RollupCMT.FilterGroup cmtFilterGroup : filterGroups) {
-            FilterGroupUtil util = new FilterGroupUtil();
             if (util.hasChanged(cmtFilterGroup)) {
                 changedRollupTypes.addAll(util.getRollupTypes(cmtFilterGroup.recordId));
             }
@@ -326,15 +324,18 @@ public without sharing class CRLP_ApiService {
         /*******************************************************************************************************
          * @description If the archive bridge needs to be notified about rollup type change, compare rollups.
          */
-        public Boolean hasChanged(Rollup__mdt rlp) {
+        public Boolean hasChanged() {
             if (isNew) {
                 return true;
             }
 
-            if (cmtRollup.recordName == rlp.DeveloperName) {
-                if (cmtRollup.isDifferent(rlp)) {
-                    oldRollupType = new CRLP_RollupCMT.Rollup(rlp).getRollupType();
-                    return true;
+            for (Rollup__mdt rlp : CRLP_Rollup_SEL.cachedRollups) {
+                if (cmtRollup.recordName == rlp.DeveloperName) {
+                    if (cmtRollup.isDifferent(rlp)) {
+                        oldRollupType = new CRLP_RollupCMT.Rollup(rlp).getRollupType();
+                        return true;
+                    }
+                    break;
                 }
             }
 
@@ -343,10 +344,10 @@ public without sharing class CRLP_ApiService {
 
 
         /*******************************************************************************************************
-         * @description Builds a set of rollup types that have changed
+         * @description Builds a set of rollup types associated with the rollup
          * @return Set<String> Set of rollup types 
          */
-        public Set<String> getChangedRollupTypes() {
+        public Set<String> getRollupTypes() {
             if (oldRollupType == null) {
                 oldRollupType = rollupType;
             }
@@ -359,6 +360,9 @@ public without sharing class CRLP_ApiService {
     * @description Utility class for Filter Group processing
     */
     public class FilterGroupUtil {
+    
+        List<Filter_Group__mdt> allGroups = CMT_FilterRule_SEL.getFilterGroups();
+        Map<Id, List<Rollup__mdt>> rollupsById = CRLP_Rollup_SEL.getRollupsByFilterGroup();
 
         private Map<Id, List<Filter_Rule__mdt>> rulesByGroupId {
             get {
@@ -374,7 +378,6 @@ public without sharing class CRLP_ApiService {
         * @description Determines if the filter group has changed
         */
         public Boolean hasChanged(CRLP_RollupCMT.FilterGroup cmtFilterGroup) {
-            List<Filter_Group__mdt> allGroups = CMT_FilterRule_SEL.getFilterGroups();
             Boolean hasChanged  = false;
 
             for (Filter_Group__mdt filterGroup : allGroups) {
@@ -402,7 +405,7 @@ public without sharing class CRLP_ApiService {
         public Set<String> getRollupTypes(Id groupId) {
             Set<String> rollypTypes = new Set<String>();
 
-            List<Rollup__mdt> rollups = CRLP_Rollup_SEL.getRollupsByFilterGroup().get(groupId);
+            List<Rollup__mdt> rollups = rollupsById.get(groupId);
             if (rollups == null) {
                 return rollypTypes;
             }
@@ -450,6 +453,10 @@ public without sharing class CRLP_ApiService {
             }
         }
 
+        /**
+        * @description Inserts an error log into the Error table
+        * @param ex Exception object that is to be logged
+        */
         private void logError(Exception ex) {
             Error__c rollupHandlerError = new Error__c(
                 Error_Type__c = 'Rollup Metadata Handler Error',

@@ -706,10 +706,8 @@ public with sharing class CRLP_RollupUI_SVC {
             // CMT data will generate a unique RecordName to use for the new record.
             CRLP_RollupCMT.Rollup cmtRollup = (CRLP_RollupCMT.Rollup) JSON.deserialize(jsonRollup, CRLP_RollupCMT.Rollup.class);
             
-            for (Rollup__mdt rlp : CRLP_Rollup_SEL.cachedRollups) {
-                if (cmtRollup.isDuplicate(rlp)) {
-                    throw new RollupException(Label.CRLP_DuplicateTargetField);
-                }
+            if (cmtRollup.isDuplicate()) {
+                throw new RollupException(Label.CRLP_DuplicateTargetField);
             }
 
             List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>{cmtRollup};

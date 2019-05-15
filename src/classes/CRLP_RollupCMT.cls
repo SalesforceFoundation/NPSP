@@ -146,7 +146,6 @@ public class CRLP_RollupCMT {
             if (this.rules.size() != other.rules.size()) {
                 return true;
             }
-            System.debug('same size');
 
             Map<String, FilterRule> rulesByHash = new Map<String, FilterRule>();
 
@@ -157,9 +156,7 @@ public class CRLP_RollupCMT {
 
             for (Integer i = 0; i < this.rules.size(); i++) {
                 FilterRule currentRule = this.rules[i];
-                System.debug(' currentRule  ' + currentRule);
                 if (!rulesByHash.containsKey(currentRule.generateHash())) {
-                    System.debug(' different rule : ');
                     return true;
                 }
             }
@@ -509,15 +506,18 @@ public class CRLP_RollupCMT {
         /*******************************************************************************************************
         * @description Determines if the target rollup is a duplicate
         */
-        public Boolean isDuplicate(Rollup__mdt rlp) {
-            if (rlp.DeveloperName != this.recordName
-                && rlp.Active__c
-                && this.summaryObject == rlp.Summary_Object__r.QualifiedApiName
-                && this.summaryField == rlp.Summary_Field__r.QualifiedApiName
-                && !Test.isRunningTest()
-            ) {
-                return true;
+        public Boolean isDuplicate() {
+            for (Rollup__mdt rlp : CRLP_Rollup_SEL.cachedRollups) {
+                if (rlp.DeveloperName != this.recordName
+                    && rlp.Active__c
+                    && this.summaryObject == rlp.Summary_Object__r.QualifiedApiName
+                    && this.summaryField == rlp.Summary_Field__r.QualifiedApiName
+                    && !Test.isRunningTest()
+                ) {
+                    return true;
+                }
             }
+
             return false;
         }
 
@@ -636,7 +636,6 @@ public class CRLP_RollupCMT {
      */
     private static String abbreviateForSpace(String txt, Boolean forDeveloperName) {
 
-        // TODO Talk to Beth about LowerCase().
         txt = txt.replace('General Accounting Unit', 'GAU').
                 replace('Recurring Donation', 'RD').
                 replace('Opportunity', 'Opp').
