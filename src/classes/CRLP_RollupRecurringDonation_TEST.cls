@@ -132,6 +132,7 @@ private class CRLP_RollupRecurringDonation_TEST {
                 Rollups_Contact_SkewMode_Batch_Size__c = 200,
                 Rollups_Account_Soft_Credit_Batch_Size__c = 200,
                 Rollups_Contact_Soft_Credit_Batch_Size__c = 200,
+                Rollups_AcctContactSoftCredit_Batch_Size__c = 200,
                 Rollups_Account_Batch_Size__c = 20,
                 Rollups_Contact_Batch_Size__c = 20
         ));
