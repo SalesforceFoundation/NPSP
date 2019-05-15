@@ -34,12 +34,7 @@
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Service methods for the Customizable Rollups API
 */
-public without sharing class CRLP_ApiService {
-
-    public static final String PARAM_ROLLUP_TYPE = 'RollupType';
-    public static final String PARAM_ROLLUP_TYPES = 'RollupTypes';
-    public static final String PARAM_ROLLUPDEFS = 'RollupDefinitions';
-    
+public without sharing class CRLP_ApiService {    
     @TestVisible
     private static final String ACTION_ARCHIVE_BRIDGE_GET_ROLLUP_STATE = 'dso.getRollupStateForRecords';
     private static final String ACTION_ARCHIVE_BRIDGE_SET_STALE_ROLLUPS = 'dso.setRollupStateAsStale';
@@ -105,7 +100,7 @@ public without sharing class CRLP_ApiService {
             ACTION_ARCHIVE_BRIDGE_GET_ROLLUP_STATE,
             new Map<String, Object> {
                 'RecordIds' => recordIds,
-                PARAM_ROLLUP_TYPE => rollupType.name()
+                CallableApiParameters.PARAM_ROLLUP_TYPE => rollupType.name()
             }
         );
 
@@ -130,7 +125,7 @@ public without sharing class CRLP_ApiService {
         archiveBridgeConfig.getCallableApi().call(
             ACTION_ARCHIVE_BRIDGE_SET_STALE_ROLLUPS,
             new Map<String, Object> {
-                PARAM_ROLLUP_TYPES => rollups
+                CallableApiParameters.PARAM_ROLLUP_TYPES => rollups
             }
         );
         
@@ -230,7 +225,7 @@ public without sharing class CRLP_ApiService {
          if (!changedRollupTypes.isEmpty()) {
             callback = new RollupMetadataHandler();
             callback.params = new Map<String, Set<String>> { 
-                PARAM_ROLLUP_TYPES => changedRollupTypes
+                CallableApiParameters.PARAM_ROLLUP_TYPES => changedRollupTypes
             };
         }
 
@@ -304,16 +299,6 @@ public without sharing class CRLP_ApiService {
             set;
         }
 
-        private Boolean isNew {
-            get {
-                if (isNew == null) {
-                    isNew = String.isBlank(cmtRollup.recordName);
-                }
-                return isNew;
-            }
-            set;
-        }
-
         /*******************************************************************************************************
          * @description Constructor
          */
@@ -325,7 +310,7 @@ public without sharing class CRLP_ApiService {
          * @description If the archive bridge needs to be notified about rollup type change, compare rollups.
          */
         public Boolean hasChanged() {
-            if (isNew) {
+            if (cmtRollup.isNew) {
                 return true;
             }
 
@@ -478,6 +463,7 @@ public without sharing class CRLP_ApiService {
             Error__c rollupHandlerError = new Error__c(
                 Error_Type__c = 'Rollup Metadata Handler Error',
                 Object_Type__c = 'CustomMetadata',
+                Context_Type__c = ERR_Handler_API.Context.CRLP.name(),
                 Datetime__c = System.now(), 
                 Full_Message__c = ex.getMessage()
             );

@@ -77,7 +77,6 @@ public class CRLP_RollupUI_TEST {
         System.assertEquals(3,filterGroupModel.filterRuleList.size(), 'There should be 3 Filter Rules');
         System.assertEquals(13,filterGroupModel.operators.size(), 'There should be 13 operators');
         System.assertEquals(objectList.size(),filterGroupModel.filterFieldsByDataType.size(), 'There should be one entry for each object passed in');
-
     }
 
     /*********************************************************************************************************
@@ -147,7 +146,6 @@ public class CRLP_RollupUI_TEST {
         Test.stopTest();
 
         System.assertNotEquals(null, saveResult, 'Job Id should be returned from save');
-
     }
 
     /*********************************************************************************************************
@@ -157,8 +155,10 @@ public class CRLP_RollupUI_TEST {
     public static void getFilterRuleReturnsTheCurrentPicklist() {
         String objectName = 'Opportunity';
         String fieldName = 'StageName';
+
         List<Map<String,String>> options = CRLP_RollupUI_SVC.getFilterRuleConstantPicklistOptions(objectName, fieldName);
         List<PicklistEntry> picklistValues = Schema.getGlobalDescribe().get('Opportunity').getDescribe().fields.getMap().get('StageName').getDescribe().getPicklistValues();
+
         System.assertEquals(picklistValues.size(), options.size());
     }
 
@@ -214,9 +214,9 @@ public class CRLP_RollupUI_TEST {
 
     }
 
-    /******************************************************************************************************************
+    /********************************************************************************************************
     * Helper Functions
-    ******************************************************************************************************************/
+    */
 
     /**
     * @description Create test Rollup__mdt records

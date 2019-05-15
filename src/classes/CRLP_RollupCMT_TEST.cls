@@ -37,9 +37,9 @@
 @isTest(IsParallel=true)
 public with sharing class CRLP_RollupCMT_TEST {
     
-    /******************************************************************************************************************
-     * @description verifies that similar rollups are not marked as different
-     *****************************************************************************************************************/
+    /********************************************************************************************************
+     * @description Verifies that similar rollups are not marked as different
+     */
     @isTest
     private static void similarRollupsAreMarkedAsEqual() {
 
@@ -49,9 +49,9 @@ public with sharing class CRLP_RollupCMT_TEST {
         System.assertEquals(false, newRollup.isDifferent(existingRollup), 'Similiar Rollups are marked as as equal');
     }
 
-    /******************************************************************************************************************
-     * @description verifies that different rollups are marked as different
-     *****************************************************************************************************************/
+    /********************************************************************************************************
+     * @description Verifies that different rollups are marked as different
+     */
     @isTest
     private static void differentRollupsAreMarkedAsDifferent() {
 
@@ -100,13 +100,11 @@ public with sharing class CRLP_RollupCMT_TEST {
         System.assertEquals(true, newRollup12.isDifferent(existingRollup), 'Different Rollups are marked as different for isActive');
         System.assertEquals(true, newRollup13.isDifferent(existingRollup), 'Different Rollups are marked as different for isDeleted');
         System.assertEquals(true, newRollup14.isDifferent(existingRollup), 'Different Rollups are marked as different for intValue');
-
     }
     
-
-    /******************************************************************************************************************
-     * @description verifies that similar filter groups are not marked as different
-     *****************************************************************************************************************/
+    /********************************************************************************************************
+     * @description Verifies that similar filter groups are not marked as different
+     */
     @isTest
     private static void similarFilterGroupsAreMarkedAsEqual() {
 
@@ -117,9 +115,9 @@ public with sharing class CRLP_RollupCMT_TEST {
         System.assertEquals(false, newFilterGroup.isDifferent(existingFilterGroup), 'Similiar Filter Groups are marked as equal');
     }
 
-    /******************************************************************************************************************
-     * @description verifies that different filter groups are marked as different
-     *****************************************************************************************************************/
+    /********************************************************************************************************
+     * @description Verifies that different filter groups are marked as different
+     */
     @isTest
     private static void differentFilterGroupsAreMarkedAsDifferent() {
 
@@ -130,12 +128,9 @@ public with sharing class CRLP_RollupCMT_TEST {
         System.assertEquals(true, newFilterGroup.isDifferent(existingFilterGroup), 'Different Filter Groups are marked as different');
     }
     
-
-
-
-    /******************************************************************************************************************
-     * @description verifies that account hard credit rollups are returned as account hard credit
-     *****************************************************************************************************************/
+    /********************************************************************************************************
+     * @description Verifies that account hard credit rollups are returned as account hard credit
+     */
     @isTest
     private static void accountHardCreditRollupIdentifiedAsHardCreditType() {
 
@@ -146,9 +141,9 @@ public with sharing class CRLP_RollupCMT_TEST {
           'Account Hard Credit should be identified.');
     }
 
-    /******************************************************************************************************************
-     * @description verifies that account soft credit rollups are returned as account soft credit
-     *****************************************************************************************************************/
+    /********************************************************************************************************
+     * @description Verifies that account soft credit rollups are returned as account soft credit
+     */
     @isTest
     private static void accountSoftCreditRollupIdentifiedAsSoftCreditType() {
 
@@ -162,9 +157,9 @@ public with sharing class CRLP_RollupCMT_TEST {
           'Account Soft Credit should be identified.');
     }
 
-    /******************************************************************************************************************
-     * @description verifies that contact soft credit rollups are returned as contact soft credit
-     *****************************************************************************************************************/
+    /********************************************************************************************************
+     * @description Verifies that contact soft credit rollups are returned as contact soft credit
+     */
     @isTest
     private static void contactSoftCreditRollupIdentifiedAsSoftCreditType() {
 
@@ -178,9 +173,9 @@ public with sharing class CRLP_RollupCMT_TEST {
           'Contact Soft Credit should be identified.');
     }
 
-    /******************************************************************************************************************
-     * @description verifies that GAU rollups are returned as GAU
-     *****************************************************************************************************************/
+    /********************************************************************************************************
+     * @description Verifies that GAU rollups are returned as GAU
+     */
     @isTest
     private static void gauRollupIdentifiedAsGAUType() {
 
@@ -194,9 +189,9 @@ public with sharing class CRLP_RollupCMT_TEST {
           'GAU should be identified.');
     }
 
-    /******************************************************************************************************************
-     * @description verifies that RD rollups are returned as RD
-     *****************************************************************************************************************/
+    /********************************************************************************************************
+     * @description Verifies that RD rollups are returned as RD
+     */
     @isTest
     private static void rdRollupIdentifiedAsRDType() {
 
@@ -210,14 +205,14 @@ public with sharing class CRLP_RollupCMT_TEST {
           'RecurringDonations should be identified.');
     }
 
-    /******************************************************************************************************************
+    /********************************************************************************************************
      * HELPER FUNCTIONS
-     *****************************************************************************************************************/
+     */
 
 
-    /******************************************************************************************************************
+    /********************************************************************************************************
      * @description provides a sample Rollup object for Test 
-     *****************************************************************************************************************/
+     */
     public static CRLP_RollupCMT.Rollup generateRollup(String name) {
 
         CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(name);
@@ -242,11 +237,10 @@ public with sharing class CRLP_RollupCMT_TEST {
         return rollup;
     }
 
-    /******************************************************************************************************************
+    /********************************************************************************************************
      * @description provides a sample Filter Group for Testing
-     *****************************************************************************************************************/
+     */
     public static CRLP_RollupCMT.FilterGroup generateFilterGroup(String name) {
-
         CRLP_RollupCMT.FilterGroup newFilterGroup = new CRLP_RollupCMT.FilterGroup(name);
         newFilterGroup.recordName = 'filterGroup' + name;
         newFilterGroup.label = name;
