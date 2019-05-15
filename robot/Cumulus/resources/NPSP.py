@@ -602,7 +602,7 @@ class NPSP(object):
         loc = "//*[@id='pmtTable']/tbody/tr/td[2]/div//input[@value= '{}']"
         values = int(amount)/int(no_payments)
         #global self.val
-        values_1 = "{0:.2f}".format(values)
+        values_1 = "{:0.2f}".format(values)
         self.val = str(values_1)
         locator =  loc.format(self.val)
         list_payments = self.selenium.get_webelements(locator)
