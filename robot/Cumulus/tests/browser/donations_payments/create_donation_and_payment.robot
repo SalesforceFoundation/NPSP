@@ -5,7 +5,7 @@ Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
 *** Variables ***
-${No_of_payments}     5
+${No_of_payments}     4
 ${intervel}    2
 ${frequency}    Month
 ${opp_name}
@@ -16,7 +16,7 @@ Create Donation from a Contact
     [tags]  unstable
     &{contact} =  API Create Contact    Email=skristem@robot.com
     Store Session Record    Account    &{contact}[AccountId]
-    &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Donation    Name=Sravani $100 donation
+    &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Donation    Name=Sravani $1000 donation    Amount=1000    StageName=Pledged
     Go To Record Home  &{opportunity}[Id]
     Select Tab    Related
     ${opp_name}    Get Main Header 
@@ -25,16 +25,16 @@ Create Donation from a Contact
     Click Special Related List Button  Payments    Schedule Payments
     Wait For Locator    frame    Create one or more Payments for this Opportunity
     Choose Frame    Create one or more Payments for this Opportunity
+    ${date} =     Get Current Date    result_format=%-m/%-d/%Y
     ${loc}    Get NPSP Locator    id    inputX
-    Input Text    ${loc}    8/15/2018
+    Input Text    ${loc}    ${date}
     Enter Payment Schedule    ${No_of_payments}    ${intervel}    ${frequency}
     ${xpath}    Get NPSP Locator    button    Calculate Payments
     Execute JavaScript    window.document.evaluate('${xpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)
-    #Page Scroll To Locator    button    Calculate Payments
     Click Button With Value    Calculate Payments
-    ${value}     Verify Payment Split   100    ${No_of_payments}
+    ${value}     Verify Payment Split   1000    ${No_of_payments}
     Should be equal as strings    ${value}    ${No_of_payments}
-    Verify Date Split    8/15/2018    ${No_of_payments}    ${intervel}
+    Verify Date Split    ${date}    ${No_of_payments}    ${intervel}
     ${xpath}    Get NPSP Locator    button    Create Payments
     Execute JavaScript    window.document.evaluate('${xpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)    
     Click Button with Value    Create Payments
