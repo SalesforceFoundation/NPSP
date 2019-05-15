@@ -429,7 +429,9 @@ private class CRLP_RollupProcessor_TEST {
         Account account = buildMockAccount();
         List<SObject> opps = new List<SObject>{ buildMockOpportunity(account.Id, 100) };
 
-        Test.startTest();
+        List<CRLP_Rollup> mockRollups = buildMockCRLPRollup(account, opps);
+        mockRollups[0].theSum = 1000;
+        mockRollups[0].theCount = 10;
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
             .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
@@ -438,7 +440,7 @@ private class CRLP_RollupProcessor_TEST {
             .withDetailRecords(opps);
 
         Map<Id, List<CRLP_Rollup>> mockRollupsByParentId = new Map<Id, List<CRLP_Rollup>>{
-            account.Id => buildMockCRLPRollup()
+            account.Id => mockRollups
         };
 
         CRLP_ApiService_TEST.Stub apiServiceStub = new CRLP_ApiService_TEST.Stub();
@@ -446,7 +448,10 @@ private class CRLP_RollupProcessor_TEST {
 
         processor.apiService = (CRLP_ApiService) Test.createStub(CRLP_ApiService.class, apiServiceStub);
 
+        Test.startTest();
         Account updatedAcct = (Account)processor.startRollupProcessing()[0];
+        Test.stopTest();
+
         System.assertEquals(11, updatedAcct.npo02__NumberOfClosedOpps__c,
             'The number of closed opportunities for this Account should be 11, which includes the 10 from external data');
         System.assertEquals(1100, updatedAcct.npo02__TotalOppAmount__c,
@@ -454,64 +459,23 @@ private class CRLP_RollupProcessor_TEST {
     }
 
     /**
-     * @description Builds a mock List<CRLP_Rollup> to be used as for external rollup data
+     * @description Builds a mock List<CRLP_Rollup> for the given summary and detail records
+     * to be used as mock external rollup data
      */
-    private static List<CRLP_Rollup> buildMockCRLPRollup() {
-        String mockRollupJSON =
-            '['
-            +'    {'
-            +'        "useFiscalYear": false,'
-            +'        "theSum": 1000,'
-            +'        "theCount": 10,'
-            +'        "summaryObject": "Account",'
-            +'        "sumByYear": {"2019": 1000},'
-            +'        "rollupsMdt": ['
-            +'            {'
-            +'                "timeBoundOperationType": "All_Time",'
-            +'                "summaryObject": "Account",'
-            +'                "summaryField": "npo02__TotalOppAmount__c",'
-            +'                "operation": "Sum",'
-            +'                "detailObject": "Opportunity",'
-            +'                "detailField": "Amount",'
-            +'                "dateObject": "Opportunity",'
-            +'                "dateField": "CloseDate",'
-            +'                "amountObject": "Opportunity",'
-            +'                "amountField": "Amount"'
-            +'            },'
-            +'            {'
-            +'                "timeBoundOperationType": "All_Time",'
-            +'                "summaryObject": "Account",'
-            +'                "summaryField": "npo02__NumberOfClosedOpps__c",'
-            +'                "operation": "Count",'
-            +'                "detailObject": "Opportunity",'
-            +'                "detailField": "Amount",'
-            +'                "dateObject": "Opportunity",'
-            +'                "dateField": "CloseDate",'
-            +'                "amountObject": "Opportunity",'
-            +'                "amountField": "Amount"'
-            +'            }'
-            +'        ],'
-            +'        "resultFieldType": "DOUBLE",'
-            +'        "resultFieldName": "Amount",'
-            +'        "resultFieldDisplaytype": "CURRENCY",'
-            +'        "minValue": 1000,'
-            +'        "minDate": "2019-01-08",'
-            +'        "minByYear": {"2019": 1000},'
-            +'        "maxValue": 100,'
-            +'        "maxDate": "2019-05-08",'
-            +'        "maxByYear": {"2019": 100},'
-            +'        "isYearsAgoSingleResult": false,'
-            +'        "detailObject": "Opportunity",'
-            +'        "dateObject": "Opportunity",'
-            +'        "dateFieldType": "DATE",'
-            +'        "dateFieldName": "CloseDate",'
-            +'        "countByYear": {"2019": 10},'
-            +'        "amountObject": "Opportunity",'
-            +'        "amountFieldName": "Amount"'
-            +'    }'
-            +']';
+    private static List<CRLP_Rollup> buildMockCRLPRollup(SObject summaryRecord, List<SObject> detailRecords) {
+        CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
+        options.useRollupDefsByParentIdMap = true;
 
-        return (List<CRLP_Rollup>) JSON.deserialize(mockRollupJSON, List<CRLP_Rollup>.class);
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withSummaryRecord(summaryRecord)
+            .withDetailRecords(detailRecords)
+            .withJobOptions(options);
+
+        processor.startRollupProcessing();
+
+        return processor.getRollupDefsForParent(summaryRecord.Id);
     }
 
     // **************************** HELPER METHODS ****************************
