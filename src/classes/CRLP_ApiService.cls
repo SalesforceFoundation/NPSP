@@ -361,8 +361,25 @@ public without sharing class CRLP_ApiService {
     */
     public class FilterGroupUtil {
     
-        List<Filter_Group__mdt> allGroups = CMT_FilterRule_SEL.getFilterGroups();
-        Map<Id, List<Rollup__mdt>> rollupsById = CRLP_Rollup_SEL.getRollupsByFilterGroup();
+        private List<Filter_Group__mdt> allGroups {
+            get {
+                if (allGroups == null) {
+                    allGroups = CMT_FilterRule_SEL.getFilterGroups();
+                }
+                return allGroups;
+            }
+            set;
+        }
+
+        private Map<Id, List<Rollup__mdt>> rollupsById {
+            get {
+                if (rollupsById == null) {
+                    rollupsById = CRLP_Rollup_SEL.getRollupsByFilterGroup();
+                }
+                return rollupsById;
+            }
+            set;
+        }
 
         private Map<Id, List<Filter_Rule__mdt>> rulesByGroupId {
             get {
