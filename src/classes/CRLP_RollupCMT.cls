@@ -58,14 +58,12 @@ public class CRLP_RollupCMT {
         public String label;
         public String description;
         public Boolean isDeleted = false;
-        public Boolean isNew = false;
         public List<FilterRule> rules;
 
         public FilterGroup(String label) {
             this.label = label.trim();
             this.recordName = generateRecordName(this.label, false);
             this.rules = new List<FilterRule>();
-            this.isNew = true;
         }
 
         public FilterGroup(Filter_Group__mdt groupRecord) {
@@ -186,13 +184,11 @@ public class CRLP_RollupCMT {
         public String value;
         public String valueLabel;
         public Boolean isDeleted = false;
-        public Boolean isNew = false;
 
         public FilterRule(String filterGroupRecordName, String label) {
             this.label = label.trim();
             this.recordName = generateRecordName(this.label, false);
             this.filterGroupRecordName = filterGroupRecordName;
-            this.isNew = true;
         }
 
         public FilterRule(Filter_Rule__mdt filterRule) {
@@ -338,7 +334,6 @@ public class CRLP_RollupCMT {
         public Integer intValue;
         public Boolean isActive;
         public Boolean isDeleted;
-        public Boolean isNew = false;
 
         public Rollup(String label) {
             //check to see if UDR; these need a unique name
@@ -347,7 +342,6 @@ public class CRLP_RollupCMT {
             this.recordName = generateRecordName(this.label, isUDR);
             this.useFiscalYear = false;
             this.isActive = true;
-            this.isNew = true;
         }
 
         public Rollup(Rollup__mdt rlp) {

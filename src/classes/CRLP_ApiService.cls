@@ -298,6 +298,15 @@ public without sharing class CRLP_ApiService {
             }
             set;
         }
+        private Boolean isNew {
+            get {
+                if (isNew == null) {
+                    isNew = String.isBlank(cmtRollup.recordName);
+                }
+                return isNew;
+            }
+            set;
+        }
 
         /*******************************************************************************************************
          * @description Constructor
@@ -310,7 +319,7 @@ public without sharing class CRLP_ApiService {
          * @description If the archive bridge needs to be notified about rollup type change, compare rollups.
          */
         public Boolean hasChanged() {
-            if (cmtRollup.isNew) {
+            if (isNew) {
                 return true;
             }
 
