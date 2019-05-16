@@ -215,7 +215,7 @@ public class CRLP_Operation_SVC {
         for (Integer ns = 0, listSize = rollup.rollupsMdt.size(); ns < listSize; ns++) {
             CRLP_Rollup.Rollupmdt r = rollup.rollupsMdt[ns];
 
-            // if this isn't a single result operation rollup, just skip the loop
+            // if this isn't a single result operation rollup, just skip the rollup
             if (!r.singleResultRollupType || r.resultFieldDisplayType == null) {
                 continue;
             }
