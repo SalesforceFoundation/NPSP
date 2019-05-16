@@ -45,11 +45,11 @@
     <aura:attribute name="openOpportunities" type="List" description="List of open Opportunities" access="public" />
     <aura:attribute name="unpaidPayments" type="List" description="List of unpaid Payments" access="public" />
     <aura:attribute name="selectedDonation" type="SObject" description="Stored selected open donation. Can also be null or empty." access="public" />
-    <aura:attribute name="isPaymentsEnabled" type="Boolean" description="True if Opportunity Payments are enabled." access="public" />
 
     <!-- Private Attributes-->
     <aura:attribute name="pendingSave" default="false" type="Boolean"
                     description="Controls whether Save is disabled because form has uncommitted changes" access="private"/>
+    <aura:attribute name="isPaymentsEnabled" type="Boolean" description="True if Opportunity Payments are enabled." access="private"/>
 
     <!--Modal Attributes-->
     <aura:attribute name="modalOpen" type="Boolean" description="Prevents multiple modals from opening"/>
