@@ -114,53 +114,23 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
         set;
     }
 
-    /*******************************************************************************************************
-    * @description List of help text mappings that conflicts with our packaged default custom metatadata type mappings
-    */
-    public List<BDI_HelpTextCMT.DataImportFieldMapping> conflictingMappings {
-        get {
-            if (conflictingMappings == null) {
-                conflictingMappings = new List<BDI_HelpTextCMT.DataImportFieldMapping>();
-            }
-            return conflictingMappings;
-        }
-        set;
-    }
-
-    /*******************************************************************************************************
-    * @description List of custom metatadata type mappings pending deployment
-    */
-    public List<BDI_HelpTextCMT.DataImportFieldMapping> pendingMappings {
-        get {
-            if (pendingMappings == null) {
-                pendingMappings = new List<BDI_HelpTextCMT.DataImportFieldMapping>();
-            }
-            return pendingMappings;
-        }
-        set;
-    }
-
     public BDI_MigrationMappingUtility migrationMappingUtility {
         get {
             if (migrationMappingUtility == null) {
-                migrationMappingUtility = new BDI_MigrationMappingUtility();
+                migrationMappingUtility = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
             }
             return migrationMappingUtility;
         }
         set;
     }
-
-    public BDI_MigrationMappingHelper migrationMappingHelper {
-        get {
-            if (migrationMappingHelper == null) {
-                migrationMappingHelper = new BDI_MigrationMappingHelper();
-            }
-            return migrationMappingHelper;
-        }
-        set;
-    }
+    
+    public String previousFieldMappingMethod;
 
     private final String MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME = 'Migrated_Custom_Mapping_Set';
+
+    public STG_PanelDataImportMapping_CTRL() {
+        this.previousFieldMappingMethod = dataImportSettings.Field_Mapping_Method__c;
+    }
 
     /*******************************************************************************************************
     * @description Action Method to enable CMDT mapping, save custom setting
@@ -172,25 +142,22 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
         Savepoint sp = Database.setSavepoint();
         try {
             isPolling = true;
-            createdMappings.clear();
-            conflictingMappings.clear();
-            pendingMappings.clear();
 
             // Check to see if we have any existing help text mappings that conflict with our default cmt mappings
-            migrationMappingUtility.buildCustomMetadataRecordsFromHelpText(migrationMappingHelper, 'Default_Field_Mapping_Set');
+            migrationMappingUtility.buildCustomMetadataRecordsFromHelpText('Default_Field_Mapping_Set');
 
             if (!migrationMappingUtility.conflictingMappings.isEmpty()) {
                 isConflict = true;
                 isPolling = false;
-                conflictingMappings = migrationMappingUtility.conflictingMappings;
-                pendingMappings = migrationMappingUtility.pendingMappings;
             } else {
-                jobId = migrationMappingUtility.convertLegacyHelpTextToCustomMetadata();
+                if (migrationMappingUtility.queuedMetadataTypesForDeploy.isEmpty()) {
+                    dataImportSettings = BDI_MigrationMappingUtility.upsertCustomSettings('Data Import Field Mapping', 'default', String.valueOf(Metadata.DeployStatus.Succeeded));
+                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled));
+                } else {
+                    migrationMappingUtility.deployCustomMetadata();
+                }
             }
 
-            if (Test.isRunningTest()) {
-                jobId = '123';
-            }
         } catch (Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
@@ -207,15 +174,8 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
 
         try {
-            isPolling = true;
-            createdMappings.clear();
-            conflictingMappings.clear();
-            pendingMappings.clear();
-
-            Map<String, String> statusMap = new Map<String, String>{migrationMappingUtility.jobId => 'Data Import Field Mapping Disabled'};
-            dataImportSettings = BDI_MigrationMappingUtility.updateDataImportCustomSettings(statusMap, false, null);
-            jobId = migrationMappingUtility.jobId;
-
+            dataImportSettings = BDI_MigrationMappingUtility.upsertCustomSettings('Help Text', 'default', String.valueOf(Metadata.DeployStatus.Succeeded));
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.CONFIRM, Label.stgDeploymentHelpTextMappingEnabled));
         } catch (Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
@@ -236,15 +196,9 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
             isConflict = false;
             isPolling = true;
 
-            createdMappings.clear();
+            migrationMappingUtility.keepConflicts();
 
-            jobId = migrationMappingUtility.keepConflicts(migrationMappingHelper);
-
-            if (Test.isRunningTest()) {
-                jobId = '123';
-            }
         } catch (Exception e) {
-            System.debug('Got an error');
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
@@ -257,19 +211,16 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
     * @return void
     */
     public PageReference discardConflicts() {
+        System.debug('*** discardConflicts()');
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
 
         Savepoint sp = Database.setSavepoint();
         try {
-            conflictingMappings.clear();
             isConflict = false;
             isPolling = true;
 
-            jobId = migrationMappingUtility.discardConflicts();
+            migrationMappingUtility.discardConflicts();
 
-            if (Test.isRunningTest()) {
-                jobId = '123';
-            }
         } catch (Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
@@ -283,46 +234,40 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
     * @return void
     */
     public PageReference checkDeploymentStatus() {
-        System.debug('VFP checkDeploymentStatus');
-        System.debug('VFP jobId: ' + jobId);
         timeoutCount++;
 
         dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         String newStatus = dataImportSettings.CMT_API_Status__c;
-        System.debug(newStatus);
+        String newFieldMappingMethod = dataImportSettings.Field_Mapping_Method__c;
+        System.debug('New Status: ' + newStatus);
+        System.debug('Previous Mapping Method: ' + previousFieldMappingMethod);
+        System.debug('New Mapping Method: ' + newFieldMappingMethod);
+
+        if (previousFieldMappingMethod == null || previousFieldMappingMethod == '') {
+            previousFieldMappingMethod = newFieldMappingMethod;
+        } else if (newFieldMappingMethod != previousFieldMappingMethod) {
+            System.debug('Updated Custom Settings Detected');
+            updatePage(newStatus);
+        }
 
         if (timeoutCount > MAX_TIME_OUT) {
-            createdMappings.clear();
-            conflictingMappings.clear();
-            pendingMappings.clear();
-
             isPolling = false;
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.stgDeploymentTimedOut + ' ' + Label.stgDeploymentTryAgain));
             return null;
         }
 
-        if (newStatus != null && !String.isEmpty(newStatus) && jobId != null && newStatus.contains(jobId)) {
+        return null;
+    }
+
+    public void updatePage(String newStatus) {
+        if (newStatus != null && !String.isEmpty(newStatus)) {
             isPolling = false;
 
-            if (newStatus.contains('Succeeded') || newStatus.contains('empty')) {
-                System.debug('Success');
-                System.debug(migrationMappingUtility.queuedMetadataTypesForDeploy);
-                createdMappings = migrationMappingUtility.queuedMetadataTypesForDeploy;
+            if (newStatus.contains('Succeeded') && newStatus.contains('Data Import Field Mapping')) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled));
-            } else if (newStatus.contains('Disabled')) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.CONFIRM, Label.stgDeploymentHelpTextMappingEnabled));
             } else {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, newStatus +' '+ Label.stgDeploymentTryAgain));
             }
-
-            createdMappings.clear();
-            conflictingMappings.clear();
-            pendingMappings.clear();
-            migrationMappingUtility = new BDI_MigrationMappingUtility();
-
-            return null;
         }
-
-        return null;
     }
 }

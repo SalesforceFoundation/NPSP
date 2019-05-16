@@ -36,14 +36,6 @@
 */
 public class BDI_MigrationMappingUtility {
 
-    /**
-     * @description Enum of the supported 'callers'
-     */
-    public enum Source {
-        HELP_TEXT_MIGRATION,
-        CUSTOM_HELP_TEXT_MIGRATION
-    }
-
     public String migrationType = 'default';
 
     /**
@@ -52,17 +44,31 @@ public class BDI_MigrationMappingUtility {
     public List<Metadata.CustomMetadata> queuedMetadataTypesForDeploy =
         new List<Metadata.CustomMetadata>();
 
-    /**
-    * @description Metadata parked due to conflicts with our default cmt records
+    /*
+    * @description List of help text mappings that conflicts with our packaged default custom metatadata type mappings
     */
-    public List<BDI_HelpTextCMT.DataImportFieldMapping> conflictingMappings =
-        new List<BDI_HelpTextCMT.DataImportFieldMapping>();
+    public List<BDI_HelpTextCMT.DataImportFieldMapping> conflictingMappings {
+        get {
+            if (conflictingMappings == null) {
+                conflictingMappings = new List<BDI_HelpTextCMT.DataImportFieldMapping>();
+            }
+            return conflictingMappings;
+        }
+        set;
+    }
 
-    /**
-    * @description Metadata parked due to conflicts with our default cmt records
+    /*
+    * @description List of custom metatadata type mappings pending deployment
     */
-    public List<BDI_HelpTextCMT.DataImportFieldMapping> pendingMappings =
-        new List<BDI_HelpTextCMT.DataImportFieldMapping>();
+    public List<BDI_HelpTextCMT.DataImportFieldMapping> pendingMappings {
+        get {
+            if (pendingMappings == null) {
+                pendingMappings = new List<BDI_HelpTextCMT.DataImportFieldMapping>();
+            }
+            return pendingMappings;
+        }
+        set;
+    }
 
     /**
     * @description List of standard mappings
@@ -107,60 +113,113 @@ public class BDI_MigrationMappingUtility {
                 Label
         FROM Data_Import_Field_Mapping_Set__mdt
         WHERE DeveloperName = :DEFAULT_FIELD_MAPPING_SET_RECORD_NAME];
-
     /**
-    * @description Unique job id for Custom Settings
-    */
-    public String jobId = 'no_job_id';//getUniqueJobId();
-
-    /**
-     * @description Calls method for building custom metadata mapping from help text mapping
-     * @param  deployIt Boolean
-     * @return A unique jobId. This value is used when writing the final status to the Data_Import_Settings__c
-     * object and is needed to ensure that the status retrieved from that custom settings object is for this
-     * particular deployment and not a previous one.
+     * New
      */
-    public String convertLegacyHelpTextToCustomMetadata() {
+    public Id deploymentId;
 
-        if (!queuedMetadataTypesForDeploy.isEmpty()) {
-            jobId = deployMetadata();
-            System.debug('convertLegacyHelpTextToCustomMetadata jobID: ' + jobId);
-        } else {
-            // Queue is empty, but we still need to update Data Import settings
-            Map<String, String> statusMap = new Map<String, String>{jobId => 'Queue was empty'};
-            updateDataImportCustomSettings(statusMap, true, 'default');
-        }
+    private BDI_MigrationMappingHelper helper;
+    private Data_Import_Settings__c dataImportSettings;
 
-        return jobId;
+    public BDI_MigrationMappingUtility(BDI_MigrationMappingHelper helper) {
+        this.helper = helper;
+        this.dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
     }
 
-    /**
-     * @description Initiate a deployment of custom metadata type records.
-     */
-    public String deployMetadata() {
+    public Id deployCustomMetadata() {
+        System.debug(LoggingLevel.ERROR, '*** deployCustomMetadata()');
 
-        // Add all queued up metadata updates to the deployment container
-        Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
-        for (Metadata.CustomMetadata md: queuedMetadataTypesForDeploy) {
-            system.debug('deployMetadata > ' + md.fullName);
-            mdContainer.addMetadata(md);
+        if (queuedMetadataTypesForDeploy.isEmpty()) {
+            // queue is empty, nothing to deploy
+            // todo: set field mapping method to default in data import custom settings
+            upsertCustomSettings('Data Import Field Mapping', 'default', String.valueOf(Metadata.DeployStatus.SUCCEEDED));
+        } else {
+            System.debug(LoggingLevel.ERROR, '*** attempting to deploy');
+            try {
+                Metadata.DeployContainer deploymentContainer = new Metadata.DeployContainer();
+                for (Metadata.CustomMetadata customMetadataRecord : queuedMetadataTypesForDeploy) {
+                    deploymentContainer.addMetadata(customMetadataRecord);
+                }
+
+                deploymentId = Metadata.Operations.enqueueDeployment(deploymentContainer, new DeploymentCallback(migrationType));
+                System.debug(LoggingLevel.ERROR, '*** deployment container enqueued');
+                System.debug('deploymentId: ' + deploymentId);
+            } catch (Exception e) {
+                System.debug(LoggingLevel.ERROR, '*** e: ' + e);
+                throw new DeploymentException('There was an error attempting to deploy the custom metadata records.');
+            }
         }
 
-        // Setup deploy callback
-        MetadataCallBack callback = new MetadataCallBack(migrationType);
+        pendingMappings.clear();
+        pendingStandardMappings.clear();
+        conflictingMappings.clear();
 
-        // Enqueue custom metadata deployment and return the Job Id
-        if (!Test.isRunningTest()) {
-            String jobId = Metadata.Operations.enqueueDeployment(mdContainer, callback);
+        return deploymentId;
+    }
 
-            System.debug('deployMetadata jobID: ' + jobId);
-            return jobId;
+    public static Data_Import_Settings__c upsertCustomSettings(String fieldMappingMethod, String migrationType, String status) {
+
+        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dataImportSettings.Field_Mapping_Method__c = fieldMappingMethod;
+
+        if (migrationType == 'default') {
+            dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = DEFAULT_FIELD_MAPPING_SET_RECORD_NAME;
         } else {
-            return '123';
+            dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME;
+        }
+
+        Map<String, String> statusMap = new Map<String, String>{
+            'Deployment Date' => String.valueOf(Datetime.now()),
+            'Status' => String.valueOf(status),
+            'Field Mapping Method' => fieldMappingMethod
+        };
+
+        dataImportSettings.CMT_API_Status__c = JSON.serialize(statusMap);
+
+        try {
+            upsert dataImportSettings;
+            return dataImportSettings;
+        } catch (Exception e) {
+            System.debug(LoggingLevel.ERROR, '*** e: ' + e);
+            throw new DeploymentException('There was an error attempting to update data import settings.');
         }
     }
 
-    public String keepConflicts(BDI_MigrationMappingHelper helper) {
+    //copied from docs - TODO: implement our handler here
+    public class DeploymentCallback implements Metadata.DeployCallback {
+
+        private String migrationType;
+
+        public DeploymentCallback(String migrationType) {
+            this.migrationType = migrationType;
+        }
+
+        public void handleResult(Metadata.DeployResult result,
+                Metadata.DeployCallbackContext context) {
+            
+            System.debug('*** handleResult');
+            System.debug(migrationType);
+
+            if (result.status == Metadata.DeployStatus.Succeeded) {
+                // Deployment was successful
+                //TODO: update Field_Mapping_Method__c in custom setting to reflect successful enablement of advanced mapping
+                BDI_MigrationMappingUtility.upsertCustomSettings('Data Import Field Mapping', migrationType, String.valueOf(result.status));
+            } else {
+                // Deployment was not successful
+                //TODO: In this case it failed, and we would want to store the error and notify the user (generally speaking)
+                String errMsg = '';
+                for (Integer n=0; n < result.details.componentFailures.size(); n++) {
+                    errMsg += (n > 0 ? '\n' : '') + '* ' + result.details.componentFailures[n].fullName +
+                            '> ' + result.details.componentFailures[n].problem;
+                }
+
+                BDI_MigrationMappingUtility.upsertCustomSettings('Help Text', migrationType, errMsg);
+                throw new DeploymentException('There was an error attempting to deploy custom metadata.');
+            }
+        }
+    }
+
+    public void keepConflicts() {
         System.debug('keepConflicts');
 
         queuedMetadataTypesForDeploy.clear();
@@ -169,7 +228,7 @@ public class BDI_MigrationMappingUtility {
         pendingStandardMappings.clear();
         migrationType = 'custom';
 
-        buildCustomMetadataRecordsFromHelpText(helper, MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME);
+        buildCustomMetadataRecordsFromHelpText(MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME);
 
         System.debug('PM: ' + pendingMappings.size());
         System.debug('PSM: ' + pendingStandardMappings.size());
@@ -219,19 +278,18 @@ public class BDI_MigrationMappingUtility {
             // Update existing mappings to point to custom field mapping set
             List<Metadata.CustomMetadata> updatedCMTs = updateCustomMetadataRecords(
                 MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME,
-                conflictingMappings,
-                helper
+                conflictingMappings
             );
 
             queuedMetadataTypesForDeploy.addAll(updatedCMTs);
         }
 
-        jobId = convertLegacyHelpTextToCustomMetadata();
-        System.debug('keepConflicts jobID: ' + jobId);
-        return jobId;
+        deployCustomMetadata();
+        System.debug('keepConflicts deploymentId: ' + deploymentId);
     }
 
-    public String discardConflicts() {
+    public void discardConflicts() {
+        System.debug('*** discardConflicts()');
         migrationType = 'default';
 
         // Keep any net new custom help text mappings to be added to our standard defaults
@@ -245,14 +303,11 @@ public class BDI_MigrationMappingUtility {
             pendingMappings.clear();
         }
 
-        jobId = convertLegacyHelpTextToCustomMetadata();
-
-        return jobId;
+        deployCustomMetadata();
     }
 
     public List<Metadata.CustomMetadata> updateCustomMetadataRecords(String fieldMappingSetName,
-                                                                     List<BDI_HelpTextCMT.DataImportFieldMapping> fieldMappings,
-                                                                     BDI_MigrationMappingHelper helper) {
+                                                                     List<BDI_HelpTextCMT.DataImportFieldMapping> fieldMappings) {
         System.debug('updateCustomMetadataRecords');
         Map<String, Data_Import_Field_Mapping__mdt> existingFieldMappings =
             helper.getFieldMappingsByDeveloperName(fieldMappingSetName);
@@ -279,7 +334,7 @@ public class BDI_MigrationMappingUtility {
      * Type records reserve all non-standard NPSP Help Text mappings. What to do with reserved list of Help 
      * Text mappings TBD.
      */
-    public void buildCustomMetadataRecordsFromHelpText(BDI_MigrationMappingHelper helper, String fieldMappingSetName) {
+    public void buildCustomMetadataRecordsFromHelpText(String fieldMappingSetName) {
 
         Map<String, BDI_HelpTextCMT.MappingDetail> listHelpTextFieldDetails =
                 helper.getAllMappedHelpTextFields();
@@ -387,91 +442,6 @@ public class BDI_MigrationMappingUtility {
         return foundMismatch;
     }
 
-    /**
-     * @description Inserting or Updating CMT's through the Apex Metadata API is an asynchronous process. This callback
-     * class is used to handle the async response from the call to Metadata.Operations.enqueueDeployment().
-     * If the call is not successfull, the Customizable_Rollup_Settings__c  record is updated
-     * with the result status.
-     */
-    public class MetadataCallBack implements Metadata.DeployCallBack {
-
-        private String migrationType;
-
-        /**
-         * @description Constructor for Callback Class
-         * @param jobId Some unique string value to use when writing the deployment status to the Custom Settings object
-         */
-        public MetadataCallBack(String migrationType) {
-            this.migrationType = migrationType;
-        }
-
-        /**
-         * @description Method called by salesforce with the result of the Metadata deployment operation status.
-         * This will write the status of the deployment to a CustomSettings object
-         */
-        public void handleResult(Metadata.DeployResult result, Metadata.DeployCallbackContext context) {
-
-            System.debug('Inside handle result');
-            System.debug(context);
-            System.debug('Migration Type: ' + migrationType);
-            Id jobId = context.getCallbackJobId();
-            System.debug('CALL BACK JOB ID: ' + jobId);
-
-            Boolean isSuccess = (result != null ? result.status == Metadata.DeployStatus.Succeeded : false);
-            Map<String, String> statusMap = new Map<String, String>{ jobId => (result != null ? result.status.name() : 'Unknown') };
-
-            // If the status is not Success, collect all errors into a string that can be written as the status
-            if (result != null && result.status != Metadata.DeployStatus.Succeeded) {
-                setStatusMap(result, statusMap, isSuccess, jobId);
-            }
-
-            updateDataImportCustomSettings(statusMap, isSuccess, migrationType);
-
-            if (isSuccess) {
-                UTIL_OrgTelemetry_SVC.asyncProcessNpspSettingsTelemetry();
-            }
-        }
-
-        /**
-        * @description Method that parses the Metadata deployment result into a map, job id => status
-        */
-        private void setStatusMap(Metadata.DeployResult result, Map<String, String> statusMap, Boolean isSuccess, String jobId) {
-            String errMsg = '';
-            for (Integer n=0; n < result.details.componentFailures.size(); n++) {
-                errMsg += (n > 0 ? '\n' : '') + '* ' + result.details.componentFailures[n].fullName +
-                        '> ' + result.details.componentFailures[n].problem;
-            }
-
-            // The custom settings field is a max of 255 characters, but need space for the serialized json overhead
-            statusMap.put(jobId, errMsg.left(220));
-            isSuccess = false;
-        }
-    }
-
-    /**
-     * @description Update Data Import Custom Settings
-     */
-    public static Data_Import_Settings__c updateDataImportCustomSettings(Map<String, String> statusMap, Boolean isSuccess, String migrationType) {
-        // Write the deployment status to the custom settings object
-        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        dataImportSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
-
-        dataImportSettings.Field_Mapping_Method__c = (isSuccess ? 'Data Import Field Mapping' : 'Help Text');
-        if (isSuccess && migrationType != null) {
-            if (migrationType == 'default') {
-                dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = 'Default_Field_Mapping_Set';
-            } else {
-                dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = 'Migrated_Custom_Mapping_Set';
-            }
-        } else {
-            dataImportSettings.Default_Data_Import_Field_Mapping_Set__c = '';
-        }
-
-        if (!Test.isRunningTest()) {
-            upsert dataImportSettings;
-        }
-
-        return dataImportSettings;
-    }
+    private class DeploymentException extends Exception {}
 
 } // BDI_MigrationMappingUtility
