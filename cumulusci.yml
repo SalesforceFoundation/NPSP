@@ -165,7 +165,6 @@ tasks:
                 - Allocation__c
                 - General_Accounting_Unit__c
                 - Campaign
-                - npe01__OppPayment__c
                 - DataImport__c
 
     test_data_relationships:
