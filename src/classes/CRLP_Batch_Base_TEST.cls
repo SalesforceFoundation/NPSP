@@ -476,7 +476,7 @@ private class CRLP_Batch_Base_TEST {
     }
 
     /**
-     * @description Confirms summary records are include if it has no detail records and rollup states are enabled
+     * @description Confirms summary records are included if it has no detail records and rollup states are enabled
      */
     @isTest
     private static void shouldIncludeSummaryRecordsWithNoDetailsIfItHasRollupStates(){
@@ -503,7 +503,7 @@ private class CRLP_Batch_Base_TEST {
 
         System.assertEquals(1, includedRecords.size());
         System.assertEquals(rollupAccount.Id, includedRecords[0].Id,
-            'Summary records should be included if rollup states are enabled even if they have no detail records');
+            'Summary records should be included if they have rollup states even if they have no detail records');
     }
 
     /**
@@ -533,7 +533,7 @@ private class CRLP_Batch_Base_TEST {
             accountBatchJob.excludeSummaryWithMissingDetailRecords(new List<SObject>{rollupAccount}, new List<SObject>());
 
         System.assert(includedRecords.isEmpty(),
-            'Summary records should not be included if they have no detail records and rollup states are disabled');
+            'Summary records should not be included if they have no detail records and and rollup state');
     }
 
     /******************************** Helper Methods *****************************/
