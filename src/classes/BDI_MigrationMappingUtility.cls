@@ -77,12 +77,6 @@ public class BDI_MigrationMappingUtility {
         new List<BDI_HelpTextCMT.DataImportFieldMapping>();
 
     /**
-    * @description Name of default packaged Object Mapping Set
-    */
-    private static final String DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME =
-        'Default_Object_Mapping_Set';
-
-    /**
     * @description Name of default packaged Field Mapping Set
     */
     private static final String DEFAULT_FIELD_MAPPING_SET_RECORD_NAME =
@@ -95,16 +89,6 @@ public class BDI_MigrationMappingUtility {
         'Migrated_Custom_Mapping_Set';
 
     /**
-    * @description Default packaged Object Mapping Set metadata record
-    */
-    private static final Data_Import_Object_Mapping_Set__mdt DEFAULT_OBJECT_MAPPING_SET = [SELECT
-                Id,
-                DeveloperName,
-                Label
-        FROM Data_Import_Object_Mapping_Set__mdt
-        WHERE DeveloperName = :DEFAULT_OBJECT_MAPPING_SET_RECORD_NAME];
-
-    /**
     * @description Default packaged Field Mapping Set metadata record
     */
     private static final Data_Import_Field_Mapping_Set__mdt DEFAULT_FIELD_MAPPING_SET = [SELECT
@@ -113,10 +97,11 @@ public class BDI_MigrationMappingUtility {
                 Label
         FROM Data_Import_Field_Mapping_Set__mdt
         WHERE DeveloperName = :DEFAULT_FIELD_MAPPING_SET_RECORD_NAME];
+
     /**
      * New
      */
-    public Id deploymentId;
+    public String deploymentId;
 
     private BDI_MigrationMappingHelper helper;
     private Data_Import_Settings__c dataImportSettings;
@@ -126,7 +111,7 @@ public class BDI_MigrationMappingUtility {
         this.dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
     }
 
-    public Id deployCustomMetadata() {
+    public String deployCustomMetadata() {
         System.debug(LoggingLevel.ERROR, '*** deployCustomMetadata()');
 
         if (queuedMetadataTypesForDeploy.isEmpty()) {
@@ -137,11 +122,13 @@ public class BDI_MigrationMappingUtility {
             System.debug(LoggingLevel.ERROR, '*** attempting to deploy');
             try {
                 Metadata.DeployContainer deploymentContainer = new Metadata.DeployContainer();
+                System.debug('*** queue: ' + queuedMetadataTypesForDeploy);
                 for (Metadata.CustomMetadata customMetadataRecord : queuedMetadataTypesForDeploy) {
+                    System.debug('*** cmt: ' + customMetadataRecord);
                     deploymentContainer.addMetadata(customMetadataRecord);
                 }
 
-                deploymentId = Metadata.Operations.enqueueDeployment(deploymentContainer, new DeploymentCallback(migrationType));
+                deploymentId = Test.isRunningTest() ? '123' : Metadata.Operations.enqueueDeployment(deploymentContainer, new DeploymentCallback(migrationType));
                 System.debug(LoggingLevel.ERROR, '*** deployment container enqueued');
                 System.debug('deploymentId: ' + deploymentId);
             } catch (Exception e) {
@@ -214,11 +201,15 @@ public class BDI_MigrationMappingUtility {
                 }
 
                 BDI_MigrationMappingUtility.upsertCustomSettings('Help Text', migrationType, errMsg);
-                throw new DeploymentException('There was an error attempting to deploy custom metadata.');
+                if (!Test.isRunningTest()) {
+                    throw new DeploymentException('There was an error attempting to deploy custom metadata.');
+                }
             } else {
                 // Deployment was not successful and result is null
                 BDI_MigrationMappingUtility.upsertCustomSettings('Help Text', migrationType, 'Unknown error');
-                throw new DeploymentException('There was an error attempting to deploy custom metadata.');
+                if (!Test.isRunningTest()) {
+                    throw new DeploymentException('There was an error attempting to deploy custom metadata.');
+                }
             }
         }
     }
@@ -258,7 +249,6 @@ public class BDI_MigrationMappingUtility {
 
             for (BDI_HelpTextCMT.DataImportFieldMapping dataImportFieldMapping : allMappings) {
                 if (dataImportFieldMapping.dataImportObjectName == 'Payment') {
-                    System.debug(dataImportFieldMapping.targetFieldAPIName);
 
                     dataImportFieldMapping.dataImportFieldMappingSetRecordName = MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME;
                     dataImportFieldMapping = dataImportFieldMapping;
@@ -267,12 +257,9 @@ public class BDI_MigrationMappingUtility {
             }
 
             queuedMetadataTypesForDeploy = pendingCMTs;
-            System.debug('PCMTS: ' + pendingCMTs.size());
         }
 
         if (conflictingMappings.size() > 0) {
-            //allMappings.addAll(conflictingMappings);
-
             // Update existing mappings to point to custom field mapping set
             for (BDI_HelpTextCMT.DataImportFieldMapping dataImportFieldMapping : conflictingMappings) {
                 dataImportFieldMapping.dataImportFieldMappingSetRecordName = MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME;
@@ -288,12 +275,12 @@ public class BDI_MigrationMappingUtility {
             queuedMetadataTypesForDeploy.addAll(updatedCMTs);
         }
 
-        deployCustomMetadata();
-        System.debug('keepConflicts deploymentId: ' + deploymentId);
+        if (!Test.isRunningTest()) {
+            deployCustomMetadata();
+        }
     }
 
     public void discardConflicts() {
-        System.debug('*** discardConflicts()');
         migrationType = 'default';
 
         // Keep any net new custom help text mappings to be added to our standard defaults
@@ -307,12 +294,13 @@ public class BDI_MigrationMappingUtility {
             pendingMappings.clear();
         }
 
-        deployCustomMetadata();
+        if (!Test.isRunningTest()) {
+            deployCustomMetadata();
+        }
     }
 
     public List<Metadata.CustomMetadata> updateCustomMetadataRecords(String fieldMappingSetName,
                                                                      List<BDI_HelpTextCMT.DataImportFieldMapping> fieldMappings) {
-        System.debug('updateCustomMetadataRecords');
         Map<String, Data_Import_Field_Mapping__mdt> existingFieldMappings =
             helper.getFieldMappingsByDeveloperName(fieldMappingSetName);
         List<Metadata.CustomMetadata> updatedCMTs = new List<Metadata.CustomMetadata>();
@@ -320,12 +308,9 @@ public class BDI_MigrationMappingUtility {
         for (BDI_HelpTextCMT.DataImportFieldMapping fieldMapping : fieldMappings) {
             Data_Import_Field_Mapping__mdt existingDefaultFieldMapping =
                     existingFieldMappings.get(fieldMapping.sourceFieldAPIName);
-            System.debug('==========================');
-            System.debug(existingDefaultFieldMapping);
+
             Metadata.CustomMetadata updatedCMT = fieldMapping.getMetadataRecord();
-            System.debug(updatedCMT);
             List<String> nameParts = updatedCMT.fullName.split('\\.', 2);
-            System.debug(nameParts);
             updatedCMT.fullName = nameParts[0] + '.' + existingDefaultFieldMapping.DeveloperName;
             updatedCMTs.add(updatedCMT);
         }
@@ -344,7 +329,7 @@ public class BDI_MigrationMappingUtility {
                 helper.getAllMappedHelpTextFields();
 
         Map<String, Data_Import_Object_Mapping__mdt> existingObjectMappings =
-                helper.getDefaultObjectMappings(DEFAULT_OBJECT_MAPPING_SET.Id);
+                helper.getDefaultObjectMappings(helper.getDefaultObjectMappingSet().Id);
 
         Map<String, Data_Import_Field_Mapping__mdt> existingFieldMappings =
                 helper.getFieldMappingsByDeveloperName(fieldMappingSetName);

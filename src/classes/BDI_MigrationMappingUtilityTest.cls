@@ -70,10 +70,14 @@ private class BDI_MigrationMappingUtilityTest {
         BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
         util.buildCustomMetadataRecordsFromHelpText('Default_Field_Mapping_Set');
 
+        util.discardConflicts();
+
         Test.startTest();
 
         // Convert mappings to Custom Metadata and start deployment
-        String jobId = util.deployCustomMetadata();
+        System.assertEquals(1, util.queuedMetadataTypesForDeploy.size());
+
+        util.deployCustomMetadata();
 
         // Confirm custom settings updated accordingly
         BDI_MigrationMappingUtility.DeploymentCallback callback = new BDI_MigrationMappingUtility.DeploymentCallback('default');
@@ -94,6 +98,50 @@ private class BDI_MigrationMappingUtilityTest {
         Map<String,String> result = (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
 
         System.assertNotEquals(null, result.get('Status'), result);
+        System.assertEquals(result.get('Field Mapping Method'), 'Data Import Field Mapping');
+    }
+
+    @IsTest
+    static void migrationUtilityDeploysWithMetadataConflicts() {
+        // Create a mock version of the BDI_MigrationUtilityHelper class.
+        BDI_MigrationMappingHelper mock_BDI_MigrationMappingHelper =
+                (BDI_MigrationMappingHelper) Test.createStub(
+                        BDI_MigrationMappingHelper.class,
+                        new BDI_MigrationMappingHelperMock());
+
+        // Call the method
+        BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
+        util.buildCustomMetadataRecordsFromHelpText('Default_Field_Mapping_Set');
+
+        util.keepConflicts();
+
+        Test.startTest();
+
+        // Convert mappings to Custom Metadata and start deployment
+        System.assertEquals(3, util.queuedMetadataTypesForDeploy.size());
+
+        util.deployCustomMetadata();
+
+        // Confirm custom settings updated accordingly
+        BDI_MigrationMappingUtility.DeploymentCallback callback = new BDI_MigrationMappingUtility.DeploymentCallback('default');
+
+        // Construct a dummy Context
+        TestingDeployCallbackContext context = new TestingDeployCallbackContext();
+
+        Metadata.DeployResult deployResult = new Metadata.DeployResult();
+        deployResult.status = Metadata.DeployStatus.SUCCEEDED;
+
+        // Call the handleResult() method of our main Callback with our dummy context var
+        callback.handleResult(deployResult, context);
+
+        Test.stopTest();
+
+        // Confirm that we've updated the CMT API Status field in Data Import Settings
+        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        Map<String,String> result = (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
+
+        System.assertNotEquals(null, result.get('Status'), result);
+        System.assertEquals(result.get('Field Mapping Method'), 'Data Import Field Mapping');
     }
 
     @IsTest
@@ -101,8 +149,9 @@ private class BDI_MigrationMappingUtilityTest {
         BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
 
         Test.startTest();
-        // Convert mappings to Custom Metadata and start deployment
-        String jobId = util.deployCustomMetadata();
+        // start deployment with no queued records
+        System.assertEquals(0, util.queuedMetadataTypesForDeploy.size());
+        util.deployCustomMetadata();
 
         // Confirm custom settings updated accordingly
         BDI_MigrationMappingUtility.DeploymentCallback callback = new BDI_MigrationMappingUtility.DeploymentCallback('default');
@@ -123,6 +172,71 @@ private class BDI_MigrationMappingUtilityTest {
         Map<String,String> result = (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
 
         System.assertNotEquals(null, result.get('Status'), result);
+        System.assertEquals(result.get('Field Mapping Method'), 'Data Import Field Mapping');
+    }
+
+    @IsTest
+    static void migrationUtilityDeploysPartialSuccess() {
+        BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
+
+        Test.startTest();
+        // start deployment with no queued records
+        System.assertEquals(0, util.queuedMetadataTypesForDeploy.size());
+        util.deployCustomMetadata();
+
+        // Confirm custom settings updated accordingly
+        BDI_MigrationMappingUtility.DeploymentCallback callback = new BDI_MigrationMappingUtility.DeploymentCallback('default');
+
+        // Construct a dummy Context
+        TestingDeployCallbackContext context = new TestingDeployCallbackContext();
+
+        Metadata.DeployResult deployResult = new Metadata.DeployResult();
+        deployResult.status = Metadata.DeployStatus.SUCCEEDEDPARTIAL;
+        Metadata.DeployMessage failureMessage = new Metadata.DeployMessage();
+        failureMessage.problem = 'problem';
+        Metadata.DeployDetails deployDetails = new Metadata.DeployDetails();
+        deployResult.details = deployDetails;
+        deployResult.details.componentFailures = new List<Metadata.DeployMessage>{failureMessage};
+
+        // Call the handleResult() method of our main Callback with our dummy context var
+        callback.handleResult(deployResult, context);
+
+        Test.stopTest();
+
+        // Confirm that we've updated the CMT API Status field in Data Import Settings
+        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        Map<String,String> result = (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
+
+        System.assertNotEquals(null, result.get('Status'), result);
+        System.assertEquals(result.get('Field Mapping Method'), 'Help Text');
+    }
+
+    @IsTest
+    static void migrationUtilityDeploysWithNullResult() {
+        BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
+
+        Test.startTest();
+        // start deployment with no queued records
+        System.assertEquals(0, util.queuedMetadataTypesForDeploy.size());
+        util.deployCustomMetadata();
+
+        // Confirm custom settings updated accordingly
+        BDI_MigrationMappingUtility.DeploymentCallback callback = new BDI_MigrationMappingUtility.DeploymentCallback('default');
+
+        // Construct a dummy Context
+        TestingDeployCallbackContext context = new TestingDeployCallbackContext();
+
+        // Call the handleResult() method of our main Callback with our dummy context var
+        callback.handleResult(null, context);
+
+        Test.stopTest();
+
+        // Confirm that we've updated the CMT API Status field in Data Import Settings
+        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        Map<String,String> result = (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
+
+        System.assertNotEquals(null, result.get('Status'), result);
+        System.assertEquals(result.get('Status'), 'Unknown error');
     }
 
     private class BDI_MigrationMappingHelperMock implements System.StubProvider {
@@ -206,6 +320,26 @@ private class BDI_MigrationMappingUtilityTest {
                     'npsp__Account1_City__c' => fieldMapping1,
                     'npsp__Account2_City__c' => fieldMapping2
                 };
+            }
+
+            if (stubbedMethodName == 'getDefaultObjectMappingSet') {
+                Data_Import_Object_Mapping_Set__mdt objectMappingSet =
+                    new Data_Import_Object_Mapping_Set__mdt(
+                        Label='Default Object Mapping Set',
+                        DeveloperName='Default_Object_Mapping_Set'
+                    );
+
+                return objectMappingSet;
+            }
+
+            if (stubbedMethodName == 'createNewFieldMappingSet') {
+                BDI_HelpTextCMT.DataImportFieldMappingSet fieldMappingSet =
+                    new BDI_HelpTextCMT.DataImportFieldMappingSet(
+                        'Migrated Field Mapping Set',
+                        'Default_Object_Mapping_Set'
+                    );
+
+                return fieldMappingSet.getMetadataRecord();
             }
 
             return null;
