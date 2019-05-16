@@ -106,6 +106,22 @@ tasks:
                 - record_type: Opportunity.NPSP_Default
                   default: true
 
+    test_data_bdi:
+        description: 'Generate and load test data for BDI benchmarks into an org'
+        class_path: tasks.generate_bdi_data.GenerateBDIData
+        options:
+            mapping: 'testdata/bdi_benchmark/mapping.yml'
+            num_records: 2500
+
+    performance_tests:
+        description: Runs Robot Framework performance tests
+        class_path: cumulusci.tasks.robotframework.Robot
+        group: bdi
+        options:
+            suites: robot/Cumulus/perftests/
+            options:
+                outputdir: robot/Cumulus/results/perf
+
     pmd:
         description: Run Apex code analysis with PMD. This task assumes that PMD is available in PATH. On MacOS PMD is available to install in brew.
         class_path: tasks.pmd.PMDTask
@@ -149,6 +165,8 @@ tasks:
                 - Allocation__c
                 - General_Accounting_Unit__c
                 - Campaign
+                - npe01__OppPayment__c
+                - DataImport__c
 
     test_data_relationships:
         description: 'Runs execute anonymous to insert the default relationships'
@@ -193,6 +211,8 @@ tasks:
                 - npsp__Allocation__c
                 - npsp__General_Accounting_Unit__c
                 - Campaign
+                - npe01__OppPayment__c
+                - npsp__DataImport__c
 
     npsp_default_settings:
         description: Configure the default NPSP Settings including Membership RecordType
