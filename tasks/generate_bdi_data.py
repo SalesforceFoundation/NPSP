@@ -28,17 +28,22 @@ class GenerateBDIData(BaseSalesforceApiTask):
 
     task_options = {
         "num_records": {
-            "description": "how many records to generate",
+            "description": "How many records to generate: total number of opportunities.",
             "required": True,
         },
         "mapping_yaml": {"description": "A mapping YAML file to use", "required": True},
+        "debug_db_path": {"description": "A path to put a copy of the sqlite database (for debugging)", "required": False},
     }
 
     def _run_task(self):
         mapping_file = os.path.abspath(self.options["mapping_yaml"])
         num_records = int(self.options["num_records"])
+        debug_db_path = self.options["debug_db_path"]
         with temporary_dir() as tempdir:
-            sqlite_path = os.path.join(tempdir, "generated_data.db")
+            if(debug_db_path):
+                sqlite_path = debug_db_path
+            else:
+                sqlite_path = os.path.join(tempdir, "generated_data.db")
             url = "sqlite:///" + sqlite_path
             batch_size = math.floor(num_records / 10)
             self.generate_data(url, mapping_file, batch_size)
@@ -56,6 +61,7 @@ class GenerateBDIData(BaseSalesforceApiTask):
             subtask()
 
     def generate_data(self, db_url, mapping_file_path, batch_size):
+        """Generate all of the data"""
         with open(mapping_file_path, "r") as f:
             mappings = ordered_yaml_load(f)
 
@@ -65,6 +71,7 @@ class GenerateBDIData(BaseSalesforceApiTask):
         self.session.commit()
 
     def make_opportunity(self, amount, date, paid, payment_amount, **kw):
+        """Make a specific opportunity and matching payment records"""
         opp = self.Opportunity(
             amount=amount, stage_name="Prospecting", close_date=date, **kw
         )
@@ -82,6 +89,7 @@ class GenerateBDIData(BaseSalesforceApiTask):
     def make_records(
         self, model, name, key_field, start, end, amount, paid, payment_amount
     ):
+        """Make a batch of records according to a specification"""
         date = START_DATE
         for i in range(start + 1, end + 1):
             parent = model(name=name + " " + str(i))
@@ -94,6 +102,7 @@ class GenerateBDIData(BaseSalesforceApiTask):
             date = date + timedelta(days=1)
 
     def make_all_records(self, batch_size, base):
+        """Make all of the records"""
         class Adder:
             x = 0
 
@@ -211,6 +220,8 @@ class GenerateBDIData(BaseSalesforceApiTask):
         )
 
     def generate_bdi_denormalized_table(self, fraction):
+        """BDI has a denormalized import table called npsp__DataImport__c.
+           Generate that table using a mix of matching and umatching data."""
         self.generate_matching_records(fraction)
         self.generate_unmatched_records(fraction)
 
@@ -240,7 +251,7 @@ class GenerateBDIData(BaseSalesforceApiTask):
         )
 
     def generate_unmatched_records(self, fraction):
-        """Make a dummy record for every real record in the npsp__DataImport__c
+        """Make a randomized record for every real record in the npsp__DataImport__c
            table so that we test the process of failing to match records."""
         self.session.execute(
             """
