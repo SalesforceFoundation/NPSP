@@ -315,8 +315,11 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, detailObjectType,
                     this.statefulCacheOfRollupsToBeProcessed);
 
-        } else if (CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(this.jobType)) {
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
             addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Contact.SObjectType, Partial_Soft_Credit__c.SObjectType);
+
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+            addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Account.SObjectType, Partial_Soft_Credit__c.SObjectType);
 
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
             addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, this.detailObjectType);
@@ -433,7 +436,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         // Resequence the Parent (Summary) records to be in the exact order of the detail records
         // using the defined parent Id
         List<SObject> reorderedSummaryRecords = new List<SObject>();
-        Map<Id, SObject> mapOfSummaryRecords = new Map<Id, SObject>(database.query(soql));
+        Map<Id, SObject> mapOfSummaryRecords = new Map<Id, SObject>(Database.query(soql));
         for (Id parentId : parentIds) {
             reorderedSummaryRecords.add(mapOfSummaryRecords.get(parentId));
         }
