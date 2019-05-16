@@ -19,8 +19,7 @@ from sqlalchemy.orm import create_session
 START_DATE = date(2019, 1, 1)
 
 
-class GenerateBDIData(BaseSalesforceApiTask):
-
+class BatchDataTask(BaseSalesforceApiTask):
     task_docs = """
     Use the `num_records` option to specify how many records to generate.
     Use the `mappings` option to specify a mapping file.
@@ -37,7 +36,6 @@ class GenerateBDIData(BaseSalesforceApiTask):
 
     def _run_task(self):
         mapping_file = os.path.abspath(self.options["mapping_yaml"])
-        num_records = int(self.options["num_records"])
         debug_db_path = self.options["debug_db_path"]
         with temporary_dir() as tempdir:
             if(debug_db_path):
@@ -45,8 +43,7 @@ class GenerateBDIData(BaseSalesforceApiTask):
             else:
                 sqlite_path = os.path.join(tempdir, "generated_data.db")
             url = "sqlite:///" + sqlite_path
-            batch_size = math.floor(num_records / 10)
-            self.generate_data(url, mapping_file, batch_size)
+            self._generate_data(url, mapping_file)
             subtask_config = TaskConfig(
                 {"options": {"database_url": url, "mapping": mapping_file}}
             )
@@ -60,14 +57,28 @@ class GenerateBDIData(BaseSalesforceApiTask):
             )
             subtask()
 
-    def generate_data(self, db_url, mapping_file_path, batch_size):
+    def _generate_data(self, db_url, mapping_file_path):
         """Generate all of the data"""
         with open(mapping_file_path, "r") as f:
             mappings = ordered_yaml_load(f)
 
-        self.session, base = init_db(db_url, mappings)
-        self.make_all_records(batch_size, base)
-        self.generate_bdi_denormalized_table(2)
+        session, base = init_db(db_url, mappings)
+        self.generate_data(session, base)
+        self.session.commit()
+        fesfe()
+
+    def generate_data(self, session, base):
+        raise NotImplementedError("generate_data method")
+
+
+class GenerateBDIData(BatchDataTask):
+    def generate_data(self, session, base):
+        self.session = session
+        self.base = base
+        num_records = int(self.options["num_records"])
+        batch_size = math.floor(num_records / 10)
+        self.make_all_records(batch_size)
+        self.generate_bdi_denormalized_table(1) # 1 for 1 old to new
         self.session.commit()
 
     def make_opportunity(self, amount, date, paid, payment_amount, **kw):
@@ -101,8 +112,9 @@ class GenerateBDIData(BaseSalesforceApiTask):
             self.make_opportunity(amount, date, paid, payment_amount, **kw)
             date = date + timedelta(days=1)
 
-    def make_all_records(self, batch_size, base):
+    def make_all_records(self, batch_size):
         """Make all of the records"""
+        base = self.base
         class Adder:
             x = 0
 
