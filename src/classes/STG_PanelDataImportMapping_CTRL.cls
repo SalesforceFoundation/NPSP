@@ -74,7 +74,7 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
     /*******************************************************************************************************
     * @description Get custom data import settings
     */
-    public Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+    public Data_Import_Settings__c dataImportSettings { get; set; }
 
     /*******************************************************************************************************
     * @description Return boolean for the current field mapping method
@@ -96,40 +96,16 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
         set;
     }
 
-    /*******************************************************************************************************
-    * @description the jobId of the deployment
-    */
-    public String jobId { get; private set; }
+    //private final String MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME = 'Migrated_Custom_Mapping_Set';
 
-    /*******************************************************************************************************
-    * @description List of help text mappings that conflicts with our packaged default custom metatadata type mappings
-    */
-    public List<Metadata.CustomMetadata> createdMappings {
-        get {
-            if (createdMappings == null) {
-                createdMappings = new List<Metadata.CustomMetadata>();
-            }
-            return createdMappings;
-        }
-        set;
-    }
-
-    public BDI_MigrationMappingUtility migrationMappingUtility {
-        get {
-            if (migrationMappingUtility == null) {
-                migrationMappingUtility = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
-            }
-            return migrationMappingUtility;
-        }
-        set;
-    }
+    public BDI_MigrationMappingUtility migrationMappingUtility { get; set; }
     
     public String previousFieldMappingMethod;
 
-    private final String MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME = 'Migrated_Custom_Mapping_Set';
-
     public STG_PanelDataImportMapping_CTRL() {
-        this.previousFieldMappingMethod = dataImportSettings.Field_Mapping_Method__c;
+        this.migrationMappingUtility = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
+        this.dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        this.previousFieldMappingMethod = this.dataImportSettings.Field_Mapping_Method__c;
     }
 
     /*******************************************************************************************************
@@ -247,7 +223,15 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
             previousFieldMappingMethod = newFieldMappingMethod;
         } else if (newFieldMappingMethod != previousFieldMappingMethod) {
             System.debug('Updated Custom Settings Detected');
-            updatePage(newStatus);
+            if (newStatus != null && !String.isEmpty(newStatus)) {
+                isPolling = false;
+
+                if (newStatus.contains('Succeeded') && newStatus.contains('Data Import Field Mapping')) {
+                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled));
+                } else {
+                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, newStatus +' '+ Label.stgDeploymentTryAgain));
+                }
+            }
         }
 
         if (timeoutCount > MAX_TIME_OUT) {
@@ -257,17 +241,5 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
         }
 
         return null;
-    }
-
-    public void updatePage(String newStatus) {
-        if (newStatus != null && !String.isEmpty(newStatus)) {
-            isPolling = false;
-
-            if (newStatus.contains('Succeeded') && newStatus.contains('Data Import Field Mapping')) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled));
-            } else {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, newStatus +' '+ Label.stgDeploymentTryAgain));
-            }
-        }
     }
 }
