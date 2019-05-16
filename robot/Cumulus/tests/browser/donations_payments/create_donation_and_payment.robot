@@ -16,7 +16,7 @@ Create Donation from a Contact
     [tags]  unstable
     &{contact} =  API Create Contact    Email=skristem@robot.com
     Store Session Record    Account    &{contact}[AccountId]
-    &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Donation    Name=Sravani $1000 donation    Amount=1000    StageName=Pledged
+    &{opportunity} =  API Create Opportunity    &{Contact}[AccountId]    Donation    Name=Sravani $1000 donation    Amount=1000    StageName=Pledged    npe01__Do_Not_Automatically_Create_Payment__c=false
     Go To Record Home  &{opportunity}[Id]
     Select Tab    Related
     ${opp_name}    Get Main Header 
@@ -39,9 +39,9 @@ Create Donation from a Contact
     Execute JavaScript    window.document.evaluate('${xpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.scrollIntoView(true)    
     Click Button with Value    Create Payments
     Select Window
-    Page Scroll To Locator    payments.check_occurrence    Payments
-    ${value}    Verify Occurrence Payments    Payments
-    Should not be equal as strings    ${value}    0
+    Page Scroll To Locator    record.related.check_occurrence    Payments
+    Wait For Locator    record.related.viewall    Payments
+    Verify Occurrence    Payments    4
     Click ViewAll Related List    Payments
     ${flag}     Verify payment    
     should be equal as strings     ${flag}    pass
