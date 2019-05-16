@@ -974,6 +974,7 @@ class NPSP(object):
            self.builtin.should_be_equal_as_strings(rec[key], value)
 
     def batch_data_import(self):
+        """"Do a BDI import using the API and wait for it to complete"""
         subtask_config = TaskConfig(
                 {"options": {"apex" : "BDI_DataImport_API.importData();"}}
         )
