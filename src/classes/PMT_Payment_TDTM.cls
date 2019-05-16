@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2017, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -15,20 +15,20 @@
       from this software without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.org 
+* @author Salesforce.org
 * @date 2017
 * @group Payments
 * @group-content ../../ApexDocContent/Payments.htm
@@ -39,6 +39,16 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     /** @description Retrieve and cache the household settings the first time this class is loaded only */
     private static final npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
+    /** @description Identifies if the Custom Setting Enforce Accounting Data Consistency is enforced */
+    private Boolean isEnforceAccountingDataConsistency {
+        get {
+            if (isEnforceAccountingDataConsistency == null) {
+                isEnforceAccountingDataConsistency = UTIL_CustomSettingsFacade.getContactsSettings().Enforce_Accounting_Data_Consistency__c;
+            }
+            return isEnforceAccountingDataConsistency;
+        }
+        set;
+    }
 
     /** @description  Identifies if the org has the CurrencyIsoField */
     private Boolean isCurrencyFieldAvailable {
@@ -78,11 +88,11 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     * @param newlist The list of Payments from trigger new.
     * @param oldlist The list of Payments from trigger old.
     * @param triggerAction Which trigger event (BeforeInsert, AfterInsert, etc.).
-    * @return dmlWrapper Returns a dmlWrapper object if there were opportunity records modified 
+    * @return dmlWrapper Returns a dmlWrapper object if there were opportunity records modified
     *  otherwise returns null
     ********************************************************************************************************/
     public DmlWrapper runForPayments(
-        List<npe01__OppPayment__c> newlist, 
+        List<npe01__OppPayment__c> newlist,
         List<npe01__OppPayment__c> oldlist,
         TDTM_Runnable.Action triggerAction) {
 
@@ -99,13 +109,13 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description Trigger Handler on Opportunities for managing Payments
-    * @param newlist the list of Opps from trigger new. 
-    * @param oldlist the list of Opps from trigger old. 
-    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
+    * @param newlist the list of Opps from trigger new.
+    * @param oldlist the list of Opps from trigger old.
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
     * @return dmlWrapper Returns a dmlWrapper object if there were opportunity records modified.
     ********************************************************************************************************/
     public DmlWrapper runForOpportunities(
-        List<Opportunity> newlist, 
+        List<Opportunity> newlist,
         List<Opportunity> oldlist,
         TDTM_Runnable.Action triggerAction) {
 
@@ -149,10 +159,10 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         Set<Id> oppIds = (new Map<Id, Opportunity>(listOpps)).keySet();
 
         // Get a list of the Payment records by Opportunity and update the CurrencyIsoCode value
-        String soql = 
+        String soql =
             'SELECT Id, CurrencyIsoCode, npe01__Payment_Amount__c, npe01__Opportunity__r.CurrencyIsoCode ' +
             'FROM npe01__OppPayment__c ' +
-            'WHERE npe01__Opportunity__c IN :oppIds ' + 
+            'WHERE npe01__Opportunity__c IN :oppIds ' +
             'ORDER BY npe01__Opportunity__c';
         for (npe01__OppPayment__c pmt : database.query(soql)) {
             Opportunity opp = (Opportunity)pmt.getSObject('npe01__Opportunity__r');
@@ -188,9 +198,9 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     * @return dmlWrapper this method modifies dmlWrapper and returns it
     ********************************************************************************************************/
     private DmlWrapper handleMultiCurrencyPayments(
-        List<npe01__OppPayment__c> newlist, 
+        List<npe01__OppPayment__c> newlist,
         List<npe01__OppPayment__c> oldlist,
-        TDTM_Runnable.Action triggerAction, 
+        TDTM_Runnable.Action triggerAction,
         DmlWrapper dmlWrapper) {
 
         if (dmlWrapper == null) {
@@ -203,7 +213,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
         }
 
         Map<Id, Opportunity> oppsById = getPaymentOpportunities(oppIds);
-        
+
         // Validation and default the CurrencyIsoCode for new records for Before Insert/update
         if (isCurrencyFieldAvailable && (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate)) {
             for (Integer i = 0; i < newlist.size(); i++) {
@@ -233,7 +243,7 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description  For multicurrency orgs, set the currency of the payment to the currency of 
+    * @description  For multicurrency orgs, set the currency of the payment to the currency of
     *  the opportunity and make sure that the payment currency was not modified
     * @param oppsById Map of Opportunities
     * @param pmt Payment Object
@@ -260,8 +270,8 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description For multicurrency orgs with advanced currency management enabled, 
-    * Set the stageName if the amount is equal payments made and opp is not closed.  
+    * @description For multicurrency orgs with advanced currency management enabled,
+    * Set the stageName if the amount is equal payments made and opp is not closed.
     * @param opp Opportunity object
     * @param closedStageName String of the stageName
     * @param dmlWrapper DmlWrapper Object
@@ -286,16 +296,39 @@ public class PMT_Payment_TDTM extends TDTM_Runnable {
     * @return void Does not return anything
     ********************************************************************************************************/
     private void validatePayments(
-        List<npe01__OppPayment__c> newlist, 
+        List<npe01__OppPayment__c> newlist,
         List<npe01__OppPayment__c> oldlist,
-        TDTM_Runnable.Action triggerAction, 
+        TDTM_Runnable.Action triggerAction,
         DmlWrapper dmlWrapper) {
         if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             for (npe01__OppPayment__c payment : newlist) {
+                if (isEnforceAccountingDataConsistency) {
+                    enforceAccountingDataConsistency(payment);
+                }
+
                 if (payment.npe01__Paid__c == true && payment.npe01__Written_Off__c == true) {
                     payment.addError(System.Label.pmtWriteOffPaidPayment);
                 }
             }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description If the custom setting to enforce account rules is enabled, it will validate that paid payments
+    * have a payment date and unpaid payments have a scheduled date.
+    * @param payment the Payment from trigger new.
+    * @return void Does not return anything
+    ********************************************************************************************************/
+    private void enforceAccountingDataConsistency(npe01__OppPayment__c payment) {
+        if ((payment.npe01__Paid__c == true || payment.npe01__Written_Off__c == true) && payment.npe01__Payment_Date__c == null) {
+
+            if (payment.npe01__Paid__c == true) {
+                payment.addError(System.Label.pmtPaidPaymentDateRequired);
+            } else {
+                payment.addError(System.Label.pmtWrittenOffPaymentDateRequired);
+            }
+        } else if (payment.npe01__Paid__c == false && payment.npe01__Written_Off__c == false && payment.npe01__Scheduled_Date__c == null) {
+            payment.addError(System.Label.pmtUnpaidPaymentScheduledDateRequired);
         }
     }
 }
