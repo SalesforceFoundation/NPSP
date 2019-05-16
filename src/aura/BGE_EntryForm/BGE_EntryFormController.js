@@ -1,5 +1,12 @@
 ({
     /**
+     * @description: alerts parent component that form needs to be reset
+     */
+    doInit: function(component, event, helper){
+        helper.init(component);
+    },
+
+    /**
      * @description: called during render to focus on open donation link if present and donation not selected
      */
     callFocus: function(component){

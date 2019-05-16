@@ -1,4 +1,18 @@
 ({
+    /******************************** Init Functions *****************************/
+    init: function(component) {
+        var action = component.get('c.getPaymentsEnabledSettings');
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (state === 'SUCCESS') {
+                component.set('v.isPaymentsEnabled', response.getReturnValue());
+            } else {
+                this.handleApexErrors(component, response);
+            }
+        });
+        $A.enqueueAction(action);
+    },
+
     /**
      * @description: clears all info on user-selected open donation
      */

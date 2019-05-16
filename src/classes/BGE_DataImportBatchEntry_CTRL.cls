@@ -52,6 +52,15 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description Checks whether Payments are enabled in the Org.
+    * @return True if Payments are enabled, else false.
+    */
+    @AuraEnabled
+    public static Boolean getPaymentsEnabledSettings() {
+        return UTIL_CustomSettingsFacade.getOrgContactsSettings().npe01__Payments_Enabled__c;
+    }
+
+    /*******************************************************************************************************
     * @description deletes DataImport__c record and returns updated totals in the model
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
     * @param dataImportId: ID of the DataImport__c

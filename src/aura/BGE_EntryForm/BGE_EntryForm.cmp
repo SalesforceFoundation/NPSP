@@ -45,6 +45,7 @@
     <aura:attribute name="openOpportunities" type="List" description="List of open Opportunities" access="public" />
     <aura:attribute name="unpaidPayments" type="List" description="List of unpaid Payments" access="public" />
     <aura:attribute name="selectedDonation" type="SObject" description="Stored selected open donation. Can also be null or empty." access="public" />
+    <aura:attribute name="isPaymentsEnabled" type="Boolean" description="True if Opportunity Payments are enabled." access="public" />
 
     <!-- Private Attributes-->
     <aura:attribute name="pendingSave" default="false" type="Boolean"
@@ -57,6 +58,7 @@
     </aura:attribute>
 
     <!--Events-->
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
     <aura:handler name="render" action="{!c.callFocus}" value="{!this}"/>
     <aura:handler event="ltng:sendMessage" action="{!c.handleMessage}"/>
 
