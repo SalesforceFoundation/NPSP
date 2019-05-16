@@ -221,7 +221,13 @@ class GenerateBDIData(BaseSalesforceApiTask):
 
     def generate_bdi_denormalized_table(self, fraction):
         """BDI has a denormalized import table called npsp__DataImport__c.
-           Generate that table using a mix of matching and umatching data."""
+           Generate that table using a mix of matching and umatching data.
+           
+           Fraction is slightly non-intuitive. It's the proportion of existing
+           records to match in the BDI table. So 1 means match 1 to 1.
+           2 means match half. 3 means match a third. The bigger the number,
+           the smaller the size of the BDI table.
+           """
         self.generate_matching_records(fraction)
         self.generate_unmatched_records(fraction)
 
@@ -233,7 +239,7 @@ class GenerateBDIData(BaseSalesforceApiTask):
             """
         INSERT INTO npsp__DataImport__c
             SELECT
-                payments.Id as Id, -- unique id
+                Opportunities.Id as Id, -- unique id
             accounts.name, -- account_name -> npe01__Account1_Name__c
             contacts.name, -- contact1_lastname -> npe01__Contact1_Lastname__c
             opportunities.name, -- donation_name ->  npe01__Donation_Name__c
@@ -241,11 +247,10 @@ class GenerateBDIData(BaseSalesforceApiTask):
             opportunities.amount, -- donation_amount -> npe01__Donation_Amount__c
             opportunities.close_date -- donation_date -> npe01__Donation_Date__c
         -- disabled   FALSE -- do_not_automatically_create_payment -> npe01__Do_Not_Automatically_Create_Payment__c
-        FROM payments
-            LEFT JOIN opportunities ON npe01__opportunity__c=opportunities.Id
+        FROM Opportunities
             LEFT JOIN contacts on primary_contact__c=contacts.Id
             LEFT JOIN accounts on opportunities.account_id=accounts.Id
-        WHERE payments.Id %% %(fraction)s  -- only half of the records
+        WHERE Opportunities.Id %% %(fraction)s = 0 -- only half (or other portion) of the records
             """
             % {"fraction": fraction}
         )
