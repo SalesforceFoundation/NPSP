@@ -115,7 +115,8 @@
                 'unpaidPayments': component.get('v.unpaidPayments'),
                 'openOpportunities': component.get('v.openOpportunities'),
                 'selectedDonation': component.get('v.selectedDonation'),
-                'labels': component.get('v.labels')
+                'labels': component.get('v.labels'),
+                'isPaymentsEnabled': component.get('v.isPaymentsEnabled')
             },
             function (newcomponent, status, errorMessage) {
                 if (status === 'SUCCESS') {
