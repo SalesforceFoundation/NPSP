@@ -200,11 +200,11 @@ public class BDI_MigrationMappingUtility {
             System.debug('*** handleResult');
             System.debug(migrationType);
 
-            if (result.status == Metadata.DeployStatus.Succeeded) {
+            if (result != null && result.status == Metadata.DeployStatus.SUCCEEDED) {
                 // Deployment was successful
                 //TODO: update Field_Mapping_Method__c in custom setting to reflect successful enablement of advanced mapping
                 BDI_MigrationMappingUtility.upsertCustomSettings('Data Import Field Mapping', migrationType, String.valueOf(result.status));
-            } else {
+            } else if (result != null && result.status != Metadata.DeployStatus.SUCCEEDED) {
                 // Deployment was not successful
                 //TODO: In this case it failed, and we would want to store the error and notify the user (generally speaking)
                 String errMsg = '';
@@ -214,6 +214,10 @@ public class BDI_MigrationMappingUtility {
                 }
 
                 BDI_MigrationMappingUtility.upsertCustomSettings('Help Text', migrationType, errMsg);
+                throw new DeploymentException('There was an error attempting to deploy custom metadata.');
+            } else {
+                // Deployment was not successful and result is null
+                BDI_MigrationMappingUtility.upsertCustomSettings('Help Text', migrationType, 'Unknown error');
                 throw new DeploymentException('There was an error attempting to deploy custom metadata.');
             }
         }

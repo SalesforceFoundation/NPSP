@@ -47,8 +47,8 @@ private class BDI_MigrationMappingUtilityTest {
                         new BDI_MigrationMappingHelperMock());
 
         // Call build method
-        BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility();
-        util.buildCustomMetadataRecordsFromHelpText(mock_BDI_MigrationMappingHelper);
+        BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
+        util.buildCustomMetadataRecordsFromHelpText('Default_Field_Mapping_Set');
 
         // Confirm that we have a new pending data import field mapping waiting to be deployed
         System.assertEquals(1, util.pendingMappings.size());
@@ -67,22 +67,25 @@ private class BDI_MigrationMappingUtilityTest {
                         new BDI_MigrationMappingHelperMock());
 
         // Call the method
-        BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility();
-        util.buildCustomMetadataRecordsFromHelpText(mock_BDI_MigrationMappingHelper);
+        BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
+        util.buildCustomMetadataRecordsFromHelpText('Default_Field_Mapping_Set');
 
         Test.startTest();
 
         // Convert mappings to Custom Metadata and start deployment
-        String jobId = util.convertLegacyHelpTextToCustomMetadata();
+        String jobId = util.deployCustomMetadata();
 
         // Confirm custom settings updated accordingly
-        CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack(jobId, CMT_MetadataAPI.Source.HELP_TEXT_MIGRATION);
+        BDI_MigrationMappingUtility.DeploymentCallback callback = new BDI_MigrationMappingUtility.DeploymentCallback('default');
 
         // Construct a dummy Context
         TestingDeployCallbackContext context = new TestingDeployCallbackContext();
 
+        Metadata.DeployResult deployResult = new Metadata.DeployResult();
+        deployResult.status = Metadata.DeployStatus.SUCCEEDED;
+
         // Call the handleResult() method of our main Callback with our dummy context var
-        callback.handleResult(null, context);
+        callback.handleResult(deployResult, context);
 
         Test.stopTest();
 
@@ -90,25 +93,28 @@ private class BDI_MigrationMappingUtilityTest {
         Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         Map<String,String> result = (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
 
-        System.assertNotEquals(null, result.get(jobId), result);
+        System.assertNotEquals(null, result.get('Status'), result);
     }
 
     @IsTest
     static void migrationUtilityDeploysWithoutMetadata() {
-        BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility();
+        BDI_MigrationMappingUtility util = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
 
         Test.startTest();
         // Convert mappings to Custom Metadata and start deployment
-        String jobId = util.convertLegacyHelpTextToCustomMetadata();
+        String jobId = util.deployCustomMetadata();
 
         // Confirm custom settings updated accordingly
-        CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack(jobId, CMT_MetadataAPI.Source.HELP_TEXT_MIGRATION);
+        BDI_MigrationMappingUtility.DeploymentCallback callback = new BDI_MigrationMappingUtility.DeploymentCallback('default');
 
         // Construct a dummy Context
         TestingDeployCallbackContext context = new TestingDeployCallbackContext();
 
+        Metadata.DeployResult deployResult = new Metadata.DeployResult();
+        deployResult.status = Metadata.DeployStatus.SUCCEEDED;
+
         // Call the handleResult() method of our main Callback with our dummy context var
-        callback.handleResult(null, context);
+        callback.handleResult(deployResult, context);
 
         Test.stopTest();
 
@@ -116,7 +122,7 @@ private class BDI_MigrationMappingUtilityTest {
         Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         Map<String,String> result = (Map<String,String>)JSON.deserialize(dataImportSettings.CMT_API_Status__c, Map<String,String>.class);
 
-        System.assertNotEquals(null, result.get(jobId), result);
+        System.assertNotEquals(null, result.get('Status'), result);
     }
 
     private class BDI_MigrationMappingHelperMock implements System.StubProvider {
@@ -181,7 +187,7 @@ private class BDI_MigrationMappingUtilityTest {
                 };
             }
 
-            if (stubbedMethodName == 'getDefaultFieldMappings') {
+            if (stubbedMethodName == 'getFieldMappingsByDeveloperName') {
                 Data_Import_Field_Mapping__mdt fieldMapping1 = new Data_Import_Field_Mapping__mdt(
                     Label='Account 1 City',
                     DeveloperName='Account_1_City',
