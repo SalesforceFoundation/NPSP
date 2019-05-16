@@ -128,23 +128,25 @@
                     <aura:set attribute="footer">
                         <div class="selectedDonationBody">
                             <lightning:layout multipleRows="true">
-                                <lightning:layoutItem size="12" padding="around_xx-small">
-                                    <aura:if isTrue="{!and(equals(donation.Id, v.selectedDonation.Id), not(v.selectedDonation.applyPayment))}">
-                                        <lightning:icon iconName="utility:check" size="small"
-                                                        class="slds-p-right_small selectedCheckmark"
-                                                        alternativeText="{!$Label.c.stgCheckboxTrue}"
-                                                        title="{!$Label.c.stgCheckboxTrue}"/>
-                                        <lightning:formattedText
-                                                value="{!$Label.c.bgeFormSelectedOpportunity}"/>
-                                        <aura:set attribute="else">
-                                            <lightning:button
-                                                    value="{!donation}"
-                                                    label="{!$Label.c.bgeFormUpdateOpportunity}"
-                                                    onclick="{!c.handleDonationSelection}"
-                                                    variant="base"/>
-                                        </aura:set>
-                                    </aura:if>
-                                </lightning:layoutItem>
+                                <aura:if isTrue="{!not(v.isPaymentsEnabled)}">
+                                    <lightning:layoutItem size="12" padding="around_xx-small">
+                                        <aura:if isTrue="{!and(equals(donation.Id, v.selectedDonation.Id), not(v.selectedDonation.applyPayment))}">
+                                            <lightning:icon iconName="utility:check" size="small"
+                                                            class="slds-p-right_small selectedCheckmark"
+                                                            alternativeText="{!$Label.c.stgCheckboxTrue}"
+                                                            title="{!$Label.c.stgCheckboxTrue}"/>
+                                            <lightning:formattedText
+                                                    value="{!$Label.c.bgeFormSelectedOpportunity}"/>
+                                            <aura:set attribute="else">
+                                                <lightning:button
+                                                        value="{!donation}"
+                                                        label="{!$Label.c.bgeFormUpdateOpportunity}"
+                                                        onclick="{!c.handleDonationSelection}"
+                                                        variant="base"/>
+                                            </aura:set>
+                                        </aura:if>
+                                    </lightning:layoutItem>
+                                </aura:if>
                                 <lightning:layoutItem size="12" padding="around_xx-small"
                                                       class="slds-border_top slds-p-top_x-small slds-m-top_x-small">
                                     <aura:if isTrue="{!and(equals(donation.Id, v.selectedDonation.Id), v.selectedDonation.applyPayment)}">
