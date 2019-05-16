@@ -476,7 +476,7 @@ private class CRLP_Batch_Base_TEST {
     }
 
     /**
-     * @description Confirms summary records are included if it has no detail records and rollup states are enabled
+     * @description Confirms summary records are included if it has no detail records and has rollup states
      */
     @isTest
     private static void shouldIncludeSummaryRecordsWithNoDetailsIfItHasRollupStates(){
@@ -507,7 +507,7 @@ private class CRLP_Batch_Base_TEST {
     }
 
     /**
-     * @description Confirms summary records are excluded if it has no detail records and rollup states are not enabled
+     * @description Confirms summary records are excluded if it has no detail records and no rollup states
      */
     @isTest
     private static void shouldNotIncludeSummaryRecordsWithNoDetailsIfRollupStatesAreNotEnabled(){
