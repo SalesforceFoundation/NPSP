@@ -241,29 +241,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
      */
     @TestVisible
     private List<SObject> excludeSummaryWithMissingDetailRecords(List<SObject> summaryRecords, List<SObject> detailRecords) {
-        String relationshipName;
-        String parentKeyField = CRLP_Rollup_SVC.getParentFieldNameForProcessing(jobType);
-
-        // If keyField field has dot-notation (ex: Contact__r.AccountId), need to parse out the two components
-        if (parentKeyField.contains('.')) {
-            relationshipName = parentKeyField.split('\\.')[0];
-            parentKeyField = parentKeyField.split('\\.')[1];
-        }
-
-        Set<Id> includeParentIds = new Set<Id>();
-        for (Integer n=0, listSize=detailRecords.size(); n<listSize; n++) {
-            SObject detailRecord = detailRecords[n];
-            if (String.isNotBlank(relationshipName)) {
-                detailRecord = detailRecords[n].getSObject(relationshipName);
-            }
-
-            includeParentIds.add((String) detailRecord.get(parentKeyField));
-        }
-
-        Set<SObjectType> nonZeroCheckSObjectTypes = new Set<SObjectType> {
-                Contact.SObjectType,
-                Account.SObjectType
-        };
+        Set<Id> includeParentIds = buildParentIdsToIncludeFromDetails(detailRecords);
 
         Map<Id,List<CRLP_Rollup>> externalRollupStates = apiService.getBaseRollupStateForRecords(
             new Map<Id,SObject>(summaryRecords).keySet(),
@@ -271,7 +249,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         );
 
         List<SObject> includeSummaryRecords = new List<SObject>();
-        for (Integer n=0, listSize=summaryRecords.size(); n<listSize; n++) {
+        for (Integer n = 0, listSize = summaryRecords.size(); n < listSize; n++) {
             if (includeParentIds.contains(summaryRecords[n].Id) || hasRollupState(externalRollupStates, summaryRecords[n])) {
                 includeSummaryRecords.add(summaryRecords[n]);
 
@@ -292,6 +270,34 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         }
 
         return includeSummaryRecords;
+    }
+
+    /**
+     * @description Builds a set of parent Ids to include based on detail records
+     * @param detailRecords
+     * @return Set<Id>
+     */
+    private Set<Id> buildParentIdsToIncludeFromDetails(List<SObject> detailRecords) {
+        String relationshipName;
+        String parentKeyField = CRLP_Rollup_SVC.getParentFieldNameForProcessing(jobType);
+
+        // If keyField field has dot-notation (ex: Contact__r.AccountId), need to parse out the two components
+        if (parentKeyField.contains('.')) {
+            relationshipName = parentKeyField.split('\\.')[0];
+            parentKeyField = parentKeyField.split('\\.')[1];
+        }
+
+        Set<Id> includeParentIds = new Set<Id>();
+        for (Integer n = 0, listSize = detailRecords.size(); n<listSize; n++) {
+            SObject detailRecord = detailRecords[n];
+            if (String.isNotBlank(relationshipName)) {
+                detailRecord = detailRecords[n].getSObject(relationshipName);
+            }
+
+            includeParentIds.add((String) detailRecord.get(parentKeyField));
+        }
+
+        return includeParentIds;
     }
 
     /**
