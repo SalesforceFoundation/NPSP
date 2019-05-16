@@ -65,7 +65,6 @@ class BatchDataTask(BaseSalesforceApiTask):
         session, base = init_db(db_url, mappings)
         self.generate_data(session, base)
         self.session.commit()
-        fesfe()
 
     def generate_data(self, session, base):
         raise NotImplementedError("generate_data method")
