@@ -42,6 +42,7 @@
     <aura:attribute name="unpaidPayments" type="List" description="List of unpaid Payments" access="global" />
     <aura:attribute name="openOpportunities" type="List" description="List of open Opportunities" access="global" />
     <aura:attribute name="labels" type="Map" description="Labels retrieved in Apex related to Schema information." access="global"/>
+    <aura:attribute name="isPaymentsEnabled" type="Boolean" description="True if Opportunity Payments are enabled." access="public" default="false" />
 
     <!--Markup-->
     <lightning:overlayLibrary aura:id="overlayLibSelector"/>
