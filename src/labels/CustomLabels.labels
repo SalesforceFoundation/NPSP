@@ -1842,6 +1842,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Manage Allocations button is only supported from a Campaign, Opportunity, Payment or Recurring Donation record.</value>
     </labels>
     <labels>
+        <fullName>alloPaymentOverallocatedError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloPaymentOverallocatedError</shortDescription>
+        <value>The amount allocated is more than the amount of the Payment. Please update the Payment Allocation amount(s) so the total equals the Payment Amount. See Opportunity “{0}, Id: {1}”</value>
+    </labels>
+    <labels>
+        <fullName>alloPaidPmtsExceedsOpp</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloPaidPmtsExceedsOpp</shortDescription>
+        <value>The Allocations you've updated for this Opportunity would total less than what's allocated on Paid Payments. You must reduce the total allocations on paid Payments before you can reduce Opportunity Allocations. See Opportunity “{0}, Id: {1}” Allocation “{2}, Id: {3}”</value>
+    </labels>
+    <labels>
         <fullName>alloPaymentNotEnabled</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
@@ -1858,12 +1874,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Percent-based Allocations cannot exceed 100%.</value>
     </labels>
     <labels>
+        <fullName>alloPmtOppSingleTransaction</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloPmtOppSingleTransaction</shortDescription>
+        <value>Opportunity and Payment Allocations for the same Opportunity record cannot be created or modified at the same time.</value>
+    </labels>
+    <labels>
         <fullName>alloRemainder</fullName>
         <categories>Allocation</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloRemainder</shortDescription>
         <value>Remainder:</value>
+    </labels>
+    <labels>
+        <fullName>alloRemoveOppWithPmt</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloRemoveOppWithPmt</shortDescription>
+        <value>You can't delete this Opportunity Allocation because the same Allocation is used on a Paid Payment associated with this Opportunity. See Opportunity “{0}, Id: {1}” Allocation “{2}, Id: {3}”</value>
     </labels>
     <labels>
         <fullName>alloSignMistmatch</fullName>
@@ -5654,14 +5686,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You do not have permissions to manage Address settings. Please contact your system administrator for more information.</value>
     </labels>
     <labels>
-        <fullName>stgAllocationLevel</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgAllocationLevel</shortDescription>
-        <value>Allocation Type</value>
-    </labels>
-    <labels>
         <fullName>stgBtnBack</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -6059,20 +6083,6 @@ Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or r
         <protected>false</protected>
         <shortDescription>stgHelpAlloNDayValue</shortDescription>
         <value>Sets the value for 'N day' rollups, where 'N' is the number of days from today into the past. This value defaults to roll up GAU Allocations over the past 365 days.</value>
-    </labels>
-    <labels>
-        <fullName>stgHelpAllocationLevel</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgHelpAllocationLevel</shortDescription>
-        <value>An allocation is the specific amount of a gift that goes to a designated General Accounting Unit (GAU). This setting determines whether funds are allocated based on the Amount on the Opportunity or the Amount on the Payment.&lt;br/&gt;&lt;br/&gt;
-
-&lt;b&gt;WARNING:&lt;/b&gt; Choosing to use Payment Allocations changes the way Opportunity Allocations work in your org. It's important that you understand these changes and the additional requirements that exist before enabling them.&lt;br/&gt;&lt;br/&gt;
-
-If you enable and start using Payment Allocations and then disable them, you will need to manually reconcile your data and update Opportunity Allocation records to reflect the information previously assigned in Payment Allocations. Review the Payment Allocations documentation to better understand the potential impact.&lt;br/&gt;&lt;br/&gt;
-
-When you enable Payment Allocations, existing rollups remain the same. We do not modify rollups or create new Custom Rollups. You can create new rollups based only on Payments, if you want to.</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoAffil</fullName>
@@ -7249,14 +7259,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelAlloBatchProgress</shortDescription>
         <value>Rollup Allocations Batch Progress</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelAllocationBehaviorSettings</fullName>
-        <categories>Allocation, Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgLabelAllocationsRollupSettings</shortDescription>
-        <value>Allocation Behavior Settings</value>
     </labels>
     <labels>
         <fullName>stgLabelAllocationsRollupSettings</fullName>
