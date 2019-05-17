@@ -1,7 +1,4 @@
 ({
-    /**
-     * @description: alerts parent component that form needs to be reset
-     */
     doInit: function(component, event, helper){
         helper.init(component);
     },
@@ -116,7 +113,7 @@
                 'openOpportunities': component.get('v.openOpportunities'),
                 'selectedDonation': component.get('v.selectedDonation'),
                 'labels': component.get('v.labels'),
-                'isPaymentsEnabled': component.get('v.isPaymentsEnabled')
+                'isPaymentCreationEnabled': component.get('v.isPaymentCreationEnabled')
             },
             function (newcomponent, status, errorMessage) {
                 if (status === 'SUCCESS') {

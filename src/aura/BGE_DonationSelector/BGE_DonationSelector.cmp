@@ -42,7 +42,7 @@
     <aura:attribute name="unpaidPayments" type="List" description="List of unpaid Payments" access="global" />
     <aura:attribute name="openOpportunities" type="List" description="List of open Opportunities" access="global" />
     <aura:attribute name="labels" type="Map" description="Labels retrieved in Apex related to Schema information." access="global"/>
-    <aura:attribute name="isPaymentsEnabled" type="Boolean" description="True if Opportunity Payments are enabled." access="public" default="false" />
+    <aura:attribute name="isPaymentCreationEnabled" type="Boolean" description="True if Automatic Payment Creation is enabled." access="public" default="false" />
 
     <!--Markup-->
     <lightning:overlayLibrary aura:id="overlayLibSelector"/>
@@ -128,7 +128,7 @@
                     <aura:set attribute="footer">
                         <div class="selectedDonationBody">
                             <lightning:layout multipleRows="true">
-                                <aura:if isTrue="{!not(v.isPaymentsEnabled)}">
+                                <aura:if isTrue="{!not(v.isPaymentCreationEnabled)}">
                                     <lightning:layoutItem size="12" padding="around_xx-small">
                                         <aura:if isTrue="{!and(equals(donation.Id, v.selectedDonation.Id), not(v.selectedDonation.applyPayment))}">
                                             <lightning:icon iconName="utility:check" size="small"
@@ -147,7 +147,7 @@
                                         </aura:if>
                                     </lightning:layoutItem>
                                 </aura:if>
-                                <aura:if isTrue="{!v.isPaymentsEnabled}">
+                                <aura:if isTrue="{!v.isPaymentCreationEnabled}">
                                     <lightning:layoutItem size="12" padding="around_xx-small">
                                         <aura:if isTrue="{!and(equals(donation.Id, v.selectedDonation.Id), v.selectedDonation.applyPayment)}">
                                             <lightning:icon iconName="utility:check" size="small"

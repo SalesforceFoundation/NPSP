@@ -49,7 +49,7 @@
     <!-- Private Attributes-->
     <aura:attribute name="pendingSave" default="false" type="Boolean"
                     description="Controls whether Save is disabled because form has uncommitted changes" access="private"/>
-    <aura:attribute name="isPaymentsEnabled" type="Boolean" description="True if Opportunity Payments are enabled." access="private"/>
+    <aura:attribute name="isPaymentCreationEnabled" type="Boolean" description="True if Automatic Payment Creation is enabled." access="private"/>
 
     <!--Modal Attributes-->
     <aura:attribute name="modalOpen" type="Boolean" description="Prevents multiple modals from opening"/>

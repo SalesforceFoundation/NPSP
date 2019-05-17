@@ -5,7 +5,7 @@
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (state === 'SUCCESS') {
-                component.set('v.isPaymentsEnabled', response.getReturnValue());
+                component.set('v.isPaymentCreationEnabled', response.getReturnValue());
             } else {
                 this.handleApexErrors(component, response);
             }
