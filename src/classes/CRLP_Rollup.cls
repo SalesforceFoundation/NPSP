@@ -67,8 +67,8 @@ public class CRLP_Rollup {
     public Decimal minValue;        // smallest/largest
     public Date maxDate;            // first/last
     public Date minDate;            // first/last
-    public DateTime maxDateTime;    // first/last
-    public DateTime minDateTime;    // first/last
+    public Datetime maxDateTime;    // first/last
+    public Datetime minDateTime;    // first/last
 
     // Vars to handle using a different field for the summary. For example, might have Largest as the Operation
     // against the Opportunity.Amount, but the ResultField might pull in Opportunity.Id or any field from the
@@ -80,7 +80,7 @@ public class CRLP_Rollup {
     public Decimal[] numValue;
     public Id[] idValue;
     public Date[] dateValue;
-    public DateTime[] dateTimeValue;
+    public Datetime[] dateTimeValue;
 
     // Maps of rolled up stats by year; where the map key is the year (fiscal or calendar) from the specified date field
     public Map<String, Decimal> sumByYear;
@@ -90,38 +90,47 @@ public class CRLP_Rollup {
 
     /** @description Constructor */
     public CRLP_Rollup(Rollup__mdt rlp) {
+
         if (this.rollupsMdt == null) {
-            this.rollupsMdt = new List<Rollupmdt>();
-
-            // Field and Object details
-            this.summaryObject = rlp.Summary_Object__r.QualifiedApiName;
-            this.amountObject = rlp.Amount_Object__r.QualifiedApiName;
-            this.dateObject = rlp.Date_Object__r.QualifiedApiName;
-            this.detailObject = rlp.Detail_Object__r.QualifiedApiName;
-            this.filterGroup = rlp.Filter_Group__c;
-
-            // Year and Date/Day related details
-            this.useFiscalYear = rlp.Use_Fiscal_Year__c;
-            this.timeBoundOperation = rlp.Time_Bound_Operation_Type__c;
-            if (this.timeBoundOperation == CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()) {
-                this.daysBack = Integer.valueOf(rlp.Integer__c);
-            }
-
-            this.isYearsAgoSingleResult = false;
-            if (this.timeBoundOperation == CRLP_Operation.TimeBoundOperationType.YEARS_AGO.name()) {
-                this.yearsAgo = Integer.valueOf(rlp.Integer__c);
-                if (rlp.Operation__c == CRLP_Operation.RollupType.Largest.name()
-                        || rlp.Operation__c == CRLP_Operation.RollupType.Smallest.name()
-                        || rlp.Operation__c == CRLP_Operation.RollupType.First.name()
-                        || rlp.Operation__c == CRLP_Operation.RollupType.Last.name()) {
-                    this.isYearsAgoSingleResult = true;
-                }
-            }
-
-            // Clear all the counter values
-            resetValues();
+            setDefaultsFromFirstMdt(rlp);
         }
         addNewMDTRecord(rlp);
+    }
+
+    /**
+     * @description Set the default CRLP_Rollup properties from the first Rollup__mdt record added to the group
+     * @param rlp Rollup__mdt record
+     */
+    private void setDefaultsFromFirstMdt(Rollup__mdt rlp) {
+        this.rollupsMdt = new List<Rollupmdt>();
+
+        // Field and Object details
+        this.summaryObject = rlp.Summary_Object__r.QualifiedApiName;
+        this.amountObject = rlp.Amount_Object__r.QualifiedApiName;
+        this.dateObject = rlp.Date_Object__r.QualifiedApiName;
+        this.detailObject = rlp.Detail_Object__r.QualifiedApiName;
+        this.filterGroup = rlp.Filter_Group__c;
+
+        // Year and Date/Day related details
+        this.useFiscalYear = rlp.Use_Fiscal_Year__c;
+        this.timeBoundOperation = rlp.Time_Bound_Operation_Type__c;
+        if (this.timeBoundOperation == CRLP_Operation.TimeBoundOperationType.Days_Back.name()) {
+            this.daysBack = Integer.valueOf(rlp.Integer__c);
+        }
+
+        this.isYearsAgoSingleResult = false;
+        if (this.timeBoundOperation == CRLP_Operation.TimeBoundOperationType.Years_Ago.name()) {
+            this.yearsAgo = Integer.valueOf(rlp.Integer__c);
+            if (rlp.Operation__c == CRLP_Operation.RollupType.Largest.name()
+                    || rlp.Operation__c == CRLP_Operation.RollupType.Smallest.name()
+                    || rlp.Operation__c == CRLP_Operation.RollupType.First.name()
+                    || rlp.Operation__c == CRLP_Operation.RollupType.Last.name()) {
+                this.isYearsAgoSingleResult = true;
+            }
+        }
+
+        // Clear all the counter values
+        resetValues();
     }
 
     /**
@@ -145,7 +154,7 @@ public class CRLP_Rollup {
             this.dateFieldName = rlp.Date_Field__r.QualifiedApiName;
         }
         // Don't get the amount field if the operation is a Count
-        if (this.amountFieldName == null && rlp.Amount_Field__c != null && rlp.Operation__c != CRLP_Operation.RollupType.COUNT.name()) {
+        if (this.amountFieldName == null && rlp.Amount_Field__c != null && rlp.Operation__c != CRLP_Operation.RollupType.Count.name()) {
             this.amountFieldName = rlp.Amount_Field__r.QualifiedApiName;
         }
         this.rollupsMdt.add(new Rollupmdt(rlp));
@@ -167,7 +176,7 @@ public class CRLP_Rollup {
         this.numValue = new List<Decimal>{ 0, 0, 0, 0 };
         this.idValue = new List<Id>{ null, null, null, null };
         this.dateValue = new List<Date>{ null, null, null, null };
-        this.dateTimeValue = new List<DateTime>{ null, null, null, null };
+        this.dateTimeValue = new List<Datetime>{ null, null, null, null };
     }
 
     /**
@@ -209,7 +218,7 @@ public class CRLP_Rollup {
 
         // DaysBack operations have to be grouped together, so if the value doesn't match exactly don't
         // consider them in the same group
-        String daysBackOperation = CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name();
+        String daysBackOperation = CRLP_Operation.TimeBoundOperationType.Days_Back.name();
         if ((this.timeBoundOperation == daysBackOperation && (otherMdtTimeBoundOperationType != daysBackOperation ||
                 this.daysBack != otherMdtRollup.Integer__c)) ||
                 (otherMdtTimeBoundOperationType == daysBackOperation && this.timeBoundOperation != daysBackOperation)
@@ -219,25 +228,27 @@ public class CRLP_Rollup {
 
         // YearsAgo operations have to be grouped together by year for Single Result Operations,
         // so if the op group + value don't match exactly don't consider them in the same group
-        String yearsAgoOperation = CRLP_Operation.TimeBoundOperationType.YEARS_AGO.name();
-        Boolean isSingleResult = otherMdtRollup.Operation__c == CRLP_Operation.RollupType.Largest.name() || otherMdtRollup.Operation__c == CRLP_Operation.RollupType.Smallest.name()
-                ||   otherMdtRollup.Operation__c == CRLP_Operation.RollupType.First.name() || otherMdtRollup.Operation__c == CRLP_Operation.RollupType.Last.name();
+        String yearsAgoOperation = CRLP_Operation.TimeBoundOperationType.Years_Ago.name();
+        Boolean isSingleResult = otherMdtRollup.Operation__c == CRLP_Operation.RollupType.Largest.name()
+                || otherMdtRollup.Operation__c == CRLP_Operation.RollupType.Smallest.name()
+                || otherMdtRollup.Operation__c == CRLP_Operation.RollupType.First.name()
+                || otherMdtRollup.Operation__c == CRLP_Operation.RollupType.Last.name();
         if ((this.isYearsAgoSingleResult == true
                 && (otherMdtTimeBoundOperationType != yearsAgoOperation
                 || otherMdtRollup.Integer__c != this.yearsAgo
-                || !isSingleResult))
-                ||
-                (this.isYearsAgoSingleResult != true
+                || !isSingleResult)
+        ) || (this.isYearsAgoSingleResult != true
                 && otherMdtTimeBoundOperationType == yearsAgoOperation
-                && isSingleResult)) {
+                && isSingleResult)
+                ) {
             return false;
         }
 
         // The Amount and Detail fields do not matter for Count operations, so remove them from the
         // grouping matching logic if this Rollup is a Count OR there is only one MDT record in the
         // instance and that one is a Count.
-        if (otherMdtRollup.Operation__c == CRLP_Operation.RollupType.COUNT.name()
-                || (this.rollupsMdt.size() == 1 && this.rollupsMdt[0].operation == CRLP_Operation.RollupType.COUNT.name())) {
+        if (otherMdtRollup.Operation__c == CRLP_Operation.RollupType.Count.name()
+                || (this.rollupsMdt.size() == 1 && this.rollupsMdt[0].operation == CRLP_Operation.RollupType.Count.name())) {
             matchingFields.remove('Amount_Field__c');
             matchingFields.remove('Detail_Field__c');
         }
@@ -325,10 +336,10 @@ public class CRLP_Rollup {
         // in the later logic to determine the values to return for this rollup.
         // ================================================================
         Decimal sumForSpecifiedYear = 0, maxForSpecifiedYear = 0, minForSpecifiedYear = 0, countForSpecifiedYear = 0;
-        Boolean useYearsAgoValue = ( r.timeBoundOperationType == CRLP_Operation.TimeBoundOperationType.YEARS_AGO.name());
+        Boolean useYearsAgoValue = ( r.timeBoundOperationType == CRLP_Operation.TimeBoundOperationType.Years_Ago.name());
 
         if (useYearsAgoValue == true) {
-            
+
             // Find the data for the specified number of years back.
             Integer getThisYear = (this.useFiscalYear ? fiscalYrs.getYear(Date.today()) : Date.today().year()) - r.intValue;
             String yrString = UTIL_String.removeNonNumericCharacters(getThisYear.format());
@@ -347,7 +358,7 @@ public class CRLP_Rollup {
         // First/Last ,such as "Last Gift Amount"
         // This could be an Id or pretty much any other field that can be stored as 'text'
         // ================================================================
-        if (operation == CRLP_Operation.RollupType.FIRST || operation == CRLP_Operation.RollupType.LAST) {
+        if (operation == CRLP_Operation.RollupType.First || operation == CRLP_Operation.RollupType.Last) {
             Integer arrayPosition = CRLP_Operation.operationTypeToArrayPosition(operation);
             if (fldType == SoapType.DOUBLE) {
                 resultValue = numValue[arrayPosition];
@@ -365,13 +376,13 @@ public class CRLP_Rollup {
         // ================================================================
         // Sum, Average, Largest, Smallest, Count
         // ================================================================
-        else if (fldType == SoapType.DOUBLE && operation == CRLP_Operation.RollupType.SUM) {
+        else if (fldType == SoapType.DOUBLE && operation == CRLP_Operation.RollupType.Sum) {
             if (useYearsAgoValue == false) {
                 resultValue = theSum;
             } else {
                 resultValue = sumForSpecifiedYear;
             }
-        } else if (fldType == SoapType.DOUBLE && operation == CRLP_Operation.RollupType.AVERAGE) {
+        } else if (fldType == SoapType.DOUBLE && operation == CRLP_Operation.RollupType.Average) {
             if (useYearsAgoValue == false && theCount != 0) {
                 resultValue = theSum.divide(theCount, 2, RoundingMode.HALF_UP);
             } else if (countForSpecifiedYear != 0) {
@@ -379,19 +390,19 @@ public class CRLP_Rollup {
             } else {
                 resultValue = 0;
             }
-        } else if (fldType == SoapType.DOUBLE && operation == CRLP_Operation.RollupType.SMALLEST) {
+        } else if (fldType == SoapType.DOUBLE && operation == CRLP_Operation.RollupType.Smallest) {
             if (useYearsAgoValue == false) {
                 resultValue = minValue;
             } else {
                 resultValue = minForSpecifiedYear;
             }
-        } else if (fldType == SoapType.DOUBLE && operation == CRLP_Operation.RollupType.LARGEST) {
+        } else if (fldType == SoapType.DOUBLE && operation == CRLP_Operation.RollupType.Largest) {
             if (useYearsAgoValue == false) {
                 resultValue = maxValue;
             } else {
                 resultValue = maxForSpecifiedYear;
             }
-        } else if (fldType == SoapType.DOUBLE && operation == CRLP_Operation.RollupType.COUNT) {
+        } else if (fldType == SoapType.DOUBLE && operation == CRLP_Operation.RollupType.Count) {
             if (useYearsAgoValue == false) {
                 resultValue = theCount;
             } else {
@@ -462,7 +473,7 @@ public class CRLP_Rollup {
         // ================================================================
         // Largest/Smallest for other types
         // ================================================================
-        if (operation == CRLP_Operation.RollupType.LARGEST || operation == CRLP_Operation.RollupType.SMALLEST) {
+        if (operation == CRLP_Operation.RollupType.Largest || operation == CRLP_Operation.RollupType.Smallest) {
             Integer arrayPosition = CRLP_Operation.operationTypeToArrayPosition(operation);
             if (fldType == SoapType.DOUBLE) {
                 resultValue = numValue[arrayPosition];
@@ -485,7 +496,7 @@ public class CRLP_Rollup {
                 resultValue = stringValue.abbreviate(maxFieldLength);
             }
         }
-        
+
 //        CRLP_Debug_UTIL.amendLastCurrentRollupState('==> ' + resultValue);
         return resultValue;
     }
