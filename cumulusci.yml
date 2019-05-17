@@ -263,12 +263,8 @@ flows:
             1:
                 task: deploy
                 options:
-                    path: unpackaged/config/acctsc_rollups
+                    path: unpackaged/config/crlp_testing
             2:
-                task: deploy
-                options:
-                    path: unpackaged/config/payment_rollups
-            3:
                 task: update_admin_profile
 
     config_managed:
