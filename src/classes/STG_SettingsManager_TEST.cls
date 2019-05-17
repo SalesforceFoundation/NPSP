@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2015 Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,18 +13,18 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
- 
+
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -45,21 +45,21 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('idPanelHome', STG_SettingsManager_CTRL.idPanelCurrent);
         system.assertEquals(null, ctrl.setPanelCurrent());
     }
-    
+
     /*********************************************************************************************************
     * @description Tests setting up TDTM and the Schedulables
     * @return void
     */
     public static testMethod void testRequiredJobsAreScheduledWhenNpspSettingsPageLoads() {
-        STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
-        
+        STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL();
+
         Test.startTest();
         ctrl.onNpspSettingsLoad();
         Test.stopTest();
-                
+
         List<CronTrigger> masterJobs = [
-            SELECT Id, CronJobDetail.Id 
-            FROM CronTrigger 
+            SELECT Id, CronJobDetail.Id
+            FROM CronTrigger
             WHERE CronJobDetail.Name IN :UTIL_MasterSchedulableHelper.defaultScheduledJobs.keySet() AND
                 CronJobDetail.JobType = '7'
         ];
@@ -68,7 +68,7 @@ public with sharing class STG_SettingsManager_TEST {
         System.assertNotEquals(null, STG_Panel.stgService);
     }
 
-    
+
     /*********************************************************************************************************
     * @description Tests an exception message is displayed if the record type settings update throws an exception
     * @return void
@@ -76,11 +76,11 @@ public with sharing class STG_SettingsManager_TEST {
     public static testMethod void testRecordTypeSettingsUpdateExceptionIsDisplayed() {
         Test.setCurrentPage(Page.STG_SettingsManager);
 
-        STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
+        STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL();
 
         UTIL_RecordTypeSettingsUpdate_TEST.UpdateSettingsMock mockUpdateSettings = new UTIL_RecordTypeSettingsUpdate_TEST.UpdateSettingsMock().throwException();
         UTIL_RecordTypeSettingsUpdate.instance = mockUpdateSettings;
-        
+
         Test.startTest();
         ctrl.onNpspSettingsLoad();
         Test.stopTest();
@@ -88,7 +88,7 @@ public with sharing class STG_SettingsManager_TEST {
         UTIL_UnitTestData_TEST.assertPageHasError('Test Exception');
     }
 
-     
+
     /*********************************************************************************************************
     * @description Tests the DataBoundMultiSelect control used in Settings
     * @return void
@@ -104,7 +104,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('a;b;c', ctrl.strValues);
         list<string> listStr = new list<string>{'x', 'y', 'z'};
         ctrl.listStrValues = listStr;
-        system.assertEquals('x;y;z', ctrl.strValues);        
+        system.assertEquals('x;y;z', ctrl.strValues);
     }
 
     /*********************************************************************************************************
@@ -137,7 +137,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertNotEquals(null, STG_Panel.listSOCampaignTypes);
         system.assertNotEquals(null, STG_Panel.listSOMailingReportIds);
     }
-    
+
     /*********************************************************************************************************
     * @description Tests that the Settings Service has each settings object loaded
     * @return void
@@ -158,7 +158,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertNotEquals(null, svc.listPMTFieldMapping);
         svc.saveAll();
     }
-    
+
     /*********************************************************************************************************
     * @description Tests the Affiliations panel
     * @return void
@@ -181,31 +181,21 @@ public with sharing class STG_SettingsManager_TEST {
     public static testMethod void testPanelAllo() {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(name='foo');
         insert gau;
-        
+
         STG_PanelAllocations_CTRL panel = new STG_PanelAllocations_CTRL();
-        system.assertEquals('idPanelAllocations', panel.idPanel());
-        system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Payment_Allocations_Enabled__c, 'Payment Allocations should not be enabled.');
-        system.assertEquals(panel.strAllocationLevel, STG_Panel.oppLabel, 'If Payment Allocations are not enabled, allocation level should be opportunity');
-        // Simulate selecting Payment Allocations without default GAU set
-        panel.strAllocationLevel = STG_Panel.paymentLabel;
-
-        panel.saveSettings();
-
-        List<Apexpages.Message> msgs = ApexPages.getMessages();
-        system.assertEquals(1, msgs.size(), 'Default GAU must be enabled');
-        system.assert(msgs[0].getDetail().contains(Label.alloDefaultNotEnabled));
-
-        system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default_Allocations_Enabled__c, 'Settings should not save successfully.');
-        system.assertEquals(null,UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default__c, 'Default GAU value should not be filled in.');
 
         // Try again with just default allocations enabled
         STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = true;
-        
-        panel.saveSettings();
 
-        msgs = ApexPages.getMessages();
-        system.assertEquals(2, msgs.size(), 'New error, a Default GAU value must be set');
-        system.assert(msgs[1].getDetail().contains(Label.alloDefaultGAUMissing));
+
+
+        panel.saveSettings();
+        STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c = true;
+
+
+        List<ApexPages.Message> msgs = ApexPages.getMessages();
+        system.assertEquals(1, msgs.size(), 'New error, a Default GAU value must be set');
+        system.assert(msgs[0].getDetail().contains(Label.alloDefaultGAUMissing));
 
         // Finally, set everything correctly
         STG_PanelAllocations_CTRL.allo = null;
@@ -214,7 +204,7 @@ public with sharing class STG_SettingsManager_TEST {
         panel.saveSettings();
 
         msgs = ApexPages.getMessages();
-        system.assertEquals(2, msgs.size(), 'No new error messages');
+        system.assertEquals(1, msgs.size(), 'No new error messages');
         system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default_Allocations_Enabled__c, 'Settings should save successfully.');
         system.assertNotEquals(null,UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default__c, 'Default GAU value should be filled in.');
         system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Payment_Allocations_Enabled__c, 'Payment Allocations should be enabled.');
@@ -260,7 +250,7 @@ public with sharing class STG_SettingsManager_TEST {
     */
     public static testMethod void testPanelContacts() {
         String hhAccountRecTypeLabel = STG_PanelContacts_CTRL.strHHAccountRecordTypeLabel;
-        String oneToOneRecordTypeLabel = STG_PanelContacts_CTRL.strOneToOneRecordTypeLabel;  
+        String oneToOneRecordTypeLabel = STG_PanelContacts_CTRL.strOneToOneRecordTypeLabel;
 
         STG_PanelContacts_CTRL panel = new STG_PanelContacts_CTRL();
         system.assertEquals('idPanelCon', panel.idPanel());
@@ -274,17 +264,17 @@ public with sharing class STG_SettingsManager_TEST {
         panel.saveSettings();
 
         system.assertEquals('One-to-One', UTIL_CustomSettingsFacade.getOrgContactsSettings().npe01__Account_Processor__c);
-    }    
+    }
 
     /*********************************************************************************************************
-    @description 
-        Tests Refresh Household Names batch when Automatic Household Naming is turned off 
+    @description
+        Tests Refresh Household Names batch when Automatic Household Naming is turned off
         and Household Naming Settings is invalid
     verify:
         Household Naming batch has not been run.
         Automatic Household Naming field is still turned off.
-        The Page contains an error.        
-    **********************************************************************************************************/ 
+        The Page contains an error.
+    **********************************************************************************************************/
     private static testMethod void testPanelRenameHHDoesNotRunBatchWhenHHNamingSettingsIsInvalid() {
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
         UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings();
@@ -300,20 +290,20 @@ public with sharing class STG_SettingsManager_TEST {
 
         System.assertEquals(null, pg, 'Returned PageReference should be null');
         System.assert(!ctrl.isRunningBatch, 'The batch should not run');
-        System.assertEquals(false, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned off');        
-        
+        System.assertEquals(false, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned off');
+
         UTIL_UnitTestData_TEST.assertPageHasError('Invalid field');
     }
 
     /*********************************************************************************************************
-    @description 
-        Tests Refresh Household Names batch when Automatic Household Naming is turned off 
+    @description
+        Tests Refresh Household Names batch when Automatic Household Naming is turned off
         and Household Naming Settings is valid
     verify:
         Household Naming batch has been run.
         Automatic Household Naming field is turned on.
-        The Page contains no error.        
-    **********************************************************************************************************/ 
+        The Page contains no error.
+    **********************************************************************************************************/
     private static testMethod void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOff() {
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
 
@@ -328,18 +318,18 @@ public with sharing class STG_SettingsManager_TEST {
 
         System.assertEquals(null, pg, 'Returned PageReference should be null');
         System.assert(ctrl.isRunningBatch, 'The batch should run');
-        System.assertEquals(true, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned on');    
-        
+        System.assertEquals(true, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned on');
+
         System.assertEquals(0, ApexPages.getMessages().size(), 'The page should not contain any error: ' + ApexPages.getMessages());
     }
 
     /*********************************************************************************************************
-    @description 
+    @description
         Tests Refresh Household Names batch when Automatic Household Naming is turned on
     verify:
         Household Naming batch has been run.
-        The Page contains no error.        
-    **********************************************************************************************************/ 
+        The Page contains no error.
+    **********************************************************************************************************/
     private static testMethod void testPanelRenameHHRunsBatchWhenAutomaticHHNamingIsOn() {
         UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
 
@@ -353,8 +343,8 @@ public with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
 
         System.assertEquals(null, pg, 'Returned PageReference should be null');
-        System.assert(ctrl.isRunningBatch, 'The batch should run');    
-        System.assertEquals(true, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned on');    
+        System.assert(ctrl.isRunningBatch, 'The batch should run');
+        System.assertEquals(true, UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Advanced_Household_Naming__c, 'Automatic Household Naming should be turned on');
 
         System.assertEquals(0, ApexPages.getMessages().size(), 'The page should not contain any error: ' + ApexPages.getMessages());
     }
@@ -383,7 +373,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('idPanelMembership', panel.idPanel());
         STG_Panel.stgService.stgHH.npo02__Membership_Grace_Period__c = 10;
         panel.saveSettings();
-        system.assertEquals(10, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Membership_Grace_Period__c);        
+        system.assertEquals(10, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Membership_Grace_Period__c);
         STG_Panel.stgService.stgHH.npo02__Membership_Grace_Period__c = 20;
         panel.saveSettings();
         system.assertEquals(20, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Membership_Grace_Period__c);
@@ -410,7 +400,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals('idPanelOppRollup', panel.idPanel());
         STG_Panel.stgService.stgHH.npo02__Batch_Size__c = 10;
         panel.saveSettings();
-        system.assertEquals(10, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Batch_Size__c);        
+        system.assertEquals(10, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Batch_Size__c);
         STG_Panel.stgService.stgHH.npo02__Batch_Size__c = 20;
         panel.saveSettings();
         system.assertEquals(20, UTIL_CustomSettingsFacade.getOrgHouseholdsSettings().npo02__Batch_Size__c);
@@ -453,23 +443,23 @@ public with sharing class STG_SettingsManager_TEST {
     public static testMethod void testPanelPaymentMapping() {
         STG_PanelPaymentMapping_CTRL panel = new STG_PanelPaymentMapping_CTRL();
         system.assertEquals('idPanelPaymentMapping', panel.idPanel());
-        system.assertEquals(false, ApexPages.hasMessages());               
+        system.assertEquals(false, ApexPages.hasMessages());
         system.assertNotEquals(null, panel.getSourceFields());
         system.assertNotEquals(null, panel.getTargetFields());
-        system.assertEquals(null, panel.newPfm());        
+        system.assertEquals(null, panel.newPfm());
         system.assertNotEquals(null, panel.pfmNew);
         system.assertEquals(true, panel.isEditMode);
         system.assertEquals(null, panel.cancelPfmEdit());
         system.assertEquals(false, panel.isEditMode);
-        system.assertEquals(null, panel.newPfm());        
+        system.assertEquals(null, panel.newPfm());
         system.assertNotEquals(null, panel.pfmNew);
         system.assertEquals(true, panel.isEditMode);
-        panel.pfmNew.npe01__Opportunity_Field__c = null;        
+        panel.pfmNew.npe01__Opportunity_Field__c = null;
         panel.pfmNew.npe01__Payment_Field__c = null;
         system.assertEquals(null, panel.savePfm());
         system.assertEquals(true, panel.isEditMode);
-        panel.pfmNew.npe01__Opportunity_Field__c = 'Amount';  
-        system.assertEquals(null, panel.onSelectSourceField());      
+        panel.pfmNew.npe01__Opportunity_Field__c = 'Amount';
+        system.assertEquals(null, panel.onSelectSourceField());
         panel.pfmNew.npe01__Payment_Field__c = 'npe01__Payment_Amount__c';
         system.assertEquals(true, panel.isPfmNewValid);
         system.assertEquals(null, panel.savePfm());
@@ -479,17 +469,17 @@ public with sharing class STG_SettingsManager_TEST {
         panel.pfmIdDelete = panel.listPMTFieldMapping[0].Id;
         system.assertEquals(null, panel.deletePfm());
         system.assertNotEquals(null, panel.listPMTFieldMapping);
-        system.assertEquals(0, panel.listPMTFieldMapping.size());  
+        system.assertEquals(0, panel.listPMTFieldMapping.size());
 
         // save a bogus mapping, and verify our check complains
-        panel.pfmNew.npe01__Opportunity_Field__c = 'NoExist';        
+        panel.pfmNew.npe01__Opportunity_Field__c = 'NoExist';
         panel.pfmNew.npe01__Payment_Field__c = 'NoExist';
         system.assertEquals(true, panel.isPfmNewValid);
         system.assertEquals(null, panel.savePfm());
         system.assertEquals(false, panel.isEditMode);
         system.assertNotEquals(null, panel.listPMTFieldMapping);
         system.assertEquals(1, panel.listPMTFieldMapping.size());
-             
+
     }
 
     /*********************************************************************************************************
@@ -533,22 +523,22 @@ public with sharing class STG_SettingsManager_TEST {
     public static testMethod void testPanelRDCustomFieldMapping() {
         STG_PanelRDCustomFieldMapping_CTRL panel = new STG_PanelRDCustomFieldMapping_CTRL();
         system.assertEquals('idPanelRDFieldMap', panel.idPanel());
-        system.assertEquals(false, ApexPages.hasMessages());               
+        system.assertEquals(false, ApexPages.hasMessages());
         system.assertNotEquals(null, STG_PanelRDCustomFieldMapping_CTRL.listSORDFields);
         system.assertNotEquals(null, STG_PanelRDCustomFieldMapping_CTRL.listSOOppFields);
-        system.assertEquals(null, panel.newCustomFieldMapping());        
+        system.assertEquals(null, panel.newCustomFieldMapping());
         system.assertNotEquals(null, panel.fmNew);
         system.assertEquals(true, panel.isEditMode);
         system.assertEquals(null, panel.cancelCustomFieldMapping());
         system.assertEquals(false, panel.isEditMode);
-        system.assertEquals(null, panel.newCustomFieldMapping());        
+        system.assertEquals(null, panel.newCustomFieldMapping());
         system.assertNotEquals(null, panel.fmNew);
         system.assertEquals(true, panel.isEditMode);
-        panel.fmNew.npe03__Recurring_Donation_Field__c = null;        
+        panel.fmNew.npe03__Recurring_Donation_Field__c = null;
         panel.fmNew.npe03__Opportunity_Field__c = null;
         system.assertEquals(null, panel.createCustomFieldMapping());
         system.assertEquals(true, panel.isEditMode);
-        panel.fmNew.npe03__Opportunity_Field__c = 'Amount';  
+        panel.fmNew.npe03__Opportunity_Field__c = 'Amount';
         panel.fmNew.npe03__Recurring_Donation_Field__c = 'npe03__Amount__c';
         system.assertEquals(null, panel.createCustomFieldMapping());
         system.assertEquals(false, panel.isEditMode);
@@ -559,7 +549,7 @@ public with sharing class STG_SettingsManager_TEST {
         panel.fmIdDelete = panel.listRDCustomFieldMapping[0].Id;
         system.assertEquals(null, panel.deleteFm());
         system.assertNotEquals(null, panel.listRDCustomFieldMapping);
-        system.assertEquals(0, panel.listRDCustomFieldMapping.size());  
+        system.assertEquals(0, panel.listRDCustomFieldMapping.size());
     }
 
     /*********************************************************************************************************
@@ -569,23 +559,23 @@ public with sharing class STG_SettingsManager_TEST {
     public static testMethod void testPanelRDCustomInstallment() {
         STG_PanelRDCustomInstallment_CTRL panel = new STG_PanelRDCustomInstallment_CTRL();
         system.assertEquals('idPanelRDInstPd', panel.idPanel());
-        system.assertEquals(false, ApexPages.hasMessages());               
+        system.assertEquals(false, ApexPages.hasMessages());
         system.assertNotEquals(null, STG_PanelRDCustomInstallment_CTRL.listSORDCustomPeriod);
-        system.assertEquals(null, panel.newCustomInstallment());        
+        system.assertEquals(null, panel.newCustomInstallment());
         system.assertNotEquals(null, panel.ciNew);
         system.assertEquals(true, panel.isEditMode);
         system.assertEquals(null, panel.cancelCustomInstallment());
         system.assertEquals(false, panel.isEditMode);
-        system.assertEquals(null, panel.newCustomInstallment());        
+        system.assertEquals(null, panel.newCustomInstallment());
         system.assertNotEquals(null, panel.ciNew);
         system.assertEquals(true, panel.isEditMode);
-        panel.ciNew.Name = null;        
-        panel.ciNew.npe03__Value__c = null;        
+        panel.ciNew.Name = null;
+        panel.ciNew.npe03__Value__c = null;
         panel.ciNew.npe03__Increment__c = null;
         system.assertEquals(null, panel.createCustomInstallment());
         system.assertEquals(true, panel.isEditMode);
-        panel.ciNew.Name = 'TestInstallment';        
-        panel.ciNew.npe03__Value__c = 10;        
+        panel.ciNew.Name = 'TestInstallment';
+        panel.ciNew.npe03__Value__c = 10;
         panel.ciNew.npe03__Increment__c = 'Days';
         system.assertEquals(null, panel.createCustomInstallment());
         system.assertEquals(false, panel.isEditMode);
@@ -597,14 +587,14 @@ public with sharing class STG_SettingsManager_TEST {
         panel.ciIdDelete = STG_Panel.stgService.listRDCustomInstallment[0].Id;
         system.assertEquals(null, panel.deleteCi());
         system.assertNotEquals(null, STG_Panel.stgService.listRDCustomInstallment);
-        system.assertEquals(0, STG_Panel.stgService.listRDCustomInstallment.size());  
+        system.assertEquals(0, STG_Panel.stgService.listRDCustomInstallment.size());
     }
 
     /*********************************************************************************************************
     * @description Tests the Relationships panel
     * @return void
     */
-    public static testMethod void testPanelRel() { 
+    public static testMethod void testPanelRel() {
         STG_PanelRel_CTRL panel = new STG_PanelRel_CTRL();
         system.assertEquals('idPanelRel', panel.idPanel());
         STG_Panel.stgService.stgRel.npe4__Allow_AutoCreated_Duplicates__c = true;
@@ -613,7 +603,7 @@ public with sharing class STG_SettingsManager_TEST {
         STG_Panel.stgService.stgRel.npe4__Allow_AutoCreated_Duplicates__c = false;
         panel.saveSettings();
         system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgRelationshipSettings().npe4__Allow_AutoCreated_Duplicates__c);
-        
+
         STG_Panel.stgService.stgRel.Enable_Custom_Field_Sync__c = true;
         panel.saveSettings();
         system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgRelationshipSettings().Enable_Custom_Field_Sync__c);
@@ -652,23 +642,23 @@ public with sharing class STG_SettingsManager_TEST {
     public static testMethod void testPanelRelAuto() {
         STG_PanelRelAuto_CTRL panel = new STG_PanelRelAuto_CTRL();
         system.assertEquals('idPanelRelAuto', panel.idPanel());
-        system.assertEquals(false, ApexPages.hasMessages());               
-        system.assertEquals(null, panel.newRelAutoCreate());        
+        system.assertEquals(false, ApexPages.hasMessages());
+        system.assertEquals(null, panel.newRelAutoCreate());
         system.assertNotEquals(null, panel.acNew);
         system.assertEquals(true, panel.isEditMode);
         system.assertEquals(null, panel.cancelRelAutoCreate());
         system.assertEquals(false, panel.isEditMode);
-        system.assertEquals(null, panel.newRelAutoCreate());        
+        system.assertEquals(null, panel.newRelAutoCreate());
         system.assertNotEquals(null, panel.acNew);
         system.assertEquals(true, panel.isEditMode);
-        panel.acNew.npe4__Object__c = null;        
-        panel.acNew.npe4__Field__c = null;        
+        panel.acNew.npe4__Object__c = null;
+        panel.acNew.npe4__Field__c = null;
         panel.acNew.npe4__Relationship_Type__c = null;
         panel.acNew.npe4__Campaign_Types__c = null;
         system.assertEquals(null, panel.createRelAutoCreate());
         system.assertEquals(true, panel.isEditMode);
-        panel.acNew.npe4__Object__c = 'Contact';        
-        panel.acNew.npe4__Field__c = 'ReportsToId';        
+        panel.acNew.npe4__Object__c = 'Contact';
+        panel.acNew.npe4__Field__c = 'ReportsToId';
         panel.acNew.npe4__Relationship_Type__c = 'coworker';
         panel.acNew.npe4__Campaign_Types__c = null;
         system.assertEquals(null, panel.createRelAutoCreate());
@@ -680,8 +670,8 @@ public with sharing class STG_SettingsManager_TEST {
         panel.acIdDelete = panel.listRelAutoCreate[0].Id;
         system.assertEquals(null, panel.deleteAc());
         system.assertNotEquals(null, panel.listRelAutoCreate);
-        system.assertEquals(0, panel.listRelAutoCreate.size());  
-        panel.acNew.npe4__Object__c = 'Contact';        
+        system.assertEquals(0, panel.listRelAutoCreate.size());
+        panel.acNew.npe4__Object__c = 'Contact';
         system.assertNotEquals(null, panel.listSOACfield);
         panel.acNew.npe4__Object__c = 'CampaignMember';
         system.assertNotEquals(null, panel.listSOACfield);
@@ -694,25 +684,25 @@ public with sharing class STG_SettingsManager_TEST {
     public static testMethod void testPanelRelReciprocal() {
         STG_PanelRelReciprocal_CTRL panel = new STG_PanelRelReciprocal_CTRL();
         system.assertEquals('idPanelRelReciprocal', panel.idPanel());
-        system.assertEquals(false, ApexPages.hasMessages());               
-        system.assertEquals(null, panel.newRelLookup());        
+        system.assertEquals(false, ApexPages.hasMessages());
+        system.assertEquals(null, panel.newRelLookup());
         system.assertNotEquals(null, panel.rlNew);
         system.assertEquals(true, panel.isEditMode);
         system.assertEquals(null, panel.cancelRelLookup());
         system.assertEquals(false, panel.isEditMode);
-        system.assertEquals(null, panel.newRelLookup());        
+        system.assertEquals(null, panel.newRelLookup());
         system.assertNotEquals(null, panel.rlNew);
         system.assertEquals(true, panel.isEditMode);
-        panel.rlNew.Name = null;        
-        panel.rlNew.npe4__Male__c = null;        
-        panel.rlNew.npe4__Female__c = null;        
-        panel.rlNew.npe4__Neutral__c = null;        
+        panel.rlNew.Name = null;
+        panel.rlNew.npe4__Male__c = null;
+        panel.rlNew.npe4__Female__c = null;
+        panel.rlNew.npe4__Neutral__c = null;
         system.assertEquals(null, panel.createRelLookup());
         system.assertEquals(true, panel.isEditMode);
-        panel.rlNew.Name = 'foo';        
-        panel.rlNew.npe4__Male__c = 'bar';        
-        panel.rlNew.npe4__Female__c = 'baz';        
-        panel.rlNew.npe4__Neutral__c = 'buz';        
+        panel.rlNew.Name = 'foo';
+        panel.rlNew.npe4__Male__c = 'bar';
+        panel.rlNew.npe4__Female__c = 'baz';
+        panel.rlNew.npe4__Neutral__c = 'buz';
         system.assertEquals(null, panel.createRelLookup());
         system.assertEquals(false, panel.isEditMode);
         system.assertNotEquals(null, panel.listRelLookup);
@@ -722,7 +712,7 @@ public with sharing class STG_SettingsManager_TEST {
         panel.rlIdDelete = panel.listRelLookup[0].Id;
         system.assertEquals(null, panel.deleteRl());
         system.assertNotEquals(null, panel.listRelLookup);
-        system.assertEquals(0, panel.listRelLookup.size());  
+        system.assertEquals(0, panel.listRelLookup.size());
     }
 
     /*********************************************************************************************************
@@ -732,8 +722,8 @@ public with sharing class STG_SettingsManager_TEST {
     public static testMethod void testPanelUserRollup() {
         STG_PanelUserRollup_CTRL panel = new STG_PanelUserRollup_CTRL();
         system.assertEquals('idPanelUserRollup', panel.idPanel());
-        system.assertEquals(false, ApexPages.hasMessages());               
-        panel.startBuild();        
+        system.assertEquals(false, ApexPages.hasMessages());
+        panel.startBuild();
         system.assertNotEquals(null, panel.activeUDR);
         system.assertEquals(true, panel.isEditMode);
         system.assertNotEquals(null, panel.getSourceFields());
@@ -745,31 +735,31 @@ public with sharing class STG_SettingsManager_TEST {
         panel.clearForTargetObject();
         panel.cancel();
         system.assertEquals(false, panel.isEditMode);
-        panel.startBuild();        
+        panel.startBuild();
         system.assertNotEquals(null, panel.activeUDR);
         system.assertEquals(true, panel.isEditMode);
-        panel.activeUDR.SourceField = null;         
-        panel.activeUDR.Operation = null;        
-        panel.activeUDR.TargetObject = null;        
-        panel.activeUDR.TargetField = null;    
-        system.assertEquals(false, panel.activeUDR.getisValid());    
+        panel.activeUDR.SourceField = null;
+        panel.activeUDR.Operation = null;
+        panel.activeUDR.TargetObject = null;
+        panel.activeUDR.TargetField = null;
+        system.assertEquals(false, panel.activeUDR.getisValid());
         panel.activeUDR.save();
         system.assertEquals(true, panel.isEditMode);
-        panel.activeUDR.SourceField = 'Amount';        
-        panel.activeUDR.Operation = 'SUM';        
-        panel.activeUDR.TargetObject = 'Contact';        
-        panel.activeUDR.TargetField = 'Description'; 
-        system.assertEquals(true, panel.activeUDR.getisValid());    
+        panel.activeUDR.SourceField = 'Amount';
+        panel.activeUDR.Operation = 'SUM';
+        panel.activeUDR.TargetObject = 'Contact';
+        panel.activeUDR.TargetField = 'Description';
+        system.assertEquals(true, panel.activeUDR.getisValid());
         system.assertNotEquals(null, panel.getSourceFields());
         system.assertNotEquals(null, panel.getTargetFields());
         system.assertNotEquals(null, panel.getTargetObjects());
         system.assertNotEquals(null, panel.getValidOperators());
         system.assertNotEquals(null, panel.udrList);
-        panel.activeUDR.TargetObject = 'Account';        
+        panel.activeUDR.TargetObject = 'Account';
         system.assertNotEquals(null, panel.getTargetFields());
-        panel.activeUDR.TargetObject = 'npo02__Household__c';        
+        panel.activeUDR.TargetObject = 'npo02__Household__c';
         system.assertNotEquals(null, panel.getTargetFields());
-        panel.activeUDR.TargetObject = 'Contact';        
+        panel.activeUDR.TargetObject = 'Contact';
         panel.activeUDR.save();
         system.assertEquals(false, panel.isEditMode);
         system.assertNotEquals(null, panel.udrlist);
@@ -783,8 +773,8 @@ public with sharing class STG_SettingsManager_TEST {
         panel.udrList = null;
         UTIL_ListCustomSettingsFacade.mapUserRollupFieldSettings = null;
         system.assertNotEquals(null, panel.udrlist);
-        system.assertEquals(0, panel.udrlist.size());  
-        
+        system.assertEquals(0, panel.udrlist.size());
+
     }
 
     /*********************************************************************************************************
@@ -793,48 +783,48 @@ public with sharing class STG_SettingsManager_TEST {
     */
     public static testMethod void TEST_userRollupSettings() {
         Test.setCurrentPageReference(new PageReference('Page.STG_SettingsManager'));
-        
+
         //pass the controller into the extension
         STG_PanelUserRollup_CTRL controller = new STG_PanelUserRollup_CTRL();
-  
+
         //kickoff a new rollup
         controller.startBuild();
-        
+
         //call the major getter methods
         list<SelectOption> oppyList = controller.getSourceFields();
         controller.activeUDR.SourceField = 'Amount';
-        
+
         list<SelectOption> operatorList = controller.getValidOperators();
         system.assert(operatorList.size() == 4);
-        
+
         controller.activeUDR.SourceField = 'CloseDate';
         operatorList = controller.getValidOperators();
         system.assert(operatorList.size() == 2);
-        
+
         controller.activeUDR.Operation = 'MAX';
-                
+
         list<SelectOption> targetObjectList = controller.getTargetObjects();
         system.assertEquals(targetObjectList.size(), 3);
-        
+
         controller.activeUDR.TargetObject = 'Account';
-        
+
         list<SelectOption> targetFieldList = controller.getTargetFields();
-               
-        //change target object to test other options        
+
+        //change target object to test other options
         controller.activeUDR.TargetObject = 'npo02__Household__c';
         targetFieldList = controller.getTargetFields();
-        
+
         controller.activeUDR.TargetObject = 'Contact';
         targetFieldList = controller.getTargetFields();
         controller.activeUDR.TargetField = 'Birthdate';
         STG_PanelUserRollup_CTRL.UDR udr = controller.activeUDR;
         controller.activeUDR.save();
         //load a UDR
-        udr.loadMe();        
-        
+        udr.loadMe();
+
         //run through the loop with a newly inserted UDR
         targetFieldList = controller.getTargetFields();
-        
+
         //blank out settings so they are queried again
         controller.udrList = null;
         UTIL_ListCustomSettingsFacade.mapUserRollupFieldSettings = null;
@@ -842,8 +832,8 @@ public with sharing class STG_SettingsManager_TEST {
         //existing invalid rollups will cause test failure
         system.assertEquals(controller.activeUDR.getisValid(), true);
         list<STG_PanelUserRollup_CTRL.UDR> udrlist = controller.udrList;
-        system.assert(udrList.size() > 0);        
-        
+        system.assert(udrList.size() > 0);
+
         //test clearing the three different lists
         controller.clearForTargetObject();
         system.assert(controller.activeUDR.TargetField == null);
@@ -851,45 +841,45 @@ public with sharing class STG_SettingsManager_TEST {
         system.assert(controller.activeUDR.TargetObject != null);
         controller.clearForSourceField();
         system.assert(controller.activeUDR.Operation == null);
-        
+
         controller.cancel();
         system.assertEquals(null, controller.activeUDR);
-        
+
         //generate a new one so we can call its delete sequence
         controller.startBuild();
         //delete it
         controller.activeUDR.deleteMe();
-        
+
         //call the other UDR contructor
         STG_PanelUserRollup_CTRL.UDR u = new STG_PanelUserRollup_CTRL.UDR('', '', '', '', controller);
-                
+
         //insert invalid rollup to test error handling methods
         npo02__User_Rollup_Field_Settings__c badurfs = new npo02__User_Rollup_Field_Settings__c(
         Name = 'Invalid Test Rollup',
         npo02__Target_Field__c = 'InvalidTargetField__test',
         npo02__Source_Field__c = 'InvalidSourceField__test',
         npo02__Object_Name__c = 'Account',
-        npo02__Field_Action__c = 'TEST'         
-        );        
+        npo02__Field_Action__c = 'TEST'
+        );
         insert badurfs;
-        
+
         //exercise household code
         npo02__User_Rollup_Field_Settings__c HHurfs = new npo02__User_Rollup_Field_Settings__c(
         Name = 'Household Test Rollup',
         npo02__Target_Field__c = 'lastoppamount__c',
         npo02__Source_Field__c = 'Amount',
         npo02__Object_Name__c = 'npo02__Household__c',
-        npo02__Field_Action__c = 'MAX'         
-        );        
-        insert HHurfs; 
-                
+        npo02__Field_Action__c = 'MAX'
+        );
+        insert HHurfs;
+
         npo02__User_Rollup_Field_Settings__c badobject = new npo02__User_Rollup_Field_Settings__c(
         Name = 'Invalid Object Rollup',
         npo02__Target_Field__c = 'InvalidTargetField__test',
         npo02__Source_Field__c = 'InvalidSourceField__test',
         npo02__Object_Name__c = 'BadAccount',
         npo02__Field_Action__c = 'TEST'
-        );        
+        );
         insert badobject;
     }
 
@@ -961,26 +951,26 @@ public with sharing class STG_SettingsManager_TEST {
     public static testMethod void testPanelTDTM() {
         STG_PanelTDTM_CTRL panel = new STG_PanelTDTM_CTRL();
         system.assertEquals('idPanelTDTM', panel.idPanel());
-        system.assertEquals(false, ApexPages.hasMessages());               
-        system.assertEquals(null, panel.newTh());        
+        system.assertEquals(false, ApexPages.hasMessages());
+        system.assertEquals(null, panel.newTh());
         system.assertNotEquals(null, panel.thNew);
         system.assertEquals(true, panel.isEditMode);
         system.assertEquals(null, panel.cancelTh());
         system.assertEquals(false, panel.isEditMode);
-        system.assertEquals(null, panel.newTh());        
+        system.assertEquals(null, panel.newTh());
         system.assertNotEquals(null, panel.thNew);
         system.assertEquals(true, panel.isEditMode);
-        panel.thNew.Object__c = null;        
-        panel.thNew.Class__c = null;        
-        panel.thNew.Trigger_Action__c = null;        
-        panel.thNew.Load_Order__c = null;        
+        panel.thNew.Object__c = null;
+        panel.thNew.Class__c = null;
+        panel.thNew.Trigger_Action__c = null;
+        panel.thNew.Load_Order__c = null;
         system.assertEquals(null, panel.createTh());
         system.assertEquals(true, panel.isEditMode);
-        panel.thNew.Object__c = 'foo';        
-        panel.thNew.Class__c = 'bar';        
-        panel.thNew.Trigger_Action__c = 'AfterInsert';        
+        panel.thNew.Object__c = 'foo';
+        panel.thNew.Class__c = 'bar';
+        panel.thNew.Trigger_Action__c = 'AfterInsert';
         panel.thNew.Load_Order__c = 1;
-        panel.thNew.Active__c = false;        
+        panel.thNew.Active__c = false;
         system.assertEquals(null, panel.createTh());
         system.assertEquals(false, panel.isEditMode);
         system.assertNotEquals(null, panel.listTH);
@@ -991,7 +981,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(null, panel.deleteTh());
         system.assertNotEquals(null, panel.listTH);
         system.assertEquals(0, panel.listTH.size());
-        system.assertNotEquals(null, panel.listSOTriggerAction); 
+        system.assertNotEquals(null, panel.listSOTriggerAction);
     }
 
     /*********************************************************************************************************
@@ -1027,7 +1017,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertNotEquals(null, slv.SortItemAsc);
         system.assertEquals(null, slv.SortItem());
         system.assertNotEquals(null, slv.showCheckboxes);
-        
+
     }
 
     /*********************************************************************************************************
@@ -1050,7 +1040,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(false, panel.isRunningBatch);
         panel.runBatch();
         system.assertEquals(true, panel.isRunningBatch);
-    }   
+    }
 
     /*********************************************************************************************************
     * @description Tests the Remove Duplicate Primary OCRs Batch panel.
