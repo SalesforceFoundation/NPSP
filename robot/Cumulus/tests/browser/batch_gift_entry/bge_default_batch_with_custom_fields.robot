@@ -109,4 +109,3 @@ Verify Custom Fields on Payment and Donation
     ...    ${org_ns}custom_picklist__c=2
     ...    ${org_ns}custom_textarea__c=this is custom batch
     ...    ${org_ns}custom_text__c=Robot
-
