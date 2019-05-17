@@ -27,7 +27,6 @@ Delete a Data Import
     Click Link With Text    &{batch}[Name]
     Wait For Locator    bge.title    Batch Gift Entry
     Wait For Locator    bge.locate_dropdown    1
-    Reload Page
     Sleep    3
     Select BGE Row     &{account}[Name]
     Click Span Button    Delete  

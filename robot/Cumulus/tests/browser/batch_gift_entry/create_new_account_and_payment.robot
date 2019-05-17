@@ -42,14 +42,10 @@ Create a new account and enter payment information
     Click BGE Button    Today
     Click BGE Button       Save
     Wait For Locator    bge.title    Batch Gift Entry
-    Reload Page
     Verify Row Count    1 
     Wait For Locator    bge.edit_button    Donation Amount
     SeleniumLibrary.Element Text Should Be    //td[@data-label="Donation"]//lightning-formatted-url    ${Empty}
-    #Sleep    1
     Click BGE Button       Process Batch
-    # Select Frame With Title    NPSP Data Import
-    # Click Button With Value   Begin Data Import Process
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Locator    data_imports.status    Completed
     Click Button With Value   Close

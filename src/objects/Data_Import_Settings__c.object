@@ -41,6 +41,17 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>CMT_API_Status__c</fullName>
+        <description>Result of the last CustomMetadataType deployment</description>
+        <externalId>false</externalId>
+        <inlineHelpText>JSON for the CMT deployment result
+{ &quot;jobId&quot;: &quot;repsonse&quot; }</inlineHelpText>
+        <label>CMT API Deployment Result</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
         <fullName>Contact_Custom_Unique_ID__c</fullName>
         <description>An optional Unique Id field to use for Contact matching</description>
         <externalId>false</externalId>
