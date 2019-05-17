@@ -248,8 +248,7 @@ public class ALLO_PaymentSync_SVC {
                 Allocation__c newOppAllocation = new Allocation__c(
                     General_Accounting_Unit__c = gau,
                     Opportunity__c = context.opportunity.id,
-                    Amount__c = newGAUAmtForOpp,
-                    Percent__c = (context.Opportunity.Amount != 0) ? newGAUAmtFOrOpp / context.Opportunity.Amount * 100 : 0
+                    Amount__c = newGAUAmtForOpp
                 );
                 allocationsChanges.objectsToInsert.add(newOppAllocation);
             }
