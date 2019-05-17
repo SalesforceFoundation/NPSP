@@ -857,7 +857,7 @@ class NPSP(object):
         locator=npsp_lex_locators['bge']['count']
         actual_value=self.selenium.get_webelements(locator)
         count=len(actual_value)
-        assert int(value) == count, "Expected value to be {} but found {}".format(
+        assert int(value) == count, "Expected rows to be {} but found {}".format(
             value, count
         )       
         
@@ -970,3 +970,9 @@ class NPSP(object):
        rec=self.salesforce.salesforce_get(table,rec_id)
        for key, value in kwargs.items():
            self.builtin.should_be_equal_as_strings(rec[key], value)   
+           
+    def get_org_namespace_prefix(self):
+        if self.cumulusci.org.namespaced:
+            return "npsp__" 
+        else:
+            return ""       
