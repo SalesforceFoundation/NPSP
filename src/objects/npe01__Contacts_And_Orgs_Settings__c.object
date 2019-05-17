@@ -60,6 +60,16 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Enforce_Accounting_Data_Consistency__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Enables rules and automation that enforce consistency in accounting data.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Enables multiple rules and automations on payments and opportunities to ensure that accounting data is complete and consistent.</inlineHelpText>
+        <label>Enforce Accounting Data Consistency</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Honoree_Opportunity_Contact_Role__c</fullName>
         <description>Populating this setting will automatically create a Contact Role for Opportunities with an honoree Contact. Leaving this field blank will disable automatic Contact Role creation for the honoree.</description>
         <externalId>false</externalId>
