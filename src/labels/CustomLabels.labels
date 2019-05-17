@@ -5059,7 +5059,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>pmtPaidPaymentDateRequired</shortDescription>
-        <value>A paid payment must have a payment date.</value>
+        <value>A paid Payment must have a Payment Date.</value>
     </labels>
     <labels>
         <fullName>pmtUnpaidPaymentScheduledDateRequired</fullName>
@@ -5067,7 +5067,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>pmtUnpaidPaymentScheduledDateRequired</shortDescription>
-        <value>An unpaid payment must have a scheduled date.</value>
+        <value>An unpaid Payment must have a Scheduled Date.</value>
     </labels>
     <labels>
         <fullName>pmtWriteOffPaidPayment</fullName>
@@ -5355,7 +5355,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>pmtWrittenOffPaymentDateRequired</shortDescription>
-        <value>A written off payment must have a payment date.</value>
+        <value>A written off Payment must have a Payment Date.</value>
     </labels>
     <labels>
         <fullName>pscDeleteRow</fullName>
