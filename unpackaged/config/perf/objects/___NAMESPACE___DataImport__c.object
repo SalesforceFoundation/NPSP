@@ -15,11 +15,26 @@
         <fullName>npe01__Do_Not_Automatically_Create_Payment__c</fullName>
         <description>????</description>
         <externalId>false</externalId>
-        <inlineHelpText>npe01__Do_Not_Automatically_Create_Payment__c</inlineHelpText>
+        <inlineHelpText>Opportunity.npe01__Do_Not_Automatically_Create_Payment__c</inlineHelpText>
         <label>Do Not Automatically Create Payment</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
-        <type>????</type>
+        <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>True</fullName>
+                    <default>false</default>
+                    <label>True</label>
+                </value>
+                <value>
+                    <fullName>False</fullName>
+                    <default>false</default>
+                    <label>False</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
     </fields>
 </CustomObject>
