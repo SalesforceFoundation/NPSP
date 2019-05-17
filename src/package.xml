@@ -54,9 +54,12 @@
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
         <members>BDE_BatchEntry_TEST</members>
+        <members>BDE_AdditionalObjectService</members>
+        <members>BDE_AdditionalObjectServiceTest</members>
         <members>BDI_BatchOverride_CTRL</members>
         <members>BDI_BatchOverride_TEST</members>
         <members>BDI_ContactService</members>
+        <members>BDI_CustObjMappingGAUAllocation</members>
         <members>BDI_DataImportAPI_TEST</members>
         <members>BDI_DataImportBatch_SCHED</members>
         <members>BDI_DataImportBatch_SEL</members>
@@ -85,6 +88,8 @@
         <members>BDI_MigrationMappingHelper</members>
         <members>BDI_MigrationMappingUtility</members>
         <members>BDI_MigrationMappingUtilityTest</members>
+        <members>BDI_ObjectMappingLogic</members>
+        <members>BDI_ObjectWrap</members>
         <members>BDI_PerfLogger</members>
         <members>BDI_PerfLogger_TEST</members>
         <members>BDI_PostProcess_TEST</members>
@@ -1096,6 +1101,7 @@
         <members>Data_Import_Field_Mapping__mdt.Source_Field_API_Name__c</members>
         <members>Data_Import_Field_Mapping__mdt.Target_Field_API_Name__c</members>
         <members>Data_Import_Field_Mapping__mdt.Target_Object_Mapping__c</members>
+        <members>Data_Import_Object_Mapping__mdt.Custom_Mapping_Logic_Class__c</members>
         <members>Data_Import_Object_Mapping__mdt.Data_Import_Object_Mapping_Set__c</members>
         <members>Data_Import_Object_Mapping__mdt.Imported_Record_Field_Name__c</members>
         <members>Data_Import_Object_Mapping__mdt.Imported_Record_Status_Field_Name__c</members>
@@ -1405,6 +1411,9 @@
         <members>alloTotalExceedsOppAmt</members>
         <members>alloTotals</members>
         <members>alloUnallocated</members>
+        <members>bdiAdditionalObjPredNotFound</members>
+        <members>bdiAdditionalObjRequiredFieldsNull</members>
+        <members>bdiUpdated</members>
         <members>bdiAccountCustomIdError</members>
         <members>bdiBatchException</members>
         <members>bdiBehaviorBestMatchOrCreate</members>

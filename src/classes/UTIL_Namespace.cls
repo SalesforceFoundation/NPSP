@@ -156,7 +156,23 @@ public class UTIL_Namespace {
     public static string removeNSPrefixNpspOnly(string str) {
         if (str.startsWith('npsp__')) {
             str = str.replaceFirst('npsp__', '');
+        } else if (str.startsWith('npsp.')) {
+            str = str.replaceFirst('npsp.', '');
         }
         return str;
     }
+
+    /*******************************************************************************************************
+    * @description If running in non-npsp namespace environment, then remove npsp from field/object names.
+    * 
+    * @param str token name 
+    * @return token name, with namespace prefix removed, if present.
+    ********************************************************************************************************/
+    public static String adjustNPSPNamespace(String name) {
+        if (getNamespace() != 'npsp') {
+            name = removeNSPrefixNpspOnly(name);
+        }
+        return name;
+    }
+
 }
