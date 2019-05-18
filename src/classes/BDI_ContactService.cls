@@ -121,6 +121,9 @@ public with sharing class BDI_ContactService {
         HH_HouseholdNaming.disableHouseholdNaming(false);
         Set<Id> setHHId = new Set<Id>();
         for (DataImport__c di : bdi.listDI) {
+            if (di.Status__c == BDI_DataImport_API.bdiFailed) {
+                continue;
+            }
             if (setDIIdUpdated.contains(di.Id)) {
                 setHHId.add(di.HouseholdAccountImported__c);
             }
@@ -137,6 +140,9 @@ public with sharing class BDI_ContactService {
     */
     private void verifyContactData() {
         for (DataImport__c di: bdi.listDI) {
+            if (di.Status__c == BDI_DataImport_API.bdiFailed) {
+                continue;
+            }
             if (isContactSpecified(di, 'Contact1') && string.isBlank(di.Contact1_Lastname__c) && di.Contact1Imported__c == null) {
                 bdi.LogBDIError(di, label.bdiErrorInvalidLastname, 'Contact1ImportStatus__c');
                 continue;
@@ -240,6 +246,9 @@ public with sharing class BDI_ContactService {
         // update each DI with its new contact ID
         Set<Id> setConId = new Set<Id>();
         for (DataImport__c di : bdi.listDI) {
+            if (di.Status__c == BDI_DataImport_API.bdiFailed) {
+                continue;
+            }
             Id conId = (Id)di.get(strCx + 'Imported__c');
             if (conId == null) {
                 Contact con = ContactFromDi(di, iCx);
@@ -271,6 +280,9 @@ public with sharing class BDI_ContactService {
         }
         // store it back in C1 and the DI for later use
         for (DataImport__c di : bdi.listDI) {
+            if (di.Status__c == BDI_DataImport_API.bdiFailed) {
+                continue;
+            }
             if (di.Contact1Imported__c != null) {
                 Id HHId = mapC1IdToHHId.get(di.Contact1Imported__c);
                 if (HHId != null) {
