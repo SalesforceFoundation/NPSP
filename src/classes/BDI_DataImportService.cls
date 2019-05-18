@@ -43,8 +43,6 @@ global with sharing class BDI_DataImportService {
 
     public BDI_FieldMapping fieldMapper;
 
-    private static Set<String> inaccessibleFields = new Set<String>();
-
     /*******************************************************************************************************
     * @description constructor
     * @param isDryRun whether to run in Dry Run mode or commit records.
@@ -880,36 +878,6 @@ global with sharing class BDI_DataImportService {
                 List<String> dataImportFields) {
         
         Map<String, String> targetFieldByDIField = fieldMapper.getFieldMap(dataImportObjectName, targetObjectName, dataImportFields);
-
-        // verify that the user has correct FLS access to target field
-        // TODO: Move to its own method?                     
-        for(String dataImportFieldName: targetFieldByDIField.keySet()) {  
-            String targetFieldName = targetFieldByDIField.get(dataImportFieldName);
-
-            if (!Test.isRunningTest() || failFieldLevelSecurity) {
-                DescribeFieldResult fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, targetFieldName);
-                Set<String> setAuditFields = new Set<String>{
-                    'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'
-                };
-                Boolean isAuditField = setAuditFields.contains(targetFieldName.toLowerCase());
-                Boolean isCreatable = fieldDescribe.isCreateable();
-                Boolean isUpdateable = fieldDescribe.isUpdateable();
-                Boolean isPopulated = populatedDataImportFields.contains(dataImportFieldName);
-
-                if (failFieldLevelSecurity ||
-                    fieldDescribe == null ||
-                    (!isCreatable && isPopulated) ||
-                    (!isAuditField && !isUpdateable && isPopulated)) {
-                        /***
-                        throw (new FLSException(
-                            String.format(System.Label.flsError, new List<String>{ targetObjectName + '.' + targetFieldName }
-                        )));
-                        ****/
-                        System.debug(' *** Adding to inaccessible fields: '+targetObjectName + '.' + targetFieldName);
-                        inaccessibleFields.add(targetObjectName + '.' + targetFieldName);
-                }
-            }
-        }
 
         return targetFieldByDIField;
     }    
