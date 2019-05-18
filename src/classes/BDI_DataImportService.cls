@@ -919,16 +919,6 @@ global with sharing class BDI_DataImportService {
         if (value != null && value != false) {
             String destinationField = mapDIFieldToDstField.get(dataImportField);
 
-            String fullFieldName = destinationRecord.getSObjectType().getDescribe().getName() + '.' + 
-                destinationField;
-
-            System.debug(' *** Checking list of inaccessible fields for: '+fullFieldName);
-            if(inaccessibleFields.contains(fullFieldName)) {
-                throw (new FLSException(
-                    String.format(System.Label.flsError, new List<String>{ fullFieldName }
-                )));    
-            }
-
             // if values haven't changed, don't copy it and say the object was modified!
             if (destinationRecord.get(destinationField) == value) {
                 return false;
