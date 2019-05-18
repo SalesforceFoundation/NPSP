@@ -486,6 +486,51 @@ global with sharing class BDI_DataImportService {
         return isDryRun ? BDI_DataImport_API.bdiDryRunValidated : BDI_DataImport_API.bdiImported;
     }
 
+    public void checkFieldAccess(List<DataImport__c> dataImports) {
+        BDI_MigrationMappingHelper fieldHelper =  new BDI_MigrationMappingHelper();
+        Map<String, BDI_HelpTextCMT.MappingDetail> helpTextFieldDetails = fieldHelper.getAllMappedHelpTextFields();
+
+        for (String mappedField: helpTextFieldDetails.keySet()){
+            System.debug('  **** help text map key: '+mappedField);
+            helpTextFieldDetails.put(mappedField.toLowerCase(), helpTextFieldDetails.get(mappedField));
+        }
+
+        for (DataImport__c dataImport : dataImports) {
+            for(String dataImportFieldName: dataImport.getPopulatedFieldsAsMap().keySet()) {  
+                System.debug(' **** Checking mapped field map for key: '+dataImportFieldName.toLowerCase()+' '+
+                    helpTextFieldDetails.containsKey(dataImportFieldName.toLowerCase()));
+                if(!helpTextFieldDetails.containsKey(dataImportFieldName.toLowerCase())) {
+                    continue;
+                }
+                BDI_HelpTextCMT.MappingDetail mappingDetail = helpTextFieldDetails.get(dataImportFieldName.toLowerCase());
+                String targetFieldName = mappingDetail.targetFieldAPIName.toLowerCase();
+                String targetObjectName = mappingDetail.targetObjectName.toLowerCase();
+
+                if (!Test.isRunningTest() || failFieldLevelSecurity) {
+                    DescribeFieldResult fieldDescribe = UTIL_Describe.getFieldDescribe(targetObjectName, targetFieldName);
+                    Set<String> setAuditFields = new Set<String>{
+                        'createddate', 'createdbyid', 'lastmodifieddate', 'lastmodifiedbyid'
+                    };
+                    Boolean isAuditField = setAuditFields.contains(targetFieldName);
+                    Boolean isCreatable = fieldDescribe.isCreateable();
+                    Boolean isUpdateable = fieldDescribe.isUpdateable();
+                    Boolean isPopulated = true;  
+
+                    if (failFieldLevelSecurity ||
+                        fieldDescribe == null ||
+                        (!isCreatable && isPopulated) ||
+                        (!isAuditField && !isUpdateable && isPopulated)) {
+                            String errMessage = String.format(System.Label.flsError, 
+                                    new List<String>{ targetObjectName + '.' + targetFieldName });
+                            System.debug(' ***** FLS failed with ' + errMessage);
+                            LogBDIError(dataImport, errMessage, null);
+                            dataImport.FailureInformation__c = errMessage;
+                    }
+                }
+            }
+        }
+    }
+
     /*******************************************************************************************************
     * @description The real work gets done here! Given a list of data import records, process them.
     * @param apexJobId the apexJob that this is executing under
@@ -524,6 +569,8 @@ global with sharing class BDI_DataImportService {
             for(Integer i = 0; i < populatedDataImportFields.size(); i++) {
                 populatedDataImportFields[i] = populatedDataImportFields[i].toLowerCase();
             }
+
+            checkFieldAccess(dataImports);
 
             // do any performance optimizations to avoid unnecessary code
             disableAllOppRollups();
@@ -579,6 +626,8 @@ global with sharing class BDI_DataImportService {
             // the failed update/inserts on the di record with the problem.
             // So go ahead and rollback the entire transaction on these totally unexpected errors.
             Database.rollback(sp);
+
+            System.debug(' ***** '+e.getStackTraceString());
 
             // log the unexpected error
             ERR_Handler.processError(e, ERR_Handler_API.Context.BDI);
