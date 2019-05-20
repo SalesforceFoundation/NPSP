@@ -131,6 +131,9 @@ public class BDI_MigrationMappingUtility {
                 deploymentId = Test.isRunningTest() ? '123' : Metadata.Operations.enqueueDeployment(deploymentContainer, new DeploymentCallback(migrationType));
                 System.debug(LoggingLevel.ERROR, '*** deployment container enqueued');
                 System.debug('deploymentId: ' + deploymentId);
+
+                saveDeploymentId(deploymentId);
+
             } catch (Exception e) {
                 System.debug(LoggingLevel.ERROR, '*** e: ' + e);
                 throw new DeploymentException('There was an error attempting to deploy the custom metadata records.');
@@ -142,6 +145,19 @@ public class BDI_MigrationMappingUtility {
         conflictingMappings.clear();
 
         return deploymentId;
+    }
+
+    public void saveDeploymentId(String deploymentId) {
+        System.debug('*** saveDeploymentId');
+
+        dataImportSettings.CMT_Deployment_Id__c = deploymentId;
+
+        try {
+            upsert dataImportSettings;
+        } catch (Exception e) {
+            System.debug(LoggingLevel.ERROR, '*** Error: ' + e);
+            throw new DeploymentException('There was an error attempting to update custom settings.');
+        }
     }
 
     public static Data_Import_Settings__c upsertCustomSettings(String fieldMappingMethod, String migrationType, String status) {
