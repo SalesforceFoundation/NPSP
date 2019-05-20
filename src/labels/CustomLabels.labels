@@ -1842,12 +1842,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Manage Allocations button is only supported from a Campaign, Opportunity, Payment or Recurring Donation record.</value>
     </labels>
     <labels>
+        <fullName>alloPaymentOverallocatedError</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloPaymentOverallocatedError</shortDescription>
+        <value>The amount allocated is more than the amount of the Payment. Please update the Payment Allocation amount(s) so the total equals the Payment Amount. See Opportunity “{0}, Id: {1}”</value>
+    </labels>
+    <labels>
         <fullName>alloPaidPmtsExceedsOpp</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>alloPaidPmtsExceedsOpp</shortDescription>
-        <value>The total allocation of paid payments cannot exceed the opportunity allocation for a GAU.</value>
+        <value>The Allocations you've updated for this Opportunity would total less than what's allocated on Paid Payments. You must reduce the total allocations on paid Payments before you can reduce Opportunity Allocations. See Opportunity “{0}, Id: {1}” Allocation “{2}, Id: {3}”</value>
     </labels>
     <labels>
         <fullName>alloPaymentNotEnabled</fullName>
@@ -1887,7 +1895,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>alloRemoveOppWithPmt</shortDescription>
-        <value>You cannot remove an opportunity allocation for a GAU that has paid payment allocations.</value>
+        <value>You can't delete this Opportunity Allocation because the same Allocation is used on a Paid Payment associated with this Opportunity. See Opportunity “{0}, Id: {1}” Allocation “{2}, Id: {3}”</value>
     </labels>
     <labels>
         <fullName>alloSignMistmatch</fullName>
