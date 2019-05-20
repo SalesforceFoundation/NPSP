@@ -147,10 +147,12 @@ public class BDI_MigrationMappingUtility {
         return deploymentId;
     }
 
-    public void saveDeploymentId(String deploymentId) {
+    @future
+    public static void saveDeploymentId(String deploymentId) {
         System.debug('*** saveDeploymentId');
 
-        dataImportSettings.CMT_Deployment_Id__c = deploymentId;
+        Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dataImportSettings.CMT_Deployment_ID__c = deploymentId;
 
         try {
             upsert dataImportSettings;
@@ -445,6 +447,23 @@ public class BDI_MigrationMappingUtility {
                 badIsDeletedField;
 
         return foundMismatch;
+    }
+
+    public String checkDeployStatus(String deploymentId) {
+        Http h = new Http();
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint(Url.getOrgDomainUrl().toExternalForm() +
+            '/services/data/v44.0/metadata/deployRequest/' +
+            deploymentId +
+            '?includeDetails=true'
+        );
+        req.setMethod('GET');
+        req.setHeader('Authorization', 'Bearer ' + UserInfo.getSessionId());
+        HttpResponse res = h.send(req);
+        System.debug(res);
+        System.debug(res.getBody());
+
+        return res.getBody();
     }
 
     private class DeploymentException extends Exception {}

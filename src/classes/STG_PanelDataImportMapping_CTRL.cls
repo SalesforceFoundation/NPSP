@@ -96,6 +96,11 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
         set;
     }
 
+    /*******************************************************************************************************
+    * @description Custom metadata deployment status
+    */
+    public Metadata.DeployResult deployment { get; set; }
+
     //private final String MIGRATED_CUSTOM_FIELD_MAPPING_SET_NAME = 'Migrated_Custom_Mapping_Set';
 
     public BDI_MigrationMappingUtility migrationMappingUtility { get; set; }
@@ -106,6 +111,7 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
         this.migrationMappingUtility = new BDI_MigrationMappingUtility(new BDI_MigrationMappingHelper());
         this.dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         this.previousFieldMappingMethod = this.dataImportSettings.Field_Mapping_Method__c;
+        checkDeploymentStatus();
     }
 
     /*******************************************************************************************************
@@ -209,30 +215,10 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
     * @description Action Method used by Poller to check status of CMDT deployment
     * @return void
     */
-    public PageReference checkDeploymentStatus() {
+    public PageReference startPolling() {
         timeoutCount++;
 
-        dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        String newStatus = dataImportSettings.CMT_API_Status__c;
-        String newFieldMappingMethod = dataImportSettings.Field_Mapping_Method__c;
-        System.debug('New Status: ' + newStatus);
-        System.debug('Previous Mapping Method: ' + previousFieldMappingMethod);
-        System.debug('New Mapping Method: ' + newFieldMappingMethod);
-
-        if (previousFieldMappingMethod == null || previousFieldMappingMethod == '') {
-            previousFieldMappingMethod = newFieldMappingMethod;
-        } else if (newFieldMappingMethod != previousFieldMappingMethod) {
-            System.debug('Updated Custom Settings Detected');
-            if (newStatus != null && !String.isEmpty(newStatus)) {
-                isPolling = false;
-
-                if (newStatus.contains('Succeeded') && newStatus.contains('Data Import Field Mapping')) {
-                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled));
-                } else {
-                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, newStatus +' '+ Label.stgDeploymentTryAgain));
-                }
-            }
-        }
+        checkDeploymentStatus();
 
         if (timeoutCount > MAX_TIME_OUT) {
             isPolling = false;
@@ -241,5 +227,51 @@ public with sharing class STG_PanelDataImportMapping_CTRL extends STG_Panel {
         }
 
         return null;
+    }
+
+    
+    private void checkDeploymentStatus() {
+
+        dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+
+        if (dataImportSettings.CMT_Deployment_ID__c != null) {
+            String response = migrationMappingUtility.checkDeployStatus(dataImportSettings.CMT_Deployment_ID__c);
+            System.debug('response: ' + response);
+            DeployResultWrapper responseWrapper =
+                (DeployResultWrapper)JSON.deserialize(response, DeployResultWrapper.class);
+            System.debug('responseWrapper: ' + responseWrapper);
+            System.debug('Deployment Id: ' + responseWrapper.id);
+            System.debug('Deployment Result Id: ' + responseWrapper.deployResult.id);
+            System.debug('Status: ' + responseWrapper.deployResult.status);
+
+            deployment = responseWrapper.deployResult;
+
+            /*dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+            String newStatus = dataImportSettings.CMT_API_Status__c;
+            String newFieldMappingMethod = dataImportSettings.Field_Mapping_Method__c;
+            System.debug('New Status: ' + newStatus);
+            System.debug('Previous Mapping Method: ' + previousFieldMappingMethod);
+            System.debug('New Mapping Method: ' + newFieldMappingMethod);
+
+            if (previousFieldMappingMethod == null || previousFieldMappingMethod == '') {
+                previousFieldMappingMethod = newFieldMappingMethod;
+            } else if (newFieldMappingMethod != previousFieldMappingMethod) {
+                System.debug('Updated Custom Settings Detected');
+                if (newStatus != null && !String.isEmpty(newStatus)) {
+                    isPolling = false;
+
+                    if (newStatus.contains('Succeeded') && newStatus.contains('Data Import Field Mapping')) {
+                        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.CONFIRM, Label.stgDeploymentCustomMetadataMappingEnabled));
+                    } else {
+                        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, newStatus +' '+ Label.stgDeploymentTryAgain));
+                    }
+                }
+            }*/
+        }
+    }
+
+    public class DeployResultWrapper {
+        public Id id { get; set; }
+        public Metadata.DeployResult deployResult { get; set; }
     }
 }
