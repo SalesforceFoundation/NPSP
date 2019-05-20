@@ -12,8 +12,8 @@
         <type>Date</type>
     </fields>
     <fields>
-        <fullName>npe01__Do_Not_Automatically_Create_Payment__c</fullName>
-        <description>????</description>
+        <fullName>Do_Not_Automatically_Create_Payment__c</fullName>
+        <description>https://powerofus.force.com/s/article/NPSP-Manage-Multiple-Payment-Donations#ariaid-title2</description>
         <externalId>false</externalId>
         <inlineHelpText>Opportunity.npe01__Do_Not_Automatically_Create_Payment__c</inlineHelpText>
         <label>Do Not Automatically Create Payment</label>
