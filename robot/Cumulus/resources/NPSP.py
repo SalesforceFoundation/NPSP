@@ -397,6 +397,7 @@ class NPSP(object):
         
     def check_record_related_item(self,title,value):
         locator=npsp_lex_locators['record']['related']['item'].format(title,value)
+        self.selenium.wait_until_page_contains_element(locator)
         actual_value=self.selenium.get_webelement(locator).text
         assert value == actual_value, "Expected value to be {} but found {}".format(
             value, actual_value
@@ -433,6 +434,7 @@ class NPSP(object):
         """verifies the values in the related list objects page""" 
         for name, value in kwargs.items():
             locator= npsp_lex_locators['record']['related']['field_value'].format(name,value)
+            self.selenium.wait_until_page_contains_element(locator)
             self.selenium.page_should_contain_element(locator)
             
     def page_contains_record(self,title):   
@@ -602,7 +604,7 @@ class NPSP(object):
         loc = "//*[@id='pmtTable']/tbody/tr/td[2]/div//input[@value= '{}']"
         values = int(amount)/int(no_payments)
         #global self.val
-        values_1 = "{0:.2f}".format(values)
+        values_1 = "{:0.2f}".format(values)
         self.val = str(values_1)
         locator =  loc.format(self.val)
         list_payments = self.selenium.get_webelements(locator)
