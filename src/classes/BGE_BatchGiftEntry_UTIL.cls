@@ -194,7 +194,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
             }
 
             DescribeFieldResult fieldResult =
-                UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrAllNSPrefix(objectName), UTIL_Namespace.StrAllNSPrefix(fieldName));
+                UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrAllNSPrefix(objectName), fieldName);
 
             if (fieldName != 'Id' && !fieldResults.contains(fieldResult)) {
                 fieldResults.add(fieldResult);

@@ -119,8 +119,9 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     * the start() method of the individual batch jobs that extend this class.
     * @return database.Querylocator
     */
-    public Database.Querylocator start(Database.BatchableContext bc) {
+    public Database.QueryLocator start(Database.BatchableContext bc) {
         try {
+            // TODO Refactor to use the new CRLP_QueryBuilder class
             String query = getBatchStartQuery(
                     lastIdProcessed,
                     batchSizeChunkLimit,
@@ -141,7 +142,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     * @param summaryRecords List of Summary records
     */
     public void execute(Database.BatchableContext bc, List<SObject> summaryRecords) {
-        try {
+         try {
             if (isChunkModeEnabled) {
                 // Since execution contexts might not run in order (ex., chunk size 10k,
                 // batch size 2k has 5 batches but they won't run in a guaranteed order)
@@ -152,123 +153,41 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 }
             }
 
-            CRLP_RollupProcessingOptions.ProcessingOptions options = buildProcessingOptions();
+            CRLP_RollupQueryBuilder queryBuilder = new CRLP_RollupQueryBuilder()
+                    .withRollupType(jobType)
+                    .withSummaryRecords(summaryRecords)
+                    .withSummaryRecordIdsVar('summaryRecords')
+                    .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+                    .withOrderBy(CRLP_Rollup_SVC.getParentFieldNameForQuery(jobType));
 
-            // Get the detail records for the current set of Summary Records
-            // This could be Opportunity or OCR records
-            List<SObject> detailRecords;
-            if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-                detailRecords = CRLP_RollupProcessor_SVC.getDetailOppRecordsForParentRecords(summaryRecords, hasActivePaymentRollupsForThisJob(), options);
-
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-
-                npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-
-                String query = CRLP_Query_SEL.buildDetailObjectQueryForRollup(this.detailObjectType, new List<SObjectType>());
-
-                List<String> whereClauses = new List<String>();
-                whereClauses.add(this.keyField + ' IN : summaryRecords');
-
-                String addlFilter;
-                if (jobType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                    addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, Partial_Soft_Credit__c.SObjectType);
-                } else {
-                    addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, this.detailObjectType);
-                }
-                if (!String.isEmpty(addlFilter)) {
-                    whereClauses.add(addlFilter);
-                }
-
-                if (jobType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                    if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false) {
-                        whereClauses.add('(IsPrimary = False OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = False)');
-                    } else {
-                        whereClauses.add('IsPrimary = False');
-                    }
-                }
-
-                if (!whereClauses.isEmpty()) {
-                    query += ' WHERE ' + String.join(whereClauses, ' AND ');
-                }
-
-                // Note that the ORDER BY here doesn't guarantee that the records will actually be in this order
-                query += ' ORDER BY ' + this.keyField;
-
-                String createdDateClause;
-                if (jobType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                    createdDateClause = ', Opportunity.CreatedDate ASC ';
-                } else {
-                    createdDateClause = ', Opportunity__r.CreatedDate ASC ';
-                }
-                query += createdDateClause;
-
-                UTIL_Debug.debug(LoggingLevel.WARN, '>> OCR Query =' + query);
-                // Convert the list of OpportunityContactRole detail records into a list of PartialSoftCredit
-                // records complete with the parent Opportunity details (CloseDate, Amount, ec.)
-                if (jobType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                    detailRecords = buildPartialSoftCreditRecordsFromOCRs(Database.query(query));
-                } else {
-                    detailRecords = Database.query(query);
-                }
-                UTIL_Debug.debug(LoggingLevel.WARN, '>> PSC Detail Record Size =' + detailRecords.size());
-
+            if (CRLP_Rollup_SVC.hasActiveRollups(jobType)) {
+                queryBuilder.includePaymentRecords();
             }
 
-            String parentObjectField;
-            String parentKeyField = options.parentKeyField;
+            String query = queryBuilder.buildDetailsQuery();
 
-            // The parentKeyField field may be have dot-notation (ex: Contact__r.AccountId)
-            // If this is the case, need to parse out the two components to use
-            if (parentKeyField.contains('.')) {
-                parentObjectField = parentKeyField.split('\\.')[0];
-                parentKeyField = parentKeyField.split('\\.')[1];
+            List<SObject> detailRecords = Database.query(query);
+
+            if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
+                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+                detailRecords = convertContactRolesToPartialSoftCredits(detailRecords);
             }
 
-            // Strip out summary records where there are no detail records to process.
-            Set<Id> parentIdHasDetailRecords = new Set<Id>(); // which parent records have details
-            for (Integer n=0, listSize=detailRecords.size(); n<listSize; n++) {
-                if (parentObjectField == null) {
-                    parentIdHasDetailRecords.add((String)detailRecords[n].get(parentKeyField));
-                } else {
-                    SObject dtlRecord = detailRecords[n].getSObject(parentObjectField);
-                    parentIdHasDetailRecords.add((String)dtlRecord.get(parentKeyField));
-                }
-            }
-
-            List<SObject> newSummaryRecords = new List<SObject>();
-            for (Integer n=0, listSize=summaryRecords.size(); n<listSize; n++) {
-                if (parentIdHasDetailRecords.contains(summaryRecords[n].Id)) {
-                    newSummaryRecords.add(summaryRecords[n]);
-                } else if (this.summaryObjectType == Contact.SObjectType || this.summaryObjectType == Account.SObjectType) {
-                    // If the Account and Contact is the Summary record, and there are no detail records, but the object
-                    // has a value in any of these key rollup fields, then we need to include it so the values can be
-                    // updated (reset) as necessary
-                    for (String f : fieldsToCheckForNonZero) {
-                        Object val = summaryRecords[n].get(f);
-                        if (val != null && val != 0) {
-                            newSummaryRecords.add(summaryRecords[n]);
-                            break;
-                        }
-                    }
-                }
-
-            }
-            summaryRecords = newSummaryRecords;
+            summaryRecords = excludeSummaryWithMissingDetailRecords(summaryRecords, detailRecords);
 
             // Are there any summary records left to process?
             if (summaryRecords.size() > 0) {
+                Map<Id, List<SObject>> paymentsByOpp = getRelatedPayments(detailRecords);
 
-                Map<Id, List<SObject>> paymentsByOpp = new Map<Id, List<SObject>>();
-                if (hasActivePaymentRollupsForThisJob() && (this.summaryObjectType == Account.SObjectType || this.summaryObjectType == Contact.SObjectType) && this.detailObjectType != Account_Soft_Credit__c.SObjectType) {
-                    paymentsByOpp = CRLP_RollupProcessor_SVC.splitChildRecordsInMapByParentId(detailRecords, 'npe01__OppPayment__r');
-                }
+                // Need to pass in the Rollup Type, Rollup Defnitions if they're available along
+                // with the Summary Record(s), Detail Record(s) and any Related Records.
+                CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+                        .withRollupType(jobType)
+                        .withSummaryRecords(summaryRecords)
+                        .withDetailRecords(detailRecords)
+                        .withRelatedRecords(paymentsByOpp);
 
-                // Call the method to do the actual rollups. This returns only records that require updating
-                List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, paymentsByOpp, options);
+                List<SObject> updatedRecords = processor.startRollupProcessing();
 
                 // Handle dml on the records to be updated
                 if (updatedRecords != null && !updatedRecords.isEmpty()) {
@@ -279,7 +198,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             }
 
         } catch (Exception ex) {
-            // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
             ex.setMessage(ex.getMessage() + '\n\nRollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState());
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP + '.' + this.jobType.name());
         }
@@ -293,15 +211,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     public void finish(Database.BatchableContext bc) {
         // In debug mode, write a summary of the job to the error log
         if (CRLP_Debug_UTIL.isDebuggingEnabled) {
-            Error__c logEntry = new Error__c(
-                    Context_Type__c = ERR_Handler_API.Context.CRLP.name() + ': ' + this.jobType.name() + ' ' + this.jobMode.name(),
-                    Error_Type__c = 'DEBUG LOG',
-                    Full_Message__c = ('Total Batch Iterations: ' + this.batchIteration + '\n' +
-                            'Total DML Operations: ' + this.totalCommits + '\n' +
-                            'Total Records Updates: ' + this.totalRecordsModified + '\n' +
-                            'Rollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState()).left(32768)
-            );
-            insert logEntry;
+            logDebugInfo((isChunkModeEnabled ? 'LastIdProcessed: ' + lastIdProcessed : ''));
         }
 
         // If chunk mode is enabled and there are more records to process,
@@ -309,6 +219,78 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         if (isChunkModeEnabled && hasAdditionalRecordsToProcess(lastIdProcessed)) {
             submitBatchableJobForNextChunk();
         }
+    }
+
+    /**
+     * @description Loop through the Summary records and remove any that do not have Detail Objects to be rolled up
+     * @param summaryRecords
+     * @param detailRecords
+     * @return a cleaned list of summary records
+     */
+    private List<SObject> excludeSummaryWithMissingDetailRecords(List<SObject> summaryRecords, List<SObject> detailRecords) {
+        String relationshipName;
+        String parentKeyField = CRLP_Rollup_SVC.getParentFieldNameForProcessing(jobType);
+
+        // If keyField field has dot-notation (ex: Contact__r.AccountId), need to parse out the two components
+        if (parentKeyField.contains('.')) {
+            relationshipName = parentKeyField.split('\\.')[0];
+            parentKeyField = parentKeyField.split('\\.')[1];
+        }
+
+        Set<Id> includeParentIds = new Set<Id>();
+        for (Integer n=0, listSize=detailRecords.size(); n<listSize; n++) {
+            SObject detailRecord = detailRecords[n];
+            if (String.isNotBlank(relationshipName)) {
+                detailRecord = detailRecords[n].getSObject(relationshipName);
+            }
+
+            includeParentIds.add((String) detailRecord.get(parentKeyField));
+        }
+
+        Set<SObjectType> nonZeroCheckSObjectTypes = new Set<SObjectType> {
+                Contact.SObjectType,
+                Account.SObjectType
+        };
+
+        List<SObject> includeSummaryRecords = new List<SObject>();
+        for (Integer n=0, listSize=summaryRecords.size(); n<listSize; n++) {
+            if (includeParentIds.contains(summaryRecords[n].Id)) {
+                includeSummaryRecords.add(summaryRecords[n]);
+
+            } else if (this.summaryObjectType == Contact.SObjectType || this.summaryObjectType == Account.SObjectType) {
+                // If the Account and Contact is the Summary record, and there are no detail records, but the object
+                // has a value in any of these key rollup fields, then we need to include it so the values can be
+                // updated (reset) as necessary
+                for (String f : fieldsToCheckForNonZero) {
+                    Object val = summaryRecords[n].get(f);
+
+                    if (val != null && val != 0) {
+                        includeSummaryRecords.add(summaryRecords[n]);
+                        break;
+                    }
+                }
+            }
+
+        }
+
+        return includeSummaryRecords;
+    }
+
+    /**
+     * @description Retrieve a map of related Payments for each Detail record, but only if Payment Rollups are active
+     * for the given rollup type
+     * @param detailRecords
+     * @return Map<Id, List<SObject>>
+     */
+    private Map<Id, List<SObject>> getRelatedPayments(List<SObject> detailRecords) {
+        Map<Id, List<SObject>> paymentsByOpp = new Map<Id, List<SObject>>();
+        if (hasActivePaymentRollupsForThisJob()
+                && this.detailObjectType != Account_Soft_Credit__c.SObjectType
+                && (this.summaryObjectType == Account.SObjectType || this.summaryObjectType == Contact.SObjectType)
+        ) {
+            paymentsByOpp = CRLP_RollupProcessor_SVC.splitChildRecordsInMapByParentId(detailRecords, 'npe01__OppPayment__r');
+        }
+        return paymentsByOpp;
     }
 
     /**
@@ -329,14 +311,4 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             }
         }
     }
-
-    /**
-     * @description Instantiate the ProcessingOptions class for Non-Skew Mode batch operations.
-     */
-    private CRLP_RollupProcessingOptions.ProcessingOptions buildProcessingOptions() {
-        CRLP_RollupProcessingOptions.ProcessingOptions options = super.initOptionsInstance();
-        options.detailObjType = this.detailObjectType;
-        return options;
-    }
-
 }

@@ -1184,11 +1184,11 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>ErrorEmailMessage</shortDescription>
-        <value>Salesforce reported the below errors as NPSP was attempting to execute its batch jobs, or at a time when it was unable to display error messages directly to a user. It’s likely that NPSP was attempting to update summary fields on Accounts and Contacts, but was unable to save certain records. This failure might have been caused by a variety of issues unrelated to NPSP, such as custom code or validation rules.
+        <value>Salesforce reported the below errors as NPSP was attempting to execute its batch jobs, or at a time when it was unable to display error messages directly to a user. It&apos;s likely that NPSP was attempting to update summary fields on Accounts and Contacts, but was unable to save certain records. This failure might have been caused by a variety of issues unrelated to NPSP, such as custom code or validation rules.
 
 Read this article on the Power of Us Hub to learn how these Scheduled Jobs work: https://powerofus.force.com/NPSP_Scheduled_Jobs
 
-If you’re not sure how to resolve these errors, post a message in the Nonprofit Success Pack group in the Power of Us Hub: https://powerofus.force.com/HUB_NPSP_Group</value>
+If you&apos;re not sure how to resolve these errors, post a message in the Nonprofit Success Pack group in the Power of Us Hub: https://powerofus.force.com/HUB_NPSP_Group</value>
     </labels>
     <labels>
         <fullName>HiddenForSecurity</fullName>
@@ -3059,7 +3059,15 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error parsing/type casting a parameter</shortDescription>
-        <value>Error parsing {0} parameter</value>
+        <value>Error parsing {0} parameter: {1}</value>
+    </labels>
+    <labels>
+        <fullName>CallableApiProcessingError</fullName>
+        <categories>API</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error completing the specified API call</shortDescription>
+        <value>Error completing the {0} api: {1}</value>
     </labels>
     <labels>
         <fullName>conFailedAccountCreate</fullName>
@@ -5038,6 +5046,30 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You can't modify Payment currencies directly. Update the parent Opportunity's currency, and NPSP will automatically update the currency of all related Payment records.</value>
     </labels>
     <labels>
+        <fullName>pmtPaidPaymentDateRequired</fullName>
+        <categories>Payment, Accounting Data Consistency</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtPaidPaymentDateRequired</shortDescription>
+        <value>A paid Payment must have a Payment Date.</value>
+    </labels>
+    <labels>
+        <fullName>pmtUnpaidPaymentScheduledDateRequired</fullName>
+        <categories>Payment, Accounting Data Consistency</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtUnpaidPaymentScheduledDateRequired</shortDescription>
+        <value>An unpaid Payment must have a Scheduled Date.</value>
+    </labels>
+    <labels>
+        <fullName>pmtWriteOffPaidPayment</fullName>
+        <categories>Payment, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWriteOffPaidPayment</shortDescription>
+        <value>A Payment can't be both paid and written off. You must deselect one or both checkboxes.</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardBtnCalcPayments</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
@@ -5134,6 +5166,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>NOTE: This Opportunity has payment record(s) that are both Paid and Written Off. You must deselect one or both checkboxes.</value>
     </labels>
     <labels>
+        <fullName>pmtWizardScheduleInvalidRecords</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWizardScheduleInvalidRecords</shortDescription>
+        <value>One or more existing Payment records are both paid and written off. To create a new Payment schedule, you must first deselect one or both checkboxes for these Payments.</value>
+    </labels>
+    <labels>
         <fullName>pmtWizardScheduleNoAmount</fullName>
         <categories>Payment Wizard</categories>
         <language>en_US</language>
@@ -5148,6 +5188,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>pmtWizardNoAmount</shortDescription>
         <value>NOTE: This Opportunity has no Amount. You must enter an Amount before you can write off Payments.</value>
+    </labels>
+    <labels>
+        <fullName>pmtWizardWriteOffInvalidRecords</fullName>
+        <categories>Payment Wizard</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWizardWriteOffInvalidRecords</shortDescription>
+        <value>One or more existing Payment records are both paid and written off. To write off Payments, you must first deselect one or both checkboxes for these Payments.</value>
     </labels>
     <labels>
         <fullName>pmtWizardNoUnpaidAmount</fullName>
@@ -5292,6 +5340,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>pmtWizardYear</shortDescription>
         <value>Year</value>
+    </labels>
+    <labels>
+        <fullName>pmtWrittenOffPaymentDateRequired</fullName>
+        <categories>Payment, Accounting Data Consistency</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>pmtWrittenOffPaymentDateRequired</shortDescription>
+        <value>A written off Payment must have a Payment Date.</value>
     </labels>
     <labels>
         <fullName>pscDeleteRow</fullName>

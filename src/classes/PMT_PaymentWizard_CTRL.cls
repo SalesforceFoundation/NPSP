@@ -238,7 +238,9 @@ public with sharing class PMT_PaymentWizard_CTRL {
             writeoffPaymentCount = outstandingPaymentCount;
         }
 
-        
+        if (invalidPaymentRecordCount > 0) {
+            isWizardEnabled = false;
+        }
     }
 
     
@@ -487,7 +489,11 @@ public with sharing class PMT_PaymentWizard_CTRL {
         }
 
         if (invalidPaymentRecordCount > 0) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardInvalidRecords));
+            if (isScheduleWizard) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardScheduleInvalidRecords));
+            } else if (isWriteoffWizard) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, System.Label.pmtWizardWriteOffInvalidRecords));
+            }
             return;
         }
 
@@ -500,8 +506,6 @@ public with sharing class PMT_PaymentWizard_CTRL {
         } else if (!removePaidPayments && isWriteoffWizard == true && haveAmount == false) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, System.Label.pmtWizardNoWriteoffAmount));
         }
-
-
 
     }
 

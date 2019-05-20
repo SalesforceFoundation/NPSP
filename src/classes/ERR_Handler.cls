@@ -108,30 +108,37 @@ public class ERR_Handler {
     public static Errors getErrors(List<Object> dmlResults, List<SObject> sObjects) {
         Errors errors = new Errors();
 
-        if (dmlResults != null) {
-            for (Integer i=0; i<dmlResults.size(); i++) {
-                Boolean isSuccess = true;
-                if (dmlResults[i] instanceof Database.SaveResult) {
-                    isSuccess = ((Database.SaveResult)dmlResults[i]).isSuccess();
-                } else if (dmlResults[i] instanceof Database.DeleteResult) {
-                    isSuccess = ((Database.DeleteResult)dmlResults[i]).isSuccess();
-                } else if (dmlResults[i] instanceof Database.UndeleteResult) {
-                    isSuccess = ((Database.UndeleteResult)dmlResults[i]).isSuccess();
-                }
+        if (dmlResults == null || dmlResults.isEmpty()) {
+            return errors;
+        }
+        for (Integer i=0; i<dmlResults.size(); i++) {
+            Boolean isSuccess = true;
+            if (dmlResults[i] instanceof Database.SaveResult) {
+                isSuccess = ((Database.SaveResult)dmlResults[i]).isSuccess();
+            } else if (dmlResults[i] instanceof Database.DeleteResult) {
+                isSuccess = ((Database.DeleteResult)dmlResults[i]).isSuccess();
+            } else if (dmlResults[i] instanceof Database.UndeleteResult) {
+                isSuccess = ((Database.UndeleteResult)dmlResults[i]).isSuccess();
+            }
 
-                if (!isSuccess) {
-                    errors.errorsExist = true;
+            if (!isSuccess) {
+                errors.errorsExist = true;
 
-                    //Creating error object
-                    Error__c err = createError(dmlResults[i], sObjects[i].getSObjectType().getDescribe().getName(), sObjects[i].Id);
-                    errors.errorRecords.add(err);
+                //Creating error object
+                Error__c err = createError(
+                    dmlResults[i],
+                    sObjects[i].getSObjectType().getDescribe().getName(),
+                    sObjects[i].Id,
+                    null
+                );
+                errors.errorRecords.add(err);
 
-                    //We cannot use addError on the record here, because if we do, the whole transaction will be rolled back, and
-                    //no error record will be saved, or error notification sent.
+                //We cannot use addError on the record here, because if we do, the whole transaction will be rolled back, and
+                //no error record will be saved, or error notification sent.
 
-                    //Displaying an error message to the user
-                    if(ApexPages.currentPage() != null)
-                       ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, err.Full_Message__c));
+                //Displaying an error message to the user
+                if (ApexPages.currentPage() != null) {
+                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, err.Full_Message__c));
                 }
             }
         }
@@ -140,14 +147,14 @@ public class ERR_Handler {
 
     /*******************************************************************************************************
     * @description Processes the results of a group DML operations caused by a batch, future, or queued job and performed
-    * 				using the Database class to determine if errors occurred. It does not store errors or send error email
-    * 				notifications. These operations should be performed after the rollback.
+    * using the Database class to determine if errors occurred. It does not store errors or send error email
+    * notifications. These operations should be performed after the rollback.
     *
     * @param dmlResults The results of a DML batch operation performed using the Database class.
     * @param sObjects The records the DML operation was performed on.
     * @return Errors The errors with a single list that occurred during a batch DML operation performed using the Database class.
     */
-    public static Errors getJobErrors(List<Object> dmlResults, List<SObject> sObjects, string context) {
+    public static Errors getJobErrors(List<Object> dmlResults, List<SObject> sObjects, String context) {
         Errors errors = new Errors();
         List<String> errorsFound = new List<String>();
 
@@ -257,7 +264,7 @@ public class ERR_Handler {
     */
     public static void processError(Exception e, String context) {
         if (e != null) {
-            Error__c error = createError(e);
+            Error__c error = createError(e, context);
             processErrors(new Error__c[]{error}, context);
         }
     }
@@ -274,7 +281,7 @@ public class ERR_Handler {
     public static void processErrors(List<Exception> exceptions, ERR_Handler_API.Context context) {
         List<Error__c> errors = new List<Error__c>();
         for (Exception e : exceptions) {
-            errors.add(createError(e));
+            errors.add(createError(e, context.name()));
         }
         
         processErrors(errors, context.name());
@@ -297,6 +304,7 @@ public class ERR_Handler {
                 UTIL_Debug.debug('**** Storing errorRecords: ' + errorRecords);
                 Database.insert(errorRecords, false);
             }
+
             //ERR_Notifier takes care of checking the settings itself.
             ERR_Notifier.sendErrorNotifications(context);
         }
@@ -305,13 +313,15 @@ public class ERR_Handler {
     /*******************************************************************************************************
     * @description Creates an error record from an exception.
     * @param e Exception to create error record from.
+    * @param context The context the exception was raised on.
     * @return Error__c Error record.
     */
-    private static Error__c createError(Exception e) {
+    private static Error__c createError(Exception e, String context) {
         Error__c error = new Error__c();
         error.Datetime__c = System.now();
         error.Error_Type__c = e.getTypeName();
         error.Full_Message__c = e.getMessage();
+        error.Context_Type__c = context;
 
         //Putting it into a local string to see if that helps storing the stack trace when we
         //are in a managed package.
@@ -335,12 +345,14 @@ public class ERR_Handler {
     *               the different DML operations that the Database class can perform don't have a common parent.
     * @param objectType The name of the type of object that caused the error.
     * @param objId The id of the record that caused the error.
+    * @param context The context the exception was raised on.
     * @return The error record.
     */
-    private static Error__c createError(Object result, string objectType, id objId) {
+    private static Error__c createError(Object result, String objectType, Id objId, String context) {
         Error__c error = new Error__c();
         error.Datetime__c = System.now();
         error.Object_Type__c = objectType;
+        error.Context_Type__c = context;
 
         if (result instanceof Database.SaveResult) {
             Database.SaveResult saveResult = (Database.SaveResult) result;
@@ -365,6 +377,7 @@ public class ERR_Handler {
     /*******************************************************************************************************
     * @description Creates a single error record from a Database class DML operation in a batch, future or queued job.
     * @param message The full message of all the errors for a given job and compiled IDs.
+    * @param context The context the exception was raised on.
     * @param objectType The type of all records in the job, only to be passed in if they all match.
     * @return The error record.
     */
@@ -383,6 +396,7 @@ public class ERR_Handler {
     /*******************************************************************************************************
     * @description Creates a single error record from a Database class DML operation in a batch, future or queued job.
     * @param message The full message of all the errors for a given job and compiled IDs.
+    * @param context The context the exception was raised on.
     * @return The error record.
     */
     private static Error__c createJobError(String message, String context) {

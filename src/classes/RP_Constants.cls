@@ -47,7 +47,7 @@ public with sharing class RP_Constants {
     public static final String RP_CUSTOMER_JOURNEY_LINK = 'http://www.salesforce.org/events/';
     public static final String RP_NPSP_DOCUMENTATION_LINK = 'https://powerofus.force.com/articles/Best_Practice_Business_Process/Salesforce-Fundamentals';
     public static final String RP_SALESFORCE_ORG_OFFICE_HOURS_LINK = 'https://powerofus.force.com/articles/Customer_Service/Salesforce-com-Foundation-Weekly-Office-Hours';
-    public static final String RP_TRAILHEAD_LINK = 'https://trailhead.salesforce.com/users/00550000006yYDZAA2/trailmixes/npsp';
+    public static final String RP_TRAILHEAD_LINK = 'https://trailhead.salesforce.com/en/content/learn/modules/nonprofit-cloud-basics';
     public static final String RP_US_LINK = 'https://powerofus.force.com';
     public static final String RP_WEBINAR_LINK = 'https://powerofus.force.com/articles/Resource/NPSP-Documentation';
 

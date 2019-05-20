@@ -35,12 +35,11 @@
 * @description Service Class to handle actions on the User object.
 */
 public with sharing class USER_UserService {
-    public static final String OBJECT_ID_PREFIX_USER = '005';
-    public static final String ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS = 'All Sys Admins';
+
+    public static final String OBJECT_ID_PREFIX_USER = User.SObjectType.getDescribe().getKeyPrefix();
     public static final String JOB_TYPE_SCHEDULED_APEX = '7';
     public static final String ERROR_TYPE_SCHEDULED_APEX = 'Scheduled Apex Error';
     public static final String OBJECT_TYPE_USER = 'User';
-
 
     /*********************************************************************************************************
     * @description Determines if a User in the List is a System Administrator based on ProfileId.
@@ -137,7 +136,7 @@ public with sharing class USER_UserService {
         if (errorSettings.Error_Notifications_To__c.startsWith(OBJECT_ID_PREFIX_USER)) {
             for (Id currentSysAdminId: sysAdminUserIds) {
                 if (errorSettings.Error_Notifications_To__c == currentSysAdminId) {
-                    errorSettings.Error_Notifications_To__c = ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS;
+                    errorSettings.Error_Notifications_To__c = ERR_Notifier.ERROR_NOTIFICATION_RECIPIENT_ALL_SYS_ADMINS;
                     Database.update(errorSettings, true);
                     break;
                 }
