@@ -46,3 +46,6 @@ Create Donation from a Contact
     ${flag}     Verify payment    
     should be equal as strings     ${flag}    pass
     
+Verify values in Create one or more Payments for this Opportunity page
+    Click Link    title=${opp_name}
+    Select Tab    Related
