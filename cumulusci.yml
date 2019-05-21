@@ -112,6 +112,7 @@ tasks:
         options:
             mapping_yaml: 'testdata/bdi_benchmark/mapping.yml'
             num_records: 5000
+            debug_db_path: /tmp/temp_db.db
 
     performance_tests:
         description: Runs Robot Framework performance tests
@@ -377,7 +378,21 @@ flows:
         steps:
             3:
                 task: ensure_record_type
-    
+
+    test_performance:
+        description: 'Creates a BDI org and runs a performance test'
+        steps:
+            1:
+                flow: dev_org_namespaced
+            2:
+                task: deploy
+                options:
+                    unmanaged: False
+                    path: unpackaged/config/perf
+                    namespace_inject: $project_config.project__package__namespace
+            3:
+                task: performance_tests
+
     beta_dependencies:
         steps:
             3:
