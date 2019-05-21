@@ -34,11 +34,7 @@
                                                 html-name="checkbox-toggle-2"
                                                 value="{!isDataImportFieldMapping}"
                                                 html-aria-describedby="checkbox-toggle-2"
-                                                disabled="{!IF(AND(
-                                                    deployment.id != null,
-                                                    deployment.status != 'Succeeded'),
-                                                    true,
-                                                    false)}"/>
+                                                disabled="{!toggleDisabled}"/>
                             <span class="slds-checkbox_faux_container" aria-live="assertive">
                                 <span class="slds-checkbox_faux"></span>
                                 <span class="slds-checkbox_on">Enabled</span>

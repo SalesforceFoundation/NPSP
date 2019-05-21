@@ -917,6 +917,7 @@
         <members>Data_Import_Settings__c.Account_Matching_Rule__c</members>
         <members>Data_Import_Settings__c.Batch_Size__c</members>
         <members>Data_Import_Settings__c.CMT_API_Status__c</members>
+        <members>Data_Import_Settings__c.CMT_Deployment_ID__c</members>
         <members>Data_Import_Settings__c.Contact_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Contact_Matching_Rule__c</members>
         <members>Data_Import_Settings__c.Default_Data_Import_Field_Mapping_Set__c</members>
