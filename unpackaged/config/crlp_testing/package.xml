@@ -137,6 +137,12 @@
         <name>CustomMetadata</name>
     </types>
     <types>
+        <members>Account-Household Lightning Layout</members>
+        <members>Account-Organization Lightning Layout</members>
+        <members>Contact-Contact Lightning Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
         <members>CRLP_TEST_VALIDATE_ROLLUPS</members>
         <name>ApexClass</name>
     </types>
