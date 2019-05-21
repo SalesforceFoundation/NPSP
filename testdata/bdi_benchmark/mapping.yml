@@ -41,10 +41,10 @@ DataImport:
     sf_object: npsp__DataImport__c
     table: npsp__DataImport__c
     fields:
-        npsp__Account1_Name__c: account_name
-        npsp__Contact1_Lastname__c: contact1_lastname
-        npsp__Donation_Name__c: donation_name
-        npsp__Donation_Stage__c: donation_stage
-        npsp__Donation_Amount__c: donation_amount
-        npsp__Donation_Date__c: donation_date
-#        npsp_Do_Not_Automatically_Create_Payment__c: do_not_automatically_create_payment
+        npsp__Account1_Name__c: npsp__Account1_Name__c
+        npsp__Contact1_Lastname__c: npsp__Contact1_Lastname__c
+        npsp__Donation_Amount__c: npsp__Donation_Amount__c
+        npsp__Donation_Date__c: npsp__Donation_Date__c
+        npsp__Donation_Donor__c: npsp__Donation_Donor__c
+        npsp__Do_Not_Automatically_Create_Payment__c: npsp__Do_Not_Automatically_Create_Payment__c
+        npsp__Qualified_Date__c: npsp__Qualified_Date__c
