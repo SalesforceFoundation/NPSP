@@ -97,6 +97,7 @@
     <relatedLists>
         <fields>MasterLabel</fields>
         <fields>DeveloperName</fields>
+        <fields>Data_Import_Field_Mapping_Set__c</fields>
         <fields>NamespacePrefix</fields>
         <relatedList>Data_Import_Field_Mapping__mdt.Target_Object_Mapping__c</relatedList>
     </relatedLists>
