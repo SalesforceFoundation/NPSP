@@ -394,16 +394,20 @@ plans:
         tier: primary
         steps:
             1:
-                flow: dependencies
-                ui_options:
-                    deploy_pre:
-                        account_record_types:
-                            name: Account Record Types
-                        opportunity_record_types:
-                            name: Opportunity Record Types
+                task: update_dependencies
             2:
-                task: install_managed
+                task: deploy
+                options:
+                    path: unpackaged/pre/account_record_types
+                ui_options:
+                    name: Account Record Types
             3:
+                task: ensure_record_type
+                ui_options:
+                    name: Opportunity Record Types
+            4:
+                task: install_managed
+            5:
                 task: deploy_post
                 options:
                     unmanaged: False
