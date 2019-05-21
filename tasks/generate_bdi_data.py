@@ -15,6 +15,8 @@ from sqlalchemy import Table
 from sqlalchemy import Unicode
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import create_session
+from sqlalchemy.sql.expression import func
+
 
 START_DATE = date(2019, 1, 1)
 
@@ -36,7 +38,7 @@ class BatchDataTask(BaseSalesforceApiTask):
 
     def _run_task(self):
         mapping_file = os.path.abspath(self.options["mapping_yaml"])
-        debug_db_path = self.options["debug_db_path"]
+        debug_db_path = self.options.get("debug_db_path")
         with temporary_dir() as tempdir:
             if(debug_db_path):
                 sqlite_path = debug_db_path
@@ -70,6 +72,15 @@ class BatchDataTask(BaseSalesforceApiTask):
         raise NotImplementedError("generate_data method")
 
 
+class Adder:
+    def __init__(self, x=0):
+        self.x = x
+
+    def __call__(self, value):
+        self.x += value
+        return self.x
+
+
 class GenerateBDIData(BatchDataTask):
     def generate_data(self, session, base):
         self.session = session
@@ -77,7 +88,7 @@ class GenerateBDIData(BatchDataTask):
         num_records = int(self.options["num_records"])
         batch_size = math.floor(num_records / 10)
         self.make_all_records(batch_size)
-        self.generate_bdi_denormalized_table(1) # 1 for 1 old to new
+        self.generate_bdi_denormalized_table(num_records)
         self.session.commit()
 
     def make_opportunity(self, amount, date, paid, payment_amount, **kw):
@@ -101,7 +112,7 @@ class GenerateBDIData(BatchDataTask):
     ):
         """Make a batch of records according to a specification"""
         date = START_DATE
-        for i in range(start + 1, end + 1):
+        for i in range(start, end):
             parent = model(name=name + " " + str(i))
             if model is self.Account:
                 parent.record_type = "Organization"
@@ -114,18 +125,12 @@ class GenerateBDIData(BatchDataTask):
     def make_all_records(self, batch_size):
         """Make all of the records"""
         base = self.base
-        class Adder:
-            x = 0
-
-            def __call__(self, value):
-                self.x += value
-                return self.x
 
         Account = self.Account = base.classes.accounts
         Contact = self.Contact = base.classes.contacts
         self.Opportunity = base.classes.opportunities
         self.Payment = base.classes.payments
-        account_adder = Adder()
+        account_adder = Adder(1)
 
         self.make_records(
             Account,
@@ -178,7 +183,7 @@ class GenerateBDIData(BatchDataTask):
             payment_amount=None,
         )
 
-        contacts_adder = Adder()
+        contacts_adder = Adder(1)
         self.make_records(
             Contact,
             "Contact",
@@ -230,60 +235,128 @@ class GenerateBDIData(BatchDataTask):
             payment_amount=None,
         )
 
-    def generate_bdi_denormalized_table(self, fraction):
+    def generate_bdi_denormalized_table(self, num_records):
         """BDI has a denormalized import table called npsp__DataImport__c.
            Generate that table using a mix of matching and umatching data.
-           
-           Fraction is slightly non-intuitive. It's the proportion of existing
-           records to match in the BDI table. So 1 means match 1 to 1.
-           2 means match half. 3 means match a third. The bigger the number,
-           the smaller the size of the BDI table.
            """
-        self.generate_matching_records(fraction)
-        self.generate_unmatched_records(fraction)
+        self.generate_matching_records(num_records)
 
-    def generate_matching_records(self, fraction):
+    def generate_matching_records(self, num_records):
         """Generate records that match what's already "in" the org by
            copying the records from the tables that will be populated in the
            org. """
-        self.session.execute(
-            """
-        INSERT INTO npsp__DataImport__c
-            SELECT
-                Opportunities.Id as Id, -- unique id
-            accounts.name, -- account_name -> npe01__Account1_Name__c
-            contacts.name, -- contact1_lastname -> npe01__Contact1_Lastname__c
-            opportunities.name, -- donation_name ->  npe01__Donation_Name__c
-            opportunities.stage_name, -- donation_stage -> npe01__Donation_Stage__c
-            opportunities.amount, -- donation_amount -> npe01__Donation_Amount__c
-            opportunities.close_date -- donation_date -> npe01__Donation_Date__c
-        -- disabled   FALSE -- do_not_automatically_create_payment -> npe01__Do_Not_Automatically_Create_Payment__c
-        FROM Opportunities
-            LEFT JOIN contacts on primary_contact__c=contacts.Id
-            LEFT JOIN accounts on opportunities.account_id=accounts.Id
-        WHERE Opportunities.Id %% %(fraction)s = 0 -- only half (or other portion) of the records
-            """
-            % {"fraction": fraction}
-        )
+        batch_size = math.floor(num_records / 10)
 
-    def generate_unmatched_records(self, fraction):
-        """Make a randomized record for every real record in the npsp__DataImport__c
-           table so that we test the process of failing to match records."""
-        self.session.execute(
-            """
-        INSERT INTO npsp__DataImport__c
-            SELECT
-                Id + (SELECT MAX(Id) from npsp__DataImport__c), -- unique id
-                lower(hex(randomblob(16))), -- account_name -> npe01__Account1_Name__c
-                lower(hex(randomblob(16))), -- contact1_lastname -> npe01__Contact1_Lastname__c
-                lower(hex(randomblob(16))), -- donation_name ->  npe01__Donation_Name__c
-                donation_stage, -- donation_stage -> npe01__Donation_Stage__c
-                donation_amount, -- donation_amount -> npe01__Donation_Amount__c
-                donation_date -- donation_date -> npe01__Donation_Date__c
-        -- disabled   FALSE -- do_not_automatically_create_payment -> npe01__Do_Not_Automatically_Create_Payment__c
-        FROM npsp__DataImport__c
-            """
-        )
+        def cleanup_value(value, context):
+            if type(value)==str:
+                return value % context
+            elif type(value)==bool:
+                return str(value).upper()
+            else:
+                return value
+
+        def make_records_import_table(adder, **kwargs):
+            autoincrement_date = START_DATE
+            for i in range(adder(0), adder(batch_size)):
+                replaceables = {'i': i}
+                fields = {key: cleanup_value(value, replaceables) for key, value in kwargs.items()}
+                fields['npsp__Donation_Date__c'] = autoincrement_date
+#                fields.setdefault('npsp__Do_Not_Automatically_Create_Payment__c', "FALSE")
+                record = self.base.classes.npsp__DataImport__c(**fields)
+                autoincrement_date = autoincrement_date + timedelta(days=1)
+                self.session.add(record)
+
+        account_adder = Adder(1)
+
+        make_records_import_table(account_adder,
+            npsp__Account1_Name__c = "Account %(i)d",
+            npsp__Donation_Amount__c = 100,
+            npsp__Donation_Donor__c = "Account1")
+
+        make_records_import_table(account_adder,
+            npsp__Account1_Name__c = "Account %(i)d",
+            npsp__Donation_Amount__c = 200,
+            npsp__Donation_Donor__c = "Account1",
+#            npsp__Do_Not_Automatically_Create_Payment__c = True,
+            npsp__Qualified_Date__c = '2020-01-01')
+
+        make_records_import_table(account_adder,
+            npsp__Account1_Name__c = "Account %(i)d",
+            npsp__Donation_Amount__c = 50,
+            npsp__Donation_Donor__c = "Account1")
+
+        make_records_import_table(account_adder,
+            npsp__Account1_Name__c = "Account %(i)d",
+            npsp__Donation_Amount__c = 400,
+            npsp__Donation_Donor__c = "Account1")
+
+        make_records_import_table(account_adder,
+            npsp__Account1_Name__c = "Account %(i)d",
+            npsp__Donation_Amount__c = 500,
+            npsp__Donation_Donor__c = "Account1")
+
+        contact_adder = Adder(1)
+
+        make_records_import_table(contact_adder,
+            npsp__Contact1_Lastname__c = "Contact %(i)d",
+            npsp__Donation_Amount__c = 600,
+            npsp__Donation_Donor__c = "Contact1")
+
+        make_records_import_table(contact_adder,
+            npsp__Contact1_Lastname__c = "Contact %(i)d",
+            npsp__Donation_Amount__c = 700,
+            npsp__Donation_Donor__c = "Contact1",
+#            npsp__Do_Not_Automatically_Create_Payment__c = True,
+            npsp__Qualified_Date__c = '2020-01-01')
+
+        make_records_import_table(contact_adder,
+            npsp__Contact1_Lastname__c = "Contact %(i)d",
+            npsp__Donation_Amount__c = 50,
+            npsp__Donation_Donor__c = "Contact1")
+
+        make_records_import_table(contact_adder,
+            npsp__Contact1_Lastname__c = "Contact %(i)d",
+            npsp__Donation_Amount__c = 900,
+            npsp__Donation_Donor__c = "Contact1")
+
+        make_records_import_table(contact_adder,
+            npsp__Contact1_Lastname__c = "Contact %(i)d",
+            npsp__Donation_Amount__c = 1000,
+            npsp__Donation_Donor__c = "Contact1")
+
+        batch_size = math.floor(num_records / 4)
+        account_adder = Adder(1)
+
+        make_records_import_table(account_adder,
+            npsp__Account1_Name__c = "Account%(i)d",
+            npsp__Donation_Amount__c = 100,
+            npsp__Donation_Donor__c = "Account1",
+#            npsp__Do_Not_Automatically_Create_Payment__c = False
+            )
+
+        make_records_import_table(account_adder,
+            npsp__Account1_Name__c = "Account%(i)d",
+            npsp__Donation_Amount__c = 200,
+            npsp__Donation_Donor__c = "Account1",
+#            npsp__Do_Not_Automatically_Create_Payment__c = True
+            )
+        contact_adder = Adder(1)
+
+        make_records_import_table(contact_adder,
+            npsp__Contact1_Lastname__c = "Contact%(i)d",
+            npsp__Donation_Amount__c = 300,
+            npsp__Donation_Donor__c = "Contact1",
+#            npsp__Do_Not_Automatically_Create_Payment__c = False
+            )
+
+        make_records_import_table(contact_adder,
+            npsp__Contact1_Lastname__c = "Contact%(i)d",
+            npsp__Donation_Amount__c = 400,
+            npsp__Donation_Donor__c = "Contact1",
+#            npsp__Do_Not_Automatically_Create_Payment__c = True
+            )
+
+        self.session.flush()
 
 
 # Note: code below here is taken from cumulusci.tasks.bulkdata.QueryData,
