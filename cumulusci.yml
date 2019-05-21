@@ -298,10 +298,14 @@ flows:
                 task: deploy_reports
                 options:
                     unmanaged: False
+            7:
+                task: enable_customizable_rollups
+            8:
+                task: enable_incremental_rollups
 
     config_regression:
         steps:
-            1:
+            2:
                 task: deploy_qa_config
                 options:
                     unmanaged: False
@@ -313,11 +317,7 @@ flows:
     config_trial:
         steps:
             1:
-                flow: config_qa
-            2:
-                task: enable_customizable_rollups
-            3:
-                task: enable_incremental_rollups
+                flow: config_managed
 
     config_offsetfiscal:
         description: 'Configure an offset fiscal year'
@@ -393,7 +393,7 @@ flows:
             1:
                 flow: dependencies
             2:
-                flow: deploy_unmanaged
+                task: install_managed
             3:
                 flow: config_trial
 

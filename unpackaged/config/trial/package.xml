@@ -14,6 +14,10 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>*</members>
+        <name>CustomMetadata</name>
+    </types>
+    <types>
         <members>Account.Level__c</members>
         <members>Account.Previous_Level__c</members>
         <members>Contact.Gender__c</members>
