@@ -2,6 +2,7 @@
 
 npsp_lex_locators={
     'breadcrumb': "//li[contains(@class, 'slds-breadcrumb__item')]/span[text()='{}']",
+    'breadcrumb-link':"//a[@title='{}' and contains(@class,'BreadCrumbItem')]",
     'placeholder': "//*[contains(@placeholder,'{}')]",
     'app_launcher':{
         'select-option':'//span/mark[text()="{}"]',
@@ -24,6 +25,7 @@ npsp_lex_locators={
             'viewall':'//a[.//span[text()="View All"]/span[text()="{}"]]',
             'item':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//h3//a",
             'field_value': '//a[text()="{}"]/ancestor::li//div[contains(@class, "slds-item--detail")]//*[text()="{}"]',
+            'link':"//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//table[contains(@class,'forceRecordLayout')]/tbody/tr[.//th/div/a[contains(@class,'textUnderline')]][.//td//span[text()='{}']]/th//a",
          },
     },
     "alert": "//span[contains(@class,'toastMessage')]/a",
@@ -67,6 +69,7 @@ npsp_lex_locators={
     'click_search':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/span/span/input[contains(@id,"inputX")]',
     'field': "//div[contains(@class, 'uiInput')][.//label[contains(@class, 'uiLabel')][.//span[text()='{}']]]//input",
     'field_lookup_value': "//a[@role='option'][.//div[@title='{}']]",
+    'field-value':"//div[contains(@class,'slds-form-element')][./label[text()='{}']]/div/span",
     'header':'//h1/div[contains(@title,"{}")]',
     'check_related_list_item':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")]//tbody//th//a[text()="{}"]',
     'detail_page': {
@@ -112,9 +115,11 @@ npsp_lex_locators={
     'payments':{
         'date_loc':"//*[@id='pmtTable']/tbody/tr/td[3]/div//input",       
         'no_payments':'//tbody/tr[./th//a[contains(@title,"PMT")]]/td[3]',
+        'pays':'//tbody/tr[./th//a[contains(@title,"PMT")]]/td[.//span[text()="{}"]]',
         'pay_amount':'//tbody/tr[{}]/td[3]/span/span[text()="{}"]',
         'check_occurrence':'//h2/a/span[@title="{}"]/following-sibling::span',
         'text':'//*[@id="j_id0:vfForm:j_id76:util_formfield:inputx:util_inputfield:inputX"]',
+        'field-value':"//div[contains(@class,'slds-form-element')][./span[text()='{}']]/following-sibling::div",
         },
     'gaus':{
         'input_field':'//div[@class="slds-form-element"][./label[text()="{}"]]/div/input',
