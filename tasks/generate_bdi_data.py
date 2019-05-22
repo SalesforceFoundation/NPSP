@@ -261,7 +261,7 @@ class GenerateBDIData(BatchDataTask):
                 replaceables = {'i': i}
                 fields = {key: cleanup_value(value, replaceables) for key, value in kwargs.items()}
                 fields['npsp__Donation_Date__c'] = autoincrement_date
-#                fields.setdefault('npsp__Do_Not_Automatically_Create_Payment__c', "FALSE")
+                fields.setdefault('npsp__Do_Not_Automatically_Create_Payment__c', "FALSE")
                 record = self.base.classes.npsp__DataImport__c(**fields)
                 autoincrement_date = autoincrement_date + timedelta(days=1)
                 self.session.add(record)
@@ -277,7 +277,6 @@ class GenerateBDIData(BatchDataTask):
             npsp__Account1_Name__c = "Account %(i)d",
             npsp__Donation_Amount__c = 200,
             npsp__Donation_Donor__c = "Account1",
-#            npsp__Do_Not_Automatically_Create_Payment__c = True,
             npsp__Qualified_Date__c = '2020-01-01')
 
         make_records_import_table(account_adder,
@@ -306,7 +305,6 @@ class GenerateBDIData(BatchDataTask):
             npsp__Contact1_Lastname__c = "Contact %(i)d",
             npsp__Donation_Amount__c = 700,
             npsp__Donation_Donor__c = "Contact1",
-#            npsp__Do_Not_Automatically_Create_Payment__c = True,
             npsp__Qualified_Date__c = '2020-01-01')
 
         make_records_import_table(contact_adder,
@@ -331,14 +329,14 @@ class GenerateBDIData(BatchDataTask):
             npsp__Account1_Name__c = "Account%(i)d",
             npsp__Donation_Amount__c = 100,
             npsp__Donation_Donor__c = "Account1",
-#            npsp__Do_Not_Automatically_Create_Payment__c = False
+            npsp__Do_Not_Automatically_Create_Payment__c = False
             )
 
         make_records_import_table(account_adder,
             npsp__Account1_Name__c = "Account%(i)d",
             npsp__Donation_Amount__c = 200,
             npsp__Donation_Donor__c = "Account1",
-#            npsp__Do_Not_Automatically_Create_Payment__c = True
+            npsp__Do_Not_Automatically_Create_Payment__c = True
             )
         contact_adder = Adder(1)
 
@@ -346,14 +344,14 @@ class GenerateBDIData(BatchDataTask):
             npsp__Contact1_Lastname__c = "Contact%(i)d",
             npsp__Donation_Amount__c = 300,
             npsp__Donation_Donor__c = "Contact1",
-#            npsp__Do_Not_Automatically_Create_Payment__c = False
+            npsp__Do_Not_Automatically_Create_Payment__c = False
             )
 
         make_records_import_table(contact_adder,
             npsp__Contact1_Lastname__c = "Contact%(i)d",
             npsp__Donation_Amount__c = 400,
             npsp__Donation_Donor__c = "Contact1",
-#            npsp__Do_Not_Automatically_Create_Payment__c = True
+            npsp__Do_Not_Automatically_Create_Payment__c = True
             )
 
         self.session.flush()
