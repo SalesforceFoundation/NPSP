@@ -47,14 +47,11 @@ Enter a donation for an account with exact payment match
     Click Element With Locator    bge.field-input    Donation Date
     Click BGE Button    Today
     Click BGE Button       Save
-    Reload Page
     Verify Row Count    1
     Page Should Contain Link    ${pay_no}
     Wait For Locator    bge.edit_button    Donation Amount
     Sleep    2
     Click BGE Button       Process Batch
-    # Select Frame With Title    NPSP Data Import
-    # Click Button With Value   Begin Data Import Process
     Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
     Wait For Locator    data_imports.status    Completed
     Click Button With Value   Close
@@ -64,10 +61,10 @@ Enter a donation for an account with exact payment match
     Click Link With Text    ${value}
     ${pay_id}    Get Current Record ID
     Store Session Record      npe01__OppPayment__c  ${pay_id}
-    &{payment} =     Salesforce Get  npe01__OppPayment__c  ${pay_id}
-    Should Be Equal As Strings    &{payment}[npe01__Payment_Amount__c]    100.0
-    Should Be Equal As Strings    &{payment}[npe01__Payment_Date__c]    ${date}
-    Should Be Equal As Strings    &{payment}[npe01__Paid__c]    True
+    Verify Expected Values    nonns    npe01__OppPayment__c    ${pay_id}
+    ...    npe01__Payment_Amount__c=100.0
+    ...    npe01__Payment_Date__c=${date}
+    ...    npe01__Paid__c=True
     Go To Record Home    &{opportunity}[Id]
     Confirm Value    Amount    $100.00    Y 
     ${opp_date} =     Get Current Date    result_format=%-m/%-d/%Y

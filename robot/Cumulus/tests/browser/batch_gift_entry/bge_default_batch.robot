@@ -36,3 +36,20 @@ BGE Batch With Default Values
     ...    Post_Process_Implementing_Class__c=None
     ...    RequireTotalMatch__c=False
     ...    Run_Opportunity_Rollups_while_Processing__c=True
+Create New gift and process batch and validate
+    [tags]  unstable
+    &{contact} =     API Create Contact
+    Select Value From BGE DD    Donor Type    Contact
+    Populate Field By Placeholder    Search Contacts    &{contact}[FirstName] &{contact}[LastName]
+    Click Link    &{contact}[FirstName] &{contact}[LastName]
+    Fill BGE Form    Donation Amount=100
+    Click Field And Select Date    Donation Date    Today
+    Click BGE Button       Save
+    Click BGE Button       Process Batch
+    Click Data Import Button    NPSP Data Import    button    Begin Data Import Process
+    Wait For Locator    data_imports.status    Completed
+    Click Button With Value   Close
+    Verify Row Count    1
+    Page Should Contain    PMT-
+    
+             

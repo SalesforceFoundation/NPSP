@@ -35,7 +35,7 @@
 * Needs to be "without sharing" so that the Install Script can run it.
 */
 public without sharing class UTIL_CustomSettingsFacade {
-    private static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR = 'Donor';
+    public static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR = 'Donor';
     public static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT = 'Soft Credit';
 
     public static final Integer DEFAULT_ROLLUP_SKEW_MODE_BATCH_SIZE = 1000;
@@ -678,6 +678,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         contactsSettings.Payments_Auto_Close_Stage_Name__c = mySettings.Payments_Auto_Close_Stage_Name__c;
         contactsSettings.Honoree_Opportunity_Contact_Role__c = mySettings.Honoree_Opportunity_Contact_Role__c;
         contactsSettings.Notification_Recipient_Opp_Contact_Role__c = mySettings.Notification_Recipient_Opp_Contact_Role__c;
+        contactsSettings.Enforce_Accounting_Data_Consistency__c = mySettings.Enforce_Accounting_Data_Consistency__c;
         orgContactsSettings = contactsSettings;
         return contactsSettings;
     }
