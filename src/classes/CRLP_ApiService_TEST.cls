@@ -38,8 +38,6 @@ private class CRLP_ApiService_TEST {
     private static UTIL_IntegrationConfig_TEST.MockPackage mockPackage;
     private static MockCallable callableMock;
 
-    private static final String ROLLUP_DEFINITIONS = '[{"useFiscalYear":false,"timeBoundOperation":"All_Time","theSum":0,"theCount":0,"textValue":[null,null,null,null],"summaryObject":"General_Accounting_Unit__c","sumByYear":{}}]';
-
     /**
     * @description Validate the getRollupDefinitions returns the expected collection of CRLP_Rollup instances.
     * Calls the mocking utilities to build a bunch of rollup definitions and filter groups/rules fo
@@ -201,13 +199,14 @@ private class CRLP_ApiService_TEST {
      */
     @isTest
     private static void getBaseRollupStateForRecordsShouldBuildCRLPRollupMap() {
+        final String MOCK_ROLLUP_DEFINITIONS = '[{"mockRollupDefinition":"randomData"}]';
         CRLP_ApiService service = new CRLP_ApiService();
         setupMockIntegration(service);
 
         Map<Id, String> expectedRollupsByReferenceId = new Map<Id, String>();
         Set<Id> expectedReferenceIds = new Set<Id>(UTIL_UnitTestData_Test.mockIds(Account.SObjectType, 3));
         for (Id referenceId : expectedReferenceIds) {
-            expectedRollupsByReferenceId.put(referenceId, ROLLUP_DEFINITIONS);
+            expectedRollupsByReferenceId.put(referenceId, MOCK_ROLLUP_DEFINITIONS);
         }
 
         callableMock.withReturnValue(expectedRollupsByReferenceId);
