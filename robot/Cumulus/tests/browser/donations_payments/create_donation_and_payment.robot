@@ -47,7 +47,6 @@ Create Donation from a Contact
     should be equal as strings     ${flag}    pass
 
 Verify values in Create one or more Payments for this Opportunity page
-    [tags]  unstable
     Click Element With Locator    breadcrumb-link    ${opp_name}
     Select Tab    Related
     Click First Matching Related Item Popup Link    Payments    Unpaid    Edit
@@ -76,3 +75,4 @@ Verify values in Create one or more Payments for this Opportunity page
     Verify Details
     ...    Unpaid=3
     ...    Written Off=1
+
